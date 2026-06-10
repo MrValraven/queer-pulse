@@ -1,0 +1,140 @@
+.gather {
+  background: var(--plum);
+  color: var(--cream);
+  padding: 108px 0 116px;
+  position: relative;
+  overflow: hidden;
+}
+.gather::after {
+  content: '';
+  position: absolute;
+  bottom: -25%;
+  left: -6%;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  pointer-events: none;
+}
+.inner {
+  position: relative;
+}
+.list {
+  margin-top: 42px;
+  border-top: 1px solid rgba(247, 243, 238, 0.16);
+}
+.row {
+  display: grid;
+  grid-template-columns: 96px 1fr auto;
+  gap: 30px;
+  align-items: center;
+  padding: 26px 12px;
+  border-bottom: 1px solid rgba(247, 243, 238, 0.16);
+  transition:
+    background 0.35s var(--ease),
+    padding-left 0.35s var(--ease);
+  color: inherit;
+}
+.row:hover {
+  background: rgba(247, 243, 238, 0.05);
+  padding-left: 22px;
+}
+.date {
+  text-align: center;
+  font-family: var(--serif);
+}
+.date .day {
+  display: block;
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.date .month {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 5px;
+}
+.type {
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 25px;
+  color: var(--cream);
+  margin: 7px 0 6px;
+  letter-spacing: -0.01em;
+}
+.meta {
+  font-size: 14px;
+  color: rgba(247, 243, 238, 0.6);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.meta span {
+  white-space: nowrap;
+}
+.dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(247, 243, 238, 0.4);
+}
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+.spots {
+  font-size: 13px;
+  color: rgba(247, 243, 238, 0.55);
+  white-space: nowrap;
+}
+.spots b {
+  color: var(--jade);
+  font-weight: 600;
+}
+
+/* Ghost-dark pill rendered as a span (the whole row is the link). */
+.cta {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  border-radius: var(--radius-pill);
+  padding: 11px 20px;
+  white-space: nowrap;
+  background: transparent;
+  color: var(--cream);
+  border: 1.5px solid rgba(247, 243, 238, 0.32);
+  transition:
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+.row:hover .cta {
+  border-color: var(--cream);
+  background: rgba(247, 243, 238, 0.08);
+}
+
+@media (max-width: 760px) {
+  .row {
+    grid-template-columns: 64px 1fr;
+    gap: 18px;
+  }
+  .right {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

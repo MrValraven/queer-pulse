@@ -1,0 +1,61 @@
+import type { ImageSlotTint } from '../../shared/components/ui/ImageSlot'
+
+export type Access = 'free' | 'member' | 'rent'
+
+export interface CinemaFilm {
+  id: string
+  access: Access
+  accessLabel: string
+  kicker: string
+  /** Title parts: plain + emphasised + trailing. */
+  titlePre: string
+  titleEm?: string
+  titlePost?: string
+  meta: string
+  note: string
+  by: string
+  tint: ImageSlotTint
+  format: string
+  country: string
+  year: string
+  subs: string[]
+}
+
+export const films: CinemaFilm[] = [
+  { id: 'cascais', access: 'free', accessLabel: 'Free', kicker: 'Narrative feature', titlePre: 'A summer in ', titleEm: 'Cascais', meta: 'Inês Tavares · PT · 104 min', note: 'Three sisters, one inheritance, and the ghost of the great-aunt who left them the house.', by: 'Sara M.', tint: 'coral', format: 'Feature', country: 'PT', year: '2024', subs: ['PT subs', 'EN subs'] },
+  { id: 'paris', access: 'member', accessLabel: 'Sustainer', kicker: 'Documentary', titlePre: 'Paris is ', titleEm: 'still', titlePost: ' burning', meta: 'Akin Diallo · FR/SN · 87 min', note: 'A West African ballroom scene, two decades after the diaspora that built it.', by: 'D. Okoye', tint: 'plum', format: 'Documentary', country: 'FR/SN', year: '2025', subs: ['FR spoken', 'EN subs', 'PT subs'] },
+  { id: 'pharmacy', access: 'free', accessLabel: 'Free', kicker: 'Short · 18 min', titlePre: 'The pharmacy at 3am', meta: 'Rui Almeida · PT · 18 min', note: 'A trans woman, a graveyard shift, a stranger asking for testosterone.', by: 'made here', tint: 'jade', format: 'Short', country: 'PT', year: '2026', subs: ['PT spoken'] },
+  { id: 'mother', access: 'rent', accessLabel: 'Rent · €3', kicker: 'Narrative feature', titlePre: 'Mother, ', titleEm: 'weather', meta: 'Yuki Tanaka · JP · 118 min', note: 'A son returns to Hokkaido to come out to his mother through the act of cooking her dinner.', by: "curators' council", tint: 'coral', format: 'Feature', country: 'JP', year: '2024', subs: ['JP spoken', 'EN subs', 'PT subs'] },
+  { id: 'archive', access: 'member', accessLabel: 'Sustainer', kicker: 'Documentary', titlePre: 'The archive ', titleEm: 'keepers', meta: 'Laila Hassan · EG/UK · 76 min', note: "Cairo's hidden queer archive, smuggled to London, returned in pieces.", by: 'Yara R.', tint: 'plum', format: 'Documentary', country: 'EG/UK', year: '2023', subs: ['EN spoken', 'PT subs', 'AR subs'] },
+  { id: 'carta', access: 'free', accessLabel: 'Free', kicker: 'Series · 4 ep', titlePre: 'Carta a quem ', titleEm: 'fica', meta: 'Mateus Ferreira · BR · 4×22 min', note: "Letters from young Brazilians who didn't emigrate, to those who did.", by: 'Sara M.', tint: 'jade', format: 'Series', country: 'BR', year: '2025', subs: ['PT spoken', 'EN subs'] },
+]
+
+export const coverFilm = {
+  kicker: 'Cover film · streaming until 14 June',
+  titlePre: 'The light ',
+  titleEm: 'between',
+  titlePost: ' rooms',
+  meta: 'Maria Vasconcelos · Portugal, 2025 · 92 min · documentary',
+  curatorWho: '— Programmed by João Ribeiro',
+  curatorBody:
+    "A patient, generous film about Lisbon's working-class queer elders, made over three years in the kitchens that raised them. Stay for the second hour — it's where the film stops being about loss and starts being about teaching.",
+}
+
+export const collections = [
+  { tag: 'Collection', titlePre: 'Iberian queer cinema, ', titleEm: '1974–now', desc: 'From the carnation revolution to Almodóvar to TikTok-native shorts from Porto. A 24-film arc through Portuguese and Spanish queer image-making.', by: 'João Ribeiro & Sofía Castro', av: 'JR', count: '24 films · 9 free · 15 sustainer', total: '37h' },
+  { tag: 'Collection', titlePre: 'Trans documentaries: ', titleEm: 'the 2020s', desc: 'The decade is half over. Twelve documentaries — five by trans filmmakers — selected for how they treat their subjects as collaborators.', by: 'D. Okoye', av: 'DO', count: '12 films · 3 free · 9 rent', total: '18h' },
+  { tag: 'Collection', titlePre: 'Films our parents ', titleEm: 'could', titlePost: ' watch', desc: 'Quiet, generous, generationally translatable. A bridge collection. Bring a parent. Bring an aunt. Bring the friend who\'s still working it out.', by: 'Sara Marques', av: 'SM', count: '9 films · 9 free', total: '14h' },
+  { tag: 'Collection', titlePre: 'Lesbian sci-fi, ’78 to ', titleEm: 'tomorrow', desc: 'From the cult of Born in Flames to the Brazilian shorts no one\'s importing yet. The future has always had us in it.', by: 'Yara Reis', av: 'YR', count: '18 films · 6 free · 12 rent', total: '26h' },
+]
+
+export const shorts = [
+  { eyebrow: 'Short · 12 min', titlePre: 'What my grandmother ', titleEm: 'did', titlePost: ' say', desc: 'A late-night phone call, transcribed and re-enacted. Lisbon, 2026. Made on the spring micro-grant.', meta: 'Helena P. · ★ 412 watches this week' },
+  { eyebrow: 'Short · 9 min', titlePre: 'Bicha, with love', desc: 'One Brazilian word, six speakers, six relationships to it. A visual essay shot on a Bolex.', meta: 'Mateus F. · ★ 286 watches this week' },
+  { eyebrow: 'Documentary · 28 min', titlePre: 'The first ', titleEm: 'Sunday', desc: "Inside Lisbon's first community-run queer Sunday roast. Funded by 47 sustainers, in 11 days.", meta: 'Inês T. & collective · ★ 819 watches this week' },
+]
+
+export const liveEvents = [
+  { day: '10', dow: 'Wed', badge: 'Premiere', badgeClass: 'premiere', titlePre: 'Premiere · ', titleEm: 'The light between rooms', titlePost: ', with Maria Vasconcelos', sub: 'Live Q&A after the screening. Co-hosted with Casa do Comum.', tags: ['21:00 Lisbon · online + at the room', 'EN + PT live captions'] },
+  { day: '12', dow: 'Fri', badge: 'Watch party', badgeClass: 'party', titlePre: 'Watch party · ', titleEm: 'Paris is still burning', sub: 'Synced playback with live chat. Hosted by D. Okoye.', tags: ['22:00 Lisbon · online', 'Sustainer access'] },
+  { day: '13', dow: 'Sat', badge: 'In the room', badgeClass: 'live', titlePre: 'Open mic · ', titleEm: 'Made here', titlePost: ', shorts night', sub: 'Four community-made shorts back-to-back, with directors live in the room.', tags: ['20:30 · Casa do Comum', 'Open'] },
+]

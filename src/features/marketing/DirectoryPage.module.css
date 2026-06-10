@@ -1,0 +1,229 @@
+.heroNote {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--ink-40);
+}
+.heroNote .live {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+}
+
+.bar {
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(247, 243, 238, 0.88);
+  backdrop-filter: blur(12px);
+}
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border-radius: 12px;
+  padding: 11px 16px;
+  background: var(--paper);
+  margin-bottom: 14px;
+}
+.search svg {
+  width: 17px;
+  height: 17px;
+  color: var(--ink-40);
+}
+.search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: none;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  color: var(--ink);
+}
+.pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pill {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-60);
+  background: transparent;
+  border: 1px solid rgba(45, 27, 61, 0.16);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.pill:hover {
+  border-color: var(--plum);
+  color: var(--plum);
+}
+.pillOn {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+
+.content {
+  padding: 32px 0 80px;
+}
+.count {
+  font-size: 13.5px;
+  color: var(--ink-40);
+  margin-bottom: 20px;
+}
+.count b {
+  color: var(--plum);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 18px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.av {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 15px;
+}
+.badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 6px;
+}
+.owned {
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+}
+.friendly {
+  background: rgba(74, 140, 111, 0.12);
+  color: var(--jade);
+}
+.name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+}
+.cat {
+  font-size: 12px;
+  color: var(--accent-ink);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.hood {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-top: 4px;
+}
+.desc {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  flex: 1;
+}
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  font-size: 13px;
+  font-weight: 600;
+}
+.memberLink {
+  color: var(--jade);
+}
+.visit {
+  color: var(--plum);
+  margin-left: auto;
+}
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 50px 0;
+  color: var(--ink-40);
+}
+
+.submitStrip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  background: rgba(45, 27, 61, 0.04);
+  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  border-radius: 20px;
+  padding: 32px 36px;
+  margin-top: 40px;
+}
+.submitStrip h3 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 26px;
+  color: var(--plum);
+  letter-spacing: -0.015em;
+}
+.submitStrip h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.submitStrip p {
+  font-size: 14.5px;
+  color: var(--ink-60);
+  max-width: 48ch;
+  margin-top: 6px;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+:global([data-theme='dark']) .bar {
+  background: rgba(26, 16, 40, 0.86);
+}
+:global([data-theme='dark']) .card,
+:global([data-theme='dark']) .search {
+  border-color: rgba(247, 243, 238, 0.1);
+}

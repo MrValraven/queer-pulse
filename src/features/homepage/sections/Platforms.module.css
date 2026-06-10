@@ -1,0 +1,79 @@
+.strip {
+  padding: 88px 0;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 44px;
+}
+.badge {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: inherit;
+  transition:
+    transform 0.3s var(--ease),
+    box-shadow 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+.badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -18px rgba(45, 27, 61, 0.3);
+  border-color: rgba(45, 27, 61, 0.18);
+}
+.dashed {
+  border-style: dashed;
+}
+.ic {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 12px;
+  flex: none;
+}
+.jade {
+  background: rgba(74, 140, 111, 0.12);
+  color: var(--jade);
+}
+.coral {
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-ink);
+}
+.plum {
+  background: rgba(45, 27, 61, 0.07);
+  color: var(--plum);
+}
+.plus {
+  background: transparent;
+  color: var(--ink-40);
+  font-size: 20px;
+  font-family: var(--sans);
+}
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.nameMuted {
+  color: var(--ink-60);
+}
+.cat {
+  font-size: 11.5px;
+  color: var(--ink-40);
+}
+
+:global([data-theme='dark']) .badge {
+  border-color: rgba(247, 243, 238, 0.1);
+}

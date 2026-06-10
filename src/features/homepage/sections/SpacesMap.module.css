@@ -1,0 +1,92 @@
+.section {
+  background: var(--plum);
+  color: var(--cream);
+  padding: 108px 0 116px;
+  overflow: hidden;
+}
+.container {
+  margin-top: 44px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(247, 243, 238, 0.12);
+}
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(247, 243, 238, 0.1);
+}
+.chip {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba(247, 243, 238, 0.22);
+  background: transparent;
+  border-radius: var(--radius-pill);
+  padding: 7px 15px;
+  color: rgba(247, 243, 238, 0.65);
+  transition: all var(--dur-base) var(--ease);
+}
+.chip:hover {
+  color: var(--cream);
+  border-color: rgba(247, 243, 238, 0.5);
+}
+.chipActive {
+  background: rgba(247, 243, 238, 0.14);
+  color: var(--cream);
+  border-color: rgba(247, 243, 238, 0.4);
+}
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.pin {
+  cursor: pointer;
+}
+.pinGlow {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 0.25s,
+    opacity 0.25s;
+}
+.pin:hover .pinGlow {
+  transform: scale(1.8);
+  opacity: 0.4;
+}
+.pinLabel {
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+.pin:hover .pinLabel {
+  opacity: 1;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 22px;
+  border-top: 1px solid rgba(247, 243, 238, 0.1);
+}
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: rgba(247, 243, 238, 0.65);
+}
+.legendDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+.legendCount {
+  margin-left: auto;
+  font-size: 13px;
+  color: rgba(247, 243, 238, 0.4);
+}

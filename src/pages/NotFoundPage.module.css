@@ -1,0 +1,116 @@
+.wrap404 {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 140px 0 90px;
+}
+.inner {
+  max-width: 620px;
+}
+.code {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(96px, 18vw, 200px);
+  color: var(--plum);
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+}
+.code em {
+  font-style: italic;
+  color: var(--accent);
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(24px, 3.4vw, 36px);
+  color: var(--plum);
+  letter-spacing: -0.018em;
+  margin-top: 8px;
+}
+.sub {
+  font-size: 16px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  margin: 16px auto 0;
+  max-width: 48ch;
+}
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+.linksTitle {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin: 48px 0 16px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  text-align: left;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -20px rgba(45, 27, 61, 0.34);
+}
+.linkIcon {
+  font-size: 22px;
+}
+.linkLabel {
+  font-weight: 600;
+  color: var(--plum);
+  font-size: 14.5px;
+}
+.linkSub {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+.search {
+  display: flex;
+  gap: 8px;
+  max-width: 420px;
+  margin: 28px auto 0;
+}
+.searchInput {
+  flex: 1;
+  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+}
+.searchInput:focus {
+  border-color: var(--plum);
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+:global([data-theme='dark']) .link {
+  border-color: rgba(247, 243, 238, 0.1);
+}

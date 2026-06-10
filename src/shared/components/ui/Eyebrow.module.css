@@ -1,0 +1,20 @@
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-60);
+  font-family: var(--sans);
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-avatar);
+  background: var(--jade);
+  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.18);
+  flex-shrink: 0;
+}

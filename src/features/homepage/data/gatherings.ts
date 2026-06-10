@@ -1,0 +1,62 @@
+import type { Gathering } from './types'
+
+export const neighbourhoods: string[] = [
+  'Príncipe Real',
+  'Alfama',
+  'Marvila',
+  'Mouraria',
+  'Graça',
+  'Cais do Sodré',
+  'Arroios',
+  'Bairro Alto',
+]
+
+export const gatherings: Gathering[] = [
+  {
+    id: 'supper-club-12',
+    day: '06',
+    month: 'Jun',
+    type: 'Supper Club',
+    title: 'Queer Supper Club №12',
+    hood: 'Mouraria',
+    detail: 'Hosted by Tomás B.',
+    spotsValue: '8',
+    spotsLabel: 'seats left',
+    ctaLabel: 'Reserve a seat',
+  },
+  {
+    id: 'portfolio-night',
+    day: '14',
+    month: 'Jun',
+    type: 'Mixer',
+    title: 'Portfolio Night: Designers & Photographers',
+    hood: 'Príncipe Real',
+    detail: 'Open to all members',
+    spotsValue: '32',
+    spotsLabel: 'going',
+    ctaLabel: "I'll be there",
+  },
+  {
+    id: 'studio-visit',
+    day: '21',
+    month: 'Jun',
+    type: 'Studio Visit',
+    title: "Inside Beatriz's Ceramics Studio",
+    hood: 'Graça',
+    detail: 'Limited to 10',
+    spotsValue: '3',
+    spotsLabel: 'spots left',
+    ctaLabel: 'Request a spot',
+  },
+  {
+    id: 'founders-breakfast',
+    day: '02',
+    month: 'Jul',
+    type: 'Breakfast',
+    title: 'Founders & Builders Breakfast',
+    hood: 'Marvila',
+    detail: 'Early start, good coffee',
+    spotsLabel: 'Casual',
+    ctaLabel: 'RSVP',
+  },
+]

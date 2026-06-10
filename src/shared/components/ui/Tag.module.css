@@ -1,0 +1,51 @@
+.tag {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  background: rgba(45, 27, 61, 0.05);
+  border-radius: var(--radius-tag);
+  padding: 5px 10px;
+  font-weight: 500;
+  display: inline-block;
+  font-family: var(--sans);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.chip {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: var(--radius-tag);
+  white-space: nowrap;
+  font-family: var(--sans);
+  display: inline-block;
+}
+
+.offering {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.13);
+}
+.looking,
+.feature {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+.network {
+  color: var(--plum);
+  background: rgba(45, 27, 61, 0.08);
+}
+.locked {
+  color: var(--ink-40);
+  background: rgba(45, 27, 61, 0.06);
+}
+
+:global([data-theme='dark']) .tag {
+  background: rgba(247, 243, 238, 0.08);
+  color: rgba(247, 243, 238, 0.6);
+}

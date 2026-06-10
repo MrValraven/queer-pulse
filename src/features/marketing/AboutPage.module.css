@@ -1,0 +1,201 @@
+.originGrid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.body p {
+  font-size: 15.5px;
+  color: var(--ink-60);
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+.pull {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 24px;
+  color: var(--plum);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  border-left: 3px solid var(--accent);
+  padding-left: 24px;
+  font-style: italic;
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.teamCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  padding: 24px 22px;
+}
+.tcAv {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.tcName {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--plum);
+}
+.tcRole {
+  font-size: 12.5px;
+  color: var(--accent-ink);
+  font-weight: 600;
+  margin: 2px 0 10px;
+}
+.tcBio {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.6;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.valCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  padding: 24px 26px;
+}
+.valTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.valText {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 28px;
+  max-width: 720px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: rgba(45, 27, 61, 0.12);
+}
+.tlItem {
+  position: relative;
+  padding-bottom: 28px;
+}
+.tlItem:last-child {
+  padding-bottom: 0;
+}
+.tlDot {
+  position: absolute;
+  left: -28px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 2px solid var(--accent);
+}
+.tlDate {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.tlTitle {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+}
+.tlText {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+.contactStrip {
+  background: rgba(45, 27, 61, 0.04);
+  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  border-radius: 20px;
+  padding: 36px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+.csText h3 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 26px;
+  color: var(--plum);
+  letter-spacing: -0.015em;
+  margin-bottom: 8px;
+}
+.csText h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.csText p {
+  font-size: 14.5px;
+  color: var(--ink-60);
+  max-width: 44ch;
+  line-height: 1.6;
+}
+.csActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 880px) {
+  .originGrid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .teamGrid,
+  .valuesGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .teamGrid,
+  .valuesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+:global([data-theme='dark']) .teamCard,
+:global([data-theme='dark']) .valCard {
+  border-color: rgba(247, 243, 238, 0.1);
+}
+:global([data-theme='dark']) .tlDot {
+  background: var(--plum);
+}

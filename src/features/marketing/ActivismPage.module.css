@@ -1,0 +1,257 @@
+.conviction {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+  position: relative;
+}
+.convItem .n {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.convItem .l {
+  font-size: 14px;
+  color: rgba(247, 243, 238, 0.7);
+  line-height: 1.55;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 56px;
+  align-items: start;
+  padding: 56px 0 80px;
+}
+.nav {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.navLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 8px;
+}
+.navItem {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink-60);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border-left: 2px solid transparent;
+  background: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all 0.18s;
+}
+.navItem:hover {
+  color: var(--plum);
+}
+.navItemActive {
+  color: var(--plum);
+  font-weight: 600;
+  border-left-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.section {
+  margin-bottom: 56px;
+  scroll-margin-top: 96px;
+}
+.section h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(26px, 3.4vw, 40px);
+  color: var(--plum);
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+.section h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.section p {
+  font-size: 15.5px;
+  color: var(--ink-60);
+  line-height: 1.75;
+  margin-bottom: 14px;
+  max-width: 64ch;
+}
+.section p b {
+  color: var(--plum);
+}
+.divider {
+  border: none;
+  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  margin: 0 0 56px;
+}
+
+.actionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 20px;
+}
+.actionCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  padding: 22px 24px;
+  color: inherit;
+}
+.acNum {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 22px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.acTitle {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--plum);
+  margin-bottom: 6px;
+}
+.acBody {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+}
+.acLink {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+.acHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.acPill {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 6px;
+  color: var(--jade);
+  background: rgba(74, 140, 111, 0.1);
+  white-space: nowrap;
+}
+
+.banner {
+  display: flex;
+  gap: 16px;
+  background: rgba(74, 140, 111, 0.06);
+  border: 1px solid rgba(74, 140, 111, 0.18);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin: 18px 0;
+}
+.bannerCoral {
+  background: rgba(var(--accent-rgb), 0.07);
+  border-color: rgba(var(--accent-rgb), 0.2);
+}
+.ibDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--jade);
+  flex: none;
+  margin-top: 6px;
+}
+.bannerCoral .ibDot {
+  background: var(--accent);
+}
+.ibHead {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--jade);
+  margin-bottom: 6px;
+}
+.bannerCoral .ibHead {
+  color: var(--accent-ink);
+}
+.banner p {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.orgList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+.orgRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 16px 18px;
+  color: inherit;
+}
+.orgAv {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex: none;
+}
+.orgName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--plum);
+}
+.orgDesc {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+@media (max-width: 880px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .nav {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .conviction,
+  .actionGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+:global([data-theme='dark']) .actionCard,
+:global([data-theme='dark']) .orgRow {
+  border-color: rgba(247, 243, 238, 0.1);
+}

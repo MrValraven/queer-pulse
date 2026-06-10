@@ -1,0 +1,50 @@
+.section {
+  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+}
+
+.sectionButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 16px 0;
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--plum);
+}
+
+.sectionChevron {
+  font-size: 11px;
+  opacity: 0.6;
+  transition: transform 0.2s var(--ease);
+}
+.sectionOpen .sectionChevron {
+  transform: rotate(180deg);
+}
+
+.panel {
+  padding: 0 0 12px;
+}
+
+.colHead {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin: 10px 0 6px;
+}
+
+.link {
+  display: block;
+  font-size: 15px;
+  color: var(--ink-60);
+  padding: 8px 0 8px 10px;
+}
+.linkFeatured {
+  color: var(--plum);
+  font-weight: 600;
+}

@@ -1,0 +1,50 @@
+.slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid rgba(45, 27, 61, 0.1);
+  position: relative;
+}
+
+.slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.caption {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 12px 16px;
+  opacity: 0.7;
+}
+
+.initials {
+  font-family: var(--serif);
+  font-weight: 500;
+}
+
+.circle {
+  border-radius: var(--radius-avatar);
+}
+
+/* Tints */
+.default {
+  background: rgba(45, 27, 61, 0.06);
+  color: var(--accent);
+}
+.coral {
+  background: rgba(var(--accent-rgb), 0.15);
+  color: var(--accent-ink);
+}
+.jade {
+  background: rgba(var(--jade-rgb), 0.15);
+  color: var(--jade);
+}
+.plum {
+  background: rgba(45, 27, 61, 0.1);
+  color: var(--plum);
+}

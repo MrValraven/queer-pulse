@@ -1,0 +1,367 @@
+.root {
+  background: var(--plum);
+  min-height: 100vh;
+}
+.brand {
+  text-align: center;
+  padding: 28px 0 0;
+  position: relative;
+  z-index: 1;
+}
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--cream);
+}
+.brandItalic {
+  font-style: italic;
+}
+.pulseDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  position: relative;
+}
+.pulseDot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: qpPulse 2.6s var(--ease) infinite;
+}
+
+.page {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px 60px;
+  position: relative;
+}
+.page::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.1), transparent 62%);
+  pointer-events: none;
+}
+
+.card {
+  background: var(--cream);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+  box-shadow:
+    0 40px 100px -28px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+.cardTop {
+  background: var(--plum);
+  padding: 36px 40px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.checkWrap {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+}
+.checkCircle {
+  stroke: var(--jade);
+  stroke-width: 2;
+  fill: rgba(74, 140, 111, 0.12);
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  animation: circleDraw 0.65s var(--ease) 0.1s forwards;
+}
+.checkMark {
+  stroke: var(--jade);
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: checkDraw 0.4s var(--ease) 0.65s forwards;
+}
+@keyframes circleDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes checkDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--jade);
+  margin-bottom: 10px;
+}
+.h {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(36px, 7vw, 52px);
+  color: var(--cream);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.h em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.gName {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(247, 243, 238, 0.85);
+}
+
+.cardBody {
+  padding: 28px 36px 36px;
+}
+.details {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  margin-bottom: 22px;
+  overflow: hidden;
+}
+.detail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+}
+.detail:last-child {
+  border-bottom: none;
+}
+.detailIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex: none;
+}
+.detailLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.detailVal {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--plum);
+}
+
+.withLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 12px;
+}
+.withRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.withText {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.withText strong {
+  color: var(--plum);
+  font-weight: 700;
+}
+
+.hostNote {
+  background: rgba(45, 27, 61, 0.04);
+  border-left: 3px solid var(--plum);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+}
+.hnHead {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 8px;
+}
+.hnName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--plum);
+}
+.hnRole {
+  font-size: 11.5px;
+  color: var(--ink-40);
+}
+.hnText {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+.calLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 10px;
+}
+.calRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.calBtn {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  background: var(--paper);
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  color: var(--plum);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s;
+}
+.calBtn:hover {
+  border-color: var(--plum);
+  background: rgba(45, 27, 61, 0.04);
+}
+
+.ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ctas a,
+.ctas button {
+  width: 100%;
+  justify-content: center;
+}
+
+.coc {
+  background: var(--cream);
+  padding: 52px 20px 60px;
+  position: relative;
+  z-index: 1;
+}
+.cocInner {
+  max-width: 520px;
+  margin: 0 auto;
+}
+.cocTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(22px, 3.5vw, 30px);
+  color: var(--plum);
+  letter-spacing: -0.02em;
+  margin-bottom: 22px;
+  text-align: center;
+  line-height: 1.1;
+}
+.cocTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.cocItems {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cocItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.08);
+  border-radius: 13px;
+  padding: 14px 16px;
+}
+.cocDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--jade);
+  flex: none;
+  margin-top: 5px;
+}
+.cocText {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+}
+.cocText strong {
+  color: var(--plum);
+  font-weight: 700;
+}
+
+.footer {
+  text-align: center;
+  padding: 16px 0 28px;
+  position: relative;
+  z-index: 1;
+}
+.footer p {
+  font-size: 13px;
+  color: rgba(247, 243, 238, 0.3);
+}
+.footer a {
+  color: rgba(247, 243, 238, 0.45);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.footer a:hover {
+  color: rgba(247, 243, 238, 0.7);
+}
+
+@media (max-width: 480px) {
+  .cardTop {
+    padding: 28px 24px 24px;
+  }
+  .cardBody {
+    padding: 22px 24px 28px;
+  }
+}

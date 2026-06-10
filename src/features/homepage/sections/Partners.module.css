@@ -1,0 +1,81 @@
+.strip {
+  padding: 88px 0;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+}
+.head {
+  margin-bottom: 44px;
+}
+.logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: stretch;
+}
+.badge {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  transition:
+    transform 0.3s var(--ease),
+    box-shadow 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+.badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -18px rgba(45, 27, 61, 0.3);
+  border-color: rgba(45, 27, 61, 0.18);
+}
+.dashed {
+  border-style: dashed;
+}
+.av {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 13px;
+  flex: none;
+}
+.jade {
+  background: rgba(74, 140, 111, 0.15);
+  color: var(--jade);
+}
+.coral {
+  background: rgba(232, 119, 90, 0.14);
+  color: var(--accent-ink);
+}
+.plum {
+  background: rgba(45, 27, 61, 0.1);
+  color: var(--plum);
+}
+.plus {
+  background: transparent;
+  color: var(--ink-40);
+  font-size: 20px;
+}
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.nameMuted {
+  color: var(--ink-60);
+}
+.loc {
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+:global([data-theme='dark']) .badge {
+  background: var(--paper);
+  border-color: rgba(247, 243, 238, 0.1);
+}

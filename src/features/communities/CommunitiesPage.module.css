@@ -1,0 +1,204 @@
+.hero {
+  background: var(--plum);
+  padding: 148px 0 88px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: -8%;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.12), transparent 62%);
+  pointer-events: none;
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  position: relative;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 84px);
+  color: var(--cream);
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  max-width: 14ch;
+  position: relative;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.lede {
+  font-size: 17px;
+  color: rgba(247, 243, 238, 0.68);
+  max-width: 52ch;
+  margin-top: 22px;
+  line-height: 1.65;
+  position: relative;
+}
+
+.body {
+  padding: 80px 0 120px;
+}
+.filters {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.chip {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-60);
+  cursor: pointer;
+  border: 1px solid rgba(45, 27, 61, 0.16);
+  background: transparent;
+  border-radius: 999px;
+  padding: 9px 17px;
+  transition: all var(--dur-base) var(--ease);
+}
+.chip:hover {
+  color: var(--ink);
+  border-color: rgba(45, 27, 61, 0.4);
+}
+.chipActive {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-slow) var(--ease),
+    box-shadow var(--dur-slow) var(--ease);
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -22px rgba(45, 27, 61, 0.38);
+}
+.type {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 7px;
+  align-self: flex-start;
+}
+.social {
+  color: var(--jade);
+  background: rgba(74, 140, 111, 0.12);
+}
+.arts {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+.activism {
+  color: var(--plum);
+  background: rgba(45, 27, 61, 0.09);
+}
+.support {
+  color: #7a52b8;
+  background: rgba(122, 82, 184, 0.1);
+}
+.sports {
+  color: var(--jade);
+  background: rgba(74, 140, 111, 0.1);
+}
+.professional {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+.name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 21px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.desc {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  flex: 1;
+}
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  margin-top: auto;
+}
+.meta {
+  font-size: 13px;
+  color: var(--jade);
+  font-weight: 600;
+}
+.joinBtn {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--plum);
+  color: var(--cream);
+  border: none;
+  border-radius: 999px;
+  padding: 9px 18px;
+  transition:
+    background var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+.joinBtn:hover {
+  background: var(--accent-ink);
+  transform: translateY(-1px);
+}
+.joined {
+  background: rgba(74, 140, 111, 0.12);
+  color: var(--jade);
+}
+.joined:hover {
+  background: rgba(74, 140, 111, 0.12);
+  transform: none;
+}
+
+:global([data-theme='dark']) .card {
+  border-color: rgba(247, 243, 238, 0.1);
+}

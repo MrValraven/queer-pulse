@@ -1,0 +1,133 @@
+.section {
+  background: var(--plum);
+  padding: 108px 0 116px;
+  position: relative;
+  overflow: hidden;
+}
+.section::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -4%;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.13), transparent 60%);
+  pointer-events: none;
+}
+.top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-bottom: 52px;
+  position: relative;
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-display);
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  margin: 0;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+.sub {
+  font-size: 15px;
+  color: rgba(247, 243, 238, 0.62);
+  line-height: 1.65;
+  max-width: 36ch;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  position: relative;
+}
+.card {
+  background: rgba(247, 243, 238, 0.06);
+  border: 1px solid rgba(247, 243, 238, 0.1);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  transition:
+    transform var(--dur-slow) var(--ease),
+    background 0.35s var(--ease);
+}
+.card:hover {
+  transform: translateY(-4px);
+  background: rgba(247, 243, 238, 0.09);
+}
+.body {
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex: 1;
+}
+.cause {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 24px;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.blurb {
+  font-size: 13.5px;
+  color: rgba(247, 243, 238, 0.62);
+  line-height: 1.62;
+  flex: 1;
+}
+.tags {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.tag {
+  font-size: 11.5px;
+  color: rgba(247, 243, 238, 0.5);
+  background: rgba(247, 243, 238, 0.08);
+  border-radius: 6px;
+  padding: 4px 9px;
+  font-weight: 500;
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,82 @@
+import type { CSSProperties, HTMLAttributes } from 'react'
+import styles from './Avatar.module.css'
+
+export type AvatarTint = 'default' | 'coral' | 'jade' | 'plum' | 'auth'
+
+interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
+  initials: string
+  tint?: AvatarTint
+  size?: number
+  verified?: boolean
+  /** Optional photo; falls back to initials when absent. */
+  src?: string
+  alt?: string
+}
+
+export function Avatar({
+  initials,
+  tint = 'default',
+  size = 40,
+  verified = false,
+  src,
+  alt,
+  className,
+  ...rest
+}: AvatarProps) {
+  const circleStyle: CSSProperties = {
+    width: size,
+    height: size,
+    fontSize: size * 0.34,
+  }
+
+  return (
+    <div className={[styles.wrap, className].filter(Boolean).join(' ')} {...rest}>
+      <div className={[styles.avatar, styles[tint]].join(' ')} style={circleStyle}>
+        {src ? <img src={src} alt={alt ?? initials} /> : initials}
+      </div>
+      {verified && (
+        <span className={styles.verifiedBadge} title="Verified member">
+          <svg width={9} height={9} viewBox="0 0 24 24" fill="none" aria-hidden>
+            <polyline
+              points="20 6 9 17 4 12"
+              stroke="#fff"
+              strokeWidth={3}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+      )}
+    </div>
+  )
+}
+
+interface AvatarStackProps extends HTMLAttributes<HTMLDivElement> {
+  avatars: Array<{ initials: string; tint?: AvatarTint; src?: string }>
+  size?: number
+}
+
+export function AvatarStack({
+  avatars,
+  size = 36,
+  className,
+  ...rest
+}: AvatarStackProps) {
+  return (
+    <div className={[styles.stack, className].filter(Boolean).join(' ')} {...rest}>
+      {avatars.map((avatar, index) => (
+        <Avatar
+          key={index}
+          initials={avatar.initials}
+          tint={avatar.tint}
+          src={avatar.src}
+          size={size}
+          style={{
+            marginLeft: index === 0 ? 0 : -10,
+            zIndex: avatars.length - index,
+          }}
+        />
+      ))}
+    </div>
+  )
+}

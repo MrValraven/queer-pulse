@@ -1,0 +1,356 @@
+.hero {
+  padding: 140px 0 40px;
+}
+.eye {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 72px);
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.hero p {
+  font-size: 16.5px;
+  color: var(--ink-60);
+  max-width: 56ch;
+  margin-top: 18px;
+  line-height: 1.6;
+}
+.stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 28px;
+}
+.stat b {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 30px;
+  color: var(--plum);
+  display: block;
+  letter-spacing: -0.02em;
+}
+.stat span {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+.filterBar {
+  padding: 18px 0;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+}
+.fbInner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.fbLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-right: 2px;
+}
+.fbSep {
+  width: 1px;
+  height: 22px;
+  background: rgba(45, 27, 61, 0.14);
+  margin: 0 6px;
+}
+.chip {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-60);
+  background: transparent;
+  border: 1px solid rgba(45, 27, 61, 0.16);
+  border-radius: 999px;
+  padding: 6px 13px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.chip:hover {
+  border-color: var(--plum);
+  color: var(--plum);
+}
+.chipOn {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+.vibe.chipOn {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 28px;
+  padding: 32px 0 80px;
+  align-items: start;
+}
+.mapPanel {
+  position: sticky;
+  top: 88px;
+  background: #ede6da;
+  border: 1px solid rgba(45, 27, 61, 0.12);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.bairro {
+  cursor: pointer;
+}
+.zone {
+  transition: opacity 0.2s, stroke-width 0.2s;
+  stroke-width: 1.5;
+}
+.bairro:hover .zone {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+.bairroActive .zone {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+.bairroDimmed {
+  opacity: 0.4;
+}
+.bairroLabel {
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 500;
+  fill: var(--plum);
+  text-anchor: middle;
+  pointer-events: none;
+  letter-spacing: -0.01em;
+}
+.riverLabel {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  fill: rgba(45, 27, 61, 0.45);
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.sidebar {
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  position: sticky;
+  top: 88px;
+}
+.sbTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.sbHeading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--plum);
+  letter-spacing: -0.015em;
+}
+.sbCount {
+  font-size: 13px;
+  color: var(--ink-40);
+  margin-top: 2px;
+}
+.sbCount b {
+  color: var(--plum);
+}
+.clear {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: rgba(45, 27, 61, 0.05);
+  border: none;
+  border-radius: 999px;
+  padding: 7px 13px;
+  cursor: pointer;
+}
+.clear:hover {
+  color: var(--plum);
+}
+.groupHead {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 18px 0 8px;
+}
+.empty {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--ink-40);
+  font-size: 14px;
+}
+
+.vc {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.vc:hover {
+  border-color: rgba(45, 27, 61, 0.2);
+}
+.vcExpanded {
+  border-color: var(--plum);
+  box-shadow: 0 14px 30px -20px rgba(45, 27, 61, 0.3);
+}
+.vcHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.vcIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex: none;
+}
+.vcInfo {
+  flex: 1;
+  min-width: 0;
+}
+.vcName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--plum);
+}
+.vcBairro {
+  font-size: 12px;
+  color: var(--ink-40);
+}
+.vcRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+.vcTypeTag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.vcAccess {
+  font-size: 13px;
+}
+.vcVibes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+.vt {
+  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.vcBody {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+}
+.vcRow {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-bottom: 6px;
+}
+.vcRowIcon {
+  flex: none;
+}
+.vcNote {
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.6;
+  margin: 10px 0;
+  font-style: italic;
+  font-family: var(--serif);
+}
+.vcBeenRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+.beenCount {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+.beenCount b {
+  color: var(--plum);
+}
+.beenBtn {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--plum);
+  background: var(--cream);
+  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.beenBtn:hover {
+  border-color: var(--plum);
+}
+.beenDone {
+  background: var(--jade);
+  color: #fff;
+  border-color: var(--jade);
+}
+
+@media (max-width: 880px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+  .mapPanel,
+  .sidebar {
+    position: static;
+    max-height: none;
+  }
+}
+
+:global([data-theme='dark']) .vc {
+  border-color: rgba(247, 243, 238, 0.1);
+}

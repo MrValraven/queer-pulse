@@ -1,0 +1,149 @@
+.nav {
+  position: fixed;
+  top: var(--nav-top);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: calc(100% - 40px);
+  max-width: 1180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 10px 12px 10px 22px;
+  background: rgba(247, 243, 238, 0.66);
+  backdrop-filter: var(--blur-nav);
+  -webkit-backdrop-filter: var(--blur-nav);
+  border: 1px solid rgba(45, 27, 61, 0.1);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-nav);
+  transition:
+    box-shadow var(--dur-slow) var(--ease),
+    background var(--dur-slow) var(--ease);
+}
+.scrolled {
+  background: rgba(247, 243, 238, 0.82);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 23px;
+  letter-spacing: -0.01em;
+  color: var(--plum);
+}
+.brandItalic {
+  font-style: italic;
+}
+.pulseDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  position: relative;
+  flex: none;
+}
+.pulseDot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: qpPulse 2.6s var(--ease) infinite;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.link {
+  font-size: 14px;
+  color: var(--ink-60);
+  font-weight: 500;
+  position: relative;
+  transition: color var(--dur-base) var(--ease);
+}
+.link:hover {
+  color: var(--ink);
+}
+.linkActive {
+  color: var(--accent-ink);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: var(--plum);
+  transition: background var(--dur-base) var(--ease);
+}
+.bell:hover {
+  background: rgba(45, 27, 61, 0.06);
+}
+.bellBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--cream);
+}
+
+.themeToggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--plum);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--dur-base) var(--ease);
+}
+.themeToggle:hover {
+  background: rgba(45, 27, 61, 0.06);
+}
+
+@media (max-width: 720px) {
+  .links {
+    display: none;
+  }
+}
+
+:global([data-theme='dark']) .nav {
+  background: rgba(14, 8, 32, 0.82);
+  border-color: rgba(247, 243, 238, 0.1);
+}
+:global([data-theme='dark']) .brand,
+:global([data-theme='dark']) .bell,
+:global([data-theme='dark']) .themeToggle {
+  color: var(--cream);
+}
+:global([data-theme='dark']) .bellBadge {
+  border-color: var(--paper);
+}

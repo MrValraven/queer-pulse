@@ -1,0 +1,73 @@
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 56ch;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-display);
+  color: var(--plum);
+  letter-spacing: var(--ls-display);
+  line-height: var(--lh-display);
+  margin: 0;
+}
+
+.subtitleLeft {
+  font-size: 14px;
+  color: var(--ink-60);
+  max-width: 46ch;
+  line-height: var(--lh-body);
+  margin: 0;
+}
+.dark .subtitleLeft {
+  color: rgba(247, 243, 238, 0.62);
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--ink-60);
+  max-width: 30ch;
+  line-height: var(--lh-body);
+  margin: 0;
+  text-align: right;
+}
+
+.link {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  white-space: nowrap;
+}
+
+/* Dark variant (plum sections) */
+.dark .title {
+  color: var(--cream);
+}
+.dark .subtitle {
+  color: rgba(247, 243, 238, 0.62);
+}
+.dark .link {
+  color: var(--accent);
+}

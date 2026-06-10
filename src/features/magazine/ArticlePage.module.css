@@ -1,0 +1,229 @@
+.header {
+  background: var(--cream);
+  padding: 120px 0 48px;
+  border-bottom: 2px solid var(--plum);
+}
+.back {
+  margin-bottom: 28px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-40);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.back:hover {
+  color: var(--plum);
+}
+.kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(32px, 5.5vw, 72px);
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  margin-bottom: 24px;
+  max-width: 18ch;
+}
+.title em {
+  font-style: italic;
+  font-weight: 400;
+}
+.bylineRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.author {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--plum);
+}
+.role {
+  font-size: 13px;
+  color: var(--ink-40);
+}
+.pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.pill {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-60);
+  background: rgba(45, 27, 61, 0.06);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.hero {
+  border-bottom: 2px solid var(--plum);
+}
+.heroStrip {
+  height: 6px;
+  background: var(--plum);
+}
+
+.bodyWrap {
+  display: grid;
+  grid-template-columns: 1fr min(68ch, 100%) 1fr;
+  padding: 64px 28px 0;
+}
+.bodyInner {
+  grid-column: 2;
+}
+.body p {
+  font-size: 19px;
+  line-height: 1.84;
+  color: var(--ink);
+  margin-bottom: 1.5em;
+}
+.body p:first-of-type::first-letter {
+  font-family: var(--serif);
+  font-size: 5em;
+  font-weight: 400;
+  float: left;
+  line-height: 0.72;
+  padding-right: 0.06em;
+  padding-top: 0.05em;
+  color: var(--plum);
+}
+.body strong {
+  font-weight: 700;
+  color: var(--plum);
+}
+.pull {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(22px, 3vw, 34px);
+  color: var(--plum);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  border-left: 3px solid var(--accent);
+  padding: 4px 0 4px 28px;
+  margin: 48px 0 48px -4px;
+}
+
+.bio {
+  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  margin-top: 56px;
+  padding-top: 32px;
+  padding-bottom: 56px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+.bioName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--plum);
+  margin-bottom: 4px;
+}
+.bioText {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.65;
+}
+
+.related {
+  background: var(--paper);
+  border-top: 2px solid var(--plum);
+  padding: 56px 0 80px;
+}
+.relatedHead {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--plum);
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+}
+.relatedHead em {
+  font-style: italic;
+  color: var(--accent);
+}
+.relGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.relCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 22px;
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.25s,
+    transform 0.25s var(--ease);
+}
+.relCard:hover {
+  border-color: rgba(45, 27, 61, 0.2);
+  box-shadow: 0 8px 24px -14px rgba(45, 27, 61, 0.25);
+  transform: translateY(-2px);
+}
+.relKicker {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.relTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 17px;
+  color: var(--plum);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.relTitle em {
+  font-style: italic;
+}
+.relMeta {
+  font-size: 12px;
+  color: var(--ink-40);
+  margin-top: 4px;
+}
+
+.notFound {
+  padding: 140px 0 100px;
+  text-align: center;
+}
+.notFound h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 42px;
+  color: var(--plum);
+  margin-bottom: 16px;
+}
+.notFound p {
+  font-size: 16px;
+  color: var(--ink-60);
+  margin-bottom: 28px;
+}
+
+@media (max-width: 760px) {
+  .relGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+:global([data-theme='dark']) .relCard {
+  border-color: rgba(247, 243, 238, 0.1);
+}

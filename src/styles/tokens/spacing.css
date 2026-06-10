@@ -1,0 +1,37 @@
+/* QueerPulse — Spacing & layout tokens */
+:root {
+  /* ── Max widths ── */
+  --maxw:      1240px;
+  --maxw-text: 680px;
+  --wrap-px:   28px;    /* horizontal gutter */
+
+  /* ── Corner radii ── */
+  --radius-card:   22px;   /* member cards, pain cards */
+  --radius-panel:  20px;   /* mega nav, search overlay, dropdowns */
+  --radius-badge:  14px;   /* smaller cards */
+  --radius-tag:    7px;    /* tags, chips */
+  --radius-pill:   999px;  /* buttons, filters, level pills */
+  --radius-avatar: 50%;    /* circular avatars */
+
+  /* ── Card padding ── */
+  --card-pad: 24px;
+  --card-pad-lg: 30px;
+
+  /* ── Section rhythm ── */
+  --section-y:    108px;   /* vertical padding for most sections */
+  --section-y-lg: 120px;   /* larger sections */
+
+  /* ── Grid gaps ── */
+  --gap-grid:  22px;
+  --gap-sm:    14px;
+  --gap-xs:    9px;
+
+  /* ── Navbar ── */
+  --nav-top:    18px;
+  --nav-height: 62px;
+}
+
+/* Shorthand alias for components that still reference the old name */
+:root {
+  --card-radius: var(--radius-card);
+}

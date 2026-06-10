@@ -1,0 +1,335 @@
+.crumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text60);
+  padding: 16px 0 4px;
+}
+.crumb a {
+  color: var(--text60);
+}
+.crumb a:hover {
+  color: var(--text);
+}
+.crumb em {
+  font-style: italic;
+  color: var(--text40);
+}
+
+.inSet {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 8px 0 32px;
+  font-size: 13.5px;
+  color: var(--text60);
+}
+.inSet .live {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+.inSet b {
+  color: var(--text);
+}
+.inSet em {
+  font-style: italic;
+  color: var(--accent);
+}
+.inSet a {
+  margin-left: auto;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 28px;
+  align-items: start;
+  padding-bottom: 40px;
+}
+
+.lyrCard {
+  background: rgba(247, 243, 238, 0.04);
+  border: 1px solid var(--line, rgba(247, 243, 238, 0.08));
+  border-radius: 18px;
+  padding: 28px 30px;
+}
+.lyrH {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.lyrH h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--cream);
+}
+.lyrH h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.lyrLang {
+  display: flex;
+  gap: 2px;
+  background: rgba(247, 243, 238, 0.06);
+  border-radius: 999px;
+  padding: 3px;
+}
+.lyrLang button {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(247, 243, 238, 0.5);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+.lyrLangOn {
+  background: var(--accent);
+  color: #fff;
+}
+.lyric .annot {
+  font-size: 11.5px;
+  font-style: italic;
+  font-family: var(--serif);
+  color: var(--accent);
+  margin: 18px 0 8px;
+}
+.lyric .annot:first-child {
+  margin-top: 0;
+}
+.lyric p {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: rgba(247, 243, 238, 0.6);
+  line-height: 1.7;
+}
+.lyric p em {
+  font-style: italic;
+  color: var(--cream);
+}
+.lyric p.played {
+  color: rgba(247, 243, 238, 0.85);
+}
+.lyric p.now {
+  color: var(--accent);
+  font-weight: 500;
+}
+.lyrFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(247, 243, 238, 0.1);
+  font-size: 12.5px;
+  color: rgba(247, 243, 238, 0.4);
+  font-style: italic;
+  font-family: var(--serif);
+}
+.lyrFoot a {
+  color: var(--jade-light, #9be0bd);
+  font-weight: 600;
+  font-style: normal;
+  font-family: var(--sans);
+}
+
+.rSide {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sCard {
+  background: rgba(247, 243, 238, 0.04);
+  border: 1px solid rgba(247, 243, 238, 0.1);
+  border-radius: 16px;
+  padding: 22px 24px;
+}
+.sEb {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(247, 243, 238, 0.4);
+  margin-bottom: 14px;
+}
+.noteHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.noteAv {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.18);
+  color: #ffc4af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 14px;
+}
+.noteName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cream);
+}
+.noteRole {
+  font-size: 12px;
+  color: rgba(247, 243, 238, 0.4);
+}
+.sCard p {
+  font-size: 14px;
+  color: rgba(247, 243, 238, 0.72);
+  line-height: 1.65;
+  font-family: var(--serif);
+}
+.sCard p em {
+  font-style: italic;
+  color: var(--accent);
+}
+.splitLead {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--cream);
+  margin-bottom: 14px;
+}
+.splitLead em {
+  font-style: normal;
+  color: var(--accent);
+}
+.splitBar {
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  margin-bottom: 16px;
+}
+.splitBar span {
+  height: 100%;
+}
+.splRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(247, 243, 238, 0.08);
+  font-size: 13px;
+}
+.splRow:last-child {
+  border-bottom: none;
+}
+.splDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+.splK {
+  flex: 1;
+  color: rgba(247, 243, 238, 0.6);
+}
+.splK b {
+  display: block;
+  color: var(--cream);
+  font-size: 13px;
+}
+.splV {
+  font-family: var(--serif);
+  color: var(--cream);
+}
+.splV em {
+  font-style: normal;
+  color: var(--accent);
+}
+.credRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(247, 243, 238, 0.08);
+  font-size: 13px;
+}
+.credRow:last-child {
+  border-bottom: none;
+}
+.credRow .who {
+  color: rgba(247, 243, 238, 0.78);
+}
+.credRow .who a {
+  color: rgba(247, 243, 238, 0.78);
+}
+.credRow .role {
+  color: var(--text40, rgba(247, 243, 238, 0.4));
+  white-space: nowrap;
+  font-size: 12px;
+}
+.sheetMini {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(74, 140, 111, 0.06);
+  border: 1px solid rgba(74, 140, 111, 0.2);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+.sheetMini .icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(74, 140, 111, 0.14);
+  color: var(--jade-light, #9be0bd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.sheetMini .icon svg {
+  width: 20px;
+  height: 20px;
+}
+.sheetMini .nm b {
+  font-size: 13.5px;
+  color: var(--cream);
+}
+.sheetMini .nm b em {
+  font-style: italic;
+}
+.sheetMini .nm small {
+  display: block;
+  font-size: 11.5px;
+  color: rgba(247, 243, 238, 0.45);
+  margin-top: 3px;
+}
+.sheetMini > a {
+  margin-left: auto;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--jade-light, #9be0bd);
+  white-space: nowrap;
+}
+
+@media (max-width: 880px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+}

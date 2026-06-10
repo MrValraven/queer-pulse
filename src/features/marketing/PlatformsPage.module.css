@@ -1,0 +1,136 @@
+.bar {
+  padding: 24px 0 0;
+}
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.chip {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-60);
+  background: transparent;
+  border: 1px solid rgba(45, 27, 61, 0.16);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.chip:hover {
+  border-color: var(--plum);
+  color: var(--plum);
+}
+.chipOn {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+
+.note {
+  display: flex;
+  gap: 12px;
+  background: rgba(45, 27, 61, 0.04);
+  border: 1px solid rgba(45, 27, 61, 0.1);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin: 24px 0 8px;
+}
+.pnDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+  margin-top: 6px;
+}
+.note p {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin: 0;
+}
+.note b {
+  color: var(--plum);
+}
+
+.body {
+  padding: 24px 0 80px;
+}
+.secTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 26px;
+  color: var(--plum);
+  letter-spacing: -0.018em;
+  margin: 36px 0 18px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.card {
+  display: flex;
+  gap: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  padding: 20px 22px;
+  color: inherit;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -20px rgba(45, 27, 61, 0.3);
+}
+.icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 14px;
+  flex: none;
+}
+.pCat {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+.pName {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  margin: 2px 0 5px;
+}
+.pDesc {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.55;
+}
+.pUrl {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--jade);
+  margin-top: 8px;
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+:global([data-theme='dark']) .card,
+:global([data-theme='dark']) .note {
+  border-color: rgba(247, 243, 238, 0.1);
+}

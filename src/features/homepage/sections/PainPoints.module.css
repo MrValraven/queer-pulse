@@ -1,0 +1,66 @@
+.pain {
+  padding: 100px 0;
+  background: var(--cream);
+}
+.head {
+  margin-bottom: 52px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card);
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.question {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--accent-ink);
+  font-style: italic;
+  line-height: 1.45;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  line-height: 1.18;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.body {
+  font-size: 14.5px;
+  color: var(--ink-60);
+  line-height: 1.62;
+}
+.cta {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--plum);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  transition:
+    color 0.2s,
+    gap 0.2s;
+}
+.cta:hover {
+  color: var(--accent-ink);
+  gap: 8px;
+}
+
+:global([data-theme='dark']) .card {
+  border-color: rgba(247, 243, 238, 0.1);
+}

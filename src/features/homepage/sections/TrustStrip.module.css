@@ -1,0 +1,40 @@
+.strip {
+  padding: 0 0 52px;
+  background: var(--plum);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  align-items: center;
+  border-top: 1px solid rgba(247, 243, 238, 0.1);
+  padding-top: 28px;
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13.5px;
+  color: rgba(247, 243, 238, 0.68);
+}
+.icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: rgba(247, 243, 238, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.policyLink {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(247, 243, 238, 0.45);
+  white-space: nowrap;
+  transition: color var(--dur-base) var(--ease);
+}
+.policyLink:hover {
+  color: rgba(247, 243, 238, 0.85);
+}

@@ -1,0 +1,286 @@
+.hero {
+  background: var(--plum);
+  padding: 140px 0 88px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.13), transparent 62%);
+  pointer-events: none;
+}
+.cat {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(38px, 5.8vw, 80px);
+  color: var(--cream);
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  max-width: 15ch;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.hero p {
+  font-size: 16.5px;
+  color: rgba(247, 243, 238, 0.68);
+  max-width: 52ch;
+  margin-top: 20px;
+  line-height: 1.65;
+}
+.note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: rgba(247, 243, 238, 0.68);
+  margin-top: 24px;
+}
+.noteDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+  flex: none;
+}
+
+.body {
+  padding: 72px 0 90px;
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.chip {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-60);
+  cursor: pointer;
+  border: 1px solid rgba(45, 27, 61, 0.16);
+  background: transparent;
+  border-radius: 999px;
+  padding: 9px 17px;
+  transition: all var(--dur-base) var(--ease);
+}
+.chip:hover {
+  color: var(--ink);
+  border-color: rgba(45, 27, 61, 0.4);
+}
+.chipActive {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+.listBtn {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 11px 22px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s;
+  white-space: nowrap;
+}
+.listBtn:hover {
+  background: var(--accent-ink);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -22px rgba(45, 27, 61, 0.38);
+}
+.cardBody {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.type {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+.cardTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.details {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.detail {
+  font-size: 12px;
+  color: var(--ink-60);
+  background: rgba(45, 27, 61, 0.05);
+  border-radius: 6px;
+  padding: 3px 9px;
+}
+.cardDesc {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  flex: 1;
+}
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  margin-top: auto;
+}
+.price {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--plum);
+}
+.price span {
+  font-size: 12px;
+  color: var(--ink-40);
+  font-family: var(--sans);
+}
+.poster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+.landlords {
+  padding: 72px 0;
+  background: var(--cream);
+}
+.llGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 36px;
+}
+.llCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  padding: 20px 22px;
+  display: flex;
+  gap: 14px;
+}
+.llBadge {
+  font-size: 22px;
+  flex: none;
+}
+.llName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--plum);
+}
+.llHood {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-top: 1px;
+}
+.llStars {
+  color: var(--accent);
+  font-size: 13px;
+  margin: 6px 0;
+}
+.llNote {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.55;
+}
+
+.tips {
+  padding: 72px 0 100px;
+}
+.tipsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 36px;
+}
+.tipCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  padding: 22px 24px;
+}
+.tipNum {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 300;
+  color: rgba(45, 27, 61, 0.18);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.tipTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--plum);
+  margin-bottom: 6px;
+}
+.tipText {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+}
+
+:global([data-theme='dark']) .card,
+:global([data-theme='dark']) .llCard,
+:global([data-theme='dark']) .tipCard {
+  border-color: rgba(247, 243, 238, 0.1);
+}

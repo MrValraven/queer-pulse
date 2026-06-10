@@ -1,0 +1,269 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120px 24px 80px;
+}
+.inner {
+  width: 100%;
+  max-width: 540px;
+}
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--ink-40);
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.backLink:hover {
+  color: var(--plum);
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 12px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(34px, 5vw, 50px);
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  font-size: 15px;
+  color: var(--ink-60);
+  line-height: 1.72;
+  margin-bottom: 20px;
+  max-width: 46ch;
+}
+.quotaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.quotaChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(74, 140, 111, 0.08);
+  border: 1px solid rgba(74, 140, 111, 0.2);
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--jade);
+}
+.resetNote {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 22px;
+  padding: 32px 36px;
+  margin-bottom: 20px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.field:last-child {
+  margin-bottom: 0;
+}
+.field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-60);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.field input,
+.field textarea {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border-radius: 12px;
+  padding: 12px 15px;
+  outline: none;
+  transition: border-color 0.22s;
+}
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--plum);
+  background: var(--paper);
+}
+.field textarea {
+  resize: none;
+  min-height: 82px;
+  line-height: 1.6;
+}
+.helper {
+  font-size: 12px;
+  color: var(--ink-40);
+  line-height: 1.5;
+}
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.charCount {
+  font-size: 12px;
+  color: var(--ink-40);
+  text-align: right;
+}
+.epLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 8px;
+}
+.emailPreview {
+  background: rgba(45, 27, 61, 0.03);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+.epContent {
+  background: var(--paper);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.epBrand {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--plum);
+  margin-bottom: 8px;
+}
+.epSubject {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.epNote {
+  font-size: 13px;
+  color: var(--ink-60);
+  font-style: italic;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+.epBtn {
+  display: inline-block;
+  background: var(--plum);
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 9px;
+  margin-bottom: 8px;
+}
+.epExpire {
+  font-size: 11.5px;
+  color: var(--ink-40);
+}
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.actions :global(.btn),
+.actions button {
+  width: 100%;
+  justify-content: center;
+}
+.formNote {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  text-align: center;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+/* Sent state */
+.sent {
+  text-align: center;
+}
+.sentIcon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(74, 140, 111, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+.sentHead {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 30px;
+  color: var(--plum);
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.sentHead em {
+  font-style: italic;
+  color: var(--jade);
+}
+.sentSub {
+  font-size: 14.5px;
+  color: var(--ink-60);
+  line-height: 1.7;
+  margin-bottom: 22px;
+  max-width: 38ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+.summaryCard {
+  background: rgba(45, 27, 61, 0.04);
+  border-radius: 13px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+.srRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+}
+.srRow:last-child {
+  border-bottom: none;
+}
+.srLabel {
+  color: var(--ink-60);
+}
+.srVal {
+  font-weight: 600;
+  color: var(--plum);
+}
+
+:global([data-theme='dark']) .card,
+:global([data-theme='dark']) .epContent {
+  border-color: rgba(247, 243, 238, 0.1);
+}

@@ -1,0 +1,91 @@
+.footer {
+  background: var(--plum);
+  color: var(--cream);
+  padding: 54px 0 48px;
+  border-top: 1px solid rgba(247, 243, 238, 0.12);
+}
+
+.grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.brandCol {
+  max-width: 300px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 23px;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+}
+.brand .brandItalic {
+  font-style: italic;
+}
+.pulseDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+.blurb {
+  font-size: 13.5px;
+  color: rgba(247, 243, 238, 0.5);
+  margin-top: 16px;
+  line-height: 1.6;
+}
+
+.cols {
+  display: flex;
+  gap: 64px;
+  flex-wrap: wrap;
+}
+.col h4 {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.col a {
+  display: block;
+  font-size: 14px;
+  color: rgba(247, 243, 238, 0.66);
+  margin-bottom: 11px;
+  transition: color var(--dur-base) var(--ease);
+}
+.col a:hover {
+  color: var(--cream);
+}
+
+.base {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(247, 243, 238, 0.1);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: rgba(247, 243, 238, 0.42);
+}
+.base a {
+  color: inherit;
+}
+.base a:hover {
+  color: var(--cream);
+}
+
+@media (max-width: 860px) {
+  .grid {
+    gap: 34px;
+  }
+}
