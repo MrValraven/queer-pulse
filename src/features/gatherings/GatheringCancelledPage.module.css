@@ -1,0 +1,437 @@
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 108px 24px 80px;
+}
+.back {
+  font-size: 13px;
+  color: var(--ink-40);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  transition: color 0.2s var(--ease);
+}
+.back:hover {
+  color: var(--plum);
+}
+
+.stamp {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 22px 26px;
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+  border-radius: 18px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.stamp::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--accent);
+}
+.stampIc {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.stampIc svg {
+  width: 20px;
+  height: 20px;
+  stroke: #fff;
+  stroke-width: 2.2;
+  fill: none;
+  stroke-linecap: round;
+}
+.stamp h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--accent-ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+.stamp p {
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.55;
+}
+.stamp p b {
+  color: var(--plum);
+  font-weight: 600;
+}
+
+.eventCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 22px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.eventCard::after {
+  content: "CANCELLED";
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  padding: 5px 12px;
+  border: 2px solid var(--accent);
+  border-radius: 6px;
+  transform: rotate(-3deg);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+.eventH {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 22px;
+  align-items: center;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  padding-right: 120px;
+}
+@media (max-width: 560px) {
+  .eventH {
+    padding-right: 60px;
+  }
+  .eventCard::after {
+    right: 14px;
+  }
+}
+.eventDate {
+  width: 78px;
+  text-align: center;
+}
+.eventDate .d {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 42px;
+  color: var(--ink-40);
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  text-decoration: line-through;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+.eventDate .m {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  font-weight: 700;
+  margin-top: 4px;
+}
+.eventInfo h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 24px;
+  color: var(--ink-40);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+  text-decoration: line-through;
+  text-decoration-color: rgba(var(--accent-rgb), 0.6);
+}
+.eventInfo h2 em {
+  font-style: italic;
+}
+.eventMeta {
+  font-size: 13.5px;
+  color: var(--ink-40);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.eventMeta .dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--ink-40);
+}
+.explainer {
+  padding-top: 18px;
+}
+.explainer h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.explainer p {
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.7;
+  max-width: 60ch;
+}
+.explainer p em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.explainer p b {
+  color: var(--plum);
+  font-weight: 600;
+}
+.host {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(45, 27, 61, 0.06);
+}
+.hostAv {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-ink);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.hostText {
+  flex: 1;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+.hostText b {
+  color: var(--plum);
+  font-weight: 700;
+}
+.hostLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+  text-decoration: none;
+}
+
+.info {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 22px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+.info h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  margin-bottom: 18px;
+}
+.info h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.infoRow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  align-items: flex-start;
+}
+.infoRow:last-child {
+  border-bottom: none;
+}
+.infoIc {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(var(--jade-rgb), 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.infoIc svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--jade);
+  stroke-width: 2.4;
+  fill: none;
+  stroke-linecap: round;
+}
+.infoIcAccent {
+  background: rgba(var(--accent-rgb), 0.1);
+}
+.infoIcAccent svg {
+  stroke: var(--accent-ink);
+}
+.infoRow b {
+  display: block;
+  font-size: 14px;
+  color: var(--plum);
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+.infoRow span {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+}
+.infoRow a {
+  color: var(--plum);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.noteCard {
+  background: var(--plum);
+  color: var(--cream);
+  border-radius: 18px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+.noteEyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.noteCard h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.noteCard h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.noteCard p {
+  font-size: 14.5px;
+  color: rgba(247, 243, 238, 0.85);
+  line-height: 1.7;
+  margin-bottom: 0.8em;
+}
+.noteSign {
+  font-size: 12.5px;
+  color: rgba(247, 243, 238, 0.55);
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(247, 243, 238, 0.16);
+}
+.noteSign b {
+  color: var(--cream);
+  font-weight: 600;
+}
+
+.altH {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin: 18px 0 14px;
+}
+.altGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.altRow {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.2s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+.altRow:hover {
+  transform: translateY(-1px);
+  border-color: rgba(45, 27, 61, 0.18);
+  box-shadow: 0 12px 26px -22px rgba(45, 27, 61, 0.4);
+}
+.altRowPrimary {
+  border-color: var(--plum);
+  background: rgba(45, 27, 61, 0.04);
+}
+.altDate {
+  text-align: center;
+}
+.altDate .d {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 24px;
+  color: var(--plum);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.altDate .m {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 3px;
+}
+.altTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+}
+.altTitle em {
+  font-style: italic;
+}
+.altMeta {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  margin-top: 3px;
+}
+.altSpots {
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+.altSpots b {
+  color: var(--jade);
+  font-weight: 700;
+}
+.footActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 14px;
+  flex-wrap: wrap;
+}

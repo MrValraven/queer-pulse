@@ -13,12 +13,19 @@ import { NotificationsPage } from '../features/notifications/NotificationsPage'
 import { ConnectPage } from '../features/connect/ConnectPage'
 import { MessagesPage } from '../features/messages/MessagesPage'
 import { CommunitiesPage } from '../features/communities/CommunitiesPage'
+import { CommunityDetailPage } from '../features/communities/CommunityDetailPage'
 import { CalendarPage } from '../features/gatherings/CalendarPage'
 import { GatheringPage } from '../features/gatherings/GatheringPage'
 import { EventPage } from '../features/gatherings/EventPage'
 import { RsvpPage } from '../features/gatherings/RsvpPage'
 import { GatheringRecapPage } from '../features/gatherings/GatheringRecapPage'
 import { HostPage } from '../features/gatherings/HostPage'
+import { CreateGatheringPage } from '../features/gatherings/CreateGatheringPage'
+import { GatheringDashboardPage } from '../features/gatherings/GatheringDashboardPage'
+import { ManageGatheringPage } from '../features/gatherings/ManageGatheringPage'
+import { CoHostInvitePage } from '../features/gatherings/CoHostInvitePage'
+import { GatheringCancelledPage } from '../features/gatherings/GatheringCancelledPage'
+import { GatheringPhotosPage } from '../features/gatherings/GatheringPhotosPage'
 import { MagazinePage } from '../features/magazine/MagazinePage'
 import { ArticlePage } from '../features/magazine/ArticlePage'
 import { AuthorPage } from '../features/magazine/AuthorPage'
@@ -99,6 +106,7 @@ import { StudioCouncilPage } from '../features/studio/StudioCouncilPage'
 import { StudioTriagePage } from '../features/studio/StudioTriagePage'
 import { StudioFlagReviewPage } from '../features/studio/StudioFlagReviewPage'
 import { ChangemakersPage } from '../features/community/ChangemakersPage'
+import { ChangemakerStoryPage } from '../features/community/ChangemakerStoryPage'
 import { ForumPage } from '../features/forum/ForumPage'
 import { ThreadPage } from '../features/forum/ThreadPage'
 import { SettingsPage } from '../features/settings/SettingsPage'
@@ -107,6 +115,7 @@ import { AboutPage } from '../features/marketing/AboutPage'
 import { ContactPage } from '../features/marketing/ContactPage'
 import { HelpPage } from '../features/marketing/HelpPage'
 import { VolunteerPage } from '../features/marketing/VolunteerPage'
+import { VolunteerOpportunityPage } from '../features/marketing/VolunteerOpportunityPage'
 import { GuidelinesPage } from '../features/marketing/GuidelinesPage'
 import { DirectoryPage } from '../features/marketing/DirectoryPage'
 import { ResourceLibraryPage } from '../features/marketing/ResourceLibraryPage'
@@ -266,6 +275,7 @@ export function AppRoutes() {
       <Route path="/messages" element={<MessagesPage />} />
       <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="/communities" element={<CommunitiesPage />} />
+      <Route path="/community/:slug" element={<CommunityDetailPage />} />
 
       {/* Gatherings */}
       <Route path="/calendar" element={<CalendarPage />} />
@@ -275,6 +285,12 @@ export function AppRoutes() {
       <Route path="/rsvp-ticket" element={<RsvpPage />} />
       <Route path="/gathering-recap" element={<GatheringRecapPage />} />
       <Route path="/host" element={<HostPage />} />
+      <Route path="/create-gathering" element={<CreateGatheringPage />} />
+      <Route path="/gathering-dashboard" element={<GatheringDashboardPage />} />
+      <Route path="/manage-gathering" element={<ManageGatheringPage />} />
+      <Route path="/co-host-invite" element={<CoHostInvitePage />} />
+      <Route path="/gathering-cancelled" element={<GatheringCancelledPage />} />
+      <Route path="/gathering-photos" element={<GatheringPhotosPage />} />
 
       {/* Magazine */}
       <Route path="/magazine" element={<MagazinePage />} />
@@ -372,6 +388,7 @@ export function AppRoutes() {
 
       {/* Community */}
       <Route path="/changemakers" element={<ChangemakersPage />} />
+      <Route path="/changemaker/:slug" element={<ChangemakerStoryPage />} />
       <Route path="/forum" element={<ForumPage />} />
       <Route path="/thread" element={<ThreadPage />} />
       <Route path="/settings" element={<SettingsPage />} />
@@ -382,6 +399,7 @@ export function AppRoutes() {
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/help" element={<HelpPage />} />
       <Route path="/volunteer" element={<VolunteerPage />} />
+      <Route path="/volunteer-opportunity/:slug" element={<VolunteerOpportunityPage />} />
       <Route path="/guidelines" element={<GuidelinesPage />} />
       <Route path="/directory" element={<DirectoryPage />} />
       <Route path="/resources" element={<ResourceLibraryPage />} />

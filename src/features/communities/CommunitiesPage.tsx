@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Reveal } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
 import { communities } from '../homepage/data/communities'
-import type { CommunityType } from '../homepage/data/types'
+import type { Community, CommunityType } from '../homepage/data/types'
+import { JoinModal } from './JoinModal'
 import styles from './CommunitiesPage.module.css'
 
 const FILTERS: { value: 'all' | CommunityType; label: string }[] = [
@@ -17,19 +18,14 @@ const FILTERS: { value: 'all' | CommunityType; label: string }[] = [
 ]
 
 export function CommunitiesPage() {
-  const { showToast } = useToast()
   const [filter, setFilter] = useState<'all' | CommunityType>('all')
   const [joined, setJoined] = useState<Set<string>>(new Set())
+  const [joining, setJoining] = useState<Community | null>(null)
 
   const visible = useMemo(
     () => (filter === 'all' ? communities : communities.filter((c) => c.type === filter)),
     [filter],
   )
-
-  function join(name: string) {
-    setJoined((current) => new Set(current).add(name))
-    showToast(`Joined ${name}`, 'success')
-  }
 
   return (
     <PageShell>
@@ -69,7 +65,11 @@ export function CommunitiesPage() {
             {visible.map((community) => {
               const hasJoined = joined.has(community.name)
               return (
-                <div key={community.name} className={styles.card}>
+                <Link
+                  key={community.name}
+                  to={`/community/${community.slug}`}
+                  className={styles.card}
+                >
                   <span className={[styles.type, styles[community.type]].join(' ')}>
                     {community.typeLabel}
                   </span>
@@ -77,21 +77,51 @@ export function CommunitiesPage() {
                   <p className={styles.desc}>{community.description}</p>
                   <div className={styles.foot}>
                     <span className={styles.meta}>{community.count}</span>
-                    <button
-                      className={[styles.joinBtn, hasJoined && styles.joined]
-                        .filter(Boolean)
-                        .join(' ')}
-                      onClick={() => !hasJoined && join(community.name)}
-                    >
-                      {hasJoined ? '✓ Joined' : 'Join'}
-                    </button>
+                    {hasJoined ? (
+                      <span className={[styles.joinBtn, styles.joined].join(' ')}>✓ Joined</span>
+                    ) : community.privateBadge ? (
+                      <span className={styles.joinBtn}>Enter →</span>
+                    ) : (
+                      <span
+                        className={styles.joinBtn}
+                        role="button"
+                        tabIndex={0}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          setJoining(community)
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            setJoining(community)
+                          }
+                        }}
+                      >
+                        Join
+                      </span>
+                    )}
                   </div>
-                </div>
+                </Link>
               )
             })}
           </div>
         </div>
       </div>
+
+      {joining && (
+        <JoinModal
+          community={{
+            name: joining.name,
+            typeLabel: joining.typeLabel,
+            count: joining.count,
+            description: joining.description,
+          }}
+          onClose={() => setJoining(null)}
+          onJoined={() => setJoined((current) => new Set(current).add(joining.name))}
+        />
+      )}
     </PageShell>
   )
 }

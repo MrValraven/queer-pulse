@@ -115,6 +115,8 @@ export interface Community {
   joinLabel: string
   dashed?: boolean
   privateBadge?: boolean
+  /** Stable slug for the community detail route (`/community/:slug`). */
+  slug?: string
 }
 
 export interface GrantStat {

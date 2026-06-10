@@ -1,6 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
 import styles from './HostPage.module.css'
 
 const HERO_TYPES = ['Supper club', 'Studio visit', 'Skills workshop', 'Film screening', 'Morning walk', 'Book club', 'Open studio']
@@ -19,8 +18,6 @@ const SPACES = [
 ]
 
 export function HostPage() {
-  const { showToast } = useToast()
-
   return (
     <PageShell>
       <div className={styles.hero}>
@@ -185,10 +182,7 @@ export function HostPage() {
                   Once you have a date, a format, and a rough idea of who you're inviting, you can
                   list it on the QueerPulse gatherings page.
                 </p>
-                <Button
-                  className={styles.fullBtn}
-                  onClick={() => showToast('Gathering builder coming soon', 'info')}
-                >
+                <Button className={styles.fullBtn} to="/create-gathering">
                   Create your gathering →
                 </Button>
               </div>
