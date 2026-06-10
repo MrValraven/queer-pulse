@@ -1,0 +1,349 @@
+.hero {
+  padding: 180px 0 100px;
+  background: var(--plum);
+  color: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -8%;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  pointer-events: none;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(247, 243, 238, 0.7);
+  margin-bottom: 24px;
+  position: relative;
+}
+.eyebrow .live {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(44px, 7vw, 88px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  max-width: 18ch;
+  position: relative;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.lead {
+  font-size: clamp(16px, 1.6vw, 19px);
+  color: rgba(247, 243, 238, 0.68);
+  max-width: 52ch;
+  margin-top: 28px;
+  line-height: 1.65;
+  position: relative;
+}
+
+.howSection {
+  padding: 80px 0;
+  background: var(--cream);
+}
+.secHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+.secHead h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(28px, 3.5vw, 44px);
+  color: var(--plum);
+  letter-spacing: -0.02em;
+}
+.secHead h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.secHead .sub {
+  font-size: 14px;
+  color: var(--ink-60);
+  margin-top: 6px;
+}
+.howGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+@media (max-width: 760px) {
+  .howGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.howItem {
+  background: var(--plum);
+  color: var(--cream);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.howN {
+  font-family: var(--serif);
+  font-size: 48px;
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.howTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+}
+.howDesc {
+  font-size: 13.5px;
+  color: rgba(247, 243, 238, 0.62);
+  line-height: 1.62;
+}
+
+.reviewsSection {
+  padding: 80px 0;
+  background: var(--paper);
+}
+.companyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 18px;
+  margin-top: 44px;
+}
+.companyCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 22px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.coTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.coAv {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 16px;
+  flex: none;
+}
+.coName {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 21px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.coIndustry {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-top: 3px;
+}
+.coScore {
+  text-align: right;
+}
+.coNum {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--jade);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.coLabel {
+  font-size: 11px;
+  color: var(--ink-40);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+.coBars {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.barRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--ink-60);
+}
+.barLabel {
+  min-width: 120px;
+  flex: none;
+}
+.barTrack {
+  flex: 1;
+  height: 5px;
+  background: rgba(45, 27, 61, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.barFill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--jade);
+}
+.coQuote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  padding: 14px 16px;
+  background: rgba(45, 27, 61, 0.04);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent);
+}
+.coMeta {
+  font-size: 12px;
+  color: var(--ink-40);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.coFoot {
+  display: flex;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(45, 27, 61, 0.07);
+}
+.coBtn {
+  font-size: 13px;
+  padding: 8px 16px;
+}
+
+.writeBox {
+  background: var(--cream);
+  border-radius: 20px;
+  padding: 48px;
+  margin-top: 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+@media (max-width: 760px) {
+  .writeBox {
+    grid-template-columns: 1fr;
+  }
+}
+.writeBox h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(28px, 3.5vw, 44px);
+  color: var(--plum);
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+}
+.writeBox h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.writeBox p {
+  font-size: 14.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  margin-top: 12px;
+}
+.writeBtn {
+  margin-top: 28px;
+}
+.writeNote {
+  font-size: 12px;
+  color: var(--ink-40);
+  margin-top: 12px;
+}
+.writeRules {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rulesTitle {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 6px;
+}
+.rule {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+.ruleDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--jade);
+  flex: none;
+  margin-top: 6px;
+}
+
+.outro {
+  background: var(--plum);
+  color: var(--cream);
+  padding: 120px 0;
+  text-align: center;
+}
+.outro h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+.outro h2 em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.outroSub {
+  font-size: 17px;
+  color: rgba(247, 243, 238, 0.62);
+  max-width: 46ch;
+  margin: 24px auto 34px;
+  line-height: 1.65;
+}

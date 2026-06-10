@@ -1,0 +1,140 @@
+import { useState } from "react";
+import { PageShell } from "../../shared/components/layout";
+import { useToast } from "../../shared/components/feedback/useToast";
+import styles from "./PressArchivePage.module.css";
+import { Button } from '../../shared/components/ui'
+
+interface Piece {
+  day: string;
+  month: string;
+  kind: string;
+  pin?: boolean;
+  source: React.ReactNode;
+  sourceMuted?: boolean;
+  sourceKind: string;
+  title: React.ReactNode;
+  meta: React.ReactNode;
+  out: string;
+}
+interface YearGroup {
+  year: string;
+  count: string;
+  pieces: Piece[];
+}
+
+const DATA: YearGroup[] = [
+  { year: "2026", count: "14 pieces", pieces: [
+    { day: "04", month: "Mar", kind: "Long-form", pin: true, source: "Público", sourceKind: "feature", title: <>"Em Lisboa, uma rede profissional <em>queer e independente</em>."</>, meta: <>By Ana Sá Lopes · 6,400 words · <b>PT</b></>, out: "publico.pt" },
+    { day: "18", month: "Feb", kind: "Interview", source: "Vice Portugal", sourceKind: "interview", title: <>The platform that <em>refuses to scale.</em></>, meta: <>Interview with Marta Reis · 22 min read · <b>PT/EN</b></>, out: "vice.com/pt" },
+    { day: "24", month: "Jan", kind: "Feature", pin: true, source: "FT Weekend", sourceKind: "feature", title: <>Inside Lisbon's quietest queer institution.</>, meta: <>Long-form magazine piece · syndicated to FT.com · <b>EN</b></>, out: "ft.com" },
+    { day: "10", month: "Jan", kind: "News", source: "Observador", sourceKind: "news", title: <>QueerPulse anuncia abertura no Porto em Agosto.</>, meta: <>By Maria Caetano · 800 words · <b>PT</b></>, out: "observador.pt" },
+  ] },
+  { year: "2025", count: "26 pieces", pieces: [
+    { day: "11", month: "Nov", kind: "Local", source: "Mensagem de Lisboa", sourceKind: "feature", title: <>A Câmara dos <em>Anjos.</em></>, meta: <>Local-press feature on the neighbourhood · <b>PT</b></>, out: "amensagem.pt" },
+    { day: "22", month: "Sep", kind: "Critique", sourceMuted: true, source: "Diário de Notícias", sourceKind: "op-ed", title: <>"A invite-only network · who's left out?"</>, meta: <>Critical op-ed by António Marreiros · we replied publicly · <b>PT</b></>, out: "dn.pt" },
+    { day: "14", month: "Jul", kind: "Interview", source: "Antena 1 · podcast", sourceKind: "radio interview", title: <>"A nossa entrevista do dia · Catarina Vaz."</>, meta: <>38 min radio interview · <b>PT</b> · transcript published</>, out: "rtp.pt" },
+    { day: "28", month: "Apr", kind: "News", source: "Gay Star News", sourceKind: "news", title: <>Lisbon's QueerPulse hits 1,500 members.</>, meta: <>Short news piece · <b>EN</b></>, out: "gaystarnews.com" },
+    { day: "03", month: "Mar", kind: "Profile", source: "Wired UK", sourceKind: "profile", title: <>The slow social network.</>, meta: <>By Caitlin Welsh · 4,200 words · <b>EN</b></>, out: "wired.co.uk" },
+  ] },
+  { year: "2024", count: "14 pieces · launch year", pieces: [
+    { day: "12", month: "Dec", kind: "Annual", source: "Are.na Annual", sourceKind: "editor's pick", title: <>The 12 platforms we wished existed in 2024.</>, meta: <>Editor's pick · positioned #4 · <b>EN</b></>, out: "are.na" },
+    { day: "04", month: "Oct", kind: "Profile", source: "Le Monde · M Magazine", sourceKind: "profile", title: <>"Le réseau social qui ne veut pas grandir."</>, meta: <>3,800 words · <b>FR</b></>, out: "lemonde.fr" },
+    { day: "21", month: "Jul", kind: "News", source: "Público", sourceKind: "launch coverage", title: <>"QueerPulse · uma nova rede para profissionais LGBTI+ em Lisboa."</>, meta: <>By Ana Sá Lopes · 1,200 words · <b>PT</b></>, out: "publico.pt" },
+  ] },
+];
+
+const CHIPS = ["All · 54", "Features · 22", "Interviews · 12", "News · 14", "Critiques · 6"];
+
+export function PressArchivePage() {
+  const { showToast } = useToast();
+  const [chip, setChip] = useState(0);
+
+  return (
+    <PageShell>
+      <div className={styles.page}>
+        <header className={styles.head}>
+          <div>
+            <div className={styles.eye}>Coverage archive · since 2024</div>
+            <h1 className={styles.h1}>
+              Everything written <em>about us.</em>
+            </h1>
+            <p className={styles.sub}>
+              Pieces about QueerPulse in third-party publications, indexed by year.{" "}
+              <em>Includes critiques we disagreed with.</em>
+            </p>
+          </div>
+          <div className={styles.stats}>
+            <span>
+              <b>
+                <em>54</em>
+              </b>
+              Pieces all-time
+            </span>
+            <span>
+              <b>6</b>Languages
+            </span>
+            <span>
+              <b>
+                <em>14</em>
+              </b>
+              This year
+            </span>
+          </div>
+        </header>
+
+        <div className={styles.controls}>
+          <div className={styles.search}>
+            <svg viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input type="text" placeholder="Search title, source, author" />
+          </div>
+          {CHIPS.map((c, i) => (
+            <button
+              key={c}
+              type="button"
+              className={[styles.chip, chip === i && styles.chipActive].filter(Boolean).join(" ")}
+              onClick={() => setChip(i)}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+
+        {DATA.map((yg) => (
+          <div key={yg.year}>
+            <h2 className={styles.year}>
+              202<em>{yg.year.slice(3)}</em>
+              <span className={styles.ct}>{yg.count}</span>
+            </h2>
+            {yg.pieces.map((p, i) => (
+              <a href="#" className={styles.row} key={i} onClick={(e) => e.preventDefault()}>
+                <div className={styles.date}>
+                  {p.day} <em>{p.month}</em>
+                  <span>{p.kind}</span>
+                </div>
+                <div>
+                  <div className={styles.source} style={p.sourceMuted ? { color: "var(--ink-60)" } : undefined}>
+                    {p.pin && <span className={styles.pin}>Featured</span>}
+                    {p.source}
+                    <span className={styles.kind}>· {p.sourceKind}</span>
+                  </div>
+                  <div className={styles.title}>{p.title}</div>
+                  <div className={styles.meta}>{p.meta}</div>
+                </div>
+                <div className={styles.out}>{p.out}</div>
+              </a>
+            ))}
+          </div>
+        ))}
+
+        <div className={styles.loadMore}>
+          <Button type="button" variant="ghost" onClick={() => showToast("Loading more pieces…", "info")}>
+            Load 36 more pieces
+          </Button>
+        </div>
+      </div>
+    </PageShell>
+  );
+}

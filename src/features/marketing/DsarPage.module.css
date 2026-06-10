@@ -1,0 +1,347 @@
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 108px 28px 80px;
+}
+.back {
+  font-size: 13px;
+  color: var(--ink-40);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+.back:hover {
+  color: var(--plum);
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(40px, 5.5vw, 56px);
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  max-width: 22ch;
+  margin-bottom: 14px;
+}
+.h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.lead {
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 1.7;
+  max-width: 54ch;
+  margin-bottom: 24px;
+}
+.lead b {
+  color: var(--plum);
+  font-weight: 600;
+}
+.lead em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.gdprStrip {
+  padding: 14px 20px;
+  background: rgba(45, 27, 61, 0.04);
+  border-radius: 12px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+.gdprStrip b {
+  color: var(--plum);
+  font-weight: 700;
+}
+.gdprStrip a {
+  color: var(--plum);
+  font-weight: 700;
+  text-decoration: none;
+}
+.rightLabel {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 14px;
+}
+.rightGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 32px;
+}
+@media (max-width: 760px) {
+  .rightGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.rightCard {
+  padding: 18px;
+  background: var(--paper);
+  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--sans);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    transform 0.2s var(--ease);
+}
+.rightCard:hover {
+  border-color: var(--plum);
+  transform: translateY(-2px);
+}
+.rightCardSelected {
+  border-color: var(--plum);
+  background: rgba(45, 27, 61, 0.04);
+  box-shadow: 0 0 0 3px rgba(45, 27, 61, 0.06);
+}
+.art {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+.rightCard h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  color: var(--plum);
+  letter-spacing: -0.005em;
+  margin-bottom: 5px;
+}
+.rightCard h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.rightCard p {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+.form {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 22px;
+  padding: 32px 36px;
+  box-shadow: 0 1px 2px rgba(45, 27, 61, 0.04);
+}
+.form h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+.form h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.formSub {
+  font-size: 14px;
+  color: var(--ink-60);
+  margin-bottom: 24px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+.field label {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.field label .opt {
+  font-weight: 500;
+  color: var(--ink-40);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11px;
+}
+.field input,
+.field textarea {
+  font-family: var(--sans);
+  font-size: 14.5px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border-radius: 11px;
+  padding: 12px 14px;
+  outline: none;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--plum);
+  background: var(--paper);
+}
+.field textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+}
+.fieldHint {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.5;
+  margin-top: 3px;
+}
+.fieldHint em {
+  font-style: italic;
+}
+.scopeList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.scopeRow {
+  display: flex;
+  gap: 11px;
+  padding: 10px 14px;
+  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  border-radius: 11px;
+  cursor: pointer;
+  transition:
+    border-color 0.22s var(--ease),
+    background 0.22s var(--ease);
+}
+.scopeRow:hover {
+  border-color: rgba(45, 27, 61, 0.3);
+}
+.scopeRow input {
+  margin-top: 3px;
+  accent-color: var(--plum);
+  flex: none;
+}
+.scopeRowChecked {
+  border-color: var(--plum);
+  background: rgba(45, 27, 61, 0.03);
+}
+.scopeRow b {
+  display: block;
+  font-size: 13.5px;
+  color: var(--plum);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.scopeRow span {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.55;
+}
+.legalStrip {
+  padding: 16px 20px;
+  background: rgba(var(--accent-rgb), 0.05);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  margin-top: 14px;
+}
+.legalStrip b {
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+.legalStrip a {
+  color: var(--plum);
+  font-weight: 700;
+  text-decoration: none;
+}
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 24px;
+  margin-top: 20px;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.actions .info {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.5;
+  max-width: 36ch;
+}
+.actions .info b {
+  color: var(--plum);
+}
+
+.pastH {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin: 36px 0 14px;
+}
+.pastRow {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  color: var(--ink);
+  align-items: center;
+}
+.pastRow b {
+  color: var(--plum);
+  font-weight: 700;
+}
+.pastRow .num {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  color: var(--accent-ink);
+  letter-spacing: 0.04em;
+  background: rgba(var(--accent-rgb), 0.08);
+  padding: 3px 9px;
+  border-radius: 6px;
+}
+.pastRow .status {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 5px;
+}
+.statusDone {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+}

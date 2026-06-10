@@ -2,6 +2,12 @@ import { Route, Routes } from 'react-router-dom'
 import { HomePage } from '../features/homepage/HomePage'
 import { MembersPage } from '../features/members/MembersPage'
 import { ProfilePage } from '../features/members/ProfilePage'
+import { MemberDirectoryFilterPage } from '../features/members/MemberDirectoryFilterPage'
+import { SearchPage } from '../features/members/SearchPage'
+import { ConnectionsPage } from '../features/connect/ConnectionsPage'
+import { DatingPage } from '../features/community/DatingPage'
+import { ReadingGroupsPage } from '../features/community/ReadingGroupsPage'
+import { FamilyPage } from '../features/community/FamilyPage'
 import { FeedPage } from '../features/feed/FeedPage'
 import { NotificationsPage } from '../features/notifications/NotificationsPage'
 import { ConnectPage } from '../features/connect/ConnectPage'
@@ -17,7 +23,44 @@ import { MagazinePage } from '../features/magazine/MagazinePage'
 import { ArticlePage } from '../features/magazine/ArticlePage'
 import { AuthorPage } from '../features/magazine/AuthorPage'
 import { IssuePage } from '../features/magazine/IssuePage'
+import { IssuesPage } from '../features/magazine/IssuesPage'
+import { CoverGalleryPage } from '../features/magazine/CoverGalleryPage'
+import { TagPage } from '../features/magazine/TagPage'
+import { PodcastShowPage } from '../features/magazine/PodcastShowPage'
+import { AudioPlayerPage } from '../features/magazine/AudioPlayerPage'
+import { NewsletterArchivePage } from '../features/magazine/NewsletterArchivePage'
+import { StoryPage } from '../features/magazine/StoryPage'
+import { CreativesPage } from '../features/community/CreativesPage'
+import { ManifestoPage } from '../features/marketing/ManifestoPage'
+import { PrivacyPage } from '../features/marketing/PrivacyPage'
+import { TermsPage } from '../features/marketing/TermsPage'
+import { DsarPage } from '../features/marketing/DsarPage'
+import { ConstitutionPage } from '../features/marketing/ConstitutionPage'
+import { CodeOfConductPage } from '../features/marketing/CodeOfConductPage'
+import { ChangelogPage } from '../features/marketing/ChangelogPage'
+import { PressArchivePage } from '../features/marketing/PressArchivePage'
+import { NewsletterPage } from '../features/marketing/NewsletterPage'
+import { AnnualAssemblyPage } from '../features/marketing/AnnualAssemblyPage'
+import { GetTheAppPage } from '../features/marketing/GetTheAppPage'
+import { ComponentLibraryPage } from '../features/marketing/ComponentLibraryPage'
+import { CitiesPage } from '../features/marketing/CitiesPage'
+import { ForOrganisationsPage } from '../features/marketing/ForOrganisationsPage'
+import { PressKitPage } from '../features/marketing/PressKitPage'
+import { TransparencyReportPage } from '../features/marketing/TransparencyReportPage'
+import { AccessibilityPage } from '../features/marketing/AccessibilityPage'
 import { WellbeingPage } from '../features/resources/WellbeingPage'
+import { MentalHealthPage } from '../features/resources/MentalHealthPage'
+import { TransHealthcarePage } from '../features/resources/TransHealthcarePage'
+import { HarmReductionPage } from '../features/resources/HarmReductionPage'
+import { SexualHealthPage } from '../features/resources/SexualHealthPage'
+import { SoberPage } from '../features/resources/SoberPage'
+import { Queer101Page } from '../features/resources/Queer101Page'
+import { GlossaryPage } from '../features/resources/GlossaryPage'
+import { TransDayOfVisibilityPage } from '../features/resources/TransDayOfVisibilityPage'
+import { WorldAidsDayPage } from '../features/resources/WorldAidsDayPage'
+import { PrideMonthPage } from '../features/resources/PrideMonthPage'
+import { MicroGrantsPage } from '../features/resources/MicroGrantsPage'
+import { IntersectionalityPage } from '../features/resources/IntersectionalityPage'
 import { TransHubPage } from '../features/resources/TransHubPage'
 import { LegalPage } from '../features/resources/LegalPage'
 import { SafetyPage } from '../features/resources/SafetyPage'
@@ -30,6 +73,11 @@ import { HousingPage } from '../features/economy/HousingPage'
 import { SkillsPage } from '../features/economy/SkillsPage'
 import { GrantsPage } from '../features/economy/GrantsPage'
 import { BarterPage } from '../features/economy/BarterPage'
+import { OfferPage } from '../features/economy/OfferPage'
+import { EmployerReviewsPage } from '../features/economy/EmployerReviewsPage'
+import { ApplicationStatusPage } from '../features/economy/ApplicationStatusPage'
+import { MentorshipPage } from '../features/economy/MentorshipPage'
+import { EconomyPage } from '../features/economy/EconomyPage'
 import { CinemaPage } from '../features/cinema/CinemaPage'
 import { CinemaBrowsePage } from '../features/cinema/CinemaBrowsePage'
 import { CinemaMembershipPage } from '../features/cinema/CinemaMembershipPage'
@@ -66,6 +114,13 @@ import { PartnersPage } from '../features/marketing/PartnersPage'
 import { ActivismPage } from '../features/marketing/ActivismPage'
 import { PlatformsPage } from '../features/marketing/PlatformsPage'
 import { MapPage } from '../features/marketing/MapPage'
+import { SafeSpacesPage } from '../features/safety/SafeSpacesPage'
+import { FlatmatesPage } from '../features/economy/FlatmatesPage'
+import { SolidarityPage } from '../features/economy/SolidarityPage'
+import { VisasPage } from '../features/marketing/VisasPage'
+import { ArrivingPage } from '../features/marketing/ArrivingPage'
+import { HateCrimePage } from '../features/safety/HateCrimePage'
+import { EmergencyPage } from '../features/safety/EmergencyPage'
 import { ReportPage } from '../features/safety/ReportPage'
 import { LeavePage } from '../features/safety/LeavePage'
 import { BlockMutePage } from '../features/safety/BlockMutePage'
@@ -78,6 +133,12 @@ import { KNOWN_ROUTE_SLUGS } from './routeMap'
 const BUILT_SLUGS = new Set([
   'feed',
   'members',
+  'member-directory-filter',
+  'search',
+  'connections',
+  'dating',
+  'reading-groups',
+  'family',
   'profile',
   'messages',
   'notifications',
@@ -129,6 +190,55 @@ const BUILT_SLUGS = new Set([
   'leave',
   'block-mute',
   'appeal-outcome',
+  'safe-spaces',
+  'flatmates',
+  'solidarity',
+  'visas',
+  'arriving',
+  'mental-health',
+  'trans-healthcare',
+  'harm-reduction',
+  'sexual-health',
+  'sober',
+  'hate-crime',
+  'emergency',
+  '101',
+  'glossary',
+  'trans-day-of-visibility',
+  'world-aids-day',
+  'pride-month',
+  'micro-grants',
+  'intersectionality',
+  'issues',
+  'cover-gallery',
+  'tag',
+  'podcast-show',
+  'audio-player',
+  'newsletter-archive',
+  'story',
+  'creatives',
+  'manifesto',
+  'offer',
+  'employer-reviews',
+  'application-status',
+  'mentorship',
+  'economy',
+  'privacy',
+  'terms',
+  'dsar',
+  'constitution',
+  'code-of-conduct',
+  'changelog',
+  'press-archive',
+  'newsletter',
+  'annual-assembly',
+  'get-the-app',
+  'component-library',
+  'cities',
+  'for-organisations',
+  'press-kit',
+  'transparency-report',
+  'accessibility',
 ])
 
 /**
@@ -143,10 +253,16 @@ export function AppRoutes() {
       {/* Member Platform */}
       <Route path="/feed" element={<FeedPage />} />
       <Route path="/members" element={<MembersPage />} />
+      <Route path="/member-directory-filter" element={<MemberDirectoryFilterPage />} />
+      <Route path="/search" element={<SearchPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/profile/:slug" element={<ProfilePage />} />
       <Route path="/connect" element={<ConnectPage />} />
       <Route path="/connect/:slug" element={<ConnectPage />} />
+      <Route path="/connections" element={<ConnectionsPage />} />
+      <Route path="/dating" element={<DatingPage />} />
+      <Route path="/reading-groups" element={<ReadingGroupsPage />} />
+      <Route path="/family" element={<FamilyPage />} />
       <Route path="/messages" element={<MessagesPage />} />
       <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="/communities" element={<CommunitiesPage />} />
@@ -165,9 +281,48 @@ export function AppRoutes() {
       <Route path="/article" element={<ArticlePage />} />
       <Route path="/author" element={<AuthorPage />} />
       <Route path="/issue" element={<IssuePage />} />
+      <Route path="/issues" element={<IssuesPage />} />
+      <Route path="/cover-gallery" element={<CoverGalleryPage />} />
+      <Route path="/tag" element={<TagPage />} />
+      <Route path="/podcast-show" element={<PodcastShowPage />} />
+      <Route path="/audio-player" element={<AudioPlayerPage />} />
+      <Route path="/newsletter-archive" element={<NewsletterArchivePage />} />
+      <Route path="/story" element={<StoryPage />} />
+      <Route path="/creatives" element={<CreativesPage />} />
+      <Route path="/manifesto" element={<ManifestoPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/dsar" element={<DsarPage />} />
+      <Route path="/constitution" element={<ConstitutionPage />} />
+      <Route path="/code-of-conduct" element={<CodeOfConductPage />} />
+      <Route path="/changelog" element={<ChangelogPage />} />
+      <Route path="/press-archive" element={<PressArchivePage />} />
+      <Route path="/newsletter" element={<NewsletterPage />} />
+      <Route path="/annual-assembly" element={<AnnualAssemblyPage />} />
+      <Route path="/get-the-app" element={<GetTheAppPage />} />
+      <Route path="/component-library" element={<ComponentLibraryPage />} />
+      <Route path="/cities" element={<CitiesPage />} />
+      <Route path="/for-organisations" element={<ForOrganisationsPage />} />
+      <Route path="/press-kit" element={<PressKitPage />} />
+      <Route path="/transparency-report" element={<TransparencyReportPage />} />
+      <Route path="/accessibility" element={<AccessibilityPage />} />
 
       {/* Resources & Wellbeing */}
       <Route path="/wellbeing" element={<WellbeingPage />} />
+      <Route path="/mental-health" element={<MentalHealthPage />} />
+      <Route path="/trans-healthcare" element={<TransHealthcarePage />} />
+      <Route path="/harm-reduction" element={<HarmReductionPage />} />
+      <Route path="/sexual-health" element={<SexualHealthPage />} />
+      <Route path="/sober" element={<SoberPage />} />
+      <Route path="/hate-crime" element={<HateCrimePage />} />
+      <Route path="/emergency" element={<EmergencyPage />} />
+      <Route path="/101" element={<Queer101Page />} />
+      <Route path="/glossary" element={<GlossaryPage />} />
+      <Route path="/trans-day-of-visibility" element={<TransDayOfVisibilityPage />} />
+      <Route path="/world-aids-day" element={<WorldAidsDayPage />} />
+      <Route path="/pride-month" element={<PrideMonthPage />} />
+      <Route path="/micro-grants" element={<MicroGrantsPage />} />
+      <Route path="/intersectionality" element={<IntersectionalityPage />} />
       <Route path="/trans-hub" element={<TransHubPage />} />
       <Route path="/legal" element={<LegalPage />} />
       <Route path="/safety" element={<SafetyPage />} />
@@ -185,6 +340,11 @@ export function AppRoutes() {
       <Route path="/skills" element={<SkillsPage />} />
       <Route path="/grants" element={<GrantsPage />} />
       <Route path="/barter" element={<BarterPage />} />
+      <Route path="/offer" element={<OfferPage />} />
+      <Route path="/employer-reviews" element={<EmployerReviewsPage />} />
+      <Route path="/application-status" element={<ApplicationStatusPage />} />
+      <Route path="/mentorship" element={<MentorshipPage />} />
+      <Route path="/economy" element={<EconomyPage />} />
 
       {/* Cinema */}
       <Route path="/cinema" element={<CinemaPage />} />
@@ -229,6 +389,13 @@ export function AppRoutes() {
       <Route path="/activism" element={<ActivismPage />} />
       <Route path="/platforms" element={<PlatformsPage />} />
       <Route path="/map" element={<MapPage />} />
+
+      {/* Lisbon */}
+      <Route path="/safe-spaces" element={<SafeSpacesPage />} />
+      <Route path="/flatmates" element={<FlatmatesPage />} />
+      <Route path="/solidarity" element={<SolidarityPage />} />
+      <Route path="/visas" element={<VisasPage />} />
+      <Route path="/arriving" element={<ArrivingPage />} />
 
       {/* Safety & lifecycle flows */}
       <Route path="/report" element={<ReportPage />} />

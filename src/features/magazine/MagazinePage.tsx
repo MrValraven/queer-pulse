@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, ImageSlot, Reveal } from '../../shared/components/ui'
+import { Avatar, Button, ImageSlot, Reveal } from '../../shared/components/ui'
 import type { AvatarTint } from '../../shared/components/ui/Avatar'
 import styles from './MagazinePage.module.css'
 
@@ -266,9 +266,9 @@ export function MagazinePage() {
                 members. No formal credentials required — just something worth saying.
               </p>
             </div>
-            <a href="mailto:magazine@queerpulse.pt" className="btn btn-primary btn-lg" style={{ background: 'var(--accent)', color: '#fff', borderRadius: 999, padding: '15px 30px', fontWeight: 600, fontFamily: 'var(--sans)' }}>
+            <Button href="mailto:magazine@queerpulse.pt" variant="primary" size="lg" style={{ background: 'var(--accent)', color: '#fff', borderRadius: 999, padding: '15px 30px', fontWeight: 600, fontFamily: 'var(--sans)' }}>
               Pitch us
-            </a>
+            </Button>
           </div>
         </div>
       </main>
