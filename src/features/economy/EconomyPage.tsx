@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useScrollLock } from "../../shared/hooks";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { linkToPath } from "../../app/routeMap";
@@ -71,6 +72,7 @@ export function EconomyPage() {
   const [sector, setSector] = useState<Sector | "all">("all");
   const [modal, setModal] = useState(false);
   const [annual, setAnnual] = useState("40000");
+  useScrollLock(modal);
   const [days, setDays] = useState("180");
   const [overhead, setOverhead] = useState("20");
   const [iva, setIva] = useState("23");

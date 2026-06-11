@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useScrollLock } from "../../shared/hooks";
 import { PageShell } from "../../shared/components/layout";
 import { linkToPath } from "../../app/routeMap";
 import styles from "./FlatmatesPage.module.css";
@@ -60,6 +61,7 @@ export function FlatmatesPage() {
   const [sent, setSent] = useState<Set<number>>(new Set());
   const [modalOpen, setModalOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  useScrollLock(modalOpen);
   const [modalType, setModalType] = useState<ListingType>("seeking");
   const [modalTags, setModalTags] = useState<Set<string>>(new Set());
 

@@ -2,20 +2,9 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
+import { DIRECTORY_PLACES as BIZS, type Tint } from './directoryPlaces'
 import m from './marketing.module.css'
 import s from './DirectoryPage.module.css'
-
-type Tint = 'coral' | 'jade' | 'plum'
-interface Biz {
-  name: string
-  cat: string
-  hood: string
-  owned: boolean
-  member?: string
-  av: string
-  tint: Tint
-  desc: string
-}
 
 const CATS = [
   { c: 'all', label: 'All' },
@@ -32,27 +21,6 @@ const CAT_LABEL: Record<string, string> = Object.fromEntries(CATS.map((c) => [c.
 
 const tintBg: Record<Tint, string> = { coral: 'rgba(232,119,90,.15)', jade: 'rgba(74,140,111,.15)', plum: 'rgba(45,27,61,.1)' }
 const tintFg: Record<Tint, string> = { coral: '#C85A40', jade: '#4A8C6F', plum: '#2D1B3D' }
-
-const BIZS: Biz[] = [
-  { name: 'Atelier Pulso', cat: 'design', hood: 'Príncipe Real', owned: true, member: 'ines', av: 'AP', tint: 'coral', desc: 'Graphic design studio specialising in brand identity and editorial work for cultural institutions and small presses. Open by appointment.' },
-  { name: 'Queer Supper Club', cat: 'food', hood: 'Mouraria', owned: true, member: 'tomas', av: 'QS', tint: 'coral', desc: 'Monthly intimate dinners hosted by Tomás Beto — twelve seats, seasonal menu, honest cooking. The most important table in Mouraria.' },
-  { name: 'Estúdio Beatriz Pinto', cat: 'design', hood: 'Graça', owned: true, member: 'beatriz', av: 'BP', tint: 'plum', desc: 'Ceramics studio producing functional pieces with a slow aesthetic. Workshop sessions monthly. Spare desks to share.' },
-  { name: 'Opus Diversus', cat: 'health', hood: 'Intendente', owned: false, av: 'OD', tint: 'jade', desc: 'LGBTQ+-affirming mental health support — therapy, peer groups, crisis support. Sliding scale fees. Portuguese and English.' },
-  { name: 'Livraria Bertha', cat: 'culture', hood: 'Príncipe Real', owned: true, av: 'LB', tint: 'plum', desc: 'Queer-run independent bookshop with a strong feminist and LGBTQ+ section. Regular readings, launches, and community events.' },
-  { name: 'Café Mouraria Velha', cat: 'food', hood: 'Mouraria', owned: false, av: 'CM', tint: 'jade', desc: 'Family-run café known among the community for warmth and a complete absence of hostility. Excellent pastéis.' },
-  { name: 'Bairro Alto Studio', cat: 'tech', hood: 'Bairro Alto', owned: true, member: 'diogo', av: 'BA', tint: 'jade', desc: 'Music production studio available for session hire. Diogo and the team specialise in electronic and experimental work.' },
-  { name: 'Espaço Intendente', cat: 'space', hood: 'Intendente', owned: false, av: 'EI', tint: 'plum', desc: 'Community coworking space, explicitly LGBTQ+-friendly. Day passes and monthly desks at accessible prices.' },
-  { name: 'A Farinha', cat: 'food', hood: 'Arroios', owned: true, av: 'AF', tint: 'coral', desc: 'Queer-owned natural wine bar and small plates restaurant. Natural wine list, seasonal kitchen, generous hospitality.' },
-  { name: 'Studio André Quintela', cat: 'design', hood: 'Cais do Sodré', owned: true, member: 'andre', av: 'AQ', tint: 'jade', desc: 'Portrait photography studio. Analog film, medium format, darkroom on site. Priority allocation for community members.' },
-  { name: 'Clínica da Estrela', cat: 'health', hood: 'Estrela', owned: false, av: 'CE', tint: 'plum', desc: 'General practice with two LGBTQ+-affirming GPs and a trans-competent endocrinologist. Accepts SNS referrals.' },
-  { name: 'Galeria Lume', cat: 'culture', hood: 'Marvila', owned: true, av: 'GL', tint: 'coral', desc: 'Artist-run gallery in a Marvila warehouse. Programming focuses on queer and feminist artists, emphasis on emerging work.' },
-  { name: 'Navalha', cat: 'grooming', hood: 'Príncipe Real', owned: true, av: 'NV', tint: 'coral', desc: 'Queer-owned barbershop known for trans haircuts done right. No awkward questions. No gendered pricing.' },
-  { name: 'Salão Mouraria', cat: 'grooming', hood: 'Mouraria', owned: false, av: 'SM', tint: 'jade', desc: 'Neighbourhood salon adopted by the queer community. Bilingual, trans-welcoming, affordable.' },
-  { name: 'Studio Cabelo', cat: 'grooming', hood: 'Intendente', owned: true, av: 'SC', tint: 'plum', desc: 'Gender-neutral pricing on every service — never more based on hair length or gender. Clean space, good music.' },
-  { name: 'Academia Livre', cat: 'fitness', hood: 'Cais do Sodré', owned: false, av: 'AL', tint: 'jade', desc: 'The most trans-inclusive gym in the city. Gender-neutral changing rooms on every floor, no body-shaming culture.' },
-  { name: 'Corpo Livre', cat: 'fitness', hood: 'Bairro Alto', owned: true, av: 'CL', tint: 'plum', desc: 'Feminist and queer-centred fitness studio. Small classes, no mirrors, no scales. Body-neutral by design.' },
-  { name: 'Movimento', cat: 'fitness', hood: 'Alfama', owned: true, av: 'MV', tint: 'coral', desc: 'Yoga, capoeira, and weights in a converted Alfama warehouse. Queer-run, sliding-scale memberships.' },
-]
 
 export function DirectoryPage() {
   const [cat, setCat] = useState('all')
@@ -109,7 +77,7 @@ export function DirectoryPage() {
           <div className={s.grid}>
             {visible.length === 0 && <div className={s.empty}>No places match — try a broader filter.</div>}
             {visible.map((b) => (
-              <div key={b.name} className={s.card}>
+              <Link key={b.name} to={`/space/${b.slug}`} className={s.card}>
                 <div className={s.top}>
                   <span className={s.av} style={{ background: tintBg[b.tint], color: tintFg[b.tint] }}>
                     {b.av}
@@ -123,18 +91,10 @@ export function DirectoryPage() {
                 </div>
                 <div className={s.desc}>{b.desc}</div>
                 <div className={s.foot}>
-                  {b.member ? (
-                    <Link to="/profile" className={s.memberLink}>
-                      Member-run →
-                    </Link>
-                  ) : (
-                    <span />
-                  )}
-                  <a className={s.visit} href="#">
-                    Visit →
-                  </a>
+                  {b.member ? <span className={s.memberLink}>Member-run</span> : <span />}
+                  <span className={s.visit}>View details →</span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

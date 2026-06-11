@@ -1,34 +1,11 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, ImageSlot, Reveal, SectionHead } from '../../shared/components/ui'
-import type { AvatarTint } from '../../shared/components/ui/Avatar'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { HOUSING_LISTINGS as LISTINGS } from './housingListings'
+import { LANDLORDS } from './landlords'
 import styles from './HousingPage.module.css'
-
-interface Listing {
-  type: string
-  typeLabel: string
-  typeColor: string
-  typeText: string
-  tint: 'coral' | 'jade' | 'plum'
-  title: string
-  hood: string
-  beds: string
-  avail: string
-  desc: string
-  price: string
-  period: string
-  poster: { initials: string; name: string; tint: AvatarTint }
-}
-
-const LISTINGS: Listing[] = [
-  { type: 'sublet', typeLabel: 'Sublet', typeColor: 'rgba(232,119,90,.1)', typeText: 'var(--accent-ink)', tint: 'coral', title: 'Sunny one-bed in Príncipe Real — July & August', hood: 'Príncipe Real', beds: '1 bed', avail: '1 Jul', desc: 'Beautiful first-floor flat with a view of the garden square. Fully furnished, excellent light. Available while I travel for two months.', price: '€1,100', period: 'month', poster: { initials: 'IT', name: 'Inês T.', tint: 'coral' } },
-  { type: 'room', typeLabel: 'Room share', typeColor: 'rgba(74,140,111,.1)', typeText: 'var(--jade)', tint: 'jade', title: 'Room in shared flat — Arroios, long-term', hood: 'Arroios', beds: '1 room', avail: 'Now', desc: 'Quiet three-bed flat shared with two queer women. Big room, own bathroom, good wifi. Looking for someone who keeps to themselves but is up for the occasional dinner.', price: '€750', period: 'month', poster: { initials: 'CN', name: 'Carla N.', tint: 'coral' } },
-  { type: 'short', typeLabel: 'Short-term', typeColor: 'rgba(45,27,61,.08)', typeText: 'var(--plum)', tint: 'plum', title: 'Studio in Graça — 2 weeks minimum', hood: 'Graça', beds: 'Studio', avail: '15 Jun', desc: 'Small but well-designed studio in a converted building in Graça. Perfect for someone newly arrived or between places. The building has a rooftop with views.', price: '€85', period: 'night', poster: { initials: 'BP', name: 'Beatriz P.', tint: 'plum' } },
-  { type: 'room', typeLabel: 'Room share', typeColor: 'rgba(74,140,111,.1)', typeText: 'var(--jade)', tint: 'jade', title: 'Room in Marvila warehouse flat — creative people', hood: 'Marvila', beds: '1 room', avail: '1 Jul', desc: 'Large warehouse converted to four bedrooms. Three of us currently live here — a musician, an engineer, and a photographer. Looking for a fourth.', price: '€800', period: 'month', poster: { initials: 'DV', name: 'Diogo V.', tint: 'jade' } },
-  { type: 'studio', typeLabel: 'Studio', typeColor: 'rgba(122,82,184,.1)', typeText: '#7A52B8', tint: 'plum', title: 'Full flat in Cais do Sodré — 3 months', hood: 'Cais do Sodré', beds: '1 bed', avail: 'Aug', desc: 'My own flat while I go on residency. One bed, good light, close to everything. Priority to LGBTQ+ tenants. References exchanged.', price: '€1,350', period: 'month', poster: { initials: 'SA', name: 'Sofia A.', tint: 'jade' } },
-  { type: 'sublet', typeLabel: 'Sublet', typeColor: 'rgba(232,119,90,.1)', typeText: 'var(--accent-ink)', tint: 'coral', title: 'Two-bedroom in Mouraria — June & July', hood: 'Mouraria', beds: '2 beds', avail: '1 Jun', desc: 'Traditional building, recently renovated. Two bedrooms, could work for a couple or two friends. Very central, heart of Mouraria.', price: '€950', period: 'month', poster: { initials: 'TB', name: 'Tomás B.', tint: 'coral' } },
-]
 
 const FILTERS = [
   { value: 'all', label: 'All listings' },
@@ -36,13 +13,6 @@ const FILTERS = [
   { value: 'room', label: 'Room share' },
   { value: 'short', label: 'Short-term' },
   { value: 'studio', label: 'Studio / whole flat' },
-]
-
-const LANDLORDS = [
-  { name: 'Senhor Costa', hood: 'Arroios · Rooms + flats', stars: '★★★★★', note: '"Completely unfazed by our relationship, fixed things quickly, never dropped by unannounced. Recommended by 3 members."' },
-  { name: 'Ana Ferreira', hood: 'Mouraria · Studio flats', stars: '★★★★★', note: '"Has been renting to queer tenants for 15 years. Genuinely lovely. Contracts are clear and fair."' },
-  { name: 'Família Rodrigues', hood: 'Graça · Flats', stars: '★★★★☆', note: '"Older couple, very traditional but completely respectful. No problems. Good building, quiet street."' },
-  { name: 'Paulo Matos', hood: 'Cais do Sodré · Rooms', stars: '★★★★★', note: '"Queer himself. Has a policy of never renting to people he thinks would make tenants uncomfortable."' },
 ]
 
 const TIPS = [
@@ -100,7 +70,7 @@ export function HousingPage() {
           </div>
           <div className={styles.grid}>
             {visible.map((listing) => (
-              <div key={listing.title} className={styles.card}>
+              <Link key={listing.title} to={`/housing/${listing.slug}`} className={styles.card}>
                 <ImageSlot tint={listing.tint} height={150} radius={0} placeholder={`Photo · ${listing.hood}`} />
                 <div className={styles.cardBody}>
                   <span className={styles.type} style={{ background: listing.typeColor, color: listing.typeText }}>
@@ -123,7 +93,7 @@ export function HousingPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -137,15 +107,15 @@ export function HousingPage() {
           />
           <div className={styles.llGrid}>
             {LANDLORDS.map((ll) => (
-              <div key={ll.name} className={styles.llCard}>
+              <Link key={ll.name} to={`/landlord/${ll.slug}`} className={styles.llCard}>
                 <span className={styles.llBadge}>🏅</span>
                 <div>
                   <div className={styles.llName}>{ll.name}</div>
                   <div className={styles.llHood}>{ll.hood}</div>
-                  <div className={styles.llStars}>{ll.stars}</div>
+                  <div className={styles.llStars}>{'★'.repeat(ll.stars)}{'☆'.repeat(5 - ll.stars)}</div>
                   <div className={styles.llNote}>{ll.note}</div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

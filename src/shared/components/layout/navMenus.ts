@@ -130,6 +130,7 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Read & watch",
         links: [
           { label: "Magazine", href: "QueerPulse Magazine.html", featured: true },
+          { label: "Cinema · queer film", href: "QueerPulse Cinema.html", featured: true },
           { label: "Issues", href: "QueerPulse Issues.html" },
           { label: "Cover gallery", href: "QueerPulse Cover Gallery.html" },
           { label: "Long reads", href: "QueerPulse Tag.html" },
@@ -150,6 +151,7 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Create & act",
         links: [
           { label: "Creatives", href: "QueerPulse Creatives.html", featured: true },
+          { label: "Studio · queer music", href: "QueerPulse Studio.html", featured: true },
           { label: "Activism", href: "QueerPulse Activism.html" },
           { label: "Changemakers", href: "QueerPulse Changemakers.html" },
           { label: "Manifesto", href: "QueerPulse Manifesto.html" },

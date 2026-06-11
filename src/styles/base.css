@@ -72,3 +72,38 @@ img {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Brand scrollbars — subtle plum on transparent, matching the palette */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(45, 27, 61, 0.28) transparent;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(45, 27, 61, 0.22);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 27, 61, 0.4);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+[data-theme='dark'] * {
+  scrollbar-color: rgba(247, 243, 238, 0.28) transparent;
+}
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: rgba(247, 243, 238, 0.22);
+  background-clip: padding-box;
+}
+[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(247, 243, 238, 0.4);
+  background-clip: padding-box;
+}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
 import styles from "./JoinModal.module.css";
 
 export interface JoinModalCommunity {
@@ -27,6 +28,7 @@ export function JoinModal({
 }) {
   const [step, setStep] = useState(1);
   const [involvement, setInvolvement] = useState("active");
+  useScrollLock();
 
   const total = 3;
   const done = step > total;

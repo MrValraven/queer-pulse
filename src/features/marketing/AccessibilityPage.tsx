@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useScrollLock } from "../../shared/hooks";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { linkToPath } from "../../app/routeMap";
@@ -78,6 +79,7 @@ export function AccessibilityPage() {
   const [flagDone, setFlagDone] = useState(false);
   const [accomOpen, setAccomOpen] = useState(false);
   const [accomDone, setAccomDone] = useState(false);
+  useScrollLock(flagVenue !== null || accomOpen);
 
   const venues = VENUES.filter((v) => filter === "all" || v.featureTags.includes(filter));
   const badgeClass: Record<Badge, string> = { yes: styles.badgeYes, partial: styles.badgePartial, no: styles.badgeNo };

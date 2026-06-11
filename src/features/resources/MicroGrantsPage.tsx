@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useScrollLock } from "../../shared/hooks";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { linkToPath } from "../../app/routeMap";
@@ -110,6 +111,7 @@ export function MicroGrantsPage() {
   const [amount, setAmount] = useState("€20");
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1);
+  useScrollLock(open);
   const [cat, setCat] = useState<number | null>(null);
   const [projName, setProjName] = useState("");
   const [projWhat, setProjWhat] = useState("");

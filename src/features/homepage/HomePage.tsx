@@ -9,6 +9,7 @@ import {
   Hero,
   Library,
   Manifesto,
+  Media,
   MicroGrants,
   Newsletter,
   Outro,
@@ -23,7 +24,7 @@ import {
 } from './sections'
 
 /**
- * QueerPulse marketing homepage — composes the 20 sections in the order from
+ * QueerPulse marketing homepage — composes the sections in the order from
  * the design prototype. Plum and cream sections alternate for rhythm.
  */
 export function HomePage() {
@@ -36,6 +37,7 @@ export function HomePage() {
       <Discovery />
       <Gatherings />
       <Stories />
+      <Media />
       <ChangeMakers />
       <Wellbeing />
       <Communities />

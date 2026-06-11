@@ -77,6 +77,8 @@ import { InvitePage } from '../features/auth/InvitePage'
 import { OnboardingPage } from '../features/auth/OnboardingPage'
 import { JobsPage } from '../features/economy/JobsPage'
 import { HousingPage } from '../features/economy/HousingPage'
+import { HousingListingPage } from '../features/economy/HousingListingPage'
+import { LandlordPage } from '../features/economy/LandlordPage'
 import { SkillsPage } from '../features/economy/SkillsPage'
 import { GrantsPage } from '../features/economy/GrantsPage'
 import { BarterPage } from '../features/economy/BarterPage'
@@ -118,12 +120,15 @@ import { VolunteerPage } from '../features/marketing/VolunteerPage'
 import { VolunteerOpportunityPage } from '../features/marketing/VolunteerOpportunityPage'
 import { GuidelinesPage } from '../features/marketing/GuidelinesPage'
 import { DirectoryPage } from '../features/marketing/DirectoryPage'
+import { DirectorySpacePage } from '../features/marketing/DirectorySpacePage'
 import { ResourceLibraryPage } from '../features/marketing/ResourceLibraryPage'
 import { PartnersPage } from '../features/marketing/PartnersPage'
+import { PartnerDetailPage } from '../features/marketing/PartnerDetailPage'
 import { ActivismPage } from '../features/marketing/ActivismPage'
 import { PlatformsPage } from '../features/marketing/PlatformsPage'
 import { MapPage } from '../features/marketing/MapPage'
 import { SafeSpacesPage } from '../features/safety/SafeSpacesPage'
+import { SafeSpaceDetailPage } from '../features/safety/SafeSpaceDetailPage'
 import { FlatmatesPage } from '../features/economy/FlatmatesPage'
 import { SolidarityPage } from '../features/economy/SolidarityPage'
 import { VisasPage } from '../features/marketing/VisasPage'
@@ -353,6 +358,8 @@ export function AppRoutes() {
       {/* Jobs & economy */}
       <Route path="/jobs" element={<JobsPage />} />
       <Route path="/housing" element={<HousingPage />} />
+      <Route path="/housing/:slug" element={<HousingListingPage />} />
+      <Route path="/landlord/:slug" element={<LandlordPage />} />
       <Route path="/skills" element={<SkillsPage />} />
       <Route path="/grants" element={<GrantsPage />} />
       <Route path="/barter" element={<BarterPage />} />
@@ -402,14 +409,17 @@ export function AppRoutes() {
       <Route path="/volunteer-opportunity/:slug" element={<VolunteerOpportunityPage />} />
       <Route path="/guidelines" element={<GuidelinesPage />} />
       <Route path="/directory" element={<DirectoryPage />} />
+      <Route path="/space/:slug" element={<DirectorySpacePage />} />
       <Route path="/resources" element={<ResourceLibraryPage />} />
       <Route path="/partners" element={<PartnersPage />} />
+      <Route path="/partner/:slug" element={<PartnerDetailPage />} />
       <Route path="/activism" element={<ActivismPage />} />
       <Route path="/platforms" element={<PlatformsPage />} />
       <Route path="/map" element={<MapPage />} />
 
       {/* Lisbon */}
       <Route path="/safe-spaces" element={<SafeSpacesPage />} />
+      <Route path="/safe-space/:slug" element={<SafeSpaceDetailPage />} />
       <Route path="/flatmates" element={<FlatmatesPage />} />
       <Route path="/solidarity" element={<SolidarityPage />} />
       <Route path="/visas" element={<VisasPage />} />

@@ -1,5 +1,6 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { useScrollLock } from '../../shared/hooks'
 import { AppShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
 import styles from './SettingsPage.module.css'
@@ -43,6 +44,7 @@ export function SettingsPage() {
   const [dirty, setDirty] = useState(false)
   const [termQuery, setTermQuery] = useState('')
   const [showDelete, setShowDelete] = useState(false)
+  useScrollLock(showDelete)
 
   const markChanged = () => setDirty(true)
 

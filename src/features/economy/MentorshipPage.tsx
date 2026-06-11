@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useScrollLock } from "../../shared/hooks";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { linkToPath } from "../../app/routeMap";
@@ -70,6 +71,7 @@ export function MentorshipPage() {
   const { showToast } = useToast();
   const [mode, setMode] = useState<Mode | null>(null);
   const [step, setStep] = useState(1);
+  useScrollLock(mode !== null);
 
   const total = mode === "mentee" ? 3 : 2;
   const done = step > total;
