@@ -1,0 +1,442 @@
+.page {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - 70px);
+  margin-top: 70px;
+  background: var(--cream);
+}
+
+@media (max-width: 820px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left nav */
+.nav {
+  border-right: 1px solid rgba(45, 27, 61, 0.09);
+  padding: 32px 0;
+  position: sticky;
+  top: 70px;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+  background: var(--paper);
+}
+
+@media (max-width: 820px) {
+  .nav {
+    display: none;
+  }
+}
+
+.navInner {
+  padding: 0 18px;
+}
+
+.navSection {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  padding: 0 10px;
+  margin: 22px 0 8px;
+}
+
+.navSection:first-child {
+  margin-top: 0;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-60);
+  cursor: pointer;
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-family: var(--sans);
+  text-align: left;
+  transition: all 0.18s;
+}
+
+.navItem:hover {
+  background: rgba(45, 27, 61, 0.05);
+  color: var(--ink);
+}
+
+.navItemActive {
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.navIcon {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  flex: none;
+}
+
+/* Main */
+.main {
+  padding: 40px 52px 100px;
+  max-width: 740px;
+}
+
+@media (max-width: 900px) {
+  .main {
+    padding: 28px 22px 80px;
+  }
+}
+
+.section {
+  margin-bottom: 48px;
+}
+
+.sectionTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--plum);
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+}
+
+.sectionTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.sectionSub {
+  font-size: 14px;
+  color: var(--ink-60);
+  margin-bottom: 24px;
+  line-height: 1.55;
+}
+
+.sectionSub a {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Photo row */
+.photoRow {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.photoAv {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 28px;
+  color: var(--accent-ink);
+  flex: none;
+  border: 3px solid rgba(45, 27, 61, 0.08);
+}
+
+.photoActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.photoHint {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-top: 4px;
+}
+
+/* Field rows */
+.field {
+  margin-bottom: 20px;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 560px) {
+  .fieldRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fieldLabel {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fieldOptional {
+  font-size: 11px;
+  color: var(--ink-40);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.fieldInput,
+.fieldTextarea,
+.fieldSelect {
+  width: 100%;
+  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  color: var(--ink);
+  background: rgba(45, 27, 61, 0.02);
+  outline: none;
+  transition: border-color 0.2s;
+  line-height: 1.5;
+}
+
+.fieldInput:focus,
+.fieldTextarea:focus,
+.fieldSelect:focus {
+  border-color: var(--plum);
+}
+
+.fieldTextarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.fieldSelect {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.fieldHint {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.charCount {
+  font-size: 12px;
+  color: var(--ink-40);
+  font-weight: 500;
+}
+
+.charCountWarn {
+  color: var(--accent-ink);
+}
+
+/* Pronoun chips */
+.pronounChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pronounChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  color: var(--ink-60);
+  background: var(--paper);
+  transition: all 0.2s;
+  user-select: none;
+  font-family: var(--sans);
+}
+
+.pronounChip:hover {
+  border-color: var(--plum);
+  color: var(--plum);
+}
+
+.pronounChipSelected {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+
+/* Skills / interests */
+.skillInputRow {
+  display: flex;
+  gap: 10px;
+}
+
+.skillInputRow .fieldInput {
+  flex: 1;
+}
+
+.skillsDisplay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.skillTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  background: rgba(45, 27, 61, 0.06);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--ink-60);
+}
+
+.skillTagRemove {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--ink-40);
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.skillTagRemove:hover {
+  color: var(--accent-ink);
+}
+
+/* Visibility panel */
+.visPanel {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.1);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.visRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+}
+
+.visRow:last-child {
+  border-bottom: none;
+}
+
+.visFieldName {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.visFieldDesc {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-top: 2px;
+}
+
+.visAlwaysOn {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--jade);
+}
+
+.visSelect {
+  font-size: 12px;
+  font-weight: 600;
+  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border-radius: 999px;
+  padding: 4px 10px 4px 8px;
+  font-family: var(--sans);
+  color: var(--ink-60);
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  transition: border-color 0.2s;
+}
+
+.visSelect:focus {
+  border-color: var(--plum);
+}
+
+/* Save bar */
+.saveBar {
+  position: fixed;
+  bottom: 0;
+  left: 260px;
+  right: 0;
+  background: var(--paper);
+  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  padding: 16px 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  z-index: 50;
+  transition: opacity 0.2s;
+}
+
+@media (max-width: 820px) {
+  .saveBar {
+    left: 0;
+    padding: 14px 22px;
+  }
+}
+
+.unsavedLabel {
+  font-size: 13px;
+  color: var(--accent-ink);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.unsavedLabel::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+.saveActions {
+  display: flex;
+  gap: 10px;
+}

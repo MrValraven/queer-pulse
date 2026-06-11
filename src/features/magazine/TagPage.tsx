@@ -7,7 +7,6 @@ import styles from "./TagPage.module.css";
 import { Button } from '../../shared/components/ui'
 
 const ARTICLE = linkToPath("QueerPulse Article.html");
-const AUTHOR = linkToPath("QueerPulse Author.html");
 const NEWSLETTER = linkToPath("QueerPulse Newsletter.html");
 
 const CHIPS = ["All · 42", "Health", "Migration", "Work", "Public services", "The city", "Money", "Family", "Activism", "Profiles", "Interviews"];

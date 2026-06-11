@@ -2,38 +2,45 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { PageShell } from '../shared/components/layout'
 import { Button } from '../shared/components/ui'
+import { linkToPath } from '../app/routeMap'
 import styles from './NotFoundPage.module.css'
 
 const LINKS = [
-  { icon: '📖', label: 'Magazine', sub: 'June 2026 issue', to: '/magazine' },
-  { icon: '🎟️', label: 'Gatherings', sub: 'Upcoming events', to: '/calendar' },
-  { icon: '🎬', label: 'Cinema', sub: 'This week\'s slate', to: '/cinema' },
-  { icon: '💬', label: 'Forum', sub: 'Community discussion', to: '/forum' },
-  { icon: '🎵', label: 'Studio', sub: 'The room is on air', to: '/studio' },
-  { icon: '👥', label: 'Members', sub: 'Find your people', to: '/members' },
+  { icon: '📖', label: 'Magazine', sub: 'June 2026 issue', to: linkToPath('QueerPulse Magazine.html') },
+  { icon: '🎟️', label: 'Gatherings', sub: 'Upcoming events', to: linkToPath('QueerPulse Gathering.html') },
+  { icon: '📚', label: 'Reading groups', sub: '8 groups open', to: linkToPath('QueerPulse Reading Groups.html') },
+  { icon: '💬', label: 'Forum', sub: 'Community discussion', to: linkToPath('QueerPulse Forum.html') },
+  { icon: '❓', label: 'Help & FAQ', sub: 'Get answers', to: linkToPath('QueerPulse Help.html') },
+  { icon: '✉️', label: 'Contact us', sub: 'hello@queerpulse.pt', to: linkToPath('QueerPulse Contact.html') },
 ]
 
 export function NotFoundPage() {
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
 
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault()
+    if (query.trim()) navigate(linkToPath('QueerPulse Search.html') + '?q=' + encodeURIComponent(query.trim()))
+  }
+
   return (
     <PageShell>
-      <div className={`wrap ${styles.wrap404}`}>
-        <div className={styles.inner}>
-          <div className={styles.code}>
-            4<em>0</em>4
-          </div>
-          <div className={styles.title}>This page slipped between rooms.</div>
+      <div className={styles.page}>
+        <div className={styles.numBg} aria-hidden>404</div>
+
+        <div className={styles.content}>
+          <div className={styles.eyebrow}>Page not found</div>
+          <h1 className={styles.title}>
+            You've arrived<br /><em>somewhere else.</em>
+          </h1>
           <p className={styles.sub}>
             The page you're looking for doesn't exist, has moved, or requires you to be logged in.
             It happens. Here are some places to go instead.
           </p>
+
           <div className={styles.actions}>
             <Button to="/">Go to homepage</Button>
-            <Button variant="ghost" onClick={() => navigate(-1)}>
-              ← Go back
-            </Button>
+            <Button variant="ghost" onClick={() => navigate(-1)}>← Go back</Button>
           </div>
 
           <div className={styles.linksTitle}>Or try one of these</div>
@@ -47,13 +54,7 @@ export function NotFoundPage() {
             ))}
           </div>
 
-          <form
-            className={styles.search}
-            onSubmit={(e) => {
-              e.preventDefault()
-              if (query.trim()) navigate('/members')
-            }}
-          >
+          <form className={styles.search} onSubmit={handleSearch}>
             <input
               className={styles.searchInput}
               type="text"
@@ -61,7 +62,7 @@ export function NotFoundPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <Button type="submit">Search</Button>
+            <button type="submit" className={styles.searchBtn}>Search</button>
           </form>
         </div>
       </div>

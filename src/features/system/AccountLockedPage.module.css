@@ -1,0 +1,287 @@
+/* Shell */
+.root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 84px 16px 40px;
+  background: var(--cream);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orbA {
+  width: 540px;
+  height: 540px;
+  top: -18%;
+  right: -12%;
+  background: radial-gradient(circle, rgba(232, 119, 90, 0.1) 0%, transparent 65%);
+}
+
+.orbB {
+  width: 480px;
+  height: 480px;
+  bottom: -22%;
+  left: -14%;
+  background: radial-gradient(circle, rgba(45, 27, 61, 0.06) 0%, transparent 65%);
+}
+
+.brand {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  z-index: 10;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--plum);
+}
+
+.brand em {
+  font-style: italic;
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+/* Card */
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 24px;
+  padding: 48px 44px 38px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 6px 52px -10px rgba(45, 27, 61, 0.16);
+  position: relative;
+  z-index: 1;
+}
+
+.icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 22px;
+  background: rgba(var(--accent-rgb), 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.icon svg {
+  width: 32px;
+  height: 32px;
+  stroke: var(--accent-ink);
+  stroke-width: 1.7;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.heading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 42px;
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  margin-bottom: 18px;
+}
+
+.heading em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.lead {
+  font-size: 15.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  margin-bottom: 6px;
+}
+
+.lead b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.reasonList {
+  margin-top: 28px;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  padding: 6px 0;
+}
+
+.reasonRow {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+}
+
+.reasonRow:last-child {
+  border-bottom: none;
+}
+
+.reasonIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(45, 27, 61, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.reasonIcon svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--ink-60);
+  stroke-width: 1.9;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.reasonText {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.55;
+}
+
+.reasonText b {
+  color: var(--plum);
+  font-weight: 600;
+}
+
+.whatNow {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wnRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(45, 27, 61, 0.1);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.22s, transform 0.25s var(--ease), background 0.22s;
+}
+
+.wnRow:hover {
+  border-color: var(--plum);
+  background: rgba(45, 27, 61, 0.03);
+  transform: translateY(-1px);
+}
+
+.wnNum {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--plum);
+  color: var(--cream);
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.wnText {
+  flex: 1;
+}
+
+.wnTitle {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--plum);
+}
+
+.wnDesc {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+.wnArrow {
+  color: var(--ink-40);
+  font-size: 18px;
+  flex: none;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 22px;
+  margin-top: 24px;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  font-size: 12.5px;
+  color: var(--ink-40);
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.foot a {
+  color: var(--ink-60);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.foot a:hover {
+  color: var(--plum);
+}
+
+.incidentId {
+  font-family: var(--sans);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 500px) {
+  .brand {
+    top: 18px;
+    left: 18px;
+  }
+
+  .card {
+    padding: 36px 22px 28px;
+  }
+
+  .heading {
+    font-size: 34px;
+  }
+}

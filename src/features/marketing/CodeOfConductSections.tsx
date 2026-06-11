@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { PACT, LADDER } from "./codeOfConductPage.data";
 import styles from "./CodeOfConductPage.module.css";
 

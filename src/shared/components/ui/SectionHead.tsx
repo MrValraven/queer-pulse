@@ -2,7 +2,7 @@ import type { HTMLAttributes, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './SectionHead.module.css'
 
-interface SectionHeadProps extends HTMLAttributes<HTMLDivElement> {
+interface SectionHeadProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Title content — pass `<>…<em>accent</em></>` for the accent emphasis. */
   title: ReactNode
   subtitle?: ReactNode

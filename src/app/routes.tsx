@@ -141,6 +141,41 @@ import { BlockMutePage } from '../features/safety/BlockMutePage'
 import { AppealOutcomePage } from '../features/safety/AppealOutcomePage'
 import { PlaceholderPage } from '../pages/PlaceholderPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
+import { ServerErrorPage } from '../features/system/ServerErrorPage'
+import { MaintenancePage } from '../features/system/MaintenancePage'
+import { OfflinePage } from '../features/system/OfflinePage'
+import { GeoRestrictedPage } from '../features/system/GeoRestrictedPage'
+import { PwaPromptPage } from '../features/system/PwaPromptPage'
+import { AccountBannedPage } from '../features/system/AccountBannedPage'
+import { AccountLockedPage } from '../features/system/AccountLockedPage'
+import { AccountSuspendedPage } from '../features/system/AccountSuspendedPage'
+import { InviteExpiredPage } from '../features/system/InviteExpiredPage'
+import { InviteLandingPage } from '../features/system/InviteLandingPage'
+import { PendingReviewPage } from '../features/system/PendingReviewPage'
+import { VerificationNeededPage } from '../features/system/VerificationNeededPage'
+import { StatusPage } from '../features/system/StatusPage'
+import { Studio404Page } from '../features/studio/Studio404Page'
+import { Studio500Page } from '../features/studio/Studio500Page'
+import { StudioOffAirPage } from '../features/studio/StudioOffAirPage'
+import { TwoFactorSetupPage } from '../features/auth/TwoFactorSetupPage'
+import { MagicLinkPage } from '../features/auth/MagicLinkPage'
+import { PasswordResetPage } from '../features/auth/PasswordResetPage'
+import { SetNewPasswordPage } from '../features/auth/SetNewPasswordPage'
+import { ConfirmEmailPage } from '../features/auth/ConfirmEmailPage'
+import { RecoveryCodesPage } from '../features/auth/RecoveryCodesPage'
+import { StudioSignInPage } from '../features/studio/StudioSignInPage'
+import { StudioSettingsPage } from '../features/studio/StudioSettingsPage'
+import { AccessibilityPreferencesPage } from '../features/settings/AccessibilityPreferencesPage'
+import { NotificationPreferencesPage } from '../features/settings/NotificationPreferencesPage'
+import { DataExportPage } from '../features/settings/DataExportPage'
+import { DeleteAccountPage } from '../features/settings/DeleteAccountPage'
+import { EditProfilePage } from '../features/settings/EditProfilePage'
+import { LinkedAccountsPage } from '../features/settings/LinkedAccountsPage'
+import { SecurityPage } from '../features/settings/SecurityPage'
+import { SessionsPage } from '../features/settings/SessionsPage'
+import { ProfileThemePage } from '../features/settings/ProfileThemePage'
+import { SubscriptionsPage } from '../features/settings/SubscriptionsPage'
+import { CancelMembershipPage } from '../features/settings/CancelMembershipPage'
 import { KNOWN_ROUTE_SLUGS } from './routeMap'
 
 /** Top-level slugs that now have real pages — excluded from the placeholder fallback. */
@@ -354,6 +389,12 @@ export function AppRoutes() {
       <Route path="/invite" element={<InvitePage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/welcome" element={<OnboardingPage />} />
+      <Route path="/2fa-setup" element={<TwoFactorSetupPage />} />
+      <Route path="/magic-link" element={<MagicLinkPage />} />
+      <Route path="/password-reset" element={<PasswordResetPage />} />
+      <Route path="/set-new-password" element={<SetNewPasswordPage />} />
+      <Route path="/confirm-email" element={<ConfirmEmailPage />} />
+      <Route path="/recovery-codes" element={<RecoveryCodesPage />} />
 
       {/* Jobs & economy */}
       <Route path="/jobs" element={<JobsPage />} />
@@ -392,6 +433,11 @@ export function AppRoutes() {
       <Route path="/studio/council" element={<StudioCouncilPage />} />
       <Route path="/studio/triage" element={<StudioTriagePage />} />
       <Route path="/studio/flag-review" element={<StudioFlagReviewPage />} />
+      <Route path="/studio/off-air" element={<StudioOffAirPage />} />
+      <Route path="/studio/404" element={<Studio404Page />} />
+      <Route path="/studio/500" element={<Studio500Page />} />
+      <Route path="/studio/sign-in" element={<StudioSignInPage />} />
+      <Route path="/studio/settings" element={<StudioSettingsPage />} />
 
       {/* Community */}
       <Route path="/changemakers" element={<ChangemakersPage />} />
@@ -430,6 +476,34 @@ export function AppRoutes() {
       <Route path="/leave" element={<LeavePage />} />
       <Route path="/block-mute" element={<BlockMutePage />} />
       <Route path="/appeal-outcome" element={<AppealOutcomePage />} />
+
+      {/* Account & settings sub-flows */}
+      <Route path="/edit-profile" element={<EditProfilePage />} />
+      <Route path="/notification-preferences" element={<NotificationPreferencesPage />} />
+      <Route path="/accessibility-preferences" element={<AccessibilityPreferencesPage />} />
+      <Route path="/profile-theme" element={<ProfileThemePage />} />
+      <Route path="/linked-accounts" element={<LinkedAccountsPage />} />
+      <Route path="/security" element={<SecurityPage />} />
+      <Route path="/sessions" element={<SessionsPage />} />
+      <Route path="/subscriptions" element={<SubscriptionsPage />} />
+      <Route path="/data-export" element={<DataExportPage />} />
+      <Route path="/delete-account" element={<DeleteAccountPage />} />
+      <Route path="/cancel-membership" element={<CancelMembershipPage />} />
+
+      {/* System, error & account-state screens */}
+      <Route path="/500" element={<ServerErrorPage />} />
+      <Route path="/maintenance" element={<MaintenancePage />} />
+      <Route path="/offline" element={<OfflinePage />} />
+      <Route path="/geo-restricted" element={<GeoRestrictedPage />} />
+      <Route path="/pwa-prompt" element={<PwaPromptPage />} />
+      <Route path="/account-banned" element={<AccountBannedPage />} />
+      <Route path="/account-locked" element={<AccountLockedPage />} />
+      <Route path="/account-suspended" element={<AccountSuspendedPage />} />
+      <Route path="/invite-expired" element={<InviteExpiredPage />} />
+      <Route path="/invite-landing" element={<InviteLandingPage />} />
+      <Route path="/pending-review" element={<PendingReviewPage />} />
+      <Route path="/verification-needed" element={<VerificationNeededPage />} />
+      <Route path="/status" element={<StatusPage />} />
 
       {/* Known-but-unbuilt features → styled "coming soon" placeholder */}
       {KNOWN_ROUTE_SLUGS.filter((slug) => !BUILT_SLUGS.has(slug)).map((slug) => (

@@ -79,7 +79,7 @@ export const PROFILES: TdovProfile[] = [
     pron: 'he/him · contributor',
     nameMain: 'Tó ',
     nameEm: 'Costa',
-    role: 'Writer · the magazine's translation editor · author of Issue 04 cover',
+    role: "Writer · the magazine's translation editor · author of Issue 04 cover",
     quote: (
       <>"I translate everything we publish into the Portuguese my grandmother spoke. She doesn't read me; that's not the point."</>
     ),

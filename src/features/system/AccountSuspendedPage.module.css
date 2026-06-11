@@ -1,0 +1,253 @@
+/* Shell */
+.root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 84px 16px 40px;
+  background: var(--cream);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orbA {
+  width: 540px;
+  height: 540px;
+  top: -18%;
+  right: -12%;
+  background: radial-gradient(circle, rgba(232, 119, 90, 0.1) 0%, transparent 65%);
+}
+
+.orbB {
+  width: 480px;
+  height: 480px;
+  bottom: -22%;
+  left: -14%;
+  background: radial-gradient(circle, rgba(45, 27, 61, 0.06) 0%, transparent 65%);
+}
+
+.brand {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  z-index: 10;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--plum);
+}
+
+.brand em {
+  font-style: italic;
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+/* Card */
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 24px;
+  padding: 46px 44px 36px;
+  width: 100%;
+  max-width: 580px;
+  box-shadow: 0 6px 52px -10px rgba(45, 27, 61, 0.16);
+  position: relative;
+  z-index: 1;
+}
+
+.icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 22px;
+  background: rgba(var(--accent-rgb), 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
+.icon svg {
+  width: 30px;
+  height: 30px;
+  stroke: var(--accent-ink);
+  stroke-width: 1.7;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.heading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 40px;
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  margin-bottom: 16px;
+}
+
+.heading em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.lead {
+  font-size: 15.5px;
+  color: var(--ink);
+  line-height: 1.65;
+  margin-bottom: 6px;
+}
+
+.lead b {
+  color: var(--plum);
+  font-weight: 600;
+}
+
+.lead em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+.detailList {
+  margin-top: 24px;
+  padding: 18px 22px;
+  background: var(--cream);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 7px 0;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  border-bottom: 1px dashed rgba(45, 27, 61, 0.1);
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+}
+
+.detailRow b {
+  color: var(--plum);
+  font-weight: 700;
+}
+
+.detailNum {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.detailNum em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.whatStays {
+  margin-top: 24px;
+  padding: 18px 22px;
+  background: rgba(var(--jade-rgb), 0.05);
+  border-radius: 12px;
+}
+
+.whatStays h4 {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jade);
+  margin-bottom: 10px;
+}
+
+.whatStays ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.whatStays ul li {
+  padding-left: 18px;
+  position: relative;
+}
+
+.whatStays ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--jade);
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  flex-wrap: wrap;
+}
+
+.foot {
+  margin-top: 18px;
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.foot a {
+  color: var(--ink-60);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (max-width: 500px) {
+  .brand {
+    top: 18px;
+    left: 18px;
+  }
+
+  .card {
+    padding: 36px 22px 28px;
+  }
+
+  .heading {
+    font-size: 32px;
+  }
+}

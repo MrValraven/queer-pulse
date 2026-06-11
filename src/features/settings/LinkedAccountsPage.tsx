@@ -1,0 +1,161 @@
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { AppShell } from '../../shared/components/layout'
+import { useToast } from '../../shared/components/feedback/useToast'
+import { linkToPath } from '../../app/routeMap'
+import { SIGN_IN_METHODS, CONNECTED_APPS } from './linkedAccounts.data'
+import styles from './LinkedAccountsPage.module.css'
+
+export function LinkedAccountsPage() {
+  const { showToast } = useToast()
+  const navigate = useNavigate()
+  const [revokedIds, setRevokedIds] = useState<Set<string>>(new Set())
+
+  function handleUnlink(id: string) {
+    if (window.confirm('Unlink/revoke this connection? You can re-link anytime.')) {
+      setRevokedIds((prev) => new Set(prev).add(id))
+      showToast('Connection revoked', 'success')
+    }
+  }
+
+  function handleCopyCalendar() {
+    navigator.clipboard?.writeText('https://queerpulse.app/cal/tomas.ics')
+    showToast('Calendar URL copied', 'success')
+  }
+
+  const iconClass: Record<string, string> = {
+    google: styles.iconGoogle,
+    apple: styles.iconApple,
+    magic: styles.iconMagic,
+    passkey: styles.iconPasskey,
+    discord: styles.iconDiscord,
+    bluesky: styles.iconBluesky,
+    arena: styles.iconArena,
+    calendar: styles.iconCalendar,
+  }
+
+  return (
+    <AppShell>
+      <div className={styles.page}>
+        <button className={styles.back} onClick={() => navigate(-1)}>← Security</button>
+        <div className={styles.eyebrow}>Security · Linked accounts</div>
+        <h1 className={styles.heading}>Sign-in methods &amp; <em>connected apps.</em></h1>
+        <p className={styles.lead}>Two separate lists. <b>Sign-in methods</b> are alternative ways to sign in to QueerPulse. <b>Connected apps</b> are third-party services you've given limited access to. <em>You can revoke either, any time.</em></p>
+
+        <div className={styles.sectionH}>Sign-in methods</div>
+        <div className={styles.list}>
+          {SIGN_IN_METHODS.map((m) => {
+            const revoked = revokedIds.has(m.id)
+            return (
+              <div key={m.id} className={styles.row}>
+                <div className={`${styles.icon} ${iconClass[m.id] ?? ''}`}>
+                  <SignInIcon id={m.id} />
+                </div>
+                <div className={styles.info}>
+                  <b className={styles.infoName}>{m.name}</b>
+                  <span className={styles.infoDetail}>{m.detail}</span>
+                </div>
+                <div className={styles.state}>
+                  <span className={`${styles.badge} ${m.linked ? styles.badgeLinked : styles.badgeUnlinked}`}>{revoked ? 'Unlinked' : m.badgeText}</span>
+                  {m.canUnlink && !revoked && <button className={`${styles.rowBtn} ${styles.rowBtnUnlink}`} onClick={() => handleUnlink(m.id)}>Unlink</button>}
+                  {m.canLink && <button className={`${styles.rowBtn} ${styles.rowBtnConnect}`} onClick={() => showToast('Redirecting to provider...', 'info')}>Link</button>}
+                  {m.defaultDisabled && <button className={`${styles.rowBtn} ${styles.rowBtnDisabled}`} disabled>Default</button>}
+                  {m.canManage && <button className={styles.rowBtn} onClick={() => showToast('Opens device list', 'info')}>Manage</button>}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className={styles.ssoNote}>
+          <b>About SSO and privacy.</b> Linking Google or Apple means those services know you have a QueerPulse account, but not what you do here. <em>They never see your messages, posts, or community memberships.</em> If you're worried about a workplace Google linking to your queer life, use magic-link instead — it's our most private option.
+        </div>
+
+        <div className={styles.sectionH}>Connected apps · third-party access</div>
+        <div className={styles.list}>
+          {CONNECTED_APPS.map((app) => {
+            const revoked = revokedIds.has(app.id)
+            return (
+              <div key={app.id} className={styles.row}>
+                <div className={`${styles.icon} ${iconClass[app.id] ?? ''}`}>
+                  <AppIcon id={app.id} />
+                </div>
+                <div className={styles.info}>
+                  <b className={styles.infoName}>{app.name}</b>
+                  <span className={styles.infoDetail}>{app.detail}</span>
+                </div>
+                <div className={styles.state}>
+                  <span className={`${styles.badge} ${styles.badgeLinked}`}>{revoked ? 'Revoked' : app.badgeText}</span>
+                  {app.canRevoke && !revoked && <button className={`${styles.rowBtn} ${styles.rowBtnUnlink}`} onClick={() => handleUnlink(app.id)}>Revoke</button>}
+                  {app.canCopy && <button className={styles.rowBtn} onClick={handleCopyCalendar}>Copy URL</button>}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className={styles.sectionH}>Connect another</div>
+        <div className={styles.list}>
+          <div className={`${styles.row} ${styles.rowDashed}`}>
+            <div className={`${styles.icon} ${styles.iconAdd}`}>+</div>
+            <div className={styles.info}>
+              <b className={styles.infoName}>Browse available integrations</b>
+              <span className={styles.infoDetail}>Stripe (Sustainer billing), Mastodon, Spotify (Audio Rooms), iCal export, and 4 more</span>
+            </div>
+            <button className={`${styles.rowBtn} ${styles.rowBtnConnect}`} onClick={() => showToast('Browse integrations gallery', 'info')}>Browse</button>
+          </div>
+        </div>
+
+        <div className={`${styles.ssoNote} ${styles.ssoNoteAccent}`}>
+          <b>Permissions are scoped narrowly.</b> No connected app can read your DMs, your draft posts, your billing, or your community memberships. If you ever want a full audit, request a <Link to={linkToPath('QueerPulse Data Export.html')} style={{ color: 'var(--plum)', fontWeight: 700, textDecoration: 'none' }}>data export</Link>.
+        </div>
+      </div>
+    </AppShell>
+  )
+}
+
+function SignInIcon({ id }: { id: string }) {
+  if (id === 'google') return <span>G</span>
+  if (id === 'apple') return (
+    <svg viewBox="0 0 24 24" fill="#fff" width="22" height="22">
+      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
+    </svg>
+  )
+  if (id === 'magic') return (
+    <svg viewBox="0 0 24 24" fill="#fff" width="22" height="22">
+      <path d="M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0z" stroke="#fff" strokeWidth="1.6" fill="none" />
+      <path d="M8 12l3 3 5-6" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+  if (id === 'passkey') return (
+    <svg viewBox="0 0 24 24" fill="#fff" width="22" height="22">
+      <path d="M19 11H5m14 0a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2m14 0V7a7 7 0 1 0-14 0v4" stroke="#fff" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+    </svg>
+  )
+  return null
+}
+
+function AppIcon({ id }: { id: string }) {
+  if (id === 'discord') return (
+    <svg viewBox="0 0 24 24" fill="#fff" width="22" height="22">
+      <circle cx="9" cy="12" r="1.5" /><circle cx="15" cy="12" r="1.5" />
+      <path d="M5 8c2.5-1.5 9.5-1.5 14 0M5 16c2.5 1.5 9.5 1.5 14 0" stroke="#fff" fill="none" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  )
+  if (id === 'bluesky') return (
+    <svg viewBox="0 0 24 24" fill="#fff" width="22" height="22">
+      <path d="M5 4l9.5 9.5L5 23h2.5l8.5-8.5L21 21h-3l-7-7-7 7H1.5L11 11.5 1.5 2H5z" />
+    </svg>
+  )
+  if (id === 'arena') return (
+    <svg viewBox="0 0 24 24" fill="#fff" width="22" height="22">
+      <rect x="3" y="4" width="18" height="16" rx="3" />
+    </svg>
+  )
+  if (id === 'calendar') return (
+    <svg viewBox="0 0 24 24" fill="#fff" width="22" height="22">
+      <path d="M3 10h18M3 14h18M7 6v12M17 6v12" stroke="#fff" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+    </svg>
+  )
+  return null
+}

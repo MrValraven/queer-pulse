@@ -19,7 +19,7 @@ export const TABS: { id: TabId; label: string }[] = [
 ]
 
 export function buildPanels(links: { MENTAL: string; FORUM: string; LEGAL: string }): Record<TabId, Block[]> {
-  const { MENTAL, FORUM, LEGAL } = links
+  const { MENTAL, FORUM } = links
   return {
     immediate: [
       { kind: 'preamble', text: 'The moments after an incident are disorienting. These steps help you protect yourself and preserve your options — without committing to anything yet.' },

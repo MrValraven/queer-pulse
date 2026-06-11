@@ -1,0 +1,124 @@
+.envelope {
+  width: 74px;
+  height: 74px;
+  border-radius: 18px;
+  background: rgba(var(--accent-rgb), 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+  color: var(--accent-ink);
+}
+
+.codeRow {
+  display: flex;
+  gap: 9px;
+  margin: 28px 0 8px;
+  justify-content: space-between;
+}
+.codeRow input {
+  width: 100%;
+  aspect-ratio: 1 / 1.05;
+  max-width: 62px;
+  text-align: center;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 30px;
+  color: var(--plum);
+  background: var(--cream);
+  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border-radius: 14px;
+  outline: none;
+  transition: border-color 0.22s, box-shadow 0.22s, background 0.22s;
+  letter-spacing: 0;
+}
+.codeRow input:focus {
+  border-color: var(--plum);
+  box-shadow: 0 0 0 4px rgba(45, 27, 61, 0.08);
+  background: var(--paper);
+}
+.codeRowError input {
+  border-color: var(--accent-ink);
+  box-shadow: 0 0 0 4px rgba(232, 119, 90, 0.1);
+  animation: ceShake 0.42s var(--ease);
+}
+@keyframes ceShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+.codeMsg {
+  font-size: 13px;
+  color: var(--accent-ink);
+  font-weight: 500;
+  min-height: 18px;
+  margin-bottom: 18px;
+}
+.codeMsgOk {
+  color: var(--jade);
+}
+
+.auxRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  font-size: 13.5px;
+  color: var(--ink-60);
+  gap: 8px;
+}
+.resend {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--plum);
+  font-weight: 600;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+.resend:hover {
+  color: var(--accent-ink);
+}
+.resend:disabled {
+  color: var(--ink-40);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.auxTimer {
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+  font-size: 13.5px;
+}
+
+.footLink {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  text-align: center;
+  margin-top: 18px;
+}
+.footLink a {
+  color: var(--plum);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footLink a:hover {
+  color: var(--accent-ink);
+}
+
+@media (max-width: 500px) {
+  .codeRow {
+    gap: 6px;
+  }
+  .codeRow input {
+    font-size: 24px;
+    border-radius: 11px;
+  }
+}

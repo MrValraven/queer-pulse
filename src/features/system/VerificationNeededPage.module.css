@@ -1,0 +1,191 @@
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 24px;
+  padding: 42px 40px 32px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 6px 52px -10px rgba(45, 27, 61, 0.16);
+  position: relative;
+  z-index: 1;
+}
+
+.icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: rgba(45, 27, 61, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.icon svg {
+  width: 26px;
+  height: 26px;
+  stroke: var(--plum);
+  stroke-width: 1.7;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 32px;
+  color: var(--plum);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 10px;
+}
+
+.card h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.lead {
+  font-size: 14.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+.lead b {
+  color: var(--plum);
+  font-weight: 600;
+}
+
+.actionCard {
+  padding: 12px 16px;
+  background: var(--cream);
+  border: 1px solid rgba(45, 27, 61, 0.1);
+  border-radius: 11px;
+  font-size: 13.5px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.actionIc {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: rgba(var(--accent-rgb), 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.actionIc svg {
+  width: 13px;
+  height: 13px;
+  stroke: var(--accent-ink);
+  stroke-width: 2;
+  fill: none;
+}
+
+.actionCard b {
+  color: var(--plum);
+  font-weight: 700;
+}
+
+.methods {
+  display: flex;
+  gap: 4px;
+  background: var(--cream);
+  padding: 4px;
+  border-radius: 11px;
+  margin-bottom: 18px;
+}
+
+.methodTab {
+  flex: 1;
+  padding: 9px 10px;
+  background: transparent;
+  border: none;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-60);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.methodTabActive {
+  background: var(--paper);
+  color: var(--plum);
+  box-shadow: 0 1px 4px rgba(45, 27, 61, 0.08);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.field label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.field input {
+  font-family: var(--sans);
+  font-size: 14.5px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border-radius: 11px;
+  padding: 11px 14px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  width: 100%;
+}
+
+.field input:focus {
+  border-color: var(--plum);
+  background: var(--paper);
+}
+
+.confirmBtn {
+  width: 100%;
+  justify-content: center;
+  padding: 12px 18px;
+  font-size: 14.5px;
+  border-radius: 11px;
+}
+
+.foot {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  font-size: 12.5px;
+  color: var(--ink-40);
+  text-align: center;
+  line-height: 1.55;
+}
+
+.foot a {
+  color: var(--plum);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (max-width: 500px) {
+  .card {
+    padding: 32px 22px 24px;
+  }
+  .card h1 {
+    font-size: 26px;
+  }
+}

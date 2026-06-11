@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
 import {
   GATHERING, SAFETY, MANIFESTO, MARCH_META,
 } from './prideMonth.data'

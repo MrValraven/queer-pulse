@@ -46,6 +46,11 @@ export function Navbar() {
           >
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
+          {!isMobile && (
+            <Link to="/sign-in" className={styles.signIn}>
+              Sign in
+            </Link>
+          )}
           <Button to={linkToPath("QueerPulse Invite.html")}>
             Request an invite
           </Button>
@@ -75,6 +80,13 @@ export function Navbar() {
             onClick={(event) => event.stopPropagation()}
           >
             <MegaNavDrawer onNavigate={() => setDrawerOpen(false)} />
+            <Link
+              to="/sign-in"
+              className={styles.drawerSignIn}
+              onClick={() => setDrawerOpen(false)}
+            >
+              Sign in
+            </Link>
             <Button
               to={linkToPath("QueerPulse Invite.html")}
               className={styles.drawerCta}

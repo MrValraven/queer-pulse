@@ -2,6 +2,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { Button } from '../ui'
 import { useScrolled } from '../../hooks/useScrolled'
 import { useTheme } from '../../../app/providers/ThemeProvider'
+import { AccountMenu } from './AccountMenu'
 import styles from './AppNav.module.css'
 
 const APP_LINKS = [
@@ -60,9 +61,7 @@ export function AppNav({ unreadCount = 3 }: { unreadCount?: number }) {
           {unreadCount > 0 && <span className={styles.bellBadge}>{unreadCount}</span>}
         </Link>
 
-        <Button variant="ghost" to="/profile" style={{ fontSize: 13, padding: '9px 16px' }}>
-          My profile
-        </Button>
+        <AccountMenu />
         <Button to="/messages">Messages</Button>
       </div>
     </nav>

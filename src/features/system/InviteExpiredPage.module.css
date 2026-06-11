@@ -1,0 +1,239 @@
+/* Shell */
+.root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 84px 16px 40px;
+  background: var(--cream);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orbA {
+  width: 540px;
+  height: 540px;
+  top: -18%;
+  right: -12%;
+  background: radial-gradient(circle, rgba(232, 119, 90, 0.09) 0%, transparent 65%);
+}
+
+.orbB {
+  width: 480px;
+  height: 480px;
+  bottom: -22%;
+  left: -14%;
+  background: radial-gradient(circle, rgba(45, 27, 61, 0.06) 0%, transparent 65%);
+}
+
+.brand {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  z-index: 10;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--plum);
+}
+
+.brand em {
+  font-style: italic;
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+/* Card */
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 24px;
+  padding: 46px 44px 36px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 6px 52px -10px rgba(45, 27, 61, 0.16);
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.stamp {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  position: relative;
+}
+
+.stamp svg {
+  width: 38px;
+  height: 38px;
+  stroke: var(--accent-ink);
+  stroke-width: 1.6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stamp::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 1px dashed rgba(var(--accent-rgb), 0.32);
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.heading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 40px;
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  margin-bottom: 14px;
+}
+
+.heading em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.lead {
+  font-size: 15.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  max-width: 42ch;
+  margin: 0 auto 32px;
+}
+
+.inviteDetails {
+  margin: 0 auto 28px;
+  max-width: 380px;
+  padding: 18px 22px;
+  border: 1px dashed rgba(45, 27, 61, 0.18);
+  border-radius: 14px;
+  background: var(--cream);
+  text-align: left;
+}
+
+.inviteRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  padding: 4px 0;
+}
+
+.inviteRow b {
+  color: var(--plum);
+  font-weight: 600;
+}
+
+.inviteRowLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.inviteRowVouched {
+  padding-top: 10px;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  margin-top: 6px;
+}
+
+.inviteAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.18);
+  color: var(--accent-ink);
+  font-size: 10.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 7px;
+}
+
+.expiredDate {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.foot {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+.foot a {
+  color: var(--plum);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.foot a:hover {
+  color: var(--accent-ink);
+}
+
+@media (max-width: 500px) {
+  .brand {
+    top: 18px;
+    left: 18px;
+  }
+
+  .card {
+    padding: 36px 22px 28px;
+  }
+
+  .heading {
+    font-size: 32px;
+  }
+}

@@ -65,7 +65,15 @@ The design reference lives in **`docs/`**, as markdown:
 - `docs/STYLE-RULES.md` — the short, non-negotiable UI checklist
 - `docs/design-system.md` — the full design-system reference
 
-The original visual prototype was a set of standalone `QueerPulse <Name>.html` pages — this is what `linkToPath()` href strings refer to — but **those HTML files are not checked into this repo**. The only `.html` here is `index.html` (the Vite entry point). So if a task references a "design file" or an HTML prototype page, don't go looking for it on disk; treat `docs/` plus the existing built React pages as the source of truth (and ask the maintainer if you need the original HTML).
+The original visual prototype is a set of standalone `QueerPulse <Name>.html` pages — this is what `linkToPath()` href strings refer to (e.g. `linkToPath("QueerPulse Cinema.html")`). These HTML files are **not committed to the repo**, but they live on disk at:
+
+```
+/private/tmp/design_extract/queer-pulse-homepage/project/
+```
+
+That folder holds 300+ `QueerPulse *.html` design pages (plus `screenshots/`). When a task references a "design file" or asks whether a page matches the original design, **read the corresponding HTML there** — it's the source of truth for layout, copy, and which pages were intended. To find the file for a route, reverse `linkToPath`: a page named `QueerPulse <Title>.html` slugifies to `/<title-kebab>` (and nested cinema/studio pages route under `/cinema/*`, `/studio/*`).
+
+Note this is a **temp/extract location** — it may be cleared between machines/sessions. If it's gone, ask the maintainer to re-extract it. The only `.html` inside the repo itself is `index.html` (the Vite entry point).
 
 ## Design system — read before building any UI
 
