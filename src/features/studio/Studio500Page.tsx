@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './studioError.module.css'
 
 const WAVE_COUNT = 28
@@ -22,7 +22,7 @@ export function Studio500Page() {
 
   return (
     <div className={styles.root}>
-      <Link to={linkToPath('QueerPulse Studio E.html')} className={styles.brand} aria-label="QueerPulse Studio home">
+      <Link to={routes.studioE} className={styles.brand} aria-label="QueerPulse Studio home">
         <span className={styles.pulseDot} aria-hidden />
         <span className={styles.wordmark}>
           Queer<em>Pulse</em>
@@ -57,7 +57,7 @@ export function Studio500Page() {
             >
               Try again
             </button>
-            <Link to={linkToPath('QueerPulse Studio E.html')} className={styles.btGhost}>
+            <Link to={routes.studioE} className={styles.btGhost}>
               Back to the player
             </Link>
           </div>

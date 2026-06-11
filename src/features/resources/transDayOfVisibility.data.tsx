@@ -1,10 +1,10 @@
 import { type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
-const PROFILE_PATH = linkToPath('QueerPulse Profile.html')
-const TRANS_HEALTH = linkToPath('QueerPulse Trans Healthcare.html')
-const INVITE_PATH = linkToPath('QueerPulse Invite.html')
+const PROFILE_PATH = routes.profile
+const TRANS_HEALTH = routes.transHealthcare
+const INVITE_PATH = routes.invite
 
 export type ProfileTint = 'a' | 'b' | 'c'
 
@@ -117,7 +117,7 @@ export const RES_CARDS: ResCard[] = [
         gynaecology (trans-inclusive), dental. <em>Updated monthly by Nuno.</em>
       </>
     ),
-    href: linkToPath('QueerPulse Trans Hub.html'),
+    href: routes.transHub,
   },
   {
     cls: 'coral',
@@ -153,7 +153,7 @@ export const RES_CARDS: ResCard[] = [
         <em>1.4k subscribers · 74% open rate.</em>
       </>
     ),
-    href: linkToPath('QueerPulse Newsletter.html'),
+    href: routes.newsletter,
   },
 ]
 

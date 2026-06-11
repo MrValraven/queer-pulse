@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { linkToPath, routes } from '../../../app/routeMap'
 import { swaps } from '../data/swaps'
 import styles from './Barter.module.css'
 
@@ -17,7 +17,7 @@ export function Barter() {
             }
             subtitle="A structured barter system — skills for skills, expertise for expertise. Post what you offer and what you want. No money, no platforms."
             action={
-              <Button variant="ghost" to={linkToPath('QueerPulse Barter.html')}>
+              <Button variant="ghost" to={routes.barter}>
                 Browse all swaps →
               </Button>
             }

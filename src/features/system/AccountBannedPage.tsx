@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './AccountBannedPage.module.css'
 
 export function AccountBannedPage() {
@@ -59,7 +59,7 @@ export function AccountBannedPage() {
               <b>Your data is removed from the platform within 30 days</b>
               <span>
                 Per our{' '}
-                <Link to={linkToPath('QueerPulse Privacy.html')}>privacy policy</Link>. Posts you
+                <Link to={routes.privacy}>privacy policy</Link>. Posts you
                 authored are anonymised, not deleted, unless you specifically request deletion below.
               </span>
             </div>
@@ -79,8 +79,8 @@ export function AccountBannedPage() {
             <div className={styles.whatText}>
               <b>Crisis support remains available</b>
               <span>
-                <Link to={linkToPath('QueerPulse Crisis Chat.html')}>Crisis chat</Link> and the{' '}
-                <Link to={linkToPath('QueerPulse Wellbeing.html')}>resource library</Link> are open
+                <Link to={routes.crisisChat}>Crisis chat</Link> and the{' '}
+                <Link to={routes.wellbeing}>resource library</Link> are open
                 to everyone, member or not.
               </span>
             </div>
@@ -88,15 +88,15 @@ export function AccountBannedPage() {
         </div>
 
         <div className={styles.actions}>
-          <Button to={linkToPath('QueerPulse Report.html')}>File the appeal</Button>
-          <Button variant="ghost" to={linkToPath('QueerPulse Data Export.html')}>
+          <Button to={routes.report}>File the appeal</Button>
+          <Button variant="ghost" to={routes.dataExport}>
             Request full data erasure
           </Button>
         </div>
         <p className={styles.foot}>
           If you believe this was the result of coordinated false reports, please include the names
           you suspect in the appeal — we investigate this carefully.{' '}
-          <Link to={linkToPath('QueerPulse Code of Conduct.html')}>
+          <Link to={routes.codeOfConduct}>
             Re-read the Code of Conduct →
           </Link>
         </p>

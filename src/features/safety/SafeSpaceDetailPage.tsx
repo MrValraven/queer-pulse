@@ -2,12 +2,12 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { getSpace, type Tint, type VerifiedSpace, type RemovedSpace } from './safeSpaces'
 import styles from './SafeSpaceDetailPage.module.css'
 
 const TINT: Record<Tint, string> = { coral: styles.tCoral, jade: styles.tJade, plum: styles.tPlum }
-const SAFETY = linkToPath('QueerPulse Safety.html')
+const SAFETY = routes.safety
 const VERIFIED_COUNT = 47
 
 const Tick = () => (

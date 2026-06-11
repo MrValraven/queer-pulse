@@ -1,11 +1,11 @@
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
 export type TabId = 'notes' | 'chapters' | 'transcript'
 
-export const SHOW = linkToPath('QueerPulse Podcast Show.html')
+export const SHOW = routes.podcastShow
 export const HOME = '/'
-export const MEMBER = linkToPath('QueerPulse Profile.html')
-export const ARTICLE = linkToPath('QueerPulse Article.html')
+export const MEMBER = routes.profile
+export const ARTICLE = routes.article
 
 export const SPEEDS = ['0.8×', '1.0×', '1.2×', '1.5×', '2.0×']
 

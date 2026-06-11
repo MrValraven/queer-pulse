@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import type { Community } from '../homepage/data/types'
 import type { CommunityDetail, Tint } from './communityDetails'
 import { AV_CLASS } from './CommunityThread'
 import styles from './CommunityDetailPage.module.css'
 
-const GATHERING = linkToPath('QueerPulse Gathering.html')
+const GATHERING = routes.gathering
 
 const relTint = (t: string): Tint =>
   t === 'sports' || t === 'social' || t === 'support' ? 'jade' : t === 'arts' || t === 'professional' ? 'coral' : 'plum'

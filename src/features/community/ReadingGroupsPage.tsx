@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import {
   FORMAT_FILTERS,
   GENRE_FILTERS,
@@ -17,7 +17,7 @@ export function ReadingGroupsPage() {
   const { showToast } = useToast()
   const [genre, setGenre] = useState<Genre | 'all'>('all')
   const [format, setFormat] = useState<Format | 'all'>('all')
-  const messages = linkToPath('QueerPulse Messages.html')
+  const messages = routes.messages
 
   const items = GROUPS.filter(
     (g) => (genre === 'all' || g.genre === genre) && (format === 'all' || g.format === format),
@@ -164,7 +164,7 @@ export function ReadingGroupsPage() {
             QueerPulse reading groups have been running since 2024. Some have turned into
             friendships, some into collaborations, two into bands.
           </p>
-          <Button to={linkToPath('QueerPulse Invite.html')} variant="primary" size="lg">
+          <Button to={routes.invite} variant="primary" size="lg">
             Join the network
           </Button>
         </div>

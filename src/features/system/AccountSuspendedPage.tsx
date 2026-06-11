@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './AccountSuspendedPage.module.css'
 
 export function AccountSuspendedPage() {
@@ -69,17 +69,17 @@ export function AccountSuspendedPage() {
         </div>
 
         <div className={styles.actions}>
-          <Button to={linkToPath('QueerPulse Report.html')}>File an appeal</Button>
-          <Button variant="ghost" to={linkToPath('QueerPulse Code of Conduct.html')}>
+          <Button to={routes.report}>File an appeal</Button>
+          <Button variant="ghost" to={routes.codeOfConduct}>
             Read the ladder
           </Button>
-          <Button variant="ghost" to={linkToPath('QueerPulse Messages.html')}>
+          <Button variant="ghost" to={routes.messages}>
             Message the mod team
           </Button>
         </div>
         <p className={styles.foot}>
           11% of appeals are overturned. We publish the number annually.{' '}
-          <Link to={linkToPath('QueerPulse Transparency Report.html')}>
+          <Link to={routes.transparencyReport}>
             See 2025 moderation stats →
           </Link>
         </p>

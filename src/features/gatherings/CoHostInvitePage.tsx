@@ -2,11 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./CoHostInvitePage.module.css";
 
-const NOTIFICATIONS = linkToPath("QueerPulse Notifications.html");
-const MESSAGES = linkToPath("QueerPulse Messages.html");
+const NOTIFICATIONS = routes.notifications;
+const MESSAGES = routes.messages;
 
 const ROLES = [
   { ic: "G", title: "Greet at the door, 18:30 — 19:30", desc: "Check names against the RSVP list. Anika will join you by 19:00.", perm: "Required", permCls: "permYes" },
@@ -30,7 +30,7 @@ export function CoHostInvitePage() {
 
   const accept = () => {
     showToast("You're co-hosting with Anika — host tools unlocked", "success", 3500);
-    setTimeout(() => navigate(linkToPath("QueerPulse Manage Gathering.html")), 1300);
+    setTimeout(() => navigate(routes.manageGathering), 1300);
   };
   const decline = () => {
     showToast("Polite no sent to Anika. She'll find another second pair of hands.", "info", 3000);

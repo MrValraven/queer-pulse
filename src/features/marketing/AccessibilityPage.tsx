@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { COMMITMENTS, FILTERS, RESOURCES, VENUES } from './accessibility.data'
 import { AccessibleVenueCard } from './AccessibleVenueCard'
 import { AccommodationsModal, FlagVenueModal } from './AccessibilityModals'
 import styles from './AccessibilityPage.module.css'
 
-const INVITE = linkToPath('QueerPulse Invite.html')
+const INVITE = routes.invite
 
 export function AccessibilityPage() {
   const { showToast } = useToast()
@@ -163,7 +163,7 @@ export function AccessibilityPage() {
               <Button type="button" variant="primary" onClick={() => showToast('Joining the group…', 'success')}>
                 Join the group
               </Button>
-              <Button to={linkToPath('QueerPulse Mentorship.html')} variant="ghost-dark">
+              <Button to={routes.mentorship} variant="ghost-dark">
                 Find a peer mentor →
               </Button>
             </div>

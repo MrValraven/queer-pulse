@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import {
   GATHERING_DETAILS,
   GOING_ATTENDEES,
@@ -207,8 +207,8 @@ interface ManageGatheringSidebarProps {
 }
 
 export function ManageGatheringSidebar({ onCopyLink }: ManageGatheringSidebarProps) {
-  const GATHERING = linkToPath("QueerPulse Gathering.html");
-  const CONTACT = linkToPath("QueerPulse Contact.html");
+  const GATHERING = routes.gathering;
+  const CONTACT = routes.contact;
   return (
     <div className={styles.sidebar}>
       <div className={styles.sbCard}>

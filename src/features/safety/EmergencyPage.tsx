@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./EmergencyPage.module.css";
 
 const CRISIS_NUMS = [
@@ -33,7 +33,7 @@ const SECTIONS: Section[] = [
     intro: "Whether you're in acute crisis or just struggling — these organisations specifically support LGBTQ+ people in Lisbon.",
     items: [
       { name: "Opus Diversus", detail: "Peer support and mental health resources for LGBTQ+ people. Drop-in sessions and one-to-ones available.", link: { label: "↗ opusdiversus.org", href: "https://opusdiversus.org", external: true } },
-      { name: "Mariana Loução (QueerPulse)", detail: "Clinical psychologist specialising in LGBTQ+ care. Runs a monthly peer support group in Lisbon for queer professionals.", link: { label: "View profile →", href: linkToPath("QueerPulse Profile.html") } },
+      { name: "Mariana Loução (QueerPulse)", detail: "Clinical psychologist specialising in LGBTQ+ care. Runs a monthly peer support group in Lisbon for queer professionals.", link: { label: "View profile →", href: routes.profile } },
       { name: "SNS mental health services", detail: "You can access mental health support via the NHS (SNS) with a referral from your GP. Call 808 24 24 24 to start." },
     ],
   },
@@ -44,8 +44,8 @@ const SECTIONS: Section[] = [
     intro: "Support specifically for trans, non-binary, and gender non-conforming people in Portugal and Lisbon.",
     items: [
       { name: "ILGA Portugal — Trans rights team", detail: "Legal support, healthcare referrals, documentation help, and crisis support for trans people. Call 707 200 220.", link: { label: "↗ ilga-portugal.pt", href: "https://ilga-portugal.pt", external: true } },
-      { name: "Panteras Rosa", detail: "Trans rights advocacy and community organising. Can connect you to trans peer support and community in Lisbon.", link: { label: "More info →", href: linkToPath("QueerPulse Platforms.html") } },
-      { name: "Trans Mutual Aid Network (QueerPulse)", detail: "Peer-run mutual aid for trans people in Lisbon. Practical help, resource sharing, community connection.", link: { label: "Join the network →", href: linkToPath("QueerPulse Communities.html") } },
+      { name: "Panteras Rosa", detail: "Trans rights advocacy and community organising. Can connect you to trans peer support and community in Lisbon.", link: { label: "More info →", href: routes.platforms } },
+      { name: "Trans Mutual Aid Network (QueerPulse)", detail: "Peer-run mutual aid for trans people in Lisbon. Practical help, resource sharing, community connection.", link: { label: "Join the network →", href: routes.communities } },
     ],
   },
   {
@@ -55,7 +55,7 @@ const SECTIONS: Section[] = [
     intro: "If your home environment is dangerous or you have no safe place to go.",
     items: [
       { name: "APAV — Domestic violence support", detail: "Support for people experiencing domestic violence, including LGBTQ+ people. 116 006, free, 24h. Can help arrange emergency accommodation." },
-      { name: "Queer Housing Justice Network", detail: "Community-run network that tracks queer-safe housing and can urgently connect people in housing crisis with community members who have space.", link: { label: "Housing resources →", href: linkToPath("QueerPulse Housing.html") } },
+      { name: "Queer Housing Justice Network", detail: "Community-run network that tracks queer-safe housing and can urgently connect people in housing crisis with community members who have space.", link: { label: "Housing resources →", href: routes.housing } },
       { name: "Santa Casa da Misericórdia", detail: "Lisbon's largest social services organisation. Can refer to emergency housing." },
     ],
   },
@@ -66,7 +66,7 @@ const SECTIONS: Section[] = [
     intro: "Facing discrimination, hate crime, family law crisis, or immigration emergency.",
     items: [
       { name: "ILGA Portugal — Legal team", detail: "Free legal consultations for LGBTQ+ people facing discrimination, hate crimes, family law, or immigration issues. Call 707 200 220." },
-      { name: "Raquel Baptista (QueerPulse)", detail: "Lawyer offering pro-bono consultations for LGBTQ+ people facing discrimination and family law challenges. Over 60 cases in three years.", link: { label: "View profile →", href: linkToPath("QueerPulse Changemakers.html") } },
+      { name: "Raquel Baptista (QueerPulse)", detail: "Lawyer offering pro-bono consultations for LGBTQ+ people facing discrimination and family law challenges. Over 60 cases in three years.", link: { label: "View profile →", href: routes.changemakers } },
       { name: "Ordem dos Advogados — Legal aid", detail: "Portugal's bar association runs a legal aid (apoio judiciário) scheme for those who can't afford a lawyer." },
     ],
   },

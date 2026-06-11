@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './PwaPromptPage.module.css'
 
 const FEATURES = [
@@ -127,7 +127,7 @@ export function PwaPromptPage() {
         <p className={styles.actionsFoot}>
           Snoozing this stops us asking on this device for <b>30 days</b>. You can also install
           any time from{' '}
-          <Link to={linkToPath('QueerPulse Get the App.html')} className={styles.appLink}>
+          <Link to={routes.getTheApp} className={styles.appLink}>
             Get the app
           </Link>.
         </p>

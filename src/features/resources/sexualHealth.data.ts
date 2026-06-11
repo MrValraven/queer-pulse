@@ -1,4 +1,4 @@
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
 export type TabId = 'testing' | 'prep' | 'hiv' | 'guides'
 export type ClinicType = 'public' | 'ngo' | 'private' | 'pharmacy'
@@ -64,8 +64,8 @@ export const PREP_FAQ = [
 export const HIV_INFO = [
   { icon: '🏥', title: 'Just tested positive?', body: 'Take a breath. Modern HIV treatment is effective and straightforward. The CAD service or your GP can refer you immediately to an infectious disease specialist. Treatment usually begins within days of diagnosis.', link: { label: 'Linha SIDA: 800 210 008 (free) →', href: 'tel:800210008', external: true } },
   { icon: '💊', title: 'PEP — after potential exposure', body: "Post-exposure prophylaxis must be started within 72 hours (ideally 24). Go to any hospital A&E and ask for PEP — do not wait. It's free through the SNS and highly effective when taken on time." },
-  { icon: '🤝', title: 'Community peer support', body: 'The QueerPulse HIV+ peer support group is private, moderated, and limited to members who have opted in. A space to share experience without stigma or unsolicited advice.', link: { label: 'Find the group →', href: linkToPath('QueerPulse Communities.html') } },
-  { icon: '⚖️', title: 'Rights & non-disclosure', body: 'Portuguese law on HIV criminalisation is nuanced. You are not legally obligated to disclose to every partner in every situation. The legal reality is complex — talk to GAT or a lawyer if you have concerns.', link: { label: 'Legal resources →', href: linkToPath('QueerPulse Legal.html') } },
+  { icon: '🤝', title: 'Community peer support', body: 'The QueerPulse HIV+ peer support group is private, moderated, and limited to members who have opted in. A space to share experience without stigma or unsolicited advice.', link: { label: 'Find the group →', href: routes.communities } },
+  { icon: '⚖️', title: 'Rights & non-disclosure', body: 'Portuguese law on HIV criminalisation is nuanced. You are not legally obligated to disclose to every partner in every situation. The legal reality is complex — talk to GAT or a lawyer if you have concerns.', link: { label: 'Legal resources →', href: routes.legal } },
 ]
 
 export const GUIDES = [
@@ -73,6 +73,6 @@ export const GUIDES = [
   { icon: '🦠', title: 'Mpox — what to know', body: 'Mpox can affect anyone, but some queer networks have higher exposure. Vaccination is available via SNS for close contacts and higher-risk individuals. CheckpointLx maintains an up-to-date guide.' },
   { icon: '🔬', title: 'Bacterial STIs — syphilis, gonorrhoea, chlamydia', body: 'All are curable with antibiotics and all are on the rise across Europe. Many have no symptoms. Testing every 3 months if sexually active is the most reliable way to catch them early.' },
   { icon: '💬', title: 'Talking to partners about testing', body: 'A practical guide to having the conversation — different scripts for different situations. Written by community members, not clinical guidelines.', link: { label: 'Read the guide →', href: '#' } },
-  { icon: '🌿', title: 'Sexual health & substance use', body: 'Practical harm reduction for people who use substances in sexual contexts — chemsex, MDMA, alcohol. No judgment, practical information about risk reduction.', link: { label: 'Read the guide →', href: linkToPath('QueerPulse Harm Reduction.html') } },
-  { icon: '🧬', title: 'Sexual health for trans & non-binary people', body: 'Bodies vary, practices vary, and most sexual health guidance is written for cisgender people. A community-written guide to navigating the system and finding clinicians who understand.', link: { label: 'Trans Hub →', href: linkToPath('QueerPulse Trans Hub.html') } },
+  { icon: '🌿', title: 'Sexual health & substance use', body: 'Practical harm reduction for people who use substances in sexual contexts — chemsex, MDMA, alcohol. No judgment, practical information about risk reduction.', link: { label: 'Read the guide →', href: routes.harmReduction } },
+  { icon: '🧬', title: 'Sexual health for trans & non-binary people', body: 'Bodies vary, practices vary, and most sexual health guidance is written for cisgender people. A community-written guide to navigating the system and finding clinicians who understand.', link: { label: 'Trans Hub →', href: routes.transHub } },
 ]

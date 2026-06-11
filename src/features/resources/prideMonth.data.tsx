@@ -1,11 +1,11 @@
 import { type ReactNode } from 'react'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
-export const GATHERING = linkToPath('QueerPulse Gathering.html')
-export const MANIFESTO = linkToPath('QueerPulse Manifesto.html')
-export const SAFETY = linkToPath('QueerPulse Safety.html')
-export const HATE_CRIME = linkToPath('QueerPulse Hate Crime.html')
-export const ARTICLE = linkToPath('QueerPulse Article.html')
+export const GATHERING = routes.gathering
+export const MANIFESTO = routes.manifesto
+export const SAFETY = routes.safety
+export const HATE_CRIME = routes.hateCrime
+export const ARTICLE = routes.article
 
 export const CHIPS = [
   'All · 38',

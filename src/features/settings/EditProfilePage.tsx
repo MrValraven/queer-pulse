@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { IdentitySection, PronounsSection, BioSection, SkillsSection, VisibilitySection } from './EditProfileSections'
 import styles from './EditProfilePage.module.css'
 
@@ -70,7 +70,7 @@ export function EditProfilePage() {
               Field visibility
             </button>
             <div className={styles.navSection}>More</div>
-            <Link to={linkToPath('QueerPulse Pronouns Guide.html')} className={styles.navItem}>
+            <Link to={routes.pronounsGuide} className={styles.navItem}>
                 <svg className={styles.navIcon} viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" /><path d="M8 5v0M8 8v4" /></svg>
                 Pronouns guide
               </Link>

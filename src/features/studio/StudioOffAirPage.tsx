@@ -1,6 +1,6 @@
 import { useToast } from '../../shared/components/feedback/useToast'
 import { ImageSlot } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { linkToPath, routes } from '../../app/routeMap'
 import { Link } from 'react-router-dom'
 import { StudioShell } from './StudioShell'
 import { OFF_AIR_LIBRARY, QUIET_HOURS } from './studioOffAir.data'
@@ -93,7 +93,7 @@ export function StudioOffAirPage() {
           <div style={{ fontSize: 13, color: 'rgba(247,243,238,.4)' }}>
             From your library · plays on, broadcast or not
           </div>
-          <Link to={linkToPath('QueerPulse Studio Library.html')} style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 600, color: 'rgba(247,243,238,.6)' }}>
+          <Link to={routes.studioLibrary} style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 600, color: 'rgba(247,243,238,.6)' }}>
             Library →
           </Link>
         </div>
@@ -128,7 +128,7 @@ export function StudioOffAirPage() {
           <div style={{ fontSize: 13, color: 'rgba(247,243,238,.4)' }}>
             Council collections that don't need the lights on
           </div>
-          <Link to={linkToPath('QueerPulse Studio Search.html')} style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 600, color: 'rgba(247,243,238,.6)' }}>
+          <Link to={routes.studioSearch} style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 600, color: 'rgba(247,243,238,.6)' }}>
             All →
           </Link>
         </div>

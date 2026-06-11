@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './DeleteAccountPage.module.css'
 
 type Option = 'deactivate' | 'delete'
@@ -62,11 +62,11 @@ export function DeleteAccountPage() {
         <aside className={styles.sidebar}>
           <div className={styles.sidebarInner}>
             <div className={styles.sidebarHead}>Account</div>
-            <Link to={linkToPath('QueerPulse Edit Profile.html')} className={styles.navItem}>
+            <Link to={routes.editProfile} className={styles.navItem}>
                 <svg className={styles.navIcon} viewBox="0 0 16 16"><circle cx="8" cy="6" r="3" /><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" /></svg>
                 Edit profile
               </Link>
-            <Link to={linkToPath('QueerPulse Notification Preferences.html')} className={styles.navItem}>
+            <Link to={routes.notificationPreferences} className={styles.navItem}>
                 <svg className={styles.navIcon} viewBox="0 0 16 16"><path d="M8 2a6 6 0 0 1 6 6c0 3.3-6 8-6 8S2 11.3 2 8a6 6 0 0 1 6-6z" /><circle cx="8" cy="8" r="1.5" fill="currentColor" /></svg>
                 Notifications
               </Link>
@@ -155,7 +155,7 @@ export function DeleteAccountPage() {
               ) : (
                 <Button type="submit" variant="primary" disabled={!canSubmit}>{content.btnLabel}</Button>
               )}
-              <Button variant="ghost" to={linkToPath('QueerPulse Settings.html')}>Cancel</Button>
+              <Button variant="ghost" to={routes.settings}>Cancel</Button>
             </div>
           </form>
         </main>

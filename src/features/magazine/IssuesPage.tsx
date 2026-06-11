@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./IssuesPage.module.css";
 import { Button } from '../../shared/components/ui'
 
-const ISSUE = linkToPath("QueerPulse Issue.html");
+const ISSUE = routes.issue;
 
 type Tint = "a" | "b" | "c" | "d";
 interface Issue {
@@ -96,7 +96,7 @@ export function IssuesPage() {
                 <Button to={ISSUE} variant="primary">
                   Read issue 09 →
                 </Button>
-                <Button to={linkToPath("QueerPulse Invite.html")} variant="ghost-dark">
+                <Button to={routes.invite} variant="ghost-dark">
                   Order print · €8
                 </Button>
               </div>

@@ -1,5 +1,5 @@
 import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { routes } from '../../../app/routeMap'
 import { skills } from '../data/skills'
 import styles from './SkillsTeaser.module.css'
 
@@ -37,7 +37,7 @@ export function SkillsTeaser() {
         </Reveal>
 
         <Reveal className={styles.cta}>
-          <Button variant="ghost-dark" size="lg" to={linkToPath('QueerPulse Skills.html')}>
+          <Button variant="ghost-dark" size="lg" to={routes.skills}>
             Browse all skills &amp; learning →
           </Button>
         </Reveal>

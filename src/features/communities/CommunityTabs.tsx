@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import type { CommunityDetail, Person, Thread as ThreadData } from './communityDetails'
 import { AV_CLASS, CommunityThread } from './CommunityThread'
 import styles from './CommunityDetailPage.module.css'
 
-const GATHERING = linkToPath('QueerPulse Gathering.html')
-const MEMBER = linkToPath('QueerPulse Profile.html')
+const GATHERING = routes.gathering
+const MEMBER = routes.profile
 
 export function AboutTab({ detail }: { detail: CommunityDetail }) {
   return (

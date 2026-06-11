@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { SIGN_IN_METHODS, CONNECTED_APPS } from './linkedAccounts.data'
 import styles from './LinkedAccountsPage.module.css'
 
@@ -107,7 +107,7 @@ export function LinkedAccountsPage() {
         </div>
 
         <div className={`${styles.ssoNote} ${styles.ssoNoteAccent}`}>
-          <b>Permissions are scoped narrowly.</b> No connected app can read your DMs, your draft posts, your billing, or your community memberships. If you ever want a full audit, request a <Link to={linkToPath('QueerPulse Data Export.html')} style={{ color: 'var(--plum)', fontWeight: 700, textDecoration: 'none' }}>data export</Link>.
+          <b>Permissions are scoped narrowly.</b> No connected app can read your DMs, your draft posts, your billing, or your community memberships. If you ever want a full audit, request a <Link to={routes.dataExport} style={{ color: 'var(--plum)', fontWeight: 700, textDecoration: 'none' }}>data export</Link>.
         </div>
       </div>
     </AppShell>

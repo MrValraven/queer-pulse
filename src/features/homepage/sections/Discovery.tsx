@@ -8,7 +8,7 @@ import {
   TagRow,
   VisibilityBadge,
 } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { linkToPath, routes } from '../../../app/routeMap'
 import { members, memberFilters, visibilitySay } from '../data/members'
 import { filterMembers } from '../lib/filters'
 import type { Member } from '../data/types'
@@ -17,8 +17,8 @@ import styles from './Discovery.module.css'
 function MemberCard({ member }: { member: Member }) {
   const connectHref =
     member.visibility === 'private'
-      ? `QueerPulse Profile.html#${member.key}`
-      : `QueerPulse Connect.html#${member.key}`
+      ? `${routes.profile}#${member.key}`
+      : `${routes.connect}#${member.key}`
   const connectLabel = member.visibility === 'private' ? 'View profile' : 'Say hello'
 
   return (
@@ -39,7 +39,7 @@ function MemberCard({ member }: { member: Member }) {
       </div>
 
       <div>
-        <Link to={linkToPath(`QueerPulse Profile.html#${member.key}`)}>
+        <Link to={`${routes.profile}#${member.key}`}>
           <div className={styles.name}>{member.name}</div>
         </Link>
         <div className={styles.role}>{member.role}</div>

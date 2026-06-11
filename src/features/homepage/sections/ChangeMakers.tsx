@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button, ImageSlot, Reveal } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { routes } from '../../../app/routeMap'
 import { changemakers } from '../data/changemakers'
 import styles from './ChangeMakers.module.css'
 
@@ -21,7 +21,7 @@ export function ChangeMakers() {
               people, real work, real change.
             </Reveal>
             <Reveal delay={60}>
-              <Button variant="ghost-dark" to={linkToPath('QueerPulse Changemakers.html')}>
+              <Button variant="ghost-dark" to={routes.changemakers}>
                 Meet all change makers →
               </Button>
             </Reveal>
@@ -32,7 +32,7 @@ export function ChangeMakers() {
           {changemakers.map((person, index) => (
             <Reveal key={person.key} delay={index * 70}>
               <Link
-                to={linkToPath(`QueerPulse Changemakers.html#${person.key}`)}
+                to={`${routes.changemakers}#${person.key}`}
                 className={styles.card}
               >
                 <ImageSlot

@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { linkToPath, routes } from '../../../app/routeMap'
 import { libraryItems, libraryMoreCount } from '../data/libraryItems'
 import styles from './Library.module.css'
 
@@ -18,7 +18,7 @@ export function Library() {
             }
             subtitle="Recordings, guides, and notes from every gathering — searchable and preserved. Workshop wisdom that outlives the room."
             action={
-              <Button variant="ghost" to={linkToPath('QueerPulse Library.html')}>
+              <Button variant="ghost" to={routes.library}>
                 Browse the library →
               </Button>
             }
@@ -47,7 +47,7 @@ export function Library() {
 
           <Reveal delay={libraryItems.length * 50}>
             <Link
-              to={linkToPath('QueerPulse Library.html')}
+              to={routes.library}
               className={[styles.card, styles.more].join(' ')}
             >
               <div className={styles.moreCount}>{libraryMoreCount}</div>

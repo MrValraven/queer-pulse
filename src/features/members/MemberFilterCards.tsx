@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import {
   DISCIPLINES,
   IDENTITY,
@@ -12,7 +12,7 @@ import {
 } from './memberDirectoryFilter.data'
 import styles from './MemberDirectoryFilterPage.module.css'
 
-const PROFILE = linkToPath('QueerPulse Profile.html')
+const PROFILE = routes.profile
 
 function avClass(tint?: 'jade' | 'plum') {
   if (tint === 'jade') return `${styles.mAv} ${styles.mAvJade}`

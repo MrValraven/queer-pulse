@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { INITIAL_GUESTS, nowHHMM, type Guest } from './gatheringDashboard.data'
 import { CheckInColumn, GuestListCard, StatsColumn } from './GatheringDashboardCards'
 import styles from './GatheringDashboardPage.module.css'
 
-const MANAGE = linkToPath('QueerPulse Manage Gathering.html')
+const MANAGE = routes.manageGathering
 
 export function GatheringDashboardPage() {
   const { showToast } = useToast()

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import {
   PRACTITIONERS, FILTERS, TINT_BG, TINT_FG, initials, type Cat,
 } from './solidarity.data'
@@ -10,7 +10,7 @@ import styles from './SolidarityPage.module.css'
 export function SolidarityDirectory() {
   const [cat, setCat] = useState<Cat | 'all'>('all')
   const [query, setQuery] = useState('')
-  const messages = linkToPath('QueerPulse Messages.html')
+  const messages = routes.messages
   const q = query.toLowerCase()
 
   const items = PRACTITIONERS.filter((p) => {
@@ -111,10 +111,10 @@ export function SolidarityDirectory() {
               </p>
             </div>
             <div className={styles.rsCta}>
-              <Button to={linkToPath('QueerPulse Invite.html')} variant="primary" size="lg">
+              <Button to={routes.invite} variant="primary" size="lg">
                 Register your practice
               </Button>
-              <Link to={linkToPath('QueerPulse Contact.html')} className={styles.rsCtaLink}>
+              <Link to={routes.contact} className={styles.rsCtaLink}>
                 Questions first? Get in touch
               </Link>
             </div>

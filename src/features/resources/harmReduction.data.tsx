@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
 export interface HrItem {
   title: string
@@ -63,7 +63,7 @@ export const SOBER: HrSection = {
     { title: 'Non-alcoholic options', body: 'Most Lisbon venues serve water and soft drinks. Ask for sparkling water with lime if you do not want it to look like you are not drinking — it is no one else\'s business.' },
     { title: 'QueerPulse Sober community', body: 'The Sober page connects community members who are sober or sober-curious. You are not alone in wanting to be part of the night without the substances.' },
   ],
-  link: { label: 'Visit the Sober page →', href: linkToPath('QueerPulse Sober.html') },
+  link: { label: 'Visit the Sober page →', href: routes.sober },
 }
 
 export const SERVICES: HrSection = {

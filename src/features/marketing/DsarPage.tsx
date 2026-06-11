@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./DsarPage.module.css";
 import { Button } from '../../shared/components/ui'
 
-const PRIVACY = linkToPath("QueerPulse Privacy.html");
+const PRIVACY = routes.privacy;
 
 interface Right {
   art: number;

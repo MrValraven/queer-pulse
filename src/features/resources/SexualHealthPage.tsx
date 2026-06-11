@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { TABS, type TabId } from './sexualHealth.data'
 import { GuidesTab, HivTab, PrepTab, TestingTab } from './SexualHealthTabs'
 import styles from './SexualHealthPage.module.css'
@@ -54,10 +54,10 @@ export function SexualHealthPage() {
             Questions, concerns, or just not sure where to start — the community is here.
           </p>
           <div className={styles.outroBtns}>
-            <Button to={linkToPath('QueerPulse Wellbeing.html')} variant="primary" size="lg">
+            <Button to={routes.wellbeing} variant="primary" size="lg">
               Wellbeing resources
             </Button>
-            <Button to={linkToPath('QueerPulse Communities.html')} variant="ghost-dark" size="lg">
+            <Button to={routes.communities} variant="ghost-dark" size="lg">
               Find peer support
             </Button>
           </div>

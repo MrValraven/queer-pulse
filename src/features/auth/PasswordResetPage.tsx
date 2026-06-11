@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { AuthLayout } from './AuthLayout'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './auth.module.css'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -62,7 +62,7 @@ export function PasswordResetPage() {
             {resendLabel}
           </Button>
           <div className={styles.footer} style={{ marginTop: 16 }}>
-            <Link to={linkToPath('QueerPulse Sign In.html')}>← Back to sign in</Link>
+            <Link to={routes.signIn}>← Back to sign in</Link>
           </div>
         </div>
       </AuthLayout>
@@ -103,7 +103,7 @@ export function PasswordResetPage() {
       </form>
 
       <div className={styles.footer}>
-        <Link to={linkToPath('QueerPulse Sign In.html')}>← Back to sign in</Link>
+        <Link to={routes.signIn}>← Back to sign in</Link>
       </div>
     </AuthLayout>
   )

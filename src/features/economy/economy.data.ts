@@ -1,10 +1,10 @@
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
 export type Tab = 'incubator' | 'freelance' | 'salary'
 export type Sector = 'tech' | 'design' | 'creative' | 'ngo' | 'law'
 
-export const JOBS = linkToPath('QueerPulse Jobs.html')
-export const MENTORSHIP = linkToPath('QueerPulse Mentorship.html')
+export const JOBS = routes.jobs
+export const MENTORSHIP = routes.mentorship
 
 export const STEPS = [
   { n: 1, title: 'Apply', desc: 'A short application — your idea, where you are, what you need. No pitch deck required. Decisions in 3 weeks.', meta: 'Applications open · Deadline 30 Jul' },

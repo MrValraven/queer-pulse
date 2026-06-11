@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './OfflinePage.module.css'
 
 const CACHED = [
   {
-    to: linkToPath('QueerPulse RSVP Ticket.html'),
+    to: routes.rsvpTicket,
     label: 'Your QR ticket — Open clinic night',
     sub: 'Thu 12 Jun · Café Beirão · cached 3h ago',
     icon: (
@@ -16,7 +16,7 @@ const CACHED = [
     ),
   },
   {
-    to: linkToPath('QueerPulse Spaces Map.html'),
+    to: routes.spacesMap,
     label: 'Safe-spaces map · Lisbon',
     sub: '42 venues · updated yesterday',
     icon: (
@@ -27,7 +27,7 @@ const CACHED = [
     ),
   },
   {
-    to: linkToPath('QueerPulse Crisis Chat.html'),
+    to: routes.crisisChat,
     label: 'Crisis chat · SMS fallback',
     sub: 'Will deliver as soon as signal returns',
     icon: (
@@ -37,7 +37,7 @@ const CACHED = [
     ),
   },
   {
-    to: linkToPath('QueerPulse Emergency.html'),
+    to: routes.emergency,
     label: 'Emergency contacts',
     sub: '112 · SOS Voz Amiga · ILGA helpline',
     icon: (

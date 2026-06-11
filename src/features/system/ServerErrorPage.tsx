@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './ServerErrorPage.module.css'
 
 function Countdown() {
@@ -85,7 +85,7 @@ export function ServerErrorPage() {
                   <a href="https://status.queerpulse.pt">status.queerpulse.pt</a> for updates.</>
               ) : (
                 <><strong>Our team has been alerted.</strong> Check{' '}
-                  <a href={linkToPath('QueerPulse Status.html')}>status.queerpulse.pt</a> for live updates.</>
+                  <a href={routes.status}>status.queerpulse.pt</a> for live updates.</>
               )}
             </span>
           </div>
@@ -99,7 +99,7 @@ export function ServerErrorPage() {
             <Button variant="ghost" to="/" className={styles.actionBtn}>
               Go to homepage
             </Button>
-            <Button variant="ghost" to={linkToPath('QueerPulse Status.html')} className={styles.actionBtn}>
+            <Button variant="ghost" to={routes.status} className={styles.actionBtn}>
               Check platform status
             </Button>
           </div>

@@ -1,13 +1,13 @@
 import { type ReactNode } from 'react'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
 export type TabId = 'adoption' | 'ivf' | 'coparenting' | 'donors' | 'legal'
 
-export const LEGAL = linkToPath('QueerPulse Legal.html')
-export const TRANS_HUB = linkToPath('QueerPulse Trans Hub.html')
-export const FORUM = linkToPath('QueerPulse Forum.html')
-export const MENTORSHIP = linkToPath('QueerPulse Mentorship.html')
-export const INVITE = linkToPath('QueerPulse Invite.html')
+export const LEGAL = routes.legal
+export const TRANS_HUB = routes.transHub
+export const FORUM = routes.forum
+export const MENTORSHIP = routes.mentorship
+export const INVITE = routes.invite
 
 export interface InfoCard {
   eyebrow: string

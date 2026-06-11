@@ -1,5 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './studioError.module.css'
 
 const FLAT_DOTS = 18
@@ -9,7 +9,7 @@ export function Studio404Page() {
 
   return (
     <div className={styles.root}>
-      <Link to={linkToPath('QueerPulse Studio E.html')} className={styles.brand} aria-label="QueerPulse Studio home">
+      <Link to={routes.studioE} className={styles.brand} aria-label="QueerPulse Studio home">
         <span className={styles.pulseDot} aria-hidden />
         <span className={styles.wordmark}>
           Queer<em>Pulse</em>
@@ -37,7 +37,7 @@ export function Studio404Page() {
           </div>
 
           <div className={styles.errActions}>
-            <Link to={linkToPath('QueerPulse Studio E.html')} className={styles.btPrimary}>
+            <Link to={routes.studioE} className={styles.btPrimary}>
               Back to the player
             </Link>
             <button
@@ -51,19 +51,19 @@ export function Studio404Page() {
 
           <div className={styles.errLinksTitle}>Try one of these instead</div>
           <div className={styles.errGrid}>
-            <Link to={linkToPath('QueerPulse Studio Live.html')} className={styles.errLink}>
+            <Link to={routes.studioLive} className={styles.errLink}>
               <span className={styles.errLinkLabel}>
                 This week's <em>set</em>
               </span>
               <span className={styles.errLinkSub}>Live, programmed Mondays</span>
             </Link>
-            <Link to={linkToPath('QueerPulse Studio Search.html')} className={styles.errLink}>
+            <Link to={routes.studioSearch} className={styles.errLink}>
               <span className={styles.errLinkLabel}>
                 <em>Search</em> the catalogue
               </span>
               <span className={styles.errLinkSub}>Tracks, artists, sheet music</span>
             </Link>
-            <Link to={linkToPath('QueerPulse Studio Library.html')} className={styles.errLink}>
+            <Link to={routes.studioLibrary} className={styles.errLink}>
               <span className={styles.errLinkLabel}>
                 Your <em>room</em>
               </span>

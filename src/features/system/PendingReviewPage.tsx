@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './PendingReviewPage.module.css'
 
 export function PendingReviewPage() {
@@ -80,8 +80,8 @@ export function PendingReviewPage() {
         </div>
 
         <div className={styles.actions}>
-          <Button to={linkToPath('QueerPulse Magazine.html')}>Read the magazine →</Button>
-          <Button variant="ghost" to={linkToPath('QueerPulse Vouch.html')}>
+          <Button to={routes.magazine}>Read the magazine →</Button>
+          <Button variant="ghost" to={routes.vouch}>
             Ask a member to vouch
           </Button>
           <Button
@@ -93,11 +93,11 @@ export function PendingReviewPage() {
         </div>
         <p className={styles.foot}>
           Already know a member who can vouch?{' '}
-          <Link to={linkToPath('QueerPulse Vouch.html')}>Send them a one-click vouch link</Link> —
+          <Link to={routes.vouch}>Send them a one-click vouch link</Link> —
           bumps you ahead in the queue.
           <br />
           Want to withdraw?{' '}
-          <Link to={linkToPath('QueerPulse Contact.html')}>Write to the team</Link>.
+          <Link to={routes.contact}>Write to the team</Link>.
         </p>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { linkToPath, routes } from '../../../app/routeMap'
 import { communities } from '../data/communities'
 import styles from './Communities.module.css'
 
@@ -26,7 +26,7 @@ export function Communities() {
             }
             subtitle="A living directory of queer communities across Lisbon — social groups, arts collectives, activist circles, sports clubs, and more."
             action={
-              <Button variant="ghost" to={linkToPath('QueerPulse Communities.html')}>
+              <Button variant="ghost" to={routes.communities}>
                 Browse all communities →
               </Button>
             }

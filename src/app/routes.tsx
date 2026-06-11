@@ -37,6 +37,8 @@ import { PodcastShowPage } from '../features/magazine/PodcastShowPage'
 import { AudioPlayerPage } from '../features/magazine/AudioPlayerPage'
 import { NewsletterArchivePage } from '../features/magazine/NewsletterArchivePage'
 import { StoryPage } from '../features/magazine/StoryPage'
+import { StoryTomasPage } from '../features/magazine/StoryTomasPage'
+import { StorySafetyPage } from '../features/magazine/StorySafetyPage'
 import { CreativesPage } from '../features/community/CreativesPage'
 import { ManifestoPage } from '../features/marketing/ManifestoPage'
 import { PrivacyPage } from '../features/marketing/PrivacyPage'
@@ -176,6 +178,17 @@ import { SessionsPage } from '../features/settings/SessionsPage'
 import { ProfileThemePage } from '../features/settings/ProfileThemePage'
 import { SubscriptionsPage } from '../features/settings/SubscriptionsPage'
 import { CancelMembershipPage } from '../features/settings/CancelMembershipPage'
+import { MembershipPage } from '../features/settings/MembershipPage'
+import { GiftMembershipPage } from '../features/settings/GiftMembershipPage'
+import { PublicProfilePage } from '../features/members/PublicProfilePage'
+import { MentorProfilePage } from '../features/economy/MentorProfilePage'
+import { NotificationDeepLinkPage } from '../features/notifications/NotificationDeepLinkPage'
+import { MentionsPage } from '../features/notifications/MentionsPage'
+import { CollectionsPage } from '../features/members/CollectionsPage'
+import { DraftsPage } from '../features/members/DraftsPage'
+import { QrScannerPage } from '../features/members/QrScannerPage'
+import { CookiesPage } from '../features/marketing/CookiesPage'
+import { PronounsGuidePage } from '../features/resources/PronounsGuidePage'
 import { KNOWN_ROUTE_SLUGS } from './routeMap'
 
 /** Top-level slugs that now have real pages — excluded from the placeholder fallback. */
@@ -265,6 +278,8 @@ const BUILT_SLUGS = new Set([
   'audio-player',
   'newsletter-archive',
   'story',
+  'story-tomas',
+  'story-safety',
   'creatives',
   'manifesto',
   'offer',
@@ -306,6 +321,7 @@ export function AppRoutes() {
       <Route path="/search" element={<SearchPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/profile/:slug" element={<ProfilePage />} />
+      <Route path="/public-profile" element={<PublicProfilePage />} />
       <Route path="/connect" element={<ConnectPage />} />
       <Route path="/connect/:slug" element={<ConnectPage />} />
       <Route path="/connections" element={<ConnectionsPage />} />
@@ -314,6 +330,11 @@ export function AppRoutes() {
       <Route path="/family" element={<FamilyPage />} />
       <Route path="/messages" element={<MessagesPage />} />
       <Route path="/notifications" element={<NotificationsPage />} />
+      <Route path="/notification-deep-link" element={<NotificationDeepLinkPage />} />
+      <Route path="/mentions" element={<MentionsPage />} />
+      <Route path="/collections" element={<CollectionsPage />} />
+      <Route path="/drafts" element={<DraftsPage />} />
+      <Route path="/qr-scanner" element={<QrScannerPage />} />
       <Route path="/communities" element={<CommunitiesPage />} />
       <Route path="/community/:slug" element={<CommunityDetailPage />} />
 
@@ -344,11 +365,14 @@ export function AppRoutes() {
       <Route path="/audio-player" element={<AudioPlayerPage />} />
       <Route path="/newsletter-archive" element={<NewsletterArchivePage />} />
       <Route path="/story" element={<StoryPage />} />
+      <Route path="/story-tomas" element={<StoryTomasPage />} />
+      <Route path="/story-safety" element={<StorySafetyPage />} />
       <Route path="/creatives" element={<CreativesPage />} />
       <Route path="/manifesto" element={<ManifestoPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/dsar" element={<DsarPage />} />
+      <Route path="/cookies" element={<CookiesPage />} />
       <Route path="/constitution" element={<ConstitutionPage />} />
       <Route path="/code-of-conduct" element={<CodeOfConductPage />} />
       <Route path="/changelog" element={<ChangelogPage />} />
@@ -374,6 +398,7 @@ export function AppRoutes() {
       <Route path="/emergency" element={<EmergencyPage />} />
       <Route path="/101" element={<Queer101Page />} />
       <Route path="/glossary" element={<GlossaryPage />} />
+      <Route path="/pronouns-guide" element={<PronounsGuidePage />} />
       <Route path="/trans-day-of-visibility" element={<TransDayOfVisibilityPage />} />
       <Route path="/world-aids-day" element={<WorldAidsDayPage />} />
       <Route path="/pride-month" element={<PrideMonthPage />} />
@@ -408,6 +433,7 @@ export function AppRoutes() {
       <Route path="/employer-reviews" element={<EmployerReviewsPage />} />
       <Route path="/application-status" element={<ApplicationStatusPage />} />
       <Route path="/mentorship" element={<MentorshipPage />} />
+      <Route path="/mentor-profile" element={<MentorProfilePage />} />
       <Route path="/economy" element={<EconomyPage />} />
 
       {/* Cinema */}
@@ -489,6 +515,8 @@ export function AppRoutes() {
       <Route path="/data-export" element={<DataExportPage />} />
       <Route path="/delete-account" element={<DeleteAccountPage />} />
       <Route path="/cancel-membership" element={<CancelMembershipPage />} />
+      <Route path="/membership" element={<MembershipPage />} />
+      <Route path="/gift-membership" element={<GiftMembershipPage />} />
 
       {/* System, error & account-state screens */}
       <Route path="/500" element={<ServerErrorPage />} />

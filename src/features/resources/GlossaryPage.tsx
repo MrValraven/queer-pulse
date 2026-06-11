@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./GlossaryPage.module.css";
 import { Button } from '../../shared/components/ui'
 
@@ -20,9 +20,9 @@ interface LetterBlock {
   terms: Term[];
 }
 
-const Q101 = linkToPath("QueerPulse 101.html");
-const TRANS_HEALTH = linkToPath("QueerPulse Trans Healthcare.html");
-const CONTACT = linkToPath("QueerPulse Contact.html");
+const Q101 = routes.queer101;
+const TRANS_HEALTH = routes.transHealthcare;
+const CONTACT = routes.contact;
 
 const BLOCKS: LetterBlock[] = [
   {
@@ -47,7 +47,7 @@ const BLOCKS: LetterBlock[] = [
     terms: [
       { name: "Cis", type: "Essential", typeKind: "essential", def: (<>Short for cisgender — describing a person whose gender matches the one they were assigned at birth. <em>Not an insult, not a slur, just a descriptor</em> — symmetric to "trans". Latin: <i>cis-</i> means "on this side of".</>), search: "cis cisgender descriptor" },
       { name: "Chosen family", type: "Essential", typeKind: "essential", def: (<>The set of intentional, ongoing relationships of care that queer people build, often in parallel with (and sometimes in place of) biological family. <b>Includes lovers, exes, friends, neighbours, and the person who calls if you don't post for three days.</b></>), search: "chosen family care relationships" },
-      { name: "Coming out", type: "Essential", typeKind: "essential", def: (<>The ongoing act of disclosing a non-heterosexual or non-cisgender identity. <em>Not a one-time event.</em> Most queer people come out hundreds of times — to coworkers, to taxi drivers, to landlords, to GPs.</>), meta: (<>See also: <Link to={linkToPath("QueerPulse Coming Out.html")}>Coming-Out Support</Link></>), search: "coming out disclosing identity" },
+      { name: "Coming out", type: "Essential", typeKind: "essential", def: (<>The ongoing act of disclosing a non-heterosexual or non-cisgender identity. <em>Not a one-time event.</em> Most queer people come out hundreds of times — to coworkers, to taxi drivers, to landlords, to GPs.</>), meta: (<>See also: <Link to={routes.comingOut}>Coming-Out Support</Link></>), search: "coming out disclosing identity" },
     ],
   },
   {

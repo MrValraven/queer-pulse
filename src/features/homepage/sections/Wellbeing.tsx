@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { linkToPath, routes } from '../../../app/routeMap'
 import { wellbeingResources } from '../data/wellbeing'
 import type { WellbeingIcon, WellbeingTone } from '../data/types'
 import styles from './Wellbeing.module.css'
@@ -80,7 +80,7 @@ export function Wellbeing() {
             }
             subtitle="A professional network without health infrastructure is incomplete. Resources, directories, and care — built in, not bolted on."
             action={
-              <Button variant="ghost" to={linkToPath('QueerPulse Wellbeing.html')}>
+              <Button variant="ghost" to={routes.wellbeing}>
                 All resources →
               </Button>
             }

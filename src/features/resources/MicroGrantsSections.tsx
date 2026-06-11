@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './MicroGrantsPage.module.css'
 
-const INVITE = linkToPath('QueerPulse Invite.html')
+const INVITE = routes.invite
 const CONTRIBUTE_AMOUNTS = ['€5', '€10', '€20', '€50', 'Other']
 
 export function MicroGrantsHero() {

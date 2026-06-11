@@ -1,8 +1,8 @@
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
 export type Mode = 'mentee' | 'mentor'
 
-export const VOLUNTEER = linkToPath('QueerPulse Volunteer.html')
+export const VOLUNTEER = routes.volunteer
 
 export const STATS = [
   { n: '24', l: 'Active mentors in the network' },

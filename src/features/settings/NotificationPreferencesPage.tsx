@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { MATRIX_ROWS } from './notificationPreferences.data'
 import styles from './NotificationPreferencesPage.module.css'
 
@@ -23,7 +23,7 @@ export function NotificationPreferencesPage() {
         <aside className={styles.sidebar}>
           <div className={styles.sidebarInner}>
             <div className={styles.sidebarHead}>Account</div>
-            <Link to={linkToPath('QueerPulse Edit Profile.html')} className={styles.navItem}>
+            <Link to={routes.editProfile} className={styles.navItem}>
                 <svg className={styles.navIcon} viewBox="0 0 16 16"><circle cx="8" cy="6" r="3" /><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" /></svg>
                 Edit profile
               </Link>
@@ -36,7 +36,7 @@ export function NotificationPreferencesPage() {
               Privacy
             </button>
             <div className={styles.sidebarHead}>Danger zone</div>
-            <Link to={linkToPath('QueerPulse Delete Account.html')} className={`${styles.navItem} ${styles.navItemDanger}`}>
+            <Link to={routes.deleteAccount} className={`${styles.navItem} ${styles.navItemDanger}`}>
                 <svg className={styles.navIcon} viewBox="0 0 16 16"><polyline points="3,4 13,4" /><path d="M6 4V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1M5 4l.5 9h5l.5-9" /></svg>
                 Deactivate account
               </Link>

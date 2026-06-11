@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { PILL_LABELS, TIPS, TOTAL_STEPS } from './createGathering.data'
 import { useGatheringForm } from './useGatheringForm'
 import {
@@ -36,7 +36,7 @@ export function CreateGatheringPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
   const back = () => {
-    if (step === 1) navigate(linkToPath('QueerPulse Host.html'))
+    if (step === 1) navigate(routes.host)
     else setStep((s) => s - 1)
   }
 
@@ -93,10 +93,10 @@ export function CreateGatheringPage() {
                     You'll get an email notification for each new attendee.
                   </p>
                   <div className={styles.successActions}>
-                    <Button to={linkToPath('QueerPulse Gathering.html')} variant="ghost-dark">
+                    <Button to={routes.gathering} variant="ghost-dark">
                       View on board →
                     </Button>
-                    <Button to={linkToPath('QueerPulse Event.html')} variant="primary">
+                    <Button to={routes.event} variant="primary">
                       See your event page →
                     </Button>
                   </div>

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import { CONTACTS, type Path } from "./transHealthcare.data";
 import styles from "./TransHealthcarePage.module.css";
 
@@ -87,19 +87,19 @@ export function TransHealthcareSidebar() {
       <div className={styles.sbCard}>
         <div className={styles.sbcTitle}>Related on QueerPulse</div>
         <div className={styles.sbcItem}>
-          <Link to={linkToPath("QueerPulse Solidarity.html")} className={styles.sbcLink}>
+          <Link to={routes.solidarity} className={styles.sbcLink}>
             Solidarity Pricing Registry →
           </Link>
           <div className={styles.sbcRole}>Trans-affirming GPs, psychiatrists</div>
         </div>
         <div className={styles.sbcItem}>
-          <Link to={linkToPath("QueerPulse Legal.html")} className={styles.sbcLink}>
+          <Link to={routes.legal} className={styles.sbcLink}>
             Legal Resources →
           </Link>
           <div className={styles.sbcRole}>Name change documents</div>
         </div>
         <div className={styles.sbcItem}>
-          <Link to={linkToPath("QueerPulse Mental Health.html")} className={styles.sbcLink}>
+          <Link to={routes.mentalHealth} className={styles.sbcLink}>
             Mental Health →
           </Link>
           <div className={styles.sbcRole}>Support through the process</div>
@@ -120,7 +120,7 @@ export function TransHealthcareOutro() {
           The QueerPulse community includes trans-affirming GPs, therapists, and
           legal professionals. You do not have to navigate this alone.
         </p>
-        <Button to={linkToPath("QueerPulse Solidarity.html")} variant="primary" size="lg">
+        <Button to={routes.solidarity} variant="primary" size="lg">
           Find solidarity pricing
         </Button>
       </div>

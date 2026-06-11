@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import {
   CLINICS,
   CLINIC_FILTERS,
@@ -178,7 +178,7 @@ export function HivTab() {
           </div>
         </div>
         <div className={styles.hivBtns}>
-          <Button to={linkToPath('QueerPulse Communities.html')} variant="primary">
+          <Button to={routes.communities} variant="primary">
             Find HIV support services
           </Button>
         </div>

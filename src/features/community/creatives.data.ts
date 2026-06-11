@@ -1,7 +1,7 @@
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
-export const PROFILE = linkToPath('QueerPulse Profile.html')
-export const INVITE = linkToPath('QueerPulse Invite.html')
+export const PROFILE = routes.profile
+export const INVITE = routes.invite
 
 export type Tint = 'coral' | 'jade' | 'plum'
 export const TINT_BG: Record<Tint, string> = {

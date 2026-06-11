@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { PageShell } from '../../shared/components/layout'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './RecoveryCodesPage.module.css'
 
 type CodeEntry = { code: string; used: string | null }
@@ -68,7 +68,7 @@ export function RecoveryCodesPage() {
   return (
     <PageShell>
       <div className={styles.page}>
-        <Link to={linkToPath('QueerPulse Security.html')} className={styles.back}>← Security</Link>
+        <Link to={routes.security} className={styles.back}>← Security</Link>
         <div className={styles.eyebrow}>Security · 2FA recovery codes</div>
         <h1 className={styles.h1}>Your way back in, <em>if you lose your phone.</em></h1>
         <p className={styles.lead}>Ten codes. Each works once. Use them only when your authenticator app is gone — phone lost, replaced, factory-reset. Don't store them on the same device as your authenticator.</p>

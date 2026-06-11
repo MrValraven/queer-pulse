@@ -1,4 +1,5 @@
 import type { StoryCard, StoryFeature } from './types'
+import { routes } from '../../../app/routeMap'
 
 export const featureStory: StoryFeature = {
   category: 'Field Notes',
@@ -7,7 +8,7 @@ export const featureStory: StoryFeature = {
     "Six years ago it was a dusty first-floor flat with bad wiring. Today it's where half of Lisbon's queer design scene passes through — and nobody there is performing for an algorithm.",
   bylineInitials: 'IT',
   byline: 'Words by Inês Tavares · 6 min read →',
-  href: 'QueerPulse Story.html',
+  href: routes.story,
   tint: 'coral',
 }
 
@@ -17,7 +18,7 @@ export const storyCards: StoryCard[] = [
     title: 'Leaving the startup grind for a supper club in Mouraria',
     bylineInitials: 'SA',
     byline: 'Sofia Andrade · 4 min read',
-    href: 'QueerPulse Story Tomas.html',
+    href: routes.storyTomas,
     tint: 'jade',
   },
   {
@@ -25,7 +26,7 @@ export const storyCards: StoryCard[] = [
     title: 'Why we stayed invite-only: safety as a feature, not a gate',
     bylineInitials: 'QP',
     byline: 'The QueerPulse team · 3 min read',
-    href: 'QueerPulse Story Safety.html',
+    href: routes.storySafety,
     tint: 'plum',
   },
 ]

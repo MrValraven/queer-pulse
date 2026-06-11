@@ -1,4 +1,5 @@
 import type { AvatarTint } from '../../shared/components/ui/Avatar'
+import { routes } from '../../app/routeMap'
 
 export type NotifType = 'messages' | 'events' | 'community' | 'platform'
 
@@ -39,8 +40,8 @@ export const notifications: Notification[] = [
     meta: 'Private message',
     time: '2 min ago',
     actions: [
-      { label: 'Reply', variant: 'primary', href: 'QueerPulse Messages.html' },
-      { label: 'View thread', variant: 'ghost', href: 'QueerPulse Messages.html' },
+      { label: 'Reply', variant: 'primary', href: routes.messages },
+      { label: 'View thread', variant: 'ghost', href: routes.messages },
     ],
   },
   {
@@ -51,7 +52,7 @@ export const notifications: Notification[] = [
     text: 'Your RSVP for <strong>Newcomer Welcome Dinner</strong> has been confirmed. The event is on Saturday June 14th at Casa do Alentejo.',
     meta: 'Event · Gathering',
     time: '18 min ago',
-    actions: [{ label: 'View event', variant: 'primary', href: 'QueerPulse Event.html' }],
+    actions: [{ label: 'View event', variant: 'primary', href: routes.event }],
   },
   {
     id: 3,
@@ -62,7 +63,7 @@ export const notifications: Notification[] = [
     meta: 'Reading group · Invitation',
     time: '1 hr ago',
     actions: [
-      { label: 'Accept', variant: 'primary', href: 'QueerPulse Reading Groups.html' },
+      { label: 'Accept', variant: 'primary', href: routes.readingGroups },
       { label: 'Decline', variant: 'ghost', href: '#' },
     ],
   },
@@ -74,7 +75,7 @@ export const notifications: Notification[] = [
     text: '<strong>Sofia Andrade</strong> mentioned you in the Forum thread: "What are we reading in July?"',
     meta: 'Forum · Mention',
     time: '3 hr ago',
-    actions: [{ label: 'View thread', variant: 'primary', href: 'QueerPulse Forum.html' }],
+    actions: [{ label: 'View thread', variant: 'primary', href: routes.forum }],
   },
   {
     id: 5,
@@ -84,7 +85,7 @@ export const notifications: Notification[] = [
     text: '<strong>QueerPulse Magazine Issue 18</strong> is now available. Cover story: The city changed. Did we?',
     meta: 'Magazine · June 2026',
     time: 'Yesterday',
-    actions: [{ label: 'Read now', variant: 'primary', href: 'QueerPulse Magazine.html' }],
+    actions: [{ label: 'Read now', variant: 'primary', href: routes.magazine }],
   },
   {
     id: 6,
@@ -94,7 +95,7 @@ export const notifications: Notification[] = [
     text: 'Reminder: <strong>Theory Thursdays</strong> reading group meets tomorrow at 7pm in Mouraria. 1 spot still open.',
     meta: 'Reading group · Reminder',
     time: 'Yesterday',
-    actions: [{ label: 'See details', variant: 'ghost', href: 'QueerPulse Reading Groups.html' }],
+    actions: [{ label: 'See details', variant: 'ghost', href: routes.readingGroups }],
   },
   {
     id: 7,
@@ -113,7 +114,7 @@ export const notifications: Notification[] = [
     text: 'New platform feature: <strong>Barter Exchange</strong> now supports service bundles. You can offer multi-session packages.',
     meta: 'Platform update',
     time: '3 days ago',
-    actions: [{ label: 'See barter board', variant: 'ghost', href: 'QueerPulse Barter.html' }],
+    actions: [{ label: 'See barter board', variant: 'ghost', href: routes.barter }],
   },
   {
     id: 9,
@@ -123,7 +124,7 @@ export const notifications: Notification[] = [
     text: 'The <strong>Queer Cinema Night — Levante</strong> you attended has a follow-up discussion scheduled for June 20th.',
     meta: 'Event · Follow-up',
     time: '4 days ago',
-    actions: [{ label: 'View event', variant: 'ghost', href: 'QueerPulse Event.html' }],
+    actions: [{ label: 'View event', variant: 'ghost', href: routes.event }],
   },
   {
     id: 10,
@@ -133,7 +134,7 @@ export const notifications: Notification[] = [
     text: '<strong>Rui Fernandes</strong> sent you a message regarding the Archive Night on Friday.',
     meta: 'Private message',
     time: '5 days ago',
-    actions: [{ label: 'Read message', variant: 'ghost', href: 'QueerPulse Messages.html' }],
+    actions: [{ label: 'Read message', variant: 'ghost', href: routes.messages }],
   },
   {
     id: 11,
@@ -143,7 +144,7 @@ export const notifications: Notification[] = [
     text: 'Your post in the Forum ("Housing law update — what I found out") received 12 replies.',
     meta: 'Forum · Activity',
     time: '6 days ago',
-    actions: [{ label: 'View replies', variant: 'ghost', href: 'QueerPulse Forum.html' }],
+    actions: [{ label: 'View replies', variant: 'ghost', href: routes.forum }],
   },
   {
     id: 12,
@@ -153,6 +154,6 @@ export const notifications: Notification[] = [
     text: 'The <strong>Q2 2026 Community Health Report</strong> has been published. Moderation stats and finances are now live.',
     meta: 'Governance · Quarterly report',
     time: '1 week ago',
-    actions: [{ label: 'Read report', variant: 'ghost', href: 'QueerPulse Governance.html' }],
+    actions: [{ label: 'Read report', variant: 'ghost', href: routes.governance }],
   },
 ]

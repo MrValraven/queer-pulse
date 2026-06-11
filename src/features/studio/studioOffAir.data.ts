@@ -1,4 +1,5 @@
 import type { ImageSlotTint } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 
 export interface OffAirCard {
   to: string
@@ -14,7 +15,7 @@ export interface OffAirCard {
 
 export const OFF_AIR_LIBRARY: OffAirCard[] = [
   {
-    to: 'QueerPulse Studio Album.html',
+    to: routes.studioAlbum,
     tint: 'coral',
     tag: 'mem',
     tagLabel: 'Sustainer',
@@ -24,7 +25,7 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     pay: true,
   },
   {
-    to: 'QueerPulse Studio Set.html',
+    to: routes.studioSet,
     tint: 'plum',
     tag: 'free',
     tagLabel: 'Replay',
@@ -34,7 +35,7 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     meta: 'DJ set · 1h 42m',
   },
   {
-    to: 'QueerPulse Studio Collection.html',
+    to: routes.studioCollection,
     tint: 'jade',
     curator: 'D. Okoye',
     title: 'Songs for ',
@@ -42,7 +43,7 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     meta: 'Collection · 22 tracks',
   },
   {
-    to: 'QueerPulse Studio Track.html',
+    to: routes.studioTrack,
     tint: 'default',
     tag: 'free',
     tagLabel: 'Free',
@@ -52,7 +53,7 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     pay: true,
   },
   {
-    to: 'QueerPulse Studio Album.html',
+    to: routes.studioAlbum,
     tint: 'plum',
     tag: 'mem',
     tagLabel: 'Sustainer',
@@ -65,7 +66,7 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
 
 export const QUIET_HOURS: OffAirCard[] = [
   {
-    to: 'QueerPulse Studio Collection.html',
+    to: routes.studioCollection,
     tint: 'jade',
     curator: 'Yara Reis',
     title: 'Almost ',
@@ -73,7 +74,7 @@ export const QUIET_HOURS: OffAirCard[] = [
     meta: 'Collection · 31 tracks',
   },
   {
-    to: 'QueerPulse Studio Collection.html',
+    to: routes.studioCollection,
     tint: 'plum',
     curator: 'D. Okoye',
     title: 'Trans ',
@@ -81,7 +82,7 @@ export const QUIET_HOURS: OffAirCard[] = [
     meta: 'Mix · 58m',
   },
   {
-    to: 'QueerPulse Studio Collection.html',
+    to: routes.studioCollection,
     tint: 'coral',
     curator: 'João Ribeiro',
     title: 'Rain on the ',
@@ -89,7 +90,7 @@ export const QUIET_HOURS: OffAirCard[] = [
     meta: 'Collection · 18 tracks',
   },
   {
-    to: 'QueerPulse Studio Collection.html',
+    to: routes.studioCollection,
     tint: 'default',
     curator: 'Sofía Castro',
     title: 'Piano, one ',
@@ -97,7 +98,7 @@ export const QUIET_HOURS: OffAirCard[] = [
     meta: 'EP · 6 tracks',
   },
   {
-    to: 'QueerPulse Studio Collection.html',
+    to: routes.studioCollection,
     tint: 'jade',
     curator: 'Coro de Outubro',
     title: 'Vespers, ',

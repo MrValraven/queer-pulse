@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./GatheringCancelledPage.module.css";
 
-const CALENDAR = linkToPath("QueerPulse Calendar.html");
-const GATHERING = linkToPath("QueerPulse Gathering.html");
-const MESSAGES = linkToPath("QueerPulse Messages.html");
+const CALENDAR = routes.calendar;
+const GATHERING = routes.gathering;
+const MESSAGES = routes.messages;
 
 const Tick = () => (
   <svg viewBox="0 0 24 24">

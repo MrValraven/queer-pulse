@@ -1,10 +1,10 @@
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
 export type Tint = 'jade' | 'plum' | undefined
 export type TabId = 'all' | 'incoming' | 'outgoing' | 'vouched'
 
-export const PROFILE = linkToPath('QueerPulse Profile.html')
-export const MESSAGES = linkToPath('QueerPulse Messages.html')
+export const PROFILE = routes.profile
+export const MESSAGES = routes.messages
 
 export interface Person {
   initials: string
@@ -81,7 +81,7 @@ export const ALL: AllConnection[] = [
     tags: ['Design', 'Mentoring'],
     meta: { badge: 'You vouched', mutuals: 14 },
     actions: [
-      { label: 'Book review', to: linkToPath('QueerPulse Offer.html'), variant: 'ghost' },
+      { label: 'Book review', to: routes.offer, variant: 'ghost' },
       { label: 'Message', to: MESSAGES, variant: 'primary' },
     ],
   },
@@ -90,7 +90,7 @@ export const ALL: AllConnection[] = [
     tags: ['Design', 'Health', 'Hosting'],
     meta: { mutuals: 6, connected: 'Jan 2026' },
     actions: [
-      { label: 'Co-host', to: linkToPath('QueerPulse Host.html'), variant: 'ghost' },
+      { label: 'Co-host', to: routes.host, variant: 'ghost' },
       { label: 'Message', to: MESSAGES, variant: 'primary' },
     ],
   },
@@ -118,7 +118,7 @@ export const ALL: AllConnection[] = [
     meta: { mutuals: 13, connected: 'Sep 2025' },
     actions: [
       { label: 'Message', to: MESSAGES, variant: 'ghost' },
-      { label: 'View profile', to: linkToPath('QueerPulse Author.html'), variant: 'primary' },
+      { label: 'View profile', to: routes.author, variant: 'primary' },
     ],
   },
 ]

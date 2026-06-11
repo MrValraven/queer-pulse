@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { AuthLayout } from '../auth/AuthLayout'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './VerificationNeededPage.module.css'
 
 type Method = 'password' | '2fa' | 'magic'
@@ -24,7 +24,7 @@ export function VerificationNeededPage() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     showToast('Verified · continuing', 'success')
-    setTimeout(() => navigate(linkToPath('QueerPulse Cancel Membership.html')), 800)
+    setTimeout(() => navigate(routes.cancelMembership), 800)
   }
 
   const TABS: { label: string; value: Method }[] = [
@@ -99,7 +99,7 @@ export function VerificationNeededPage() {
 
       <p className={styles.foot}>
         Forgot your password?{' '}
-        <Link to={linkToPath('QueerPulse Password Reset.html')}>Reset →</Link> · this
+        <Link to={routes.passwordReset}>Reset →</Link> · this
         re-auth expires in <b>5 minutes</b>.
       </p>
     </AuthLayout>

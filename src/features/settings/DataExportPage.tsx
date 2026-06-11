@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { DATA_TYPES, ACCORDION_ITEMS } from './dataExport.data'
 import styles from './DataExportPage.module.css'
 
@@ -146,7 +146,7 @@ export function DataExportPage() {
         <div className="wrap">
           <h2 className={styles.outroH}>Questions about<br /><em>your data?</em></h2>
           <p className={styles.outroSub}>Write to our data team. We respond to all requests within 5 working days.</p>
-          <Button variant="primary" size="lg" to={linkToPath('QueerPulse Contact.html')}>Contact us</Button>
+          <Button variant="primary" size="lg" to={routes.contact}>Contact us</Button>
         </div>
       </section>
     </PageShell>

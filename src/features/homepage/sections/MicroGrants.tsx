@@ -1,7 +1,7 @@
 import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
 import { useScrollReveal } from '../../../shared/hooks/useScrollReveal'
 import { useCountUp } from '../../../shared/hooks/useCountUp'
-import { linkToPath } from '../../../app/routeMap'
+import { routes } from '../../../app/routeMap'
 import { grantItems, grantStats } from '../data/grants'
 import type { GrantStat } from '../data/types'
 import styles from './MicroGrants.module.css'
@@ -34,7 +34,7 @@ export function MicroGrants() {
             }
             subtitle="Members contribute what they can. Others apply for €50–200 for event costs, project materials, or emergencies. No bureaucracy."
             action={
-              <Button variant="ghost" to={linkToPath('QueerPulse Grants.html')}>
+              <Button variant="ghost" to={routes.grants}>
                 See the fund →
               </Button>
             }
@@ -61,8 +61,8 @@ export function MicroGrants() {
         </div>
 
         <Reveal className={styles.cta}>
-          <Button to={linkToPath('QueerPulse Grants.html#apply')}>Apply for a grant</Button>
-          <Button variant="ghost" to={linkToPath('QueerPulse Grants.html#contribute')}>
+          <Button to={`${routes.grants}#apply`}>Apply for a grant</Button>
+          <Button variant="ghost" to={`${routes.grants}#contribute`}>
             Contribute to the fund →
           </Button>
         </Reveal>

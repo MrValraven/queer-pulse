@@ -1,5 +1,5 @@
 import { Button, Eyebrow, Reveal } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { routes } from '../../../app/routeMap'
 import { neighbourhoods } from '../data/gatherings'
 import styles from './Hero.module.css'
 
@@ -25,7 +25,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal className={styles.cta} delay={180}>
-            <Button size="lg" to={linkToPath('QueerPulse Invite.html')}>
+            <Button size="lg" to={routes.invite}>
               Request an invite
             </Button>
             <Button size="lg" variant="ghost" href="#discovery">

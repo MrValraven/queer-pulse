@@ -1,6 +1,6 @@
 import { PageShell } from '../../shared/components/layout'
 import { Button, Reveal } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import {
   StatusHero,
   ServicesGrid,
@@ -30,7 +30,7 @@ export function StatusPage() {
             Invite-only. Community-owned. Built to last.
           </Reveal>
           <Reveal delay={140}>
-            <Button size="lg" to={linkToPath('QueerPulse Invite.html')}>
+            <Button size="lg" to={routes.invite}>
               Request an invite
             </Button>
           </Reveal>

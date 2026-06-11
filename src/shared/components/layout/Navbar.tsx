@@ -4,7 +4,7 @@ import { Button } from "../ui";
 import { useScrolled } from "../../hooks/useScrolled";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useTheme } from "../../../app/providers/ThemeProvider";
-import { linkToPath } from "../../../app/routeMap";
+import { routes } from "../../../app/routeMap";
 import { MegaNav } from "./MegaNav";
 import { MegaNavDrawer } from "./MegaNavDrawer";
 import styles from "./Navbar.module.css";
@@ -51,7 +51,7 @@ export function Navbar() {
               Sign in
             </Link>
           )}
-          <Button to={linkToPath("QueerPulse Invite.html")}>
+          <Button to={routes.invite}>
             Request an invite
           </Button>
 
@@ -88,7 +88,7 @@ export function Navbar() {
               Sign in
             </Link>
             <Button
-              to={linkToPath("QueerPulse Invite.html")}
+              to={routes.invite}
               className={styles.drawerCta}
               onClick={() => setDrawerOpen(false)}
             >

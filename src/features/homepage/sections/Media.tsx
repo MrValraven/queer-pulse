@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { routes } from '../../../app/routeMap'
 import styles from './Media.module.css'
 
 const FilmIcon = () => (
@@ -35,7 +35,7 @@ export function Media() {
         </Reveal>
 
         <Reveal className={styles.grid}>
-          <Link to={linkToPath('QueerPulse Cinema.html')} className={[styles.card, styles.cardFilm].join(' ')}>
+          <Link to={routes.cinema} className={[styles.card, styles.cardFilm].join(' ')}>
             <span className={[styles.icon, styles.iconFilm].join(' ')}>
               <FilmIcon />
             </span>
@@ -55,7 +55,7 @@ export function Media() {
             <span className={styles.cta}>Enter the Cinema →</span>
           </Link>
 
-          <Link to={linkToPath('QueerPulse Studio.html')} className={[styles.card, styles.cardMusic].join(' ')}>
+          <Link to={routes.studio} className={[styles.card, styles.cardMusic].join(' ')}>
             <span className={[styles.icon, styles.iconMusic].join(' ')}>
               <MusicIcon />
             </span>

@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./WorldAidsDayPage.module.css";
 import { Button } from '../../shared/components/ui'
 
-const LEGAL = linkToPath("QueerPulse Legal.html");
-const GATHERING = linkToPath("QueerPulse Gathering.html");
-const DIRECTORY = linkToPath("QueerPulse Directory.html");
+const LEGAL = routes.legal;
+const GATHERING = routes.gathering;
+const DIRECTORY = routes.directory;
 
 const STATS = [
   { lbl: "New diagnoses · 2024", n: <em>820</em>, p: "Down 34% from a decade ago · still ~2 per day" },
@@ -177,7 +177,7 @@ export function WorldAidsDayPage() {
                 <Button to={GATHERING} variant="ghost-dark">
                   Visit the memorial wall
                 </Button>
-                <Button to={linkToPath("QueerPulse Invite.html")} variant="ghost-dark">
+                <Button to={routes.invite} variant="ghost-dark">
                   Fund the testing programme
                 </Button>
               </div>

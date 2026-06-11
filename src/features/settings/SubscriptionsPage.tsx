@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { NEWSLETTERS, JOB_ALERTS, PRONOUN_OPTIONS, PRONOUN_VISIBILITY } from './subscriptions.data'
 import styles from './SubscriptionsPage.module.css'
 
@@ -40,7 +40,7 @@ export function SubscriptionsPage() {
   return (
     <AppShell>
       <div className={styles.page}>
-        <Link to={linkToPath('QueerPulse Settings.html')} className={styles.back}>← Settings</Link>
+        <Link to={routes.settings} className={styles.back}>← Settings</Link>
         <div className={styles.eyebrow}>Settings · subscriptions, alerts &amp; pronouns</div>
         <h1 className={styles.h1}>What we send · <em>how you appear.</em></h1>
         <p className={styles.lead}>Three small, surgical controls. <em>Each opt-in is real</em> — turning off a newsletter means we never send it, not "less of it". Pronouns are the same: visible exactly where you choose, never inferred.</p>
@@ -124,9 +124,9 @@ export function SubscriptionsPage() {
 
         <div className={styles.pitchNote}>
           <b>Want to write for the podcast or magazine?</b> Pitches are read by the editorial team, not auto-filtered.{' '}
-          <Link to={linkToPath('QueerPulse Submit Story.html')}>Pitch a story →</Link>
+          <Link to={routes.submitStory}>Pitch a story →</Link>
           {' · '}
-          <Link to={linkToPath('QueerPulse Contact.html')}>Pitch yourself for The Back Room →</Link>
+          <Link to={routes.contact}>Pitch yourself for The Back Room →</Link>
         </div>
       </div>
     </AppShell>

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { VERIFIED_SPACES, type Category } from './safeSpaces'
 import { FILTERS } from './safeSpacesPage.data'
 import { FlagModal } from './FlagModal'
@@ -100,10 +100,10 @@ export function SafeSpacesPage() {
             only works because the community maintains it.
           </p>
           <div className={styles.outroBtns}>
-            <Button to={linkToPath('QueerPulse Safety.html')} variant="primary" size="lg">
+            <Button to={routes.safety} variant="primary" size="lg">
               Safety &amp; reporting
             </Button>
-            <Button to={linkToPath('QueerPulse Sober.html')} variant="ghost-dark" size="lg">
+            <Button to={routes.sober} variant="ghost-dark" size="lg">
               Sober &amp; social
             </Button>
           </div>

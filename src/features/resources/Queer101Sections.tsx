@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import {
   FAQ,
   GLOSSARY,
@@ -216,10 +216,10 @@ export function Queer101Outro() {
           isn't going anywhere.
         </p>
         <div className={styles.outroBtns}>
-          <Button to={linkToPath("QueerPulse Invite.html")} variant="primary" size="lg">
+          <Button to={routes.invite} variant="primary" size="lg">
             Join QueerPulse
           </Button>
-          <Button to={linkToPath("QueerPulse Communities.html")} variant="ghost-dark" size="lg">
+          <Button to={routes.communities} variant="ghost-dark" size="lg">
             Explore communities
           </Button>
         </div>

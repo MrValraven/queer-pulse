@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Avatar, AvatarStack } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { NEW_THIS_WEEK } from './feed.data'
 import styles from './FeedPage.module.css'
 
@@ -25,7 +25,7 @@ export function FeedSidebar() {
             <div className={styles.upVenue}>LX Factory</div>
           </div>
         </div>
-        <Link to={linkToPath('QueerPulse Calendar.html')} className={styles.sbLink}>See full calendar →</Link>
+        <Link to={routes.calendar} className={styles.sbLink}>See full calendar →</Link>
       </div>
 
       <div className={styles.sbCard}>

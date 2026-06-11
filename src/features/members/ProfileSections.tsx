@@ -10,7 +10,7 @@ import {
   Tag,
   TagRow,
 } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { memberProfiles, type MemberProfile } from './data/memberProfiles'
 import styles from './ProfilePage.module.css'
 
@@ -105,7 +105,7 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
             </TagRow>
             <div className={styles.cta}>
               {profile.visibility === 'private' ? (
-                <Button size="lg" variant="ghost" to={linkToPath('QueerPulse Invite.html')}>
+                <Button size="lg" variant="ghost" to={routes.invite}>
                   Request an intro
                 </Button>
               ) : (
@@ -113,7 +113,7 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
                   Say hello
                 </Button>
               )}
-              <Button size="lg" variant="ghost" to={linkToPath('QueerPulse Invite.html')}>
+              <Button size="lg" variant="ghost" to={routes.invite}>
                 Vouch for {profile.first}
               </Button>
             </div>
@@ -194,7 +194,7 @@ export function ProfileContent({ profile }: { profile: MemberProfile }) {
             {profile.board.map((item) => (
               <Link
                 key={item.slug}
-                to={linkToPath(`QueerPulse Offer.html#${item.slug}`)}
+                to={`${routes.offer}#${item.slug}`}
                 className={styles.ask}
               >
                 <KindChip kind={item.kind}>

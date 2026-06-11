@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./ArrivingPage.module.css";
 import { Button } from "../../shared/components/ui";
 import type { InfoCard } from "./arrivingPage.data";
 import { HOODS, ORGS, COMM_QUICK } from "./arrivingPage.data";
 
-const CHANGEMAKERS = linkToPath("QueerPulse Changemakers.html");
-const VOLUNTEER = linkToPath("QueerPulse Volunteer.html");
-const PLATFORMS = linkToPath("QueerPulse Platforms.html");
-const COMMUNITIES = linkToPath("QueerPulse Communities.html");
+const CHANGEMAKERS = routes.changemakers;
+const VOLUNTEER = routes.volunteer;
+const PLATFORMS = routes.platforms;
+const COMMUNITIES = routes.communities;
 
 const HEALTH: InfoCard[] = [
   { icon: "🏥", iconBg: "rgba(74,140,111,.1)", title: "Registering with SNS", body: "Register with the Serviço Nacional de Saúde (SNS) as soon as you have a NIF. You're entitled to a GP (médico de família). Ask at your local health centre (Centro de Saúde) — Arroios, Mouraria, and Príncipe Real all have active centres.", link: { label: "sns.gov.pt →", href: "https://www.sns.gov.pt", external: true } },
@@ -169,7 +169,7 @@ export function ArrivingPage() {
               <h3>Designers &amp; Photographers</h3>
               <p>Príncipe Real · From 7pm · Casual, warm, no agenda. Bring your work or just yourself.</p>
             </div>
-            <Button to={linkToPath("QueerPulse Gathering.html")} variant="ghost-dark">
+            <Button to={routes.gathering} variant="ghost-dark">
               I'll be there →
             </Button>
           </div>
@@ -212,7 +212,7 @@ export function ArrivingPage() {
             Request an invite to QueerPulse and get access to the full network —
             members, gatherings, board, and everything else on this page.
           </p>
-          <Button to={linkToPath("QueerPulse Invite.html")} variant="primary" size="lg">
+          <Button to={routes.invite} variant="primary" size="lg">
             Request an invite →
           </Button>
         </div>

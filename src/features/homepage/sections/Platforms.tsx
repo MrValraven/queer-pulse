@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { linkToPath, routes } from '../../../app/routeMap'
 import { platforms } from '../data/platforms'
 import styles from './Platforms.module.css'
 
@@ -17,7 +17,7 @@ export function Platforms() {
             }
             subtitle="Other LGBTQ+ platforms, media, and communities worth knowing about — beyond QueerPulse."
             action={
-              <Button variant="ghost" to={linkToPath('QueerPulse Platforms.html')}>
+              <Button variant="ghost" to={routes.platforms}>
                 See all platforms →
               </Button>
             }
@@ -39,7 +39,7 @@ export function Platforms() {
             </Link>
           ))}
           <Link
-            to={linkToPath('QueerPulse Platforms.html')}
+            to={routes.platforms}
             className={[styles.badge, styles.dashed].join(' ')}
           >
             <span className={[styles.ic, styles.plus].join(' ')}>+</span>

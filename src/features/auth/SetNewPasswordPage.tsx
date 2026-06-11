@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { AuthLayout } from './AuthLayout'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './auth.module.css'
 import pageStyles from './SetNewPasswordPage.module.css'
 
@@ -49,7 +49,7 @@ export function SetNewPasswordPage() {
           </div>
           <div className={pageStyles.doneHead}>Password updated</div>
           <div className={pageStyles.doneSub}>You're good to go. Sign in with your new password.</div>
-          <Button className={styles.authBtn} onClick={() => navigate(linkToPath('QueerPulse Sign In.html'))}>
+          <Button className={styles.authBtn} onClick={() => navigate(routes.signIn)}>
             Sign in
           </Button>
           <p className={pageStyles.doneNote}>All other sessions were signed out.</p>

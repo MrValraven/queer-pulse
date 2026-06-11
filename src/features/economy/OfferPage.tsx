@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./OfferPage.module.css";
 import { Button } from '../../shared/components/ui'
 
@@ -43,9 +43,9 @@ const OTHERS: { slug: string; kind: Kind; title: string; by: string }[] = [
 export function OfferPage() {
   const o = MAIN;
   const owner = o.owner;
-  const connect = linkToPath("QueerPulse Connect.html");
-  const profile = linkToPath("QueerPulse Profile.html");
-  const offer = linkToPath("QueerPulse Offer.html");
+  const connect = routes.connect;
+  const profile = routes.profile;
+  const offer = routes.offer;
 
   return (
     <PageShell>

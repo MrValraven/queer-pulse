@@ -1,14 +1,14 @@
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { APPS, CULTURE, EVENTS, RECOGNITION, STRUCTURES } from './dating.data'
 import { DatingAppCard } from './DatingAppCard'
 import styles from './DatingPage.module.css'
 
 export function DatingPage() {
-  const calendar = linkToPath('QueerPulse Calendar.html')
-  const forum = linkToPath('QueerPulse Forum.html')
-  const legal = linkToPath('QueerPulse Legal.html')
+  const calendar = routes.calendar
+  const forum = routes.forum
+  const legal = routes.legal
 
   return (
     <PageShell>

@@ -1,6 +1,6 @@
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./CodeOfConductPage.module.css";
 import { TOC } from "./codeOfConductPage.data";
 import {
@@ -11,9 +11,9 @@ import {
   CocChangesSection,
 } from "./CodeOfConductSections";
 
-const REPORT = linkToPath("QueerPulse Report.html");
-const EMERGENCY = linkToPath("QueerPulse Emergency.html");
-const CHANGELOG = linkToPath("QueerPulse Changelog.html");
+const REPORT = routes.report;
+const EMERGENCY = routes.emergency;
+const CHANGELOG = routes.changelog;
 
 export function CodeOfConductPage() {
   const { showToast } = useToast();

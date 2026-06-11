@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { routes } from '../../../app/routeMap'
 import { gatherings } from '../data/gatherings'
 import styles from './Gatherings.module.css'
 
@@ -25,7 +25,7 @@ export function Gatherings() {
             {gatherings.map((event, index) => (
               <Reveal key={event.id} delay={index * 50}>
                 <Link
-                  to={linkToPath(`QueerPulse Gathering.html#${event.id}`)}
+                  to={`${routes.gathering}#${event.id}`}
                   className={styles.row}
                 >
                   <div className={styles.date}>

@@ -160,6 +160,20 @@ export function SafetyPage() {
           </p>
         </Reveal>
       </div>
+
+      <section className={styles.outro}>
+        <div className="wrap">
+          <h2>
+            Safety is a feature, <em>not a footnote.</em>
+          </h2>
+          <p className={styles.outroSub}>
+            Any questions about how the network works? Write to us.
+          </p>
+          <Button href="mailto:hello@queerpulse.pt" variant="primary" size="lg">
+            hello@queerpulse.pt
+          </Button>
+        </div>
+      </section>
     </PageShell>
   )
 }

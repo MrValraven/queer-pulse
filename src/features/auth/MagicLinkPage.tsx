@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { AuthLayout } from './AuthLayout'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './auth.module.css'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -76,7 +76,7 @@ export function MagicLinkPage() {
             </button>
           </p>
           <div className={styles.footer}>
-            <Link to={linkToPath('QueerPulse Sign In.html')} style={{ fontSize: 13.5, color: 'var(--ink-60)', fontWeight: 500 }}>
+            <Link to={routes.signIn} style={{ fontSize: 13.5, color: 'var(--ink-60)', fontWeight: 500 }}>
               ← Use a different method
             </Link>
           </div>
@@ -121,10 +121,10 @@ export function MagicLinkPage() {
       <div className={styles.divider}>or</div>
 
       <div className={styles.footer}>
-        <Link to={linkToPath('QueerPulse Sign In.html')} className={styles.signinLink} style={{ color: 'var(--plum)', fontWeight: 600, fontSize: 13.5 }}>
+        <Link to={routes.signIn} className={styles.signinLink} style={{ color: 'var(--plum)', fontWeight: 600, fontSize: 13.5 }}>
           Sign in with password instead
         </Link>
-        <Link to={linkToPath('QueerPulse Invite.html')} style={{ fontSize: 13.5, color: 'var(--ink-60)', fontWeight: 500 }}>
+        <Link to={routes.invite} style={{ fontSize: 13.5, color: 'var(--ink-60)', fontWeight: 500 }}>
           Not a member yet? Request an invite
         </Link>
       </div>

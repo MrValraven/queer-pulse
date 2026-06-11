@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./CoverGalleryPage.module.css";
 
-const ISSUE = linkToPath("QueerPulse Issue.html");
-const MEMBER = linkToPath("QueerPulse Profile.html");
-const PRESS = linkToPath("QueerPulse Press Kit.html");
+const ISSUE = routes.issue;
+const MEMBER = routes.profile;
+const PRESS = routes.pressKit;
 
 type Tint = "a" | "b" | "c" | "d" | "e";
 interface Cover {

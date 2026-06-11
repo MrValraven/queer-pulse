@@ -1,5 +1,5 @@
 import { Button, Reveal } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { routes } from '../../../app/routeMap'
 import styles from './Outro.module.css'
 
 export function Outro() {
@@ -15,7 +15,7 @@ export function Outro() {
             is already here, ask them to vouch for you.
           </Reveal>
           <Reveal delay={140}>
-            <Button size="lg" to={linkToPath('QueerPulse Invite.html')}>
+            <Button size="lg" to={routes.invite}>
               Request an invite
             </Button>
           </Reveal>

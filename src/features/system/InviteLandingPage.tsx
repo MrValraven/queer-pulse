@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './InviteLandingPage.module.css'
 
 const INVITER_NAME = 'Rita Fonseca'
@@ -41,7 +41,7 @@ export function InviteLandingPage() {
             Your account is ready. Take a minute to set up your profile before jumping in.
           </p>
           <div className={styles.successActions}>
-            <Button to={linkToPath('QueerPulse Edit Profile.html')} size="lg" className={styles.submitBtn}>
+            <Button to={routes.editProfile} size="lg" className={styles.submitBtn}>
               Set up my profile
             </Button>
             <Button variant="ghost" to="/" className={styles.submitBtn}>
@@ -52,7 +52,7 @@ export function InviteLandingPage() {
         <div className={styles.pageFooter}>
           <p>
             Not expecting this?{' '}
-            <Link to={linkToPath('QueerPulse Privacy.html')}>Privacy policy</Link>
+            <Link to={routes.privacy}>Privacy policy</Link>
           </p>
         </div>
       </div>
@@ -170,8 +170,8 @@ export function InviteLandingPage() {
               />
               <label htmlFor="consentCheck" className={styles.consentText}>
                 I've read the{' '}
-                <Link to={linkToPath('QueerPulse Terms.html')}>terms of use</Link> and{' '}
-                <Link to={linkToPath('QueerPulse Privacy.html')}>privacy policy</Link> and I'm
+                <Link to={routes.terms}>terms of use</Link> and{' '}
+                <Link to={routes.privacy}>privacy policy</Link> and I'm
                 happy to join.
               </label>
             </div>
@@ -182,7 +182,7 @@ export function InviteLandingPage() {
 
           <p className={styles.alreadyMember}>
             Already have an account?{' '}
-            <Link to={linkToPath('QueerPulse Sign In.html')}>Sign in</Link>
+            <Link to={routes.signIn}>Sign in</Link>
           </p>
         </div>
       </div>
@@ -190,7 +190,7 @@ export function InviteLandingPage() {
       <div className={styles.pageFooter}>
         <p>
           Not expecting this?{' '}
-          <Link to={linkToPath('QueerPulse Privacy.html')}>Privacy policy</Link>
+          <Link to={routes.privacy}>Privacy policy</Link>
         </p>
       </div>
     </div>

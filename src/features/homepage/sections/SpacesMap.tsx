@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { routes } from '../../../app/routeMap'
 import { mapFilters, mapLegend, mapSpaces, MAP_COLORS } from '../data/mapSpaces'
 import { visibleSpaces } from '../lib/filters'
 import type { MapSpaceType } from '../data/types'
@@ -23,7 +23,7 @@ export function SpacesMap() {
             }
             subtitle="Community-curated queer-safe venues, member studios, and gathering spaces across Lisbon. Not a business directory — this is ours."
             action={
-              <Button variant="ghost-dark" to={linkToPath('QueerPulse Map.html')}>
+              <Button variant="ghost-dark" to={routes.map}>
                 Open full map →
               </Button>
             }

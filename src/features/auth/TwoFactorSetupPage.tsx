@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { PageShell } from '../../shared/components/layout'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { Step1, Step2, Step3, Step4, StepDone } from './TwoFactorSetupSteps'
 import styles from './TwoFactorSetupPage.module.css'
 
@@ -70,7 +70,7 @@ export function TwoFactorSetupPage() {
   return (
     <PageShell>
       <div className={styles.pageWrap}>
-        <Link to={linkToPath('QueerPulse Security.html')} className={styles.back}>← Security</Link>
+        <Link to={routes.security} className={styles.back}>← Security</Link>
         <div className={styles.eyebrow}>Account security</div>
         <h1 className={styles.h1}>Add a second <em>lock on the door.</em></h1>
         <p className={styles.lead}>Two-factor auth means even if your password is stolen, your account isn't. Takes about a minute.</p>
@@ -103,8 +103,8 @@ export function TwoFactorSetupPage() {
         {step === 4 && <Step4 onCopyCodes={copyCodes} onDownload={downloadCodes} onFinish={finish} />}
         {step === 'done' && (
           <StepDone
-            onSecurity={() => navigate(linkToPath('QueerPulse Security.html'))}
-            onSettings={() => navigate(linkToPath('QueerPulse Settings.html'))}
+            onSecurity={() => navigate(routes.security)}
+            onSettings={() => navigate(routes.settings)}
           />
         )}
       </div>

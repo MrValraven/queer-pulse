@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./TagPage.module.css";
 import { Button } from '../../shared/components/ui'
 
-const ARTICLE = linkToPath("QueerPulse Article.html");
-const NEWSLETTER = linkToPath("QueerPulse Newsletter.html");
+const ARTICLE = routes.article;
+const NEWSLETTER = routes.newsletter;
 
 const CHIPS = ["All · 42", "Health", "Migration", "Work", "Public services", "The city", "Money", "Family", "Activism", "Profiles", "Interviews"];
 

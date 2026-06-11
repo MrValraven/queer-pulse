@@ -1,14 +1,14 @@
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
-export const GUIDELINES = linkToPath('QueerPulse Guidelines.html')
-export const COMMUNITIES = linkToPath('QueerPulse Communities.html')
-export const FORUM = linkToPath('QueerPulse Forum.html')
-export const SOBER = linkToPath('QueerPulse Sober.html')
-export const REPORT = linkToPath('QueerPulse Report.html')
-export const LEGAL = linkToPath('QueerPulse Legal.html')
-export const ACCESSIBILITY = linkToPath('QueerPulse Accessibility.html')
-export const GOVERNANCE = linkToPath('QueerPulse Governance.html')
-export const CONTACT = linkToPath('QueerPulse Contact.html')
+export const GUIDELINES = routes.guidelines
+export const COMMUNITIES = routes.communities
+export const FORUM = routes.forum
+export const SOBER = routes.sober
+export const REPORT = routes.report
+export const LEGAL = routes.legal
+export const ACCESSIBILITY = routes.accessibility
+export const GOVERNANCE = routes.governance
+export const CONTACT = routes.contact
 
 export interface Voice {
   initials: string
@@ -49,7 +49,7 @@ export const FAITH_INFO: InfoCard[] = [
 export const CLASS_INFO: InfoCard[] = [
   { eyebrow: "Lisbon's cost shift", title: 'What gentrification means here', body: 'Lisbon has become significantly more expensive in the last decade, partly driven by international migration including the queer expat community. This is worth holding honestly — the queer community is part of a pattern that has displaced local working-class residents. This tension is real and the community tries to engage with it rather than look away.' },
   { eyebrow: 'Queer social life', title: 'The cost of belonging', body: "Bar and club culture as the default queer social form excludes people who don't drink, can't afford cover charges, or find late-night environments difficult. QueerPulse deliberately runs social events that are free or low-cost, daytime or early evening, and alcohol-optional.", link: { label: 'Sober community →', href: SOBER } },
-  { eyebrow: 'Economic support', title: 'Community resources', body: 'The Economy page has resources on emergency financial support, benefit navigation, and community mutual aid. The Skills Exchange is a non-monetary community tool. Both are available to all members.', link: { label: 'Economy resources →', href: linkToPath('QueerPulse Economy.html') } },
+  { eyebrow: 'Economic support', title: 'Community resources', body: 'The Economy page has resources on emergency financial support, benefit navigation, and community mutual aid. The Skills Exchange is a non-monetary community tool. Both are available to all members.', link: { label: 'Economy resources →', href: routes.economy } },
 ]
 export const CLASS_VOICE: Voice = { initials: 'JB', bg: 'rgba(232,119,90,.16)', color: 'var(--accent-ink)', name: 'Joana B.', context: 'Queer woman · Porto-born, Lisbon resident · Member since 2023', quote: '"I grew up working class in Porto. Moving to Lisbon and entering queer expat spaces felt like moving to another country again. The cultural codes around travel, careers, aesthetics — I had to learn them from scratch and pretend I\'d always known them. That\'s exhausting. The spaces in this community that acknowledge class exist feel like taking a breath."' }
 

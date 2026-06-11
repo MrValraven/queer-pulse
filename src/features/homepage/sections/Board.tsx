@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { linkToPath, routes } from '../../../app/routeMap'
 import { boardFilters, boardPosts } from '../data/boardPosts'
 import { filterBoardPosts } from '../lib/filters'
 import styles from './Board.module.css'
@@ -44,7 +44,7 @@ export function Board() {
           </div>
           <Button
             variant="ghost"
-            to={linkToPath('QueerPulse Offer.html')}
+            to={routes.offer}
             style={{ fontSize: 13, padding: '9px 17px' }}
           >
             + Post something

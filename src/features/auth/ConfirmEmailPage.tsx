@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { AuthLayout } from './AuthLayout'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './auth.module.css'
 import pageStyles from './ConfirmEmailPage.module.css'
 
@@ -64,7 +64,7 @@ export function ConfirmEmailPage() {
       setMessage('Verified. Welcome aboard.')
       setMessageOk(true)
       showToast('Email confirmed', 'success')
-      setTimeout(() => navigate(linkToPath('QueerPulse Welcome.html')), 950)
+      setTimeout(() => navigate(routes.welcome), 950)
     } else {
       setError(true)
       setMessage("That code didn't match. Try again, or resend below.")
@@ -141,7 +141,7 @@ export function ConfirmEmailPage() {
 
       <p className={pageStyles.footLink}>
         Wrong email?{' '}
-        <Link to={linkToPath('QueerPulse Create Account.html')}>Start over</Link>
+        <Link to={routes.createAccount}>Start over</Link>
       </p>
     </AuthLayout>
   )

@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./GatheringPhotosPage.module.css";
 
-const RECAP = linkToPath("QueerPulse Gathering Recap.html");
-const MEMBER = linkToPath("QueerPulse Profile.html");
-const CALENDAR = linkToPath("QueerPulse Calendar.html");
-const REPORT = linkToPath("QueerPulse Report.html");
+const RECAP = routes.gatheringRecap;
+const MEMBER = routes.profile;
+const CALENDAR = routes.calendar;
+const REPORT = routes.report;
 
 const CHIPS = ["All", "The space", "The clinic", "The crowd", "After hours"];
 
@@ -148,7 +148,7 @@ export function GatheringPhotosPage() {
             If you see yourself in a photo and want it removed (or unblurred), email{" "}
             <a href="mailto:photos@queerpulse.app">photos@queerpulse.app</a> — we'll handle
             it within 24 hours, no questions. <em>You can also untick "appear in event
-            photos" globally</em> in <Link to={linkToPath("QueerPulse Privacy.html")}>Privacy settings</Link>.
+            photos" globally</em> in <Link to={routes.privacy}>Privacy settings</Link>.
           </p>
 
           <h3 style={{ marginTop: 24 }}>

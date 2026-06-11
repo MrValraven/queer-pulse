@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { PROFILES, matchesBudget, type ListingType } from './flatmates.data'
 import { FlatmateCard } from './FlatmateCard'
 import { FlatmatesFilterBar } from './FlatmatesFilterBar'
@@ -116,7 +116,7 @@ export function FlatmatesPage() {
                 shares — everything you need to find and secure a home in Lisbon.
               </p>
             </div>
-            <Button to={linkToPath('QueerPulse Housing.html')} variant="ghost">
+            <Button to={routes.housing} variant="ghost">
               Housing Board →
             </Button>
           </div>
@@ -136,7 +136,7 @@ export function FlatmatesPage() {
             <Button type="button" variant="primary" size="lg" onClick={() => setModalOpen(true)}>
               Post your profile
             </Button>
-            <Button to={linkToPath('QueerPulse Forum.html')} variant="ghost-dark" size="lg">
+            <Button to={routes.forum} variant="ghost-dark" size="lg">
               Ask the forum →
             </Button>
           </div>

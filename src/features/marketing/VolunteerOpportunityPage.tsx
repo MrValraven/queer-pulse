@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import { VOLUNTEER_OPPORTUNITIES, getOpportunity } from "./volunteerOpportunities";
 import styles from "./VolunteerOpportunityPage.module.css";
 
-const MEMBER = linkToPath("QueerPulse Profile.html");
-const MESSAGES = linkToPath("QueerPulse Messages.html");
-const PARTNER = linkToPath("QueerPulse Partner.html");
-const DONATE = linkToPath("QueerPulse Donate.html");
+const MEMBER = routes.profile;
+const MESSAGES = routes.messages;
+const PARTNER = routes.partner;
+const DONATE = routes.donate;
 
 const Tick = () => (
   <svg viewBox="0 0 24 24">

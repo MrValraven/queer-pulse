@@ -1,11 +1,11 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import { CHANGEMAKERS, getChangemaker, type Tint } from "./changemakerStories";
 import styles from "./ChangemakerStoryPage.module.css";
 
-const CONNECT = linkToPath("QueerPulse Connect.html");
+const CONNECT = routes.connect;
 
 const HERO_GRADIENT: Record<Tint, string> = {
   coral: "linear-gradient(135deg, rgba(var(--accent-rgb),.42), rgba(45,27,61,.5))",

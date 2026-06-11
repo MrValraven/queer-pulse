@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { linkToPath, routes } from '../../../app/routeMap'
 import { partners } from '../data/partners'
 import styles from './Partners.module.css'
 
@@ -35,7 +35,7 @@ export function Partners() {
             </Link>
           ))}
           <Link
-            to={linkToPath('QueerPulse Partners.html')}
+            to={routes.partners}
             className={[styles.badge, styles.dashed].join(' ')}
           >
             <span className={[styles.av, styles.plus].join(' ')}>+</span>

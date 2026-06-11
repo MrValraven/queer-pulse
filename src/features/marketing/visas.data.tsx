@@ -1,11 +1,11 @@
 import { type ReactNode } from 'react'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
 export type TabId = 'eu' | 'd7' | 'd8' | 'work' | 'partner' | 'citizenship'
 
-export const LEGAL = linkToPath('QueerPulse Legal.html')
-export const FORUM = linkToPath('QueerPulse Forum.html')
-export const ARRIVING = linkToPath('QueerPulse Arriving.html')
+export const LEGAL = routes.legal
+export const FORUM = routes.forum
+export const ARRIVING = routes.arriving
 
 export interface InfoCard {
   eyebrow: string

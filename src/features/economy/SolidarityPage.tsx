@@ -1,6 +1,6 @@
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { HOW } from './solidarity.data'
 import { SolidarityDirectory } from './SolidarityDirectory'
 import styles from './SolidarityPage.module.css'
@@ -51,7 +51,7 @@ export function SolidarityPage() {
             QueerPulse connects the community to professionals who believe in access
             as much as you do.
           </p>
-          <Button to={linkToPath('QueerPulse Invite.html')} variant="primary" size="lg">
+          <Button to={routes.invite} variant="primary" size="lg">
             Join the network
           </Button>
         </div>

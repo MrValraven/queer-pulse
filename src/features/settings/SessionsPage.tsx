@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { ACTIVE_SESSIONS, TRUSTED_DEVICES, type Session, type TrustedDevice } from './sessions.data'
 import styles from './SessionsPage.module.css'
 
@@ -116,13 +116,13 @@ export function SessionsPage() {
   return (
     <AppShell>
       <div className={styles.page}>
-        <Link to={linkToPath('QueerPulse Security.html')} className={styles.back}>← Security</Link>
+        <Link to={routes.security} className={styles.back}>← Security</Link>
 
         <div className={styles.eyebrow}>Security · Active sessions</div>
         <h1 className={styles.h1}>Where you're <em>signed in</em> right now.</h1>
         <p className={styles.lead}>
           Every device with an active session. If something here looks unfamiliar, sign it out — and read{' '}
-          <Link to={linkToPath('QueerPulse Account Locked.html')}>what to do next</Link>.
+          <Link to={routes.accountLocked}>what to do next</Link>.
         </p>
 
         <div className={styles.bulkRow}>
@@ -146,8 +146,8 @@ export function SessionsPage() {
 
         <div className={styles.footNote}>
           <b>Something looks wrong?</b> If you didn't sign in from Madrid, sign that session out, then{' '}
-          <Link to={linkToPath('QueerPulse Password Reset.html')}>reset your password</Link> and{' '}
-          <Link to={linkToPath('QueerPulse 2FA Setup.html')}>re-issue your backup codes</Link>. We'll send an email to the address on file with the full incident report.
+          <Link to={routes.passwordReset}>reset your password</Link> and{' '}
+          <Link to={routes.twoFactorSetup}>re-issue your backup codes</Link>. We'll send an email to the address on file with the full incident report.
         </div>
       </div>
     </AppShell>

@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { PROFILES, RES_CARDS, ACTIONS } from './transDayOfVisibility.data'
 import styles from './TransDayOfVisibilityPage.module.css'
 
-const PROFILE = linkToPath('QueerPulse Profile.html')
+const PROFILE = routes.profile
 
 export function TdovProfiles() {
   return (

@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./NewsletterPage.module.css";
 
-const SETTINGS = linkToPath("QueerPulse Settings.html");
+const SETTINGS = routes.settings;
 
 interface Pref {
   id: string;

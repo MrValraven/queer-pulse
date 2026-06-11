@@ -1,10 +1,10 @@
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./EmployerReviewsPage.module.css";
 import { Button } from '../../shared/components/ui'
 
-const INVITE = linkToPath("QueerPulse Invite.html");
+const INVITE = routes.invite;
 
 const HOW = [
   { n: "01", title: "Write anonymously", desc: "Your identity is never attached to your review. We verify you're a member — nothing else is logged." },

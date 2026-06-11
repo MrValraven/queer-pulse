@@ -1,12 +1,12 @@
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { CRISIS } from './mentalHealth.data'
 import { TherapistSection, ExperiencesSection, SnsSection } from './MentalHealthSections'
 import styles from './MentalHealthPage.module.css'
 
-const FORUM = linkToPath('QueerPulse Forum.html')
-const MENTORSHIP = linkToPath('QueerPulse Mentorship.html')
+const FORUM = routes.forum
+const MENTORSHIP = routes.mentorship
 
 export function MentalHealthPage() {
   return (

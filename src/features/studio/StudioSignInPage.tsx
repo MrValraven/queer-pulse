@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './StudioSignInPage.module.css'
 
 type Tab = 'in' | 'join'
@@ -37,7 +37,7 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
           <input id="si-pw" type="password" placeholder="Your password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <div style={{ textAlign: 'right', marginBottom: 14 }}>
-          <Link to={linkToPath('QueerPulse Password Reset.html')} style={{ fontSize: 12.5, color: 'var(--text-60)' }}>Forgot password?</Link>
+          <Link to={routes.passwordReset} style={{ fontSize: 12.5, color: 'var(--text-60)' }}>Forgot password?</Link>
         </div>
         <Button type="submit" className={styles.btnFull}>Sign in →</Button>
       </form>
@@ -58,7 +58,7 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
         <a href="#" onClick={(e) => { e.preventDefault(); onSwitch() }}>Join the room →</a>
         <span className={styles.free}>
           Just want to listen?{' '}
-          <Link to={linkToPath('QueerPulse Studio Landing.html')}>Stream one set free, no account</Link>
+          <Link to={routes.studioLanding}>Stream one set free, no account</Link>
         </span>
       </div>
     </div>
@@ -73,7 +73,7 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    navigate(linkToPath('QueerPulse Studio Checkout.html'))
+    navigate(routes.studioCheckout)
   }
 
   const canSubmit = EMAIL_RE.test(email.trim()) && password.length >= 8
@@ -136,7 +136,7 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
         <a href="#" onClick={(e) => { e.preventDefault(); onSwitch() }}>Sign in →</a>
         <span className={styles.free}>
           Not ready?{' '}
-          <Link to={linkToPath('QueerPulse Studio Landing.html')}>Listen to one free set first</Link>
+          <Link to={routes.studioLanding}>Listen to one free set first</Link>
         </span>
       </div>
     </div>

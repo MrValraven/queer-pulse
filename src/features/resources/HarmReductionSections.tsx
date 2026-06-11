@@ -1,5 +1,5 @@
 import { Button } from "../../shared/components/ui";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import {
   SECTIONS,
   AFTER,
@@ -149,7 +149,7 @@ export function HarmReductionOutro() {
           Harm reduction is a community practice. The more people who know this,
           the safer our nights are.
         </p>
-        <Button to={linkToPath("QueerPulse Sexual Health.html")} variant="primary" size="lg">
+        <Button to={routes.sexualHealth} variant="primary" size="lg">
           Sexual health resources
         </Button>
       </div>

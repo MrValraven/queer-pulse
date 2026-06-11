@@ -1,10 +1,10 @@
 import { type ReactNode } from "react";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 
-export const EPISODE_PATH = linkToPath("QueerPulse Audio Player.html");
-export const MEMBER_PATH = linkToPath("QueerPulse Profile.html");
-export const NEWSLETTER_PATH = linkToPath("QueerPulse Newsletter.html");
-export const CONTACT_PATH = linkToPath("QueerPulse Contact.html");
+export const EPISODE_PATH = routes.audioPlayer;
+export const MEMBER_PATH = routes.profile;
+export const NEWSLETTER_PATH = routes.newsletter;
+export const CONTACT_PATH = routes.contact;
 
 export const PLATFORMS: { name: string; color: string }[] = [
   { name: "Spotify", color: "#1DB954" },

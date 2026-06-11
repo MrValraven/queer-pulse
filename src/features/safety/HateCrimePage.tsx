@@ -1,10 +1,10 @@
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { HateCrimePanel } from './HateCrimeTabs'
 import styles from './HateCrimePage.module.css'
 
-const LEGAL = linkToPath('QueerPulse Legal.html')
+const LEGAL = routes.legal
 
 export function HateCrimePage() {
   return (

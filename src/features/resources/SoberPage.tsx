@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./SoberPage.module.css";
 import { Button } from "../../shared/components/ui";
 import { REASONS, EVENTS, TYPE_CLASS } from "./soberPage.data";
 import { SoberHonestSection, SoberVenuesSection, SoberVoicesSection, SoberRecoverySection } from "./SoberSections";
 
-const SAFE_SPACES = linkToPath("QueerPulse Safe Spaces.html");
-const COMMUNITIES = linkToPath("QueerPulse Communities.html");
-const WELLBEING = linkToPath("QueerPulse Wellbeing.html");
-const MENTORSHIP = linkToPath("QueerPulse Mentorship.html");
-const RESOURCES = linkToPath("QueerPulse Resources.html");
+const SAFE_SPACES = routes.safeSpaces;
+const COMMUNITIES = routes.communities;
+const WELLBEING = routes.wellbeing;
+const MENTORSHIP = routes.mentorship;
+const RESOURCES = routes.resources;
 
 const LINK_MAP: Record<string, string> = { COMMUNITIES, WELLBEING, MENTORSHIP, RESOURCES };
 

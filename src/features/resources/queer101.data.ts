@@ -1,9 +1,9 @@
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 
-export const COMMUNITIES = linkToPath('QueerPulse Communities.html')
-export const MENTORSHIP = linkToPath('QueerPulse Mentorship.html')
-export const WELLBEING = linkToPath('QueerPulse Wellbeing.html')
-export const FORUM = linkToPath('QueerPulse Forum.html')
+export const COMMUNITIES = routes.communities
+export const MENTORSHIP = routes.mentorship
+export const WELLBEING = routes.wellbeing
+export const FORUM = routes.forum
 
 export const FAQ: { q: string; a: string }[] = [
   { q: "How do I know if I'm queer?", a: "There's no test and no threshold. Some people feel certain early; others figure it out over years, or never settle on a label at all — and all of that is fine. A useful question isn't \"am I queer?\" but \"what feels true to me right now?\" You don't owe anyone an answer, including yourself." },

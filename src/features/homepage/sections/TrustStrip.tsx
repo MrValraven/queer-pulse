@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Reveal } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
+import { routes } from '../../../app/routeMap'
 import styles from './TrustStrip.module.css'
 
 const STROKE = 'rgba(247,243,238,.75)'
@@ -74,7 +74,7 @@ export function TrustStrip() {
               {item.label}
             </div>
           ))}
-          <Link to={linkToPath('QueerPulse Report.html')} className={styles.policyLink}>
+          <Link to={routes.report} className={styles.policyLink}>
             Safety policy & reporting →
           </Link>
         </Reveal>

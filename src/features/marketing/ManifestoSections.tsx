@@ -1,5 +1,5 @@
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { SIGNERS } from './manifesto.data'
 import styles from './ManifestoPage.module.css'
 
@@ -215,7 +215,7 @@ export function ManifestoActions({ onSign }: { onSign: () => void }) {
         <Button type="button" variant="ghost" onClick={() => window.print()}>
           Print / save PDF
         </Button>
-        <Button to={linkToPath('QueerPulse Governance.html')} variant="ghost">
+        <Button to={routes.governance} variant="ghost">
           Read the governance report →
         </Button>
       </div>

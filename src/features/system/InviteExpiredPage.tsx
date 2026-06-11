@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './InviteExpiredPage.module.css'
 
 export function InviteExpiredPage() {
@@ -54,10 +54,10 @@ export function InviteExpiredPage() {
         </div>
 
         <div className={styles.actions}>
-          <Button to={linkToPath('QueerPulse Contact.html')}>
+          <Button to={routes.contact}>
             Ask Catarina to re-send →
           </Button>
-          <Button variant="ghost" to={linkToPath('QueerPulse Invite.html')}>
+          <Button variant="ghost" to={routes.invite}>
             Request a fresh invite
           </Button>
         </div>
@@ -65,11 +65,11 @@ export function InviteExpiredPage() {
         <div className={styles.foot}>
           <div>
             Already a member?{' '}
-            <Link to={linkToPath('QueerPulse Sign In.html')}>Sign in</Link>
+            <Link to={routes.signIn}>Sign in</Link>
           </div>
           <div>
             Need help?{' '}
-            <Link to={linkToPath('QueerPulse Help.html')}>Ask the team</Link>
+            <Link to={routes.help}>Ask the team</Link>
           </div>
         </div>
       </div>

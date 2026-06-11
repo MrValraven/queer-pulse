@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./StoryPage.module.css";
 import { StoryArticle } from "./StoryArticle";
 
-const PROFILE = linkToPath("QueerPulse Profile.html");
-const STORY = linkToPath("QueerPulse Story.html");
-const INVITE = linkToPath("QueerPulse Invite.html");
+const PROFILE = routes.profile;
+const STORY = routes.story;
+const INVITE = routes.invite;
 
 export function StoryPage() {
   return (

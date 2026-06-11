@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { FLAG_SWATCHES, COVER_STYLES, PATTERNS, BADGE_OPTIONS, type CoverStyle, type PatternKey } from './profileTheme.data'
 import styles from './ProfileThemePage.module.css'
 
@@ -141,7 +141,7 @@ export function ProfileThemePage() {
       </div>
 
       <div style={{ position: 'fixed', top: 18, right: 24, zIndex: 200, display: 'flex', gap: 10 }}>
-        <Link to={linkToPath('QueerPulse Profile.html')} style={{ fontSize: 13, padding: '9px 16px', borderRadius: 999, border: '1.5px solid rgba(45,27,61,.16)', background: 'var(--cream)', color: 'var(--plum)', textDecoration: 'none', fontWeight: 600 }}>← My profile</Link>
+        <Link to={routes.profile} style={{ fontSize: 13, padding: '9px 16px', borderRadius: 999, border: '1.5px solid rgba(45,27,61,.16)', background: 'var(--cream)', color: 'var(--plum)', textDecoration: 'none', fontWeight: 600 }}>← My profile</Link>
         <Button variant="primary" onClick={() => showToast('Theme saved', 'success')}>Save theme</Button>
       </div>
     </AppShell>

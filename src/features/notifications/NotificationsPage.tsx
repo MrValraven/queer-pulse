@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Avatar, Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { linkToPath, routes } from '../../app/routeMap'
 import {
   notificationTabs,
   notifications,
@@ -96,7 +96,7 @@ export function NotificationsPage() {
               <button className={styles.markRead} onClick={markAllRead}>
                 Mark all as read
               </button>
-              <Button variant="ghost" to={linkToPath('QueerPulse Newsletter.html')} style={{ padding: '8px 16px', fontSize: 13 }}>
+              <Button variant="ghost" to={routes.newsletter} style={{ padding: '8px 16px', fontSize: 13 }}>
                 Preferences
               </Button>
             </div>

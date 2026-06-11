@@ -1,23 +1,23 @@
 import { Link } from 'react-router-dom'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './GeoRestrictedPage.module.css'
 
 const CAN_DO = [
   {
     label: 'Read all public articles & the magazine',
-    detail: <>The full editorial archive is open · <Link to={linkToPath('QueerPulse Magazine.html')}>browse →</Link></>,
+    detail: <>The full editorial archive is open · <Link to={routes.magazine}>browse →</Link></>,
   },
   {
     label: 'Access crisis & safety resources',
-    detail: <>Crisis chat, emergency guides, and harm-reduction docs · <Link to={linkToPath('QueerPulse Crisis Chat.html')}>open crisis chat →</Link></>,
+    detail: <>Crisis chat, emergency guides, and harm-reduction docs · <Link to={routes.crisisChat}>open crisis chat →</Link></>,
   },
   {
     label: 'Browse vetted international resources',
-    detail: <>Hotlines, queer-friendly legal aid, and emergency contacts in 14 other countries · <Link to={linkToPath('QueerPulse Resources.html')}>resource library →</Link></>,
+    detail: <>Hotlines, queer-friendly legal aid, and emergency contacts in 14 other countries · <Link to={routes.resources}>resource library →</Link></>,
   },
   {
     label: 'Ask us to open access here',
-    detail: <>Tell us where you are (no need for your name) and what would help · <Link to={linkToPath('QueerPulse Contact.html') + '?topic=region'}>write to the team →</Link></>,
+    detail: <>Tell us where you are (no need for your name) and what would help · <Link to={routes.contact + '?topic=region'}>write to the team →</Link></>,
   },
 ]
 

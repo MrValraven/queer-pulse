@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Avatar, AvatarStack } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './FeedPage.module.css'
 
 export function GatheringCard() {
@@ -92,7 +92,7 @@ export function SavedArticleCard() {
       <div className={styles.savedEyebrow}>From your saves</div>
       <div className={styles.savedTitle}>The Quiet Politics of Chosen Family</div>
       <div className={styles.savedSource}>QueerPulse Magazine · Issue 17 · 6 min read</div>
-      <Link className={styles.savedLink} to={linkToPath('QueerPulse Article.html')}>Continue reading →</Link>
+      <Link className={styles.savedLink} to={routes.article}>Continue reading →</Link>
     </article>
   )
 }
@@ -103,7 +103,7 @@ export function RecapCard() {
       <div className={styles.recapEyebrow}>Gathering recap</div>
       <div className={styles.savedTitle}>Pride Brunch — June Edition</div>
       <div className={styles.savedSource}>You attended · 3 days ago · 38 people were there</div>
-      <Link className={styles.savedLink} to={linkToPath('QueerPulse Gathering Recap.html')}>Read the recap →</Link>
+      <Link className={styles.savedLink} to={routes.gatheringRecap}>Read the recap →</Link>
     </article>
   )
 }

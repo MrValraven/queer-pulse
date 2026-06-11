@@ -1,10 +1,10 @@
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import styles from "./GetTheAppPage.module.css";
 import { Button } from '../../shared/components/ui'
 
-const INVITE = linkToPath("QueerPulse Invite.html");
+const INVITE = routes.invite;
 
 function QrCode({ size = 21, seed = 7 }: { size?: number; seed?: number }) {
   // Deterministic pseudo-random module pattern with three finder squares.

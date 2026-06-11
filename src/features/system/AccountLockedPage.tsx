@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './AccountLockedPage.module.css'
 
 export function AccountLockedPage() {
@@ -67,7 +67,7 @@ export function AccountLockedPage() {
         </div>
 
         <div className={styles.whatNow}>
-          <Link to={linkToPath('QueerPulse Password Reset.html')} className={styles.wnRow}>
+          <Link to={routes.passwordReset} className={styles.wnRow}>
             <div className={styles.wnNum}>1</div>
             <div className={styles.wnText}>
               <div className={styles.wnTitle}>Reset your password</div>
@@ -77,7 +77,7 @@ export function AccountLockedPage() {
             </div>
             <span className={styles.wnArrow} aria-hidden>→</span>
           </Link>
-          <Link to={linkToPath('QueerPulse Magic Link.html')} className={styles.wnRow}>
+          <Link to={routes.magicLink} className={styles.wnRow}>
             <div className={styles.wnNum}>2</div>
             <div className={styles.wnText}>
               <div className={styles.wnTitle}>Sign in with a magic link</div>
@@ -85,7 +85,7 @@ export function AccountLockedPage() {
             </div>
             <span className={styles.wnArrow} aria-hidden>→</span>
           </Link>
-          <Link to={linkToPath('QueerPulse Contact.html')} className={styles.wnRow}>
+          <Link to={routes.contact} className={styles.wnRow}>
             <div className={styles.wnNum}>3</div>
             <div className={styles.wnText}>
               <div className={styles.wnTitle}>Contact the team</div>
@@ -102,7 +102,7 @@ export function AccountLockedPage() {
             Incident <span className={styles.incidentId}>QP-8423-LOCK</span> · 14:08 WET
           </span>
           <span>
-            <Link to={linkToPath('QueerPulse Help.html')}>Why does this happen?</Link>
+            <Link to={routes.help}>Why does this happen?</Link>
           </span>
         </div>
       </div>

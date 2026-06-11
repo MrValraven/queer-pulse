@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './CancelMembershipPage.module.css'
 
 type Step = 1 | 2 | 3 | 'done'
@@ -54,7 +54,7 @@ export function CancelMembershipPage() {
   return (
     <AppShell>
       <div className={styles.page}>
-        <Link to={linkToPath('QueerPulse Membership.html')} className={styles.back}>← Membership</Link>
+        <Link to={routes.membership} className={styles.back}>← Membership</Link>
         <div className={styles.eyebrow}>Cancel · Sustainer (annual)</div>
         <h1 className={styles.h1}>Sorry to see you <em>thinking about it.</em></h1>
         <p className={styles.lead}>No dark patterns — three quick steps and you're out, or you can pause or downshift instead. Either way, no shame. Your community access remains.</p>
@@ -97,7 +97,7 @@ export function CancelMembershipPage() {
                 <div className={styles.altText}><div className={styles.altT}>Downshift to Member (€36/year)</div><div className={styles.altD}>Keep all community access. Drop Sustainer-only perks (open studio, ILGA consult, magazine).</div></div>
                 <div className={styles.altArrow}>→</div>
               </button>
-              <Link to={linkToPath('QueerPulse Solidarity.html')} className={styles.alt}>
+              <Link to={routes.solidarity} className={styles.alt}>
                 <div className={styles.altIc} style={{ background: 'rgba(45,27,61,.08)', color: 'var(--plum)' }}>♥</div>
                 <div className={styles.altText}><div className={styles.altT}>Drop to solidarity rate</div><div className={styles.altD}>€12/year, no questions asked. The fund covers the difference. <b>Genuinely.</b></div></div>
                 <div className={styles.altArrow}>→</div>
@@ -105,7 +105,7 @@ export function CancelMembershipPage() {
             </div>
             <div className={styles.actions}>
               <Button variant="ghost" onClick={() => goStep(2)}>Continue cancelling →</Button>
-              <Link to={linkToPath('QueerPulse Membership.html')}><Button variant="ghost">Keep my Sustainer</Button></Link>
+              <Link to={routes.membership}><Button variant="ghost">Keep my Sustainer</Button></Link>
             </div>
           </div>
         )}
@@ -152,7 +152,7 @@ export function CancelMembershipPage() {
             <div className={styles.actions}>
               <Button variant="ghost" onClick={() => goStep(2)}>← Back</Button>
               <div className={styles.actionRight}>
-                <Link to={linkToPath('QueerPulse Membership.html')}><Button variant="primary">Keep my Sustainer</Button></Link>
+                <Link to={routes.membership}><Button variant="primary">Keep my Sustainer</Button></Link>
                 <Button variant="ghost" disabled={!confirmed} onClick={doCancel}>Cancel my membership</Button>
               </div>
             </div>
@@ -169,7 +169,7 @@ export function CancelMembershipPage() {
               <p style={{ fontSize: 13, color: 'var(--ink-40)', marginTop: 12 }}>If this was a mistake, you can resubscribe one-tap from the email or your account settings — no penalty.</p>
               <div className={styles.farewellBtns}>
                 <Button variant="primary" to="/">Back to home</Button>
-                <Button variant="ghost" to={linkToPath('QueerPulse Membership.html')}>Resubscribe</Button>
+                <Button variant="ghost" to={routes.membership}>Resubscribe</Button>
               </div>
             </div>
           </div>

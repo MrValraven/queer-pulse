@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { type TabId, type TagKind, TABS, buildPanels } from './hateCrime.data'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './HateCrimePage.module.css'
 
-const MENTAL = linkToPath('QueerPulse Mental Health.html')
-const FORUM = linkToPath('QueerPulse Forum.html')
-const LEGAL = linkToPath('QueerPulse Legal.html')
+const MENTAL = routes.mentalHealth
+const FORUM = routes.forum
+const LEGAL = routes.legal
 
 const PANELS = buildPanels({ MENTAL, FORUM, LEGAL })
 
@@ -164,12 +164,12 @@ function HateCrimeSidebar() {
           </Link>
         </div>
         <div className={styles.sbcItem}>
-          <Link to={linkToPath('QueerPulse Solidarity.html')} className={styles.sbcLink}>
+          <Link to={routes.solidarity} className={styles.sbcLink}>
             Solidarity Pricing →
           </Link>
         </div>
         <div className={styles.sbcItem}>
-          <Link to={linkToPath('QueerPulse Report.html')} className={styles.sbcLink}>
+          <Link to={routes.report} className={styles.sbcLink}>
             Report to QueerPulse →
           </Link>
         </div>

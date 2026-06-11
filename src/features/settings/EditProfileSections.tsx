@@ -1,7 +1,7 @@
 import { type KeyboardEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import { PRONOUN_CHIPS, VIS_FIELDS } from './editProfile.data'
 import styles from './EditProfilePage.module.css'
 
@@ -57,7 +57,7 @@ export function PronounsSection({ selected, onToggle, onChange }: PronounsSectio
       <h2 className={styles.sectionTitle}>Pronouns <em>&amp; name</em></h2>
       <p className={styles.sectionSub}>
         Your chosen name and pronouns appear everywhere on the platform. See the{' '}
-        <Link to={linkToPath('QueerPulse Pronouns Guide.html')}>pronouns guide</Link>{' '}
+        <Link to={routes.pronounsGuide}>pronouns guide</Link>{' '}
         if you're updating a legal name across the platform.
       </p>
       <div className={styles.field} style={{ marginBottom: '14px' }}>

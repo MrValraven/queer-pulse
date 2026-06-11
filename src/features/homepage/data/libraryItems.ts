@@ -1,15 +1,16 @@
 import type { LibraryItem } from './types'
+import { routes } from '../../../app/routeMap'
 
 export const libraryItems: LibraryItem[] = [
   {
-    href: 'QueerPulse Library.html#freelance-taxes',
+    href: `${routes.library}#freelance-taxes`,
     type: 'recording',
     typeLabel: 'Recording',
     title: 'Navigating freelance taxes in Portugal as a foreign national',
     meta: ['Workshop · May 2026', '48 min'],
   },
   {
-    href: 'QueerPulse Library.html#trans-healthcare',
+    href: `${routes.library}#trans-healthcare`,
     type: 'guide',
     typeLabel: 'Guide',
     title:
@@ -17,21 +18,21 @@ export const libraryItems: LibraryItem[] = [
     meta: ['Jonas Ferreira', 'Updated Apr 2026'],
   },
   {
-    href: 'QueerPulse Library.html#portfolio-notes',
+    href: `${routes.library}#portfolio-notes`,
     type: 'notes',
     typeLabel: 'Meeting Notes',
     title: 'Portfolio Night №8: feedback, patterns, and what designers said',
     meta: ['Gathering notes · Mar 2026', '10 min read'],
   },
   {
-    href: 'QueerPulse Library.html#housing-rights',
+    href: `${routes.library}#housing-rights`,
     type: 'guide',
     typeLabel: 'Guide',
     title: 'Tenant rights for LGBTQ+ renters in Lisbon: a practical guide',
     meta: ['Catarina Vaz', 'Updated Feb 2026'],
   },
   {
-    href: 'QueerPulse Library.html#collective',
+    href: `${routes.library}#collective`,
     type: 'recording',
     typeLabel: 'Recording',
     title: 'Starting a queer creative collective: legal structures, money, and trust',

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { linkToPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import { ManageGatheringTabs, ManageGatheringSidebar } from "./ManageGatheringTabs";
 import styles from "./ManageGatheringPage.module.css";
 
@@ -12,7 +12,7 @@ export function ManageGatheringPage() {
 
   const cancelGathering = () => {
     if (window.confirm("Cancel Pride Brunch? All 14 attendees will be notified.")) {
-      navigate(linkToPath("QueerPulse Gathering Cancelled.html"));
+      navigate(routes.gatheringCancelled);
     }
   };
 
@@ -38,7 +38,7 @@ export function ManageGatheringPage() {
                 <Button variant="ghost" className={styles.actionBtn} onClick={() => showToast("Opening messages…", "info")}>
                   Message attendees
                 </Button>
-                <Button variant="primary" className={styles.actionBtn} to={linkToPath("QueerPulse Gathering Dashboard.html")}>
+                <Button variant="primary" className={styles.actionBtn} to={routes.gatheringDashboard}>
                   Day-of dashboard →
                 </Button>
               </div>

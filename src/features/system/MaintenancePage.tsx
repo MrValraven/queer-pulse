@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
-import { linkToPath } from '../../app/routeMap'
+import { routes } from '../../app/routeMap'
 import styles from './MaintenancePage.module.css'
 
 const AFFECTED = [
@@ -53,8 +53,8 @@ export function MaintenancePage() {
         </div>
 
         <div className={styles.actions}>
-          <Button to={linkToPath('QueerPulse Status.html')}>Live status →</Button>
-          <Button variant="ghost-dark" to={linkToPath('QueerPulse Crisis Chat.html')}>
+          <Button to={routes.status}>Live status →</Button>
+          <Button variant="ghost-dark" to={routes.crisisChat}>
             Crisis chat (still on)
           </Button>
         </div>

@@ -2,16 +2,16 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { PageShell } from '../shared/components/layout'
 import { Button } from '../shared/components/ui'
-import { linkToPath } from '../app/routeMap'
+import { routes } from '../app/routeMap'
 import styles from './NotFoundPage.module.css'
 
 const LINKS = [
-  { icon: '📖', label: 'Magazine', sub: 'June 2026 issue', to: linkToPath('QueerPulse Magazine.html') },
-  { icon: '🎟️', label: 'Gatherings', sub: 'Upcoming events', to: linkToPath('QueerPulse Gathering.html') },
-  { icon: '📚', label: 'Reading groups', sub: '8 groups open', to: linkToPath('QueerPulse Reading Groups.html') },
-  { icon: '💬', label: 'Forum', sub: 'Community discussion', to: linkToPath('QueerPulse Forum.html') },
-  { icon: '❓', label: 'Help & FAQ', sub: 'Get answers', to: linkToPath('QueerPulse Help.html') },
-  { icon: '✉️', label: 'Contact us', sub: 'hello@queerpulse.pt', to: linkToPath('QueerPulse Contact.html') },
+  { icon: '📖', label: 'Magazine', sub: 'June 2026 issue', to: routes.magazine },
+  { icon: '🎟️', label: 'Gatherings', sub: 'Upcoming events', to: routes.gathering },
+  { icon: '📚', label: 'Reading groups', sub: '8 groups open', to: routes.readingGroups },
+  { icon: '💬', label: 'Forum', sub: 'Community discussion', to: routes.forum },
+  { icon: '❓', label: 'Help & FAQ', sub: 'Get answers', to: routes.help },
+  { icon: '✉️', label: 'Contact us', sub: 'hello@queerpulse.pt', to: routes.contact },
 ]
 
 export function NotFoundPage() {
@@ -20,7 +20,7 @@ export function NotFoundPage() {
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
-    if (query.trim()) navigate(linkToPath('QueerPulse Search.html') + '?q=' + encodeURIComponent(query.trim()))
+    if (query.trim()) navigate(routes.search + '?q=' + encodeURIComponent(query.trim()))
   }
 
   return (
