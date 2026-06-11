@@ -4,19 +4,9 @@ import { ImageSlot } from '../../shared/components/ui'
 import { CinemaShell } from './CinemaShell'
 import { films, type Access } from './data'
 import styles from './CinemaBrowsePage.module.css'
+import { ACCESS_FILTERS, FORMATS, MADE_BY, COUNTRIES, ACCESSIBILITY, MOODS } from './cinemaBrowse.data'
 
 const accessClass = { free: styles.free, member: styles.member, rent: styles.rent }
-
-const ACCESS = [
-  { value: 'free' as Access, label: 'Free' },
-  { value: 'member' as Access, label: 'Sustainer' },
-  { value: 'rent' as Access, label: 'Rent · €3' },
-]
-const FORMATS = ['Documentary', 'Feature', 'Short', 'Series', 'Experimental']
-const MADE_BY = ['Trans filmmakers', 'Lesbian filmmakers', 'Gay filmmakers', 'Non-binary filmmakers', 'QP members']
-const COUNTRIES = ['Portugal', 'Brazil', 'France', 'Japan', 'UK', 'Senegal', 'Egypt', '+14 more']
-const ACCESSIBILITY = ['PT subtitles', 'EN subtitles', 'Audio description', 'Sign language']
-const MOODS = ['Slow', 'Tender', 'Political', 'Funny', 'Healing', 'Joyful']
 
 function FilterGroup({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -50,7 +40,7 @@ export function CinemaBrowsePage() {
     })
   }
 
-  const activeChips = [...[...access].map((a) => ACCESS.find((x) => x.value === a)?.label ?? a), format].filter(
+  const activeChips = [...[...access].map((a) => ACCESS_FILTERS.find((x) => x.value === a)?.label ?? a), format].filter(
     Boolean,
   ) as string[]
 
@@ -86,7 +76,7 @@ export function CinemaBrowsePage() {
               </div>
 
               <FilterGroup label="Access">
-                {ACCESS.map((a) => (
+                {ACCESS_FILTERS.map((a) => (
                   <button
                     key={a.value}
                     className={[styles.chip, access.has(a.value) && styles.chipOn].filter(Boolean).join(' ')}

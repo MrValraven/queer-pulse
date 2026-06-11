@@ -1,0 +1,54 @@
+import type { Profile } from './flatmates.data'
+import styles from './FlatmatesPage.module.css'
+
+export function FlatmateCard({
+  p,
+  sent,
+  onSayHello,
+}: {
+  p: Profile
+  sent: boolean
+  onSayHello: () => void
+}) {
+  return (
+    <div className={styles.card}>
+      <div className={styles.cardTop}>
+        <div className={styles.av} style={{ background: p.avBg, color: p.avCol }}>
+          {p.av}
+        </div>
+        <div className={styles.identity}>
+          <div className={styles.name}>{p.name}</div>
+          <div className={styles.pronouns}>{p.pronouns}</div>
+        </div>
+        <span
+          className={[styles.badge, p.type === 'seeking' ? styles.badgeSeeking : styles.badgeOffering].join(' ')}
+        >
+          {p.type === 'seeking' ? 'Seeking a room' : 'Offering a room'}
+        </span>
+      </div>
+      <div className={styles.details}>
+        <span className={styles.detail}>📍 {p.neighbourhoodLabel}</span>
+        <span className={styles.detail}>🕒 {p.movein}</span>
+        <span className={styles.detail}>{p.budget}</span>
+      </div>
+      <p className={styles.note}>{p.note}</p>
+      <div className={styles.tags}>
+        {p.tags.map((t) => (
+          <span key={t} className={styles.tag}>
+            {t}
+          </span>
+        ))}
+      </div>
+      <div className={styles.foot}>
+        <span className={styles.since}>Member since {p.since}</span>
+        <button
+          type="button"
+          className={[styles.sayBtn, sent && styles.sayBtnSent].filter(Boolean).join(' ')}
+          onClick={onSayHello}
+        >
+          {sent ? '✓ Hello sent' : 'Say hello →'}
+        </button>
+      </div>
+    </div>
+  )
+}

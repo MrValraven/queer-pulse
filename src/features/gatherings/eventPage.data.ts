@@ -1,0 +1,12 @@
+export const TIERS = [
+  { name: 'Free', desc: 'No barriers to attending', price: '€0' },
+  { name: 'Standard', desc: 'Covers the cost of your dinner', price: '€8' },
+  { name: 'Supporter', desc: "Subsidises someone else's place", price: '€15' },
+]
+
+export const DETAILS = [
+  { icon: '📅', label: 'Date & time', value: 'Saturday, 14 June 2026', sub: '7:00pm–10:30pm (doors open 6:45pm)' },
+  { icon: '📍', label: 'Location', value: 'Casa do Alentejo', sub: 'Rua das Portas de Santo Antão 58, Intendente · 5 min from Intendente metro' },
+  { icon: '🍽️', label: 'Food & drink', value: 'Shared dinner included', sub: 'Note dietary requirements when you RSVP. Vegetarian and vegan options always available.' },
+  { icon: '🗣️', label: 'Language', value: 'PT / EN · bilingual throughout', sub: 'No one will be left out of a conversation.' },
+]
