@@ -1,11 +1,12 @@
 import { useState } from 'react'
+import { memberName } from '../members/data/members'
 import { ImageSlot } from '../../shared/components/ui'
 import { StudioShell } from './StudioShell'
 import { useToast } from '../../shared/components/feedback/useToast'
 import s from './funding.module.css'
 
 const TRACKS = [
-  { tc: '00:00', who: 'Inês Tavares', title: 'A summer in Cascais', m: true, tint: 'coral' as const },
+  { tc: '00:00', who: memberName('ines'), title: 'A summer in Cascais', m: true, tint: 'coral' as const },
   { tc: '06:40', who: 'Akin Diallo', title: 'Salt water, slowly', m: true, tint: 'plum' as const },
   { tc: '12:18', who: '', title: 'unknown bootleg edit', m: false, tint: 'plum' as const },
   { tc: '18:30', who: 'Yara Reis', title: 'If you have to ask', m: true, tint: 'jade' as const },
@@ -14,7 +15,7 @@ const TRACKS = [
   { tc: '37:44', who: 'Mariana Sol', title: 'Carta para a santa', m: true, tint: 'coral' as const },
 ]
 
-const PASTE = `00:00  Inês Tavares — A summer in Cascais
+const PASTE = `00:00  ${memberName('ines')} — A summer in Cascais
 06:40  Akin Diallo — Salt water, slowly
 12:18  (unknown bootleg edit)
 18:30  Yara Reis — If you have to ask

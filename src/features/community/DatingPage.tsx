@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { APPS, CULTURE, EVENTS, RECOGNITION, STRUCTURES } from './dating.data'
 import { DatingAppCard } from './DatingAppCard'
@@ -138,19 +138,14 @@ export function DatingPage() {
         </div>
       </section>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Real connection <em>exists here.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            It takes a little time and a little showing up. The community makes it easier.
-          </p>
-          <Button to={calendar} variant="primary" size="lg">
-            See what's on →
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Real connection <em>exists here.</em></>}
+        sub="It takes a little time and a little showing up. The community makes it easier."
+      >
+        <Button to={calendar} variant="primary" size="lg">
+          See what's on →
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

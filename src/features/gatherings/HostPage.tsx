@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import styles from './HostPage.module.css'
 
 const HERO_TYPES = ['Supper club', 'Studio visit', 'Skills workshop', 'Film screening', 'Morning walk', 'Book club', 'Open studio']
@@ -44,7 +44,7 @@ export function HostPage() {
         <div className="wrap">
           <div className={styles.grid}>
             <div className={styles.steps}>
-              <div className={styles.step}>
+              <Reveal className={styles.step}>
                 <div className={styles.stepNum}>1</div>
                 <div className={styles.stepContent}>
                   <h2>
@@ -73,9 +73,9 @@ export function HostPage() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Reveal>
 
-              <div className={styles.step}>
+              <Reveal className={styles.step} delay={60}>
                 <div className={styles.stepNum}>2</div>
                 <div className={styles.stepContent}>
                   <h2>
@@ -108,9 +108,9 @@ export function HostPage() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Reveal>
 
-              <div className={styles.step}>
+              <Reveal className={styles.step} delay={60}>
                 <div className={styles.stepNum}>3</div>
                 <div className={styles.stepContent}>
                   <h2>
@@ -127,9 +127,9 @@ export function HostPage() {
                     <li>Set a realistic cap and stick to it. Turning people away is fine. Overcrowding isn't.</li>
                   </ul>
                 </div>
-              </div>
+              </Reveal>
 
-              <div className={styles.step}>
+              <Reveal className={styles.step} delay={60}>
                 <div className={styles.stepNum}>4</div>
                 <div className={styles.stepContent}>
                   <h2>
@@ -153,9 +153,9 @@ export function HostPage() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Reveal>
 
-              <div className={styles.step}>
+              <Reveal className={styles.step} delay={60}>
                 <div className={`${styles.stepNum} ${styles.stepNumDone}`}>✓</div>
                 <div className={styles.stepContent}>
                   <h2>
@@ -172,10 +172,10 @@ export function HostPage() {
                   </p>
                   <Button to="/contact">Tell us how it went →</Button>
                 </div>
-              </div>
+              </Reveal>
             </div>
 
-            <aside className={styles.sidebar}>
+            <Reveal as="aside" className={styles.sidebar} delay={90}>
               <div className={styles.sidebarCard}>
                 <h3>Ready to list your gathering?</h3>
                 <p>
@@ -199,10 +199,19 @@ export function HostPage() {
                   ))}
                 </div>
               </div>
-            </aside>
+            </Reveal>
           </div>
         </div>
       </div>
+
+      <Outro
+        title={<>The best gatherings are the ones <em>that happen.</em></>}
+        sub="Start small, start soon. The community is here."
+      >
+        <Button to="/create-gathering" size="lg">
+          Create your gathering →
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

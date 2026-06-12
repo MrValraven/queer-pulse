@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { PageHero, PageShell } from '../../shared/components/layout'
+import { Button, Outro } from '../../shared/components/ui'
 import { PARTNERS, type Region } from './partnerDetails'
-import m from './marketing.module.css'
 import s from './PartnersPage.module.css'
 
 const regionClass: Record<Region, string> = { pt: s.pt, eu: s.eu, int: s.int }
@@ -10,15 +9,11 @@ const regionClass: Record<Region, string> = { pt: s.pt, eu: s.eu, int: s.int }
 export function PartnersPage() {
   return (
     <PageShell>
-      <header className={m.hero}>
-        <div className="wrap">
-          <div className={m.eyebrow}>Partners &amp; community</div>
-          <h1 className={m.heroTitle}>
-            Community is stronger when <em>communities connect.</em>
-          </h1>
-          <p className={m.heroSub}>QueerPulse doesn't exist in isolation. We're part of a wider network of queer organisations, communities, and spaces across Portugal and beyond.</p>
-        </div>
-      </header>
+      <PageHero
+        eyebrow="Partners & community"
+        title={<>Community is stronger when <em>communities connect.</em></>}
+        sub="QueerPulse doesn't exist in isolation. We're part of a wider network of queer organisations, communities, and spaces across Portugal and beyond."
+      />
 
       <section className={s.interStrip}>
         <div className="wrap">
@@ -89,17 +84,14 @@ export function PartnersPage() {
         </div>
       </section>
 
-      <section className={m.outro}>
-        <div className="wrap">
-          <h2>
-            You don't have to navigate this <em>alone.</em>
-          </h2>
-          <p>QueerPulse, and the organisations we work with, exist so that you don't have to start from zero.</p>
-          <Button size="lg" to="/invite">
-            Request an invite
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>You don't have to navigate this <em>alone.</em></>}
+        sub="QueerPulse, and the organisations we work with, exist so that you don't have to start from zero."
+      >
+        <Button size="lg" to="/invite">
+          Request an invite
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

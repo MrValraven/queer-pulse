@@ -54,3 +54,9 @@ export const CATS = [
 ]
 
 export const BADGE: Record<Mode, string> = { offering: 'Offering', seeking: 'Seeking', both: 'Offering & seeking' }
+
+export const PRINCIPLES = [
+  { title: 'No money', body: 'Every exchange is peer-to-peer. Value is set by the people involved, not the platform.' },
+  { title: 'Reputation-backed', body: 'Offers come from verified members. Your community vouch is your credit history.' },
+  { title: 'What you want matters', body: "Post what you're looking for, not just what you can give. Needs are as welcome as offers." },
+]

@@ -1,3 +1,5 @@
+import { MEMBERS, memberName } from '../members/data/members'
+
 export type Tint = 'coral' | 'jade' | 'plum'
 
 export interface Recommendation {
@@ -44,7 +46,7 @@ export const LANDLORDS: Landlord[] = [
       { value: '★ 5.0', label: 'Community rating' },
     ],
     recommendations: [
-      { initials: 'CN', name: 'Carla Nogueira', tint: 'coral', stars: 5, text: 'Rented from him for two years. A radiator died in January and was replaced in two days. Never once made us feel like our relationship was his business.', when: 'Recommended Mar 2026' },
+      { initials: MEMBERS.carla.initials, name: memberName('carla'), tint: 'coral', stars: 5, text: 'Rented from him for two years. A radiator died in January and was replaced in two days. Never once made us feel like our relationship was his business.', when: 'Recommended Mar 2026' },
       { initials: 'JF', name: 'Jonas Ferreira', tint: 'jade', stars: 5, text: 'Clear contract, fair deposit, returned in full. He is exactly as advertised — unremarkable in the best possible way.', when: 'Recommended Jan 2026' },
       { initials: 'RV', name: 'Rita Varela', tint: 'plum', stars: 5, text: 'Three years, zero problems. The bar for landlords is in hell and he clears it with room to spare.', when: 'Recommended Nov 2025' },
     ],
@@ -66,7 +68,7 @@ export const LANDLORDS: Landlord[] = [
       { value: '★ 5.0', label: 'Community rating' },
     ],
     recommendations: [
-      { initials: 'TB', name: 'Tomás Beto', tint: 'coral', stars: 5, text: 'Ana rented me my first place in Lisbon when no one else would look at a freelancer. Fair, warm, completely unbothered by anything about me except whether I was happy there.', when: 'Recommended Apr 2026' },
+      { initials: MEMBERS.tomas.initials, name: memberName('tomas'), tint: 'coral', stars: 5, text: 'Ana rented me my first place in Lisbon when no one else would look at a freelancer. Fair, warm, completely unbothered by anything about me except whether I was happy there.', when: 'Recommended Apr 2026' },
       { initials: 'SC', name: 'Sofia Castaño', tint: 'jade', stars: 5, text: 'Two studios over four years. Deposit returned both times, to the cent. She is the reason I tell people Lisbon can be kind.', when: 'Recommended Feb 2026' },
     ],
     rentingNote: 'Ana prefers an introduction through the community. Request one and mention you found her on the QueerPulse board — she likes knowing tenants come vouched.',
@@ -88,7 +90,7 @@ export const LANDLORDS: Landlord[] = [
     ],
     recommendations: [
       { initials: 'NA', name: 'Nuno Alves', tint: 'plum', stars: 4, text: 'Formal, traditional, and not once a problem. They fixed a leak properly, kept to the contract, and treated my partner and me with complete courtesy.', when: 'Recommended Mar 2026' },
-      { initials: 'BP', name: 'Beatriz Pinto', tint: 'jade', stars: 5, text: 'Quiet street, solid building, fair people. Don\'t expect warmth on day one, but do expect to be treated properly. I stayed three years.', when: 'Recommended Dec 2025' },
+      { initials: MEMBERS.beatriz.initials, name: memberName('beatriz'), tint: 'jade', stars: 5, text: 'Quiet street, solid building, fair people. Don\'t expect warmth on day one, but do expect to be treated properly. I stayed three years.', when: 'Recommended Dec 2025' },
     ],
     rentingNote: 'The Rodrigues family rent long-term only and value references and stability. Approach formally, bring your documents (NIF, proof of income), and be patient — they are slow but solid.',
   },

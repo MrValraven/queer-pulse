@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { COMMITMENTS, FILTERS, RESOURCES, VENUES } from './accessibility.data'
@@ -171,19 +171,14 @@ export function AccessibilityPage() {
         </div>
       </section>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            You belong <em>here</em> — fully.
-          </h2>
-          <p className={styles.outroSub}>
-            Not as an afterthought. Not with a separate entrance. As a full member of this community.
-          </p>
-          <Button to={INVITE} variant="primary" size="lg">
-            Join QueerPulse
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>You belong <em>here</em> — fully.</>}
+        sub="Not as an afterthought. Not with a separate entrance. As a full member of this community."
+      >
+        <Button to={INVITE} variant="primary" size="lg">
+          Join QueerPulse
+        </Button>
+      </Outro>
 
       {flagVenue !== null && <FlagVenueModal venue={flagVenue} onClose={() => setFlagVenue(null)} />}
       {accomOpen && <AccommodationsModal onClose={() => setAccomOpen(false)} />}

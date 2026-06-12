@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { routes } from '../../app/routeMap'
 import styles from './StoryTomasPage.module.css'
+import { memberName } from '../members/data/members'
 
 function QA({ q, a }: { q: string; a: string }) {
   return (
@@ -57,7 +58,7 @@ export function StoryTomasArticle() {
               The job was fine. The money was fine. But I'd go to work and come home and go to a bar
               and nothing felt like it had anything to do with who I actually was.
             </p>
-            <cite>— Tomás Beto</cite>
+            <cite>— {memberName('tomas')}</cite>
           </blockquote>
 
           <p>
@@ -107,7 +108,7 @@ export function StoryTomasArticle() {
               Hospitality is the art of making someone feel like they don't have to earn their place
               at the table. That's not a political position. It's just what I'm trying to do.
             </p>
-            <cite>— Tomás Beto</cite>
+            <cite>— {memberName('tomas')}</cite>
           </blockquote>
 
           <h2>
@@ -132,7 +133,7 @@ export function StoryTomasArticle() {
           <div className={styles.authorCard}>
             <div className={styles.authorAv}>SA</div>
             <div>
-              <div className={styles.authorName}>Sofia Andrade</div>
+              <div className={styles.authorName}>{memberName('sofia')}</div>
               <div className={styles.authorRole}>Documentary Filmmaker · Alfama</div>
               <div className={styles.authorBio}>
                 Sofia makes documentaries about people who wouldn't think to be documented. She is
@@ -155,7 +156,7 @@ export function StoryTomasArticle() {
                 <div className={styles.mcTitle}>
                   How a Príncipe Real studio became a quiet home for queer designers
                 </div>
-                <div className={styles.mcBy}>Inês Tavares · 6 min read</div>
+                <div className={styles.mcBy}>{memberName('ines')} · 6 min read</div>
               </Link>
               <Link to={routes.storySafety} className={styles.moreCard}>
                 <div className={styles.moreImg} />

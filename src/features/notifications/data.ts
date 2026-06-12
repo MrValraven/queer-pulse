@@ -1,5 +1,6 @@
 import type { AvatarTint } from '../../shared/components/ui/Avatar'
 import { routes } from '../../app/routeMap'
+import { memberName } from '../members/data/members'
 
 export type NotifType = 'messages' | 'events' | 'community' | 'platform'
 
@@ -36,7 +37,7 @@ export const notifications: Notification[] = [
     type: 'messages',
     unread: true,
     avatar: { initials: 'IT', tint: 'jade' },
-    text: '<strong>Inês Tavares</strong> replied to your message about the Sunday table gathering.',
+    text: `<strong>${memberName('ines')}</strong> replied to your message about the Sunday table gathering.`,
     meta: 'Private message',
     time: '2 min ago',
     actions: [
@@ -59,7 +60,7 @@ export const notifications: Notification[] = [
     type: 'community',
     unread: true,
     avatar: { initials: 'DV', tint: 'plum' },
-    text: '<strong>Diogo Vasques</strong> invited you to join <strong>Queer Classics</strong> reading group.',
+    text: `<strong>${memberName('diogo')}</strong> invited you to join <strong>Queer Classics</strong> reading group.`,
     meta: 'Reading group · Invitation',
     time: '1 hr ago',
     actions: [
@@ -72,7 +73,7 @@ export const notifications: Notification[] = [
     type: 'messages',
     unread: true,
     avatar: { initials: 'SA', tint: 'jade' },
-    text: '<strong>Sofia Andrade</strong> mentioned you in the Forum thread: "What are we reading in July?"',
+    text: `<strong>${memberName('sofia')}</strong> mentioned you in the Forum thread: "What are we reading in July?"`,
     meta: 'Forum · Mention',
     time: '3 hr ago',
     actions: [{ label: 'View thread', variant: 'primary', href: routes.forum }],

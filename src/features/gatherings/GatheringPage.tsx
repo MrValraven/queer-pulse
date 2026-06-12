@@ -81,7 +81,13 @@ export function GatheringPage() {
               <div className={styles.sh}>Hosted by</div>
               {host ? (
                 <div className={styles.hostRow}>
-                  <Avatar initials={host.initials} tint={host.tint} size={44} />
+                  <Avatar
+                    initials={host.initials}
+                    tint={host.tint}
+                    size={44}
+                    src={host.photo}
+                    alt={`${host.first} ${host.last}`}
+                  />
                   <div>
                     <div className={styles.hostName}>
                       <Link to={`/profile/${host.slug}`} style={{ color: 'var(--ink)' }}>

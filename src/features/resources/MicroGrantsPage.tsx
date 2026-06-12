@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { CRITERIA, CURRENT, HOW, PANEL, PAST, RULES } from './microGrants.data'
@@ -137,20 +137,14 @@ export function MicroGrantsPage() {
         </div>
       </main>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            The community <em>funds itself.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            Every project here was made possible by members contributing what they could spare. The
-            fund grows with the network.
-          </p>
-          <Button to={INVITE} variant="primary" size="lg">
-            Join the network
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>The community <em>funds itself.</em></>}
+        sub="Every project here was made possible by members contributing what they could spare. The fund grows with the network."
+      >
+        <Button to={INVITE} variant="primary" size="lg">
+          Join the network
+        </Button>
+      </Outro>
 
       {open && <GrantApplicationModal onClose={() => setOpen(false)} />}
     </PageShell>

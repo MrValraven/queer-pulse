@@ -3,7 +3,7 @@ import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./SoberPage.module.css";
-import { Button } from "../../shared/components/ui";
+import { Button, Outro } from "../../shared/components/ui";
 import { REASONS, EVENTS, TYPE_CLASS } from "./soberPage.data";
 import { SoberHonestSection, SoberVenuesSection, SoberVoicesSection, SoberRecoverySection } from "./SoberSections";
 
@@ -109,25 +109,17 @@ export function SoberPage() {
       <SoberVoicesSection />
       <SoberRecoverySection linkMap={LINK_MAP} />
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            You belong <em>here.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            Sober, curious, or somewhere in between. The community is big enough for
-            all of it.
-          </p>
-          <div className={styles.outroBtns}>
-            <Button to={SAFE_SPACES} variant="primary" size="lg">
-              Find safe spaces
-            </Button>
-            <Button to={COMMUNITIES} variant="ghost-dark" size="lg">
-              Browse communities
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Outro
+        title={<>You belong <em>here.</em></>}
+        sub="Sober, curious, or somewhere in between. The community is big enough for all of it."
+      >
+        <Button to={SAFE_SPACES} variant="primary" size="lg">
+          Find safe spaces
+        </Button>
+        <Button to={COMMUNITIES} variant="ghost-dark" size="lg">
+          Browse communities
+        </Button>
+      </Outro>
     </PageShell>
   );
 }

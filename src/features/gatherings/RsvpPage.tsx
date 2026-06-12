@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Avatar, Button } from '../../shared/components/ui'
+import { memberName } from '../members/data/members'
 import { useToast } from '../../shared/components/feedback/useToast'
 import styles from './RsvpPage.module.css'
 
 const DETAILS = [
   { icon: '📅', bg: 'rgba(232,119,90,.1)', label: 'Date & time', value: 'Sunday 22 June · 7:00 PM' },
   { icon: '📍', bg: 'rgba(74,140,111,.1)', label: 'Location', value: 'Mouraria Community Centre' },
-  { icon: '👤', bg: 'rgba(45,27,61,.07)', label: 'Host', value: 'Mariana Loução' },
+  { icon: '👤', bg: 'rgba(45,27,61,.07)', label: 'Host', value: memberName('mariana') },
 ]
 
 const COC = [
@@ -88,7 +89,7 @@ export function RsvpPage() {
               <div className={styles.hnHead}>
                 <Avatar initials="ML" tint="plum" size={28} />
                 <div>
-                  <div className={styles.hnName}>Mariana Loução</div>
+                  <div className={styles.hnName}>{memberName('mariana')}</div>
                   <div className={styles.hnRole}>Reading group organiser</div>
                 </div>
               </div>

@@ -21,6 +21,8 @@ export interface Member {
   visibility: VisibilityMode
   initials: string
   tint: AvatarTint
+  /** Profile photo URL; falls back to initials when absent. */
+  photo?: string
   vouchedBy: string
 }
 

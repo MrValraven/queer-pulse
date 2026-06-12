@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
-import m from './marketing.module.css'
+import { PageHero, PageShell } from '../../shared/components/layout'
+import { Button, Outro } from '../../shared/components/ui'
 import s from './PlatformsPage.module.css'
 
 interface Platform {
@@ -54,24 +53,21 @@ export function PlatformsPage() {
 
   return (
     <PageShell>
-      <header className={m.hero}>
-        <div className="wrap">
-          <div className={m.eyebrow}>Queer platforms</div>
-          <h1 className={m.heroTitle}>
-            The wider <em>queer web.</em>
-          </h1>
-          <p className={m.heroSub}>Apps, media, professional networks, and advocacy organisations that are genuinely useful for queer people — beyond QueerPulse itself.</p>
-          <div className={s.bar}>
-            <div className={s.filters}>
-              {FILTERS.map((f) => (
-                <button key={f} className={[s.chip, filter === f && s.chipOn].filter(Boolean).join(' ')} onClick={() => setFilter(f)}>
-                  {f === 'all' ? 'All' : CAT_LABELS[f]}
-                </button>
-              ))}
-            </div>
+      <PageHero
+        eyebrow="Queer platforms"
+        title={<>The wider <em>queer web.</em></>}
+        sub="Apps, media, professional networks, and advocacy organisations that are genuinely useful for queer people — beyond QueerPulse itself."
+      >
+        <div className={s.bar}>
+          <div className={s.filters}>
+            {FILTERS.map((f) => (
+              <button key={f} className={[s.chip, filter === f && s.chipOn].filter(Boolean).join(' ')} onClick={() => setFilter(f)}>
+                {f === 'all' ? 'All' : CAT_LABELS[f]}
+              </button>
+            ))}
           </div>
         </div>
-      </header>
+      </PageHero>
 
       <section className={s.body}>
         <div className="wrap">
@@ -109,17 +105,14 @@ export function PlatformsPage() {
         </div>
       </section>
 
-      <section className={m.outro}>
-        <div className="wrap">
-          <h2>
-            Something missing? <em>Tell us.</em>
-          </h2>
-          <p>Know a platform, resource, or community that should be here? Suggest it and we'll add it to the directory.</p>
-          <Button size="lg" to="/forum">
-            Suggest a platform →
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Something missing? <em>Tell us.</em></>}
+        sub="Know a platform, resource, or community that should be here? Suggest it and we'll add it to the directory."
+      >
+        <Button size="lg" to="/forum">
+          Suggest a platform →
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

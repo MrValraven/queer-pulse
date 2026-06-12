@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { PageHero, PageShell } from '../../shared/components/layout'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { DIRECTORY_PLACES as BIZS, type Tint } from './directoryPlaces'
-import m from './marketing.module.css'
 import s from './DirectoryPage.module.css'
 
 const CATS = [
@@ -37,18 +36,15 @@ export function DirectoryPage() {
 
   return (
     <PageShell>
-      <header className={m.hero}>
-        <div className="wrap">
-          <div className={m.eyebrow}>Queer business directory</div>
-          <h1 className={m.heroTitle}>
-            Find your <em>people's places.</em>
-          </h1>
-          <p className={m.heroSub}>Queer-owned businesses and queer-friendly professionals in Lisbon. Vetted by the community, maintained by the community.</p>
-          <div className={s.heroNote}>
-            <span className={s.live} /> Community-verified · updated monthly
-          </div>
+      <PageHero
+        eyebrow="Queer business directory"
+        title={<>Find your <em>people's places.</em></>}
+        sub="Queer-owned businesses and queer-friendly professionals in Lisbon. Vetted by the community, maintained by the community. Whether you just arrived or you've been here for years."
+      >
+        <div className={s.heroNote}>
+          <span className={s.live} /> Community-verified · updated monthly
         </div>
-      </header>
+      </PageHero>
 
       <div className={s.bar}>
         <div className="wrap">
@@ -71,9 +67,9 @@ export function DirectoryPage() {
 
       <section className={s.content}>
         <div className="wrap">
-          <div className={s.count}>
+          <Reveal className={s.count}>
             Showing <b>{visible.length}</b> of {BIZS.length} places
-          </div>
+          </Reveal>
           <div className={s.grid}>
             {visible.length === 0 && <div className={s.empty}>No places match — try a broader filter.</div>}
             {visible.map((b) => (
@@ -98,31 +94,28 @@ export function DirectoryPage() {
             ))}
           </div>
 
-          <div className={s.submitStrip}>
+          <Reveal className={s.submitStrip}>
             <div>
               <h3>
                 Know a place worth <em>adding?</em>
               </h3>
-              <p>If you run or know a queer-owned or queer-friendly business in Lisbon that belongs here, tell us. We review every suggestion before it goes live.</p>
+              <p>If you run or know a queer-owned or queer-friendly business in Lisbon that belongs in this directory, tell us. We review every suggestion before it goes live.</p>
             </div>
             <Button size="lg" href="mailto:hello@queerpulse.pt?subject=Directory suggestion">
               Suggest a place
             </Button>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      <section className={m.outro}>
-        <div className="wrap">
-          <h2>
-            New to Lisbon? <em>You're not starting from zero.</em>
-          </h2>
-          <p>Join the network and get the full directory, member recommendations, and a community that knows the city.</p>
-          <Button size="lg" to="/invite">
-            Request an invite
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>New to Lisbon? <em>You're not starting from zero.</em></>}
+        sub="Join the network and get access to the full directory, member recommendations, and a community that knows the city."
+      >
+        <Button size="lg" to="/invite">
+          Request an invite
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

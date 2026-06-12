@@ -1,3 +1,5 @@
+import { memberName } from '../members/data/members'
+
 export interface GatheringDetail {
   slug: string
   type: string
@@ -20,7 +22,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     month: 'Jun',
     title: 'Queer Supper Club №12',
     hood: 'Mouraria',
-    host: 'Tomás Beto',
+    host: memberName('tomas'),
     hostSlug: 'tomas',
     spots: '8 seats left',
     cta: 'Reserve a seat',
@@ -46,7 +48,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     month: 'Jun',
     title: "Inside Beatriz's Ceramics Studio",
     hood: 'Graça',
-    host: 'Beatriz Pinto',
+    host: memberName('beatriz'),
     hostSlug: 'beatriz',
     spots: '3 spots left',
     cta: 'Request a spot',
@@ -101,7 +103,9 @@ export const calendarEvents: CalendarEvent[] = [
   { date: new Date(2026, 6, 2), org: 'QueerPulse', orgColor: ACCENT, title: 'Founders & Builders Breakfast', hood: 'Marvila', time: '8:30am', to: '/gathering#founders-breakfast' },
   { date: new Date(2026, 6, 5), org: 'Community', orgColor: COMMUNITY, title: 'Queer Youth Network — First Gathering', hood: 'Arroios', time: '5pm', to: '/communities' },
   { date: new Date(2026, 6, 7), org: 'Rede ex aequo', orgColor: PARTNER, title: 'Rede Monthly Gathering', hood: 'Lisbon', time: '6pm', to: '/event' },
+  { date: new Date(2026, 6, 9), org: 'QueerPulse', orgColor: ACCENT, title: 'Disability & Access — Open Conversation', hood: 'Online', time: '6:30pm', to: '/communities' },
   { date: new Date(2026, 6, 11), org: 'ILGA Portugal', orgColor: JADE, title: 'Free Legal Clinic', hood: 'Intendente', time: '2pm', to: '/legal' },
+  { date: new Date(2026, 6, 14), org: 'Community', orgColor: COMMUNITY, title: 'Queer Choir Monthly Rehearsal', hood: 'Príncipe Real', time: '7pm', to: '/communities' },
   { date: new Date(2026, 6, 16), org: 'QueerPulse', orgColor: ACCENT, title: 'Resource Library Launch — Live Q&A', hood: 'Online', time: '7pm', to: '/library' },
   { date: new Date(2026, 6, 19), org: 'Opus Diversus', orgColor: JADE, title: 'Peer Support Circle — Open Session', hood: 'Estrela', time: '6:30pm', to: '/event' },
   { date: new Date(2026, 6, 22), org: 'QueerPulse', orgColor: ACCENT, title: 'Micro-Grants — Q3 Open Office Hours', hood: 'Online', time: '12pm', to: '/grants' },

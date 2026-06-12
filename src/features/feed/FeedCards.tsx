@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Avatar, AvatarStack } from '../../shared/components/ui'
+import { Avatar } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import styles from './FeedPage.module.css'
@@ -20,11 +20,11 @@ export function GatheringCard() {
         </div>
         <div className={styles.gcFooter}>
           <div className={styles.attStack}>
-            <AvatarStack size={24} avatars={[
-              { initials: 'AK', tint: 'jade' },
-              { initials: 'JP', tint: 'coral' },
-              { initials: 'TM', tint: 'plum' },
-            ]} />
+            <div className={styles.attAvs}>
+              <Avatar initials="AK" tint="jade" size={24} />
+              <Avatar initials="JP" tint="coral" size={24} />
+              <Avatar initials="TM" tint="plum" size={24} />
+            </div>
             <span className={styles.attLabel}>+9 going</span>
           </div>
           <span className={styles.goingChip}>✓ You're going</span>

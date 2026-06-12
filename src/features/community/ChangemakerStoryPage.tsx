@@ -1,6 +1,6 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, Outro } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { CHANGEMAKERS, getChangemaker, type Tint } from "./changemakerStories";
 import styles from "./ChangemakerStoryPage.module.css";
@@ -102,25 +102,17 @@ export function ChangemakerStoryPage() {
         </div>
       </article>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Want to support <em>{cm.name.split(" ")[0]}'s</em> work?
-          </h2>
-          <p className={styles.outroSub}>
-            Change makers do this alongside their day jobs. A message, an introduction, or
-            an hour of your time goes further than you'd think.
-          </p>
-          <div className={styles.outroActions}>
-            <Button variant="primary" to={CONNECT}>
-              Connect with {cm.name.split(" ")[0]} →
-            </Button>
-            <Button variant="ghost-dark" to="/changemakers">
-              Meet more change makers
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Outro
+        title={<>Want to support <em>{cm.name.split(" ")[0]}'s</em> work?</>}
+        sub="Change makers do this alongside their day jobs. A message, an introduction, or an hour of your time goes further than you'd think."
+      >
+        <Button variant="primary" to={CONNECT}>
+          Connect with {cm.name.split(" ")[0]} →
+        </Button>
+        <Button variant="ghost-dark" to="/changemakers">
+          Meet more change makers
+        </Button>
+      </Outro>
 
       <div className={styles.more}>
         <div className={styles.moreLabel}>More change makers</div>

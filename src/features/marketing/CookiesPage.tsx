@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { COOKIE_CATEGORIES } from './cookies.data'
@@ -139,17 +139,14 @@ export function CookiesPage() {
         </div>
       </main>
 
-      <section className={styles.outro}>
-        <h2>
-          Your privacy. <em>Our commitment.</em>
-        </h2>
-        <p className={styles.outroSub}>
-          We don't track you. We don't profile you. We don't sell anything about you.
-        </p>
+      <Outro
+        title={<>Your privacy. <em>Our commitment.</em></>}
+        sub="We don't track you. We don't profile you. We don't sell anything about you."
+      >
         <Button variant="ghost-dark" size="lg" to={routes.privacy}>
           Read our privacy policy
         </Button>
-      </section>
+      </Outro>
     </PageShell>
   )
 }

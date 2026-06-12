@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { Button, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import {
@@ -206,24 +206,16 @@ export function Queer101TalkOptions() {
 
 export function Queer101Outro() {
   return (
-    <section className={styles.outro}>
-      <div className="wrap">
-        <h2>
-          You're welcome <em>here.</em>
-        </h2>
-        <p className={styles.outroSub}>
-          Wherever you are in the process. However long it takes. This community
-          isn't going anywhere.
-        </p>
-        <div className={styles.outroBtns}>
-          <Button to={routes.invite} variant="primary" size="lg">
-            Join QueerPulse
-          </Button>
-          <Button to={routes.communities} variant="ghost-dark" size="lg">
-            Explore communities
-          </Button>
-        </div>
-      </div>
-    </section>
+    <Outro
+      title={<>You're welcome <em>here.</em></>}
+      sub="Wherever you are in the process. However long it takes. This community isn't going anywhere."
+    >
+      <Button to={routes.invite} variant="primary" size="lg">
+        Join QueerPulse
+      </Button>
+      <Button to={routes.communities} variant="ghost-dark" size="lg">
+        Explore communities
+      </Button>
+    </Outro>
   );
 }

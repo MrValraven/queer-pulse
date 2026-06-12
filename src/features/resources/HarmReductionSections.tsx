@@ -1,4 +1,4 @@
-import { Button } from "../../shared/components/ui";
+import { Button, Outro } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import {
   SECTIONS,
@@ -140,19 +140,13 @@ export function HarmReductionGrid() {
 
 export function HarmReductionOutro() {
   return (
-    <section className={styles.outro}>
-      <div className="wrap">
-        <h2>
-          Take care of <em>each other.</em>
-        </h2>
-        <p className={styles.outroSub}>
-          Harm reduction is a community practice. The more people who know this,
-          the safer our nights are.
-        </p>
-        <Button to={routes.sexualHealth} variant="primary" size="lg">
-          Sexual health resources
-        </Button>
-      </div>
-    </section>
+    <Outro
+      title={<>Take care of <em>each other.</em></>}
+      sub="Harm reduction is a community practice. The more people who know this, the safer our nights are."
+    >
+      <Button to={routes.sexualHealth} variant="primary" size="lg">
+        Sexual health resources
+      </Button>
+    </Outro>
   );
 }

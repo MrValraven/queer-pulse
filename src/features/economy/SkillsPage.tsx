@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button, Tag, TagRow } from '../../shared/components/ui'
+import { Avatar, Button, Outro, Tag, TagRow } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { memberProfiles } from '../members/data/memberProfiles'
 import styles from './SkillsPage.module.css'
 
@@ -162,6 +163,15 @@ export function SkillsPage() {
           </div>
         </div>
       </div>
+
+      <Outro
+        title={<>The best way to get better is to <em>know someone further along.</em></>}
+        sub="Join the network and find the people who can help you grow — and the people you can help in return."
+      >
+        <Button to={routes.invite} variant="primary" size="lg">
+          Request an invite
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

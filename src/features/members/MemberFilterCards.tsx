@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { routes } from '../../app/routeMap'
+import { Avatar } from '../../shared/components/ui'
+import { fullName, memberProfiles } from './data/memberProfiles'
 import {
   DISCIPLINES,
   IDENTITY,
@@ -11,14 +12,6 @@ import {
   type MemberCard,
 } from './memberDirectoryFilter.data'
 import styles from './MemberDirectoryFilterPage.module.css'
-
-const PROFILE = routes.profile
-
-function avClass(tint?: 'jade' | 'plum') {
-  if (tint === 'jade') return `${styles.mAv} ${styles.mAvJade}`
-  if (tint === 'plum') return `${styles.mAv} ${styles.mAvPlum}`
-  return styles.mAv
-}
 
 function ChipGroup({ options }: { options: ChipOption[] }) {
   const [active, setActive] = useState(() => new Set(options.filter((o) => o.active).map((o) => o.label)))
@@ -111,12 +104,14 @@ export function FiltersSidebar({ appliedCount, onClearAll }: { appliedCount: num
 }
 
 export function MemberResultCard({ member }: { member: MemberCard }) {
+  const m = memberProfiles[member.slug]
+  const name = fullName(m)
   return (
-    <Link to={PROFILE} className={styles.mCard}>
+    <Link to={`/profile/${member.slug}`} className={styles.mCard}>
       <div className={styles.mHead}>
-        <div className={avClass(member.tint)}>{member.initials}</div>
+        <Avatar initials={m.initials} tint={m.tint} src={m.photo} size={48} alt={name} />
         <div>
-          <div className={styles.mName}>{member.name}</div>
+          <div className={styles.mName}>{name}</div>
           <div className={styles.mPron}>{member.meta}</div>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { memberName } from '../members/data/members'
+
 export type Category = 'Bar' | 'Club' | 'Cafe' | 'Health' | 'Services' | 'Arts'
 export type Tint = 'coral' | 'jade' | 'plum'
 
@@ -81,8 +83,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { title: 'Incidents reported to moderation within 48h.', desc: 'Anything that happens here reaches the QueerPulse moderation team within two days.' },
     ],
     vouches: [
-      { initials: 'KL', name: 'Kai Larsson', tint: J, byline: 'Member 2 years · vouched 4×', text: "A guy started filming people on the dancefloor. I pointed him out to the bar and he was gone in ninety seconds, no drama, no making me explain. That's the whole point of this place.", when: 'Vouched 18 Apr 2026' },
-      { initials: 'RV', name: 'Rita Varela', tint: C, byline: 'Regular', text: "It's the one bar I'll go to alone and still feel held. The bathrooms are genuinely fine and the staff clock when someone's not okay.", when: 'Vouched 2 Mar 2026' },
+      { initials: 'KL', name: memberName('kai'), tint: J, byline: 'Member 2 years · vouched 4×', text: "A guy started filming people on the dancefloor. I pointed him out to the bar and he was gone in ninety seconds, no drama, no making me explain. That's the whole point of this place.", when: 'Vouched 18 Apr 2026' },
+      { initials: 'RV', name: memberName('rita'), tint: C, byline: 'Regular', text: "It's the one bar I'll go to alone and still feel held. The bathrooms are genuinely fine and the staff clock when someone's not okay.", when: 'Vouched 2 Mar 2026' },
     ],
     glance: [
       { label: 'Type', value: 'Bar · Wed–Sun' },
@@ -109,8 +111,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { title: 'Incidents reported to moderation within 48h.', desc: 'The management has a direct line to QueerPulse moderation.' },
     ],
     vouches: [
-      { initials: 'NA', name: 'Nuno Alves', tint: P, byline: 'Member 3 years', text: "I'm bi and married to a woman and I've never once felt like the odd one out here. The Friday queens look after newcomers.", when: 'Vouched 9 Mar 2026' },
-      { initials: 'SC', name: 'Sofia Castaño', tint: C, byline: 'Regular', text: 'Docked nothing for safety — only flagged the stairs so wheelchair-using friends know in advance. Staff carried my friend\'s chair without being asked.', when: 'Vouched 21 Feb 2026' },
+      { initials: 'NA', name: memberName('nuno'), tint: P, byline: 'Member 3 years', text: "I'm bi and married to a woman and I've never once felt like the odd one out here. The Friday queens look after newcomers.", when: 'Vouched 9 Mar 2026' },
+      { initials: 'SC', name: memberName('sofia-castano'), tint: C, byline: 'Regular', text: 'Docked nothing for safety — only flagged the stairs so wheelchair-using friends know in advance. Staff carried my friend\'s chair without being asked.', when: 'Vouched 21 Feb 2026' },
     ],
     glance: [
       { label: 'Type', value: 'Bar · Tue–Sun' },
@@ -137,8 +139,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { title: 'Incidents reported to moderation within 48h.', desc: 'Management shares incident reports with QueerPulse moderation.' },
     ],
     vouches: [
-      { initials: 'KL', name: 'Kai Larsson', tint: J, byline: 'Member 2 years', text: "Reported a creep on the main floor at 3am expecting nothing. A staff member walked me to find him and handled it. In a club this famous, that's not nothing.", when: 'Vouched 14 Mar 2026' },
-      { initials: 'AK', name: 'Anika Kovač', tint: C, byline: 'Member 4 years', text: 'The lit bathrooms sound like a small thing until you\'ve needed them. Felt safe here at every queer night I\'ve been to.', when: 'Vouched 1 Mar 2026' },
+      { initials: 'KL', name: memberName('kai'), tint: J, byline: 'Member 2 years', text: "Reported a creep on the main floor at 3am expecting nothing. A staff member walked me to find him and handled it. In a club this famous, that's not nothing.", when: 'Vouched 14 Mar 2026' },
+      { initials: 'AK', name: memberName('anika'), tint: C, byline: 'Member 4 years', text: 'The lit bathrooms sound like a small thing until you\'ve needed them. Felt safe here at every queer night I\'ve been to.', when: 'Vouched 1 Mar 2026' },
     ],
     glance: [
       { label: 'Type', value: 'Club · Thu–Sat' },
@@ -165,8 +167,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { title: 'Sober by default.', desc: 'No alcohol, no pressure — a rare quiet option in a nightlife neighbourhood.' },
     ],
     vouches: [
-      { initials: 'JF', name: 'Jonas Ferreira', tint: J, byline: 'Member 3 years', text: 'I run my recovery meet-ups out of the corner here. Staff hold the table, keep it sober, never make it weird. Quietly one of the safest rooms in the city.', when: 'Vouched 28 Apr 2026' },
-      { initials: 'RV', name: 'Rita Varela', tint: C, byline: 'Regular', text: 'Did all my scary first dates here on purpose. The staff clock it and hover just enough. Cup always says Rita, never the other name.', when: 'Vouched 12 Apr 2026' },
+      { initials: 'JF', name: memberName('jonas'), tint: J, byline: 'Member 3 years', text: 'I run my recovery meet-ups out of the corner here. Staff hold the table, keep it sober, never make it weird. Quietly one of the safest rooms in the city.', when: 'Vouched 28 Apr 2026' },
+      { initials: 'RV', name: memberName('rita'), tint: C, byline: 'Regular', text: 'Did all my scary first dates here on purpose. The staff clock it and hover just enough. Cup always says Rita, never the other name.', when: 'Vouched 12 Apr 2026' },
     ],
     glance: [
       { label: 'Type', value: 'Café · 7 days' },
@@ -193,8 +195,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { title: 'Warm hand-off to further care.', desc: 'If you need more, they connect you to vetted, affirming services — not a leaflet.' },
     ],
     vouches: [
-      { initials: 'AK', name: 'Anika Kovač', tint: C, byline: 'Member 4 years', text: 'First place I ever got tested where nobody flinched, nobody assumed, nobody used the wrong word. Free, fast, kind. I send everyone here.', when: 'Vouched 3 May 2026' },
-      { initials: 'KL', name: 'Kai Larsson', tint: J, byline: 'Member 2 years', text: 'They handed me the intake form already gender-neutral. Small thing, enormous relief. Safest clinic experience of my life.', when: 'Vouched 20 Apr 2026' },
+      { initials: 'AK', name: memberName('anika'), tint: C, byline: 'Member 4 years', text: 'First place I ever got tested where nobody flinched, nobody assumed, nobody used the wrong word. Free, fast, kind. I send everyone here.', when: 'Vouched 3 May 2026' },
+      { initials: 'KL', name: memberName('kai'), tint: J, byline: 'Member 2 years', text: 'They handed me the intake form already gender-neutral. Small thing, enormous relief. Safest clinic experience of my life.', when: 'Vouched 20 Apr 2026' },
     ],
     glance: [
       { label: 'Type', value: 'Sexual health · free' },
@@ -221,8 +223,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { title: 'A held first chop.', desc: 'Doing something big? Say so. They will go slow and check in.' },
     ],
     vouches: [
-      { initials: 'KL', name: 'Kai Larsson', tint: J, byline: 'Member 2 years', text: 'Walked in terrified, asked for a cut I\'d been too scared to ask for anywhere else. The barber just nodded and did it. I welled up in the chair.', when: 'Vouched 16 Apr 2026' },
-      { initials: 'NA', name: 'Nuno Alves', tint: P, byline: 'Regular', text: 'Same price as anywhere, none of the awkwardness, twice the skill. Genuinely safe — never once misgendered, never once a weird question.', when: 'Vouched 30 Mar 2026' },
+      { initials: 'KL', name: memberName('kai'), tint: J, byline: 'Member 2 years', text: 'Walked in terrified, asked for a cut I\'d been too scared to ask for anywhere else. The barber just nodded and did it. I welled up in the chair.', when: 'Vouched 16 Apr 2026' },
+      { initials: 'NA', name: memberName('nuno'), tint: P, byline: 'Regular', text: 'Same price as anywhere, none of the awkwardness, twice the skill. Genuinely safe — never once misgendered, never once a weird question.', when: 'Vouched 30 Mar 2026' },
     ],
     glance: [
       { label: 'Type', value: 'Barbershop' },
@@ -249,8 +251,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { title: 'Incidents reported to moderation within 48h.', desc: 'The venue keeps an open channel with QueerPulse moderation.' },
     ],
     vouches: [
-      { initials: 'LG', name: 'Luísa Gomes', tint: P, byline: 'Curator · vouched 3×', text: "I've put on queer shows here for years. They protect the work and the audience equally. When a crowd got hostile once, staff shut it down, not the artist.", when: 'Vouched 8 Apr 2026' },
-      { initials: 'RV', name: 'Rita Varela', tint: C, byline: 'Member 2 years', text: 'The one venue where I\'ve never had to brace at the door. Old, scrappy, and completely ours.', when: 'Vouched 25 Mar 2026' },
+      { initials: 'LG', name: memberName('luisa'), tint: P, byline: 'Curator · vouched 3×', text: "I've put on queer shows here for years. They protect the work and the audience equally. When a crowd got hostile once, staff shut it down, not the artist.", when: 'Vouched 8 Apr 2026' },
+      { initials: 'RV', name: memberName('rita'), tint: C, byline: 'Member 2 years', text: 'The one venue where I\'ve never had to brace at the door. Old, scrappy, and completely ours.', when: 'Vouched 25 Mar 2026' },
     ],
     glance: [
       { label: 'Type', value: 'Arts venue' },
@@ -277,8 +279,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { title: 'Sober-friendly.', desc: 'No alcohol and no pressure — easy to suggest to anyone who needs that.' },
     ],
     vouches: [
-      { initials: 'SC', name: 'Sofia Castaño', tint: C, byline: 'Member 2 years', text: 'My default "meet a stranger safely in daylight" spot. Staff are queer, kind, and quietly attentive. Never had a bad moment here.', when: 'Vouched 2 May 2026' },
-      { initials: 'JF', name: 'Jonas Ferreira', tint: J, byline: 'Regular', text: 'Sober and central is a rare combination near Cais do Sodré. This is the one I trust.', when: 'Vouched 14 Apr 2026' },
+      { initials: 'SC', name: memberName('sofia-castano'), tint: C, byline: 'Member 2 years', text: 'My default "meet a stranger safely in daylight" spot. Staff are queer, kind, and quietly attentive. Never had a bad moment here.', when: 'Vouched 2 May 2026' },
+      { initials: 'JF', name: memberName('jonas'), tint: J, byline: 'Regular', text: 'Sober and central is a rare combination near Cais do Sodré. This is the one I trust.', when: 'Vouched 14 Apr 2026' },
     ],
     glance: [
       { label: 'Type', value: 'Café · 7 days' },

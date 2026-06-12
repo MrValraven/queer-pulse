@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Button, ImageSlot } from '../../shared/components/ui'
+import { Button, ImageSlot, Outro } from '../../shared/components/ui'
 import { coverFilm, collections, films, liveEvents, shorts } from './data'
 import { SECTION_NAV } from './cinemaPage.data'
 import styles from './CinemaPage.module.css'
@@ -325,16 +325,13 @@ export function LedgerSection() {
 
 export function CinemaOutro() {
   return (
-    <section className={styles.outro}>
-      <div className="wrap">
-        <h2>
-          Watch <em>together</em>.
-        </h2>
-        <p>Cinema is a room with people in it. The room is open.</p>
-        <Button size="lg" to="/cinema/membership">
-          Sustain the cinema
-        </Button>
-      </div>
-    </section>
+    <Outro
+      title={<>Watch <em>together</em>.</>}
+      sub="Cinema is a room with people in it. The room is open."
+    >
+      <Button size="lg" to="/cinema/membership">
+        Sustain the cinema
+      </Button>
+    </Outro>
   )
 }

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { PageShell } from '../../shared/components/layout';
 import { Avatar, Button, ImageSlot, Reveal } from '../../shared/components/ui';
+import { memberName } from '../members/data/members';
 import styles from './MagazinePage.module.css';
 import type { Card } from './magazinePage.data';
 import { FEATURES, ESSAYS, INTERVIEWS, REVIEWS, COMMUNITY, LETTERS, ARCHIVE, NAV } from './magazinePage.data';
@@ -80,7 +81,7 @@ export function MagazinePage() {
             <br />
             <em>Did we?</em>
           </h1>
-          <div className={styles.csByline}>By Sofia Andrade · Photography by André Quintela</div>
+          <div className={styles.csByline}>By {memberName('sofia')} · Photography by {memberName('andre')}</div>
           <p className={styles.csExcerpt}>
             Lisbon's queer community has spent a decade finding itself. The rent has tripled. The
             bars have closed and reopened and closed again. What survived the decade, and what did
@@ -109,7 +110,7 @@ export function MagazinePage() {
                 <br />
                 <em>I arrived.</em>
               </h2>
-              <div className={styles.feByline}>By Tomás Beto</div>
+              <div className={styles.feByline}>By {memberName('tomas')}</div>
               <p className={styles.feExcerpt}>
                 Coming out implies a before and an after. A door, a room, a revelation. What if it
                 was never that clean? What if you just quietly became yourself and one day looked

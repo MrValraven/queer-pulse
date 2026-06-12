@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
+import { Reveal } from '../../shared/components/ui'
 import { NAV } from './governance.data'
 import {
   CouncilSection,
@@ -35,21 +36,23 @@ export function GovernancePage() {
     <PageShell>
       <section className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Governance &amp; Transparency</div>
-          <h1>
+          <Reveal as="div" className={styles.cat}>
+            Governance &amp; Transparency
+          </Reveal>
+          <Reveal as="h1" delay={60}>
             How we run this, and who <em>decides.</em>
-          </h1>
-          <p>
+          </Reveal>
+          <Reveal as="p" delay={120}>
             QueerPulse is a community platform. That means being transparent about how it's governed,
             how decisions are made, and what happens when things go wrong. This page is that record.
-          </p>
+          </Reveal>
         </div>
       </section>
 
       <section className={styles.body}>
         <div className="wrap">
           <div className={styles.layout}>
-            <nav className={styles.nav}>
+            <Reveal as="nav" className={styles.nav}>
               {NAV.map((item) => (
                 <a
                   key={item.id}
@@ -59,7 +62,7 @@ export function GovernancePage() {
                   {item.label}
                 </a>
               ))}
-            </nav>
+            </Reveal>
 
             <div className={styles.content}>
               <HealthSection />

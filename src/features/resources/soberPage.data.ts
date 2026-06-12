@@ -1,3 +1,5 @@
+import { memberName } from "../members/data/members";
+
 export type EventType = "Social" | "Support" | "Outdoors" | "Culture";
 
 export interface SoberEvent {
@@ -50,7 +52,7 @@ export const VENUES = [
 ];
 
 export const VOICES = [
-  { quote: '"I thought getting sober would mean losing the community. It turned out I found a deeper one — people who show up because they want to, not because the bar is there."', av: "ML", avBg: "rgba(232,119,90,.15)", avCol: "var(--accent-ink)", name: "Mariana Loução", role: "3 years sober · Clinical Psychologist" },
+  { quote: '"I thought getting sober would mean losing the community. It turned out I found a deeper one — people who show up because they want to, not because the bar is there."', av: "ML", avBg: "rgba(232,119,90,.15)", avCol: "var(--accent-ink)", name: memberName('mariana'), role: "3 years sober · Clinical Psychologist" },
   { quote: '"I don\'t drink for health reasons, not recovery — but the reaction is often the same. Having spaces where it just isn\'t the question is a relief I can\'t fully describe."', av: "RP", avBg: "rgba(74,140,111,.15)", avCol: "var(--jade)", name: "Rafael Pinto", role: "Illustrator · Graça" },
   { quote: '"The morning walk group changed things for me. I\'d been so isolated — not because I didn\'t want connection, but because every social option seemed to start at midnight in a bar."', av: "CF", avBg: "rgba(45,27,61,.1)", avCol: "var(--plum)", name: "Catarina Faria", role: "Architect · Estrela" },
 ];

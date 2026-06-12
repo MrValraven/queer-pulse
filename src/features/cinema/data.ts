@@ -1,4 +1,5 @@
 import type { ImageSlotTint } from '../../shared/components/ui/ImageSlot'
+import { memberName } from '../members/data/members'
 
 export type Access = 'free' | 'member' | 'rent'
 
@@ -22,7 +23,7 @@ export interface CinemaFilm {
 }
 
 export const films: CinemaFilm[] = [
-  { id: 'cascais', access: 'free', accessLabel: 'Free', kicker: 'Narrative feature', titlePre: 'A summer in ', titleEm: 'Cascais', meta: 'Inês Tavares · PT · 104 min', note: 'Three sisters, one inheritance, and the ghost of the great-aunt who left them the house.', by: 'Sara M.', tint: 'coral', format: 'Feature', country: 'PT', year: '2024', subs: ['PT subs', 'EN subs'] },
+  { id: 'cascais', access: 'free', accessLabel: 'Free', kicker: 'Narrative feature', titlePre: 'A summer in ', titleEm: 'Cascais', meta: `${memberName('ines')} · PT · 104 min`, note: 'Three sisters, one inheritance, and the ghost of the great-aunt who left them the house.', by: 'Sara M.', tint: 'coral', format: 'Feature', country: 'PT', year: '2024', subs: ['PT subs', 'EN subs'] },
   { id: 'paris', access: 'member', accessLabel: 'Sustainer', kicker: 'Documentary', titlePre: 'Paris is ', titleEm: 'still', titlePost: ' burning', meta: 'Akin Diallo · FR/SN · 87 min', note: 'A West African ballroom scene, two decades after the diaspora that built it.', by: 'D. Okoye', tint: 'plum', format: 'Documentary', country: 'FR/SN', year: '2025', subs: ['FR spoken', 'EN subs', 'PT subs'] },
   { id: 'pharmacy', access: 'free', accessLabel: 'Free', kicker: 'Short · 18 min', titlePre: 'The pharmacy at 3am', meta: 'Rui Almeida · PT · 18 min', note: 'A trans woman, a graveyard shift, a stranger asking for testosterone.', by: 'made here', tint: 'jade', format: 'Short', country: 'PT', year: '2026', subs: ['PT spoken'] },
   { id: 'mother', access: 'rent', accessLabel: 'Rent · €3', kicker: 'Narrative feature', titlePre: 'Mother, ', titleEm: 'weather', meta: 'Yuki Tanaka · JP · 118 min', note: 'A son returns to Hokkaido to come out to his mother through the act of cooking her dinner.', by: "curators' council", tint: 'coral', format: 'Feature', country: 'JP', year: '2024', subs: ['JP spoken', 'EN subs', 'PT subs'] },

@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import { MEMBERS, memberName } from '../members/data/members'
 
 export const WF = [30, 55, 70, 90, 65, 80, 50, 42, 60, 75, 55, 88, 62, 48, 72, 80, 34, 58, 80, 46, 64, 78, 42, 90, 54, 38, 66, 74, 48, 60, 35, 50, 42, 65, 78, 50, 68, 42, 36]
 
@@ -6,7 +7,7 @@ export const WF = [30, 55, 70, 90, 65, 80, 50, 42, 60, 75, 55, 88, 62, 48, 72, 8
 export const PLAYED = 15
 
 export const SET = [
-  { n: '1', pre: 'A summer in ', em: 'Cascais', who: 'Inês Tavares · played 21:00 → 21:04', pay: '€0.05 to Inês', tm: '4:12', state: 'played', tint: 'coral' },
+  { n: '1', pre: 'A summer in ', em: 'Cascais', who: `${memberName('ines')} · played 21:00 → 21:04`, pay: `€0.05 to ${MEMBERS.ines.first}`, tm: '4:12', state: 'played', tint: 'coral' },
   { n: '2', pre: 'Paris is ', em: 'still', post: ' burning', who: 'Akin Diallo · played 21:04 → 21:09', pay: '€0.05 to Akin', tm: '5:08', state: 'played', tint: 'plum' },
   { n: '3', pre: 'If you have to ', em: 'ask', who: 'Yara Reis · played 21:09 → 21:10', pay: '€0.05 to Yara', tm: '1:22', state: 'played', tint: 'jade' },
   { n: '4', pre: 'Salt water, ', em: 'slowly', who: 'Akin Diallo · played 21:10 → 21:16', pay: '€0.05 to Akin', tm: '5:31', state: 'played', tint: 'coral' },

@@ -60,6 +60,26 @@
   margin-top: 42px;
   align-items: center;
 }
+.simLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 18px;
+}
+.simLink {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(var(--accent-rgb), 0.4);
+  transition: text-decoration-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.simLink:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
 .note {
   font-size: 13.5px;
   color: var(--ink-40);

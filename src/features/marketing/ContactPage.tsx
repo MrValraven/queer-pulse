@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import s from './ContactPage.module.css'
 
 const ROUTES = [
-  { icon: '✉️', bg: 'rgba(232,119,90,.12)', title: 'General hello', desc: "Anything that doesn't fit elsewhere — questions, feedback, introductions, ideas.", email: 'hello@queerpulse.pt' },
-  { icon: '🌿', bg: 'rgba(74,140,111,.12)', title: 'Safety concern', desc: 'If something in the network has made you feel unsafe. Handled with full discretion, within 24 hours.', email: 'safe@queerpulse.pt' },
-  { icon: '📰', bg: 'rgba(45,27,61,.08)', title: 'Press & media', desc: "Journalists, researchers, documentary makers. We ask that you share your draft before publication.", email: 'press@queerpulse.pt' },
-  { icon: '🤝', bg: 'rgba(232,119,90,.1)', title: 'Partnerships', desc: "Organisations and communities who want to work with QueerPulse. Selective, but genuinely interested.", email: 'partners@queerpulse.pt' },
+  { icon: '✉️', bg: 'rgba(232,119,90,.12)', title: 'General hello', desc: "Anything that doesn't fit elsewhere — questions, feedback, introductions, ideas you think we should hear about.", email: 'hello@queerpulse.pt' },
+  { icon: '🌿', bg: 'rgba(74,140,111,.12)', title: 'Safety concern', desc: 'If something in the network has made you feel unsafe or uncomfortable. Handled with full discretion. We respond within 24 hours.', email: 'safe@queerpulse.pt' },
+  { icon: '📰', bg: 'rgba(45,27,61,.08)', title: 'Press & media', desc: "Journalists, researchers, documentary makers. We're happy to talk about what we're building and why. We ask that you share your draft before publication.", email: 'press@queerpulse.pt' },
+  { icon: '🤝', bg: 'rgba(232,119,90,.1)', title: 'Partnerships', desc: "Organisations, spaces, and communities who want to work with QueerPulse. We're selective but we're genuinely interested in the right collaborations.", email: 'partners@queerpulse.pt' },
 ]
 
 export function ContactPage() {
@@ -19,7 +19,7 @@ export function ContactPage() {
     <PageShell>
       <div className="wrap">
         <div className={s.grid}>
-          <div className={s.intro}>
+          <Reveal className={s.intro}>
             <div className={s.eyebrow}>
               <span className={s.live} /> We read everything
             </div>
@@ -41,9 +41,9 @@ export function ContactPage() {
                 </a>
               ))}
             </div>
-          </div>
+          </Reveal>
 
-          <div className={s.form}>
+          <Reveal className={s.form} delay={90}>
             {sent ? (
               <div className={s.sent}>
                 <div className={s.tyIcon}>
@@ -98,9 +98,18 @@ export function ContactPage() {
                 </Button>
               </form>
             )}
-          </div>
+          </Reveal>
         </div>
       </div>
+
+      <Outro
+        title={<>Built in Lisbon, <em>with care.</em></>}
+        sub="QueerPulse is a small, member-supported network. Your feedback helps keep it good."
+      >
+        <Button to="/" size="lg">
+          Back to the room
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

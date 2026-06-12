@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { COMMITMENTS, COMMUNITIES, CONTACT, FORUM, GOVERNANCE, ORGS } from './intersectionality.data'
 import styles from './IntersectionalityPage.module.css'
 
@@ -61,22 +61,17 @@ export function IntersectionalityFooter() {
         </div>
       </section>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            All of you <em>belongs here.</em>
-          </h2>
-          <p className={styles.outroSub}>Not the parts that are easiest to hold. All of it.</p>
-          <div className={styles.outroBtns}>
-            <Button to={COMMUNITIES} variant="primary" size="lg">
-              Find your community group
-            </Button>
-            <Button to={FORUM} variant="ghost-dark" size="lg">
-              Forum →
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Outro
+        title={<>All of you <em>belongs here.</em></>}
+        sub="Not the parts that are easiest to hold. All of it."
+      >
+        <Button to={COMMUNITIES} variant="primary" size="lg">
+          Find your community group
+        </Button>
+        <Button to={FORUM} variant="ghost-dark" size="lg">
+          Forum →
+        </Button>
+      </Outro>
     </>
   )
 }

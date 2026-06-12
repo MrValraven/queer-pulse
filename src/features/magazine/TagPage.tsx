@@ -5,6 +5,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./TagPage.module.css";
 import { Button } from '../../shared/components/ui'
+import { memberName } from '../members/data/members'
 
 const ARTICLE = routes.article;
 const NEWSLETTER = routes.newsletter;
@@ -22,7 +23,7 @@ const ITEMS: Item[] = [
   { kicker: "Reportage", read: "· 22 min · Issue 07", title: <>A history of the lifeline, <em>1995–2025.</em></>, dek: "Three decades of ILGA Portugal's helpline, told through the calls operators remember and the ones they can't.", byline: <>By <b>Catarina Vaz</b> · 12 Dec 2025</> },
   { kicker: "Reported essay", read: "· 17 min · Issue 06", title: <>The visa queue is <em>a kind of closet.</em></>, dek: "Three queer migrants on what it means to wait for a residency permit while not being out to your case officer.", byline: <>By <b>Sara Pinheiro</b> · 18 Sep 2025</> },
   { kicker: "Reportage", read: "· 16 min · Issue 08", title: <>Inside the back room of <em>Café Beirão.</em></>, dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure.", byline: <>By <b>Jonas Ferreira</b> · 14 Mar 2026</> },
-  { kicker: "Interview", read: "· 19 min · Issue 06", title: <>Mariza Câmara, <em>district health director.</em></>, dek: "An hour-long conversation about queer health policy in Lisbon's Câmara Municipal — what passed, what got buried.", byline: <>By <b>Sara Pinheiro</b> &amp; <b>Sofia Andrade</b> · 14 Sep 2025</> },
+  { kicker: "Interview", read: "· 19 min · Issue 06", title: <>Mariza Câmara, <em>district health director.</em></>, dek: "An hour-long conversation about queer health policy in Lisbon's Câmara Municipal — what passed, what got buried.", byline: <>By <b>Sara Pinheiro</b> &amp; <b>{memberName('sofia')}</b> · 14 Sep 2025</> },
   { kicker: "Long read", read: "· 24 min · Issue 05", title: <>Six months on a four-day week.</>, dek: "A studio that closes on Fridays, told from inside — what it does to the work, the staff, and the math.", byline: <>By <b>Tomás Mendes</b> · 4 Jun 2025</> },
   { kicker: "Reported essay", read: "· 14 min · Issue 07", title: <>What the SNS gets right (and where it <em>still leaves you waiting</em>).</>, dek: "Six months reporting inside three regional health centres in Lisbon and the Algarve.", byline: <>By <b>Sara Pinheiro</b> · 8 Apr 2026</> },
   { kicker: "Profile", read: "· 18 min · Issue 04", title: <>The lawyer who only takes <em>cases nobody else will.</em></>, dek: "Twenty-one years of asylum work, told over five lunches.", byline: <>By <b>Anika Kovač</b> · 12 Mar 2025</> },

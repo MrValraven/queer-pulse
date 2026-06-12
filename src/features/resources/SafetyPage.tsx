@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button, Reveal } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import styles from './SafetyPage.module.css'
 
 export function SafetyPage() {
@@ -161,19 +161,14 @@ export function SafetyPage() {
         </Reveal>
       </div>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Safety is a feature, <em>not a footnote.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            Any questions about how the network works? Write to us.
-          </p>
-          <Button href="mailto:hello@queerpulse.pt" variant="primary" size="lg">
-            hello@queerpulse.pt
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Safety is a feature, <em>not a footnote.</em></>}
+        sub="Any questions about how the network works? Write to us."
+      >
+        <Button href="mailto:hello@queerpulse.pt" variant="primary" size="lg">
+          hello@queerpulse.pt
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

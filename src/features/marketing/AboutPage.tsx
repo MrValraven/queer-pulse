@@ -1,5 +1,5 @@
-import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { PageHero, PageShell } from '../../shared/components/layout'
+import { Button, Outro } from '../../shared/components/ui'
 import m from './marketing.module.css'
 import s from './AboutPage.module.css'
 
@@ -32,15 +32,11 @@ const TIMELINE = [
 export function AboutPage() {
   return (
     <PageShell>
-      <header className={m.hero}>
-        <div className="wrap">
-          <div className={m.eyebrow}>About QueerPulse</div>
-          <h1 className={m.heroTitle}>
-            Built in Lisbon. <em>Built for us.</em>
-          </h1>
-          <p className={m.heroSub}>QueerPulse is a private professional network for the queer community in Lisbon. Not a social media platform. Not a startup looking for scale. A piece of infrastructure the community needed and built for itself.</p>
-        </div>
-      </header>
+      <PageHero
+        eyebrow="About QueerPulse"
+        title={<>Built in Lisbon. <em>Built for us.</em></>}
+        sub="QueerPulse is a private professional network for the queer community in Lisbon. Not a social media platform. Not a startup looking for scale. A piece of infrastructure the community needed and built for itself."
+      />
 
       <section className={m.section}>
         <div className="wrap">
@@ -133,17 +129,14 @@ export function AboutPage() {
         </div>
       </section>
 
-      <section className={m.outro}>
-        <div className="wrap">
-          <h2>
-            A queer network. <em>Rooted in Lisbon.</em>
-          </h2>
-          <p>Invite-only. Community-owned. Built to last.</p>
-          <Button size="lg" to="/invite">
-            Request an invite
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>A queer network. <em>Rooted in Lisbon.</em></>}
+        sub="Invite-only. Community-owned. Built to last."
+      >
+        <Button size="lg" to="/invite">
+          Request an invite
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

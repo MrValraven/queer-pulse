@@ -1,10 +1,11 @@
 import type { DigestPreviewItem } from './types'
+import { MEMBERS, memberName } from '../../members/data/members'
 
 export const digestPreview: DigestPreviewItem[] = [
   {
     tag: 'Members',
     title: '3 new members in design & tech this week',
-    meta: 'Inês, Rui, and one more to discover →',
+    meta: `${MEMBERS.ines.first}, ${MEMBERS.rui.first}, and one more to discover →`,
   },
   {
     tag: 'Upcoming',
@@ -14,11 +15,11 @@ export const digestPreview: DigestPreviewItem[] = [
   {
     tag: 'Open swap',
     title: 'Tax filing ↔ website redesign',
-    meta: 'Mariana L. · posted 2 days ago',
+    meta: `${MEMBERS.mariana.first} ${MEMBERS.mariana.last[0]}. · posted 2 days ago`,
   },
   {
     tag: 'Essay',
     title: '"On belonging in a city that\'s changing"',
-    meta: 'Sofia Andrade · 6 min read',
+    meta: `${memberName('sofia')} · 6 min read`,
   },
 ]

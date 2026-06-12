@@ -267,29 +267,3 @@
   font-size: 13px;
   color: var(--ink-40);
 }
-
-.outro {
-  background: var(--plum);
-  color: var(--cream);
-  padding: 110px 0;
-  text-align: center;
-}
-.outro h2 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(36px, 5.5vw, 64px);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-}
-.outro h2 em {
-  font-style: italic;
-  color: var(--accent);
-  font-weight: 400;
-}
-.outroSub {
-  font-size: 17px;
-  color: rgba(247, 243, 238, 0.62);
-  max-width: 46ch;
-  margin: 24px auto 34px;
-  line-height: 1.65;
-}

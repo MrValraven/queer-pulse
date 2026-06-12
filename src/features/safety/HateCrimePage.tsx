@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { HateCrimePanel } from './HateCrimeTabs'
 import styles from './HateCrimePage.module.css'
@@ -33,20 +33,14 @@ export function HateCrimePage() {
 
       <HateCrimePanel />
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            You have <em>rights.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            The QueerPulse community includes lawyers, legal professionals, and people who have
-            been through this process. You do not have to navigate it alone.
-          </p>
-          <Button to={LEGAL} variant="primary" size="lg">
-            Legal resources
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>You have <em>rights.</em></>}
+        sub="The QueerPulse community includes lawyers, legal professionals, and people who have been through this process. You do not have to navigate it alone."
+      >
+        <Button to={LEGAL} variant="primary" size="lg">
+          Legal resources
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

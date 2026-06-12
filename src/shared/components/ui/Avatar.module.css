@@ -60,3 +60,8 @@
 .stack {
   display: flex;
 }
+/* Opaque ring so overlapping avatars read as a clean left-to-right sequence
+   instead of blending through their translucent backgrounds. */
+.stack .avatar {
+  border: 2px solid var(--paper);
+}

@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
+import { Avatar, Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
+import { memberProfiles } from '../members/data/memberProfiles'
 import type { Community } from '../homepage/data/types'
 import type { CommunityDetail, Tint } from './communityDetails'
 import { AV_CLASS } from './CommunityThread'
@@ -14,13 +15,40 @@ const relTint = (t: string): Tint =>
 
 export function CommunitySidebar({ detail, related }: { detail: CommunityDetail; related: Community[] }) {
   const { showToast } = useToast()
+  const org = detail.organiser
+  const orgMember = org.slug ? memberProfiles[org.slug] : undefined
+  const orgAvatar = (
+    <Avatar
+      initials={org.initials}
+      tint={org.tint}
+      src={orgMember?.photo}
+      size={48}
+      alt={org.name}
+    />
+  )
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sbC}>
         <div className={styles.sbLbl}>Organiser</div>
-        <div className={[styles.sbOrgAv, AV_CLASS[detail.organiser.tint]].join(' ')}>{detail.organiser.initials}</div>
-        <div className={styles.sbOrgName}>{detail.organiser.name}</div>
-        <div className={styles.sbBadge}>{detail.organiser.role}</div>
+        <div className={styles.sbOrgAv}>
+          {org.slug ? (
+            <Link to={`/profile/${org.slug}`} title={org.name}>
+              {orgAvatar}
+            </Link>
+          ) : (
+            orgAvatar
+          )}
+        </div>
+        <div className={styles.sbOrgName}>
+          {org.slug ? (
+            <Link to={`/profile/${org.slug}`} style={{ color: 'inherit' }}>
+              {org.name}
+            </Link>
+          ) : (
+            org.name
+          )}
+        </div>
+        <div className={styles.sbBadge}>{org.role}</div>
         <p className={styles.sbOrgBio}>{detail.organiser.bio}</p>
         <Button variant="ghost" className={styles.sbFull} onClick={() => showToast(`Message sent to ${detail.organiser.name.split(' ')[0]}.`, 'success')}>
           Send a message

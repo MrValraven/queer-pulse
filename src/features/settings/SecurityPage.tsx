@@ -1,5 +1,5 @@
 import { useToast } from '../../shared/components/feedback/useToast'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { PageShell } from '../../shared/components/layout'
 import styles from './SecurityPage.module.css'
 
@@ -143,13 +143,12 @@ export function SecurityPage() {
         </div>
       </main>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2 className={styles.outroH}>Security is<br /><em>community work.</em></h2>
-          <p className={styles.outroSub}>Thank you to everyone who helps keep QueerPulse safe.</p>
-          <Button variant="primary" size="lg" href="mailto:security@queerpulse.pt">Contact the security team</Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Security is<br /><em>community work.</em></>}
+        sub="Thank you to everyone who helps keep QueerPulse safe."
+      >
+        <Button variant="primary" size="lg" href="mailto:security@queerpulse.pt">Contact the security team</Button>
+      </Outro>
     </PageShell>
   )
 }

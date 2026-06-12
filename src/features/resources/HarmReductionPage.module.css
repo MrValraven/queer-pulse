@@ -259,30 +259,3 @@
 .ncStepBody strong {
   color: var(--cream);
 }
-
-.outro {
-  background: #1a1228;
-  color: var(--cream);
-  padding: 120px 0;
-  text-align: center;
-}
-.outro h2 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(40px, 6vw, 72px);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-  color: var(--cream);
-}
-.outro h2 em {
-  font-style: italic;
-  color: var(--accent);
-  font-weight: 400;
-}
-.outroSub {
-  font-size: 17px;
-  color: rgba(247, 243, 238, 0.5);
-  max-width: 46ch;
-  margin: 24px auto 34px;
-  line-height: 1.65;
-}

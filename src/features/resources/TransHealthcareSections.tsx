@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { Button, Outro } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { CONTACTS, type Path } from "./transHealthcare.data";
 import styles from "./TransHealthcarePage.module.css";
@@ -111,19 +111,13 @@ export function TransHealthcareSidebar() {
 
 export function TransHealthcareOutro() {
   return (
-    <section className={styles.outro}>
-      <div className="wrap">
-        <h2>
-          You deserve <em>good care.</em>
-        </h2>
-        <p className={styles.outroSub}>
-          The QueerPulse community includes trans-affirming GPs, therapists, and
-          legal professionals. You do not have to navigate this alone.
-        </p>
-        <Button to={routes.solidarity} variant="primary" size="lg">
-          Find solidarity pricing
-        </Button>
-      </div>
-    </section>
+    <Outro
+      title={<>You deserve <em>good care.</em></>}
+      sub="The QueerPulse community includes trans-affirming GPs, therapists, and legal professionals. You do not have to navigate this alone."
+    >
+      <Button to={routes.solidarity} variant="primary" size="lg">
+        Find solidarity pricing
+      </Button>
+    </Outro>
   );
 }

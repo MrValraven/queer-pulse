@@ -3,6 +3,7 @@ import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./OfferPage.module.css";
 import { Button } from '../../shared/components/ui'
+import { MEMBERS, memberName } from '../members/data/members'
 
 type Kind = "looking" | "offering";
 type Tint = "coral" | "jade" | "plum";
@@ -35,9 +36,9 @@ const MAIN: Offer = {
 };
 
 const OTHERS: { slug: string; kind: Kind; title: string; by: string }[] = [
-  { slug: "free-portraits", kind: "offering", title: "Free portrait sessions for trans & nonbinary members", by: "André Quintela · Cais do Sodré" },
-  { slug: "mentoring-engineers", kind: "offering", title: "Monthly mentoring for junior engineers", by: "Rui Marçal · Marvila" },
-  { slug: "sublet-arroios", kind: "looking", title: "A sublet in Arroios, June through August", by: "Carla Nogueira · Arroios" },
+  { slug: "free-portraits", kind: "offering", title: "Free portrait sessions for trans & nonbinary members", by: `${memberName('andre')} · ${MEMBERS.andre.hood}` },
+  { slug: "mentoring-engineers", kind: "offering", title: "Monthly mentoring for junior engineers", by: `${memberName('rui')} · ${MEMBERS.rui.hood}` },
+  { slug: "sublet-arroios", kind: "looking", title: "A sublet in Arroios, June through August", by: `${memberName('carla')} · ${MEMBERS.carla.hood}` },
 ];
 
 export function OfferPage() {

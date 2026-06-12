@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { JOBS, MENTORSHIP, type Tab } from './economy.data'
 import { FreelanceTab, IncubatorTab, SalaryTab } from './EconomyTabs'
 import styles from './EconomyPage.module.css'
@@ -49,24 +49,17 @@ export function EconomyPage() {
         </div>
       </div>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Build it <em>with us.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            A stronger queer economy benefits all of us. Start with the tools, stay for the community.
-          </p>
-          <div className={styles.outroBtns}>
-            <Button to={JOBS} variant="primary" size="lg">
-              Browse jobs
-            </Button>
-            <Button to={MENTORSHIP} variant="ghost-dark" size="lg">
-              Find a mentor
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Outro
+        title={<>Build it <em>with us.</em></>}
+        sub="A stronger queer economy benefits all of us. Start with the tools, stay for the community."
+      >
+        <Button to={JOBS} variant="primary" size="lg">
+          Browse jobs
+        </Button>
+        <Button to={MENTORSHIP} variant="ghost-dark" size="lg">
+          Find a mentor
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

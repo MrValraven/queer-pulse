@@ -1,4 +1,5 @@
 import type { AvatarTint } from '../../../shared/components/ui/Avatar'
+import { MEMBERS, memberName } from './members'
 
 export type ConnectState = 'connect' | 'pending' | 'connected'
 
@@ -19,8 +20,8 @@ export interface DirectoryMember {
 export const directoryMembers: DirectoryMember[] = [
   {
     slug: 'sofia',
-    initials: 'SR',
-    name: 'Sofia Rodrigues',
+    initials: MEMBERS['sofia-rodrigues'].initials,
+    name: memberName('sofia-rodrigues'),
     pronouns: 'she/her',
     location: 'Lisbon',
     since: 'Jan 2025',
@@ -32,8 +33,8 @@ export const directoryMembers: DirectoryMember[] = [
   },
   {
     slug: 'anika',
-    initials: 'AK',
-    name: 'Anika Kovač',
+    initials: MEMBERS.anika.initials,
+    name: memberName('anika'),
     pronouns: 'she/they',
     location: 'Lisbon',
     since: 'Mar 2025',
@@ -45,8 +46,8 @@ export const directoryMembers: DirectoryMember[] = [
   },
   {
     slug: 'jordan',
-    initials: 'JP',
-    name: 'Jordan Park',
+    initials: MEMBERS.jordan.initials,
+    name: memberName('jordan'),
     pronouns: 'they/them',
     location: 'Lisbon',
     since: 'Jun 2025',
@@ -58,8 +59,8 @@ export const directoryMembers: DirectoryMember[] = [
   },
   {
     slug: 'tomas',
-    initials: 'TM',
-    name: 'Tomás Mendes',
+    initials: MEMBERS['tomas-mendes'].initials,
+    name: memberName('tomas-mendes'),
     pronouns: 'he/him',
     location: 'Lisbon',
     since: 'Oct 2024',
@@ -71,8 +72,8 @@ export const directoryMembers: DirectoryMember[] = [
   },
   {
     slug: 'maria',
-    initials: 'MF',
-    name: 'Maria Ferreira',
+    initials: MEMBERS.maria.initials,
+    name: memberName('maria'),
     pronouns: 'she/her',
     location: 'Porto',
     since: 'Feb 2025',
@@ -84,8 +85,8 @@ export const directoryMembers: DirectoryMember[] = [
   },
   {
     slug: 'kai',
-    initials: 'KL',
-    name: 'Kai Larsson',
+    initials: MEMBERS.kai.initials,
+    name: memberName('kai'),
     pronouns: 'they/them',
     location: 'Lisbon',
     since: 'Apr 2026',

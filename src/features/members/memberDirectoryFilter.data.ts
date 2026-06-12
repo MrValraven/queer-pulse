@@ -8,9 +8,9 @@ export interface ChipOption {
   active?: boolean
 }
 export interface MemberCard {
-  initials: string
-  tint?: 'jade' | 'plum'
-  name: string
+  /** Registry slug — identity (name, initials, tint, photo) is derived from it,
+   *  and the card links to `/profile/<slug>`. */
+  slug: string
   meta: string
   role: string
   tags: { label: string; match?: boolean }[]
@@ -67,12 +67,12 @@ export const LANGUAGES: ChipOption[] = [
 ]
 
 export const MEMBERS: MemberCard[] = [
-  { initials: 'LG', name: 'Luísa Gomes', meta: 'she/her · Mouraria', role: 'Design director, ex-Atelier Pulso. Reviews portfolios, mentors junior designers, hosts critique nights.', tags: [{ label: 'Design', match: true }, { label: 'Mentoring', match: true }, { label: 'PT · EN' }], vouch: '3 vouches', mutuals: '3 mutuals' },
-  { initials: 'AB', tint: 'jade', name: 'André Bento', meta: 'he/him · Anjos', role: 'Co-founder of Atelier Pulso. Hosts Open Studio monthly. Mentors mid-career designers in identity systems.', tags: [{ label: 'Design', match: true }, { label: 'Hosting', match: true }, { label: 'PT · EN' }], vouch: '7 vouches', mutuals: '4 mutuals' },
-  { initials: 'TC', tint: 'plum', name: 'Tó Cunha', meta: 'he/him · Anjos', role: 'Riso printer at Editora Anjos. Runs the 6-week risograph workshop. Open to mentoring & co-hosting print nights.', tags: [{ label: 'Design', match: true }, { label: 'Mentoring', match: true }, { label: 'Hosting', match: true }], vouch: '2 vouches', mutuals: '1 mutual' },
-  { initials: 'MR', name: 'Marta Reis', meta: 'she/her · Anjos', role: 'Editor in chief of QueerPulse Magazine. Hosts Open Studio. Mentors designers moving into editorial.', tags: [{ label: 'Design', match: true }, { label: 'Editorial' }, { label: 'Hosting', match: true }], vouch: '9 vouches', mutuals: '11 mutuals' },
-  { initials: 'SC', tint: 'jade', name: 'Sofia Castaño', meta: 'she/her · Mouraria', role: 'Service designer. Hosts the Stone Butch Blues reading group. Open to portfolio reviews for service designers.', tags: [{ label: 'Design', match: true }, { label: 'Hosting', match: true }, { label: 'PT · EN' }], vouch: '2 vouches', mutuals: '4 mutuals' },
-  { initials: 'FL', tint: 'plum', name: 'Filipa Lopes', meta: 'she/her · Anjos', role: 'Brand designer · Atelier Pulso. Co-hosts Porto launch. Mentors juniors making the city move.', tags: [{ label: 'Design', match: true }, { label: 'Mentoring', match: true }], vouch: '1 vouch', mutuals: '2 mutuals' },
+  { slug: 'ines', meta: 'she/her · Príncipe Real', role: 'Graphic designer & founder of Atelier Pulso. Reviews portfolios, mentors junior designers, hosts critique nights.', tags: [{ label: 'Design', match: true }, { label: 'Mentoring', match: true }, { label: 'PT · EN' }], vouch: '3 vouches', mutuals: '3 mutuals' },
+  { slug: 'andre', meta: 'he/him · Cais do Sodré', role: 'Portrait photographer on film. Hosts darkroom sessions and offers free portraits for trans & nonbinary members.', tags: [{ label: 'Photo', match: true }, { label: 'Hosting', match: true }, { label: 'PT · EN' }], vouch: '1 vouch', mutuals: '4 mutuals' },
+  { slug: 'tomas', meta: 'he/him · Mouraria', role: 'Chef & supper club host. Open to catering collaborations, recipe testing and long, slow dinners.', tags: [{ label: 'Food', match: true }, { label: 'Hosting', match: true }], vouch: '2 vouches', mutuals: '1 mutual' },
+  { slug: 'luisa', meta: 'she/her · Lisbon', role: 'Curator. Hosts reading groups and mentors emerging curators moving into institutional work.', tags: [{ label: 'Design', match: true }, { label: 'Hosting', match: true }, { label: 'PT · EN' }], vouch: '2 vouches', mutuals: '11 mutuals' },
+  { slug: 'sofia-castano', meta: 'she/her · Mouraria', role: 'Photographer. Hosts the Stone Butch Blues reading group. Open to portfolio reviews for image-makers.', tags: [{ label: 'Photo', match: true }, { label: 'Hosting', match: true }, { label: 'PT · EN' }], vouch: '2 vouches', mutuals: '4 mutuals' },
+  { slug: 'beatriz', meta: 'she/her · Graça', role: 'Ceramicist. Shares a bright Graça studio and runs monthly wheel-throwing workshops for beginners.', tags: [{ label: 'Craft', match: true }, { label: 'Hosting', match: true }], vouch: '1 vouch', mutuals: '2 mutuals' },
 ]
 
 export const INITIAL_APPLIED = ['Open to mentoring', 'Hosting gatherings', 'Anjos', 'Mouraria', 'Design', 'PT + EN']

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { DATA_TYPES, ACCORDION_ITEMS } from './dataExport.data'
@@ -142,13 +142,12 @@ export function DataExportPage() {
         </div>
       </main>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2 className={styles.outroH}>Questions about<br /><em>your data?</em></h2>
-          <p className={styles.outroSub}>Write to our data team. We respond to all requests within 5 working days.</p>
-          <Button variant="primary" size="lg" to={routes.contact}>Contact us</Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Questions about<br /><em>your data?</em></>}
+        sub="Write to our data team. We respond to all requests within 5 working days."
+      >
+        <Button variant="primary" size="lg" to={routes.contact}>Contact us</Button>
+      </Outro>
     </PageShell>
   )
 }

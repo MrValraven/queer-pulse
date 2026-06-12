@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ImageSlot } from '../../shared/components/ui'
+import { memberName } from '../members/data/members'
 import { StudioShell } from './StudioShell'
 import styles from './studio.module.css'
 import { TRACKS, TABS, MORE } from './studioAlbum.data'
@@ -111,7 +112,7 @@ export function StudioAlbumPage() {
               </p>
               <p>João Anjos — cello (2, 7, 11) · Coro de Outubro — choir (4) · Inês T. — percussion (7)</p>
               <p>
-                Sofia Andrade — engineer + mix · Pedro G. — mastering · Helena P. — lyric
+                {memberName('sofia')} — engineer + mix · Pedro G. — mastering · Helena P. — lyric
                 translation, <em>paid from the solidarity fund.</em>
               </p>
               <p>Recorded at Casa do Comum, in-kind. Every fee is on the public ledger.</p>

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./StoryPage.module.css";
+import { memberName } from "../members/data/members";
 import { StoryArticle } from "./StoryArticle";
 
 const PROFILE = routes.profile;
@@ -23,7 +24,7 @@ export function StoryPage() {
             <div className={styles.heroByline}>
               <span className={styles.bylineAv}>IT</span>
               <span>
-                Words by <Link to={PROFILE}>Inês Tavares</Link>
+                Words by <Link to={PROFILE}>{memberName('ines')}</Link>
               </span>
               <span className={styles.bDot} />
               <span>6 min read</span>

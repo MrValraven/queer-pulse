@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { TABS, type TabId } from './sexualHealth.data'
 import { GuidesTab, HivTab, PrepTab, TestingTab } from './SexualHealthTabs'
@@ -45,24 +45,17 @@ export function SexualHealthPage() {
         </div>
       </div>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Your health <em>matters.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            Questions, concerns, or just not sure where to start — the community is here.
-          </p>
-          <div className={styles.outroBtns}>
-            <Button to={routes.wellbeing} variant="primary" size="lg">
-              Wellbeing resources
-            </Button>
-            <Button to={routes.communities} variant="ghost-dark" size="lg">
-              Find peer support
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Outro
+        title={<>Your health <em>matters.</em></>}
+        sub="Questions, concerns, or just not sure where to start — the community is here."
+      >
+        <Button to={routes.wellbeing} variant="primary" size="lg">
+          Wellbeing resources
+        </Button>
+        <Button to={routes.communities} variant="ghost-dark" size="lg">
+          Find peer support
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

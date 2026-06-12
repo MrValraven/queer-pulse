@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
-import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
-import m from './marketing.module.css'
+import { PageHero, PageShell } from '../../shared/components/layout'
+import { Button, Outro } from '../../shared/components/ui'
 import s from './GuidelinesPage.module.css'
 
 interface Clause {
@@ -112,15 +111,11 @@ const CLAUSES: Clause[] = [
 export function GuidelinesPage() {
   return (
     <PageShell>
-      <header className={m.hero}>
-        <div className="wrap">
-          <div className={m.eyebrow}>Community guidelines</div>
-          <h1 className={m.heroTitle}>
-            The Code <em>of Care.</em>
-          </h1>
-          <p className={m.heroSub}>This is not a terms of service. It's how we want to treat each other — written plainly, without legal language, by the people who built this room.</p>
-        </div>
-      </header>
+      <PageHero
+        eyebrow="Community guidelines"
+        title={<>The Code <em>of Care.</em></>}
+        sub="This is not a terms of service. It's how we want to treat each other — written plainly, without legal language, by the people who built this room."
+      />
 
       <div className="wrap">
         <div className={s.content}>
@@ -159,17 +154,14 @@ export function GuidelinesPage() {
         </div>
       </div>
 
-      <section className={m.outro}>
-        <div className="wrap">
-          <h2>
-            A room worth being <em>in.</em>
-          </h2>
-          <p>The code of care only works if everyone holds it. We're grateful you're here.</p>
-          <Button size="lg" to="/">
-            Back to QueerPulse
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>A room worth being <em>in.</em></>}
+        sub="The code of care only works if everyone holds it. We're grateful you're here."
+      >
+        <Button size="lg" to="/">
+          Back to QueerPulse
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

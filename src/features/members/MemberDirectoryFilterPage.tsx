@@ -74,7 +74,7 @@ export function MemberDirectoryFilterPage() {
 
             <div className={styles.mGrid}>
               {MEMBERS.map((member) => (
-                <MemberResultCard key={member.name} member={member} />
+                <MemberResultCard key={member.slug} member={member} />
               ))}
             </div>
 

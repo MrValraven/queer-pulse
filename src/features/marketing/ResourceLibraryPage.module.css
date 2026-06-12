@@ -7,13 +7,13 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--plum);
+  color: var(--accent);
   display: block;
   letter-spacing: -0.02em;
 }
 .stat span {
   font-size: 12.5px;
-  color: var(--ink-40);
+  color: rgba(247, 243, 238, 0.55);
 }
 
 .bar {

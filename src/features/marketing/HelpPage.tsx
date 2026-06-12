@@ -1,8 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
+import { PageHero, PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import m from './marketing.module.css'
 import s from './HelpPage.module.css'
 
 interface QA {
@@ -98,22 +97,20 @@ export function HelpPage() {
 
   return (
     <PageShell>
-      <header className={m.hero}>
-        <div className="wrap">
-          <div className={m.eyebrow}>Help Centre</div>
-          <h1 className={m.heroTitle}>
-            How can we <em>help?</em>
-          </h1>
-          <p className={m.heroSub}>Answers to the questions members ask most. Can't find what you need? Write to us — a real person reads every message.</p>
-          <div className={s.tabs}>
-            {CATEGORIES.map((c) => (
-              <button key={c.id} className={[s.tab, tab === c.id && s.tabOn].filter(Boolean).join(' ')} onClick={() => { setTab(c.id); setOpen(`${c.id}-0`) }}>
-                {c.label}
-              </button>
-            ))}
-          </div>
+      <PageHero
+        plum={false}
+        eyebrow="Help Centre"
+        title={<>How can we <em>help?</em></>}
+        sub="Answers to the questions members ask most. Can't find what you need? Write to us — a real person reads every message."
+      >
+        <div className={s.tabs}>
+          {CATEGORIES.map((c) => (
+            <button key={c.id} className={[s.tab, tab === c.id && s.tabOn].filter(Boolean).join(' ')} onClick={() => { setTab(c.id); setOpen(`${c.id}-0`) }}>
+              {c.label}
+            </button>
+          ))}
         </div>
-      </header>
+      </PageHero>
 
       <div className="wrap">
         <div className={s.body}>

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { NameTable, WhereGrid, FaqList } from './PronounsGuideSections'
 import styles from './PronounsGuidePage.module.css'
@@ -128,15 +128,14 @@ export function PronounsGuidePage() {
         </div>
       </main>
 
-      <section className={styles.outro}>
-        <h2>
-          Questions about <em>your identity settings?</em>
-        </h2>
-        <p className={styles.outroSub}>Write to us. We'll respond within two working days.</p>
+      <Outro
+        title={<>Questions about <em>your identity settings?</em></>}
+        sub="Write to us. We'll respond within two working days."
+      >
         <Button variant="ghost-dark" size="lg" to={routes.contact}>
           Contact us
         </Button>
-      </section>
+      </Outro>
     </PageShell>
   )
 }

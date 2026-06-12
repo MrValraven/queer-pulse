@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./EmergencyPage.module.css";
+import { memberName } from "../members/data/members";
 
 const CRISIS_NUMS = [
   { label: "Emergency services", num: "112", note: "Police, ambulance, fire — 24h, free" },
@@ -33,7 +34,7 @@ const SECTIONS: Section[] = [
     intro: "Whether you're in acute crisis or just struggling — these organisations specifically support LGBTQ+ people in Lisbon.",
     items: [
       { name: "Opus Diversus", detail: "Peer support and mental health resources for LGBTQ+ people. Drop-in sessions and one-to-ones available.", link: { label: "↗ opusdiversus.org", href: "https://opusdiversus.org", external: true } },
-      { name: "Mariana Loução (QueerPulse)", detail: "Clinical psychologist specialising in LGBTQ+ care. Runs a monthly peer support group in Lisbon for queer professionals.", link: { label: "View profile →", href: routes.profile } },
+      { name: `${memberName('mariana')} (QueerPulse)`, detail: "Clinical psychologist specialising in LGBTQ+ care. Runs a monthly peer support group in Lisbon for queer professionals.", link: { label: "View profile →", href: routes.profile } },
       { name: "SNS mental health services", detail: "You can access mental health support via the NHS (SNS) with a referral from your GP. Call 808 24 24 24 to start." },
     ],
   },

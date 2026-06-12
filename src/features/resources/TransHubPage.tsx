@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Reveal } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { ResourceHero } from './ResourceHero'
 import styles from './resources.module.css'
 
@@ -155,6 +155,15 @@ export function TransHubPage() {
           </Reveal>
         </div>
       </section>
+
+      <Outro
+        title={<>You're seen <em>here.</em></>}
+        sub="QueerPulse is a vouched-for, invite-only network. If someone you trust is already here, ask them to vouch for you."
+      >
+        <Button to="/invite" variant="primary" size="lg">
+          Request an invite
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

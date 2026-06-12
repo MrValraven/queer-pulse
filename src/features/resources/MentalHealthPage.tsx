@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { CRISIS } from './mentalHealth.data'
 import { TherapistSection, ExperiencesSection, SnsSection } from './MentalHealthSections'
@@ -53,19 +53,14 @@ export function MentalHealthPage() {
       <ExperiencesSection />
       <SnsSection forum={FORUM} mentorship={MENTORSHIP} />
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Asking for help is <em>not small.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            It's one of the harder things. The community is here.
-          </p>
-          <Button to={FORUM} variant="primary" size="lg">
-            Talk to someone
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Asking for help is <em>not small.</em></>}
+        sub="It's one of the harder things. The community is here."
+      >
+        <Button to={FORUM} variant="primary" size="lg">
+          Talk to someone
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

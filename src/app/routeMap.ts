@@ -202,6 +202,7 @@ export const routes = {
   volunteer: '/volunteer',
   vouch: '/vouch',
   welcome: '/welcome',
+  welcomeTour: '/welcome-tour',
   wellbeing: '/wellbeing',
   worldAidsDay: '/world-aids-day',
 } as const
@@ -223,6 +224,7 @@ export const KNOWN_ROUTE_SLUGS: string[] = [
   'messages',
   'search',
   'welcome',
+  'welcome-tour',
   'changemakers',
   'parents',
   'coming-out',

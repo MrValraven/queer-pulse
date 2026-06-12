@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { PageHero, PageShell } from '../../shared/components/layout'
+import { Button, Outro } from '../../shared/components/ui'
 import { VOLUNTEER_OPPORTUNITIES as OPPS } from './volunteerOpportunities'
-import m from './marketing.module.css'
 import s from './VolunteerPage.module.css'
 
 const FILTERS = [
@@ -32,18 +31,15 @@ export function VolunteerPage() {
 
   return (
     <PageShell>
-      <header className={`${m.hero} ${m.heroPlum}`}>
-        <div className="wrap">
-          <div className={m.eyebrow}>Volunteer</div>
-          <h1 className={m.heroTitle}>
-            Give your time to the <em>community</em> around you.
-          </h1>
-          <p className={m.heroSub}>You don't need to be an activist. You need two free hours and a willingness to show up. Below are organisations in Lisbon genuinely looking for people like you.</p>
-          <div className={s.note}>
-            <span className={s.dot} /> Every organisation below has been vetted by the QueerPulse community
-          </div>
+      <PageHero
+        eyebrow="Volunteer"
+        title={<>Give your time to the <em>community</em> around you.</>}
+        sub="You don't need to be an activist. You need two free hours and a willingness to show up. Below are organisations in Lisbon genuinely looking for people like you."
+      >
+        <div className={s.note}>
+          <span className={s.dot} /> Every organisation below has been vetted by the QueerPulse community
         </div>
-      </header>
+      </PageHero>
 
       <section className={s.body}>
         <div className="wrap">
@@ -94,17 +90,14 @@ export function VolunteerPage() {
         </div>
       </section>
 
-      <section className={m.outro}>
-        <div className="wrap">
-          <h2>
-            Want to connect <em>more deeply?</em>
-          </h2>
-          <p>Find the change makers already working on the causes you care about.</p>
-          <Button size="lg" to="/changemakers">
-            Meet the change makers →
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Want to connect <em>more deeply?</em></>}
+        sub="Find the change makers already working on the causes you care about."
+      >
+        <Button size="lg" to="/changemakers">
+          Meet the change makers →
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

@@ -1,3 +1,5 @@
+import { memberName } from '../members/data/members';
+
 export interface SetRow {
   n: number;
   cvTint: "coral" | "jade" | "plum";
@@ -11,7 +13,7 @@ export interface SetRow {
 }
 
 export const SET: SetRow[] = [
-  { n: 1, cvTint: "coral", titlePre: "A summer in ", titleEm: "Cascais", who: "Inês Tavares", payNote: "paid", pay: "€0.05 to Inês", tm: "4:12" },
+  { n: 1, cvTint: "coral", titlePre: "A summer in ", titleEm: "Cascais", who: memberName('ines'), payNote: "paid", pay: "€0.05 to Inês", tm: "4:12" },
   { n: 2, cvTint: "plum", titlePre: "Paris is ", titleEm: "still burning", who: "Akin Diallo", payNote: "paid", pay: "€0.05 to Akin", tm: "5:08" },
   { n: 3, cvTint: "jade", titlePre: "If you have to ", titleEm: "ask", who: "Yara Reis", payNote: "paid", pay: "€0.05 to Yara", tm: "1:22" },
   { n: 4, cvTint: "coral", titlePre: "Salt water, ", titleEm: "slowly", who: "Akin Diallo", payNote: "paid", pay: "€0.05 to Akin", tm: "5:31" },

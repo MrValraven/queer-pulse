@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { ARRIVING, FORUM, GROUND, LAWYERS, ROUTES, TABS, type TabId } from './visas.data'
 import { VisasTabContent } from './VisasTabContent'
 import styles from './VisasPage.module.css'
@@ -132,22 +132,17 @@ export function VisasPage() {
         </div>
       </section>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            You're building a life <em>here.</em>
-          </h2>
-          <p className={styles.outroSub}>The paperwork is temporary. The community is permanent.</p>
-          <div className={styles.outroBtns}>
-            <Button to={ARRIVING} variant="primary" size="lg">
-              Settling in guide →
-            </Button>
-            <Button to={FORUM} variant="ghost-dark" size="lg">
-              Ask the community
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Outro
+        title={<>You're building a life <em>here.</em></>}
+        sub="The paperwork is temporary. The community is permanent."
+      >
+        <Button to={ARRIVING} variant="primary" size="lg">
+          Settling in guide →
+        </Button>
+        <Button to={FORUM} variant="ghost-dark" size="lg">
+          Ask the community
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

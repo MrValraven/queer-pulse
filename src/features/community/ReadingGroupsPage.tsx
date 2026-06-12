@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import {
@@ -155,20 +155,14 @@ export function ReadingGroupsPage() {
         </div>
       </main>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Books build <em>community.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            QueerPulse reading groups have been running since 2024. Some have turned into
-            friendships, some into collaborations, two into bands.
-          </p>
-          <Button to={routes.invite} variant="primary" size="lg">
-            Join the network
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Books build <em>community.</em></>}
+        sub="QueerPulse reading groups have been running since 2024. Some have turned into friendships, some into collaborations, two into bands."
+      >
+        <Button to={routes.invite} variant="primary" size="lg">
+          Join the network
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

@@ -1,4 +1,5 @@
 import { routes } from '../../app/routeMap'
+import { MEMBERS, memberName } from '../members/data/members'
 
 export type Tint = 'jade' | 'plum' | undefined
 export type TabId = 'all' | 'incoming' | 'outgoing' | 'vouched'
@@ -65,19 +66,19 @@ export const TABS: { id: TabId; label: string; count: string; accent?: boolean }
 
 export const ALL: AllConnection[] = [
   {
-    person: { initials: 'CV', name: 'Catarina Vaz', pron: 'she/her', role: 'Trans Hub coordinator · long-form writer' },
+    person: { initials: MEMBERS['catarina-vaz'].initials, name: memberName('catarina-vaz'), pron: 'she/her', role: 'Trans Hub coordinator · long-form writer' },
     tags: ['Activism', 'Writing', 'Trans Hub'],
     meta: { badge: 'Vouched for you', mutuals: 11, connected: 'Mar 2025' },
     actions: DEFAULT_ACTIONS,
   },
   {
-    person: { initials: 'JF', tint: 'jade', name: 'Jonas Ferreira', pron: 'he/him', role: 'Reporter, QueerPulse Magazine' },
+    person: { initials: MEMBERS.jonas.initials, tint: 'jade', name: memberName('jonas'), pron: 'he/him', role: 'Reporter, QueerPulse Magazine' },
     tags: ['Editorial', 'Reportage'],
     meta: { mutuals: 8, connected: 'Dec 2024' },
     actions: DEFAULT_ACTIONS,
   },
   {
-    person: { initials: 'LG', tint: 'plum', name: 'Luísa Gomes', pron: 'she/her', role: 'Design director · ex-Atelier Pulso' },
+    person: { initials: MEMBERS.luisa.initials, tint: 'plum', name: memberName('luisa'), pron: 'she/her', role: 'Design director · ex-Atelier Pulso' },
     tags: ['Design', 'Mentoring'],
     meta: { badge: 'You vouched', mutuals: 14 },
     actions: [
@@ -86,7 +87,7 @@ export const ALL: AllConnection[] = [
     ],
   },
   {
-    person: { initials: 'AK', name: 'Anika Kovač', pron: 'she/her', role: 'Healthcare designer · Trans & NB Network' },
+    person: { initials: MEMBERS.anika.initials, name: memberName('anika'), pron: 'she/her', role: 'Healthcare designer · Trans & NB Network' },
     tags: ['Design', 'Health', 'Hosting'],
     meta: { mutuals: 6, connected: 'Jan 2026' },
     actions: [
@@ -101,13 +102,13 @@ export const ALL: AllConnection[] = [
     actions: DEFAULT_ACTIONS,
   },
   {
-    person: { initials: 'NA', tint: 'plum', name: 'Nuno Alves', pron: 'he/him', role: 'Trans Hub coordinator' },
+    person: { initials: MEMBERS.nuno.initials, tint: 'plum', name: memberName('nuno'), pron: 'he/him', role: 'Trans Hub coordinator' },
     tags: ['Activism', 'Trans Hub'],
     meta: { mutuals: 11, connected: 'Feb 2025' },
     actions: DEFAULT_ACTIONS,
   },
   {
-    person: { initials: 'SC', name: 'Sofia Castaño', pron: 'she/her', role: 'Service designer · reading group host' },
+    person: { initials: MEMBERS['sofia-castano'].initials, name: memberName('sofia-castano'), pron: 'she/her', role: 'Service designer · reading group host' },
     tags: ['Design', 'Reading'],
     meta: { mutuals: 4, connected: 'Apr 2026' },
     actions: DEFAULT_ACTIONS,

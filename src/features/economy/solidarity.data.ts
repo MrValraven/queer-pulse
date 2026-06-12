@@ -1,3 +1,5 @@
+import { memberName } from '../members/data/members'
+
 export type Cat = 'therapy' | 'legal' | 'medical' | 'dental' | 'vet' | 'finance' | 'body'
 export type Tint = 'coral' | 'jade' | 'plum'
 
@@ -17,7 +19,7 @@ export interface Practitioner {
 }
 
 export const PRACTITIONERS: Practitioner[] = [
-  { id: 'p1', name: 'Mariana Costa', cat: 'therapy', spec: 'Psychotherapy & EMDR', hood: 'Mouraria', langs: ['PT', 'EN'], isMember: true, range: '€30 – €80', scaleNote: 'Income-based. First session free to assess fit. No proof required — you set the amount.', desc: 'Queer-affirming, trauma-informed psychotherapy. Works with gender identity, relationship structures, and life transitions. In-person and remote.', tags: ['LGBTQ+', 'trauma', 'relationships', 'trans-affirming'], tint: 'jade' },
+  { id: 'p1', name: memberName('mariana-costa'), cat: 'therapy', spec: 'Psychotherapy & EMDR', hood: 'Mouraria', langs: ['PT', 'EN'], isMember: true, range: '€30 – €80', scaleNote: 'Income-based. First session free to assess fit. No proof required — you set the amount.', desc: 'Queer-affirming, trauma-informed psychotherapy. Works with gender identity, relationship structures, and life transitions. In-person and remote.', tags: ['LGBTQ+', 'trauma', 'relationships', 'trans-affirming'], tint: 'jade' },
   { id: 'p2', name: 'Beatriz Melo', cat: 'legal', spec: 'Immigration & Employment Law', hood: 'Príncipe Real', langs: ['PT', 'EN', 'FR'], isMember: false, range: '€0 – €120/hr', scaleNote: 'Name-your-price for community members earning under €1,400/month. Full rate for others.', desc: 'Specialises in NHR applications, D7 visas, residency renewals, and employment contracts. Bilingual consultations in PT, EN, or FR.', tags: ['visas', 'NHR', 'employment', 'immigration'], tint: 'plum' },
   { id: 'p3', name: 'Dr. Luís Ferreira', cat: 'medical', spec: 'General Practice / SNS', hood: 'Intendente', langs: ['PT', 'EN'], isMember: false, range: 'Free (SNS) or €35 private', scaleNote: 'SNS patients pay nothing. Private appointments for those without a centros de saúde allocation — sliding scale for income under €1,200/month.', desc: 'LGBTQ+-affirming GP with experience in trans health. Provides referrals for gender dysphoria care within the SNS system. No judgement, ever.', tags: ['GP', 'trans-affirming', 'SNS', 'HRT referrals'], tint: 'jade' },
   { id: 'p4', name: 'Catarina Luz', cat: 'therapy', spec: 'Sex & Relationship Therapy', hood: 'Santos', langs: ['PT', 'EN', 'ES'], isMember: true, range: '€25 – €90', scaleNote: 'Sliding scale based on income bracket. Three brackets: under €900, €900–1500, above €1500. You self-select, no questions asked.', desc: 'Relational and somatic sex therapy. Works with queer, poly, and kinky clients. No prior knowledge of your sexuality or relationship structure required.', tags: ['sex therapy', 'poly', 'kink', 'somatic'], tint: 'coral' },

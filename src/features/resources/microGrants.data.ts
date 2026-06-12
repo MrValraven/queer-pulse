@@ -1,3 +1,5 @@
+import { memberName } from '../members/data/members'
+
 export interface Grant {
   amount: string
   name: string
@@ -51,8 +53,8 @@ export const RULES = [
 
 export const PANEL = [
   { title: 'Mariana Costa', body: 'Psychotherapist · Mouraria' },
-  { title: 'Rui Marçal', body: 'Software engineer · Bairro Alto' },
-  { title: 'Beatriz Pinto', body: 'Ceramicist · Graça' },
+  { title: memberName('rui'), body: 'Software engineer · Bairro Alto' },
+  { title: memberName('beatriz'), body: 'Ceramicist · Graça' },
   { title: '+ 2 community members', body: "Rotating seats — open to any member who hasn't applied this round" },
 ]
 

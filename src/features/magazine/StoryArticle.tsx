@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
+import { memberName } from '../members/data/members'
 import styles from './StoryPage.module.css'
 
 interface Props {
@@ -43,7 +44,7 @@ export function StoryArticle({ profilePath, storyPath, invitePath }: Props) {
               became one because there was nowhere else to go, and then because people
               kept coming back.
             </p>
-            <cite>— Inês Tavares</cite>
+            <cite>— {memberName('ines')}</cite>
           </blockquote>
 
           <p>
@@ -57,7 +58,7 @@ export function StoryArticle({ profilePath, storyPath, invitePath }: Props) {
           <div className={styles.imgInline}>
             <div className={styles.inlineImg}>Studio at Rua de São Marçal</div>
             <div className={styles.imgCaption}>
-              The studio at Rua de São Marçal, photographed by André Quintela. The
+              The studio at Rua de São Marçal, photographed by {memberName('andre')}. The
               plants are mostly alive.
             </div>
           </div>
@@ -87,7 +88,7 @@ export function StoryArticle({ profilePath, storyPath, invitePath }: Props) {
               people who needed a room, and happened to be queer, and happened to end up
               in mine.
             </p>
-            <cite>— Inês Tavares</cite>
+            <cite>— {memberName('ines')}</cite>
           </blockquote>
 
           <h2>
@@ -131,7 +132,7 @@ export function StoryArticle({ profilePath, storyPath, invitePath }: Props) {
           <div className={styles.authorCard}>
             <div className={styles.authorAv}>IT</div>
             <div>
-              <div className={styles.authorName}>Inês Tavares</div>
+              <div className={styles.authorName}>{memberName('ines')}</div>
               <div className={styles.authorRole}>
                 Graphic Designer · Founder, Atelier Pulso · Príncipe Real
               </div>
@@ -156,7 +157,7 @@ export function StoryArticle({ profilePath, storyPath, invitePath }: Props) {
                 <div className={styles.mcTitle}>
                   Leaving the startup grind for a supper club in Mouraria
                 </div>
-                <div className={styles.mcBy}>Sofia Andrade · 4 min read</div>
+                <div className={styles.mcBy}>{memberName('sofia')} · 4 min read</div>
               </Link>
               <Link to={storyPath} className={styles.moreCard}>
                 <div className={styles.moreImg} />
@@ -171,19 +172,14 @@ export function StoryArticle({ profilePath, storyPath, invitePath }: Props) {
         </div>
       </div>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Want to be part of what <em>gets written about next?</em>
-          </h2>
-          <p className={styles.outroSub}>
-            The stories are about the people in the room. Join us.
-          </p>
-          <Button to={invitePath} variant="primary" size="lg">
-            Request an invite
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Want to be part of what <em>gets written about next?</em></>}
+        sub="The stories are about the people in the room. Join us."
+      >
+        <Button to={invitePath} variant="primary" size="lg">
+          Request an invite
+        </Button>
+      </Outro>
     </>
   )
 }

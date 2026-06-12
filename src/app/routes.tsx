@@ -77,17 +77,21 @@ import { SignInPage } from '../features/auth/SignInPage'
 import { CreateAccountPage } from '../features/auth/CreateAccountPage'
 import { InvitePage } from '../features/auth/InvitePage'
 import { OnboardingPage } from '../features/auth/OnboardingPage'
+import { WelcomeTourPage } from '../features/auth/WelcomeTourPage'
 import { JobsPage } from '../features/economy/JobsPage'
+import { JobDetailPage } from '../features/economy/JobDetailPage'
 import { HousingPage } from '../features/economy/HousingPage'
 import { HousingListingPage } from '../features/economy/HousingListingPage'
 import { LandlordPage } from '../features/economy/LandlordPage'
 import { SkillsPage } from '../features/economy/SkillsPage'
 import { GrantsPage } from '../features/economy/GrantsPage'
 import { BarterPage } from '../features/economy/BarterPage'
+import { BarterDetailPage } from '../features/economy/BarterDetailPage'
 import { OfferPage } from '../features/economy/OfferPage'
 import { EmployerReviewsPage } from '../features/economy/EmployerReviewsPage'
 import { ApplicationStatusPage } from '../features/economy/ApplicationStatusPage'
 import { MentorshipPage } from '../features/economy/MentorshipPage'
+import { MentorDetailPage } from '../features/economy/MentorDetailPage'
 import { EconomyPage } from '../features/economy/EconomyPage'
 import { CinemaPage } from '../features/cinema/CinemaPage'
 import { CinemaBrowsePage } from '../features/cinema/CinemaBrowsePage'
@@ -127,6 +131,7 @@ import { ResourceLibraryPage } from '../features/marketing/ResourceLibraryPage'
 import { PartnersPage } from '../features/marketing/PartnersPage'
 import { PartnerDetailPage } from '../features/marketing/PartnerDetailPage'
 import { ActivismPage } from '../features/marketing/ActivismPage'
+import { ArchivePage } from '../features/marketing/ArchivePage'
 import { PlatformsPage } from '../features/marketing/PlatformsPage'
 import { MapPage } from '../features/marketing/MapPage'
 import { SafeSpacesPage } from '../features/safety/SafeSpacesPage'
@@ -238,6 +243,7 @@ const BUILT_SLUGS = new Set([
   'settings',
   'governance',
   'about',
+  'archive',
   'contact',
   'help',
   'volunteer',
@@ -414,6 +420,7 @@ export function AppRoutes() {
       <Route path="/invite" element={<InvitePage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/welcome" element={<OnboardingPage />} />
+      <Route path="/welcome-tour" element={<WelcomeTourPage />} />
       <Route path="/2fa-setup" element={<TwoFactorSetupPage />} />
       <Route path="/magic-link" element={<MagicLinkPage />} />
       <Route path="/password-reset" element={<PasswordResetPage />} />
@@ -423,16 +430,19 @@ export function AppRoutes() {
 
       {/* Jobs & economy */}
       <Route path="/jobs" element={<JobsPage />} />
+      <Route path="/jobs/:slug" element={<JobDetailPage />} />
       <Route path="/housing" element={<HousingPage />} />
       <Route path="/housing/:slug" element={<HousingListingPage />} />
       <Route path="/landlord/:slug" element={<LandlordPage />} />
       <Route path="/skills" element={<SkillsPage />} />
       <Route path="/grants" element={<GrantsPage />} />
       <Route path="/barter" element={<BarterPage />} />
+      <Route path="/barter/:id" element={<BarterDetailPage />} />
       <Route path="/offer" element={<OfferPage />} />
       <Route path="/employer-reviews" element={<EmployerReviewsPage />} />
       <Route path="/application-status" element={<ApplicationStatusPage />} />
       <Route path="/mentorship" element={<MentorshipPage />} />
+      <Route path="/mentorship/:slug" element={<MentorDetailPage />} />
       <Route path="/mentor-profile" element={<MentorProfilePage />} />
       <Route path="/economy" element={<EconomyPage />} />
 
@@ -486,6 +496,7 @@ export function AppRoutes() {
       <Route path="/partners" element={<PartnersPage />} />
       <Route path="/partner/:slug" element={<PartnerDetailPage />} />
       <Route path="/activism" element={<ActivismPage />} />
+      <Route path="/archive" element={<ArchivePage />} />
       <Route path="/platforms" element={<PlatformsPage />} />
       <Route path="/map" element={<MapPage />} />
 

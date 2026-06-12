@@ -17,7 +17,7 @@ import styles from './Discovery.module.css'
 function MemberCard({ member }: { member: Member }) {
   const connectHref =
     member.visibility === 'private'
-      ? `${routes.profile}#${member.key}`
+      ? `${routes.profile}/${member.key}`
       : `${routes.connect}#${member.key}`
   const connectLabel = member.visibility === 'private' ? 'View profile' : 'Say hello'
 
@@ -30,6 +30,8 @@ function MemberCard({ member }: { member: Member }) {
             tint={member.tint}
             size={60}
             verified={member.verified}
+            src={member.photo}
+            alt={member.name}
           />
           {member.verified && (
             <span className={styles.vtip}>Vouched by {member.vouchedBy}</span>
@@ -39,7 +41,7 @@ function MemberCard({ member }: { member: Member }) {
       </div>
 
       <div>
-        <Link to={`${routes.profile}#${member.key}`}>
+        <Link to={`${routes.profile}/${member.key}`}>
           <div className={styles.name}>{member.name}</div>
         </Link>
         <div className={styles.role}>{member.role}</div>

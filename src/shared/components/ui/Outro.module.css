@@ -1,0 +1,32 @@
+.outro {
+  background: var(--plum);
+  color: var(--cream);
+  padding: clamp(72px, 10vw, 120px) 0;
+  text-align: center;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(34px, 5vw, 60px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.sub {
+  font-size: 16px;
+  color: rgba(247, 243, 238, 0.62);
+  max-width: 48ch;
+  margin: 20px auto 28px;
+  line-height: 1.65;
+}
+.actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}

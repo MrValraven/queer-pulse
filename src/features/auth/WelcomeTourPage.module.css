@@ -1,0 +1,498 @@
+.root {
+  min-height: 100vh;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+}
+
+.topNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 28px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--plum);
+}
+.brand em {
+  font-style: italic;
+}
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+.skip {
+  font-size: 13px;
+  color: var(--ink-40);
+}
+.skip:hover {
+  color: var(--ink-60);
+}
+
+.page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+}
+.card {
+  width: 100%;
+  max-width: 560px;
+}
+
+/* Progress */
+.progress {
+  margin-bottom: 36px;
+}
+.bar {
+  height: 3px;
+  background: rgba(45, 27, 61, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.5s var(--ease);
+}
+.stepsLabel {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.step {
+  animation: tourStepIn 0.35s var(--ease) both;
+}
+@keyframes tourStepIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.eye {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.h {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(30px, 5vw, 52px);
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  margin: 0 0 14px;
+}
+.h em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.p {
+  font-size: 15.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+
+/* Vouch card */
+.vouchCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 18px;
+  padding: 20px 22px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 28px;
+}
+.vcAv {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(var(--jade-rgb), 0.15);
+  color: var(--jade);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 17px;
+  flex: none;
+}
+.vcName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.vcRole {
+  font-size: 13px;
+  color: var(--ink-40);
+  margin-top: 2px;
+}
+.vcNote {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin-top: 10px;
+  font-style: italic;
+  border-left: 2px solid rgba(var(--accent-rgb), 0.4);
+  padding-left: 12px;
+}
+
+/* Queer 101 nudge */
+.q101 {
+  background: rgba(var(--jade-rgb), 0.07);
+  border: 1px solid rgba(var(--jade-rgb), 0.18);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+}
+.q101Label {
+  font-weight: 700;
+  color: var(--jade);
+  display: block;
+  margin-bottom: 3px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.q101Link {
+  color: var(--jade);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Profile fields */
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.input,
+.select {
+  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+  width: 100%;
+  transition: border-color 0.25s;
+}
+.select {
+  appearance: none;
+  cursor: pointer;
+}
+.input:focus,
+.select:focus {
+  border-color: var(--accent);
+}
+.fieldLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.visOpts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.visOpt {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 13px 16px;
+  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.visOpt:has(input:checked) {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.05);
+}
+.visOpt input {
+  margin-top: 2px;
+  accent-color: var(--accent);
+}
+.visText span {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  display: block;
+}
+.visText small {
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+/* Interests */
+.intGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 9px;
+  margin-bottom: 28px;
+}
+.intItem {
+  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border-radius: 12px;
+  padding: 13px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: transparent;
+  text-align: left;
+  font-family: var(--sans);
+}
+.intItem:hover {
+  border-color: rgba(45, 27, 61, 0.28);
+}
+.intSel {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.07);
+}
+.intIcon {
+  font-size: 18px;
+  flex: none;
+}
+.intLabel {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* Communities */
+.commList {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 28px;
+}
+.commPick {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.commPick input {
+  margin-top: 4px;
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+.commPicked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.05);
+}
+.commName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  display: block;
+}
+.commDesc {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-top: 2px;
+  display: block;
+}
+
+/* Connections */
+.sugGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.sugCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.sugAv {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 17px;
+  flex: none;
+}
+.jade {
+  background: rgba(var(--jade-rgb), 0.15);
+  color: var(--jade);
+}
+.coral {
+  background: rgba(var(--accent-rgb), 0.15);
+  color: var(--accent-ink);
+}
+.sugInfo {
+  flex: 1;
+  min-width: 0;
+}
+.sugName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.sugRole {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-top: 2px;
+}
+.sugReason {
+  font-size: 12.5px;
+  color: var(--accent-ink);
+  font-weight: 600;
+  margin-top: 4px;
+}
+.sugSay {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+  border: 1.5px solid rgba(45, 27, 61, 0.18);
+  border-radius: 999px;
+  padding: 8px 16px;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.sugSay:hover {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+.sugSent {
+  background: rgba(var(--jade-rgb), 0.1);
+  color: var(--jade);
+  border-color: rgba(var(--jade-rgb), 0.3);
+  pointer-events: none;
+}
+
+/* Explore */
+.exploreGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+  margin-bottom: 28px;
+}
+.exCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 16px;
+  display: block;
+  color: inherit;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.exCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px -14px rgba(45, 27, 61, 0.3);
+}
+.exIcon {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+.exName {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--plum);
+  margin-bottom: 3px;
+}
+.exDesc {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+.goBtn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Nav */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+.back {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-60);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 12px 4px;
+  transition: color 0.2s;
+}
+.back:hover {
+  color: var(--ink);
+}
+
+@media (max-width: 480px) {
+  .row,
+  .exploreGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+:global([data-theme='dark']) .vouchCard,
+:global([data-theme='dark']) .sugCard,
+:global([data-theme='dark']) .exCard {
+  border-color: rgba(247, 243, 238, 0.1);
+}
+:global([data-theme='dark']) .topNav {
+  border-color: rgba(247, 243, 238, 0.1);
+}

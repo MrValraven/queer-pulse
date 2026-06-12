@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { memberName } from "../members/data/members";
 
 export type Tint = "coral" | "jade" | "plum";
 
@@ -224,7 +225,7 @@ export const CHANGEMAKERS: ChangemakerStory[] = [
       "Founded Alcântara's first queer youth group",
       "Mentors 20+ young people through the hardest years",
     ],
-    byline: "Words by Mariana Loução",
+    byline: `Words by ${memberName('mariana')}`,
     readTime: "5 min read",
     date: "June 2026",
     heroNote: "Miguel outside a school in Alcântara",

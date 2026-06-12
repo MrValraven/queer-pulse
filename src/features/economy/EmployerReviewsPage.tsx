@@ -2,7 +2,7 @@ import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./EmployerReviewsPage.module.css";
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 
 const INVITE = routes.invite;
 
@@ -185,19 +185,14 @@ export function EmployerReviewsPage() {
         </div>
       </section>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Your work <em>matters.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            You deserve to know what you're walking into. So does everyone else.
-          </p>
-          <Button to={INVITE} variant="primary" size="lg">
-            Request an invite
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Your work <em>matters.</em></>}
+        sub="You deserve to know what you're walking into. So does everyone else."
+      >
+        <Button to={INVITE} variant="primary" size="lg">
+          Request an invite
+        </Button>
+      </Outro>
     </PageShell>
   );
 }

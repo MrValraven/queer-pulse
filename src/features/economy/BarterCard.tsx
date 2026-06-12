@@ -1,11 +1,14 @@
+import type { SyntheticEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { Avatar } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { routes } from '../../app/routeMap'
 import { type Barter, BADGE } from './barter.data'
 import { memberProfiles } from '../members/data/memberProfiles'
 import type { AvatarTint } from '../../shared/components/ui/Avatar'
 import styles from './BarterPage.module.css'
 
-function getMemberInfo(b: Barter): { name: string; initials: string; tint: AvatarTint; hood: string } {
+export function getMemberInfo(b: Barter): { name: string; initials: string; tint: AvatarTint; hood: string } {
   if (b.member && memberProfiles[b.member]) {
     const m = memberProfiles[b.member]
     return { name: `${m.first} ${m.last}`, initials: m.initials, tint: m.tint, hood: m.hood }
@@ -21,8 +24,14 @@ export function BarterCard({ barter: b }: Props) {
   const { showToast } = useToast()
   const info = getMemberInfo(b)
 
+  function propose(e: SyntheticEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    showToast(`Message sent to ${info.name}`, 'success')
+  }
+
   return (
-    <article className={styles.bc}>
+    <Link to={`${routes.barter}/${b.id}`} className={styles.bc}>
       <div className={styles.bcHead}>
         <Avatar initials={info.initials} tint={info.tint} size={40} />
         <div className={styles.bcMeta}>
@@ -52,10 +61,18 @@ export function BarterCard({ barter: b }: Props) {
       </div>
       <div className={styles.bcFoot}>
         <span className={styles.bcDays}>{b.days === 1 ? 'Today' : `${b.days} days ago`}</span>
-        <button className={styles.bcReach} onClick={() => showToast(`Message sent to ${info.name}`, 'success')}>
+        <span
+          role="button"
+          tabIndex={0}
+          className={styles.bcReach}
+          onClick={propose}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') propose(e)
+          }}
+        >
           Propose a swap →
-        </button>
+        </span>
       </div>
-    </article>
+    </Link>
   )
 }

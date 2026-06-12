@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import {
   ART_FILTERS,
   ART_WORKS,
@@ -155,20 +155,14 @@ export function CreativesPage() {
         </div>
       </main>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Your work <em>belongs here.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            QueerPulse is a space for queer creatives to be found, supported, and commissioned — by
-            each other and the wider community.
-          </p>
-          <Button to={INVITE} variant="primary" size="lg">
-            Add your creative profile
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Your work <em>belongs here.</em></>}
+        sub="QueerPulse is a space for queer creatives to be found, supported, and commissioned — by each other and the wider community."
+      >
+        <Button to={INVITE} variant="primary" size="lg">
+          Add your creative profile
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

@@ -42,6 +42,7 @@ export const NAV_MENUS: MegaMenu[] = [
           { label: "Reading Groups", href: routes.readingGroups },
           { label: "Family", href: routes.family },
           { label: "Volunteer", href: routes.volunteer },
+          { label: "Activism", href: routes.activism },
           { label: "Changemakers", href: routes.changemakers },
           { label: "Communities", href: routes.communities },
         ],
@@ -153,7 +154,6 @@ export const NAV_MENUS: MegaMenu[] = [
         links: [
           { label: "Creatives", href: routes.creatives, featured: true },
           { label: "Studio · queer music", href: routes.studio, featured: true },
-          { label: "Activism", href: routes.activism },
           { label: "Changemakers", href: routes.changemakers },
           { label: "Manifesto", href: routes.manifesto },
           { label: "Governance", href: routes.governance },

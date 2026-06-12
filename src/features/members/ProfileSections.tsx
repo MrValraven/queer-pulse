@@ -69,6 +69,7 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
           <Reveal className={styles.portraitWrap}>
             <ImageSlot
               tint={profile.tint === 'auth' ? 'plum' : profile.tint}
+              src={profile.photo}
               initials={profile.initials}
               height={430}
               radius={20}
@@ -119,15 +120,31 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
             </div>
             <div className={styles.vouchRow}>
               <div className={styles.vouchFaces}>
-                {profile.vouchers.map((voucher, index) => (
-                  <Avatar
-                    key={index}
-                    initials={voucher.initials}
-                    tint={voucher.tint}
-                    size={36}
-                    style={{ marginLeft: index === 0 ? 0 : -10 }}
-                  />
-                ))}
+                {profile.vouchers.map((slug, index) => {
+                  const voucher = memberProfiles[slug]
+                  if (!voucher) return null
+                  const name = `${voucher.first} ${voucher.last}`
+                  return (
+                    <Link
+                      key={slug}
+                      to={`/profile/${slug}`}
+                      className={styles.vouchFace}
+                      style={{
+                        marginLeft: index === 0 ? 0 : -12,
+                        zIndex: profile.vouchers.length - index,
+                      }}
+                    >
+                      <span className={styles.vouchTip}>{name}</span>
+                      <Avatar
+                        initials={voucher.initials}
+                        tint={voucher.tint}
+                        size={52}
+                        src={voucher.photo}
+                        alt={name}
+                      />
+                    </Link>
+                  )
+                })}
               </div>
               <div className={styles.vouchText}>
                 Vouched for by <b>{profile.voucherNames}</b>.

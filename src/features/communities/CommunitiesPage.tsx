@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Reveal } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { communities } from '../homepage/data/communities'
 import type { Community, CommunityType } from '../homepage/data/types'
 import { JoinModal } from './JoinModal'
@@ -47,7 +47,7 @@ export function CommunitiesPage() {
 
       <div className={styles.body}>
         <div className="wrap">
-          <div className={styles.filters}>
+          <Reveal className={styles.filters}>
             {FILTERS.map((option) => (
               <button
                 key={option.value}
@@ -59,17 +59,17 @@ export function CommunitiesPage() {
                 {option.label}
               </button>
             ))}
-          </div>
+          </Reveal>
 
           <div className={styles.grid}>
-            {visible.map((community) => {
+            {visible.map((community, index) => {
               const hasJoined = joined.has(community.name)
               return (
-                <Link
-                  key={community.name}
-                  to={`/community/${community.slug}`}
-                  className={styles.card}
-                >
+                <Reveal key={community.name} delay={Math.min(index, 6) * 45}>
+                  <Link
+                    to={`/community/${community.slug}`}
+                    className={styles.card}
+                  >
                   <span className={[styles.type, styles[community.type]].join(' ')}>
                     {community.typeLabel}
                   </span>
@@ -103,12 +103,22 @@ export function CommunitiesPage() {
                       </span>
                     )}
                   </div>
-                </Link>
+                  </Link>
+                </Reveal>
               )
             })}
           </div>
         </div>
       </div>
+
+      <Outro
+        title={<>Not finding the right <em>space?</em></>}
+        sub="Suggest a community to add to the directory, or post on the board to find people who share your interest — and maybe start something together."
+      >
+        <Button to="/#board" size="lg">
+          See the board →
+        </Button>
+      </Outro>
 
       {joining && (
         <JoinModal

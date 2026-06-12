@@ -1,15 +1,45 @@
 import type { Member } from './types'
+import { MEMBERS, memberName } from '../../members/data/members'
+
+/**
+ * Homepage member cards derive their identity (name, hood, avatar, vouchers,
+ * verification, visibility) from the canonical registry, so editing a member in
+ * one place updates them here too. Only the card-specific presentation — the
+ * abbreviated `role`, the short `tags`, and the homepage `category` — stays local.
+ */
+function card(
+  slug: string,
+  category: Member['category'],
+  tags: string[],
+  role: string,
+): Member {
+  const m = MEMBERS[slug]
+  return {
+    key: slug,
+    name: memberName(slug),
+    role,
+    hood: m.hood,
+    category,
+    tags,
+    verified: m.verified,
+    visibility: m.visibility,
+    initials: m.initials,
+    tint: m.tint,
+    photo: m.photo,
+    vouchedBy: m.voucherNames,
+  }
+}
 
 export const members: Member[] = [
-  { key: 'ines', name: 'Inês Tavares', role: 'Graphic Designer', hood: 'Príncipe Real', category: 'design', tags: ['Branding', 'Editorial', 'Type'], verified: true, visibility: 'open', initials: 'IT', tint: 'coral', vouchedBy: 'Sofia, Rui & Beatriz' },
-  { key: 'rui', name: 'Rui Marçal', role: 'Software Engineer', hood: 'Marvila', category: 'tech', tags: ['Backend', 'Rust', 'Infra'], verified: true, visibility: 'network', initials: 'RM', tint: 'plum', vouchedBy: 'Inês & Diogo' },
-  { key: 'sofia', name: 'Sofia Andrade', role: 'Documentary Filmmaker', hood: 'Alfama', category: 'film', tags: ['Directing', 'Editing', 'Sound'], verified: true, visibility: 'open', initials: 'SA', tint: 'jade', vouchedBy: 'Inês & Mariana' },
-  { key: 'tomas', name: 'Tomás Beto', role: 'Chef · Supper Club Host', hood: 'Mouraria', category: 'food', tags: ['Fermentation', 'Menus'], verified: false, visibility: 'network', initials: 'TB', tint: 'coral', vouchedBy: 'Sofia & Beatriz' },
-  { key: 'mariana', name: 'Mariana Loução', role: 'Clinical Psychologist', hood: 'Estrela', category: 'care', tags: ['LGBTQ+ care', 'Therapy'], verified: true, visibility: 'private', initials: 'ML', tint: 'plum', vouchedBy: 'Sofia' },
-  { key: 'andre', name: 'André Quintela', role: 'Portrait Photographer', hood: 'Cais do Sodré', category: 'film', tags: ['Portrait', 'Analog'], verified: false, visibility: 'open', initials: 'AQ', tint: 'jade', vouchedBy: 'Inês' },
-  { key: 'carla', name: 'Carla Nogueira', role: 'Product Manager', hood: 'Arroios', category: 'tech', tags: ['Fintech', 'Strategy'], verified: true, visibility: 'network', initials: 'CN', tint: 'coral', vouchedBy: 'Rui & Inês' },
-  { key: 'beatriz', name: 'Beatriz Pinto', role: 'Ceramicist', hood: 'Graça', category: 'craft', tags: ['Studio', 'Glazing'], verified: false, visibility: 'open', initials: 'BP', tint: 'plum', vouchedBy: 'Tomás & Inês' },
-  { key: 'diogo', name: 'Diogo Vasques', role: 'Music Producer', hood: 'Bairro Alto', category: 'music', tags: ['Mixing', 'Live sets'], verified: true, visibility: 'network', initials: 'DV', tint: 'jade', vouchedBy: 'Rui & Sofia' },
+  card('ines', 'design', ['Branding', 'Editorial', 'Type'], 'Graphic Designer'),
+  card('rui', 'tech', ['Backend', 'Rust', 'Infra'], 'Software Engineer'),
+  card('sofia', 'film', ['Directing', 'Editing', 'Sound'], 'Documentary Filmmaker'),
+  card('tomas', 'food', ['Fermentation', 'Menus'], 'Chef · Supper Club Host'),
+  card('mariana', 'care', ['LGBTQ+ care', 'Therapy'], 'Clinical Psychologist'),
+  card('andre', 'film', ['Portrait', 'Analog'], 'Portrait Photographer'),
+  card('carla', 'tech', ['Fintech', 'Strategy'], 'Product Manager'),
+  card('beatriz', 'craft', ['Studio', 'Glazing'], 'Ceramicist'),
+  card('diogo', 'music', ['Mixing', 'Live sets'], 'Music Producer'),
 ]
 
 export const memberFilters: { value: 'all' | Member['category']; label: string }[] = [

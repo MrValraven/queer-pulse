@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Reveal } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { ResourceHero } from './ResourceHero'
 import styles from './resources.module.css'
 
@@ -152,6 +152,15 @@ export function LegalPage() {
           </Reveal>
         </div>
       </section>
+
+      <Outro
+        title={<>You have <em>rights.</em></>}
+        sub="Knowledge is the first line of defence. Share these resources with anyone who needs them."
+      >
+        <Button to="/invite" variant="primary" size="lg">
+          Request an invite
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

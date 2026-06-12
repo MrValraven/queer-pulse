@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./ArrivingPage.module.css";
-import { Button } from "../../shared/components/ui";
+import { Button, Outro, Reveal } from "../../shared/components/ui";
 import type { InfoCard } from "./arrivingPage.data";
 import { HOODS, ORGS, COMM_QUICK } from "./arrivingPage.data";
 
@@ -28,8 +28,8 @@ const HOUSING: InfoCard[] = [
 function InfoCards({ cards }: { cards: InfoCard[] }) {
   return (
     <div className={styles.infoGrid}>
-      {cards.map((c) => (
-        <div className={styles.infoCard} key={c.title}>
+      {cards.map((c, i) => (
+        <Reveal as="div" className={styles.infoCard} key={c.title} delay={i * 55}>
           <div className={styles.icHead}>
             <div className={styles.icIcon} style={{ background: c.iconBg }}>{c.icon}</div>
             <div className={styles.icTitle}>{c.title}</div>
@@ -43,7 +43,7 @@ function InfoCards({ cards }: { cards: InfoCard[] }) {
             ) : (
               <Link to={c.link.href} className={styles.icLink}>{c.link.label}</Link>
             ))}
-        </div>
+        </Reveal>
       ))}
     </div>
   );
@@ -54,39 +54,39 @@ export function ArrivingPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>New to Lisbon</div>
-          <h1>
+          <Reveal as="div" className={styles.cat}>New to Lisbon</Reveal>
+          <Reveal as="h1" delay={60}>
             Queer and new to Lisbon? <em>Welcome.</em>
-          </h1>
-          <p>
+          </Reveal>
+          <Reveal as="p" delay={120}>
             This city has a lot for us — a real, rooted queer community, welcoming
             neighbourhoods, organisations doing serious work, and people who will
             genuinely help you settle in. Here's what to know first.
-          </p>
+          </Reveal>
         </div>
       </div>
 
       <section className={`${styles.section} ${styles.alt}`}>
         <div className="wrap">
-          <div className={styles.eye}>Lisbon's neighbourhoods</div>
-          <h2 className={styles.h}>
+          <Reveal as="div" className={styles.eye}>Lisbon's neighbourhoods</Reveal>
+          <Reveal as="h2" className={styles.h} delay={60}>
             Where queer life <em>happens.</em>
-          </h2>
-          <p className={styles.intro}>
+          </Reveal>
+          <Reveal as="p" className={styles.intro} delay={120}>
             Lisbon doesn't have one queer neighbourhood — it has several pockets,
             each with its own character. Here's an honest guide to where the
             community is.
-          </p>
+          </Reveal>
           <div className={styles.hoodGrid}>
-            {HOODS.map((h) => (
-              <div className={styles.hoodCard} key={h.name}>
+            {HOODS.map((h, i) => (
+              <Reveal as="div" className={styles.hoodCard} key={h.name} delay={i * 55}>
                 <span className={styles.hoodTag} style={{ color: h.tagColor, background: h.tagBg }}>
                   {h.tag}
                 </span>
                 <div className={styles.hoodName}>{h.name}</div>
                 <p className={styles.hoodDesc}>{h.desc}</p>
                 <div className={styles.hoodNote}>{h.note}</div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -94,47 +94,47 @@ export function ArrivingPage() {
 
       <section className={`${styles.section} ${styles.paper}`}>
         <div className="wrap">
-          <div className={styles.eye}>Health</div>
-          <h2 className={styles.h}>
+          <Reveal as="div" className={styles.eye}>Health</Reveal>
+          <Reveal as="h2" className={styles.h} delay={60}>
             Healthcare in Lisbon — <em>what you need to know.</em>
-          </h2>
-          <p className={styles.intro}>
+          </Reveal>
+          <Reveal as="p" className={styles.intro} delay={120}>
             Portugal has a national health service (SNS) that you can register with.
             Trans-affirming care has improved significantly — but it takes knowing
             where to go.
-          </p>
+          </Reveal>
           <InfoCards cards={HEALTH} />
         </div>
       </section>
 
       <section className={`${styles.section} ${styles.alt}`}>
         <div className="wrap">
-          <div className={styles.eye}>Housing</div>
-          <h2 className={styles.h}>
+          <Reveal as="div" className={styles.eye}>Housing</Reveal>
+          <Reveal as="h2" className={styles.h} delay={60}>
             Finding a place to live — <em>honestly.</em>
-          </h2>
-          <p className={styles.intro}>
+          </Reveal>
+          <Reveal as="p" className={styles.intro} delay={120}>
             Lisbon's housing market is expensive and competitive. Here's an honest
             picture of what to expect, and where to get help.
-          </p>
+          </Reveal>
           <InfoCards cards={HOUSING} />
         </div>
       </section>
 
       <section className={`${styles.section} ${styles.paper}`}>
         <div className="wrap">
-          <div className={styles.eye}>Organisations</div>
-          <h2 className={styles.h}>
+          <Reveal as="div" className={styles.eye}>Organisations</Reveal>
+          <Reveal as="h2" className={styles.h} delay={60}>
             Know these <em>three first.</em>
-          </h2>
-          <p className={styles.intro}>
+          </Reveal>
+          <Reveal as="p" className={styles.intro} delay={120}>
             These are the organisations most likely to be useful within your first
             weeks in Lisbon — for legal support, mental health, or simply connecting
             to the community.
-          </p>
+          </Reveal>
           <div className={styles.orgList}>
-            {ORGS.map((o) => (
-              <Link to={PLATFORMS} className={styles.org} key={o.name}>
+            {ORGS.map((o, i) => (
+              <Reveal as={Link} to={PLATFORMS} className={styles.org} key={o.name} delay={i * 55}>
                 <div className={styles.orgAv} style={{ background: o.bg, color: o.color }}>
                   {o.initials}
                 </div>
@@ -143,7 +143,7 @@ export function ArrivingPage() {
                   <p className={styles.orgDesc}>{o.desc}</p>
                   <div className={styles.orgUrl}>{o.url}</div>
                 </div>
-              </Link>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -151,15 +151,15 @@ export function ArrivingPage() {
 
       <section className={`${styles.section} ${styles.dark}`}>
         <div className="wrap">
-          <div className={styles.eye}>Your first step</div>
-          <h2 className={styles.h}>
+          <Reveal as="div" className={styles.eye}>Your first step</Reveal>
+          <Reveal as="h2" className={styles.h} delay={60}>
             Come to something <em>in person.</em>
-          </h2>
-          <p className={styles.intro}>
+          </Reveal>
+          <Reveal as="p" className={styles.intro} delay={120}>
             Everything on this page is useful. But the best thing you can do is show
             up to a gathering. Next one coming up:
-          </p>
-          <div className={styles.firstGather}>
+          </Reveal>
+          <Reveal as="div" className={styles.firstGather} delay={160}>
             <div className={styles.fgDate}>
               <span className={styles.d}>14</span>
               <span className={styles.m}>Jun</span>
@@ -172,51 +172,45 @@ export function ArrivingPage() {
             <Button to={routes.gathering} variant="ghost-dark">
               I'll be there →
             </Button>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       <section className={`${styles.section} ${styles.alt}`}>
         <div className="wrap">
-          <div className={styles.eye}>Where to start</div>
-          <h2 className={styles.h}>
+          <Reveal as="div" className={styles.eye}>Where to start</Reveal>
+          <Reveal as="h2" className={styles.h} delay={60}>
             Three communities for <em>new arrivals.</em>
-          </h2>
-          <p className={styles.intro}>
+          </Reveal>
+          <Reveal as="p" className={styles.intro} delay={120}>
             Not sure where to begin? These three communities are particularly
             welcoming to people who are new to Lisbon.
-          </p>
+          </Reveal>
           <div className={styles.commQuick}>
-            {COMM_QUICK.map((c) => (
-              <Link to={COMMUNITIES} className={styles.cqCard} key={c.name}>
+            {COMM_QUICK.map((c, i) => (
+              <Reveal as={Link} to={COMMUNITIES} className={styles.cqCard} key={c.name} delay={i * 55}>
                 <span className={styles.cqType} style={{ color: c.typeColor, background: c.typeBg }}>
                   {c.type}
                 </span>
                 <div className={styles.cqName}>{c.name}</div>
                 <p className={styles.cqReason}>{c.reason}</p>
-              </Link>
+              </Reveal>
             ))}
           </div>
-          <div className={styles.commCta}>
+          <Reveal as="div" className={styles.commCta} delay={120}>
             <Button to={COMMUNITIES} variant="ghost">Browse all communities →</Button>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Ready to meet <em>the community?</em>
-          </h2>
-          <p className={styles.outroSub}>
-            Request an invite to QueerPulse and get access to the full network —
-            members, gatherings, board, and everything else on this page.
-          </p>
-          <Button to={routes.invite} variant="primary" size="lg">
-            Request an invite →
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Ready to meet <em>the community?</em></>}
+        sub="Request an invite to QueerPulse and get access to the full network — members, gatherings, board, and everything else on this page."
+      >
+        <Button to={routes.invite} variant="primary" size="lg">
+          Request an invite →
+        </Button>
+      </Outro>
     </PageShell>
   );
 }

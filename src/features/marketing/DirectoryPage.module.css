@@ -4,13 +4,14 @@
   gap: 9px;
   margin-top: 20px;
   font-size: 13px;
-  color: var(--ink-40);
+  color: rgba(247, 243, 238, 0.55);
 }
 .heroNote .live {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--jade);
+  box-shadow: 0 0 0 3px rgba(74, 140, 111, 0.3);
 }
 
 .bar {

@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button, Reveal } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import {
   StatusHero,
@@ -8,7 +8,6 @@ import {
   IncidentsSection,
   SubscribeStrip,
 } from './StatusComponents'
-import styles from './StatusComponents.module.css'
 
 export function StatusPage() {
   return (
@@ -19,23 +18,14 @@ export function StatusPage() {
       <IncidentsSection />
       <SubscribeStrip />
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <Reveal as="h2">
-            A queer network.
-            <br />
-            <em>Rooted in Lisbon.</em>
-          </Reveal>
-          <Reveal as="p" delay={80} className={styles.outroSub}>
-            Invite-only. Community-owned. Built to last.
-          </Reveal>
-          <Reveal delay={140}>
-            <Button size="lg" to={routes.invite}>
-              Request an invite
-            </Button>
-          </Reveal>
-        </div>
-      </section>
+      <Outro
+        title={<>A queer network.<br /><em>Rooted in Lisbon.</em></>}
+        sub="Invite-only. Community-owned. Built to last."
+      >
+        <Button size="lg" to={routes.invite}>
+          Request an invite
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

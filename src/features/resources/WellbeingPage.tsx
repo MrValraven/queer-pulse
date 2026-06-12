@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Reveal } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { ResourceHero } from './ResourceHero'
 import styles from './resources.module.css'
 
@@ -180,6 +180,15 @@ export function WellbeingPage() {
           </div>
         </div>
       </section>
+
+      <Outro
+        title={<>You belong <em>here.</em></>}
+        sub="If you're not yet a member, request an invite. If you are, everything above is in the member area — no separate login needed."
+      >
+        <Button to="/invite" variant="primary" size="lg">
+          Request an invite
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

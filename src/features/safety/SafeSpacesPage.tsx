@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { VERIFIED_SPACES, type Category } from './safeSpaces'
@@ -90,25 +90,17 @@ export function SafeSpacesPage() {
       <RemovedSection />
       <NominateSection sectionRef={nomRef} />
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Safety is <em>collective.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            Every review, every flag, every nomination makes this list more useful for everyone. It
-            only works because the community maintains it.
-          </p>
-          <div className={styles.outroBtns}>
-            <Button to={routes.safety} variant="primary" size="lg">
-              Safety &amp; reporting
-            </Button>
-            <Button to={routes.sober} variant="ghost-dark" size="lg">
-              Sober &amp; social
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Outro
+        title={<>Safety is <em>collective.</em></>}
+        sub="Every review, every flag, every nomination makes this list more useful for everyone. It only works because the community maintains it."
+      >
+        <Button to={routes.safety} variant="primary" size="lg">
+          Safety &amp; reporting
+        </Button>
+        <Button to={routes.sober} variant="ghost-dark" size="lg">
+          Sober &amp; social
+        </Button>
+      </Outro>
 
       {flagging && (
         <FlagModal

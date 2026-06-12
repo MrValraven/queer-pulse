@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { memberName } from '../members/data/members'
 
 export const MENTOR = {
   eyebrow: 'Mentor · long-form & reporting · 4 mentees',
@@ -62,10 +63,10 @@ export const PROCESS_STEPS: { num: string; title: string; desc: ReactNode }[] = 
 ]
 
 export const MENTEES: { initials: string; name: string; tint: 'jade' | 'coral' | 'plum' }[] = [
-  { initials: 'SP', name: "Sara Pinheiro · '23 cohort", tint: 'jade' },
-  { initials: 'JF', name: "Jonas Ferreira · '24 cohort", tint: 'jade' },
-  { initials: 'AK', name: "Anika Kovač · '25 cohort", tint: 'coral' },
-  { initials: 'TM', name: "Tomás Mendes · '25 cohort", tint: 'plum' },
+  { initials: 'SP', name: `${memberName('sara-pinheiro')} · '23 cohort`, tint: 'jade' },
+  { initials: 'JF', name: `${memberName('jonas')} · '24 cohort`, tint: 'jade' },
+  { initials: 'AK', name: `${memberName('anika')} · '25 cohort`, tint: 'coral' },
+  { initials: 'TM', name: `${memberName('tomas-mendes')} · '25 cohort`, tint: 'plum' },
 ]
 
 export const BOOK_ROWS: { label: string; value: ReactNode; jade?: boolean; accent?: boolean }[] = [

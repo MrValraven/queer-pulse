@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { PROFILES, matchesBudget, type ListingType } from './flatmates.data'
 import { FlatmateCard } from './FlatmateCard'
@@ -123,25 +123,17 @@ export function FlatmatesPage() {
         </div>
       </div>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            A home where <em>you belong.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            The right flatmate can make a city feel like home. Take your time, trust your gut, and
-            use the community.
-          </p>
-          <div className={styles.outroBtns}>
-            <Button type="button" variant="primary" size="lg" onClick={() => setModalOpen(true)}>
-              Post your profile
-            </Button>
-            <Button to={routes.forum} variant="ghost-dark" size="lg">
-              Ask the forum →
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Outro
+        title={<>A home where <em>you belong.</em></>}
+        sub="The right flatmate can make a city feel like home. Take your time, trust your gut, and use the community."
+      >
+        <Button type="button" variant="primary" size="lg" onClick={() => setModalOpen(true)}>
+          Post your profile
+        </Button>
+        <Button to={routes.forum} variant="ghost-dark" size="lg">
+          Ask the forum →
+        </Button>
+      </Outro>
 
       {modalOpen && <PostProfileModal onClose={() => setModalOpen(false)} />}
     </PageShell>

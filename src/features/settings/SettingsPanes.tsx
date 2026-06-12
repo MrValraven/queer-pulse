@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { memberName } from '../members/data/members'
 import { TERMS } from './settings.data'
 import { DataCard, Pane, Section, SelectRow, ToggleList, ToggleRow } from './SettingsControls'
 import styles from './SettingsPage.module.css'
@@ -161,7 +162,7 @@ export function ProfilePane({ onChange }: { onChange: () => void }) {
       <Section label="Basic information">
         <div className={styles.fields}>
           <div className={styles.fieldRow2}>
-            <input className={styles.input} type="text" defaultValue="Sofia Andrade" onChange={onChange} />
+            <input className={styles.input} type="text" defaultValue={memberName('sofia')} onChange={onChange} />
             <input className={styles.input} type="text" defaultValue="she / her" onChange={onChange} />
           </div>
           <input className={styles.input} type="text" defaultValue="Documentary Filmmaker · Alfama" onChange={onChange} />

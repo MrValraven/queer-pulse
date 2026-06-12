@@ -714,28 +714,6 @@
   margin-top: 16px;
 }
 
-.outro {
-  text-align: center;
-  padding: 90px 0 60px;
-}
-.outro h2 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(40px, 6vw, 72px);
-  color: var(--cream);
-  letter-spacing: -0.02em;
-}
-.outro h2 em {
-  font-style: italic;
-  color: var(--accent);
-}
-.outro p {
-  font-size: 17px;
-  color: rgba(247, 243, 238, 0.6);
-  margin: 24px auto 32px;
-  max-width: 40ch;
-}
-
 @media (max-width: 960px) {
   .cover {
     grid-template-columns: 1fr;

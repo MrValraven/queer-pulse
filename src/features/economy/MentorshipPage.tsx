@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { MENTORS, STATS, VOLUNTEER, type Mode } from './mentorship.data'
 import { MentorMatchModal } from './MentorMatchModal'
 import styles from './MentorshipPage.module.css'
@@ -76,7 +78,7 @@ export function MentorshipPage() {
           </div>
           <div className={styles.mentorGrid}>
             {MENTORS.map((m) => (
-              <div className={styles.mentorCard} key={m.name}>
+              <Link to={`${routes.mentorship}/${m.slug}`} className={styles.mentorCard} key={m.slug}>
                 <div className={styles.mcTop}>
                   <div className={styles.mcAv} style={{ background: m.bg, color: m.color }}>
                     {m.initials}
@@ -93,30 +95,42 @@ export function MentorshipPage() {
                     </span>
                   ))}
                 </div>
-                <div className={styles.mcCap}>{m.cap}</div>
-                <button type="button" className={styles.mcConnect} onClick={() => setMode('mentee')}>
+                <div className={`${styles.mcCap} ${m.btn === 'Join waitlist' ? styles.mcCapWait : ''}`}>
+                  {m.cap}
+                </div>
+                <span
+                  role="button"
+                  tabIndex={0}
+                  className={styles.mcConnect}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    setMode('mentee')
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setMode('mentee')
+                    }
+                  }}
+                >
                   {m.btn}
-                </button>
-              </div>
+                </span>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Have something <em>to give?</em>
-          </h2>
-          <p className={styles.outroSub}>
-            Mentorship is one way. Browse volunteer opportunities to find other ways to contribute to
-            the community around you.
-          </p>
-          <Button to={VOLUNTEER} variant="primary" size="lg">
-            See volunteer roles →
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Have something <em>to give?</em></>}
+        sub="Mentorship is one way. Browse volunteer opportunities to find other ways to contribute to the community around you."
+      >
+        <Button to={VOLUNTEER} variant="primary" size="lg">
+          See volunteer roles →
+        </Button>
+      </Outro>
 
       {mode && <MentorMatchModal mode={mode} onClose={() => setMode(null)} />}
     </PageShell>

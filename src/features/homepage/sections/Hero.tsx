@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Button, Eyebrow, Reveal } from '../../../shared/components/ui'
 import { routes } from '../../../app/routeMap'
 import { neighbourhoods } from '../data/gatherings'
@@ -31,6 +32,15 @@ export function Hero() {
             <Button size="lg" variant="ghost" href="#discovery">
               Explore members
             </Button>
+          </Reveal>
+
+          <Reveal className={styles.simLinks} delay={200}>
+            <Link to={routes.welcome} className={styles.simLink}>
+              Simulate onboarding →
+            </Link>
+            <Link to={routes.welcomeTour} className={styles.simLink}>
+              Simulate welcome →
+            </Link>
           </Reveal>
 
           <Reveal as="p" className={styles.note} delay={220}>

@@ -1,4 +1,4 @@
-import type { CSSProperties, HTMLAttributes } from 'react'
+import { useState, type CSSProperties, type HTMLAttributes } from 'react'
 import styles from './Avatar.module.css'
 
 export type AvatarTint = 'default' | 'coral' | 'jade' | 'plum' | 'auth'
@@ -23,6 +23,7 @@ export function Avatar({
   className,
   ...rest
 }: AvatarProps) {
+  const [imgFailed, setImgFailed] = useState(false)
   const circleStyle: CSSProperties = {
     width: size,
     height: size,
@@ -32,7 +33,11 @@ export function Avatar({
   return (
     <div className={[styles.wrap, className].filter(Boolean).join(' ')} {...rest}>
       <div className={[styles.avatar, styles[tint]].join(' ')} style={circleStyle}>
-        {src ? <img src={src} alt={alt ?? initials} /> : initials}
+        {src && !imgFailed ? (
+          <img src={src} alt={alt ?? initials} onError={() => setImgFailed(true)} />
+        ) : (
+          initials
+        )}
       </div>
       {verified && (
         <span className={styles.verifiedBadge} title="Verified member">

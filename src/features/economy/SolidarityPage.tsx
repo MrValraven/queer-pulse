@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { HOW } from './solidarity.data'
 import { SolidarityDirectory } from './SolidarityDirectory'
@@ -42,20 +42,14 @@ export function SolidarityPage() {
 
       <SolidarityDirectory />
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Care is a <em>collective act.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            QueerPulse connects the community to professionals who believe in access
-            as much as you do.
-          </p>
-          <Button to={routes.invite} variant="primary" size="lg">
-            Join the network
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Care is a <em>collective act.</em></>}
+        sub="QueerPulse connects the community to professionals who believe in access as much as you do."
+      >
+        <Button to={routes.invite} variant="primary" size="lg">
+          Join the network
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

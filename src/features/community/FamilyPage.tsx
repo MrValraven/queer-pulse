@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { FORUM, INVITE, LEGAL, MENTORSHIP, SITUATIONS, TABS, TALK_CARDS, type TabId } from './family.data'
 import { FamilyTabContent } from './FamilyTabContent'
 import styles from './FamilyPage.module.css'
@@ -146,19 +146,14 @@ export function FamilyPage() {
         </div>
       </section>
 
-      <section className={styles.outro}>
-        <div className="wrap">
-          <h2>
-            Your family is <em>real.</em>
-          </h2>
-          <p className={styles.outroSub}>
-            Whatever route you take, whatever shape it takes. The community is here.
-          </p>
-          <Button to={INVITE} variant="primary" size="lg">
-            Join QueerPulse
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Your family is <em>real.</em></>}
+        sub="Whatever route you take, whatever shape it takes. The community is here."
+      >
+        <Button to={INVITE} variant="primary" size="lg">
+          Join QueerPulse
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

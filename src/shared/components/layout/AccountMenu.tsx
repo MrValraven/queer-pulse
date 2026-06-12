@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Avatar } from '../ui'
+import { MEMBERS, memberName } from '../../../features/members/data/members'
 import styles from './AccountMenu.module.css'
 
 const ITEMS = [
@@ -9,7 +10,7 @@ const ITEMS = [
 ]
 
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
-export function AccountMenu({ name = 'Sofia Andrade', initials = 'SA' }: { name?: string; initials?: string }) {
+export function AccountMenu({ name = memberName('sofia'), initials = MEMBERS.sofia.initials }: { name?: string; initials?: string }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 

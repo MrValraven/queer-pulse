@@ -1,0 +1,59 @@
+.hero {
+  padding: 140px 0 56px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+}
+.plum {
+  background: var(--plum);
+  color: var(--cream);
+  border-bottom: none;
+  position: relative;
+  overflow: hidden;
+}
+.plum::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  pointer-events: none;
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  position: relative;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 76px);
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  max-width: 18ch;
+  position: relative;
+}
+.plum .title {
+  color: var(--cream);
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  font-size: 17px;
+  color: var(--ink-60);
+  max-width: 58ch;
+  margin-top: 20px;
+  line-height: 1.65;
+  position: relative;
+}
+.plum .sub {
+  color: rgba(247, 243, 238, 0.68);
+}

@@ -1,4 +1,5 @@
 import { routes } from '../../app/routeMap'
+import { memberName } from './data/members'
 export type ResultType = 'member' | 'gathering' | 'community' | 'board'
 
 export interface SearchItem {
@@ -10,15 +11,15 @@ export interface SearchItem {
 }
 
 export const SEARCH_DATA: SearchItem[] = [
-  { t: 'member', name: 'Inês Tavares', sub: 'Graphic Designer · Príncipe Real', href: routes.profile, kw: 'design branding type editorial' },
-  { t: 'member', name: 'Rui Marçal', sub: 'Software Engineer · Marvila', href: routes.profile, kw: 'tech backend rust engineering' },
-  { t: 'member', name: 'Sofia Andrade', sub: 'Documentary Filmmaker · Alfama', href: routes.profile, kw: 'film directing editing documentary' },
-  { t: 'member', name: 'Tomás Beto', sub: 'Chef · Supper Club Host · Mouraria', href: routes.profile, kw: 'food supper club fermentation chef' },
-  { t: 'member', name: 'Mariana Loução', sub: 'Clinical Psychologist · Estrela', href: routes.profile, kw: 'care therapy lgbtq psychologist' },
-  { t: 'member', name: 'André Quintela', sub: 'Portrait Photographer · Cais do Sodré', href: routes.profile, kw: 'photography analog portrait darkroom' },
-  { t: 'member', name: 'Carla Nogueira', sub: 'Product Manager · Arroios', href: routes.profile, kw: 'tech product fintech strategy' },
-  { t: 'member', name: 'Beatriz Pinto', sub: 'Ceramicist · Graça', href: routes.profile, kw: 'craft ceramics studio glazing' },
-  { t: 'member', name: 'Diogo Vasques', sub: 'Music Producer · Bairro Alto', href: routes.profile, kw: 'music electronic dj producing' },
+  { t: 'member', name: memberName('ines'), sub: 'Graphic Designer · Príncipe Real', href: routes.profile, kw: 'design branding type editorial' },
+  { t: 'member', name: memberName('rui'), sub: 'Software Engineer · Marvila', href: routes.profile, kw: 'tech backend rust engineering' },
+  { t: 'member', name: memberName('sofia'), sub: 'Documentary Filmmaker · Alfama', href: routes.profile, kw: 'film directing editing documentary' },
+  { t: 'member', name: memberName('tomas'), sub: 'Chef · Supper Club Host · Mouraria', href: routes.profile, kw: 'food supper club fermentation chef' },
+  { t: 'member', name: memberName('mariana'), sub: 'Clinical Psychologist · Estrela', href: routes.profile, kw: 'care therapy lgbtq psychologist' },
+  { t: 'member', name: memberName('andre'), sub: 'Portrait Photographer · Cais do Sodré', href: routes.profile, kw: 'photography analog portrait darkroom' },
+  { t: 'member', name: memberName('carla'), sub: 'Product Manager · Arroios', href: routes.profile, kw: 'tech product fintech strategy' },
+  { t: 'member', name: memberName('beatriz'), sub: 'Ceramicist · Graça', href: routes.profile, kw: 'craft ceramics studio glazing' },
+  { t: 'member', name: memberName('diogo'), sub: 'Music Producer · Bairro Alto', href: routes.profile, kw: 'music electronic dj producing' },
   { t: 'gathering', name: 'Queer Supper Club №12', sub: 'Mouraria · 6 Jun — 8 seats left', href: routes.gathering, kw: 'food social supper dinner' },
   { t: 'gathering', name: 'Portfolio Night: Designers & Photographers', sub: 'Príncipe Real · 14 Jun — 32 going', href: routes.gathering, kw: 'design photography portfolio mixer' },
   { t: 'gathering', name: "Inside Beatriz's Ceramics Studio", sub: 'Graça · 21 Jun — 3 spots left', href: routes.gathering, kw: 'craft ceramics studio visit' },
@@ -30,12 +31,12 @@ export const SEARCH_DATA: SearchItem[] = [
   { t: 'community', name: 'Queer Hikers Lisboa', sub: 'Sports · 156 members · Weekly', href: routes.communities, kw: 'hiking outdoors sintra nature' },
   { t: 'community', name: 'Queer Founders Lisboa', sub: 'Professional · 72 members · Monthly', href: routes.communities, kw: 'founders professional startup' },
   { t: 'community', name: 'Queer Tech Lisbon', sub: 'Professional · 134 members · Monthly', href: routes.communities, kw: 'tech professional career talks' },
-  { t: 'board', name: 'Free portrait sessions for trans & nonbinary members', sub: 'Offering · André Quintela · 2 days ago', href: routes.offer, kw: 'portrait free trans nonbinary' },
-  { t: 'board', name: 'A collaborator for a queer zine launching in September', sub: 'Looking for · Inês Tavares · 3 days ago', href: routes.offer, kw: 'zine collab writing illustration design' },
-  { t: 'board', name: 'Monthly mentoring for junior engineers', sub: 'Offering · Rui Marçal · 4 days ago', href: routes.offer, kw: 'mentoring tech engineering backend' },
-  { t: 'board', name: 'A sublet in Arroios, June through August', sub: 'Looking for · Carla Nogueira · 1 week ago', href: routes.offer, kw: 'housing sublet arroios rent' },
-  { t: 'board', name: 'Two desks to share in a bright Graça studio', sub: 'Offering · Beatriz Pinto · 1 week ago', href: routes.offer, kw: 'desk studio workspace graça' },
-  { t: 'board', name: 'A composer for a short documentary, paid', sub: 'Looking for · Sofia Andrade · 2 weeks ago', href: routes.offer, kw: 'music composer documentary film paid' },
+  { t: 'board', name: 'Free portrait sessions for trans & nonbinary members', sub: `Offering · ${memberName('andre')} · 2 days ago`, href: routes.offer, kw: 'portrait free trans nonbinary' },
+  { t: 'board', name: 'A collaborator for a queer zine launching in September', sub: `Looking for · ${memberName('ines')} · 3 days ago`, href: routes.offer, kw: 'zine collab writing illustration design' },
+  { t: 'board', name: 'Monthly mentoring for junior engineers', sub: `Offering · ${memberName('rui')} · 4 days ago`, href: routes.offer, kw: 'mentoring tech engineering backend' },
+  { t: 'board', name: 'A sublet in Arroios, June through August', sub: `Looking for · ${memberName('carla')} · 1 week ago`, href: routes.offer, kw: 'housing sublet arroios rent' },
+  { t: 'board', name: 'Two desks to share in a bright Graça studio', sub: `Offering · ${memberName('beatriz')} · 1 week ago`, href: routes.offer, kw: 'desk studio workspace graça' },
+  { t: 'board', name: 'A composer for a short documentary, paid', sub: `Looking for · ${memberName('sofia')} · 2 weeks ago`, href: routes.offer, kw: 'music composer documentary film paid' },
 ]
 
 export const TYPE_BG: Record<ResultType, string> = {

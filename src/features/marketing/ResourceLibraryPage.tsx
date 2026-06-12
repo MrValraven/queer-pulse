@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { PageHero, PageShell } from '../../shared/components/layout'
+import { Button, Outro } from '../../shared/components/ui'
 import { linkToPath, routes } from '../../app/routeMap'
-import m from './marketing.module.css'
 import s from './ResourceLibraryPage.module.css'
 
 interface Resource {
@@ -73,29 +72,26 @@ export function ResourceLibraryPage() {
 
   return (
     <PageShell>
-      <header className={m.hero}>
-        <div className="wrap">
-          <div className={m.eyebrow}>Resource Library</div>
-          <h1 className={m.heroTitle}>
-            Things that <em>actually help.</em>
-          </h1>
-          <p className={m.heroSub}>Community-maintained guides, organisations, contacts, and QueerPulse tools — in one searchable place.</p>
-          <div className={s.stats}>
-            <div className={s.stat}>
-              <b>{RESOURCES.length}</b>
-              <span>resources</span>
-            </div>
-            <div className={s.stat}>
-              <b>7</b>
-              <span>categories</span>
-            </div>
-            <div className={s.stat}>
-              <b>Community</b>
-              <span>maintained</span>
-            </div>
+      <PageHero
+        eyebrow="Resource Library"
+        title={<>Things that <em>actually help.</em></>}
+        sub="Community-maintained guides, organisations, contacts, and QueerPulse tools — in one searchable place."
+      >
+        <div className={s.stats}>
+          <div className={s.stat}>
+            <b>{RESOURCES.length}</b>
+            <span>resources</span>
+          </div>
+          <div className={s.stat}>
+            <b>7</b>
+            <span>categories</span>
+          </div>
+          <div className={s.stat}>
+            <b>Community</b>
+            <span>maintained</span>
           </div>
         </div>
-      </header>
+      </PageHero>
 
       <div className={s.bar}>
         <div className="wrap">
@@ -158,17 +154,14 @@ export function ResourceLibraryPage() {
         </div>
       </section>
 
-      <section className={m.outro}>
-        <div className="wrap">
-          <h2>
-            Know something <em>missing?</em>
-          </h2>
-          <p>Every resource here was added by a community member. If something helped you and isn't listed, tell us.</p>
-          <Button size="lg" href="mailto:hello@queerpulse.pt?subject=Resource suggestion">
-            Suggest a resource
-          </Button>
-        </div>
-      </section>
+      <Outro
+        title={<>Know something <em>missing?</em></>}
+        sub="Every resource here was added by a community member. If something helped you and isn't listed, tell us."
+      >
+        <Button size="lg" href="mailto:hello@queerpulse.pt?subject=Resource suggestion">
+          Suggest a resource
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

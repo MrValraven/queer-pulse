@@ -1,4 +1,5 @@
 import type { AvatarTint } from '../../shared/components/ui/Avatar'
+import { MEMBERS, memberName } from '../members/data/members'
 
 export type Tint = 'coral' | 'jade' | 'plum'
 
@@ -42,7 +43,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     title: 'Sunny one-bed in Príncipe Real — July & August', hood: 'Príncipe Real', beds: '1 bed', avail: '1 Jul',
     desc: 'Beautiful first-floor flat with a view of the garden square. Fully furnished, excellent light. Available while I travel for two months.',
     price: '€1,100', period: 'month',
-    poster: { initials: 'IT', name: 'Inês T.', fullName: 'Inês Tavares', tint: 'coral', memberSince: 'Member since 2023', responseTime: 'within a few hours', bio: 'Designer in Príncipe Real, runs Atelier Pulso. Subletting while away on a residency.' },
+    poster: { initials: MEMBERS.ines.initials, name: 'Inês T.', fullName: memberName('ines'), tint: 'coral', memberSince: 'Member since 2023', responseTime: 'within a few hours', bio: 'Designer in Príncipe Real, runs Atelier Pulso. Subletting while away on a residency.' },
     gallery: ['Living room · garden view', 'Bedroom', 'Kitchen', 'The square below'],
     longDesc: [
       'A bright first-floor one-bed right on the garden square, in one of the calmest corners of Príncipe Real. South-facing, so the living room gets sun most of the day, and the bedroom looks onto the courtyard at the back — quiet at night.',
@@ -67,7 +68,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     title: 'Room in shared flat — Arroios, long-term', hood: 'Arroios', beds: '1 room', avail: 'Now',
     desc: 'Quiet three-bed flat shared with two queer women. Big room, own bathroom, good wifi. Looking for someone who keeps to themselves but is up for the occasional dinner.',
     price: '€750', period: 'month',
-    poster: { initials: 'CN', name: 'Carla N.', fullName: 'Carla Nogueira', tint: 'coral', memberSince: 'Member since 2022', responseTime: 'within a day', bio: 'Product manager, lives in Arroios with one flatmate. Looking for a third for the long term.' },
+    poster: { initials: MEMBERS.carla.initials, name: 'Carla N.', fullName: memberName('carla'), tint: 'coral', memberSince: 'Member since 2022', responseTime: 'within a day', bio: 'Product manager, lives in Arroios with one flatmate. Looking for a third for the long term.' },
     gallery: ['The room', 'Ensuite bathroom', 'Shared kitchen', 'Arroios street'],
     longDesc: [
       "The big room in our quiet three-bed in Arroios is opening up — our flatmate is moving in with their partner. It has its own bathroom, a double bed, a desk, and good morning light. We're two queer women in our early thirties, both work normal hours.",
@@ -92,7 +93,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     title: 'Studio in Graça — 2 weeks minimum', hood: 'Graça', beds: 'Studio', avail: '15 Jun',
     desc: 'Small but well-designed studio in a converted building in Graça. Perfect for someone newly arrived or between places. The building has a rooftop with views.',
     price: '€85', period: 'night',
-    poster: { initials: 'BP', name: 'Beatriz P.', fullName: 'Beatriz Pinto', tint: 'plum', memberSince: 'Member since 2021', responseTime: 'within a few hours', bio: 'Ceramicist in Graça. Keeps this studio as a soft-landing space for people arriving in the city.' },
+    poster: { initials: MEMBERS.beatriz.initials, name: 'Beatriz P.', fullName: memberName('beatriz'), tint: 'plum', memberSince: 'Member since 2021', responseTime: 'within a few hours', bio: 'Ceramicist in Graça. Keeps this studio as a soft-landing space for people arriving in the city.' },
     gallery: ['Studio interior', 'Kitchenette', 'Building rooftop', 'Graça lookout'],
     longDesc: [
       'A small but genuinely well-designed studio in a converted building near the Graça miradouro. Everything you need and nothing you don\'t: a proper bed, a compact kitchenette, a good shower, and a desk by the window.',
@@ -117,7 +118,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     title: 'Room in Marvila warehouse flat — creative people', hood: 'Marvila', beds: '1 room', avail: '1 Jul',
     desc: 'Large warehouse converted to four bedrooms. Three of us currently live here — a musician, an engineer, and a photographer. Looking for a fourth.',
     price: '€800', period: 'month',
-    poster: { initials: 'DV', name: 'Diogo V.', fullName: 'Diogo Vasques', tint: 'jade', memberSince: 'Member since 2022', responseTime: 'within a day', bio: 'Music producer in a Marvila warehouse share. Runs Bairro Alto Studio. Looking for a fourth housemate.' },
+    poster: { initials: MEMBERS.diogo.initials, name: 'Diogo V.', fullName: memberName('diogo'), tint: 'jade', memberSince: 'Member since 2022', responseTime: 'within a day', bio: 'Music producer in a Marvila warehouse share. Runs Bairro Alto Studio. Looking for a fourth housemate.' },
     gallery: ['The room', 'Communal space', 'Warehouse kitchen', 'Marvila exterior'],
     longDesc: [
       "Our converted warehouse in Marvila has a room opening up. It's big — high ceilings, huge windows, room for a studio setup if you have one. The communal space is the heart of the place: a long table, a proper sound system, and a lot of plants.",
@@ -142,7 +143,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     title: 'Full flat in Cais do Sodré — 3 months', hood: 'Cais do Sodré', beds: '1 bed', avail: 'Aug',
     desc: 'My own flat while I go on residency. One bed, good light, close to everything. Priority to LGBTQ+ tenants. References exchanged.',
     price: '€1,350', period: 'month',
-    poster: { initials: 'SA', name: 'Sofia A.', fullName: 'Sofia Andrade', tint: 'jade', memberSince: 'Member since 2021', responseTime: 'within a day', bio: 'Documentary filmmaker. Subletting her own flat for three months during a residency abroad.' },
+    poster: { initials: MEMBERS.sofia.initials, name: 'Sofia A.', fullName: memberName('sofia'), tint: 'jade', memberSince: 'Member since 2021', responseTime: 'within a day', bio: 'Documentary filmmaker. Subletting her own flat for three months during a residency abroad.' },
     gallery: ['Living room', 'Bedroom', 'Kitchen', 'Cais do Sodré at night'],
     longDesc: [
       "My one-bed in Cais do Sodré is free for three months while I'm away on a residency. It's a real home, not a let — full of books, good light, a proper kitchen, and everything where it should be. Central enough to walk most places, quiet enough to sleep.",
@@ -167,7 +168,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     title: 'Two-bedroom in Mouraria — June & July', hood: 'Mouraria', beds: '2 beds', avail: '1 Jun',
     desc: 'Traditional building, recently renovated. Two bedrooms, could work for a couple or two friends. Very central, heart of Mouraria.',
     price: '€950', period: 'month',
-    poster: { initials: 'TB', name: 'Tomás B.', fullName: 'Tomás Beto', tint: 'coral', memberSince: 'Member since 2022', responseTime: 'within a few hours', bio: 'Chef and supper-club host in Mouraria. Subletting the family flat for the summer.' },
+    poster: { initials: MEMBERS.tomas.initials, name: 'Tomás B.', fullName: memberName('tomas'), tint: 'coral', memberSince: 'Member since 2022', responseTime: 'within a few hours', bio: 'Chef and supper-club host in Mouraria. Subletting the family flat for the summer.' },
     gallery: ['Living area', 'Main bedroom', 'Second bedroom', 'Mouraria alley'],
     longDesc: [
       'A two-bedroom in a traditional Mouraria building, recently renovated but with the soul kept intact — tiled hallway, tall windows, a tiny balcony over the alley. Two real bedrooms, so it works for a couple or two friends sharing.',

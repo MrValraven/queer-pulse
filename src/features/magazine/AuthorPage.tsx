@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button, ImageSlot } from '../../shared/components/ui'
+import { memberName } from '../members/data/members'
 import { useToast } from '../../shared/components/feedback/useToast'
 import styles from './AuthorPage.module.css'
 
@@ -12,7 +13,7 @@ const ARTICLES = [
   { kicker: 'Reported essay', titleHtml: 'The visa queue is <em>a kind of closet.</em>', dek: 'Three queer migrants on what it means to wait for a residency permit while not being out to your case officer.', meta: 'Issue 05 · Dec 2025' },
   { kicker: 'Opinion', titleHtml: 'Stop calling it "access." <em>Call it care.</em>', dek: 'A small change in language that changes how clinics get funded — and who gets seen.', meta: 'Issue 04 · Oct 2025' },
   { kicker: 'Reporting', titleHtml: 'Inside the back room of <em>Café Beirão.</em>', dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure.", meta: 'Issue 03 · Aug 2025' },
-  { kicker: 'Interview · with Sofia Andrade', titleHtml: 'Mariza Câmara, <em>district health director.</em>', dek: "An hour-long conversation about queer health policy in Lisbon's Câmara Municipal.", meta: 'Issue 02 · Jun 2025' },
+  { kicker: `Interview · with ${memberName('sofia')}`, titleHtml: 'Mariza Câmara, <em>district health director.</em>', dek: "An hour-long conversation about queer health policy in Lisbon's Câmara Municipal.", meta: 'Issue 02 · Jun 2025' },
 ]
 
 const READING = [

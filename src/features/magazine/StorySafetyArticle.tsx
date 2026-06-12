@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { routes } from '../../app/routeMap'
 import styles from './StorySafetyPage.module.css'
+import { memberName } from '../members/data/members'
 
 export function StorySafetyArticle() {
   return (
@@ -161,7 +162,7 @@ export function StorySafetyArticle() {
               <div className={styles.mcTitle}>
                 How a Príncipe Real studio became a quiet home for queer designers
               </div>
-              <div className={styles.mcBy}>Inês Tavares · 6 min read</div>
+              <div className={styles.mcBy}>{memberName('ines')} · 6 min read</div>
             </Link>
             <Link to={routes.storyTomas} className={styles.moreCard}>
               <div className={styles.moreImg} />
@@ -169,7 +170,7 @@ export function StorySafetyArticle() {
               <div className={styles.mcTitle}>
                 Leaving the startup grind for a supper club in Mouraria
               </div>
-              <div className={styles.mcBy}>Sofia Andrade · 4 min read</div>
+              <div className={styles.mcBy}>{memberName('sofia')} · 4 min read</div>
             </Link>
           </div>
         </div>

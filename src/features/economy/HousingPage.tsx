@@ -53,7 +53,7 @@ export function HousingPage() {
       <div className={styles.body}>
         <div className="wrap">
           <div className={styles.top}>
-            <div className={styles.filters}>
+            <Reveal as="div" className={styles.filters}>
               {FILTERS.map((f) => (
                 <button
                   key={f.value}
@@ -63,12 +63,12 @@ export function HousingPage() {
                   {f.label}
                 </button>
               ))}
-            </div>
-            <button className={styles.listBtn} onClick={() => showToast('Listing submitted', 'info')}>
+            </Reveal>
+            <Reveal as="button" className={styles.listBtn} delay={60} onClick={() => showToast('Listing submitted', 'info')}>
               + List your space
-            </button>
+            </Reveal>
           </div>
-          <div className={styles.grid}>
+          <Reveal as="div" className={styles.grid}>
             {visible.map((listing) => (
               <Link key={listing.title} to={`/housing/${listing.slug}`} className={styles.card}>
                 <ImageSlot tint={listing.tint} height={150} radius={0} placeholder={`Photo · ${listing.hood}`} />
@@ -95,19 +95,21 @@ export function HousingPage() {
                 </div>
               </Link>
             ))}
-          </div>
+          </Reveal>
         </div>
       </div>
 
       <section className={styles.landlords}>
         <div className="wrap">
-          <SectionHead
-            title={<>Community-endorsed <em>landlords</em></>}
-            subtitle="Members have vouched for these landlords as queer-friendly, reliable, and fair. Not a guarantee — always do your own due diligence."
-          />
+          <Reveal>
+            <SectionHead
+              title={<>Community-endorsed <em>landlords</em></>}
+              subtitle="Members have vouched for these landlords as queer-friendly, reliable, and fair. Not a guarantee — always do your own due diligence."
+            />
+          </Reveal>
           <div className={styles.llGrid}>
-            {LANDLORDS.map((ll) => (
-              <Link key={ll.name} to={`/landlord/${ll.slug}`} className={styles.llCard}>
+            {LANDLORDS.map((ll, i) => (
+              <Reveal as={Link} key={ll.name} to={`/landlord/${ll.slug}`} className={styles.llCard} delay={i * 55}>
                 <span className={styles.llBadge}>🏅</span>
                 <div>
                   <div className={styles.llName}>{ll.name}</div>
@@ -115,7 +117,7 @@ export function HousingPage() {
                   <div className={styles.llStars}>{'★'.repeat(ll.stars)}{'☆'.repeat(5 - ll.stars)}</div>
                   <div className={styles.llNote}>{ll.note}</div>
                 </div>
-              </Link>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -123,14 +125,16 @@ export function HousingPage() {
 
       <section className={styles.tips}>
         <div className="wrap">
-          <SectionHead title={<>Housing in Lisbon — <em>what to know</em></>} />
+          <Reveal>
+            <SectionHead title={<>Housing in Lisbon — <em>what to know</em></>} />
+          </Reveal>
           <div className={styles.tipsGrid}>
-            {TIPS.map((tip) => (
-              <div key={tip.num} className={styles.tipCard}>
+            {TIPS.map((tip, i) => (
+              <Reveal as="div" key={tip.num} className={styles.tipCard} delay={i * 55}>
                 <div className={styles.tipNum}>{tip.num}</div>
                 <div className={styles.tipTitle}>{tip.title}</div>
                 <div className={styles.tipText}>{tip.text}</div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>

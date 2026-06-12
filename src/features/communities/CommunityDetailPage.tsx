@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { communities } from '../homepage/data/communities'
+import { memberProfiles } from '../members/data/memberProfiles'
 import { JoinModal } from './JoinModal'
 import { getCommunityDetail, membersFor, type Thread as ThreadData, type Tint } from './communityDetails'
 import { AboutTab, ForumTab, MembersTab } from './CommunityTabs'
@@ -73,11 +74,31 @@ export function CommunityDetailPage() {
             </Button>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <div className={styles.avStrip}>
-                {heroAvatars.map((m, i) => (
-                  <div key={i} className={styles.sav} style={HERO_AV[m.tint]}>
-                    {m.initials}
-                  </div>
-                ))}
+                {heroAvatars.map((m, i) => {
+                  const photo = m.slug ? memberProfiles[m.slug]?.photo : undefined
+                  const inner = (
+                    <>
+                      <span className={styles.heroAvTip}>{m.name}</span>
+                      <span className={styles.sav} style={HERO_AV[m.tint]}>
+                        {photo ? <img src={photo} alt={m.name} /> : m.initials}
+                      </span>
+                    </>
+                  )
+                  return m.slug ? (
+                    <Link
+                      key={i}
+                      to={`/profile/${m.slug}`}
+                      className={styles.heroAv}
+                      style={{ zIndex: heroAvatars.length - i }}
+                    >
+                      {inner}
+                    </Link>
+                  ) : (
+                    <span key={i} className={styles.heroAv} style={{ zIndex: heroAvatars.length - i }}>
+                      {inner}
+                    </span>
+                  )
+                })}
               </div>
               {hasCount && <span className={styles.stripNote}>and {memberNum - 5} more</span>}
             </div>
