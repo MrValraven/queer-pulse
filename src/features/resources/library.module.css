@@ -1,0 +1,106 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  margin: 0 auto 34px;
+  max-width: 720px;
+}
+.search {
+  flex: 1 1 280px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 999px;
+  padding: 13px 20px;
+}
+.search svg {
+  width: 18px;
+  height: 18px;
+  color: var(--plum);
+  opacity: 0.55;
+  flex: none;
+}
+.search input {
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  width: 100%;
+  outline: none;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  justify-content: center;
+  margin-bottom: 38px;
+}
+.chip {
+  appearance: none;
+  border: 1px solid rgba(45, 27, 61, 0.16);
+  background: transparent;
+  color: var(--plum);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--ease), color var(--ease), border-color var(--ease);
+}
+.chip:hover {
+  border-color: var(--plum);
+}
+.chipOn {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: var(--cream);
+}
+.popular {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  justify-content: center;
+  align-items: baseline;
+  margin-top: 10px;
+}
+.popular span {
+  font-size: 13px;
+  color: var(--plum);
+  opacity: 0.55;
+  font-weight: 600;
+}
+.popular button {
+  appearance: none;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.popular button:hover {
+  text-decoration: underline;
+}
+.empty {
+  text-align: center;
+  color: var(--plum);
+  opacity: 0.6;
+  font-size: 16px;
+  padding: 40px 0;
+}
+.resMeta {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--plum);
+  opacity: 0.5;
+  margin-top: 14px;
+}

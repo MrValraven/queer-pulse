@@ -1,0 +1,212 @@
+.hero {
+  background: var(--plum);
+  color: var(--cream);
+  padding: clamp(96px, 13vw, 168px) 0 clamp(56px, 7vw, 96px);
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.eyebrow::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(36px, 6vw, 70px);
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  margin: 20px 0 0;
+  max-width: 15ch;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.lead {
+  font-size: 18px;
+  line-height: 1.65;
+  color: rgba(247, 243, 238, 0.72);
+  max-width: 52ch;
+  margin: 22px 0 36px;
+}
+.card {
+  background: rgba(247, 243, 238, 0.06);
+  border: 1px solid rgba(247, 243, 238, 0.16);
+  border-radius: 18px;
+  padding: 28px;
+  max-width: 560px;
+}
+.toggle {
+  display: inline-flex;
+  background: rgba(20, 10, 30, 0.3);
+  border-radius: 999px;
+  padding: 4px;
+  margin-bottom: 22px;
+}
+.toggleBtn {
+  appearance: none;
+  border: none;
+  background: none;
+  color: rgba(247, 243, 238, 0.6);
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.toggleOn {
+  background: var(--cream);
+  color: var(--plum);
+}
+.amounts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+@media (min-width: 560px) {
+  .amounts {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.amount {
+  position: relative;
+  appearance: none;
+  background: rgba(247, 243, 238, 0.04);
+  border: 1.5px solid rgba(247, 243, 238, 0.18);
+  border-radius: 12px;
+  padding: 18px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color var(--ease), background var(--ease);
+}
+.amountOn {
+  border-color: var(--accent);
+  background: rgba(232, 119, 90, 0.14);
+}
+.amountVal {
+  font-family: var(--serif);
+  font-size: 26px;
+  color: var(--cream);
+  line-height: 1;
+}
+.amountNote {
+  font-size: 12px;
+  color: rgba(247, 243, 238, 0.6);
+  margin-top: 6px;
+}
+.ribbon {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: var(--cream);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.section {
+  padding: clamp(64px, 9vw, 112px) 0;
+  background: var(--cream);
+}
+.sectionPaper {
+  background: var(--paper);
+  border-block: 1px solid rgba(45, 27, 61, 0.09);
+}
+.h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--plum);
+}
+.h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.leadP {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--plum);
+  opacity: 0.78;
+  max-width: 56ch;
+  margin: 16px 0 40px;
+}
+.alloc {
+  display: grid;
+  gap: 14px;
+}
+.allocRow {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 12px;
+  padding: 20px 22px;
+}
+.allocPct {
+  font-family: var(--serif);
+  font-size: 30px;
+  color: var(--accent);
+  line-height: 1;
+  flex: none;
+  width: 84px;
+}
+.allocLabel {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--plum);
+}
+.allocBody {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--plum);
+  opacity: 0.74;
+  margin-top: 4px;
+}
+.trust {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.trustCard {
+  background: var(--cream);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 24px;
+}
+.trustIcon {
+  font-size: 24px;
+}
+.trustTitle {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--plum);
+  margin: 12px 0 7px;
+}
+.trustBody {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--plum);
+  opacity: 0.74;
+}

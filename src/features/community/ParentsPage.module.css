@@ -1,0 +1,200 @@
+.hero {
+  background: var(--plum);
+  color: var(--cream);
+  padding: clamp(96px, 13vw, 168px) 0 clamp(56px, 7vw, 88px);
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.eyebrow::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(36px, 6vw, 70px);
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  margin: 20px 0 0;
+  max-width: 16ch;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.lead {
+  font-size: 18px;
+  line-height: 1.65;
+  color: rgba(247, 243, 238, 0.7);
+  max-width: 54ch;
+  margin: 22px 0 36px;
+}
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+.statN {
+  font-family: var(--serif);
+  font-size: 40px;
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1;
+}
+.statL {
+  font-size: 13.5px;
+  color: rgba(247, 243, 238, 0.6);
+  margin-top: 6px;
+}
+.section {
+  padding: clamp(64px, 9vw, 112px) 0;
+  background: var(--cream);
+}
+.sectionPaper {
+  background: var(--paper);
+  border-block: 1px solid rgba(45, 27, 61, 0.09);
+}
+.h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--plum);
+}
+.h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.leadP {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--plum);
+  opacity: 0.78;
+  max-width: 56ch;
+  margin: 16px 0 40px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+  gap: 18px;
+}
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 26px 24px;
+}
+.cardIcon {
+  font-size: 26px;
+  line-height: 1;
+}
+.cardTitle {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--plum);
+  margin: 14px 0 8px;
+}
+.cardBody {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--plum);
+  opacity: 0.74;
+}
+.meetups {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+.meetup {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--cream);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+.date {
+  flex: none;
+  text-align: center;
+  width: 52px;
+}
+.dateDd {
+  font-family: var(--serif);
+  font-size: 26px;
+  color: var(--plum);
+  line-height: 1;
+}
+.dateMm {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  margin-top: 2px;
+}
+.meetupBody {
+  flex: 1;
+}
+.meetupTitle {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--plum);
+}
+.meetupMeta {
+  font-size: 13.5px;
+  color: var(--plum);
+  opacity: 0.65;
+  margin-top: 3px;
+}
+.meetupTag {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--jade);
+  background: rgba(74, 124, 89, 0.1);
+  padding: 5px 11px;
+  border-radius: 999px;
+}
+.resList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+.resLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.12);
+  border-radius: 999px;
+  padding: 11px 20px;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--plum);
+  text-decoration: none;
+  transition: border-color var(--ease);
+}
+.resLink:hover {
+  border-color: var(--plum);
+}
+.resLink::after {
+  content: '→';
+  color: var(--accent);
+}

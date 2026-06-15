@@ -37,7 +37,8 @@ export const NAV_MENUS: MegaMenu[] = [
       {
         head: "Gather",
         links: [
-          { label: "Gatherings", href: routes.gathering },
+          { label: "Gatherings", href: `${routes.homepage}#gather` },
+          { label: "Events", href: routes.events },
           { label: "Host a gathering", href: routes.host },
           { label: "Reading Groups", href: routes.readingGroups },
           { label: "Family", href: routes.family },

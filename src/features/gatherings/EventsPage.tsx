@@ -1,0 +1,116 @@
+import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { PageShell } from '../../shared/components/layout'
+import { Button, Eyebrow, Reveal, SectionHead } from '../../shared/components/ui'
+import { calendarEvents, type CalendarEvent } from './data'
+import { MONTHS, MSHORT } from './calendar.data'
+import { EVENT_CATEGORIES, eventsHeader } from './eventsPage.data'
+import styles from './EventsPage.module.css'
+
+function EventCard({ event }: { event: CalendarEvent }) {
+  return (
+    <Link to={event.to} className={styles.card}>
+      <div className={styles.date}>
+        <span className={styles.day}>{event.date.getDate()}</span>
+        <span className={styles.month} style={{ color: event.orgColor }}>
+          {MSHORT[event.date.getMonth()]}
+        </span>
+      </div>
+      <div className={styles.cardBody}>
+        <div className={styles.org} style={{ color: event.orgColor }}>
+          {event.org}
+        </div>
+        <h3 className={styles.cardTitle}>{event.title}</h3>
+        <div className={styles.meta}>
+          <span>{event.hood}</span>
+          <span className={styles.dot} aria-hidden />
+          <span>{event.time}</span>
+        </div>
+      </div>
+      <span className={styles.cta} aria-hidden>
+        →
+      </span>
+    </Link>
+  )
+}
+
+export function EventsPage() {
+  const [active, setActive] = useState('all')
+
+  const filtered = useMemo(() => {
+    const cat = EVENT_CATEGORIES.find((c) => c.key === active)
+    if (!cat?.colors) return calendarEvents
+    return calendarEvents.filter((e) => cat.colors!.includes(e.orgColor))
+  }, [active])
+
+  const months = useMemo(() => {
+    const map = new Map<string, CalendarEvent[]>()
+    for (const event of filtered) {
+      const key = `${MONTHS[event.date.getMonth()]} ${event.date.getFullYear()}`
+      const list = map.get(key) ?? []
+      list.push(event)
+      map.set(key, list)
+    }
+    return [...map.entries()]
+  }, [filtered])
+
+  return (
+    <PageShell>
+      <header className={styles.hero}>
+        <div className="wrap">
+          <Eyebrow>{eventsHeader.eyebrow}</Eyebrow>
+          <SectionHead
+            title={
+              <>
+                Everything happening <em>this season</em>
+              </>
+            }
+            subtitle={eventsHeader.subtitle}
+            action={
+              <Button variant="ghost" to="/calendar">
+                View as calendar
+              </Button>
+            }
+          />
+        </div>
+      </header>
+
+      <main className={styles.body}>
+        <div className="wrap">
+          <div className={styles.filters} role="tablist" aria-label="Filter events">
+            {EVENT_CATEGORIES.map((cat) => (
+              <button
+                key={cat.key}
+                type="button"
+                role="tab"
+                aria-selected={active === cat.key}
+                className={`${styles.chip} ${active === cat.key ? styles.chipActive : ''}`}
+                onClick={() => setActive(cat.key)}
+              >
+                <span className={styles.chipDot} style={{ background: cat.dot }} aria-hidden />
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {months.map(([label, events]) => (
+            <section key={label} className={styles.group}>
+              <h2 className={styles.groupTitle}>{label}</h2>
+              <div className={styles.list}>
+                {events.map((event, index) => (
+                  <Reveal key={`${event.title}-${event.date.toISOString()}`} delay={index * 40}>
+                    <EventCard event={event} />
+                  </Reveal>
+                ))}
+              </div>
+            </section>
+          ))}
+
+          {filtered.length === 0 && (
+            <p className={styles.empty}>No events in this category yet.</p>
+          )}
+        </div>
+      </main>
+    </PageShell>
+  )
+}

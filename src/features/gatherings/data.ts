@@ -87,6 +87,14 @@ const JADE = 'var(--jade)'
 const COMMUNITY = '#7A52B8'
 const PARTNER = 'rgba(45,27,61,.7)'
 
+/** Org category colours shared between the calendar and the events list. */
+export const orgColors = {
+  queerpulse: ACCENT,
+  ilga: JADE,
+  community: COMMUNITY,
+  partner: PARTNER,
+}
+
 export const calendarEvents: CalendarEvent[] = [
   { date: new Date(2026, 5, 6), org: 'QueerPulse', orgColor: ACCENT, title: 'Queer Supper Club №12', hood: 'Mouraria', time: '7:30pm', to: '/gathering#supper-club-12' },
   { date: new Date(2026, 5, 10), org: 'Community', orgColor: COMMUNITY, title: 'Trans & NB Hub — Monthly Meetup', hood: 'Arroios', time: '6:30pm', to: '/trans-hub' },

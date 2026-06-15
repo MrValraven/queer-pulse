@@ -73,12 +73,6 @@
   border-bottom-color: var(--plum);
 }
 
-.cover {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-bottom: 2px solid var(--plum);
-  min-height: 540px;
-}
 .csImage {
   background: var(--plum);
   position: relative;
@@ -150,6 +144,16 @@
 .csRead:hover {
   color: var(--accent-ink);
   gap: 10px;
+}
+.csTextInner {
+  max-width: 42ch;
+}
+
+.coverRebalanced {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  border-bottom: 2px solid var(--plum);
+  min-height: 540px;
 }
 
 .body {
@@ -475,12 +479,15 @@
   }
 }
 @media (max-width: 760px) {
-  .cover {
+  .coverRebalanced {
     grid-template-columns: 1fr;
   }
   .csText {
     border-left: none;
     border-top: 2px solid var(--plum);
+  }
+  .csTextInner {
+    max-width: none;
   }
   .featured {
     grid-template-columns: 1fr;

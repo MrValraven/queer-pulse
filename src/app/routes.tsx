@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { HomePage } from '../features/homepage/HomePage'
 import { MembersPage } from '../features/members/MembersPage'
 import { ProfilePage } from '../features/members/ProfilePage'
@@ -17,6 +17,7 @@ import { CommunityDetailPage } from '../features/communities/CommunityDetailPage
 import { CalendarPage } from '../features/gatherings/CalendarPage'
 import { GatheringPage } from '../features/gatherings/GatheringPage'
 import { EventPage } from '../features/gatherings/EventPage'
+import { EventsPage } from '../features/gatherings/EventsPage'
 import { RsvpPage } from '../features/gatherings/RsvpPage'
 import { GatheringRecapPage } from '../features/gatherings/GatheringRecapPage'
 import { HostPage } from '../features/gatherings/HostPage'
@@ -194,6 +195,19 @@ import { DraftsPage } from '../features/members/DraftsPage'
 import { QrScannerPage } from '../features/members/QrScannerPage'
 import { CookiesPage } from '../features/marketing/CookiesPage'
 import { PronounsGuidePage } from '../features/resources/PronounsGuidePage'
+import { LibraryPage } from '../features/resources/LibraryPage'
+import { ComingOutPage } from '../features/community/ComingOutPage'
+import { ParentsPage } from '../features/community/ParentsPage'
+import { GatheringsPage } from '../features/gatherings/GatheringsPage'
+import { CrisisChatPage } from '../features/safety/CrisisChatPage'
+import { VouchPage } from '../features/members/VouchPage'
+import { DonatePage } from '../features/marketing/DonatePage'
+import { SubmitStoryPage } from '../features/magazine/SubmitStoryPage'
+import { StudioCollectionPage } from '../features/studio/StudioCollectionPage'
+import { StudioSetPage } from '../features/studio/StudioSetPage'
+import { StudioSearchPage } from '../features/studio/StudioSearchPage'
+import { StudioLibraryPage } from '../features/studio/StudioLibraryPage'
+import { StudioCheckoutPage } from '../features/studio/StudioCheckoutPage'
 import { KNOWN_ROUTE_SLUGS } from './routeMap'
 
 /** Top-level slugs that now have real pages — excluded from the placeholder fallback. */
@@ -309,6 +323,11 @@ const BUILT_SLUGS = new Set([
   'press-kit',
   'transparency-report',
   'accessibility',
+  'library',
+  'coming-out',
+  'parents',
+  'gatherings',
+  'business-directory',
 ])
 
 /**
@@ -346,6 +365,7 @@ export function AppRoutes() {
 
       {/* Gatherings */}
       <Route path="/calendar" element={<CalendarPage />} />
+      <Route path="/events" element={<EventsPage />} />
       <Route path="/gathering" element={<GatheringPage />} />
       <Route path="/event" element={<EventPage />} />
       <Route path="/rsvp" element={<RsvpPage />} />
@@ -462,6 +482,11 @@ export function AppRoutes() {
       <Route path="/studio/payouts" element={<StudioPayoutsPage />} />
       <Route path="/studio/track" element={<StudioTrackPage />} />
       <Route path="/studio/live" element={<StudioLivePage />} />
+      <Route path="/studio/collection" element={<StudioCollectionPage />} />
+      <Route path="/studio/set" element={<StudioSetPage />} />
+      <Route path="/studio/search" element={<StudioSearchPage />} />
+      <Route path="/studio/library" element={<StudioLibraryPage />} />
+      <Route path="/studio/checkout" element={<StudioCheckoutPage />} />
       <Route path="/studio/sheet-store" element={<StudioSheetStorePage />} />
       <Route path="/studio/solidarity-fund" element={<StudioSolidarityFundPage />} />
       <Route path="/studio/calls" element={<StudioOpenCallsPage />} />
@@ -543,6 +568,20 @@ export function AppRoutes() {
       <Route path="/pending-review" element={<PendingReviewPage />} />
       <Route path="/verification-needed" element={<VerificationNeededPage />} />
       <Route path="/status" element={<StatusPage />} />
+
+      {/* Newly built community / resource / support pages */}
+      <Route path="/library" element={<LibraryPage />} />
+      <Route path="/coming-out" element={<ComingOutPage />} />
+      <Route path="/parents" element={<ParentsPage />} />
+      <Route path="/gatherings" element={<GatheringsPage />} />
+      <Route path="/crisis-chat" element={<CrisisChatPage />} />
+      <Route path="/vouch" element={<VouchPage />} />
+      <Route path="/donate" element={<DonatePage />} />
+      <Route path="/submit-story" element={<SubmitStoryPage />} />
+
+      {/* Legacy aliases → canonical pages */}
+      <Route path="/business-directory" element={<Navigate to="/directory" replace />} />
+      <Route path="/spaces-map" element={<Navigate to="/map" replace />} />
 
       {/* Known-but-unbuilt features → styled "coming soon" placeholder */}
       {KNOWN_ROUTE_SLUGS.filter((slug) => !BUILT_SLUGS.has(slug)).map((slug) => (
