@@ -53,7 +53,7 @@ function SessionCard({ session, onSignOut }: { session: Session; onSignOut: (id:
           {isTrusted && <span className={`${styles.badge} ${styles.badgeTrusted}`}>Trusted</span>}
         </div>
         <div className={`${styles.row} ${isSuspect ? styles.rowSuspect : ''}`}>
-          <span dangerouslySetInnerHTML={{ __html: session.loc.replace(/\b(Lisbon|Madrid|Atelier Pulso office, Largo do Carmo|home network|MEO mobile|unfamiliar network|home)\b/g, '<b>$1</b>') }} />
+          <span>{session.loc}</span>
           <span className={styles.sep}>·</span>
           <span>Signed in <b>{session.signedIn}</b></span>
         </div>

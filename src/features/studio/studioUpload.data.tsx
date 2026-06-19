@@ -22,8 +22,18 @@ export const UPLOAD_SPLITS = [
 export const UPLOAD_SIDE_INFO = [
   {
     eyebrow: 'What we do with your files',
-    title: 'Yours, <em>still</em>.',
-    body: 'You drop the masters; we transcode and stream. Your original WAV / FLAC stays your property — we hold a copy <em>only</em> for delivery. Takedown removes the listening copy in 14 days. Non-exclusive, always.',
+    title: (
+      <>
+        Yours, <em>still</em>.
+      </>
+    ),
+    body: (
+      <>
+        You drop the masters; we transcode and stream. Your original WAV / FLAC
+        stays your property — we hold a copy <em>only</em> for delivery. Takedown
+        removes the listening copy in 14 days. Non-exclusive, always.
+      </>
+    ),
     list: [
       { label: 'Source kept', value: 'your file, untouched', em: true },
       { label: 'Listener delivery', value: 'FLAC + AAC 256', em: false },
@@ -33,8 +43,18 @@ export const UPLOAD_SIDE_INFO = [
   },
   {
     eyebrow: 'Lyrics & translations',
-    title: 'Lyrics <em>required</em>, translations paid.',
-    body: 'Upload lyrics in any language. For a line-by-line translation, the solidarity fund pays a community translator <em>€40 per song</em>. They keep their byline; you approve before publish.',
+    title: (
+      <>
+        Lyrics <em>required</em>, translations paid.
+      </>
+    ),
+    body: (
+      <>
+        Upload lyrics in any language. For a line-by-line translation, the
+        solidarity fund pays a community translator <em>€40 per song</em>. They
+        keep their byline; you approve before publish.
+      </>
+    ),
     list: [
       { label: 'Auto-transcribe', value: 'free · ~94%', em: true },
       { label: 'Community translation', value: '€40 → translator', em: false },

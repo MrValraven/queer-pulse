@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { AvatarTint } from '../../shared/components/ui/Avatar'
 import { routes } from '../../app/routeMap'
 import { memberName } from '../members/data/members'
@@ -17,7 +18,7 @@ export interface Notification {
   /** Either an avatar (initials + tint) or an emoji icon with a background. */
   avatar?: { initials: string; tint: AvatarTint }
   icon?: { emoji: string; bg: string }
-  text: string
+  text: ReactNode
   meta: string
   time: string
   actions?: NotifAction[]
@@ -37,7 +38,12 @@ export const notifications: Notification[] = [
     type: 'messages',
     unread: true,
     avatar: { initials: 'IT', tint: 'jade' },
-    text: `<strong>${memberName('ines')}</strong> replied to your message about the Sunday table gathering.`,
+    text: (
+      <>
+        <strong>{memberName('ines')}</strong> replied to your message about the
+        Sunday table gathering.
+      </>
+    ),
     meta: 'Private message',
     time: '2 min ago',
     actions: [
@@ -50,7 +56,12 @@ export const notifications: Notification[] = [
     type: 'events',
     unread: true,
     icon: { emoji: '🎟️', bg: 'rgba(232,119,90,.1)' },
-    text: 'Your RSVP for <strong>Newcomer Welcome Dinner</strong> has been confirmed. The event is on Saturday June 14th at Casa do Alentejo.',
+    text: (
+      <>
+        Your RSVP for <strong>Newcomer Welcome Dinner</strong> has been
+        confirmed. The event is on Saturday June 14th at Casa do Alentejo.
+      </>
+    ),
     meta: 'Event · Gathering',
     time: '18 min ago',
     actions: [{ label: 'View event', variant: 'primary', href: routes.event }],
@@ -60,7 +71,12 @@ export const notifications: Notification[] = [
     type: 'community',
     unread: true,
     avatar: { initials: 'DV', tint: 'plum' },
-    text: `<strong>${memberName('diogo')}</strong> invited you to join <strong>Queer Classics</strong> reading group.`,
+    text: (
+      <>
+        <strong>{memberName('diogo')}</strong> invited you to join{' '}
+        <strong>Queer Classics</strong> reading group.
+      </>
+    ),
     meta: 'Reading group · Invitation',
     time: '1 hr ago',
     actions: [
@@ -73,7 +89,12 @@ export const notifications: Notification[] = [
     type: 'messages',
     unread: true,
     avatar: { initials: 'SA', tint: 'jade' },
-    text: `<strong>${memberName('sofia')}</strong> mentioned you in the Forum thread: "What are we reading in July?"`,
+    text: (
+      <>
+        <strong>{memberName('sofia')}</strong> mentioned you in the Forum thread:
+        "What are we reading in July?"
+      </>
+    ),
     meta: 'Forum · Mention',
     time: '3 hr ago',
     actions: [{ label: 'View thread', variant: 'primary', href: routes.forum }],
@@ -83,7 +104,12 @@ export const notifications: Notification[] = [
     type: 'platform',
     unread: true,
     icon: { emoji: '📖', bg: 'rgba(45,27,61,.07)' },
-    text: '<strong>QueerPulse Magazine Issue 18</strong> is now available. Cover story: The city changed. Did we?',
+    text: (
+      <>
+        <strong>QueerPulse Magazine Issue 18</strong> is now available. Cover
+        story: The city changed. Did we?
+      </>
+    ),
     meta: 'Magazine · June 2026',
     time: 'Yesterday',
     actions: [{ label: 'Read now', variant: 'primary', href: routes.magazine }],
@@ -93,7 +119,12 @@ export const notifications: Notification[] = [
     type: 'events',
     unread: true,
     icon: { emoji: '⏰', bg: 'rgba(74,140,111,.1)' },
-    text: 'Reminder: <strong>Theory Thursdays</strong> reading group meets tomorrow at 7pm in Mouraria. 1 spot still open.',
+    text: (
+      <>
+        Reminder: <strong>Theory Thursdays</strong> reading group meets tomorrow
+        at 7pm in Mouraria. 1 spot still open.
+      </>
+    ),
     meta: 'Reading group · Reminder',
     time: 'Yesterday',
     actions: [{ label: 'See details', variant: 'ghost', href: routes.readingGroups }],
@@ -103,7 +134,11 @@ export const notifications: Notification[] = [
     type: 'community',
     unread: true,
     avatar: { initials: 'MC', tint: 'coral' },
-    text: '<strong>Mariana Costa</strong> accepted your connection request.',
+    text: (
+      <>
+        <strong>Mariana Costa</strong> accepted your connection request.
+      </>
+    ),
     meta: 'Connection',
     time: '2 days ago',
   },
@@ -112,7 +147,12 @@ export const notifications: Notification[] = [
     type: 'platform',
     unread: false,
     icon: { emoji: '✨', bg: 'rgba(232,119,90,.09)' },
-    text: 'New platform feature: <strong>Barter Exchange</strong> now supports service bundles. You can offer multi-session packages.',
+    text: (
+      <>
+        New platform feature: <strong>Barter Exchange</strong> now supports
+        service bundles. You can offer multi-session packages.
+      </>
+    ),
     meta: 'Platform update',
     time: '3 days ago',
     actions: [{ label: 'See barter board', variant: 'ghost', href: routes.barter }],
@@ -122,7 +162,12 @@ export const notifications: Notification[] = [
     type: 'events',
     unread: false,
     icon: { emoji: '🎟️', bg: 'rgba(232,119,90,.1)' },
-    text: 'The <strong>Queer Cinema Night — Levante</strong> you attended has a follow-up discussion scheduled for June 20th.',
+    text: (
+      <>
+        The <strong>Queer Cinema Night — Levante</strong> you attended has a
+        follow-up discussion scheduled for June 20th.
+      </>
+    ),
     meta: 'Event · Follow-up',
     time: '4 days ago',
     actions: [{ label: 'View event', variant: 'ghost', href: routes.event }],
@@ -132,7 +177,12 @@ export const notifications: Notification[] = [
     type: 'messages',
     unread: false,
     avatar: { initials: 'RF', tint: 'jade' },
-    text: '<strong>Rui Fernandes</strong> sent you a message regarding the Archive Night on Friday.',
+    text: (
+      <>
+        <strong>Rui Fernandes</strong> sent you a message regarding the Archive
+        Night on Friday.
+      </>
+    ),
     meta: 'Private message',
     time: '5 days ago',
     actions: [{ label: 'Read message', variant: 'ghost', href: routes.messages }],
@@ -152,7 +202,12 @@ export const notifications: Notification[] = [
     type: 'platform',
     unread: false,
     icon: { emoji: '🏛️', bg: 'rgba(45,27,61,.07)' },
-    text: 'The <strong>Q2 2026 Community Health Report</strong> has been published. Moderation stats and finances are now live.',
+    text: (
+      <>
+        The <strong>Q2 2026 Community Health Report</strong> has been published.
+        Moderation stats and finances are now live.
+      </>
+    ),
     meta: 'Governance · Quarterly report',
     time: '1 week ago',
     actions: [{ label: 'Read report', variant: 'ghost', href: routes.governance }],

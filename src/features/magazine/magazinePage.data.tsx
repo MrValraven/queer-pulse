@@ -1,10 +1,11 @@
+import type { ReactNode } from "react";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { MEMBERS, memberName } from "../members/data/members";
 
 export interface Card {
   id: string;
   kicker: string;
-  titleHtml: string;
+  title: ReactNode;
   excerpt: string;
   author: string;
   meta: string;
@@ -40,7 +41,7 @@ export const FEATURES: Card[] = [
   {
     id: "mouraria-family",
     kicker: "Community",
-    titleHtml: "Mouraria's chosen family, ten years later",
+    title:"Mouraria's chosen family, ten years later",
     excerpt:
       "The original group is scattered. Some left Lisbon. Two died. The rest still meet on the same corner. A decade on, what holds a chosen family together?",
     author: memberName("ines"),
@@ -53,7 +54,7 @@ export const FEATURES: Card[] = [
   {
     id: "last-bar",
     kicker: "Nightlife",
-    titleHtml: "The last queer bar in Bairro Alto that isn't trying",
+    title:"The last queer bar in Bairro Alto that isn't trying",
     excerpt:
       "No Instagram. No theme nights. No cocktail menu. Just a room, a sound system, and forty years of the community walking through the same door.",
     author: memberName("diogo"),
@@ -67,7 +68,7 @@ export const FEATURES: Card[] = [
   {
     id: "housing-law",
     kicker: "Politics",
-    titleHtml: "What the new housing law actually means for us",
+    title:"What the new housing law actually means for us",
     excerpt:
       "The legislation passed in April. We spoke to three housing lawyers and four community members already living its consequences.",
     author: "Mariana Costa",
@@ -83,7 +84,13 @@ export const ESSAYS: Card[] = [
   {
     id: "i-arrived",
     kicker: "Essay of the month",
-    titleHtml: "I didn't come out.<br/><em>I arrived.</em>",
+    title: (
+      <>
+        I didn't come out.
+        <br />
+        <em>I arrived.</em>
+      </>
+    ),
     excerpt:
       "On becoming queer as arrival rather than revelation — and why the community gave me the language for the identity, not the other way around.",
     author: memberName("tomas"),
@@ -95,7 +102,11 @@ export const ESSAYS: Card[] = [
   {
     id: "visibility-politics",
     kicker: "Essay",
-    titleHtml: "On visibility, and <em>who it actually serves</em>",
+    title: (
+      <>
+        On visibility, and <em>who it actually serves</em>
+      </>
+    ),
     excerpt:
       "Visibility saves lives. The data says so. But whose visibility are we building infrastructure for — and is the billboard kind ever enough?",
     author: "Rui Fernandes",
@@ -107,7 +118,11 @@ export const ESSAYS: Card[] = [
   {
     id: "politics-of-staying",
     kicker: "Essay",
-    titleHtml: "The politics <em>of staying</em>",
+    title: (
+      <>
+        The politics <em>of staying</em>
+      </>
+    ),
     excerpt:
       "Everyone who left had a reasonable reason. But rebuilding the informal infrastructure of a queer life is specific, slow work — and the staying was the building.",
     author: "Catarina Melo",
@@ -122,7 +137,7 @@ export const INTERVIEWS: Card[] = [
   {
     id: "kiko-neves",
     kicker: "Music",
-    titleHtml: '"The audience at my worst gig taught me more than my best one"',
+    title:'"The audience at my worst gig taught me more than my best one"',
     excerpt:
       "Kiko Neves on improvisation, Marvila, and what it means to make queer jazz in a city that hasn't quite decided what it is yet.",
     author: memberName("sofia"),
@@ -134,7 +149,7 @@ export const INTERVIEWS: Card[] = [
   {
     id: "beatriz-pinto",
     kicker: "Art & Craft",
-    titleHtml:
+    title:
       "Beatriz Pinto: making things that will outlast the conversation",
     excerpt:
       "The ceramicist on slowness, the politics of functional objects, and why she hasn't installed a social media account.",
@@ -147,7 +162,7 @@ export const INTERVIEWS: Card[] = [
   {
     id: "ilga-director",
     kicker: "Activism",
-    titleHtml: "ILGA Portugal's new director on what the next decade requires",
+    title:"ILGA Portugal's new director on what the next decade requires",
     excerpt:
       "A conversation about what has changed, what hasn't, and why the movement's most important work is happening in places that aren't visible yet.",
     author: "Mariana Costa",
@@ -162,7 +177,11 @@ export const REVIEWS: Card[] = [
   {
     id: "review-argonauts",
     kicker: "Book",
-    titleHtml: "<em>The Argonauts</em> — Maggie Nelson",
+    title: (
+      <>
+        <em>The Argonauts</em> — Maggie Nelson
+      </>
+    ),
     excerpt:
       "Rereading Nelson in Lisbon in 2026: how the most cited book in queer theory still reads like a report from the inside.",
     author: "Ana Lima",
@@ -175,7 +194,11 @@ export const REVIEWS: Card[] = [
   {
     id: "review-levante",
     kicker: "Film",
-    titleHtml: "<em>Levante</em> dir. Lillah Halla",
+    title: (
+      <>
+        <em>Levante</em> dir. Lillah Halla
+      </>
+    ),
     excerpt:
       "A Brazilian debut about a swimmer, an institution, and the particular heroism of friendship. The best film shown in Lisbon this year.",
     author: memberName("diogo"),
@@ -188,7 +211,7 @@ export const REVIEWS: Card[] = [
   {
     id: "review-sereia",
     kicker: "Venue",
-    titleHtml: "Sereia, Intendente — a bar that wants to be boring",
+    title:"Sereia, Intendente — a bar that wants to be boring",
     excerpt:
       "Six weeks old, no theme nights, no Instagram. Sereia is attempting something rare in a new queer bar: to simply be somewhere you can drink slowly and talk.",
     author: memberName("sofia"),
@@ -204,7 +227,7 @@ export const COMMUNITY: Card[] = [
   {
     id: "sunday-table",
     kicker: "Gathering",
-    titleHtml: "The Sunday table at Esplanada do Intendente",
+    title:"The Sunday table at Esplanada do Intendente",
     excerpt:
       "Three years of eight to twenty-three people gathering every Sunday for an event that has no organiser, no invitation, and no agenda. A portrait.",
     author: memberName("ines"),
@@ -216,7 +239,7 @@ export const COMMUNITY: Card[] = [
   {
     id: "barter-board",
     kicker: "Economy",
-    titleHtml: "How the barter board actually works",
+    title:"How the barter board actually works",
     excerpt:
       "Legal advice for language lessons. Ceramics for photography. Therapy for dog-sitting. Eighteen months in, the barter board has become something nobody predicted.",
     author: "Mariana Costa",
@@ -228,7 +251,7 @@ export const COMMUNITY: Card[] = [
   {
     id: "archive-night",
     kicker: "Memory",
-    titleHtml: "The Archive Night: memory as infrastructure",
+    title:"The Archive Night: memory as infrastructure",
     excerpt:
       "On the last Friday of each month, a room in Mouraria fills with people talking about queer Lisbon history — the kind held in boxes under beds, not institutions.",
     author: "Rui Fernandes",

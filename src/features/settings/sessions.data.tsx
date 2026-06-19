@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 export type SessionVariant = 'current' | 'trusted' | 'suspect' | 'normal'
 export type DeviceType = 'desktop' | 'mobile'
 
@@ -6,7 +8,7 @@ export interface Session {
   device: string
   variant: SessionVariant
   deviceType: DeviceType
-  loc: string
+  loc: ReactNode
   signedIn: string
   lastActivity: string
   extra?: string
@@ -26,7 +28,11 @@ export const ACTIVE_SESSIONS: Session[] = [
     device: 'MacBook Pro · Safari 18',
     variant: 'current',
     deviceType: 'desktop',
-    loc: '🇵🇹 Lisbon, Portugal · home network · 192.168.•••',
+    loc: (
+      <>
+        🇵🇹 <b>Lisbon</b>, Portugal · <b>home network</b> · 192.168.•••
+      </>
+    ),
     signedIn: '4 hours ago',
     lastActivity: '2 min ago',
     extra: '2FA on this device',
@@ -36,7 +42,11 @@ export const ACTIVE_SESSIONS: Session[] = [
     device: 'iPhone 14 · QueerPulse app 2.4.1',
     variant: 'trusted',
     deviceType: 'mobile',
-    loc: '🇵🇹 Lisbon, Portugal · MEO mobile',
+    loc: (
+      <>
+        🇵🇹 <b>Lisbon</b>, Portugal · <b>MEO mobile</b>
+      </>
+    ),
     signedIn: '23 days ago',
     lastActivity: '40 min ago',
   },
@@ -45,7 +55,11 @@ export const ACTIVE_SESSIONS: Session[] = [
     device: 'Studio iMac · Chrome 138',
     variant: 'normal',
     deviceType: 'desktop',
-    loc: '🇵🇹 Atelier Pulso office, Largo do Carmo',
+    loc: (
+      <>
+        🇵🇹 <b>Atelier Pulso office, Largo do Carmo</b>
+      </>
+    ),
     signedIn: '8 days ago',
     lastActivity: 'this morning, 9:14',
   },
@@ -54,7 +68,11 @@ export const ACTIVE_SESSIONS: Session[] = [
     device: 'Unknown · Firefox 132 · macOS',
     variant: 'suspect',
     deviceType: 'desktop',
-    loc: '🇪🇸 Madrid, Spain · unfamiliar network',
+    loc: (
+      <>
+        🇪🇸 <b>Madrid</b>, Spain · <b>unfamiliar network</b>
+      </>
+    ),
     signedIn: '14h ago',
     lastActivity: '11h ago',
     extra: '2FA used — but new location',
@@ -64,7 +82,11 @@ export const ACTIVE_SESSIONS: Session[] = [
     device: 'iPad Pro · Safari 18',
     variant: 'normal',
     deviceType: 'mobile',
-    loc: '🇵🇹 Lisbon, Portugal · home',
+    loc: (
+      <>
+        🇵🇹 <b>Lisbon</b>, Portugal · <b>home</b>
+      </>
+    ),
     signedIn: '2 months ago',
     lastActivity: 'last Sunday',
   },

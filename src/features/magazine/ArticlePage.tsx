@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button, ImageSlot } from '../../shared/components/ui'
-import { articles, defaultArticleId } from './data/articles'
+import { articles, defaultArticleId, isPullQuote } from './data/articles'
 
 import styles from './ArticlePage.module.css'
 
@@ -34,7 +34,7 @@ export function ArticlePage() {
             ← Magazine <span style={{ opacity: 0.5 }}>·</span> {article.section}
           </Link>
           <div className={styles.kicker}>{article.kicker}</div>
-          <h1 className={styles.title} dangerouslySetInnerHTML={{ __html: article.titleHtml }} />
+          <h1 className={styles.title}>{article.title}</h1>
           <div className={styles.bylineRow}>
             <Avatar initials={article.initials} tint={article.tint} size={36} />
             <div>
@@ -58,12 +58,12 @@ export function ArticlePage() {
         <article className={styles.bodyInner}>
           <div className={styles.body}>
             {article.body.map((block, index) =>
-              typeof block === 'string' ? (
-                <p key={index} dangerouslySetInnerHTML={{ __html: block }} />
-              ) : (
+              isPullQuote(block) ? (
                 <blockquote key={index} className={styles.pull}>
                   {block.pull}
                 </blockquote>
+              ) : (
+                <p key={index}>{block}</p>
               ),
             )}
           </div>
@@ -88,7 +88,7 @@ export function ArticlePage() {
               {related.map((rel) => (
                 <Link key={rel.id} to={`/article?id=${rel.id}`} className={styles.relCard}>
                   <div className={styles.relKicker}>{rel.section}</div>
-                  <div className={styles.relTitle} dangerouslySetInnerHTML={{ __html: rel.titleHtml }} />
+                  <div className={styles.relTitle}>{rel.title}</div>
                   <div className={styles.relMeta}>
                     {rel.byline} · {rel.readTime}
                   </div>

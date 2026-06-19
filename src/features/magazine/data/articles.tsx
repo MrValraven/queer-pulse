@@ -1,15 +1,25 @@
+import { isValidElement, type ReactNode } from 'react'
 import type { AvatarTint } from '../../../shared/components/ui/Avatar'
 import { memberName } from '../../members/data/members'
 
-/** A paragraph (may contain inline <strong>/<em>/<br> HTML) or a pull quote. */
-export type ArticleBlock = string | { pull: string }
+/** A paragraph (plain text or rich JSX) or a pull quote. */
+export type ArticleBlock = ReactNode | { pull: string }
+
+/** True when a body block is a pull quote rather than a renderable node. */
+export function isPullQuote(block: ArticleBlock): block is { pull: string } {
+  return (
+    typeof block === 'object' &&
+    block !== null &&
+    !isValidElement(block) &&
+    'pull' in block
+  )
+}
 
 export interface Article {
   id: string
   kicker: string
   section: string
-  titleHtml: string
-  title: string
+  title: ReactNode
   byline: string
   role: string | null
   date: string
@@ -27,8 +37,13 @@ export const articles: Record<string, Article> = {
     id: 'city-changed',
     kicker: 'Cover story · Feature',
     section: 'Features',
-    titleHtml: 'The city changed.<br/><em>Did we?</em>',
-    title: 'The city changed. Did we?',
+    title: (
+      <>
+        The city changed.
+        <br />
+        <em>Did we?</em>
+      </>
+    ),
     byline: memberName('sofia'),
     role: `Photography by ${memberName('andre')}`,
     date: 'June 2026',
@@ -51,8 +66,13 @@ export const articles: Record<string, Article> = {
     id: 'mouraria-family',
     kicker: 'Feature · Community',
     section: 'Features',
-    titleHtml: "Mouraria's chosen family,<br/><em>ten years later</em>",
-    title: "Mouraria's chosen family, ten years later",
+    title: (
+      <>
+        Mouraria's chosen family,
+        <br />
+        <em>ten years later</em>
+      </>
+    ),
     byline: memberName('ines'),
     role: null,
     date: 'June 2026',
@@ -74,8 +94,13 @@ export const articles: Record<string, Article> = {
     id: 'last-bar',
     kicker: 'Feature · Nightlife',
     section: 'Features',
-    titleHtml: "The last queer bar in Bairro Alto<br/><em>that isn't trying</em>",
-    title: "The last queer bar in Bairro Alto that isn't trying",
+    title: (
+      <>
+        The last queer bar in Bairro Alto
+        <br />
+        <em>that isn't trying</em>
+      </>
+    ),
     byline: memberName('diogo'),
     role: null,
     date: 'June 2026',
@@ -97,8 +122,13 @@ export const articles: Record<string, Article> = {
     id: 'housing-law',
     kicker: 'Feature · Politics',
     section: 'Features',
-    titleHtml: 'What the new housing law<br/><em>actually means for us</em>',
-    title: 'What the new housing law actually means for us',
+    title: (
+      <>
+        What the new housing law
+        <br />
+        <em>actually means for us</em>
+      </>
+    ),
     byline: memberName('mariana-costa'),
     role: null,
     date: 'June 2026',
@@ -120,8 +150,13 @@ export const articles: Record<string, Article> = {
     id: 'i-arrived',
     kicker: 'Essay of the month',
     section: 'Essays',
-    titleHtml: "I didn't come out.<br/><em>I arrived.</em>",
-    title: "I didn't come out. I arrived.",
+    title: (
+      <>
+        I didn't come out.
+        <br />
+        <em>I arrived.</em>
+      </>
+    ),
     byline: memberName('tomas'),
     role: null,
     date: 'June 2026',
@@ -143,8 +178,13 @@ export const articles: Record<string, Article> = {
     id: 'visibility-politics',
     kicker: 'Essay',
     section: 'Essays',
-    titleHtml: 'On visibility, and<br/><em>who it actually serves</em>',
-    title: 'On visibility, and who it actually serves',
+    title: (
+      <>
+        On visibility, and
+        <br />
+        <em>who it actually serves</em>
+      </>
+    ),
     byline: memberName('rui-fernandes'),
     role: null,
     date: 'June 2026',
@@ -166,8 +206,13 @@ export const articles: Record<string, Article> = {
     id: 'politics-of-staying',
     kicker: 'Essay',
     section: 'Essays',
-    titleHtml: 'The politics<br/><em>of staying</em>',
-    title: 'The politics of staying',
+    title: (
+      <>
+        The politics
+        <br />
+        <em>of staying</em>
+      </>
+    ),
     byline: memberName('catarina-melo'),
     role: null,
     date: 'June 2026',
@@ -189,8 +234,13 @@ export const articles: Record<string, Article> = {
     id: 'kiko-neves',
     kicker: 'Interview · Music',
     section: 'Interviews',
-    titleHtml: '"The audience at my worst gig<br/>taught me more than <em>my best one"</em>',
-    title: '"The audience at my worst gig taught me more than my best one"',
+    title: (
+      <>
+        "The audience at my worst gig
+        <br />
+        taught me more than <em>my best one"</em>
+      </>
+    ),
     byline: memberName('sofia'),
     role: 'Interview with Kiko Neves',
     date: 'June 2026',
@@ -201,11 +251,51 @@ export const articles: Record<string, Article> = {
     authorBio: `${memberName('sofia')} conducted this interview in Kiko's studio over two afternoons in May.`,
     related: ['last-bar', 'city-changed'],
     body: [
-      '<strong>You started playing in Marvila before it became Marvila. What was that like?</strong><br/>An untuned piano and audiences who had made an effort to get there. That changes everything. When people leave their house, take two buses, arrive somewhere uncertain — they are already in a different mode. You can slow down. You can fail.',
-      '<strong>When you say "queer jazz," what do you actually mean?</strong><br/>Music that doesn\'t perform certainty. Music comfortable with not arriving at the place it thought it was going. The queer form wants to stay somewhere interesting for as long as possible. To treat the unresolved thing as the destination rather than the problem.',
+      (
+        <>
+          <strong>
+            You started playing in Marvila before it became Marvila. What was
+            that like?
+          </strong>
+          <br />
+          An untuned piano and audiences who had made an effort to get there.
+          That changes everything. When people leave their house, take two
+          buses, arrive somewhere uncertain — they are already in a different
+          mode. You can slow down. You can fail.
+        </>
+      ),
+      (
+        <>
+          <strong>When you say "queer jazz," what do you actually mean?</strong>
+          <br />
+          Music that doesn't perform certainty. Music comfortable with not
+          arriving at the place it thought it was going. The queer form wants to
+          stay somewhere interesting for as long as possible. To treat the
+          unresolved thing as the destination rather than the problem.
+        </>
+      ),
       { pull: 'I went home and wrote for six hours because of that comment. Constraint is clarifying.' },
-      '<strong>Tell me about the worst gig.</strong><br/>2022. Eleven people. Three left early. One asked me afterwards if I had considered playing something more fun. I went home and wrote for six hours. The best gig was the album release — everyone there, perfect energy — and I felt almost nothing. There is something about resistance and constraint that I apparently require.',
-      '<strong>What does Lisbon give you that another city wouldn\'t?</strong><br/>The light is not a cliché. It does something specific to time. And the city is still small enough that you run into people. Three of my collaborations started in queues. You cannot engineer that. You can only stay and let it happen.',
+      (
+        <>
+          <strong>Tell me about the worst gig.</strong>
+          <br />
+          2022. Eleven people. Three left early. One asked me afterwards if I had
+          considered playing something more fun. I went home and wrote for six
+          hours. The best gig was the album release — everyone there, perfect
+          energy — and I felt almost nothing. There is something about
+          resistance and constraint that I apparently require.
+        </>
+      ),
+      (
+        <>
+          <strong>What does Lisbon give you that another city wouldn't?</strong>
+          <br />
+          The light is not a cliché. It does something specific to time. And the
+          city is still small enough that you run into people. Three of my
+          collaborations started in queues. You cannot engineer that. You can
+          only stay and let it happen.
+        </>
+      ),
     ],
   },
 }

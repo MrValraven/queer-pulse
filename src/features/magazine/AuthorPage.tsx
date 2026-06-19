@@ -8,20 +8,20 @@ import styles from './AuthorPage.module.css'
 const BEATS = ['Health & access', 'Migration & visas', 'Public services', 'Long reads', 'Interviews', 'Reported essays']
 
 const ARTICLES = [
-  { kicker: 'Long read · 14 min', titleHtml: 'What the SNS gets right (and where it <em>still leaves you waiting</em>).', dek: 'Six months reporting inside three regional health centres in Lisbon and the Algarve.', meta: 'Issue 07 · Apr 2026' },
-  { kicker: 'Interview', titleHtml: "Dr. Inês Pereira on <em>fifteen minutes of someone else's time.</em>", dek: 'The Anjos GP who treats trans patients as adults — and changed the protocol for an entire clinic.', meta: 'Issue 06 · Feb 2026' },
-  { kicker: 'Reported essay', titleHtml: 'The visa queue is <em>a kind of closet.</em>', dek: 'Three queer migrants on what it means to wait for a residency permit while not being out to your case officer.', meta: 'Issue 05 · Dec 2025' },
-  { kicker: 'Opinion', titleHtml: 'Stop calling it "access." <em>Call it care.</em>', dek: 'A small change in language that changes how clinics get funded — and who gets seen.', meta: 'Issue 04 · Oct 2025' },
-  { kicker: 'Reporting', titleHtml: 'Inside the back room of <em>Café Beirão.</em>', dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure.", meta: 'Issue 03 · Aug 2025' },
-  { kicker: `Interview · with ${memberName('sofia')}`, titleHtml: 'Mariza Câmara, <em>district health director.</em>', dek: "An hour-long conversation about queer health policy in Lisbon's Câmara Municipal.", meta: 'Issue 02 · Jun 2025' },
+  { kicker: 'Long read · 14 min', title: <>What the SNS gets right (and where it <em>still leaves you waiting</em>).</>, dek: 'Six months reporting inside three regional health centres in Lisbon and the Algarve.', meta: 'Issue 07 · Apr 2026' },
+  { kicker: 'Interview', title: <>Dr. Inês Pereira on <em>fifteen minutes of someone else's time.</em></>, dek: 'The Anjos GP who treats trans patients as adults — and changed the protocol for an entire clinic.', meta: 'Issue 06 · Feb 2026' },
+  { kicker: 'Reported essay', title: <>The visa queue is <em>a kind of closet.</em></>, dek: 'Three queer migrants on what it means to wait for a residency permit while not being out to your case officer.', meta: 'Issue 05 · Dec 2025' },
+  { kicker: 'Opinion', title: <>Stop calling it "access." <em>Call it care.</em></>, dek: 'A small change in language that changes how clinics get funded — and who gets seen.', meta: 'Issue 04 · Oct 2025' },
+  { kicker: 'Reporting', title: <>Inside the back room of <em>Café Beirão.</em></>, dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure.", meta: 'Issue 03 · Aug 2025' },
+  { kicker: `Interview · with ${memberName('sofia')}`, title: <>Mariza Câmara, <em>district health director.</em></>, dek: "An hour-long conversation about queer health policy in Lisbon's Câmara Municipal.", meta: 'Issue 02 · Jun 2025' },
 ]
 
 const READING = [
-  { titleHtml: 'The Right to Maim <em>· Jasbir K. Puar</em>', tag: 'book' },
-  { titleHtml: 'How a queer GP rebuilt her practice', tag: 'FT Magazine, 2024' },
-  { titleHtml: 'Lisboa pulse — visual notes <em>· Editora Anjos</em>', tag: 'zine' },
-  { titleHtml: 'The SNS, in numbers', tag: '2025 annual report' },
-  { titleHtml: 'On waiting <em>· Maria Tumarkin</em>', tag: 'essay' },
+  { title: <>The Right to Maim <em>· Jasbir K. Puar</em></>, tag: 'book' },
+  { title: 'How a queer GP rebuilt her practice', tag: 'FT Magazine, 2024' },
+  { title: <>Lisboa pulse — visual notes <em>· Editora Anjos</em></>, tag: 'zine' },
+  { title: 'The SNS, in numbers', tag: '2025 annual report' },
+  { title: <>On waiting <em>· Maria Tumarkin</em></>, tag: 'essay' },
 ]
 
 export function AuthorPage() {
@@ -114,10 +114,10 @@ export function AuthorPage() {
           <Link to="/magazine">All 14 articles →</Link>
         </div>
         <div className={styles.articles}>
-          {ARTICLES.map((article) => (
-            <Link key={article.titleHtml} to="/article?id=housing-law" className={styles.art}>
+          {ARTICLES.map((article, index) => (
+            <Link key={index} to="/article?id=housing-law" className={styles.art}>
               <div className={styles.artKicker}>{article.kicker}</div>
-              <div className={styles.artTitle} dangerouslySetInnerHTML={{ __html: article.titleHtml }} />
+              <div className={styles.artTitle}>{article.title}</div>
               <div className={styles.artDek}>{article.dek}</div>
               <div className={styles.artMeta}>{article.meta}</div>
             </Link>
@@ -135,9 +135,9 @@ export function AuthorPage() {
             </Button>
           </div>
           <ol>
-            {READING.map((item) => (
-              <li key={item.titleHtml}>
-                <span dangerouslySetInnerHTML={{ __html: item.titleHtml }} /> <span>{item.tag}</span>
+            {READING.map((item, index) => (
+              <li key={index}>
+                <span>{item.title}</span> <span>{item.tag}</span>
               </li>
             ))}
           </ol>

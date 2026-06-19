@@ -149,8 +149,8 @@ export function UploadSidebar() {
       {UPLOAD_SIDE_INFO.map((info) => (
         <div key={info.eyebrow} className={s.sideCard}>
           <div className={s.sideEb}>{info.eyebrow}</div>
-          <h4 dangerouslySetInnerHTML={{ __html: info.title }} />
-          <p dangerouslySetInnerHTML={{ __html: info.body }} />
+          <h4>{info.title}</h4>
+          <p>{info.body}</p>
           <ul className={s.sideList}>
             {info.list.map((item) => (
               <li key={item.label}>

@@ -90,12 +90,12 @@ export function IssuePage() {
               <div className={styles.sectionH}>{section.heading}</div>
               <div className={styles.entries}>
                 {section.entries.map((entry) => (
-                  <Link key={entry.titleHtml} to="/article?id=housing-law" className={styles.entry}>
+                  <Link key={entry.page} to="/article?id=housing-law" className={styles.entry}>
                     <div>
                       <div className={styles.entryKicker}>{entry.kicker}</div>
-                      <div className={styles.entryTitle} dangerouslySetInnerHTML={{ __html: entry.titleHtml }} />
+                      <div className={styles.entryTitle}>{entry.title}</div>
                       <div className={styles.entryDek}>{entry.dek}</div>
-                      <div className={styles.entryByline} dangerouslySetInnerHTML={{ __html: entry.bylineHtml }} />
+                      <div className={styles.entryByline}>{entry.byline}</div>
                     </div>
                     <div className={styles.metaR}>
                       {entry.page}

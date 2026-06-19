@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Avatar, Button, ImageSlot, Reveal } from "../../shared/components/ui";
@@ -34,10 +35,7 @@ function ArticleCard({ card }: { card: Card }) {
         />
       </div>
       <div className={styles.acKicker}>{card.kicker}</div>
-      <div
-        className={styles.acTitle}
-        dangerouslySetInnerHTML={{ __html: card.titleHtml }}
-      />
+      <div className={styles.acTitle}>{card.title}</div>
       <div className={styles.acExcerpt}>{card.excerpt}</div>
       <div className={styles.acMeta}>
         <Avatar initials={card.initials} tint={card.tint} size={22} />
@@ -57,16 +55,19 @@ function ArticleCard({ card }: { card: Card }) {
   );
 }
 
-function SectionHead({ title, id }: { title: string; id: string }) {
+function SectionHead({
+  title,
+  label,
+  id,
+}: {
+  title: ReactNode;
+  label: string;
+  id: string;
+}) {
   return (
     <div className={styles.asHead} id={id}>
-      <div
-        className={styles.asTitle}
-        dangerouslySetInnerHTML={{ __html: title }}
-      />
-      <span className={styles.asSeeAll}>
-        All {title.replace(/<[^>]+>/g, "").toLowerCase()} →
-      </span>
+      <div className={styles.asTitle}>{title}</div>
+      <span className={styles.asSeeAll}>All {label} →</span>
     </div>
   );
 }
@@ -109,7 +110,15 @@ export function MagazinePage() {
       <main className={styles.body}>
         <div className="wrap">
           <section className={styles.section}>
-            <SectionHead title="This month's <em>features</em>" id="features" />
+            <SectionHead
+              title={
+                <>
+                  This month's <em>features</em>
+                </>
+              }
+              label="this month's features"
+              id="features"
+            />
             <div className={styles.grid}>
               {FEATURES.map((card) => (
                 <ArticleCard key={card.id} card={card} />
@@ -143,7 +152,7 @@ export function MagazinePage() {
           </Reveal>
 
           <section className={styles.section}>
-            <SectionHead title="<em>Essays</em>" id="essays" />
+            <SectionHead title={<em>Essays</em>} label="essays" id="essays" />
             <div className={styles.essaysGrid}>
               {ESSAYS.map((card) => (
                 <Reveal
@@ -153,10 +162,7 @@ export function MagazinePage() {
                   className={styles.ec}
                 >
                   <div className={styles.ecKicker}>{card.kicker}</div>
-                  <div
-                    className={styles.ecTitle}
-                    dangerouslySetInnerHTML={{ __html: card.titleHtml }}
-                  />
+                  <div className={styles.ecTitle}>{card.title}</div>
                   <p className={styles.acExcerpt}>{card.excerpt}</p>
                   <div className={styles.acMeta}>
                     <Avatar
@@ -172,7 +178,11 @@ export function MagazinePage() {
           </section>
 
           <section className={styles.section}>
-            <SectionHead title="<em>Interviews</em>" id="interviews" />
+            <SectionHead
+              title={<em>Interviews</em>}
+              label="interviews"
+              id="interviews"
+            />
             <div className={styles.grid}>
               {INTERVIEWS.map((card) => (
                 <ArticleCard key={card.id} card={card} />
@@ -181,7 +191,7 @@ export function MagazinePage() {
           </section>
 
           <section className={styles.section}>
-            <SectionHead title="<em>Reviews</em>" id="reviews" />
+            <SectionHead title={<em>Reviews</em>} label="reviews" id="reviews" />
             <div className={styles.grid}>
               {REVIEWS.map((card) => (
                 <ArticleCard key={card.id} card={card} />
@@ -190,7 +200,15 @@ export function MagazinePage() {
           </section>
 
           <section className={styles.section}>
-            <SectionHead title="Community <em>life</em>" id="community-life" />
+            <SectionHead
+              title={
+                <>
+                  Community <em>life</em>
+                </>
+              }
+              label="community life"
+              id="community-life"
+            />
             <div className={styles.grid}>
               {COMMUNITY.map((card) => (
                 <ArticleCard key={card.id} card={card} />
@@ -211,7 +229,15 @@ export function MagazinePage() {
           </section>
 
           <section className={styles.section} id="archive">
-            <SectionHead title="Past <em>issues</em>" id="archive-head" />
+            <SectionHead
+              title={
+                <>
+                  Past <em>issues</em>
+                </>
+              }
+              label="past issues"
+              id="archive-head"
+            />
             <div className={styles.archiveRow}>
               {ARCHIVE.map((issue) => (
                 <Link

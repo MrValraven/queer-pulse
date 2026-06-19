@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
-import { routes } from '../../app/routeMap'
 import { PlanPanel, BillingPanel, AccessPanel } from './MembershipPanels'
 import { MembershipSidebar } from './MembershipSidebar'
 import styles from './MembershipPage.module.css'

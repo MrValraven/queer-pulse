@@ -53,10 +53,7 @@ export function NotificationsPage() {
           </span>
         )}
         <div className={styles.body}>
-          <div
-            className={styles.text}
-            dangerouslySetInnerHTML={{ __html: notification.text }}
-          />
+          <div className={styles.text}>{notification.text}</div>
           <div className={styles.meta}>{notification.meta}</div>
           {notification.actions && (
             <div className={styles.itemActions}>
