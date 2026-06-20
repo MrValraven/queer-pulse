@@ -1,3 +1,9 @@
+export const ONBOARDING_PREVIEW = [
+  { title: 'Make it yours', desc: 'Add a photo so members can put a face to your name.' },
+  { title: 'Set your intentions', desc: 'Tell us what brings you here, and we’ll tailor things.' },
+  { title: 'Find your communities', desc: 'Join the groups that match what you care about.' },
+];
+
 export const STEP_LABELS = [
   'Step 1 of 6',
   'Step 2 of 6',

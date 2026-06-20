@@ -1,12 +1,41 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, ImageSlot } from '../../shared/components/ui';
-import { NORMS, INTENTS, COMMUNITIES_LIST, QUICK_STARTS } from './onboardingPage.data';
+import { NORMS, INTENTS, COMMUNITIES_LIST, QUICK_STARTS, ONBOARDING_PREVIEW } from './onboardingPage.data';
 import styles from './OnboardingPage.module.css';
 
 interface StepProps {
   onNext: () => void;
   onBack: () => void;
+}
+
+export function StepIntro({ onNext }: { onNext: () => void }) {
+  return (
+    <>
+      <div className={styles.eye}>Welcome to QueerPulse</div>
+      <div className={styles.h}>
+        Let's start your <em>onboarding</em>
+      </div>
+      <div className={styles.p}>
+        A few quick steps to set up your profile and find your people. It takes about two minutes —
+        and you can change anything later.
+      </div>
+      <div className={styles.normCards}>
+        {ONBOARDING_PREVIEW.map((item) => (
+          <div key={item.title} className={styles.normCard}>
+            <div className={styles.ncDot} />
+            <div>
+              <div className={styles.ncTitle}>{item.title}</div>
+              <div className={styles.ncDesc}>{item.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className={styles.nav}>
+        <Button onClick={onNext}>Let's begin</Button>
+      </div>
+    </>
+  );
 }
 
 export function StepWelcome({ onNext }: { onNext: () => void }) {

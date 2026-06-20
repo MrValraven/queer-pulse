@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { usePrefersReducedMotion } from '../../shared/hooks'
 import { getMember } from '../members/data/members'
+import { OnboardingPage } from '../auth/OnboardingPage'
 import { routes } from '../../app/routeMap'
 import styles from './InviteLandingPage.module.css'
 
@@ -36,16 +37,12 @@ type Phase = 'sealed' | 'opening' | 'invite'
 
 export function InviteLandingPage() {
   const prefersReduced = usePrefersReducedMotion()
-  const [phase, setPhase] = useState<Phase>('sealed')
+  const [phase, setPhase] = useState<Phase>(prefersReduced ? 'sealed' : 'opening')
   const [step, setStep] = useState(0)
   const [joined, setJoined] = useState(false)
 
   function openInvitation() {
-    if (prefersReduced) {
-      setPhase('invite')
-      return
-    }
-    setPhase('opening')
+    setPhase('invite')
   }
 
   useEffect(() => {
@@ -54,7 +51,7 @@ export function InviteLandingPage() {
     const stepTimers = LOADER_STEPS.map((_, i) =>
       window.setTimeout(() => setStep(i), i * stepMs),
     )
-    const done = window.setTimeout(() => setPhase('invite'), LOADER_STEPS.length * stepMs + 350)
+    const done = window.setTimeout(() => setPhase('sealed'), LOADER_STEPS.length * stepMs + 350)
     return () => {
       stepTimers.forEach(clearTimeout)
       clearTimeout(done)
@@ -120,43 +117,9 @@ export function InviteLandingPage() {
     )
   }
 
+  // Once the account is created, the new member flows straight into onboarding.
   if (joined) {
-    return (
-      <div className={styles.root}>
-        <div className={styles.successCard}>
-          <div className={styles.successIcon}>
-            <svg width={28} height={28} viewBox="0 0 28 28" fill="none" aria-hidden>
-              <polyline
-                points="4,14 10,20 24,7"
-                stroke="var(--jade)"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-          <h2 className={styles.successHeading}>
-            Welcome to <em>QueerPulse.</em>
-          </h2>
-          <p className={styles.successLead}>
-            Your account is ready. Take a minute to set up your profile before jumping in.
-          </p>
-          <div className={styles.successActions}>
-            <Button to={routes.editProfile} size="lg" className={styles.submitBtn}>
-              Set up my profile
-            </Button>
-            <Button variant="ghost" to="/" className={styles.submitBtn}>
-              Go to homepage
-            </Button>
-          </div>
-        </div>
-        <div className={styles.pageFooter}>
-          <p>
-            Not expecting this?{' '}
-            <Link to={routes.privacy}>Privacy policy</Link>
-          </p>
-        </div>
-      </div>
-    )
+    return <OnboardingPage />
   }
 
   return (
