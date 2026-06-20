@@ -3,6 +3,7 @@ import { ThemeProvider } from './providers/ThemeProvider'
 import { AuthProvider } from './providers/AuthProvider'
 import { I18nProvider } from './providers/I18nProvider'
 import { ToastProvider } from '../shared/components/feedback/ToastProvider'
+import { RoomLoader } from '../shared/components/feedback/RoomLoader'
 import { ScrollManager } from './ScrollManager'
 import { AppRoutes } from './routes'
 
@@ -15,6 +16,7 @@ export default function App() {
             <BrowserRouter>
               <ScrollManager />
               <AppRoutes />
+              <RoomLoader />
             </BrowserRouter>
           </ToastProvider>
         </I18nProvider>

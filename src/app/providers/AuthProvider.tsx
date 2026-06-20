@@ -10,8 +10,12 @@ import {
 
 interface AuthContextValue {
   loggedIn: boolean
+  /** True while the post-login "preparing the room" loader should be shown. */
+  preparing: boolean
   signIn: () => void
   signOut: () => void
+  /** Called by the loader once its sequence completes, to dismiss it. */
+  endPreparing: () => void
 }
 
 const STORAGE_KEY = 'qp_logged_in'
@@ -26,15 +30,27 @@ function getInitialLoggedIn(): boolean {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loggedIn, setLoggedIn] = useState<boolean>(getInitialLoggedIn)
+  const [preparing, setPreparing] = useState(false)
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, loggedIn ? 'true' : 'false')
   }, [loggedIn])
 
-  const signIn = useCallback(() => setLoggedIn(true), [])
-  const signOut = useCallback(() => setLoggedIn(false), [])
+  const signIn = useCallback(() => {
+    setLoggedIn(true)
+    // Show the "preparing the room" loader on an explicit sign-in.
+    setPreparing(true)
+  }, [])
+  const signOut = useCallback(() => {
+    setLoggedIn(false)
+    setPreparing(false)
+  }, [])
+  const endPreparing = useCallback(() => setPreparing(false), [])
 
-  const value = useMemo(() => ({ loggedIn, signIn, signOut }), [loggedIn, signIn, signOut])
+  const value = useMemo(
+    () => ({ loggedIn, preparing, signIn, signOut, endPreparing }),
+    [loggedIn, preparing, signIn, signOut, endPreparing],
+  )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
