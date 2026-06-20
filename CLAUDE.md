@@ -65,15 +65,19 @@ The design reference lives in **`docs/`**, as markdown:
 - `docs/STYLE-RULES.md` — the short, non-negotiable UI checklist
 - `docs/design-system.md` — the full design-system reference
 
-The original visual prototype is a set of standalone `QueerPulse <Name>.html` pages — this is what `linkToPath()` href strings refer to (e.g. `linkToPath("QueerPulse Cinema.html")`). These HTML files are **not committed to the repo**, but they live on disk at:
+The original visual prototype is a set of standalone `QueerPulse <Name>.html` pages — this is what `linkToPath()` href strings refer to (e.g. `linkToPath("QueerPulse Cinema.html")`). These HTML files are **not committed to the repo**.
+
+**Primary source — the Claude Design MCP project (use this first).** The full prototype lives in the design project at:
 
 ```
-/private/tmp/design_extract/queer-pulse-homepage/project/
+https://claude.ai/design/p/59dc1938-6e1e-4e95-9973-dbf61aef45d1   (name: "Queer Pulse homepage")
 ```
 
-That folder holds 300+ `QueerPulse *.html` design pages (plus `screenshots/`). When a task references a "design file" or asks whether a page matches the original design, **read the corresponding HTML there** — it's the source of truth for layout, copy, and which pages were intended. To find the file for a route, reverse `linkToPath`: a page named `QueerPulse <Title>.html` slugifies to `/<title-kebab>` (and nested cinema/studio pages route under `/cinema/*`, `/studio/*`).
+Read design files with the `claude_design` MCP connector (the `DesignSync` tool): `list_files` to browse, then `get_file` with the path `QueerPulse <Name>.html`. If the connector isn't authorized yet, tell the maintainer to run `/design-login`. This is the source of truth for layout, copy, and which pages were intended.
 
-Note this is a **temp/extract location** — it may be cleared between machines/sessions. If it's gone, ask the maintainer to re-extract it. The only `.html` inside the repo itself is `index.html` (the Vite entry point).
+**Fallback — a local extract** that may also exist on disk at `/private/tmp/design_extract/queer-pulse-homepage/project/` (300+ `QueerPulse *.html` pages plus `screenshots/`). This is a **temp location** and may be cleared between machines/sessions; prefer the MCP project above, which is always current.
+
+To find the file for a route, reverse `linkToPath`: a page named `QueerPulse <Title>.html` slugifies to `/<title-kebab>` (and nested cinema/studio pages route under `/cinema/*`, `/studio/*`). The only `.html` inside the repo itself is `index.html` (the Vite entry point).
 
 ## Design system — read before building any UI
 

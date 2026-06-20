@@ -19,7 +19,7 @@ function MentionRow({ m }: { m: Mention }) {
       <div className={styles.headRow}>
         <div className={`${styles.av} ${avClass[m.tint]}`}>{m.initials}</div>
         <div className={styles.who}>
-          <Link to={routes.profile}>{m.name}</Link>
+          <Link to={routes.members}>{m.name}</Link>
           <span> · {m.context}</span>
         </div>
         <div className={`${styles.when} ${m.fresh ? styles.fresh : ''}`}>{m.when}</div>

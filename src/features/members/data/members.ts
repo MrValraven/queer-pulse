@@ -1,5 +1,6 @@
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { VisibilityMode } from "../../../shared/components/ui/VisibilityBadge";
+import { routes } from "../../../app/routeMap";
 
 export interface ShapingItem {
   title: string;
@@ -14,6 +15,23 @@ export interface BoardItem {
   kind: "looking" | "offering";
   title: string;
   slug: string;
+}
+/** A skill or service the member offers on the barter board. */
+export interface SkillItem {
+  name: string;
+  meta: string;
+}
+/** A group / reading circle / collective the member belongs to. */
+export interface GroupItem {
+  name: string;
+  role: string;
+}
+/** A recent public action, linking to where it happened. */
+export interface ActivityItem {
+  icon: string;
+  title: string;
+  sub: string;
+  to: string;
 }
 export interface Member {
   /** Stable numeric id, assigned by registration order. */
@@ -41,6 +59,12 @@ export interface Member {
   voucherNames: string;
   related: string[];
   shapings: Partial<Record<"film" | "book" | "song" | "moment", ShapingItem>>;
+  /** Skills/services offered on the barter board. */
+  skills: SkillItem[];
+  /** Groups, reading circles and collectives the member is part of. */
+  groups: GroupItem[];
+  /** Recent public activity across the platform. */
+  activity: ActivityItem[];
 }
 
 /** Build a lightweight member (identity only) with empty profile detail. */
@@ -74,6 +98,9 @@ function lite(
     voucherNames: "",
     related: [],
     shapings: {},
+    skills: [],
+    groups: [],
+    activity: [],
   };
 }
 
@@ -139,6 +166,22 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     vouchers: ["sofia", "rui", "beatriz"],
     voucherNames: "Sofia, Rui & Beatriz",
     related: ["andre", "carla", "beatriz"],
+    skills: [
+      { name: "Brand identity sprints", meta: "Available · cultural orgs & small presses" },
+      { name: "Portfolio reviews", meta: "Available · junior queer designers" },
+      { name: "Risograph printing", meta: "Trade · zines & posters" },
+      { name: "Type setting", meta: "Available · editorial projects" },
+    ],
+    groups: [
+      { name: "Atelier Pulso", role: "Studio · Founder" },
+      { name: "Riso Club Lisboa", role: "Print collective · Organiser" },
+      { name: "Editorial Reading Circle", role: "Reading group · Member" },
+    ],
+    activity: [
+      { icon: "📰", title: "Featured in QueerPulse Magazine", sub: "Designing a queer bookshop's identity · Culture · June 2026", to: routes.magazine },
+      { icon: "🎟️", title: "Hosting a portfolio review night", sub: "Atelier Pulso · 21 June", to: routes.event },
+      { icon: "💬", title: "Replied in the Forum", sub: "Best riso printers in Lisbon? · 4 days ago", to: routes.forum },
+    ],
     shapings: {
       film: {
         title: "Mulholland Drive",
@@ -201,6 +244,21 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     vouchers: ["ines", "diogo"],
     voucherNames: "Inês & Diogo",
     related: ["carla", "diogo", "ines"],
+    skills: [
+      { name: "DevOps & infra setup", meta: "Available · queer-run nonprofits" },
+      { name: "Code review", meta: "Available · backend & Rust" },
+      { name: "Self-hosting advice", meta: "Trade · privacy-first stacks" },
+    ],
+    groups: [
+      { name: "Open Source Queers", role: "Community · Organiser" },
+      { name: "Marvila Makers", role: "Collective · Member" },
+      { name: "Sci-fi & Systems", role: "Reading group · Member" },
+    ],
+    activity: [
+      { icon: "💬", title: "Started a Forum thread", sub: "Low-cost infra for community projects · 1 week ago", to: routes.forum },
+      { icon: "🎟️", title: "Attending a build night", sub: "Open Source Queers · 18 June", to: routes.event },
+      { icon: "📚", title: "Joined a reading group", sub: "Sci-fi & Systems · The Dispossessed", to: routes.readingGroups },
+    ],
     shapings: {
       film: {
         title: "Blade Runner 2049",
@@ -259,6 +317,21 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     vouchers: ["ines", "mariana"],
     voucherNames: "Inês & Mariana",
     related: ["andre", "ines", "mariana"],
+    skills: [
+      { name: "Documentary consults", meta: "Available · first-time directors" },
+      { name: "Editing", meta: "Trade · short docs" },
+      { name: "Interview facilitation", meta: "Available · bilingual PT/EN" },
+    ],
+    groups: [
+      { name: "Alfama Film Club", role: "Screening group · Organiser" },
+      { name: "Lisbon Doc Collective", role: "Collective · Member" },
+      { name: "Sound & Image", role: "Community · Member" },
+    ],
+    activity: [
+      { icon: "📝", title: "Published in QueerPulse Magazine", sub: "On filming the last tascas · Culture · May 2026", to: routes.magazine },
+      { icon: "🎟️", title: "Screening at a community night", sub: "O Café das Seis · 27 June", to: routes.event },
+      { icon: "💬", title: "Replied in the Forum", sub: "Composers for a short doc? · 2 days ago", to: routes.forum },
+    ],
     shapings: {
       film: {
         title: "Jeanne Dielman, 23 quai du Commerce",
@@ -306,6 +379,21 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     vouchers: ["sofia", "beatriz"],
     voucherNames: "Sofia & Beatriz",
     related: ["beatriz", "sofia", "ines"],
+    skills: [
+      { name: "Supper club catering", meta: "Trade · long dinners" },
+      { name: "Fermentation help", meta: "Available · in-person, Lisbon" },
+      { name: "Menu development", meta: "Available · seasonal & plant-led" },
+    ],
+    groups: [
+      { name: "Queer Supper Club", role: "Collective · Host" },
+      { name: "Mouraria Neighbours", role: "Community · Member" },
+      { name: "Slow Food Circle", role: "Reading group · Member" },
+    ],
+    activity: [
+      { icon: "🎟️", title: "Hosting the 13th supper club", sub: "Twelve seats · Mouraria · 28 June", to: routes.event },
+      { icon: "💬", title: "Replied in the Forum", sub: "Where to find natural wine in Lisbon? · 3 days ago", to: routes.forum },
+      { icon: "📚", title: "Started a reading group", sub: "Slow Food Circle · The Omnivore's Dilemma", to: routes.readingGroups },
+    ],
     shapings: {
       film: {
         title: "Tampopo",
@@ -351,6 +439,19 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     vouchers: ["sofia"],
     voucherNames: "Sofia",
     related: ["sofia", "ines", "carla"],
+    skills: [
+      { name: "Peer consultations", meta: "Available · referrals welcome" },
+      { name: "Group facilitation", meta: "Available · peer support" },
+      { name: "Community talks", meta: "Trade · mental health & visibility" },
+    ],
+    groups: [
+      { name: "Queer Professionals Peer Group", role: "Support group · Facilitator" },
+      { name: "Estrela Neighbours", role: "Community · Member" },
+    ],
+    activity: [
+      { icon: "🎟️", title: "Running a monthly peer group", sub: "Queer professionals · waitlist open", to: routes.event },
+      { icon: "💬", title: "Replied in the Forum", sub: "Finding LGBTQ+-affirming therapists · 5 days ago", to: routes.forum },
+    ],
     shapings: {
       film: {
         title: "Portrait of a Lady on Fire",
@@ -413,6 +514,21 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     vouchers: ["ines"],
     voucherNames: "Inês",
     related: ["sofia", "ines", "diogo"],
+    skills: [
+      { name: "Portrait sessions", meta: "Free · trans & nonbinary members" },
+      { name: "Darkroom lessons", meta: "Trade · analog film" },
+      { name: "Editorial photography", meta: "Available · zines & covers" },
+    ],
+    groups: [
+      { name: "Analog Lisboa", role: "Collective · Organiser" },
+      { name: "Cais do Sodré Darkroom", role: "Studio · Member" },
+      { name: "Portrait Exchange", role: "Barter collective · Member" },
+    ],
+    activity: [
+      { icon: "📷", title: "Added work to the Art Showcase", sub: "Faces of the Bairro · Culture", to: routes.culture },
+      { icon: "🎟️", title: "Free portrait day", sub: "For trans & nonbinary members · 15 June", to: routes.event },
+      { icon: "💬", title: "Replied in the Forum", sub: "Best film labs still open in Lisbon? · 1 week ago", to: routes.forum },
+    ],
     shapings: {
       film: {
         title: "The Ballad of Sexual Dependency — Nan Goldin",
@@ -471,6 +587,21 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     vouchers: ["rui", "ines"],
     voucherNames: "Rui & Inês",
     related: ["rui", "ines", "mariana"],
+    skills: [
+      { name: "Product consults", meta: "Available · informal chats" },
+      { name: "UX reviews", meta: "Trade · early-stage products" },
+      { name: "Roadmapping", meta: "Available · zero-to-one" },
+    ],
+    groups: [
+      { name: "Ethical Product Lisbon", role: "Community · Member" },
+      { name: "Non-fiction Circle", role: "Reading group · Member" },
+      { name: "Arroios Walkers", role: "Social · Member" },
+    ],
+    activity: [
+      { icon: "💬", title: "Started a Forum thread", sub: "A sublet in Arroios, June–August? · 2 days ago", to: routes.forum },
+      { icon: "🎟️", title: "Attending a product meetup", sub: "Ethical Product Lisbon · 20 June", to: routes.event },
+      { icon: "📚", title: "Joined a reading group", sub: "Non-fiction Circle · Invisible Cities", to: routes.readingGroups },
+    ],
     shapings: {
       film: {
         title: "The Social Network",
@@ -533,6 +664,21 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     vouchers: ["tomas", "ines"],
     voucherNames: "Tomás & Inês",
     related: ["tomas", "ines", "andre"],
+    skills: [
+      { name: "Wheel-throwing workshops", meta: "Trade · beginners welcome" },
+      { name: "Glaze testing", meta: "Available · studio swaps" },
+      { name: "Two studio desks", meta: "Offering · bright Graça light" },
+    ],
+    groups: [
+      { name: "Graça Studio Share", role: "Studio · Host" },
+      { name: "Clay & Craft", role: "Collective · Member" },
+      { name: "Slow Objects Circle", role: "Reading group · Member" },
+    ],
+    activity: [
+      { icon: "🎟️", title: "Opening a small exhibition", sub: "Slow Objects · late summer", to: routes.event },
+      { icon: "💬", title: "Replied in the Forum", sub: "Shared kiln space in Lisbon? · 4 days ago", to: routes.forum },
+      { icon: "📚", title: "Joined a reading group", sub: "Slow Objects Circle · Zen & the Art…", to: routes.readingGroups },
+    ],
     shapings: {
       film: {
         title: "Être et Avoir",
@@ -585,6 +731,21 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     vouchers: ["rui", "sofia"],
     voucherNames: "Rui & Sofia",
     related: ["rui", "sofia", "andre"],
+    skills: [
+      { name: "Live set commissions", meta: "Available · queer club nights" },
+      { name: "Mixing", meta: "Trade · EPs & demos" },
+      { name: "Studio time swaps", meta: "Trade · Bairro Alto" },
+    ],
+    groups: [
+      { name: "Queer Thursdays", role: "Collective · Resident" },
+      { name: "Bairro Alto Studio", role: "Studio · Member" },
+      { name: "Sound & Image", role: "Community · Member" },
+    ],
+    activity: [
+      { icon: "🎵", title: "Released a debut EP", sub: "'Pulso' · self-released · 2025", to: routes.culture },
+      { icon: "🎟️", title: "Resident DJ set", sub: "Queer Thursdays at Lux", to: routes.event },
+      { icon: "💬", title: "Replied in the Forum", sub: "Scoring a documentary — rate advice? · 6 days ago", to: routes.forum },
+    ],
     shapings: {
       film: {
         title: "Paris Is Burning",

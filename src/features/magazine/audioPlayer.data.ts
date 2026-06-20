@@ -4,7 +4,7 @@ export type TabId = 'notes' | 'chapters' | 'transcript'
 
 export const SHOW = routes.podcastShow
 export const HOME = '/'
-export const MEMBER = routes.profile
+export const MEMBER = routes.members
 export const ARTICLE = routes.article
 
 export const SPEEDS = ['0.8×', '1.0×', '1.2×', '1.5×', '2.0×']

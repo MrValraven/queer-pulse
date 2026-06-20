@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { PageShell } from "../../shared/components/layout";
+import { AppShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./NewsletterPage.module.css";
@@ -63,9 +63,10 @@ export function NewsletterPage() {
   };
 
   return (
-    <PageShell>
+    <AppShell>
       <div className={styles.page}>
         <div className={`wrap ${styles.wrap}`}>
+          <Link to={SETTINGS} className={styles.back}>← Settings</Link>
           <div className={styles.header}>
             <div className={styles.eye}>Email preferences</div>
             <h1 className={styles.title}>
@@ -138,6 +139,6 @@ export function NewsletterPage() {
           </div>
         </div>
       </div>
-    </PageShell>
+    </AppShell>
   );
 }

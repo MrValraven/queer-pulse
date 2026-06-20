@@ -2,7 +2,7 @@ import { type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { routes } from '../../app/routeMap'
 
-const PROFILE_PATH = routes.profile
+const PROFILE_PATH = routes.members
 const TRANS_HEALTH = routes.transHealthcare
 const INVITE_PATH = routes.invite
 

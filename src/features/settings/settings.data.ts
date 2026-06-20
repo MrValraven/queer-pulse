@@ -1,25 +1,61 @@
-export type PaneId = 'notifications' | 'language' | 'data' | 'visibility' | 'profile' | 'account'
+import type { IconType } from 'react-icons'
+import { FiAlertTriangle, FiBell, FiDroplet, FiEdit2, FiEye, FiHeart, FiLock, FiMessageCircle, FiPlayCircle, FiSettings, FiSliders } from 'react-icons/fi'
 
-export const NAV: { group: string; items: { id: PaneId; icon: string; label: string }[] }[] = [
+export type PaneId =
+  | 'notifications'
+  | 'language'
+  | 'data'
+  | 'visibility'
+  | 'profile'
+  | 'profile-theme'
+  | 'accessibility'
+  | 'interests'
+  | 'account'
+  | 'simulations'
+  | 'delete'
+
+export type NavItem = { id: PaneId; icon: IconType; label: string; danger?: boolean }
+
+export const NAV: { group: string; items: NavItem[] }[] = [
   {
     group: 'Preferences',
     items: [
-      { id: 'notifications', icon: '🔔', label: 'Notifications' },
-      { id: 'language', icon: '💬', label: 'Language & terminology' },
+      { id: 'notifications', icon: FiBell, label: 'Notifications' },
+      { id: 'language', icon: FiMessageCircle, label: 'Language & terminology' },
     ],
   },
   {
     group: 'Privacy & data',
     items: [
-      { id: 'data', icon: '🔒', label: 'Data & privacy' },
-      { id: 'visibility', icon: '👁', label: 'Visibility' },
+      { id: 'data', icon: FiLock, label: 'Data & privacy' },
+      { id: 'visibility', icon: FiEye, label: 'Visibility' },
     ],
   },
   {
     group: 'Account',
     items: [
-      { id: 'profile', icon: '✏️', label: 'Profile' },
-      { id: 'account', icon: '⚙️', label: 'Account' },
+      { id: 'profile', icon: FiEdit2, label: 'Profile' },
+      { id: 'account', icon: FiSettings, label: 'Account' },
+    ],
+  },
+  {
+    group: 'Personalisation',
+    items: [
+      { id: 'profile-theme', icon: FiDroplet, label: 'Profile theme' },
+      { id: 'accessibility', icon: FiSliders, label: 'Accessibility' },
+      { id: 'interests', icon: FiHeart, label: 'Interests' },
+    ],
+  },
+  {
+    group: 'Prototype',
+    items: [
+      { id: 'simulations', icon: FiPlayCircle, label: 'Simulations' },
+    ],
+  },
+  {
+    group: 'Danger zone',
+    items: [
+      { id: 'delete', icon: FiAlertTriangle, label: 'Delete account', danger: true },
     ],
   },
 ]

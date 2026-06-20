@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import {
   BoilerplateSection,
@@ -70,6 +70,15 @@ export function PressKitPage() {
           <a href="mailto:press@queerpulse.app">press@queerpulse.app</a>.
         </div>
       </div>
+
+      <Outro
+        title={<>Writing about <em>QueerPulse?</em></>}
+        sub="We're happy to help. Write to the press team and we'll get back to you within a working day."
+      >
+        <Button size="lg" href="mailto:press@queerpulse.app">
+          Contact press team
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

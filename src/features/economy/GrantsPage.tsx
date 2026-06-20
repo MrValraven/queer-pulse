@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Reveal } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { useScrollReveal } from '../../shared/hooks/useScrollReveal'
 import { useCountUp } from '../../shared/hooks/useCountUp'
 import styles from './GrantsPage.module.css'
@@ -159,6 +159,15 @@ export function GrantsPage() {
           </div>
         </div>
       </section>
+
+      <Outro
+        title={<>Your project <em>deserves support.</em></>}
+        sub="Found something that fits? Apply with confidence — and if you land it, pay it forward by adding the opportunity for the next member."
+      >
+        <Button to="/grants" size="lg">
+          See open grants
+        </Button>
+      </Outro>
     </PageShell>
   )
 }

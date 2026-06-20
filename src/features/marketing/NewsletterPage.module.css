@@ -4,6 +4,17 @@
 .wrap {
   max-width: 640px;
 }
+.back {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  margin-bottom: 24px;
+}
+.back:hover {
+  color: var(--plum);
+}
 .header {
   margin-bottom: 44px;
 }

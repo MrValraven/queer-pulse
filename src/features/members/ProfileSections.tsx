@@ -12,6 +12,8 @@ import {
 } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { memberProfiles, type MemberProfile } from './data/memberProfiles'
+import { discoverCount, earnedBadges, levelInfo } from './badges.data'
+import { availableCount } from './perks.data'
 import styles from './ProfilePage.module.css'
 
 const SHAPING_META: Record<string, { label: string; icon: string }> = {
@@ -127,7 +129,7 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
                   return (
                     <Link
                       key={slug}
-                      to={`/profile/${slug}`}
+                      to={`/members/${slug}`}
                       className={styles.vouchFace}
                       style={{
                         marginLeft: index === 0 ? 0 : -12,
@@ -159,9 +161,53 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
   )
 }
 
-export function ProfileContent({ profile }: { profile: MemberProfile }) {
+export function RecognitionSection() {
+  return (
+    <Section title="Recognition" subtitle="Your level, badges and member perks">
+      <div className={styles.recogGrid}>
+        <Link to={routes.badges} className={styles.recogCard}>
+          <div className={styles.recogTop}>
+            <span className={styles.recogChip}>
+              Level {levelInfo.level} · {levelInfo.name}
+            </span>
+          </div>
+          <div className={styles.recogTitle}>Badges &amp; level</div>
+          <div className={styles.recogDesc}>
+            {earnedBadges.length} earned · {discoverCount} to discover
+          </div>
+          <div className={styles.recogXpBar}>
+            <div className={styles.recogXpFill} style={{ width: `${levelInfo.percent}%` }} />
+          </div>
+          <div className={styles.recogArrow}>See badges &amp; level →</div>
+        </Link>
+
+        <Link to={routes.perks} className={styles.recogCard}>
+          <div className={styles.recogTop}>
+            <span className={`${styles.recogChip} ${styles.jade}`}>
+              {availableCount} available
+            </span>
+          </div>
+          <div className={styles.recogTitle}>Member perks</div>
+          <div className={styles.recogDesc}>
+            Bonuses your level unlocks — early RSVP access, the Trusted Lounge and more.
+          </div>
+          <div className={styles.recogArrow}>Redeem your perks →</div>
+        </Link>
+      </div>
+    </Section>
+  )
+}
+
+export function ProfileContent({
+  profile,
+  isSelf,
+}: {
+  profile: MemberProfile
+  isSelf?: boolean
+}) {
   return (
     <div className="wrap">
+      {isSelf && <RecognitionSection />}
       <Section title="Now" subtitle={`What ${profile.first} is in the middle of`}>
         <div className={styles.nowCard}>
           <span className={styles.nowDot} aria-hidden />
@@ -224,6 +270,41 @@ export function ProfileContent({ profile }: { profile: MemberProfile }) {
         </Section>
       )}
 
+      {profile.skills.length > 0 && (
+        <Section
+          title="Skills & offerings"
+          subtitle={`What ${profile.first} can help with — and swap on the barter board`}
+        >
+          <div className={styles.skillsGrid}>
+            {profile.skills.map((skill) => (
+              <div key={skill.name} className={styles.skillCard}>
+                <div className={styles.skillName}>{skill.name}</div>
+                <div className={styles.skillMeta}>{skill.meta}</div>
+              </div>
+            ))}
+          </div>
+          <Link to={routes.barter} className={styles.barterLink}>
+            See the full barter board →
+          </Link>
+        </Section>
+      )}
+
+      {profile.groups.length > 0 && (
+        <Section
+          title="Groups & circles"
+          subtitle={`Where ${profile.first} shows up in the community`}
+        >
+          <div className={styles.groupsGrid}>
+            {profile.groups.map((group) => (
+              <div key={group.name} className={styles.groupCard}>
+                <div className={styles.groupName}>{group.name}</div>
+                <div className={styles.groupType}>{group.role}</div>
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
+
       {Object.keys(profile.shapings).length > 0 && (
         <Section title="What shaped me" subtitle="Not interests. Formative texts, films, moments.">
           <div className={styles.shapingsGrid}>
@@ -244,6 +325,24 @@ export function ProfileContent({ profile }: { profile: MemberProfile }) {
         </Section>
       )}
 
+      {profile.activity.length > 0 && (
+        <Section title="Recent activity" subtitle="Public moments from around the platform">
+          <div className={styles.activityList}>
+            {profile.activity.map((item) => (
+              <Link key={item.title} to={item.to} className={styles.actItem}>
+                <span className={styles.actIcon} aria-hidden>
+                  {item.icon}
+                </span>
+                <span className={styles.actBody}>
+                  <span className={styles.actTitle}>{item.title}</span>
+                  <span className={styles.actSub}>{item.sub}</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </Section>
+      )}
+
       {profile.related.length > 0 && (
         <Section title="Also in the room" subtitle="People nearby in craft or neighbourhood">
           <div className={styles.relGrid}>
@@ -251,7 +350,7 @@ export function ProfileContent({ profile }: { profile: MemberProfile }) {
               const related = memberProfiles[relSlug]
               if (!related) return null
               return (
-                <Link key={relSlug} to={`/profile/${relSlug}`} className={styles.relCard}>
+                <Link key={relSlug} to={`/members/${relSlug}`} className={styles.relCard}>
                   <Avatar initials={related.initials} tint={related.tint} size={46} />
                   <div>
                     <div className={styles.relName}>

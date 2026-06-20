@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Eyebrow, Reveal, SectionHead } from '../../shared/components/ui'
+import { Button, Eyebrow, Reveal, SectionHead, Tag } from '../../shared/components/ui'
 import { calendarEvents, type CalendarEvent } from './data'
 import { MONTHS, MSHORT } from './calendar.data'
 import { EVENT_CATEGORIES, eventsHeader } from './eventsPage.data'
@@ -17,8 +17,13 @@ function EventCard({ event }: { event: CalendarEvent }) {
         </span>
       </div>
       <div className={styles.cardBody}>
-        <div className={styles.org} style={{ color: event.orgColor }}>
-          {event.org}
+        <div className={styles.orgRow}>
+          <span className={styles.org} style={{ color: event.orgColor }}>
+            {event.org}
+          </span>
+          <Tag className={event.kind === 'event' ? styles.badgeEvent : styles.badgeGathering}>
+            {event.kind === 'event' ? 'Event' : 'Gathering'}
+          </Tag>
         </div>
         <h3 className={styles.cardTitle}>{event.title}</h3>
         <div className={styles.meta}>

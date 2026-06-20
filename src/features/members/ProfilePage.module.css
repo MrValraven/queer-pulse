@@ -413,6 +413,212 @@
 :global([data-theme='dark']) .nowCard,
 :global([data-theme='dark']) .ask,
 :global([data-theme='dark']) .shapingCard,
-:global([data-theme='dark']) .relCard {
+:global([data-theme='dark']) .relCard,
+:global([data-theme='dark']) .recogCard,
+:global([data-theme='dark']) .skillCard,
+:global([data-theme='dark']) .groupCard,
+:global([data-theme='dark']) .actItem {
   border-color: rgba(247, 243, 238, 0.1);
+}
+
+/* Skills & offerings (barter) */
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.skillCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition:
+    transform 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+.skillCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -22px rgba(45, 27, 61, 0.4);
+}
+.skillName {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.skillMeta {
+  font-size: 13px;
+  color: var(--ink-60);
+}
+.barterLink {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+.barterLink:hover {
+  color: var(--plum);
+}
+
+/* Groups & circles */
+.groupsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.groupCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+.groupName {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin-bottom: 3px;
+}
+.groupType {
+  font-size: 13px;
+  color: var(--ink-40);
+}
+
+/* Recent activity */
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.actItem {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 16px 18px;
+  text-decoration: none;
+  transition:
+    transform 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+.actItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -22px rgba(45, 27, 61, 0.4);
+}
+.actIcon {
+  font-size: 20px;
+  flex: none;
+  line-height: 1.2;
+}
+.actBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.actTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.actSub {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+@media (max-width: 640px) {
+  .groupsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Recognition (badges & perks entry) */
+.recogGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 640px) {
+  .recogGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.recogCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card);
+  padding: 24px 26px;
+  text-decoration: none;
+  transition:
+    box-shadow 0.22s var(--ease),
+    transform 0.22s var(--ease);
+}
+.recogCard:hover {
+  box-shadow: 0 8px 28px rgba(45, 27, 61, 0.1);
+  transform: translateY(-2px);
+}
+.recogTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.recogChip {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  white-space: nowrap;
+}
+.recogChip.jade {
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade);
+}
+.recogTitle {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--plum);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+.recogDesc {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.55;
+}
+.recogArrow {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+.recogXpBar {
+  height: 5px;
+  background: rgba(45, 27, 61, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+.recogXpFill {
+  height: 100%;
+  background: var(--jade);
+  border-radius: 999px;
 }

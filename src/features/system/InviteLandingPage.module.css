@@ -100,6 +100,14 @@
   border: 2.5px solid rgba(247, 243, 238, 0.2);
 }
 
+.avatarPhoto {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
 .inviterName {
   font-weight: 700;
   font-size: 16px;
@@ -278,76 +286,48 @@
   font-weight: 600;
 }
 
-/* Form */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.input {
-  width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
-  border-radius: 12px;
-  padding: 12px 16px;
-  font-family: var(--sans);
-  font-size: 14.5px;
-  color: var(--ink);
-  background: rgba(45, 27, 61, 0.02);
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.input:focus {
-  border-color: var(--plum);
-}
-
-.input::placeholder {
-  color: var(--ink-40);
-}
-
-.consentRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 4px 0;
-}
-
-.checkbox {
-  width: 18px;
-  height: 18px;
-  border-radius: 5px;
-  border: 1.5px solid rgba(45, 27, 61, 0.25);
-  cursor: pointer;
-  appearance: none;
-  flex: none;
-  margin-top: 1px;
-  transition: all 0.15s;
-  position: relative;
-  accent-color: var(--plum);
-}
-
-.checkbox:checked {
-  background: var(--plum);
-  border-color: var(--plum);
-}
-
-.consentText {
-  font-size: 13px;
-  color: var(--ink-60);
-  line-height: 1.5;
-}
-
-.consentText a {
-  color: var(--accent-ink);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 .submitBtn {
   width: 100%;
   justify-content: center;
   margin-top: 4px;
+}
+
+/* Google-only sign up */
+.google {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--paper);
+  border: 1.5px solid rgba(45, 27, 61, 0.15);
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.google:hover {
+  border-color: rgba(45, 27, 61, 0.35);
+  background: var(--cream);
+}
+
+.consentNote {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.6;
+  text-align: center;
+  margin-top: 14px;
+}
+
+.consentNote a {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .alreadyMember {
@@ -445,5 +425,440 @@
 
   .message {
     margin: 0 22px;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Sealed — "open invitation"                                      */
+/* ---------------------------------------------------------------- */
+
+.sealed {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 440px;
+  padding: 20px;
+  animation: invFadeUp 0.6s var(--ease) both;
+}
+
+/* Bigger seal on the initial screen so the inviter is clearly recognisable */
+.seal.sealStatic {
+  width: 176px;
+  height: 176px;
+  margin-bottom: 30px;
+}
+
+/* Photo stays perfectly still & sharp — only the ring + glow animate around it */
+.sealStatic .sealAvatar {
+  inset: 16px;
+  font-size: 46px;
+  animation: none;
+  z-index: 1;
+  box-shadow: 0 0 0 1px rgba(247, 243, 238, 0.08), 0 14px 36px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Pulse that radiates from behind the photo without scaling it */
+.seal.sealStatic::after {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.35);
+  z-index: 0;
+  animation: invSealGlow 2.4s ease-out infinite;
+}
+
+@keyframes invSealGlow {
+  0% {
+    transform: scale(0.94);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(1.32);
+    opacity: 0;
+  }
+}
+
+.sealRingStatic {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: rgba(var(--accent-rgb), 0.55);
+  stroke-width: 1.4;
+  stroke-dasharray: 4 8;
+  animation: invSealRotate 26s linear infinite;
+}
+
+.sealedEyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(247, 243, 238, 0.5);
+  margin-bottom: 14px;
+}
+
+.sealedSub {
+  font-size: 14.5px;
+  color: rgba(247, 243, 238, 0.6);
+  line-height: 1.6;
+  max-width: 38ch;
+  margin: 14px 0 28px;
+}
+
+.sealedBtn {
+  min-width: 220px;
+  justify-content: center;
+}
+
+@keyframes invSealRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Loader — "receiving your invitation"                            */
+/* ---------------------------------------------------------------- */
+
+.loader {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 420px;
+  padding: 20px;
+  animation: invFadeUp 0.5s var(--ease) both;
+}
+
+.seal {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 28px;
+}
+
+.sealRing {
+  position: absolute;
+  inset: 0;
+  width: 96px;
+  height: 96px;
+  fill: none;
+  stroke: rgba(var(--accent-rgb), 0.85);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 70 210;
+  transform-origin: center;
+  animation: invSealSpin 1.15s linear infinite;
+}
+
+.sealAvatar {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 24px;
+  color: var(--cream);
+  background: rgba(var(--accent-rgb), 0.25);
+  border: 2.5px solid rgba(247, 243, 238, 0.2);
+  animation: invSealPulse 1.8s ease-in-out infinite;
+}
+
+.loaderBrand {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: rgba(247, 243, 238, 0.55);
+  margin-bottom: 14px;
+}
+
+.loaderBrand em {
+  font-style: italic;
+}
+
+.loaderTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(26px, 5vw, 34px);
+  color: var(--cream);
+  letter-spacing: -0.022em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.loaderTitle em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.loaderStatus {
+  font-size: 14px;
+  color: rgba(247, 243, 238, 0.6);
+  min-height: 1.4em;
+  animation: invStatusFade 0.8s var(--ease) infinite;
+}
+
+.loaderBar {
+  margin-top: 24px;
+  width: 220px;
+  max-width: 70vw;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(247, 243, 238, 0.12);
+  overflow: hidden;
+}
+
+.loaderBarFill {
+  height: 100%;
+  width: 40%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--jade));
+  animation: invBarSlide 1.4s var(--ease) infinite;
+}
+
+@keyframes invSealSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes invSealPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.35);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 0 10px rgba(var(--accent-rgb), 0);
+  }
+}
+
+@keyframes invStatusFade {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes invBarSlide {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(370%);
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Entrance animations                                              */
+/* ---------------------------------------------------------------- */
+
+@keyframes invCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes invFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes invAvatarIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes invGlowDrift {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: translate(0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-3%, 2%);
+  }
+}
+
+@keyframes invCheckDraw {
+  from {
+    stroke-dashoffset: 40;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes invIconPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Card shells lift in */
+.card,
+.successCard {
+  animation: invCardIn 0.7s var(--ease) both;
+}
+
+/* Ambient glow gently drifts behind the header */
+.header::before {
+  animation: invGlowDrift 9s ease-in-out infinite;
+}
+
+/* Staggered cascade of the card's contents */
+.brand,
+.inviterRow,
+.heading,
+.headerNote,
+.message,
+.whatItem,
+.tokenBadge,
+.expiryRow,
+.form,
+.alreadyMember {
+  animation: invFadeUp 0.6s var(--ease) both;
+}
+
+.brand {
+  animation-delay: 0.12s;
+}
+.inviterRow {
+  animation-delay: 0.19s;
+}
+.heading {
+  animation-delay: 0.26s;
+}
+.headerNote {
+  animation-delay: 0.33s;
+}
+.message {
+  animation-delay: 0.4s;
+}
+.whatItem:nth-child(1) {
+  animation-delay: 0.47s;
+}
+.whatItem:nth-child(2) {
+  animation-delay: 0.54s;
+}
+.whatItem:nth-child(3) {
+  animation-delay: 0.61s;
+}
+.tokenBadge {
+  animation-delay: 0.68s;
+}
+.expiryRow {
+  animation-delay: 0.74s;
+}
+.form {
+  animation-delay: 0.8s;
+}
+.alreadyMember {
+  animation-delay: 0.88s;
+}
+
+.inviterAvatar {
+  animation: invAvatarIn 0.55s var(--ease) both;
+  animation-delay: 0.26s;
+}
+
+/* Success state */
+.successIcon {
+  animation: invIconPop 0.55s var(--ease) both;
+  animation-delay: 0.2s;
+}
+
+.successIcon svg polyline {
+  stroke-dasharray: 40;
+  animation: invCheckDraw 0.5s var(--ease) both;
+  animation-delay: 0.55s;
+}
+
+.successHeading {
+  animation: invFadeUp 0.6s var(--ease) both;
+  animation-delay: 0.34s;
+}
+.successLead {
+  animation: invFadeUp 0.6s var(--ease) both;
+  animation-delay: 0.44s;
+}
+.successActions {
+  animation: invFadeUp 0.6s var(--ease) both;
+  animation-delay: 0.54s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sealed,
+  .sealRingStatic,
+  .seal.sealStatic::after,
+  .loader,
+  .sealRing,
+  .sealAvatar,
+  .loaderStatus,
+  .loaderBarFill,
+  .card,
+  .successCard,
+  .header::before,
+  .brand,
+  .inviterRow,
+  .inviterAvatar,
+  .heading,
+  .headerNote,
+  .message,
+  .whatItem,
+  .tokenBadge,
+  .expiryRow,
+  .form,
+  .alreadyMember,
+  .successIcon,
+  .successIcon svg polyline,
+  .successHeading,
+  .successLead,
+  .successActions {
+    animation: none;
   }
 }

@@ -4,7 +4,7 @@ import { MEMBERS, memberName } from '../members/data/members'
 export type Tint = 'jade' | 'plum' | undefined
 export type TabId = 'all' | 'incoming' | 'outgoing' | 'vouched'
 
-export const PROFILE = routes.profile
+export const PROFILE = routes.members
 export const MESSAGES = routes.messages
 
 export interface Person {

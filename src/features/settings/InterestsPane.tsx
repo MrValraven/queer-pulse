@@ -1,0 +1,167 @@
+import { useState } from 'react'
+import { Pane, Section, ToggleList, ToggleRow } from './SettingsControls'
+import {
+  AGE_LABELS,
+  CONTENT_SETTINGS,
+  DEFAULT_AGE_INDEX,
+  DEFAULT_FREQ,
+  FREQ_OPTIONS,
+  IDENTITIES,
+  LOOKING_FOR,
+  READING_PREFS,
+  type ChipGroup,
+} from './interests.data'
+import styles from './InterestsPane.module.css'
+
+function ChipField({
+  group,
+  onChange,
+}: {
+  group: ChipGroup
+  onChange: () => void
+}) {
+  const [selected, setSelected] = useState<string[]>(group.defaults)
+
+  function toggle(label: string) {
+    setSelected((prev) =>
+      prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label],
+    )
+    onChange()
+  }
+
+  return (
+    <div className={styles.chipWrap}>
+      {group.options.map((label) => (
+        <button
+          key={label}
+          type="button"
+          className={`${styles.chip} ${selected.includes(label) ? styles.chipOn : ''}`}
+          onClick={() => toggle(label)}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+export function InterestsPane({ onChange }: { onChange: () => void }) {
+  const [identitiesSkipped, setIdentitiesSkipped] = useState(false)
+  const [ageIndex, setAgeIndex] = useState(DEFAULT_AGE_INDEX)
+  const [freq, setFreq] = useState(DEFAULT_FREQ)
+
+  return (
+    <Pane
+      title={<>Shape what you <em>see.</em></>}
+      sub="These are private — not shown on your profile. They help us surface gatherings, members, and content that's relevant to you. Change them any time."
+    >
+      <div className={`${styles.prefSection} ${identitiesSkipped ? styles.skipped : ''}`}>
+        <div className={styles.psHead}>
+          Which identities feel like yours?
+          <button
+            type="button"
+            className={styles.psSkip}
+            onClick={() => setIdentitiesSkipped((v) => !v)}
+          >
+            {identitiesSkipped ? 'Skipped' : 'Skip'}
+          </button>
+        </div>
+        <div className={styles.psHelper}>
+          Select as many as feel right. We use these to suggest relevant communities and content —
+          not to categorise you.
+        </div>
+        <ChipField group={IDENTITIES} onChange={onChange} />
+      </div>
+
+      <div className={styles.prefSection}>
+        <div className={styles.psHead}>What are you looking for here?</div>
+        <div className={styles.psHelper}>Select as many as you like.</div>
+        <ChipField group={LOOKING_FOR} onChange={onChange} />
+      </div>
+
+      <div className={styles.prefSection}>
+        <div className={styles.psHead}>
+          A bit about your life
+          <span className={styles.psHeadNote}>(private — helps with local suggestions)</span>
+        </div>
+        <div className={styles.worldGrid}>
+          <div className={styles.field}>
+            <label>City / region</label>
+            <input type="text" defaultValue="Lisbon, Portugal" onChange={onChange} />
+          </div>
+          <div className={styles.field}>
+            <label>Languages</label>
+            <input type="text" placeholder="e.g. Portuguese, English" onChange={onChange} />
+          </div>
+        </div>
+        <div className={styles.field}>
+          <label>
+            Your age range{' '}
+            <span className={styles.fieldNote}>(optional — never shown to other members)</span>
+          </label>
+          <input
+            type="range"
+            className={styles.ageSlider}
+            min={0}
+            max={AGE_LABELS.length - 1}
+            step={1}
+            value={ageIndex}
+            onChange={(e) => {
+              setAgeIndex(Number(e.target.value))
+              onChange()
+            }}
+          />
+          <div className={styles.ageLabelRow}>
+            {AGE_LABELS.map((l) => (
+              <span key={l}>{l}</span>
+            ))}
+          </div>
+          <div className={styles.ageVal}>{AGE_LABELS[ageIndex]}</div>
+        </div>
+      </div>
+
+      <div className={styles.prefSection}>
+        <div className={styles.psHead}>What do you like reading?</div>
+        <ToggleList>
+          {READING_PREFS.map((title) => (
+            <ToggleRow key={title} title={title} defaultChecked onChange={onChange} />
+          ))}
+        </ToggleList>
+        <div className={styles.subHead}>How often do you want to hear from us?</div>
+        <div className={styles.freqOpts}>
+          {FREQ_OPTIONS.map((opt) => (
+            <button
+              key={opt.key}
+              type="button"
+              className={`${styles.freqOpt} ${freq === opt.key ? styles.freqOptSelected : ''}`}
+              onClick={() => {
+                setFreq(opt.key)
+                onChange()
+              }}
+            >
+              <div className={styles.foRadio}><div className={styles.foDot} /></div>
+              <div>
+                <div className={styles.foTitle}>{opt.title}</div>
+                <div className={styles.foDesc}>{opt.desc}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <Section label="Content settings">
+        <div className={styles.psHelper}>
+          Turning these off never affects your community access — only your feed.
+        </div>
+        <ToggleList>
+          {CONTENT_SETTINGS.map((title) => (
+            <ToggleRow key={title} title={title} defaultChecked onChange={onChange} />
+          ))}
+        </ToggleList>
+        <div className={styles.legalNote}>
+          These preferences are private. Only you and QueerPulse can see them.
+        </div>
+      </Section>
+    </Pane>
+  )
+}

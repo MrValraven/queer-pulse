@@ -17,7 +17,7 @@ import styles from './Discovery.module.css'
 function MemberCard({ member }: { member: Member }) {
   const connectHref =
     member.visibility === 'private'
-      ? `${routes.profile}/${member.key}`
+      ? `${routes.members}/${member.key}`
       : `${routes.connect}#${member.key}`
   const connectLabel = member.visibility === 'private' ? 'View profile' : 'Say hello'
 
@@ -41,7 +41,7 @@ function MemberCard({ member }: { member: Member }) {
       </div>
 
       <div>
-        <Link to={`${routes.profile}/${member.key}`}>
+        <Link to={`${routes.members}/${member.key}`}>
           <div className={styles.name}>{member.name}</div>
         </Link>
         <div className={styles.role}>{member.role}</div>

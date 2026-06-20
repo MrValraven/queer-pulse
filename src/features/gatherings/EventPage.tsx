@@ -23,7 +23,7 @@ export function EventPage() {
             <Avatar initials="MC" tint="coral" size={34} />
             <div className={styles.by}>
               Hosted by <strong>Mateus Costa</strong> ·{' '}
-              <Link to="/profile" style={{ color: 'rgba(247,243,238,.58)', textDecoration: 'underline' }}>
+              <Link to="/members" style={{ color: 'rgba(247,243,238,.58)', textDecoration: 'underline' }}>
                 View profile
               </Link>
             </div>

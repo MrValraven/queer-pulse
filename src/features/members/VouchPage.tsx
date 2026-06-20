@@ -32,7 +32,7 @@ export function VouchPage() {
                   someone already had their back before they even walked in.
                 </p>
                 <div className={styles.panelActions}>
-                  <Button to="/connections" variant="ghost-dark" size="lg">
+                  <Button to="/account/connections" variant="ghost-dark" size="lg">
                     Back to connections
                   </Button>
                   <Button to="/members" variant="jade" size="lg">

@@ -139,7 +139,7 @@ export function StoryTomasArticle() {
                 Sofia makes documentaries about people who wouldn't think to be documented. She is
                 currently in post-production on a 28-minute film about Lisbon's disappearing tascas.
               </div>
-              <Link to={routes.profile} className={styles.authorLink}>
+              <Link to={routes.members} className={styles.authorLink}>
                 View her profile →
               </Link>
             </div>

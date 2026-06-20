@@ -1,18 +1,18 @@
-import { routes } from '../../../app/routeMap'
+import { routes } from "../../../app/routeMap";
 export interface MegaLink {
-  label: string
-  href: string
-  featured?: boolean
+  label: string;
+  href: string;
+  featured?: boolean;
 }
 
 export interface MegaColumn {
-  head: string
-  links: MegaLink[]
+  head: string;
+  links: MegaLink[];
 }
 
 export interface MegaMenu {
-  key: string
-  columns: MegaColumn[]
+  key: string;
+  columns: MegaColumn[];
 }
 
 export const NAV_MENUS: MegaMenu[] = [
@@ -22,13 +22,11 @@ export const NAV_MENUS: MegaMenu[] = [
       {
         head: "People",
         links: [
-          { label: "Members", href: `${routes.homepage}#discovery` },
           {
-            label: "Browse · advanced",
+            label: "Members directory",
             href: routes.memberDirectoryFilter,
           },
           { label: "Connect", href: routes.connect },
-          { label: "Your connections", href: routes.connections },
           { label: "Forum", href: routes.forum },
           { label: "Search", href: routes.search },
           { label: "Dating", href: routes.dating },
@@ -37,11 +35,9 @@ export const NAV_MENUS: MegaMenu[] = [
       {
         head: "Gather",
         links: [
-          { label: "Gatherings", href: `${routes.homepage}#gather` },
           { label: "Events", href: routes.events },
           { label: "Host a gathering", href: routes.host },
           { label: "Reading Groups", href: routes.readingGroups },
-          { label: "Family", href: routes.family },
           { label: "Volunteer", href: routes.volunteer },
           { label: "Activism", href: routes.activism },
           { label: "Changemakers", href: routes.changemakers },
@@ -93,6 +89,10 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Legal & safety",
         links: [
           { label: "Legal Resources", href: routes.legal },
+          { label: "Family", href: routes.family },
+          { label: "Coming Out", href: routes.comingOut },
+          { label: "Parents", href: routes.parents },
+          { label: "Library", href: routes.library },
           { label: "Hate Crime Guide", href: routes.hateCrime },
           { label: "Safety Guide", href: routes.safety },
           { label: "Emergency", href: routes.emergency },
@@ -116,7 +116,6 @@ export const NAV_MENUS: MegaMenu[] = [
           },
           { label: "World AIDS Day", href: routes.worldAidsDay },
           { label: "Pride Month", href: routes.prideMonth },
-          { label: "Micro Grants", href: routes.microGrants },
           { label: "Barter Exchange", href: routes.barter },
           {
             label: "Intersectionality",
@@ -132,6 +131,7 @@ export const NAV_MENUS: MegaMenu[] = [
       {
         head: "Read & watch",
         links: [
+          { label: "Cultural life", href: routes.culture, featured: true },
           { label: "Magazine", href: routes.magazine, featured: true },
           { label: "Cinema · queer film", href: routes.cinema, featured: true },
           { label: "Issues", href: routes.issues },
@@ -154,7 +154,11 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Create & act",
         links: [
           { label: "Creatives", href: routes.creatives, featured: true },
-          { label: "Studio · queer music", href: routes.studio, featured: true },
+          {
+            label: "Studio · queer music",
+            href: routes.studio,
+            featured: true,
+          },
           { label: "Changemakers", href: routes.changemakers },
           { label: "Manifesto", href: routes.manifesto },
           { label: "Governance", href: routes.governance },
@@ -185,6 +189,7 @@ export const NAV_MENUS: MegaMenu[] = [
             featured: true,
           },
           { label: "Solidarity Pricing", href: routes.solidarity },
+          { label: "Grants", href: routes.grants },
           { label: "Micro Grants", href: routes.microGrants },
           { label: "Economy", href: routes.economy },
           { label: "Offer a skill", href: routes.offer },
@@ -220,7 +225,6 @@ export const NAV_MENUS: MegaMenu[] = [
           { label: "Help & FAQ", href: routes.help },
           { label: "Changelog", href: routes.changelog },
           { label: "Accessibility", href: routes.accessibility },
-          { label: "Newsletter", href: routes.newsletter },
         ],
       },
       {
@@ -237,4 +241,4 @@ export const NAV_MENUS: MegaMenu[] = [
       },
     ],
   },
-]
+];

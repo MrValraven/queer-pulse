@@ -5,7 +5,7 @@ import styles from "./StoryPage.module.css";
 import { memberName } from "../members/data/members";
 import { StoryArticle } from "./StoryArticle";
 
-const PROFILE = routes.profile;
+const PROFILE = routes.members;
 const STORY = routes.story;
 const INVITE = routes.invite;
 

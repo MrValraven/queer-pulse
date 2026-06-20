@@ -1,46 +1,17 @@
-import { useState, type KeyboardEvent } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
-import { IdentitySection, PronounsSection, BioSection, SkillsSection, VisibilitySection } from './EditProfileSections'
+import { EditProfilePane } from './EditProfilePane'
 import styles from './EditProfilePage.module.css'
 
 export function EditProfilePage() {
   const { showToast } = useToast()
   const [unsaved, setUnsaved] = useState(false)
-  const [selectedPronouns, setSelectedPronouns] = useState<string[]>(['she/her'])
-  const [skills, setSkills] = useState(['Community organising', 'Legal research'])
-  const [interests, setInterests] = useState(['Housing policy', 'Queer theory', 'Lisbon history'])
-  const [skillInput, setSkillInput] = useState('')
-  const [interestInput, setInterestInput] = useState('')
-  const [bioText, setBioText] = useState('Former housing rights lawyer. Has been doing community organising in Mouraria since 2018. Convinced the platform needed to exist before she knew how to build it.')
 
   const markChanged = () => setUnsaved(true)
-
-  function togglePronoun(p: string) {
-    setSelectedPronouns((prev) => prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p])
-    markChanged()
-  }
-
-  function addTag(key: 'skills' | 'interests', val: string) {
-    const trimmed = val.trim()
-    if (!trimmed) return
-    if (key === 'skills') { setSkills((prev) => prev.includes(trimmed) ? prev : [...prev, trimmed]); setSkillInput('') }
-    else { setInterests((prev) => prev.includes(trimmed) ? prev : [...prev, trimmed]); setInterestInput('') }
-    markChanged()
-  }
-
-  function removeTag(key: 'skills' | 'interests', val: string) {
-    if (key === 'skills') setSkills((prev) => prev.filter((s) => s !== val))
-    else setInterests((prev) => prev.filter((s) => s !== val))
-    markChanged()
-  }
-
-  function handleTagKey(e: KeyboardEvent<HTMLInputElement>, key: 'skills' | 'interests') {
-    if (e.key === 'Enter') { e.preventDefault(); addTag(key, key === 'skills' ? skillInput : interestInput) }
-  }
 
   return (
     <AppShell>
@@ -78,11 +49,7 @@ export function EditProfilePage() {
         </aside>
 
         <main className={styles.main}>
-          <IdentitySection onUpload={() => showToast('Photo upload — connect to your file system.', 'info')} onRemove={() => showToast('Photo removed.', 'info')} onChange={markChanged} />
-          <PronounsSection selected={selectedPronouns} onToggle={togglePronoun} onChange={markChanged} />
-          <BioSection bioText={bioText} onChange={setBioText} onAnyChange={markChanged} />
-          <SkillsSection skills={skills} interests={interests} skillInput={skillInput} interestInput={interestInput} onSkillInputChange={setSkillInput} onInterestInputChange={setInterestInput} onAdd={addTag} onRemove={removeTag} onKeyDown={handleTagKey} />
-          <VisibilitySection onChange={markChanged} />
+          <EditProfilePane onChange={markChanged} />
           <div style={{ height: '80px' }} />
         </main>
       </div>

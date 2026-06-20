@@ -5,7 +5,7 @@ import { useToast } from '../../shared/components/feedback/useToast'
 import styles from './AccessibilityPreferencesPage.module.css'
 import { A11yDisplaySection, A11yMotionSection, A11yReadingSection, A11yInteractionSection } from './AccessibilityPrefSections'
 
-type ColorTheme = 'default' | 'softer' | 'high-contrast'
+export type ColorTheme = 'default' | 'softer' | 'high-contrast'
 
 export interface A11yPrefs {
   highContrast: boolean
@@ -22,7 +22,7 @@ export interface A11yPrefs {
   colorTheme: ColorTheme
 }
 
-const DEFAULT_PREFS: A11yPrefs = {
+export const DEFAULT_PREFS: A11yPrefs = {
   highContrast: false, largerText: false, dyslexia: false,
   reduceMotion: false, pauseDecorative: false, wideSpacing: false,
   focusRings: false, largeTargets: false, stickyNav: true, skipLink: false,

@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { HomePage } from '../features/homepage/HomePage'
 import { MembersPage } from '../features/members/MembersPage'
 import { ProfilePage } from '../features/members/ProfilePage'
@@ -41,6 +41,7 @@ import { StoryPage } from '../features/magazine/StoryPage'
 import { StoryTomasPage } from '../features/magazine/StoryTomasPage'
 import { StorySafetyPage } from '../features/magazine/StorySafetyPage'
 import { CreativesPage } from '../features/community/CreativesPage'
+import { CulturePage } from '../features/culture/CulturePage'
 import { ManifestoPage } from '../features/marketing/ManifestoPage'
 import { PrivacyPage } from '../features/marketing/PrivacyPage'
 import { TermsPage } from '../features/marketing/TermsPage'
@@ -191,6 +192,8 @@ import { MentorProfilePage } from '../features/economy/MentorProfilePage'
 import { NotificationDeepLinkPage } from '../features/notifications/NotificationDeepLinkPage'
 import { MentionsPage } from '../features/notifications/MentionsPage'
 import { CollectionsPage } from '../features/members/CollectionsPage'
+import { BadgesPage } from '../features/members/BadgesPage'
+import { PerksPage } from '../features/members/PerksPage'
 import { DraftsPage } from '../features/members/DraftsPage'
 import { QrScannerPage } from '../features/members/QrScannerPage'
 import { CookiesPage } from '../features/marketing/CookiesPage'
@@ -331,6 +334,40 @@ const BUILT_SLUGS = new Set([
 ])
 
 /**
+ * Legacy top-level account paths → their new `/account/*` home. Keeps old
+ * bookmarks, hardcoded links, and design-prototype hrefs working after the
+ * account routes were unified under `/account`.
+ */
+const ACCOUNT_REDIRECTS: [string, string][] = [
+  ['/profile', '/account/profile'],
+  ['/badges', '/account/badges'],
+  ['/perks', '/account/perks'],
+  ['/connections', '/account/connections'],
+  ['/collections', '/account/collections'],
+  ['/drafts', '/account/drafts'],
+  ['/settings', '/account/settings'],
+  ['/edit-profile', '/account/edit-profile'],
+  ['/notification-preferences', '/account/notification-preferences'],
+  ['/accessibility-preferences', '/account/accessibility-preferences'],
+  ['/profile-theme', '/account/profile-theme'],
+  ['/linked-accounts', '/account/linked-accounts'],
+  ['/security', '/account/security'],
+  ['/sessions', '/account/sessions'],
+  ['/subscriptions', '/account/subscriptions'],
+  ['/data-export', '/account/data-export'],
+  ['/delete-account', '/account/delete-account'],
+  ['/cancel-membership', '/account/cancel-membership'],
+  ['/membership', '/account/membership'],
+  ['/gift-membership', '/account/gift-membership'],
+]
+
+/** Legacy public-profile path `/profile/:slug` → its new home `/members/:slug`. */
+function MemberProfileRedirect() {
+  const { slug } = useParams()
+  return <Navigate to={`/members/${slug ?? ''}`} replace />
+}
+
+/**
  * The Member Platform surface is now built. Remaining known links resolve to a
  * styled placeholder, and unknown paths fall through to it too, so no link 404s.
  */
@@ -344,12 +381,15 @@ export function AppRoutes() {
       <Route path="/members" element={<MembersPage />} />
       <Route path="/member-directory-filter" element={<MemberDirectoryFilterPage />} />
       <Route path="/search" element={<SearchPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/profile/:slug" element={<ProfilePage />} />
+      <Route path="/account/profile" element={<ProfilePage />} />
+      <Route path="/members/:slug" element={<ProfilePage />} />
+      <Route path="/profile/:slug" element={<MemberProfileRedirect />} />
       <Route path="/public-profile" element={<PublicProfilePage />} />
+      <Route path="/account/badges" element={<BadgesPage />} />
+      <Route path="/account/perks" element={<PerksPage />} />
       <Route path="/connect" element={<ConnectPage />} />
       <Route path="/connect/:slug" element={<ConnectPage />} />
-      <Route path="/connections" element={<ConnectionsPage />} />
+      <Route path="/account/connections" element={<ConnectionsPage />} />
       <Route path="/dating" element={<DatingPage />} />
       <Route path="/reading-groups" element={<ReadingGroupsPage />} />
       <Route path="/family" element={<FamilyPage />} />
@@ -357,8 +397,8 @@ export function AppRoutes() {
       <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="/notification-deep-link" element={<NotificationDeepLinkPage />} />
       <Route path="/mentions" element={<MentionsPage />} />
-      <Route path="/collections" element={<CollectionsPage />} />
-      <Route path="/drafts" element={<DraftsPage />} />
+      <Route path="/account/collections" element={<CollectionsPage />} />
+      <Route path="/account/drafts" element={<DraftsPage />} />
       <Route path="/qr-scanner" element={<QrScannerPage />} />
       <Route path="/communities" element={<CommunitiesPage />} />
       <Route path="/community/:slug" element={<CommunityDetailPage />} />
@@ -367,6 +407,7 @@ export function AppRoutes() {
       <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/events" element={<EventsPage />} />
       <Route path="/gathering" element={<GatheringPage />} />
+      <Route path="/gathering/:slug" element={<GatheringPage />} />
       <Route path="/event" element={<EventPage />} />
       <Route path="/rsvp" element={<RsvpPage />} />
       <Route path="/rsvp-ticket" element={<RsvpPage />} />
@@ -394,6 +435,7 @@ export function AppRoutes() {
       <Route path="/story-tomas" element={<StoryTomasPage />} />
       <Route path="/story-safety" element={<StorySafetyPage />} />
       <Route path="/creatives" element={<CreativesPage />} />
+      <Route path="/culture" element={<CulturePage />} />
       <Route path="/manifesto" element={<ManifestoPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
@@ -505,7 +547,8 @@ export function AppRoutes() {
       <Route path="/changemaker/:slug" element={<ChangemakerStoryPage />} />
       <Route path="/forum" element={<ForumPage />} />
       <Route path="/thread" element={<ThreadPage />} />
-      <Route path="/settings" element={<SettingsPage />} />
+      <Route path="/thread/:id" element={<ThreadPage />} />
+      <Route path="/account/settings" element={<SettingsPage />} />
       <Route path="/governance" element={<GovernancePage />} />
 
       {/* Marketing / content */}
@@ -539,20 +582,26 @@ export function AppRoutes() {
       <Route path="/block-mute" element={<BlockMutePage />} />
       <Route path="/appeal-outcome" element={<AppealOutcomePage />} />
 
-      {/* Account & settings sub-flows */}
-      <Route path="/edit-profile" element={<EditProfilePage />} />
-      <Route path="/notification-preferences" element={<NotificationPreferencesPage />} />
-      <Route path="/accessibility-preferences" element={<AccessibilityPreferencesPage />} />
-      <Route path="/profile-theme" element={<ProfileThemePage />} />
-      <Route path="/linked-accounts" element={<LinkedAccountsPage />} />
-      <Route path="/security" element={<SecurityPage />} />
-      <Route path="/sessions" element={<SessionsPage />} />
-      <Route path="/subscriptions" element={<SubscriptionsPage />} />
-      <Route path="/data-export" element={<DataExportPage />} />
-      <Route path="/delete-account" element={<DeleteAccountPage />} />
-      <Route path="/cancel-membership" element={<CancelMembershipPage />} />
-      <Route path="/membership" element={<MembershipPage />} />
-      <Route path="/gift-membership" element={<GiftMembershipPage />} />
+      {/* Account hub & settings sub-flows (all under /account) */}
+      <Route path="/account" element={<Navigate to="/account/profile" replace />} />
+      <Route path="/account/edit-profile" element={<EditProfilePage />} />
+      <Route path="/account/notification-preferences" element={<NotificationPreferencesPage />} />
+      <Route path="/account/accessibility-preferences" element={<AccessibilityPreferencesPage />} />
+      <Route path="/account/profile-theme" element={<ProfileThemePage />} />
+      <Route path="/account/linked-accounts" element={<LinkedAccountsPage />} />
+      <Route path="/account/security" element={<SecurityPage />} />
+      <Route path="/account/sessions" element={<SessionsPage />} />
+      <Route path="/account/subscriptions" element={<SubscriptionsPage />} />
+      <Route path="/account/data-export" element={<DataExportPage />} />
+      <Route path="/account/delete-account" element={<DeleteAccountPage />} />
+      <Route path="/account/cancel-membership" element={<CancelMembershipPage />} />
+      <Route path="/account/membership" element={<MembershipPage />} />
+      <Route path="/account/gift-membership" element={<GiftMembershipPage />} />
+
+      {/* Legacy account paths → /account/* (keeps old links & design hrefs working) */}
+      {ACCOUNT_REDIRECTS.map(([from, to]) => (
+        <Route key={from} path={from} element={<Navigate to={to} replace />} />
+      ))}
 
       {/* System, error & account-state screens */}
       <Route path="/500" element={<ServerErrorPage />} />

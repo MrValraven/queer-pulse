@@ -4,7 +4,7 @@ import { routes } from "../../app/routeMap";
 import styles from "./CoverGalleryPage.module.css";
 
 const ISSUE = routes.issue;
-const MEMBER = routes.profile;
+const MEMBER = routes.members;
 const PRESS = routes.pressKit;
 
 type Tint = "a" | "b" | "c" | "d" | "e";

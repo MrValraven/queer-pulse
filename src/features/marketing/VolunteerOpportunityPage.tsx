@@ -6,7 +6,7 @@ import { routes } from "../../app/routeMap";
 import { VOLUNTEER_OPPORTUNITIES, getOpportunity } from "./volunteerOpportunities";
 import styles from "./VolunteerOpportunityPage.module.css";
 
-const MEMBER = routes.profile;
+const MEMBER = routes.members;
 const MESSAGES = routes.messages;
 const PARTNER = routes.partner;
 const DONATE = routes.donate;

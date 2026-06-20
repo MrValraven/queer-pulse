@@ -47,7 +47,7 @@ export function InvitePage() {
                 </div>
               </div>
               <div className={styles.actions}>
-                <Button variant="ghost" to="/profile">
+                <Button variant="ghost" to="/account/profile">
                   Back to my profile
                 </Button>
               </div>
@@ -62,7 +62,7 @@ export function InvitePage() {
     <AppShell>
       <div className={styles.page}>
         <div className={styles.inner}>
-          <Link to="/profile" className={styles.backLink}>
+          <Link to="/account/profile" className={styles.backLink}>
             ← Back to profile
           </Link>
           <div className={styles.eyebrow}>Invite someone</div>

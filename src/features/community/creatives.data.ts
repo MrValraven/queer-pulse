@@ -1,7 +1,7 @@
 import { routes } from '../../app/routeMap'
 import { MEMBERS, memberName } from '../members/data/members'
 
-export const PROFILE = routes.profile
+export const PROFILE = routes.members
 export const INVITE = routes.invite
 
 export type Tint = 'coral' | 'jade' | 'plum'

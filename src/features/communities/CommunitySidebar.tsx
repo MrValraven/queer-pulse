@@ -32,7 +32,7 @@ export function CommunitySidebar({ detail, related }: { detail: CommunityDetail;
         <div className={styles.sbLbl}>Organiser</div>
         <div className={styles.sbOrgAv}>
           {org.slug ? (
-            <Link to={`/profile/${org.slug}`} title={org.name}>
+            <Link to={`/members/${org.slug}`} title={org.name}>
               {orgAvatar}
             </Link>
           ) : (
@@ -41,7 +41,7 @@ export function CommunitySidebar({ detail, related }: { detail: CommunityDetail;
         </div>
         <div className={styles.sbOrgName}>
           {org.slug ? (
-            <Link to={`/profile/${org.slug}`} style={{ color: 'inherit' }}>
+            <Link to={`/members/${org.slug}`} style={{ color: 'inherit' }}>
               {org.name}
             </Link>
           ) : (

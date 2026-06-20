@@ -1,7 +1,11 @@
 import type { ReactNode } from 'react'
-import { AppNav } from './AppNav'
+import { Navbar } from './Navbar'
 
-/** Logged-in page frame: floating app nav + main content (no marketing footer). */
+/**
+ * Logged-in page frame: the single site-wide Navbar (which reflects auth state)
+ * + main content, with no marketing footer. `unreadCount` feeds the nav's
+ * notifications bell.
+ */
 export function AppShell({
   children,
   unreadCount,
@@ -11,7 +15,7 @@ export function AppShell({
 }) {
   return (
     <>
-      <AppNav unreadCount={unreadCount} />
+      <Navbar unreadCount={unreadCount} />
       <main>{children}</main>
     </>
   )

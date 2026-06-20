@@ -3,6 +3,7 @@
 :root {
   /* ── Brand ── */
   --plum:        #2D1B3D;
+  --plum-rgb:    45, 27, 61;
   --plum-deep:   #241430;
 
   /* ── Accent (coral / terracotta — swappable) ── */
@@ -17,6 +18,10 @@
   /* ── Jade (success / live / verified) ── */
   --jade:     #4A8C6F;
   --jade-rgb: 74, 140, 111;
+
+  /* ── Violet (Culture category accent — design/digital) ── */
+  --violet:     #7A52B8;
+  --violet-rgb: 122, 82, 184;
 
   /* ── Ink (text) ── */
   --ink:    #1A1A1F;

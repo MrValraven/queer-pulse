@@ -1,16 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Avatar } from '../ui'
+import { useAuth } from '../../../app/providers/AuthProvider'
+import { routes } from '../../../app/routeMap'
 import { MEMBERS, memberName } from '../../../features/members/data/members'
 import styles from './AccountMenu.module.css'
 
 const ITEMS = [
-  { label: 'My profile', to: '/profile' },
-  { label: 'Settings', to: '/settings' },
+  { label: 'Feed', to: '/feed' },
+  { label: 'Messages', to: routes.messages },
+  { label: 'My profile', to: routes.accountProfile },
+  { label: 'Your connections', to: routes.connections },
+  { label: 'Settings', to: routes.settings },
 ]
 
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
 export function AccountMenu({ name = memberName('sofia'), initials = MEMBERS.sofia.initials }: { name?: string; initials?: string }) {
+  const { signOut } = useAuth()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -59,7 +65,15 @@ export function AccountMenu({ name = memberName('sofia'), initials = MEMBERS.sof
             </Link>
           ))}
           <div className={styles.divider} />
-          <Link to="/sign-in" role="menuitem" className={`${styles.item} ${styles.signOut}`} onClick={() => setOpen(false)}>
+          <Link
+            to="/"
+            role="menuitem"
+            className={`${styles.item} ${styles.signOut}`}
+            onClick={() => {
+              signOut()
+              setOpen(false)
+            }}
+          >
             Sign out
           </Link>
         </div>

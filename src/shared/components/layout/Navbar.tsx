@@ -4,24 +4,49 @@ import { Button } from "../ui";
 import { useScrolled } from "../../hooks/useScrolled";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useTheme } from "../../../app/providers/ThemeProvider";
+import { useAuth } from "../../../app/providers/AuthProvider";
 import { routes } from "../../../app/routeMap";
 import { MegaNav } from "./MegaNav";
 import { MegaNavDrawer } from "./MegaNavDrawer";
+import { AccountMenu } from "./AccountMenu";
 import styles from "./Navbar.module.css";
 
-function Brand() {
+function Brand({ to }: { to: string }) {
   return (
-    <Link to="/" className={styles.brand}>
+    <Link to={to} className={styles.brand}>
       <span className={styles.pulseDot} aria-hidden />
       Queer<span className={styles.brandItalic}>Pulse</span>
     </Link>
   );
 }
 
-export function Navbar() {
+function NotificationsBell({ unreadCount }: { unreadCount: number }) {
+  return (
+    <Link to="/notifications" className={styles.bell} aria-label="Notifications">
+      <svg width={20} height={20} viewBox="0 0 20 20" fill="none" aria-hidden>
+        <path
+          d="M10 2a6 6 0 0 1 6 6v3l1.5 2.5H2.5L4 11V8a6 6 0 0 1 6-6ZM8 16.5a2 2 0 0 0 4 0"
+          stroke="currentColor"
+          strokeWidth={1.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      {unreadCount > 0 && <span className={styles.bellBadge}>{unreadCount}</span>}
+    </Link>
+  );
+}
+
+/**
+ * The single site-wide nav. Reflects the global auth state: signed-in members
+ * see the notifications bell + profile menu; signed-out visitors see the
+ * marketing sign-in / request-an-invite calls to action.
+ */
+export function Navbar({ unreadCount = 3 }: { unreadCount?: number } = {}) {
   const scrolled = useScrolled(8);
   const isMobile = useMediaQuery("(max-width: 860px)");
   const { theme, toggleTheme } = useTheme();
+  const { loggedIn, signOut } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
@@ -31,7 +56,7 @@ export function Navbar() {
           .filter(Boolean)
           .join(" ")}
       >
-        <Brand />
+        <Brand to={loggedIn ? "/feed" : "/"} />
 
         <div className={styles.links}>
           <MegaNav />
@@ -46,14 +71,21 @@ export function Navbar() {
           >
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
-          {!isMobile && (
-            <Link to="/sign-in" className={styles.signIn}>
-              Sign in
-            </Link>
-          )}
-          <Button to={routes.invite}>
-            Request an invite
-          </Button>
+
+          {!isMobile &&
+            (loggedIn ? (
+              <>
+                <NotificationsBell unreadCount={unreadCount} />
+                <AccountMenu />
+              </>
+            ) : (
+              <>
+                <Link to="/sign-in" className={styles.signIn}>
+                  Sign in
+                </Link>
+                <Button to={routes.invite}>Request an invite</Button>
+              </>
+            ))}
 
           {isMobile && (
             <button
@@ -80,26 +112,60 @@ export function Navbar() {
             onClick={(event) => event.stopPropagation()}
           >
             <MegaNavDrawer onNavigate={() => setDrawerOpen(false)} />
-            <Link
-              to="/sign-in"
-              className={styles.drawerSignIn}
-              onClick={() => setDrawerOpen(false)}
-            >
-              Sign in
-            </Link>
-            <Button
-              to={routes.invite}
-              className={styles.drawerCta}
-              onClick={() => setDrawerOpen(false)}
-            >
-              Request an invite
-            </Button>
+            {loggedIn ? (
+              <>
+                {ACCOUNT_LINKS.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className={styles.drawerSignIn}
+                    onClick={() => setDrawerOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                <Link
+                  to="/"
+                  className={styles.drawerSignIn}
+                  onClick={() => {
+                    signOut();
+                    setDrawerOpen(false);
+                  }}
+                >
+                  Sign out
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/sign-in"
+                  className={styles.drawerSignIn}
+                  onClick={() => setDrawerOpen(false)}
+                >
+                  Sign in
+                </Link>
+                <Button
+                  to={routes.invite}
+                  className={styles.drawerCta}
+                  onClick={() => setDrawerOpen(false)}
+                >
+                  Request an invite
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}
     </>
   );
 }
+
+const ACCOUNT_LINKS = [
+  { label: "Feed", to: "/feed" },
+  { label: "Messages", to: routes.messages },
+  { label: "My profile", to: routes.accountProfile },
+  { label: "Settings", to: routes.settings },
+];
 
 function MoonIcon() {
   return (

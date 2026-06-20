@@ -20,7 +20,7 @@ export function StoryTomasPage() {
             <div className={styles.heroByline}>
               <span className={styles.bylineAv}>SA</span>
               <span>
-                Words by <Link to={routes.profile}>{memberName('sofia')}</Link>
+                Words by <Link to={routes.members}>{memberName('sofia')}</Link>
               </span>
               <span className={styles.bDot} />
               <span>4 min read</span>

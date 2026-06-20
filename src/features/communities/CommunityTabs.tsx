@@ -8,7 +8,7 @@ import { AV_CLASS, CommunityThread } from './CommunityThread'
 import styles from './CommunityDetailPage.module.css'
 
 const GATHERING = routes.gathering
-const MEMBER = routes.profile
+const MEMBER = routes.members
 
 export function AboutTab({ detail }: { detail: CommunityDetail }) {
   return (

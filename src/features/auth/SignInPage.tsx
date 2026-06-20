@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useAuth } from '../../app/providers/AuthProvider'
 import { AuthLayout } from './AuthLayout'
 import styles from './auth.module.css'
 
@@ -10,6 +11,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 export function SignInPage() {
   const navigate = useNavigate()
   const { showToast } = useToast()
+  const { signIn } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -29,7 +31,10 @@ export function SignInPage() {
       <form
         onSubmit={(event) => {
           event.preventDefault()
-          if (canSubmit) navigate('/feed')
+          if (canSubmit) {
+            signIn()
+            navigate('/feed')
+          }
         }}
       >
         <div className={styles.field}>

@@ -35,9 +35,9 @@ const CATEGORIES: Category[] = [
     headPre: 'Your ',
     headEm: 'account',
     qa: [
-      { q: 'How do I change my display name or pronouns?', a: <>Go to your profile and click "Edit profile" (or the <Link to="/settings">Settings</Link> page). Your display name can differ from your legal name. Pronoun changes take effect immediately across the platform.</> },
-      { q: 'Can I make my profile private?', a: <>Yes. In <Link to="/settings">Settings → Visibility</Link>, set it to <strong>Open</strong>, <strong>Network only</strong>, or <strong>Private</strong>. Private profiles are hidden from the directory and search, but you can still browse and join gatherings.</> },
-      { q: 'How do I delete my account?', a: <>Go to <Link to="/settings">Settings → Data &amp; privacy</Link> and find "Delete account". We show what gets removed and offer gentler alternatives (deactivating). If you still want to delete, your data is removed within 30 days.</> },
+      { q: 'How do I change my display name or pronouns?', a: <>Go to your profile and click "Edit profile" (or the <Link to="/account/settings">Settings</Link> page). Your display name can differ from your legal name. Pronoun changes take effect immediately across the platform.</> },
+      { q: 'Can I make my profile private?', a: <>Yes. In <Link to="/account/settings">Settings → Visibility</Link>, set it to <strong>Open</strong>, <strong>Network only</strong>, or <strong>Private</strong>. Private profiles are hidden from the directory and search, but you can still browse and join gatherings.</> },
+      { q: 'How do I delete my account?', a: <>Go to <Link to="/account/settings">Settings → Data &amp; privacy</Link> and find "Delete account". We show what gets removed and offer gentler alternatives (deactivating). If you still want to delete, your data is removed within 30 days.</> },
       { q: 'What does my level mean and how do I level up?', a: 'Your level reflects your participation — attending gatherings, making connections, contributing, and supporting the platform. Each level unlocks new perks.' },
     ],
   },
@@ -83,7 +83,7 @@ const CATEGORIES: Category[] = [
     headPre: '',
     headEm: 'Technical',
     qa: [
-      { q: 'How do I manage my email notifications?', a: <>Go to <Link to="/settings">Settings → Notifications</Link>. You can toggle each type individually and set how often we batch them (immediately, daily, or weekly), plus quiet hours.</> },
+      { q: 'How do I manage my email notifications?', a: <>Go to <Link to="/account/settings">Settings → Notifications</Link>. You can toggle each type individually and set how often we batch them (immediately, daily, or weekly), plus quiet hours.</> },
       { q: 'Which browsers and devices are supported?', a: 'QueerPulse works on any modern browser — Chrome, Firefox, Safari, Edge — on desktop and mobile. There is no app to install; the site is fully responsive.' },
       { q: 'Something looks broken. What do I do?', a: <>Try a hard refresh first. If it persists, write to us via <Link to="/contact">Contact</Link> with your browser and what you were doing — crash reports help us fix things faster.</> },
     ],

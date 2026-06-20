@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: 252px 1fr;
   gap: 48px;
-  padding: 40px 0 120px;
+  padding: 108px 0 120px;
   align-items: start;
 }
 
@@ -48,11 +48,20 @@
   color: var(--accent-ink);
   font-weight: 600;
 }
+.navItemDanger {
+  color: #c85a40;
+}
+.navItemDanger:hover {
+  background: rgba(200, 90, 64, 0.08);
+  color: #c85a40;
+}
 .icon {
   font-size: 16px;
   flex: none;
   width: 20px;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .main {
@@ -260,8 +269,10 @@
   margin-bottom: 36px;
 }
 .gIcon {
-  font-size: 26px;
+  font-size: 24px;
   flex: none;
+  color: var(--jade);
+  margin-top: 2px;
 }
 .gdprBox p {
   font-size: 14px;

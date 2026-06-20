@@ -1,15 +1,15 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button } from '../../shared/components/ui'
+import { Avatar, Button, Tag } from '../../shared/components/ui'
 import { memberProfiles } from '../members/data/memberProfiles'
-import { defaultGatheringSlug, gatheringDetails } from './data'
+import { gatheringDetails, gatheringKind, gatheringPath, resolveGathering } from './data'
 
 import styles from './GatheringPage.module.css'
 
 export function GatheringPage() {
-  const { hash } = useLocation()
-  const slug = hash.replace('#', '') || defaultGatheringSlug
-  const gathering = gatheringDetails[slug] ?? gatheringDetails[defaultGatheringSlug]
+  const { slug: param } = useParams()
+  const gathering = resolveGathering(param)
+  const kind = gatheringKind(gathering)
   const host = gathering.hostSlug ? memberProfiles[gathering.hostSlug] : null
   const spotsNum = parseInt(gathering.spots, 10)
   const connectTo = gathering.hostSlug ? `/connect/${gathering.hostSlug}` : '/connect'
@@ -28,7 +28,12 @@ export function GatheringPage() {
 
           <div className={styles.grid}>
             <div>
-              <div className={styles.type}>{gathering.type}</div>
+              <div className={styles.typeRow}>
+                <span className={styles.type}>{gathering.type}</span>
+                <Tag className={kind === 'event' ? styles.badgeEvent : styles.badgeGathering}>
+                  {kind === 'event' ? 'QueerPulse event' : 'Member gathering'}
+                </Tag>
+              </div>
               <h1 className={styles.title}>{gathering.title}</h1>
               <div className={styles.meta}>
                 <span className={styles.metaItem}>
@@ -90,7 +95,7 @@ export function GatheringPage() {
                   />
                   <div>
                     <div className={styles.hostName}>
-                      <Link to={`/profile/${host.slug}`} style={{ color: 'var(--ink)' }}>
+                      <Link to={`/members/${host.slug}`} style={{ color: 'var(--ink)' }}>
                         {host.first} {host.last}
                       </Link>
                     </div>
@@ -99,7 +104,7 @@ export function GatheringPage() {
                 </div>
               ) : (
                 <div className={styles.hostRow}>
-                  <div className={styles.hostName}>Hosted by QueerPulse</div>
+                  <div className={styles.hostName}>Hosted by {gathering.host || 'QueerPulse'}</div>
                 </div>
               )}
 
@@ -118,7 +123,7 @@ export function GatheringPage() {
             </h2>
             <div className={styles.cards}>
               {others.map((other) => (
-                <Link key={other.slug} to={`/gathering#${other.slug}`} className={styles.card}>
+                <Link key={other.slug} to={gatheringPath(other.slug)} className={styles.card}>
                   <div className={styles.dateMini}>
                     <div className={styles.gd}>{other.day}</div>
                     <div className={styles.gm}>{other.month}</div>

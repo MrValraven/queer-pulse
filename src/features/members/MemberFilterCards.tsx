@@ -107,7 +107,7 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
   const m = memberProfiles[member.slug]
   const name = fullName(m)
   return (
-    <Link to={`/profile/${member.slug}`} className={styles.mCard}>
+    <Link to={`/members/${member.slug}`} className={styles.mCard}>
       <div className={styles.mHead}>
         <Avatar initials={m.initials} tint={m.tint} src={m.photo} size={48} alt={name} />
         <div>

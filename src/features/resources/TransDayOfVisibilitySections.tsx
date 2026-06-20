@@ -3,7 +3,7 @@ import { routes } from '../../app/routeMap'
 import { PROFILES, RES_CARDS, ACTIONS } from './transDayOfVisibility.data'
 import styles from './TransDayOfVisibilityPage.module.css'
 
-const PROFILE = routes.profile
+const PROFILE = routes.members
 
 export function TdovProfiles() {
   return (

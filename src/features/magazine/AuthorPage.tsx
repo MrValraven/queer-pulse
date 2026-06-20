@@ -158,7 +158,7 @@ export function AuthorPage() {
           <a href="#">
             Bluesky <span>· @sarapinheiro</span>
           </a>
-          <Link to="/profile">
+          <Link to="/members">
             Member profile <span>· in Lisbon</span>
           </Link>
         </div>

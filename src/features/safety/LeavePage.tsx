@@ -23,7 +23,7 @@ export function LeavePage() {
     <div className={s.page}>
       {state === 'considering' && (
         <div className={`${s.card} ${s.cardWide}`}>
-          <Link to="/settings" className={s.backLink}>
+          <Link to="/account/settings" className={s.backLink}>
             ← Back to settings
           </Link>
           <div className={s.title}>
@@ -69,7 +69,7 @@ export function LeavePage() {
             <div>
               <div className={s.altTitle}>Step back quietly — reduce your presence</div>
               <div className={s.altDesc}>Set your profile to private, mute all notifications, and come back whenever you're ready. No pressure, no timer, no questions.</div>
-              <Button variant="ghost" to="/settings">
+              <Button variant="ghost" to="/account/settings">
                 Go quiet instead
               </Button>
             </div>

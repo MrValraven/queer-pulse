@@ -105,7 +105,7 @@ export function FilmBody() {
               </div>
             </div>
             <div className={styles.fmActions}>
-              <Button to="/profile">View profile</Button>
+              <Button to="/members">View profile</Button>
               <Button variant="ghost" onClick={() => showToast('Following Maria', 'success')}>
                 Follow filmmaker
               </Button>

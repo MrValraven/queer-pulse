@@ -87,7 +87,7 @@ export function CommunityDetailPage() {
                   return m.slug ? (
                     <Link
                       key={i}
-                      to={`/profile/${m.slug}`}
+                      to={`/members/${m.slug}`}
                       className={styles.heroAv}
                       style={{ zIndex: heroAvatars.length - i }}
                     >

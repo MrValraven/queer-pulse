@@ -85,7 +85,7 @@ export function DirectorySpaceAside({ place }: Props) {
         </span>
         <p className={s.ownerBio}>{place.owner.bio}</p>
         {place.owner.inQueerPulse && (
-          <Button variant="ghost" className={s.ctaBtn} to="/profile">
+          <Button variant="ghost" className={s.ctaBtn} to="/members">
             View {place.owner.first}'s profile →
           </Button>
         )}
@@ -97,7 +97,7 @@ export function DirectorySpaceAside({ place }: Props) {
           {MEMBERS_HERE.map((m) => (
             <div key={m.initials} className={s.whoRow}>
               <span className={[s.whoAv, TINT[m.tint]].join(' ')}>{m.initials}</span>
-              <Link to="/profile">{m.name}</Link>
+              <Link to="/members">{m.name}</Link>
               <span className={s.whoWhen}>{m.when}</span>
             </div>
           ))}

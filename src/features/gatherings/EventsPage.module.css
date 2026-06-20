@@ -105,12 +105,34 @@
   margin-top: 3px;
 }
 
+.orgRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 5px;
+}
 .org {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-bottom: 5px;
+}
+.badgeEvent,
+.badgeGathering {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+.badgeEvent {
+  background: var(--plum);
+  color: var(--cream);
+}
+.badgeGathering {
+  background: rgba(45, 27, 61, 0.07);
+  color: var(--plum);
 }
 .cardTitle {
   font-family: var(--serif);

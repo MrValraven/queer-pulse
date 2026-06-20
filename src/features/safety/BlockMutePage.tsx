@@ -128,7 +128,7 @@ export function BlockMutePage() {
               <span className={s.csVal}>No</span>
             </div>
           </div>
-          <Link to="/settings" className={s.manageLink}>
+          <Link to="/account/settings" className={s.manageLink}>
             Manage muted members →
           </Link>
           <span className={s.undoLink} onClick={() => setState('choose')}>
@@ -163,7 +163,7 @@ export function BlockMutePage() {
               <span className={s.csVal}>No</span>
             </div>
           </div>
-          <Link to="/settings" className={s.manageLink}>
+          <Link to="/account/settings" className={s.manageLink}>
             Manage blocked members →
           </Link>
           <span className={s.undoLink} onClick={() => setState('choose')}>

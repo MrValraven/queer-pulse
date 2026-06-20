@@ -1,0 +1,223 @@
+/* Section */
+.prefSection {
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+}
+.prefSection:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.psHead {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.psHeadNote {
+  font-size: 12px;
+  color: var(--ink-40);
+  font-weight: 400;
+}
+.psHelper {
+  font-size: 13px;
+  color: var(--ink-40);
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+.psSkip {
+  font-size: 13px;
+  color: var(--accent-ink);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--sans);
+}
+.skipped {
+  opacity: 0.4;
+}
+
+/* Chips */
+.chipWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
+}
+.chip:hover {
+  border-color: var(--plum);
+  color: var(--plum);
+}
+.chipOn {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+
+/* World fields */
+.worldGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+@media (max-width: 560px) {
+  .worldGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-60);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.fieldNote {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11px;
+  color: var(--ink-40);
+}
+.field input {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border-radius: 11px;
+  padding: 11px 14px;
+  outline: none;
+  transition: border-color 0.22s var(--ease);
+}
+.field input:focus {
+  border-color: var(--plum);
+  background: var(--paper);
+}
+
+/* Age slider */
+.ageSlider {
+  width: 100%;
+  accent-color: var(--plum);
+  margin-bottom: 2px;
+  cursor: pointer;
+}
+.ageLabelRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--ink-40);
+  margin-top: 4px;
+}
+.ageVal {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--plum);
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* Sub-heading inside a section */
+.subHead {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 20px 0 0;
+}
+
+/* Frequency options */
+.freqOpts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+.freqOpt {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 16px;
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border-radius: 12px;
+  cursor: pointer;
+  background: none;
+  text-align: left;
+  font-family: var(--sans);
+  transition:
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
+}
+.freqOptSelected {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.03);
+}
+.foRadio {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--plum-rgb), 0.2);
+  flex: none;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+.freqOptSelected .foRadio {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.foDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+}
+.freqOptSelected .foDot {
+  opacity: 1;
+}
+.foTitle {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--plum);
+}
+.foDesc {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-top: 2px;
+}
+
+.legalNote {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.55;
+  margin-top: 20px;
+}

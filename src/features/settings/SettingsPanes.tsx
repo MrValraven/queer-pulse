@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { FiShield } from 'react-icons/fi'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { memberName } from '../members/data/members'
+import { routes } from '../../app/routeMap'
 import { TERMS } from './settings.data'
+import { SIM_GROUPS } from './simulations.data'
 import { DataCard, Pane, Section, SelectRow, ToggleList, ToggleRow } from './SettingsControls'
 import styles from './SettingsPage.module.css'
 
@@ -39,6 +40,11 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
       <Section label="Delivery">
         <SelectRow title="Email notifications" desc="How often to batch and send notifications by email" options={['Immediately', 'Daily digest', 'Weekly digest', 'Never']} defaultValue="Daily digest" onChange={onChange} />
         <SelectRow title="Quiet hours" desc="Don't send anything between these hours" options={['No quiet hours', '22:00 – 08:00', '21:00 – 09:00', '20:00 – 10:00']} defaultValue="22:00 – 08:00" onChange={onChange} />
+      </Section>
+      <Section label="Newsletters & email">
+        <div className={styles.dataCards}>
+          <DataCard title="Newsletter & email preferences" desc="Choose which newsletters and email streams you receive — magazine issues, event digests, community announcements, and more." btn="Manage" to={routes.newsletter} />
+        </div>
       </Section>
     </Pane>
   )
@@ -81,7 +87,7 @@ export function DataPane({ onChange, onDeleteClick }: { onChange: () => void; on
   return (
     <Pane title={<>Data &amp; <em>privacy.</em></>} sub="Your data belongs to you. We collect the minimum needed to run the platform and never sell it. You can download or delete everything at any time.">
       <div className={styles.gdprBox}>
-        <span className={styles.gIcon}>🇪🇺</span>
+        <span className={styles.gIcon}><FiShield /></span>
         <p>
           <strong>GDPR compliant.</strong> QueerPulse is subject to EU data protection law and the Portuguese RGPD. Your rights include access, correction, portability, and deletion. This page is how you exercise them.
         </p>
@@ -129,6 +135,25 @@ export function DataPane({ onChange, onDeleteClick }: { onChange: () => void; on
   )
 }
 
+export function SimulationsPane() {
+  return (
+    <Pane
+      title={<>Flow <em>simulations.</em></>}
+      sub="Preview key member journeys end to end. Each simulation launches the real screens so you can walk through the experience exactly as someone else would."
+    >
+      {SIM_GROUPS.map((g) => (
+        <Section key={g.label} label={g.label}>
+          <div className={styles.dataCards}>
+            {g.flows.map((f) => (
+              <DataCard key={f.title} title={f.title} desc={f.desc} btn="Start simulation" to={f.to} />
+            ))}
+          </div>
+        </Section>
+      ))}
+    </Pane>
+  )
+}
+
 export function VisibilityPane({ onChange }: { onChange: () => void }) {
   return (
     <Pane title={<>Profile <em>visibility.</em></>} sub="Control who can find and reach you. You can change this at any time with no questions asked.">
@@ -152,26 +177,6 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
           <ToggleRow title="Show activity status" desc="Let people see when you were last active (approximate)" onChange={onChange} />
         </ToggleList>
       </Section>
-    </Pane>
-  )
-}
-
-export function ProfilePane({ onChange }: { onChange: () => void }) {
-  return (
-    <Pane title={<>Profile <em>settings.</em></>} sub="Edit your name, pronouns, bio, and photo.">
-      <Section label="Basic information">
-        <div className={styles.fields}>
-          <div className={styles.fieldRow2}>
-            <input className={styles.input} type="text" defaultValue={memberName('sofia')} onChange={onChange} />
-            <input className={styles.input} type="text" defaultValue="she / her" onChange={onChange} />
-          </div>
-          <input className={styles.input} type="text" defaultValue="Documentary Filmmaker · Alfama" onChange={onChange} />
-          <textarea className={`${styles.input} ${styles.textarea}`} onChange={onChange} defaultValue="Making films about queer histories and public space in Lisbon. Alfama local since 2019. Always happy to introduce people around." />
-        </div>
-      </Section>
-      <Link to="/profile" className={styles.dcBtn}>
-        View my full profile →
-      </Link>
     </Pane>
   )
 }

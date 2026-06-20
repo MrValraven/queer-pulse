@@ -89,7 +89,7 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
                   <div className={styles.vouchHead}>
                     <div className={[styles.vouchAv, TINT[v.tint]].join(' ')}>{v.initials}</div>
                     <div>
-                      <div className={styles.vouchName}><Link to="/profile">{v.name}</Link></div>
+                      <div className={styles.vouchName}><Link to="/members">{v.name}</Link></div>
                       <div className={styles.vouchByline}>{v.byline}</div>
                     </div>
                   </div>

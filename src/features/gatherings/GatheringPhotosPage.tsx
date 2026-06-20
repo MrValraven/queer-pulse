@@ -7,7 +7,7 @@ import { routes } from "../../app/routeMap";
 import styles from "./GatheringPhotosPage.module.css";
 
 const RECAP = routes.gatheringRecap;
-const MEMBER = routes.profile;
+const MEMBER = routes.members;
 const CALENDAR = routes.calendar;
 const REPORT = routes.report;
 

@@ -3,13 +3,17 @@ import { useScrollLock } from '../../shared/hooks'
 import { AppShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { NAV, type PaneId } from './settings.data'
+import { DeleteAccountSection } from './DeleteAccountSection'
+import { EditProfilePane } from './EditProfilePane'
+import { ProfileThemePane, AccessibilityPane } from './SettingsPersonalisation'
+import { InterestsPane } from './InterestsPane'
 import { DeleteAccountModal } from './SettingsControls'
 import {
   AccountPane,
   DataPane,
   LanguagePane,
   NotificationsPane,
-  ProfilePane,
+  SimulationsPane,
   VisibilityPane,
 } from './SettingsPanes'
 import styles from './SettingsPage.module.css'
@@ -33,10 +37,16 @@ export function SettingsPage() {
               {g.items.map((item) => (
                 <button
                   key={item.id}
-                  className={[styles.navItem, pane === item.id && styles.navItemActive].filter(Boolean).join(' ')}
+                  className={[
+                    styles.navItem,
+                    item.danger && styles.navItemDanger,
+                    pane === item.id && styles.navItemActive,
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
                   onClick={() => setPane(item.id)}
                 >
-                  <span className={styles.icon}>{item.icon}</span>
+                  <span className={styles.icon}><item.icon /></span>
                   {item.label}
                 </button>
               ))}
@@ -49,8 +59,13 @@ export function SettingsPage() {
           {pane === 'language' && <LanguagePane onChange={markChanged} />}
           {pane === 'data' && <DataPane onChange={markChanged} onDeleteClick={() => setShowDelete(true)} />}
           {pane === 'visibility' && <VisibilityPane onChange={markChanged} />}
-          {pane === 'profile' && <ProfilePane onChange={markChanged} />}
+          {pane === 'profile' && <EditProfilePane onChange={markChanged} />}
+          {pane === 'profile-theme' && <ProfileThemePane onChange={markChanged} />}
+          {pane === 'accessibility' && <AccessibilityPane onChange={markChanged} />}
+          {pane === 'interests' && <InterestsPane onChange={markChanged} />}
           {pane === 'account' && <AccountPane onChange={markChanged} />}
+          {pane === 'simulations' && <SimulationsPane />}
+          {pane === 'delete' && <DeleteAccountSection />}
         </main>
       </div>
 

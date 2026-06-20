@@ -112,7 +112,7 @@ export function AppealOutcomePage() {
             <strong>What's been restored:</strong> the warning on your account has been removed, and your content is visible again. Your account standing is unchanged.
           </div>
           <div className={s.actions} style={{ marginTop: 18 }}>
-            <Button to="/profile">Return to your profile</Button>
+            <Button to="/account/profile">Return to your profile</Button>
             <Button variant="ghost" to="/guidelines">
               View community guidelines
             </Button>

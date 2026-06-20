@@ -32,7 +32,7 @@ export function ToggleRow({
   onChange,
 }: {
   title: string
-  desc: string
+  desc?: string
   defaultChecked?: boolean
   onChange: () => void
 }) {
@@ -40,7 +40,7 @@ export function ToggleRow({
     <div className={styles.toggleRow}>
       <div className={styles.toggleLabel}>
         <div className={styles.toggleTitle}>{title}</div>
-        <div className={styles.toggleDesc}>{desc}</div>
+        {desc && <div className={styles.toggleDesc}>{desc}</div>}
       </div>
       <label className={styles.switch}>
         <input type="checkbox" defaultChecked={defaultChecked} onChange={onChange} />

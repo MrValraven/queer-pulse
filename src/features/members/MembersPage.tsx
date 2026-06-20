@@ -107,7 +107,7 @@ export function MembersPage() {
                               Connect
                             </button>
                           )}
-                          <Link to={`/profile/${member.slug}`} className={styles.view}>View profile →</Link>
+                          <Link to={`/members/${member.slug}`} className={styles.view}>View profile →</Link>
                         </div>
                       </div>
                     </article>

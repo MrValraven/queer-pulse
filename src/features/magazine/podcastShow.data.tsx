@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import { routes } from "../../app/routeMap";
 
 export const EPISODE_PATH = routes.audioPlayer;
-export const MEMBER_PATH = routes.profile;
+export const MEMBER_PATH = routes.members;
 export const NEWSLETTER_PATH = routes.newsletter;
 export const CONTACT_PATH = routes.contact;
 

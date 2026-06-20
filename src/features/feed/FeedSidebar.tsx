@@ -53,7 +53,7 @@ export function FeedSidebar() {
           ]} />
           <div>
             <div className={styles.connCount}>42 connections</div>
-            <Link to="/profile" style={{ fontSize: 12, color: 'var(--accent-ink)', fontWeight: 600 }}>Manage →</Link>
+            <Link to="/account/connections" style={{ fontSize: 12, color: 'var(--accent-ink)', fontWeight: 600 }}>Manage →</Link>
           </div>
         </div>
       </div>

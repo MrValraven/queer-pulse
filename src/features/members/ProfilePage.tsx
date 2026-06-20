@@ -18,7 +18,7 @@ export function ProfilePage() {
       </div>
 
       <ProfileHero profile={profile} />
-      <ProfileContent profile={profile} />
+      <ProfileContent profile={profile} isSelf={!slug} />
     </PageShell>
   )
 }

@@ -45,7 +45,7 @@ export function OfferPage() {
   const o = MAIN;
   const owner = o.owner;
   const connect = routes.connect;
-  const profile = routes.profile;
+  const profile = routes.members;
   const offer = routes.offer;
 
   return (
