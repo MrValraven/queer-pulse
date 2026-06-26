@@ -358,6 +358,8 @@
   margin-top: 2px;
 }
 .rvStars {
+  display: inline-flex;
+  gap: 2px;
   color: var(--accent);
   font-size: 13px;
   margin-bottom: 8px;

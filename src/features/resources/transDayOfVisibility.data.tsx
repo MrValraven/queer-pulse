@@ -1,4 +1,6 @@
 import { type ReactNode } from 'react'
+import type { IconType } from 'react-icons'
+import { FiClock, FiMessageCircle, FiShield, FiMail } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { routes } from '../../app/routeMap'
 
@@ -100,7 +102,7 @@ export const PROFILES: TdovProfile[] = [
 
 export interface ResCard {
   cls: '' | 'coral' | 'plum'
-  icon: string
+  icon: IconType
   title: ReactNode
   body: ReactNode
   href: string
@@ -109,7 +111,7 @@ export interface ResCard {
 export const RES_CARDS: ResCard[] = [
   {
     cls: '',
-    icon: '🕐',
+    icon: FiClock,
     title: <>The vetted provider <em>list</em></>,
     body: (
       <>
@@ -121,7 +123,7 @@ export const RES_CARDS: ResCard[] = [
   },
   {
     cls: 'coral',
-    icon: '💬',
+    icon: FiMessageCircle,
     title: <>Open clinic night · <em>every Thursday</em></>,
     body: (
       <>
@@ -133,7 +135,7 @@ export const RES_CARDS: ResCard[] = [
   },
   {
     cls: 'plum',
-    icon: '🛡',
+    icon: FiShield,
     title: <>Lei n.º 38/2018 <em>plain-language guide</em></>,
     body: (
       <>
@@ -145,7 +147,7 @@ export const RES_CARDS: ResCard[] = [
   },
   {
     cls: '',
-    icon: '✉',
+    icon: FiMail,
     title: <>The Trans Hub <em>bulletin</em></>,
     body: (
       <>

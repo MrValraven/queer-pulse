@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react'
+import { FiCheck } from 'react-icons/fi'
 import { Avatar, Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import {
@@ -47,7 +48,7 @@ export function ClubSection() {
               <span className={`${styles.pickBadge} ${styles[`badge_${pick.kind}`]}`}>
                 {pick.kind}
               </span>
-              {pick.emoji}
+              <pick.emoji />
             </div>
             <div className={styles.pickBody}>
               <div className={styles.pickTitle}>{pick.title}</div>
@@ -109,7 +110,7 @@ function CommissionCard({ commission }: { commission: Commission }) {
           onClick={() => setSent(true)}
           disabled={sent}
         >
-          {sent ? 'Interest sent ✓' : 'Express interest'}
+          {sent ? <>Interest sent <FiCheck /></> : 'Express interest'}
         </Button>
       </div>
     </article>
@@ -146,7 +147,7 @@ export function ShowcaseSection() {
       <div className={styles.galleryGrid}>
         {GALLERY.map((item) => (
           <div key={item.title} className={`${styles.galItem} ${item.feat ? styles.galFeat : ''}`}>
-            <div className={styles.galBg} style={{ background: item.gradient }}>{item.emoji}</div>
+            <div className={styles.galBg} style={{ background: item.gradient }}><item.emoji /></div>
             <div className={styles.galOverlay}>
               <div className={styles.goTitle}>{item.title}</div>
               <div className={styles.goArtist}>{item.artist}</div>

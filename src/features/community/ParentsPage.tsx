@@ -40,7 +40,7 @@ export function ParentsPage() {
           <div className={styles.grid}>
             {OFFERS.map((offer, index) => (
               <Reveal key={offer.title} className={styles.card} delay={index * 55}>
-                <div className={styles.cardIcon}>{offer.icon}</div>
+                <div className={styles.cardIcon}><offer.icon /></div>
                 <div className={styles.cardTitle}>{offer.title}</div>
                 <div className={styles.cardBody}>{offer.body}</div>
               </Reveal>

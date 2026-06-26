@@ -1,3 +1,5 @@
+import type { IconType } from 'react-icons'
+import { FiCheck, FiRotateCcw } from 'react-icons/fi'
 import type { Category } from './safeSpaces'
 
 export const TYPE_CLASS: Record<Category, string> = {
@@ -9,14 +11,14 @@ export const TYPE_CLASS: Record<Category, string> = {
   Arts: 'typeArts',
 }
 
-export const CRITERIA: { icon: string; lead: string; rest: string }[] = [
-  { icon: '✓', lead: 'Gender-neutral bathrooms', rest: ' available or clearly accessible' },
-  { icon: '✓', lead: 'Staff intervene', rest: ' if a customer is being harassed or discriminated against' },
-  { icon: '✓', lead: 'No discriminatory incidents', rest: ' reported in the past 12 months' },
-  { icon: '✓', lead: 'Trans and non-binary people', rest: ' feel genuinely welcome, not just tolerated' },
-  { icon: '✓', lead: 'Accessible', rest: ' — or access limitations clearly communicated' },
-  { icon: '✓', lead: 'Minimum 3 independent reviews', rest: ' from verified QueerPulse members' },
-  { icon: '↺', lead: 'Annual re-review', rest: " — status doesn't last forever" },
+export const CRITERIA: { icon: IconType; lead: string; rest: string }[] = [
+  { icon: FiCheck, lead: 'Gender-neutral bathrooms', rest: ' available or clearly accessible' },
+  { icon: FiCheck, lead: 'Staff intervene', rest: ' if a customer is being harassed or discriminated against' },
+  { icon: FiCheck, lead: 'No discriminatory incidents', rest: ' reported in the past 12 months' },
+  { icon: FiCheck, lead: 'Trans and non-binary people', rest: ' feel genuinely welcome, not just tolerated' },
+  { icon: FiCheck, lead: 'Accessible', rest: ' — or access limitations clearly communicated' },
+  { icon: FiCheck, lead: 'Minimum 3 independent reviews', rest: ' from verified QueerPulse members' },
+  { icon: FiRotateCcw, lead: 'Annual re-review', rest: " — status doesn't last forever" },
 ]
 
 export const HOW: { num: string; title: string; desc: string }[] = [

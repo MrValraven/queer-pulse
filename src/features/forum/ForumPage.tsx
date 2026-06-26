@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiAlertTriangle, FiHome, FiBriefcase } from 'react-icons/fi'
+import { LuLandmark } from 'react-icons/lu'
+import { TbPin } from 'react-icons/tb'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -57,23 +60,23 @@ export function ForumPage() {
                   className={[styles.catItem, cat === c.id && styles.catItemOn].filter(Boolean).join(' ')}
                   onClick={() => setCat(c.id)}
                 >
-                  <span className={styles.catIcon}>{c.icon}</span>
+                  <span className={styles.catIcon}><c.icon /></span>
                   <span className={styles.catName}>{c.name}</span>
                   <span className={styles.catCount}>{c.count}</span>
                 </button>
               ))}
               <div className={styles.sbDivider} />
               <Link to="/safety" className={styles.sbLink}>
-                🆘 Emergency resources
+                <FiAlertTriangle /> Emergency resources
               </Link>
               <Link to="/housing" className={styles.sbLink}>
-                🏠 Housing board
+                <FiHome /> Housing board
               </Link>
               <Link to="/jobs" className={styles.sbLink}>
-                💼 Job board
+                <FiBriefcase /> Job board
               </Link>
               <Link to="/governance" className={styles.sbLink}>
-                🏛️ Governance &amp; transparency
+                <LuLandmark /> Governance &amp; transparency
               </Link>
             </aside>
 
@@ -98,15 +101,27 @@ export function ForumPage() {
                 const cs = CAT_STYLE[t.cat]
                 return (
                   <Link key={t.id} to={`/thread/${t.id}`} className={[styles.thread, t.pinned && styles.threadPinned].filter(Boolean).join(' ')}>
-                    <div className={styles.voteCol} onClick={(e) => { e.preventDefault(); toggleVote(t.id) }}>
+                    <div
+                      className={styles.voteCol}
+                      role="button"
+                      tabIndex={0}
+                      aria-pressed={isVoted}
+                      onClick={(e) => { e.preventDefault(); toggleVote(t.id) }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          toggleVote(t.id)
+                        }
+                      }}
+                    >
                       <button className={[styles.voteUp, isVoted && styles.voteUpOn].filter(Boolean).join(' ')}>▲</button>
                       <span className={styles.voteN}>{t.upvotes + (isVoted ? 1 : 0)}</span>
                     </div>
                     <div>
                       <div className={styles.badges}>
-                        {t.pinned && <span className={styles.pinBadge}>📌 Pinned</span>}
+                        {t.pinned && <span className={styles.pinBadge}><TbPin /> Pinned</span>}
                         <span className={styles.catBadge} style={{ background: cs.bg, color: cs.color }}>
-                          {catMeta?.icon} {catMeta?.name}
+                          {catMeta && <catMeta.icon />} {catMeta?.name}
                         </span>
                         {t.tags.map((tg) => (
                           <span key={tg} className={styles.tag}>

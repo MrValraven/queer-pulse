@@ -1,10 +1,11 @@
 import { useState } from 'react'
+import type { IconType } from 'react-icons'
 import { LANGS } from './createGathering.data'
 
 /** All wizard form state + helpers, shared by the page and its step components. */
 export function useGatheringForm() {
   const [type, setType] = useState('')
-  const [typeIcon, setTypeIcon] = useState('')
+  const [typeIcon, setTypeIcon] = useState<IconType | null>(null)
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
   const [date, setDate] = useState('')
@@ -25,7 +26,7 @@ export function useGatheringForm() {
   const [bring, setBring] = useState('')
   const [checks, setChecks] = useState<boolean[]>([false, false, false])
 
-  const selectType = (name: string, icon: string) => {
+  const selectType = (name: string, icon: IconType) => {
     setType(name)
     setTypeIcon(icon)
   }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FiMessageCircle } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import type { Thread as ThreadData, Tint } from './communityDetails'
@@ -22,7 +23,19 @@ export function CommunityThread({ data }: { data: ThreadData }) {
 
   return (
     <div className={styles.thread}>
-      <div className={styles.thHead} onClick={() => setOpen((o) => !o)}>
+      <div
+        className={styles.thHead}
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            setOpen((o) => !o)
+          }
+        }}
+      >
         <div className={styles.thVote}>
           <button
             type="button"
@@ -42,7 +55,7 @@ export function CommunityThread({ data }: { data: ThreadData }) {
             <div className={[styles.thAv, AV_CLASS[data.author.tint]].join(' ')}>{data.author.initials}</div>
             <span className={styles.thName}>{data.author.name}</span>
             <span>{data.time}</span>
-            <span className={styles.thReplies}>💬 {data.replyCount} replies</span>
+            <span className={styles.thReplies}><FiMessageCircle /> {data.replyCount} replies</span>
           </div>
         </div>
       </div>

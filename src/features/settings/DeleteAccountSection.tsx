@@ -48,7 +48,7 @@ export function DeleteAccountSection() {
         >
           <div className={styles.optRadio}><div className={styles.optRadioInner} /></div>
           <div className={`${styles.optIcon} ${styles.optIconDanger}`}>
-            <svg className={styles.optIconSvg} viewBox="0 0 20 20" stroke="#C85A40"><polyline points="4,5 16,5" /><path d="M7 5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M6 5l.6 11h6.8l.6-11" /></svg>
+            <svg className={styles.optIconSvg} viewBox="0 0 20 20" stroke="var(--accent-ink)"><polyline points="4,5 16,5" /><path d="M7 5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M6 5l.6 11h6.8l.6-11" /></svg>
           </div>
           <div className={`${styles.optTitle} ${styles.optTitleDanger}`}>Delete account</div>
           <div className={styles.optDesc}>Permanently erases your account and all associated data within 30 days. This cannot be undone.</div>

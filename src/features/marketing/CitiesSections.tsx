@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { BETA, WAITLIST, HOW } from './cities.data'
@@ -98,7 +99,7 @@ export function WaitlistSection() {
                 className={`${styles.wlVoteBtn} ${styles.wlVoteBtnVoted}`}
                 disabled
               >
-                ✓ You voted
+                <FiCheck /> You voted
               </button>
             ) : (
               <button

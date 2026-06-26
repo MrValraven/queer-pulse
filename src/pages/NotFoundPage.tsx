@@ -1,17 +1,25 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import {
+  FiBookOpen,
+  FiCalendar,
+  FiBook,
+  FiMessageCircle,
+  FiHelpCircle,
+  FiMail,
+} from 'react-icons/fi'
 import { PageShell } from '../shared/components/layout'
 import { Button } from '../shared/components/ui'
 import { routes } from '../app/routeMap'
 import styles from './NotFoundPage.module.css'
 
 const LINKS = [
-  { icon: '📖', label: 'Magazine', sub: 'June 2026 issue', to: routes.magazine },
-  { icon: '🎟️', label: 'Gatherings', sub: 'Upcoming events', to: routes.gathering },
-  { icon: '📚', label: 'Reading groups', sub: '8 groups open', to: routes.readingGroups },
-  { icon: '💬', label: 'Forum', sub: 'Community discussion', to: routes.forum },
-  { icon: '❓', label: 'Help & FAQ', sub: 'Get answers', to: routes.help },
-  { icon: '✉️', label: 'Contact us', sub: 'hello@queerpulse.pt', to: routes.contact },
+  { icon: <FiBookOpen />, label: 'Magazine', sub: 'June 2026 issue', to: routes.magazine },
+  { icon: <FiCalendar />, label: 'Gatherings', sub: 'Upcoming events', to: routes.gathering },
+  { icon: <FiBook />, label: 'Reading groups', sub: '8 groups open', to: routes.readingGroups },
+  { icon: <FiMessageCircle />, label: 'Forum', sub: 'Community discussion', to: routes.forum },
+  { icon: <FiHelpCircle />, label: 'Help & FAQ', sub: 'Get answers', to: routes.help },
+  { icon: <FiMail />, label: 'Contact us', sub: 'hello@queerpulse.pt', to: routes.contact },
 ]
 
 export function NotFoundPage() {

@@ -1,13 +1,15 @@
 import { useState } from 'react'
+import type { IconType } from 'react-icons'
+import { FiMail, FiShield, FiFileText, FiUsers } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
 import s from './ContactPage.module.css'
 
-const ROUTES = [
-  { icon: '✉️', bg: 'rgba(232,119,90,.12)', title: 'General hello', desc: "Anything that doesn't fit elsewhere — questions, feedback, introductions, ideas you think we should hear about.", email: 'hello@queerpulse.pt' },
-  { icon: '🌿', bg: 'rgba(74,140,111,.12)', title: 'Safety concern', desc: 'If something in the network has made you feel unsafe or uncomfortable. Handled with full discretion. We respond within 24 hours.', email: 'safe@queerpulse.pt' },
-  { icon: '📰', bg: 'rgba(45,27,61,.08)', title: 'Press & media', desc: "Journalists, researchers, documentary makers. We're happy to talk about what we're building and why. We ask that you share your draft before publication.", email: 'press@queerpulse.pt' },
-  { icon: '🤝', bg: 'rgba(232,119,90,.1)', title: 'Partnerships', desc: "Organisations, spaces, and communities who want to work with QueerPulse. We're selective but we're genuinely interested in the right collaborations.", email: 'partners@queerpulse.pt' },
+const ROUTES: { icon: IconType; bg: string; title: string; desc: string; email: string }[] = [
+  { icon: FiMail, bg: 'rgba(232,119,90,.12)', title: 'General hello', desc: "Anything that doesn't fit elsewhere — questions, feedback, introductions, ideas you think we should hear about.", email: 'hello@queerpulse.pt' },
+  { icon: FiShield, bg: 'rgba(74,140,111,.12)', title: 'Safety concern', desc: 'If something in the network has made you feel unsafe or uncomfortable. Handled with full discretion. We respond within 24 hours.', email: 'safe@queerpulse.pt' },
+  { icon: FiFileText, bg: 'rgba(45,27,61,.08)', title: 'Press & media', desc: "Journalists, researchers, documentary makers. We're happy to talk about what we're building and why. We ask that you share your draft before publication.", email: 'press@queerpulse.pt' },
+  { icon: FiUsers, bg: 'rgba(232,119,90,.1)', title: 'Partnerships', desc: "Organisations, spaces, and communities who want to work with QueerPulse. We're selective but we're genuinely interested in the right collaborations.", email: 'partners@queerpulse.pt' },
 ]
 
 export function ContactPage() {
@@ -31,7 +33,7 @@ export function ContactPage() {
               {ROUTES.map((r) => (
                 <a key={r.email} className={s.route} href={`mailto:${r.email}`}>
                   <span className={s.routeIcon} style={{ background: r.bg }}>
-                    {r.icon}
+                    <r.icon />
                   </span>
                   <div>
                     <h3>{r.title}</h3>

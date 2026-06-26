@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FaRainbow } from 'react-icons/fa6'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -79,7 +80,7 @@ export function JobDetailPage() {
           </div>
           <div className={styles.org}>
             {job.org}
-            {job.qr && <span className={styles.qrBadge}>🏳️‍🌈 {job.qrLabel}</span>}
+            {job.qr && <span className={styles.qrBadge}><FaRainbow /> {job.qrLabel}</span>}
           </div>
           <div className={styles.chips}>
             <span className={`${styles.chip} ${styles.salary}`}>
@@ -156,7 +157,7 @@ export function JobDetailPage() {
                 {job.logo}
               </div>
               <div className={styles.coName}>{job.org}</div>
-              {job.qr && <div className={styles.coQr}>🏳️‍🌈 {job.qrLabel}</div>}
+              {job.qr && <div className={styles.coQr}><FaRainbow /> {job.qrLabel}</div>}
 
               <div className={styles.detailRow}>
                 <span className={styles.dl}>Salary</span>

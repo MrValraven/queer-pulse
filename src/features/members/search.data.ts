@@ -1,3 +1,5 @@
+import type { IconType } from 'react-icons'
+import { FiUser, FiCalendar, FiUsers, FiClipboard } from 'react-icons/fi'
 import { routes } from '../../app/routeMap'
 import { memberName } from './data/members'
 export type ResultType = 'member' | 'gathering' | 'community' | 'board'
@@ -45,11 +47,11 @@ export const TYPE_BG: Record<ResultType, string> = {
   community: 'rgba(232,119,90,.1)',
   board: 'rgba(122,82,184,.1)',
 }
-export const TYPE_ICON: Record<ResultType, string> = {
-  member: '👤',
-  gathering: '📅',
-  community: '🤝',
-  board: '📋',
+export const TYPE_ICON: Record<ResultType, IconType> = {
+  member: FiUser,
+  gathering: FiCalendar,
+  community: FiUsers,
+  board: FiClipboard,
 }
 export const TYPE_LABEL: Record<ResultType, string> = {
   member: 'Members',

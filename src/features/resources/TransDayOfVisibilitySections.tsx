@@ -77,7 +77,7 @@ export function TdovResources() {
                 .filter(Boolean)
                 .join(' ')}
             >
-              <div className={styles.rIc}>{c.icon}</div>
+              <div className={styles.rIc}><c.icon /></div>
               <h3>{c.title}</h3>
               <p>{c.body}</p>
             </Link>

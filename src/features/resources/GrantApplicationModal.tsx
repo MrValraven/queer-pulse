@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { FiSun, FiX } from 'react-icons/fi'
 import { useScrollLock } from '../../shared/hooks'
 import { STEP_LABELS, TOTAL_STEPS, type BudgetRow } from './microGrants.data'
 import {
@@ -19,6 +20,14 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
   const [appName, setAppName] = useState('')
   const [rows, setRows] = useState<BudgetRow[]>([{ id: 1, item: '', amount: '' }])
   const [checks, setChecks] = useState<Set<number>>(new Set())
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [onClose])
 
   const total = useMemo(() => rows.reduce((acc, r) => acc + (parseFloat(r.amount) || 0), 0), [rows])
   const budgetItems = useMemo(
@@ -56,7 +65,7 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
         <div className={styles.sheetHead}>
           <div className={styles.sheetTitle}>Apply — Q2 2026 round</div>
           <button type="button" className={styles.close} onClick={onClose}>
-            ✕
+            <FiX />
           </button>
         </div>
 
@@ -110,7 +119,7 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
           )}
           {step === 6 && (
             <div className={styles.success}>
-              <div className={styles.successIcon}>🌱</div>
+              <div className={styles.successIcon}><FiSun /></div>
               <div className={styles.successTitle}>
                 Application <em>submitted.</em>
               </div>

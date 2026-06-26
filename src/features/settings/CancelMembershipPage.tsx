@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { FiHeart } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -17,11 +18,11 @@ const REASONS = [
   { id: 'r6', label: <><b>Other / prefer not to say.</b></> },
 ]
 
-const ENDS = [
+const ENDS: { t: string; d: ReactNode }[] = [
   { t: 'Sustainer-only Open Studio', d: "You'll lose your standing invite to the monthly sessions." },
   { t: 'Magazine subscription', d: 'Quarterly print magazine stops shipping after the next issue.' },
   { t: 'Free ILGA legal consult', d: 'Your unused consult for this year expires when membership ends.' },
-  { t: 'Sustainer badge', d: 'The little ♥ on your profile goes away.' },
+  { t: 'Sustainer badge', d: <>The little <FiHeart /> on your profile goes away.</> },
 ]
 
 const STAYS = [
@@ -98,7 +99,7 @@ export function CancelMembershipPage() {
                 <div className={styles.altArrow}>→</div>
               </button>
               <Link to={routes.solidarity} className={styles.alt}>
-                <div className={styles.altIc} style={{ background: 'rgba(45,27,61,.08)', color: 'var(--plum)' }}>♥</div>
+                <div className={styles.altIc} style={{ background: 'rgba(45,27,61,.08)', color: 'var(--plum)' }}><FiHeart /></div>
                 <div className={styles.altText}><div className={styles.altT}>Drop to solidarity rate</div><div className={styles.altD}>€12/year, no questions asked. The fund covers the difference. <b>Genuinely.</b></div></div>
                 <div className={styles.altArrow}>→</div>
               </Link>

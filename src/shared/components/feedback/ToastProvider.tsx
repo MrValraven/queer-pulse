@@ -4,8 +4,10 @@ import {
   useMemo,
   useRef,
   useState,
+  type ComponentType,
   type ReactNode,
 } from 'react'
+import { FiCheck, FiX, FiInfo } from 'react-icons/fi'
 import styles from './Toast.module.css'
 
 export type ToastType = 'success' | 'error' | 'info'
@@ -23,7 +25,11 @@ interface ToastContextValue {
 
 export const ToastContext = createContext<ToastContextValue | null>(null)
 
-const ICONS: Record<ToastType, string> = { success: '✓', error: '✕', info: 'ℹ' }
+const ICONS: Record<ToastType, ComponentType> = {
+  success: FiCheck,
+  error: FiX,
+  info: FiInfo,
+}
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([])
@@ -56,23 +62,26 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={value}>
       {children}
       <div className={styles.container} aria-live="polite" aria-atomic="true">
-        {toasts.map((toast) => (
-          <div
-            key={toast.id}
-            className={[
-              styles.toast,
-              styles[toast.type],
-              toast.leaving && styles.leaving,
-            ]
-              .filter(Boolean)
-              .join(' ')}
-          >
-            <span className={styles.icon} aria-hidden>
-              {ICONS[toast.type]}
-            </span>
-            {toast.message}
-          </div>
-        ))}
+        {toasts.map((toast) => {
+          const Icon = ICONS[toast.type]
+          return (
+            <div
+              key={toast.id}
+              className={[
+                styles.toast,
+                styles[toast.type],
+                toast.leaving && styles.leaving,
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            >
+              <span className={styles.icon} aria-hidden>
+                <Icon />
+              </span>
+              {toast.message}
+            </div>
+          )
+        })}
       </div>
     </ToastContext.Provider>
   )

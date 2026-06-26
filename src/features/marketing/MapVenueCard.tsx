@@ -1,3 +1,5 @@
+import { FiMapPin, FiCheck } from 'react-icons/fi'
+import { FaWheelchair } from 'react-icons/fa6'
 import { TYPE_BG, TYPE_FG, TYPE_ICON, VIBE_BG, VIBE_FG, type Venue } from './map.data'
 import s from './MapPage.module.css'
 
@@ -16,11 +18,24 @@ export function MapVenueCard({
   onToggle: () => void
   onMarkBeen: () => void
 }) {
+  const TypeIcon = TYPE_ICON[v.type]
   return (
-    <div className={[s.vc, isExpanded && s.vcExpanded].filter(Boolean).join(' ')} onClick={onToggle}>
+    <div
+      className={[s.vc, isExpanded && s.vcExpanded].filter(Boolean).join(' ')}
+      onClick={onToggle}
+      role="button"
+      tabIndex={0}
+      aria-expanded={isExpanded}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onToggle()
+        }
+      }}
+    >
       <div className={s.vcHead}>
         <span className={s.vcIcon} style={{ background: TYPE_BG[v.type], color: TYPE_FG[v.type] }}>
-          {TYPE_ICON[v.type]}
+          {TypeIcon && <TypeIcon />}
         </span>
         <div className={s.vcInfo}>
           <div className={s.vcName}>{v.name}</div>
@@ -30,7 +45,7 @@ export function MapVenueCard({
           <span className={s.vcTypeTag} style={{ background: TYPE_BG[v.type], color: TYPE_FG[v.type] }}>
             {v.type}
           </span>
-          {v.accessible && <span className={s.vcAccess}>♿</span>}
+          {v.accessible && <span className={s.vcAccess}><FaWheelchair /></span>}
         </div>
       </div>
       <div className={s.vcVibes}>
@@ -43,7 +58,7 @@ export function MapVenueCard({
       {isExpanded && (
         <div className={s.vcBody}>
           <div className={s.vcRow}>
-            <span className={s.vcRowIcon}>📍</span>
+            <span className={s.vcRowIcon}><FiMapPin /></span>
             <span>{v.address}</span>
           </div>
           <div className={s.vcRow}>
@@ -62,7 +77,7 @@ export function MapVenueCard({
                 if (!marked) onMarkBeen()
               }}
             >
-              {marked ? '✓ Been there' : "I've been here"}
+              {marked ? <><FiCheck /> Been there</> : "I've been here"}
             </button>
           </div>
         </div>

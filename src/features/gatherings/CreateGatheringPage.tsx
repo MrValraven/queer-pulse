@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { FiAward } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -84,7 +85,7 @@ export function CreateGatheringPage() {
 
               {isSuccess && (
                 <div className={styles.success}>
-                  <div className={styles.successIcon}>🎉</div>
+                  <div className={styles.successIcon}><FiAward /></div>
                   <div className={styles.successTitle}>
                     Your gathering <em>is live.</em>
                   </div>

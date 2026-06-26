@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { StudioShell } from './StudioShell'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { PLAN, REASSURE } from './studioCheckout.data'
@@ -20,7 +21,7 @@ export function StudioCheckoutPage() {
     return (
       <StudioShell>
         <div className={s.done}>
-          <div className={s.doneIcon}>✓</div>
+          <div className={s.doneIcon}><FiCheck /></div>
           <h1>
             You're <em>sustaining</em> it now.
           </h1>

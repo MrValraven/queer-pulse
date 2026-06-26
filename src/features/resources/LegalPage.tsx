@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { FiAlertOctagon } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
@@ -147,7 +148,7 @@ export function LegalPage() {
               </p>
             </div>
             <Button variant="ghost-dark" size="lg" to="/emergency">
-              🆘 Emergency network →
+              <FiAlertOctagon /> Emergency network →
             </Button>
           </Reveal>
         </div>

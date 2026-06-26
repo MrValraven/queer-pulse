@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button, Reveal } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -23,7 +24,7 @@ export function VouchPage() {
           <div className={styles.inner}>
             {sent ? (
               <Reveal className={styles.panel}>
-                <div className={styles.panelIcon}>✓</div>
+                <div className={styles.panelIcon}><FiCheck /></div>
                 <h1 className={styles.panelTitle}>
                   That's a <em>real welcome.</em>
                 </h1>
@@ -59,7 +60,7 @@ export function VouchPage() {
                 <div className={styles.means}>
                   {MEANS.map((mean, index) => (
                     <Reveal key={mean.title} className={styles.mean} delay={index * 50}>
-                      <span className={styles.meanIcon}>{mean.icon}</span>
+                      <span className={styles.meanIcon}><mean.icon /></span>
                       <div>
                         <div className={styles.meanTitle}>{mean.title}</div>
                         <div className={styles.meanBody}>{mean.body}</div>

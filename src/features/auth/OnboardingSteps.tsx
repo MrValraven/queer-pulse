@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FiCheck } from 'react-icons/fi';
 import { Button, ImageSlot } from '../../shared/components/ui';
 import { NORMS, INTENTS, COMMUNITIES_LIST, QUICK_STARTS, ONBOARDING_PREVIEW } from './onboardingPage.data';
 import styles from './OnboardingPage.module.css';
@@ -203,7 +204,7 @@ export function StepCommunities({ onNext, onBack }: StepProps) {
                 className={[styles.ccJoin, isJoined && styles.ccJoinActive].filter(Boolean).join(' ')}
                 onClick={() => toggleJoin(community.id)}
               >
-                {isJoined ? '✓ Joined' : 'Join'}
+                {isJoined ? <><FiCheck /> Joined</> : 'Join'}
               </button>
             </div>
           );
@@ -228,7 +229,7 @@ export function StepDone() {
       <div className={styles.quickStart}>
         {QUICK_STARTS.map((qs) => (
           <Link key={qs.to} to={qs.to} className={styles.qsCard}>
-            <span className={styles.qsIcon} style={{ background: qs.iconBg }}>{qs.icon}</span>
+            <span className={styles.qsIcon} style={{ background: qs.iconBg }}><qs.icon /></span>
             <div className={styles.qsBody}>
               <div className={styles.qsTitle}>{qs.title}</div>
               <div className={styles.qsDesc}>{qs.desc}</div>

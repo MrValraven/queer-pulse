@@ -343,58 +343,6 @@
   text-underline-offset: 3px;
 }
 
-/* Success state */
-.successCard {
-  background: var(--cream);
-  border-radius: 28px;
-  width: 100%;
-  max-width: 480px;
-  text-align: center;
-  padding: 56px 36px;
-  box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.55);
-  position: relative;
-  z-index: 1;
-}
-
-.successIcon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: rgba(74, 140, 111, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-}
-
-.successHeading {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 28px;
-  color: var(--plum);
-  letter-spacing: -0.02em;
-  margin-bottom: 10px;
-}
-
-.successHeading em {
-  font-style: italic;
-  color: var(--accent);
-}
-
-.successLead {
-  font-size: 15px;
-  color: var(--ink-60);
-  line-height: 1.65;
-  max-width: 34ch;
-  margin: 0 auto 28px;
-}
-
-.successActions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 /* Page footer */
 .pageFooter {
   text-align: center;
@@ -739,8 +687,7 @@
 }
 
 /* Card shells lift in */
-.card,
-.successCard {
+.card {
   animation: invCardIn 0.7s var(--ease) both;
 }
 
@@ -832,31 +779,6 @@
   animation-delay: 0.5s;
 }
 
-/* Success state */
-.successIcon {
-  animation: invIconPop 0.55s var(--ease) both;
-  animation-delay: 0.2s;
-}
-
-.successIcon svg polyline {
-  stroke-dasharray: 40;
-  animation: invCheckDraw 0.5s var(--ease) both;
-  animation-delay: 0.55s;
-}
-
-.successHeading {
-  animation: invFadeUp 0.6s var(--ease) both;
-  animation-delay: 0.34s;
-}
-.successLead {
-  animation: invFadeUp 0.6s var(--ease) both;
-  animation-delay: 0.44s;
-}
-.successActions {
-  animation: invFadeUp 0.6s var(--ease) both;
-  animation-delay: 0.54s;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .sealed,
   .sealed .seal.sealStatic,
@@ -873,7 +795,6 @@
   .loaderStatus,
   .loaderBarFill,
   .card,
-  .successCard,
   .header::before,
   .brand,
   .inviterRow,
@@ -885,12 +806,7 @@
   .tokenBadge,
   .expiryRow,
   .form,
-  .alreadyMember,
-  .successIcon,
-  .successIcon svg polyline,
-  .successHeading,
-  .successLead,
-  .successActions {
+  .alreadyMember {
     animation: none;
   }
 }

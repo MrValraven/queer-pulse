@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { FiStar, FiFlag } from 'react-icons/fi'
 import type { VerifiedSpace } from './safeSpaces'
 import { TYPE_CLASS } from './safeSpacesPage.data'
 import styles from './SafeSpacesPage.module.css'
@@ -33,7 +34,7 @@ export function SafeSpaceCard({ s, onFlag }: { s: VerifiedSpace; onFlag: () => v
       </div>
       <div className={styles.cardFoot}>
         <div className={styles.reviews}>
-          ★ <strong>{s.rating}</strong> · {s.reviews}
+          <FiStar /> <strong>{s.rating}</strong> · {s.reviews}
         </div>
         <span
           role="button"
@@ -44,7 +45,7 @@ export function SafeSpaceCard({ s, onFlag }: { s: VerifiedSpace; onFlag: () => v
             if (e.key === 'Enter' || e.key === ' ') flag(e)
           }}
         >
-          ⚑ Flag
+          <FiFlag /> Flag
         </span>
       </div>
     </Link>

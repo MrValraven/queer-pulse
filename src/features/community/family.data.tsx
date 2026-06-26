@@ -22,7 +22,7 @@ export interface Review {
   color: string
   name: string
   context: string
-  stars: string
+  stars: number
   quote: string
 }
 export interface Step {
@@ -77,9 +77,9 @@ export const TABS: Tab[] = [
     ),
     reviewHead: <>Community-reviewed <em>social workers &amp; agencies</em></>,
     reviews: [
-      { initials: 'CM', bg: 'rgba(74,140,111,.15)', color: 'var(--jade)', name: 'Carla Matos', context: 'Social worker · SCML Lisboa', stars: '★★★★★', quote: '"Dealt with our case without a single awkward moment. Prepared, respectful, made the home study feel like a conversation. Recommended by four members of this community."' },
-      { initials: 'FA', bg: 'rgba(232,119,90,.15)', color: 'var(--accent-ink)', name: 'Fundação Ajuda', context: 'Adoption agency · Lisbon', stars: '★★★★☆', quote: '"Good organisation, thorough process. One social worker was clearly less experienced with LGBTQ+ families but the lead was excellent. Overall positive."' },
-      { initials: 'RN', bg: 'rgba(45,27,61,.1)', color: 'var(--plum)', name: 'Rita Nunes', context: 'Independent social worker', stars: '★★★★★', quote: '"Specifically experienced with LGBTQ+ families. Worth contacting directly before you start the official process — she helped us understand what to expect."' },
+      { initials: 'CM', bg: 'rgba(74,140,111,.15)', color: 'var(--jade)', name: 'Carla Matos', context: 'Social worker · SCML Lisboa', stars: 5, quote: '"Dealt with our case without a single awkward moment. Prepared, respectful, made the home study feel like a conversation. Recommended by four members of this community."' },
+      { initials: 'FA', bg: 'rgba(232,119,90,.15)', color: 'var(--accent-ink)', name: 'Fundação Ajuda', context: 'Adoption agency · Lisbon', stars: 4, quote: '"Good organisation, thorough process. One social worker was clearly less experienced with LGBTQ+ families but the lead was excellent. Overall positive."' },
+      { initials: 'RN', bg: 'rgba(45,27,61,.1)', color: 'var(--plum)', name: 'Rita Nunes', context: 'Independent social worker', stars: 5, quote: '"Specifically experienced with LGBTQ+ families. Worth contacting directly before you start the official process — she helped us understand what to expect."' },
     ],
   },
   {
@@ -101,8 +101,8 @@ export const TABS: Tab[] = [
     ),
     reviewHead: <>Community-recommended <em>clinics</em></>,
     reviews: [
-      { initials: 'CF', bg: 'rgba(74,140,111,.15)', color: 'var(--jade)', name: 'Clínica Ferticare', context: 'Private · Marquês de Pombal', stars: '★★★★★', quote: '"Genuinely affirming from the first call. The team treated us as a couple — not a \'special case\'. Two members of our community are now parents thanks to them."' },
-      { initials: 'IM', bg: 'rgba(232,119,90,.15)', color: 'var(--accent-ink)', name: 'Instituto Marquesa', context: 'Private · Cascais', stars: '★★★★☆', quote: '"Slightly further out but shorter waitlists and very professional. Had no issues being a single woman. Would recommend for people who\'ve had bad experiences elsewhere."' },
+      { initials: 'CF', bg: 'rgba(74,140,111,.15)', color: 'var(--jade)', name: 'Clínica Ferticare', context: 'Private · Marquês de Pombal', stars: 5, quote: '"Genuinely affirming from the first call. The team treated us as a couple — not a \'special case\'. Two members of our community are now parents thanks to them."' },
+      { initials: 'IM', bg: 'rgba(232,119,90,.15)', color: 'var(--accent-ink)', name: 'Instituto Marquesa', context: 'Private · Cascais', stars: 4, quote: '"Slightly further out but shorter waitlists and very professional. Had no issues being a single woman. Would recommend for people who\'ve had bad experiences elsewhere."' },
     ],
   },
   {

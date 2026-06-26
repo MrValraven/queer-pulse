@@ -1,6 +1,13 @@
+import type { IconType } from "react-icons";
+import { FiCoffee, FiMapPin } from "react-icons/fi";
 import { memberName } from "../members/data/members";
 
 export type EventType = "Social" | "Support" | "Outdoors" | "Culture";
+
+export interface SoberMeta {
+  icon?: IconType;
+  text: string;
+}
 
 export interface SoberEvent {
   id: number;
@@ -9,7 +16,7 @@ export interface SoberEvent {
   type: EventType;
   typeLabel: string;
   name: string;
-  meta: string[];
+  meta: SoberMeta[];
   going?: boolean;
 }
 
@@ -24,11 +31,11 @@ export const REASONS = [
 ];
 
 export const EVENTS: SoberEvent[] = [
-  { id: 1, d: "08", m: "Jun", type: "Social", typeLabel: "Alcohol-free", name: "Morning walk — Monsanto Forest Park", meta: ["🌲 Monsanto", "9:00am", "14 going"], going: true },
-  { id: 2, d: "14", m: "Jun", type: "Culture", typeLabel: "Alcohol-free", name: "Book club meetup — Giovanni's Room", meta: ["☕ Linha d'Água café, Príncipe Real", "18:30", "11 going"] },
-  { id: 3, d: "21", m: "Jun", type: "Support", typeLabel: "Support group", name: "Sober & Queer — weekly peer support", meta: ["📍 Online (private link sent on RSVP)", "19:00", "Recurring"] },
-  { id: 4, d: "28", m: "Jun", type: "Outdoors", typeLabel: "Alcohol-free", name: "Pride picnic — alcohol-free zone", meta: ["🌳 Jardim da Estrela", "14:00–18:00", "38 going"] },
-  { id: 5, d: "05", m: "Jul", type: "Social", typeLabel: "Alcohol-free", name: "Film night — Portrait of a Lady on Fire", meta: ["📍 Member's flat, Mouraria", "20:00", "8 spots left"] },
+  { id: 1, d: "08", m: "Jun", type: "Social", typeLabel: "Alcohol-free", name: "Morning walk — Monsanto Forest Park", meta: [{ icon: FiMapPin, text: "Monsanto" }, { text: "9:00am" }, { text: "14 going" }], going: true },
+  { id: 2, d: "14", m: "Jun", type: "Culture", typeLabel: "Alcohol-free", name: "Book club meetup — Giovanni's Room", meta: [{ icon: FiCoffee, text: "Linha d'Água café, Príncipe Real" }, { text: "18:30" }, { text: "11 going" }] },
+  { id: 3, d: "21", m: "Jun", type: "Support", typeLabel: "Support group", name: "Sober & Queer — weekly peer support", meta: [{ icon: FiMapPin, text: "Online (private link sent on RSVP)" }, { text: "19:00" }, { text: "Recurring" }] },
+  { id: 4, d: "28", m: "Jun", type: "Outdoors", typeLabel: "Alcohol-free", name: "Pride picnic — alcohol-free zone", meta: [{ icon: FiMapPin, text: "Jardim da Estrela" }, { text: "14:00–18:00" }, { text: "38 going" }] },
+  { id: 5, d: "05", m: "Jul", type: "Social", typeLabel: "Alcohol-free", name: "Film night — Portrait of a Lady on Fire", meta: [{ icon: FiMapPin, text: "Member's flat, Mouraria" }, { text: "20:00" }, { text: "8 spots left" }] },
 ];
 
 export const TYPE_CLASS: Record<EventType, string> = {

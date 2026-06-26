@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
 import { Avatar, Button, ImageSlot } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -27,7 +28,7 @@ export function GatheringRecapPage() {
             Pride Brunch — <em>June Edition</em>
           </div>
           <div className={styles.meta}>Saturday 21 June 2026 · Príncipe Real, Lisbon</div>
-          <div className={styles.attendedChip}>✓ 38 attended</div>
+          <div className={styles.attendedChip}><FiCheck /> 38 attended</div>
         </div>
       </div>
 
@@ -139,7 +140,7 @@ export function GatheringRecapPage() {
 
               <div className={styles.attendedCard}>
                 <div className={styles.acRow}>
-                  <span style={{ color: 'var(--jade)' }}>✓</span>
+                  <span style={{ color: 'var(--jade)' }}><FiCheck /></span>
                   <div className={styles.acText}>You attended this gathering</div>
                 </div>
                 <Link to="/year-in-review" className={styles.acLink}>

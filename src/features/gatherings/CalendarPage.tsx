@@ -13,7 +13,18 @@ function sameDay(a: Date, b: Date) {
 function EventCard({ event }: { event: CalendarEvent }) {
   const navigate = useNavigate()
   return (
-    <div className={styles.eventCard} onClick={() => navigate(event.to)} role="link" tabIndex={0}>
+    <div
+      className={styles.eventCard}
+      onClick={() => navigate(event.to)}
+      role="link"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          navigate(event.to)
+        }
+      }}
+    >
       <div className={styles.ecDate}>
         <div className={styles.ecD}>{event.date.getDate()}</div>
         <div className={styles.ecM} style={{ color: event.orgColor }}>{MSHORT[event.date.getMonth()]}</div>
@@ -146,14 +157,14 @@ export function CalendarPage() {
                   onSubmit={(event) => {
                     event.preventDefault()
                     const button = event.currentTarget.querySelector('button')
-                    if (button) { button.textContent = 'Subscribed ✓'; button.disabled = true }
+                    if (button) { button.textContent = 'Subscribed'; button.disabled = true }
                   }}
                 >
                   <input className={styles.subInput} type="email" placeholder="your@email.com" />
                   <button
                     type="submit"
                     className="btn"
-                    style={{ padding: '11px 18px', fontSize: 13.5, background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 999, fontFamily: 'var(--sans)', fontWeight: 600, cursor: 'pointer' }}
+                    style={{ padding: '11px 18px', fontSize: 13.5, background: 'var(--accent)', color: 'var(--cream)', border: 'none', borderRadius: 999, fontFamily: 'var(--sans)', fontWeight: 600, cursor: 'pointer' }}
                   >
                     Subscribe
                   </button>

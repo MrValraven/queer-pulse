@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { communities } from '../homepage/data/communities'
@@ -78,7 +79,7 @@ export function CommunitiesPage() {
                   <div className={styles.foot}>
                     <span className={styles.meta}>{community.count}</span>
                     {hasJoined ? (
-                      <span className={[styles.joinBtn, styles.joined].join(' ')}>✓ Joined</span>
+                      <span className={[styles.joinBtn, styles.joined].join(' ')}><FiCheck /> Joined</span>
                     ) : community.privateBadge ? (
                       <span className={styles.joinBtn}>Enter →</span>
                     ) : (

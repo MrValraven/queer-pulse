@@ -1,3 +1,6 @@
+import type { IconType } from 'react-icons'
+import { FiBook, FiHeart, FiPenTool, FiSun, FiUsers } from 'react-icons/fi'
+import { LuScale } from 'react-icons/lu'
 import { memberName } from '../members/data/members'
 
 export interface Grant {
@@ -58,13 +61,13 @@ export const PANEL = [
   { title: '+ 2 community members', body: "Rotating seats — open to any member who hasn't applied this round" },
 ]
 
-export const CATEGORIES = [
-  { icon: '🎨', name: 'Creative & art', sub: 'Exhibitions, prints, performances' },
-  { icon: '📚', name: 'Education & knowledge', sub: 'Workshops, guides, resources' },
-  { icon: '🏥', name: 'Health & wellbeing', sub: 'Mental health, harm reduction' },
-  { icon: '⚖️', name: 'Legal & advocacy', sub: 'Rights, accompaniment' },
-  { icon: '🤝', name: 'Community & space', sub: 'Gatherings, mutual aid' },
-  { icon: '🌱', name: 'Other', sub: "Something that doesn't fit neatly" },
+export const CATEGORIES: { icon: IconType; name: string; sub: string }[] = [
+  { icon: FiPenTool, name: 'Creative & art', sub: 'Exhibitions, prints, performances' },
+  { icon: FiBook, name: 'Education & knowledge', sub: 'Workshops, guides, resources' },
+  { icon: FiHeart, name: 'Health & wellbeing', sub: 'Mental health, harm reduction' },
+  { icon: LuScale, name: 'Legal & advocacy', sub: 'Rights, accompaniment' },
+  { icon: FiUsers, name: 'Community & space', sub: 'Gatherings, mutual aid' },
+  { icon: FiSun, name: 'Other', sub: "Something that doesn't fit neatly" },
 ]
 
 export const COMMITMENTS = [

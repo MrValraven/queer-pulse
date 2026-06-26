@@ -25,7 +25,7 @@ export function StudioTrackSidebar() {
         <div className={t.splitBar}>
           <span style={{ width: '80%', background: 'var(--accent)' }} />
           <span style={{ width: '8%', background: 'var(--jade)' }} />
-          <span style={{ width: '8%', background: '#2D1B3D' }} />
+          <span style={{ width: '8%', background: 'var(--plum)' }} />
           <span style={{ width: '4%', background: 'rgba(247,243,238,.2)' }} />
         </div>
         <div>

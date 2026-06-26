@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { FiStar } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
 import { ARRIVING, FORUM, GROUND, LAWYERS, ROUTES, TABS, type TabId } from './visas.data'
@@ -119,7 +120,11 @@ export function VisasPage() {
                     <div className={styles.rvContext}>{l.context}</div>
                   </div>
                 </div>
-                <div className={styles.rvStars}>{l.stars}</div>
+                <div className={styles.rvStars}>
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <FiStar key={n} className={n <= l.stars ? styles.rvStarOn : undefined} />
+                  ))}
+                </div>
                 <div className={styles.rvQuote}>{l.quote}</div>
               </div>
             ))}

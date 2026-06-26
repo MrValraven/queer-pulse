@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCheck, FiInfo, FiStar } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
@@ -30,7 +31,7 @@ export function TestingTab() {
       <div className={styles.infoGrid}>
         {TESTING_INFO.map((c) => (
           <div key={c.title} className={styles.infoCard} style={{ background: c.bg, borderColor: c.border }}>
-            <div className={styles.infoIcon}>{c.icon}</div>
+            <div className={styles.infoIcon}><c.icon /></div>
             <div className={styles.infoTitle} style={{ color: c.color }}>
               {c.title}
             </div>
@@ -61,16 +62,26 @@ export function TestingTab() {
               <div className={styles.ccDesc}>{c.desc}</div>
               <div className={styles.ccMeta}>
                 {c.meta.map((m) => (
-                  <span key={m}>{m}</span>
+                  <span key={m.text}>
+                    <m.icon /> {m.text}
+                  </span>
                 ))}
               </div>
             </div>
             <div className={styles.ccRight}>
-              {c.verified && <div className={styles.ccBadge}>Community verified ✓</div>}
+              {c.verified && (
+                <div className={styles.ccBadge}>
+                  Community verified <FiCheck />
+                </div>
+              )}
               <button type="button" className={styles.ccBtn} onClick={() => showToast('Opening details…', 'info')}>
                 {c.btn}
               </button>
-              {c.review && <div className={styles.ccReview}>{c.review}</div>}
+              {c.review && (
+                <div className={styles.ccReview}>
+                  <FiStar /> {c.review}
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -106,7 +117,7 @@ export function PrepTab() {
         taken correctly it is over 99% effective at preventing HIV. Here's how to access it.
       </p>
       <div className={styles.tip}>
-        <div className={styles.tipIcon}>💡</div>
+        <div className={styles.tipIcon}><FiInfo /></div>
         <div className={styles.tipText}>
           <strong>Portugal was one of the first European countries to make PrEP free.</strong> You
           don't need private insurance. The process involves a simple eligibility check, blood tests,
@@ -186,7 +197,7 @@ export function HivTab() {
       <div className={styles.infoGrid}>
         {HIV_INFO.map((c) => (
           <div className={styles.infoCard} key={c.title}>
-            <div className={styles.infoIcon}>{c.icon}</div>
+            <div className={styles.infoIcon}><c.icon /></div>
             <div className={styles.infoTitle}>{c.title}</div>
             <div className={styles.infoBody}>{c.body}</div>
             {c.link &&
@@ -220,7 +231,7 @@ export function GuidesTab() {
       <div className={styles.infoGrid}>
         {GUIDES.map((g) => (
           <div className={styles.infoCard} key={g.title}>
-            <div className={styles.infoIcon}>{g.icon}</div>
+            <div className={styles.infoIcon}><g.icon /></div>
             <div className={styles.infoTitle}>{g.title}</div>
             <div className={styles.infoBody}>{g.body}</div>
             {g.link &&

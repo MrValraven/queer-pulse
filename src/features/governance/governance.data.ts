@@ -1,3 +1,6 @@
+import type { IconType } from 'react-icons'
+import { FiLock, FiEye, FiSlash, FiMessageCircle, FiBookOpen } from 'react-icons/fi'
+import { MdAccessible } from 'react-icons/md'
 import { MEMBERS, memberName } from '../members/data/members'
 
 export const NAV = [
@@ -33,13 +36,13 @@ export const COUNCIL = [
   { i: 'JF', name: 'Jonas Ferreira', role: 'Healthcare advocate', bg: 'rgba(74,140,111,.12)', color: 'var(--jade)' },
 ]
 
-export const PRINCIPLES = [
-  { icon: '🔒', title: 'We will never sell member data', text: 'Member data is used only to run the platform. We never share, sell, or use it for advertising.' },
-  { icon: '👁️', title: 'Visibility is always your choice', text: 'You control who can see your profile, posts, and activity. Defaults are conservative.' },
-  { icon: '🚫', title: 'No algorithms deciding who you see', text: 'No engagement algorithm. Members are not ranked. You see what you choose to see.' },
-  { icon: '💬', title: 'Community has a voice in decisions', text: 'Significant changes are discussed in the Forum before implementation; proposals go to the council.' },
-  { icon: '📖', title: 'Transparency is non-negotiable', text: 'Quarterly health reports. Published moderation stats. Council meetings summarised publicly.' },
-  { icon: '♿', title: 'Access is not conditional on ability to pay', text: 'A sliding scale for all paid gatherings. No one is excluded for financial circumstances.' },
+export const PRINCIPLES: { icon: IconType; title: string; text: string }[] = [
+  { icon: FiLock, title: 'We will never sell member data', text: 'Member data is used only to run the platform. We never share, sell, or use it for advertising.' },
+  { icon: FiEye, title: 'Visibility is always your choice', text: 'You control who can see your profile, posts, and activity. Defaults are conservative.' },
+  { icon: FiSlash, title: 'No algorithms deciding who you see', text: 'No engagement algorithm. Members are not ranked. You see what you choose to see.' },
+  { icon: FiMessageCircle, title: 'Community has a voice in decisions', text: 'Significant changes are discussed in the Forum before implementation; proposals go to the council.' },
+  { icon: FiBookOpen, title: 'Transparency is non-negotiable', text: 'Quarterly health reports. Published moderation stats. Council meetings summarised publicly.' },
+  { icon: MdAccessible, title: 'Access is not conditional on ability to pay', text: 'A sliding scale for all paid gatherings. No one is excluded for financial circumstances.' },
 ]
 
 export const FIN_STATS = [

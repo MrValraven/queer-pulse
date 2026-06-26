@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+import type { IconType } from 'react-icons'
+import { FiBookOpen, FiClipboard, FiClock, FiHome, FiStar, FiTag } from 'react-icons/fi'
 import type { AvatarTint } from '../../shared/components/ui/Avatar'
 import { routes } from '../../app/routeMap'
 import { memberName } from '../members/data/members'
@@ -17,7 +19,7 @@ export interface Notification {
   unread: boolean
   /** Either an avatar (initials + tint) or an emoji icon with a background. */
   avatar?: { initials: string; tint: AvatarTint }
-  icon?: { emoji: string; bg: string }
+  icon?: { Glyph: IconType; bg: string }
   text: ReactNode
   meta: string
   time: string
@@ -55,7 +57,7 @@ export const notifications: Notification[] = [
     id: 2,
     type: 'events',
     unread: true,
-    icon: { emoji: '🎟️', bg: 'rgba(232,119,90,.1)' },
+    icon: { Glyph: FiTag, bg: 'rgba(232,119,90,.1)' },
     text: (
       <>
         Your RSVP for <strong>Newcomer Welcome Dinner</strong> has been
@@ -103,7 +105,7 @@ export const notifications: Notification[] = [
     id: 5,
     type: 'platform',
     unread: true,
-    icon: { emoji: '📖', bg: 'rgba(45,27,61,.07)' },
+    icon: { Glyph: FiBookOpen, bg: 'rgba(45,27,61,.07)' },
     text: (
       <>
         <strong>QueerPulse Magazine Issue 18</strong> is now available. Cover
@@ -118,7 +120,7 @@ export const notifications: Notification[] = [
     id: 6,
     type: 'events',
     unread: true,
-    icon: { emoji: '⏰', bg: 'rgba(74,140,111,.1)' },
+    icon: { Glyph: FiClock, bg: 'rgba(74,140,111,.1)' },
     text: (
       <>
         Reminder: <strong>Theory Thursdays</strong> reading group meets tomorrow
@@ -146,7 +148,7 @@ export const notifications: Notification[] = [
     id: 8,
     type: 'platform',
     unread: false,
-    icon: { emoji: '✨', bg: 'rgba(232,119,90,.09)' },
+    icon: { Glyph: FiStar, bg: 'rgba(232,119,90,.09)' },
     text: (
       <>
         New platform feature: <strong>Barter Exchange</strong> now supports
@@ -161,7 +163,7 @@ export const notifications: Notification[] = [
     id: 9,
     type: 'events',
     unread: false,
-    icon: { emoji: '🎟️', bg: 'rgba(232,119,90,.1)' },
+    icon: { Glyph: FiTag, bg: 'rgba(232,119,90,.1)' },
     text: (
       <>
         The <strong>Queer Cinema Night — Levante</strong> you attended has a
@@ -191,7 +193,7 @@ export const notifications: Notification[] = [
     id: 11,
     type: 'community',
     unread: false,
-    icon: { emoji: '📋', bg: 'rgba(45,27,61,.07)' },
+    icon: { Glyph: FiClipboard, bg: 'rgba(45,27,61,.07)' },
     text: 'Your post in the Forum ("Housing law update — what I found out") received 12 replies.',
     meta: 'Forum · Activity',
     time: '6 days ago',
@@ -201,7 +203,7 @@ export const notifications: Notification[] = [
     id: 12,
     type: 'platform',
     unread: false,
-    icon: { emoji: '🏛️', bg: 'rgba(45,27,61,.07)' },
+    icon: { Glyph: FiHome, bg: 'rgba(45,27,61,.07)' },
     text: (
       <>
         The <strong>Q2 2026 Community Health Report</strong> has been published.

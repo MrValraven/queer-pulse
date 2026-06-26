@@ -1,3 +1,4 @@
+import { FiCheck } from 'react-icons/fi'
 import { ACCESS_OPTIONS, CONFIRM_CHECKS, HOODS, LANGS, TYPES } from './createGathering.data'
 import type { GatheringForm } from './useGatheringForm'
 import styles from './CreateGatheringPage.module.css'
@@ -17,7 +18,7 @@ export function TypeStep({ form }: { form: GatheringForm }) {
             className={[styles.typeCard, form.type === t.name && styles.typeCardSelected].filter(Boolean).join(' ')}
             onClick={() => form.selectType(t.name, t.icon)}
           >
-            <div className={styles.typeIcon}>{t.icon}</div>
+            <div className={styles.typeIcon}><t.icon /></div>
             <span className={styles.typeName}>{t.name}</span>
             <span className={styles.typeSub}>{t.sub}</span>
           </button>
@@ -119,8 +120,17 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
               key={name}
               className={[styles.accessItem, on && styles.accessItemSelected].filter(Boolean).join(' ')}
               onClick={() => form.toggleAccess(name)}
+              role="checkbox"
+              aria-checked={on}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  form.toggleAccess(name)
+                }
+              }}
             >
-              <div className={styles.accessCheck}>{on ? '✓' : ''}</div>
+              <div className={styles.accessCheck}>{on ? <FiCheck /> : ''}</div>
               <span className={styles.accessName}>{name}</span>
             </div>
           )
@@ -142,9 +152,21 @@ export function PricingStep({ form }: { form: GatheringForm }) {
         QueerPulse takes 0% of ticket revenue. All money goes directly to you. Sliding scale is
         mandatory for any paid event.
       </p>
-      <div className={styles.freeToggle} onClick={() => form.setFree(!form.free)}>
+      <div
+        className={styles.freeToggle}
+        onClick={() => form.setFree(!form.free)}
+        role="checkbox"
+        aria-checked={form.free}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            form.setFree(!form.free)
+          }
+        }}
+      >
         <div className={[styles.freeCheck, form.free && styles.freeCheckOn].filter(Boolean).join(' ')}>
-          {form.free ? '✓' : ''}
+          {form.free ? <FiCheck /> : ''}
         </div>
         <div>
           <div className={styles.freeLabel}>Free event — no tickets needed</div>
@@ -217,8 +239,9 @@ export function PricingStep({ form }: { form: GatheringForm }) {
 }
 
 export function ReviewStep({ form }: { form: GatheringForm }) {
+  const TypeIcon = form.typeIcon
   const review = [
-    { l: 'Type', v: <>{form.typeIcon} <strong>{form.type || '—'}</strong></> },
+    { l: 'Type', v: <>{TypeIcon && <TypeIcon />} <strong>{form.type || '—'}</strong></> },
     { l: 'Title', v: <strong>{form.title || '—'}</strong> },
     { l: 'Date & time', v: `${form.date || '—'} at ${form.time || '—'}` },
     { l: 'Location', v: `${form.venue || '—'}, ${form.hood || '—'}` },
@@ -248,9 +271,22 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
         all three are checked.
       </p>
       {CONFIRM_CHECKS.map((text, i) => (
-        <div key={i} className={styles.checkRow} onClick={() => form.toggleCheck(i)}>
+        <div
+          key={i}
+          className={styles.checkRow}
+          onClick={() => form.toggleCheck(i)}
+          role="checkbox"
+          aria-checked={form.checks[i]}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              form.toggleCheck(i)
+            }
+          }}
+        >
           <div className={[styles.check, form.checks[i] && styles.checkOn].filter(Boolean).join(' ')}>
-            {form.checks[i] ? '✓' : ''}
+            {form.checks[i] ? <FiCheck /> : ''}
           </div>
           <span className={styles.checkText}>{text}</span>
         </div>

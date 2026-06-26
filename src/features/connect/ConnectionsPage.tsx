@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FiInfo } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -30,7 +31,7 @@ export function ConnectionsPage() {
         </header>
 
         <div className={styles.langNote}>
-          <span>💡</span>
+          <span><FiInfo /></span>
           <span>
             <b>No follower counts on purpose.</b> If you're looking to "follow a member's posts"
             without connecting first, use the Communities feed instead. Connections are a two-way

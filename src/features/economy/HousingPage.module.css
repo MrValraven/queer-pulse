@@ -252,9 +252,14 @@
   margin-top: 1px;
 }
 .llStars {
+  display: inline-flex;
+  gap: 2px;
   color: var(--accent);
   font-size: 13px;
   margin: 6px 0;
+}
+.llStarOn {
+  fill: currentColor;
 }
 .llNote {
   font-size: 13px;

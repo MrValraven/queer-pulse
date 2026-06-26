@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { FiAward, FiStar } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, ImageSlot, Reveal, SectionHead } from '../../shared/components/ui'
@@ -110,11 +111,15 @@ export function HousingPage() {
           <div className={styles.llGrid}>
             {LANDLORDS.map((ll, i) => (
               <Reveal as={Link} key={ll.name} to={`/landlord/${ll.slug}`} className={styles.llCard} delay={i * 55}>
-                <span className={styles.llBadge}>🏅</span>
+                <span className={styles.llBadge}><FiAward /></span>
                 <div>
                   <div className={styles.llName}>{ll.name}</div>
                   <div className={styles.llHood}>{ll.hood}</div>
-                  <div className={styles.llStars}>{'★'.repeat(ll.stars)}{'☆'.repeat(5 - ll.stars)}</div>
+                  <div className={styles.llStars}>
+                    {Array.from({ length: 5 }, (_, n) => (
+                      <FiStar key={n} className={n < ll.stars ? styles.llStarOn : undefined} />
+                    ))}
+                  </div>
                   <div className={styles.llNote}>{ll.note}</div>
                 </div>
               </Reveal>

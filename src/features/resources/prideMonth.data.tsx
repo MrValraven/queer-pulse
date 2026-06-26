@@ -1,4 +1,6 @@
 import { type ReactNode } from 'react'
+import type { IconType } from 'react-icons'
+import { FiShield, FiMessageCircle, FiAlertTriangle } from 'react-icons/fi'
 import { routes } from '../../app/routeMap'
 
 export const GATHERING = routes.gathering
@@ -50,16 +52,16 @@ export const MARCH_META: [string, string][] = [
 ]
 
 export interface SafetyCard {
-  icon: string
+  icon: IconType
   h: ReactNode
   p: string
   href: string
 }
 
 export const SAFETY_CARDS: SafetyCard[] = [
-  { icon: '🛡', h: <>Safety <em>brief</em> for the march</>, p: "Pocket card. Where the observers are. What to do if. Print it, screenshot it, carry it.", href: SAFETY },
-  { icon: '💬', h: <>Crisis chat · <em>extended hours</em></>, p: 'Staffed 24/7 for June. Trained peer responders reply in <90s. Anonymous if you need it.', href: SAFETY },
-  { icon: '⚠', h: <>Hate-crime <em>reporting bridge</em></>, p: "One form. Goes to ILGA's casework lead within 24h with your consent. We've routed 300+ cases.", href: HATE_CRIME },
+  { icon: FiShield, h: <>Safety <em>brief</em> for the march</>, p: "Pocket card. Where the observers are. What to do if. Print it, screenshot it, carry it.", href: SAFETY },
+  { icon: FiMessageCircle, h: <>Crisis chat · <em>extended hours</em></>, p: 'Staffed 24/7 for June. Trained peer responders reply in <90s. Anonymous if you need it.', href: SAFETY },
+  { icon: FiAlertTriangle, h: <>Hate-crime <em>reporting bridge</em></>, p: "One form. Goes to ILGA's casework lead within 24h with your consent. We've routed 300+ cases.", href: HATE_CRIME },
 ]
 
 export interface ReadItem {

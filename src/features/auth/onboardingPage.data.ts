@@ -1,3 +1,6 @@
+import type { IconType } from 'react-icons';
+import { FiBookOpen, FiCalendar, FiUsers } from 'react-icons/fi';
+
 export const ONBOARDING_PREVIEW = [
   { title: 'Make it yours', desc: 'Add a photo so members can put a face to your name.' },
   { title: 'Set your intentions', desc: 'Tell us what brings you here, and we’ll tailor things.' },
@@ -40,8 +43,8 @@ export const COMMUNITIES_LIST = [
   { id: 'cc4', name: 'Queer Tech', count: '61 members', desc: 'Queer people working in technology — design, engineering, product, and the ethics behind it.', joined: false },
 ];
 
-export const QUICK_STARTS = [
-  { to: '/members', icon: '👥', iconBg: 'rgba(45,27,61,.07)', title: 'Browse the member directory', desc: '482 members in Lisbon and beyond' },
-  { to: '/calendar', icon: '📅', iconBg: 'rgba(232,119,90,.08)', title: 'See upcoming gatherings', desc: 'Real-world events for the community' },
-  { to: '/magazine', icon: '📖', iconBg: 'rgba(74,140,111,.08)', title: 'Read the community magazine', desc: 'Published the first of every month' },
+export const QUICK_STARTS: { to: string; icon: IconType; iconBg: string; title: string; desc: string }[] = [
+  { to: '/members', icon: FiUsers, iconBg: 'rgba(45,27,61,.07)', title: 'Browse the member directory', desc: '482 members in Lisbon and beyond' },
+  { to: '/calendar', icon: FiCalendar, iconBg: 'rgba(232,119,90,.08)', title: 'See upcoming gatherings', desc: 'Real-world events for the community' },
+  { to: '/magazine', icon: FiBookOpen, iconBg: 'rgba(74,140,111,.08)', title: 'Read the community magazine', desc: 'Published the first of every month' },
 ];

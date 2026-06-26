@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { FiX } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { TYPES, VENUES, VIBES, type Venue } from './map.data'
 import { LisbonMapSvg } from './LisbonMapSvg'
@@ -126,7 +127,7 @@ export function MapPage() {
               </div>
               {bairro && (
                 <button className={s.clear} onClick={() => selectBairro(null)}>
-                  ✕ Clear
+                  <FiX /> Clear
                 </button>
               )}
             </div>

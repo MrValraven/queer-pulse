@@ -58,7 +58,7 @@ export function LisbonMapSvg({
         {BAIRROS.filter((b) => counts[b.name]).map((b) => (
           <g key={`badge-${b.name}`} style={{ pointerEvents: 'none' }}>
             <circle cx={b.bx} cy={b.by} r="9" fill="var(--accent)" opacity="0.9" />
-            <text x={b.bx} y={b.by} textAnchor="middle" dominantBaseline="middle" style={{ fontFamily: 'var(--sans)', fontSize: 9, fontWeight: 700, fill: '#fff' }}>
+            <text x={b.bx} y={b.by} textAnchor="middle" dominantBaseline="middle" style={{ fontFamily: 'var(--sans)', fontSize: 9, fontWeight: 700, fill: 'var(--paper)' }}>
               {counts[b.name]}
             </text>
           </g>

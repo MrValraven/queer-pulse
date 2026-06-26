@@ -1,3 +1,4 @@
+import { FiCheck, FiClock, FiMapPin } from 'react-icons/fi'
 import type { Profile } from './flatmates.data'
 import styles from './FlatmatesPage.module.css'
 
@@ -27,8 +28,8 @@ export function FlatmateCard({
         </span>
       </div>
       <div className={styles.details}>
-        <span className={styles.detail}>📍 {p.neighbourhoodLabel}</span>
-        <span className={styles.detail}>🕒 {p.movein}</span>
+        <span className={styles.detail}><FiMapPin /> {p.neighbourhoodLabel}</span>
+        <span className={styles.detail}><FiClock /> {p.movein}</span>
         <span className={styles.detail}>{p.budget}</span>
       </div>
       <p className={styles.note}>{p.note}</p>
@@ -46,7 +47,7 @@ export function FlatmateCard({
           className={[styles.sayBtn, sent && styles.sayBtnSent].filter(Boolean).join(' ')}
           onClick={onSayHello}
         >
-          {sent ? '✓ Hello sent' : 'Say hello →'}
+          {sent ? <><FiCheck /> Hello sent</> : 'Say hello →'}
         </button>
       </div>
     </div>

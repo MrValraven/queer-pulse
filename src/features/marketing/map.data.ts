@@ -1,3 +1,7 @@
+import type { IconType } from 'react-icons'
+import { FiMusic, FiCoffee, FiPlusCircle, FiBookOpen, FiDroplet, FiUsers, FiScissors, FiActivity } from 'react-icons/fi'
+import { FaWineGlass } from 'react-icons/fa6'
+
 export interface Bairro {
   name: string
   path: string
@@ -75,6 +79,6 @@ export const VIBES = ['mixed', 'masc-leaning', 'femme-leaning', 'trans-centred',
 
 export const TYPE_BG: Record<string, string> = { bar: 'rgba(232,119,90,.14)', club: 'rgba(45,27,61,.1)', café: 'rgba(74,140,111,.12)', clinic: 'rgba(74,140,111,.14)', bookshop: 'rgba(232,119,90,.1)', sauna: 'rgba(45,27,61,.08)', 'community space': 'rgba(74,140,111,.14)', barbershop: 'rgba(185,130,80,.15)', gym: 'rgba(80,120,185,.13)' }
 export const TYPE_FG: Record<string, string> = { bar: 'var(--accent-ink)', club: 'var(--plum)', café: 'var(--jade)', clinic: 'var(--jade)', bookshop: 'var(--accent-ink)', sauna: 'var(--ink-60)', 'community space': 'var(--jade)', barbershop: '#9A6820', gym: '#3A5EA0' }
-export const TYPE_ICON: Record<string, string> = { bar: '▮', club: '◉', café: '○', clinic: '+', bookshop: '◻', sauna: '〜', 'community space': '⬡', barbershop: '✂', gym: '◈' }
+export const TYPE_ICON: Record<string, IconType> = { bar: FaWineGlass, club: FiMusic, café: FiCoffee, clinic: FiPlusCircle, bookshop: FiBookOpen, sauna: FiDroplet, 'community space': FiUsers, barbershop: FiScissors, gym: FiActivity }
 export const VIBE_BG: Record<string, string> = { mixed: 'rgba(45,27,61,.06)', 'masc-leaning': 'rgba(45,27,61,.09)', 'femme-leaning': 'rgba(232,119,90,.09)', 'trans-centred': 'rgba(74,140,111,.1)', 'sober-friendly': 'rgba(74,140,111,.08)' }
 export const VIBE_FG: Record<string, string> = { mixed: 'var(--ink-60)', 'masc-leaning': 'var(--ink-60)', 'femme-leaning': 'var(--accent-ink)', 'trans-centred': 'var(--jade)', 'sober-friendly': 'var(--jade)' }

@@ -1,3 +1,4 @@
+import { FiZap, FiSettings } from 'react-icons/fi'
 import { StudioCreatorShell } from './StudioCreatorShell'
 import { useToast } from '../../shared/components/feedback/useToast'
 import s from './creator.module.css'
@@ -152,7 +153,7 @@ export function StudioPayoutsPage() {
               <span className={s.methodBadge}>Active</span>
             </div>
             <div className={s.method}>
-              <span className={`${s.methodIc} ${s.methodIcAlt}`}>⚡</span>
+              <span className={`${s.methodIc} ${s.methodIcAlt}`}><FiZap /></span>
               <span className={s.methodNm}>
                 Stripe Connect
                 <small>connected · backup, not primary</small>
@@ -160,7 +161,7 @@ export function StudioPayoutsPage() {
               <span className={s.methodSwitch}>Switch</span>
             </div>
             <div className={s.method}>
-              <span className={`${s.methodIc} ${s.methodIcAlt}`}>⚙</span>
+              <span className={`${s.methodIc} ${s.methodIcAlt}`}><FiSettings /></span>
               <span className={s.methodNm}>
                 Co-op credit
                 <small>spend at Casa do Comum, rehearsal rooms · €0 fees</small>

@@ -49,10 +49,22 @@ export const collections = [
   { tag: 'Collection', titlePre: 'Lesbian sci-fi, ’78 to ', titleEm: 'tomorrow', desc: 'From the cult of Born in Flames to the Brazilian shorts no one\'s importing yet. The future has always had us in it.', by: 'Yara Reis', av: 'YR', count: '18 films · 6 free · 12 rent', total: '26h' },
 ]
 
-export const shorts = [
-  { eyebrow: 'Short · 12 min', titlePre: 'What my grandmother ', titleEm: 'did', titlePost: ' say', desc: 'A late-night phone call, transcribed and re-enacted. Lisbon, 2026. Made on the spring micro-grant.', meta: 'Helena P. · ★ 412 watches this week' },
-  { eyebrow: 'Short · 9 min', titlePre: 'Bicha, with love', desc: 'One Brazilian word, six speakers, six relationships to it. A visual essay shot on a Bolex.', meta: 'Mateus F. · ★ 286 watches this week' },
-  { eyebrow: 'Documentary · 28 min', titlePre: 'The first ', titleEm: 'Sunday', desc: "Inside Lisbon's first community-run queer Sunday roast. Funded by 47 sustainers, in 11 days.", meta: 'Inês T. & collective · ★ 819 watches this week' },
+export interface CinemaShort {
+  eyebrow: string
+  titlePre: string
+  titleEm?: string
+  titlePost?: string
+  desc: string
+  /** Author byline, rendered before an inline star icon. */
+  metaBy: string
+  /** Watch count, rendered after the star icon (e.g. '412 watches this week'). */
+  metaWatches: string
+}
+
+export const shorts: CinemaShort[] = [
+  { eyebrow: 'Short · 12 min', titlePre: 'What my grandmother ', titleEm: 'did', titlePost: ' say', desc: 'A late-night phone call, transcribed and re-enacted. Lisbon, 2026. Made on the spring micro-grant.', metaBy: 'Helena P.', metaWatches: '412 watches this week' },
+  { eyebrow: 'Short · 9 min', titlePre: 'Bicha, with love', desc: 'One Brazilian word, six speakers, six relationships to it. A visual essay shot on a Bolex.', metaBy: 'Mateus F.', metaWatches: '286 watches this week' },
+  { eyebrow: 'Documentary · 28 min', titlePre: 'The first ', titleEm: 'Sunday', desc: "Inside Lisbon's first community-run queer Sunday roast. Funded by 47 sustainers, in 11 days.", metaBy: 'Inês T. & collective', metaWatches: '819 watches this week' },
 ]
 
 export const liveEvents = [

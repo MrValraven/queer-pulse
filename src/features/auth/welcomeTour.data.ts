@@ -2,6 +2,31 @@
  * Static content for the faithful "QueerPulse Welcome" guided tour
  * (ported from the original `QueerPulse Welcome.html` design prototype).
  */
+import type { IconType } from 'react-icons';
+import {
+  FiActivity,
+  FiBookOpen,
+  FiBriefcase,
+  FiCalendar,
+  FiCheckCircle,
+  FiFilm,
+  FiGlobe,
+  FiMapPin,
+  FiMonitor,
+  FiMusic,
+  FiPenTool,
+  FiTool,
+  FiUsers,
+} from 'react-icons/fi';
+import {
+  FaHandFist,
+  FaHandshake,
+  FaHospital,
+  FaLandmark,
+  FaLeaf,
+  FaSeedling,
+  FaUtensils,
+} from 'react-icons/fa6';
 import { memberName } from '../members/data/members';
 
 export const TOUR_STEP_FILLS = ['17%', '34%', '50%', '67%', '84%', '100%'];
@@ -43,19 +68,19 @@ export const VISIBILITY_OPTIONS = [
   { value: 'private', title: 'Keep it quiet for now', desc: "I'll reach out when I'm ready" },
 ];
 
-export const INTERESTS = [
-  { icon: '🎨', label: 'Design' },
-  { icon: '💻', label: 'Tech' },
-  { icon: '🎬', label: 'Film' },
-  { icon: '🎵', label: 'Music' },
-  { icon: '✊', label: 'Activism' },
-  { icon: '🌿', label: 'Wellbeing' },
-  { icon: '🍽️', label: 'Food' },
-  { icon: '🏃', label: 'Sports' },
-  { icon: '📖', label: 'Writing' },
-  { icon: '🏺', label: 'Craft' },
-  { icon: '🏛️', label: 'Policy' },
-  { icon: '🌍', label: 'Community' },
+export const INTERESTS: { icon: IconType; label: string }[] = [
+  { icon: FiPenTool, label: 'Design' },
+  { icon: FiMonitor, label: 'Tech' },
+  { icon: FiFilm, label: 'Film' },
+  { icon: FiMusic, label: 'Music' },
+  { icon: FaHandFist, label: 'Activism' },
+  { icon: FaLeaf, label: 'Wellbeing' },
+  { icon: FaUtensils, label: 'Food' },
+  { icon: FiActivity, label: 'Sports' },
+  { icon: FiBookOpen, label: 'Writing' },
+  { icon: FiTool, label: 'Craft' },
+  { icon: FaLandmark, label: 'Policy' },
+  { icon: FiGlobe, label: 'Community' },
 ];
 
 export const TOUR_COMMUNITIES = [
@@ -94,16 +119,16 @@ export const CONNECTIONS = [
 ];
 
 /** Explore cards — `href` uses original prototype filenames, resolved via linkToPath(). */
-export const EXPLORE_CARDS = [
-  { icon: '👥', name: 'Members', desc: 'Browse and say hello to people in the network', href: 'QueerPulse Homepage.html#discovery' },
-  { icon: '📅', name: 'Gatherings', desc: 'RSVP to something happening near you', href: 'QueerPulse Homepage.html#gather' },
-  { icon: '🤝', name: 'Communities', desc: 'Find an ongoing group to join', href: 'QueerPulse Communities.html' },
-  { icon: '🎨', name: 'Culture', desc: 'Book club, art showcase, commission board, radio', href: 'QueerPulse Culture.html' },
-  { icon: '💼', name: 'Economy', desc: 'Incubator, freelance tools, salary transparency', href: 'QueerPulse Economy.html' },
-  { icon: '🌱', name: 'Queer 101', desc: 'Still exploring your identity? A quiet place to start', href: 'QueerPulse 101.html' },
-  { icon: '✊', name: 'Volunteer', desc: 'Find a way to give back to the local community', href: 'QueerPulse Volunteer.html' },
-  { icon: '🏙️', name: 'New to Lisbon?', desc: 'A guide to settling into the queer scene here', href: 'QueerPulse Arriving.html' },
-  { icon: '🏥', name: 'Sexual health', desc: 'Testing, PrEP, HIV resources — queer-specific & direct', href: 'QueerPulse Sexual Health.html' },
-  { icon: '✅', name: 'Safe spaces', desc: 'Community-verified venues — earned, not self-declared', href: 'QueerPulse Safe Spaces.html' },
-  { icon: '🌿', name: 'Sober & social', desc: 'A full social life, without alcohol at the centre', href: 'QueerPulse Sober.html' },
+export const EXPLORE_CARDS: { icon: IconType; name: string; desc: string; href: string }[] = [
+  { icon: FiUsers, name: 'Members', desc: 'Browse and say hello to people in the network', href: 'QueerPulse Homepage.html#discovery' },
+  { icon: FiCalendar, name: 'Gatherings', desc: 'RSVP to something happening near you', href: 'QueerPulse Homepage.html#gather' },
+  { icon: FaHandshake, name: 'Communities', desc: 'Find an ongoing group to join', href: 'QueerPulse Communities.html' },
+  { icon: FiPenTool, name: 'Culture', desc: 'Book club, art showcase, commission board, radio', href: 'QueerPulse Culture.html' },
+  { icon: FiBriefcase, name: 'Economy', desc: 'Incubator, freelance tools, salary transparency', href: 'QueerPulse Economy.html' },
+  { icon: FaSeedling, name: 'Queer 101', desc: 'Still exploring your identity? A quiet place to start', href: 'QueerPulse 101.html' },
+  { icon: FaHandFist, name: 'Volunteer', desc: 'Find a way to give back to the local community', href: 'QueerPulse Volunteer.html' },
+  { icon: FiMapPin, name: 'New to Lisbon?', desc: 'A guide to settling into the queer scene here', href: 'QueerPulse Arriving.html' },
+  { icon: FaHospital, name: 'Sexual health', desc: 'Testing, PrEP, HIV resources — queer-specific & direct', href: 'QueerPulse Sexual Health.html' },
+  { icon: FiCheckCircle, name: 'Safe spaces', desc: 'Community-verified venues — earned, not self-declared', href: 'QueerPulse Safe Spaces.html' },
+  { icon: FaLeaf, name: 'Sober & social', desc: 'A full social life, without alcohol at the centre', href: 'QueerPulse Sober.html' },
 ];

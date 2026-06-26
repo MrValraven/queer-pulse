@@ -92,7 +92,7 @@ export function SubscriptionsPage() {
           <h4 style={{ fontSize: 13, fontWeight: 700, color: 'var(--plum)', marginBottom: 10 }}>Pick one or more</h4>
           <div className={styles.pronGrid}>
             {PRONOUN_OPTIONS.map((p) => (
-              <div key={p} className={`${styles.pronChip} ${selectedPronouns.has(p) ? styles.pronChipSelected : ''}`} onClick={() => togglePronoun(p)}>
+              <div key={p} className={`${styles.pronChip} ${selectedPronouns.has(p) ? styles.pronChipSelected : ''}`} role="button" tabIndex={0} aria-pressed={selectedPronouns.has(p)} onClick={() => togglePronoun(p)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); togglePronoun(p) } }}>
                 {p.includes('/') ? <>{p.split('/')[0]}<em>/</em>{p.split('/')[1]}</> : p}
               </div>
             ))}

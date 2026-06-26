@@ -1,4 +1,6 @@
 import { useMemo, useState, type SyntheticEvent } from 'react'
+import { FiCheck } from 'react-icons/fi'
+import { FaRainbow } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Reveal, SectionHead } from '../../shared/components/ui'
@@ -38,7 +40,7 @@ function JobCard({ job }: { job: Job }) {
               color: job.qr ? 'var(--jade)' : 'var(--ink-60)',
             }}
           >
-            {job.qr ? '🏳️‍🌈 ' : ''}
+            {job.qr ? <><FaRainbow /> </> : ''}
             {job.qrLabel}
           </span>
           {job.tags.map((tag) => (
@@ -66,7 +68,7 @@ function JobCard({ job }: { job: Job }) {
           if (e.key === 'Enter' || e.key === ' ') apply(e)
         }}
       >
-        {applied ? 'Applied ✓' : 'Apply'}
+        {applied ? <>Applied <FiCheck /></> : 'Apply'}
       </span>
     </Link>
   )
@@ -92,8 +94,8 @@ export function JobsPage() {
             as yourself. No rainbow capitalism. Every listing is vetted by the community.
           </Reveal>
           <Reveal className={styles.badges} delay={160}>
-            <span className={styles.badge}>🏳️‍🌈 Queer-run</span>
-            <span className={styles.badge}>✓ Community verified</span>
+            <span className={styles.badge}><FaRainbow /> Queer-run</span>
+            <span className={styles.badge}><FiCheck /> Community verified</span>
             <span className={styles.badge}>Lisbon + remote</span>
           </Reveal>
         </div>
@@ -140,6 +142,7 @@ export function JobsPage() {
                 <div className={styles.empName}>{emp.name}</div>
                 <div className={styles.empType}>{emp.type}</div>
                 <span className={styles.empBadge} style={{ background: emp.badgeBg, color: emp.badgeText }}>
+                  {emp.qr ? <><FaRainbow /> </> : ''}
                   {emp.badge}
                 </span>
               </div>

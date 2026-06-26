@@ -43,7 +43,7 @@ export const LANDLORDS: Landlord[] = [
       { value: '3', label: 'Member recommendations' },
       { value: '15+', label: 'Years renting locally' },
       { value: '≤ 48h', label: 'Typical repair response' },
-      { value: '★ 5.0', label: 'Community rating' },
+      { value: '5.0', label: 'Community rating' },
     ],
     recommendations: [
       { initials: MEMBERS.carla.initials, name: memberName('carla'), tint: 'coral', stars: 5, text: 'Rented from him for two years. A radiator died in January and was replaced in two days. Never once made us feel like our relationship was his business.', when: 'Recommended Mar 2026' },
@@ -65,7 +65,7 @@ export const LANDLORDS: Landlord[] = [
       { value: '5', label: 'Member recommendations' },
       { value: '15', label: 'Years renting to queer tenants' },
       { value: '≤ 24h', label: 'Typical response' },
-      { value: '★ 5.0', label: 'Community rating' },
+      { value: '5.0', label: 'Community rating' },
     ],
     recommendations: [
       { initials: MEMBERS.tomas.initials, name: memberName('tomas'), tint: 'coral', stars: 5, text: 'Ana rented me my first place in Lisbon when no one else would look at a freelancer. Fair, warm, completely unbothered by anything about me except whether I was happy there.', when: 'Recommended Apr 2026' },
@@ -86,7 +86,7 @@ export const LANDLORDS: Landlord[] = [
       { value: '2', label: 'Member recommendations' },
       { value: '20+', label: 'Years owning the building' },
       { value: '≤ 72h', label: 'Typical repair response' },
-      { value: '★ 4.5', label: 'Community rating' },
+      { value: '4.5', label: 'Community rating' },
     ],
     recommendations: [
       { initials: 'NA', name: 'Nuno Alves', tint: 'plum', stars: 4, text: 'Formal, traditional, and not once a problem. They fixed a leak properly, kept to the contract, and treated my partner and me with complete courtesy.', when: 'Recommended Mar 2026' },
@@ -107,7 +107,7 @@ export const LANDLORDS: Landlord[] = [
       { value: '4', label: 'Member recommendations' },
       { value: '8', label: 'Years renting' },
       { value: '≤ 12h', label: 'Typical response' },
-      { value: '★ 5.0', label: 'Community rating' },
+      { value: '5.0', label: 'Community rating' },
     ],
     recommendations: [
       { initials: 'KL', name: 'Kai Larsson', tint: 'jade', stars: 5, text: 'Paulo actually screens for who you\'ll be living with. My house was full of people I\'d never have found alone and now can\'t imagine not knowing.', when: 'Recommended Apr 2026' },

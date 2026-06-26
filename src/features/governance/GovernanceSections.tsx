@@ -97,7 +97,9 @@ export function PrinciplesSection() {
       <div className={styles.prinList}>
         {PRINCIPLES.map((p) => (
           <div key={p.title} className={styles.prinItem}>
-            <span className={styles.prinIcon}>{p.icon}</span>
+            <span className={styles.prinIcon}>
+              <p.icon />
+            </span>
             <div>
               <div className={styles.prinTitle}>{p.title}</div>
               <div className={styles.prinText}>{p.text}</div>

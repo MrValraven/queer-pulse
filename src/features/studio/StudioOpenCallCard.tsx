@@ -68,7 +68,7 @@ export function StudioOpenCallCard({ call: c }: Props) {
           <div className={s.al}>Attach one track from your catalogue</div>
           <div className={s.picker}>
             {c.tracks.map((tr, i) => (
-              <div key={tr.pre} className={[s.trk, picked === i && s.trkOn].filter(Boolean).join(' ')} onClick={() => setPicked(i)}>
+              <div key={tr.pre} className={[s.trk, picked === i && s.trkOn].filter(Boolean).join(' ')} role="button" tabIndex={0} onClick={() => setPicked(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPicked(i) } }}>
                 <span className={s.cv}>
                   <ImageSlot tint={tr.tint} width={36} height={36} radius={6} placeholder="" />
                 </span>

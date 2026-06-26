@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
@@ -80,7 +81,10 @@ export function SoberPage() {
                     <div className={styles.seName}>{e.name}</div>
                     <div className={styles.seMeta}>
                       {e.meta.map((m, i) => (
-                        <span key={m}>{i > 0 && "· "}{m}</span>
+                        <span key={m.text}>
+                          {i > 0 && "· "}
+                          {m.icon && <m.icon />} {m.text}
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -96,7 +100,7 @@ export function SoberPage() {
                       })
                     }
                   >
-                    {isGoing ? "Going ✓" : "RSVP"}
+                    {isGoing ? <>Going <FiCheck /></> : "RSVP"}
                   </button>
                 </div>
               );

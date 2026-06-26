@@ -89,7 +89,7 @@ export function StudioTriagePage() {
         <div className={s.trBody}>
           <section className={s.subList}>
             {SUBS.map((sub, i) => (
-              <div key={i} className={[s.subRow, active === i && s.subRowActive].filter(Boolean).join(' ')} onClick={() => setActive(i)}>
+              <div key={i} className={[s.subRow, active === i && s.subRowActive].filter(Boolean).join(' ')} role="button" tabIndex={0} onClick={() => setActive(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(i) } }}>
                 <div className={s.subTop}>
                   <span className={s.srCov}>
                     <ImageSlot tint={sub.tint} width={48} height={48} radius={8} placeholder="" />

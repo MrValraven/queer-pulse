@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { FiStar, FiHeart } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -114,7 +115,7 @@ export function ThreadPage() {
                   <div className={styles.replyTop}>
                     <span className={styles.replyName}>{r.name}</span>
                     {r.isOP && <span className={styles.opBadge}>OP</span>}
-                    {r.helpful && <span className={styles.helpfulBadge}>★ Most helpful</span>}
+                    {r.helpful && <span className={styles.helpfulBadge}><FiStar /> Most helpful</span>}
                     <span className={styles.replyTime}>{r.time}</span>
                   </div>
                   <div className={styles.replyBody}>
@@ -129,7 +130,7 @@ export function ThreadPage() {
                     ))}
                   </div>
                   <span className={styles.replyReact} onClick={() => showToast('Liked', 'success')}>
-                    ♥ {r.reactions}
+                    <FiHeart /> {r.reactions}
                   </span>
                 </div>
               </div>

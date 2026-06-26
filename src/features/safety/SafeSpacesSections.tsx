@@ -1,5 +1,6 @@
 import { useState, type RefObject } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { REMOVED_SPACES } from './safeSpaces'
 import { CRITERIA, HOW } from './safeSpacesPage.data'
@@ -12,7 +13,7 @@ export function BadgeExplainer() {
         <div className={styles.beGrid}>
           <div className={styles.beBadge}>
             <div className={styles.badgeVisual}>
-              <div className={styles.bvCheck}>✓</div>
+              <div className={styles.bvCheck}><FiCheck /></div>
               <div className={styles.bvName}>
                 Community
                 <br />
@@ -34,7 +35,7 @@ export function BadgeExplainer() {
             <div className={styles.criteriaList}>
               {CRITERIA.map((c) => (
                 <div className={styles.critItem} key={c.lead}>
-                  <div className={styles.critDot}>{c.icon}</div>
+                  <div className={styles.critDot}><c.icon /></div>
                   <div className={styles.critText}>
                     <strong>{c.lead}</strong>
                     {c.rest}

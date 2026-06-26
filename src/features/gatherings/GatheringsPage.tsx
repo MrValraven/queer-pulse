@@ -40,7 +40,7 @@ export function GatheringsPage() {
           <div className={styles.grid}>
             {WAYS.map((way, index) => (
               <Reveal key={way.title} className={styles.wayCard} delay={index * 55}>
-                <div className={styles.wayIcon}>{way.icon}</div>
+                <div className={styles.wayIcon}><way.icon /></div>
                 <div className={styles.wayTitle}>{way.title}</div>
                 <div className={styles.wayBody}>{way.body}</div>
                 <Link to={way.to} className={styles.wayLink}>

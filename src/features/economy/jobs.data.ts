@@ -328,9 +328,9 @@ export const JOB_FILTERS = [
 ]
 
 export const EMPLOYERS = [
-  { logo: 'AP', bg: 'rgba(232,119,90,.12)', text: 'var(--accent-ink)', name: 'Atelier Pulso', type: 'Design studio · Príncipe Real', badge: '🏳️‍🌈 Queer-run', badgeBg: 'rgba(232,119,90,.1)', badgeText: 'var(--accent-ink)' },
-  { logo: 'QP', bg: 'rgba(74,140,111,.12)', text: 'var(--jade)', name: 'QueerPulse', type: 'Community platform · Lisbon', badge: '🏳️‍🌈 Queer-run', badgeBg: 'rgba(74,140,111,.1)', badgeText: 'var(--jade)' },
-  { logo: 'IL', bg: 'rgba(122,82,184,.1)', text: '#7A52B8', name: 'ILGA Portugal', type: 'NGO · Intendente', badge: '🏳️‍🌈 Queer-led', badgeBg: 'rgba(122,82,184,.08)', badgeText: '#7A52B8' },
-  { logo: 'OD', bg: 'rgba(45,27,61,.08)', text: 'var(--plum)', name: 'Opus Diversus', type: 'Mental health · Lisbon', badge: 'Community org', badgeBg: 'rgba(45,27,61,.06)', badgeText: 'var(--plum)' },
-  { logo: 'LB', bg: 'rgba(232,119,90,.1)', text: 'var(--accent-ink)', name: 'Livraria Devagar', type: 'Bookshop · Anjos', badge: '🏳️‍🌈 Queer-friendly', badgeBg: 'rgba(232,119,90,.1)', badgeText: 'var(--accent-ink)' },
+  { logo: 'AP', bg: 'rgba(232,119,90,.12)', text: 'var(--accent-ink)', name: 'Atelier Pulso', type: 'Design studio · Príncipe Real', qr: true, badge: 'Queer-run', badgeBg: 'rgba(232,119,90,.1)', badgeText: 'var(--accent-ink)' },
+  { logo: 'QP', bg: 'rgba(74,140,111,.12)', text: 'var(--jade)', name: 'QueerPulse', type: 'Community platform · Lisbon', qr: true, badge: 'Queer-run', badgeBg: 'rgba(74,140,111,.1)', badgeText: 'var(--jade)' },
+  { logo: 'IL', bg: 'rgba(122,82,184,.1)', text: '#7A52B8', name: 'ILGA Portugal', type: 'NGO · Intendente', qr: true, badge: 'Queer-led', badgeBg: 'rgba(122,82,184,.08)', badgeText: '#7A52B8' },
+  { logo: 'OD', bg: 'rgba(45,27,61,.08)', text: 'var(--plum)', name: 'Opus Diversus', type: 'Mental health · Lisbon', qr: false, badge: 'Community org', badgeBg: 'rgba(45,27,61,.06)', badgeText: 'var(--plum)' },
+  { logo: 'LB', bg: 'rgba(232,119,90,.1)', text: 'var(--accent-ink)', name: 'Livraria Devagar', type: 'Bookshop · Anjos', qr: true, badge: 'Queer-friendly', badgeBg: 'rgba(232,119,90,.1)', badgeText: 'var(--accent-ink)' },
 ]

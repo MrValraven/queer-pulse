@@ -100,7 +100,7 @@ export function DonatePage() {
           <div className={styles.trust}>
             {TRUST.map((item, index) => (
               <Reveal key={item.title} className={styles.trustCard} delay={index * 55}>
-                <div className={styles.trustIcon}>{item.icon}</div>
+                <div className={styles.trustIcon}><item.icon /></div>
                 <div className={styles.trustTitle}>{item.title}</div>
                 <div className={styles.trustBody}>{item.body}</div>
               </Reveal>

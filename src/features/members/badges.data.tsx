@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { FiCheck } from 'react-icons/fi'
 
 export type BadgeRarity = 'common' | 'rare' | 'legendary'
 export type BadgeTint = 'jade' | 'accent' | 'plum'
@@ -37,7 +38,7 @@ export interface PerkLadderRow {
   name: string
   state: PerkRowState
   perks: string[]
-  status: string
+  status: ReactNode
 }
 
 /** Total badges still to discover (more exist in the catalogue than are shown). */
@@ -322,7 +323,11 @@ export const perksLadder: PerkLadderRow[] = [
     num: 1,
     name: 'Newcomer',
     state: 'achieved',
-    status: '✓ Done',
+    status: (
+      <>
+        <FiCheck /> Done
+      </>
+    ),
     perks: [
       'Browse the member directory',
       'Join gatherings & RSVP',
@@ -333,7 +338,11 @@ export const perksLadder: PerkLadderRow[] = [
     num: 2,
     name: 'Explorer',
     state: 'achieved',
-    status: '✓ Done',
+    status: (
+      <>
+        <FiCheck /> Done
+      </>
+    ),
     perks: [
       'Message other members directly',
       'Save articles & resources',
@@ -344,7 +353,11 @@ export const perksLadder: PerkLadderRow[] = [
     num: 3,
     name: 'Regular',
     state: 'achieved',
-    status: '✓ Done',
+    status: (
+      <>
+        <FiCheck /> Done
+      </>
+    ),
     perks: [
       'Vouch for new members on the waitlist',
       'Apply to host a gathering',

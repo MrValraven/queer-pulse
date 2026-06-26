@@ -6,9 +6,10 @@ import { SEARCH_DATA, TYPE_BG, TYPE_ICON, TYPE_LABEL, RECENTS, TABS, type Result
 import styles from './SearchPage.module.css'
 
 function ResultCard({ item }: { item: SearchItem }) {
+  const TypeIcon = TYPE_ICON[item.t]
   return (
     <Link to={linkToPath(item.href)} className={styles.card}>
-      <div className={styles.cardIcon} style={{ background: TYPE_BG[item.t] }}>{TYPE_ICON[item.t]}</div>
+      <div className={styles.cardIcon} style={{ background: TYPE_BG[item.t] }}><TypeIcon /></div>
       <div className={styles.cardBody}>
         <div className={styles.cardType}>{TYPE_LABEL[item.t]}</div>
         <div className={styles.cardName}>{item.name}</div>

@@ -118,7 +118,7 @@ export function NewsletterPage() {
           ))}
 
           <div className={styles.save}>
-            <button type="button" className={styles.saveBtn} onClick={() => showToast("Preferences saved ✓", "success")}>
+            <button type="button" className={styles.saveBtn} onClick={() => showToast("Preferences saved", "success")}>
               Save preferences
             </button>
             <div className={styles.saveNote}>

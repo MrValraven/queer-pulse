@@ -1,9 +1,13 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { FiAlertOctagon } from "react-icons/fi";
+import { MdAccessible } from "react-icons/md";
 import { linkToPath, routes } from "../../../app/routeMap";
 import styles from "./Footer.module.css";
 
 interface FooterLink {
-  label: string;
+  label: ReactNode;
+  key?: string;
   href: string;
 }
 interface FooterColumn {
@@ -69,14 +73,30 @@ const COLUMNS: FooterColumn[] = [
 ];
 
 const BASE_LINKS: FooterLink[] = [
-  { label: "🆘 Emergency", href: routes.emergency },
+  {
+    key: "Emergency",
+    label: (
+      <>
+        <FiAlertOctagon aria-hidden /> Emergency
+      </>
+    ),
+    href: routes.emergency,
+  },
   { label: "Governance", href: routes.governance },
   { label: "Community guidelines", href: routes.guidelines },
   { label: "Privacy", href: routes.safety },
   { label: "Cookies", href: routes.cookies },
   { label: "Data export", href: routes.dataExport },
   { label: "Security", href: routes.security },
-  { label: "♿ Accessibility", href: routes.accessibility },
+  {
+    key: "Accessibility",
+    label: (
+      <>
+        <MdAccessible aria-hidden /> Accessibility
+      </>
+    ),
+    href: routes.accessibility,
+  },
 ];
 
 export function Footer() {
@@ -100,7 +120,7 @@ export function Footer() {
               <div key={column.heading} className={styles.col}>
                 <h4>{column.heading}</h4>
                 {column.links.map((link) => (
-                  <Link key={link.label} to={linkToPath(link.href)}>
+                  <Link key={link.href} to={linkToPath(link.href)}>
                     {link.label}
                   </Link>
                 ))}
@@ -113,7 +133,7 @@ export function Footer() {
           <span>© 2026 QueerPulse · Made in Lisbon with care</span>
           <span>
             {BASE_LINKS.map((link, index) => (
-              <span key={link.label}>
+              <span key={link.key ?? link.href}>
                 {index > 0 && " · "}
                 <Link to={linkToPath(link.href)}>{link.label}</Link>
               </span>

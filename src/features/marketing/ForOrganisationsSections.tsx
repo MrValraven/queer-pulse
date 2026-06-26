@@ -65,7 +65,7 @@ export function TiersSection() {
               For: civic, advocacy, healthcare, and mission-aligned orgs. Selection is
               slow and rare. <b>Two new operational partners per year, max.</b>
             </p>
-            <Button href="#start" variant="primary" className={styles.tierBtn} style={{ background: "var(--accent)", color: "#fff" }}>
+            <Button href="#start" variant="primary" className={styles.tierBtn} style={{ background: "var(--accent)", color: "var(--cream)" }}>
               Propose a partnership
             </Button>
           </div>

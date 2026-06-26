@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { FiStar } from 'react-icons/fi'
 import type { Tab } from './family.data'
 import styles from './FamilyPage.module.css'
 
@@ -48,7 +49,11 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
                     <div className={styles.rvContext}>{r.context}</div>
                   </div>
                 </div>
-                <div className={styles.rvStars}>{r.stars}</div>
+                <div className={styles.rvStars} aria-label={`${r.stars} out of 5`}>
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <FiStar key={i} fill={i < r.stars ? 'currentColor' : 'none'} />
+                  ))}
+                </div>
                 <div className={styles.rvQuote}>{r.quote}</div>
               </div>
             ))}

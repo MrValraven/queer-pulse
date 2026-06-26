@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react'
+import { FiStar } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import styles from './housingModals.module.css'
@@ -168,7 +169,7 @@ export function RecommendModal({
                 onClick={() => setStars(n)}
                 aria-label={`${n} star${n > 1 ? 's' : ''}`}
               >
-                ★
+                <FiStar />
               </button>
             ))}
           </div>

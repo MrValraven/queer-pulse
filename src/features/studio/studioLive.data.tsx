@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import { FiHeart, FiSmile, FiArrowDown } from 'react-icons/fi'
 import { MEMBERS, memberName } from '../members/data/members'
 
 export const WF = [30, 55, 70, 90, 65, 80, 50, 42, 60, 75, 55, 88, 62, 48, 72, 80, 34, 58, 80, 46, 64, 78, 42, 90, 54, 38, 66, 74, 48, 60, 35, 50, 42, 65, 78, 50, 68, 42, 36]
@@ -24,15 +25,15 @@ export type Msg =
 export const CHAT: Msg[] = [
   { system: '21:00 · Sara Marques opened the room' },
   { av: 'SM', tone: 'jade', name: 'Sara Marques', curator: true, role: 'Curator', roleClass: 'cu', text: <>welcome in. tonight: twelve tracks, mostly piano, some choir. don't shuffle — <em>i'll know</em>.</>, time: '21:01 · pinned' },
-  { av: 'RT', name: 'Rita T.', text: 'first 🥹', time: '21:01' },
+  { av: 'RT', name: 'Rita T.', text: <>first <FiSmile /></>, time: '21:01' },
   { av: 'PL', name: 'Pedro L.', text: 'cascais opener, classic move', time: '21:02' },
   { system: '21:10 · 312 in the room · 41 cities' },
-  { av: 'DO', tone: 'jade', name: 'D. Okoye', role: 'Sustainer', text: 'the akin double is so good. how did you sequence that 🤍', time: '21:15' },
+  { av: 'DO', tone: 'jade', name: 'D. Okoye', role: 'Sustainer', text: <>the akin double is so good. how did you sequence that <FiHeart /></>, time: '21:15' },
   { av: 'SM', tone: 'jade', name: 'Sara Marques', curator: true, role: 'Curator', roleClass: 'cu', text: <>honestly? <em>by accident.</em> i had paris in slot 4 last week and it didn't land. moved it earlier, then salt water followed it home.</>, time: '21:16' },
   { av: 'PL', tone: 'jade', name: 'Pedro L.', role: 'Artist', roleClass: 'artist', tip: true, text: <><b>tipped €5 to Akin</b> · "salt water is the whole record"</>, time: '21:17' },
   { system: '21:22 · now playing: Carta para a santa, Mariana Sol' },
   { av: 'RT', name: 'Rita T.', text: <>second verse just broke me. <em>again.</em></>, time: '21:23' },
-  { av: 'DO', tone: 'jade', name: 'D. Okoye', role: 'Sustainer', text: '@yara it\'s pinned in track notes 👇', time: '21:23' },
+  { av: 'DO', tone: 'jade', name: 'D. Okoye', role: 'Sustainer', text: <>@yara it's pinned in track notes <FiArrowDown /></>, time: '21:23' },
   { av: 'PL', name: 'Pedro L.', role: 'Artist', roleClass: 'artist', tip: true, text: <><b>tipped €5 to Mariana</b> · "earn it, mariana."</>, time: '21:24' },
   { av: 'SM', tone: 'jade', name: 'Sara Marques', curator: true, role: 'Curator', roleClass: 'cu', text: <>the piano leaves you here on purpose. <em>wait.</em></>, time: '21:24' },
   { av: '·', tone: 'plum', name: 'Anonymous', tip: true, text: <><b>tipped €10 to Mariana</b></>, time: '21:24' },

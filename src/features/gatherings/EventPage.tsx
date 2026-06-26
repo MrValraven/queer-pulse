@@ -68,7 +68,7 @@ export function EventPage() {
                 <div className={styles.details}>
                   {DETAILS.map((detail) => (
                     <div key={detail.label} className={styles.detail}>
-                      <div className={styles.detailIcon}>{detail.icon}</div>
+                      <div className={styles.detailIcon}><detail.icon /></div>
                       <div>
                         <div className={styles.detailLabel}>{detail.label}</div>
                         <div className={styles.detailValue}>{detail.value}</div>

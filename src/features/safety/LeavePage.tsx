@@ -97,7 +97,20 @@ export function LeavePage() {
           </div>
           <div className={s.durOpts}>
             {DURATIONS.map((d) => (
-              <div key={d.label} className={[s.durOpt, dur === d.label && s.durOptSelected].filter(Boolean).join(' ')} onClick={() => setDur(d.label)}>
+              <div
+                key={d.label}
+                className={[s.durOpt, dur === d.label && s.durOptSelected].filter(Boolean).join(' ')}
+                onClick={() => setDur(d.label)}
+                role="radio"
+                aria-checked={dur === d.label}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setDur(d.label)
+                  }
+                }}
+              >
                 <span className={s.ocRadio}>
                   <span className={s.ocDot} />
                 </span>

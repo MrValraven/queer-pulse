@@ -63,7 +63,19 @@ export function AudioPlayerMain() {
           </p>
 
           <div>
-            <div className={styles.bar} onClick={() => showToast('Seeking…', 'info')}>
+            <div
+              className={styles.bar}
+              role="button"
+              tabIndex={0}
+              aria-label="Seek"
+              onClick={() => showToast('Seeking…', 'info')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  showToast('Seeking…', 'info')
+                }
+              }}
+            >
               <div className={styles.barFill} style={{ width: '38%' }} />
             </div>
             <div className={styles.times}>

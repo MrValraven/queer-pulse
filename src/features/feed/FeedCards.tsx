@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { FiBookmark, FiCheck } from 'react-icons/fi'
 import { Avatar } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
@@ -27,7 +28,7 @@ export function GatheringCard() {
             </div>
             <span className={styles.attLabel}>+9 going</span>
           </div>
-          <span className={styles.goingChip}>✓ You're going</span>
+          <span className={styles.goingChip}><FiCheck /> You're going</span>
         </div>
       </div>
     </article>
@@ -80,7 +81,7 @@ export function PostCard() {
       </div>
       <div className={styles.postFooter}>
         <button className={styles.postAction} onClick={() => showToast('Replied', 'success')}>↩ Reply · 4</button>
-        <button className={styles.postAction} onClick={() => showToast('Post saved', 'success')}>⚑ Save</button>
+        <button className={styles.postAction} onClick={() => showToast('Post saved', 'success')}><FiBookmark /> Save</button>
       </div>
     </article>
   )

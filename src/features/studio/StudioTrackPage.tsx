@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiHeart } from 'react-icons/fi'
 import { ImageSlot } from '../../shared/components/ui'
 import { StudioShell } from './StudioShell'
 import { StudioTrackSidebar } from './StudioTrackSidebar'
@@ -45,7 +46,7 @@ export function StudioTrackPage() {
                 <svg viewBox="0 0 12 14" fill="currentColor"><path d="M1 1l10 6-10 6z" /></svg>
               </button>
               <button>＋ Library</button>
-              <button className={ss.tip}>♥ Tip €2</button>
+              <button className={ss.tip}><FiHeart /> Tip €2</button>
             </div>
             <div className={ss.payPill}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>

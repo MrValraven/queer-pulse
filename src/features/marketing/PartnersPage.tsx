@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { FiMapPin } from 'react-icons/fi'
 import { PageHero, PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
 import { PARTNERS, type Region } from './partnerDetails'
@@ -43,7 +44,7 @@ export function PartnersPage() {
                 </div>
                 <div>
                   <div className={s.name}>{p.name}</div>
-                  <div className={s.city}>📍 {p.city}</div>
+                  <div className={s.city}><FiMapPin /> {p.city}</div>
                 </div>
                 <div className={s.desc}>{p.desc}</div>
                 <div className={s.tags}>

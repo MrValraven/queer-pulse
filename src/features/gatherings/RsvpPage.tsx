@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom'
+import type { IconType } from 'react-icons'
+import { FiCalendar, FiMapPin, FiUser } from 'react-icons/fi'
 import { Avatar, Button } from '../../shared/components/ui'
 import { memberName } from '../members/data/members'
 import { useToast } from '../../shared/components/feedback/useToast'
 import styles from './RsvpPage.module.css'
 
-const DETAILS = [
-  { icon: '📅', bg: 'rgba(232,119,90,.1)', label: 'Date & time', value: 'Sunday 22 June · 7:00 PM' },
-  { icon: '📍', bg: 'rgba(74,140,111,.1)', label: 'Location', value: 'Mouraria Community Centre' },
-  { icon: '👤', bg: 'rgba(45,27,61,.07)', label: 'Host', value: memberName('mariana') },
+const DETAILS: { icon: IconType; bg: string; label: string; value: string }[] = [
+  { icon: FiCalendar, bg: 'rgba(232,119,90,.1)', label: 'Date & time', value: 'Sunday 22 June · 7:00 PM' },
+  { icon: FiMapPin, bg: 'rgba(74,140,111,.1)', label: 'Location', value: 'Mouraria Community Centre' },
+  { icon: FiUser, bg: 'rgba(45,27,61,.07)', label: 'Host', value: memberName('mariana') },
 ]
 
 const COC = [
@@ -50,7 +52,7 @@ export function RsvpPage() {
               {DETAILS.map((detail) => (
                 <div key={detail.label} className={styles.detail}>
                   <span className={styles.detailIcon} style={{ background: detail.bg }}>
-                    {detail.icon}
+                    <detail.icon />
                   </span>
                   <div>
                     <div className={styles.detailLabel}>{detail.label}</div>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiHeart } from 'react-icons/fi'
 import { ImageSlot } from '../../shared/components/ui'
 import { memberName } from '../members/data/members'
 import { StudioShell } from './StudioShell'
@@ -32,7 +33,7 @@ export function StudioAlbumPage() {
               </svg>
             </Link>
             <button>＋ Library</button>
-            <button className={styles.tip}>♥ Tip Mariana</button>
+            <button className={styles.tip}><FiHeart /> Tip Mariana</button>
             <button>Share</button>
           </div>
         </div>

@@ -1,3 +1,6 @@
+import type { IconType } from 'react-icons'
+import { FiBook, FiCoffee, FiFeather, FiFilm, FiMessageCircle, FiStar, FiUsers } from 'react-icons/fi'
+
 export const TOTAL_STEPS = 5
 
 export const PILL_LABELS = ['Type', 'Date & place', 'Capacity', 'Pricing', 'Review']
@@ -10,15 +13,15 @@ export const TIPS = [
   'Once you publish, you can still edit the listing. You cannot reduce capacity below the number of existing RSVPs.',
 ]
 
-export const TYPES = [
-  { icon: '🍽️', name: 'Supper club', sub: 'Shared meal, hosted' },
-  { icon: '📚', name: 'Workshop / talk', sub: 'Teach or share something' },
-  { icon: '🎬', name: 'Screening', sub: 'Film, music, performance' },
-  { icon: '🎨', name: 'Studio visit', sub: 'Open your space' },
-  { icon: '🚶', name: 'Walk or outdoor', sub: 'Movement, outdoor' },
-  { icon: '💬', name: 'Discussion', sub: 'Reading group, debate' },
-  { icon: '🤝', name: 'Skills exchange', sub: 'Mutual learning' },
-  { icon: '✨', name: 'Other', sub: 'Something else entirely' },
+export const TYPES: { icon: IconType; name: string; sub: string }[] = [
+  { icon: FiCoffee, name: 'Supper club', sub: 'Shared meal, hosted' },
+  { icon: FiBook, name: 'Workshop / talk', sub: 'Teach or share something' },
+  { icon: FiFilm, name: 'Screening', sub: 'Film, music, performance' },
+  { icon: FiFeather, name: 'Studio visit', sub: 'Open your space' },
+  { icon: FiUsers, name: 'Walk or outdoor', sub: 'Movement, outdoor' },
+  { icon: FiMessageCircle, name: 'Discussion', sub: 'Reading group, debate' },
+  { icon: FiUsers, name: 'Skills exchange', sub: 'Mutual learning' },
+  { icon: FiStar, name: 'Other', sub: 'Something else entirely' },
 ]
 
 export const HOODS = ['Mouraria', 'Intendente', 'Alfama', 'Graça', 'Príncipe Real', 'Bairro Alto', 'Cais do Sodré', 'Santos', 'Marvila', 'Arroios', 'Online', 'Other in Lisbon']

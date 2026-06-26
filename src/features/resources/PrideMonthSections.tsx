@@ -87,7 +87,7 @@ export function PrideMonthSafety() {
         <div className={styles.safetyGrid}>
           {SAFETY_CARDS.map((c, i) => (
             <Link to={c.href} className={styles.safetyCard} key={i}>
-              <div className={styles.safetyIc}>{c.icon}</div>
+              <div className={styles.safetyIc}><c.icon /></div>
               <h4>{c.h}</h4>
               <p>{c.p}</p>
             </Link>

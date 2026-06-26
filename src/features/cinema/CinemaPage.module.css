@@ -534,6 +534,12 @@
   padding-top: 6px;
 }
 
+.shortMeta svg {
+  vertical-align: -1px;
+  width: 11px;
+  height: 11px;
+}
+
 .liveList {
   border-top: 1px solid rgba(247, 243, 238, 0.16);
 }

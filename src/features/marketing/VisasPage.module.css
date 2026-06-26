@@ -453,9 +453,15 @@
   margin-top: 2px;
 }
 .rvStars {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
   color: var(--accent);
   font-size: 12px;
   margin-bottom: 7px;
+}
+.rvStarOn {
+  fill: currentColor;
 }
 .rvQuote {
   font-size: 13.5px;

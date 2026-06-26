@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import s from './flows.module.css'
 
@@ -16,17 +17,17 @@ function Timeline({ stage }: { stage: 'pending' | 'done' }) {
   return (
     <div className={s.timeline}>
       <div className={s.tlStep}>
-        <div className={`${s.tlDot} ${s.tlDone}`}>✓</div>
+        <div className={`${s.tlDot} ${s.tlDone}`}><FiCheck /></div>
         <div className={s.tlLabel}>Report filed</div>
       </div>
       <div className={`${s.tlLine} ${s.tlLineDone}`} />
       <div className={s.tlStep}>
-        <div className={`${s.tlDot} ${last ? s.tlSuccess : s.tlCurrent}`}>{last ? '✓' : '2'}</div>
+        <div className={`${s.tlDot} ${last ? s.tlSuccess : s.tlCurrent}`}>{last ? <FiCheck /> : '2'}</div>
         <div className={s.tlLabel}>Appeal submitted</div>
       </div>
       <div className={[s.tlLine, last && s.tlLineDone].filter(Boolean).join(' ')} />
       <div className={s.tlStep}>
-        <div className={`${s.tlDot} ${last ? s.tlSuccess : s.tlPending}`}>{last ? '✓' : '3'}</div>
+        <div className={`${s.tlDot} ${last ? s.tlSuccess : s.tlPending}`}>{last ? <FiCheck /> : '3'}</div>
         <div className={s.tlLabel}>Decision</div>
       </div>
     </div>

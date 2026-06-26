@@ -32,7 +32,7 @@ export function ComingOutPage() {
           <div className={styles.grid}>
             {PRIVACY.map((item, index) => (
               <Reveal key={item.title} className={styles.card} delay={index * 55}>
-                <div className={styles.cardIcon}>{item.icon}</div>
+                <div className={styles.cardIcon}><item.icon /></div>
                 <div className={styles.cardTitle}>{item.title}</div>
                 <div className={styles.cardBody}>{item.body}</div>
               </Reveal>

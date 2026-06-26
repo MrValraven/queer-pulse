@@ -7,7 +7,7 @@ type SegKey = string
 type RadioKey = string
 
 function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
-  return <div className={`${s.tgSw} ${on ? s.tgSwOn : ''}`} onClick={onToggle} role="switch" aria-checked={on} />
+  return <div className={`${s.tgSw} ${on ? s.tgSwOn : ''}`} onClick={onToggle} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle() } }} role="switch" tabIndex={0} aria-checked={on} />
 }
 
 function Seg({ opts, active, onChange }: { opts: string[]; active: SegKey; onChange: (k: SegKey) => void }) {
@@ -24,7 +24,7 @@ function RadioCards({ opts, active, onChange }: { opts: { key: RadioKey; label: 
   return (
     <div className={s.rcards}>
       {opts.map((o) => (
-        <div key={o.key} className={`${s.rcard} ${active === o.key ? s.rcardOn : ''}`} onClick={() => onChange(o.key)}>
+        <div key={o.key} className={`${s.rcard} ${active === o.key ? s.rcardOn : ''}`} role="button" tabIndex={0} onClick={() => onChange(o.key)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange(o.key) } }}>
           <div className={s.rdot} />
           <div>
             <h5>{o.label}{o.badge && <span className={s.badge}>{o.badge}</span>}</h5>
@@ -106,7 +106,7 @@ export function StudioSettingsPage() {
           <div className={s.opt}><div className={s.ot}><h4>Default amount</h4><p>You can always pick a different figure at tip time.</p></div>
             <div className={s.chips}>
               {['€1', '€2', '€5', '€10'].map((a) => (
-                <div key={a} className={`${s.chip} ${tipAmt === a ? s.chipOn : ''}`} onClick={() => setTipAmt(a)}>{a}</div>
+                <div key={a} className={`${s.chip} ${tipAmt === a ? s.chipOn : ''}`} role="button" tabIndex={0} onClick={() => setTipAmt(a)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTipAmt(a) } }}>{a}</div>
               ))}
             </div>
           </div>

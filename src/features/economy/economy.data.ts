@@ -1,3 +1,5 @@
+import type { IconType } from 'react-icons'
+import { FiBookOpen, FiClipboard, FiDollarSign, FiFileText } from 'react-icons/fi'
 import { routes } from '../../app/routeMap'
 
 export type Tab = 'incubator' | 'freelance' | 'salary'
@@ -19,11 +21,11 @@ export const INC_MENTORS = [
   { av: 'AC', bg: 'rgba(45,27,61,.1)', color: 'var(--plum)', name: 'Ana Catarina', role: 'Angel investor · ex-Unbabel, Feedzai', tags: ['B2B SaaS', 'Pre-seed', 'Hiring'] },
 ]
 
-export const TOOLS = [
-  { icon: '📄', title: 'Service contract (PT/EN)', desc: 'A straightforward freelance services contract in Portuguese and English. Covers scope, payment terms, IP, and cancellation. Reviewed by a lawyer in the community.', cta: 'Download (.docx)' },
-  { icon: '💸', title: 'Invoice template', desc: 'A clean Portuguese-law-compliant invoice template with NIF field, IVA options, and retention tax. In both recibo verde and standard formats.', cta: 'Download (.xlsx)' },
-  { icon: '📋', title: 'Scope of work template', desc: "Define exactly what you're delivering, what you're not, how many revisions, and what happens if the scope changes. The document that prevents most disputes.", cta: 'Download (.docx)' },
-  { icon: '📚', title: 'Recibo verde guide', desc: 'A plain-language guide to the Portuguese freelance tax system — what you need to register, when to pay, what you can deduct. Updated for 2025.', cta: 'Read the guide' },
+export const TOOLS: { icon: IconType; title: string; desc: string; cta: string }[] = [
+  { icon: FiFileText, title: 'Service contract (PT/EN)', desc: 'A straightforward freelance services contract in Portuguese and English. Covers scope, payment terms, IP, and cancellation. Reviewed by a lawyer in the community.', cta: 'Download (.docx)' },
+  { icon: FiDollarSign, title: 'Invoice template', desc: 'A clean Portuguese-law-compliant invoice template with NIF field, IVA options, and retention tax. In both recibo verde and standard formats.', cta: 'Download (.xlsx)' },
+  { icon: FiClipboard, title: 'Scope of work template', desc: "Define exactly what you're delivering, what you're not, how many revisions, and what happens if the scope changes. The document that prevents most disputes.", cta: 'Download (.docx)' },
+  { icon: FiBookOpen, title: 'Recibo verde guide', desc: 'A plain-language guide to the Portuguese freelance tax system — what you need to register, when to pay, what you can deduct. Updated for 2025.', cta: 'Read the guide' },
 ]
 
 export interface SalaryRow {

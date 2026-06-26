@@ -122,6 +122,7 @@
 }
 .starOn {
   color: var(--accent);
+  fill: currentColor;
 }
 .textarea {
   width: 100%;

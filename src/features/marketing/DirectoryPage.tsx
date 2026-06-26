@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiMapPin } from 'react-icons/fi'
 import { PageHero, PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { DIRECTORY_PLACES as BIZS, type Tint } from './directoryPlaces'
@@ -83,7 +84,7 @@ export function DirectoryPage() {
                 <div>
                   <div className={s.name}>{b.name}</div>
                   <div className={s.cat}>{CAT_LABEL[b.cat]}</div>
-                  <div className={s.hood}>📍 {b.hood}</div>
+                  <div className={s.hood}><FiMapPin /> {b.hood}</div>
                 </div>
                 <div className={s.desc}>{b.desc}</div>
                 <div className={s.foot}>

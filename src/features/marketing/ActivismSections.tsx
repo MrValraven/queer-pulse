@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { FiStar } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { START_STEPS, SKILLS_CARDS, ORGS, VOLUNTEER_ROLES } from './activism.data'
 import s from './ActivismPage.module.css'
@@ -47,7 +48,7 @@ export function SkillsSection() {
       <div className={s.actionGrid}>
         {SKILLS_CARDS.map((c) => (
           <div key={c.title} className={s.actionCard}>
-            <div className={s.acNum}>✦</div>
+            <div className={s.acNum}><FiStar /></div>
             <div className={s.acTitle}>{c.title}</div>
             <div className={s.acBody}>{c.body}</div>
           </div>

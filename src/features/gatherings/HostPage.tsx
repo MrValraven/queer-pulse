@@ -1,14 +1,16 @@
+import type { IconType } from 'react-icons'
+import { FiBook, FiCheck, FiCoffee, FiFeather, FiFilm } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
 import styles from './HostPage.module.css'
 
 const HERO_TYPES = ['Supper club', 'Studio visit', 'Skills workshop', 'Film screening', 'Morning walk', 'Book club', 'Open studio']
 
-const TYPE_CARDS = [
-  { icon: '🍽️', title: 'Supper club', body: 'Intimate, hosted in your home or borrowed kitchen. 8–14 people. The model Tomás uses — and it works because it\'s personal.' },
-  { icon: '🎨', title: 'Studio visit', body: 'Open your workspace to people who\'d genuinely want to see it. Low logistics, high value. Works especially well for makers.' },
-  { icon: '📚', title: 'Skills session', body: 'Teach something you know. An hour of practical knowledge shared is worth more than most workshops that cost money.' },
-  { icon: '🎬', title: 'Screening or talk', body: 'A film, a documentary, a conversation with someone interesting. A projector and a living room is enough.' },
+const TYPE_CARDS: { icon: IconType; title: string; body: string }[] = [
+  { icon: FiCoffee, title: 'Supper club', body: 'Intimate, hosted in your home or borrowed kitchen. 8–14 people. The model Tomás uses — and it works because it\'s personal.' },
+  { icon: FiFeather, title: 'Studio visit', body: 'Open your workspace to people who\'d genuinely want to see it. Low logistics, high value. Works especially well for makers.' },
+  { icon: FiBook, title: 'Skills session', body: 'Teach something you know. An hour of practical knowledge shared is worth more than most workshops that cost money.' },
+  { icon: FiFilm, title: 'Screening or talk', body: 'A film, a documentary, a conversation with someone interesting. A projector and a living room is enough.' },
 ]
 
 const SPACES = [
@@ -58,7 +60,7 @@ export function HostPage() {
                   <div className={styles.typesGrid}>
                     {TYPE_CARDS.map((card) => (
                       <div key={card.title} className={styles.typeCard}>
-                        <div className={styles.tcIcon}>{card.icon}</div>
+                        <div className={styles.tcIcon}><card.icon /></div>
                         <h4>{card.title}</h4>
                         <p>{card.body}</p>
                       </div>
@@ -156,7 +158,7 @@ export function HostPage() {
               </Reveal>
 
               <Reveal className={styles.step} delay={60}>
-                <div className={`${styles.stepNum} ${styles.stepNumDone}`}>✓</div>
+                <div className={`${styles.stepNum} ${styles.stepNumDone}`}><FiCheck /></div>
                 <div className={styles.stepContent}>
                   <h2>
                     After it's <em>over</em>

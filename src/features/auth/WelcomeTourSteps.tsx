@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FiCheck } from 'react-icons/fi';
 import { Button } from '../../shared/components/ui';
 import { routes, linkToPath } from '../../app/routeMap';
 import {
@@ -130,7 +131,7 @@ export function TourInterests({ onNext, onBack }: StepProps) {
               .join(' ')}
             onClick={() => toggle(interest.label)}
           >
-            <span className={styles.intIcon}>{interest.icon}</span>
+            <span className={styles.intIcon}><interest.icon /></span>
             <span className={styles.intLabel}>{interest.label}</span>
           </button>
         ))}
@@ -217,7 +218,7 @@ export function TourConnections({ onNext, onBack }: StepProps) {
                 className={[styles.sugSay, isSent && styles.sugSent].filter(Boolean).join(' ')}
                 onClick={() => setSent((current) => new Set(current).add(person.name))}
               >
-                {isSent ? 'Sent ✓' : 'Say hello'}
+                {isSent ? <>Sent <FiCheck /></> : 'Say hello'}
               </button>
             </div>
           );
@@ -244,7 +245,7 @@ export function TourExplore() {
       <div className={styles.exploreGrid}>
         {EXPLORE_CARDS.map((card) => (
           <Link key={card.name} to={linkToPath(card.href)} className={styles.exCard}>
-            <div className={styles.exIcon}>{card.icon}</div>
+            <div className={styles.exIcon}><card.icon /></div>
             <div className={styles.exName}>{card.name}</div>
             <div className={styles.exDesc}>{card.desc}</div>
           </Link>

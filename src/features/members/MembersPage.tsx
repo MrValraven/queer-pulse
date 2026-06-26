@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
 import { Avatar, Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -99,7 +100,7 @@ export function MembersPage() {
                         </div>
                         <div className={styles.actions}>
                           {state === 'connected' ? (
-                            <span className={`${styles.connect} ${styles.connected}`}>✓ Connected</span>
+                            <span className={`${styles.connect} ${styles.connected}`}><FiCheck /> Connected</span>
                           ) : state === 'pending' ? (
                             <span className={`${styles.connect} ${styles.pending}`}>Request sent</span>
                           ) : (

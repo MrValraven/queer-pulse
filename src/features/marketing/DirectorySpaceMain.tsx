@@ -1,8 +1,17 @@
+import { FiStar } from 'react-icons/fi'
 import { type DirectoryPlace, hoursRows, type Tint } from './directoryPlaces'
-import { CAT_LABEL, stars } from './directorySpace.data'
+import { CAT_LABEL, STAR_SLOTS } from './directorySpace.data'
 import s from './DirectorySpacePage.module.css'
 
 const TINT: Record<Tint, string> = { coral: s.tCoral, jade: s.tJade, plum: s.tPlum }
+
+const Stars = ({ score, className }: { score: number; className?: string }) => (
+  <span className={[s.starRow, className].filter(Boolean).join(' ')}>
+    {STAR_SLOTS.map((n) => (
+      <FiStar key={n} className={n <= score ? s.starOn : undefined} />
+    ))}
+  </span>
+)
 
 const Check = () => (
   <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
@@ -38,7 +47,7 @@ export function DirectorySpaceMain({ place }: Props) {
         </div>
         <div className={s.ratingRow}>
           <div className={s.rating}>
-            <span className={s.stars}>{stars(Math.round(Number(place.rating.score)))}</span>
+            <Stars score={Math.round(Number(place.rating.score))} className={s.stars} />
             <b>{place.rating.score}</b>
             <span>· {place.rating.count} reviews</span>
           </div>
@@ -101,7 +110,7 @@ export function DirectorySpaceMain({ place }: Props) {
                 <div className={s.revName}>{rev.name}</div>
                 <div className={s.revByline}>{rev.byline}</div>
               </div>
-              <span className={s.revStars}>{stars(rev.stars)}</span>
+              <Stars score={rev.stars} className={s.revStars} />
             </div>
             <div className={s.revText}>{rev.text}</div>
             <div className={s.revHelpful}><b>{rev.helpful}</b> members found this helpful</div>

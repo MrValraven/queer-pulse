@@ -1,4 +1,16 @@
 import type { ReactNode } from 'react'
+import type { IconType } from 'react-icons'
+import {
+  FiBookOpen,
+  FiCamera,
+  FiDroplet,
+  FiEdit2,
+  FiFilm,
+  FiImage,
+  FiMonitor,
+  FiMusic,
+} from 'react-icons/fi'
+import { FaLeaf, FaMasksTheater, FaTents } from 'react-icons/fa6'
 import type { AvatarTint } from '../../shared/components/ui'
 
 export type TabKey = 'club' | 'commission' | 'showcase' | 'radio'
@@ -14,7 +26,7 @@ export type PickKind = 'book' | 'film' | 'music'
 
 export interface Pick {
   kind: PickKind
-  emoji: string
+  emoji: IconType
   title: string
   author: string
   discussing: string
@@ -22,9 +34,9 @@ export interface Pick {
 }
 
 export const PICKS: Pick[] = [
-  { kind: 'book', emoji: '📚', title: "Giovanni's Room", author: 'James Baldwin · 1956', discussing: '42 discussing', when: 'Meets 14 Jun' },
-  { kind: 'film', emoji: '🎬', title: 'Portrait of a Lady on Fire', author: 'Céline Sciamma · 2019', discussing: '38 discussing', when: 'Screening 19 Jun' },
-  { kind: 'music', emoji: '🎵', title: 'The Gag Order', author: 'Kehlani · 2023', discussing: '27 discussing', when: 'Listening party 22 Jun' },
+  { kind: 'book', emoji: FiBookOpen, title: "Giovanni's Room", author: 'James Baldwin · 1956', discussing: '42 discussing', when: 'Meets 14 Jun' },
+  { kind: 'film', emoji: FiFilm, title: 'Portrait of a Lady on Fire', author: 'Céline Sciamma · 2019', discussing: '38 discussing', when: 'Screening 19 Jun' },
+  { kind: 'music', emoji: FiMusic, title: 'The Gag Order', author: 'Kehlani · 2023', discussing: '27 discussing', when: 'Listening party 22 Jun' },
 ]
 
 export interface Thread {
@@ -94,7 +106,7 @@ export const COMMISSIONS: Commission[] = [
 ]
 
 export interface GalleryItem {
-  emoji: string
+  emoji: IconType
   gradient: string
   title: string
   artist: string
@@ -102,14 +114,14 @@ export interface GalleryItem {
 }
 
 export const GALLERY: GalleryItem[] = [
-  { emoji: '🎨', gradient: 'linear-gradient(135deg,rgba(var(--plum-rgb),.18),rgba(var(--accent-rgb),.14))', title: 'Corpo Estranho, 2024', artist: 'Inês Tavares · Mixed media', feat: true },
-  { emoji: '📷', gradient: 'linear-gradient(135deg,rgba(var(--jade-rgb),.18),rgba(var(--jade-rgb),.06))', title: 'Without Title, 2023', artist: 'Sofia Andrade · Photography' },
-  { emoji: '🖼️', gradient: 'linear-gradient(135deg,rgba(var(--accent-rgb),.18),rgba(var(--plum-rgb),.06))', title: 'Fronteira, 2024', artist: 'Rafael Pinto · Painting' },
-  { emoji: '✏️', gradient: 'linear-gradient(135deg,rgba(var(--plum-rgb),.14),rgba(var(--jade-rgb),.1))', title: 'Série Madrugada, 2023', artist: 'Marta Pereira · Illustration' },
-  { emoji: '🎭', gradient: 'linear-gradient(135deg,rgba(var(--accent-rgb),.14),rgba(var(--jade-rgb),.12))', title: 'Fragmentos, 2024', artist: 'Paulo Mendes · Performance' },
-  { emoji: '🔮', gradient: 'linear-gradient(135deg,rgba(var(--violet-rgb),.16),rgba(var(--plum-rgb),.08))', title: 'Não Binário, 2024', artist: 'Beatriz Noronha · Digital' },
-  { emoji: '🌿', gradient: 'linear-gradient(135deg,rgba(var(--jade-rgb),.2),rgba(var(--accent-rgb),.08))', title: 'Raízes, 2023', artist: 'Catarina Faria · Ceramics' },
-  { emoji: '🎪', gradient: 'linear-gradient(135deg,rgba(var(--plum-rgb),.12),rgba(var(--accent-rgb),.16))', title: 'Depois do Arco-Íris, 2024', artist: 'Tomás Beto · Installation' },
+  { emoji: FiDroplet, gradient: 'linear-gradient(135deg,rgba(var(--plum-rgb),.18),rgba(var(--accent-rgb),.14))', title: 'Corpo Estranho, 2024', artist: 'Inês Tavares · Mixed media', feat: true },
+  { emoji: FiCamera, gradient: 'linear-gradient(135deg,rgba(var(--jade-rgb),.18),rgba(var(--jade-rgb),.06))', title: 'Without Title, 2023', artist: 'Sofia Andrade · Photography' },
+  { emoji: FiImage, gradient: 'linear-gradient(135deg,rgba(var(--accent-rgb),.18),rgba(var(--plum-rgb),.06))', title: 'Fronteira, 2024', artist: 'Rafael Pinto · Painting' },
+  { emoji: FiEdit2, gradient: 'linear-gradient(135deg,rgba(var(--plum-rgb),.14),rgba(var(--jade-rgb),.1))', title: 'Série Madrugada, 2023', artist: 'Marta Pereira · Illustration' },
+  { emoji: FaMasksTheater, gradient: 'linear-gradient(135deg,rgba(var(--accent-rgb),.14),rgba(var(--jade-rgb),.12))', title: 'Fragmentos, 2024', artist: 'Paulo Mendes · Performance' },
+  { emoji: FiMonitor, gradient: 'linear-gradient(135deg,rgba(var(--violet-rgb),.16),rgba(var(--plum-rgb),.08))', title: 'Não Binário, 2024', artist: 'Beatriz Noronha · Digital' },
+  { emoji: FaLeaf, gradient: 'linear-gradient(135deg,rgba(var(--jade-rgb),.2),rgba(var(--accent-rgb),.08))', title: 'Raízes, 2023', artist: 'Catarina Faria · Ceramics' },
+  { emoji: FaTents, gradient: 'linear-gradient(135deg,rgba(var(--plum-rgb),.12),rgba(var(--accent-rgb),.16))', title: 'Depois do Arco-Íris, 2024', artist: 'Tomás Beto · Installation' },
 ]
 
 export interface RadioData {

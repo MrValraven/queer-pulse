@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { LuSprout, LuTreeDeciduous } from 'react-icons/lu'
 import { Button } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -57,7 +58,7 @@ export function MentorMatchModal({ mode, onClose }: { mode: Mode; onClose: () =>
 
         {done ? (
           <div className={styles.mmSuccess}>
-            <div className={styles.mmSuccessIcon}>{mode === 'mentee' ? '🌱' : '🌳'}</div>
+            <div className={styles.mmSuccessIcon}>{mode === 'mentee' ? <LuSprout /> : <LuTreeDeciduous />}</div>
             <div className={styles.mmTitle} style={{ fontSize: 24 }}>
               {mode === 'mentee' ? 'Request received.' : 'Thank you.'}
             </div>

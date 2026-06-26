@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiHeart } from 'react-icons/fi'
 import { ImageSlot } from '../../shared/components/ui'
 import { StudioShell } from './StudioShell'
 import styles from './studio.module.css'
@@ -44,7 +45,7 @@ export function StudioArtistPage() {
               </svg>
             </Link>
             <button>＋ Follow</button>
-            <button className={styles.tip}>♥ Tip Mariana</button>
+            <button className={styles.tip}><FiHeart /> Tip Mariana</button>
             <button>Share</button>
           </div>
           <div className={styles.payPill}>

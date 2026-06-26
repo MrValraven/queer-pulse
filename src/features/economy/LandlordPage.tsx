@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FiStar } from 'react-icons/fi'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button } from '../../shared/components/ui'
@@ -8,7 +9,13 @@ import { RecommendModal } from './HousingModals'
 import s from './LandlordPage.module.css'
 
 const TINT: Record<Tint, string> = { coral: s.tCoral, jade: s.tJade, plum: s.tPlum }
-const starStr = (n: number) => '★★★★★☆☆☆☆☆'.slice(5 - n, 10 - n)
+const Stars = ({ n }: { n: number }) => (
+  <>
+    {Array.from({ length: 5 }, (_, i) => (
+      <FiStar key={i} className={i < n ? s.starOn : undefined} />
+    ))}
+  </>
+)
 
 export function LandlordPage() {
   const { slug } = useParams()
@@ -29,7 +36,7 @@ export function LandlordPage() {
             <div className={s.eyebrow}>Community-endorsed landlord</div>
             <h1 className={s.name}>{ll.name}</h1>
             <div className={s.metaLine}>
-              <span className={s.stars}>{starStr(Math.round(ll.stars))}</span>
+              <span className={s.stars}><Stars n={Math.round(ll.stars)} /></span>
               <span>{ll.hood}</span>
             </div>
             <p className={s.tagline}>{ll.tagline}</p>
@@ -74,7 +81,7 @@ export function LandlordPage() {
                         <div className={s.recName}>{r.name}</div>
                         <div className={s.recWhen}>{r.when}</div>
                       </div>
-                      <span className={s.recStars}>{starStr(r.stars)}</span>
+                      <span className={s.recStars}><Stars n={r.stars} /></span>
                     </div>
                     <div className={s.recText}>{r.text}</div>
                   </div>
@@ -89,7 +96,10 @@ export function LandlordPage() {
               {ll.stats.map((st) => (
                 <div key={st.label} className={s.statRow}>
                   <span>{st.label}</span>
-                  <b>{st.value}</b>
+                  <b>
+                    {st.label === 'Community rating' && <FiStar className={s.statStar} />}
+                    {st.value}
+                  </b>
                 </div>
               ))}
             </div>
@@ -125,7 +135,7 @@ export function LandlordPage() {
         <RecommendModal
           landlordName={ll.name}
           onClose={() => setRecommending(false)}
-          onSubmitted={(stars) => showToast(`Recommendation submitted — ${stars}★`, 'success')}
+          onSubmitted={(stars) => showToast(`Recommendation submitted — ${stars} stars`, 'success')}
         />
       )}
     </PageShell>

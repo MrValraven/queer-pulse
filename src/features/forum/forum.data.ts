@@ -1,15 +1,19 @@
+import type { IconType } from 'react-icons'
+import { FiGlobe, FiMessageCircle, FiHome, FiActivity, FiBookOpen, FiBriefcase, FiZap } from 'react-icons/fi'
+import { LuPalette } from 'react-icons/lu'
+import { FaHandFist } from 'react-icons/fa6'
 import { MEMBERS, memberName } from '../members/data/members'
 
-export const CATS = [
-  { id: 'all', name: 'All posts', icon: '🌐', count: 61 },
-  { id: 'general', name: 'General', icon: '💬', count: 12 },
-  { id: 'housing', name: 'Housing', icon: '🏠', count: 8 },
-  { id: 'health', name: 'Health & Wellbeing', icon: '🧠', count: 9 },
-  { id: 'arts', name: 'Arts & Culture', icon: '🎨', count: 6 },
-  { id: 'activism', name: 'Activism & Proposals', icon: '✊', count: 8 },
-  { id: 'guides', name: 'Guides & Resources', icon: '📖', count: 6 },
-  { id: 'jobs', name: 'Jobs & Skills', icon: '💼', count: 7 },
-  { id: 'trans', name: 'Trans & Non-Binary', icon: '⚡', count: 5 },
+export const CATS: { id: string; name: string; icon: IconType; count: number }[] = [
+  { id: 'all', name: 'All posts', icon: FiGlobe, count: 61 },
+  { id: 'general', name: 'General', icon: FiMessageCircle, count: 12 },
+  { id: 'housing', name: 'Housing', icon: FiHome, count: 8 },
+  { id: 'health', name: 'Health & Wellbeing', icon: FiActivity, count: 9 },
+  { id: 'arts', name: 'Arts & Culture', icon: LuPalette, count: 6 },
+  { id: 'activism', name: 'Activism & Proposals', icon: FaHandFist, count: 8 },
+  { id: 'guides', name: 'Guides & Resources', icon: FiBookOpen, count: 6 },
+  { id: 'jobs', name: 'Jobs & Skills', icon: FiBriefcase, count: 7 },
+  { id: 'trans', name: 'Trans & Non-Binary', icon: FiZap, count: 5 },
 ]
 
 export const CAT_STYLE: Record<string, { bg: string; color: string }> = {
@@ -168,7 +172,7 @@ export const THREADS: Thread[] = [
     id: 3,
     cat: 'general',
     pinned: true,
-    title: 'Welcome thread — introduce yourself 👋',
+    title: 'Welcome thread — introduce yourself',
     excerpt:
       "Say hello. Tell us who you are, where you're from, what you make, and what brought you to QueerPulse. We read every one.",
     author: { i: 'QP', n: 'QueerPulse', t: '#E8775A', tt: '#fff' },

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { FiBell } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Avatar, Button } from '../../shared/components/ui'
@@ -49,7 +50,7 @@ export function NotificationsPage() {
           />
         ) : (
           <span className={styles.icon} style={{ background: notification.icon?.bg }}>
-            {notification.icon?.emoji}
+            {notification.icon && <notification.icon.Glyph />}
           </span>
         )}
         <div className={styles.body}>
@@ -115,7 +116,7 @@ export function NotificationsPage() {
 
           {visible.length === 0 ? (
             <div className={styles.empty}>
-              <div style={{ fontSize: 40 }}>🔔</div>
+              <div style={{ fontSize: 40 }}><FiBell /></div>
               <div className={styles.emptyTitle}>All caught up</div>
               <div>No notifications in this category.</div>
             </div>

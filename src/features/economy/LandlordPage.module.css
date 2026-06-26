@@ -62,6 +62,8 @@
   color: var(--ink-60);
 }
 .stars {
+  display: inline-flex;
+  gap: 2px;
   color: var(--accent);
   font-size: 15px;
   letter-spacing: 0.06em;
@@ -181,10 +183,15 @@
   color: var(--ink-40);
 }
 .recStars {
+  display: inline-flex;
+  gap: 2px;
   margin-left: auto;
   color: var(--accent);
   font-size: 13px;
   letter-spacing: 0.04em;
+}
+.starOn {
+  fill: currentColor;
 }
 .recText {
   font-size: 14.5px;
@@ -229,6 +236,12 @@
 .statRow b {
   color: var(--plum);
   font-weight: 600;
+}
+.statStar {
+  color: var(--accent);
+  fill: currentColor;
+  vertical-align: -1px;
+  margin-right: 4px;
 }
 
 .recCard {

@@ -1,3 +1,6 @@
+import type { ReactNode } from 'react'
+import { FiCheck } from 'react-icons/fi'
+
 export type TierKey = 'hardship' | 'solidarity' | 'sustaining'
 
 export interface Tier {
@@ -46,8 +49,16 @@ export const CURRENT_PLAN = {
   since: 'Member since March 2024',
 }
 
-export const BILLING_ROWS: { label: string; value: string; ok?: boolean }[] = [
-  { label: 'Last payment', value: '€20 · 5 May 2026 ✓', ok: true },
+export const BILLING_ROWS: { label: string; value: ReactNode; ok?: boolean }[] = [
+  {
+    label: 'Last payment',
+    value: (
+      <>
+        €20 · 5 May 2026 <FiCheck />
+      </>
+    ),
+    ok: true,
+  },
   { label: 'Next billing date', value: '5 June 2026' },
   { label: 'Billing cycle', value: 'Monthly' },
   { label: 'Amount', value: '€20.00' },

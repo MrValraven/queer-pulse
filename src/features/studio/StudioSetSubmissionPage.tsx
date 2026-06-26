@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FiCheck } from 'react-icons/fi'
 import { memberName } from '../members/data/members'
 import { ImageSlot } from '../../shared/components/ui'
 import { StudioShell } from './StudioShell'
@@ -44,7 +45,7 @@ export function StudioSetSubmissionPage() {
 
         <div className={s.djSteps}>
           <div className={`${s.djStep} ${s.djStepDone}`}>
-            <span className={s.num}>✓</span>File
+            <span className={s.num}><FiCheck /></span>File
           </div>
           <span className={s.djBar} />
           <div className={`${s.djStep} ${s.djStepOn}`}>
@@ -68,7 +69,7 @@ export function StudioSetSubmissionPage() {
               </span>
               <div>
                 <h5>house-for-the-tired_master.wav</h5>
-                <p>2h 08m · 24-bit / 48kHz · 1.4 GB · loudness −9.2 LUFS ✓</p>
+                <p>2h 08m · 24-bit / 48kHz · 1.4 GB · loudness −9.2 LUFS <FiCheck /></p>
               </div>
               <span className={s.ok}>Uploaded</span>
             </div>

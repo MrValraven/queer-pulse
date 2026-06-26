@@ -11,8 +11,8 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
     label: 'Joining the community',
     flows: [
       {
-        title: 'Invite landing',
-        desc: 'Start from the invite landing page — the first screen someone sees when they open an invitation link.',
+        title: 'Join QueerPulse',
+        desc: 'The full join journey end to end — open your invitation, create your account, complete new-member onboarding, and finish on the welcome tour.',
         to: routes.inviteLanding,
       },
       {
@@ -24,16 +24,6 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         title: 'Vouch for someone',
         desc: 'See how an existing member nominates and vouches for a friend to bring them into the network.',
         to: routes.vouch,
-      },
-      {
-        title: 'New-member onboarding',
-        desc: 'Walk through the guided setup someone completes right after accepting their invite.',
-        to: routes.welcome,
-      },
-      {
-        title: 'Welcome tour',
-        desc: 'Take the orientation a member sees on their first visit — a quick tour of the platform and what to do next.',
-        to: routes.welcomeTour,
       },
       {
         title: 'Pending review',
@@ -66,14 +56,9 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.magicLink,
       },
       {
-        title: 'Password reset',
-        desc: 'Walk through forgetting your password and choosing a new one, end to end.',
+        title: 'Reset your password',
+        desc: 'The full password-recovery flow — request a reset link, then choose and confirm a new password.',
         to: routes.passwordReset,
-      },
-      {
-        title: 'Set a new password',
-        desc: 'The screen where you choose a replacement password after following a reset link.',
-        to: routes.setNewPassword,
       },
       {
         title: 'Confirm your email',
@@ -81,14 +66,9 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.confirmEmail,
       },
       {
-        title: 'Two-factor setup',
-        desc: 'Walk through adding a second login step and saving your backup recovery codes.',
+        title: 'Set up two-factor',
+        desc: 'Add a second login step from start to finish — enable 2FA and save your one-time recovery codes.',
         to: routes.twoFactorSetup,
-      },
-      {
-        title: 'Recovery codes',
-        desc: 'See the one-time backup codes screen used to regain access if you lose your 2FA device.',
-        to: routes.recoveryCodes,
       },
       {
         title: 'Verification needed',
@@ -107,18 +87,8 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
       },
       {
         title: 'Host a gathering',
-        desc: 'Start the host journey — from the host pitch through creating and publishing a gathering.',
+        desc: 'The whole host journey — from the host pitch through creating, publishing and inviting a co-organiser to your gathering.',
         to: routes.host,
-      },
-      {
-        title: 'Create a gathering',
-        desc: 'Jump straight into the gathering-creation form a host fills in to list a new event.',
-        to: routes.createGathering,
-      },
-      {
-        title: 'Co-host invite',
-        desc: 'See how a host brings in a co-organiser to help run their gathering.',
-        to: routes.coHostInvite,
       },
       {
         title: 'Gathering recap',
@@ -166,14 +136,9 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
     label: 'Managing your membership',
     flows: [
       {
-        title: 'Manage membership',
-        desc: 'Walk through viewing and changing your membership tier and benefits.',
+        title: 'Membership & billing',
+        desc: 'Review and change your membership tier, benefits, and recurring billing all in one place.',
         to: routes.membership,
-      },
-      {
-        title: 'Subscriptions',
-        desc: 'See the screen for managing recurring subscriptions and billing.',
-        to: routes.subscriptions,
       },
       {
         title: 'Gift a membership',
@@ -181,14 +146,9 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.giftMembership,
       },
       {
-        title: 'Export your data',
-        desc: 'See how a member requests and downloads a full export of their data.',
+        title: 'Your data rights',
+        desc: 'Exercise your data rights — request a full export of your data or file a formal GDPR access request.',
         to: routes.dataExport,
-      },
-      {
-        title: 'Data subject access request',
-        desc: 'Walk through the formal GDPR request for the personal data held about you.',
-        to: routes.dsar,
       },
       {
         title: 'Cancel membership',
@@ -212,13 +172,8 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
     flows: [
       {
         title: 'Apply to a job',
-        desc: 'Walk through finding a role on the jobs board and submitting an application.',
+        desc: 'Find a role on the jobs board, submit your application, and track where it stands.',
         to: routes.jobs,
-      },
-      {
-        title: 'Track an application',
-        desc: 'See the status screen where a candidate follows where their application stands.',
-        to: routes.applicationStatus,
       },
       {
         title: 'Post an offer',
@@ -251,14 +206,9 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
     label: 'Cinema',
     flows: [
       {
-        title: 'Join Cinema',
-        desc: 'Walk through the Cinema membership and sign-up flow.',
+        title: 'Watch on Cinema',
+        desc: 'Join Cinema and go straight into watching a film.',
         to: routes.cinemaMembership,
-      },
-      {
-        title: 'Watch a film',
-        desc: 'Step into a film page and start the viewing experience.',
-        to: routes.film,
       },
     ],
   },

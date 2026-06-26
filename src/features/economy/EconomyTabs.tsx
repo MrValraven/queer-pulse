@@ -131,7 +131,7 @@ export function FreelanceTab() {
       <div className={styles.toolsGrid}>
         {TOOLS.map((t) => (
           <div className={styles.toolCard} key={t.title}>
-            <div className={styles.toolIcon}>{t.icon}</div>
+            <div className={styles.toolIcon}><t.icon /></div>
             <div className={styles.toolTitle}>{t.title}</div>
             <div className={styles.toolDesc}>{t.desc}</div>
             <button type="button" className={styles.toolCtaBtn} onClick={() => showToast(`${t.cta}…`, 'info')}>

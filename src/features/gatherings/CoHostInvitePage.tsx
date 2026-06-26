@@ -3,6 +3,7 @@ import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
+import { FiStar } from "react-icons/fi";
 import styles from "./CoHostInvitePage.module.css";
 
 const NOTIFICATIONS = routes.notifications;
@@ -64,7 +65,7 @@ export function CoHostInvitePage() {
             <div className={styles.fromMeta}>
               <b>Hosted 14 gatherings</b>
               <span className={styles.dot}>·</span>
-              <b>4.9 ★</b> from attendees
+              <b>4.9 <FiStar /></b> from attendees
               <span className={styles.dot}>·</span>You've been to 3 of hers
             </div>
           </div>

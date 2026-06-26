@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { communities } from '../homepage/data/communities'
@@ -35,7 +36,7 @@ export function CommunityDetailPage() {
 
   const welcome: ThreadData = {
     votes: 38,
-    title: `Welcome, new members — introduce yourself 👋`,
+    title: `Welcome, new members — introduce yourself`,
     author: detail.organiser,
     time: '2 weeks ago',
     replyCount: 18,
@@ -70,7 +71,7 @@ export function CommunityDetailPage() {
           </div>
           <div className={styles.actRow}>
             <Button variant={joined ? 'jade' : 'primary'} onClick={() => (joined ? setJoined(false) : setJoining(true))}>
-              {joined ? '✓ Joined' : community.privateBadge ? 'Request access' : 'Join community'}
+              {joined ? <><FiCheck /> Joined</> : community.privateBadge ? 'Request access' : 'Join community'}
             </Button>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <div className={styles.avStrip}>

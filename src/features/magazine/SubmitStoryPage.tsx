@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Reveal } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -24,7 +25,7 @@ export function SubmitStoryPage() {
         <section className={styles.page}>
           <div className="wrap">
             <Reveal className={styles.panel}>
-              <div className={styles.panelIcon}>✓</div>
+              <div className={styles.panelIcon}><FiCheck /></div>
               <h1 className={styles.panelTitle}>
                 We're <em>reading.</em>
               </h1>
@@ -66,7 +67,7 @@ export function SubmitStoryPage() {
               <div className={styles.looking}>
                 {LOOKING_FOR.map((item, index) => (
                   <Reveal key={item.title} className={styles.look} delay={index * 50}>
-                    <span className={styles.lookIcon}>{item.icon}</span>
+                    <span className={styles.lookIcon}><item.icon /></span>
                     <div>
                       <div className={styles.lookTitle}>{item.title}</div>
                       <div className={styles.lookBody}>{item.body}</div>

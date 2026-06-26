@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FiMapPin } from 'react-icons/fi'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button } from '../../shared/components/ui'
@@ -41,7 +42,7 @@ export function HousingListingPage() {
           </span>
           <h1 className={s.title}>{l.title}</h1>
           <div className={s.metaRow}>
-            <span className={s.metaPill}>📍 {l.hood}</span>
+            <span className={s.metaPill}><FiMapPin /> {l.hood}</span>
             <span className={s.metaPill}>{l.beds}</span>
             <span className={s.metaPill}>From {l.avail}</span>
             <span className={s.metaPill}>{l.price} / {l.period}</span>

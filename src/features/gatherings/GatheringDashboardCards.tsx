@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+import { FiSend } from 'react-icons/fi'
+import { MdQrCodeScanner } from 'react-icons/md'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { RECENT, WAITLIST, type Guest } from './gatheringDashboard.data'
@@ -17,8 +19,19 @@ export function CheckInColumn({ guests }: { guests: Guest[] }) {
       <div className={styles.card}>
         <div className={styles.cardHead}>Check-in</div>
         <div className={styles.cardBody}>
-          <div className={styles.qrArea} onClick={() => showToast('Opening camera…', 'info')}>
-            <div className={styles.qrIcon}>⬛</div>
+          <div
+            className={styles.qrArea}
+            onClick={() => showToast('Opening camera…', 'info')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                showToast('Opening camera…', 'info')
+              }
+            }}
+          >
+            <div className={styles.qrIcon}><MdQrCodeScanner /></div>
             <div className={styles.qrLabel}>
               QR scanner area
               <br />
@@ -134,7 +147,19 @@ export function GuestListCard({
           ))}
         </div>
 
-        <div className={styles.waitlistToggle} onClick={() => setWaitlistOpen((o) => !o)}>
+        <div
+          className={styles.waitlistToggle}
+          onClick={() => setWaitlistOpen((o) => !o)}
+          role="button"
+          tabIndex={0}
+          aria-expanded={waitlistOpen}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              setWaitlistOpen((o) => !o)
+            }
+          }}
+        >
           <span>{waitlistOpen ? '▾' : '▸'}</span> 3 on waitlist — promote
         </div>
         {waitlistOpen && (
@@ -209,7 +234,7 @@ export function StatsColumn() {
               Message all attendees
             </Button>
             <Button variant="ghost" className={styles.qaBtn} onClick={() => showToast("We're starting — sent to all guests", 'success')}>
-              Send "We're starting" ✦
+              Send "We're starting" <FiSend />
             </Button>
           </div>
         </div>

@@ -18,4 +18,4 @@ export const MEMBERS_HERE: { initials: string; name: string; tint: Tint; when: s
   { initials: 'SC', name: 'Sofia C.', tint: 'coral', when: 'last week' },
 ]
 
-export const stars = (n: number) => '★★★★★☆☆☆☆☆'.slice(5 - n, 10 - n)
+export const STAR_SLOTS = [1, 2, 3, 4, 5]

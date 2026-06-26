@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiHeart } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { SET, TRACKS, type TrackCard } from "./studioPage.data";
 import styles from "./studio.module.css";
@@ -40,7 +41,7 @@ export function StudioHero() {
               </svg>
             </Link>
             <button>＋ Library</button>
-            <button className={styles.tip}>♥ Tip €2</button>
+            <button className={styles.tip}><FiHeart /> Tip €2</button>
           </div>
           <div className={styles.payPill}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>

@@ -78,6 +78,9 @@
   font-size: 22px;
   line-height: 1.2;
   flex: none;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
 }
 .meanTitle {
   font-weight: 700;
@@ -138,6 +141,7 @@
   place-items: center;
   margin: 0 auto 22px;
   font-size: 28px;
+  color: var(--cream);
 }
 .panelTitle {
   font-family: var(--serif);

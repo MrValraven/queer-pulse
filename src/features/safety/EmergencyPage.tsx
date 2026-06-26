@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import type { IconType } from "react-icons";
+import { FiActivity, FiUsers, FiHome, FiFlag, FiHeart, FiGlobe, FiZap, FiPhone } from "react-icons/fi";
+import { FaScaleBalanced } from "react-icons/fa6";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./EmergencyPage.module.css";
@@ -19,7 +22,7 @@ interface Item {
   link?: { label: string; href: string; external?: boolean };
 }
 interface Section {
-  icon: string;
+  icon: IconType;
   iconBg: string;
   title: string;
   intro: string;
@@ -28,7 +31,7 @@ interface Section {
 
 const SECTIONS: Section[] = [
   {
-    icon: "🧠",
+    icon: FiActivity,
     iconBg: "rgba(122,82,184,.1)",
     title: "Mental health support",
     intro: "Whether you're in acute crisis or just struggling — these organisations specifically support LGBTQ+ people in Lisbon.",
@@ -39,7 +42,7 @@ const SECTIONS: Section[] = [
     ],
   },
   {
-    icon: "🏳️‍⚧️",
+    icon: FiUsers,
     iconBg: "rgba(74,140,111,.1)",
     title: "Trans-specific support",
     intro: "Support specifically for trans, non-binary, and gender non-conforming people in Portugal and Lisbon.",
@@ -50,7 +53,7 @@ const SECTIONS: Section[] = [
     ],
   },
   {
-    icon: "🏠",
+    icon: FiHome,
     iconBg: "rgba(220,50,50,.08)",
     title: "Unsafe at home / housing crisis",
     intro: "If your home environment is dangerous or you have no safe place to go.",
@@ -61,7 +64,7 @@ const SECTIONS: Section[] = [
     ],
   },
   {
-    icon: "⚖️",
+    icon: FaScaleBalanced,
     iconBg: "rgba(45,27,61,.08)",
     title: "Legal emergency & discrimination",
     intro: "Facing discrimination, hate crime, family law crisis, or immigration emergency.",
@@ -73,12 +76,12 @@ const SECTIONS: Section[] = [
   },
 ];
 
-const ONLINE = [
-  { icon: "🏳️‍🌈", name: "ILGA Portugal", sub: "Portuguese · LGBTQ+ rights", href: "https://ilga-portugal.pt" },
-  { icon: "💙", name: "The Trevor Project", sub: "English · Youth crisis support", href: "https://thetrevorproject.org" },
-  { icon: "🏳️‍⚧️", name: "Trans Lifeline", sub: "English · Trans peer support", href: "https://translifeline.org" },
-  { icon: "🧠", name: "Opus Diversus", sub: "Portuguese · LGBTQ+ mental health", href: "https://opusdiversus.org" },
-  { icon: "🌍", name: "Rainbow Railroad", sub: "English · Escape from persecution", href: "https://rainbowrailroad.org" },
+const ONLINE: { icon: IconType; name: string; sub: string; href: string }[] = [
+  { icon: FiFlag, name: "ILGA Portugal", sub: "Portuguese · LGBTQ+ rights", href: "https://ilga-portugal.pt" },
+  { icon: FiHeart, name: "The Trevor Project", sub: "English · Youth crisis support", href: "https://thetrevorproject.org" },
+  { icon: FiUsers, name: "Trans Lifeline", sub: "English · Trans peer support", href: "https://translifeline.org" },
+  { icon: FiActivity, name: "Opus Diversus", sub: "Portuguese · LGBTQ+ mental health", href: "https://opusdiversus.org" },
+  { icon: FiGlobe, name: "Rainbow Railroad", sub: "English · Escape from persecution", href: "https://rainbowrailroad.org" },
 ];
 
 export function EmergencyPage() {
@@ -91,7 +94,7 @@ export function EmergencyPage() {
       <div className={styles.exitBar}>
         <p>If you need to leave this page quickly, click Exit — it goes to Google immediately.</p>
         <button type="button" className={styles.exitBtn} onClick={leaveSite}>
-          ⚡ Leave site now
+          <FiZap /> Leave site now
         </button>
       </div>
 
@@ -119,7 +122,7 @@ export function EmergencyPage() {
           </div>
 
           <div className={styles.crisisNow}>
-            <h2>📞 If you need help right now</h2>
+            <h2><FiPhone /> If you need help right now</h2>
             <div className={styles.crisisNums}>
               {CRISIS_NUMS.map((c) => (
                 <div className={styles.crisisNum} key={c.label}>
@@ -136,7 +139,7 @@ export function EmergencyPage() {
               <div className={styles.sec} key={s.title}>
                 <div className={styles.esHead}>
                   <div className={styles.esIcon} style={{ background: s.iconBg }}>
-                    {s.icon}
+                    <s.icon />
                   </div>
                   <div className={styles.esTitle}>{s.title}</div>
                 </div>
@@ -179,7 +182,7 @@ export function EmergencyPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <span className={styles.osChipIcon}>{o.icon}</span>
+                  <span className={styles.osChipIcon}><o.icon /></span>
                   <div>
                     <div className={styles.osChipName}>{o.name}</div>
                     <div className={styles.osChipSub}>{o.sub}</div>

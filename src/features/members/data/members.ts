@@ -1,3 +1,13 @@
+import type { IconType } from "react-icons";
+import {
+  FiBookOpen,
+  FiCalendar,
+  FiCamera,
+  FiEdit3,
+  FiFileText,
+  FiMessageCircle,
+  FiMusic,
+} from "react-icons/fi";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { VisibilityMode } from "../../../shared/components/ui/VisibilityBadge";
 import { routes } from "../../../app/routeMap";
@@ -28,7 +38,7 @@ export interface GroupItem {
 }
 /** A recent public action, linking to where it happened. */
 export interface ActivityItem {
-  icon: string;
+  icon: IconType;
   title: string;
   sub: string;
   to: string;
@@ -178,9 +188,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       { name: "Editorial Reading Circle", role: "Reading group · Member" },
     ],
     activity: [
-      { icon: "📰", title: "Featured in QueerPulse Magazine", sub: "Designing a queer bookshop's identity · Culture · June 2026", to: routes.magazine },
-      { icon: "🎟️", title: "Hosting a portfolio review night", sub: "Atelier Pulso · 21 June", to: routes.event },
-      { icon: "💬", title: "Replied in the Forum", sub: "Best riso printers in Lisbon? · 4 days ago", to: routes.forum },
+      { icon: FiFileText, title: "Featured in QueerPulse Magazine", sub: "Designing a queer bookshop's identity · Culture · June 2026", to: routes.magazine },
+      { icon: FiCalendar, title: "Hosting a portfolio review night", sub: "Atelier Pulso · 21 June", to: routes.event },
+      { icon: FiMessageCircle, title: "Replied in the Forum", sub: "Best riso printers in Lisbon? · 4 days ago", to: routes.forum },
     ],
     shapings: {
       film: {
@@ -255,9 +265,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       { name: "Sci-fi & Systems", role: "Reading group · Member" },
     ],
     activity: [
-      { icon: "💬", title: "Started a Forum thread", sub: "Low-cost infra for community projects · 1 week ago", to: routes.forum },
-      { icon: "🎟️", title: "Attending a build night", sub: "Open Source Queers · 18 June", to: routes.event },
-      { icon: "📚", title: "Joined a reading group", sub: "Sci-fi & Systems · The Dispossessed", to: routes.readingGroups },
+      { icon: FiMessageCircle, title: "Started a Forum thread", sub: "Low-cost infra for community projects · 1 week ago", to: routes.forum },
+      { icon: FiCalendar, title: "Attending a build night", sub: "Open Source Queers · 18 June", to: routes.event },
+      { icon: FiBookOpen, title: "Joined a reading group", sub: "Sci-fi & Systems · The Dispossessed", to: routes.readingGroups },
     ],
     shapings: {
       film: {
@@ -328,9 +338,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       { name: "Sound & Image", role: "Community · Member" },
     ],
     activity: [
-      { icon: "📝", title: "Published in QueerPulse Magazine", sub: "On filming the last tascas · Culture · May 2026", to: routes.magazine },
-      { icon: "🎟️", title: "Screening at a community night", sub: "O Café das Seis · 27 June", to: routes.event },
-      { icon: "💬", title: "Replied in the Forum", sub: "Composers for a short doc? · 2 days ago", to: routes.forum },
+      { icon: FiEdit3, title: "Published in QueerPulse Magazine", sub: "On filming the last tascas · Culture · May 2026", to: routes.magazine },
+      { icon: FiCalendar, title: "Screening at a community night", sub: "O Café das Seis · 27 June", to: routes.event },
+      { icon: FiMessageCircle, title: "Replied in the Forum", sub: "Composers for a short doc? · 2 days ago", to: routes.forum },
     ],
     shapings: {
       film: {
@@ -390,9 +400,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       { name: "Slow Food Circle", role: "Reading group · Member" },
     ],
     activity: [
-      { icon: "🎟️", title: "Hosting the 13th supper club", sub: "Twelve seats · Mouraria · 28 June", to: routes.event },
-      { icon: "💬", title: "Replied in the Forum", sub: "Where to find natural wine in Lisbon? · 3 days ago", to: routes.forum },
-      { icon: "📚", title: "Started a reading group", sub: "Slow Food Circle · The Omnivore's Dilemma", to: routes.readingGroups },
+      { icon: FiCalendar, title: "Hosting the 13th supper club", sub: "Twelve seats · Mouraria · 28 June", to: routes.event },
+      { icon: FiMessageCircle, title: "Replied in the Forum", sub: "Where to find natural wine in Lisbon? · 3 days ago", to: routes.forum },
+      { icon: FiBookOpen, title: "Started a reading group", sub: "Slow Food Circle · The Omnivore's Dilemma", to: routes.readingGroups },
     ],
     shapings: {
       film: {
@@ -449,8 +459,8 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       { name: "Estrela Neighbours", role: "Community · Member" },
     ],
     activity: [
-      { icon: "🎟️", title: "Running a monthly peer group", sub: "Queer professionals · waitlist open", to: routes.event },
-      { icon: "💬", title: "Replied in the Forum", sub: "Finding LGBTQ+-affirming therapists · 5 days ago", to: routes.forum },
+      { icon: FiCalendar, title: "Running a monthly peer group", sub: "Queer professionals · waitlist open", to: routes.event },
+      { icon: FiMessageCircle, title: "Replied in the Forum", sub: "Finding LGBTQ+-affirming therapists · 5 days ago", to: routes.forum },
     ],
     shapings: {
       film: {
@@ -525,9 +535,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       { name: "Portrait Exchange", role: "Barter collective · Member" },
     ],
     activity: [
-      { icon: "📷", title: "Added work to the Art Showcase", sub: "Faces of the Bairro · Culture", to: routes.culture },
-      { icon: "🎟️", title: "Free portrait day", sub: "For trans & nonbinary members · 15 June", to: routes.event },
-      { icon: "💬", title: "Replied in the Forum", sub: "Best film labs still open in Lisbon? · 1 week ago", to: routes.forum },
+      { icon: FiCamera, title: "Added work to the Art Showcase", sub: "Faces of the Bairro · Culture", to: routes.culture },
+      { icon: FiCalendar, title: "Free portrait day", sub: "For trans & nonbinary members · 15 June", to: routes.event },
+      { icon: FiMessageCircle, title: "Replied in the Forum", sub: "Best film labs still open in Lisbon? · 1 week ago", to: routes.forum },
     ],
     shapings: {
       film: {
@@ -598,9 +608,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       { name: "Arroios Walkers", role: "Social · Member" },
     ],
     activity: [
-      { icon: "💬", title: "Started a Forum thread", sub: "A sublet in Arroios, June–August? · 2 days ago", to: routes.forum },
-      { icon: "🎟️", title: "Attending a product meetup", sub: "Ethical Product Lisbon · 20 June", to: routes.event },
-      { icon: "📚", title: "Joined a reading group", sub: "Non-fiction Circle · Invisible Cities", to: routes.readingGroups },
+      { icon: FiMessageCircle, title: "Started a Forum thread", sub: "A sublet in Arroios, June–August? · 2 days ago", to: routes.forum },
+      { icon: FiCalendar, title: "Attending a product meetup", sub: "Ethical Product Lisbon · 20 June", to: routes.event },
+      { icon: FiBookOpen, title: "Joined a reading group", sub: "Non-fiction Circle · Invisible Cities", to: routes.readingGroups },
     ],
     shapings: {
       film: {
@@ -675,9 +685,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       { name: "Slow Objects Circle", role: "Reading group · Member" },
     ],
     activity: [
-      { icon: "🎟️", title: "Opening a small exhibition", sub: "Slow Objects · late summer", to: routes.event },
-      { icon: "💬", title: "Replied in the Forum", sub: "Shared kiln space in Lisbon? · 4 days ago", to: routes.forum },
-      { icon: "📚", title: "Joined a reading group", sub: "Slow Objects Circle · Zen & the Art…", to: routes.readingGroups },
+      { icon: FiCalendar, title: "Opening a small exhibition", sub: "Slow Objects · late summer", to: routes.event },
+      { icon: FiMessageCircle, title: "Replied in the Forum", sub: "Shared kiln space in Lisbon? · 4 days ago", to: routes.forum },
+      { icon: FiBookOpen, title: "Joined a reading group", sub: "Slow Objects Circle · Zen & the Art…", to: routes.readingGroups },
     ],
     shapings: {
       film: {
@@ -742,9 +752,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       { name: "Sound & Image", role: "Community · Member" },
     ],
     activity: [
-      { icon: "🎵", title: "Released a debut EP", sub: "'Pulso' · self-released · 2025", to: routes.culture },
-      { icon: "🎟️", title: "Resident DJ set", sub: "Queer Thursdays at Lux", to: routes.event },
-      { icon: "💬", title: "Replied in the Forum", sub: "Scoring a documentary — rate advice? · 6 days ago", to: routes.forum },
+      { icon: FiMusic, title: "Released a debut EP", sub: "'Pulso' · self-released · 2025", to: routes.culture },
+      { icon: FiCalendar, title: "Resident DJ set", sub: "Queer Thursdays at Lux", to: routes.event },
+      { icon: FiMessageCircle, title: "Replied in the Forum", sub: "Scoring a documentary — rate advice? · 6 days ago", to: routes.forum },
     ],
     shapings: {
       film: {

@@ -179,10 +179,17 @@
   font-size: 22px;
   color: var(--plum);
 }
+.starRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+.starOn {
+  fill: currentColor;
+}
 .stars {
   color: var(--accent);
   font-size: 14px;
-  letter-spacing: 0.04em;
 }
 
 .sec {

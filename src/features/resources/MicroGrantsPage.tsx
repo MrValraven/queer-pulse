@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -69,7 +70,7 @@ export function MicroGrantsPage() {
                   <div className={styles.critList}>
                     {CRITERIA.map((c) => (
                       <div className={styles.crit} key={c}>
-                        <span className={styles.critCheck}>✓</span>
+                        <span className={styles.critCheck}><FiCheck /></span>
                         <span>{c}</span>
                       </div>
                     ))}

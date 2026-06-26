@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -53,7 +54,7 @@ export function DataExportPage() {
           <div className={stepCls(1) + ' ' + stepCls(2)}>
             <div className={styles.stepsRow}>
               <div className={stepCls(1)}>
-                <div className={styles.stepNum}>{stepState(1) === 'done' ? '✓' : '1'}</div>
+                <div className={styles.stepNum}>{stepState(1) === 'done' ? <FiCheck /> : '1'}</div>
                 <div>
                   <div className={styles.stepLabel}>Choose what to export</div>
                   <div className={styles.stepDesc}>Select the data types you want included in your archive.</div>
@@ -84,7 +85,7 @@ export function DataExportPage() {
               <div className={styles.fieldLabel}>What to include</div>
               <div className={styles.dataTypes}>
                 {DATA_TYPES.map((dt, i) => (
-                  <div key={dt.label} className={[styles.dtItem, checked[i] && styles.dtItemChecked].filter(Boolean).join(' ')} onClick={() => toggleType(i)}>
+                  <div key={dt.label} className={[styles.dtItem, checked[i] && styles.dtItemChecked].filter(Boolean).join(' ')} role="button" tabIndex={0} aria-pressed={checked[i]} onClick={() => toggleType(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleType(i) } }}>
                     <div className={styles.dtCheck}>
                       <svg className={styles.dtCheckIcon} viewBox="0 0 10 8"><polyline points="1,4 3.5,7 9,1" /></svg>
                     </div>
@@ -126,7 +127,7 @@ export function DataExportPage() {
             <p className={styles.incSub}>A breakdown of every data category we hold and what each contains.</p>
             {ACCORDION_ITEMS.map((item, i) => (
               <div key={item.title} className={styles.accItem}>
-                <div className={styles.accHeader} onClick={() => setOpenAcc(openAcc === i ? null : i)}>
+                <div className={styles.accHeader} role="button" tabIndex={0} aria-expanded={openAcc === i} onClick={() => setOpenAcc(openAcc === i ? null : i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenAcc(openAcc === i ? null : i) } }}>
                   <span className={styles.accName}>{item.title}</span>
                   <span className={[styles.accArrow, openAcc === i && styles.accArrowOpen].filter(Boolean).join(' ')}>▼</span>
                 </div>

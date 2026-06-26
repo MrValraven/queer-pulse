@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import type { Job } from './jobs.data'
@@ -38,7 +39,7 @@ export function JobApplyForm({ job }: { job: Job }) {
     return (
       <div className={styles.applyWrap}>
         <Button variant="jade" disabled style={{ width: '100%', justifyContent: 'center' }}>
-          ✓ Application sent
+          <FiCheck /> Application sent
         </Button>
       </div>
     )

@@ -95,7 +95,7 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
 
         <div className={styles.tierLbl}>Choose your tier</div>
 
-        <div className={[styles.tier, tier === 'studio' ? styles.tierOn : ''].filter(Boolean).join(' ')} onClick={() => setTier('studio')}>
+        <div className={[styles.tier, tier === 'studio' ? styles.tierOn : ''].filter(Boolean).join(' ')} role="button" tabIndex={0} onClick={() => setTier('studio')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTier('studio') } }}>
           <div className={styles.tierDot} />
           <div className={styles.tierInfo}>
             <div className={styles.tierTop}>
@@ -110,7 +110,7 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
           </div>
         </div>
 
-        <div className={[styles.tier, tier === 'coop' ? styles.tierOn : ''].filter(Boolean).join(' ')} style={{ position: 'relative' }} onClick={() => setTier('coop')}>
+        <div className={[styles.tier, tier === 'coop' ? styles.tierOn : ''].filter(Boolean).join(' ')} style={{ position: 'relative' }} role="button" tabIndex={0} onClick={() => setTier('coop')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTier('coop') } }}>
           <div className={styles.tierDot} />
           <div className={styles.tierRec}>Best value</div>
           <div className={styles.tierInfo}>

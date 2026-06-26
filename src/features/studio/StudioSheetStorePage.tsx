@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { ImageSlot } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { StudioShell } from './StudioShell'
@@ -149,7 +150,7 @@ export function StudioSheetStorePage() {
               { nm: 'Saved card · Visa ·· 4291', sub: 'one-tap, no re-entry' },
               { nm: 'SEPA direct', sub: 'lower fee, 1–2 day settle' },
             ].map((m, i) => (
-              <div key={i} className={[s.pm, pm === i && s.pmOn].filter(Boolean).join(' ')} onClick={() => setPm(i)}>
+              <div key={i} className={[s.pm, pm === i && s.pmOn].filter(Boolean).join(' ')} role="button" tabIndex={0} onClick={() => setPm(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPm(i) } }}>
                 <span className={s.pmDot} />
                 <span className={s.pn}>
                   {m.nm}
@@ -167,7 +168,7 @@ export function StudioSheetStorePage() {
               showToast('Downloaded — €0.90 paid to Teresa & Mariana tonight', 'success')
             }}
           >
-            {bought ? 'Paid ✓ · downloading PDF…' : 'Pay €1.04 & download →'}
+            {bought ? <>Paid <FiCheck /> · downloading PDF…</> : 'Pay €1.04 & download →'}
           </button>
           <div className={s.chNote}>
             Instant download · re-download any time from your library · <em>the makers are paid tonight</em>.

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { LuSprout, LuTreeDeciduous } from 'react-icons/lu'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
@@ -43,7 +44,7 @@ export function MentorshipPage() {
           </div>
           <div className={styles.chooseGrid}>
             <button type="button" className={styles.chooseCard} onClick={() => setMode('mentee')}>
-              <div className={styles.ccIcon}>🌱</div>
+              <div className={styles.ccIcon}><LuSprout /></div>
               <div className={styles.ccTitle}>I'm looking for a mentor</div>
               <p className={styles.ccDesc}>
                 You're navigating something — a career transition, a creative block, coming out
@@ -53,7 +54,7 @@ export function MentorshipPage() {
               <div className={styles.ccFor}>For: anyone at any stage who could use some guidance →</div>
             </button>
             <button type="button" className={styles.chooseCard} onClick={() => setMode('mentor')}>
-              <div className={styles.ccIcon}>🌳</div>
+              <div className={styles.ccIcon}><LuTreeDeciduous /></div>
               <div className={styles.ccTitle}>I can be a mentor</div>
               <p className={styles.ccDesc}>
                 You've been through enough to have something to offer. You don't need to be an expert
