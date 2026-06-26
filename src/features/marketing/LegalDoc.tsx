@@ -70,5 +70,3 @@ export function LegalDoc({ eyebrow, title, meta, plain, toc, sections, contact }
     </PageShell>
   );
 }
-
-export { styles as legalStyles };

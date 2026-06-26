@@ -4,12 +4,15 @@ import { routes } from '../../app/routeMap'
 import styles from './ServerErrorPage.module.css'
 
 function Countdown() {
-  const endRef = useRef<number>(Date.now() + 23 * 60_000 + 44_000)
+  const endRef = useRef<number | null>(null)
   const [display, setDisplay] = useState('23:44')
 
   useEffect(() => {
+    // Compute the deadline once the timer starts — Date.now() is impure, so keep
+    // it out of render.
+    endRef.current = Date.now() + 23 * 60_000 + 44_000
     const id = setInterval(() => {
-      const diff = Math.max(0, endRef.current - Date.now())
+      const diff = Math.max(0, (endRef.current ?? 0) - Date.now())
       const m = Math.floor(diff / 60_000)
       const s = Math.floor((diff % 60_000) / 1000)
       setDisplay(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`)

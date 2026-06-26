@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from '../../../app/providers/AuthProvider'
+import { useAuth } from '../../../app/providers/authContext'
 import { useScrollLock } from '../../hooks'
 import styles from './RoomLoader.module.css'
 
@@ -37,22 +37,33 @@ export function RoomLoader() {
   const [shown, setShown] = useState(false)
   useScrollLock(mounted)
 
-  // Mount + fade in, then fade out + unmount, following `preparing`.
+  // Mount + reset on one frame, fade in on the next; fade out + unmount when
+  // preparing ends. State changes run inside rAF/timeout callbacks (not the
+  // effect body) so they don't fire synchronously during the effect.
   useEffect(() => {
     if (preparing) {
-      setMounted(true)
-      const raf = requestAnimationFrame(() => setShown(true))
-      return () => cancelAnimationFrame(raf)
+      let fadeRaf = 0
+      const mountRaf = requestAnimationFrame(() => {
+        setMounted(true)
+        setStep(0)
+        fadeRaf = requestAnimationFrame(() => setShown(true))
+      })
+      return () => {
+        cancelAnimationFrame(mountRaf)
+        cancelAnimationFrame(fadeRaf)
+      }
     }
-    setShown(false)
+    const fadeRaf = requestAnimationFrame(() => setShown(false))
     const t = window.setTimeout(() => setMounted(false), EXIT_MS)
-    return () => window.clearTimeout(t)
+    return () => {
+      cancelAnimationFrame(fadeRaf)
+      window.clearTimeout(t)
+    }
   }, [preparing])
 
   // Run the checklist sequence while preparing, then dismiss.
   useEffect(() => {
     if (!preparing) return
-    setStep(0)
     let current = 0
     const id = window.setInterval(() => {
       current += 1

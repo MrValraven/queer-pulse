@@ -118,7 +118,7 @@ export function CancelMembershipPage() {
             <div className={styles.reasonList}>
               {REASONS.map((r) => (
                 <label key={r.id} className={`${styles.reason} ${checked.has(r.id) ? styles.reasonChecked : ''}`}>
-                  <input type="checkbox" checked={checked.has(r.id)} onChange={(e) => setChecked((prev) => { const n = new Set(prev); e.target.checked ? n.add(r.id) : n.delete(r.id); return n })} />
+                  <input type="checkbox" checked={checked.has(r.id)} onChange={(e) => setChecked((prev) => { const n = new Set(prev); if (e.target.checked) n.add(r.id); else n.delete(r.id); return n })} />
                   <div className={styles.reasonText}>{r.label}</div>
                 </label>
               ))}

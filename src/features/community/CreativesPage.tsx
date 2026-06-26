@@ -9,7 +9,8 @@ import {
   MUSIC_ARTISTS,
   MUSIC_FILTERS,
 } from './creatives.data'
-import { ArtCard, MusicCard, badgeClass } from './CreativesCards'
+import { ArtCard, MusicCard } from './CreativesCards'
+import { badgeClass } from './creativesBadge'
 import styles from './CreativesPage.module.css'
 
 export function CreativesPage() {

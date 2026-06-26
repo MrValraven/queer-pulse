@@ -54,6 +54,11 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
+      // Underscore-prefixed args/vars are intentional throwaways.
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+      ],
       // Conventions from CLAUDE.md, enforced in CI:
       // 1. Icons over emoji (hard error — protects the icon sweep).
       'local/no-emoji': 'error',
@@ -78,5 +83,10 @@ export default defineConfig([
       'src/features/marketing/CitiesPage.tsx',
     ],
     rules: { 'local/no-emoji': 'off' },
+  },
+  // routes.tsx is a flat route registry, not a component — the line limit doesn't apply.
+  {
+    files: ['src/app/routes.tsx'],
+    rules: { 'max-lines-per-function': 'off' },
   },
 ])

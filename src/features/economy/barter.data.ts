@@ -1,4 +1,5 @@
 import type { AvatarTint } from '../../shared/components/ui/Avatar'
+import { memberProfiles } from '../members/data/memberProfiles'
 
 export type Mode = 'offering' | 'seeking' | 'both'
 
@@ -54,6 +55,14 @@ export const CATS = [
 ]
 
 export const BADGE: Record<Mode, string> = { offering: 'Offering', seeking: 'Seeking', both: 'Offering & seeking' }
+
+export function getMemberInfo(b: Barter): { name: string; initials: string; tint: AvatarTint; hood: string } {
+  if (b.member && memberProfiles[b.member]) {
+    const m = memberProfiles[b.member]
+    return { name: `${m.first} ${m.last}`, initials: m.initials, tint: m.tint, hood: m.hood }
+  }
+  return { name: b.name ?? '—', initials: b.initials ?? '?', tint: (b.tint ?? 'jade') as AvatarTint, hood: b.hood ?? '' }
+}
 
 export const PRINCIPLES = [
   { title: 'No money', body: 'Every exchange is peer-to-peer. Value is set by the people involved, not the platform.' },

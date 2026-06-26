@@ -4,7 +4,8 @@ import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import type { CommunityDetail, Person, Thread as ThreadData } from './communityDetails'
-import { AV_CLASS, CommunityThread } from './CommunityThread'
+import { CommunityThread } from './CommunityThread'
+import { AV_CLASS } from './communityAvatar'
 import styles from './CommunityDetailPage.module.css'
 
 const GATHERING = routes.gathering

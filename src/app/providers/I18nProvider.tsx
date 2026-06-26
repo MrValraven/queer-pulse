@@ -1,5 +1,4 @@
 import {
-  createContext,
   useCallback,
   useEffect,
   useMemo,
@@ -9,13 +8,7 @@ import {
 import { en } from '../../shared/i18n/strings.en'
 import { translate } from '../../shared/i18n/translate'
 import type { Language, StringCatalog } from '../../shared/i18n/types'
-
-interface I18nContextValue {
-  language: Language
-  setLanguage: (language: Language) => void
-  /** Translate a catalog key, falling back to the key when missing. */
-  t: (key: string) => string
-}
+import { I18nContext } from './i18nContext'
 
 const STORAGE_KEY = 'qp-lang'
 
@@ -24,8 +17,6 @@ const catalogs: Record<Language, StringCatalog> = {
   en,
   pt: {},
 }
-
-export const I18nContext = createContext<I18nContextValue | null>(null)
 
 function getInitialLanguage(): Language {
   if (typeof window === 'undefined') return 'en'

@@ -246,7 +246,7 @@ export function Signoff() {
           <div className={styles.signName}>Catarina Vaz</div>
           <div className={styles.signRole}>Co-treasurer · drafted finance + mistakes</div>
         </div>
-        <div className={styles.signAv} style={{ background: 'rgba(var(--jade-rgb),.18)', color: '#7cd7ad' }}>AB</div>
+        <div className={styles.signAv} style={{ background: 'rgba(var(--jade-rgb),.18)', color: 'var(--jade-soft)' }}>AB</div>
         <div>
           <div className={styles.signName}>André Bento</div>
           <div className={styles.signRole}>Co-treasurer · drafted moderation + governance</div>

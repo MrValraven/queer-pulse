@@ -18,6 +18,13 @@
   /* ── Jade (success / live / verified) ── */
   --jade:     #4A8C6F;
   --jade-rgb: 74, 140, 111;
+  --jade-soft: #7CD7AD;   /* light jade — text/icons on jade-tinted surfaces */
+
+  /* ── Amber (warning / medium states) ── */
+  --amber:    #E8B44A;
+
+  /* ── Soft accent (light coral — text/icons on accent-tinted surfaces) ── */
+  --accent-soft: #FFC4AF;
 
   /* ── Violet (Culture category accent — design/digital) ── */
   --violet:     #7A52B8;

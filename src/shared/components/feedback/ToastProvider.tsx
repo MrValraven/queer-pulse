@@ -1,5 +1,4 @@
 import {
-  createContext,
   useCallback,
   useMemo,
   useRef,
@@ -8,9 +7,8 @@ import {
   type ReactNode,
 } from 'react'
 import { FiCheck, FiX, FiInfo } from 'react-icons/fi'
+import { ToastContext, type ToastType } from './toastContext'
 import styles from './Toast.module.css'
-
-export type ToastType = 'success' | 'error' | 'info'
 
 interface ToastItem {
   id: number
@@ -18,12 +16,6 @@ interface ToastItem {
   type: ToastType
   leaving: boolean
 }
-
-interface ToastContextValue {
-  showToast: (message: string, type?: ToastType, durationMs?: number) => void
-}
-
-export const ToastContext = createContext<ToastContextValue | null>(null)
 
 const ICONS: Record<ToastType, ComponentType> = {
   success: FiCheck,

@@ -7,7 +7,7 @@ import {
   DEFAULT_PREFS,
   type A11yPrefs,
   type ColorTheme,
-} from './AccessibilityPreferencesPage'
+} from './accessibilityPreferences.data'
 import {
   A11yDisplaySection,
   A11yMotionSection,

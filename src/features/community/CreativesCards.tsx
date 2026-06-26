@@ -2,13 +2,8 @@ import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { MusicPlayer } from './MusicPlayer'
 import { PROFILE, TINT_BG, TINT_FG, type ArtWork, type MusicArtist } from './creatives.data'
+import { badgeClass } from './creativesBadge'
 import styles from './CreativesPage.module.css'
-
-export function badgeClass(b: string) {
-  if (b.includes('commission') || b.includes('bookings')) return styles.cbCommission
-  if (b.includes('exhibition') || b.includes('live')) return styles.cbExhibition
-  return styles.cbCollab
-}
 
 export function ArtCard({ w }: { w: ArtWork }) {
   return (

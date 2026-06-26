@@ -72,38 +72,44 @@ function SectionHead({
   );
 }
 
+function MagazineMasthead() {
+  return (
+    <div className={styles.masthead}>
+      <div className="wrap">
+        <div className={styles.mmTop}>
+          <div className={styles.mmBrand}>
+            Queer<em>Pulse</em>
+            <br />
+            Magazine
+          </div>
+          <div className={styles.mmMeta}>
+            <div className={styles.mmIssue}>Issue 18</div>
+            <div className={styles.mmDate}>June 2026</div>
+            <div className={styles.mmTagline}>
+              Published the first of every month
+            </div>
+          </div>
+        </div>
+        <nav className={styles.magNav}>
+          {NAV.map((label) => (
+            <a
+              key={label}
+              className={styles.mnLink}
+              href={`#${label.toLowerCase().replace(/\s+/g, "-")}`}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+}
+
 export function MagazinePage() {
   return (
     <PageShell>
-      <div className={styles.masthead}>
-        <div className="wrap">
-          <div className={styles.mmTop}>
-            <div className={styles.mmBrand}>
-              Queer<em>Pulse</em>
-              <br />
-              Magazine
-            </div>
-            <div className={styles.mmMeta}>
-              <div className={styles.mmIssue}>Issue 18</div>
-              <div className={styles.mmDate}>June 2026</div>
-              <div className={styles.mmTagline}>
-                Published the first of every month
-              </div>
-            </div>
-          </div>
-          <nav className={styles.magNav}>
-            {NAV.map((label) => (
-              <a
-                key={label}
-                className={styles.mnLink}
-                href={`#${label.toLowerCase().replace(/\s+/g, "-")}`}
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      </div>
+      <MagazineMasthead />
 
       <MagazineCover />
 
@@ -275,7 +281,7 @@ export function MagazinePage() {
               size="lg"
               style={{
                 background: "var(--accent)",
-                color: "#fff",
+                color: "var(--cream)",
                 borderRadius: 999,
                 padding: "15px 30px",
                 fontWeight: 600,

@@ -5,7 +5,7 @@ import { routes } from '../../app/routeMap'
 import { memberProfiles } from '../members/data/memberProfiles'
 import type { Community } from '../homepage/data/types'
 import type { CommunityDetail, Tint } from './communityDetails'
-import { AV_CLASS } from './CommunityThread'
+import { AV_CLASS } from './communityAvatar'
 import styles from './CommunityDetailPage.module.css'
 
 const GATHERING = routes.gathering

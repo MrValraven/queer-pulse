@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { useAuth } from '../../app/providers/AuthProvider'
+import { useAuth } from '../../app/providers/authContext'
 import { AuthLayout } from './AuthLayout'
 import styles from './auth.module.css'
 

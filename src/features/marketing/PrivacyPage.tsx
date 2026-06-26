@@ -1,4 +1,5 @@
-import { LegalDoc, legalStyles as s, type LegalSection } from "./LegalDoc";
+import { LegalDoc, type LegalSection } from "./LegalDoc";
+import s from "./LegalDoc.module.css";
 
 const SECTIONS: LegalSection[] = [
   { id: "who-we-are", title: "1. Who we are", body: (<>

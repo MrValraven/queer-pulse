@@ -82,7 +82,7 @@ export function CollectionsSection() {
             </h3>
             <p>{c.desc}</p>
             <div className={styles.collBy}>
-              <span className="av" style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(232,119,90,.22)', color: '#ffc4af', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--serif)', fontSize: 10 }}>
+              <span className="av" style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(232,119,90,.22)', color: 'var(--accent-soft)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--serif)', fontSize: 10 }}>
                 {c.av}
               </span>
               {c.by}

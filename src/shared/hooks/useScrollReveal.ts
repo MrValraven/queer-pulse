@@ -12,10 +12,8 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>() {
   const [isVisible, setIsVisible] = useState(prefersReduced)
 
   useEffect(() => {
-    if (prefersReduced) {
-      setIsVisible(true)
-      return
-    }
+    // Reduced motion: already visible via the initial state — no observer needed.
+    if (prefersReduced) return
     const node = ref.current
     if (!node) return
 

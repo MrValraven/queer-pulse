@@ -1,5 +1,5 @@
 import { type RefCallback } from 'react'
-import { type A11yPrefs } from './AccessibilityPreferencesPage'
+import { type A11yPrefs } from './accessibilityPreferences.data'
 import styles from './AccessibilityPreferencesPage.module.css'
 
 type ToggleKey = keyof A11yPrefs

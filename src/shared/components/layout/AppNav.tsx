@@ -1,7 +1,7 @@
 import { Link, NavLink } from 'react-router-dom'
 import { Button } from '../ui'
 import { useScrolled } from '../../hooks/useScrolled'
-import { useTheme } from '../../../app/providers/ThemeProvider'
+import { useTheme } from '../../../app/providers/themeContext'
 import { AccountMenu } from './AccountMenu'
 import styles from './AppNav.module.css'
 

@@ -2,10 +2,9 @@ import { useState } from 'react'
 import { FiMessageCircle } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import type { Thread as ThreadData, Tint } from './communityDetails'
+import type { Thread as ThreadData } from './communityDetails'
+import { AV_CLASS } from './communityAvatar'
 import styles from './CommunityDetailPage.module.css'
-
-export const AV_CLASS: Record<Tint, string> = { coral: styles.tCoral, jade: styles.tJade, plum: styles.tPlum }
 
 export function CommunityThread({ data }: { data: ThreadData }) {
   const { showToast } = useToast()

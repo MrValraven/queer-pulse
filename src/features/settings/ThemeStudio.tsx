@@ -9,8 +9,8 @@ import {
 } from './profileTheme.data'
 import styles from './ProfileThemePage.module.css'
 
-export function buildCoverBg(colors: string[], coverStyle: CoverStyle, pattern: PatternKey): string {
-  let gradient = ''
+function buildCoverBg(colors: string[], coverStyle: CoverStyle, pattern: PatternKey): string {
+  let gradient: string
   if (coverStyle === 'gradient') {
     gradient = `linear-gradient(to right,${colors[0]},${colors[Math.floor(colors.length / 2)]})`
   } else if (coverStyle === 'stripe') {

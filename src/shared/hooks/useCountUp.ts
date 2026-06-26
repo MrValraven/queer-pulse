@@ -17,13 +17,9 @@ export function useCountUp(target: number, { active = true, durationMs = 1100 }:
   const startedRef = useRef(false)
 
   useEffect(() => {
-    if (!active || startedRef.current) return
+    // Reduced motion needs no animation — the value is derived in the return below.
+    if (!active || startedRef.current || prefersReduced) return
     startedRef.current = true
-
-    if (prefersReduced) {
-      setValue(target)
-      return
-    }
 
     let frame = 0
     const start = performance.now()
@@ -38,5 +34,6 @@ export function useCountUp(target: number, { active = true, durationMs = 1100 }:
     return () => cancelAnimationFrame(frame)
   }, [active, target, durationMs, prefersReduced])
 
-  return value
+  // Under reduced motion, jump straight to the target once active.
+  return prefersReduced && active ? target : value
 }

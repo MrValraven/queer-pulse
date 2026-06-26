@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Avatar } from '../ui'
-import { useAuth } from '../../../app/providers/AuthProvider'
+import { useAuth } from '../../../app/providers/authContext'
 import { routes } from '../../../app/routeMap'
 import { MEMBERS, memberName } from '../../../features/members/data/members'
 import styles from './AccountMenu.module.css'

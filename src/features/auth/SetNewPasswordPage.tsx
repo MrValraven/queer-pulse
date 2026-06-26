@@ -90,7 +90,7 @@ export function SetNewPasswordPage() {
                 <div key={i} className={[pageStyles.strengthSeg, i <= score ? COLORS[score] : ''].filter(Boolean).join(' ')} />
               ))}
             </div>
-            <div className={pageStyles.strengthLabel} style={{ color: score >= 3 ? 'var(--jade)' : score === 2 ? '#E8B44A' : score === 1 ? 'var(--accent-ink)' : 'var(--ink-40)' }}>
+            <div className={pageStyles.strengthLabel} style={{ color: score >= 3 ? 'var(--jade)' : score === 2 ? 'var(--amber)' : score === 1 ? 'var(--accent-ink)' : 'var(--ink-40)' }}>
               {strengthLabel}
             </div>
           </div>

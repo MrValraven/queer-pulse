@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { parseDur, seededHeights, type MusicArtist } from './creatives.data'
 import styles from './CreativesPage.module.css'
 
@@ -14,12 +14,11 @@ export function MusicPlayer({
   const [playing, setPlaying] = useState(false)
   const [trackIdx, setTrackIdx] = useState(0)
   const [progress, setProgress] = useState(0)
-  const heights = useRef(seededHeights(artist.id, 40)).current
+  const heights = useMemo(() => seededHeights(artist.id, 40), [artist.id])
   const duration = parseDur(artist.tracks[trackIdx].dur)
 
-  useEffect(() => {
-    if (!active && playing) setPlaying(false)
-  }, [active, playing])
+  // Stop playing if another player takes over (adjust state during render).
+  if (!active && playing) setPlaying(false)
 
   useEffect(() => {
     if (!playing) return

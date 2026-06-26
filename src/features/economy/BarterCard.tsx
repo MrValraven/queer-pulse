@@ -3,18 +3,8 @@ import { Link } from 'react-router-dom'
 import { Avatar } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
-import { type Barter, BADGE } from './barter.data'
-import { memberProfiles } from '../members/data/memberProfiles'
-import type { AvatarTint } from '../../shared/components/ui/Avatar'
+import { type Barter, BADGE, getMemberInfo } from './barter.data'
 import styles from './BarterPage.module.css'
-
-export function getMemberInfo(b: Barter): { name: string; initials: string; tint: AvatarTint; hood: string } {
-  if (b.member && memberProfiles[b.member]) {
-    const m = memberProfiles[b.member]
-    return { name: `${m.first} ${m.last}`, initials: m.initials, tint: m.tint, hood: m.hood }
-  }
-  return { name: b.name ?? '—', initials: b.initials ?? '?', tint: (b.tint ?? 'jade') as AvatarTint, hood: b.hood ?? '' }
-}
 
 interface Props {
   barter: Barter
