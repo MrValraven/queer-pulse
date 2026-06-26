@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { FiBookOpen } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, EmptyState, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import {
@@ -90,9 +91,19 @@ export function ReadingGroupsPage() {
         <div className="wrap">
           <div className={styles.grid}>
             {items.length === 0 && (
-              <div className={styles.empty}>
-                <p>No groups match — try different filters, or start your own.</p>
-              </div>
+              <EmptyState
+                className={styles.empty}
+                icon={<FiBookOpen />}
+                title="No groups match those filters"
+                description="Nothing fits this genre and format combination yet — try widening your filters, or start a group around the book you want to read."
+                action={{
+                  label: 'Clear filters',
+                  onClick: () => {
+                    setGenre('all')
+                    setFormat('all')
+                  },
+                }}
+              />
             )}
             {items.map((g) => (
               <ReadingGroupCard

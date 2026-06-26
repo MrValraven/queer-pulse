@@ -3,6 +3,7 @@ import { FiAlertOctagon } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { useConnect } from '../../app/providers/ConnectProvider'
 import { ResourceHero } from './ResourceHero'
 import styles from './resources.module.css'
 
@@ -68,6 +69,7 @@ function RightsSection({ id, title, lead, cream, rights }: { id: string; title: 
 }
 
 export function LegalPage() {
+  const { openConnect } = useConnect()
   return (
     <PageShell>
       <ResourceHero
@@ -128,9 +130,20 @@ export function LegalPage() {
                 </div>
                 <div className={styles.cardFoot}>
                   <span className={styles.cardLoc}>{lawyer.loc}</span>
-                  <Link to="/connect" className={styles.cardCta}>
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    className={styles.cardCta}
+                    onClick={() => openConnect()}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault()
+                        openConnect()
+                      }
+                    }}
+                  >
                     Request consultation →
-                  </Link>
+                  </span>
                 </div>
               </Reveal>
             ))}

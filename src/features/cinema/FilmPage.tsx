@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { ImageSlot } from '../../shared/components/ui'
-import { films } from './data'
+import { ImageSlot, Tag } from '../../shared/components/ui'
+import { films, filmRelationReason } from './data'
 import { FilmBody } from './FilmBody'
 import { FilmHero } from './FilmHero'
 import styles from './FilmPage.module.css'
@@ -88,6 +88,7 @@ export function FilmPage() {
                   {film.titlePost}
                 </div>
                 <div className={styles.rfMeta}>{film.meta}</div>
+                <Tag className={styles.rfReason}>{filmRelationReason(film)}</Tag>
               </Link>
             ))}
           </div>

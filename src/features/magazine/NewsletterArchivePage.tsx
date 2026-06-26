@@ -1,17 +1,32 @@
-import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { TABS, type Stream } from './newsletterArchive.data'
+import { routes } from '../../app/routeMap'
+import { MagazineMasthead } from './MagazineMasthead'
+import {
+  LATEST,
+  STREAM_SLUG,
+  TABS,
+  streamFromSlug,
+  type Stream,
+} from './newsletterArchive.data'
 import { NewsletterArchiveList } from './NewsletterArchiveList'
+import { NewsletterSubscribe } from './NewsletterSubscribe'
 import styles from './NewsletterArchivePage.module.css'
 
 export function NewsletterArchivePage() {
-  const { showToast } = useToast()
-  const [stream, setStream] = useState<Stream | 'all'>('all')
+  const [params, setParams] = useSearchParams()
+  const stream = streamFromSlug(params.get('stream'))
+  const latest = LATEST[stream]
+
+  function selectStream(next: Stream | 'all') {
+    const slug = STREAM_SLUG[next]
+    setParams(slug === 'all' ? {} : { stream: slug })
+  }
 
   return (
     <PageShell>
+      <MagazineMasthead active="newsletter" />
       <div className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.heroInner}>
@@ -24,22 +39,7 @@ export function NewsletterArchivePage() {
               companion, and a Trans Hub bulletin. All free. Read any of them here — or
               subscribe and we'll send them straight.
             </p>
-            <form
-              className={styles.sub}
-              onSubmit={(e) => {
-                e.preventDefault()
-                showToast('Almost there — check your inbox', 'success')
-              }}
-            >
-              <input type="email" placeholder="you@example.com" required />
-              <Button variant="primary" type="submit">
-                Subscribe →
-              </Button>
-            </form>
-            <p className={styles.subFoot}>
-              Pick which newsletters you want in step 2. Unsubscribe one-tap from any
-              email. We never share your address.
-            </p>
+            <NewsletterSubscribe stream={stream} />
             <div className={styles.stats}>
               <span><b><em>78</em></b>Issues in the archive</span>
               <span><b>3</b>Active newsletter streams</span>
@@ -49,15 +49,17 @@ export function NewsletterArchivePage() {
           </div>
         </section>
 
-        <div className={styles.tabs}>
+        <div className={styles.tabs} role="tablist" aria-label="Newsletter streams">
           {TABS.map((t) => (
             <button
               key={t.id}
               type="button"
+              role="tab"
+              aria-selected={stream === t.id}
               className={[styles.tab, stream === t.id && styles.tabActive]
                 .filter(Boolean)
                 .join(' ')}
-              onClick={() => setStream(t.id)}
+              onClick={() => selectStream(t.id)}
             >
               {t.label} <span className={styles.badge}>{t.count}</span>
             </button>
@@ -68,28 +70,20 @@ export function NewsletterArchivePage() {
           <div className={styles.latestCard}>
             <div className={styles.latestInner}>
               <div>
-                <div className={styles.latestMeta}>
-                  Latest · sent yesterday · 8,420 inboxes
-                </div>
-                <h2>
-                  The summer slowdown <em>edition.</em>
-                </h2>
-                <p>
-                  What we're reading, who's hosting in July, the new vetted-therapist
-                  list, and the back room of Café Beirão schedule. Plus: Sara's cover
-                  piece pulled into a shorter take.
-                </p>
+                <div className={styles.latestMeta}>{latest.meta}</div>
+                <h2>{latest.title}</h2>
+                <p>{latest.dek}</p>
                 <div className={styles.latestInfo}>
-                  <span>Community dispatch · <b>Issue 52</b></span>
-                  <span>Sent <b>8 Jun 2026</b></span>
-                  <span>Read time <b>~ 8 min</b></span>
-                  <span>Open rate <b>61%</b></span>
+                  {latest.info.map((i) => (
+                    <span key={i.label}>
+                      {i.label} <b>{i.value}</b>
+                    </span>
+                  ))}
                 </div>
               </div>
               <Button
-                type="button"
                 variant="primary"
-                onClick={() => showToast('Opening in browser…', 'info')}
+                to={`${routes.newsletterArchive}/${latest.num}`}
               >
                 Read in browser →
               </Button>

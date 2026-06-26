@@ -240,6 +240,22 @@ export function PricingStep({ form }: { form: GatheringForm }) {
 
 export function ReviewStep({ form }: { form: GatheringForm }) {
   const TypeIcon = form.typeIcon
+  const accessList = [...form.access]
+  const accessVal =
+    accessList.length || form.accessNotes.trim() ? (
+      <span className={styles.reviewAccess}>
+        {accessList.map((a) => (
+          <span key={a} className={styles.reviewAccessTag}>
+            <FiCheck /> {a}
+          </span>
+        ))}
+        {form.accessNotes.trim() && (
+          <span className={styles.reviewAccessNote}>{form.accessNotes.trim()}</span>
+        )}
+      </span>
+    ) : (
+      <span className={styles.reviewAccessEmpty}>None specified yet — add what you can confirm</span>
+    )
   const review = [
     { l: 'Type', v: <>{TypeIcon && <TypeIcon />} <strong>{form.type || '—'}</strong></> },
     { l: 'Title', v: <strong>{form.title || '—'}</strong> },
@@ -247,6 +263,7 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
     { l: 'Location', v: `${form.venue || '—'}, ${form.hood || '—'}` },
     { l: 'Capacity', v: `${form.cap || '—'} people · ${form.lang}` },
     { l: 'Pricing', v: form.free ? 'Free event' : `Sliding scale · Free / €${form.stdPrice || '—'} / €${form.supPrice || '—'}` },
+    { l: 'Accessibility', v: accessVal },
   ]
   const remaining = 3 - form.checkedCount
   return (

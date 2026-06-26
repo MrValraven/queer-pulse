@@ -7,14 +7,10 @@ export const ONBOARDING_PREVIEW = [
   { title: 'Find your communities', desc: 'Join the groups that match what you care about.' },
 ];
 
-export const STEP_LABELS = [
-  'Step 1 of 6',
-  'Step 2 of 6',
-  'Step 3 of 6 · Community norms',
-  'Step 4 of 6 · What brings you here',
-  'Step 5 of 6 · Communities',
-  "You're all set!",
-];
+// Total number of onboarding steps, including the warm intro (counted as step 1)
+// and the final "you're all set" screen. Used to render an honest, linear
+// "Step X of N" indicator and progress bar across every step.
+export const TOTAL_STEPS = 7;
 
 export const NORMS = [
   { title: 'Be present', desc: "Give conversations your genuine attention. Scrolling past is fine; engaging half-heartedly isn't." },

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FiAward } from 'react-icons/fi'
+import { FiAward, FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -93,6 +93,18 @@ export function CreateGatheringPage() {
                     It's now visible on the QueerPulse gatherings board. Members can see it and RSVP.
                     You'll get an email notification for each new attendee.
                   </p>
+                  {form.access.size > 0 && (
+                    <div className={styles.successAccess}>
+                      <span className={styles.successAccessLbl}>Accessibility shown to attendees</span>
+                      <div className={styles.successAccessTags}>
+                        {[...form.access].map((a) => (
+                          <span key={a} className={styles.successAccessTag}>
+                            <FiCheck /> {a}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className={styles.successActions}>
                     <Button to={routes.gathering} variant="ghost-dark">
                       View on board →

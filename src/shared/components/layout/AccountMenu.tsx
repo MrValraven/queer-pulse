@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Avatar } from '../ui'
 import { useAuth } from '../../../app/providers/authContext'
 import { routes } from '../../../app/routeMap'
-import { MEMBERS, memberName } from '../../../features/members/data/members'
+import { currentUser, fullName } from '../../../features/members/data/members'
 import styles from './AccountMenu.module.css'
 
 const ITEMS = [
@@ -11,11 +11,13 @@ const ITEMS = [
   { label: 'Messages', to: routes.messages },
   { label: 'My profile', to: routes.accountProfile },
   { label: 'Your connections', to: routes.connections },
+  { label: 'Your applications', to: routes.applicationStatus },
+  { label: 'Your Work', to: routes.work },
   { label: 'Settings', to: routes.settings },
 ]
 
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
-export function AccountMenu({ name = memberName('sofia'), initials = MEMBERS.sofia.initials }: { name?: string; initials?: string }) {
+export function AccountMenu({ name = fullName(currentUser), initials = currentUser.initials }: { name?: string; initials?: string }) {
   const { signOut } = useAuth()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)

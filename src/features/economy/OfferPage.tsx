@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
+import { useConnect } from "../../app/providers/ConnectProvider";
 import styles from "./OfferPage.module.css";
 import { Button } from '../../shared/components/ui'
 import { MEMBERS, memberName } from '../members/data/members'
@@ -44,7 +45,7 @@ const OTHERS: { slug: string; kind: Kind; title: string; by: string }[] = [
 export function OfferPage() {
   const o = MAIN;
   const owner = o.owner;
-  const connect = routes.connect;
+  const { openConnect } = useConnect();
   const profile = routes.members;
   const offer = routes.offer;
 
@@ -63,7 +64,7 @@ export function OfferPage() {
               <h1 className={styles.title}>{o.title}</h1>
               <p className={styles.body}>{o.body}</p>
               <div className={styles.cta}>
-                <Button to={connect} variant="primary" size="lg">
+                <Button onClick={() => openConnect('ines')} variant="primary" size="lg">
                   Respond to {owner.first} →
                 </Button>
                 <Button to={profile} variant="ghost" size="lg">
@@ -93,7 +94,7 @@ export function OfferPage() {
                 {owner.verified ? " and has been verified by the team" : ""}. Every
                 member is vouched for by someone already in the room.
               </div>
-              <Button to={connect} variant="primary" className={styles.sidebarBtn}>
+              <Button onClick={() => openConnect('ines')} variant="primary" className={styles.sidebarBtn}>
                 Say hello to {owner.first}
               </Button>
             </aside>

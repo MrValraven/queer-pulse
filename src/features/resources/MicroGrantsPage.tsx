@@ -2,19 +2,19 @@ import { useState } from 'react'
 import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { CRITERIA, CURRENT, HOW, PANEL, PAST, RULES } from './microGrants.data'
 import { GrantCard } from './GrantCard'
 import { GrantApplicationModal } from './GrantApplicationModal'
+import { PanelSignupModal } from './PanelSignupModal'
 import { ContributeStrip, MicroGrantsHero } from './MicroGrantsSections'
 import styles from './MicroGrantsPage.module.css'
 
 const INVITE = routes.invite
 
 export function MicroGrantsPage() {
-  const { showToast } = useToast()
   const [open, setOpen] = useState(false)
+  const [panelOpen, setPanelOpen] = useState(false)
 
   return (
     <PageShell>
@@ -127,7 +127,7 @@ export function MicroGrantsPage() {
                 type="button"
                 variant="ghost"
                 className={styles.sbcBtn}
-                onClick={() => showToast('Opening panel sign-up…', 'info')}
+                onClick={() => setPanelOpen(true)}
               >
                 Join the review panel →
               </Button>
@@ -148,6 +148,7 @@ export function MicroGrantsPage() {
       </Outro>
 
       {open && <GrantApplicationModal onClose={() => setOpen(false)} />}
+      {panelOpen && <PanelSignupModal onClose={() => setPanelOpen(false)} />}
     </PageShell>
   )
 }

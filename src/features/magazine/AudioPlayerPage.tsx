@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { type TabId } from './audioPlayer.data'
+import { useAudioPlayer } from './useAudioPlayer'
 import { AudioPlayerMain } from './AudioPlayerMain'
 import { ChaptersTab, NotesTab, TranscriptTab } from './AudioPlayerTabs'
 import styles from './AudioPlayerPage.module.css'
 
 export function AudioPlayerPage() {
   const [tab, setTab] = useState<TabId>('notes')
+  const player = useAudioPlayer()
 
   return (
     <div className={styles.page}>
-      <AudioPlayerMain />
+      <AudioPlayerMain player={player} />
 
       <section className={styles.below}>
         <div className={styles.tabs}>
@@ -25,8 +27,8 @@ export function AudioPlayerPage() {
         </div>
 
         {tab === 'notes' && <NotesTab />}
-        {tab === 'chapters' && <ChaptersTab />}
-        {tab === 'transcript' && <TranscriptTab />}
+        {tab === 'chapters' && <ChaptersTab player={player} />}
+        {tab === 'transcript' && <TranscriptTab player={player} />}
       </section>
     </div>
   )

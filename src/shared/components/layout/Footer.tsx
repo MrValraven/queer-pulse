@@ -84,7 +84,7 @@ const BASE_LINKS: FooterLink[] = [
   },
   { label: "Governance", href: routes.governance },
   { label: "Community guidelines", href: routes.guidelines },
-  { label: "Privacy", href: routes.safety },
+  { label: "Privacy", href: routes.privacy },
   { label: "Cookies", href: routes.cookies },
   { label: "Data export", href: routes.dataExport },
   { label: "Security", href: routes.security },

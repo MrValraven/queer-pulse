@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
+import { MagazineMasthead } from "./MagazineMasthead";
 import styles from "./StoryPage.module.css";
 import { memberName } from "../members/data/members";
 import { StoryArticle } from "./StoryArticle";
@@ -12,6 +13,7 @@ const INVITE = routes.invite;
 export function StoryPage() {
   return (
     <PageShell>
+      <MagazineMasthead active="stories" />
       <div className={styles.hero}>
         <div className={styles.heroOverlay} />
         <div className={styles.heroLabel}>

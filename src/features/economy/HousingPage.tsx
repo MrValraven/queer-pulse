@@ -3,9 +3,9 @@ import { FiAward, FiStar } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, ImageSlot, Reveal, SectionHead } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
 import { HOUSING_LISTINGS as LISTINGS } from './housingListings'
 import { LANDLORDS } from './landlords'
+import { ListSpaceModal } from './ListSpaceModal'
 import styles from './HousingPage.module.css'
 
 const FILTERS = [
@@ -26,8 +26,8 @@ const TIPS = [
 ]
 
 export function HousingPage() {
-  const { showToast } = useToast()
   const [filter, setFilter] = useState('all')
+  const [listing, setListing] = useState(false)
   const visible = useMemo(() => (filter === 'all' ? LISTINGS : LISTINGS.filter((l) => l.type === filter)), [filter])
 
   return (
@@ -65,7 +65,7 @@ export function HousingPage() {
                 </button>
               ))}
             </Reveal>
-            <Reveal as="button" className={styles.listBtn} delay={60} onClick={() => showToast('Listing submitted', 'info')}>
+            <Reveal as="button" className={styles.listBtn} delay={60} onClick={() => setListing(true)}>
               + List your space
             </Reveal>
           </div>
@@ -144,6 +144,8 @@ export function HousingPage() {
           </div>
         </div>
       </section>
+
+      {listing && <ListSpaceModal onClose={() => setListing(false)} />}
     </PageShell>
   )
 }

@@ -1,7 +1,16 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCalendar } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Eyebrow, Reveal, SectionHead, Tag } from '../../shared/components/ui'
+import {
+  Button,
+  EmptyState,
+  Eyebrow,
+  Reveal,
+  SectionHead,
+  SkeletonLine,
+  Tag,
+} from '../../shared/components/ui'
 import { calendarEvents, type CalendarEvent } from './data'
 import { MONTHS, MSHORT } from './calendar.data'
 import { EVENT_CATEGORIES, eventsHeader } from './eventsPage.data'
@@ -39,8 +48,29 @@ function EventCard({ event }: { event: CalendarEvent }) {
   )
 }
 
+function EventSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden>
+      <div className={styles.date}>
+        <SkeletonLine width={28} height={28} />
+      </div>
+      <div className={styles.cardBody} style={{ flex: 1 }}>
+        <SkeletonLine width="35%" height={12} />
+        <SkeletonLine width="80%" height={18} style={{ marginTop: 10 }} />
+        <SkeletonLine width="55%" height={12} style={{ marginTop: 10 }} />
+      </div>
+    </div>
+  )
+}
+
 export function EventsPage() {
   const [active, setActive] = useState('all')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 600)
+    return () => clearTimeout(t)
+  }, [])
 
   const filtered = useMemo(() => {
     const cat = EVENT_CATEGORIES.find((c) => c.key === active)
@@ -98,21 +128,37 @@ export function EventsPage() {
             ))}
           </div>
 
-          {months.map(([label, events]) => (
-            <section key={label} className={styles.group}>
-              <h2 className={styles.groupTitle}>{label}</h2>
-              <div className={styles.list}>
-                {events.map((event, index) => (
-                  <Reveal key={`${event.title}-${event.date.toISOString()}`} delay={index * 40}>
-                    <EventCard event={event} />
-                  </Reveal>
-                ))}
-              </div>
-            </section>
-          ))}
+          {loading ? (
+            <div className={styles.list}>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <EventSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <>
+              {months.map(([label, events]) => (
+                <section key={label} className={styles.group}>
+                  <h2 className={styles.groupTitle}>{label}</h2>
+                  <div className={styles.list}>
+                    {events.map((event, index) => (
+                      <Reveal key={`${event.title}-${event.date.toISOString()}`} delay={index * 40}>
+                        <EventCard event={event} />
+                      </Reveal>
+                    ))}
+                  </div>
+                </section>
+              ))}
 
-          {filtered.length === 0 && (
-            <p className={styles.empty}>No events in this category yet.</p>
+              {filtered.length === 0 && (
+                <EmptyState
+                  icon={<FiCalendar />}
+                  title="Nothing in this category yet"
+                  description="No events match this filter for the season. Try another category, or browse everything that's on."
+                  action={{ label: 'Show all events', onClick: () => setActive('all') }}
+                  secondaryAction={{ label: 'View as calendar', to: '/calendar' }}
+                />
+              )}
+            </>
           )}
         </div>
       </main>

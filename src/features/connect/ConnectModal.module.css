@@ -1,0 +1,308 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 31, 0.55);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  padding: 24px 16px 0;
+}
+.modal {
+  background: var(--paper);
+  border-radius: 28px 28px 0 0;
+  width: 100%;
+  max-width: 560px;
+  padding: 44px 48px 48px;
+  position: relative;
+  max-height: 92vh;
+  overflow-y: auto;
+  animation: connectUp 0.4s cubic-bezier(0.22, 0.68, 0.16, 1);
+}
+@keyframes connectUp {
+  from {
+    transform: translateY(40px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(45, 27, 61, 0.07);
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--ink-60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s var(--ease);
+}
+.close:hover {
+  background: rgba(45, 27, 61, 0.14);
+}
+
+.toRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+}
+.toName {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+.toRole {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  margin-top: 3px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 38px;
+  color: var(--plum);
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  margin-bottom: 8px;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  font-size: 15px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  letter-spacing: 0.02em;
+}
+.req {
+  color: var(--accent);
+  margin-left: 1px;
+}
+.field input:disabled,
+.field textarea:disabled,
+.field select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.field input,
+.field textarea,
+.field select {
+  font-family: var(--sans);
+  font-size: 15.5px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border-radius: 12px;
+  padding: 13px 15px;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+  outline: none;
+  width: 100%;
+}
+.field textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: var(--plum);
+  box-shadow: 0 0 0 4px rgba(45, 27, 61, 0.08);
+  background: var(--paper);
+}
+.note {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+}
+.back {
+  font-size: 14px;
+  color: var(--ink-60);
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+.back:hover {
+  color: var(--plum);
+}
+.back:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Sending — inline spinner inside the Send button */
+.sending {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.spinner {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid rgba(247, 243, 238, 0.35);
+  border-top-color: var(--cream);
+  animation: connectSpin 0.7s linear infinite;
+}
+@keyframes connectSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success — plum-panel pattern per the design system */
+.modalSent {
+  background: var(--plum);
+  transition: background 0.45s var(--ease);
+}
+.modalSent .close {
+  background: rgba(247, 243, 238, 0.12);
+  color: var(--cream);
+}
+.modalSent .close:hover {
+  background: rgba(247, 243, 238, 0.22);
+}
+.sent {
+  text-align: center;
+  padding: 28px 4px 12px;
+}
+.tyIcon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(74, 140, 111, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 22px;
+  animation: connectPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes connectPop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* Draw the checkmark on after the icon pops in */
+.tyCheck {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: connectDraw 0.4s var(--ease) 0.32s forwards;
+}
+@keyframes connectDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Stagger the success copy + button in under the icon */
+.sent h2,
+.sent p,
+.sent :global(.btn),
+.sent a,
+.sent button {
+  animation: connectRise 0.5s var(--ease) both;
+}
+.sent h2 {
+  animation-delay: 0.18s;
+}
+.sent p {
+  animation-delay: 0.28s;
+}
+.sent > :last-child {
+  animation-delay: 0.38s;
+}
+@keyframes connectRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.sent h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 38px;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+}
+.sent h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sent p {
+  font-size: 15px;
+  color: rgba(247, 243, 238, 0.78);
+  margin: 16px 0 28px;
+  line-height: 1.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal,
+  .tyIcon,
+  .tyCheck,
+  .sent h2,
+  .sent p,
+  .sent > :last-child,
+  .spinner {
+    animation: none;
+  }
+  .tyCheck {
+    stroke-dashoffset: 0;
+  }
+}
+
+:global([data-theme='dark']) .modal {
+  border: 1px solid rgba(247, 243, 238, 0.1);
+}
+:global([data-theme='dark']) .modalSent {
+  border-color: transparent;
+}

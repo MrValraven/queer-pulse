@@ -411,6 +411,38 @@
 .reviewVal strong {
   color: var(--plum);
 }
+.reviewAccess {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.reviewAccessTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+  border-radius: 6px;
+  padding: 3px 9px;
+}
+.reviewAccessTag svg {
+  flex: none;
+}
+.reviewAccessNote {
+  flex-basis: 100%;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  font-style: italic;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+.reviewAccessEmpty {
+  font-size: 13.5px;
+  color: var(--ink-40);
+}
 
 .checkRow {
   display: flex;
@@ -553,6 +585,41 @@
   line-height: 1.7;
   max-width: 48ch;
   margin: 0 auto 28px;
+}
+.successAccess {
+  margin: 0 auto 28px;
+  max-width: 46ch;
+}
+.successAccessLbl {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(247, 243, 238, 0.5);
+  margin-bottom: 10px;
+}
+.successAccessTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  justify-content: center;
+}
+.successAccessTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--cream);
+  background: rgba(74, 140, 111, 0.28);
+  border: 1px solid rgba(74, 140, 111, 0.4);
+  border-radius: 7px;
+  padding: 4px 10px;
+}
+.successAccessTag svg {
+  flex: none;
+  color: var(--jade);
 }
 .successActions {
   display: flex;

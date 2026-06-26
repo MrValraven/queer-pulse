@@ -2,9 +2,12 @@ import { useState } from 'react'
 import { FaRainbow } from 'react-icons/fa6'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
+import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { JOBS } from './jobs.data'
+import { safetyFor } from './employerSafety.data'
+import { SafetyBadges } from './SafetyBadges'
 import { JobApplyForm } from './JobApplyForm'
 import styles from './JobDetailPage.module.css'
 
@@ -149,6 +152,22 @@ export function JobDetailPage() {
               <h2 className={styles.secTitle}>About {job.org}</h2>
               <p className={styles.text}>{d.aboutCompany}</p>
             </div>
+
+            {safetyFor(job.org) && (
+              <div className={styles.section}>
+                <h2 className={styles.secTitle}>Safety</h2>
+                <p className={styles.text}>
+                  How {job.org} is rated by the community on the things that matter to queer
+                  professionals.
+                </p>
+                <div className={styles.safetyBlock}>
+                  <SafetyBadges signals={safetyFor(job.org)} />
+                  <Button variant="ghost" to={routes.employerReviews}>
+                    See safety reviews →
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
 
           <aside className={styles.sidebar}>

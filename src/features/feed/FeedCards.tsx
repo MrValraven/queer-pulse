@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { FiBookmark, FiCheck } from 'react-icons/fi'
 import { Avatar } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useConnect } from '../../app/providers/ConnectProvider'
+import { memberAvatar } from '../members/data/members'
 import { routes } from '../../app/routeMap'
 import styles from './FeedPage.module.css'
 
@@ -36,12 +38,12 @@ export function GatheringCard() {
 }
 
 export function NewMemberCard() {
-  const { showToast } = useToast()
+  const { openConnect } = useConnect()
   return (
     <article className={`${styles.card} ${styles.pad}`}>
       <div className={styles.tag}><span className={styles.dot} /> New member</div>
       <div className={styles.nmRow}>
-        <Avatar initials="KL" tint="plum" size={46} />
+        <Avatar initials="KL" tint="plum" size={46} src={memberAvatar('kai')?.photo} alt="Kai Larsson" />
         <div className={styles.nmInfo}>
           <div className={styles.nmName}>Kai Larsson</div>
           <div className={styles.nmMeta}>they/them · Lisbon · Joined today</div>
@@ -54,7 +56,7 @@ export function NewMemberCard() {
             <span className={styles.nmChip}>Queer Lisbon</span>
           </div>
           <div className={styles.nmActions}>
-            <button className={styles.btnOutline} onClick={() => showToast('Request sent to Kai', 'success')}>Connect</button>
+            <button className={styles.btnOutline} onClick={() => openConnect('kai')}>Connect</button>
             <Link to="/profile/kai" className={styles.linkBtn}>View profile →</Link>
           </div>
         </div>

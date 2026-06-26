@@ -1,19 +1,30 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiCheck } from 'react-icons/fi';
+import { FiArrowRight, FiCheck } from 'react-icons/fi';
 import { Button, ImageSlot } from '../../shared/components/ui';
+import { currentUser } from '../members/data/members';
 import { NORMS, INTENTS, COMMUNITIES_LIST, QUICK_STARTS, ONBOARDING_PREVIEW } from './onboardingPage.data';
 import styles from './OnboardingPage.module.css';
 
 interface StepProps {
+  stepLabel: string;
   onNext: () => void;
   onBack: () => void;
 }
 
-export function StepIntro({ onNext }: { onNext: () => void }) {
+/** A clearly-styled "skip for now" affordance for non-critical steps. */
+function SkipLink({ onSkip, label = 'Skip for now — you can add this later' }: { onSkip: () => void; label?: string }) {
+  return (
+    <button type="button" className={styles.skip} onClick={onSkip}>
+      {label} <FiArrowRight aria-hidden />
+    </button>
+  );
+}
+
+export function StepIntro({ stepLabel, onNext }: { stepLabel: string; onNext: () => void }) {
   return (
     <>
-      <div className={styles.eye}>Welcome to QueerPulse</div>
+      <div className={styles.eye}>{stepLabel} · Welcome to QueerPulse</div>
       <div className={styles.h}>
         Let's start your <em>onboarding</em>
       </div>
@@ -39,7 +50,7 @@ export function StepIntro({ onNext }: { onNext: () => void }) {
   );
 }
 
-export function StepWelcome({ onNext }: { onNext: () => void }) {
+export function StepWelcome({ stepLabel, onNext }: { stepLabel: string; onNext: () => void }) {
   return (
     <>
       <div className={styles.checkWrap}>
@@ -48,9 +59,9 @@ export function StepWelcome({ onNext }: { onNext: () => void }) {
           <path className={styles.checkMark} d="M22 36l10.5 11.5L50 24" />
         </svg>
       </div>
-      <div className={styles.eye}>You're in</div>
+      <div className={styles.eye}>{stepLabel} · You're in</div>
       <div className={styles.h}>
-        Welcome, <em>Sofia</em>
+        Welcome, <em>{currentUser.first}</em>
       </div>
       <div className={styles.vouchCard}>
         <div className={styles.vcAv}>TM</div>
@@ -58,7 +69,7 @@ export function StepWelcome({ onNext }: { onNext: () => void }) {
           <div className={styles.vcName}>Tomás Mendes</div>
           <div className={styles.vcRole}>Member since Oct 2024 · Architect</div>
           <div className={styles.vcNote}>
-            "Sofia is exactly the kind of person this community was built for — thoughtful,
+            "{currentUser.first} is exactly the kind of person this community was built for — thoughtful,
             creative, and genuinely invested in making queer spaces better."
           </div>
         </div>
@@ -74,10 +85,10 @@ export function StepWelcome({ onNext }: { onNext: () => void }) {
   );
 }
 
-export function StepPhoto({ onNext, onBack }: StepProps) {
+export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
   return (
     <>
-      <div className={styles.eye}>Step 2 of 6</div>
+      <div className={styles.eye}>{stepLabel}</div>
       <div className={styles.h}>
         Put a face to the <em>name</em>
       </div>
@@ -92,18 +103,18 @@ export function StepPhoto({ onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <Button onClick={onNext}>Continue</Button>
-        <button className={styles.skip} onClick={onNext}>Skip for now</button>
+        <SkipLink onSkip={onNext} />
         <button className={styles.back} onClick={onBack}>← Back</button>
       </div>
     </>
   );
 }
 
-export function StepNorms({ onNext, onBack }: StepProps) {
+export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
   const [agreed, setAgreed] = useState(false);
   return (
     <>
-      <div className={styles.eye}>Step 3 of 6</div>
+      <div className={styles.eye}>{stepLabel}</div>
       <div className={styles.h}>
         This is a <em>cared-for</em> space
       </div>
@@ -132,7 +143,7 @@ export function StepNorms({ onNext, onBack }: StepProps) {
   );
 }
 
-export function StepIntents({ onNext, onBack }: StepProps) {
+export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
   const [selectedIntents, setSelectedIntents] = useState<Set<string>>(
     new Set(['Community', 'Professional connections', 'Creative collaboration']),
   );
@@ -144,13 +155,15 @@ export function StepIntents({ onNext, onBack }: StepProps) {
       return next;
     });
   }
+  // At least one intent is required so we can actually personalize the experience.
+  const hasSelection = selectedIntents.size > 0;
   return (
     <>
-      <div className={styles.eye}>Step 4 of 6</div>
+      <div className={styles.eye}>{stepLabel}</div>
       <div className={styles.h}>
         What brings you <em>here?</em>
       </div>
-      <div className={styles.chipHint}>Select as many as you like</div>
+      <div className={styles.chipHint}>Pick at least one — choose as many as fit.</div>
       <div className={styles.chips}>
         {INTENTS.map((intent) => (
           <button
@@ -163,14 +176,14 @@ export function StepIntents({ onNext, onBack }: StepProps) {
         ))}
       </div>
       <div className={styles.nav}>
-        <Button onClick={onNext}>Continue</Button>
+        <Button onClick={onNext} disabled={!hasSelection}>Continue</Button>
         <button className={styles.back} onClick={onBack}>← Back</button>
       </div>
     </>
   );
 }
 
-export function StepCommunities({ onNext, onBack }: StepProps) {
+export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
   const [joined, setJoined] = useState<Set<string>>(new Set(['cc1']));
   function toggleJoin(id: string) {
     setJoined((current) => {
@@ -182,7 +195,7 @@ export function StepCommunities({ onNext, onBack }: StepProps) {
   }
   return (
     <>
-      <div className={styles.eye}>Step 5 of 6</div>
+      <div className={styles.eye}>{stepLabel}</div>
       <div className={styles.h}>
         Find your <em>communities</em>
       </div>
@@ -212,17 +225,18 @@ export function StepCommunities({ onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <Button onClick={onNext}>Continue</Button>
-        <button className={styles.skip} onClick={onNext}>Skip for now</button>
+        <SkipLink onSkip={onNext} label="Skip for now — explore and join later" />
         <button className={styles.back} onClick={onBack}>← Back</button>
       </div>
     </>
   );
 }
 
-export function StepDone() {
+export function StepDone({ stepLabel }: { stepLabel: string }) {
   const navigate = useNavigate();
   return (
     <>
+      <div className={styles.eye}>{stepLabel}</div>
       <div className={styles.h}>
         You're <em>part of it</em> now
       </div>

@@ -72,6 +72,82 @@ export const RESOLUTIONS: Resolution[] = [
   },
 ]
 
+/** Extra resolutions revealed by "Show 8 more resolutions →". */
+export const MORE_RESOLUTIONS: Resolution[] = [
+  {
+    num: <>R<em>·03</em> · Set 2027 <em>reserve target</em></>,
+    title: null,
+    threshold: 'SIMPLE MAJORITY',
+    desc: <>Hold a six-month operating reserve (≈<b>€156k</b>) ring-fenced from programme spend, reviewed each quarter by the co-treasurers.</>,
+    yesLabel: 'Yes · approve',
+    bar: { y: 81, n: 9, a: 10 },
+    tally: { yes: '253 · 81%', no: '28 · 9%', abstain: '31 · 10%' },
+  },
+  {
+    num: <>R<em>·04</em> · Renew the <em>ILGA Portugal</em> partnership</>,
+    title: null,
+    threshold: 'SIMPLE MAJORITY',
+    desc: <>Renew the legal-aid and helpline-handoff agreement with ILGA Portugal for a further two years at the current €18k/year.</>,
+    yesLabel: 'Yes · renew',
+    bar: { y: 90, n: 3, a: 7 },
+    tally: { yes: '281 · 90%', no: '9 · 3%', abstain: '22 · 7%' },
+  },
+  {
+    num: <>R<em>·06</em> · New §06 clause · <em>data minimisation</em></>,
+    title: null,
+    threshold: 'SUPERMAJORITY · 60%',
+    desc: <>Add an explicit data-minimisation commitment to the Code of Conduct: no retention of message content beyond 30 days unless flagged.</>,
+    yesLabel: 'Yes · adopt',
+    bar: { y: 71, n: 14, a: 15 },
+    tally: { yes: '221 · 71%', no: '44 · 14%', abstain: '47 · 15%' },
+  },
+  {
+    num: <>R<em>·07</em> · Manifesto · <em>stanza 4 wording</em></>,
+    title: null,
+    threshold: 'SUPERMAJORITY · 60%',
+    desc: <>Adopt the revised wording of manifesto stanza 4, replacing "grow" with "deepen" to reaffirm the no-scale commitment.</>,
+    yesLabel: 'Yes · adopt',
+    bar: { y: 88, n: 5, a: 7 },
+    tally: { yes: '274 · 88%', no: '16 · 5%', abstain: '22 · 7%' },
+  },
+  {
+    num: <>R<em>·08</em> · Standing-circle <em>terms</em></>,
+    title: null,
+    threshold: 'SIMPLE MAJORITY',
+    desc: <>Set standing-circle terms at 12 months with a one-term renewal cap, to keep rotation healthy.</>,
+    yesLabel: 'Yes · approve',
+    bar: { y: 76, n: 13, a: 11 },
+    tally: { yes: '237 · 76%', no: '41 · 13%', abstain: '34 · 11%' },
+  },
+  {
+    num: <>R<em>·09</em> · New partner · <em>Clínica do Largo</em></>,
+    title: null,
+    threshold: 'SIMPLE MAJORITY',
+    desc: <>Approve a referral partnership with Clínica do Largo for trans-affirming primary care at member rates.</>,
+    yesLabel: 'Yes · approve',
+    bar: { y: 85, n: 6, a: 9 },
+    tally: { yes: '265 · 85%', no: '19 · 6%', abstain: '28 · 9%' },
+  },
+  {
+    num: <>R<em>·10</em> · Porto launch · <em>budget release</em></>,
+    title: null,
+    threshold: 'SIMPLE MAJORITY',
+    desc: <>Release the €40k Porto launch budget on the August timeline, contingent on a local host circle of at least five members.</>,
+    yesLabel: 'Yes · release',
+    bar: { y: 79, n: 11, a: 10 },
+    tally: { yes: '247 · 79%', no: '34 · 11%', abstain: '31 · 10%' },
+  },
+  {
+    num: <>R<em>·11</em> · Solidarity rate · <em>keep free tier</em></>,
+    title: null,
+    threshold: 'SUPERMAJORITY · 60%',
+    desc: <>Reaffirm the free solidarity tier as permanent and non-revocable, funded by Sustainer memberships.</>,
+    yesLabel: 'Yes · reaffirm',
+    bar: { y: 94, n: 2, a: 4 },
+    tally: { yes: '293 · 94%', no: '6 · 2%', abstain: '13 · 4%', extra: <span style={{ marginLeft: 'auto', color: 'var(--jade)', fontWeight: 700 }}>Threshold met · would pass</span> },
+  },
+]
+
 export const HISTORY: HistoryItem[] = [
   { y: '5', title: 'Eleven resolutions · nine passed', sub: 'Notable: §06 off-platform first added · Porto green-lit · solidarity rate codified' },
   { y: '4', title: 'Eight resolutions · seven passed', sub: 'First assembly to ratify the Code of Conduct. Sustainer pricing set at €96.' },

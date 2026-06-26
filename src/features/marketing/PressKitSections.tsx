@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { useToast } from '../../shared/components/feedback/useToast'
 import { BOILER, COVERAGE, DOWNLOADS, FACTS, IMAGES, LOGOS, SWATCHES, TEAM } from './pressKit.data'
+import { PressKitDownloadModal } from './PressKitDownloadModal'
+import { assetFor, logoSvg, type PressAsset } from './pressKitAssets.data'
+import logoStyles from './MarketingModal.module.css'
 import styles from './PressKitPage.module.css'
 
 export function BoilerplateSection() {
@@ -38,8 +40,17 @@ export function BoilerplateSection() {
   )
 }
 
+const LOGO_VARIANTS: ('light' | 'plum' | 'coral')[] = ['light', 'plum', 'coral']
+const LOGO_NAMES = ['primary-light', 'inverse-plum', 'coral-solidarity']
+
 export function MarkSection() {
-  const { showToast } = useToast()
+  const [open, setOpen] = useState<number | null>(null)
+  const variant = open !== null ? LOGO_VARIANTS[open] : 'light'
+  const asset: PressAsset = {
+    filename: `queerpulse-mark-${open !== null ? LOGO_NAMES[open] : 'light'}.svg`,
+    mime: 'image/svg+xml',
+    content: logoSvg(variant),
+  }
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
@@ -63,11 +74,31 @@ export function MarkSection() {
             </div>
             <div className={styles.logoMeta}>
               <span>{l.meta}</span>
-              <a onClick={() => showToast('Downloading SVG', 'success')}>SVG · PNG</a>
+              <a role="button" tabIndex={0} onClick={() => setOpen(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(i) } }}>SVG · PNG</a>
             </div>
           </div>
         ))}
       </div>
+      {open !== null && (
+        <PressKitDownloadModal
+          eyebrow="Brand mark · SVG"
+          title={<>The <em>mark</em>, ready to use.</>}
+          lead={
+            <>
+              Preview the {LOGO_VARIANTS[open]} variant below. Download generates a real, clean{' '}
+              <b>.svg</b> file — vector, recolour-safe, with the pulse dot intact.
+            </>
+          }
+          asset={asset}
+          preview={
+            <div className={`${logoStyles.logoStage} ${variant === 'plum' ? styles.displayPlum : variant === 'coral' ? styles.displayCoral : ''}`}>
+              <span dangerouslySetInnerHTML={{ __html: logoSvg(variant) }} />
+            </div>
+          }
+          buttonLabel="Download · SVG"
+          onClose={() => setOpen(null)}
+        />
+      )}
       <p style={{ fontSize: 14, color: 'var(--ink-60)', marginTop: 18 }}>
         <b>Spacing:</b> always leave one full <em>P</em>-height of clear space around the mark.{' '}
         <b>Minimum size:</b> 88px wide on screen, 18 mm in print. <b>Don't:</b> stretch, recolour,
@@ -214,7 +245,9 @@ export function CoverageSection() {
 }
 
 export function DownloadsSection() {
-  const { showToast } = useToast()
+  const [open, setOpen] = useState<number | null>(null)
+  const d = open !== null ? DOWNLOADS[open] : null
+  const asset = d ? assetFor(d.ic, d.title, d.desc) : null
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
@@ -225,17 +258,33 @@ export function DownloadsSection() {
       </div>
       <p>Direct file links. The full kit is a 38 MB ZIP with everything below; individual files are smaller.</p>
       <div className={styles.downloadRow}>
-        {DOWNLOADS.map((d, i) => (
-          <button type="button" className={styles.dlCard} key={i} onClick={() => showToast('Downloading…', 'success')}>
-            <div className={[styles.dlIc, d.icCls && styles[d.icCls]].filter(Boolean).join(' ')}>{d.ic}</div>
+        {DOWNLOADS.map((dl, i) => (
+          <button type="button" className={styles.dlCard} key={i} onClick={() => setOpen(i)}>
+            <div className={[styles.dlIc, dl.icCls && styles[dl.icCls]].filter(Boolean).join(' ')}>{dl.ic}</div>
             <div className={styles.dlInfo}>
-              <b>{d.title}</b>
-              <span>{d.desc}</span>
+              <b>{dl.title}</b>
+              <span>{dl.desc}</span>
             </div>
             <div className={styles.dlArrow}>↓</div>
           </button>
         ))}
       </div>
+      {d && asset && (
+        <PressKitDownloadModal
+          eyebrow={`Download · ${d.ic}`}
+          title={<>{d.title}.</>}
+          lead={
+            <>
+              {d.desc}. Download now generates a real <b>{asset.filename}</b> in your browser —
+              a working stand-in for the production asset.
+            </>
+          }
+          rows={[{ ic: d.ic, title: asset.filename, desc: d.desc }]}
+          asset={asset}
+          buttonLabel={`Download · ${asset.filename.split('.').pop()?.toUpperCase()}`}
+          onClose={() => setOpen(null)}
+        />
+      )}
     </section>
   )
 }

@@ -4,18 +4,28 @@ import { AppShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { SIGN_IN_METHODS, CONNECTED_APPS } from './linkedAccounts.data'
+import { LINK_PROVIDERS } from './integrations.data'
+import { LinkProviderModal } from './LinkProviderModal'
+import { IntegrationsModal } from './IntegrationsModal'
 import styles from './LinkedAccountsPage.module.css'
 
 export function LinkedAccountsPage() {
   const { showToast } = useToast()
   const navigate = useNavigate()
   const [revokedIds, setRevokedIds] = useState<Set<string>>(new Set())
+  const [linkedIds, setLinkedIds] = useState<Set<string>>(new Set())
+  const [linkProviderId, setLinkProviderId] = useState<string | null>(null)
+  const [galleryOpen, setGalleryOpen] = useState(false)
 
   function handleUnlink(id: string) {
     if (window.confirm('Unlink/revoke this connection? You can re-link anytime.')) {
       setRevokedIds((prev) => new Set(prev).add(id))
       showToast('Connection revoked', 'success')
     }
+  }
+
+  function handleLinked(id: string) {
+    setLinkedIds((prev) => new Set(prev).add(id))
   }
 
   function handleCopyCalendar() {
@@ -46,6 +56,7 @@ export function LinkedAccountsPage() {
         <div className={styles.list}>
           {SIGN_IN_METHODS.map((m) => {
             const revoked = revokedIds.has(m.id)
+            const linked = linkedIds.has(m.id)
             return (
               <div key={m.id} className={styles.row}>
                 <div className={`${styles.icon} ${iconClass[m.id] ?? ''}`}>
@@ -56,11 +67,11 @@ export function LinkedAccountsPage() {
                   <span className={styles.infoDetail}>{m.detail}</span>
                 </div>
                 <div className={styles.state}>
-                  <span className={`${styles.badge} ${m.linked ? styles.badgeLinked : styles.badgeUnlinked}`}>{revoked ? 'Unlinked' : m.badgeText}</span>
+                  <span className={`${styles.badge} ${m.linked || linked ? styles.badgeLinked : styles.badgeUnlinked}`}>{revoked ? 'Unlinked' : linked ? 'Linked' : m.badgeText}</span>
                   {m.canUnlink && !revoked && <button className={`${styles.rowBtn} ${styles.rowBtnUnlink}`} onClick={() => handleUnlink(m.id)}>Unlink</button>}
-                  {m.canLink && <button className={`${styles.rowBtn} ${styles.rowBtnConnect}`} onClick={() => showToast('Redirecting to provider...', 'info')}>Link</button>}
+                  {m.canLink && !linked && <button className={`${styles.rowBtn} ${styles.rowBtnConnect}`} onClick={() => setLinkProviderId(m.id)}>Link</button>}
                   {m.defaultDisabled && <button className={`${styles.rowBtn} ${styles.rowBtnDisabled}`} disabled>Default</button>}
-                  {m.canManage && <button className={styles.rowBtn} onClick={() => showToast('Opens device list', 'info')}>Manage</button>}
+                  {m.canManage && <button className={styles.rowBtn} onClick={() => navigate(routes.sessions)}>Manage</button>}
                 </div>
               </div>
             )
@@ -102,7 +113,7 @@ export function LinkedAccountsPage() {
               <b className={styles.infoName}>Browse available integrations</b>
               <span className={styles.infoDetail}>Stripe (Sustainer billing), Mastodon, Spotify (Audio Rooms), iCal export, and 4 more</span>
             </div>
-            <button className={`${styles.rowBtn} ${styles.rowBtnConnect}`} onClick={() => showToast('Browse integrations gallery', 'info')}>Browse</button>
+            <button className={`${styles.rowBtn} ${styles.rowBtnConnect}`} onClick={() => setGalleryOpen(true)}>Browse</button>
           </div>
         </div>
 
@@ -110,6 +121,15 @@ export function LinkedAccountsPage() {
           <b>Permissions are scoped narrowly.</b> No connected app can read your DMs, your draft posts, your billing, or your community memberships. If you ever want a full audit, request a <Link to={routes.dataExport} style={{ color: 'var(--plum)', fontWeight: 700, textDecoration: 'none' }}>data export</Link>.
         </div>
       </div>
+
+      {linkProviderId && LINK_PROVIDERS[linkProviderId] && (
+        <LinkProviderModal
+          provider={LINK_PROVIDERS[linkProviderId]}
+          onClose={() => setLinkProviderId(null)}
+          onLinked={() => handleLinked(linkProviderId)}
+        />
+      )}
+      {galleryOpen && <IntegrationsModal onClose={() => setGalleryOpen(false)} />}
     </AppShell>
   )
 }

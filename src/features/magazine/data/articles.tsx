@@ -28,8 +28,22 @@ export interface Article {
   tint: AvatarTint
   imgDesc: string
   authorBio: string
+  /** Topical tags used both for display and to explain why pieces relate. */
+  tags: string[]
   related: string[]
   body: ArticleBlock[]
+}
+
+/**
+ * Why a related article is being recommended, derived from shared fields.
+ * Used to render a small relationship badge on each related card.
+ */
+export function relationReason(current: Article, candidate: Article): string {
+  if (candidate.byline === current.byline) return 'Same author'
+  const sharedTag = candidate.tags.find((tag) => current.tags.includes(tag))
+  if (sharedTag) return `Same tag: ${sharedTag}`
+  if (candidate.section === current.section) return `Same section: ${candidate.section}`
+  return 'Editor’s pick'
 }
 
 export const articles: Record<string, Article> = {
@@ -52,6 +66,7 @@ export const articles: Record<string, Article> = {
     tint: 'jade',
     imgDesc: 'Lisbon rooftops at golden hour, Mouraria neighbourhood, washing lines, terracotta',
     authorBio: `${memberName('sofia')} is a journalist and editor at QueerPulse. She has been writing about queer life in Lisbon since 2019.`,
+    tags: ['Lisbon', 'Community', 'Gentrification'],
     related: ['mouraria-family', 'politics-of-staying', 'last-bar'],
     body: [
       'There is a bar in Cais do Sodré that has had five names in nine years. When it was O Farol, you could stay until four in the morning and nobody would ask you to buy another drink. The lights were low enough that everyone looked better than they were, and the music was always slightly too loud to have the kind of conversation that would embarrass you in daylight. We loved it. We took people there the first night we trusted them. Then it became something else, then something else again. Now it has good cocktails and a terrace and it is on three different travel websites. We go back sometimes and feel like strangers.',
@@ -81,6 +96,7 @@ export const articles: Record<string, Article> = {
     tint: 'jade',
     imgDesc: 'Narrow street in Mouraria, late afternoon light, laundry lines overhead, cobblestones',
     authorBio: `${memberName('ines')} writes about community, place, and the social infrastructure of queer life. She has lived in Mouraria for eight years.`,
+    tags: ['Community', 'Chosen family', 'Lisbon'],
     related: ['city-changed', 'politics-of-staying'],
     body: [
       'The original group met at a language exchange in 2016. There were seven of them — some Portuguese, some Brazilian, one from Cape Verde, one from Germany who never quite left. They did not set out to become a family. They set out to practise their Spanish on a Tuesday evening in a bar that served free olives and had too many candles.',
@@ -109,6 +125,7 @@ export const articles: Record<string, Article> = {
     tint: 'plum',
     imgDesc: 'Low-lit bar interior in afternoon, mismatched chairs, a faded pride flag, no customers',
     authorBio: `${memberName('diogo')} writes about nightlife, music, and the architecture of queer space in Lisbon.`,
+    tags: ['Nightlife', 'Lisbon', 'Queer space'],
     related: ['city-changed', 'kiko-neves'],
     body: [
       'There is no sign. There has never been a sign. The address circulates by word of mouth, the way addresses used to before everyone had a phone and a map in their pocket. If you find it, you find it. The bar — I am not naming it here because the owner asked me not to — has been open since 1987, which means it survived the AIDS crisis, two recessions, three rounds of Bairro Alto gentrification, and the arrival of the internet.',
@@ -137,6 +154,7 @@ export const articles: Record<string, Article> = {
     tint: 'coral',
     imgDesc: 'Person reading documents at a kitchen table, morning light, coffee cup nearby',
     authorBio: `${memberName('mariana-costa')} covers politics, law, and housing for QueerPulse. She is also a trained housing lawyer who now writes instead of practises.`,
+    tags: ['Housing', 'Politics', 'Chosen family'],
     related: ['politics-of-staying', 'city-changed'],
     body: [
       'The legislation that passed in April amends three articles of the urban rental law and introduces a new category of "social vulnerability" that can delay evictions by sixty days. The amendment is well-intentioned. It is also, as three housing lawyers independently told me, likely to produce outcomes its drafters did not anticipate — particularly for queer households whose structure the law does not recognise.',
@@ -165,6 +183,7 @@ export const articles: Record<string, Article> = {
     tint: 'plum',
     imgDesc: 'Empty rooftop terrace at dusk, Mouraria, a single chair facing the river',
     authorBio: `${memberName('tomas')} is a writer and musician living in Intendente. This is his second essay for the magazine.`,
+    tags: ['Identity', 'Community', 'Coming out'],
     related: ['visibility-politics', 'politics-of-staying'],
     body: [
       'I have been trying to remember the moment I came out and I cannot find it. My memory will not produce a door, a revelation, a conversation where everything changed. What it produces is a series of Tuesdays: someone laughing at something I said and me feeling, for the first time, that the laugh was for me and not despite me.',
@@ -193,6 +212,7 @@ export const articles: Record<string, Article> = {
     tint: 'jade',
     imgDesc: 'A Pride flag reflection in a puddle on Lisbon cobblestones, distorted and beautiful',
     authorBio: `${memberName('rui-fernandes')} is an activist and writer. He co-founded the Lisbon Queer Mental Health Collective in 2022.`,
+    tags: ['Visibility', 'Identity', 'Politics'],
     related: ['i-arrived', 'politics-of-staying'],
     body: [
       'Every June, we are told that visibility saves lives. And it does. There is data. Young queer people who see queer adults existing in the world are statistically less likely to hurt themselves. This is true and it matters and I am not arguing against it.',
@@ -221,6 +241,7 @@ export const articles: Record<string, Article> = {
     tint: 'coral',
     imgDesc: 'Apartment building facade in Mouraria at late evening, one lit window in the dark',
     authorBio: `${memberName('catarina-melo')} is a housing rights advocate and occasional essayist. She has lived in the same apartment in Lisbon for eleven years.`,
+    tags: ['Housing', 'Lisbon', 'Community'],
     related: ['housing-law', 'mouraria-family'],
     body: [
       'Everyone I know who left Lisbon has a reasonable reason. The rent went up. A better opportunity appeared elsewhere. A relationship ended. These are not bad reasons. But when I try to understand why I stayed, I keep coming back to something less rational: I stayed because I was afraid of starting again.',
@@ -249,6 +270,7 @@ export const articles: Record<string, Article> = {
     tint: 'jade',
     imgDesc: 'Kiko Neves at an upright piano in his Marvila studio, light from the side',
     authorBio: `${memberName('sofia')} conducted this interview in Kiko's studio over two afternoons in May.`,
+    tags: ['Music', 'Lisbon', 'Identity'],
     related: ['last-bar', 'city-changed'],
     body: [
       (

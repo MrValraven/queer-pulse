@@ -1,13 +1,13 @@
 import { Link, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { defaultProfileSlug, memberProfiles } from './data/memberProfiles'
+import { currentUserSlug, memberProfiles } from './data/memberProfiles'
 import { ProfileHero, ProfileContent } from './ProfileSections'
 import styles from './ProfilePage.module.css'
 
 export function ProfilePage() {
   const { slug } = useParams()
   const profile =
-    (slug && memberProfiles[slug]) || memberProfiles[defaultProfileSlug]
+    (slug && memberProfiles[slug]) || memberProfiles[currentUserSlug]
 
   return (
     <PageShell>

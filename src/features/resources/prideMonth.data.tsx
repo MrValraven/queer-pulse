@@ -43,6 +43,18 @@ export const EVENTS: Ev[] = [
   { d: '28', m: 'Jun', day: 'Sat', kind: 'Closing · reflective', title: <>Last day of June · <em>open mic &amp; goodbye-to-pride</em></>, host: <>Hosted by <b>Marta &amp; Tomás</b> · Café Beirão · 19:00–23:00</>, free: 'Free · all welcome', count: 'RSVPs open' },
 ]
 
+/* Revealed when "Load more events" is clicked — second page of the calendar. */
+export const MORE_EVENTS: Ev[] = [
+  { d: '03', m: 'Jun', day: 'Tue', kind: 'Social · first-week', title: <>Coffee &amp; new faces · <em>just say hi</em></>, host: <>Hosted by <b>Inês Moreira</b> · Linha d'Água, Príncipe Real · 18:00</>, free: 'Free', count: '19 going' },
+  { d: '05', m: 'Jun', day: 'Thu', kind: 'Quiet · sensory-friendly', title: <>Low-stim crafting circle · <em>no music, soft light</em></>, host: <>Hosted by <b>Bruno Lima</b> · Atelier Pulso · 18:30</>, free: 'Materials free', count: '7 spots left' },
+  { d: '08', m: 'Jun', day: 'Sun', kind: 'Outdoors · trans-led', title: <>Tejo riverside walk · <em>slow pace, all bodies</em></>, host: <>Hosted by <b>Trans Hub walking group</b> · Cais do Sodré · 10:30</>, free: 'Free', count: '23 going' },
+  { d: '12', m: 'Jun', day: 'Thu', kind: 'Film · quiet', title: <>Screening · <em>Paris Is Burning</em> + talk</>, host: <>Hosted by <b>QueerPulse Cinema</b> · Cinema Ideal · 21:00</>, free: 'Pay what you can', count: '40 going' },
+  { d: '15', m: 'Jun', day: 'Sun', kind: 'For parents', title: <>Family picnic · <em>kids, dogs, and chosen family</em></>, host: <>Hosted by <b>Queer Parent Network</b> · Jardim da Estrela · 12:00</>, free: 'Free', count: '31 going' },
+  { d: '19', m: 'Jun', day: 'Thu', kind: 'Culture · march weekend', title: <>Banner-painting late session · <em>last-minute placards</em></>, host: <>Hosted by <b>André Bento</b> · Atelier Pulso · 19:00–22:00</>, free: 'Materials free', count: 'Drop-in' },
+  { d: '20', m: 'Jun', day: 'Fri', kind: 'Music · all welcome', title: <>Pride-eve listening party · <em>Lisbon queer artists</em></>, host: <>Hosted by <b>Rita Vasquez</b> · ZDB, Bairro Alto · 20:00</>, free: 'Free entry', count: '66 going' },
+  { d: '25', m: 'Jun', day: 'Wed', kind: 'Reflective · last-week', title: <>After-the-march debrief · <em>circle &amp; tea</em></>, host: <>Hosted by <b>Sofia Castaño</b> · Café Beirão · 19:00</>, free: 'Free', count: '14 going' },
+]
+
 export const MARCH_META: [string, string][] = [
   ['Date', 'Sat 21 June 2026 · 16:00 start'],
   ['Meeting point', 'Marquês de Pombal · west steps'],

@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { usePrefersReducedMotion } from '../../shared/hooks'
 import { ARTICLE, CHAPTERS, TRANSCRIPT } from './audioPlayer.data'
+import { TranscriptDownloadModal } from './AudioPlayerModals'
+import type { AudioPlayer } from './useAudioPlayer'
 import styles from './AudioPlayerPage.module.css'
 
 export function NotesTab() {
@@ -40,23 +42,47 @@ export function NotesTab() {
   )
 }
 
-export function ChaptersTab() {
-  const [chapter, setChapter] = useState(2)
+export function ChaptersTab({ player }: { player: AudioPlayer }) {
   return (
     <div className={styles.chapters}>
-      {CHAPTERS.map((c, i) => (
-        <button type="button" key={c.time} className={[styles.chapter, chapter === i && styles.chapterCurrent].filter(Boolean).join(' ')} onClick={() => setChapter(i)}>
-          <div className={styles.chTime}>{c.time}</div>
-          <div className={styles.chTitle}>{c.title}</div>
-          {chapter === i ? <div className={styles.chNow}>Now</div> : <div className={styles.chArrow}>→</div>}
-        </button>
-      ))}
+      {CHAPTERS.map((c, i) => {
+        const current = player.chapterIndex === i
+        return (
+          <button type="button" key={c.time} className={[styles.chapter, current && styles.chapterCurrent].filter(Boolean).join(' ')} onClick={() => player.seek(c.sec)}>
+            <div className={styles.chTime}>{c.time}</div>
+            <div className={styles.chTitle}>{c.title}</div>
+            {current ? <div className={styles.chNow}>Now</div> : <div className={styles.chArrow}>→</div>}
+          </button>
+        )
+      })}
     </div>
   )
 }
 
-export function TranscriptTab() {
-  const { showToast } = useToast()
+export function TranscriptTab({ player }: { player: AudioPlayer }) {
+  const [autoScroll, setAutoScroll] = useState(false)
+  const [downloadOpen, setDownloadOpen] = useState(false)
+  const blockRefs = useRef<(HTMLDivElement | null)[]>([])
+  const reduceMotion = usePrefersReducedMotion()
+
+  // Which transcript cue is currently playing.
+  const currentIndex = useMemo(() => {
+    let idx = 0
+    for (let i = 0; i < TRANSCRIPT.length; i++) {
+      if (player.currentTime >= TRANSCRIPT[i].sec) idx = i
+    }
+    return idx
+  }, [player.currentTime])
+
+  // Smooth-scroll the active block into view when auto-scroll is on.
+  useEffect(() => {
+    if (!autoScroll) return
+    blockRefs.current[currentIndex]?.scrollIntoView({
+      behavior: reduceMotion ? 'auto' : 'smooth',
+      block: 'center',
+    })
+  }, [autoScroll, currentIndex, reduceMotion])
+
   return (
     <>
       <div className={styles.trControls}>
@@ -67,14 +93,14 @@ export function TranscriptTab() {
           </svg>
           <input type="text" placeholder="Search transcript" />
         </div>
-        <button type="button" className={styles.actionBtn} onClick={() => showToast('Auto-scroll on', 'info')}>
+        <button type="button" className={[styles.actionBtn, autoScroll && styles.actionActive].filter(Boolean).join(' ')} onClick={() => setAutoScroll((v) => !v)} aria-pressed={autoScroll}>
           <svg viewBox="0 0 24 24">
             <line x1="12" y1="5" x2="12" y2="19" />
             <polyline points="19 12 12 19 5 12" />
           </svg>
-          Auto-scroll
+          Auto-scroll{autoScroll ? ' · on' : ''}
         </button>
-        <button type="button" className={styles.actionBtn} onClick={() => showToast('Download transcript .txt', 'success')}>
+        <button type="button" className={styles.actionBtn} onClick={() => setDownloadOpen(true)}>
           <svg viewBox="0 0 24 24">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="7 10 12 15 17 10" />
@@ -85,7 +111,22 @@ export function TranscriptTab() {
       </div>
       <div className={styles.transcript}>
         {TRANSCRIPT.map((t, i) => (
-          <div key={i} className={[styles.trBlock, t.current && styles.trCurrent].filter(Boolean).join(' ')}>
+          <div
+            key={i}
+            ref={(el) => {
+              blockRefs.current[i] = el
+            }}
+            className={[styles.trBlock, currentIndex === i && styles.trCurrent].filter(Boolean).join(' ')}
+            onClick={() => player.seek(t.sec)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                player.seek(t.sec)
+              }
+            }}
+          >
             <div className={styles.trWho}>
               {t.who} <time>{t.time}</time>
             </div>
@@ -93,6 +134,8 @@ export function TranscriptTab() {
           </div>
         ))}
       </div>
+
+      {downloadOpen && <TranscriptDownloadModal onClose={() => setDownloadOpen(false)} />}
     </>
   )
 }

@@ -28,7 +28,6 @@ export function TwoFactorSetupPage() {
   const [copyLabel, setCopyLabel] = useState('Copy')
 
   function next() {
-    if (step === 1 && method === 'sms') showToast("SMS isn't available in demo — falling back to app", 'info')
     setStep(((step as number) + 1) as Step)
   }
   function prev() { setStep(((step as number) - 1) as Step) }

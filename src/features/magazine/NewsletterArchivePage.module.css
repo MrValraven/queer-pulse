@@ -72,6 +72,70 @@
   max-width: 54ch;
   line-height: 1.5;
 }
+.subFoot strong {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.subDone {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  max-width: 600px;
+  margin-top: 24px;
+  padding: 26px 30px;
+  background: var(--plum);
+  color: var(--cream);
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.subDoneIcon {
+  display: inline-flex;
+  color: var(--jade);
+  font-size: 30px;
+  flex: none;
+  margin-top: 2px;
+}
+.subDoneTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.subDoneTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.subDoneBody {
+  font-size: 14.5px;
+  color: rgba(247, 243, 238, 0.8);
+  line-height: 1.6;
+  margin-top: 10px;
+}
+.subDoneBody strong {
+  color: var(--cream);
+  font-weight: 600;
+}
+.subDoneNext {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(247, 243, 238, 0.66);
+  line-height: 1.55;
+  margin-top: 12px;
+}
+.subDoneNext svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+}
+.subDone :global(.btn) {
+  margin-top: 16px;
+}
 .stats {
   display: flex;
   gap: 30px;

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button, ImageSlot, Reveal } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useConnect } from '../../app/providers/ConnectProvider'
 import { CHANGEMAKERS } from './changemakerStories'
 import styles from './ChangemakersPage.module.css'
 
@@ -18,6 +19,7 @@ const MAKERS = CHANGEMAKERS.slice(1)
 
 export function ChangemakersPage() {
   const { showToast } = useToast()
+  const { openConnect } = useConnect()
   const [nominee, setNominee] = useState('')
 
   return (
@@ -68,7 +70,7 @@ export function ChangemakersPage() {
               </div>
               <div className={styles.featFoot}>
                 <Button to={`/changemaker/${FEATURED.slug}`}>Read her story →</Button>
-                <Button variant="ghost" to="/connect">
+                <Button variant="ghost" onClick={() => openConnect()}>
                   Connect
                 </Button>
               </div>

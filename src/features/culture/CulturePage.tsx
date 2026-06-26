@@ -21,13 +21,13 @@ export function CulturePage() {
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Cultural life</div>
+          <div className={styles.cat}>Lisbon scene & radio</div>
           <h1 className={styles.heroH}>
-            The queer <em>cultural life</em> of Lisbon.
+            Lisbon's queer <em>scene</em>.
           </h1>
           <p className={styles.lead}>
-            What we read, watch, make, and listen to — between gatherings and beyond them.
-            Community-curated, ever-changing.
+            The clubs, commissions, showcases, and radio that make up the city's queer
+            cultural life — community-curated, ever-changing.
           </p>
           <div className={styles.tabs} role="tablist">
             {TABS.map((t) => (

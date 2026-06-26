@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button, Outro, Tag, TagRow } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
+import { useConnect } from '../../app/providers/ConnectProvider'
 import { memberProfiles } from '../members/data/memberProfiles'
 import styles from './SkillsPage.module.css'
 
@@ -39,6 +39,7 @@ const FILTERS = [
 
 function SkillCard({ skill }: { skill: Skill }) {
   const member = memberProfiles[skill.member]
+  const { openConnect } = useConnect()
   return (
     <div className={styles.card}>
       <div className={styles.cardTop}>
@@ -61,9 +62,20 @@ function SkillCard({ skill }: { skill: Skill }) {
       </TagRow>
       <div className={styles.foot}>
         <span className={styles.hood}>{member.hood}</span>
-        <Link to={`/connect/${skill.member}`} className={styles.reach}>
+        <span
+          role="button"
+          tabIndex={0}
+          className={styles.reach}
+          onClick={() => openConnect(skill.member)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              openConnect(skill.member)
+            }
+          }}
+        >
           Reach out →
-        </Link>
+        </span>
       </div>
     </div>
   )

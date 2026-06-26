@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button, Tag } from '../../shared/components/ui'
+import { useConnect } from '../../app/providers/ConnectProvider'
 import { memberProfiles } from '../members/data/memberProfiles'
 import { gatheringDetails, gatheringKind, gatheringPath, resolveGathering } from './data'
 
@@ -12,7 +13,7 @@ export function GatheringPage() {
   const kind = gatheringKind(gathering)
   const host = gathering.hostSlug ? memberProfiles[gathering.hostSlug] : null
   const spotsNum = parseInt(gathering.spots, 10)
-  const connectTo = gathering.hostSlug ? `/connect/${gathering.hostSlug}` : '/connect'
+  const { openConnect } = useConnect()
 
   const others = Object.values(gatheringDetails).filter((g) => g.slug !== gathering.slug)
 
@@ -51,7 +52,7 @@ export function GatheringPage() {
               </div>
               <p className={styles.body}>{gathering.body}</p>
               <div className={styles.cta}>
-                <Button size="lg" to={connectTo}>
+                <Button size="lg" onClick={() => openConnect(gathering.hostSlug)}>
                   {gathering.cta} →
                 </Button>
                 <Button size="lg" variant="ghost" to="/calendar">
@@ -108,7 +109,7 @@ export function GatheringPage() {
                 </div>
               )}
 
-              <Button className={styles.fullBtn} to={connectTo}>
+              <Button className={styles.fullBtn} onClick={() => openConnect(gathering.hostSlug)}>
                 {gathering.cta}
               </Button>
               <div className={styles.sidebarNote}>

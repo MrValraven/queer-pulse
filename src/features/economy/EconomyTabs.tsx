@@ -12,10 +12,13 @@ import {
   type Sector,
 } from './economy.data'
 import { SalarySubmitModal } from './SalarySubmitModal'
+import { CohortApplyModal, MentorSignupModal } from './IncubatorModals'
+import { ToolActionModal, type ToolInfo } from './ToolActionModal'
 import styles from './EconomyPage.module.css'
 
 export function IncubatorTab() {
   const { showToast } = useToast()
+  const [modal, setModal] = useState<'cohort' | 'mentor' | null>(null)
   return (
     <>
       <div className={styles.incHeroBox}>
@@ -28,10 +31,10 @@ export function IncubatorTab() {
             mentorship, peer accountability, and connections to investors and collaborators who get it.
           </p>
           <div className={styles.incBtns}>
-            <Button type="button" variant="primary" onClick={() => showToast('Cohort 3 application opening…', 'info')}>
+            <Button type="button" variant="primary" onClick={() => setModal('cohort')}>
               Apply for cohort 3
             </Button>
-            <Button type="button" variant="ghost-dark" onClick={() => showToast('Mentor sign-up opening…', 'info')} style={{ fontSize: 14 }}>
+            <Button type="button" variant="ghost-dark" onClick={() => setModal('mentor')} style={{ fontSize: 14 }}>
               Become a mentor
             </Button>
           </div>
@@ -101,16 +104,19 @@ export function IncubatorTab() {
           </div>
         </div>
       </div>
+
+      {modal === 'cohort' && <CohortApplyModal onClose={() => setModal(null)} />}
+      {modal === 'mentor' && <MentorSignupModal onClose={() => setModal(null)} />}
     </>
   )
 }
 
 export function FreelanceTab() {
-  const { showToast } = useToast()
   const [annual, setAnnual] = useState('40000')
   const [days, setDays] = useState('180')
   const [overhead, setOverhead] = useState('20')
   const [iva, setIva] = useState('23')
+  const [tool, setTool] = useState<ToolInfo | null>(null)
 
   const base = ((parseFloat(annual) || 0) / (parseFloat(days) || 1)) * (1 + (parseFloat(overhead) || 0) / 100)
   const withIva = base * (1 + (parseFloat(iva) || 0) / 100)
@@ -134,7 +140,7 @@ export function FreelanceTab() {
             <div className={styles.toolIcon}><t.icon /></div>
             <div className={styles.toolTitle}>{t.title}</div>
             <div className={styles.toolDesc}>{t.desc}</div>
-            <button type="button" className={styles.toolCtaBtn} onClick={() => showToast(`${t.cta}…`, 'info')}>
+            <button type="button" className={styles.toolCtaBtn} onClick={() => setTool(t)}>
               {t.cta}
             </button>
           </div>
@@ -185,6 +191,8 @@ export function FreelanceTab() {
         A starting point only — adjust for your sector, experience, and market. See the salary board
         for what others in similar roles charge.
       </p>
+
+      {tool && <ToolActionModal tool={tool} onClose={() => setTool(null)} />}
     </>
   )
 }

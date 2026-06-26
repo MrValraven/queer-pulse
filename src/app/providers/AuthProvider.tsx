@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { AuthContext } from './authContext'
-
-const STORAGE_KEY = 'qp_logged_in'
+import { AUTH_STORAGE_KEY as STORAGE_KEY } from '../../features/marketing/cookies.data'
 
 function getInitialLoggedIn(): boolean {
   if (typeof window === 'undefined') return true

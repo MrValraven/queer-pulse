@@ -116,16 +116,127 @@
   background: rgba(var(--accent-rgb), 0.1);
 }
 
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  background: var(--cream);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 13px 18px;
+  margin-bottom: 28px;
+}
+.legendLabel {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-right: 4px;
+}
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+.legendDot {
+  width: 14px;
+  height: 5px;
+  border-radius: 3px;
+  flex: none;
+}
+.legendDone {
+  background: var(--jade);
+}
+.legendActive {
+  background: var(--accent);
+}
+.legendUpcoming {
+  background: rgba(45, 27, 61, 0.1);
+}
+.legendClosed {
+  background: rgba(45, 27, 61, 0.2);
+}
+
 .list {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.group {
+  display: flex;
+  flex-direction: column;
+}
+.groupHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+}
+.groupTitle {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+}
+.groupCount {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: 6px;
+  padding: 1px 8px;
+}
+.groupHint {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-left: auto;
+}
+.compareBtn {
+  margin-left: auto;
+}
+.groupHeadMuted .groupTitle {
+  font-size: 15px;
+  color: var(--ink-60);
+}
+.groupHeadMuted .groupCount {
+  color: var(--ink-60);
+  background: rgba(45, 27, 61, 0.06);
+}
+.groupItems {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
+/* Closed & draft records recede — desaturated and faded, returning to full
+   colour on hover when you actually look at one. */
+.appMuted {
+  opacity: 0.62;
+  filter: saturate(0.4);
+  transition:
+    opacity 0.25s var(--ease),
+    filter 0.25s var(--ease),
+    transform 0.25s var(--ease),
+    border-color 0.2s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+.appMuted:hover {
+  opacity: 1;
+  filter: none;
+}
 .app {
+  position: relative;
   background: var(--paper);
   border: 1px solid rgba(45, 27, 61, 0.09);
   border-radius: 18px;
-  padding: 24px;
+  padding: 24px 24px 24px 27px;
   display: grid;
   grid-template-columns: 56px 1fr auto;
   gap: 18px;
@@ -139,6 +250,31 @@
   transform: translateY(-1px);
   border-color: rgba(45, 27, 61, 0.18);
   box-shadow: 0 12px 30px -22px rgba(45, 27, 61, 0.4);
+}
+
+/* Card-level emphasis — a left accent bar for the things that need attention. */
+.appOffer::before,
+.appOverdue::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  bottom: -1px;
+  width: 4px;
+  border-radius: 18px 0 0 18px;
+}
+.appOffer {
+  border-color: rgba(var(--jade-rgb), 0.35);
+}
+.appOffer::before {
+  background: var(--jade);
+}
+.appOverdue {
+  border-color: rgba(var(--accent-rgb), 0.4);
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.04), var(--paper) 120px);
+}
+.appOverdue::before {
+  background: var(--accent);
 }
 @media (max-width: 640px) {
   .app {
@@ -163,6 +299,7 @@
   font-size: 20px;
   color: var(--accent-ink);
   flex: none;
+  box-shadow: inset 0 0 0 1px rgba(45, 27, 61, 0.08);
 }
 .logoJade {
   background: rgba(var(--jade-rgb), 0.12);
@@ -202,10 +339,54 @@
   border-radius: 6px;
   padding: 3px 9px;
 }
+.appDeadline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: rgba(45, 27, 61, 0.05);
+  border-radius: 6px;
+  padding: 3px 9px;
+}
+.appDeadlineUrgent {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+.stageStep {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-top: 16px;
+}
+.stageStepLabel {
+  color: var(--accent-ink);
+}
+.stageHint {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin-top: 10px;
+  background: rgba(var(--accent-rgb), 0.06);
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+.stageHintK {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-bottom: 3px;
+}
 .stages {
   display: flex;
   gap: 6px;
-  margin-top: 14px;
+  margin-top: 8px;
   align-items: center;
 }
 .stage {
@@ -216,6 +397,7 @@
   min-width: 0;
 }
 .stageBar {
+  position: relative;
   height: 5px;
   border-radius: 3px;
   background: rgba(45, 27, 61, 0.1);
@@ -226,13 +408,26 @@
 .stageActive .stageBar {
   background: var(--accent);
 }
+/* "You are here" marker on the active stage. */
+.stageActive .stageBar::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateY(-50%);
+  box-shadow: 0 0 0 2px var(--paper);
+}
 .stageRejected .stageBar {
   background: rgba(45, 27, 61, 0.2);
 }
 .stageL {
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 600;
-  color: var(--ink-40);
+  color: var(--ink-60);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -254,7 +449,7 @@
   color: var(--plum);
   font-weight: 600;
 }
-.appStatus .ago {
+.appStatus :global(.ago) {
   color: var(--ink-40);
 }
 .appRight {
@@ -296,6 +491,11 @@
   background: rgba(45, 27, 61, 0.05);
   border: 1px dashed rgba(45, 27, 61, 0.15);
 }
+.badgeAttention {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.14);
+  border: 1px solid rgba(var(--accent-rgb), 0.32);
+}
 .pulse {
   width: 6px;
   height: 6px;
@@ -334,5 +534,6 @@
   gap: 9px;
 }
 .appActionMuted {
-  color: var(--ink-40);
+  color: var(--ink-60);
+  font-weight: 500;
 }

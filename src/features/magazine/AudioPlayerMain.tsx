@@ -1,49 +1,67 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiMoon, FiX } from 'react-icons/fi'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { HOME, MEMBER, SHOW, SPEEDS } from './audioPlayer.data'
+import { HOME, MEMBER, SHOW, SPEEDS, secToTime } from './audioPlayer.data'
+import { CastModal, SleepTimerModal } from './AudioPlayerModals'
+import type { AudioPlayer } from './useAudioPlayer'
 import styles from './AudioPlayerPage.module.css'
 
-export function AudioPlayerMain() {
+function PlayerTopbar({ onCast }: { onCast: () => void }) {
   const { showToast } = useToast()
-  const [playing, setPlaying] = useState(true)
-  const [speed, setSpeed] = useState('1.0×')
-  const [saved, setSaved] = useState(false)
-  const [liked, setLiked] = useState(false)
-
   const share = () => {
     if (navigator.clipboard) navigator.clipboard.writeText(location.href)
     showToast('Link copied', 'success')
   }
+  return (
+    <div className={styles.topbar}>
+      <Link to={SHOW} className={styles.back}>
+        ← Back to show
+      </Link>
+      <Link to={HOME} className={styles.brand}>
+        <span className={styles.brandDot} />
+        Queer<span className={styles.brandItalic}>Pulse</span>
+      </Link>
+      <div className={styles.extra}>
+        <button type="button" className={styles.iconBtn} title="Share" onClick={share}>
+          <svg viewBox="0 0 24 24">
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+          </svg>
+        </button>
+        <button type="button" className={styles.iconBtn} title="Cast / AirPlay" onClick={onCast}>
+          <svg viewBox="0 0 24 24">
+            <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6" />
+            <line x1="2" y1="20" x2="2.01" y2="20" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
+  const [saved, setSaved] = useState(false)
+  const [liked, setLiked] = useState(false)
+  const [castOpen, setCastOpen] = useState(false)
+  const [sleepOpen, setSleepOpen] = useState(false)
+  const barRef = useRef<HTMLDivElement>(null)
+
+  const seekFromEvent = (clientX: number) => {
+    const el = barRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    player.seekFraction((clientX - rect.left) / rect.width)
+  }
+
+  const pct = (player.currentTime / player.duration) * 100
 
   return (
     <>
-      <div className={styles.topbar}>
-        <Link to={SHOW} className={styles.back}>
-          ← Back to show
-        </Link>
-        <Link to={HOME} className={styles.brand}>
-          <span className={styles.brandDot} />
-          Queer<span className={styles.brandItalic}>Pulse</span>
-        </Link>
-        <div className={styles.extra}>
-          <button type="button" className={styles.iconBtn} title="Share" onClick={share}>
-            <svg viewBox="0 0 24 24">
-              <circle cx="18" cy="5" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="19" r="3" />
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-            </svg>
-          </button>
-          <button type="button" className={styles.iconBtn} title="Cast / AirPlay" onClick={() => showToast('Looking for nearby devices', 'info')}>
-            <svg viewBox="0 0 24 24">
-              <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6" />
-              <line x1="2" y1="20" x2="2.01" y2="20" />
-            </svg>
-          </button>
-        </div>
-      </div>
+      <PlayerTopbar onCast={() => setCastOpen(true)} />
 
       <main className={styles.wrap}>
         <div className={styles.cover}>The Back Room · cover art</div>
@@ -64,43 +82,50 @@ export function AudioPlayerMain() {
 
           <div>
             <div
+              ref={barRef}
               className={styles.bar}
-              role="button"
+              role="slider"
               tabIndex={0}
               aria-label="Seek"
-              onClick={() => showToast('Seeking…', 'info')}
+              aria-valuemin={0}
+              aria-valuemax={player.duration}
+              aria-valuenow={Math.floor(player.currentTime)}
+              onClick={(e) => seekFromEvent(e.clientX)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
+                if (e.key === 'ArrowRight') {
                   e.preventDefault()
-                  showToast('Seeking…', 'info')
+                  player.nudge(5)
+                } else if (e.key === 'ArrowLeft') {
+                  e.preventDefault()
+                  player.nudge(-5)
                 }
               }}
             >
-              <div className={styles.barFill} style={{ width: '38%' }} />
+              <div className={styles.barFill} style={{ width: `${pct}%` }} />
             </div>
             <div className={styles.times}>
               <span>
-                <b>19:42</b>
+                <b>{secToTime(player.currentTime)}</b>
               </span>
-              <span>52:14</span>
+              <span>{secToTime(player.duration)}</span>
             </div>
           </div>
 
           <div className={styles.controls}>
-            <button type="button" className={styles.ctrl} title="Previous chapter" onClick={() => showToast('Previous chapter', 'info')}>
+            <button type="button" className={styles.ctrl} title="Previous chapter" onClick={player.prevChapter}>
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="19 20 9 12 19 4 19 20" />
                 <line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" />
               </svg>
             </button>
-            <button type="button" className={styles.ctrl} title="-15s" onClick={() => showToast('-15s', 'info')}>
+            <button type="button" className={styles.ctrl} title="-15s" onClick={() => player.nudge(-15)}>
               <svg viewBox="0 0 24 24">
                 <path d="M2.5 2v6h6" />
                 <path d="M21.5 12A9 9 0 1 1 6 5.3L2.5 8" />
               </svg>
             </button>
-            <button type="button" className={styles.playBtn} onClick={() => setPlaying((p) => !p)}>
-              {playing ? (
+            <button type="button" className={styles.playBtn} onClick={player.togglePlay} title={player.playing ? 'Pause' : 'Play'}>
+              {player.playing ? (
                 <svg viewBox="0 0 24 24">
                   <rect x="6" y="4" width="4" height="16" />
                   <rect x="14" y="4" width="4" height="16" />
@@ -111,13 +136,13 @@ export function AudioPlayerMain() {
                 </svg>
               )}
             </button>
-            <button type="button" className={styles.ctrl} title="+30s" onClick={() => showToast('+30s', 'info')}>
+            <button type="button" className={styles.ctrl} title="+30s" onClick={() => player.nudge(30)}>
               <svg viewBox="0 0 24 24">
                 <path d="M21.5 2v6h-6" />
                 <path d="M2.5 12A9 9 0 1 0 18 5.3L21.5 8" />
               </svg>
             </button>
-            <button type="button" className={styles.ctrl} title="Next chapter" onClick={() => showToast('Next chapter', 'info')}>
+            <button type="button" className={styles.ctrl} title="Next chapter" onClick={player.nextChapter}>
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="5 4 15 12 5 20 5 4" />
                 <line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" />
@@ -128,7 +153,7 @@ export function AudioPlayerMain() {
           <div className={styles.secondary}>
             <div className={styles.speed}>
               {SPEEDS.map((sp) => (
-                <button key={sp} type="button" className={[styles.speedBtn, speed === sp && styles.speedActive].filter(Boolean).join(' ')} onClick={() => setSpeed(sp)}>
+                <button key={sp} type="button" className={[styles.speedBtn, player.speed === sp && styles.speedActive].filter(Boolean).join(' ')} onClick={() => player.setSpeed(sp)}>
                   {sp}
                 </button>
               ))}
@@ -146,16 +171,36 @@ export function AudioPlayerMain() {
                 </svg>
                 Like
               </button>
-              <button type="button" className={styles.actionBtn} onClick={() => showToast('Sleep timer · 30 min', 'info')}>
-                <svg viewBox="0 0 24 24">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
-                Sleep
-              </button>
+              {player.sleepRemaining !== null ? (
+                <span className={styles.sleepChip}>
+                  <FiMoon />
+                  {secToTime(player.sleepRemaining)}
+                  <button type="button" className={styles.sleepChipX} title="Cancel sleep timer" onClick={player.cancelSleep}>
+                    <FiX />
+                  </button>
+                </span>
+              ) : (
+                <button type="button" className={styles.actionBtn} onClick={() => setSleepOpen(true)}>
+                  <svg viewBox="0 0 24 24">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg>
+                  Sleep
+                </button>
+              )}
             </div>
           </div>
         </div>
       </main>
+
+      {castOpen && <CastModal onClose={() => setCastOpen(false)} />}
+      {sleepOpen && (
+        <SleepTimerModal
+          active={player.sleepRemaining}
+          onClose={() => setSleepOpen(false)}
+          onPick={player.startSleep}
+          onCancel={player.cancelSleep}
+        />
+      )}
     </>
   )
 }

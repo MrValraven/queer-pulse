@@ -12,6 +12,25 @@ const DETAILS: { icon: IconType; bg: string; label: string; value: string }[] = 
   { icon: FiUser, bg: 'rgba(45,27,61,.07)', label: 'Host', value: memberName('mariana') },
 ]
 
+const GATHERING_TITLE = 'The Dispossessed — Reading Group #8'
+const GATHERING_LOCATION = 'Mouraria Community Centre'
+const GATHERING_DETAILS_TEXT =
+  "Reading group #8 — chapters 10–14 of The Dispossessed. The kitchen opens from 6:45 PM if you'd like to arrive early. RSVP'd via QueerPulse."
+// 22 June 2026, 19:00–21:00 UTC, in Google Calendar's compact UTC format.
+const GATHERING_START = '20260622T190000Z'
+const GATHERING_END = '20260622T210000Z'
+
+function googleCalendarUrl() {
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: GATHERING_TITLE,
+    dates: `${GATHERING_START}/${GATHERING_END}`,
+    details: GATHERING_DETAILS_TEXT,
+    location: GATHERING_LOCATION,
+  })
+  return `https://calendar.google.com/calendar/render?${params.toString()}`
+}
+
 const COC = [
   { strong: 'This is an affirming space.', rest: ' Bring your whole self — including the parts you usually have to leave at the door. Queer identity, trans experience, neurodivergence, disability: you\'re welcome as you are.' },
   { strong: 'We practise active consent.', rest: ' Ask before touching, check before sharing photos, and take cues from each other. When in doubt, ask.' },
@@ -104,7 +123,10 @@ export function RsvpPage() {
 
             <div className={styles.calLabel}>Add to calendar</div>
             <div className={styles.calRow}>
-              <button className={styles.calBtn} onClick={() => showToast('Opening Google Calendar…', 'info')}>
+              <button
+                className={styles.calBtn}
+                onClick={() => window.open(googleCalendarUrl(), '_blank', 'noopener,noreferrer')}
+              >
                 Google Calendar
               </button>
               <button className={styles.calBtn} onClick={() => showToast('Calendar file downloaded.', 'success')}>

@@ -3,14 +3,19 @@ import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
+import { InlineEditModal } from "./InlineEditModal";
 import {
-  GATHERING_DETAILS,
   GOING_ATTENDEES,
   WAITLIST_ATTENDEES,
   PREVIOUS_MESSAGES,
   GATHERING_SETTINGS,
 } from "./manageGathering.data";
 import styles from "./ManageGatheringPage.module.css";
+
+interface GatheringDetail {
+  label: string;
+  value: string;
+}
 
 type Tab = "overview" | "attendees" | "messages" | "settings";
 
@@ -25,8 +30,18 @@ const Check = () => (
   </svg>
 );
 
-function OverviewTab() {
-  const { showToast } = useToast();
+interface OverviewTabProps {
+  details: GatheringDetail[];
+  description: string;
+  onUpdateDetail: (label: string, value: string) => void;
+  onUpdateDescription: (value: string) => void;
+}
+
+function OverviewTab({ details, description, onUpdateDetail, onUpdateDescription }: OverviewTabProps) {
+  const [editing, setEditing] = useState<
+    { kind: "detail"; label: string; value: string } | { kind: "description"; value: string } | null
+  >(null);
+
   return (
     <div>
       <div className={styles.statsRow}>
@@ -38,11 +53,15 @@ function OverviewTab() {
         ))}
       </div>
       <div className={styles.detailBlock}>
-        {GATHERING_DETAILS.map((d) => (
+        {details.map((d) => (
           <div className={styles.detailRow} key={d.label}>
             <div className={styles.drLabel}>{d.label}</div>
             <div className={styles.drVal}>{d.value}</div>
-            <button type="button" className={styles.drEdit} onClick={() => showToast(`Edit ${d.label.toLowerCase()}`, "info")}>
+            <button
+              type="button"
+              className={styles.drEdit}
+              onClick={() => setEditing({ kind: "detail", label: d.label, value: d.value })}
+            >
               <Pencil /> Edit
             </button>
           </div>
@@ -51,18 +70,35 @@ function OverviewTab() {
       <div className={styles.descCard}>
         <div className={styles.descLabel}>
           Description
-          <button type="button" className={styles.drEdit} onClick={() => showToast("Edit description", "info")}>
+          <button
+            type="button"
+            className={styles.drEdit}
+            onClick={() => setEditing({ kind: "description", value: description })}
+          >
             Edit
           </button>
         </div>
-        <div className={styles.descText}>
-          A slow, joyful Pride-week brunch for queer Lisbon. Good food, no
-          agenda, no strangers for long. We'll have the terrace to ourselves
-          from 11am. Bring your people, or come solo — you'll leave with new
-          ones.
-        </div>
+        <div className={styles.descText}>{description}</div>
       </div>
       <div className={styles.lastEdit}>Last edited 2 days ago</div>
+
+      {editing?.kind === "detail" && (
+        <InlineEditModal
+          label={`Edit ${editing.label.toLowerCase()}`}
+          initialValue={editing.value}
+          onClose={() => setEditing(null)}
+          onSave={(value) => onUpdateDetail(editing.label, value)}
+        />
+      )}
+      {editing?.kind === "description" && (
+        <InlineEditModal
+          label="Edit description"
+          initialValue={editing.value}
+          multiline
+          onClose={() => setEditing(null)}
+          onSave={onUpdateDescription}
+        />
+      )}
     </div>
   );
 }
@@ -245,9 +281,20 @@ export function ManageGatheringSidebar({ onCopyLink }: ManageGatheringSidebarPro
 interface ManageGatheringTabsProps {
   initialTab?: Tab;
   onCancel: () => void;
+  details: GatheringDetail[];
+  description: string;
+  onUpdateDetail: (label: string, value: string) => void;
+  onUpdateDescription: (value: string) => void;
 }
 
-export function ManageGatheringTabs({ initialTab = "overview", onCancel }: ManageGatheringTabsProps) {
+export function ManageGatheringTabs({
+  initialTab = "overview",
+  onCancel,
+  details,
+  description,
+  onUpdateDetail,
+  onUpdateDescription,
+}: ManageGatheringTabsProps) {
   const [tab, setTab] = useState<Tab>(initialTab);
   return (
     <div>
@@ -263,7 +310,14 @@ export function ManageGatheringTabs({ initialTab = "overview", onCancel }: Manag
           </button>
         ))}
       </div>
-      {tab === "overview" && <OverviewTab />}
+      {tab === "overview" && (
+        <OverviewTab
+          details={details}
+          description={description}
+          onUpdateDetail={onUpdateDetail}
+          onUpdateDescription={onUpdateDescription}
+        />
+      )}
       {tab === "attendees" && <AttendeesTab />}
       {tab === "messages" && <MessagesTab />}
       {tab === "settings" && <SettingsTab onCancel={onCancel} />}

@@ -68,7 +68,7 @@ export function GatheringDashboardPage() {
       <div className={styles.body}>
         <div className="wrap">
           <div className={styles.grid}>
-            <CheckInColumn guests={guests} />
+            <CheckInColumn guests={guests} onCheckIn={checkInManual} />
             <GuestListCard guests={guests} checkedIn={checkedIn} onCheckIn={checkInManual} />
             <StatsColumn />
           </div>

@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { BarterQuestionModal } from './BarterQuestionModal'
 import styles from './BarterDetailPage.module.css'
 
 export function BarterProposeCard({ name, firstName }: { name: string; firstName: string }) {
   const { showToast } = useToast()
   const [message, setMessage] = useState('')
+  const [asking, setAsking] = useState(false)
 
   function send() {
     if (!message.trim()) {
@@ -37,7 +39,7 @@ export function BarterProposeCard({ name, firstName }: { name: string; firstName
           </Button>
           <Button
             variant="ghost"
-            onClick={() => showToast(`Asked ${firstName} a question`, 'info')}
+            onClick={() => setAsking(true)}
             style={{ width: '100%', justifyContent: 'center' }}
           >
             Ask a question first
@@ -48,6 +50,10 @@ export function BarterProposeCard({ name, firstName }: { name: string; firstName
           cut.
         </p>
       </div>
+
+      {asking && (
+        <BarterQuestionModal name={name} firstName={firstName} onClose={() => setAsking(false)} />
+      )}
     </div>
   )
 }

@@ -4,8 +4,45 @@ import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
-import { NEWSLETTERS, JOB_ALERTS, PRONOUN_OPTIONS, PRONOUN_VISIBILITY } from './subscriptions.data'
+import {
+  NEWSLETTERS,
+  JOB_ALERTS,
+  PRONOUN_OPTIONS,
+  PRONOUN_VISIBILITY,
+  type JobAlert,
+} from './subscriptions.data'
+import { AlertBuilderModal, type AlertDraft } from './AlertBuilderModal'
 import styles from './SubscriptionsPage.module.css'
+
+/** Build a JobAlert card record from a saved-search draft. */
+function alertFromDraft(d: AlertDraft): JobAlert {
+  return {
+    id: d.id,
+    ic: (d.title.trim()[0] ?? 'A').toUpperCase(),
+    title: d.title,
+    desc: <>Matching jobs sent · {d.frequency.toLowerCase()}</>,
+    criteria: [
+      { label: <>Title: <b>{d.keywords}</b></> },
+      { label: <>Location: <b>{d.location}</b></> },
+      ...(d.minSalary ? [{ label: <>Min salary: <b>{d.minSalary}</b></> }] : []),
+    ],
+    status: `Live · ${d.frequency.toLowerCase()}`,
+    matches: 'New',
+    lastSent: 'Not sent yet',
+  }
+}
+
+/** Reverse a JobAlert card into an editable draft (best-effort, mock data). */
+function draftFromAlert(a: JobAlert): AlertDraft {
+  return {
+    id: a.id,
+    title: a.title,
+    keywords: '',
+    location: 'Lisbon',
+    minSalary: '',
+    frequency: 'Weekly digest',
+  }
+}
 
 const iconVariantClass: Record<'coral' | 'jade' | 'plum', string> = {
   coral: '',
@@ -19,6 +56,9 @@ export function SubscriptionsPage() {
     Object.fromEntries(NEWSLETTERS.map((n) => [n.id, n.defaultOn]))
   )
   const [removedAlerts, setRemovedAlerts] = useState<Set<string>>(new Set())
+  const [alerts, setAlerts] = useState<JobAlert[]>(JOB_ALERTS)
+  const [builderOpen, setBuilderOpen] = useState(false)
+  const [editingAlert, setEditingAlert] = useState<AlertDraft | null>(null)
   const [selectedPronouns, setSelectedPronouns] = useState<Set<string>>(new Set(['he/him']))
   const [pronVis, setPronVis] = useState<Record<string, boolean>>(
     Object.fromEntries(PRONOUN_VISIBILITY.map((p) => [p.id, p.defaultOn]))
@@ -27,6 +67,14 @@ export function SubscriptionsPage() {
   function removeAlert(id: string) {
     setRemovedAlerts((prev) => new Set(prev).add(id))
     showToast('Alert removed', 'info')
+  }
+
+  function saveAlert(draft: AlertDraft) {
+    setAlerts((prev) => {
+      const exists = prev.some((a) => a.id === draft.id)
+      const next = alertFromDraft(draft)
+      return exists ? prev.map((a) => (a.id === draft.id ? next : a)) : [...prev, next]
+    })
   }
 
   function togglePronoun(p: string) {
@@ -64,7 +112,7 @@ export function SubscriptionsPage() {
         ))}
 
         <div className={styles.sectionH}>Saved searches &amp; job alerts</div>
-        {JOB_ALERTS.filter((a) => !removedAlerts.has(a.id)).map((alert) => (
+        {alerts.filter((a) => !removedAlerts.has(a.id)).map((alert) => (
           <div key={alert.id} className={styles.alertCard}>
             <div className={styles.alertHead}>
               <div className={styles.alertIc}>{alert.ic}</div>
@@ -73,7 +121,7 @@ export function SubscriptionsPage() {
                 <span>{alert.desc}</span>
               </div>
               <div className={styles.alertActions}>
-                <button className={styles.alertAction} onClick={() => showToast('Opened in editor', 'info')}>Edit</button>
+                <button className={styles.alertAction} onClick={() => setEditingAlert(draftFromAlert(alert))}>Edit</button>
                 <button className={`${styles.alertAction} ${styles.alertActionDanger}`} onClick={() => removeAlert(alert.id)}>Delete</button>
               </div>
             </div>
@@ -85,7 +133,7 @@ export function SubscriptionsPage() {
             <div className={styles.alertRow}><span>Last sent</span><b>{alert.lastSent}</b></div>
           </div>
         ))}
-        <button className={styles.addCard} onClick={() => showToast('New saved search · opening builder', 'info')}>+ Create a new alert</button>
+        <button className={styles.addCard} onClick={() => setBuilderOpen(true)}>+ Create a new alert</button>
 
         <div className={styles.sectionH}>Pronouns · how you appear across QueerPulse</div>
         <div className={styles.pronCard}>
@@ -130,6 +178,17 @@ export function SubscriptionsPage() {
           <Link to={routes.contact}>Pitch yourself for The Back Room →</Link>
         </div>
       </div>
+
+      {builderOpen && (
+        <AlertBuilderModal onClose={() => setBuilderOpen(false)} onSave={saveAlert} />
+      )}
+      {editingAlert && (
+        <AlertBuilderModal
+          initial={editingAlert}
+          onClose={() => setEditingAlert(null)}
+          onSave={saveAlert}
+        />
+      )}
     </AppShell>
   )
 }

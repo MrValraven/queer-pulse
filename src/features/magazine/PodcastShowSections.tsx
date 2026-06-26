@@ -1,14 +1,18 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiPlay } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { PodcastListenModal } from "./PodcastShowModals";
 import {
   EPISODES,
+  OLDER_EPISODES,
   PLATFORMS,
   SHOW_INFO,
   EPISODE_PATH,
   MEMBER_PATH,
   NEWSLETTER_PATH,
   CONTACT_PATH,
+  type Episode,
 } from "./podcastShow.data";
 import styles from "./PodcastShowPage.module.css";
 
@@ -18,8 +22,9 @@ const PlayIcon = () => (
   </svg>
 );
 
+const OLDER_BATCH = 4;
+
 export function PodcastHero() {
-  const { showToast } = useToast();
   return (
     <div className={styles.hero}>
       <div className={styles.heroInner}>
@@ -39,8 +44,9 @@ export function PodcastHero() {
             <span>Since <b>Aug 2024</b></span>
           </div>
           <div className={styles.actions}>
-            <Button type="button" variant="primary" onClick={() => showToast("Playing latest episode", "success")}>
-              ▶ Play latest
+            <Button to={EPISODE_PATH} variant="primary">
+              <FiPlay style={{ verticalAlign: "-2px", marginRight: 8 }} />
+              Play latest
             </Button>
             <Button to={NEWSLETTER_PATH} variant="ghost-dark">
               Subscribe
@@ -53,7 +59,7 @@ export function PodcastHero() {
 }
 
 export function PodcastListenRow() {
-  const { showToast } = useToast();
+  const [listenOpen, setListenOpen] = useState(false);
   return (
     <div className={styles.listenRow}>
       <div className={styles.listenInner}>
@@ -63,20 +69,43 @@ export function PodcastListenRow() {
             key={p.name}
             type="button"
             className={styles.listenBtn}
-            onClick={() => showToast(`Opening ${p.name}…`, "info")}
+            onClick={() => setListenOpen(true)}
           >
             <span className={styles.listenIc} style={{ background: p.color }} />
             {p.name}
           </button>
         ))}
       </div>
+      {listenOpen && <PodcastListenModal onClose={() => setListenOpen(false)} />}
+    </div>
+  );
+}
+
+function EpisodeRow({ e }: { e: Episode }) {
+  return (
+    <div className={styles.epRow}>
+      <div className={styles.epNum}>
+        {e.num}<em>{e.numEm}</em>
+      </div>
+      <div className={styles.epInfo}>
+        <h3>{e.title}</h3>
+        <p>{e.desc}</p>
+        <div className={styles.emMeta}>{e.meta}</div>
+      </div>
+      <div className={styles.epActions}>
+        <Link to={EPISODE_PATH} className={styles.play} title="Play episode">
+          <PlayIcon />
+        </Link>
+        <span className={styles.epDuration}>{e.duration}</span>
+      </div>
     </div>
   );
 }
 
 export function PodcastEpisodes() {
-  const { showToast } = useToast();
-  const play = (label: string) => showToast(`Playing ${label}`, "success");
+  const [shown, setShown] = useState(0);
+  const remaining = OLDER_EPISODES.length - shown;
+  const visibleOlder = OLDER_EPISODES.slice(0, shown);
 
   return (
     <main>
@@ -110,13 +139,9 @@ export function PodcastEpisodes() {
           prescription lists, and why she answers her own phone.
         </p>
         <div className={styles.epFeatRow}>
-          <button
-            type="button"
-            className={`${styles.play} ${styles.playLg}`}
-            onClick={() => play("episode 34")}
-          >
+          <Link to={EPISODE_PATH} className={`${styles.play} ${styles.playLg}`} title="Play episode 34">
             <PlayIcon />
-          </button>
+          </Link>
           <Link to={EPISODE_PATH} className={styles.epFeatNotes}>
             View episode notes →
           </Link>
@@ -125,31 +150,22 @@ export function PodcastEpisodes() {
 
       <div className={styles.epList}>
         {EPISODES.map((e, i) => (
-          <div className={styles.epRow} key={i}>
-            <div className={styles.epNum}>
-              {e.num}<em>{e.numEm}</em>
-            </div>
-            <div className={styles.epInfo}>
-              <h3>{e.title}</h3>
-              <p>{e.desc}</p>
-              <div className={styles.emMeta}>{e.meta}</div>
-            </div>
-            <div className={styles.epActions}>
-              <button type="button" className={styles.play} onClick={() => play("episode")}>
-                <PlayIcon />
-              </button>
-              <span className={styles.epDuration}>{e.duration}</span>
-            </div>
-          </div>
+          <EpisodeRow e={e} key={`base-${i}`} />
         ))}
-        <div className={styles.epMore}>
-          <Button
-            type="button" variant="ghost"
-            onClick={() => showToast("Loading older episodes…", "info")}
-          >
-            Show 28 older episodes
-          </Button>
-        </div>
+        {visibleOlder.map((e, i) => (
+          <EpisodeRow e={e} key={`older-${i}`} />
+        ))}
+        {remaining > 0 && (
+          <div className={styles.epMore}>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setShown((n) => Math.min(OLDER_EPISODES.length, n + OLDER_BATCH))}
+            >
+              Show {Math.min(OLDER_BATCH, remaining)} older episodes
+            </Button>
+          </div>
+        )}
       </div>
     </main>
   );

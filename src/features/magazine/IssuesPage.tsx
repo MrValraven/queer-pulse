@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
+import { MagazineMasthead } from "./MagazineMasthead";
 import styles from "./IssuesPage.module.css";
 import { Button } from '../../shared/components/ui'
 
@@ -37,6 +38,7 @@ export function IssuesPage() {
 
   return (
     <PageShell>
+      <MagazineMasthead active="issues" />
       <div className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.heroInner}>

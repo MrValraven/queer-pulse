@@ -1,76 +1,33 @@
-.masthead {
-  background: var(--cream);
-  border-bottom: 2px solid var(--plum);
-  padding: 128px 0 0;
-}
-.mmTop {
+.inIssue {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.12);
+  align-items: baseline;
+  gap: 8px 18px;
+  padding: 14px 0 16px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
   flex-wrap: wrap;
 }
-.mmBrand {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(42px, 7vw, 96px);
-  color: var(--plum);
-  letter-spacing: -0.03em;
-  line-height: 0.9;
-}
-.mmBrand em {
-  font-style: italic;
-  color: var(--accent);
-}
-.mmMeta {
-  text-align: right;
-}
-.mmIssue {
+.inIssueLabel {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-40);
-}
-.mmDate {
-  font-family: var(--serif);
-  font-size: 18px;
-  color: var(--plum);
-  margin-top: 4px;
-}
-.mmTagline {
-  font-size: 13px;
-  color: var(--ink-40);
-  margin-top: 6px;
-  font-style: italic;
-}
-.magNav {
-  display: flex;
-  gap: 24px;
-  padding: 12px 0;
-  border-bottom: 2px solid var(--plum);
-  overflow-x: auto;
-}
-.mnLink {
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-60);
   white-space: nowrap;
-  padding-bottom: 10px;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -12px;
-  cursor: pointer;
-  transition:
-    color 0.2s,
-    border-color 0.2s;
 }
-.mnLink:hover {
+.inIssueLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+.inIssueLink {
+  font-size: 13px;
+  color: var(--ink-60);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.inIssueLink:hover {
   color: var(--plum);
-  border-bottom-color: var(--plum);
 }
 
 .csImage {

@@ -4,6 +4,14 @@
   padding: 44px 28px 120px;
 }
 
+.safetyBlock {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
 /* Breadcrumb */
 .breadcrumb {
   display: flex;

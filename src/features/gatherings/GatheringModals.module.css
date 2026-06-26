@@ -1,0 +1,220 @@
+/* Shared modal shell + form + plum-panel success for gatherings flows */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 31, 0.55);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background: var(--paper);
+  border-radius: var(--radius-card, 22px);
+  width: 100%;
+  max-width: 520px;
+  padding: 34px 36px 38px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalUp 0.4s var(--ease);
+}
+@keyframes modalUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal {
+    animation: none;
+  }
+}
+
+.close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(45, 27, 61, 0.07);
+  border: none;
+  cursor: pointer;
+  color: var(--ink-60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s var(--ease);
+}
+.close:hover {
+  background: rgba(45, 27, 61, 0.14);
+}
+
+.eye {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(21px, 3vw, 28px);
+  color: var(--plum);
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+  margin-bottom: 12px;
+}
+.title em {
+  color: var(--accent);
+  font-style: italic;
+}
+.sub {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+}
+.req {
+  color: var(--accent);
+}
+.input,
+.textarea {
+  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border-radius: 12px;
+  padding: 12px 15px;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+  transition: border-color 0.25s var(--ease);
+  box-sizing: border-box;
+  width: 100%;
+}
+.input:focus,
+.textarea:focus {
+  border-color: var(--accent);
+}
+.textarea {
+  resize: vertical;
+  line-height: 1.55;
+  min-height: 110px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.full {
+  width: 100%;
+}
+
+/* ---- plum-panel success ---- */
+.successPanel {
+  background: var(--plum);
+  color: var(--cream);
+  border-radius: var(--radius-card, 22px);
+  width: 100%;
+  max-width: 520px;
+  padding: 40px 38px 38px;
+  position: relative;
+  text-align: left;
+  animation: modalUp 0.4s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .successPanel {
+    animation: none;
+  }
+}
+.successIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(74, 140, 111, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--jade);
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+.successTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(24px, 4vw, 32px);
+  color: var(--cream);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+.successTitle em {
+  color: var(--accent);
+  font-style: italic;
+}
+.successSub {
+  font-size: 14.5px;
+  color: rgba(247, 243, 238, 0.8);
+  line-height: 1.65;
+  margin-bottom: 26px;
+}
+.successSub b {
+  color: var(--cream);
+  font-weight: 600;
+}
+.successMeta {
+  font-size: 13px;
+  color: rgba(247, 243, 238, 0.5);
+  margin-bottom: 24px;
+}
+.successClose {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(247, 243, 238, 0.12);
+  border: none;
+  cursor: pointer;
+  color: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s var(--ease);
+}
+.successClose:hover {
+  background: rgba(247, 243, 238, 0.22);
+}

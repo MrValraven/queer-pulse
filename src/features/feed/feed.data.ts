@@ -1,11 +1,14 @@
-import { memberName } from '../members/data/members'
+import { MEMBERS, memberName } from '../members/data/members'
 
 export const FEED_TABS = ['All', 'Gatherings', 'People', 'Posts'] as const
 export type FeedTab = (typeof FEED_TABS)[number]
 
-export const NEW_THIS_WEEK = [
-  { initials: 'KL', tint: 'plum', name: memberName('kai'), slug: 'kai' },
-  { initials: 'BK', tint: 'jade', name: 'Bilal Kaya', slug: 'bilal' },
-  { initials: 'IF', tint: 'coral', name: 'Ines Fonseca', slug: 'ines' },
-  { initials: 'DO', tint: 'plum', name: 'Daniel Oliveira', slug: 'daniel' },
-] as const
+const NEW_SLUGS = ['kai', 'bilal-kaya', 'ines-fonseca', 'daniel-oliveira'] as const
+
+export const NEW_THIS_WEEK = NEW_SLUGS.map((slug) => ({
+  slug,
+  name: memberName(slug),
+  initials: MEMBERS[slug].initials,
+  tint: MEMBERS[slug].tint,
+  photo: MEMBERS[slug].photo,
+}))

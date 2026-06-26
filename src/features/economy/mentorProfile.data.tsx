@@ -84,3 +84,11 @@ export const MORE_FROM: string[] = [
   '→ Hosts The Back Room podcast',
   '→ Co-treasurer · transparency report',
 ]
+
+export const APPLY_FOCUS_AREAS: string[] = [
+  'Long-form reporting',
+  'Pitching & editors',
+  'Structure & edit',
+  'Finding the story',
+  'Sustaining a practice',
+]

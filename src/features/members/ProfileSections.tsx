@@ -10,6 +10,7 @@ import {
   TagRow,
 } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
+import { useConnect } from '../../app/providers/ConnectProvider'
 import { memberProfiles, type MemberProfile } from './data/memberProfiles'
 import { discoverCount, earnedBadges, levelInfo } from './badges.data'
 import { availableCount } from './perks.data'
@@ -61,6 +62,7 @@ export function Section({
 }
 
 export function ProfileHero({ profile }: { profile: MemberProfile }) {
+  const { openConnect } = useConnect()
   return (
     <header className={styles.phero}>
       <div className="wrap">
@@ -109,7 +111,7 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
                   Request an intro
                 </Button>
               ) : (
-                <Button size="lg" to={`/connect/${profile.slug}`}>
+                <Button size="lg" onClick={() => openConnect(profile.slug)}>
                   Say hello
                 </Button>
               )}

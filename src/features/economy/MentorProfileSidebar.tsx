@@ -1,10 +1,12 @@
+import { useState } from 'react'
 import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { BOOK_ROWS, MORE_FROM } from './mentorProfile.data'
+import { BOOK_ROWS, MENTOR, MORE_FROM } from './mentorProfile.data'
+import { MentorApplyModal } from './MentorApplyModal'
 import styles from './MentorProfilePage.module.css'
 
 export function MentorProfileSidebar() {
-  const { showToast } = useToast()
+  const [open, setOpen] = useState(false)
+  const mentorName = `${MENTOR.firstName} ${MENTOR.lastName}`
 
   return (
     <aside className={styles.side}>
@@ -25,7 +27,7 @@ export function MentorProfileSidebar() {
           </div>
         ))}
         <div className={styles.sideBtnWrap}>
-          <Button variant="primary" onClick={() => showToast('Application form opening', 'info')}>
+          <Button variant="primary" onClick={() => setOpen(true)}>
             Open application
           </Button>
         </div>
@@ -44,6 +46,8 @@ export function MentorProfileSidebar() {
           ))}
         </div>
       </div>
+
+      {open && <MentorApplyModal mentorName={mentorName} onClose={() => setOpen(false)} />}
     </aside>
   )
 }

@@ -4,11 +4,12 @@ import { MdQrCodeScanner } from 'react-icons/md'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { RECENT, WAITLIST, type Guest } from './gatheringDashboard.data'
+import { QrScanModal } from './QrScanModal'
 import styles from './GatheringDashboardPage.module.css'
 
-export function CheckInColumn({ guests }: { guests: Guest[] }) {
-  const { showToast } = useToast()
+export function CheckInColumn({ guests, onCheckIn }: { guests: Guest[]; onCheckIn: (name: string) => void }) {
   const [scanQuery, setScanQuery] = useState('')
+  const [scanOpen, setScanOpen] = useState(false)
   const scanMatches = useMemo(() => {
     if (scanQuery.length < 2) return null
     return guests.filter((g) => g.name.toLowerCase().includes(scanQuery.toLowerCase()))
@@ -21,13 +22,13 @@ export function CheckInColumn({ guests }: { guests: Guest[] }) {
         <div className={styles.cardBody}>
           <div
             className={styles.qrArea}
-            onClick={() => showToast('Opening camera…', 'info')}
+            onClick={() => setScanOpen(true)}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault()
-                showToast('Opening camera…', 'info')
+                setScanOpen(true)
               }
             }}
           >
@@ -38,7 +39,7 @@ export function CheckInColumn({ guests }: { guests: Guest[] }) {
               tap to open camera
             </div>
           </div>
-          <Button variant="primary" className={styles.scanBtn} onClick={() => showToast('Opening camera…', 'info')}>
+          <Button variant="primary" className={styles.scanBtn} onClick={() => setScanOpen(true)}>
             Scan member QR
           </Button>
           <div className={styles.orDivider}>
@@ -77,6 +78,10 @@ export function CheckInColumn({ guests }: { guests: Guest[] }) {
           </div>
         </div>
       </div>
+
+      {scanOpen && (
+        <QrScanModal guests={guests} onCheckIn={onCheckIn} onClose={() => setScanOpen(false)} />
+      )}
     </div>
   )
 }

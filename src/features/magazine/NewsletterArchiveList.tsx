@@ -1,19 +1,36 @@
-import { type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { YEARS, STREAM_CLASS, type Stream } from './newsletterArchive.data'
+import { routes } from '../../app/routeMap'
+import {
+  YEARS,
+  INITIAL_YEARS,
+  STREAM_CLASS,
+  type Row,
+  type Stream,
+} from './newsletterArchive.data'
 import styles from './NewsletterArchivePage.module.css'
 
 interface Props {
   stream: Stream | 'all'
 }
 
+function olderIssueCount(fromYear: number): number {
+  return YEARS.slice(fromYear).reduce((sum, y) => sum + y.rows.length, 0)
+}
+
 export function NewsletterArchiveList({ stream }: Props) {
-  const { showToast } = useToast()
+  const navigate = useNavigate()
+  const [shownYears, setShownYears] = useState(INITIAL_YEARS)
+
+  const openIssue = (r: Row) =>
+    navigate(`${routes.newsletterArchive}/${r.num}`)
+
+  const remaining = olderIssueCount(shownYears)
 
   return (
     <section className={styles.list}>
-      {YEARS.map((y, yi) => (
+      {YEARS.slice(0, shownYears).map((y, yi) => (
         <div key={yi}>
           <div className={styles.year}>
             <h3>{y.label as ReactNode}</h3>
@@ -28,7 +45,7 @@ export function NewsletterArchiveList({ stream }: Props) {
                 className={[styles.row, STREAM_CLASS[r.stream] && styles[STREAM_CLASS[r.stream] as keyof typeof styles]]
                   .filter(Boolean)
                   .join(' ')}
-                onClick={() => showToast('Opening newsletter…', 'info')}
+                onClick={() => openIssue(r)}
                 style={{ textAlign: 'left', border: 'none', background: 'none', width: '100%', font: 'inherit', cursor: 'pointer' }}
               >
                 <div>
@@ -56,15 +73,17 @@ export function NewsletterArchiveList({ stream }: Props) {
             ))}
         </div>
       ))}
-      <div className={styles.loadMore}>
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={() => showToast('Loading older issues…', 'info')}
-        >
-          Load 66 older issues
-        </Button>
-      </div>
+      {remaining > 0 && (
+        <div className={styles.loadMore}>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => setShownYears(YEARS.length)}
+          >
+            Load {remaining} older issues
+          </Button>
+        </div>
+      )}
     </section>
   )
 }

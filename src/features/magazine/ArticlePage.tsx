@@ -1,12 +1,23 @@
+import { useState, type CSSProperties } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button, ImageSlot } from '../../shared/components/ui'
-import { articles, defaultArticleId, isPullQuote } from './data/articles'
+import { Avatar, Button, ImageSlot, Tag } from '../../shared/components/ui'
+import { MagazineMasthead } from './MagazineMasthead'
+import {
+  articles,
+  defaultArticleId,
+  isPullQuote,
+  relationReason,
+} from './data/articles'
+import { ArticleToolbar, type TextSize } from './ArticleToolbar'
 
 import styles from './ArticlePage.module.css'
 
+const SIZE_PX: Record<TextSize, number> = { sm: 17, md: 19, lg: 22 }
+
 export function ArticlePage() {
   const [params] = useSearchParams()
+  const [textSize, setTextSize] = useState<TextSize>('md')
   const id = params.get('id') ?? defaultArticleId
   const article = articles[id]
 
@@ -28,6 +39,7 @@ export function ArticlePage() {
 
   return (
     <PageShell>
+      <MagazineMasthead />
       <div className={styles.header}>
         <div className="wrap">
           <Link to="/magazine" className={styles.back}>
@@ -56,7 +68,11 @@ export function ArticlePage() {
 
       <div className={styles.bodyWrap}>
         <article className={styles.bodyInner}>
-          <div className={styles.body}>
+          <ArticleToolbar textSize={textSize} onTextSize={setTextSize} />
+          <div
+            className={styles.body}
+            style={{ '--article-body-size': `${SIZE_PX[textSize]}px` } as CSSProperties}
+          >
             {article.body.map((block, index) =>
               isPullQuote(block) ? (
                 <blockquote key={index} className={styles.pull}>
@@ -92,6 +108,7 @@ export function ArticlePage() {
                   <div className={styles.relMeta}>
                     {rel.byline} · {rel.readTime}
                   </div>
+                  <Tag className={styles.relReason}>{relationReason(article, rel)}</Tag>
                 </Link>
               ))}
             </div>

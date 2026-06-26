@@ -1,0 +1,273 @@
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 108px 28px 96px;
+  background: var(--cream);
+}
+
+/* ---- Header ---- */
+.head {
+  padding-bottom: 32px;
+  margin-bottom: 40px;
+  border-bottom: 2px solid var(--plum);
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(40px, 5vw, 60px);
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+.h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.status {
+  font-size: 15px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-top: 16px;
+}
+
+/* ---- Bands ---- */
+.band {
+  margin-bottom: 48px;
+}
+.sectionTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--plum);
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+}
+
+/* ---- Next actions ---- */
+.actionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 22px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.row:hover {
+  border-color: rgba(45, 27, 61, 0.2);
+}
+.rowUrgent {
+  border-color: rgba(232, 119, 90, 0.4);
+  background: rgba(232, 119, 90, 0.05);
+}
+.rowIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(45, 27, 61, 0.06);
+  color: var(--plum);
+  font-size: 19px;
+}
+.rowUrgent .rowIcon {
+  background: rgba(232, 119, 90, 0.14);
+  color: var(--accent-ink);
+}
+.rowBody {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.rowLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.rowContext {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  margin-top: 4px;
+}
+.urgency {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(45, 27, 61, 0.08);
+  color: var(--ink-60);
+}
+.urgencyUrgent {
+  background: rgba(232, 119, 90, 0.16);
+  color: var(--accent-ink);
+}
+
+/* ---- Status cards ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.card {
+  position: relative;
+  display: block;
+  padding: 22px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  text-decoration: none;
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.card:hover {
+  border-color: rgba(45, 27, 61, 0.22);
+  transform: translateY(-2px);
+}
+.cardIcon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: rgba(74, 140, 111, 0.12);
+  color: var(--jade);
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.cardLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.cardPrimary {
+  font-family: var(--serif);
+  font-size: 21px;
+  color: var(--plum);
+  letter-spacing: -0.015em;
+  margin: 6px 0 4px;
+}
+.cardNext {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+.cardArrow {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  color: var(--ink-40);
+  transition: transform 0.2s var(--ease), color 0.2s var(--ease);
+}
+.card:hover .cardArrow {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+
+/* ---- Work Profile module ---- */
+.pCard {
+  padding: 28px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 18px;
+}
+.pHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.pId {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.pName {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--plum);
+  letter-spacing: -0.015em;
+}
+.pPronouns {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+.pHeadline {
+  font-size: 14px;
+  color: var(--ink);
+  margin-top: 4px;
+}
+.pLocation {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-top: 2px;
+}
+.pBadge {
+  flex: 0 0 auto;
+}
+.pMeterRow {
+  margin: 22px 0;
+}
+.pMeterLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.meter {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(45, 27, 61, 0.08);
+  overflow: hidden;
+  margin-top: 8px;
+}
+.meterFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--jade);
+}
+.pFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.pNote {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  max-width: 42ch;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 92px 18px 72px;
+  }
+  .row {
+    flex-wrap: wrap;
+  }
+}

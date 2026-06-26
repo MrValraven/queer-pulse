@@ -1,3 +1,6 @@
+/** localStorage key that records an explicit sign-out for the prototype auth state. */
+export const AUTH_STORAGE_KEY = 'qp_logged_in'
+
 export interface CookieRow {
   name: string
   expires: string

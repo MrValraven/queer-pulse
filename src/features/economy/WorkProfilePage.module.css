@@ -1,0 +1,324 @@
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 108px 28px 96px;
+  background: var(--cream);
+}
+
+/* ---- Header ---- */
+.head {
+  padding-bottom: 28px;
+  margin-bottom: 32px;
+  border-bottom: 2px solid var(--plum);
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(34px, 4.5vw, 52px);
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+}
+.h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  font-size: 14.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  max-width: 52ch;
+  margin-top: 14px;
+}
+
+/* ---- Sections ---- */
+.section {
+  padding: 28px;
+  margin-bottom: 20px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 18px;
+}
+.sectionTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 23px;
+  color: var(--plum);
+  letter-spacing: -0.015em;
+}
+.sectionTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sectionSub {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin: 6px 0 20px;
+}
+
+/* ---- Fields ---- */
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.field {
+  margin-bottom: 16px;
+}
+.fieldLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 7px;
+}
+.fieldOptional {
+  font-weight: 400;
+  color: var(--ink-40);
+}
+.fieldInput,
+.fieldTextarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 14.5px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1px solid rgba(45, 27, 61, 0.16);
+  border-radius: 11px;
+  padding: 12px 14px;
+  transition: border-color 0.2s var(--ease);
+}
+.fieldTextarea {
+  min-height: 96px;
+  resize: vertical;
+}
+.fieldInput:focus,
+.fieldTextarea:focus {
+  outline: none;
+  border-color: var(--plum);
+}
+.fieldHint {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* ---- Out-at-work segmented control ---- */
+.seg {
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  background: var(--cream);
+  border: 1px solid rgba(45, 27, 61, 0.12);
+  border-radius: 13px;
+  flex-wrap: wrap;
+}
+.segBtn {
+  flex: 1 1 auto;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+.segBtn:hover {
+  color: var(--plum);
+}
+.segOn {
+  background: var(--plum);
+  color: var(--cream);
+}
+.segDesc {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin-top: 12px;
+}
+
+/* ---- Toggle rows ---- */
+.toggleList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toggleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  background: var(--cream);
+  border: 1px solid rgba(45, 27, 61, 0.1);
+  border-radius: 13px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.toggleRowOn {
+  border-color: rgba(74, 140, 111, 0.4);
+  background: rgba(74, 140, 111, 0.06);
+}
+.toggle {
+  flex: 0 0 auto;
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(45, 27, 61, 0.18);
+  margin-top: 2px;
+  transition: background 0.2s var(--ease);
+}
+.toggleOn {
+  background: var(--jade);
+}
+.toggleKnob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--paper);
+  transition: transform 0.2s var(--ease);
+}
+.toggleOn .toggleKnob {
+  transform: translateX(16px);
+}
+.toggleText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.toggleLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.toggleDesc {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+/* ---- Visibility matrix ---- */
+.matrix {
+  border: 1px solid rgba(45, 27, 61, 0.1);
+  border-radius: 13px;
+  overflow: hidden;
+}
+.matrixRow {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(45, 27, 61, 0.08);
+}
+.matrixRow:first-child {
+  border-top: none;
+}
+.matrixHead {
+  background: var(--cream);
+}
+.matrixHead .matrixField,
+.matrixHead .matrixCell {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.matrixField {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.matrixCell {
+  font-size: 13.5px;
+  color: var(--ink-60);
+}
+
+/* ---- Save ---- */
+.saveBar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* ---- Plum-panel success ---- */
+.successWrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 132px 28px 110px;
+}
+.success {
+  background: var(--plum);
+  border-radius: 24px;
+  padding: 56px 48px;
+  text-align: center;
+}
+.successIcon {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  background: var(--jade);
+  color: var(--cream);
+  font-size: 28px;
+}
+.successTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(32px, 4vw, 46px);
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.successTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.successSub {
+  font-size: 15px;
+  color: rgba(253, 248, 240, 0.78);
+  line-height: 1.6;
+  max-width: 46ch;
+  margin: 16px auto 32px;
+}
+.successActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 92px 18px 72px;
+  }
+  .fieldRow {
+    grid-template-columns: 1fr;
+  }
+  .matrixRow {
+    grid-template-columns: 1.4fr 1fr 1fr;
+    font-size: 12px;
+  }
+  .success {
+    padding: 40px 24px;
+  }
+}

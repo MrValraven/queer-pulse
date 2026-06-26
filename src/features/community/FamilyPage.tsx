@@ -1,23 +1,40 @@
 import { useRef, useState } from 'react'
+import { FiCompass } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
 import { FORUM, INVITE, LEGAL, MENTORSHIP, SITUATIONS, TABS, TALK_CARDS, type TabId } from './family.data'
 import { FamilyTabContent } from './FamilyTabContent'
+import { ParentNetwork } from './ParentNetwork'
 import styles from './FamilyPage.module.css'
 
 export function FamilyPage() {
   const [active, setActive] = useState<TabId>('adoption')
   const [selectedSit, setSelectedSit] = useState<number | null>(null)
+  // Low-pressure entry: this is a sensitive topic, so picking a situation is
+  // always optional. "Just exploring" lets people read everything without
+  // declaring anything about themselves.
+  const [exploring, setExploring] = useState(false)
   const tabNavRef = useRef<HTMLDivElement>(null)
 
-  const selectSituation = (index: number, tab: TabId) => {
-    setSelectedSit(index)
-    setActive(tab)
+  const scrollToTabs = () => {
     const el = tabNavRef.current
     if (el) {
       const top = el.getBoundingClientRect().top + window.scrollY - 80
       window.scrollTo({ top, behavior: 'smooth' })
     }
+  }
+
+  const selectSituation = (index: number, tab: TabId) => {
+    setSelectedSit(index)
+    setExploring(false)
+    setActive(tab)
+    scrollToTabs()
+  }
+
+  const browseFreely = () => {
+    setExploring(true)
+    setSelectedSit(null)
+    scrollToTabs()
   }
 
   const tab = TABS.find((t) => t.id === active) ?? TABS[0]
@@ -47,7 +64,10 @@ export function FamilyPage() {
             <h2>
               Where are you <em>starting from?</em>
             </h2>
-            <p>Pick your situation to highlight what's most relevant to you.</p>
+            <p>
+              Optional — pick a situation to highlight what's most relevant, or just browse
+              everything below. No need to decide anything to read.
+            </p>
           </div>
           <div className={styles.sitGrid}>
             {SITUATIONS.map((s, i) => (
@@ -62,6 +82,16 @@ export function FamilyPage() {
                 <div className={styles.sitTo}>{s.to}</div>
               </button>
             ))}
+          </div>
+          <div className={styles.browseRow}>
+            <button
+              type="button"
+              className={[styles.browseBtn, exploring && styles.browseBtnActive].filter(Boolean).join(' ')}
+              onClick={browseFreely}
+            >
+              <FiCompass aria-hidden />
+              I'm just exploring — show me everything
+            </button>
           </div>
         </div>
       </section>
@@ -145,6 +175,8 @@ export function FamilyPage() {
           </div>
         </div>
       </section>
+
+      <ParentNetwork />
 
       <Outro
         title={<>Your family is <em>real.</em></>}

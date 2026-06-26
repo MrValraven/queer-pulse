@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button, ImageSlot } from '../../shared/components/ui'
+import { MagazineMasthead } from './MagazineMasthead'
 import styles from './IssuePage.module.css'
 import { TOC, CONTRIBUTORS } from './issue.data'
 
 export function IssuePage() {
   return (
     <PageShell>
+      <MagazineMasthead active="issues" />
       <div className={styles.cover}>
         <div className={styles.coverInner}>
           <Link to="/magazine" className={styles.back}>

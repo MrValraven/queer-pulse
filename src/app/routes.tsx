@@ -10,7 +10,6 @@ import { ReadingGroupsPage } from '../features/community/ReadingGroupsPage'
 import { FamilyPage } from '../features/community/FamilyPage'
 import { FeedPage } from '../features/feed/FeedPage'
 import { NotificationsPage } from '../features/notifications/NotificationsPage'
-import { ConnectPage } from '../features/connect/ConnectPage'
 import { MessagesPage } from '../features/messages/MessagesPage'
 import { CommunitiesPage } from '../features/communities/CommunitiesPage'
 import { CommunityDetailPage } from '../features/communities/CommunityDetailPage'
@@ -37,6 +36,7 @@ import { TagPage } from '../features/magazine/TagPage'
 import { PodcastShowPage } from '../features/magazine/PodcastShowPage'
 import { AudioPlayerPage } from '../features/magazine/AudioPlayerPage'
 import { NewsletterArchivePage } from '../features/magazine/NewsletterArchivePage'
+import { NewsletterArchiveIssuePage } from '../features/magazine/NewsletterArchiveIssuePage'
 import { StoryPage } from '../features/magazine/StoryPage'
 import { StoryTomasPage } from '../features/magazine/StoryTomasPage'
 import { StorySafetyPage } from '../features/magazine/StorySafetyPage'
@@ -52,6 +52,7 @@ import { ChangelogPage } from '../features/marketing/ChangelogPage'
 import { PressArchivePage } from '../features/marketing/PressArchivePage'
 import { NewsletterPage } from '../features/marketing/NewsletterPage'
 import { AnnualAssemblyPage } from '../features/marketing/AnnualAssemblyPage'
+import { AssemblyMinutesPage } from '../features/marketing/AssemblyMinutesPage'
 import { GetTheAppPage } from '../features/marketing/GetTheAppPage'
 import { ComponentLibraryPage } from '../features/marketing/ComponentLibraryPage'
 import { CitiesPage } from '../features/marketing/CitiesPage'
@@ -189,6 +190,8 @@ import { MembershipPage } from '../features/settings/MembershipPage'
 import { GiftMembershipPage } from '../features/settings/GiftMembershipPage'
 import { PublicProfilePage } from '../features/members/PublicProfilePage'
 import { MentorProfilePage } from '../features/economy/MentorProfilePage'
+import { WorkHubPage } from '../features/economy/WorkHubPage'
+import { WorkProfilePage } from '../features/economy/WorkProfilePage'
 import { NotificationDeepLinkPage } from '../features/notifications/NotificationDeepLinkPage'
 import { MentionsPage } from '../features/notifications/MentionsPage'
 import { CollectionsPage } from '../features/members/CollectionsPage'
@@ -200,7 +203,6 @@ import { CookiesPage } from '../features/marketing/CookiesPage'
 import { PronounsGuidePage } from '../features/resources/PronounsGuidePage'
 import { LibraryPage } from '../features/resources/LibraryPage'
 import { ComingOutPage } from '../features/community/ComingOutPage'
-import { ParentsPage } from '../features/community/ParentsPage'
 import { GatheringsPage } from '../features/gatherings/GatheringsPage'
 import { CrisisChatPage } from '../features/safety/CrisisChatPage'
 import { VouchPage } from '../features/members/VouchPage'
@@ -226,7 +228,6 @@ const BUILT_SLUGS = new Set([
   'profile',
   'messages',
   'notifications',
-  'connect',
   'communities',
   'calendar',
   'gathering',
@@ -387,8 +388,6 @@ export function AppRoutes() {
       <Route path="/public-profile" element={<PublicProfilePage />} />
       <Route path="/account/badges" element={<BadgesPage />} />
       <Route path="/account/perks" element={<PerksPage />} />
-      <Route path="/connect" element={<ConnectPage />} />
-      <Route path="/connect/:slug" element={<ConnectPage />} />
       <Route path="/account/connections" element={<ConnectionsPage />} />
       <Route path="/dating" element={<DatingPage />} />
       <Route path="/reading-groups" element={<ReadingGroupsPage />} />
@@ -431,6 +430,7 @@ export function AppRoutes() {
       <Route path="/podcast-show" element={<PodcastShowPage />} />
       <Route path="/audio-player" element={<AudioPlayerPage />} />
       <Route path="/newsletter-archive" element={<NewsletterArchivePage />} />
+      <Route path="/newsletter-archive/:slug" element={<NewsletterArchiveIssuePage />} />
       <Route path="/story" element={<StoryPage />} />
       <Route path="/story-tomas" element={<StoryTomasPage />} />
       <Route path="/story-safety" element={<StorySafetyPage />} />
@@ -447,6 +447,7 @@ export function AppRoutes() {
       <Route path="/press-archive" element={<PressArchivePage />} />
       <Route path="/newsletter" element={<NewsletterPage />} />
       <Route path="/annual-assembly" element={<AnnualAssemblyPage />} />
+      <Route path="/annual-assembly/minutes/:year" element={<AssemblyMinutesPage />} />
       <Route path="/get-the-app" element={<GetTheAppPage />} />
       <Route path="/component-library" element={<ComponentLibraryPage />} />
       <Route path="/cities" element={<CitiesPage />} />
@@ -585,6 +586,8 @@ export function AppRoutes() {
       {/* Account hub & settings sub-flows (all under /account) */}
       <Route path="/account" element={<Navigate to="/account/profile" replace />} />
       <Route path="/account/edit-profile" element={<EditProfilePage />} />
+      <Route path="/account/work" element={<WorkHubPage />} />
+      <Route path="/account/work-profile" element={<WorkProfilePage />} />
       <Route path="/account/notification-preferences" element={<NotificationPreferencesPage />} />
       <Route path="/account/accessibility-preferences" element={<AccessibilityPreferencesPage />} />
       <Route path="/account/profile-theme" element={<ProfileThemePage />} />
@@ -621,7 +624,7 @@ export function AppRoutes() {
       {/* Newly built community / resource / support pages */}
       <Route path="/library" element={<LibraryPage />} />
       <Route path="/coming-out" element={<ComingOutPage />} />
-      <Route path="/parents" element={<ParentsPage />} />
+      <Route path="/parents" element={<Navigate to="/family" replace />} />
       <Route path="/gatherings" element={<GatheringsPage />} />
       <Route path="/crisis-chat" element={<CrisisChatPage />} />
       <Route path="/vouch" element={<VouchPage />} />

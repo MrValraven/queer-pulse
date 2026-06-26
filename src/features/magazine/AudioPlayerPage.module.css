@@ -384,6 +384,44 @@
   stroke: var(--accent);
 }
 
+/* Live sleep-timer countdown chip */
+.sleepChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(var(--accent-rgb), 0.16);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  padding: 5px 8px 5px 12px;
+  border-radius: 999px;
+}
+.sleepChip svg {
+  width: 14px;
+  height: 14px;
+}
+.sleepChipX {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.25);
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  line-height: 1;
+}
+.sleepChipX:hover {
+  background: rgba(var(--accent-rgb), 0.4);
+}
+
 .below {
   max-width: 920px;
   margin: 0 auto;

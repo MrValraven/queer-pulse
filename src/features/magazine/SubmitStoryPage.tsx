@@ -1,22 +1,46 @@
-import { useState, type FormEvent } from 'react'
+import { useMemo, useState, type FormEvent } from 'react'
 import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Reveal } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { MagazineMasthead } from './MagazineMasthead'
 import { FORMATS, LOOKING_FOR, STEPS } from './submitStory.data'
 import styles from './SubmitStoryPage.module.css'
 
+const PITCH_MIN = 40
+const PITCH_MAX = 800
+
+/** Two weeks from "now", formatted as e.g. "10 July 2026". */
+function replyByDate(): string {
+  const d = new Date()
+  d.setDate(d.getDate() + 14)
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
 export function SubmitStoryPage() {
-  const { showToast } = useToast()
   const [sent, setSent] = useState(false)
   const [format, setFormat] = useState('essay')
   const [working, setWorking] = useState('')
   const [pitch, setPitch] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const [touched, setTouched] = useState({ working: false, pitch: false })
+
+  const errors = useMemo(() => {
+    const e: { working?: string; pitch?: string } = {}
+    if (!working.trim()) e.working = 'A working title helps us keep track — it can change later.'
+    if (!pitch.trim()) e.pitch = 'Tell us a little about the story.'
+    else if (pitch.trim().length < PITCH_MIN) e.pitch = `A bit more, please — at least ${PITCH_MIN} characters.`
+    return e
+  }, [working, pitch])
+
+  const isValid = Object.keys(errors).length === 0
+  const showError = (k: 'working' | 'pitch') => (touched[k] || submitted) && errors[k]
+  const showOk = (k: 'working' | 'pitch') => (touched[k] || submitted) && !errors[k]
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
+    setSubmitted(true)
+    if (!isValid) return
     setSent(true)
-    showToast('Pitch received — an editor will be in touch within two weeks.')
   }
 
   if (sent) {
@@ -30,10 +54,25 @@ export function SubmitStoryPage() {
                 We're <em>reading.</em>
               </h1>
               <p className={styles.panelSub}>
-                Thank you for trusting us with “{working || 'your story'}”. An editor will reply
-                within two weeks — yes, no, or let's talk. Whatever happens, the copyright stays
-                yours.
+                Thank you for trusting us with “{working || 'your story'}”. Whatever happens, the
+                copyright stays yours.
               </p>
+              <div className={styles.timeline}>
+                <div className={styles.timelineRow}>
+                  <span className={styles.timelineDot} />
+                  <span>An editor reads every pitch personally.</span>
+                </div>
+                <div className={styles.timelineRow}>
+                  <span className={[styles.timelineDot, styles.timelineDotKey].join(' ')} />
+                  <span>
+                    You'll hear from us by <strong>{replyByDate()}</strong> — yes, no, or let's talk.
+                  </span>
+                </div>
+                <div className={styles.timelineRow}>
+                  <span className={styles.timelineDot} />
+                  <span>If it's a yes, we agree a rate and deadline together.</span>
+                </div>
+              </div>
               <div className={styles.panelActions}>
                 <Button to="/magazine" variant="ghost-dark" size="lg">
                   Back to the magazine
@@ -49,8 +88,12 @@ export function SubmitStoryPage() {
     )
   }
 
+  const pitchLen = pitch.length
+  const pitchOver = pitchLen > PITCH_MAX
+
   return (
     <PageShell>
+      <MagazineMasthead active="write" />
       <section className={styles.page}>
         <div className="wrap">
           <div className={styles.grid}>
@@ -86,7 +129,7 @@ export function SubmitStoryPage() {
               </div>
             </div>
 
-            <Reveal as="form" className={styles.form} delay={120} onSubmit={handleSubmit}>
+            <Reveal as="form" className={styles.form} delay={120} onSubmit={handleSubmit} noValidate>
               <div className={styles.field}>
                 <span className={styles.label}>What format is it?</span>
                 <div className={styles.formats}>
@@ -109,13 +152,15 @@ export function SubmitStoryPage() {
                 </label>
                 <input
                   id="working-title"
-                  className={styles.input}
+                  className={[styles.input, showError('working') ? styles.inputError : showOk('working') ? styles.inputOk : ''].filter(Boolean).join(' ')}
                   type="text"
                   placeholder="It can change later"
                   value={working}
                   onChange={(event) => setWorking(event.target.value)}
-                  required
+                  onBlur={() => setTouched((t) => ({ ...t, working: true }))}
+                  aria-invalid={!!showError('working')}
                 />
+                {showError('working') && <div className={styles.fieldError}>{errors.working}</div>}
               </div>
 
               <div className={styles.field}>
@@ -124,12 +169,26 @@ export function SubmitStoryPage() {
                 </label>
                 <textarea
                   id="pitch"
-                  className={styles.textarea}
+                  className={[styles.textarea, showError('pitch') ? styles.inputError : showOk('pitch') ? styles.inputOk : ''].filter(Boolean).join(' ')}
                   placeholder="A paragraph or two — what's the story, why now, and why you?"
                   value={pitch}
                   onChange={(event) => setPitch(event.target.value)}
-                  required
+                  onBlur={() => setTouched((t) => ({ ...t, pitch: true }))}
+                  aria-invalid={!!showError('pitch')}
+                  maxLength={PITCH_MAX}
                 />
+                <div className={styles.metaRow}>
+                  {showError('pitch') ? (
+                    <span className={styles.fieldError}>{errors.pitch}</span>
+                  ) : showOk('pitch') ? (
+                    <span className={styles.fieldOk}>Looks good.</span>
+                  ) : (
+                    <span />
+                  )}
+                  <span className={[styles.charCount, pitchOver ? styles.charCountWarn : ''].filter(Boolean).join(' ')}>
+                    {pitchLen} / {PITCH_MAX}
+                  </span>
+                </div>
               </div>
 
               <div className={styles.field}>
@@ -139,7 +198,9 @@ export function SubmitStoryPage() {
                 <input
                   id="links"
                   className={styles.input}
-                  type="text"
+                  type="url"
+                  inputMode="url"
+                  autoComplete="url"
                   placeholder="Portfolio, a published piece, your Instagram…"
                 />
               </div>

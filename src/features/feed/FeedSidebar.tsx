@@ -1,30 +1,30 @@
 import { Link } from 'react-router-dom'
 import { Avatar, AvatarStack } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { useConnect } from '../../app/providers/ConnectProvider'
 import { routes } from '../../app/routeMap'
 import { NEW_THIS_WEEK } from './feed.data'
 import styles from './FeedPage.module.css'
 
 export function FeedSidebar() {
-  const { showToast } = useToast()
+  const { openConnect } = useConnect()
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sbCard}>
         <div className={styles.sbTitle}>Upcoming</div>
-        <div className={styles.upcomingRow}>
+        <Link to={routes.gathering} className={styles.upcomingRow}>
           <span className={styles.datePill}>22 Jun</span>
           <div>
             <div className={styles.upName}>Queer Night Swim</div>
             <div className={styles.upVenue}>Piscina Municipal</div>
           </div>
-        </div>
-        <div className={styles.upcomingRow}>
+        </Link>
+        <Link to={routes.gathering} className={styles.upcomingRow}>
           <span className={styles.datePill}>19 Jul</span>
           <div>
             <div className={styles.upName}>Queer Book Club</div>
             <div className={styles.upVenue}>LX Factory</div>
           </div>
-        </div>
+        </Link>
         <Link to={routes.calendar} className={styles.sbLink}>See full calendar →</Link>
       </div>
 
@@ -32,9 +32,11 @@ export function FeedSidebar() {
         <div className={styles.sbTitle}>New this week</div>
         {NEW_THIS_WEEK.map((person) => (
           <div key={person.name} className={styles.sbMemberRow}>
-            <Avatar initials={person.initials} tint={person.tint} size={30} />
-            <span className={styles.sbMemberName}>{person.name}</span>
-            <button className={styles.linkBtn} onClick={() => showToast('Request sent', 'success')}>Connect</button>
+            <Link to={`/members/${person.slug}`} className={styles.sbMemberLink}>
+              <Avatar initials={person.initials} tint={person.tint} src={person.photo} size={30} />
+              <span className={styles.sbMemberName}>{person.name}</span>
+            </Link>
+            <button className={styles.linkBtn} onClick={() => openConnect(person.slug)}>Connect</button>
           </div>
         ))}
         <Link to="/members" className={styles.sbLink}>Browse all members →</Link>

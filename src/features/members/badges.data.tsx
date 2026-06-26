@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { FiCheck } from 'react-icons/fi'
+import { currentUser, fullName } from './data/members'
 
 export type BadgeRarity = 'common' | 'rare' | 'legendary'
 export type BadgeTint = 'jade' | 'accent' | 'plum'
@@ -52,7 +53,7 @@ export const levelInfo: LevelInfo = {
   percent: 68,
   xpToNext: 320,
   nextName: 'Trusted',
-  member: 'Sofia Rodrigues',
+  member: fullName(currentUser),
   since: 'Jan 2025',
 }
 

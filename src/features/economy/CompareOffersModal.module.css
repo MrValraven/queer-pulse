@@ -1,0 +1,116 @@
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 34px;
+  color: var(--plum);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  margin-bottom: 8px;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  font-size: 15px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-bottom: 26px;
+}
+
+.scroll {
+  overflow-x: auto;
+  margin-bottom: 24px;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.rowHead {
+  text-align: left;
+  vertical-align: top;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  padding: 14px 16px 14px 0;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+}
+.colHead {
+  text-align: left;
+  vertical-align: bottom;
+  padding: 0 14px 14px;
+  border-bottom: 2px solid var(--plum);
+  min-width: 200px;
+}
+.colCo {
+  display: block;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.colRole {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  margin-top: 3px;
+}
+.cell {
+  vertical-align: top;
+  padding: 14px;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.5;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+}
+.terms {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.terms li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.tick {
+  flex: none;
+  color: var(--jade);
+  margin-top: 1px;
+}
+
+.foot {
+  display: flex;
+  justify-content: flex-start;
+}
+.back {
+  font-size: 14px;
+  color: var(--ink-60);
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+.back:hover {
+  color: var(--plum);
+}

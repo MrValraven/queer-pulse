@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { AGENDA, RESOLUTIONS, HISTORY, type AssemblyVote, type Resolution } from './annualAssembly.data'
+import { AGENDA, RESOLUTIONS, MORE_RESOLUTIONS, HISTORY, type AssemblyVote, type Resolution } from './annualAssembly.data'
+import { LiveStreamModal } from './LiveStreamModal'
 import styles from './AnnualAssemblyPage.module.css'
 
 function ResolutionCard({ res }: { res: Resolution }) {
@@ -61,7 +63,7 @@ export function AgendaSection() {
 }
 
 export function VoteSection() {
-  const { showToast } = useToast()
+  const [showAll, setShowAll] = useState(false)
   return (
     <section className={styles.sec} id="vote">
       <h2>Vote · <em>open until 14 Nov · 14:00</em></h2>
@@ -74,15 +76,20 @@ export function VoteSection() {
         simple majority for budget items; 60% supermajority for Code of Conduct &amp; manifesto changes.
       </div>
       {RESOLUTIONS.map((r, i) => <ResolutionCard res={r} key={i} />)}
-      <p className={styles.showMore}>
-        <a onClick={() => showToast('Loading 8 more resolutions…', 'info')}>Show 8 more resolutions →</a>
-      </p>
+      {showAll && MORE_RESOLUTIONS.map((r, i) => <ResolutionCard res={r} key={`more-${i}`} />)}
+      {!showAll && (
+        <p className={styles.showMore}>
+          <a role="button" tabIndex={0} onClick={() => setShowAll(true)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowAll(true) } }}>
+            Show {MORE_RESOLUTIONS.length} more resolutions →
+          </a>
+        </p>
+      )}
     </section>
   )
 }
 
 export function AttendCard() {
-  const { showToast } = useToast()
+  const [stream, setStream] = useState(false)
   return (
     <div className={styles.attendCard}>
       <div>
@@ -91,14 +98,14 @@ export function AttendCard() {
       </div>
       <div className={styles.attendActions}>
         <Button href="#vote" variant="primary">Cast your vote</Button>
-        <Button type="button" variant="ghost-dark" onClick={() => showToast('Opening live stream…', 'info')}>Live stream link</Button>
+        <Button type="button" variant="ghost-dark" onClick={() => setStream(true)}>Live stream link</Button>
       </div>
+      {stream && <LiveStreamModal onClose={() => setStream(false)} />}
     </div>
   )
 }
 
 export function PastAssembliesSection() {
-  const { showToast } = useToast()
   return (
     <section className={styles.sec}>
       <h2>Past <em>assemblies</em></h2>
@@ -107,7 +114,7 @@ export function PastAssembliesSection() {
         <div className={styles.historyRow} key={h.y}>
           <div className={styles.histY}>202<em>{h.y}</em></div>
           <div className={styles.histInfo}><b>{h.title}</b><span>{h.sub}</span></div>
-          <a className={styles.histLink} onClick={() => showToast('Opening minutes…', 'info')}>Minutes →</a>
+          <Link className={styles.histLink} to={`/annual-assembly/minutes/202${h.y}`}>Minutes →</Link>
         </div>
       ))}
     </section>

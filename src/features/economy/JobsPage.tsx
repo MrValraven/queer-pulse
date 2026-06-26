@@ -1,12 +1,16 @@
-import { useMemo, useState, type SyntheticEvent } from 'react'
-import { FiCheck } from 'react-icons/fi'
+import { useEffect, useMemo, useState, type SyntheticEvent } from 'react'
+import { FiBriefcase, FiCheck, FiShield } from 'react-icons/fi'
 import { FaRainbow } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Reveal, SectionHead } from '../../shared/components/ui'
+import { EmptyState, Reveal, SectionHead, SkeletonLine } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
+import { useWorkProfile } from '../../app/providers/WorkProfileProvider'
 import { JOBS, JOB_FILTERS, EMPLOYERS, type Job } from './jobs.data'
+import { safetyFor } from './employerSafety.data'
+import { SafetyBadges } from './SafetyBadges'
+import { PostJobModal } from './PostJobModal'
 import styles from './JobsPage.module.css'
 
 function JobCard({ job }: { job: Job }) {
@@ -49,6 +53,7 @@ function JobCard({ job }: { job: Job }) {
             </span>
           ))}
         </div>
+        <SafetyBadges signals={safetyFor(job.org)} compact />
         <div className={styles.desc}>{job.desc}</div>
         <div className={styles.meta}>
           <span>{job.type}</span>
@@ -74,10 +79,39 @@ function JobCard({ job }: { job: Job }) {
   )
 }
 
+function JobSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden>
+      <SkeletonLine width={48} height={48} style={{ borderRadius: 12 }} />
+      <div className={styles.cBody} style={{ flex: 1 }}>
+        <SkeletonLine width="55%" height={18} />
+        <SkeletonLine width="35%" height={13} style={{ marginTop: 10 }} />
+        <SkeletonLine width="90%" height={13} style={{ marginTop: 12 }} />
+        <SkeletonLine width="45%" height={12} style={{ marginTop: 12 }} />
+      </div>
+    </div>
+  )
+}
+
 export function JobsPage() {
-  const { showToast } = useToast()
+  const { safeOnly } = useWorkProfile()
   const [filter, setFilter] = useState('all')
-  const visible = useMemo(() => (filter === 'all' ? JOBS : JOBS.filter((j) => j.cat === filter)), [filter])
+  const [showAll, setShowAll] = useState(false)
+  const [posting, setPosting] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 600)
+    return () => clearTimeout(t)
+  }, [])
+
+  const byCat = useMemo(() => (filter === 'all' ? JOBS : JOBS.filter((j) => j.cat === filter)), [filter])
+  const verifiedOnly = safeOnly && !showAll
+  const visible = useMemo(
+    () => (verifiedOnly ? byCat.filter((j) => safetyFor(j.org)?.verifiedSafe) : byCat),
+    [byCat, verifiedOnly],
+  )
+  const hiddenCount = byCat.length - visible.length
 
   return (
     <PageShell>
@@ -115,14 +149,56 @@ export function JobsPage() {
                 </button>
               ))}
             </div>
-            <button className={styles.postBtn} onClick={() => showToast('Job submitted for review', 'info')}>
+            <button className={styles.postBtn} onClick={() => setPosting(true)}>
               + Post a job
             </button>
           </div>
+          {safeOnly && (
+            <div className={styles.safetyBanner}>
+              <span className={styles.sbIcon} aria-hidden>
+                <FiShield />
+              </span>
+              <span className={styles.sbText}>
+                Matched to your work profile — showing <strong>verified-safe employers</strong>.{' '}
+                <Link to={routes.workProfile} className={styles.sbLink}>
+                  Change in your work profile
+                </Link>
+              </span>
+              <button
+                type="button"
+                className={styles.sbToggle}
+                onClick={() => setShowAll((s) => !s)}
+              >
+                {showAll ? 'Show verified only' : `Show all${hiddenCount ? ` (${hiddenCount} more)` : ''}`}
+              </button>
+            </div>
+          )}
           <div className={styles.list}>
-            {visible.map((job) => (
-              <JobCard key={job.slug} job={job} />
-            ))}
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => <JobSkeleton key={i} />)
+            ) : visible.length === 0 ? (
+              <EmptyState
+                icon={<FiBriefcase />}
+                title="No roles match right now"
+                description={
+                  verifiedOnly
+                    ? 'Nothing in this category is verified-safe yet. Show all roles, or pick a different category.'
+                    : 'No openings in this category at the moment. Browse every role, or check back soon — listings are added weekly.'
+                }
+                action={
+                  verifiedOnly
+                    ? { label: 'Show all roles', onClick: () => setShowAll(true) }
+                    : { label: 'Show all roles', onClick: () => setFilter('all') }
+                }
+                secondaryAction={
+                  filter !== 'all'
+                    ? { label: 'Clear category', onClick: () => setFilter('all') }
+                    : undefined
+                }
+              />
+            ) : (
+              visible.map((job) => <JobCard key={job.slug} job={job} />)
+            )}
           </div>
         </div>
       </div>
@@ -150,6 +226,8 @@ export function JobsPage() {
           </div>
         </div>
       </section>
+
+      {posting && <PostJobModal onClose={() => setPosting(false)} />}
     </PageShell>
   )
 }

@@ -20,6 +20,7 @@ import styles from './SexualHealthPage.module.css'
 export function TestingTab() {
   const { showToast } = useToast()
   const [clinicFilter, setClinicFilter] = useState<ClinicType | 'all'>('all')
+  const [openClinic, setOpenClinic] = useState<string | null>(null)
   const clinics = CLINICS.filter((c) => clinicFilter === 'all' || c.type === clinicFilter)
 
   return (
@@ -54,37 +55,65 @@ export function TestingTab() {
       </div>
 
       <div className={styles.clinicList}>
-        {clinics.map((c) => (
-          <div className={styles.clinicCard} key={c.name}>
-            <div>
-              <div className={`${styles.ccType} ${styles[TYPE_CLASS[c.type]]}`}>{c.typeLabel}</div>
-              <div className={styles.ccName}>{c.name}</div>
-              <div className={styles.ccDesc}>{c.desc}</div>
-              <div className={styles.ccMeta}>
-                {c.meta.map((m) => (
-                  <span key={m.text}>
-                    <m.icon /> {m.text}
-                  </span>
-                ))}
+        {clinics.map((c) => {
+          const isOpen = openClinic === c.name
+          return (
+            <div className={styles.clinicCard} key={c.name}>
+              <div>
+                <div className={`${styles.ccType} ${styles[TYPE_CLASS[c.type]]}`}>{c.typeLabel}</div>
+                <div className={styles.ccName}>{c.name}</div>
+                <div className={styles.ccDesc}>{c.desc}</div>
+                <div className={styles.ccMeta}>
+                  {c.meta.map((m) => (
+                    <span key={m.text}>
+                      <m.icon /> {m.text}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className={styles.ccRight}>
-              {c.verified && (
-                <div className={styles.ccBadge}>
-                  Community verified <FiCheck />
+              <div className={styles.ccRight}>
+                {c.verified && (
+                  <div className={styles.ccBadge}>
+                    Community verified <FiCheck />
+                  </div>
+                )}
+                <button
+                  type="button"
+                  className={[styles.ccBtn, isOpen && styles.ccBtnOpen].filter(Boolean).join(' ')}
+                  onClick={() => setOpenClinic(isOpen ? null : c.name)}
+                  aria-expanded={isOpen}
+                >
+                  {isOpen ? 'Hide details' : c.btn}
+                </button>
+                {c.review && (
+                  <div className={styles.ccReview}>
+                    <FiStar /> {c.review}
+                  </div>
+                )}
+              </div>
+              {isOpen && (
+                <div className={styles.ccDetails}>
+                  <div className={styles.ccDetailRow}>
+                    <div className={styles.ccDetailLabel}>What they test</div>
+                    <div className={styles.ccDetailVal}>{c.details.tests}</div>
+                  </div>
+                  <div className={styles.ccDetailRow}>
+                    <div className={styles.ccDetailLabel}>What to bring</div>
+                    <div className={styles.ccDetailVal}>{c.details.bring}</div>
+                  </div>
+                  <div className={styles.ccDetailRow}>
+                    <div className={styles.ccDetailLabel}>Access</div>
+                    <div className={styles.ccDetailVal}>{c.details.access}</div>
+                  </div>
+                  <div className={styles.ccDetailRow}>
+                    <div className={styles.ccDetailLabel}>Good to know</div>
+                    <div className={styles.ccDetailVal}>{c.details.note}</div>
+                  </div>
                 </div>
               )}
-              <button type="button" className={styles.ccBtn} onClick={() => showToast('Opening details…', 'info')}>
-                {c.btn}
-              </button>
-              {c.review && (
-                <div className={styles.ccReview}>
-                  <FiStar /> {c.review}
-                </div>
-              )}
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       <div className={styles.anonBox}>

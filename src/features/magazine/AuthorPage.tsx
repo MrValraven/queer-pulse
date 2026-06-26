@@ -3,6 +3,7 @@ import { PageShell } from '../../shared/components/layout'
 import { Button, ImageSlot } from '../../shared/components/ui'
 import { memberName } from '../members/data/members'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { MagazineMasthead } from './MagazineMasthead'
 import styles from './AuthorPage.module.css'
 
 const BEATS = ['Health & access', 'Migration & visas', 'Public services', 'Long reads', 'Interviews', 'Reported essays']
@@ -29,6 +30,7 @@ export function AuthorPage() {
 
   return (
     <PageShell>
+      <MagazineMasthead />
       <div className={styles.page}>
         <header className={styles.hero}>
           <div>

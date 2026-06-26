@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
 import {
-  CHIPS, EVENTS, SAFETY_CARDS, READING, GATHERING,
+  CHIPS, EVENTS, MORE_EVENTS, SAFETY_CARDS, READING, GATHERING,
 } from './prideMonth.data'
 import styles from './PrideMonthPage.module.css'
 
 export function PrideMonthCalendar() {
-  const { showToast } = useToast()
   const [activeChip, setActiveChip] = useState(0)
+  const [expanded, setExpanded] = useState(false)
+  const events = expanded ? [...EVENTS, ...MORE_EVENTS] : EVENTS
 
   return (
     <section className={styles.calSection} id="calendar">
@@ -34,7 +34,7 @@ export function PrideMonthCalendar() {
         ))}
       </div>
       <div className={styles.calList}>
-        {EVENTS.map((e, i) => (
+        {events.map((e, i) => (
           <Link
             to={GATHERING}
             key={i}
@@ -58,15 +58,13 @@ export function PrideMonthCalendar() {
             </div>
           </Link>
         ))}
-        <div className={styles.calMore}>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => showToast('Loading more events…', 'info')}
-          >
-            Show 29 more events
-          </Button>
-        </div>
+        {!expanded && (
+          <div className={styles.calMore}>
+            <Button type="button" variant="ghost" onClick={() => setExpanded(true)}>
+              Show {MORE_EVENTS.length} more events
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   )

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./SoberPage.module.css";
 import { Button, Outro } from "../../shared/components/ui";
 import { REASONS, EVENTS, TYPE_CLASS } from "./soberPage.data";
 import { SoberHonestSection, SoberVenuesSection, SoberVoicesSection, SoberRecoverySection } from "./SoberSections";
+import { SoberHostModal } from "./SoberHostModal";
 
 const SAFE_SPACES = routes.safeSpaces;
 const COMMUNITIES = routes.communities;
@@ -17,7 +17,7 @@ const RESOURCES = routes.resources;
 const LINK_MAP: Record<string, string> = { COMMUNITIES, WELLBEING, MENTORSHIP, RESOURCES };
 
 export function SoberPage() {
-  const { showToast } = useToast();
+  const [hostOpen, setHostOpen] = useState(false);
   const [going, setGoing] = useState<Set<number>>(
     () => new Set(EVENTS.filter((e) => e.going).map((e) => e.id)),
   );
@@ -60,9 +60,9 @@ export function SoberPage() {
             <button
               type="button"
               className={styles.primaryBtn}
-              onClick={() => showToast("Opening host form…", "info")}
+              onClick={() => setHostOpen(true)}
             >
-              + Host a sober gathering
+              + Host or attend a meeting
             </button>
           </div>
           <div className={styles.events}>
@@ -124,6 +124,8 @@ export function SoberPage() {
           Browse communities
         </Button>
       </Outro>
+
+      {hostOpen && <SoberHostModal onClose={() => setHostOpen(false)} />}
     </PageShell>
   );
 }

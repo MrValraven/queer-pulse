@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Outro } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import {
   FAQ,
@@ -10,6 +9,7 @@ import {
   TALK,
   type ResType,
 } from "./queer101.data";
+import { SuggestEditModal } from "./SuggestEditModal";
 import styles from "./Queer101Page.module.css";
 
 const RES_CLASS: Record<ResType, string> = {
@@ -89,7 +89,7 @@ export function Queer101Faq() {
 }
 
 export function Queer101Glossary() {
-  const { showToast } = useToast();
+  const [editOpen, setEditOpen] = useState(false);
   const [query, setQuery] = useState("");
   const q = query.toLowerCase();
 
@@ -116,7 +116,7 @@ export function Queer101Glossary() {
           <button
             type="button"
             className={styles.glossEditBtn}
-            onClick={() => showToast("Edit suggestion form opening…", "info")}
+            onClick={() => setEditOpen(true)}
           >
             Suggest an edit
           </button>
@@ -142,6 +142,7 @@ export function Queer101Glossary() {
           for another.
         </div>
       </div>
+      {editOpen && <SuggestEditModal onClose={() => setEditOpen(false)} />}
     </div>
   );
 }

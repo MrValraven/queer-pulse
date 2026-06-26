@@ -1,13 +1,45 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
+import { SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
+import { currentUser } from '../members/data/members'
 import { FEED_TABS, type FeedTab } from './feed.data'
 import { GatheringCard, NewMemberCard, PostCard, SavedArticleCard, RecapCard } from './FeedCards'
 import { FeedSidebar } from './FeedSidebar'
 import styles from './FeedPage.module.css'
 
+/** Each feed item tagged with the tabs it belongs to (besides "All"). */
+const FEED_ITEMS: { key: string; tab: FeedTab; Card: () => React.ReactElement }[] = [
+  { key: 'gathering', tab: 'Gatherings', Card: GatheringCard },
+  { key: 'new-member', tab: 'People', Card: NewMemberCard },
+  { key: 'post', tab: 'Posts', Card: PostCard },
+  { key: 'saved-article', tab: 'Posts', Card: SavedArticleCard },
+  { key: 'recap', tab: 'Gatherings', Card: RecapCard },
+]
+
+function FeedSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden>
+      <div className={styles.pad} style={{ display: 'flex', gap: 12 }}>
+        <SkeletonAvatar size={44} />
+        <div style={{ flex: 1 }}>
+          <SkeletonLine width="40%" height={14} />
+          <SkeletonLine width="80%" height={18} style={{ marginTop: 12 }} />
+          <SkeletonLine width="60%" height={13} style={{ marginTop: 10 }} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function FeedPage() {
   const [activeTab, setActiveTab] = useState<FeedTab>('All')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 600)
+    return () => clearTimeout(t)
+  }, [])
 
   return (
     <AppShell unreadCount={3}>
@@ -15,7 +47,7 @@ export function FeedPage() {
         <div className="wrap">
           <div className={styles.greetingRow}>
             <div>
-              <div className={styles.greeting}>Good morning, <em>Sofia</em></div>
+              <div className={styles.greeting}>Good morning, <em>{currentUser.first}</em></div>
               <div className={styles.greetingDate}>Saturday · Lisbon · 21 June 2026</div>
             </div>
             <Link to="/messages" className={styles.msgChip}>
@@ -40,11 +72,13 @@ export function FeedPage() {
                 ))}
               </div>
               <div className={styles.list}>
-                <GatheringCard />
-                <NewMemberCard />
-                <PostCard />
-                <SavedArticleCard />
-                <RecapCard />
+                {loading ? (
+                  Array.from({ length: 4 }).map((_, i) => <FeedSkeleton key={i} />)
+                ) : (
+                  FEED_ITEMS
+                    .filter(({ tab }) => activeTab === 'All' || tab === activeTab)
+                    .map(({ key, Card }) => <Card key={key} />)
+                )}
               </div>
             </div>
             <FeedSidebar />

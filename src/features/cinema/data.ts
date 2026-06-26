@@ -40,6 +40,20 @@ export const coverFilm = {
   curatorWho: '— Programmed by João Ribeiro',
   curatorBody:
     "A patient, generous film about Lisbon's working-class queer elders, made over three years in the kitchens that raised them. Stay for the second hour — it's where the film stops being about loss and starts being about teaching.",
+  /** Fields used to explain why other films relate to this one. */
+  country: 'PT',
+  curator: 'João Ribeiro',
+  format: 'Documentary',
+}
+
+/**
+ * Why a film appears in "More from the programme", relative to the cover film.
+ * Returns a short badge label derived from shared curator / country / format.
+ */
+export function filmRelationReason(film: CinemaFilm): string {
+  if (film.country === coverFilm.country) return `Same country · ${film.country}`
+  if (film.format === coverFilm.format) return `Same form · ${film.format}`
+  return `Curator's pick`
 }
 
 export const collections = [

@@ -1,11 +1,9 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
-import { routes } from "../../app/routeMap";
+import { useConnect } from "../../app/providers/ConnectProvider";
 import { CHANGEMAKERS, getChangemaker, type Tint } from "./changemakerStories";
 import styles from "./ChangemakerStoryPage.module.css";
-
-const CONNECT = routes.connect;
 
 const HERO_GRADIENT: Record<Tint, string> = {
   coral: "linear-gradient(135deg, rgba(var(--accent-rgb),.42), rgba(45,27,61,.5))",
@@ -26,6 +24,7 @@ const Tick = () => (
 
 export function ChangemakerStoryPage() {
   const { slug } = useParams();
+  const { openConnect } = useConnect();
   const cm = getChangemaker(slug);
   if (!cm) return <Navigate to="/changemakers" replace />;
 
@@ -106,7 +105,7 @@ export function ChangemakerStoryPage() {
         title={<>Want to support <em>{cm.name.split(" ")[0]}'s</em> work?</>}
         sub="Change makers do this alongside their day jobs. A message, an introduction, or an hour of your time goes further than you'd think."
       >
-        <Button variant="primary" to={CONNECT}>
+        <Button variant="primary" onClick={() => openConnect()}>
           Connect with {cm.name.split(" ")[0]} →
         </Button>
         <Button variant="ghost-dark" to="/changemakers">

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { useConnect } from '../../app/providers/ConnectProvider'
 import { ResourceHero } from './ResourceHero'
 import styles from './resources.module.css'
 
@@ -26,6 +27,7 @@ const HARM = [
 ]
 
 export function WellbeingPage() {
+  const { openConnect } = useConnect()
   return (
     <PageShell>
       <ResourceHero
@@ -65,9 +67,20 @@ export function WellbeingPage() {
                 </div>
                 <div className={styles.cardFoot}>
                   <span className={styles.cardLoc}>{therapist.loc}</span>
-                  <Link to="/connect" className={styles.cardCta}>
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    className={styles.cardCta}
+                    onClick={() => openConnect()}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault()
+                        openConnect()
+                      }
+                    }}
+                  >
                     Request intro →
-                  </Link>
+                  </span>
                 </div>
               </Reveal>
             ))}

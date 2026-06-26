@@ -7,6 +7,7 @@ import {
   type CoverStyle,
   type PatternKey,
 } from './profileTheme.data'
+import { currentUser, fullName } from '../members/data/members'
 import styles from './ProfileThemePage.module.css'
 
 function buildCoverBg(colors: string[], coverStyle: CoverStyle, pattern: PatternKey): string {
@@ -146,16 +147,16 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
             <div className={styles.profileCard}>
               <div className={styles.pclCover} style={{ background: coverBg }} />
               <div className={styles.pclAvWrap}>
-                <div className={styles.pclAv}>SR</div>
+                <div className={styles.pclAv}>{currentUser.initials}</div>
                 <div className={styles.pclBadgeIcon} style={{ opacity: showBadges ? 1 : 0 }}>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4.5H14l-3.7 2.7 1.4 4.3L8 11.2l-3.7 2.8 1.4-4.3L2 6.5h4.5L8 2Z" stroke="var(--plum)" strokeWidth="1.4" strokeLinejoin="round" /></svg>
                 </div>
               </div>
               <div className={styles.pclBody}>
-                <div className={styles.pclName}>Sofia Rodrigues</div>
-                <div className={styles.pclPronouns}>she/her</div>
-                <div className={styles.pclLoc}>Lisbon · Member since Jan 2025</div>
-                <div className={styles.pclBio}>UX designer working on civic tech. Passionate about accessible design, queer nightlife preservation, and really good coffee.</div>
+                <div className={styles.pclName}>{fullName(currentUser)}</div>
+                <div className={styles.pclPronouns}>he/they</div>
+                <div className={styles.pclLoc}>Lisbon · Member since {currentUser.since}</div>
+                <div className={styles.pclBio}>{currentUser.bio}</div>
                 <div className={styles.pclLevel} style={{ opacity: showLevel ? 1 : 0 }}>Lv.4 · Familiar</div>
               </div>
             </div>
@@ -164,11 +165,11 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
             <div className={styles.previewLabel}>Directory card</div>
             <div className={styles.dirCard}>
               <div className={styles.dcCover} style={{ background: coverBg }} />
-              <div className={styles.dcAvWrap}><div className={styles.dcAv}>SR</div></div>
+              <div className={styles.dcAvWrap}><div className={styles.dcAv}>{currentUser.initials}</div></div>
               <div className={styles.dcBody}>
-                <div className={styles.dcName}>Sofia Rodrigues</div>
-                <div className={styles.dcMeta}>she/her · Lisbon</div>
-                <div className={styles.dcBio}>UX designer working on civic tech. Passionate about accessible design and queer nightlife preservation.</div>
+                <div className={styles.dcName}>{fullName(currentUser)}</div>
+                <div className={styles.dcMeta}>he/they · Lisbon</div>
+                <div className={styles.dcBio}>{currentUser.bio}</div>
               </div>
             </div>
             <div className={styles.previewHint}>This is how your profile appears in search results and the member directory.</div>

@@ -1,3 +1,58 @@
+.safetyBanner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  background: rgba(74, 140, 111, 0.08);
+  border: 1px solid rgba(74, 140, 111, 0.25);
+  border-radius: 14px;
+}
+.sbIcon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: rgba(74, 140, 111, 0.16);
+  color: var(--jade);
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+.sbText {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.sbText strong {
+  font-weight: 700;
+  color: var(--plum);
+}
+.sbLink {
+  color: var(--jade);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.sbToggle {
+  flex: 0 0 auto;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.16);
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.sbToggle:hover {
+  border-color: var(--plum);
+}
+
 .hero {
   background: var(--plum);
   padding: 140px 0 88px;

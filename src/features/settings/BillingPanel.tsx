@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { BILLING_ROWS, PAYMENT_METHOD, INVOICES } from './membership.data'
+import { InvoicePreviewModal, type InvoiceData } from './InvoicePreviewModal'
 import styles from './MembershipPage.module.css'
 
 export function BillingPanel() {
@@ -10,6 +11,7 @@ export function BillingPanel() {
   const [cardNum, setCardNum] = useState('')
   const [last4, setLast4] = useState('4242')
   const [saving, setSaving] = useState(false)
+  const [previewInvoice, setPreviewInvoice] = useState<InvoiceData | null>(null)
 
   function formatCard(value: string) {
     const digits = value.replace(/\D/g, '').slice(0, 16)
@@ -106,15 +108,20 @@ export function BillingPanel() {
           <div key={inv.period} className={styles.invRow}>
             <span className={styles.invPeriod}>{inv.period}</span>
             <span className={styles.invAmt}>{inv.amount}</span>
-            <button
-              className={styles.invDl}
-              onClick={() => showToast(`Downloading invoice for ${inv.period}…`, 'info')}
-            >
+            <button className={styles.invDl} onClick={() => setPreviewInvoice(inv)}>
               Download PDF
             </button>
           </div>
         ))}
       </div>
+
+      {previewInvoice && (
+        <InvoicePreviewModal
+          invoice={previewInvoice}
+          onClose={() => setPreviewInvoice(null)}
+          onDownloaded={() => showToast(`Invoice for ${previewInvoice.period} downloaded`, 'success')}
+        />
+      )}
     </div>
   )
 }

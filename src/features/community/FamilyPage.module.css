@@ -147,6 +147,44 @@
   letter-spacing: 0.02em;
 }
 
+/* Low-pressure entry: read everything without declaring a situation. */
+.browseRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+.browseBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: var(--cream);
+  border: 1px solid rgba(45, 27, 61, 0.14);
+  border-radius: 999px;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition:
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+.browseBtn svg {
+  width: 16px;
+  height: 16px;
+}
+.browseBtn:hover {
+  color: var(--plum);
+  border-color: rgba(45, 27, 61, 0.28);
+}
+.browseBtnActive {
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
 .tabNav {
   background: var(--cream);
   border-bottom: 1px solid rgba(45, 27, 61, 0.08);

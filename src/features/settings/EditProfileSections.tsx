@@ -1,26 +1,50 @@
-import { type KeyboardEvent } from 'react'
+import { useRef, type ChangeEvent, type KeyboardEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
+import { currentUser, fullName } from '../members/data/members'
 import { PRONOUN_CHIPS, VIS_FIELDS } from './editProfile.data'
 import styles from './EditProfilePage.module.css'
 
 interface IdentitySectionProps {
-  onUpload: () => void
+  /** Object-URL preview of a freshly picked photo, or null for the initials avatar. */
+  avatarPreview: string | null
+  onPickFile: (file: File) => void
   onRemove: () => void
   onChange: () => void
 }
 
-export function IdentitySection({ onUpload, onRemove, onChange }: IdentitySectionProps) {
+export function IdentitySection({ avatarPreview, onPickFile, onRemove, onChange }: IdentitySectionProps) {
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  function handleFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (file) onPickFile(file)
+    // reset so picking the same file again still fires onChange
+    e.target.value = ''
+  }
+
   return (
     <div className={styles.section} id="identity">
       <h2 className={styles.sectionTitle}>Identity <em>&amp; photo</em></h2>
       <p className={styles.sectionSub}>This is how you appear to other members.</p>
       <div className={styles.photoRow}>
-        <div className={styles.photoAv}>SF</div>
+        <div
+          className={styles.photoAv}
+          style={avatarPreview ? { backgroundImage: `url(${avatarPreview})`, backgroundSize: 'cover', backgroundPosition: 'center', color: 'transparent' } : undefined}
+        >
+          {avatarPreview ? '' : currentUser.initials}
+        </div>
         <div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={handleFile}
+          />
           <div className={styles.photoActions}>
-            <Button variant="ghost" onClick={onUpload} style={{ fontSize: '13.5px', padding: '9px 18px' }}>Upload new photo</Button>
+            <Button variant="ghost" onClick={() => fileRef.current?.click()} style={{ fontSize: '13.5px', padding: '9px 18px' }}>Upload new photo</Button>
             <Button variant="ghost" onClick={onRemove} style={{ fontSize: '13.5px', padding: '9px 18px', color: 'var(--ink-40)' }}>Remove photo</Button>
           </div>
           <div className={styles.photoHint}>JPG or PNG · max 5 MB · square works best</div>
@@ -29,16 +53,16 @@ export function IdentitySection({ onUpload, onRemove, onChange }: IdentitySectio
       <div className={styles.fieldRow}>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>Display name</div>
-          <input className={styles.fieldInput} type="text" defaultValue="Sofia Ferreira" onChange={onChange} />
+          <input className={styles.fieldInput} type="text" defaultValue={fullName(currentUser)} onChange={onChange} />
         </div>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>Username</div>
-          <input className={styles.fieldInput} type="text" defaultValue="@sofiaferreira" onChange={onChange} />
+          <input className={styles.fieldInput} type="text" defaultValue="@tiagocosta" onChange={onChange} />
         </div>
       </div>
       <div className={styles.field}>
         <div className={styles.fieldLabel}>Location in Lisbon <span className={styles.fieldOptional}>optional</span></div>
-        <input className={styles.fieldInput} type="text" placeholder="e.g. Mouraria, Intendente…" defaultValue="Mouraria" onChange={onChange} />
+        <input className={styles.fieldInput} type="text" placeholder="e.g. Mouraria, Intendente…" defaultValue={currentUser.hood} onChange={onChange} />
         <div className={styles.fieldHint}>Neighbourhood-level only — never exact address.</div>
       </div>
     </div>
@@ -100,7 +124,7 @@ export function BioSection({ bioText, onChange, onAnyChange }: BioSectionProps) 
       <div className={styles.fieldRow}>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>Occupation</div>
-          <input className={styles.fieldInput} type="text" defaultValue="Community organiser" onChange={onAnyChange} />
+          <input className={styles.fieldInput} type="text" defaultValue={currentUser.role} onChange={onAnyChange} />
         </div>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>Organisation <span className={styles.fieldOptional}>optional</span></div>

@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./GetTheAppPage.module.css";
 import { Button } from '../../shared/components/ui'
+import { AppNotifyModal, type AppPlatform } from "./AppNotifyModal";
 
 const INVITE = routes.invite;
 
@@ -48,6 +50,7 @@ const FEATURES = [
 
 export function GetTheAppPage() {
   const { showToast } = useToast();
+  const [notify, setNotify] = useState<AppPlatform | null>(null);
 
   const copyLink = () => {
     if (navigator.clipboard) navigator.clipboard.writeText("https://queerpulse.app/get");
@@ -74,7 +77,7 @@ export function GetTheAppPage() {
             </p>
 
             <div className={styles.storeRow}>
-              <button type="button" className={styles.storeBtn} onClick={() => showToast("Opening App Store…", "info")}>
+              <button type="button" className={styles.storeBtn} onClick={() => setNotify("iOS")}>
                 <span className={styles.ic}>
                   <svg viewBox="0 0 24 24">
                     <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
@@ -85,7 +88,7 @@ export function GetTheAppPage() {
                   <span className={styles.b}>App Store</span>
                 </span>
               </button>
-              <button type="button" className={styles.storeBtn} onClick={() => showToast("Opening Google Play…", "info")}>
+              <button type="button" className={styles.storeBtn} onClick={() => setNotify("Android")}>
                 <span className={styles.ic}>
                   <svg viewBox="0 0 24 24">
                     <path d="M3.61 1.81C3.24 2.2 3 2.79 3 3.55v16.9c0 .76.24 1.35.61 1.74l.06.06L13.04 13v-.04L3.67 1.75l-.06.06zm10.96 11.1l3.12 3.12 5.65-3.21c1.61-.91 1.61-2.41 0-3.32l-5.65-3.21-3.12 3.13v3.49zM3.67 22.25c.49.52 1.31.59 2.23.07l11.42-6.49-3.13-3.13L3.67 22.25z" />
@@ -192,6 +195,8 @@ export function GetTheAppPage() {
           </div>
         </div>
       </section>
+
+      {notify && <AppNotifyModal platform={notify} onClose={() => setNotify(null)} />}
     </PageShell>
   );
 }

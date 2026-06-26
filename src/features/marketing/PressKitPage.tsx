@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { PressKitDownloadModal } from './PressKitDownloadModal'
+import { KIT_MANIFEST, KIT_PREVIEW } from './pressKitAssets.data'
 import {
   BoilerplateSection,
   ColourSection,
@@ -14,7 +16,7 @@ import {
 import styles from './PressKitPage.module.css'
 
 export function PressKitPage() {
-  const { showToast } = useToast()
+  const [showDownload, setShowDownload] = useState(false)
 
   return (
     <PageShell>
@@ -30,7 +32,7 @@ export function PressKitPage() {
             under the terms below. Updated 14 May 2026.
           </p>
           <div className={styles.actions}>
-            <Button type="button" variant="primary" onClick={() => showToast('Downloading queerpulse-press-kit.zip (38 MB)', 'success')}>
+            <Button type="button" variant="primary" onClick={() => setShowDownload(true)}>
               Download full kit · ZIP
             </Button>
             <Button href="mailto:press@queerpulse.app" variant="ghost">
@@ -79,6 +81,23 @@ export function PressKitPage() {
           Contact press team
         </Button>
       </Outro>
+
+      {showDownload && (
+        <PressKitDownloadModal
+          eyebrow="Full press kit · 38 MB"
+          title={<>Everything, in <em>one kit.</em></>}
+          lead={
+            <>
+              Here's what's inside before you grab it. Hitting download generates a real{' '}
+              <b>README + licence</b> file now; the full asset bundle ships in the production ZIP.
+            </>
+          }
+          rows={KIT_PREVIEW}
+          asset={KIT_MANIFEST}
+          buttonLabel="Download · README"
+          onClose={() => setShowDownload(false)}
+        />
+      )}
     </PageShell>
   )
 }

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
+import { MagazineMasthead } from "./MagazineMasthead";
 import styles from "./CoverGalleryPage.module.css";
 
 const ISSUE = routes.issue;
@@ -48,6 +49,7 @@ const ILLUS: { initials: string; jade?: boolean; plum?: boolean; name: string; c
 export function CoverGalleryPage() {
   return (
     <PageShell>
+      <MagazineMasthead active="covers" />
       <div className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.heroInner}>

@@ -71,9 +71,9 @@ export function EventRsvpCard() {
             ))}
           </div>
           <div className={styles.form}>
-            <input className={styles.input} type="text" placeholder="Your name *" required aria-required="true" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-            <input className={styles.input} type="email" placeholder="Your email *" required aria-required="true" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input className={styles.input} type="text" placeholder="Dietary requirements (optional)" />
+            <input className={styles.input} type="text" inputMode="text" autoComplete="name" autoCapitalize="words" placeholder="Your name *" required aria-required="true" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+            <input className={styles.input} type="email" inputMode="email" autoComplete="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} placeholder="Your email *" required aria-required="true" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input className={styles.input} type="text" inputMode="text" autoComplete="off" placeholder="Dietary requirements (optional)" />
             <div className={styles.requiredHint}>
               <span className={styles.req}>*</span> Name and email are required — we send your
               confirmation there.

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui";
 import { useScrolled } from "../../hooks/useScrolled";
@@ -42,12 +42,65 @@ function NotificationsBell({ unreadCount }: { unreadCount: number }) {
  * see the notifications bell + profile menu; signed-out visitors see the
  * marketing sign-in / request-an-invite calls to action.
  */
-export function Navbar({ unreadCount = 3 }: { unreadCount?: number } = {}) {
+export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
   const scrolled = useScrolled(8);
   const isMobile = useMediaQuery("(max-width: 860px)");
   const { theme, toggleTheme } = useTheme();
   const { loggedIn, signOut } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const drawerPanelRef = useRef<HTMLDivElement>(null);
+
+  const closeDrawer = () => setDrawerOpen(false);
+
+  // Manage focus + keyboard for the mobile drawer (dialog) while it is open.
+  useEffect(() => {
+    if (!drawerOpen) return;
+
+    const trigger = menuButtonRef.current;
+    const panel = drawerPanelRef.current;
+    // Move focus into the drawer on open.
+    panel?.focus();
+
+    const getFocusable = () =>
+      Array.from(
+        panel?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      );
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setDrawerOpen(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) {
+        event.preventDefault();
+        panel?.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (event.shiftKey && (active === first || active === panel)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      // Restore focus to the trigger when the drawer closes.
+      trigger?.focus();
+    };
+  }, [drawerOpen]);
 
   return (
     <>
@@ -89,9 +142,12 @@ export function Navbar({ unreadCount = 3 }: { unreadCount?: number } = {}) {
 
           {isMobile && (
             <button
+              ref={menuButtonRef}
               type="button"
               className={styles.menuButton}
               onClick={() => setDrawerOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={drawerOpen}
               aria-label="Open menu"
             >
               <MenuIcon />
@@ -105,13 +161,16 @@ export function Navbar({ unreadCount = 3 }: { unreadCount?: number } = {}) {
           className={styles.drawer}
           role="dialog"
           aria-modal="true"
-          onClick={() => setDrawerOpen(false)}
+          aria-label="Menu"
+          onClick={closeDrawer}
         >
           <div
+            ref={drawerPanelRef}
             className={styles.drawerPanel}
+            tabIndex={-1}
             onClick={(event) => event.stopPropagation()}
           >
-            <MegaNavDrawer onNavigate={() => setDrawerOpen(false)} />
+            <MegaNavDrawer onNavigate={closeDrawer} />
             {loggedIn ? (
               <>
                 {ACCOUNT_LINKS.map((item) => (
@@ -119,7 +178,7 @@ export function Navbar({ unreadCount = 3 }: { unreadCount?: number } = {}) {
                     key={item.to}
                     to={item.to}
                     className={styles.drawerSignIn}
-                    onClick={() => setDrawerOpen(false)}
+                    onClick={closeDrawer}
                   >
                     {item.label}
                   </Link>
@@ -129,7 +188,7 @@ export function Navbar({ unreadCount = 3 }: { unreadCount?: number } = {}) {
                   className={styles.drawerSignIn}
                   onClick={() => {
                     signOut();
-                    setDrawerOpen(false);
+                    closeDrawer();
                   }}
                 >
                   Sign out
@@ -140,14 +199,14 @@ export function Navbar({ unreadCount = 3 }: { unreadCount?: number } = {}) {
                 <Link
                   to="/sign-in"
                   className={styles.drawerSignIn}
-                  onClick={() => setDrawerOpen(false)}
+                  onClick={closeDrawer}
                 >
                   Sign in
                 </Link>
                 <Button
                   to={routes.invite}
                   className={styles.drawerCta}
-                  onClick={() => setDrawerOpen(false)}
+                  onClick={closeDrawer}
                 >
                   Request an invite
                 </Button>

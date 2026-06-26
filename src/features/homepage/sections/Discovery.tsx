@@ -9,17 +9,15 @@ import {
   VisibilityBadge,
 } from '../../../shared/components/ui'
 import { linkToPath, routes } from '../../../app/routeMap'
+import { useConnect } from '../../../app/providers/ConnectProvider'
 import { members, memberFilters, visibilitySay } from '../data/members'
 import { filterMembers } from '../lib/filters'
 import type { Member } from '../data/types'
 import styles from './Discovery.module.css'
 
 function MemberCard({ member }: { member: Member }) {
-  const connectHref =
-    member.visibility === 'private'
-      ? `${routes.members}/${member.key}`
-      : `${routes.connect}#${member.key}`
-  const connectLabel = member.visibility === 'private' ? 'View profile' : 'Say hello'
+  const { openConnect } = useConnect()
+  const isPrivate = member.visibility === 'private'
 
   return (
     <article className={styles.card}>
@@ -59,9 +57,26 @@ function MemberCard({ member }: { member: Member }) {
 
       <div className={styles.foot}>
         <span className={styles.say}>{visibilitySay[member.visibility]}</span>
-        <Link to={linkToPath(connectHref)} className={styles.connect}>
-          {connectLabel} <span aria-hidden>→</span>
-        </Link>
+        {isPrivate ? (
+          <Link to={linkToPath(`${routes.members}/${member.key}`)} className={styles.connect}>
+            View profile <span aria-hidden>→</span>
+          </Link>
+        ) : (
+          <span
+            role="button"
+            tabIndex={0}
+            className={styles.connect}
+            onClick={() => openConnect(member.key)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                openConnect(member.key)
+              }
+            }}
+          >
+            Say hello <span aria-hidden>→</span>
+          </span>
+        )}
       </div>
     </article>
   )

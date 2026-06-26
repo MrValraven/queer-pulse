@@ -6,6 +6,8 @@
 export {
   MEMBERS as memberProfiles,
   defaultProfileSlug,
+  currentUserSlug,
+  currentUser,
   getMember,
   fullName,
   memberName,

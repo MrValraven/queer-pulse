@@ -29,13 +29,19 @@ export function Step1({
             <p>Use Google Authenticator, 1Password, Authy, or similar. Works offline.</p>
           </div>
         </button>
-        <button className={[styles.method, method === 'sms' ? styles.methodSelected : ''].filter(Boolean).join(' ')} onClick={() => setMethod('sms')}>
+        <button
+          type="button"
+          className={[styles.method, styles.methodDisabled].join(' ')}
+          disabled
+          aria-disabled="true"
+          title="SMS unavailable in this demo — use an authenticator app"
+        >
           <div className={[styles.methodIc, styles.methodIcJade].join(' ')}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5.15 8.81 19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.07 2h3a2 2 0 0 1 2 1.72c.09.57.21 1.19.36 1.78" /></svg>
           </div>
           <div className={styles.methodText}>
-            <h3>SMS code</h3>
-            <p>We text a six-digit code to your phone whenever you sign in.</p>
+            <h3>SMS code<span className={styles.unavailable}>Unavailable</span></h3>
+            <p>SMS unavailable in this demo — use an authenticator app.</p>
           </div>
         </button>
       </div>

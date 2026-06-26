@@ -5,6 +5,13 @@ export const GATHERING_DETAILS = [
   { label: "Capacity", value: "20 people" },
 ];
 
+export const GATHERING_TITLE = "Pride Brunch — June Edition";
+
+export const GATHERING_DESCRIPTION =
+  "A slow, joyful Pride-week brunch for queer Lisbon. Good food, no agenda, no strangers for long. We'll have the terrace to ourselves from 11am. Bring your people, or come solo — you'll leave with new ones.";
+
+export const ATTENDEE_COUNT = 14;
+
 export const GOING_ATTENDEES = [
   { initials: "SR", bg: "rgba(74,140,111,.12)", color: "var(--jade)", name: "Sofia Rodrigues", meta: "she/her · RSVP'd 2 June" },
   { initials: "AK", bg: "rgba(232,119,90,.12)", color: "var(--accent-ink)", name: "Anika Kovač", meta: "she/they · RSVP'd 1 June" },

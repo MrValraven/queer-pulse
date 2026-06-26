@@ -160,6 +160,31 @@
   color: var(--ink-40);
   line-height: 1.5;
 }
+.req {
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+.requiredLegend {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin: 10px 0 0;
+}
+.fieldError {
+  font-size: 12px;
+  color: var(--accent-ink);
+  line-height: 1.45;
+  font-weight: 600;
+}
+.fieldOk {
+  font-size: 12px;
+  color: var(--jade);
+  line-height: 1.45;
+  font-weight: 600;
+}
+.field input[aria-invalid='true'],
+.field textarea[aria-invalid='true'] {
+  border-color: rgba(var(--accent-rgb), 0.6);
+}
 .charCount {
   font-size: 12px;
   color: var(--ink-40);

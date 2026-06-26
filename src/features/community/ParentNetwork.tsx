@@ -1,21 +1,26 @@
 import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { Reveal } from '../../shared/components/ui'
 import { MEETUPS, OFFERS, RESOURCES, STATS } from './parents.data'
-import styles from './ParentsPage.module.css'
+import styles from './ParentNetwork.module.css'
 
-export function ParentsPage() {
+/**
+ * The "already raising kids" half of the Family & parenting hub — the Queer
+ * Parent Network. Rendered as a section inside FamilyPage; the standalone
+ * /parents route redirects here.
+ */
+export function ParentNetwork() {
   return (
-    <PageShell>
-      <header className={styles.hero}>
+    <>
+      <section className={styles.section}>
         <div className="wrap">
-          <Reveal className={styles.eyebrow}>Queer Parent Network · Support</Reveal>
-          <Reveal as="h1" className={styles.title} delay={60}>
+          <Reveal className={styles.eyebrow}>Queer Parent Network · Already a parent?</Reveal>
+          <Reveal as="h2" className={styles.h2} delay={60}>
             For the families <em>often overlooked</em> in queer spaces.
           </Reveal>
-          <Reveal as="p" className={styles.lead} delay={120}>
+          <Reveal as="p" className={styles.leadP} delay={120}>
             LGBTQ+ parents, co-parents, and people navigating parenthood — biological, adoptive,
-            chosen, and everything in between. A network that already knows your family makes sense.
+            chosen, and everything in between. Less a forum, more a standing arrangement between
+            families who help each other through the practical and the heavy alike.
           </Reveal>
           <Reveal className={styles.stats} delay={160}>
             {STATS.map((stat) => (
@@ -25,19 +30,7 @@ export function ParentsPage() {
               </div>
             ))}
           </Reveal>
-        </div>
-      </header>
-
-      <section className={styles.section}>
-        <div className="wrap">
-          <Reveal as="h2" className={styles.h2}>
-            What the network <em>actually does.</em>
-          </Reveal>
-          <Reveal as="p" className={styles.leadP} delay={60}>
-            Less a forum, more a standing arrangement between families who help each other through
-            the practical and the heavy alike.
-          </Reveal>
-          <div className={styles.grid}>
+          <div className={styles.grid} style={{ marginTop: 40 }}>
             {OFFERS.map((offer, index) => (
               <Reveal key={offer.title} className={styles.card} delay={index * 55}>
                 <div className={styles.cardIcon}><offer.icon /></div>
@@ -83,18 +76,6 @@ export function ParentsPage() {
           </Reveal>
         </div>
       </section>
-
-      <Outro
-        title={<>No one explains <em>their family here.</em></>}
-        sub="Join the network, find your paediatrician, and let your kids run around with others who never had to wonder why."
-      >
-        <Button to="/community/queer-parents" variant="primary" size="lg">
-          Join the network →
-        </Button>
-        <Button to="/calendar" variant="ghost-dark" size="lg">
-          See all gatherings
-        </Button>
-      </Outro>
-    </PageShell>
+    </>
   )
 }

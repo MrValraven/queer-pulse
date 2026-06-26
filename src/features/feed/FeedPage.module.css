@@ -361,6 +361,13 @@
   gap: 10px;
   padding: 7px 0;
   border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.15s var(--ease);
+}
+.upcomingRow:hover .upName {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 .upcomingRow:last-of-type {
   border-bottom: none;
@@ -393,6 +400,18 @@
 }
 .sbMemberRow:last-of-type {
   border-bottom: none;
+}
+.sbMemberLink {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+}
+.sbMemberLink:hover .sbMemberName {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 .sbMemberName {
   flex: 1;

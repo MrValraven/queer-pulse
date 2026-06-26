@@ -4,6 +4,7 @@ import { PageShell } from "../../shared/components/layout";
 import { Avatar, Button, ImageSlot, Reveal } from "../../shared/components/ui";
 import { memberName } from "../members/data/members";
 import { MagazineCover } from "./MagazineCover";
+import { MagazineMasthead } from "./MagazineMasthead";
 import styles from "./MagazinePage.module.css";
 import type { Card } from "./magazinePage.data";
 import {
@@ -72,44 +73,27 @@ function SectionHead({
   );
 }
 
-function MagazineMasthead() {
-  return (
-    <div className={styles.masthead}>
-      <div className="wrap">
-        <div className={styles.mmTop}>
-          <div className={styles.mmBrand}>
-            Queer<em>Pulse</em>
-            <br />
-            Magazine
-          </div>
-          <div className={styles.mmMeta}>
-            <div className={styles.mmIssue}>Issue 18</div>
-            <div className={styles.mmDate}>June 2026</div>
-            <div className={styles.mmTagline}>
-              Published the first of every month
-            </div>
-          </div>
-        </div>
-        <nav className={styles.magNav}>
-          {NAV.map((label) => (
-            <a
-              key={label}
-              className={styles.mnLink}
-              href={`#${label.toLowerCase().replace(/\s+/g, "-")}`}
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
-      </div>
-    </div>
-  );
-}
-
 export function MagazinePage() {
   return (
     <PageShell>
-      <MagazineMasthead />
+      <MagazineMasthead active="current" />
+
+      <div className="wrap">
+        <nav className={styles.inIssue} aria-label="In this issue">
+          <span className={styles.inIssueLabel}>In this issue</span>
+          <span className={styles.inIssueLinks}>
+            {NAV.map((label) => (
+              <a
+                key={label}
+                className={styles.inIssueLink}
+                href={`#${label.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                {label}
+              </a>
+            ))}
+          </span>
+        </nav>
+      </div>
 
       <MagazineCover />
 
