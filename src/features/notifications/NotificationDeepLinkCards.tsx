@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
@@ -10,6 +12,11 @@ import {
   type AvTint,
 } from './notificationDeepLink.data'
 import styles from './NotificationDeepLinkPage.module.css'
+
+interface SentReply {
+  id: string
+  body: string
+}
 
 const avClass: Record<AvTint, string> = {
   jade: styles.avJade,
@@ -29,20 +36,67 @@ function MemberMini({ initials, tint, name, meta }: { initials: string; tint: Av
   )
 }
 
-function Composer({ initials, placeholder, onSend }: { initials: string; placeholder: string; onSend: () => void }) {
+function Composer({
+  initials,
+  placeholder,
+  onSend,
+}: {
+  initials: string
+  placeholder: string
+  onSend: (body: string) => void
+}) {
+  const [value, setValue] = useState('')
+  function submit() {
+    const body = value.trim()
+    if (!body) return
+    onSend(body)
+    setValue('')
+  }
   return (
     <div className={styles.composer}>
       <div className={styles.rcAv}>{initials}</div>
-      <textarea className={styles.rcInput} rows={1} placeholder={placeholder} />
-      <button className={styles.rcSend} onClick={onSend}>
+      <textarea
+        className={styles.rcInput}
+        rows={1}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault()
+            submit()
+          }
+        }}
+      />
+      <button className={styles.rcSend} onClick={submit}>
         Send
       </button>
     </div>
   )
 }
 
+/** Renders the replies the user has sent this session, in the same bubble style. */
+function SentReplies({ replies }: { replies: SentReply[] }) {
+  if (replies.length === 0) return null
+  return (
+    <>
+      {replies.map((r) => (
+        <div key={r.id} className={styles.replyBubble} style={{ marginTop: 12 }}>
+          <div className={styles.rbHeader}>
+            <div className={styles.rbAv}>YO</div>
+            <div className={styles.rbName}>You</div>
+            <div className={styles.rbTime}>Just now</div>
+          </div>
+          <div className={styles.rbText}>{r.body}</div>
+        </div>
+      ))}
+    </>
+  )
+}
+
 export function ConnectionCard() {
   const { showToast } = useToast()
+  const navigate = useNavigate()
   const c = CONNECTION
   return (
     <div className={`${styles.card} ${styles.cardPad}`}>
@@ -52,7 +106,7 @@ export function ConnectionCard() {
       </div>
       <p className={styles.connIntro}>She sent you a note with her request:</p>
       <div className={styles.connNote}>{c.note}</div>
-      <button className={styles.mutualPill} onClick={() => showToast('Opening mutual connections', 'info')}>
+      <button className={styles.mutualPill} onClick={() => navigate(routes.connections)}>
         <div className={styles.mutualAvs}>
           {c.mutuals.map((m) => (
             <div key={m.initials} className={`${styles.smAv} ${avClass[m.tint]}`}>
@@ -109,8 +163,11 @@ export function GatheringCard() {
 }
 
 export function ReplyCard() {
-  const { showToast } = useToast()
   const r = REPLY
+  const [replies, setReplies] = useState<SentReply[]>([])
+  function addReply(body: string) {
+    setReplies((prev) => [...prev, { id: `r-${Date.now()}`, body }])
+  }
   return (
     <div className={`${styles.card} ${styles.cardPad}`}>
       <MemberMini initials={r.initials} tint={r.tint} name={r.name} meta={r.meta} />
@@ -125,14 +182,18 @@ export function ReplyCard() {
         </div>
         <div className={styles.rbText}>{r.replyText}</div>
       </div>
-      <Composer initials="YO" placeholder="Reply to Anika…" onSend={() => showToast('Reply sent', 'success')} />
+      <SentReplies replies={replies} />
+      <Composer initials="YO" placeholder="Reply to Anika…" onSend={addReply} />
     </div>
   )
 }
 
 export function MentionCard() {
-  const { showToast } = useToast()
   const m = MENTION
+  const [replies, setReplies] = useState<SentReply[]>([])
+  function addReply(body: string) {
+    setReplies((prev) => [...prev, { id: `r-${Date.now()}`, body }])
+  }
   return (
     <div className={`${styles.card} ${styles.cardPad}`}>
       <MemberMini initials={m.initials} tint={m.tint} name={m.name} meta={m.meta} />
@@ -143,7 +204,8 @@ export function MentionCard() {
         design — it sparked a whole conversation in our team and we're now rethinking how we do
         Gathering descriptions.
       </div>
-      <Composer initials="YO" placeholder="Reply to Jordan…" onSend={() => showToast('Reply sent', 'success')} />
+      <SentReplies replies={replies} />
+      <Composer initials="YO" placeholder="Reply to Jordan…" onSend={addReply} />
     </div>
   )
 }

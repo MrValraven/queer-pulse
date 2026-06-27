@@ -2,7 +2,7 @@
  * Sub-components for TwoFactorSetupPage step panes.
  * Kept separate to stay under the 200-line limit.
  */
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Button } from '../../shared/components/ui'
 import styles from './TwoFactorSetupPage.module.css'
 
@@ -103,25 +103,63 @@ export function Step2({ onNext, onPrev, copyLabel, onCopy }: { onNext: () => voi
 // ── Step 3 ─────────────────────────────────────────────────────────────────
 export function Step3({
   digits, codeError, codeMsg, codeMsgOk,
-  onInput, onKeyDown, onVerify, onPrev,
+  onInput, onPaste, onVerify, onPrev,
 }: {
   digits: string[]; codeError: boolean; codeMsg: string; codeMsgOk: boolean
   onInput: (i: number, v: string) => void
-  onKeyDown: (i: number, e: React.KeyboardEvent) => void
+  onPaste: (text: string) => void
   onVerify: () => void; onPrev: () => void
 }) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+
+  // Drop the cursor into the first empty box as soon as the step appears.
+  useEffect(() => {
+    const firstEmpty = digits.findIndex((d) => !d)
+    inputRefs.current[firstEmpty === -1 ? 5 : firstEmpty]?.focus()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  function handleChange(i: number, val: string) {
+    onInput(i, val)
+    // Advance to the next box once a digit lands here.
+    if (val.replace(/\D/g, '') && i < 5) inputRefs.current[i + 1]?.focus()
+  }
+
+  function handleKeyDown(i: number, e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Backspace' && !digits[i] && i > 0) {
+      inputRefs.current[i - 1]?.focus()
+    } else if (e.key === 'ArrowLeft' && i > 0) {
+      inputRefs.current[i - 1]?.focus()
+    } else if (e.key === 'ArrowRight' && i < 5) {
+      inputRefs.current[i + 1]?.focus()
+    } else if (e.key === 'Enter') {
+      onVerify()
+    }
+  }
+
   return (
     <div className={styles.pane}>
       <h2>Verify it's <em>working.</em></h2>
       <p className={styles.paneSub}>Enter the six-digit code your app is showing right now.</p>
       <div className={[styles.codeRow, codeError ? styles.codeRowError : ''].filter(Boolean).join(' ')}>
         {digits.map((d, i) => (
-          <input key={i} ref={(el) => { inputRefs.current[i] = el }} type="text" inputMode="numeric" maxLength={1} value={d}
-            onChange={(e) => onInput(i, e.target.value)} onKeyDown={(e) => onKeyDown(i, e)} />
+          <input
+            key={i}
+            ref={(el) => { inputRefs.current[i] = el }}
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={1}
+            aria-label={`Digit ${i + 1}`}
+            value={d}
+            onChange={(e) => handleChange(i, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(i, e)}
+            onPaste={(e) => { e.preventDefault(); onPaste(e.clipboardData.getData('text')) }}
+            onFocus={(e) => e.target.select()}
+          />
         ))}
       </div>
-      <div className={[styles.codeMsg, codeMsgOk ? styles.codeMsgOk : ''].filter(Boolean).join(' ')}>{codeMsg}</div>
+      <div className={[styles.codeMsg, codeMsgOk ? styles.codeMsgOk : '', codeError ? styles.codeMsgError : ''].filter(Boolean).join(' ')}>{codeMsg}</div>
       <div className={styles.paneActions}>
         <Button variant="ghost" onClick={onPrev}>← Back</Button>
         <Button onClick={onVerify}>Verify code →</Button>
@@ -155,21 +193,19 @@ export function Step4({ onCopyCodes, onDownload, onFinish }: { onCopyCodes: () =
 // ── Done ────────────────────────────────────────────────────────────────────
 export function StepDone({ onSecurity, onSettings }: { onSecurity: () => void; onSettings: () => void }) {
   return (
-    <div className={styles.pane}>
-      <div className={styles.doneCard}>
-        <div className={styles.doneIc}>
-          <svg viewBox="0 0 24 24" width={32} height={32} fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        </div>
-        <h2>Two-factor is <em>on.</em></h2>
-        <p className={styles.paneSub} style={{ textAlign: 'center', maxWidth: '36ch', margin: '0 auto 24px' }}>
-          From now on, you'll enter a code from your authenticator app each time you sign in from a new device.
-        </p>
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Button onClick={onSecurity}>Back to Security</Button>
-          <Button variant="ghost" onClick={onSettings}>All settings</Button>
-        </div>
+    <div className={styles.donePanel}>
+      <div className={styles.doneIc}>
+        <svg viewBox="0 0 24 24" width={32} height={32} fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      </div>
+      <h2 className={styles.doneTitle}>Two-factor is <em>on.</em></h2>
+      <p className={styles.doneSub}>
+        From now on, you'll enter a code from your authenticator app each time you sign in from a new device.
+      </p>
+      <div className={styles.doneActions}>
+        <Button variant="ghost-dark" onClick={onSecurity}>Back to Security</Button>
+        <Button variant="ghost-dark" onClick={onSettings}>All settings</Button>
       </div>
     </div>
   )

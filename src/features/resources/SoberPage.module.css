@@ -227,7 +227,7 @@
 }
 .typeSupport {
   background: rgba(122, 82, 184, 0.1);
-  color: #7a52b8;
+  color: var(--violet);
 }
 .typeOutdoors {
   background: rgba(var(--accent-rgb), 0.1);

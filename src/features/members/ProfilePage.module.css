@@ -58,7 +58,7 @@
   align-items: center;
   gap: 8px;
   background: var(--jade);
-  color: #fff;
+  color: var(--cream);
   font-size: 13px;
   font-weight: 600;
   padding: 8px 14px;

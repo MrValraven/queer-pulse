@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FiSkipBack, FiSkipForward, FiPlay, FiPause } from 'react-icons/fi'
 import { RADIO } from './culture.data'
 import styles from './CulturePage.module.css'
 
@@ -32,15 +33,19 @@ export function CultureRadioPanel() {
               <div className={styles.radioProg} style={{ width: `${RADIO.now.progress}%` }} />
             </div>
             <div className={styles.radioCtrls}>
-              <button className={styles.rBtn} aria-label="Previous track">⏮</button>
+              <button className={styles.rBtn} aria-label="Previous track">
+                <FiSkipBack size={18} aria-hidden />
+              </button>
               <button
                 className={styles.rPlay}
                 onClick={() => setPlaying((p) => !p)}
                 aria-label={playing ? 'Pause' : 'Play'}
               >
-                {playing ? '⏸' : '▶'}
+                {playing ? <FiPause size={22} aria-hidden /> : <FiPlay size={22} aria-hidden />}
               </button>
-              <button className={styles.rBtn} aria-label="Next track">⏭</button>
+              <button className={styles.rBtn} aria-label="Next track">
+                <FiSkipForward size={18} aria-hidden />
+              </button>
               <div style={{ flex: 1 }} />
               <span className={styles.radioTime}>{RADIO.now.time}</span>
             </div>

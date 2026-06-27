@@ -5,6 +5,9 @@ import { I18nProvider } from './providers/I18nProvider'
 import { ToastProvider } from '../shared/components/feedback/ToastProvider'
 import { ConnectProvider } from './providers/ConnectProvider'
 import { WorkProfileProvider } from './providers/WorkProfileProvider'
+import { SavedProvider } from './providers/SavedProvider'
+import { SocialProvider } from './providers/SocialProvider'
+import { CommandPalette } from '../features/members/CommandPalette'
 import { RoomLoader } from '../shared/components/feedback/RoomLoader'
 import { ScrollManager } from './ScrollManager'
 import { AppRoutes } from './routes'
@@ -19,7 +22,12 @@ export default function App() {
               <ScrollManager />
               <WorkProfileProvider>
                 <ConnectProvider>
-                  <AppRoutes />
+                  <SavedProvider>
+                    <SocialProvider>
+                      <AppRoutes />
+                      <CommandPalette />
+                    </SocialProvider>
+                  </SavedProvider>
                 </ConnectProvider>
               </WorkProfileProvider>
               <RoomLoader />

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { type DirectoryPlace, type Tint } from './directoryPlaces'
+import { routes } from '../../app/routeMap'
 import { MEMBERS_HERE } from './directorySpace.data'
 import s from './DirectorySpacePage.module.css'
 
@@ -69,7 +70,7 @@ export function DirectorySpaceAside({ place }: Props) {
               Get in touch →
             </Button>
           ) : null}
-          <Button variant="ghost" className={s.ctaBtn} to="/directory">
+          <Button variant="ghost" className={s.ctaBtn} to={routes.directory}>
             Back to directory
           </Button>
         </div>
@@ -85,7 +86,7 @@ export function DirectorySpaceAside({ place }: Props) {
         </span>
         <p className={s.ownerBio}>{place.owner.bio}</p>
         {place.owner.inQueerPulse && (
-          <Button variant="ghost" className={s.ctaBtn} to="/members">
+          <Button variant="ghost" className={s.ctaBtn} to={routes.members}>
             View {place.owner.first}'s profile →
           </Button>
         )}
@@ -97,7 +98,7 @@ export function DirectorySpaceAside({ place }: Props) {
           {MEMBERS_HERE.map((m) => (
             <div key={m.initials} className={s.whoRow}>
               <span className={[s.whoAv, TINT[m.tint]].join(' ')}>{m.initials}</span>
-              <Link to="/members">{m.name}</Link>
+              <Link to={routes.members}>{m.name}</Link>
               <span className={s.whoWhen}>{m.when}</span>
             </div>
           ))}

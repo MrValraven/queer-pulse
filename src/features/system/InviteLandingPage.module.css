@@ -292,7 +292,27 @@
   margin-top: 4px;
 }
 
-/* Google-only sign up */
+.orDivider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.orDivider::before,
+.orDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(45, 27, 61, 0.12);
+}
+
+/* Secondary: continue with Google */
 .google {
   display: flex;
   width: 100%;

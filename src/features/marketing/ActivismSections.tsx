@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { FiStar } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { START_STEPS, SKILLS_CARDS, ORGS, VOLUNTEER_ROLES } from './activism.data'
 import s from './ActivismPage.module.css'
 
@@ -93,7 +94,7 @@ export function OrgsSection() {
       <p>These organisations are doing real work for LGBTQ+ people in Portugal. Most are looking for volunteers, skills, and support.</p>
       <div className={s.orgList}>
         {ORGS.map((o) => (
-          <Link key={o.name} to="/partners" className={s.orgRow}>
+          <Link key={o.name} to={routes.partners} className={s.orgRow}>
             <span className={s.orgAv} style={{ background: o.bg, color: o.color }}>{o.av}</span>
             <div>
               <div className={s.orgName}>{o.name}</div>
@@ -113,7 +114,7 @@ export function VolunteerSection() {
       <p>Want to do more than read about it? Here are specific, open roles in Lisbon's queer community looking for people right now — no lengthy applications, no gatekeeping.</p>
       <div className={s.actionGrid}>
         {VOLUNTEER_ROLES.map((v) => (
-          <Link key={v.title} to="/volunteer" className={s.actionCard}>
+          <Link key={v.title} to={routes.volunteer} className={s.actionCard}>
             <div className={s.acHead}>
               <div className={s.acTitle}>{v.title}</div>
               <span className={s.acPill}>{v.pill}</span>
@@ -124,7 +125,7 @@ export function VolunteerSection() {
         ))}
       </div>
       <div style={{ marginTop: 28 }}>
-        <Button variant="ghost" to="/volunteer">See all volunteer opportunities →</Button>
+        <Button variant="ghost" to={routes.volunteer}>See all volunteer opportunities →</Button>
       </div>
     </section>
   )

@@ -10,6 +10,7 @@
   --accent:      #E8775A;
   --accent-rgb:  232, 119, 90;
   --accent-ink:  #C85A40;
+  --accent-deep: #A84430;   /* darker accent — pressed/hover on accent-ink */
 
   /* ── Surfaces ── */
   --cream:  #F7F3EE;   /* page background */
@@ -22,6 +23,10 @@
 
   /* ── Amber (warning / medium states) ── */
   --amber:    #E8B44A;
+
+  /* ── Danger (destructive actions: delete, block, report, emergency) ── */
+  --danger:     #B91C1C;
+  --danger-rgb: 185, 28, 28;
 
   /* ── Soft accent (light coral — text/icons on accent-tinted surfaces) ── */
   --accent-soft: #FFC4AF;

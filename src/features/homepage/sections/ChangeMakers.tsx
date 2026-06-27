@@ -37,6 +37,7 @@ export function ChangeMakers() {
               >
                 <ImageSlot
                   tint={person.tint}
+                  src={person.image}
                   height={240}
                   radius={0}
                   placeholder={`Portrait: ${person.name}`}

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { ResourceHero } from './ResourceHero'
 import styles from './resources.module.css'
 
@@ -15,8 +16,8 @@ const HEALTHCARE: Step[] = [
   { n: '01', title: 'Start with your GP (Médico de Família)', body: <>Request a referral to an endocrinologist or the nearest gender clinic. Your GP may not be familiar with the process — bring our GP referral guide to help. SNS referrals typically take 6–18 months.</> },
   { n: '02', title: 'Gender clinics in Lisbon', body: <>Hospital de Santa Maria and Hospital Curry Cabral both have gender medicine units. Private options include the Clínica de Identidade de Género for faster access. We have member reviews of all three.</> },
   { n: '03', title: 'HRT access', body: <>Hormone therapy is available via the SNS once you have an endocrinology referral. Many members use the informed consent model at private clinics as a faster first step, then transition to SNS for ongoing care.</> },
-  { n: '04', title: 'Surgical procedures', body: <>Gender-affirming surgeries covered by the SNS include vaginoplasty, phalloplasty, mastectomy, and others. Waiting lists are long (1–3+ years). <Link to="/changemakers">Jonas Ferreira</Link> has helped many members navigate this.</> },
-  { n: '05', title: "If you're facing barriers", body: <>If a provider refuses treatment or makes the process hostile, document everything. Contact <Link to="/legal">our legal resources</Link> or ILGA Portugal. You have rights — and this community can help you enforce them.</> },
+  { n: '04', title: 'Surgical procedures', body: <>Gender-affirming surgeries covered by the SNS include vaginoplasty, phalloplasty, mastectomy, and others. Waiting lists are long (1–3+ years). <Link to={routes.changemakers}>Jonas Ferreira</Link> has helped many members navigate this.</> },
+  { n: '05', title: "If you're facing barriers", body: <>If a provider refuses treatment or makes the process hostile, document everything. Contact <Link to={routes.legal}>our legal resources</Link> or ILGA Portugal. You have rights — and this community can help you enforce them.</> },
 ]
 
 const LEGAL: Step[] = [
@@ -29,7 +30,7 @@ const RESOURCES = [
   { cat: 'Guide', catColor: 'var(--accent-ink)', catBg: 'rgba(232,119,90,.1)', title: 'The SNS trans healthcare guide', desc: 'A members-maintained walkthrough of the public system — referrals, clinics, what to bring, and how long each step really takes.' },
   { cat: 'Checklist', catColor: 'var(--jade)', catBg: 'rgba(74,140,111,.12)', title: 'Document-change checklist', desc: 'Every document to update after a legal name change, in the right order — CC, NIF, bank, employer, health records.' },
   { cat: 'Directory', catColor: 'var(--plum)', catBg: 'rgba(45,27,61,.08)', title: 'Affirming clinicians', desc: 'Endocrinologists, surgeons, and GPs reviewed by trans members. No listing fees, no algorithm — just lived experience.' },
-  { cat: 'Peer support', catColor: '#7A52B8', catBg: 'rgba(155,111,212,.1)', title: 'Trans & NB peer circle', desc: 'A moderated space to share what worked, vent what didn\'t, and find someone a few steps ahead of you on the same path.' },
+  { cat: 'Peer support', catColor: 'var(--violet)', catBg: 'rgba(155,111,212,.1)', title: 'Trans & NB peer circle', desc: 'A moderated space to share what worked, vent what didn\'t, and find someone a few steps ahead of you on the same path.' },
 ]
 
 export function TransHubPage() {
@@ -37,7 +38,7 @@ export function TransHubPage() {
     <PageShell>
       <ResourceHero
         eyebrow="Trans & Non-Binary Hub"
-        eyebrowDotColor="#9B6FD4"
+        eyebrowDotColor="var(--violet)"
         title={<>A dedicated space, <em>not an afterthought.</em></>}
         lead="Healthcare navigation, legal guides, peer support, and community — built specifically for trans and non-binary members. You don't have to figure this out alone."
         anchors={[
@@ -111,7 +112,7 @@ export function TransHubPage() {
                 </span>
                 <div className={styles.resTitle}>{res.title}</div>
                 <div className={styles.resDesc}>{res.desc}</div>
-                <Link to="/library" className={styles.rightLink}>
+                <Link to={routes.library} className={styles.rightLink}>
                   Open →
                 </Link>
               </Reveal>
@@ -133,7 +134,7 @@ export function TransHubPage() {
                 doesn't.
               </p>
               <div className={styles.plumActions}>
-                <Button variant="ghost-dark" to="/communities">
+                <Button variant="ghost-dark" to={routes.communities}>
                   Join the hub
                 </Button>
               </div>
@@ -160,7 +161,7 @@ export function TransHubPage() {
         title={<>You're seen <em>here.</em></>}
         sub="QueerPulse is a vouched-for, invite-only network. If someone you trust is already here, ask them to vouch for you."
       >
-        <Button to="/invite" variant="primary" size="lg">
+        <Button to={routes.invite} variant="primary" size="lg">
           Request an invite
         </Button>
       </Outro>

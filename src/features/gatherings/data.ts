@@ -249,6 +249,32 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     cta: 'RSVP',
     body: 'A monthly gathering centring QTIBIPOC experiences — food, music, and conversation in a space made by and for queer and trans people of colour. Allies who are invited by a member are welcome. Come as you are; this is a place to exhale.',
   },
+  'queer-night-swim': {
+    slug: 'queer-night-swim',
+    type: 'Swim',
+    day: '22',
+    month: 'Jun',
+    title: 'Queer Night Swim',
+    hood: 'Piscina Municipal, Anjos',
+    host: 'Queer Swimmers Lisboa',
+    hostSlug: '',
+    spots: '12 going',
+    cta: "I'll be there",
+    body: 'A laid-back evening swim for the queer community — lengths if you want them, floating and chatting if you don\'t. The lifeguarded municipal pool is ours for the hour after closing. Bring a suit and a towel; everything else is optional. New swimmers and nervous ones especially welcome.',
+  },
+  'queer-book-club': {
+    slug: 'queer-book-club',
+    type: 'Book Club',
+    day: '19',
+    month: 'Jul',
+    title: 'Queer Book Club — July',
+    hood: 'LX Factory, Alcântara',
+    host: 'QueerPulse',
+    hostSlug: '',
+    spots: '12 going',
+    cta: 'RSVP',
+    body: 'This month we\'re reading a queer classic and meeting in the courtyard at LX Factory to talk it over. You don\'t need to have finished the book — or even started it — to come along. Wine, snacks, and an easy conversation from 6pm. The next read gets picked together at the end.',
+  },
 }
 
 export const defaultGatheringSlug = 'supper-club-12'
@@ -301,7 +327,7 @@ export interface CalendarEvent {
 
 const ACCENT = 'var(--accent)'
 const JADE = 'var(--jade)'
-const COMMUNITY = '#7A52B8'
+const COMMUNITY = 'var(--violet)'
 const PARTNER = 'rgba(45,27,61,.7)'
 
 /** Org category colours shared between the calendar and the events list. */

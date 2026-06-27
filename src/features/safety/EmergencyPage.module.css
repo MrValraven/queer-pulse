@@ -12,13 +12,13 @@
 .exitBar p {
   font-size: 13.5px;
   font-weight: 600;
-  color: #fff;
+  color: var(--cream);
 }
 .exitBtn {
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 700;
-  color: #fff;
+  color: var(--cream);
   background: rgba(0, 0, 0, 0.22);
   border: 1.5px solid rgba(255, 255, 255, 0.5);
   border-radius: 999px;
@@ -100,8 +100,8 @@
 }
 
 .crisisNow {
-  background: rgba(220, 50, 50, 0.07);
-  border: 2px solid rgba(220, 50, 50, 0.28);
+  background: rgba(var(--danger-rgb), 0.07);
+  border: 2px solid rgba(var(--danger-rgb), 0.28);
   border-radius: 22px;
   padding: 28px 30px;
   margin-bottom: 48px;
@@ -110,7 +110,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 26px;
-  color: #b91c1c;
+  color: var(--danger);
   margin-bottom: 18px;
   letter-spacing: -0.01em;
 }

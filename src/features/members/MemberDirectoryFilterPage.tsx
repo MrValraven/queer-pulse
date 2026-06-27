@@ -1,14 +1,64 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { INITIAL_APPLIED, MEMBERS } from './memberDirectoryFilter.data'
+import {
+  DEFAULT_FILTERS,
+  MEMBERS,
+  PAGE_SIZE,
+  SORTS,
+  TOTAL_MEMBERS,
+  appliedChips,
+  matchesFilters,
+  reconcileProfessions,
+  sortMembers,
+  type AppliedChip,
+  type FilterState,
+  type SortKey,
+} from './memberDirectoryFilter.data'
 import { FiltersSidebar, MemberResultCard } from './MemberFilterCards'
 import styles from './MemberDirectoryFilterPage.module.css'
 
+/** Remove one value from whichever filter group a chip belongs to. */
+function removeChip(filters: FilterState, chip: AppliedChip): FilterState {
+  const drop = (arr: string[]) => arr.filter((v) => v !== chip.value)
+  switch (chip.group) {
+    case 'openTo':
+      return { ...filters, openTo: drop(filters.openTo) }
+    case 'hood':
+      return { ...filters, hoods: drop(filters.hoods) }
+    case 'discipline':
+      return { ...filters, disciplines: drop(filters.disciplines) }
+    case 'profession':
+      return { ...filters, professions: drop(filters.professions) }
+    case 'identity':
+      return { ...filters, identities: drop(filters.identities) }
+    case 'language':
+      return { ...filters, languages: drop(filters.languages) }
+  }
+}
+
 export function MemberDirectoryFilterPage() {
   const { showToast } = useToast()
-  const [applied, setApplied] = useState(INITIAL_APPLIED)
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
+  const [sort, setSort] = useState<SortKey>('Recently active')
+  const [visible, setVisible] = useState(PAGE_SIZE)
+
+  const filtered = useMemo(() => {
+    const matched = MEMBERS.filter((m) => matchesFilters(m, filters))
+    return sortMembers(matched, sort)
+  }, [filters, sort])
+
+  const chips = useMemo(() => appliedChips(filters), [filters])
+  const shown = filtered.slice(0, visible)
+  const remaining = filtered.length - shown.length
+
+  // Reset paging whenever the result set changes underneath us, and keep the
+  // profession selection coherent with the chosen fields.
+  const applyFilters = (next: FilterState) => {
+    setFilters(reconcileProfessions(next))
+    setVisible(PAGE_SIZE)
+  }
 
   return (
     <PageShell>
@@ -16,7 +66,7 @@ export function MemberDirectoryFilterPage() {
         <header className={styles.head}>
           <div className={styles.eyebrow}>Members · advanced filter</div>
           <h1 className={styles.h1}>
-            Find <em>1,847 members,</em> exactly.
+            Find <em>{TOTAL_MEMBERS.toLocaleString()} members,</em> exactly.
           </h1>
           <p className={styles.lead}>
             Filter by what they offer, where they're based, what they're <b>open to</b>. The same
@@ -27,9 +77,20 @@ export function MemberDirectoryFilterPage() {
 
         <div className={styles.grid}>
           <FiltersSidebar
-            appliedCount={applied.length}
+            filters={filters}
+            appliedCount={chips.length}
+            onChange={applyFilters}
             onClearAll={() => {
-              setApplied([])
+              applyFilters({
+                openTo: [],
+                hoods: [],
+                disciplines: [],
+                professions: [],
+                identities: [],
+                languages: [],
+                yearsFrom: 0,
+                yearsTo: 9,
+              })
               showToast('Filters cleared', 'info')
             }}
           />
@@ -39,31 +100,29 @@ export function MemberDirectoryFilterPage() {
               <div className={styles.count}>
                 Showing{' '}
                 <b>
-                  <em>184</em>
+                  <em>{filtered.length.toLocaleString()}</em>
                 </b>{' '}
-                of 1,847 members
+                of {TOTAL_MEMBERS.toLocaleString()} members
               </div>
               <div className={styles.sort}>
                 <span className={styles.sortLabel}>Sort</span>
-                <select defaultValue="Recently active">
-                  <option>Recently active</option>
-                  <option>Recently joined</option>
-                  <option>Closest mutuals</option>
-                  <option>A to Z</option>
-                  <option>Most vouched</option>
+                <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
+                  {SORTS.map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
                 </select>
               </div>
             </div>
 
-            {applied.length > 0 && (
+            {chips.length > 0 && (
               <div className={styles.appliedRow}>
-                {applied.map((label) => (
-                  <span key={label} className={styles.applied}>
-                    {label}
+                {chips.map((chip) => (
+                  <span key={`${chip.group}:${chip.value}`} className={styles.applied}>
+                    {chip.label}
                     <button
                       type="button"
-                      aria-label={`Remove ${label}`}
-                      onClick={() => setApplied((prev) => prev.filter((l) => l !== label))}
+                      aria-label={`Remove ${chip.label}`}
+                      onClick={() => applyFilters(removeChip(filters, chip))}
                     >
                       ×
                     </button>
@@ -72,17 +131,29 @@ export function MemberDirectoryFilterPage() {
               </div>
             )}
 
-            <div className={styles.mGrid}>
-              {MEMBERS.map((member) => (
-                <MemberResultCard key={member.slug} member={member} />
-              ))}
-            </div>
+            {shown.length === 0 ? (
+              <div className={styles.noResults}>
+                No members match these filters. Try removing a few above.
+              </div>
+            ) : (
+              <div className={styles.mGrid}>
+                {shown.map((member, i) => (
+                  <MemberResultCard key={`${member.slug}-${i}`} member={member} />
+                ))}
+              </div>
+            )}
 
-            <div className={styles.loadMore}>
-              <Button type="button" variant="ghost" onClick={() => showToast('Loading more members…', 'info')}>
-                Load 178 more members
-              </Button>
-            </div>
+            {remaining > 0 && (
+              <div className={styles.loadMore}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                >
+                  Load {Math.min(PAGE_SIZE, remaining)} more members
+                </Button>
+              </div>
+            )}
           </main>
         </div>
       </div>

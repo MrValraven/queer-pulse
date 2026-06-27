@@ -1,4 +1,6 @@
 import { type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import { routes } from '../../app/routeMap'
 
 export const TABS: [string, string][] = [
   ['money', 'Money'],
@@ -77,6 +79,6 @@ export const MISTAKES = [
 export const GOV_STATS: Bignum[] = [
   { lbl: 'Annual Assembly', b: <><em>1</em></>, p: 'Held 14 November in Anjos · 312 of 1,847 members attended in person or online' },
   { lbl: 'Resolutions voted', b: <><em>11</em></>, p: '9 passed, 2 sent back for redrafting · quorum was 184 votes' },
-  { lbl: 'Public minutes', b: <>100<em>%</em></>, p: <>All meetings minuted, posted within 7 days · <a href="#">browse →</a></> },
+  { lbl: 'Public minutes', b: <>100<em>%</em></>, p: <>All meetings minuted, posted within 7 days · <Link to={routes.governance}>browse →</Link></> },
   { lbl: 'Rotating circle members', b: <><em>23</em></>, p: 'Across 4 circles · grants, moderation, finance, hosting · 12-month max term' },
 ]

@@ -79,7 +79,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--cream);
   background: rgba(45, 27, 61, 0.7);
   backdrop-filter: blur(6px);
   border-radius: 6px;
@@ -167,7 +167,7 @@
 }
 .btP {
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
   border-color: var(--accent);
 }
 .listeners {
@@ -363,7 +363,7 @@
   height: 28px;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.18);
-  color: #ffc4af;
+  color: var(--accent-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -478,7 +478,7 @@
 }
 .chatActions button:hover {
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
   border-color: var(--accent);
 }
 

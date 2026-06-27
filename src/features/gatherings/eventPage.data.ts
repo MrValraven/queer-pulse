@@ -1,6 +1,9 @@
 import type { IconType } from 'react-icons'
 import { FiCalendar, FiCoffee, FiMapPin, FiMessageCircle } from 'react-icons/fi'
 
+export const HERO_IMAGE =
+  'https://images.unsplash.com/photo-1562050344-f7ad946cee35?q=80&w=1000&auto=format&fit=crop'
+
 export const TIERS = [
   { name: 'Free', desc: 'No barriers to attending', price: '€0' },
   { name: 'Standard', desc: 'Covers the cost of your dinner', price: '€8' },

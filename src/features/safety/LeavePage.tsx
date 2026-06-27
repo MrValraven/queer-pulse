@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { routes } from '../../app/routeMap'
 import s from './flows.module.css'
 
 type State = 'considering' | 'pausing' | 'confirmed'
@@ -22,8 +23,8 @@ export function LeavePage() {
   return (
     <div className={s.page}>
       {state === 'considering' && (
-        <div className={`${s.card} ${s.cardWide}`}>
-          <Link to="/account/settings" className={s.backLink}>
+        <div className={`${s.card} ${s.cardWide} ${s.screenIn}`}>
+          <Link to={routes.settings} className={s.backLink}>
             ← Back to settings
           </Link>
           <div className={s.title}>
@@ -40,7 +41,7 @@ export function LeavePage() {
               </div>
             ))}
             <div className={s.privacyNote}>
-              We retain only anonymised, aggregated data. Your personal data is deleted within 30 days. <Link to="/safety">Read our Privacy Policy →</Link>
+              We retain only anonymised, aggregated data. Your personal data is deleted within 30 days. <Link to={routes.safety}>Read our Privacy Policy →</Link>
             </div>
           </div>
 
@@ -69,7 +70,7 @@ export function LeavePage() {
             <div>
               <div className={s.altTitle}>Step back quietly — reduce your presence</div>
               <div className={s.altDesc}>Set your profile to private, mute all notifications, and come back whenever you're ready. No pressure, no timer, no questions.</div>
-              <Button variant="ghost" to="/account/settings">
+              <Button variant="ghost" to={routes.settings}>
                 Go quiet instead
               </Button>
             </div>
@@ -85,7 +86,7 @@ export function LeavePage() {
       )}
 
       {state === 'pausing' && (
-        <div className={s.card}>
+        <div className={`${s.card} ${s.screenIn}`}>
           <button className={s.backLink} onClick={() => setState('considering')}>
             ← Back
           </button>
@@ -140,7 +141,7 @@ export function LeavePage() {
       )}
 
       {state === 'confirmed' && (
-        <div className={`${s.card} ${s.center}`}>
+        <div className={`${s.card} ${s.center} ${s.screenIn}`}>
           <div className={s.icon} style={{ background: 'rgba(45,27,61,.07)' }}>
             <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
               <path d="M12 4C7.58 4 4 7.58 4 12s3.58 8 8 8 8-3.58 8-8" stroke="var(--plum)" strokeWidth={1.8} strokeLinecap="round" />
@@ -170,7 +171,7 @@ export function LeavePage() {
           <div className={s.reportNote} style={{ borderTop: 'none' }}>
             Changed your mind? You can cancel by signing back in within 30 days.
             <br />
-            <Link to="/sign-in">Sign in to cancel →</Link>
+            <Link to={routes.signIn}>Sign in to cancel →</Link>
           </div>
         </div>
       )}

@@ -3,6 +3,7 @@ import { Button, ImageSlot } from '../../shared/components/ui'
 import { coverFilm } from './data'
 import { SECTION_NAV } from './cinemaPage.data'
 import styles from './CinemaPage.module.css'
+import { routes } from '../../app/routeMap'
 
 export function CinemaMast() {
   return (
@@ -60,7 +61,7 @@ export function CinemaCover() {
   return (
     <section className={styles.cover}>
       <div className={styles.cvImg}>
-        <ImageSlot tint="plum" width="100%" height="100%" radius={0} placeholder="cover film · poster" style={{ position: 'absolute', inset: 0 }} />
+        <ImageSlot src={coverFilm.image} tint="plum" width="100%" height="100%" radius={0} placeholder="cover film · poster" style={{ position: 'absolute', inset: 0 }} />
         <div className={styles.cvOverlay} />
         <div className={styles.cvMarks}>
           <span className="pulse" />
@@ -84,10 +85,10 @@ export function CinemaCover() {
           <div className="cbody">{coverFilm.curatorBody}</div>
         </div>
         <div className={styles.cvActions}>
-          <Button size="lg" to="/film">
+          <Button size="lg" to={routes.film}>
             Watch now
           </Button>
-          <Button variant="ghost-dark" to="/film">
+          <Button variant="ghost-dark" to={routes.film}>
             Rent · €3
           </Button>
           <Button variant="ghost-dark" to="/rsvp">

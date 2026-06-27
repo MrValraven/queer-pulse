@@ -1,18 +1,12 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
+import { SystemStateShell } from '../../shared/components/layout'
 import { routes } from '../../app/routeMap'
 import styles from './InviteExpiredPage.module.css'
 
 export function InviteExpiredPage() {
   return (
-    <div className={styles.root}>
-      <div className={`${styles.orb} ${styles.orbA}`} />
-      <div className={`${styles.orb} ${styles.orbB}`} />
-      <Link to="/" className={styles.brand}>
-        <span className={styles.pulseDot} aria-hidden />
-        Queer<em>Pulse</em>
-      </Link>
-
+    <SystemStateShell>
       <div className={styles.card}>
         <div className={styles.stamp}>
           <svg viewBox="0 0 24 24" aria-hidden>
@@ -73,6 +67,6 @@ export function InviteExpiredPage() {
           </div>
         </div>
       </div>
-    </div>
+    </SystemStateShell>
   )
 }

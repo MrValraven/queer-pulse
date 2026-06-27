@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import s from './flows.module.css'
 
 type State = 'pending' | 'overturned' | 'upheld'
@@ -48,7 +49,7 @@ export function AppealOutcomePage() {
       </div>
 
       {state === 'pending' && (
-        <div className={`${s.card} ${s.center}`}>
+        <div className={`${s.card} ${s.center} ${s.screenIn}`}>
           <div className={s.icon} style={{ background: 'rgba(232,119,90,.1)' }}>
             <svg width={26} height={26} viewBox="0 0 26 26" fill="none">
               <circle cx={13} cy={13} r={9} stroke="var(--accent)" strokeWidth={2} />
@@ -78,13 +79,13 @@ export function AppealOutcomePage() {
             <strong>While your appeal is under review:</strong> the original decision remains in place, but no further action will be taken. You'll be notified by email as soon as a decision is reached.
           </div>
           <div className={s.govLink}>
-            <Link to="/governance">How moderation works →</Link>
+            <Link to={routes.governance}>How moderation works →</Link>
           </div>
         </div>
       )}
 
       {state === 'overturned' && (
-        <div className={`${s.card} ${s.center}`}>
+        <div className={`${s.card} ${s.center} ${s.screenIn}`}>
           <div className={s.icon} style={{ background: 'rgba(74,140,111,.1)' }}>
             <svg width={26} height={26} viewBox="0 0 26 26" fill="none">
               <path d="M7 13.5L11.5 18L19 9" stroke="var(--jade)" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
@@ -113,8 +114,8 @@ export function AppealOutcomePage() {
             <strong>What's been restored:</strong> the warning on your account has been removed, and your content is visible again. Your account standing is unchanged.
           </div>
           <div className={s.actions} style={{ marginTop: 18 }}>
-            <Button to="/account/profile">Return to your profile</Button>
-            <Button variant="ghost" to="/guidelines">
+            <Button to={routes.accountProfile}>Return to your profile</Button>
+            <Button variant="ghost" to={routes.guidelines}>
               View community guidelines
             </Button>
           </div>
@@ -122,7 +123,7 @@ export function AppealOutcomePage() {
       )}
 
       {state === 'upheld' && (
-        <div className={`${s.card} ${s.center}`}>
+        <div className={`${s.card} ${s.center} ${s.screenIn}`}>
           <div className={s.icon} style={{ background: 'rgba(45,27,61,.07)' }}>
             <svg width={26} height={26} viewBox="0 0 26 26" fill="none">
               <circle cx={13} cy={13} r={9} stroke="var(--plum)" strokeWidth={2} />
@@ -154,7 +155,7 @@ export function AppealOutcomePage() {
           <div className={s.reportNote}>
             If you believe this is in error, you can contact our Trust team directly.
             <br />
-            <Link to="/contact">Message the Trust team →</Link>
+            <Link to={routes.contact}>Message the Trust team →</Link>
           </div>
         </div>
       )}

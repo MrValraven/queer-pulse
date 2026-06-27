@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Reveal } from '../../shared/components/ui'
+import { Button, Reveal } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { calendarEvents, calendarLegend, type CalendarEvent } from './data'
 import { MONTHS, MSHORT, CALENDAR_TODAY } from './calendar.data'
 import styles from './CalendarPage.module.css'
@@ -41,6 +43,7 @@ function EventCard({ event }: { event: CalendarEvent }) {
 export function CalendarPage() {
   const [view, setView] = useState({ year: 2026, month: 5 })
   const [selected, setSelected] = useState<Date | null>(null)
+  const [subscribed, setSubscribed] = useState(false)
 
   const firstDayOffset = (new Date(view.year, view.month, 1).getDay() + 6) % 7
   const daysInMonth = new Date(view.year, view.month + 1, 0).getDate()
@@ -91,9 +94,9 @@ export function CalendarPage() {
           <div className={styles.layout}>
             <div>
               <div className={styles.monthNav}>
-                <button className={styles.navBtn} onClick={() => changeMonth(-1)} aria-label="Previous month">←</button>
+                <button type="button" className={styles.navBtn} onClick={() => changeMonth(-1)} aria-label="Previous month"><FiChevronLeft /></button>
                 <div className={styles.monthLabel}>{MONTHS[view.month]} {view.year}</div>
-                <button className={styles.navBtn} onClick={() => changeMonth(1)} aria-label="Next month">→</button>
+                <button type="button" className={styles.navBtn} onClick={() => changeMonth(1)} aria-label="Next month"><FiChevronRight /></button>
               </div>
               <div className={styles.grid}>
                 <div className={styles.weekdays}>
@@ -156,22 +159,17 @@ export function CalendarPage() {
                   className={styles.subForm}
                   onSubmit={(event) => {
                     event.preventDefault()
-                    const button = event.currentTarget.querySelector('button')
-                    if (button) { button.textContent = 'Subscribed'; button.disabled = true }
+                    setSubscribed(true)
                   }}
                 >
                   <input className={styles.subInput} type="email" placeholder="your@email.com" />
-                  <button
-                    type="submit"
-                    className="btn"
-                    style={{ padding: '11px 18px', fontSize: 13.5, background: 'var(--accent)', color: 'var(--cream)', border: 'none', borderRadius: 999, fontFamily: 'var(--sans)', fontWeight: 600, cursor: 'pointer' }}
-                  >
-                    Subscribe
-                  </button>
+                  <Button type="submit" variant="primary" disabled={subscribed}>
+                    {subscribed ? 'Subscribed' : 'Subscribe'}
+                  </Button>
                 </form>
               </div>
               <div style={{ marginTop: 16 }}>
-                <Link to="/host" style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--accent-ink)' }}>Host your own gathering →</Link>
+                <Link to={routes.host} style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--accent-ink)' }}>Host your own gathering →</Link>
               </div>
             </div>
           </div>

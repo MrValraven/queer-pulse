@@ -20,12 +20,13 @@ const GOVERNANCE = [
   { label: 'Submission inbox', to: '/studio/triage' },
   { label: 'Flagged tracks', to: '/studio/flag-review' },
 ]
-const LIBRARY = [
-  { name: 'Cidade dos ', em: 'santos', meta: 'Album · Mariana Sol', tint: 'coral' as const, to: '/studio/album' },
-  { name: 'Vespertina ', em: 'vol. iv', meta: 'Set · Sara Marques', tint: 'plum' as const, to: '/studio' },
-  { name: 'Lisbon dyke-bar ', em: 'standards', meta: 'Collection · 28 tracks', tint: 'jade' as const, to: '/studio' },
-  { name: 'Trans ', em: 'composers', meta: 'Mix · D. Okoye', tint: 'plum' as const, to: '/studio' },
-  { name: 'The Anjos ', em: 'tape', meta: 'Live · Casa do Comum', tint: 'coral' as const, to: '/studio' },
+const PLAYER_ART = 'https://images.unsplash.com/photo-1654432673600-33ff123df18a?q=80&w=400&auto=format&fit=crop'
+const LIBRARY: { name: string; em: string; meta: string; tint: 'coral' | 'plum' | 'jade'; to: string; image?: string }[] = [
+  { name: 'Cidade dos ', em: 'santos', meta: 'Album · Mariana Sol', tint: 'coral' as const, to: '/studio/album', image: 'https://images.unsplash.com/photo-1629794138560-46d2815a6d79?q=80&w=400&auto=format&fit=crop' },
+  { name: 'Vespertina ', em: 'vol. iv', meta: 'Set · Sara Marques', tint: 'plum' as const, to: '/studio', image: 'https://images.unsplash.com/photo-1528643609128-c50fdc20cc58?q=80&w=800&auto=format&fit=crop' },
+  { name: 'Lisbon dyke-bar ', em: 'standards', meta: 'Collection · 28 tracks', tint: 'jade' as const, to: '/studio', image: 'https://images.unsplash.com/photo-1565502233254-3d22afd146eb?q=80&w=800&auto=format&fit=crop' },
+  { name: 'Trans ', em: 'composers', meta: 'Mix · D. Okoye', tint: 'plum' as const, to: '/studio', image: 'https://images.unsplash.com/photo-1566108253680-7c860e4633a3?q=80&w=800&auto=format&fit=crop' },
+  { name: 'The Anjos ', em: 'tape', meta: 'Live · Casa do Comum', tint: 'coral' as const, to: '/studio', image: 'https://images.unsplash.com/photo-1585310808021-c2221275d7ad?q=80&w=800&auto=format&fit=crop' },
 ]
 
 export function StudioShell({ children }: { children: ReactNode }) {
@@ -82,7 +83,7 @@ export function StudioShell({ children }: { children: ReactNode }) {
             {LIBRARY.map((pl) => (
               <Link key={pl.name} to={pl.to} className={styles.plItem}>
                 <span className={styles.plCov}>
-                  <ImageSlot tint={pl.tint} width={36} height={36} radius={5} placeholder="" />
+                  <ImageSlot src={pl.image} tint={pl.tint} width={36} height={36} radius={5} placeholder="" />
                 </span>
                 <span>
                   <span className={styles.plName} style={{ display: 'block' }}>
@@ -143,7 +144,7 @@ export function StudioShell({ children }: { children: ReactNode }) {
       <div className={styles.fp}>
         <div className={styles.fpL}>
           <div className={styles.fpArt}>
-            <ImageSlot tint="coral" width={52} height={52} radius={8} placeholder="" />
+            <ImageSlot src={PLAYER_ART} tint="coral" width={52} height={52} radius={8} placeholder="" />
           </div>
           <div className={styles.fpInfo}>
             <div className={styles.t}>

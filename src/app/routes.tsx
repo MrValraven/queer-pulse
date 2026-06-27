@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { HomePage } from '../features/homepage/HomePage'
-import { MembersPage } from '../features/members/MembersPage'
 import { ProfilePage } from '../features/members/ProfilePage'
 import { MemberDirectoryFilterPage } from '../features/members/MemberDirectoryFilterPage'
 import { SearchPage } from '../features/members/SearchPage'
@@ -230,6 +229,7 @@ const BUILT_SLUGS = new Set([
   'notifications',
   'communities',
   'calendar',
+  'events',
   'gathering',
   'event',
   'rsvp',
@@ -248,6 +248,7 @@ const BUILT_SLUGS = new Set([
   'sign-in',
   'create-account',
   'welcome',
+  'welcome-tour',
   'onboarding',
   'jobs',
   'housing',
@@ -379,8 +380,8 @@ export function AppRoutes() {
 
       {/* Member Platform */}
       <Route path="/feed" element={<FeedPage />} />
-      <Route path="/members" element={<MembersPage />} />
-      <Route path="/member-directory-filter" element={<MemberDirectoryFilterPage />} />
+      <Route path="/members" element={<MemberDirectoryFilterPage />} />
+      <Route path="/member-directory-filter" element={<Navigate to="/members" replace />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/account/profile" element={<ProfilePage />} />
       <Route path="/members/:slug" element={<ProfilePage />} />

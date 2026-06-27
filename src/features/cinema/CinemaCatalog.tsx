@@ -3,6 +3,7 @@ import { FiStar } from 'react-icons/fi'
 import { ImageSlot } from '../../shared/components/ui'
 import { collections, films, shorts } from './data'
 import styles from './CinemaPage.module.css'
+import { routes } from '../../app/routeMap'
 
 const accessClass = { free: styles.free, member: styles.member, rent: styles.rent }
 
@@ -20,9 +21,9 @@ export function ProgrammeSection() {
       </div>
       <div className={styles.prog}>
         {films.map((film) => (
-          <Link key={film.id} to="/film" className={styles.film}>
+          <Link key={film.id} to={routes.film} className={styles.film}>
             <div className={styles.poster}>
-              <ImageSlot tint={film.tint} width="100%" height="100%" radius={14} placeholder="poster" style={{ position: 'absolute', inset: 0 }} />
+              <ImageSlot src={film.image} tint={film.tint} width="100%" height="100%" radius={14} placeholder="poster" style={{ position: 'absolute', inset: 0 }} />
               <span className={`${styles.fTag} ${accessClass[film.access]}`}>{film.accessLabel}</span>
             </div>
             <div className={styles.fKicker}>{film.kicker}</div>
@@ -114,7 +115,7 @@ export function MadeHereSection() {
       </div>
       <div className={styles.shortGrid}>
         {shorts.map((s) => (
-          <Link key={s.titlePre} to="/film" className={styles.short}>
+          <Link key={s.titlePre} to={routes.film} className={styles.short}>
             <div className={styles.shortEyebrow}>{s.eyebrow}</div>
             <h4>
               {s.titlePre}

@@ -22,14 +22,14 @@ export function VolunteerOpportunityPage() {
   const [applied, setApplied] = useState(false);
 
   const opp = getOpportunity(slug);
-  if (!opp) return <Navigate to="/volunteer" replace />;
+  if (!opp) return <Navigate to={routes.volunteer} replace />;
 
   const alternatives = VOLUNTEER_OPPORTUNITIES.filter((o) => o.slug !== opp.slug).slice(0, 3);
 
   return (
     <PageShell>
       <div className={styles.page}>
-        <Link to="/volunteer" className={styles.back}>
+        <Link to={routes.volunteer} className={styles.back}>
           ← All volunteer opportunities
         </Link>
 
@@ -129,7 +129,7 @@ export function VolunteerOpportunityPage() {
             {applied ? (
               <div className={styles.appliedCard}>
                 <div className={styles.appliedIcon}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#7cd7ad" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--jade-soft)" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 13l4 4L19 7" />
                   </svg>
                 </div>

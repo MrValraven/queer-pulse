@@ -54,7 +54,7 @@ export const SITUATIONS: { name: string; desc: string; to: string; tab: TabId }[
 export const TALK_CARDS: { initials: string; bg: string; color: string; name: string; detail: string; note: string }[] = [
   { initials: 'MR', bg: 'rgba(232,119,90,.25)', color: 'var(--accent)', name: 'Marta & Raquel', detail: 'IVF via SNS · Two children · Arroios', note: '"Happy to walk anyone through the SNS process and what we wish we\'d known before we started."' },
   { initials: 'JP', bg: 'rgba(74,140,111,.25)', color: 'var(--jade)', name: 'João & Pedro', detail: 'Adoption · Domestic · Mouraria', note: '"We adopted in 2021. The process was long but we\'re on the other side now. Ask us anything."' },
-  { initials: 'TS', bg: 'rgba(122,82,184,.2)', color: '#7A52B8', name: 'Tomás', detail: 'Trans dad · IVF · Solo parent · Graça', note: '"Specifically experienced in navigating the IVF system as a trans man. DMs open."' },
+  { initials: 'TS', bg: 'rgba(122,82,184,.2)', color: 'var(--violet)', name: 'Tomás', detail: 'Trans dad · IVF · Solo parent · Graça', note: '"Specifically experienced in navigating the IVF system as a trans man. DMs open."' },
 ]
 
 export const TABS: Tab[] = [

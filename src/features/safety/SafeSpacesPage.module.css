@@ -117,12 +117,12 @@
 }
 .bvCheck {
   font-size: 36px;
-  color: #fff;
+  color: var(--cream);
 }
 .bvName {
   font-family: var(--serif);
   font-size: 15px;
-  color: #fff;
+  color: var(--cream);
   font-weight: 600;
   letter-spacing: 0.02em;
   text-align: center;
@@ -226,7 +226,7 @@
   padding: 11px 22px;
   border-radius: 999px;
   background: var(--jade);
-  color: #fff;
+  color: var(--cream);
   border: none;
   cursor: pointer;
   transition:
@@ -325,7 +325,7 @@
 }
 .typeServices {
   background: rgba(122, 82, 184, 0.1);
-  color: #7a52b8;
+  color: var(--violet);
 }
 .verifiedBadge {
   display: inline-flex;
@@ -413,7 +413,7 @@
   padding: 0;
 }
 .flag:hover {
-  color: #b91c1c;
+  color: var(--danger);
 }
 
 .howSection {
@@ -553,7 +553,7 @@
   padding: 13px 26px;
   border-radius: 999px;
   background: var(--jade);
-  color: #fff;
+  color: var(--cream);
   border: none;
   cursor: pointer;
   transition:
@@ -730,7 +730,7 @@
 .nomThanksIcon svg {
   width: 28px;
   height: 28px;
-  stroke: #7cd7ad;
+  stroke: var(--jade-soft);
   stroke-width: 2.4;
   fill: none;
   stroke-linecap: round;

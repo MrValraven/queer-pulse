@@ -1,15 +1,19 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FiBookmark, FiCheck } from 'react-icons/fi'
+import { FiBookmark, FiCheck, FiHeart, FiCornerUpLeft, FiSend } from 'react-icons/fi'
 import { Avatar } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
 import { useConnect } from '../../app/providers/ConnectProvider'
+import { useSaved } from '../../app/providers/SavedProvider'
 import { memberAvatar } from '../members/data/members'
+import { gatheringPath } from '../gatherings/data'
 import { routes } from '../../app/routeMap'
+import { FEED_POST, type FeedReply } from './feed.data'
+import { MoreMenu, ReportModal } from './FeedModeration'
 import styles from './FeedPage.module.css'
 
 export function GatheringCard() {
   return (
-    <article className={styles.card}>
+    <Link to={gatheringPath('queer-book-club')} className={`${styles.card} ${styles.cardLink}`}>
       <div className={styles.accent} style={{ background: 'var(--jade)' }} />
       <div className={styles.pad}>
         <div className={styles.eyebrow} style={{ color: 'var(--jade)' }}>
@@ -33,7 +37,7 @@ export function GatheringCard() {
           <span className={styles.goingChip}><FiCheck /> You're going</span>
         </div>
       </div>
-    </article>
+    </Link>
   )
 }
 
@@ -65,26 +69,129 @@ export function NewMemberCard() {
   )
 }
 
+function ReplyComposer({ onSubmit, onCancel }: { onSubmit: (body: string) => void; onCancel: () => void }) {
+  const [value, setValue] = useState('')
+  return (
+    <form
+      className={styles.composer}
+      onSubmit={(e) => {
+        e.preventDefault()
+        const trimmed = value.trim()
+        if (!trimmed) return
+        onSubmit(trimmed)
+        setValue('')
+      }}
+    >
+      <label htmlFor="reply-input" className={styles.srOnly}>Write a reply</label>
+      <textarea
+        id="reply-input"
+        className={styles.composerInput}
+        placeholder="Write a reply…"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        rows={2}
+        autoFocus
+      />
+      <div className={styles.composerRow}>
+        <button type="button" className={styles.linkBtn} onClick={onCancel}>Cancel</button>
+        <button type="submit" className={styles.composerSend} disabled={!value.trim()}>
+          <FiSend /> Reply
+        </button>
+      </div>
+    </form>
+  )
+}
+
+function PostActions({
+  liked, likeCount, onLike,
+  replyCount, onToggleReply,
+  saved, onSave,
+}: {
+  liked: boolean; likeCount: number; onLike: () => void
+  replyCount: number; onToggleReply: () => void
+  saved: boolean; onSave: () => void
+}) {
+  return (
+    <div className={styles.postFooter}>
+      <button
+        className={`${styles.postAction} ${liked ? styles.postActionOn : ''}`}
+        onClick={onLike}
+        aria-pressed={liked}
+        aria-label={liked ? 'Unlike post' : 'Like post'}
+      >
+        <FiHeart fill={liked ? 'currentColor' : 'none'} /> {likeCount}
+      </button>
+      <button className={styles.postAction} onClick={onToggleReply} aria-label="Reply to post">
+        <FiCornerUpLeft /> Reply · {replyCount}
+      </button>
+      <button
+        className={`${styles.postAction} ${saved ? styles.postActionOn : ''}`}
+        onClick={onSave}
+        aria-pressed={saved}
+        aria-label={saved ? 'Remove from saved' : 'Save post'}
+      >
+        <FiBookmark fill={saved ? 'currentColor' : 'none'} /> {saved ? 'Saved' : 'Save'}
+      </button>
+    </div>
+  )
+}
+
 export function PostCard() {
-  const { showToast } = useToast()
+  const post = FEED_POST
+  const { openConnect } = useConnect()
+  const { isSaved, toggleSave } = useSaved()
+  const [liked, setLiked] = useState(false)
+  const [likeCount, setLikeCount] = useState(post.likeCount)
+  const [replies, setReplies] = useState<FeedReply[]>(post.replies)
+  const [composing, setComposing] = useState(false)
+  const [reporting, setReporting] = useState(false)
+  const saved = isSaved(post.id)
+
+  function addReply(body: string) {
+    setReplies((prev) => [...prev, { id: `r${prev.length + 1}-${Date.now()}`, author: 'You', body }])
+    setComposing(false)
+  }
+
   return (
     <article className={`${styles.card} ${styles.pad}`}>
-      <div className={styles.postAuthor}>
-        <Avatar initials="AK" tint="coral" size={36} />
-        <div>
-          <div className={styles.paName}>Anika Kovač</div>
-          <div className={styles.paTime}>2 hours ago · Trans &amp; Non-Binary Network</div>
+      <div className={styles.postHeader}>
+        <div className={styles.postAuthor}>
+          <Avatar initials={post.authorInitials} tint={post.authorTint} size={36} />
+          <div>
+            <div className={styles.paName}>{post.authorName}</div>
+            <div className={styles.paTime}>{post.time} · {post.context}</div>
+          </div>
+        </div>
+        <div className={styles.postHeaderEnd}>
+          <button className={styles.btnOutline} onClick={() => openConnect(post.slug)}>Connect</button>
+          <MoreMenu authorName={post.authorName} onReport={() => setReporting(true)} />
         </div>
       </div>
-      <div className={styles.postBody}>
-        Anyone have recommendations for a queer-friendly GP in Lisbon? Preferably someone
-        familiar with trans healthcare — I'm tired of having to explain myself from
-        scratch every visit. Grateful for any leads, DM or reply here.
-      </div>
-      <div className={styles.postFooter}>
-        <button className={styles.postAction} onClick={() => showToast('Replied', 'success')}>↩ Reply · 4</button>
-        <button className={styles.postAction} onClick={() => showToast('Post saved', 'success')}><FiBookmark /> Save</button>
-      </div>
+      <div className={styles.postBody}>{post.body}</div>
+      <PostActions
+        liked={liked}
+        likeCount={likeCount}
+        onLike={() => {
+          setLiked((l) => !l)
+          setLikeCount((c) => (liked ? c - 1 : c + 1))
+        }}
+        replyCount={replies.length}
+        onToggleReply={() => setComposing((c) => !c)}
+        saved={saved}
+        onSave={() => toggleSave({ id: post.id, kind: 'post', title: post.body.slice(0, 60), meta: post.authorName })}
+      />
+      {composing && <ReplyComposer onSubmit={addReply} onCancel={() => setComposing(false)} />}
+      {replies.length > 0 && (
+        <ul className={styles.thread}>
+          {replies.map((r) => (
+            <li key={r.id} className={styles.reply}>
+              <span className={styles.replyAuthor}>{r.author}</span>
+              <span className={styles.replyBody}>{r.body}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {reporting && <ReportModal authorName={post.authorName} onClose={() => setReporting(false)} />}
     </article>
   )
 }

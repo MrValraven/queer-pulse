@@ -27,6 +27,7 @@ export interface HousingListing {
   desc: string
   price: string
   period: string
+  image?: string
   poster: Poster
   /* detail */
   gallery: string[]
@@ -39,10 +40,11 @@ export interface HousingListing {
 export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: 'principe-real-sunny-onebed',
-    type: 'sublet', typeLabel: 'Sublet', typeColor: 'rgba(232,119,90,.1)', typeText: 'var(--accent-ink)', tint: 'coral',
+    type: 'sublet', typeLabel: 'Sublet', typeColor: 'rgba(var(--accent-rgb),.1)', typeText: 'var(--accent-ink)', tint: 'coral',
     title: 'Sunny one-bed in Príncipe Real — July & August', hood: 'Príncipe Real', beds: '1 bed', avail: '1 Jul',
     desc: 'Beautiful first-floor flat with a view of the garden square. Fully furnished, excellent light. Available while I travel for two months.',
     price: '€1,100', period: 'month',
+    image: 'https://images.unsplash.com/photo-1665249934445-1de680641f50?q=80&w=600&auto=format&fit=crop',
     poster: { initials: MEMBERS.ines.initials, name: 'Inês T.', fullName: memberName('ines'), tint: 'coral', memberSince: 'Member since 2023', responseTime: 'within a few hours', bio: 'Designer in Príncipe Real, runs Atelier Pulso. Subletting while away on a residency.' },
     gallery: ['Living room · garden view', 'Bedroom', 'Kitchen', 'The square below'],
     longDesc: [
@@ -64,10 +66,11 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   },
   {
     slug: 'arroios-room-share',
-    type: 'room', typeLabel: 'Room share', typeColor: 'rgba(74,140,111,.1)', typeText: 'var(--jade)', tint: 'jade',
+    type: 'room', typeLabel: 'Room share', typeColor: 'rgba(var(--jade-rgb),.1)', typeText: 'var(--jade)', tint: 'jade',
     title: 'Room in shared flat — Arroios, long-term', hood: 'Arroios', beds: '1 room', avail: 'Now',
     desc: 'Quiet three-bed flat shared with two queer women. Big room, own bathroom, good wifi. Looking for someone who keeps to themselves but is up for the occasional dinner.',
     price: '€750', period: 'month',
+    image: 'https://images.unsplash.com/photo-1543709525-e8764409abff?q=80&w=800&auto=format&fit=crop',
     poster: { initials: MEMBERS.carla.initials, name: 'Carla N.', fullName: memberName('carla'), tint: 'coral', memberSince: 'Member since 2022', responseTime: 'within a day', bio: 'Product manager, lives in Arroios with one flatmate. Looking for a third for the long term.' },
     gallery: ['The room', 'Ensuite bathroom', 'Shared kitchen', 'Arroios street'],
     longDesc: [
@@ -89,10 +92,11 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   },
   {
     slug: 'graca-studio-shortterm',
-    type: 'short', typeLabel: 'Short-term', typeColor: 'rgba(45,27,61,.08)', typeText: 'var(--plum)', tint: 'plum',
+    type: 'short', typeLabel: 'Short-term', typeColor: 'rgba(var(--plum-rgb),.08)', typeText: 'var(--plum)', tint: 'plum',
     title: 'Studio in Graça — 2 weeks minimum', hood: 'Graça', beds: 'Studio', avail: '15 Jun',
     desc: 'Small but well-designed studio in a converted building in Graça. Perfect for someone newly arrived or between places. The building has a rooftop with views.',
     price: '€85', period: 'night',
+    image: 'https://images.unsplash.com/photo-1579632151052-92f741fb9b79?q=80&w=800&auto=format&fit=crop',
     poster: { initials: MEMBERS.beatriz.initials, name: 'Beatriz P.', fullName: memberName('beatriz'), tint: 'plum', memberSince: 'Member since 2021', responseTime: 'within a few hours', bio: 'Ceramicist in Graça. Keeps this studio as a soft-landing space for people arriving in the city.' },
     gallery: ['Studio interior', 'Kitchenette', 'Building rooftop', 'Graça lookout'],
     longDesc: [
@@ -114,10 +118,11 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   },
   {
     slug: 'marvila-warehouse-room',
-    type: 'room', typeLabel: 'Room share', typeColor: 'rgba(74,140,111,.1)', typeText: 'var(--jade)', tint: 'jade',
+    type: 'room', typeLabel: 'Room share', typeColor: 'rgba(var(--jade-rgb),.1)', typeText: 'var(--jade)', tint: 'jade',
     title: 'Room in Marvila warehouse flat — creative people', hood: 'Marvila', beds: '1 room', avail: '1 Jul',
     desc: 'Large warehouse converted to four bedrooms. Three of us currently live here — a musician, an engineer, and a photographer. Looking for a fourth.',
     price: '€800', period: 'month',
+    image: 'https://images.unsplash.com/photo-1587842044997-8b6714110fa6?q=80&w=800&auto=format&fit=crop',
     poster: { initials: MEMBERS.diogo.initials, name: 'Diogo V.', fullName: memberName('diogo'), tint: 'jade', memberSince: 'Member since 2022', responseTime: 'within a day', bio: 'Music producer in a Marvila warehouse share. Runs Bairro Alto Studio. Looking for a fourth housemate.' },
     gallery: ['The room', 'Communal space', 'Warehouse kitchen', 'Marvila exterior'],
     longDesc: [
@@ -139,10 +144,11 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   },
   {
     slug: 'cais-do-sodre-full-flat',
-    type: 'studio', typeLabel: 'Studio', typeColor: 'rgba(122,82,184,.1)', typeText: '#7A52B8', tint: 'plum',
+    type: 'studio', typeLabel: 'Studio', typeColor: 'rgba(var(--violet-rgb),.1)', typeText: 'var(--violet)', tint: 'plum',
     title: 'Full flat in Cais do Sodré — 3 months', hood: 'Cais do Sodré', beds: '1 bed', avail: 'Aug',
     desc: 'My own flat while I go on residency. One bed, good light, close to everything. Priority to LGBTQ+ tenants. References exchanged.',
     price: '€1,350', period: 'month',
+    image: 'https://images.unsplash.com/photo-1587842060723-d99f4f34ff83?q=80&w=800&auto=format&fit=crop',
     poster: { initials: MEMBERS.sofia.initials, name: 'Sofia A.', fullName: memberName('sofia'), tint: 'jade', memberSince: 'Member since 2021', responseTime: 'within a day', bio: 'Documentary filmmaker. Subletting her own flat for three months during a residency abroad.' },
     gallery: ['Living room', 'Bedroom', 'Kitchen', 'Cais do Sodré at night'],
     longDesc: [
@@ -164,10 +170,11 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   },
   {
     slug: 'mouraria-two-bed',
-    type: 'sublet', typeLabel: 'Sublet', typeColor: 'rgba(232,119,90,.1)', typeText: 'var(--accent-ink)', tint: 'coral',
+    type: 'sublet', typeLabel: 'Sublet', typeColor: 'rgba(var(--accent-rgb),.1)', typeText: 'var(--accent-ink)', tint: 'coral',
     title: 'Two-bedroom in Mouraria — June & July', hood: 'Mouraria', beds: '2 beds', avail: '1 Jun',
     desc: 'Traditional building, recently renovated. Two bedrooms, could work for a couple or two friends. Very central, heart of Mouraria.',
     price: '€950', period: 'month',
+    image: 'https://images.unsplash.com/photo-1605086554166-da2bd45804da?q=80&w=800&auto=format&fit=crop',
     poster: { initials: MEMBERS.tomas.initials, name: 'Tomás B.', fullName: memberName('tomas'), tint: 'coral', memberSince: 'Member since 2022', responseTime: 'within a few hours', bio: 'Chef and supper-club host in Mouraria. Subletting the family flat for the summer.' },
     gallery: ['Living area', 'Main bedroom', 'Second bedroom', 'Mouraria alley'],
     longDesc: [

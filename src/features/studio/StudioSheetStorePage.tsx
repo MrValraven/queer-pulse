@@ -6,7 +6,7 @@ import { useToast } from '../../shared/components/feedback/useToast'
 import { StudioShell } from './StudioShell'
 import ss from './studio.module.css'
 import s from './sheet.module.css'
-import { SPECS, SPLIT, ALSO } from './studioSheetStore.data'
+import { SPECS, SPLIT, ALSO, PAY_METHODS, scoreCoverImage } from './studioSheetStore.data'
 
 export function StudioSheetStorePage() {
   const { showToast } = useToast()
@@ -29,7 +29,7 @@ export function StudioSheetStorePage() {
         <div>
           <div className={s.sheetHead}>
             <div className={s.sheetCv}>
-              <ImageSlot tint="coral" width="100%" height="100%" radius={10} placeholder="score cover" style={{ position: 'absolute', inset: 0 }} />
+              <ImageSlot src={scoreCoverImage} tint="coral" width="100%" height="100%" radius={10} placeholder="score cover" style={{ position: 'absolute', inset: 0 }} />
             </div>
             <div className={s.sheetHi}>
               <div className={s.eb}>Lead sheet · transcription</div>
@@ -146,10 +146,7 @@ export function StudioSheetStorePage() {
           </div>
 
           <div className={s.payMethod}>
-            {[
-              { nm: 'Saved card · Visa ·· 4291', sub: 'one-tap, no re-entry' },
-              { nm: 'SEPA direct', sub: 'lower fee, 1–2 day settle' },
-            ].map((m, i) => (
+            {PAY_METHODS.map((m, i) => (
               <div key={i} className={[s.pm, pm === i && s.pmOn].filter(Boolean).join(' ')} role="button" tabIndex={0} onClick={() => setPm(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPm(i) } }}>
                 <span className={s.pmDot} />
                 <span className={s.pn}>
@@ -187,7 +184,7 @@ export function StudioSheetStorePage() {
           {ALSO.map((a) => (
             <Link key={a.pre} to="/studio/sheet-store" className={ss.card}>
               <div className={ss.cardCov} style={{ aspectRatio: '0.77' }}>
-                <ImageSlot tint={a.tint} width="100%" height="100%" radius={10} placeholder="score" style={{ position: 'absolute', inset: 0 }} />
+                <ImageSlot src={a.image} tint={a.tint} width="100%" height="100%" radius={10} placeholder="score" style={{ position: 'absolute', inset: 0 }} />
                 <span className={`${ss.tag} ${a.tag === 'Free read' ? ss.tagFree : ss.tagMem}`}>{a.tag}</span>
               </div>
               <h4>

@@ -221,7 +221,7 @@
 }
 .typePharmacy {
   background: rgba(122, 82, 184, 0.1);
-  color: #7a52b8;
+  color: var(--violet);
 }
 .ccName {
   font-family: var(--serif);

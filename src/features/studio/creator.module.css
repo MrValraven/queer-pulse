@@ -116,7 +116,7 @@
   height: 34px;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.2);
-  color: #ffc4af;
+  color: var(--accent-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -321,7 +321,7 @@
 }
 .rangeBtnOn {
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
   border-color: var(--accent);
 }
 .chart {
@@ -379,7 +379,7 @@
   height: 38px;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.18);
-  color: #ffc4af;
+  color: var(--accent-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -602,7 +602,7 @@
 }
 .stepOn .stepNum {
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
 }
 .stepNm {
   font-size: 14px;
@@ -800,7 +800,7 @@
   height: 32px;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.18);
-  color: #ffc4af;
+  color: var(--accent-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -929,7 +929,7 @@
 }
 .statusPending {
   background: rgba(var(--accent-rgb), 0.16);
-  color: #ffc4af;
+  color: var(--accent-soft);
 }
 .statusPaid {
   background: rgba(var(--jade-rgb), 0.18);
@@ -1110,4 +1110,107 @@
   .body {
     grid-template-columns: 1fr;
   }
+}
+
+/* Loud-masters inline explainer */
+.loudToggle {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 600;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+.loudExplainer {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(var(--accent-rgb), 0.2);
+  font-size: 12.5px;
+  color: var(--text60);
+  line-height: 1.6;
+}
+.loudExplainer em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* Add-collaborator inline form */
+.collabForm {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.collabForm input {
+  flex: 1;
+  background: rgba(247, 243, 238, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--text);
+  outline: none;
+}
+.collabForm input:focus {
+  border-color: var(--accent);
+}
+
+/* Submitted-for-review plum panel */
+/* Entrance for each upload step (files → metadata → submitted) — rise-and-fade. */
+.screenIn {
+  animation: screenIn 0.4s var(--ease) both;
+}
+@keyframes screenIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .screenIn {
+    animation: none;
+  }
+}
+
+.submitted {
+  background: var(--plum);
+  border-radius: 16px;
+  padding: 40px 36px;
+  text-align: center;
+}
+.submittedIcon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: rgba(74, 140, 111, 0.2);
+  color: var(--jade-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.submitted h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 30px;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.submitted h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.submitted p {
+  font-size: 14px;
+  color: rgba(247, 243, 238, 0.7);
+  line-height: 1.7;
+  max-width: 46ch;
+  margin: 0 auto 24px;
 }

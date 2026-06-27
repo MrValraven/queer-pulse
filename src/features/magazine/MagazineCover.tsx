@@ -4,7 +4,7 @@ import { memberName } from "../members/data/members";
 import styles from "./MagazinePage.module.css";
 
 const COVER_IMG =
-  "https://images.unsplash.com/photo-1601399470081-29ab3942fd8b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+  "https://images.unsplash.com/photo-1629511565591-a1d494ad6c58?q=80&w=600&auto=format&fit=crop";
 
 export function MagazineCover() {
   return (

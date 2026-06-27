@@ -31,6 +31,7 @@ export function ArchivePage() {
           <Reveal as="div" className={styles.featStory} delay={60}>
             <ImageSlot
               tint={FEATURED.imgTint}
+              src={FEATURED.image}
               height={480}
               radius={0}
               placeholder="Portrait or scene for the featured story"
@@ -66,7 +67,7 @@ export function ArchivePage() {
           <div className={styles.grid}>
             {ARCHIVE_CARDS.map((c, i) => (
               <Reveal as="div" key={c.id} className={styles.card} delay={i * 70}>
-                <ImageSlot tint={c.imgTint} height={220} radius={0} placeholder={`Archive · ${c.name}`} />
+                <ImageSlot tint={c.imgTint} src={c.image} height={220} radius={0} placeholder={`Archive · ${c.name}`} />
                 <div className={styles.cardBody}>
                   <div className={styles.acYear}>{c.year}</div>
                   <div className={styles.acQuote}>{c.quote}</div>

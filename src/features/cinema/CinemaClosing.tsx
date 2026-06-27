@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Button, Outro } from '../../shared/components/ui'
 import { liveEvents } from './data'
 import styles from './CinemaPage.module.css'
+import { routes } from '../../app/routeMap'
 
 const badgeClass: Record<string, string> = { premiere: styles.bgPremiere, party: styles.bgParty, live: styles.bgLive }
 
@@ -65,7 +66,7 @@ export function LedgerSection() {
           split is non-negotiable.
         </p>
         <div className={styles.ledgerActions}>
-          <Button to="/cinema/membership">Become a sustainer · €7/mo</Button>
+          <Button to={routes.cinemaMembership}>Become a sustainer · €7/mo</Button>
           <Button variant="ghost-dark" to="/governance">
             Read the co-op deed
           </Button>
@@ -104,7 +105,7 @@ export function CinemaOutro() {
       title={<>Watch <em>together</em>.</>}
       sub="Cinema is a room with people in it. The room is open."
     >
-      <Button size="lg" to="/cinema/membership">
+      <Button size="lg" to={routes.cinemaMembership}>
         Sustain the cinema
       </Button>
     </Outro>

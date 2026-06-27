@@ -1,13 +1,30 @@
+import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { routes } from '../../app/routeMap'
 import { Button, Outro } from '../../shared/components/ui'
-import { COMPANIES, HOW, RULES } from './employerReviews.data'
+import { FiShield } from 'react-icons/fi'
+import { COMPANIES, HOW, RULES, VERIFY, type Company } from './employerReviews.data'
 import { EmployerReviewCard } from './EmployerReviewCard'
+import { WriteReviewModal, type SubmittedReview } from './WriteReviewModal'
 import styles from './EmployerReviewsPage.module.css'
 
 const INVITE = routes.invite
 
 export function EmployerReviewsPage() {
+  const [companies, setCompanies] = useState<Company[]>(COMPANIES)
+  // null = closed; string = open, pre-selecting that company; '' = open, no preselect.
+  const [writeFor, setWriteFor] = useState<string | null>(null)
+
+  const addReview = ({ companyName, review }: SubmittedReview) => {
+    setCompanies((prev) =>
+      prev.map((c) =>
+        c.name === companyName
+          ? { ...c, reviews: [review, ...c.reviews], reviewCount: c.reviewCount + 1 }
+          : c,
+      ),
+    )
+  }
+
   return (
     <PageShell>
       <header className={styles.hero}>
@@ -65,15 +82,38 @@ export function EmployerReviewsPage() {
               <Button to={routes.jobs} variant="ghost">
                 Browse queer-inclusive jobs →
               </Button>
-              <Button href="#write" variant="ghost">
+              <Button variant="ghost" onClick={() => setWriteFor('')}>
                 Write a review →
               </Button>
             </div>
           </div>
           <div className={styles.companyGrid}>
-            {COMPANIES.map((c) => (
-              <EmployerReviewCard company={c} key={c.name} />
+            {companies.map((c) => (
+              <EmployerReviewCard
+                company={c}
+                key={c.name}
+                onWriteReview={() => setWriteFor(c.name)}
+              />
             ))}
+          </div>
+
+          <div className={styles.verifyBox}>
+            <div className={styles.verifyHead}>
+              <span className={styles.verifyIcon} aria-hidden>
+                <FiShield />
+              </span>
+              <h3>
+                How <em>verification</em> works
+              </h3>
+            </div>
+            <div className={styles.verifyGrid}>
+              {VERIFY.map((v) => (
+                <div className={styles.verifyItem} key={v.label}>
+                  <div className={styles.verifyLabel}>{v.label}</div>
+                  <div className={styles.verifyDesc}>{v.desc}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className={styles.writeBox} id="write">
@@ -86,7 +126,11 @@ export function EmployerReviewsPage() {
                 the next queer person decide whether to take that interview. It takes 5
                 minutes and is completely anonymous.
               </p>
-              <Button to={INVITE} variant="primary" className={styles.writeBtn}>
+              <Button
+                variant="primary"
+                className={styles.writeBtn}
+                onClick={() => setWriteFor('')}
+              >
                 Write a review →
               </Button>
               <div className={styles.writeNote}>
@@ -114,6 +158,15 @@ export function EmployerReviewsPage() {
           Request an invite
         </Button>
       </Outro>
+
+      {writeFor !== null && (
+        <WriteReviewModal
+          companies={companies}
+          initialCompany={writeFor || undefined}
+          onClose={() => setWriteFor(null)}
+          onSubmit={addReview}
+        />
+      )}
     </PageShell>
   )
 }

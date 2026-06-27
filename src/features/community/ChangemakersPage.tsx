@@ -56,7 +56,7 @@ export function ChangemakersPage() {
             Featured change maker
           </Reveal>
           <Reveal as="div" className={styles.featCard}>
-            <ImageSlot tint={FEATURED.tint} width="100%" height="100%" radius={0} placeholder={FEATURED.name} initials={FEATURED.initials} />
+            <ImageSlot tint={FEATURED.tint} src={FEATURED.image} width="100%" height="100%" radius={0} placeholder={FEATURED.name} initials={FEATURED.initials} />
             <div className={styles.featBody}>
               <div className={styles.featCause}>{FEATURED.cause}</div>
               <div className={styles.featName}>{FEATURED.name}</div>
@@ -84,7 +84,7 @@ export function ChangemakersPage() {
           <div className={styles.grid}>
             {MAKERS.map((m, i) => (
               <Reveal as={Link} to={`/changemaker/${m.slug}`} key={m.name} className={styles.card} delay={i * 60}>
-                <ImageSlot tint={m.tint} width="100%" height={180} radius={0} placeholder={m.name} initials={m.initials} />
+                <ImageSlot tint={m.tint} src={m.image} width="100%" height={180} radius={0} placeholder={m.name} initials={m.initials} />
                 <div className={styles.cardBody}>
                   <div className={styles.cardCause}>{m.cause}</div>
                   <div className={styles.cardName}>{m.name}</div>

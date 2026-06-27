@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
+import { routes } from '../../app/routeMap'
 import { currentUserSlug, memberProfiles } from './data/memberProfiles'
 import { ProfileHero, ProfileContent } from './ProfileSections'
 import styles from './ProfilePage.module.css'
@@ -12,7 +13,7 @@ export function ProfilePage() {
   return (
     <PageShell>
       <div className={`${styles.backBar} wrap`}>
-        <Link to="/members" className={styles.backLink}>
+        <Link to={routes.members} className={styles.backLink}>
           ← Back to the room
         </Link>
       </div>

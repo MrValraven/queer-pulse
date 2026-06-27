@@ -50,7 +50,7 @@ export function ContactPage() {
               <div className={s.sent}>
                 <div className={s.tyIcon}>
                   <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M5 12.5l4 4L19 7" stroke="#4A8C6F" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M5 12.5l4 4L19 7" stroke="var(--jade)" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <h2>

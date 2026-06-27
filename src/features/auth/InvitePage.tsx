@@ -2,8 +2,12 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { currentUser } from '../members/data/members'
 import styles from './InvitePage.module.css'
+
+const SENDER_NAME = `${currentUser.first} ${currentUser.last}`
 
 export function InvitePage() {
   const { showToast } = useToast()
@@ -19,7 +23,7 @@ export function InvitePage() {
       <AppShell>
         <div className={styles.page}>
           <div className={styles.inner}>
-            <div className={`${styles.card} ${styles.sent}`}>
+            <div className={`${styles.card} ${styles.sent} ${styles.screenIn}`}>
               <div className={styles.sentIcon}>
                 <svg width={26} height={26} viewBox="0 0 26 26" fill="none" aria-hidden>
                   <path d="M2 13l21-10-8 10 8 10-21-10Z" fill="rgba(74,140,111,.8)" />
@@ -47,7 +51,7 @@ export function InvitePage() {
                 </div>
               </div>
               <div className={styles.actions}>
-                <Button variant="ghost" to="/account/profile">
+                <Button variant="ghost" to={routes.accountProfile}>
                   Back to my profile
                 </Button>
               </div>
@@ -62,7 +66,7 @@ export function InvitePage() {
     <AppShell>
       <div className={styles.page}>
         <div className={styles.inner}>
-          <Link to="/account/profile" className={styles.backLink}>
+          <Link to={routes.accountProfile} className={styles.backLink}>
             ← Back to profile
           </Link>
           <div className={styles.eyebrow}>Invite someone</div>
@@ -132,7 +136,7 @@ export function InvitePage() {
                 <div className={styles.epBrand}>
                   Queer<em>Pulse</em>
                 </div>
-                <div className={styles.epSubject}>Sofia Rodrigues has invited you to QueerPulse</div>
+                <div className={styles.epSubject}>{SENDER_NAME} has invited you to QueerPulse</div>
                 <div className={styles.epNote}>
                   “{note.trim() || "Hi! I think you'd love this community — it's exactly the kind of space we've talked about."}”
                 </div>

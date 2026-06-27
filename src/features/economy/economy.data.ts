@@ -16,9 +16,9 @@ export const STEPS = [
 ]
 
 export const INC_MENTORS = [
-  { av: 'RL', bg: 'rgba(232,119,90,.15)', color: 'var(--accent-ink)', name: 'Rita Lopes', role: 'Founder, Arquivo Studio · formerly Farfetch product lead', tags: ['Product', 'B2C', 'Fundraising'] },
-  { av: 'JM', bg: 'rgba(74,140,111,.15)', color: 'var(--jade)', name: 'João Melo', role: 'Co-founder, Semente Legal · social enterprise lawyer', tags: ['Legal', 'Cooperatives', 'Grants'] },
-  { av: 'AC', bg: 'rgba(45,27,61,.1)', color: 'var(--plum)', name: 'Ana Catarina', role: 'Angel investor · ex-Unbabel, Feedzai', tags: ['B2B SaaS', 'Pre-seed', 'Hiring'] },
+  { av: 'RL', bg: 'rgba(var(--accent-rgb),.15)', color: 'var(--accent-ink)', name: 'Rita Lopes', role: 'Founder, Arquivo Studio · formerly Farfetch product lead', tags: ['Product', 'B2C', 'Fundraising'] },
+  { av: 'JM', bg: 'rgba(var(--jade-rgb),.15)', color: 'var(--jade)', name: 'João Melo', role: 'Co-founder, Semente Legal · social enterprise lawyer', tags: ['Legal', 'Cooperatives', 'Grants'] },
+  { av: 'AC', bg: 'rgba(var(--plum-rgb),.1)', color: 'var(--plum)', name: 'Ana Catarina', role: 'Angel investor · ex-Unbabel, Feedzai', tags: ['B2B SaaS', 'Pre-seed', 'Hiring'] },
 ]
 
 export const TOOLS: { icon: IconType; title: string; desc: string; cta: string }[] = [

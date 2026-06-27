@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { linkToPath } from '../../app/routeMap'
 import { SEARCH_DATA, TYPE_BG, TYPE_ICON, TYPE_LABEL, RECENTS, TABS, type ResultType, type SearchItem } from './search.data'
@@ -32,7 +32,12 @@ function Group({ items, label }: { items: SearchItem[]; label: string }) {
 }
 
 export function SearchPage() {
-  const [query, setQuery] = useState('')
+  // The query lives in the URL (?q=…) so it's shareable, bookmarkable, and can be
+  // pre-filled by the global ⌘K command palette.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const query = searchParams.get('q') ?? ''
+  const setQuery = (value: string) =>
+    setSearchParams(value ? { q: value } : {}, { replace: true })
   const [tab, setTab] = useState<ResultType | 'all'>('all')
   const q = query.trim().toLowerCase()
 

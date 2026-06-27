@@ -45,9 +45,9 @@ export function PasswordResetPage() {
   if (sent) {
     return (
       <AuthLayout>
-        <div style={{ textAlign: 'center' }}>
+        <div className={styles.screenIn} style={{ textAlign: 'center' }}>
           <div className={styles.successIcon}>
-            <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="#4A8C6F" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+            <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="var(--jade)" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
               <rect x={2} y={4} width={20} height={16} rx={2} />
               <polyline points="22,6 12,13 2,6" />
             </svg>

@@ -12,13 +12,13 @@ import {
   type Sector,
 } from './economy.data'
 import { SalarySubmitModal } from './SalarySubmitModal'
-import { CohortApplyModal, MentorSignupModal } from './IncubatorModals'
+import { CohortApplyModal, MentorSignupModal, RequestSessionModal } from './IncubatorModals'
 import { ToolActionModal, type ToolInfo } from './ToolActionModal'
 import styles from './EconomyPage.module.css'
 
 export function IncubatorTab() {
-  const { showToast } = useToast()
   const [modal, setModal] = useState<'cohort' | 'mentor' | null>(null)
+  const [session, setSession] = useState<(typeof INC_MENTORS)[number] | null>(null)
   return (
     <>
       <div className={styles.incHeroBox}>
@@ -96,7 +96,7 @@ export function IncubatorTab() {
                     </span>
                   ))}
                 </div>
-                <button type="button" className={styles.mentorBtn} onClick={() => showToast('Session requested', 'success')}>
+                <button type="button" className={styles.mentorBtn} onClick={() => setSession(m)}>
                   Request session
                 </button>
               </div>
@@ -107,6 +107,13 @@ export function IncubatorTab() {
 
       {modal === 'cohort' && <CohortApplyModal onClose={() => setModal(null)} />}
       {modal === 'mentor' && <MentorSignupModal onClose={() => setModal(null)} />}
+      {session && (
+        <RequestSessionModal
+          mentorName={session.name}
+          mentorRole={session.role}
+          onClose={() => setSession(null)}
+        />
+      )}
     </>
   )
 }

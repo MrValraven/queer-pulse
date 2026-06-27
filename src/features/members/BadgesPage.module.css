@@ -118,7 +118,7 @@
 }
 .llPill.current {
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
 }
 .llPill.locked {
   background: rgba(247, 243, 238, 0.08);
@@ -323,7 +323,7 @@
   color: var(--jade);
 }
 .colCurrent .prlNum {
-  color: #fff;
+  color: var(--cream);
 }
 .colLocked .prlNum {
   color: var(--ink-40);
@@ -400,7 +400,7 @@
 }
 .chipCurrent {
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
 }
 .chipLocked {
   background: rgba(var(--plum-rgb), 0.06);

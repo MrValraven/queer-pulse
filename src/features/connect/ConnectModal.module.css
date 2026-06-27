@@ -285,6 +285,45 @@
   line-height: 1.65;
 }
 
+/* Auto-close countdown at the foot of the success panel */
+.autoClose {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  margin-top: 22px;
+  animation: connectRise 0.5s var(--ease) 0.48s both;
+}
+.autoCloseTrack {
+  width: 168px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(247, 243, 238, 0.16);
+  overflow: hidden;
+}
+.autoCloseBar {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transform-origin: left center;
+  animation: connectCountdown 6s linear forwards;
+}
+@keyframes connectCountdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+.autoCloseText {
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  color: rgba(247, 243, 238, 0.6);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .modal,
   .tyIcon,
@@ -292,6 +331,8 @@
   .sent h2,
   .sent p,
   .sent > :last-child,
+  .autoClose,
+  .autoCloseBar,
   .spinner {
     animation: none;
   }

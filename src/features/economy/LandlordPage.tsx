@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { FiStar } from 'react-icons/fi'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { routes } from '../../app/routeMap'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -23,12 +24,12 @@ export function LandlordPage() {
   const [recommending, setRecommending] = useState(false)
 
   const ll = getLandlord(slug)
-  if (!ll) return <Navigate to="/housing" replace />
+  if (!ll) return <Navigate to={routes.housing} replace />
 
   return (
     <PageShell>
       <div className={s.page}>
-        <Link to="/housing" className={s.back}>← Housing board</Link>
+        <Link to={routes.housing} className={s.back}>← Housing board</Link>
 
         <header className={s.hero}>
           <Avatar initials={ll.initials} tint={ll.tint} size={84} />

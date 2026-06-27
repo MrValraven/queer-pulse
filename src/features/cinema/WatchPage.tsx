@@ -8,7 +8,9 @@ import {
   WatchSidePanel,
   WatchBelow,
 } from './WatchPageSections'
+import { PLAYER_STILL } from './watchPage.data'
 import styles from './WatchPage.module.css'
+import { routes } from '../../app/routeMap'
 
 export function WatchPage() {
   const [showOverlay, setShowOverlay] = useState(true)
@@ -18,14 +20,14 @@ export function WatchPage() {
   return (
     <div className={styles.root}>
       <nav className={styles.nav}>
-        <Link to="/film" className={styles.brand}>
+        <Link to={routes.film} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
           Queer<em style={{ fontStyle: 'italic' }}>Pulse</em>
           <span className={styles.cin}>Cinema</span>
         </Link>
         <div className={styles.navLinks}>
-          <Link to="/film">← Film info</Link>
-          <Link to="/cinema">Cinema home</Link>
+          <Link to={routes.film}>← Film info</Link>
+          <Link to={routes.cinema}>Cinema home</Link>
         </div>
         <div className={styles.navRight}>
           <span>
@@ -41,6 +43,7 @@ export function WatchPage() {
         <div className={styles.zone}>
           <div className={styles.screen}>
             <ImageSlot
+              src={PLAYER_STILL}
               tint="plum"
               width="100%"
               height="100%"

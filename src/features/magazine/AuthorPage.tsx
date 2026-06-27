@@ -3,18 +3,23 @@ import { PageShell } from '../../shared/components/layout'
 import { Button, ImageSlot } from '../../shared/components/ui'
 import { memberName } from '../members/data/members'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useSocial } from '../../app/providers/SocialProvider'
 import { MagazineMasthead } from './MagazineMasthead'
+import { AUTHOR_PORTRAIT_IMG, AUTHOR_FEATURE_IMG } from './authorPage.data'
 import styles from './AuthorPage.module.css'
+import { routes } from '../../app/routeMap'
+
+const AUTHOR_SLUG = 'sara-pinheiro'
 
 const BEATS = ['Health & access', 'Migration & visas', 'Public services', 'Long reads', 'Interviews', 'Reported essays']
 
 const ARTICLES = [
-  { kicker: 'Long read · 14 min', title: <>What the SNS gets right (and where it <em>still leaves you waiting</em>).</>, dek: 'Six months reporting inside three regional health centres in Lisbon and the Algarve.', meta: 'Issue 07 · Apr 2026' },
-  { kicker: 'Interview', title: <>Dr. Inês Pereira on <em>fifteen minutes of someone else's time.</em></>, dek: 'The Anjos GP who treats trans patients as adults — and changed the protocol for an entire clinic.', meta: 'Issue 06 · Feb 2026' },
-  { kicker: 'Reported essay', title: <>The visa queue is <em>a kind of closet.</em></>, dek: 'Three queer migrants on what it means to wait for a residency permit while not being out to your case officer.', meta: 'Issue 05 · Dec 2025' },
-  { kicker: 'Opinion', title: <>Stop calling it "access." <em>Call it care.</em></>, dek: 'A small change in language that changes how clinics get funded — and who gets seen.', meta: 'Issue 04 · Oct 2025' },
-  { kicker: 'Reporting', title: <>Inside the back room of <em>Café Beirão.</em></>, dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure.", meta: 'Issue 03 · Aug 2025' },
-  { kicker: `Interview · with ${memberName('sofia')}`, title: <>Mariza Câmara, <em>district health director.</em></>, dek: "An hour-long conversation about queer health policy in Lisbon's Câmara Municipal.", meta: 'Issue 02 · Jun 2025' },
+  { id: 'visibility-politics', kicker: 'Long read · 14 min', title: <>What the SNS gets right (and where it <em>still leaves you waiting</em>).</>, dek: 'Six months reporting inside three regional health centres in Lisbon and the Algarve.', meta: 'Issue 07 · Apr 2026' },
+  { id: 'kiko-neves', kicker: 'Interview', title: <>Dr. Inês Pereira on <em>fifteen minutes of someone else's time.</em></>, dek: 'The Anjos GP who treats trans patients as adults — and changed the protocol for an entire clinic.', meta: 'Issue 06 · Feb 2026' },
+  { id: 'i-arrived', kicker: 'Reported essay', title: <>The visa queue is <em>a kind of closet.</em></>, dek: 'Three queer migrants on what it means to wait for a residency permit while not being out to your case officer.', meta: 'Issue 05 · Dec 2025' },
+  { id: 'politics-of-staying', kicker: 'Opinion', title: <>Stop calling it "access." <em>Call it care.</em></>, dek: 'A small change in language that changes how clinics get funded — and who gets seen.', meta: 'Issue 04 · Oct 2025' },
+  { id: 'last-bar', kicker: 'Reporting', title: <>Inside the back room of <em>Café Beirão.</em></>, dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure.", meta: 'Issue 03 · Aug 2025' },
+  { id: 'mouraria-family', kicker: `Interview · with ${memberName('sofia')}`, title: <>Mariza Câmara, <em>district health director.</em></>, dek: "An hour-long conversation about queer health policy in Lisbon's Câmara Municipal.", meta: 'Issue 02 · Jun 2025' },
 ]
 
 const READING = [
@@ -27,6 +32,8 @@ const READING = [
 
 export function AuthorPage() {
   const { showToast } = useToast()
+  const { isFollowing, toggleFollow } = useSocial()
+  const following = isFollowing(AUTHOR_SLUG)
 
   return (
     <PageShell>
@@ -46,8 +53,16 @@ export function AuthorPage() {
               Setúbal, lives in Anjos.
             </p>
             <div className={styles.metaRow}>
-              <Button onClick={() => showToast('Following Sara', 'success')}>Follow writer</Button>
-              <Button variant="ghost" to="/newsletter">
+              <Button
+                variant={following ? 'ghost' : 'primary'}
+                onClick={() => {
+                  const now = toggleFollow(AUTHOR_SLUG)
+                  showToast(now ? 'Following Sara' : 'Unfollowed Sara', now ? 'success' : 'info')
+                }}
+              >
+                {following ? 'Following' : 'Follow writer'}
+              </Button>
+              <Button variant="ghost" to={routes.newsletter}>
                 Subscribe to her column
               </Button>
               <span className={styles.pronouns}>she/her</span>
@@ -57,6 +72,8 @@ export function AuthorPage() {
             tint="coral"
             radius={24}
             className={styles.portrait}
+            src={AUTHOR_PORTRAIT_IMG}
+            alt="Portrait of Sara Pinheiro"
             placeholder="Portrait of Sara Pinheiro"
             style={{ aspectRatio: '4/5', height: 'auto' }}
           />
@@ -81,7 +98,7 @@ export function AuthorPage() {
           {BEATS.map((beat, index) => (
             <Link
               key={beat}
-              to="/tag"
+              to={routes.tag}
               className={[styles.beat, index === 0 && styles.beatPrimary].filter(Boolean).join(' ')}
             >
               {beat}
@@ -108,16 +125,16 @@ export function AuthorPage() {
             </p>
             <p className={styles.featMeta}>Published 6 Jun 2026 · 8 min read · 284 reads this week</p>
           </div>
-          <ImageSlot tint="jade" className={styles.featImg} radius={18} placeholder="Hero image: cover story 09" style={{ height: 'auto' }} />
+          <ImageSlot tint="jade" className={styles.featImg} radius={18} src={AUTHOR_FEATURE_IMG} alt="Hero image: cover story 09" placeholder="Hero image: cover story 09" style={{ height: 'auto' }} />
         </div>
 
         <div className={styles.sec}>
           <h2>Selected work</h2>
-          <Link to="/magazine">All 14 articles →</Link>
+          <Link to={routes.magazine}>All 14 articles →</Link>
         </div>
         <div className={styles.articles}>
           {ARTICLES.map((article, index) => (
-            <Link key={index} to="/article?id=housing-law" className={styles.art}>
+            <Link key={index} to={`/article?id=${article.id}`} className={styles.art}>
               <div className={styles.artKicker}>{article.kicker}</div>
               <div className={styles.artTitle}>{article.title}</div>
               <div className={styles.artDek}>{article.dek}</div>
@@ -132,7 +149,7 @@ export function AuthorPage() {
               What Sara is <em>reading.</em>
             </h3>
             <p>Curated by the writer herself — books, longforms, and resources she returns to when reporting.</p>
-            <Button to="/library" style={{ marginTop: 8 }}>
+            <Button to={routes.library} style={{ marginTop: 8 }}>
               See all 22 picks →
             </Button>
           </div>
@@ -154,13 +171,13 @@ export function AuthorPage() {
           <a href="mailto:sara@queerpulse.app">
             sara@queerpulse.app <span>· pitch direct</span>
           </a>
-          <a href="#">
+          <a href="https://www.are.na/sara-pinheiro" target="_blank" rel="noreferrer">
             Are.na <span>· /sara-pinheiro</span>
           </a>
-          <a href="#">
+          <a href="https://bsky.app/profile/sarapinheiro.bsky.social" target="_blank" rel="noreferrer">
             Bluesky <span>· @sarapinheiro</span>
           </a>
-          <Link to="/members">
+          <Link to={routes.members}>
             Member profile <span>· in Lisbon</span>
           </Link>
         </div>

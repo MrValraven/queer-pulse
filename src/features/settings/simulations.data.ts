@@ -4,6 +4,9 @@ export interface SimFlow {
   title: string
   desc: string
   to: string
+  /** Centred "state screen" — opens in an in-Settings device-frame preview
+   *  instead of navigating away. */
+  preview?: boolean
 }
 
 export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
@@ -29,11 +32,13 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         title: 'Pending review',
         desc: 'See the holding screen shown while a new application is being reviewed by the community.',
         to: routes.pendingReview,
+        preview: true,
       },
       {
         title: 'Invite expired',
         desc: 'Preview the dead-end someone hits when they open an invitation link that has already expired.',
         to: routes.inviteExpired,
+        preview: true,
       },
     ],
   },
@@ -46,34 +51,34 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.signIn,
       },
       {
-        title: 'Create account',
-        desc: 'Walk through setting up credentials for a brand-new account.',
-        to: routes.createAccount,
-      },
-      {
         title: 'Magic-link sign-in',
         desc: 'See the passwordless flow — request a one-time sign-in link sent to your email.',
         to: routes.magicLink,
+        preview: true,
       },
       {
         title: 'Reset your password',
         desc: 'The full password-recovery flow — request a reset link, then choose and confirm a new password.',
         to: routes.passwordReset,
+        preview: true,
       },
       {
         title: 'Confirm your email',
         desc: 'Preview the email-confirmation step that verifies a newly entered address.',
         to: routes.confirmEmail,
+        preview: true,
       },
       {
         title: 'Set up two-factor',
         desc: 'Add a second login step from start to finish — enable 2FA and save your one-time recovery codes.',
         to: routes.twoFactorSetup,
+        preview: true,
       },
       {
         title: 'Verification needed',
         desc: 'Preview the prompt shown when an account needs to verify identity before continuing.',
         to: routes.verificationNeeded,
+        preview: true,
       },
     ],
   },
@@ -259,41 +264,49 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         title: 'Account banned',
         desc: 'Preview the screen shown to a member whose account has been banned.',
         to: routes.accountBanned,
+        preview: true,
       },
       {
         title: 'Account locked',
         desc: 'See the temporary lock screen shown after suspicious activity.',
         to: routes.accountLocked,
+        preview: true,
       },
       {
         title: 'Account suspended',
         desc: 'Preview the notice shown to a member whose account is suspended.',
         to: routes.accountSuspended,
+        preview: true,
       },
       {
         title: 'Maintenance mode',
         desc: 'See the page shown to everyone while the platform is down for maintenance.',
         to: routes.maintenance,
+        preview: true,
       },
       {
         title: 'Offline',
         desc: 'Preview the fallback shown when a member loses their connection.',
         to: routes.offline,
+        preview: true,
       },
       {
         title: 'Geo-restricted',
         desc: 'See the screen shown when content isn’t available in the member’s region.',
         to: routes.geoRestricted,
+        preview: true,
       },
       {
         title: 'Server error',
         desc: 'Preview the 500 error page shown when something breaks on our side.',
         to: routes.serverError,
+        preview: true,
       },
       {
         title: 'Install the app',
         desc: 'See the prompt inviting members to install QueerPulse as an app.',
         to: routes.pwaPrompt,
+        preview: true,
       },
     ],
   },

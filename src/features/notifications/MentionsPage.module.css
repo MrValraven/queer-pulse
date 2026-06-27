@@ -247,3 +247,67 @@
 .action.primary:hover {
   background: rgba(var(--accent-rgb), 0.08);
 }
+.action.going {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.1);
+}
+
+/* Inline reply composer */
+.composer {
+  margin: 12px 0 0 42px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.rcInput {
+  flex: 1;
+  background: var(--cream);
+  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border-radius: 10px;
+  padding: 9px 13px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--ink);
+  outline: none;
+  resize: none;
+  min-height: 38px;
+  transition: border-color 0.2s var(--ease);
+}
+.rcInput:focus {
+  border-color: var(--plum);
+  background: var(--paper);
+}
+.rcSend {
+  background: var(--plum);
+  border: none;
+  border-radius: 9px;
+  padding: 8px 14px;
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--sans);
+  flex: none;
+  transition: opacity 0.2s var(--ease);
+}
+.rcSend:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Sent replies */
+.sentReply {
+  margin: 10px 0 0 42px;
+  padding: 10px 14px;
+  background: rgba(var(--accent-rgb), 0.05);
+  border: 1px solid rgba(var(--accent-rgb), 0.14);
+  border-radius: 11px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.srAuthor {
+  font-weight: 700;
+  color: var(--accent-ink);
+  margin-right: 6px;
+}

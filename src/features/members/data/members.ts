@@ -20,6 +20,7 @@ export interface WorkItem {
   category: string;
   title: string;
   year: string;
+  image?: string;
 }
 export interface BoardItem {
   kind: "looking" | "offering";
@@ -112,16 +113,22 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Identity",
         title: "Livraria Devagar — bookshop identity",
         year: "2025",
+        image:
+          "https://images.unsplash.com/photo-1680020556897-4495277f8efc?q=80&w=600&auto=format&fit=crop",
       },
       {
         category: "Editorial",
         title: "Tasca — a riso zine on vanishing taverns",
         year: "2025",
+        image:
+          "https://images.unsplash.com/photo-1731174218715-9b4d23795265?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Type",
         title: "Pulso Display — a variable serif",
         year: "2024",
+        image:
+          "https://images.unsplash.com/photo-1736613212084-4b7e6d94bc34?q=80&w=800&auto=format&fit=crop",
       },
     ],
     board: [
@@ -200,11 +207,15 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Open source",
         title: "Fern — a lightweight job queue in Rust",
         year: "2025",
+        image:
+          "https://images.unsplash.com/photo-1737028512200-beec1a39e2f0?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Consulting",
         title: "Infra rebuild for a Lisbon NGO",
         year: "2024",
+        image:
+          "https://images.unsplash.com/photo-1762652847912-4c2761d54aa1?q=80&w=800&auto=format&fit=crop",
       },
     ],
     board: [
@@ -273,11 +284,15 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Documentary",
         title: "O Café das Seis — portrait of a Mouraria café",
         year: "2024",
+        image:
+          "https://images.unsplash.com/photo-1770462594767-c64faffea172?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Short doc",
         title: "After the Factory — Marvila changing",
         year: "2023",
+        image:
+          "https://images.unsplash.com/photo-1772110204334-b2e9c346515e?q=80&w=800&auto=format&fit=crop",
       },
     ],
     board: [
@@ -346,6 +361,8 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Supper club",
         title: "Queer Supper Club — 12 editions in Mouraria",
         year: "2024–25",
+        image:
+          "https://images.unsplash.com/photo-1772482360229-d93a8ef2de07?q=80&w=800&auto=format&fit=crop",
       },
     ],
     board: [],
@@ -470,11 +487,15 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Portrait series",
         title: "Faces of the Bairro — 40 portraits in Mouraria",
         year: "2024",
+        image:
+          "https://images.unsplash.com/photo-1773136355382-e27d8cc9ae22?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Editorial",
         title: "Covers for Pulsar magazine, issues 3–6",
         year: "2025",
+        image:
+          "https://images.unsplash.com/photo-1774300622212-1d9a3be2d4f1?q=80&w=800&auto=format&fit=crop",
       },
     ],
     board: [
@@ -543,11 +564,15 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Product",
         title: "Payments redesign at a Lisbon fintech",
         year: "2024",
+        image:
+          "https://images.unsplash.com/photo-1775536867092-1aa0a9cd6449?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Strategy",
         title: "Zero-to-one consumer product",
         year: "2023",
+        image:
+          "https://plus.unsplash.com/premium_photo-1667823753552-1159b2b9c3c7?q=80&w=800&auto=format&fit=crop",
       },
     ],
     board: [
@@ -620,11 +645,15 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Collection",
         title: "Slow Objects — functional ceramics collection",
         year: "2025",
+        image:
+          "https://plus.unsplash.com/premium_photo-1670523428691-401adf274515?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Workshop",
         title: "Beginners wheel-throwing, monthly",
         year: "2024–25",
+        image:
+          "https://plus.unsplash.com/premium_photo-1675791726816-1ac1e815f579?q=80&w=800&auto=format&fit=crop",
       },
     ],
     board: [
@@ -693,11 +722,15 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Production",
         title: "'Pulso' — debut EP, self-released",
         year: "2025",
+        image:
+          "https://plus.unsplash.com/premium_photo-1682545693253-c9491d190b8f?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Live",
         title: "Resident DJ, Queer Thursdays at Lux",
         year: "2024–25",
+        image:
+          "https://plus.unsplash.com/premium_photo-1731950841187-cfbec0ed025b?q=80&w=800&auto=format&fit=crop",
       },
     ],
     board: [],
@@ -1213,6 +1246,55 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       { icon: FiCalendar, title: "Ran a testing night", sub: "Cais do Sodré · 31 tests", to: routes.event },
       { icon: FiMessageCircle, title: "Replied in the health forum", sub: "Thread: starting PrEP, what to expect", to: routes.forum },
       { icon: FiFileText, title: "Updated the safer-use zine", sub: "New section on chemsex care", to: routes.magazine },
+    ],
+  },
+  "raquel-baptista": {
+    slug: "raquel-baptista",
+    first: "Raquel",
+    last: "Baptista",
+    role: "Lawyer · Pro-bono Advocate",
+    hood: "Estrela",
+    tags: ["LGBTQ+ rights", "Family law", "Anti-discrimination", "Pro-bono", "Legal aid"],
+    visibility: "open",
+    initials: "RB",
+    tint: "plum",
+    photo: "https://images.unsplash.com/photo-1582896911227-c966f6e7fb93?q=80&w=800&auto=format&fit=crop",
+    verified: true,
+    since: "2021",
+    bio: "I'm a lawyer who gives away the hours I was trained never to give away. Most of my pro-bono work is queer family law and discrimination — the cases people can't afford to bring and can't afford to lose. I split my time between a small practice in Estrela and a lot of other people's kitchen tables. The law is only protection if you can actually reach it, so I spend as much time explaining rights as I do defending them.",
+    now: "Running a free monthly rights clinic and training a new cohort of lawyers to take LGBTQ+ cases without fumbling the parts that matter.",
+    openTo: ["Pro-bono referrals", "Lawyers who want to take queer cases", "Rights talks for community groups"],
+    work: [
+      { category: "Casework", title: "60+ pro-bono cases — discrimination & family law", year: "2021–25" },
+      { category: "Training", title: "Taking LGBTQ+ cases — a course for lawyers", year: "2025" },
+      { category: "Guide", title: "Know Your Rights at Work, plain-language edition", year: "2024" },
+    ],
+    board: [
+      { kind: "offering", title: "Free monthly LGBTQ+ rights clinic", slug: "rights-clinic" },
+      { kind: "looking", title: "Lawyers to train in queer family law", slug: "train-lawyers" },
+    ],
+    vouchers: ["mariana", "catarina-vaz"],
+    voucherNames: "Mariana & Catarina",
+    related: ["catarina-melo", "rui-fernandes", "mariana"],
+    shapings: {
+      film: { title: "Philadelphia", note: "I watched it too young to follow the law in it, old enough to feel the injustice. Both stuck." },
+      book: { title: "Just Mercy — Bryan Stevenson", note: "The clearest argument I know that the law is only as just as the people willing to do the unpaid hours." },
+      song: { title: "Ne Me Quitte Pas — Jacques Brel", note: "What I play after a family-law hearing, when I need to feel something other than the case file." },
+      moment: { title: "First discrimination case we won", note: "A client kept her job and her dignity, and brought me flowers she couldn't afford. I still have the dried stems." },
+    },
+    skills: [
+      { name: "Pro-bono legal consults", meta: "Free · discrimination & family law" },
+      { name: "Rights navigation", meta: "Available · work, housing, the state" },
+      { name: "Lawyer training", meta: "Trade · queer-competent casework" },
+    ],
+    groups: [
+      { name: "QueerPulse Advisory Council", role: "Legal advisor" },
+      { name: "Queer Family Law Network", role: "Co-founder" },
+    ],
+    activity: [
+      { icon: FiFileText, title: "Updated the rights-at-work guide", sub: "New section on parental leave for queer families", to: routes.magazine },
+      { icon: FiCalendar, title: "Ran a free rights clinic", sub: "Estrela · drop-in", to: routes.event },
+      { icon: FiMessageCircle, title: "Answered in the legal forum", sub: "Thread: discrimination at work, what counts?", to: routes.forum },
     ],
   },
   rita: {
@@ -1743,6 +1825,7 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     tags: ["React", "TypeScript", "Node.js", "Poetry"],
     visibility: "open",
     initials: "TC",
+    tint: "jade",
     verified: true,
     since: "2025",
     bio: "Fullstack developer based in Portugal who loves bringing useful — and sometimes silly — ideas to life on the web. Off the keyboard I'm a published poet, half of the DJ duo Hot Mess Express, and a D&D bard at heart. I write about queer love, rebellion, and the tenderness of everyday life.",
@@ -1753,16 +1836,22 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Fullstack Developer",
         title: "Broadvoice — real-time VoIP systems (React, Node, NestJS, Apache Kafka)",
         year: "2022–2025",
+        image:
+          "https://plus.unsplash.com/premium_photo-1732115973557-47e5c91ba6e9?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Fullstack Developer",
         title: "AAUE, Universidade de Évora — web platforms & a custom CMS (Vue, React, Node)",
         year: "2020–2022",
+        image:
+          "https://plus.unsplash.com/premium_photo-1737392496893-07869d657a6e?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Poetry",
         title: "Four poems published in the Ofélia books",
         year: "2024",
+        image:
+          "https://plus.unsplash.com/premium_photo-1759762964086-184095920575?q=80&w=800&auto=format&fit=crop",
       },
     ],
     board: [

@@ -1,21 +1,26 @@
 import { useEffect, useMemo, useState, type SyntheticEvent } from 'react'
-import { FiBriefcase, FiCheck, FiShield } from 'react-icons/fi'
+import { FiBriefcase, FiBookmark, FiCheck, FiShield } from 'react-icons/fi'
 import { FaRainbow } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { EmptyState, Reveal, SectionHead, SkeletonLine } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useSaved } from '../../app/providers/SavedProvider'
 import { routes } from '../../app/routeMap'
 import { useWorkProfile } from '../../app/providers/WorkProfileProvider'
 import { JOBS, JOB_FILTERS, EMPLOYERS, type Job } from './jobs.data'
 import { safetyFor } from './employerSafety.data'
 import { SafetyBadges } from './SafetyBadges'
+import { affiliationFromLabel } from './safetyBadges.data'
 import { PostJobModal } from './PostJobModal'
 import styles from './JobsPage.module.css'
 
 function JobCard({ job }: { job: Job }) {
   const { showToast } = useToast()
+  const { isSaved, toggleSave } = useSaved()
   const [applied, setApplied] = useState(false)
+  const savedId = `job:${job.slug}`
+  const saved = isSaved(savedId)
 
   function apply(e: SyntheticEvent) {
     e.preventDefault()
@@ -23,6 +28,19 @@ function JobCard({ job }: { job: Job }) {
     if (applied) return
     setApplied(true)
     showToast(`Application started for ${job.title}`, 'success')
+  }
+
+  function save(e: SyntheticEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    const now = toggleSave({
+      id: savedId,
+      kind: 'job',
+      title: job.title,
+      href: `${routes.jobs}/${job.slug}`,
+      meta: `${job.org} · ${job.location}`,
+    })
+    showToast(now ? `Saved ${job.title}` : `Removed ${job.title} from saved`, 'success')
   }
 
   return (
@@ -37,23 +55,18 @@ function JobCard({ job }: { job: Job }) {
         </div>
         <div className={styles.org}>{job.org}</div>
         <div className={styles.tags}>
-          <span
-            className={styles.qr}
-            style={{
-              background: job.qr ? 'rgba(74,140,111,.1)' : 'rgba(45,27,61,.06)',
-              color: job.qr ? 'var(--jade)' : 'var(--ink-60)',
-            }}
-          >
-            {job.qr ? <><FaRainbow /> </> : ''}
-            {job.qrLabel}
-          </span>
           {job.tags.map((tag) => (
             <span key={tag} className={styles.tag}>
               {tag}
             </span>
           ))}
         </div>
-        <SafetyBadges signals={safetyFor(job.org)} compact />
+        <SafetyBadges
+          signals={safetyFor(job.org)}
+          affiliation={affiliationFromLabel(job.qr)}
+          affiliationLabel={job.qrLabel}
+          compact
+        />
         <div className={styles.desc}>{job.desc}</div>
         <div className={styles.meta}>
           <span>{job.type}</span>
@@ -63,18 +76,34 @@ function JobCard({ job }: { job: Job }) {
           <span>Apply by {job.deadline}</span>
         </div>
       </div>
-      <span
-        role="button"
-        tabIndex={0}
-        aria-disabled={applied}
-        className={[styles.apply, applied && styles.applyDone].filter(Boolean).join(' ')}
-        onClick={apply}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') apply(e)
-        }}
-      >
-        {applied ? <>Applied <FiCheck /></> : 'Apply'}
-      </span>
+      <div className={styles.actions}>
+        <span
+          role="button"
+          tabIndex={0}
+          aria-pressed={saved}
+          aria-label={saved ? `Remove ${job.title} from saved` : `Save ${job.title}`}
+          className={[styles.saveBtn, saved && styles.saveBtnOn].filter(Boolean).join(' ')}
+          onClick={save}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') save(e)
+          }}
+        >
+          <FiBookmark fill={saved ? 'currentColor' : 'none'} />
+          {saved ? 'Saved' : 'Save'}
+        </span>
+        <span
+          role="button"
+          tabIndex={0}
+          aria-disabled={applied}
+          className={[styles.apply, applied && styles.applyDone].filter(Boolean).join(' ')}
+          onClick={apply}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') apply(e)
+          }}
+        >
+          {applied ? <>Applied <FiCheck /></> : 'Apply'}
+        </span>
+      </div>
     </Link>
   )
 }

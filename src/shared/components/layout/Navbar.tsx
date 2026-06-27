@@ -8,7 +8,7 @@ import { useAuth } from "../../../app/providers/authContext";
 import { routes } from "../../../app/routeMap";
 import { MegaNav } from "./MegaNav";
 import { MegaNavDrawer } from "./MegaNavDrawer";
-import { AccountMenu } from "./AccountMenu";
+import { AccountMenu, ACCOUNT_ITEMS } from "./AccountMenu";
 import styles from "./Navbar.module.css";
 
 function Brand({ to }: { to: string }) {
@@ -125,6 +125,20 @@ export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
 
+          {!isMobile && (
+            // Opens the global ⌘K command palette (see CommandPalette / OPEN_SEARCH_EVENT).
+            <button
+              type="button"
+              className={styles.bell}
+              aria-label="Search (⌘K)"
+              onClick={() =>
+                window.dispatchEvent(new CustomEvent("qp:open-search"))
+              }
+            >
+              <SearchIcon />
+            </button>
+          )}
+
           {!isMobile &&
             (loggedIn ? (
               <>
@@ -171,9 +185,16 @@ export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
             onClick={(event) => event.stopPropagation()}
           >
             <MegaNavDrawer onNavigate={closeDrawer} />
+            <Link
+              to={routes.search}
+              className={styles.drawerSignIn}
+              onClick={closeDrawer}
+            >
+              Search
+            </Link>
             {loggedIn ? (
               <>
-                {ACCOUNT_LINKS.map((item) => (
+                {ACCOUNT_ITEMS.map((item) => (
                   <Link
                     key={item.to}
                     to={item.to}
@@ -219,12 +240,19 @@ export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
   );
 }
 
-const ACCOUNT_LINKS = [
-  { label: "Feed", to: "/feed" },
-  { label: "Messages", to: routes.messages },
-  { label: "My profile", to: routes.accountProfile },
-  { label: "Settings", to: routes.settings },
-];
+function SearchIcon() {
+  return (
+    <svg width={19} height={19} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx={11} cy={11} r={7} stroke="currentColor" strokeWidth={2} />
+      <path
+        d="m20 20-3.5-3.5"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 function MoonIcon() {
   return (

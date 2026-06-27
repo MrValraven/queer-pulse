@@ -7,10 +7,10 @@ import type { WellbeingIcon, WellbeingTone } from '../data/types'
 import styles from './Wellbeing.module.css'
 
 const TONE_COLOR: Record<WellbeingTone, string> = {
-  violet: '#7A52B8',
-  jade: '#4A8C6F',
-  coral: '#E8775A',
-  plum: '#2D1B3D',
+  violet: 'var(--violet)',
+  jade: 'var(--jade)',
+  coral: 'var(--accent)',
+  plum: 'var(--plum)',
 }
 const TONE_BG: Record<WellbeingTone, string> = {
   violet: 'rgba(122,82,184,.1)',

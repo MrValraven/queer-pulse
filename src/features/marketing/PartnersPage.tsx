@@ -3,6 +3,7 @@ import { FiMapPin } from 'react-icons/fi'
 import { PageHero, PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
 import { PARTNERS, type Region } from './partnerDetails'
+import { routes } from '../../app/routeMap'
 import s from './PartnersPage.module.css'
 
 const regionClass: Record<Region, string> = { pt: s.pt, eu: s.eu, int: s.int }
@@ -89,7 +90,7 @@ export function PartnersPage() {
         title={<>You don't have to navigate this <em>alone.</em></>}
         sub="QueerPulse, and the organisations we work with, exist so that you don't have to start from zero."
       >
-        <Button size="lg" to="/invite">
+        <Button size="lg" to={routes.invite}>
           Request an invite
         </Button>
       </Outro>

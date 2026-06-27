@@ -1,5 +1,6 @@
 import type { IconType } from 'react-icons';
 import { FiBookOpen, FiCalendar, FiUsers } from 'react-icons/fi';
+import { routes } from '../../app/routeMap';
 
 export const ONBOARDING_PREVIEW = [
   { title: 'Make it yours', desc: 'Add a photo so members can put a face to your name.' },
@@ -40,7 +41,7 @@ export const COMMUNITIES_LIST = [
 ];
 
 export const QUICK_STARTS: { to: string; icon: IconType; iconBg: string; title: string; desc: string }[] = [
-  { to: '/members', icon: FiUsers, iconBg: 'rgba(45,27,61,.07)', title: 'Browse the member directory', desc: '482 members in Lisbon and beyond' },
+  { to: routes.members, icon: FiUsers, iconBg: 'rgba(45,27,61,.07)', title: 'Browse the member directory', desc: '482 members in Lisbon and beyond' },
   { to: '/calendar', icon: FiCalendar, iconBg: 'rgba(232,119,90,.08)', title: 'See upcoming gatherings', desc: 'Real-world events for the community' },
   { to: '/magazine', icon: FiBookOpen, iconBg: 'rgba(74,140,111,.08)', title: 'Read the community magazine', desc: 'Published the first of every month' },
 ];

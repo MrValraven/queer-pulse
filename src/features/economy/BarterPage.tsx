@@ -1,20 +1,23 @@
 import { useMemo, useState } from "react";
+import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
-import { BARTERS, MODES, CATS, PRINCIPLES, type Mode } from "./barter.data";
+import { BARTERS, MODES, CATS, PRINCIPLES, type Barter, type Mode } from "./barter.data";
 import { BarterCard } from "./BarterCard";
+import { BarterPostStrip } from "./BarterPostStrip";
 import styles from "./BarterPage.module.css";
 
 export function BarterPage() {
-  const { showToast } = useToast();
   const [mode, setMode] = useState<"all" | Mode>("all");
   const [cat, setCat] = useState("all");
   const [query, setQuery] = useState("");
 
+  // Swaps posted in this session, prepended to the board.
+  const [posted, setPosted] = useState<Barter[]>([]);
+
   const items = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return BARTERS.filter((b) => {
+    return [...posted, ...BARTERS].filter((b) => {
       if (mode === "offering" && b.mode === "seeking") return false;
       if (mode === "seeking" && b.mode === "offering") return false;
       if (cat !== "all" && b.cat !== cat) return false;
@@ -30,7 +33,7 @@ export function BarterPage() {
       }
       return true;
     });
-  }, [mode, cat, query]);
+  }, [mode, cat, query, posted]);
 
   return (
     <PageShell>
@@ -123,34 +126,7 @@ export function BarterPage() {
             ))}
           </div>
 
-          <Reveal className={styles.postStrip}>
-            <div>
-              <h3>
-                Put something <em>on the table.</em>
-              </h3>
-              <p>
-                Every exchange starts with a post. Tell the community what you
-                can offer and what you're hoping for in return.
-              </p>
-            </div>
-            <form
-              className={styles.psForm}
-              onSubmit={(e) => {
-                e.preventDefault();
-                showToast("Posted to the exchange", "success");
-              }}
-            >
-              <input
-                className={styles.psInput}
-                placeholder="I can offer — e.g. Portuguese lessons, logo design…"
-              />
-              <input
-                className={styles.psInput}
-                placeholder="I'm looking for — e.g. tax advice, moving help…"
-              />
-              <Button type="submit">Post to the exchange →</Button>
-            </form>
-          </Reveal>
+          <BarterPostStrip onPost={(b) => setPosted((prev) => [b, ...prev])} />
         </div>
       </div>
 
@@ -158,7 +134,7 @@ export function BarterPage() {
         title={<>Skills are <em>the currency.</em></>}
         sub="QueerPulse Barter is open to all members. The more you offer, the more you can ask for."
       >
-        <Button to="/invite" size="lg">
+        <Button to={routes.invite} size="lg">
           Join the network
         </Button>
       </Outro>

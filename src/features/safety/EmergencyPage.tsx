@@ -54,7 +54,7 @@ const SECTIONS: Section[] = [
   },
   {
     icon: FiHome,
-    iconBg: "rgba(220,50,50,.08)",
+    iconBg: "rgba(var(--danger-rgb),.08)",
     title: "Unsafe at home / housing crisis",
     intro: "If your home environment is dangerous or you have no safe place to go.",
     items: [
@@ -70,7 +70,7 @@ const SECTIONS: Section[] = [
     intro: "Facing discrimination, hate crime, family law crisis, or immigration emergency.",
     items: [
       { name: "ILGA Portugal — Legal team", detail: "Free legal consultations for LGBTQ+ people facing discrimination, hate crimes, family law, or immigration issues. Call 707 200 220." },
-      { name: "Raquel Baptista (QueerPulse)", detail: "Lawyer offering pro-bono consultations for LGBTQ+ people facing discrimination and family law challenges. Over 60 cases in three years.", link: { label: "View profile →", href: routes.changemakers } },
+      { name: `${memberName('raquel-baptista')} (QueerPulse)`, detail: "Lawyer offering pro-bono consultations for LGBTQ+ people facing discrimination and family law challenges. Over 60 cases in three years.", link: { label: "View profile →", href: "/members/raquel-baptista" } },
       { name: "Ordem dos Advogados — Legal aid", detail: "Portugal's bar association runs a legal aid (apoio judiciário) scheme for those who can't afford a lawyer." },
     ],
   },

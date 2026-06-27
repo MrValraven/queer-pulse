@@ -527,6 +527,8 @@
   justify-content: center;
   font-size: 13px;
   padding: 10px;
+}
+.endBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -535,6 +537,70 @@
   color: var(--ink-40);
   text-align: center;
   margin-top: 8px;
+}
+.endToggle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  cursor: pointer;
+  margin-bottom: 12px;
+  user-select: none;
+}
+.endToggle input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.endedCard {
+  background: var(--plum);
+  border: 1px solid var(--plum);
+  border-radius: 14px;
+  padding: 18px 18px 16px;
+  text-align: center;
+  animation: endedIn 0.34s var(--ease) both;
+}
+@keyframes endedIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.endedIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(74, 140, 111, 0.22);
+  color: var(--jade);
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.endedTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 21px;
+  color: var(--cream);
+  letter-spacing: -0.015em;
+}
+.endedTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.endedText {
+  font-size: 12.5px;
+  color: rgba(247, 243, 238, 0.72);
+  line-height: 1.55;
+  margin-top: 7px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .endedCard {
+    animation: none;
+  }
 }
 
 .dataFooter {

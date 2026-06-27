@@ -1,16 +1,31 @@
 import { Link } from 'react-router-dom'
+import { FiPlus, FiCheck } from 'react-icons/fi'
 import { ImageSlot } from '../../shared/components/ui'
+import { useSaved } from '../../app/providers/SavedProvider'
+import { useToast } from '../../shared/components/feedback/useToast'
 import { StudioShell } from './StudioShell'
-import { COLLECTION, RELATED, TRACKS } from './studioCollection.data'
+import { COLLECTION, HERO_COVER, RELATED, TRACKS } from './studioCollection.data'
 import ss from './studio.module.css'
 import s from './studioPages.module.css'
 
+const COLLECTION_ITEM = {
+  id: 'post:studio-collection',
+  kind: 'post' as const,
+  title: 'Studio collection',
+  href: '/studio/collection',
+  meta: 'Collection',
+}
+
 export function StudioCollectionPage() {
+  const { isSaved, toggleSave } = useSaved()
+  const { showToast } = useToast()
+  const saved = isSaved(COLLECTION_ITEM.id)
+
   return (
     <StudioShell>
       <div className={s.collHero}>
         <div className={s.collCov}>
-          <ImageSlot tint="jade" width="100%" height="100%" radius={14} placeholder="collection" style={{ position: 'absolute', inset: 0 }} />
+          <ImageSlot src={HERO_COVER} tint="jade" width="100%" height="100%" radius={14} placeholder="collection" style={{ position: 'absolute', inset: 0 }} />
         </div>
         <div className={s.collInfo}>
           <div className={s.eb}>Collection · curated by {COLLECTION.curator}</div>
@@ -28,8 +43,10 @@ export function StudioCollectionPage() {
                 <path d="M1 1l10 6-10 6z" />
               </svg>
             </button>
-            <button>＋ Library</button>
-            <button>Shuffle</button>
+            <button onClick={() => { const now = toggleSave(COLLECTION_ITEM); showToast(now ? 'Collection added to your library' : 'Removed from your library', now ? 'success' : 'info') }}>
+              {saved ? <><FiCheck /> In library</> : <><FiPlus /> Library</>}
+            </button>
+            <button onClick={() => showToast('Shuffling the collection', 'info')}>Shuffle</button>
           </div>
         </div>
       </div>
@@ -47,7 +64,7 @@ export function StudioCollectionPage() {
           {TRACKS.map((track) => (
             <Link key={track.pre + track.meta} to="/studio/track" className={ss.card}>
               <div className={ss.cardCov}>
-                <ImageSlot tint={track.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                <ImageSlot src={track.image} tint={track.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
               </div>
               <h4>
                 {track.pre}
@@ -70,7 +87,7 @@ export function StudioCollectionPage() {
           {RELATED.map((item) => (
             <Link key={item.pre + item.meta} to="/studio/collection" className={ss.card}>
               <div className={ss.cardCov}>
-                <ImageSlot tint={item.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                <ImageSlot src={item.image} tint={item.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
               </div>
               <h4>
                 {item.pre}

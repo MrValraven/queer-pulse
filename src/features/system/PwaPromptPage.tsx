@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
+import { SystemStateShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import styles from './PwaPromptPage.module.css'
@@ -64,15 +65,7 @@ export function PwaPromptPage() {
   }
 
   return (
-    <div className={styles.root}>
-      <div className={`${styles.orb} ${styles.orbA}`} />
-      <div className={`${styles.orb} ${styles.orbB}`} />
-
-      <Link to="/" className={styles.brand}>
-        <span className={styles.pulseDot} aria-hidden />
-        Queer<em>Pulse</em>
-      </Link>
-
+    <SystemStateShell>
       <div className={styles.card}>
         <div className={styles.ic}>
           <div className={styles.icInner}>
@@ -132,6 +125,6 @@ export function PwaPromptPage() {
           </Link>.
         </p>
       </div>
-    </div>
+    </SystemStateShell>
   )
 }

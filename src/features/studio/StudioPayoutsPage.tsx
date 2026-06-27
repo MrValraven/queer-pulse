@@ -1,34 +1,35 @@
 import { FiZap, FiSettings } from 'react-icons/fi'
 import { StudioCreatorShell } from './StudioCreatorShell'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { SUMMARY, PAYOUTS, BREAKDOWN } from './studioPayouts.data'
 import s from './creator.module.css'
 
-const SUMMARY = [
-  { k: 'From streaming', v: '1,712' },
-  { k: 'From tips', v: '312' },
-  { k: 'From album buys', v: '76' },
-  { k: 'Direct €3/mo subs', v: '40' },
-]
-
-const PAYOUTS = [
-  { d: '5', m: 'Jul', title: <>July 2026 payout · <em>pending</em></>, meta: <>36,400 plays · 87 tips · 1 album buy · 12 direct subs · <em>splits to 3 collaborators</em></>, amt: '2,140', status: 'pending' },
-  { d: '5', m: 'Jun', title: <>June 2026 payout</>, meta: '24,260 plays · 64 tips · 4 album buys · 8 direct subs', amt: '1,213', status: 'paid' },
-  { d: '5', m: 'May', title: <>May 2026 payout · <em>first month of CDS</em></>, meta: '18,420 plays · 42 tips · 12 album buys · 6 direct subs', amt: '1,084', status: 'paid' },
-  { d: '5', m: 'Apr', title: <>April 2026 payout</>, meta: '8,140 plays · 18 tips · 3 album buys · 4 direct subs', amt: '486', status: 'paid' },
-  { d: '5', m: 'Mar', title: <>March 2026 payout · <em>first on Studio</em></>, meta: '2,140 plays · 6 tips · 1 album buy · 2 direct subs', amt: '142', status: 'paid' },
-]
-
-const BREAKDOWN = [
-  { n: '06', nm: <>Carta para a <em>santa</em></>, plays: '25,832 plays', total: '1,291.60' },
-  { n: '04', nm: <>A <em>vizinha</em> que reza</>, plays: '4,144 plays', total: '207.20' },
-  { n: '03', nm: <>Mãe, três <em>vezes</em></>, plays: '2,880 plays', total: '144.00' },
-  { n: '01', nm: <>Mãe, <em>vento</em></>, plays: '1,684 plays', total: '84.20' },
-  { n: '08', nm: <>O <em>nome</em></>, plays: '920 plays', total: '46.00' },
-  { n: '—', nm: <>Seven other tracks <em>· combined</em></>, plays: '940 plays', total: '47.00' },
-]
+function downloadCsv(filename: string, rows: string[][]) {
+  const escape = (cell: string) => `"${cell.replace(/"/g, '""')}"`
+  const csv = rows.map((r) => r.map(escape).join(',')).join('\n')
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
 
 export function StudioPayoutsPage() {
   const { showToast } = useToast()
+
+  function exportCsv() {
+    const data: string[][] = [
+      ['Period', 'Date', 'Detail', 'Amount (EUR)', 'Status'],
+      ...PAYOUTS.map((p) => [p.period, `${p.d} ${p.m}`, p.csvMeta, p.amt.replace(/,/g, ''), p.status]),
+    ]
+    downloadCsv('studio-payout-history.csv', data)
+    showToast('Payout history exported as CSV', 'success')
+  }
+
   return (
     <StudioCreatorShell>
       <section className={s.hero}>
@@ -75,7 +76,7 @@ export function StudioPayoutsPage() {
               <h3>
                 Recent <em>payouts</em>
               </h3>
-              <a href="#" className={s.allLink} onClick={(e) => { e.preventDefault(); showToast('Exporting payout history as CSV', 'success') }}>
+              <a href="#" className={s.allLink} onClick={(e) => { e.preventDefault(); exportCsv() }}>
                 Export CSV →
               </a>
             </div>

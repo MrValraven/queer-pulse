@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useScrolled } from '../../shared/hooks/useScrolled'
 import styles from './CinemaShell.module.css'
+import { routes } from '../../app/routeMap'
 
 const LINKS = [
   { label: 'This week', to: '/cinema' },
@@ -16,7 +17,7 @@ export function CinemaShell({ children }: { children: ReactNode }) {
   return (
     <div className={styles.root}>
       <nav className={[styles.nav, scrolled && styles.scrolled].filter(Boolean).join(' ')}>
-        <Link to="/cinema" className={styles.brand}>
+        <Link to={routes.cinema} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
           Queer<em>Pulse</em>
           <span className={styles.brandTag}>Cinema</span>
@@ -34,7 +35,7 @@ export function CinemaShell({ children }: { children: ReactNode }) {
           ))}
         </div>
         <div className={styles.right}>
-          <Button to="/cinema/membership">Sustain · €7/mo</Button>
+          <Button to={routes.cinemaMembership}>Sustain · €7/mo</Button>
         </div>
       </nav>
 
@@ -53,15 +54,15 @@ export function CinemaShell({ children }: { children: ReactNode }) {
             <div className={styles.footCols}>
               <div className={styles.footCol}>
                 <h4>Cinema</h4>
-                <Link to="/cinema">This week</Link>
+                <Link to={routes.cinema}>This week</Link>
                 <Link to="/cinema/browse">Browse all</Link>
                 <Link to="/cinema/browse">Collections</Link>
-                <Link to="/cinema/membership">Membership</Link>
+                <Link to={routes.cinemaMembership}>Membership</Link>
               </div>
               <div className={styles.footCol}>
                 <h4>Filmmakers</h4>
                 <Link to="/submit-story">Submit</Link>
-                <Link to="/cinema/membership">Revenue split</Link>
+                <Link to={routes.cinemaMembership}>Revenue split</Link>
                 <Link to="/governance">Rights</Link>
               </div>
               <div className={styles.footCol}>

@@ -3,7 +3,8 @@ import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button, ImageSlot } from '../../shared/components/ui'
 import { MagazineMasthead } from './MagazineMasthead'
 import styles from './IssuePage.module.css'
-import { TOC, CONTRIBUTORS } from './issue.data'
+import { routes } from '../../app/routeMap'
+import { TOC, CONTRIBUTORS, ISSUE_COVER_IMG, PRINT_EDITION_IMG } from './issue.data'
 
 export function IssuePage() {
   return (
@@ -11,7 +12,7 @@ export function IssuePage() {
       <MagazineMasthead active="issues" />
       <div className={styles.cover}>
         <div className={styles.coverInner}>
-          <Link to="/magazine" className={styles.back}>
+          <Link to={routes.magazine} className={styles.back}>
             ← All issues
           </Link>
           <div className={styles.spread}>
@@ -45,7 +46,7 @@ export function IssuePage() {
                 </span>
               </div>
             </div>
-            <ImageSlot tint="coral" radius={18} placeholder='Issue 09 cover · "On Health"' style={{ aspectRatio: '3/4', height: 'auto' }} />
+            <ImageSlot tint="coral" radius={18} src={ISSUE_COVER_IMG} alt='Issue 09 cover · "On Health"' placeholder='Issue 09 cover · "On Health"' style={{ aspectRatio: '3/4', height: 'auto' }} />
           </div>
         </div>
       </div>
@@ -92,7 +93,7 @@ export function IssuePage() {
               <div className={styles.sectionH}>{section.heading}</div>
               <div className={styles.entries}>
                 {section.entries.map((entry) => (
-                  <Link key={entry.page} to="/article?id=housing-law" className={styles.entry}>
+                  <Link key={entry.page} to={`/article?id=${entry.articleId}`} className={styles.entry}>
                     <div>
                       <div className={styles.entryKicker}>{entry.kicker}</div>
                       <div className={styles.entryTitle}>{entry.title}</div>
@@ -122,7 +123,7 @@ export function IssuePage() {
           </p>
           <div className={styles.contribGrid}>
             {CONTRIBUTORS.map((person) => (
-              <Link key={person.name} to="/author" className={styles.contribCard}>
+              <Link key={person.name} to={routes.author} className={styles.contribCard}>
                 <Avatar initials={person.initials} tint="coral" size={38} />
                 <div>
                   <div className={styles.contribName}>{person.name}</div>
@@ -148,12 +149,12 @@ export function IssuePage() {
             </p>
             <div className={styles.poActions}>
               <Button to="/checkout">Order the print edition — €12</Button>
-              <Button variant="ghost" to="/magazine">
+              <Button variant="ghost" to={routes.magazine}>
                 Read online free
               </Button>
             </div>
           </div>
-          <ImageSlot tint="coral" radius={18} placeholder="Print edition mockup · Issue 09" style={{ aspectRatio: '4/3', height: 'auto' }} />
+          <ImageSlot tint="coral" radius={18} src={PRINT_EDITION_IMG} alt="Print edition mockup · Issue 09" placeholder="Print edition mockup · Issue 09" style={{ aspectRatio: '4/3', height: 'auto' }} />
         </div>
       </section>
     </PageShell>

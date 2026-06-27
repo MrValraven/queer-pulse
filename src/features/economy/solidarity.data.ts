@@ -34,14 +34,14 @@ export const PRACTITIONERS: Practitioner[] = [
 ]
 
 export const TINT_BG: Record<Tint, string> = {
-  coral: 'rgba(232,119,90,.14)',
-  jade: 'rgba(74,140,111,.14)',
-  plum: 'rgba(45,27,61,.1)',
+  coral: 'rgba(var(--accent-rgb),.14)',
+  jade: 'rgba(var(--jade-rgb),.14)',
+  plum: 'rgba(var(--plum-rgb),.1)',
 }
 export const TINT_FG: Record<Tint, string> = {
-  coral: '#C85A40',
-  jade: '#4A8C6F',
-  plum: '#2D1B3D',
+  coral: 'var(--accent-ink)',
+  jade: 'var(--jade)',
+  plum: 'var(--plum)',
 }
 
 export const HOW: { n: string; title: string; body: string }[] = [

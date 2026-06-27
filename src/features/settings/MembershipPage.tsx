@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { PlanPanel, BillingPanel, AccessPanel } from './MembershipPanels'
+import { routes } from '../../app/routeMap'
 import { MembershipSidebar } from './MembershipSidebar'
 import styles from './MembershipPage.module.css'
 
@@ -20,7 +21,7 @@ export function MembershipPage() {
     <AppShell>
       <div className={styles.page}>
         <div className={styles.bc}>
-          <Link to="/">Account</Link>
+          <Link to={routes.homepage}>Account</Link>
           <span className={styles.bcSep}>›</span>
           <span className={styles.bcCurrent}>Membership</span>
         </div>

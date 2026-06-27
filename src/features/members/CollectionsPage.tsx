@@ -1,15 +1,35 @@
-import type { ReactNode } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useSaved, type SavedItem } from '../../app/providers/SavedProvider'
 import {
   COLLECTIONS,
   RECENT_SAVES,
+  type Collection,
   type Privacy,
   type Thumb,
   type RecentSave,
 } from './collections.data'
+import { SavedByYou } from './SavedByYou'
+import {
+  AddToCollectionModal,
+  NewCollectionModal,
+  ViewCollectionModal,
+} from './CollectionsModals'
 import styles from './CollectionsPage.module.css'
+
+type ModalState =
+  | { type: 'new' }
+  | { type: 'view'; id: string }
+  | { type: 'add'; save: RecentSave }
+  | null
+
+const PRIVACY_LABEL: Record<Privacy, string> = {
+  private: 'Private',
+  shared: 'Shared',
+  public: 'Public',
+}
 
 const thumbClass: Record<Thumb, string> = {
   a: styles.thumbA,
@@ -46,9 +66,112 @@ const privacyIcon: Record<Privacy, ReactNode> = {
   ),
 }
 
+/** A single collection card in the grid. */
+function CollectionCard({ c, onOpen }: { c: Collection; onOpen: () => void }) {
+  return (
+    <button
+      className={`${styles.card} ${c.featured ? styles.featured : ''}`}
+      onClick={onOpen}
+    >
+      <div className={styles.ic}>{c.count}</div>
+      <div>
+        <div className={styles.name}>{c.name}</div>
+        <div className={styles.meta}>{c.meta}</div>
+      </div>
+      <div className={styles.thumbs}>
+        {c.thumbs.map((t, i) => (
+          <span key={i} className={`${styles.thumb} ${thumbClass[t]}`} />
+        ))}
+        <span className={styles.more}>{c.more}</span>
+      </div>
+      <div className={styles.foot}>
+        <span className={styles.priv}>
+          {privacyIcon[c.privacy]}
+          {c.privacyLabel}
+        </span>
+        <span>{c.updated}</span>
+      </div>
+    </button>
+  )
+}
+
+/** A recent, unfiled save — clicking opens the "add to collection" picker. */
+function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
+  return (
+    <button className={styles.recentRow} onClick={onAdd}>
+      <div className={`${styles.recentKind} ${kindClass[r.kindVariant]}`}>{r.kind}</div>
+      <div className={styles.recentInfo}>
+        <b>{r.title}</b>
+        <span>{r.saved}</span>
+      </div>
+      <span className={styles.recentAdd}>+ Add to collection →</span>
+    </button>
+  )
+}
+
 export function CollectionsPage() {
   const { showToast } = useToast()
-  const newCollection = () => showToast('New collection · name it next', 'info')
+  const { items: savedItems } = useSaved()
+
+  const [collections, setCollections] = useState<Collection[]>(COLLECTIONS)
+  // collectionId -> the saved items inside it. Seeded from live saves so the
+  // view modal has real content to show, then grown via "Add to collection".
+  const [contents, setContents] = useState<Record<string, SavedItem[]>>({})
+  const [modal, setModal] = useState<ModalState>(null)
+
+  // For each collection, blend any seeded saves with items the user has added.
+  const contentsFor = useMemo(() => {
+    return (id: string): SavedItem[] => {
+      if (contents[id]) return contents[id]
+      // Seed deterministically from the live saved store the first time.
+      const seed = savedItems.slice(0, 3)
+      return seed
+    }
+  }, [contents, savedItems])
+
+  const createCollection = (name: string, privacy: Privacy) => {
+    const id = `c-${Date.now()}`
+    setCollections((prev) => [
+      {
+        id,
+        count: '0',
+        name,
+        meta: 'Just created — start adding saves',
+        thumbs: ['a', 'b', 'c'],
+        more: '',
+        privacy,
+        privacyLabel: PRIVACY_LABEL[privacy],
+        updated: 'Updated just now',
+      },
+      ...prev,
+    ])
+    setModal(null)
+    showToast('Collection created', 'success')
+  }
+
+  const addSaveToCollection = (collectionId: string, save: RecentSave) => {
+    const item: SavedItem = {
+      id: `recent:${save.id}`,
+      kind: 'article',
+      title: save.title,
+      meta: save.saved,
+    }
+    setContents((prev) => {
+      const existing = prev[collectionId] ?? savedItems.slice(0, 3)
+      if (existing.some((it) => it.id === item.id)) return prev
+      return { ...prev, [collectionId]: [item, ...existing] }
+    })
+    setCollections((prev) =>
+      prev.map((c) =>
+        c.id === collectionId
+          ? { ...c, count: String((Number(c.count) || 0) + 1), updated: 'Updated just now' }
+          : c,
+      ),
+    )
+  }
+
+  const viewing =
+    modal?.type === 'view' ? collections.find((c) => c.id === modal.id) ?? null : null
 
   return (
     <AppShell>
@@ -64,40 +187,23 @@ export function CollectionsPage() {
               shared with specific members, or public.
             </p>
           </div>
-          <Button variant="primary" onClick={newCollection}>
+          <Button variant="primary" onClick={() => setModal({ type: 'new' })}>
             + New collection
           </Button>
         </header>
 
+        <SavedByYou />
+
         <div className={styles.grid}>
-          {COLLECTIONS.map((c) => (
-            <button
+          {collections.map((c) => (
+            <CollectionCard
               key={c.id}
-              className={`${styles.card} ${c.featured ? styles.featured : ''}`}
-              onClick={() => showToast('Opening collection', 'info')}
-            >
-              <div className={styles.ic}>{c.count}</div>
-              <div>
-                <div className={styles.name}>{c.name}</div>
-                <div className={styles.meta}>{c.meta}</div>
-              </div>
-              <div className={styles.thumbs}>
-                {c.thumbs.map((t, i) => (
-                  <span key={i} className={`${styles.thumb} ${thumbClass[t]}`} />
-                ))}
-                <span className={styles.more}>{c.more}</span>
-              </div>
-              <div className={styles.foot}>
-                <span className={styles.priv}>
-                  {privacyIcon[c.privacy]}
-                  {c.privacyLabel}
-                </span>
-                <span>{c.updated}</span>
-              </div>
-            </button>
+              c={c}
+              onOpen={() => setModal({ type: 'view', id: c.id })}
+            />
           ))}
 
-          <button className={styles.newCard} onClick={newCollection}>
+          <button className={styles.newCard} onClick={() => setModal({ type: 'new' })}>
             <div className={styles.plus}>+</div>
             <b>New collection</b>
             <span>Group saves by why they matter</span>
@@ -110,21 +216,29 @@ export function CollectionsPage() {
         </div>
         <div className={styles.recentList}>
           {RECENT_SAVES.map((r) => (
-            <button
-              key={r.id}
-              className={styles.recentRow}
-              onClick={() => showToast('Add to collection · pick one', 'info')}
-            >
-              <div className={`${styles.recentKind} ${kindClass[r.kindVariant]}`}>{r.kind}</div>
-              <div className={styles.recentInfo}>
-                <b>{r.title}</b>
-                <span>{r.saved}</span>
-              </div>
-              <span className={styles.recentAdd}>+ Add to collection →</span>
-            </button>
+            <RecentSaveRow key={r.id} r={r} onAdd={() => setModal({ type: 'add', save: r })} />
           ))}
         </div>
       </div>
+
+      {modal?.type === 'new' && (
+        <NewCollectionModal onClose={() => setModal(null)} onCreate={createCollection} />
+      )}
+      {viewing && (
+        <ViewCollectionModal
+          collection={viewing}
+          items={contentsFor(viewing.id)}
+          onClose={() => setModal(null)}
+        />
+      )}
+      {modal?.type === 'add' && (
+        <AddToCollectionModal
+          itemTitle={modal.save.title}
+          collections={collections}
+          onClose={() => setModal(null)}
+          onPick={(id) => addSaveToCollection(id, modal.save)}
+        />
+      )}
     </AppShell>
   )
 }

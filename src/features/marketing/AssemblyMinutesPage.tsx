@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { AssemblyMinutesBody } from './AssemblyMinutesBody'
 import { MINUTES, MINUTES_FALLBACK_YEAR } from './assemblyMinutes.data'
 import styles from './AssemblyMinutesPage.module.css'
@@ -31,7 +32,7 @@ export function AssemblyMinutesPage() {
             )}
           </p>
           <div className={styles.actions}>
-            <Button to="/annual-assembly" variant="ghost">
+            <Button to={routes.annualAssembly} variant="ghost">
               ← Back to the Assembly
             </Button>
           </div>

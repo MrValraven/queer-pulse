@@ -1,10 +1,16 @@
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useSocial } from '../../app/providers/SocialProvider'
 import { CREW } from './filmPage.data'
 import styles from './FilmPage.module.css'
+import { routes } from '../../app/routeMap'
+
+const FILMMAKER_SLUG = 'maria-vasconcelos'
 
 export function FilmBody() {
   const { showToast } = useToast()
+  const { isFollowing, toggleFollow } = useSocial()
+  const following = isFollowing(FILMMAKER_SLUG)
   return (
     <section className={styles.body}>
       <div className={`wrap ${styles.bodyGrid}`}>
@@ -105,9 +111,15 @@ export function FilmBody() {
               </div>
             </div>
             <div className={styles.fmActions}>
-              <Button to="/members">View profile</Button>
-              <Button variant="ghost" onClick={() => showToast('Following Maria', 'success')}>
-                Follow filmmaker
+              <Button to={routes.members}>View profile</Button>
+              <Button
+                variant={following ? 'jade' : 'ghost'}
+                onClick={() => {
+                  const now = toggleFollow(FILMMAKER_SLUG)
+                  showToast(now ? 'Following Maria' : 'Unfollowed Maria', now ? 'success' : 'info')
+                }}
+              >
+                {following ? 'Following' : 'Follow filmmaker'}
               </Button>
             </div>
           </div>

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { useConnect } from '../../app/providers/ConnectProvider'
+import { routes } from '../../app/routeMap'
 import { ResourceHero } from './ResourceHero'
 import styles from './resources.module.css'
 
@@ -17,22 +18,22 @@ interface Right {
 }
 
 const WORKPLACE: Right[] = [
-  { badge: 'protected', badgeLabel: 'Protected right', title: 'Protection from dismissal', body: 'You cannot be legally dismissed because of your sexual orientation or gender identity. Constructive dismissal — making conditions intolerable — is also prohibited. Keep records of everything.', linkLabel: 'Read the full guide →', to: '/library' },
-  { badge: 'protected', badgeLabel: 'Protected right', title: 'Harassment at work', body: 'Harassment on grounds of sexual orientation or gender identity is unlawful. Your employer has a legal duty to investigate complaints. Failure to act makes them liable. Document every incident with dates.', linkLabel: 'Read the full guide →', to: '/library' },
-  { badge: 'know', badgeLabel: 'Know this', title: 'Pronouns & name at work', body: 'Persistent misgendering after being corrected can constitute harassment. Trans employees have the right to use their preferred name before any legal name change.', linkLabel: 'Read the full guide →', to: '/library' },
-  { badge: 'practical', badgeLabel: 'Practical', title: 'Making a complaint', body: 'The ACT (Autoridade para as Condições do Trabalho) handles workplace discrimination complaints. You can report anonymously. We have a step-by-step guide and template complaint letter.', linkLabel: 'Get the template →', to: '/library' },
+  { badge: 'protected', badgeLabel: 'Protected right', title: 'Protection from dismissal', body: 'You cannot be legally dismissed because of your sexual orientation or gender identity. Constructive dismissal — making conditions intolerable — is also prohibited. Keep records of everything.', linkLabel: 'Read the full guide →', to: routes.library },
+  { badge: 'protected', badgeLabel: 'Protected right', title: 'Harassment at work', body: 'Harassment on grounds of sexual orientation or gender identity is unlawful. Your employer has a legal duty to investigate complaints. Failure to act makes them liable. Document every incident with dates.', linkLabel: 'Read the full guide →', to: routes.library },
+  { badge: 'know', badgeLabel: 'Know this', title: 'Pronouns & name at work', body: 'Persistent misgendering after being corrected can constitute harassment. Trans employees have the right to use their preferred name before any legal name change.', linkLabel: 'Read the full guide →', to: routes.library },
+  { badge: 'practical', badgeLabel: 'Practical', title: 'Making a complaint', body: 'The ACT (Autoridade para as Condições do Trabalho) handles workplace discrimination complaints. You can report anonymously. We have a step-by-step guide and template complaint letter.', linkLabel: 'Get the template →', to: routes.library },
 ]
 
 const HOUSING: Right[] = [
-  { badge: 'protected', badgeLabel: 'Protected right', title: 'Rental discrimination', body: 'A landlord refusing to rent to you due to sexual orientation or gender identity is acting illegally. Document any evidence — screenshots, recordings with consent, written refusals.', linkLabel: 'Read the full guide →', to: '/library' },
-  { badge: 'practical', badgeLabel: 'Practical', title: 'Same-sex couples & rentals', body: 'Same-sex couples have equal rights in tenancy agreements. Both partners can be named on a lease. There are protections against removal if one partner leaves or dies.', linkLabel: 'Read the full guide →', to: '/library' },
-  { badge: 'practical', badgeLabel: 'Practical', title: 'Eviction protections', body: 'Eviction on discriminatory grounds has additional protections. If you\'re facing displacement in a gentrifying area, community organisers can help — contact Catarina Vaz via QueerPulse.', linkLabel: 'Find support →', to: '/changemakers' },
+  { badge: 'protected', badgeLabel: 'Protected right', title: 'Rental discrimination', body: 'A landlord refusing to rent to you due to sexual orientation or gender identity is acting illegally. Document any evidence — screenshots, recordings with consent, written refusals.', linkLabel: 'Read the full guide →', to: routes.library },
+  { badge: 'practical', badgeLabel: 'Practical', title: 'Same-sex couples & rentals', body: 'Same-sex couples have equal rights in tenancy agreements. Both partners can be named on a lease. There are protections against removal if one partner leaves or dies.', linkLabel: 'Read the full guide →', to: routes.library },
+  { badge: 'practical', badgeLabel: 'Practical', title: 'Eviction protections', body: 'Eviction on discriminatory grounds has additional protections. If you\'re facing displacement in a gentrifying area, community organisers can help — contact Catarina Vaz via QueerPulse.', linkLabel: 'Find support →', to: routes.changemakers },
 ]
 
 const HEALTHCARE: Right[] = [
-  { badge: 'protected', badgeLabel: 'Protected right', title: 'Trans healthcare via SNS', body: 'Since 2018, trans healthcare including hormone therapy and surgical procedures is available through the SNS. Waiting lists exist — we have a guide to navigating them.', linkLabel: 'Trans Hub guide →', to: '/trans-hub' },
-  { badge: 'protected', badgeLabel: 'Protected right', title: 'Refusal of treatment', body: 'Healthcare providers cannot legally refuse treatment on grounds of sexual orientation or gender identity. If this happens, document it and contact ILGA Portugal immediately.', linkLabel: 'Report a refusal →', to: '/report' },
-  { badge: 'practical', badgeLabel: 'Practical', title: 'PrEP access', body: 'PrEP is available via the SNS at no cost if you meet eligibility criteria. Our guide walks through the process, including which clinics are most welcoming in Lisbon.', linkLabel: 'PrEP access guide →', to: '/wellbeing' },
+  { badge: 'protected', badgeLabel: 'Protected right', title: 'Trans healthcare via SNS', body: 'Since 2018, trans healthcare including hormone therapy and surgical procedures is available through the SNS. Waiting lists exist — we have a guide to navigating them.', linkLabel: 'Trans Hub guide →', to: routes.transHub },
+  { badge: 'protected', badgeLabel: 'Protected right', title: 'Refusal of treatment', body: 'Healthcare providers cannot legally refuse treatment on grounds of sexual orientation or gender identity. If this happens, document it and contact ILGA Portugal immediately.', linkLabel: 'Report a refusal →', to: routes.report },
+  { badge: 'practical', badgeLabel: 'Practical', title: 'PrEP access', body: 'PrEP is available via the SNS at no cost if you meet eligibility criteria. Our guide walks through the process, including which clinics are most welcoming in Lisbon.', linkLabel: 'PrEP access guide →', to: routes.wellbeing },
 ]
 
 const LAWYERS = [
@@ -160,7 +161,7 @@ export function LegalPage() {
                 usually reachable within hours.
               </p>
             </div>
-            <Button variant="ghost-dark" size="lg" to="/emergency">
+            <Button variant="ghost-dark" size="lg" to={routes.emergency}>
               <FiAlertOctagon /> Emergency network →
             </Button>
           </Reveal>
@@ -171,7 +172,7 @@ export function LegalPage() {
         title={<>You have <em>rights.</em></>}
         sub="Knowledge is the first line of defence. Share these resources with anyone who needs them."
       >
-        <Button to="/invite" variant="primary" size="lg">
+        <Button to={routes.invite} variant="primary" size="lg">
           Request an invite
         </Button>
       </Outro>

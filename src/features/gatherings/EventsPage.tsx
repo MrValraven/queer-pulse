@@ -11,6 +11,7 @@ import {
   SkeletonLine,
   Tag,
 } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { calendarEvents, type CalendarEvent } from './data'
 import { MONTHS, MSHORT } from './calendar.data'
 import { EVENT_CATEGORIES, eventsHeader } from './eventsPage.data'
@@ -102,7 +103,7 @@ export function EventsPage() {
             }
             subtitle={eventsHeader.subtitle}
             action={
-              <Button variant="ghost" to="/calendar">
+              <Button variant="ghost" to={routes.calendar}>
                 View as calendar
               </Button>
             }

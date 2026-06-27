@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { Button } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { AgendaSection, VoteSection, AttendCard, PastAssembliesSection } from './AnnualAssemblySections'
 import styles from './AnnualAssemblyPage.module.css'
 
@@ -39,7 +41,7 @@ export function AnnualAssemblyPage() {
         <AttendCard />
         <PastAssembliesSection />
         <div className={styles.footer}>
-          Questions about your eligibility? <a href="#">Help →</a> · Want to submit a member proposal for next year? <a href="#">Write to us</a>.
+          Questions about your eligibility? <Link to={routes.help}>Help →</Link> · Want to submit a member proposal for next year? <Link to={routes.contact}>Write to us</Link>.
         </div>
       </div>
     </PageShell>

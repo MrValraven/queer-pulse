@@ -158,6 +158,90 @@
   box-shadow: 0 0 0 4px rgba(45, 27, 61, 0.08);
   background: var(--paper);
 }
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.fieldRow .field {
+  margin-bottom: 18px;
+}
+@media (max-width: 480px) {
+  .fieldRow {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+.salaryRange {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.salaryDash {
+  color: var(--ink-40);
+  font-size: 16px;
+  flex: none;
+}
+.checkRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: var(--cream);
+  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border-radius: 12px;
+  padding: 14px 15px;
+  margin-bottom: 18px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+.checkRow:hover {
+  border-color: rgba(45, 27, 61, 0.32);
+}
+.checkRowOn {
+  border-color: var(--jade);
+  background: rgba(74, 140, 111, 0.07);
+}
+.checkBox {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 1.5px solid rgba(45, 27, 61, 0.24);
+  background: var(--paper);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  margin-top: 1px;
+  transition: background var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
+.checkRowOn .checkBox {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+.checkText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.checkLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.checkHint {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
 .note {
   font-size: 12.5px;
   color: var(--ink-40);
@@ -262,6 +346,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--sans);
   font-size: 13.5px;
   color: var(--plum);
   font-weight: 500;

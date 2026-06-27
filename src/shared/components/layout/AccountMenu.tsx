@@ -6,15 +6,33 @@ import { routes } from '../../../app/routeMap'
 import { currentUser, fullName } from '../../../features/members/data/members'
 import styles from './AccountMenu.module.css'
 
-const ITEMS = [
-  { label: 'Feed', to: '/feed' },
-  { label: 'Messages', to: routes.messages },
-  { label: 'My profile', to: routes.accountProfile },
-  { label: 'Your connections', to: routes.connections },
-  { label: 'Your applications', to: routes.applicationStatus },
-  { label: 'Your Work', to: routes.work },
-  { label: 'Settings', to: routes.settings },
+/**
+ * The canonical account links, grouped into clusters: identity, activity, and
+ * system. The desktop AccountMenu renders the groups with dividers between
+ * them; the mobile drawer in Navbar flattens them via ACCOUNT_ITEMS. Labels
+ * are bare nouns (no "My"/"Your" mix) — the menu is already scoped to "you"
+ * by the avatar header.
+ */
+export const ACCOUNT_GROUPS = [
+  [
+    { label: 'Profile', to: routes.accountProfile },
+    { label: 'Connections', to: routes.connections },
+    { label: 'Applications', to: routes.applicationStatus },
+    { label: 'Work', to: routes.work },
+    { label: 'Saved', to: routes.collections },
+  ],
+  [
+    { label: 'Feed', to: '/feed' },
+    { label: 'Messages', to: routes.messages },
+  ],
+  [
+    { label: 'Settings', to: routes.settings },
+    { label: 'Help', to: routes.help },
+  ],
 ]
+
+/** Flattened links for the mobile drawer, which has no group dividers. */
+export const ACCOUNT_ITEMS = ACCOUNT_GROUPS.flat()
 
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
 export function AccountMenu({ name = fullName(currentUser), initials = currentUser.initials }: { name?: string; initials?: string }) {
@@ -61,10 +79,15 @@ export function AccountMenu({ name = fullName(currentUser), initials = currentUs
               <div className={styles.headerMeta}>Profile &amp; account</div>
             </div>
           </div>
-          {ITEMS.map((item) => (
-            <Link key={item.to} to={item.to} role="menuitem" className={styles.item} onClick={() => setOpen(false)}>
-              {item.label}
-            </Link>
+          {ACCOUNT_GROUPS.map((group, i) => (
+            <div key={i}>
+              {i > 0 && <div className={styles.divider} />}
+              {group.map((item) => (
+                <Link key={item.to} to={item.to} role="menuitem" className={styles.item} onClick={() => setOpen(false)}>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           ))}
           <div className={styles.divider} />
           <Link

@@ -218,3 +218,52 @@
 .successClose:hover {
   background: rgba(247, 243, 238, 0.22);
 }
+
+/* ---- preparing / loading panel ---- */
+.loadingPanel {
+  background: var(--plum);
+  color: var(--cream);
+  border-radius: var(--radius-card, 22px);
+  width: 100%;
+  max-width: 520px;
+  padding: 48px 38px;
+  text-align: center;
+  animation: modalUp 0.4s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .loadingPanel {
+    animation: none;
+  }
+}
+.spinner {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  border: 3px solid rgba(247, 243, 238, 0.18);
+  border-top-color: var(--jade-soft);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+.loadingTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 3vw, 25px);
+  color: var(--cream);
+  letter-spacing: -0.015em;
+  margin-bottom: 8px;
+}
+.loadingSub {
+  font-size: 14px;
+  color: rgba(247, 243, 238, 0.62);
+  line-height: 1.6;
+}

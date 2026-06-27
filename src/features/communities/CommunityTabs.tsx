@@ -73,8 +73,33 @@ export function MembersTab({ members, hasCount, memberNum }: { members: Person[]
 export function ForumTab({ threads }: { threads: ThreadData[] }) {
   const { showToast } = useToast()
   const [newPost, setNewPost] = useState('')
+  const [extraThreads, setExtraThreads] = useState<ThreadData[]>([])
+
+  const post = () => {
+    const text = newPost.trim()
+    if (!text) return
+    const title = text.length > 70 ? `${text.slice(0, 67)}…` : text
+    setExtraThreads((prev) => [
+      {
+        votes: 1,
+        title,
+        author: { initials: 'Me', name: 'You', tint: 'plum' },
+        time: 'just now',
+        replyCount: 0,
+        post: text,
+        replies: [],
+      },
+      ...prev,
+    ])
+    setNewPost('')
+    showToast('Post added to the community forum.', 'success')
+  }
+
   return (
     <div>
+      {extraThreads.map((t, i) => (
+        <CommunityThread data={t} key={`x${i}`} />
+      ))}
       {threads.map((t, i) => (
         <CommunityThread data={t} key={i} />
       ))}
@@ -91,11 +116,7 @@ export function ForumTab({ threads }: { threads: ThreadData[] }) {
         />
         <Button
           variant="ghost"
-          onClick={() => {
-            if (!newPost.trim()) return
-            showToast('Post added to the community forum.', 'success')
-            setNewPost('')
-          }}
+          onClick={post}
           style={{ whiteSpace: 'nowrap', fontSize: 13 }}
         >
           Post

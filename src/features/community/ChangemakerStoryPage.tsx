@@ -2,6 +2,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/ConnectProvider";
+import { routes } from "../../app/routeMap";
 import { CHANGEMAKERS, getChangemaker, type Tint } from "./changemakerStories";
 import styles from "./ChangemakerStoryPage.module.css";
 
@@ -26,7 +27,7 @@ export function ChangemakerStoryPage() {
   const { slug } = useParams();
   const { openConnect } = useConnect();
   const cm = getChangemaker(slug);
-  if (!cm) return <Navigate to="/changemakers" replace />;
+  if (!cm) return <Navigate to={routes.changemakers} replace />;
 
   const others = CHANGEMAKERS.filter((c) => c.slug !== cm.slug).slice(0, 3);
   const [first, ...rest] = cm.body;
@@ -35,7 +36,7 @@ export function ChangemakerStoryPage() {
     <PageShell>
       <div className={styles.back}>
         <div className="wrap">
-          <Link to="/changemakers" className={styles.backLink}>
+          <Link to={routes.changemakers} className={styles.backLink}>
             ← Change Makers
           </Link>
         </div>
@@ -108,7 +109,7 @@ export function ChangemakerStoryPage() {
         <Button variant="primary" onClick={() => openConnect()}>
           Connect with {cm.name.split(" ")[0]} →
         </Button>
-        <Button variant="ghost-dark" to="/changemakers">
+        <Button variant="ghost-dark" to={routes.changemakers}>
           Meet more change makers
         </Button>
       </Outro>

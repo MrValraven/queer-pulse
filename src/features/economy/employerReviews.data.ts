@@ -22,6 +22,10 @@ export interface Company {
   industry: string
   score: string
   scoreColor?: string
+  /** Total number of member reviews behind the score — drives the confidence line. */
+  reviewCount: number
+  /** Whether the employer is queer-led/owned (vs. only queer-friendly). */
+  queerRun?: boolean
   bars: Bar[]
   quote: string
   meta: string[]
@@ -31,11 +35,12 @@ export interface Company {
 export const COMPANIES: Company[] = [
   {
     av: 'LX',
-    avBg: 'rgba(74,140,111,.15)',
+    avBg: 'rgba(var(--jade-rgb),.15)',
     avColor: 'var(--jade)',
     name: 'Lisbon Tech Hub',
     industry: 'Technology · 200–500 employees',
     score: '7.8',
+    reviewCount: 14,
     bars: [
       { label: 'Safe to be out', pct: 82, score: '8.2' },
       { label: 'Trans inclusion', pct: 72, score: '7.2', accent: true },
@@ -51,12 +56,13 @@ export const COMPANIES: Company[] = [
   },
   {
     av: 'NV',
-    avBg: 'rgba(45,27,61,.1)',
+    avBg: 'rgba(var(--plum-rgb),.1)',
     avColor: 'var(--plum)',
     name: 'Nova Ventures',
     industry: 'Finance · 50–200 employees',
     score: '4.3',
     scoreColor: 'var(--accent-ink)',
+    reviewCount: 8,
     bars: [
       { label: 'Safe to be out', pct: 40, score: '4.0', accent: true },
       { label: 'Trans inclusion', pct: 28, score: '2.8', accent: true },
@@ -72,11 +78,13 @@ export const COMPANIES: Company[] = [
   },
   {
     av: 'MC',
-    avBg: 'rgba(74,140,111,.12)',
+    avBg: 'rgba(var(--jade-rgb),.12)',
     avColor: 'var(--jade)',
     name: 'Marvila Creative',
     industry: 'Creative agency · 20–50 employees',
     score: '9.1',
+    reviewCount: 6,
+    queerRun: true,
     bars: [
       { label: 'Safe to be out', pct: 94, score: '9.4' },
       { label: 'Trans inclusion', pct: 90, score: '9.0' },
@@ -89,6 +97,21 @@ export const COMPANIES: Company[] = [
       { text: '"First job where I never once did the mental maths about whether to be out. I just was."', meta: ['Account', '1 month ago'] },
       { text: '"Small team, so pay is below the big agencies — but the safety is worth a lot. Be clear-eyed about the trade."', meta: ['Strategy', '2 months ago'] },
     ],
+  },
+]
+
+export const VERIFY = [
+  {
+    label: 'Verified safe',
+    desc: 'Inclusive policies confirmed on paper, then cross-checked against 3+ anonymous staff reviews. Re-verified yearly.',
+  },
+  {
+    label: 'Queer-run vs. queer-friendly',
+    desc: 'Queer-run means led or owned by queer people. Queer-friendly is affirming but not community-led — we never conflate the two.',
+  },
+  {
+    label: 'Confidence in the score',
+    desc: 'Every score shows how many reviews it rests on. More reviews, more confidence — a 9 from 3 people is not a 9 from 30.',
   },
 ]
 

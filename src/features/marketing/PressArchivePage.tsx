@@ -109,7 +109,15 @@ export function PressArchivePage() {
               <span className={styles.ct}>{yg.count}</span>
             </h2>
             {yg.pieces.map((p, i) => (
-              <a href="#" className={styles.row} key={i} onClick={(e) => e.preventDefault()}>
+              <a
+                href="#"
+                className={styles.row}
+                key={i}
+                onClick={(e) => {
+                  e.preventDefault()
+                  showToast(`Opening on ${p.out}…`, 'info')
+                }}
+              >
                 <div className={styles.date}>
                   {p.day} <em>{p.month}</em>
                   <span>{p.kind}</span>

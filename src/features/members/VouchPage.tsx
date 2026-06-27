@@ -3,6 +3,7 @@ import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button, Reveal } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { routes } from '../../app/routeMap'
 import { CANDIDATE, MEANS } from './vouch.data'
 import styles from './VouchPage.module.css'
 
@@ -33,10 +34,10 @@ export function VouchPage() {
                   someone already had their back before they even walked in.
                 </p>
                 <div className={styles.panelActions}>
-                  <Button to="/account/connections" variant="ghost-dark" size="lg">
+                  <Button to={routes.connections} variant="ghost-dark" size="lg">
                     Back to connections
                   </Button>
-                  <Button to="/members" variant="jade" size="lg">
+                  <Button to={routes.members} variant="jade" size="lg">
                     Browse members
                   </Button>
                 </div>
@@ -84,7 +85,7 @@ export function VouchPage() {
                     <Button type="submit" variant="primary" size="lg">
                       Send my vouch →
                     </Button>
-                    <Button to="/members" variant="ghost" size="lg">
+                    <Button to={routes.members} variant="ghost" size="lg">
                       Not right now
                     </Button>
                   </div>

@@ -12,6 +12,7 @@ import {
 import { ArticleToolbar, type TextSize } from './ArticleToolbar'
 
 import styles from './ArticlePage.module.css'
+import { routes } from '../../app/routeMap'
 
 const SIZE_PX: Record<TextSize, number> = { sm: 17, md: 19, lg: 22 }
 
@@ -27,7 +28,7 @@ export function ArticlePage() {
         <div className={`${styles.notFound} wrap`}>
           <h2>We couldn't find that piece.</h2>
           <p>The article may have moved, or the link may be incomplete.</p>
-          <Button to="/magazine">Back to the magazine</Button>
+          <Button to={routes.magazine}>Back to the magazine</Button>
         </div>
       </PageShell>
     )
@@ -42,7 +43,7 @@ export function ArticlePage() {
       <MagazineMasthead />
       <div className={styles.header}>
         <div className="wrap">
-          <Link to="/magazine" className={styles.back}>
+          <Link to={routes.magazine} className={styles.back}>
             ← Magazine <span style={{ opacity: 0.5 }}>·</span> {article.section}
           </Link>
           <div className={styles.kicker}>{article.kicker}</div>
@@ -62,13 +63,19 @@ export function ArticlePage() {
       </div>
 
       <div className={styles.hero}>
-        <ImageSlot tint={article.tint === 'auth' ? 'plum' : article.tint} height={480} radius={0} placeholder={article.imgDesc} />
+        <ImageSlot tint={article.tint === 'auth' ? 'plum' : article.tint} height={480} radius={0} src={article.image} alt={article.imgDesc} placeholder={article.imgDesc} />
         <div className={styles.heroStrip} />
       </div>
 
       <div className={styles.bodyWrap}>
         <article className={styles.bodyInner}>
-          <ArticleToolbar textSize={textSize} onTextSize={setTextSize} />
+          <ArticleToolbar
+            textSize={textSize}
+            onTextSize={setTextSize}
+            articleId={id}
+            articleTitle={typeof article.title === 'string' ? article.title : undefined}
+            articleMeta={`${article.byline} · ${article.readTime}`}
+          />
           <div
             className={styles.body}
             style={{ '--article-body-size': `${SIZE_PX[textSize]}px` } as CSSProperties}

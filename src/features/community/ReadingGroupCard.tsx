@@ -6,10 +6,13 @@ export function ReadingGroupCard({
   g,
   messagesPath,
   onWaitlist,
+  waitlistPosition,
 }: {
   g: Group
   messagesPath: string
   onWaitlist: () => void
+  /** The user's position on this group's waitlist, if they've joined. */
+  waitlistPosition?: number
 }) {
   const spotsClass = g.spots === 0 ? styles.spotsFull : g.spots <= 1 ? styles.spotsAlmost : styles.spotsOpen
   const spotsText = g.spots === 0 ? 'Full' : `${g.spots} spot${g.spots !== 1 ? 's' : ''} left`
@@ -43,9 +46,15 @@ export function ReadingGroupCard({
       <div className={styles.gcFoot}>
         <span className={`${styles.gcSpots} ${spotsClass}`}>{spotsText}</span>
         {g.spots === 0 ? (
-          <button type="button" className={`${styles.gcJoin} ${styles.gcJoinDisabled}`} onClick={onWaitlist}>
-            Join waitlist
-          </button>
+          waitlistPosition ? (
+            <span className={`${styles.gcJoin} ${styles.gcJoinDisabled}`} aria-disabled="true">
+              On waitlist · #{waitlistPosition}
+            </span>
+          ) : (
+            <button type="button" className={styles.gcJoin} onClick={onWaitlist}>
+              Join waitlist
+            </button>
+          )
         ) : (
           <Link to={messagesPath} className={styles.gcJoin}>
             Request to join

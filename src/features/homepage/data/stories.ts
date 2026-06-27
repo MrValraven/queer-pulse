@@ -11,6 +11,8 @@ export const featureStory: StoryFeature = {
   byline: `Words by ${memberName('ines')} · 6 min read →`,
   href: routes.story,
   tint: 'coral',
+  image:
+    'https://images.unsplash.com/photo-1600188769099-d25b4ec79659?q=80&w=600&auto=format&fit=crop',
 }
 
 export const storyCards: StoryCard[] = [
@@ -21,6 +23,8 @@ export const storyCards: StoryCard[] = [
     byline: `${memberName('sofia')} · 4 min read`,
     href: routes.storyTomas,
     tint: 'jade',
+    image:
+      'https://images.unsplash.com/photo-1600188769045-bc6026bfc8cd?q=80&w=600&auto=format&fit=crop',
   },
   {
     category: 'On Building',
@@ -29,5 +33,7 @@ export const storyCards: StoryCard[] = [
     byline: 'The QueerPulse team · 3 min read',
     href: routes.storySafety,
     tint: 'plum',
+    image:
+      'https://images.unsplash.com/photo-1506863530036-1efeddceb993?q=80&w=800&auto=format&fit=crop',
   },
 ]

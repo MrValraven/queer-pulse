@@ -259,6 +259,25 @@
   border-radius: 20px;
   padding: 56px 40px;
 }
+/* Entrance for the confirmation screen swapped in after checkout. */
+.screenIn {
+  animation: screenIn 0.42s var(--ease) both;
+}
+@keyframes screenIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .screenIn {
+    animation: none;
+  }
+}
 .doneIcon {
   width: 58px;
   height: 58px;

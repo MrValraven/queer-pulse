@@ -89,7 +89,7 @@ export function SuccessPanel({
   return (
     <div className={styles.success}>
       <div className={styles.successIcon}>
-        <FiCheck size={26} color="#4A8C6F" aria-hidden />
+        <FiCheck size={26} color="var(--jade)" aria-hidden />
       </div>
       <h2>
         {title} <em>{em}</em>

@@ -1,3 +1,6 @@
+/** Hero poster (3:4) for the cover film on the film page. */
+export const FILM_POSTER = 'https://images.unsplash.com/photo-1753944847480-92f369a5f00e?q=80&w=600&auto=format&fit=crop'
+
 export const TIPS = ['€3', '€7', '€15', '€30', '···']
 
 export const WATCH_TABS = [

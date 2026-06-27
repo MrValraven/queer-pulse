@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Avatar, AvatarStack } from '../../shared/components/ui'
 import { useConnect } from '../../app/providers/ConnectProvider'
 import { routes } from '../../app/routeMap'
+import { gatheringPath } from '../gatherings/data'
 import { NEW_THIS_WEEK } from './feed.data'
 import styles from './FeedPage.module.css'
 
@@ -11,14 +12,14 @@ export function FeedSidebar() {
     <aside className={styles.sidebar}>
       <div className={styles.sbCard}>
         <div className={styles.sbTitle}>Upcoming</div>
-        <Link to={routes.gathering} className={styles.upcomingRow}>
+        <Link to={gatheringPath('queer-night-swim')} className={styles.upcomingRow}>
           <span className={styles.datePill}>22 Jun</span>
           <div>
             <div className={styles.upName}>Queer Night Swim</div>
             <div className={styles.upVenue}>Piscina Municipal</div>
           </div>
         </Link>
-        <Link to={routes.gathering} className={styles.upcomingRow}>
+        <Link to={gatheringPath('queer-book-club')} className={styles.upcomingRow}>
           <span className={styles.datePill}>19 Jul</span>
           <div>
             <div className={styles.upName}>Queer Book Club</div>
@@ -39,7 +40,7 @@ export function FeedSidebar() {
             <button className={styles.linkBtn} onClick={() => openConnect(person.slug)}>Connect</button>
           </div>
         ))}
-        <Link to="/members" className={styles.sbLink}>Browse all members →</Link>
+        <Link to={routes.members} className={styles.sbLink}>Browse all members →</Link>
       </div>
 
       <div className={styles.sbCard}>
@@ -55,7 +56,7 @@ export function FeedSidebar() {
           ]} />
           <div>
             <div className={styles.connCount}>42 connections</div>
-            <Link to="/account/connections" style={{ fontSize: 12, color: 'var(--accent-ink)', fontWeight: 600 }}>Manage →</Link>
+            <Link to={routes.connections} style={{ fontSize: 12, color: 'var(--accent-ink)', fontWeight: 600 }}>Manage →</Link>
           </div>
         </div>
       </div>

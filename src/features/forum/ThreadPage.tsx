@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { FiStar, FiHeart } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { CATS, CAT_STYLE, REPLY_SORTS, THREADS } from './forum.data'
+import { routes } from '../../app/routeMap'
+import { CATS, CAT_STYLE, REPLY_SORTS, THREADS, type Reply } from './forum.data'
 import styles from './ThreadPage.module.css'
 
 export function ThreadPage() {
@@ -16,22 +17,45 @@ export function ThreadPage() {
   const [bookmarked, setBookmarked] = useState(false)
   const [sort, setSort] = useState<(typeof REPLY_SORTS)[number]>('Oldest')
   const [reply, setReply] = useState('')
+  const [localReplies, setLocalReplies] = useState<Reply[]>(thread.replies)
+
+  // Reset the local reply list whenever the visited thread changes.
+  useEffect(() => {
+    setLocalReplies(thread.replies)
+  }, [thread.replies])
 
   const catMeta = CATS.find((c) => c.id === thread.cat)
   const catColor = CAT_STYLE[thread.cat]?.color ?? 'var(--plum)'
 
   const replies = useMemo(() => {
-    if (sort === 'Newest') return [...thread.replies].reverse()
-    if (sort === 'Most helpful') return [...thread.replies].sort((a, b) => Number(b.helpful ?? 0) - Number(a.helpful ?? 0) || b.reactions - a.reactions)
-    return thread.replies
-  }, [thread, sort])
+    if (sort === 'Newest') return [...localReplies].reverse()
+    if (sort === 'Most helpful') return [...localReplies].sort((a, b) => Number(b.helpful ?? 0) - Number(a.helpful ?? 0) || b.reactions - a.reactions)
+    return localReplies
+  }, [localReplies, sort])
+
+  function addReply(body: string) {
+    setLocalReplies((prev) => [
+      ...prev,
+      {
+        av: 'SF',
+        bg: 'var(--plum)',
+        color: 'var(--cream)',
+        name: 'You',
+        time: 'Just now',
+        body: [body],
+        reactions: 0,
+      },
+    ])
+    setReply('')
+    showToast('Reply posted', 'success')
+  }
 
   return (
     <PageShell>
       <section className={styles.topbar}>
         <div className="wrap">
           <div className={styles.topbarInner}>
-            <Link to="/forum" className={styles.back}>
+            <Link to={routes.forum} className={styles.back}>
               <svg width={14} height={14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2}>
                 <polyline points="10,4 6,8 10,12" />
               </svg>
@@ -94,7 +118,7 @@ export function ThreadPage() {
 
           <div className={styles.replyBar}>
             <span className={styles.replyCount}>
-              {thread.comments} repl{thread.comments === 1 ? 'y' : 'ies'}
+              {localReplies.length} repl{localReplies.length === 1 ? 'y' : 'ies'}
             </span>
             <div className={styles.replySort}>
               {REPLY_SORTS.map((s) => (
@@ -154,8 +178,8 @@ export function ThreadPage() {
               <Button
                 disabled={!reply.trim()}
                 onClick={() => {
-                  showToast('Reply posted', 'success')
-                  setReply('')
+                  const body = reply.trim()
+                  if (body) addReply(body)
                 }}
               >
                 Post reply

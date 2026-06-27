@@ -106,7 +106,7 @@
 }
 .chipJade.chipOn {
   background: rgba(var(--jade-rgb), 0.22);
-  color: #9be0bd;
+  color: var(--jade-soft);
   border-color: rgba(var(--jade-rgb), 0.4);
 }
 
@@ -154,15 +154,81 @@
 .results strong {
   color: var(--cream);
 }
-.sortSel {
+.sortWrap {
   margin-left: auto;
+  position: relative;
+}
+.sortSel {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
   color: rgba(247, 243, 238, 0.66);
+  background: transparent;
+  border: 1px solid rgba(247, 243, 238, 0.16);
+  border-radius: 999px;
+  padding: 7px 14px;
   cursor: pointer;
+  transition: border-color 0.18s, color 0.18s;
+}
+.sortSel:hover {
+  border-color: rgba(247, 243, 238, 0.4);
+  color: var(--cream);
+}
+.sortMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  min-width: 180px;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: var(--plum);
+  border: 1px solid rgba(247, 243, 238, 0.16);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.7);
+  animation: sortIn 0.18s var(--ease);
+}
+@keyframes sortIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.sortOpt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(247, 243, 238, 0.72);
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.sortOpt:hover {
+  background: rgba(247, 243, 238, 0.1);
+  color: var(--cream);
+}
+.sortOptOn {
+  color: var(--accent);
+  font-weight: 700;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sortMenu {
+    animation: none;
+  }
 }
 
 .grid {
@@ -204,11 +270,11 @@
 }
 .free {
   background: rgba(var(--jade-rgb), 0.32);
-  color: #9be0bd;
+  color: var(--jade-soft);
 }
 .member {
   background: rgba(var(--accent-rgb), 0.32);
-  color: #ffc4af;
+  color: var(--accent-soft);
 }
 .rent {
   background: rgba(247, 243, 238, 0.18);
@@ -281,13 +347,6 @@
   font-style: normal;
   font-family: var(--sans);
 }
-.empty {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 0;
-  color: rgba(247, 243, 238, 0.45);
-}
-
 @media (max-width: 960px) {
   .layout {
     grid-template-columns: 1fr;

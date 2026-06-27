@@ -3,7 +3,7 @@ import { ImageSlot } from '../../shared/components/ui'
 import { linkToPath, routes } from '../../app/routeMap'
 import { Link } from 'react-router-dom'
 import { StudioShell } from './StudioShell'
-import { OFF_AIR_LIBRARY, QUIET_HOURS } from './studioOffAir.data'
+import { OFF_AIR_LIBRARY, QUIET_HOURS, nightcapImage } from './studioOffAir.data'
 import studioStyles from './studio.module.css'
 import styles from './StudioOffAirPage.module.css'
 
@@ -57,7 +57,7 @@ export function StudioOffAirPage() {
           {/* Night-cap replay */}
           <div className={styles.nightcap}>
             <div className={styles.ncCover}>
-              <ImageSlot tint="plum" width={78} height={78} radius={10} placeholder="set art" />
+              <ImageSlot src={nightcapImage} tint="plum" width={78} height={78} radius={10} placeholder="set art" />
             </div>
             <div className={styles.ncInfo}>
               <div className={styles.ncEb}>Last night's night-cap</div>
@@ -101,7 +101,7 @@ export function StudioOffAirPage() {
           {OFF_AIR_LIBRARY.map((item) => (
             <Link key={item.title} to={linkToPath(item.to)} className={studioStyles.card}>
               <div className={studioStyles.cardCov}>
-                <ImageSlot tint={item.tint} width="100%" height="100%" radius={10} placeholder="cover" />
+                <ImageSlot src={item.image} tint={item.tint} width="100%" height="100%" radius={10} placeholder="cover" />
                 {item.tag && (
                   <span className={`${studioStyles.tag} ${item.tag === 'mem' ? studioStyles.tagMem : studioStyles.tagFree}`}>
                     {item.tagLabel}
@@ -136,7 +136,7 @@ export function StudioOffAirPage() {
           {QUIET_HOURS.map((item) => (
             <Link key={item.title} to={linkToPath(item.to)} className={studioStyles.card}>
               <div className={studioStyles.cardCov}>
-                <ImageSlot tint={item.tint} width="100%" height="100%" radius={10} placeholder="cover" />
+                <ImageSlot src={item.image} tint={item.tint} width="100%" height="100%" radius={10} placeholder="cover" />
               </div>
               <div style={{ fontSize: 12, color: 'rgba(247,243,238,.5)' }}>{item.curator}</div>
               <h4 style={{ fontFamily: 'var(--serif)', fontWeight: 400, fontSize: 15, color: 'rgba(247,243,238,.92)', letterSpacing: '-0.01em' }}>

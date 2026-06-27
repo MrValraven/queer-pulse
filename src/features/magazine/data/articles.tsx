@@ -27,6 +27,8 @@ export interface Article {
   initials: string
   tint: AvatarTint
   imgDesc: string
+  /** Optional hero image URL; falls back to the tinted placeholder when absent. */
+  image?: string
   authorBio: string
   /** Topical tags used both for display and to explain why pieces relate. */
   tags: string[]
@@ -65,6 +67,7 @@ export const articles: Record<string, Article> = {
     initials: 'SA',
     tint: 'jade',
     imgDesc: 'Lisbon rooftops at golden hour, Mouraria neighbourhood, washing lines, terracotta',
+    image: 'https://images.unsplash.com/photo-1693323588991-42119b16994b?q=80&w=1000&auto=format&fit=crop',
     authorBio: `${memberName('sofia')} is a journalist and editor at QueerPulse. She has been writing about queer life in Lisbon since 2019.`,
     tags: ['Lisbon', 'Community', 'Gentrification'],
     related: ['mouraria-family', 'politics-of-staying', 'last-bar'],
@@ -95,6 +98,7 @@ export const articles: Record<string, Article> = {
     initials: 'IT',
     tint: 'jade',
     imgDesc: 'Narrow street in Mouraria, late afternoon light, laundry lines overhead, cobblestones',
+    image: 'https://images.unsplash.com/photo-1601977078202-8825cd23ddf3?q=80&w=1000&auto=format&fit=crop',
     authorBio: `${memberName('ines')} writes about community, place, and the social infrastructure of queer life. She has lived in Mouraria for eight years.`,
     tags: ['Community', 'Chosen family', 'Lisbon'],
     related: ['city-changed', 'politics-of-staying'],
@@ -124,6 +128,7 @@ export const articles: Record<string, Article> = {
     initials: 'DV',
     tint: 'plum',
     imgDesc: 'Low-lit bar interior in afternoon, mismatched chairs, a faded pride flag, no customers',
+    image: 'https://images.unsplash.com/photo-1602443394222-300ea8fca02e?q=80&w=1000&auto=format&fit=crop',
     authorBio: `${memberName('diogo')} writes about nightlife, music, and the architecture of queer space in Lisbon.`,
     tags: ['Nightlife', 'Lisbon', 'Queer space'],
     related: ['city-changed', 'kiko-neves'],
@@ -153,6 +158,7 @@ export const articles: Record<string, Article> = {
     initials: 'MC',
     tint: 'coral',
     imgDesc: 'Person reading documents at a kitchen table, morning light, coffee cup nearby',
+    image: 'https://images.unsplash.com/photo-1603600990094-03fba5042df9?q=80&w=1000&auto=format&fit=crop',
     authorBio: `${memberName('mariana-costa')} covers politics, law, and housing for QueerPulse. She is also a trained housing lawyer who now writes instead of practises.`,
     tags: ['Housing', 'Politics', 'Chosen family'],
     related: ['politics-of-staying', 'city-changed'],
@@ -182,6 +188,7 @@ export const articles: Record<string, Article> = {
     initials: 'TB',
     tint: 'plum',
     imgDesc: 'Empty rooftop terrace at dusk, Mouraria, a single chair facing the river',
+    image: 'https://images.unsplash.com/photo-1608305409721-a3529538fb2f?q=80&w=1000&auto=format&fit=crop',
     authorBio: `${memberName('tomas')} is a writer and musician living in Intendente. This is his second essay for the magazine.`,
     tags: ['Identity', 'Community', 'Coming out'],
     related: ['visibility-politics', 'politics-of-staying'],
@@ -211,6 +218,7 @@ export const articles: Record<string, Article> = {
     initials: 'RF',
     tint: 'jade',
     imgDesc: 'A Pride flag reflection in a puddle on Lisbon cobblestones, distorted and beautiful',
+    image: 'https://images.unsplash.com/photo-1622314128145-8ada937685c8?q=80&w=1000&auto=format&fit=crop',
     authorBio: `${memberName('rui-fernandes')} is an activist and writer. He co-founded the Lisbon Queer Mental Health Collective in 2022.`,
     tags: ['Visibility', 'Identity', 'Politics'],
     related: ['i-arrived', 'politics-of-staying'],
@@ -240,6 +248,7 @@ export const articles: Record<string, Article> = {
     initials: 'CM',
     tint: 'coral',
     imgDesc: 'Apartment building facade in Mouraria at late evening, one lit window in the dark',
+    image: 'https://images.unsplash.com/photo-1626796614697-3306078ce87c?q=80&w=1000&auto=format&fit=crop',
     authorBio: `${memberName('catarina-melo')} is a housing rights advocate and occasional essayist. She has lived in the same apartment in Lisbon for eleven years.`,
     tags: ['Housing', 'Lisbon', 'Community'],
     related: ['housing-law', 'mouraria-family'],
@@ -269,6 +278,7 @@ export const articles: Record<string, Article> = {
     initials: 'SA',
     tint: 'jade',
     imgDesc: 'Kiko Neves at an upright piano in his Marvila studio, light from the side',
+    image: 'https://images.unsplash.com/photo-1628359380901-56cd6f7b5d71?q=80&w=1000&auto=format&fit=crop',
     authorBio: `${memberName('sofia')} conducted this interview in Kiko's studio over two afternoons in May.`,
     tags: ['Music', 'Lisbon', 'Identity'],
     related: ['last-bar', 'city-changed'],

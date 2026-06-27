@@ -202,7 +202,7 @@
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 500;
-  color: #fff;
+  color: var(--cream);
   position: relative;
   flex: none;
 }
@@ -425,6 +425,54 @@
   opacity: 0.88;
 }
 
+.ssSuccess {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  animation: ssRise 0.32s var(--ease);
+}
+@keyframes ssRise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.ssSuccessIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(var(--jade-rgb), 0.2);
+  color: var(--jade);
+  font-size: 22px;
+}
+.ssSuccessTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 26px;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+}
+.ssSuccessTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.ssSuccessBody {
+  font-size: 14.5px;
+  color: rgba(247, 243, 238, 0.6);
+  line-height: 1.6;
+  max-width: 40ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ssSuccess {
+    animation: none;
+  }
+}
+
 .empty {
   padding: 60px 0;
   text-align: center;
@@ -435,4 +483,71 @@
   font-size: 19px;
   color: var(--ink-40);
   font-style: italic;
+}
+
+/* Waitlist confirmation — plum success panel */
+.waitlistPanel {
+  margin-top: 32px;
+  padding: 28px 32px;
+  background: var(--plum);
+  border-radius: 20px;
+  color: var(--cream);
+}
+.wpHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.wpHead svg {
+  width: 22px;
+  height: 22px;
+  color: var(--jade);
+  flex: none;
+}
+.wpHead h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -0.015em;
+  color: var(--cream);
+}
+.wpHead h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.wpSub {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(247, 243, 238, 0.72);
+  max-width: 60ch;
+}
+.wpList {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+.wpRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: rgba(247, 243, 238, 0.06);
+  border: 1px solid rgba(247, 243, 238, 0.12);
+  border-radius: 12px;
+}
+.wpName {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--cream);
+}
+.wpPos {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--accent);
 }

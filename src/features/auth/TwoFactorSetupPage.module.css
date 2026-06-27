@@ -6,6 +6,26 @@
   min-height: 100vh;
 }
 
+/* Entrance for each step as the wizard advances — rise-and-fade, not a snap. */
+.screenIn {
+  animation: screenIn 0.4s var(--ease) both;
+}
+@keyframes screenIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .screenIn {
+    animation: none;
+  }
+}
+
 .back {
   font-size: 13.5px;
   color: var(--ink-40);
@@ -57,15 +77,15 @@
 .stepper {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   margin-bottom: 36px;
-  max-width: 520px;
+  max-width: 560px;
 }
 .step {
   display: flex;
   align-items: center;
   gap: 9px;
-  flex: 1;
+  flex: none;
   min-width: 0;
 }
 .stepNum {
@@ -88,15 +108,13 @@
 }
 .stepDone .stepNum {
   background: var(--jade);
-  color: #fff;
+  color: var(--cream);
 }
 .stepLabel {
   font-size: 13px;
   font-weight: 600;
   color: var(--ink-40);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .stepActive .stepLabel,
 .stepDone .stepLabel {
@@ -104,12 +122,24 @@
 }
 .stepBar {
   flex: 1;
+  min-width: 10px;
   height: 2px;
   background: rgba(45, 27, 61, 0.1);
   border-radius: 2px;
 }
 .stepBarActive {
   background: var(--plum);
+}
+
+/* On narrow screens the four labels won't fit — keep the numbered dots and
+   the connecting rail, drop the words. */
+@media (max-width: 560px) {
+  .stepLabel {
+    display: none;
+  }
+  .step {
+    flex: none;
+  }
 }
 
 /* Pane */
@@ -347,12 +377,15 @@
 }
 .codeMsg {
   font-size: 13px;
-  color: var(--accent-ink);
+  color: var(--ink-40);
   min-height: 18px;
   font-weight: 500;
 }
 .codeMsgOk {
   color: var(--jade);
+}
+.codeMsgError {
+  color: var(--accent-ink);
 }
 
 /* Backup codes */
@@ -392,21 +425,48 @@
   margin-bottom: 24px;
 }
 
-/* Done */
-.doneCard {
+/* Done — plum-panel success surface */
+.donePanel {
+  background: var(--plum);
+  border-radius: 22px;
+  padding: 56px 40px;
   text-align: center;
-  padding: 36px 24px;
 }
 .doneIc {
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: rgba(var(--jade-rgb), 0.12);
+  background: rgba(var(--jade-rgb), 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 18px;
+  margin: 0 auto 22px;
   color: var(--jade);
+}
+.doneTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 30px;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+.doneTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.doneSub {
+  font-size: 15px;
+  color: rgba(247, 243, 238, 0.8);
+  line-height: 1.65;
+  max-width: 38ch;
+  margin: 0 auto 28px;
+}
+.doneActions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 /* Actions */

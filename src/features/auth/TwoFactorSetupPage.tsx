@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { PageShell } from '../../shared/components/layout'
+import { PageShell, BackToSettingsLink } from '../../shared/components/layout'
 import { routes } from '../../app/routeMap'
 import { Step1, Step2, Step3, Step4, StepDone } from './TwoFactorSetupSteps'
 import styles from './TwoFactorSetupPage.module.css'
@@ -32,21 +32,39 @@ export function TwoFactorSetupPage() {
   }
   function prev() { setStep(((step as number) - 1) as Step) }
 
+  function resetCodeHint() {
+    setCodeError(false); setCodeMsg('Demo: any six digits work.'); setCodeMsgOk(false)
+  }
+
   function handleDigitInput(i: number, val: string) {
     const ch = val.replace(/\D/g, '').slice(0, 1)
     const next = [...digits]; next[i] = ch; setDigits(next)
-    setCodeError(false); setCodeMsg('Demo: any six digits work.'); setCodeMsgOk(false)
+    resetCodeHint()
   }
-  function handleDigitKeyDown(_i: number, _e: React.KeyboardEvent) {}
 
-  function verify() {
-    const full = digits.join('')
+  function handleDigitPaste(text: string) {
+    const clean = text.replace(/\D/g, '').slice(0, 6)
+    if (!clean) return
+    setDigits(Array.from({ length: 6 }, (_, i) => clean[i] ?? ''))
+    resetCodeHint()
+  }
+
+  function verifyDigits(full: string) {
     if (full.length !== 6 || !/^\d{6}$/.test(full)) {
       setCodeError(true); setCodeMsg('Need all six digits.'); setCodeMsgOk(false); return
     }
     setCodeError(false); setCodeMsg('Verified.'); setCodeMsgOk(true)
-    setTimeout(() => setStep(4), 500)
+    setTimeout(() => setStep(4), 600)
   }
+  function verify() { verifyDigits(digits.join('')) }
+
+  // Auto-submit the moment all six boxes are filled — no need to reach for the button.
+  useEffect(() => {
+    if (step === 3 && digits.every((d) => d !== '') && !codeMsgOk) {
+      verifyDigits(digits.join(''))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [digits, step])
 
   function copySecret() {
     navigator.clipboard?.writeText(SECRET)
@@ -68,6 +86,7 @@ export function TwoFactorSetupPage() {
 
   return (
     <PageShell>
+      <BackToSettingsLink />
       <div className={styles.pageWrap}>
         <Link to={routes.security} className={styles.back}>← Security</Link>
         <div className={styles.eyebrow}>Account security</div>
@@ -90,22 +109,24 @@ export function TwoFactorSetupPage() {
           </div>
         )}
 
-        {step === 1 && <Step1 method={method} setMethod={setMethod} onNext={next} />}
-        {step === 2 && <Step2 onNext={next} onPrev={prev} copyLabel={copyLabel} onCopy={copySecret} />}
-        {step === 3 && (
-          <Step3
-            digits={digits} codeError={codeError} codeMsg={codeMsg} codeMsgOk={codeMsgOk}
-            onInput={handleDigitInput} onKeyDown={handleDigitKeyDown}
-            onVerify={verify} onPrev={prev}
-          />
-        )}
-        {step === 4 && <Step4 onCopyCodes={copyCodes} onDownload={downloadCodes} onFinish={finish} />}
-        {step === 'done' && (
-          <StepDone
-            onSecurity={() => navigate(routes.security)}
-            onSettings={() => navigate(routes.settings)}
-          />
-        )}
+        <div className={styles.screenIn} key={step}>
+          {step === 1 && <Step1 method={method} setMethod={setMethod} onNext={next} />}
+          {step === 2 && <Step2 onNext={next} onPrev={prev} copyLabel={copyLabel} onCopy={copySecret} />}
+          {step === 3 && (
+            <Step3
+              digits={digits} codeError={codeError} codeMsg={codeMsg} codeMsgOk={codeMsgOk}
+              onInput={handleDigitInput} onPaste={handleDigitPaste}
+              onVerify={verify} onPrev={prev}
+            />
+          )}
+          {step === 4 && <Step4 onCopyCodes={copyCodes} onDownload={downloadCodes} onFinish={finish} />}
+          {step === 'done' && (
+            <StepDone
+              onSecurity={() => navigate(routes.security)}
+              onSettings={() => navigate(routes.settings)}
+            />
+          )}
+        </div>
       </div>
     </PageShell>
   )

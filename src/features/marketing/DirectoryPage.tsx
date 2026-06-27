@@ -4,6 +4,7 @@ import { FiMapPin } from 'react-icons/fi'
 import { PageHero, PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { DIRECTORY_PLACES as BIZS, type Tint } from './directoryPlaces'
+import { routes } from '../../app/routeMap'
 import s from './DirectoryPage.module.css'
 
 const CATS = [
@@ -20,7 +21,7 @@ const CATS = [
 const CAT_LABEL: Record<string, string> = Object.fromEntries(CATS.map((c) => [c.c, c.label]))
 
 const tintBg: Record<Tint, string> = { coral: 'rgba(232,119,90,.15)', jade: 'rgba(74,140,111,.15)', plum: 'rgba(45,27,61,.1)' }
-const tintFg: Record<Tint, string> = { coral: '#C85A40', jade: '#4A8C6F', plum: '#2D1B3D' }
+const tintFg: Record<Tint, string> = { coral: 'var(--accent-ink)', jade: 'var(--jade)', plum: 'var(--plum)' }
 
 export function DirectoryPage() {
   const [cat, setCat] = useState('all')
@@ -113,7 +114,7 @@ export function DirectoryPage() {
         title={<>New to Lisbon? <em>You're not starting from zero.</em></>}
         sub="Join the network and get access to the full directory, member recommendations, and a community that knows the city."
       >
-        <Button size="lg" to="/invite">
+        <Button size="lg" to={routes.invite}>
           Request an invite
         </Button>
       </Outro>

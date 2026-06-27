@@ -261,7 +261,7 @@
   font-weight: 700;
 }
 .tierFeatured .tierList li::before {
-  color: #7cd7ad;
+  color: var(--jade-soft);
 }
 .tierList li b {
   color: var(--plum);

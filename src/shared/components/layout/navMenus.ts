@@ -32,14 +32,14 @@ export const NAV_MENUS: MegaMenu[] = [
       eyebrow: "Community",
       title: "Find your people.",
       body: "A member directory, forums, and gatherings — the everyday connective tissue of the network.",
-      href: routes.memberDirectoryFilter,
+      href: routes.members,
       cta: "Browse members",
     },
     columns: [
       {
         head: "People",
         links: [
-          { label: "Members directory", href: routes.memberDirectoryFilter },
+          { label: "Members directory", href: routes.members },
           { label: "Forum", href: routes.forum },
           { label: "Dating", href: routes.dating },
         ],

@@ -6,7 +6,15 @@ export interface Entry {
   dek: string
   byline: ReactNode
   page: string
+  /** Valid id from magazine articles data; the entry links to /article?id=… */
+  articleId: string
 }
+
+export const ISSUE_COVER_IMG =
+  'https://images.unsplash.com/photo-1775633954065-887d3f2025bd?q=80&w=600&auto=format&fit=crop'
+
+export const PRINT_EDITION_IMG =
+  'https://images.unsplash.com/photo-1759926967575-e3254dc7d531?q=80&w=600&auto=format&fit=crop'
 
 export const TOC: { heading: string; entries: Entry[] }[] = [
   {
@@ -26,6 +34,7 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
           </>
         ),
         page: '04',
+        articleId: 'city-changed',
       },
     ],
   },
@@ -46,6 +55,7 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
           </>
         ),
         page: '18',
+        articleId: 'last-bar',
       },
       {
         kicker: 'Interview · 9 min',
@@ -61,6 +71,7 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
           </>
         ),
         page: '28',
+        articleId: 'kiko-neves',
       },
       {
         kicker: 'Essay · 7 min',
@@ -76,6 +87,7 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
           </>
         ),
         page: '36',
+        articleId: 'i-arrived',
       },
       {
         kicker: 'Long read · 22 min',
@@ -91,6 +103,7 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
           </>
         ),
         page: '44',
+        articleId: 'visibility-politics',
       },
     ],
   },
@@ -111,6 +124,7 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
           </>
         ),
         page: '58',
+        articleId: 'mouraria-family',
       },
       {
         kicker: 'Profile · 7 min',
@@ -122,6 +136,7 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
           </>
         ),
         page: '64',
+        articleId: 'politics-of-staying',
       },
     ],
   },

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiInbox } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
-import { SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
+import { SkeletonAvatar, SkeletonLine, EmptyState } from '../../shared/components/ui'
 import { currentUser } from '../members/data/members'
 import { FEED_TABS, type FeedTab } from './feed.data'
 import { GatheringCard, NewMemberCard, PostCard, SavedArticleCard, RecapCard } from './FeedCards'
@@ -41,6 +43,10 @@ export function FeedPage() {
     return () => clearTimeout(t)
   }, [])
 
+  const visibleItems = FEED_ITEMS.filter(
+    ({ tab }) => activeTab === 'All' || tab === activeTab,
+  )
+
   return (
     <AppShell unreadCount={3}>
       <div className={styles.page}>
@@ -50,7 +56,7 @@ export function FeedPage() {
               <div className={styles.greeting}>Good morning, <em>{currentUser.first}</em></div>
               <div className={styles.greetingDate}>Saturday · Lisbon · 21 June 2026</div>
             </div>
-            <Link to="/messages" className={styles.msgChip}>
+            <Link to={routes.messages} className={styles.msgChip}>
               <svg width={13} height={13} viewBox="0 0 13 13" fill="none" aria-hidden>
                 <path d="M1 2.5h11v7H1zM1 2.5l5.5 4 5.5-4" stroke="var(--jade)" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -74,10 +80,15 @@ export function FeedPage() {
               <div className={styles.list}>
                 {loading ? (
                   Array.from({ length: 4 }).map((_, i) => <FeedSkeleton key={i} />)
+                ) : visibleItems.length > 0 ? (
+                  visibleItems.map(({ key, Card }) => <Card key={key} />)
                 ) : (
-                  FEED_ITEMS
-                    .filter(({ tab }) => activeTab === 'All' || tab === activeTab)
-                    .map(({ key, Card }) => <Card key={key} />)
+                  <EmptyState
+                    icon={<FiInbox />}
+                    title={`Nothing in ${activeTab} yet`}
+                    description="When there's activity here, it'll show up in your feed."
+                    action={{ label: 'View everything', onClick: () => setActiveTab('All') }}
+                  />
                 )}
               </div>
             </div>

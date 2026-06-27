@@ -32,7 +32,7 @@
   transition: all 0.25s;
 }
 .csActive .csN { background: var(--plum); color: var(--cream); }
-.csDone .csN { background: var(--jade); color: #fff; }
+.csDone .csN { background: var(--jade); color: var(--cream); }
 .csL { font-size: 13px; font-weight: 600; color: var(--ink-40); }
 .csActive .csL, .csDone .csL { color: var(--plum); }
 .csBar { flex: 1; height: 2px; background: rgba(45, 27, 61, 0.1); border-radius: 2px; max-width: 60px; }
@@ -40,6 +40,10 @@
 
 /* Pane */
 .pane { background: var(--paper); border: 1px solid rgba(45, 27, 61, 0.09); border-radius: 22px; padding: 32px; box-shadow: 0 1px 2px rgba(45, 27, 61, 0.04); }
+/* Entrance for each step pane as the wizard advances — rise-and-fade, not a snap. */
+.screenIn { animation: screenIn 0.4s var(--ease) both; }
+@keyframes screenIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .screenIn { animation: none; } }
 .pane h2 { font-family: var(--serif); font-weight: 400; font-size: 24px; color: var(--plum); letter-spacing: -0.01em; margin-bottom: 10px; }
 .pane h2 em { font-style: italic; color: var(--accent); }
 .paneSub { font-size: 14.5px; color: var(--ink-60); line-height: 1.65; margin-bottom: 26px; max-width: 54ch; }

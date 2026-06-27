@@ -56,14 +56,14 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #7dc4a0;
+  color: var(--jade-soft);
   margin-bottom: 16px;
 }
 .typeBadge .dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #7dc4a0;
+  background: var(--jade-soft);
 }
 .h1 {
   font-family: var(--serif);
@@ -427,7 +427,7 @@
 }
 .vbtnVoted {
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
   border-color: var(--accent);
 }
 .vnum {

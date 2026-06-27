@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { routes } from '../../app/routeMap'
+import { SystemStateShell } from '../../shared/components/layout'
 import styles from './OfflinePage.module.css'
 
 const CACHED = [
@@ -63,15 +64,7 @@ export function OfflinePage() {
   }
 
   return (
-    <div className={styles.root}>
-      <div className={`${styles.orb} ${styles.orbA}`} />
-      <div className={`${styles.orb} ${styles.orbB}`} />
-
-      <Link to="/" className={styles.brand}>
-        <span className={styles.pulseDot} style={{ background: 'var(--ink-40)' }} aria-hidden />
-        Queer<em>Pulse</em>
-      </Link>
-
+    <SystemStateShell mutedBrand>
       <div className={styles.card}>
         <div className={styles.ic}>
           <svg viewBox="0 0 24 24" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -118,6 +111,6 @@ export function OfflinePage() {
           </button>
         </div>
       </div>
-    </div>
+    </SystemStateShell>
   )
 }

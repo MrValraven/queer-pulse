@@ -88,7 +88,9 @@ function EpisodeRow({ e }: { e: Episode }) {
         {e.num}<em>{e.numEm}</em>
       </div>
       <div className={styles.epInfo}>
-        <h3>{e.title}</h3>
+        <h3>
+          <Link to={EPISODE_PATH}>{e.title}</Link>
+        </h3>
         <p>{e.desc}</p>
         <div className={styles.emMeta}>{e.meta}</div>
       </div>

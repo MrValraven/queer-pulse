@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Button } from '../../shared/components/ui'
+import { BackToSettingsLink } from '../../shared/components/layout'
 import { routes } from '../../app/routeMap'
 import styles from './ServerErrorPage.module.css'
 
@@ -37,6 +38,7 @@ export function ServerErrorPage() {
 
   return (
     <div className={styles.root}>
+      <BackToSettingsLink />
       <div className={styles.modeTabs} aria-label="Demo mode">
         {(['error', 'maintenance'] as Mode[]).map((m) => (
           <button
@@ -99,7 +101,7 @@ export function ServerErrorPage() {
             <Button onClick={() => window.location.reload()} className={styles.actionBtn}>
               Try again
             </Button>
-            <Button variant="ghost" to="/" className={styles.actionBtn}>
+            <Button variant="ghost" to={routes.homepage} className={styles.actionBtn}>
               Go to homepage
             </Button>
             <Button variant="ghost" to={routes.status} className={styles.actionBtn}>

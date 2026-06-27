@@ -1,5 +1,7 @@
+import { Link } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import styles from "./ForOrganisationsPage.module.css";
 
 export function TiersSection() {
@@ -117,8 +119,8 @@ export function PartnerContactForm() {
           <ul className={styles.ctaList}>
             <li>For partnerships, we usually call before we write</li>
             <li>Grant applications: include a one-pager</li>
-            <li>Press inquiries → <a href="#">Press Kit</a></li>
-            <li>Already a partner with a question → <a href="#">Contact</a></li>
+            <li>Press inquiries → <Link to={routes.pressKit}>Press Kit</Link></li>
+            <li>Already a partner with a question → <Link to={routes.contact}>Contact</Link></li>
           </ul>
         </div>
         <form

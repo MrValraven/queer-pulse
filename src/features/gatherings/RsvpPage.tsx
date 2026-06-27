@@ -1,42 +1,15 @@
 import { Link } from 'react-router-dom'
-import type { IconType } from 'react-icons'
-import { FiCalendar, FiMapPin, FiUser } from 'react-icons/fi'
 import { Avatar, Button } from '../../shared/components/ui'
 import { memberName } from '../members/data/members'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { routes } from '../../app/routeMap'
+import {
+  RSVP_COC,
+  RSVP_DETAILS,
+  downloadIcs,
+  googleCalendarUrl,
+} from './rsvpPage.data'
 import styles from './RsvpPage.module.css'
-
-const DETAILS: { icon: IconType; bg: string; label: string; value: string }[] = [
-  { icon: FiCalendar, bg: 'rgba(232,119,90,.1)', label: 'Date & time', value: 'Sunday 22 June · 7:00 PM' },
-  { icon: FiMapPin, bg: 'rgba(74,140,111,.1)', label: 'Location', value: 'Mouraria Community Centre' },
-  { icon: FiUser, bg: 'rgba(45,27,61,.07)', label: 'Host', value: memberName('mariana') },
-]
-
-const GATHERING_TITLE = 'The Dispossessed — Reading Group #8'
-const GATHERING_LOCATION = 'Mouraria Community Centre'
-const GATHERING_DETAILS_TEXT =
-  "Reading group #8 — chapters 10–14 of The Dispossessed. The kitchen opens from 6:45 PM if you'd like to arrive early. RSVP'd via QueerPulse."
-// 22 June 2026, 19:00–21:00 UTC, in Google Calendar's compact UTC format.
-const GATHERING_START = '20260622T190000Z'
-const GATHERING_END = '20260622T210000Z'
-
-function googleCalendarUrl() {
-  const params = new URLSearchParams({
-    action: 'TEMPLATE',
-    text: GATHERING_TITLE,
-    dates: `${GATHERING_START}/${GATHERING_END}`,
-    details: GATHERING_DETAILS_TEXT,
-    location: GATHERING_LOCATION,
-  })
-  return `https://calendar.google.com/calendar/render?${params.toString()}`
-}
-
-const COC = [
-  { strong: 'This is an affirming space.', rest: ' Bring your whole self — including the parts you usually have to leave at the door. Queer identity, trans experience, neurodivergence, disability: you\'re welcome as you are.' },
-  { strong: 'We practise active consent.', rest: ' Ask before touching, check before sharing photos, and take cues from each other. When in doubt, ask.' },
-  { strong: 'What happens here stays here.', rest: ' This is a private community. Please don\'t share personal information, stories, or photos from gatherings without consent.' },
-  { strong: 'If something doesn\'t feel right, tell the organiser.', rest: ' Mariana is there to make the space work for everyone. You don\'t need to manage it alone.' },
-]
 
 export function RsvpPage() {
   const { showToast } = useToast()
@@ -44,7 +17,7 @@ export function RsvpPage() {
   return (
     <div className={styles.root}>
       <div className={styles.brand}>
-        <Link to="/" className={styles.brandLink}>
+        <Link to={routes.homepage} className={styles.brandLink}>
           <span className={styles.pulseDot} aria-hidden />
           Queer<span className={styles.brandItalic}>Pulse</span>
         </Link>
@@ -68,7 +41,7 @@ export function RsvpPage() {
 
           <div className={styles.cardBody}>
             <div className={styles.details}>
-              {DETAILS.map((detail) => (
+              {RSVP_DETAILS.map((detail) => (
                 <div key={detail.label} className={styles.detail}>
                   <span className={styles.detailIcon} style={{ background: detail.bg }}>
                     <detail.icon />
@@ -129,13 +102,19 @@ export function RsvpPage() {
               >
                 Google Calendar
               </button>
-              <button className={styles.calBtn} onClick={() => showToast('Calendar file downloaded.', 'success')}>
+              <button
+                className={styles.calBtn}
+                onClick={() => {
+                  downloadIcs()
+                  showToast('Calendar file downloaded.', 'success')
+                }}
+              >
                 Apple / .ics
               </button>
             </div>
 
             <div className={styles.ctas}>
-              <Button size="lg" to="/gathering">
+              <Button size="lg" to={routes.gathering}>
                 View gathering details
               </Button>
               <Button
@@ -155,7 +134,7 @@ export function RsvpPage() {
             What to <em>expect</em>
           </h2>
           <div className={styles.cocItems}>
-            {COC.map((item) => (
+            {RSVP_COC.map((item) => (
               <div key={item.strong} className={styles.cocItem}>
                 <div className={styles.cocDot} />
                 <p className={styles.cocText}>
@@ -170,8 +149,8 @@ export function RsvpPage() {
 
       <div className={styles.footer}>
         <p>
-          You RSVPed as a QueerPulse member. <Link to="/gathering">Cancel RSVP</Link> ·{' '}
-          <Link to="/privacy">Privacy policy</Link>
+          You RSVPed as a QueerPulse member. <Link to={routes.gathering}>Cancel RSVP</Link> ·{' '}
+          <Link to={routes.privacy}>Privacy policy</Link>
         </p>
       </div>
     </div>

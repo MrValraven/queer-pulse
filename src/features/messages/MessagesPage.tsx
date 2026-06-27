@@ -1,28 +1,45 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Avatar } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { conversations, me } from './data'
+import { conversations, type ChatMessage, type Conversation } from './data'
+import { ConversationPanel } from './ConversationPanel'
+import { NewMessageModal } from './NewMessageModal'
 import styles from './MessagesPage.module.css'
 
 export function MessagesPage() {
-  const { showToast } = useToast()
-  const navigate = useNavigate()
+  const [extraThreads, setExtraThreads] = useState<Conversation[]>([])
   const [activeId, setActiveId] = useState(conversations[0].id)
   const [readIds, setReadIds] = useState<Set<string>>(new Set())
   const [query, setQuery] = useState('')
   const [draft, setDraft] = useState('')
+  /** Per-thread appended messages, keyed by conversation id. */
+  const [sent, setSent] = useState<Record<string, ChatMessage[]>>({})
+  const [composing, setComposing] = useState(false)
+
+  const allThreads = useMemo(() => [...extraThreads, ...conversations], [extraThreads])
 
   const active = useMemo(
-    () => conversations.find((c) => c.id === activeId) ?? conversations[0],
-    [activeId],
+    () => allThreads.find((c) => c.id === activeId) ?? allThreads[0],
+    [allThreads, activeId],
   )
 
   const visibleThreads = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return q ? conversations.filter((c) => c.name.toLowerCase().includes(q)) : conversations
-  }, [query])
+    return q ? allThreads.filter((c) => c.name.toLowerCase().includes(q)) : allThreads
+  }, [allThreads, query])
+
+  /** Static message groups plus any messages sent this session. */
+  const messageGroups = useMemo(() => {
+    const extra = sent[active.id]
+    if (!extra || extra.length === 0) return active.messages
+    const groups = active.messages.map((g) => ({ ...g, items: [...g.items] }))
+    const today = groups.find((g) => g.day === 'Today')
+    if (today) {
+      today.items = [...today.items, ...extra]
+      return groups
+    }
+    return [...groups, { day: 'Today', items: extra }]
+  }, [active, sent])
 
   function openThread(id: string) {
     setActiveId(id)
@@ -30,10 +47,23 @@ export function MessagesPage() {
     setDraft('')
   }
 
-  function send() {
-    if (!draft.trim()) return
+  function startThread(recipient: Conversation) {
+    setComposing(false)
+    setExtraThreads((prev) => (prev.some((t) => t.id === recipient.id) ? prev : [recipient, ...prev]))
+    setActiveId(recipient.id)
+    setReadIds((current) => new Set(current).add(recipient.id))
+    setQuery('')
     setDraft('')
-    showToast('Message sent', 'success')
+  }
+
+  function send() {
+    const body = draft.trim()
+    if (!body) return
+    setSent((prev) => ({
+      ...prev,
+      [active.id]: [...(prev[active.id] ?? []), { from: 'me', text: body, time: 'Just now' }],
+    }))
+    setDraft('')
   }
 
   return (
@@ -47,7 +77,7 @@ export function MessagesPage() {
               <button
                 className={styles.composeBtn}
                 title="New message"
-                onClick={() => showToast('Start a new conversation', 'info')}
+                onClick={() => setComposing(true)}
               >
                 <svg width={15} height={15} viewBox="0 0 15 15" fill="none" aria-hidden>
                   <path d="M10.5 2L13 4.5l-7 7H3.5V9l7-7Z" stroke="currentColor" strokeWidth={1.5} strokeLinejoin="round" />
@@ -104,91 +134,17 @@ export function MessagesPage() {
           </div>
         </div>
 
-        {/* Conversation */}
-        <div className={styles.convoPanel}>
-          <div className={styles.topbar}>
-            <Avatar initials={active.initials} tint={active.tint} size={38} />
-            <div className={styles.ctbInfo}>
-              <div className={styles.ctbName}>{active.name}</div>
-              <div className={styles.ctbMeta}>
-                {active.official
-                  ? 'Official · Cannot reply to this thread'
-                  : `${active.pronouns} · Connected since ${active.connectedSince}`}
-              </div>
-            </div>
-            {!active.official && (
-              <button className={styles.ctbLink} onClick={() => navigate('/profile')}>
-                View profile →
-              </button>
-            )}
-          </div>
-
-          <div className={styles.area}>
-            {active.messages.map((group) => (
-              <div key={group.day}>
-                <div className={styles.dayLabel}>{group.day}</div>
-                {group.items.map((message, index) => {
-                  const isSent = message.from === 'me'
-                  return (
-                    <div
-                      key={index}
-                      className={[styles.bubbleRow, isSent && styles.bubbleRowSent]
-                        .filter(Boolean)
-                        .join(' ')}
-                    >
-                      <Avatar
-                        initials={isSent ? me.initials : active.initials}
-                        tint={isSent ? me.tint : active.tint}
-                        size={28}
-                        style={{ alignSelf: 'flex-end' }}
-                      />
-                      <div>
-                        <div className={[styles.bubble, isSent ? styles.sent : styles.received].join(' ')}>
-                          {message.text}
-                        </div>
-                        {message.time && <div className={styles.bubbleTime}>{message.time}</div>}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            ))}
-          </div>
-
-          {active.official ? (
-            <div className={styles.officialBar}>
-              This is an automated thread — replies aren't monitored.
-            </div>
-          ) : (
-            <div className={styles.composer}>
-              <textarea
-                className={styles.composerTa}
-                placeholder={`Message ${active.name.split(' ')[0]}…`}
-                value={draft}
-                rows={1}
-                onChange={(event) => setDraft(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' && !event.shiftKey) {
-                    event.preventDefault()
-                    send()
-                  }
-                }}
-              />
-              <button
-                className={[styles.sendBtn, draft.trim() && styles.sendBtnActive]
-                  .filter(Boolean)
-                  .join(' ')}
-                onClick={send}
-                aria-label="Send"
-              >
-                <svg width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden>
-                  <path d="M2 8l12-6-4 6 4 6-12-6Z" fill="rgba(247,243,238,.9)" />
-                </svg>
-              </button>
-            </div>
-          )}
-        </div>
+        <ConversationPanel
+          active={active}
+          messageGroups={messageGroups}
+          draft={draft}
+          onDraftChange={setDraft}
+          onSend={send}
+        />
       </div>
+      {composing && (
+        <NewMessageModal onClose={() => setComposing(false)} onPick={startThread} />
+      )}
     </AppShell>
   )
 }

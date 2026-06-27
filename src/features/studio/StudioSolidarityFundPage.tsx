@@ -1,32 +1,41 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { StudioShell } from './StudioShell'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { routes } from '../../app/routeMap'
+import { IN, OUT, DISB, DISB_MORE } from './studioSolidarityFund.data'
 import s from './funding.module.css'
 
-const IN = [
-  { k: <>Subscription <em>surplus</em></>, d: 'When sustainer revenue beats the payout ledger, the difference pools here.', v: '4,100' },
-  { k: <>Tip <em>round-ups</em></>, d: 'The optional 5% some listeners add on top of a tip.', v: '1,860' },
-  { k: <>Cleared <em>holds</em></>, d: 'Unmatched DJ-set payouts that stay unclaimed after a year.', v: '720' },
-  { k: <>Direct <em>gifts</em></>, d: 'One-off donations from members and a Lisbon foundation.', v: '2,400' },
-]
-const OUT = [
-  { k: <>Transcribers &amp; <em>translators</em></>, d: 'Sheet music, lyric translations — paid per accepted piece.', v: '2,180' },
-  { k: <>First-release <em>grants</em></>, d: '€1,200 unrestricted to first-time members on the spring strand.', v: '2,400' },
-  { k: <>Emergency <em>artist support</em></>, d: 'No-questions help for a member in a hard month.', v: '1,200' },
-  { k: <>Access <em>work</em></>, d: 'LGP interpreters, captioning passes, the screen-reader audit.', v: '460' },
-]
-const DISB = [
-  { d: '8', m: 'Jun', tag: 'Transcriber', tagClass: 'trans', name: <>Teresa <em>Rocha</em></>, note: '14 lead sheets accepted into the archive this fortnight', amt: '210' },
-  { d: '6', m: 'Jun', tag: 'Emergency', tagClass: 'emerg', name: <>Withheld by <em>request</em></>, note: "One month's rent for a member between tours — confidential", amt: '600' },
-  { d: '5', m: 'Jun', tag: 'Grant', tagClass: 'grant', name: <>Helena <em>Pinto</em> &amp; 6 others</>, note: 'Spring first-release strand · €1,200 unrestricted each', amt: '1,400' },
-  { d: '2', m: 'Jun', tag: 'Access', tagClass: 'access', name: <>LGP <em>interpreter</em></>, note: 'Signed the Marsha P. Johnson broadcast · 90 minutes', amt: '240' },
-  { d: '29', m: 'May', tag: 'Translator', tagClass: 'trans', name: <>Community <em>pool</em> · 9 people</>, note: 'Lyric translations: PT→EN, PT→ES, FR→PT across 22 tracks', amt: '380' },
-  { d: '24', m: 'May', tag: 'Emergency', tagClass: 'emerg', name: <>Instrument <em>replacement</em></>, note: 'A stolen accordion, replaced within a week — no application form', amt: '900' },
-]
 const tagClass: Record<string, string> = { trans: s.tagTrans, emerg: s.tagEmerg, grant: s.tagGrant, access: s.tagAccess }
+
+function downloadCsv(filename: string, rows: string[][]) {
+  const escape = (cell: string) => `"${cell.replace(/"/g, '""')}"`
+  const csv = rows.map((r) => r.map(escape).join(',')).join('\n')
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
 
 export function StudioSolidarityFundPage() {
   const { showToast } = useToast()
+  const [showFull, setShowFull] = useState(false)
+  const rows = showFull ? [...DISB, ...DISB_MORE] : DISB
+
+  function exportCsv() {
+    const data: string[][] = [
+      ['Date', 'Category', 'Recipient', 'Note', 'Amount (EUR)'],
+      ...[...DISB, ...DISB_MORE].map((r) => [`${r.d} ${r.m}`, r.tag, r.csvName, r.note, r.amt.replace(/,/g, '')]),
+    ]
+    downloadCsv('solidarity-fund-disbursements.csv', data)
+    showToast('Disbursement log exported as CSV', 'success')
+  }
+
   return (
     <StudioShell>
       <div className={s.wrap}>
@@ -120,7 +129,7 @@ export function StudioSolidarityFundPage() {
           <div className={s.secDek}>
             Every payment from the fund is logged here with a name (where consent is given) and a reason. <em>No black box.</em>
           </div>
-          {DISB.map((r, i) => (
+          {rows.map((r, i) => (
             <div key={i} className={s.disbRow}>
               <div className={s.dt}>
                 <b>{r.d}</b>
@@ -139,7 +148,11 @@ export function StudioSolidarityFundPage() {
             </div>
           ))}
           <div className={s.logNote}>
-            Showing 6 of 148 this year · <a href="#">full log</a> · <a href="#">export CSV</a>
+            Showing {rows.length} of 148 this year ·{' '}
+            <button type="button" onClick={() => setShowFull((v) => !v)}>
+              {showFull ? 'show less' : 'full log'}
+            </button>{' '}
+            · <button type="button" onClick={exportCsv}>export CSV</button>
           </div>
         </section>
 
@@ -156,7 +169,7 @@ export function StudioSolidarityFundPage() {
             <button className={`${s.bt} ${s.btJade} ${s.btLg}`} onClick={() => showToast('Emergency support form opens in a private flow', 'info')}>
               Request emergency support
             </button>
-            <Link to="/studio/calls" className={`${s.bt} ${s.btLg}`}>
+            <Link to={routes.studioCalls} className={`${s.bt} ${s.btLg}`}>
               See open grants &amp; calls →
             </Link>
           </div>

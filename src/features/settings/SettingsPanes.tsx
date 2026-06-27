@@ -3,9 +3,18 @@ import { FiShield } from 'react-icons/fi'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { TERMS } from './settings.data'
-import { SIM_GROUPS } from './simulations.data'
+import { SIM_GROUPS, type SimFlow } from './simulations.data'
+import { SimulationPreviewModal } from './SimulationPreviewModal'
 import { DataCard, Pane, Section, SelectRow, ToggleList, ToggleRow } from './SettingsControls'
+import {
+  DataExportModal,
+  EmailChangeModal,
+  PasswordChangeModal,
+  SuggestEditModal,
+} from './SettingsModals'
 import styles from './SettingsPage.module.css'
+
+const ACCOUNT_EMAIL = 'sofia.andrade@email.com'
 
 const VISIBILITY_OPTIONS = [
   { v: 'open', t: 'Open to connect', d: 'Anyone in the network can see your profile and say hello' },
@@ -51,8 +60,8 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
 }
 
 export function LanguagePane({ onChange }: { onChange: () => void }) {
-  const { showToast } = useToast()
   const [termQuery, setTermQuery] = useState('')
+  const [editTerm, setEditTerm] = useState<string | null>(null)
   const terms = useMemo(() => {
     const q = termQuery.trim().toLowerCase()
     if (!q) return TERMS
@@ -71,19 +80,47 @@ export function LanguagePane({ onChange }: { onChange: () => void }) {
             <div key={t.name} className={styles.termRow}>
               <div className={styles.termName}>{t.name}</div>
               <div className={styles.termDef}>{t.def}</div>
-              <span className={styles.termEdit} onClick={() => showToast('Suggest-an-edit form coming soon', 'info')}>
+              <span className={styles.termEdit} onClick={() => setEditTerm(t.name)}>
                 Suggest an edit →
               </span>
             </div>
           ))}
         </div>
       </Section>
+      {editTerm && <SuggestEditModal term={editTerm} onClose={() => setEditTerm(null)} />}
     </Pane>
   )
 }
 
+type ExportKind = 'full' | 'messages'
+
+const EXPORTS: Record<ExportKind, { title: string; filename: string; payload: Record<string, unknown> }> = {
+  full: {
+    title: 'Preparing your full export',
+    filename: 'queerpulse-export.json',
+    payload: {
+      account: { name: 'Sofia Andrade', email: ACCOUNT_EMAIL, joined: '2024-03-11' },
+      profile: { pronouns: 'she/her', city: 'Lisbon', interests: ['Film', 'Mutual aid', 'Reading'] },
+      activity: { gatheringsAttended: 14, communitiesJoined: 6, posts: 38 },
+      exportedAt: new Date().toISOString(),
+    },
+  },
+  messages: {
+    title: 'Preparing your messages',
+    filename: 'queerpulse-messages.json',
+    payload: {
+      account: 'Sofia Andrade',
+      threads: 12,
+      messages: 487,
+      note: 'Plain export of your full message history.',
+      exportedAt: new Date().toISOString(),
+    },
+  },
+}
+
 export function DataPane({ onChange, onDeleteClick }: { onChange: () => void; onDeleteClick: () => void }) {
   const { showToast } = useToast()
+  const [exportKind, setExportKind] = useState<ExportKind | null>(null)
   return (
     <Pane title={<>Data &amp; <em>privacy.</em></>} sub="Your data belongs to you. We collect the minimum needed to run the platform and never sell it. You can download or delete everything at any time.">
       <div className={styles.gdprBox}>
@@ -94,9 +131,9 @@ export function DataPane({ onChange, onDeleteClick }: { onChange: () => void; on
       </div>
       <Section label="Your data">
         <div className={styles.dataCards}>
-          <DataCard title="Download your data" desc="A full export of your profile, messages, community posts, and activity. Delivered as a JSON file within 48 hours." btn="Request export" onClick={() => showToast("Export requested — we'll email you within 48 hours", 'success')} />
-          <DataCard title="Download your messages" desc="Your full message history, exported as plain text." btn="Export messages" onClick={() => showToast('Message export requested', 'success')} />
-          <DataCard title="Correct inaccurate data" desc="If we hold data about you that is factually incorrect, you have the right to have it corrected." btn="Contact data team" to="/contact" />
+          <DataCard title="Download your data" desc="A full export of your profile, messages, community posts, and activity. Delivered as a JSON file within 48 hours." btn="Request export" onClick={() => setExportKind('full')} />
+          <DataCard title="Download your messages" desc="Your full message history, exported as plain text." btn="Export messages" onClick={() => setExportKind('messages')} />
+          <DataCard title="Correct inaccurate data" desc="If we hold data about you that is factually incorrect, you have the right to have it corrected." btn="Contact data team" to={routes.contact} />
         </div>
       </Section>
       <Section label="What we collect">
@@ -131,25 +168,39 @@ export function DataPane({ onChange, onDeleteClick }: { onChange: () => void; on
           Under GDPR Article 17, you have the right to erasure. Deletion requests are processed within 30 days. Some data may be retained where we have a legal obligation to do so.
         </div>
       </Section>
+      {exportKind && (
+        <DataExportModal
+          title={EXPORTS[exportKind].title}
+          filename={EXPORTS[exportKind].filename}
+          payload={EXPORTS[exportKind].payload}
+          onClose={() => setExportKind(null)}
+        />
+      )}
     </Pane>
   )
 }
 
 export function SimulationsPane() {
+  const [preview, setPreview] = useState<SimFlow | null>(null)
   return (
     <Pane
       title={<>Flow <em>simulations.</em></>}
-      sub="Preview key member journeys end to end. Each simulation launches the real screens so you can walk through the experience exactly as someone else would."
+      sub="Preview key member journeys end to end. State screens open in a device-frame preview right here; richer flows launch the real screens so you can walk through them exactly as someone else would."
     >
       {SIM_GROUPS.map((g) => (
         <Section key={g.label} label={g.label}>
           <div className={styles.dataCards}>
-            {g.flows.map((f) => (
-              <DataCard key={f.title} title={f.title} desc={f.desc} btn="Start simulation" to={f.to} />
-            ))}
+            {g.flows.map((f) =>
+              f.preview ? (
+                <DataCard key={f.title} title={f.title} desc={f.desc} btn="Preview" onClick={() => setPreview(f)} />
+              ) : (
+                <DataCard key={f.title} title={f.title} desc={f.desc} btn="Start simulation" to={f.to} />
+              ),
+            )}
           </div>
         </Section>
       ))}
+      {preview && <SimulationPreviewModal flow={preview} onClose={() => setPreview(null)} />}
     </Pane>
   )
 }
@@ -182,13 +233,16 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
 }
 
 export function AccountPane({ onChange }: { onChange: () => void }) {
-  const { showToast } = useToast()
+  const [emailOpen, setEmailOpen] = useState(false)
+  const [pwOpen, setPwOpen] = useState(false)
   return (
     <Pane title={<>Account <em>settings.</em></>} sub="Email, password, and login preferences.">
       <Section label="Login">
-        <DataCard title="Email address" desc="sofia.andrade@email.com" btn="Change" onClick={() => showToast('Check your inbox to confirm the change', 'info')} />
-        <DataCard title="Password" desc="Last changed 3 months ago" btn="Change" onClick={() => showToast('Password reset link sent', 'info')} />
+        <DataCard title="Email address" desc={ACCOUNT_EMAIL} btn="Change" onClick={() => setEmailOpen(true)} />
+        <DataCard title="Password" desc="Last changed 3 months ago" btn="Change" onClick={() => setPwOpen(true)} />
       </Section>
+      {emailOpen && <EmailChangeModal currentEmail={ACCOUNT_EMAIL} onClose={() => setEmailOpen(false)} />}
+      {pwOpen && <PasswordChangeModal onClose={() => setPwOpen(false)} />}
       <Section label="Security">
         <ToggleList>
           <ToggleRow title="Two-factor authentication" desc="Adds a second step when logging in from a new device" onChange={onChange} />

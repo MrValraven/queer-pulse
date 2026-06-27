@@ -65,8 +65,11 @@ export function PressKitPage() {
         <DownloadsSection />
 
         <div className={styles.footerNote}>
-          All assets above are licensed under <a href="#">Creative Commons BY 4.0</a> for editorial
-          use.
+          All assets above are licensed under{' '}
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">
+            Creative Commons BY 4.0
+          </a>{' '}
+          for editorial use.
           <br />
           Commercial reuse requires written permission — write to{' '}
           <a href="mailto:press@queerpulse.app">press@queerpulse.app</a>.

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { PageHero, PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import s from './PlatformsPage.module.css'
 
 interface Platform {
@@ -27,7 +28,7 @@ const PLATFORMS: Platform[] = [
   { cat: 'Dating', name: 'Grindr', icon: 'Gr', ic: 'rgba(74,140,111,.14)', it: 'var(--jade)', desc: 'The largest location-based social app for gay, bi, trans, and queer people. Used by millions globally.', url: 'grindr.com' },
   { cat: 'Dating', name: 'HER', icon: 'HER', ic: 'rgba(232,119,90,.12)', it: 'var(--accent-ink)', desc: 'Dating and social app for LGBTQ+ women, non-binary, and queer people. Community features beyond dating.', url: 'weareher.com' },
   { cat: 'Dating', name: 'Lex', icon: 'Lex', ic: 'rgba(45,27,61,.07)', it: 'var(--plum)', desc: 'A text-based social and personal ads app for queer, lesbian, bi, trans and non-binary people. Community first.', url: 'lex-app.com' },
-  { cat: 'Dating', name: 'Feeld', icon: 'Ff', ic: 'rgba(122,82,184,.1)', it: '#7A52B8', desc: 'For open-minded individuals exploring connections beyond traditional dating norms.', url: 'feeld.co' },
+  { cat: 'Dating', name: 'Feeld', icon: 'Ff', ic: 'rgba(122,82,184,.1)', it: 'var(--violet)', desc: 'For open-minded individuals exploring connections beyond traditional dating norms.', url: 'feeld.co' },
   { cat: 'Media', name: 'them.', icon: 'tm', ic: 'rgba(45,27,61,.07)', it: 'var(--plum)', desc: "Condé Nast's LGBTQ+ digital media platform, covering culture, politics, and identity with a progressive lens.", url: 'them.us' },
   { cat: 'Media', name: 'PinkNews', icon: 'PN', ic: 'rgba(232,119,90,.1)', it: 'var(--accent-ink)', desc: "Europe's largest LGBTQ+ news service. Breaking news, analysis, and features on rights and culture.", url: 'pinknews.co.uk' },
   { cat: 'Media', name: 'The Advocate', icon: 'Av', ic: 'rgba(74,140,111,.12)', it: 'var(--jade)', desc: "The world's longest-running LGBTQ+ news magazine, founded in 1967.", url: 'advocate.com' },
@@ -109,7 +110,7 @@ export function PlatformsPage() {
         title={<>Something missing? <em>Tell us.</em></>}
         sub="Know a platform, resource, or community that should be here? Suggest it and we'll add it to the directory."
       >
-        <Button size="lg" to="/forum">
+        <Button size="lg" to={routes.forum}>
           Suggest a platform →
         </Button>
       </Outro>

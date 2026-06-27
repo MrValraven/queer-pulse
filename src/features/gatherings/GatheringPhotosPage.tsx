@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { FiPlay } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
+import { DownloadAlbumModal } from "./DownloadAlbumModal";
 import { PhotoViewer } from "./PhotoViewer";
 import { CHIPS, PICS, CONTRIBUTORS } from "./gatheringPhotos.data";
 import styles from "./GatheringPhotosPage.module.css";
@@ -15,9 +15,9 @@ const CALENDAR = routes.calendar;
 const REPORT = routes.report;
 
 export function GatheringPhotosPage() {
-  const { showToast } = useToast();
   const [chip, setChip] = useState(0);
   const [viewer, setViewer] = useState<{ index: number; slideshow: boolean } | null>(null);
+  const [downloading, setDownloading] = useState(false);
 
   return (
     <PageShell>
@@ -70,7 +70,7 @@ export function GatheringPhotosPage() {
             </button>
           ))}
           <div className={styles.right}>
-            <button type="button" className={styles.action} onClick={() => showToast("Downloading album.zip", "success")}>
+            <button type="button" className={styles.action} onClick={() => setDownloading(true)}>
               Download all
             </button>
             <button
@@ -156,6 +156,10 @@ export function GatheringPhotosPage() {
           slideshow={viewer.slideshow}
           onClose={() => setViewer(null)}
         />
+      )}
+
+      {downloading && (
+        <DownloadAlbumModal photoCount={28} onClose={() => setDownloading(false)} />
       )}
     </PageShell>
   );

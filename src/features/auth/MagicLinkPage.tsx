@@ -49,7 +49,7 @@ export function MagicLinkPage() {
   if (sent) {
     return (
       <AuthLayout>
-        <div style={{ textAlign: 'center', paddingTop: 18 }}>
+        <div className={styles.screenIn} style={{ textAlign: 'center', paddingTop: 18 }}>
           <div className={styles.sentIc}>
             <svg viewBox="0 0 24 24" width={32} height={32} fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
               <path d="m5 12 5 5L20 7" />

@@ -79,7 +79,7 @@ export function StudioSearchPage() {
             {results.map((result) => (
               <Link key={result.pre + result.meta} to={result.to} className={ss.card}>
                 <div className={ss.cardCov}>
-                  <ImageSlot tint={result.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                  <ImageSlot src={result.image} tint={result.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
                 </div>
                 <h4>
                   {result.pre}

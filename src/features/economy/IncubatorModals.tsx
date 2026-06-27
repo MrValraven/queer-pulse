@@ -159,3 +159,75 @@ export function MentorSignupModal({ onClose }: { onClose: () => void }) {
     </ModalShell>
   )
 }
+
+/* ── Request a mentoring session ─────────────────────────────────────── */
+export function RequestSessionModal({
+  mentorName,
+  mentorRole,
+  onClose,
+}: {
+  mentorName: string
+  mentorRole: string
+  onClose: () => void
+}) {
+  const [when, setWhen] = useState('')
+  const [message, setMessage] = useState('')
+  const { sending, done, submit } = useSubmitFlow()
+  const valid = when.trim().length > 1 && message.trim().length >= 20
+
+  return (
+    <ModalShell onClose={onClose} success={done}>
+      {done ? (
+        <SuccessPanel title="Session" em="requested." onClose={onClose} closeLabel="Done">
+          Your request reached <strong>{mentorName.split(' ')[0]}</strong>. Mentors reply within a
+          few days to confirm a time — keep an eye on your email, and the intro will come from there.
+        </SuccessPanel>
+      ) : (
+        <>
+          <div className={styles.eyebrow}>Incubator · {mentorRole}</div>
+          <h2 className={styles.title}>
+            Request a session with <em>{mentorName}.</em>
+          </h2>
+          <p className={styles.sub}>
+            A short note goes a long way. Say what you're working on and when you'd like to meet —
+            {mentorName.split(' ')[0]} will reply to set it up.
+          </p>
+
+          <div className={styles.field}>
+            <label htmlFor="rs-when">Preferred time *</label>
+            <input
+              id="rs-when"
+              type="text"
+              value={when}
+              onChange={(e) => setWhen(e.target.value)}
+              placeholder="e.g. Weekday evenings, or Tue/Thu afternoons"
+            />
+          </div>
+          <div className={styles.field}>
+            <label htmlFor="rs-msg">What would you like to talk through? *</label>
+            <textarea
+              id="rs-msg"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="A couple of sentences on where you are and what you'd most like help with."
+            />
+          </div>
+          <p className={styles.note}>
+            {message.trim().length < 20
+              ? `${20 - message.trim().length} more characters so they have context.`
+              : 'Looks good. Mentors usually reply within a few days.'}
+          </p>
+
+          <div className={`${styles.foot} ${styles.footEnd}`}>
+            <button type="button" className={styles.back} onClick={onClose}>
+              Cancel
+            </button>
+            <Button variant="primary" size="lg" disabled={!valid || sending} onClick={() => valid && submit()}>
+              {sending ? <Sending label="Sending…" /> : 'Send request'}
+            </Button>
+          </div>
+        </>
+      )}
+    </ModalShell>
+  )
+}

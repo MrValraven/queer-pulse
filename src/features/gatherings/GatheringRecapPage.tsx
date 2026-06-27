@@ -1,8 +1,12 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
 import { Avatar, Button, ImageSlot } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { routes } from '../../app/routeMap'
+import { PhotoUploadModal, type RecapPhoto } from './PhotoUploadModal'
+import { RECAP_PHOTOS } from './gatheringRecap.data'
 import styles from './GatheringRecapPage.module.css'
 
 const ATTENDEES = [
@@ -18,6 +22,13 @@ const ATTENDEES = [
 
 export function GatheringRecapPage() {
   const { showToast } = useToast()
+  const [uploadOpen, setUploadOpen] = useState(false)
+  const [submittedPhotos, setSubmittedPhotos] = useState<RecapPhoto[]>([])
+
+  function addPhoto(photo: RecapPhoto) {
+    setSubmittedPhotos((prev) => [...prev, photo])
+    showToast('Your photo was added to the recap.', 'success')
+  }
 
   return (
     <AppShell unreadCount={3}>
@@ -61,20 +72,27 @@ export function GatheringRecapPage() {
               <div className={styles.photos}>
                 <div className={styles.sectionEyebrow}>From the day</div>
                 <div className={styles.photosGrid}>
-                  {Array.from({ length: 6 }).map((_, index) => (
+                  {RECAP_PHOTOS.map((photo, index) => (
                     <ImageSlot
                       key={index}
-                      tint={(['coral', 'jade', 'plum'] as const)[index % 3]}
+                      tint={photo.tint}
+                      src={photo.image}
                       height={140}
                       radius={12}
                       placeholder="photo from the gathering"
                     />
                   ))}
+                  {submittedPhotos.map((photo) => (
+                    <figure key={photo.id} className={styles.newPhoto}>
+                      <ImageSlot tint={photo.tint} height={140} radius={12} placeholder="your photo" />
+                      <figcaption className={styles.newPhotoCaption}>{photo.caption}</figcaption>
+                    </figure>
+                  ))}
                 </div>
                 <div className={styles.photoCaption}>
                   Photos by community members ·{' '}
                   <button
-                    onClick={() => showToast('Photo upload coming soon', 'info')}
+                    onClick={() => setUploadOpen(true)}
                     style={{ color: 'var(--accent-ink)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
                   >
                     Submit yours →
@@ -133,7 +151,7 @@ export function GatheringRecapPage() {
                 <div className={styles.nextEyebrow}>Coming up next</div>
                 <div className={styles.nextTitle}>Queer Book Club — July</div>
                 <div className={styles.nextDate}>Sat 19 July · LX Factory</div>
-                <Button to="/rsvp" style={{ width: '100%', justifyContent: 'center', fontSize: 13, padding: '9px 16px' }}>
+                <Button to={routes.rsvp} style={{ width: '100%', justifyContent: 'center', fontSize: 13, padding: '9px 16px' }}>
                   RSVP →
                 </Button>
               </div>
@@ -160,6 +178,10 @@ export function GatheringRecapPage() {
           </div>
         </div>
       </div>
+
+      {uploadOpen && (
+        <PhotoUploadModal onClose={() => setUploadOpen(false)} onSubmit={addPhoto} />
+      )}
     </AppShell>
   )
 }

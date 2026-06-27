@@ -1,21 +1,16 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { SystemStateShell } from '../../shared/components/layout'
 import { routes } from '../../app/routeMap'
+import { InterestsEditorModal } from './InterestsEditorModal'
 import styles from './PendingReviewPage.module.css'
 
 export function PendingReviewPage() {
-  const { showToast } = useToast()
+  const [editing, setEditing] = useState(false)
 
   return (
-    <div className={styles.root}>
-      <div className={`${styles.orb} ${styles.orbA}`} />
-      <div className={`${styles.orb} ${styles.orbB}`} />
-      <Link to="/" className={styles.brand}>
-        <span className={styles.pulseDot} aria-hidden />
-        Queer<em>Pulse</em>
-      </Link>
-
+    <SystemStateShell orbTone="jade">
       <div className={styles.card}>
         <div className={styles.icon}>
           <svg viewBox="0 0 24 24" aria-hidden>
@@ -84,10 +79,7 @@ export function PendingReviewPage() {
           <Button variant="ghost" to={routes.vouch}>
             Ask a member to vouch
           </Button>
-          <Button
-            variant="ghost"
-            onClick={() => showToast('Update sent — we have your changes', 'success')}
-          >
+          <Button variant="ghost" onClick={() => setEditing(true)}>
             Update my interests
           </Button>
         </div>
@@ -100,6 +92,8 @@ export function PendingReviewPage() {
           <Link to={routes.contact}>Write to the team</Link>.
         </p>
       </div>
-    </div>
+
+      {editing && <InterestsEditorModal onClose={() => setEditing(false)} />}
+    </SystemStateShell>
   )
 }

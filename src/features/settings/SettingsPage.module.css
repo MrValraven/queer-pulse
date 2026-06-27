@@ -49,11 +49,11 @@
   font-weight: 600;
 }
 .navItemDanger {
-  color: #c85a40;
+  color: var(--accent-ink);
 }
 .navItemDanger:hover {
   background: rgba(200, 90, 64, 0.08);
-  color: #c85a40;
+  color: var(--accent-ink);
 }
 .icon {
   font-size: 16px;
@@ -161,7 +161,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--paper);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s var(--ease);
 }
@@ -329,19 +329,19 @@
   border-color: var(--plum);
 }
 .dcBtn.danger {
-  color: #b91c1c;
-  border-color: rgba(185, 28, 28, 0.3);
+  color: var(--danger);
+  border-color: rgba(var(--danger-rgb), 0.3);
 }
 .dcBtn.danger:hover {
-  background: #b91c1c;
-  color: #fff;
-  border-color: #b91c1c;
+  background: var(--danger);
+  color: var(--cream);
+  border-color: var(--danger);
 }
 .dangerCard {
-  border-color: rgba(185, 28, 28, 0.15);
+  border-color: rgba(var(--danger-rgb), 0.15);
 }
 .dangerTitle {
-  color: #b91c1c;
+  color: var(--danger);
 }
 .fineprint {
   font-size: 13px;
@@ -420,7 +420,7 @@
   font-size: 14px;
   font-weight: 600;
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
   border: none;
   border-radius: 999px;
   padding: 11px 22px;

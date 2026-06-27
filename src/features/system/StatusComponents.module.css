@@ -126,7 +126,7 @@
 
 .pillOut {
   background: rgba(200, 90, 64, 0.1);
-  color: #c85a40;
+  color: var(--accent-ink);
 }
 
 /* ── Uptime ── */

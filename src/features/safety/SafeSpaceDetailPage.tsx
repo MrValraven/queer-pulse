@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { getSpace, type Tint, type VerifiedSpace, type RemovedSpace } from './safeSpaces'
+import { VouchModal } from './VouchModal'
 import styles from './SafeSpaceDetailPage.module.css'
 
 const TINT: Record<Tint, string> = { coral: styles.tCoral, jade: styles.tJade, plum: styles.tPlum }
@@ -22,6 +24,7 @@ function emName(name: string) {
 
 function VerifiedView({ s }: { s: VerifiedSpace }) {
   const { showToast } = useToast()
+  const [vouchOpen, setVouchOpen] = useState(false)
   const { lead, last } = emName(s.name)
   const share = () => {
     if (navigator.clipboard) navigator.clipboard.writeText(window.location.href)
@@ -30,7 +33,7 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
 
   return (
     <div className={styles.page}>
-      <Link to="/safe-spaces" className={styles.back}>← Safe spaces</Link>
+      <Link to={routes.safeSpaces} className={styles.back}>← Safe spaces</Link>
 
       <div className={styles.trustBanner}>
         <div className={styles.seal}><Tick /></div>
@@ -81,7 +84,9 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
             <h2>Vouched by <em>{s.vouches.length} {s.vouches.length === 1 ? 'member' : 'members'}</em></h2>
             <p className={styles.secSub}>
               Independent safety reviews from verified members.{' '}
-              <button type="button" onClick={() => showToast('Vouch form opened', 'info')} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: 'var(--plum)', fontWeight: 600, fontSize: 14 }}>Add yours →</button>
+              <Button variant="ghost" className={styles.vouchTrigger} onClick={() => setVouchOpen(true)}>
+                Add yours →
+              </Button>
             </p>
             <div className={styles.vouchRow}>
               {s.vouches.map((v) => (
@@ -89,7 +94,7 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
                   <div className={styles.vouchHead}>
                     <div className={[styles.vouchAv, TINT[v.tint]].join(' ')}>{v.initials}</div>
                     <div>
-                      <div className={styles.vouchName}><Link to="/members">{v.name}</Link></div>
+                      <div className={styles.vouchName}><Link to={routes.members}>{v.name}</Link></div>
                       <div className={styles.vouchByline}>{v.byline}</div>
                     </div>
                   </div>
@@ -122,7 +127,7 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
               <b>{s.name}</b>
               {s.address}
             </div>
-            <Button variant="ghost" className={styles.sideFull} to="/safe-spaces">
+            <Button variant="ghost" className={styles.sideFull} to={routes.safeSpaces}>
               Back to all spaces
             </Button>
           </div>
@@ -146,6 +151,8 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
           </div>
         </aside>
       </div>
+
+      {vouchOpen && <VouchModal spaceName={s.name} onClose={() => setVouchOpen(false)} />}
     </div>
   )
 }
@@ -154,7 +161,7 @@ function RemovedView({ s }: { s: RemovedSpace }) {
   const { lead, last } = emName(s.name)
   return (
     <div className={styles.page}>
-      <Link to="/safe-spaces" className={styles.back}>← Safe spaces</Link>
+      <Link to={routes.safeSpaces} className={styles.back}>← Safe spaces</Link>
 
       <div className={styles.removedBanner}>
         <div className={styles.removedSeal}>
@@ -213,7 +220,7 @@ function RemovedView({ s }: { s: RemovedSpace }) {
           <div className={[styles.sideCard, styles.sharePlum].join(' ')}>
             <h4>Looking for somewhere safe?</h4>
             <p>This space is delisted, but {VERIFIED_COUNT}+ verified spaces across Lisbon are not. Find one near you.</p>
-            <Button variant="ghost-dark" className={styles.sideFull} to="/safe-spaces">
+            <Button variant="ghost-dark" className={styles.sideFull} to={routes.safeSpaces}>
               See verified spaces →
             </Button>
           </div>
@@ -226,7 +233,7 @@ function RemovedView({ s }: { s: RemovedSpace }) {
 export function SafeSpaceDetailPage() {
   const { slug } = useParams()
   const space = getSpace(slug)
-  if (!space) return <Navigate to="/safe-spaces" replace />
+  if (!space) return <Navigate to={routes.safeSpaces} replace />
 
   return (
     <PageShell>

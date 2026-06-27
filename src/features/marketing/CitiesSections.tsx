@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { routes } from '../../app/routeMap'
 import { BETA, WAITLIST, HOW } from './cities.data'
 import styles from './CitiesPage.module.css'
 
@@ -114,7 +116,7 @@ export function WaitlistSection() {
         )
       })}
       <p className={styles.wlFoot}>
-        Don't see your city? <a href="#">Write to us</a> with what you'd build there.
+        Don't see your city? <Link to={routes.contact}>Write to us</Link> with what you'd build there.
       </p>
     </section>
   )

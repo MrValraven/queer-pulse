@@ -72,7 +72,7 @@ export function HousingPage() {
           <Reveal as="div" className={styles.grid}>
             {visible.map((listing) => (
               <Link key={listing.title} to={`/housing/${listing.slug}`} className={styles.card}>
-                <ImageSlot tint={listing.tint} height={150} radius={0} placeholder={`Photo · ${listing.hood}`} />
+                <ImageSlot tint={listing.tint} src={listing.image} height={150} radius={0} placeholder={`Photo · ${listing.hood}`} />
                 <div className={styles.cardBody}>
                   <span className={styles.type} style={{ background: listing.typeColor, color: listing.typeText }}>
                     {listing.typeLabel}

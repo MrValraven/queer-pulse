@@ -1,0 +1,37 @@
+.back {
+  position: fixed;
+  top: 24px;
+  right: 28px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  box-shadow: 0 4px 18px -8px rgba(45, 27, 61, 0.22);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+  text-decoration: none;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.back:hover {
+  color: var(--accent-ink);
+  border-color: rgba(45, 27, 61, 0.18);
+}
+
+.back svg {
+  width: 15px;
+  height: 15px;
+}
+
+@media (max-width: 560px) {
+  .back {
+    top: 16px;
+    right: 14px;
+  }
+}

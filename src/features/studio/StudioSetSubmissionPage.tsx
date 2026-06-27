@@ -6,14 +6,14 @@ import { StudioShell } from './StudioShell'
 import { useToast } from '../../shared/components/feedback/useToast'
 import s from './funding.module.css'
 
-const TRACKS = [
-  { tc: '00:00', who: memberName('ines'), title: 'A summer in Cascais', m: true, tint: 'coral' as const },
-  { tc: '06:40', who: 'Akin Diallo', title: 'Salt water, slowly', m: true, tint: 'plum' as const },
-  { tc: '12:18', who: '', title: 'unknown bootleg edit', m: false, tint: 'plum' as const },
-  { tc: '18:30', who: 'Yara Reis', title: 'If you have to ask', m: true, tint: 'jade' as const },
-  { tc: '24:52', who: 'Coro de Outubro', title: 'Cantiga para a vizinha', m: true, tint: 'plum' as const },
-  { tc: '31:10', who: '', title: 'white label — ID / ID', m: false, tint: 'coral' as const },
-  { tc: '37:44', who: 'Mariana Sol', title: 'Carta para a santa', m: true, tint: 'coral' as const },
+const TRACKS: { tc: string; who: string; title: string; m: boolean; tint: 'coral' | 'plum' | 'jade'; image?: string }[] = [
+  { tc: '00:00', who: memberName('ines'), title: 'A summer in Cascais', m: true, tint: 'coral', image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=600&auto=format&fit=crop' },
+  { tc: '06:40', who: 'Akin Diallo', title: 'Salt water, slowly', m: true, tint: 'plum' as const, image: 'https://images.unsplash.com/photo-1682579280153-5ea1d3bb95ac?q=80&w=800&auto=format&fit=crop' },
+  { tc: '12:18', who: '', title: 'unknown bootleg edit', m: false, tint: 'plum' as const, image: 'https://images.unsplash.com/photo-1685378338540-30a5d312282f?q=80&w=800&auto=format&fit=crop' },
+  { tc: '18:30', who: 'Yara Reis', title: 'If you have to ask', m: true, tint: 'jade' as const, image: 'https://images.unsplash.com/photo-1709562499710-eaaf84729550?q=80&w=800&auto=format&fit=crop' },
+  { tc: '24:52', who: 'Coro de Outubro', title: 'Cantiga para a vizinha', m: true, tint: 'plum' as const, image: 'https://images.unsplash.com/photo-1721539584859-9fea914ae2fe?q=80&w=800&auto=format&fit=crop' },
+  { tc: '31:10', who: '', title: 'white label — ID / ID', m: false, tint: 'coral' as const, image: 'https://images.unsplash.com/photo-1721539584865-134ea847dbaf?q=80&w=800&auto=format&fit=crop' },
+  { tc: '37:44', who: 'Mariana Sol', title: 'Carta para a santa', m: true, tint: 'coral' as const, image: 'https://images.unsplash.com/photo-1722868453706-b248a23c6b54?q=80&w=800&auto=format&fit=crop' },
 ]
 
 const PASTE = `00:00  ${memberName('ines')} — A summer in Cascais
@@ -93,7 +93,7 @@ export function StudioSetSubmissionPage() {
                     <div key={i} className={s.mtRow}>
                       <span className={s.tc}>{t.tc}</span>
                       <span className={s.cv}>
-                        <ImageSlot tint={t.tint} width={36} height={36} radius={6} placeholder="" />
+                        <ImageSlot src={t.image} tint={t.tint} width={36} height={36} radius={6} placeholder="" />
                       </span>
                       <div>
                         <h5>{t.m ? <em>{t.title}</em> : t.title}</h5>

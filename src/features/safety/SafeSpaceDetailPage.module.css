@@ -42,7 +42,7 @@
 .seal svg {
   width: 24px;
   height: 24px;
-  stroke: #fff;
+  stroke: var(--cream);
   stroke-width: 2.5;
   fill: none;
   stroke-linecap: round;
@@ -176,6 +176,21 @@
   color: var(--plum);
   font-weight: 600;
   text-decoration: none;
+}
+.vouchTrigger {
+  padding: 0;
+  height: auto;
+  min-height: 0;
+  background: none;
+  border: none;
+  color: var(--plum);
+  font-weight: 600;
+  font-size: 14px;
+  vertical-align: baseline;
+}
+.vouchTrigger:hover {
+  background: none;
+  text-decoration: underline;
 }
 
 /* Promises */

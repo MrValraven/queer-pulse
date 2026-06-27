@@ -5,6 +5,7 @@ import { films, filmRelationReason } from './data'
 import { FilmBody } from './FilmBody'
 import { FilmHero } from './FilmHero'
 import styles from './FilmPage.module.css'
+import { routes } from '../../app/routeMap'
 
 const related = films.filter((f) => f.id !== 'cascais').slice(0, 4)
 
@@ -14,12 +15,12 @@ export function FilmPage() {
       <section className={styles.crumb}>
         <div className="wrap">
           <div className={styles.crumbRow}>
-            <Link to="/cinema">Cinema</Link>
+            <Link to={routes.cinema}>Cinema</Link>
             <span className={styles.sep}>›</span>
             <Link to="/cinema/browse">This week</Link>
             <span className={styles.sep}>›</span>
             <span className={styles.cur}>The light between rooms</span>
-            <Link to="/cinema" className={styles.crumbBack}>
+            <Link to={routes.cinema} className={styles.crumbBack}>
               ← Back to slate
             </Link>
           </div>
@@ -77,9 +78,9 @@ export function FilmPage() {
           <div className={styles.sub}>Films sharing a curator, a country, or a question.</div>
           <div className={styles.relGrid}>
             {related.map((film) => (
-              <Link key={film.id} to="/film" className={styles.rf}>
+              <Link key={film.id} to={routes.film} className={styles.rf}>
                 <div className={styles.rfPoster}>
-                  <ImageSlot tint={film.tint} width="100%" height="100%" radius={12} placeholder="poster" style={{ position: 'absolute', inset: 0 }} />
+                  <ImageSlot src={film.image} tint={film.tint} width="100%" height="100%" radius={12} placeholder="poster" style={{ position: 'absolute', inset: 0 }} />
                 </div>
                 <div className={styles.rfEb}>{film.format}</div>
                 <div className={styles.rfTitle}>

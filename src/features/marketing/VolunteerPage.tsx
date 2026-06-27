@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { PageHero, PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
 import { VOLUNTEER_OPPORTUNITIES as OPPS } from './volunteerOpportunities'
+import { routes } from '../../app/routeMap'
 import s from './VolunteerPage.module.css'
 
 const FILTERS = [
@@ -94,7 +95,7 @@ export function VolunteerPage() {
         title={<>Want to connect <em>more deeply?</em></>}
         sub="Find the change makers already working on the causes you care about."
       >
-        <Button size="lg" to="/changemakers">
+        <Button size="lg" to={routes.changemakers}>
           Meet the change makers →
         </Button>
       </Outro>

@@ -1,5 +1,6 @@
 import { PageHero, PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import m from './marketing.module.css'
 import s from './AboutPage.module.css'
 
@@ -7,7 +8,7 @@ const TEAM = [
   { i: 'SF', bg: 'rgba(45,27,61,.1)', color: 'var(--plum)', name: 'Sofia Ferreira', role: 'Founder · Strategy', bio: 'Former housing rights lawyer. Community organising in Mouraria since 2018. Convinced the platform needed to exist before she knew how to build it.' },
   { i: 'DL', bg: 'rgba(74,140,111,.14)', color: 'var(--jade)', name: 'Daniel Lima', role: 'Design · Product', bio: 'Moved to Lisbon in 2020, stayed for the community. Believes the design of a space is a political act. Cares what the platform feels like at 2am.' },
   { i: 'RV', bg: 'rgba(232,119,90,.12)', color: 'var(--accent-ink)', name: 'Rute Vasconcelos', role: 'Engineering', bio: 'Open-source contributor. Built the first version in three weeks between jobs. Refuses to add dark patterns. Has strong opinions about forms.' },
-  { i: 'MC', bg: 'rgba(112,80,170,.12)', color: '#7050AA', name: 'Mateus Costa', role: 'Community · Operations', bio: 'The person who knows everyone. Coordinates moderation, the council, and the reading groups. The platform runs because he answers his messages.' },
+  { i: 'MC', bg: 'rgba(112,80,170,.12)', color: 'var(--violet)', name: 'Mateus Costa', role: 'Community · Operations', bio: 'The person who knows everyone. Coordinates moderation, the council, and the reading groups. The platform runs because he answers his messages.' },
 ]
 
 const VALUES = [
@@ -120,8 +121,8 @@ export function AboutPage() {
               <p>If something on this page raised a question, or you want to understand more about how the platform works, write to us. We read everything and reply to most things.</p>
             </div>
             <div className={s.csActions}>
-              <Button to="/contact">Get in touch</Button>
-              <Button variant="ghost" to="/governance">
+              <Button to={routes.contact}>Get in touch</Button>
+              <Button variant="ghost" to={routes.governance}>
                 Governance &amp; transparency
               </Button>
             </div>
@@ -133,7 +134,7 @@ export function AboutPage() {
         title={<>A queer network. <em>Rooted in Lisbon.</em></>}
         sub="Invite-only. Community-owned. Built to last."
       >
-        <Button size="lg" to="/invite">
+        <Button size="lg" to={routes.invite}>
           Request an invite
         </Button>
       </Outro>

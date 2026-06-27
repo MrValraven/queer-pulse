@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { FiSend } from 'react-icons/fi'
+import { FiCheck, FiChevronDown, FiChevronRight, FiSend } from 'react-icons/fi'
 import { MdQrCodeScanner } from 'react-icons/md'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -165,7 +165,7 @@ export function GuestListCard({
             }
           }}
         >
-          <span>{waitlistOpen ? '▾' : '▸'}</span> 3 on waitlist — promote
+          <span>{waitlistOpen ? <FiChevronDown /> : <FiChevronRight />}</span> 3 on waitlist — promote
         </div>
         {waitlistOpen && (
           <div>
@@ -192,6 +192,8 @@ export function GuestListCard({
 
 export function StatsColumn() {
   const { showToast } = useToast()
+  const [eventEnded, setEventEnded] = useState(false)
+  const [wrapping, setWrapping] = useState(false)
   return (
     <div className={styles.col}>
       <div className={styles.card}>
@@ -245,14 +247,44 @@ export function StatsColumn() {
         </div>
       </div>
 
-      <div className={styles.endCard}>
-        <div className={styles.eeLabel}>End of event</div>
-        <div className={styles.eeText}>When the gathering wraps up, send a follow-up and close the check-in window.</div>
-        <Button variant="ghost" className={styles.endBtn} disabled title="Available after 14:00">
-          End event &amp; send follow-up
-        </Button>
-        <div className={styles.eeNote}>Available from 14:00</div>
-      </div>
+      {eventEnded ? (
+        <div className={styles.endedCard}>
+          <span className={styles.endedIcon} aria-hidden><FiCheck /></span>
+          <div className={styles.endedTitle}>
+            Event <em>wrapped</em>
+          </div>
+          <div className={styles.endedText}>
+            Check-in is closed and a follow-up has been sent to all 9 attendees with the recap and photo link.
+          </div>
+        </div>
+      ) : (
+        <div className={styles.endCard}>
+          <div className={styles.eeLabel}>End of event</div>
+          <div className={styles.eeText}>When the gathering wraps up, send a follow-up and close the check-in window.</div>
+          <label className={styles.endToggle}>
+            <input
+              type="checkbox"
+              checked={wrapping}
+              onChange={(e) => setWrapping(e.target.checked)}
+            />
+            The gathering has wrapped up
+          </label>
+          <Button
+            variant="ghost"
+            className={styles.endBtn}
+            disabled={!wrapping}
+            onClick={() => {
+              setEventEnded(true)
+              showToast('Follow-up sent — check-in closed', 'success')
+            }}
+          >
+            End event &amp; send follow-up
+          </Button>
+          <div className={styles.eeNote}>
+            {wrapping ? 'Ready to send the follow-up' : 'Mark the gathering as wrapped to enable'}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

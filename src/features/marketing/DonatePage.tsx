@@ -1,19 +1,15 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { routes } from '../../app/routeMap'
+import { DonateModal } from './DonateModal'
 import { ALLOCATION, AMOUNTS, TRUST } from './donate.data'
 import styles from './DonatePage.module.css'
 
 export function DonatePage() {
-  const { showToast } = useToast()
   const [monthly, setMonthly] = useState(true)
   const [selected, setSelected] = useState(1)
-
-  function handleGive() {
-    const amount = AMOUNTS[selected].value
-    showToast(`Thank you — your ${amount}${monthly ? '/mo' : ''} gift keeps the community going.`)
-  }
+  const [giving, setGiving] = useState(false)
 
   return (
     <PageShell>
@@ -59,7 +55,12 @@ export function DonatePage() {
                 </button>
               ))}
             </div>
-            <Button variant="jade" size="lg" onClick={handleGive} style={{ width: '100%' }}>
+            <Button
+              variant="jade"
+              size="lg"
+              onClick={() => setGiving(true)}
+              style={{ width: '100%' }}
+            >
               Give {AMOUNTS[selected].value}
               {monthly ? ' / month' : ''} →
             </Button>
@@ -113,13 +114,21 @@ export function DonatePage() {
         title={<>Or give your <em>time instead.</em></>}
         sub="Money is one way in. Volunteering, hosting, and showing up are just as much the point."
       >
-        <Button to="/volunteer" variant="primary" size="lg">
+        <Button to={routes.volunteer} variant="primary" size="lg">
           Volunteer with us
         </Button>
-        <Button to="/transparency-report" variant="ghost-dark" size="lg">
+        <Button to={routes.transparencyReport} variant="ghost-dark" size="lg">
           Read the figures
         </Button>
       </Outro>
+
+      {giving && (
+        <DonateModal
+          amount={AMOUNTS[selected].value}
+          monthly={monthly}
+          onClose={() => setGiving(false)}
+        />
+      )}
     </PageShell>
   )
 }

@@ -2,6 +2,7 @@ import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import s from './ReportPage.module.css'
+import { routes } from '../../app/routeMap'
 
 const FLOW = [
   { n: '01', title: 'You submit a report', desc: 'Via the button on any profile, message, or forum post — or directly through this page. You can report anonymously if needed.' },
@@ -142,7 +143,7 @@ export function ReportPage() {
               ))}
             </div>
             <div className={s.modActions}>
-              <Button variant="ghost-dark" to="/governance">
+              <Button variant="ghost-dark" to={routes.governance}>
                 View full report →
               </Button>
             </div>

@@ -2,8 +2,31 @@ import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import type { Application } from "./applicationStatus.data";
-import { ModalShell, FileIcon } from "./ApplicationModals";
+import { ModalShell, FileIcon } from "./ModalKit";
 import styles from "./ApplicationModals.module.css";
+
+/** Simulate downloading an attachment by generating a small placeholder file. */
+function downloadAttachment(fileName: string, app: Application) {
+  const body = [
+    `QueerPulse — application attachment (preview copy)`,
+    ``,
+    `File: ${fileName}`,
+    `Application: ${app.title} — ${app.companyName}`,
+    `Generated: ${new Date().toLocaleString()}`,
+    ``,
+    `This is a simulated download from the QueerPulse prototype. In a live`,
+    `product this would be the real file you submitted with your application.`,
+  ].join("\n");
+  const url = URL.createObjectURL(new Blob([body], { type: "text/plain" }));
+  const a = document.createElement("a");
+  a.href = url;
+  // Keep the original extension where there is one, else default to .txt.
+  a.download = /\.[a-z0-9]+$/i.test(fileName) ? fileName : `${fileName}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
 
 /** Read-only view of what was submitted for an application. */
 export function SubmissionModal({ app, onClose }: { app: Application; onClose: () => void }) {
@@ -24,10 +47,15 @@ export function SubmissionModal({ app, onClose }: { app: Application; onClose: (
             Attachments
           </div>
           {s.attachments.map((file) => (
-            <a key={file} className={styles.attach} href="#" onClick={(e) => e.preventDefault()}>
+            <button
+              key={file}
+              type="button"
+              className={styles.attach}
+              onClick={() => downloadAttachment(file, app)}
+            >
               <FileIcon />
               {file}
-            </a>
+            </button>
           ))}
 
           {s.answers.length > 0 && (

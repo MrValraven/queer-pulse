@@ -38,7 +38,7 @@ export const MENTORS: Mentor[] = [
   {
     slug: 'ines-tavares',
     initials: 'IT',
-    bg: 'rgba(232,119,90,.15)',
+    bg: 'rgba(var(--accent-rgb),.15)',
     color: 'var(--accent-ink)',
     name: memberName('ines'),
     pronouns: 'she/her',
@@ -56,7 +56,7 @@ export const MENTORS: Mentor[] = [
   {
     slug: 'rui-marcal',
     initials: 'RM',
-    bg: 'rgba(45,27,61,.12)',
+    bg: 'rgba(var(--plum-rgb),.12)',
     color: 'var(--plum)',
     name: memberName('rui'),
     pronouns: 'he/him',
@@ -74,7 +74,7 @@ export const MENTORS: Mentor[] = [
   {
     slug: 'mariana-loucao',
     initials: 'ML',
-    bg: 'rgba(74,140,111,.15)',
+    bg: 'rgba(var(--jade-rgb),.15)',
     color: 'var(--jade)',
     name: memberName('mariana'),
     pronouns: 'she/her',
@@ -92,7 +92,7 @@ export const MENTORS: Mentor[] = [
   {
     slug: 'carla-nogueira',
     initials: 'CN',
-    bg: 'rgba(232,119,90,.12)',
+    bg: 'rgba(var(--accent-rgb),.12)',
     color: 'var(--accent-ink)',
     name: memberName('carla'),
     pronouns: 'she/her',
@@ -110,7 +110,7 @@ export const MENTORS: Mentor[] = [
   {
     slug: 'sofia-andrade',
     initials: 'SA',
-    bg: 'rgba(74,140,111,.15)',
+    bg: 'rgba(var(--jade-rgb),.15)',
     color: 'var(--jade)',
     name: memberName('sofia'),
     pronouns: 'she/her',
@@ -128,9 +128,9 @@ export const MENTORS: Mentor[] = [
   {
     slug: 'raquel-baptista',
     initials: 'RB',
-    bg: 'rgba(122,82,184,.12)',
-    color: '#7A52B8',
-    name: 'Raquel Baptista',
+    bg: 'rgba(var(--violet-rgb),.12)',
+    color: 'var(--violet)',
+    name: memberName('raquel-baptista'),
     pronouns: 'she/her',
     role: 'Lawyer',
     areas: ['Legal career', 'Rights navigation', 'Advocacy'],

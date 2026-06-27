@@ -394,7 +394,7 @@
 .playBig svg {
   width: 16px;
   height: 16px;
-  color: #fff;
+  color: var(--cream);
   margin-left: 2px;
 }
 .heroActions .tip {
@@ -503,7 +503,7 @@
 }
 .tagMem {
   background: rgba(var(--accent-rgb), 0.32);
-  color: #ffc4af;
+  color: var(--accent-soft);
 }
 .tagLive {
   background: rgba(247, 243, 238, 0.18);
@@ -534,7 +534,7 @@
 .playFab svg {
   width: 13px;
   height: 13px;
-  color: #fff;
+  color: var(--cream);
   margin-left: 1px;
 }
 .byCur {
@@ -693,7 +693,7 @@
   height: 30px;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.2);
-  color: #ffc4af;
+  color: var(--accent-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -855,7 +855,7 @@
   height: 32px;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.2);
-  color: #ffc4af;
+  color: var(--accent-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -909,7 +909,7 @@
 }
 .btP {
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
   border-color: var(--accent);
 }
 .splitHint {

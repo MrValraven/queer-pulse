@@ -25,9 +25,9 @@ export const DELETE_CONTENT: Record<
   },
   delete: {
     wh: [
-      { col: '#C85A40', text: <><strong>All your data is queued for deletion</strong> and permanently erased within 30 days.</> },
-      { col: '#C85A40', text: <>Messages you sent <strong>are deleted from all conversations</strong> — recipients lose them too.</> },
-      { col: '#C85A40', text: <>Your forum posts are <strong>permanently removed</strong> — not anonymised, deleted.</> },
+      { col: 'var(--accent-ink)', text: <><strong>All your data is queued for deletion</strong> and permanently erased within 30 days.</> },
+      { col: 'var(--accent-ink)', text: <>Messages you sent <strong>are deleted from all conversations</strong> — recipients lose them too.</> },
+      { col: 'var(--accent-ink)', text: <>Your forum posts are <strong>permanently removed</strong> — not anonymised, deleted.</> },
       { col: 'rgba(45,27,61,.3)', text: <>Your email address is <strong>added to a suppression list</strong> so we don't accidentally re-create your account.</> },
       { col: 'rgba(45,27,61,.3)', text: <>You can request a <strong>data archive before deleting</strong> — do that first.</> },
     ],

@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { getPartner, type Tint } from './partnerDetails'
+import { routes } from '../../app/routeMap'
 import s from './PartnerDetailPage.module.css'
 
 type Tab = 'about' | 'work' | 'timeline' | 'how'
@@ -20,14 +21,14 @@ export function PartnerDetailPage() {
   const [tab, setTab] = useState<Tab>('about')
 
   const p = getPartner(slug)
-  if (!p) return <Navigate to="/partners" replace />
+  if (!p) return <Navigate to={routes.partners} replace />
 
   const { lead, last } = emName(p.name)
 
   return (
     <PageShell>
       <div className={s.page}>
-        <Link to="/partners" className={s.back}>← All partners</Link>
+        <Link to={routes.partners} className={s.back}>← All partners</Link>
 
         <header className={s.hero}>
           <div className={s.logo}>{p.logo}</div>

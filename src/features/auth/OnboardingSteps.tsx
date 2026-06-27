@@ -2,9 +2,14 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiArrowRight, FiCheck } from 'react-icons/fi';
 import { Button, ImageSlot } from '../../shared/components/ui';
-import { currentUser } from '../members/data/members';
+import { routes } from '../../app/routeMap';
+import { currentUser, getMember } from '../members/data/members';
 import { NORMS, INTENTS, COMMUNITIES_LIST, QUICK_STARTS, ONBOARDING_PREVIEW } from './onboardingPage.data';
 import styles from './OnboardingPage.module.css';
+
+const INVITER = getMember('ines')!;
+const INVITER_NAME = `${INVITER.first} ${INVITER.last}`;
+const INVITER_ROLE = INVITER.role.split(' · ')[0];
 
 interface StepProps {
   stepLabel: string;
@@ -64,10 +69,20 @@ export function StepWelcome({ stepLabel, onNext }: { stepLabel: string; onNext: 
         Welcome, <em>{currentUser.first}</em>
       </div>
       <div className={styles.vouchCard}>
-        <div className={styles.vcAv}>TM</div>
+        <div className={styles.vcAv} aria-hidden>
+          {INVITER.photo ? (
+            <img
+              src={INVITER.photo}
+              alt=""
+              style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+            />
+          ) : (
+            INVITER.initials
+          )}
+        </div>
         <div>
-          <div className={styles.vcName}>Tomás Mendes</div>
-          <div className={styles.vcRole}>Member since Oct 2024 · Architect</div>
+          <div className={styles.vcName}>{INVITER_NAME}</div>
+          <div className={styles.vcRole}>Member since {INVITER.since} · {INVITER_ROLE}</div>
           <div className={styles.vcNote}>
             "{currentUser.first} is exactly the kind of person this community was built for — thoughtful,
             creative, and genuinely invested in making queer spaces better."
@@ -132,7 +147,7 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
       <label className={styles.agreeRow}>
         <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
         <span className={styles.agreeLabel}>
-          I've read and agree to the <Link to="/guidelines">Community Guidelines</Link>
+          I've read and agree to the <Link to={routes.guidelines}>Community Guidelines</Link>
         </span>
       </label>
       <div className={styles.nav}>

@@ -18,14 +18,14 @@ interface Offer {
 }
 
 const TINT_BG: Record<Tint, string> = {
-  coral: "rgba(232,119,90,.15)",
-  jade: "rgba(74,140,111,.15)",
-  plum: "rgba(45,27,61,.1)",
+  coral: "rgba(var(--accent-rgb),.15)",
+  jade: "rgba(var(--jade-rgb),.15)",
+  plum: "rgba(var(--plum-rgb),.1)",
 };
 const TINT_FG: Record<Tint, string> = {
-  coral: "#C85A40",
-  jade: "#4A8C6F",
-  plum: "#2D1B3D",
+  coral: "var(--accent-ink)",
+  jade: "var(--jade)",
+  plum: "var(--plum)",
 };
 
 const MAIN: Offer = {

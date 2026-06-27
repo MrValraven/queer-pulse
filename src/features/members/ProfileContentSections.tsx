@@ -38,6 +38,7 @@ export function SelectedWorkSection({ profile }: { profile: MemberProfile }) {
           <article key={item.title} className={styles.workCard}>
             <ImageSlot
               tint={(['coral', 'jade', 'plum'] as const)[index % 3]}
+              src={item.image}
               height={200}
               radius={14}
               placeholder="Work"

@@ -70,7 +70,7 @@ export function StudioOpenCallCard({ call: c }: Props) {
             {c.tracks.map((tr, i) => (
               <div key={tr.pre} className={[s.trk, picked === i && s.trkOn].filter(Boolean).join(' ')} role="button" tabIndex={0} onClick={() => setPicked(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPicked(i) } }}>
                 <span className={s.cv}>
-                  <ImageSlot tint={tr.tint} width={36} height={36} radius={6} placeholder="" />
+                  <ImageSlot src={tr.image} tint={tr.tint} width={36} height={36} radius={6} placeholder="" />
                 </span>
                 <div>
                   <h5>{tr.pre}{tr.em && <em>{tr.em}</em>}</h5>

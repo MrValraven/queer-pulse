@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
+import { BackToSettingsLink } from '../../shared/components/layout'
 import { routes } from '../../app/routeMap'
 import styles from './MaintenancePage.module.css'
 
@@ -16,8 +17,9 @@ export function MaintenancePage() {
     <div className={styles.root}>
       <div className={`${styles.orb} ${styles.orbA}`} />
       <div className={`${styles.orb} ${styles.orbB}`} />
+      <BackToSettingsLink />
 
-      <Link to="/" className={styles.brand}>
+      <Link to={routes.homepage} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
         Queer<em>Pulse</em>
       </Link>

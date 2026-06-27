@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { communities } from '../homepage/data/communities'
 import { memberProfiles } from '../members/data/memberProfiles'
 import { JoinModal } from './JoinModal'
@@ -12,8 +13,8 @@ import { CommunitySidebar } from './CommunitySidebar'
 import styles from './CommunityDetailPage.module.css'
 
 const HERO_AV: Record<Tint, { background: string; color: string }> = {
-  coral: { background: 'rgba(232,119,90,.22)', color: '#F4A08A' },
-  jade: { background: 'rgba(74,140,111,.22)', color: '#7DC4A0' },
+  coral: { background: 'rgba(232,119,90,.22)', color: 'var(--accent-soft)' },
+  jade: { background: 'rgba(74,140,111,.22)', color: 'var(--jade-soft)' },
   plum: { background: 'rgba(247,243,238,.18)', color: 'rgba(247,243,238,.8)' },
 }
 
@@ -27,7 +28,7 @@ export function CommunityDetailPage() {
 
   const community = communities.find((c) => c.slug === slug)
   const detail = getCommunityDetail(slug)
-  if (!community || !detail) return <Navigate to="/communities" replace />
+  if (!community || !detail) return <Navigate to={routes.communities} replace />
 
   const memberNum = parseInt(community.count, 10)
   const hasCount = !Number.isNaN(memberNum)
@@ -53,7 +54,7 @@ export function CommunityDetailPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className={`wrap ${styles.heroInner}`}>
-          <Link to="/communities" className={styles.breadcrumb}>
+          <Link to={routes.communities} className={styles.breadcrumb}>
             ← Communities
           </Link>
           <div className={styles.typeBadge}>

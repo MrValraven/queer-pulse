@@ -112,7 +112,7 @@ export function DataExportPage() {
               <Button variant="primary" size="lg" onClick={handleSubmit} style={{ width: '100%', justifyContent: 'center' }}>Request my data archive</Button>
             </div>
           ) : (
-            <div className={`${styles.card} ${styles.confirmCard}`}>
+            <div className={`${styles.card} ${styles.confirmCard} ${styles.screenIn}`} key="confirm">
               <div className={styles.confirmIcon}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--jade)" strokeWidth="2" strokeLinecap="round"><polyline points="3,12 8,18 21,6" /></svg>
               </div>

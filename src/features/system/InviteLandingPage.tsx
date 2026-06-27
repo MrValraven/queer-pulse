@@ -127,7 +127,7 @@ export function InviteLandingPage() {
       <div className={styles.card}>
         {/* Header */}
         <div className={styles.header}>
-          <Link to="/" className={styles.brand}>
+          <Link to={routes.homepage} className={styles.brand}>
             <span className={styles.brandDot} aria-hidden />
             Queer<em>Pulse</em>
           </Link>
@@ -196,6 +196,12 @@ export function InviteLandingPage() {
               Invite expires <span>{EXPIRY_DATE}</span>
             </span>
           </div>
+
+          <Button to={routes.createAccount} size="lg" className={styles.submitBtn}>
+            Create an account →
+          </Button>
+
+          <div className={styles.orDivider}>or</div>
 
           <button type="button" className={styles.google} onClick={createAccount}>
             <svg width={18} height={18} viewBox="0 0 18 18" aria-hidden>

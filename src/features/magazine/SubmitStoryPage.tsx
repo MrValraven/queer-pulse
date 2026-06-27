@@ -5,6 +5,7 @@ import { Button, Reveal } from '../../shared/components/ui'
 import { MagazineMasthead } from './MagazineMasthead'
 import { FORMATS, LOOKING_FOR, STEPS } from './submitStory.data'
 import styles from './SubmitStoryPage.module.css'
+import { routes } from '../../app/routeMap'
 
 const PITCH_MIN = 40
 const PITCH_MAX = 800
@@ -74,10 +75,10 @@ export function SubmitStoryPage() {
                 </div>
               </div>
               <div className={styles.panelActions}>
-                <Button to="/magazine" variant="ghost-dark" size="lg">
+                <Button to={routes.magazine} variant="ghost-dark" size="lg">
                   Back to the magazine
                 </Button>
-                <Button to="/issues" variant="jade" size="lg">
+                <Button to={routes.issues} variant="jade" size="lg">
                   Read past issues
                 </Button>
               </div>

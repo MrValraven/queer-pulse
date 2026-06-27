@@ -10,19 +10,37 @@ import {
   GROUPS,
   type Format,
   type Genre,
+  type Group,
 } from './readingGroups.data'
 import { ReadingGroupCard } from './ReadingGroupCard'
+import { ListGroupStrip } from './ListGroupStrip'
+import { WaitlistPanel } from './WaitlistPanel'
 import styles from './ReadingGroupsPage.module.css'
 
 export function ReadingGroupsPage() {
   const { showToast } = useToast()
   const [genre, setGenre] = useState<Genre | 'all'>('all')
   const [format, setFormat] = useState<Format | 'all'>('all')
+  /** Map of group id → the user's position on that group's waitlist. */
+  const [waitlist, setWaitlist] = useState<Record<string, number>>({})
+  /** Groups the user has listed this session, prepended to the directory. */
+  const [myGroups, setMyGroups] = useState<Group[]>([])
   const messages = routes.messages
 
-  const items = GROUPS.filter(
+  const allGroups = [...myGroups, ...GROUPS]
+  const items = allGroups.filter(
     (g) => (genre === 'all' || g.genre === genre) && (format === 'all' || g.format === format),
   )
+
+  function joinWaitlist(id: string, name: string) {
+    setWaitlist((prev) => {
+      if (prev[id]) return prev
+      // Deterministic-but-plausible position for this prototype.
+      const position = 2 + (id.charCodeAt(id.length - 1) % 5)
+      showToast(`You're #${position} on the waitlist for ${name}`, 'success')
+      return { ...prev, [id]: position }
+    })
+  }
 
   return (
     <PageShell>
@@ -110,59 +128,15 @@ export function ReadingGroupsPage() {
                 key={g.id}
                 g={g}
                 messagesPath={messages}
-                onWaitlist={() => showToast('Added to waitlist', 'info')}
+                onWaitlist={() => joinWaitlist(g.id, g.name)}
+                waitlistPosition={waitlist[g.id]}
               />
             ))}
           </div>
 
-          <div className={styles.startStrip}>
-            <div className={styles.ssText}>
-              <h3>
-                Start your <em>own group.</em>
-              </h3>
-              <p>
-                Pick a book. Say how many people you want. Say where and when. We will list it here
-                and match you with members who want to read the same thing.
-              </p>
-            </div>
-            <form
-              className={styles.ssForm}
-              onSubmit={(e) => {
-                e.preventDefault()
-                showToast("Group listed — we'll find your readers", 'success')
-              }}
-            >
-              <div className={styles.ssRow}>
-                <label className={styles.ssLabel}>Book title &amp; author</label>
-                <input className={styles.ssInput} type="text" placeholder="e.g. Giovanni's Room — James Baldwin" />
-              </div>
-              <div className={styles.ssRow}>
-                <label className={styles.ssLabel}>Why this book?</label>
-                <input className={styles.ssInput} type="text" placeholder="One sentence — what made you choose it?" />
-              </div>
-              <div className={styles.ssRow2}>
-                <div className={styles.ssRow}>
-                  <label className={styles.ssLabel}>Format</label>
-                  <select className={styles.ssInput} defaultValue="In-person">
-                    <option>In-person</option>
-                    <option>Online</option>
-                    <option>Either</option>
-                  </select>
-                </div>
-                <div className={styles.ssRow}>
-                  <label className={styles.ssLabel}>Max people</label>
-                  <select className={styles.ssInput} defaultValue="6">
-                    <option>4</option>
-                    <option>6</option>
-                    <option>8</option>
-                  </select>
-                </div>
-              </div>
-              <button type="submit" className={styles.ssSubmit}>
-                List my group
-              </button>
-            </form>
-          </div>
+          <WaitlistPanel waitlist={waitlist} />
+
+          <ListGroupStrip onListed={(g) => setMyGroups((prev) => [g, ...prev])} />
         </div>
       </main>
 

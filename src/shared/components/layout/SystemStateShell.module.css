@@ -1,0 +1,122 @@
+.root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 84px 16px 40px;
+  background: var(--cream);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orbA {
+  width: 540px;
+  height: 540px;
+  top: -18%;
+  right: -12%;
+}
+
+.orbB {
+  width: 480px;
+  height: 480px;
+  bottom: -22%;
+  left: -14%;
+}
+
+/* Orb colour tones (orbTone prop) */
+.orbADefault {
+  background: radial-gradient(circle, rgba(232, 119, 90, 0.09) 0%, transparent 65%);
+}
+.orbBDefault {
+  background: radial-gradient(circle, rgba(45, 27, 61, 0.06) 0%, transparent 65%);
+}
+.orbAJade {
+  background: radial-gradient(circle, rgba(74, 140, 111, 0.1) 0%, transparent 65%);
+}
+.orbBJade {
+  background: radial-gradient(circle, rgba(232, 119, 90, 0.08) 0%, transparent 65%);
+}
+.orbAPlum {
+  background: radial-gradient(circle, rgba(45, 27, 61, 0.1) 0%, transparent 65%);
+}
+.orbBPlum {
+  background: radial-gradient(circle, rgba(232, 119, 90, 0.06) 0%, transparent 65%);
+}
+
+.brand {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  z-index: 10;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--plum);
+}
+
+.brand em {
+  font-style: italic;
+}
+
+/* Sombre states (account-banned, offline) dim the brand mark. */
+.brandMuted {
+  opacity: 0.5;
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+.pulseDotMuted {
+  background: var(--ink-40);
+}
+
+/* Entrance: the wrapper is a transparent full-width flex centrer so each
+   page's card keeps its own max-width while we animate opacity + rise. */
+.enter {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  animation: systemStateEnter 0.5s var(--ease) both;
+}
+
+@keyframes systemStateEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .brand {
+    top: 18px;
+    left: 28px;
+  }
+}

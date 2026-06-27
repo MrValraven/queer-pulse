@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
@@ -12,10 +13,68 @@ const avClass: Record<Mention['tint'], string> = {
   plum: styles.avPlum,
 }
 
+function ReplyComposer({ name, onSend }: { name: string; onSend: (body: string) => void }) {
+  const [value, setValue] = useState('')
+  return (
+    <form
+      className={styles.composer}
+      onSubmit={(e) => {
+        e.preventDefault()
+        const body = value.trim()
+        if (!body) return
+        onSend(body)
+        setValue('')
+      }}
+    >
+      <textarea
+        className={styles.rcInput}
+        rows={1}
+        placeholder={`Reply to ${name.split(' ')[0]}…`}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        autoFocus
+      />
+      <button className={styles.rcSend} type="submit" disabled={!value.trim()}>
+        Reply
+      </button>
+    </form>
+  )
+}
+
 function MentionRow({ m }: { m: Mention }) {
   const { showToast } = useToast()
+  const navigate = useNavigate()
+  const [unread, setUnread] = useState(!!m.unread)
+  const [going, setGoing] = useState(false)
+  const [composing, setComposing] = useState(false)
+  const [replies, setReplies] = useState<string[]>([])
+
+  function runAction(label: string) {
+    if (label === 'Reply') {
+      setComposing((c) => !c)
+    } else if (label === 'RSVP') {
+      setGoing((g) => {
+        const next = !g
+        showToast(next ? `You're going · ${m.name}'s invite` : 'RSVP withdrawn', next ? 'success' : 'info')
+        return next
+      })
+    } else if (label === 'Mark read') {
+      setUnread(false)
+    } else if (label.startsWith('Open')) {
+      navigate(m.whereTo ?? routes.forum)
+    } else {
+      showToast(`${label} · ${m.name}`, 'info')
+    }
+  }
+
+  function addReply(body: string) {
+    setReplies((prev) => [...prev, body])
+    setUnread(false)
+    setComposing(false)
+  }
+
   return (
-    <div className={`${styles.row} ${m.unread ? styles.unread : ''}`}>
+    <div className={`${styles.row} ${unread ? styles.unread : ''}`}>
       <div className={styles.headRow}>
         <div className={`${styles.av} ${avClass[m.tint]}`}>{m.initials}</div>
         <div className={styles.who}>
@@ -29,19 +88,42 @@ function MentionRow({ m }: { m: Mention }) {
         In{' '}
         {m.whereTo ? <Link to={m.whereTo}>{m.whereText}</Link> : <span>{m.whereText}</span>}
       </div>
+      {replies.map((body, i) => (
+        <div key={i} className={styles.sentReply}>
+          <span className={styles.srAuthor}>You</span>
+          {body}
+        </div>
+      ))}
       {m.actions.length > 0 && (
         <div className={styles.actions}>
-          {m.actions.map((a) => (
-            <button
-              key={a.label}
-              className={`${styles.action} ${a.primary ? styles.primary : ''}`}
-              onClick={() => showToast(`${a.label} · ${m.name}`, 'info')}
-            >
-              {a.label}
-            </button>
-          ))}
+          {m.actions.map((a) => {
+            const isGoing = a.label === 'RSVP' && going
+            return (
+              <button
+                key={a.label}
+                className={[
+                  styles.action,
+                  a.primary && styles.primary,
+                  isGoing && styles.going,
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                onClick={() => runAction(a.label)}
+              >
+                {isGoing ? (
+                  <>
+                    <FiCheck aria-hidden /> Going
+                  </>
+                ) : (
+                  a.label
+                )}
+              </button>
+            )
+          })}
+          {!unread && m.unread && <span className={styles.when}>Read</span>}
         </div>
       )}
+      {composing && <ReplyComposer name={m.name} onSend={addReply} />}
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { PRIVACY, STAGES } from './comingOut.data'
 import styles from './ComingOutPage.module.css'
 
@@ -71,7 +72,7 @@ export function ComingOutPage() {
         <Button to="/community/coming-out" variant="primary" size="lg">
           Enter the space →
         </Button>
-        <Button to="/communities" variant="ghost-dark" size="lg">
+        <Button to={routes.communities} variant="ghost-dark" size="lg">
           See all communities
         </Button>
       </Outro>

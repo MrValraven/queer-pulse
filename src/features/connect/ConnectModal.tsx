@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Avatar, Button } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import { defaultProfileSlug, memberProfiles } from '../members/data/memberProfiles'
@@ -14,6 +14,9 @@ const REASONS = [
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+/** How long the success panel lingers before closing itself. */
+const AUTO_CLOSE_SECONDS = 6
+
 type Phase = 'idle' | 'sending' | 'sent'
 
 export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => void }) {
@@ -23,7 +26,22 @@ export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => 
   const [email, setEmail] = useState('')
   const [reason, setReason] = useState('')
   const [message, setMessage] = useState('')
+  const [secondsLeft, setSecondsLeft] = useState(AUTO_CLOSE_SECONDS)
   useScrollLock()
+
+  // Once the message lands, count down and close the modal on our own.
+  useEffect(() => {
+    if (phase !== 'sent') return
+    setSecondsLeft(AUTO_CLOSE_SECONDS)
+    const tick = window.setInterval(() => {
+      setSecondsLeft((s) => (s > 1 ? s - 1 : 0))
+    }, 1000)
+    const done = window.setTimeout(onClose, AUTO_CLOSE_SECONDS * 1000)
+    return () => {
+      window.clearInterval(tick)
+      window.clearTimeout(done)
+    }
+  }, [phase, onClose])
 
   const canSend =
     name.trim().length > 0 && EMAIL_RE.test(email.trim()) && message.trim().length > 0
@@ -58,7 +76,7 @@ export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => 
                 <path
                   className={styles.tyCheck}
                   d="M5 12.5l4 4L19 7"
-                  stroke="#4A8C6F"
+                  stroke="var(--jade)"
                   strokeWidth={2.5}
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -75,6 +93,14 @@ export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => 
             <Button size="lg" variant="ghost-dark" onClick={onClose}>
               Close
             </Button>
+            <div className={styles.autoClose} aria-live="polite">
+              <span className={styles.autoCloseTrack}>
+                <span className={styles.autoCloseBar} />
+              </span>
+              <span className={styles.autoCloseText}>
+                Closing automatically in {secondsLeft}s
+              </span>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>

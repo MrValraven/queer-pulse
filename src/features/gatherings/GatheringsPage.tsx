@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { FEATURED, HOODS, WAYS } from './gatheringsPage.data'
 import styles from './GatheringsPage.module.css'
 
@@ -83,10 +84,10 @@ export function GatheringsPage() {
         title={<>Bring people <em>together.</em></>}
         sub="Every gathering started with one member deciding to host. The platform handles the rest — tickets, sliding scale, and a listing on the board."
       >
-        <Button to="/events" variant="primary" size="lg">
+        <Button to={routes.events} variant="primary" size="lg">
           Browse all events
         </Button>
-        <Button to="/host" variant="ghost-dark" size="lg">
+        <Button to={routes.host} variant="ghost-dark" size="lg">
           Host a gathering
         </Button>
       </Outro>

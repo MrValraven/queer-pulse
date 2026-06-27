@@ -20,7 +20,7 @@ export function StudioCheckoutPage() {
   if (done) {
     return (
       <StudioShell>
-        <div className={s.done}>
+        <div className={`${s.done} ${s.screenIn}`} key="done">
           <div className={s.doneIcon}><FiCheck /></div>
           <h1>
             You're <em>sustaining</em> it now.

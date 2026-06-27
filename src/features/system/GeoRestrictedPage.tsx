@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { routes } from '../../app/routeMap'
+import { SystemStateShell } from '../../shared/components/layout'
 import styles from './GeoRestrictedPage.module.css'
 
 const CAN_DO = [
@@ -29,15 +30,7 @@ const CheckIcon = () => (
 
 export function GeoRestrictedPage() {
   return (
-    <div className={styles.root}>
-      <div className={`${styles.orb} ${styles.orbA}`} />
-      <div className={`${styles.orb} ${styles.orbB}`} />
-
-      <Link to="/" className={styles.brand}>
-        <span className={styles.pulseDot} aria-hidden />
-        Queer<em>Pulse</em>
-      </Link>
-
+    <SystemStateShell>
       <div className={styles.card}>
         <div className={styles.ic}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
@@ -84,9 +77,9 @@ export function GeoRestrictedPage() {
         <div className={styles.detect}>
           <div className={styles.flag} aria-hidden />
           <span>Detected: <b>Portugal · Lisbon</b> · this is a demo of the region-restricted view.</span>
-          <Link to="/">Go home →</Link>
+          <Link to={routes.homepage}>Go home →</Link>
         </div>
       </div>
-    </div>
+    </SystemStateShell>
   )
 }

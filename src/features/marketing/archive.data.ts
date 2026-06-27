@@ -12,11 +12,14 @@ export const FEATURED = {
   excerpt:
     'Catarina has lived in Mouraria for 22 years. She watched the neighbourhood she grew up in become somewhere she could barely afford to stay — and decided to do something about it. This is her story, in her own words.',
   imgTint: 'plum' as ImageSlotTint,
+  image:
+    'https://images.unsplash.com/photo-1769458711046-23eab6a083b5?q=80&w=600&auto=format&fit=crop',
 }
 
 export interface ArchiveCard {
   id: string
   imgTint: ImageSlotTint
+  image?: string
   year: string
   quote: string
   desc: string
@@ -31,6 +34,8 @@ export const ARCHIVE_CARDS: ArchiveCard[] = [
   {
     id: 'amara',
     imgTint: 'default',
+    image:
+      'https://images.unsplash.com/photo-1693323588879-1ed5a7421c24?q=80&w=600&auto=format&fit=crop',
     year: 'Recorded 2025',
     quote:
       'I came to Lisbon with one suitcase and the address of an ILGA Portugal meeting. That meeting changed everything.',
@@ -38,13 +43,15 @@ export const ARCHIVE_CARDS: ArchiveCard[] = [
       'Arriving from Kinshasa in 2019, navigating a new country and a new language while also figuring out who she was — Amara\'s story of building a life in Lisbon.',
     initials: 'AM',
     avBg: 'rgba(122,82,184,.15)',
-    avColor: '#7A52B8',
+    avColor: 'var(--violet)',
     name: 'Amara Mbeki',
     meta: 'Community worker · Intendente',
   },
   {
     id: 'leonor',
     imgTint: 'coral',
+    image:
+      'https://plus.unsplash.com/premium_photo-1663100659263-4756f8b01495?q=80&w=800&auto=format&fit=crop',
     year: 'Recorded 2025',
     quote:
       'I was the first openly queer employee at my company. Then I was the last. The two things were not unrelated.',
@@ -59,6 +66,8 @@ export const ARCHIVE_CARDS: ArchiveCard[] = [
   {
     id: 'jose',
     imgTint: 'plum',
+    image:
+      'https://plus.unsplash.com/premium_photo-1664300141931-d4131eca753b?q=80&w=800&auto=format&fit=crop',
     year: 'Recorded 2024',
     quote:
       "We used to have a name for every bar on that street. Most of them are gone now. The names aren't.",
@@ -73,6 +82,8 @@ export const ARCHIVE_CARDS: ArchiveCard[] = [
   {
     id: 'jonas',
     imgTint: 'jade',
+    image:
+      'https://plus.unsplash.com/premium_photo-1664442394433-5e555096103f?q=80&w=800&auto=format&fit=crop',
     year: 'Recorded 2024',
     quote:
       "My family didn't come to my transition. But the community did. That's something I think about every day.",

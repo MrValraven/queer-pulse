@@ -44,7 +44,7 @@ export function StudioLibraryPage() {
             {items.map((item) => (
               <Link key={item.pre + item.meta} to={item.to} className={ss.card}>
                 <div className={ss.cardCov}>
-                  <ImageSlot tint={item.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                  <ImageSlot src={item.image} tint={item.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
                 </div>
                 <h4>
                   {item.pre}

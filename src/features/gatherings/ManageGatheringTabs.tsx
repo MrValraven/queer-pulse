@@ -161,23 +161,45 @@ function AttendeesTab() {
   );
 }
 
+type SentMessage = { subject: string; time: string; preview: string; opened: string };
+
 function MessagesTab() {
   const { showToast } = useToast();
+  const [message, setMessage] = useState("");
+  const [sent, setSent] = useState<SentMessage[]>([]);
+
+  const send = () => {
+    const text = message.trim();
+    if (!text) return;
+    const subject = text.length > 48 ? `${text.slice(0, 45)}…` : text;
+    setSent((prev) => [
+      { subject, time: "just now", preview: text, opened: "0 / 14 opened" },
+      ...prev,
+    ]);
+    setMessage("");
+    showToast("Update sent to 14 attendees", "success");
+  };
+
   return (
     <div>
       <div className={styles.composerCard}>
         <div className={styles.compLabel}>Message all attendees (14 going)</div>
-        <textarea className={styles.compTa} placeholder="Write an update for your guests…" />
+        <textarea
+          className={styles.compTa}
+          placeholder="Write an update for your guests…"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
         <div className={styles.compFooter}>
           <div className={styles.compHint}>Sent to all 14 confirmed attendees.</div>
-          <Button variant="primary" onClick={() => showToast("Update sent to 14 attendees", "success")}>
+          <Button variant="primary" disabled={!message.trim()} onClick={send}>
             Send update
           </Button>
         </div>
       </div>
       <div className={styles.prevLabel}>Previous messages</div>
       <div className={styles.msgList}>
-        {PREVIOUS_MESSAGES.map((m) => (
+        {[...sent, ...PREVIOUS_MESSAGES].map((m) => (
           <div className={styles.msgCard} key={m.subject}>
             <div className={styles.msgHeader}>
               <div className={styles.msgSubject}>{m.subject}</div>

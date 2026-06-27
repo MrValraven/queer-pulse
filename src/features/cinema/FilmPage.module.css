@@ -160,7 +160,7 @@
 }
 .tipChipOn {
   background: var(--accent);
-  color: #fff;
+  color: var(--paper);
   border-color: var(--accent);
 }
 .tipFoot {
@@ -321,6 +321,11 @@
 .iconBtn:hover {
   border-color: var(--plum);
   color: var(--plum);
+}
+.iconBtnOn {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.08);
 }
 .iconBtn svg {
   width: 18px;
@@ -742,7 +747,7 @@
 }
 .sbSeg.fm {
   background: var(--accent);
-  color: #fff;
+  color: var(--paper);
   flex: 0 0 80%;
 }
 .sbSeg.pay {

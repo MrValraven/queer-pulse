@@ -24,6 +24,7 @@ export function Stories() {
           <Link to={linkToPath(featureStory.href)} className={styles.feature}>
             <ImageSlot
               tint={featureStory.tint}
+              src={featureStory.image}
               height={400}
               radius={18}
               placeholder="Story image"
@@ -46,6 +47,7 @@ export function Stories() {
               <Link to={linkToPath(story.href)} className={styles.card}>
                 <ImageSlot
                   tint={story.tint}
+                  src={story.image}
                   height={230}
                   radius={16}
                   placeholder="Story image"

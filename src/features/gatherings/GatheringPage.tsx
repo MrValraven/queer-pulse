@@ -1,8 +1,11 @@
 import { Link, useParams } from 'react-router-dom'
+import { FiLock } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button, Tag } from '../../shared/components/ui'
 import { useConnect } from '../../app/providers/ConnectProvider'
+import { routes } from '../../app/routeMap'
 import { memberProfiles } from '../members/data/memberProfiles'
+import { JoinVouchCallout } from './JoinVouchCallout'
 import { gatheringDetails, gatheringKind, gatheringPath, resolveGathering } from './data'
 
 import styles from './GatheringPage.module.css'
@@ -22,7 +25,7 @@ export function GatheringPage() {
       <div className={styles.page}>
         <div className="wrap">
           <div className={styles.back}>
-            <Link to="/calendar" className={styles.backLink}>
+            <Link to={routes.calendar} className={styles.backLink}>
               ← Gatherings
             </Link>
           </div>
@@ -55,9 +58,13 @@ export function GatheringPage() {
                 <Button size="lg" onClick={() => openConnect(gathering.hostSlug)}>
                   {gathering.cta} →
                 </Button>
-                <Button size="lg" variant="ghost" to="/calendar">
+                <Button size="lg" variant="ghost" to={routes.calendar}>
                   See all gatherings
                 </Button>
+              </div>
+
+              <div className={styles.calloutWrap}>
+                <JoinVouchCallout />
               </div>
             </div>
 
@@ -112,8 +119,19 @@ export function GatheringPage() {
               <Button className={styles.fullBtn} onClick={() => openConnect(gathering.hostSlug)}>
                 {gathering.cta}
               </Button>
-              <div className={styles.sidebarNote}>
-                The location is shared with confirmed guests on the day of the event.
+
+              <div className={styles.locReveal}>
+                <div className={styles.locHead}>
+                  <span className={styles.locIcon} aria-hidden>
+                    <FiLock />
+                  </span>
+                  <div>
+                    <div className={styles.locHood}>{gathering.hood}</div>
+                    <div className={styles.locNote}>
+                      Full location shared with confirmed guests after you RSVP.
+                    </div>
+                  </div>
+                </div>
               </div>
             </aside>
           </div>

@@ -1,14 +1,19 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
+import { getMember } from '../members/data/members'
+import { routes } from '../../app/routeMap'
 import { AuthLayout } from './AuthLayout'
 import styles from './auth.module.css'
+
+const INVITER = getMember('ines')!
+const INVITER_NAME = `${INVITER.first} ${INVITER.last}`
 
 type Visibility = 'open' | 'network' | 'private'
 const PRONOUNS = ['he/him', 'she/her', 'they/them', 'she/they', 'he/they']
 
 const STRENGTH_LABELS = ['At least 10 characters', 'Weak', 'Fair', 'Good', 'Strong']
-const STRENGTH_COLORS = ['var(--ink-40)', 'var(--accent-ink)', '#E8B44A', 'var(--jade)', 'var(--jade)']
+const STRENGTH_COLORS = ['var(--ink-40)', 'var(--accent-ink)', 'var(--amber)', 'var(--jade)', 'var(--jade)']
 const PW_MIN = 10
 
 function passwordScore(value: string): number {
@@ -144,9 +149,19 @@ export function CreateAccountPage() {
   return (
     <AuthLayout wide>
       <div className={styles.vouchRow}>
-        <div className={styles.vouchAv}>TM</div>
+        <div className={styles.vouchAv} aria-hidden>
+          {INVITER.photo ? (
+            <img
+              src={INVITER.photo}
+              alt=""
+              style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+            />
+          ) : (
+            INVITER.initials
+          )}
+        </div>
         <div className={styles.vouchText}>
-          <strong>Tomás Mendes</strong> invited you to QueerPulse
+          <strong>{INVITER_NAME}</strong> invited you to QueerPulse
         </div>
       </div>
 
@@ -250,11 +265,11 @@ export function CreateAccountPage() {
           Create account
         </Button>
         <div className={styles.legalNote}>
-          By creating an account you agree to our <Link to="/terms">Terms of Use</Link> and{' '}
-          <Link to="/privacy">Privacy Policy</Link>
+          By creating an account you agree to our <Link to={routes.terms}>Terms of Use</Link> and{' '}
+          <Link to={routes.privacy}>Privacy Policy</Link>
         </div>
         <div className={styles.signinLink}>
-          Already have an account? <Link to="/sign-in">Sign in →</Link>
+          Already have an account? <Link to={routes.signIn}>Sign in →</Link>
         </div>
       </form>
     </AuthLayout>

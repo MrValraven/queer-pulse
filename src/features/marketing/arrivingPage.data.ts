@@ -49,6 +49,6 @@ export const ORGS: Org[] = [
 
 export const COMM_QUICK: CommQuick[] = [
   { type: "Social", typeColor: "var(--jade)", typeBg: "rgba(74,140,111,.1)", name: "Queer Social Lisbon", reason: "No agenda, no pressure. The best room for a first social step in the city." },
-  { type: "Support", typeColor: "#7A52B8", typeBg: "rgba(122,82,184,.1)", name: "Queer Immigrant Support", reason: "Specifically for LGBTQ+ people who have recently arrived. Community, resources, practical help." },
+  { type: "Support", typeColor: "var(--violet)", typeBg: "rgba(122,82,184,.1)", name: "Queer Immigrant Support", reason: "Specifically for LGBTQ+ people who have recently arrived. Community, resources, practical help." },
   { type: "Sports", typeColor: "var(--jade)", typeBg: "rgba(74,140,111,.1)", name: "Queer Runners Lisboa", reason: "Weekly runs along the Tejo. All paces welcome. A surprisingly easy way to meet people." },
 ];

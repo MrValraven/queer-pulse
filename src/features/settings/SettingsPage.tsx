@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useScrollLock } from '../../shared/hooks'
 import { AppShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -20,7 +21,13 @@ import styles from './SettingsPage.module.css'
 
 export function SettingsPage() {
   const { showToast } = useToast()
-  const [pane, setPane] = useState<PaneId>('notifications')
+  const [params] = useSearchParams()
+  const initialPane = (() => {
+    const p = params.get('pane')
+    const valid = NAV.flatMap((g) => g.items.map((i) => i.id))
+    return p && valid.includes(p as PaneId) ? (p as PaneId) : 'notifications'
+  })()
+  const [pane, setPane] = useState<PaneId>(initialPane)
   const [dirty, setDirty] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
   useScrollLock(showDelete)

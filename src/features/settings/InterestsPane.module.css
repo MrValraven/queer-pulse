@@ -198,7 +198,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--paper);
   opacity: 0;
 }
 .freqOptSelected .foDot {

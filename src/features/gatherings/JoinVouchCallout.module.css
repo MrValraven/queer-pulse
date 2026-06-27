@@ -1,0 +1,49 @@
+/* Join / vouch callout — plum emphasis for non-members landing on a gathering. */
+.callout {
+  background: var(--plum);
+  color: var(--cream);
+  border-radius: 18px;
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--jade-rgb), 0.2);
+  color: var(--jade);
+  font-size: 20px;
+}
+.body {
+  min-width: 0;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 21px;
+  color: var(--cream);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.text {
+  font-size: 13.5px;
+  color: rgba(247, 243, 238, 0.68);
+  line-height: 1.6;
+  margin-top: 8px;
+}
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}

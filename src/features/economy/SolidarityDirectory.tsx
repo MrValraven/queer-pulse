@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
+import { useConnect } from '../../app/providers/ConnectProvider'
 import {
   PRACTITIONERS, FILTERS, TINT_BG, TINT_FG, initials, type Cat,
 } from './solidarity.data'
@@ -10,7 +11,7 @@ import styles from './SolidarityPage.module.css'
 export function SolidarityDirectory() {
   const [cat, setCat] = useState<Cat | 'all'>('all')
   const [query, setQuery] = useState('')
-  const messages = routes.messages
+  const { openConnect } = useConnect()
   const q = query.toLowerCase()
 
   const items = PRACTITIONERS.filter((p) => {
@@ -92,7 +93,13 @@ export function SolidarityDirectory() {
                 </div>
                 <div className={styles.pcFoot}>
                   <span className={styles.pcLang}>{p.langs.join(' · ')}</span>
-                  <Link to={messages} className={styles.pcContact}>Contact →</Link>
+                  <button
+                    type="button"
+                    className={styles.pcContact}
+                    onClick={() => openConnect(p.id)}
+                  >
+                    Contact →
+                  </button>
                 </div>
               </article>
             ))}

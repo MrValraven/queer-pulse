@@ -1,16 +1,28 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiPlus, FiCheck } from 'react-icons/fi'
 import { ImageSlot } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useSaved } from '../../app/providers/SavedProvider'
 import { StudioShell } from './StudioShell'
 import s from './live.module.css'
-import { WF, PLAYED, SET, CHAT, TABS } from './studioLive.data'
+import { WF, PLAYED, SET, CHAT, TABS, coverImage } from './studioLive.data'
 
 const stateClass: Record<string, string> = { played: s.setPlayed, now: s.setNow, upnext: s.setUpNext, queued: s.setQueued }
 
+const LIVE_TRACK = {
+  id: 'post:studio-live-carta-para-a-santa',
+  kind: 'post' as const,
+  title: 'Carta para a santa',
+  href: '/studio/live',
+  meta: 'Mariana Sol · live set',
+}
+
 export function StudioLivePage() {
   const { showToast } = useToast()
+  const { isSaved, toggleSave } = useSaved()
   const [tab, setTab] = useState('Chat')
+  const saved = isSaved(LIVE_TRACK.id)
 
   return (
     <StudioShell>
@@ -28,7 +40,7 @@ export function StudioLivePage() {
           <div className={s.nowCard}>
             <div className={s.nowInner}>
               <div className={s.nowArt}>
-                <ImageSlot tint="coral" width="100%" height="100%" radius={14} placeholder="cover · Carta para a santa" style={{ position: 'absolute', inset: 0 }} />
+                <ImageSlot src={coverImage} tint="coral" width="100%" height="100%" radius={14} placeholder="cover · Carta para a santa" style={{ position: 'absolute', inset: 0 }} />
                 <span className={s.stamp}>
                   <span className={s.live} /> on air
                 </span>
@@ -54,7 +66,9 @@ export function StudioLivePage() {
                   <button className={`${s.bt} ${s.btP}`} onClick={() => showToast('Tipped €2 to Mariana', 'success')}>
                     Tip Mariana · €2
                   </button>
-                  <button className={s.bt}>＋ Save track</button>
+                  <button className={s.bt} onClick={() => { const now = toggleSave(LIVE_TRACK); showToast(now ? 'Track saved to your library' : 'Removed from your library', now ? 'success' : 'info') }}>
+                    {saved ? <><FiCheck /> Saved</> : <><FiPlus /> Save track</>}
+                  </button>
                   <Link to="/studio/track" className={s.bt}>
                     Lyrics &amp; notes →
                   </Link>
@@ -96,7 +110,7 @@ export function StudioLivePage() {
               <div key={r.n} className={`${s.setRow} ${stateClass[r.state]}`}>
                 <span className={s.srN}>{r.n}</span>
                 <span className={s.srCov}>
-                  <ImageSlot tint={r.tint as 'coral' | 'jade' | 'plum'} width={34} height={34} radius={5} placeholder="" />
+                  <ImageSlot src={r.image} tint={r.tint as 'coral' | 'jade' | 'plum'} width={34} height={34} radius={5} placeholder="" />
                 </span>
                 <div className={s.srInfo}>
                   <h5>

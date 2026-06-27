@@ -2,8 +2,16 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, ImageSlot } from '../../shared/components/ui'
 import { films } from './data'
-import { CONTENT_NOTES, FACTS, LOBBY, TABS, type WatchTab } from './watchPage.data'
+import {
+  CONTENT_NOTES,
+  FACTS,
+  LOBBY,
+  NEXT_UP_STILL_BY_ID,
+  TABS,
+  type WatchTab,
+} from './watchPage.data'
 import styles from './WatchPage.module.css'
+import { routes } from '../../app/routeMap'
 
 const nextUp = films.filter((f) => f.id !== 'cascais').slice(0, 3)
 
@@ -37,7 +45,7 @@ export function WatchOverlay({ onDismiss }: { onDismiss: () => void }) {
           <Button size="lg" onClick={onDismiss}>
             I'm ready · play the film
           </Button>
-          <Button variant="ghost-dark" to="/film">
+          <Button variant="ghost-dark" to={routes.film}>
             Go back to film page
           </Button>
         </div>
@@ -204,9 +212,10 @@ export function WatchBelow() {
           </h2>
           <div className={styles.nextGrid}>
             {nextUp.map((film) => (
-              <Link key={film.id} to="/film" className={styles.nf}>
+              <Link key={film.id} to={routes.film} className={styles.nf}>
                 <div className={styles.nfPoster}>
                   <ImageSlot
+                    src={NEXT_UP_STILL_BY_ID[film.id] ?? film.image}
                     tint={film.tint}
                     width="100%"
                     height="100%"

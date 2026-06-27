@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Avatar, Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { useConnect } from '../../app/providers/ConnectProvider'
 import { routes } from '../../app/routeMap'
 import { memberProfiles } from '../members/data/memberProfiles'
 import type { Community } from '../homepage/data/types'
@@ -14,7 +14,7 @@ const relTint = (t: string): Tint =>
   t === 'sports' || t === 'social' || t === 'support' ? 'jade' : t === 'arts' || t === 'professional' ? 'coral' : 'plum'
 
 export function CommunitySidebar({ detail, related }: { detail: CommunityDetail; related: Community[] }) {
-  const { showToast } = useToast()
+  const { openConnect } = useConnect()
   const org = detail.organiser
   const orgMember = org.slug ? memberProfiles[org.slug] : undefined
   const orgAvatar = (
@@ -50,7 +50,7 @@ export function CommunitySidebar({ detail, related }: { detail: CommunityDetail;
         </div>
         <div className={styles.sbBadge}>{org.role}</div>
         <p className={styles.sbOrgBio}>{detail.organiser.bio}</p>
-        <Button variant="ghost" className={styles.sbFull} onClick={() => showToast(`Message sent to ${detail.organiser.name.split(' ')[0]}.`, 'success')}>
+        <Button variant="ghost" className={styles.sbFull} onClick={() => openConnect(org.slug)}>
           Send a message
         </Button>
       </div>

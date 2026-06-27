@@ -188,6 +188,27 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    border-color 0.22s var(--ease);
+}
+.therapistCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(45, 27, 61, 0.16);
+  box-shadow: 0 14px 34px rgba(45, 27, 61, 0.08);
+}
+.therapistCard:hover .tcContact {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+.therapistCard:focus-visible {
+  outline: 2px solid var(--jade);
+  outline-offset: 3px;
 }
 .tcTop {
   display: flex;
@@ -195,16 +216,36 @@
   gap: 14px;
 }
 .tcAv {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: 18px;
   flex: none;
+}
+.tcHeadText {
+  min-width: 0;
+  flex: 1;
+}
+.tcStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 4px 9px;
+  flex: none;
+  white-space: nowrap;
+}
+.tcStatusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.tcStatusOpen {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.1);
+}
+.tcStatusFull {
+  color: var(--accent-ink);
+  background: rgba(232, 119, 90, 0.12);
 }
 .tcName {
   font-family: var(--serif);

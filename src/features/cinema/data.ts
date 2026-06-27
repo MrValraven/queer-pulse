@@ -20,19 +20,22 @@ export interface CinemaFilm {
   country: string
   year: string
   subs: string[]
+  /** Poster image URL, when a real image is wired (else the placeholder shows). */
+  image?: string
 }
 
 export const films: CinemaFilm[] = [
-  { id: 'cascais', access: 'free', accessLabel: 'Free', kicker: 'Narrative feature', titlePre: 'A summer in ', titleEm: 'Cascais', meta: `${memberName('ines')} · PT · 104 min`, note: 'Three sisters, one inheritance, and the ghost of the great-aunt who left them the house.', by: 'Sara M.', tint: 'coral', format: 'Feature', country: 'PT', year: '2024', subs: ['PT subs', 'EN subs'] },
-  { id: 'paris', access: 'member', accessLabel: 'Sustainer', kicker: 'Documentary', titlePre: 'Paris is ', titleEm: 'still', titlePost: ' burning', meta: 'Akin Diallo · FR/SN · 87 min', note: 'A West African ballroom scene, two decades after the diaspora that built it.', by: 'D. Okoye', tint: 'plum', format: 'Documentary', country: 'FR/SN', year: '2025', subs: ['FR spoken', 'EN subs', 'PT subs'] },
-  { id: 'pharmacy', access: 'free', accessLabel: 'Free', kicker: 'Short · 18 min', titlePre: 'The pharmacy at 3am', meta: 'Rui Almeida · PT · 18 min', note: 'A trans woman, a graveyard shift, a stranger asking for testosterone.', by: 'made here', tint: 'jade', format: 'Short', country: 'PT', year: '2026', subs: ['PT spoken'] },
-  { id: 'mother', access: 'rent', accessLabel: 'Rent · €3', kicker: 'Narrative feature', titlePre: 'Mother, ', titleEm: 'weather', meta: 'Yuki Tanaka · JP · 118 min', note: 'A son returns to Hokkaido to come out to his mother through the act of cooking her dinner.', by: "curators' council", tint: 'coral', format: 'Feature', country: 'JP', year: '2024', subs: ['JP spoken', 'EN subs', 'PT subs'] },
-  { id: 'archive', access: 'member', accessLabel: 'Sustainer', kicker: 'Documentary', titlePre: 'The archive ', titleEm: 'keepers', meta: 'Laila Hassan · EG/UK · 76 min', note: "Cairo's hidden queer archive, smuggled to London, returned in pieces.", by: 'Yara R.', tint: 'plum', format: 'Documentary', country: 'EG/UK', year: '2023', subs: ['EN spoken', 'PT subs', 'AR subs'] },
-  { id: 'carta', access: 'free', accessLabel: 'Free', kicker: 'Series · 4 ep', titlePre: 'Carta a quem ', titleEm: 'fica', meta: 'Mateus Ferreira · BR · 4×22 min', note: "Letters from young Brazilians who didn't emigrate, to those who did.", by: 'Sara M.', tint: 'jade', format: 'Series', country: 'BR', year: '2025', subs: ['PT spoken', 'EN subs'] },
+  { id: 'cascais', access: 'free', accessLabel: 'Free', kicker: 'Narrative feature', titlePre: 'A summer in ', titleEm: 'Cascais', meta: `${memberName('ines')} · PT · 104 min`, note: 'Three sisters, one inheritance, and the ghost of the great-aunt who left them the house.', by: 'Sara M.', tint: 'coral', format: 'Feature', country: 'PT', year: '2024', subs: ['PT subs', 'EN subs'], image: 'https://images.unsplash.com/photo-1778372670061-e84b57764aec?q=80&w=400&auto=format&fit=crop' },
+  { id: 'paris', access: 'member', accessLabel: 'Sustainer', kicker: 'Documentary', titlePre: 'Paris is ', titleEm: 'still', titlePost: ' burning', meta: 'Akin Diallo · FR/SN · 87 min', note: 'A West African ballroom scene, two decades after the diaspora that built it.', by: 'D. Okoye', tint: 'plum', format: 'Documentary', country: 'FR/SN', year: '2025', subs: ['FR spoken', 'EN subs', 'PT subs'], image: 'https://images.unsplash.com/photo-1572188863110-46d457c9234d?q=80&w=500&auto=format&fit=crop' },
+  { id: 'pharmacy', access: 'free', accessLabel: 'Free', kicker: 'Short · 18 min', titlePre: 'The pharmacy at 3am', meta: 'Rui Almeida · PT · 18 min', note: 'A trans woman, a graveyard shift, a stranger asking for testosterone.', by: 'made here', tint: 'jade', format: 'Short', country: 'PT', year: '2026', subs: ['PT spoken'], image: 'https://images.unsplash.com/photo-1618410321132-9f4cebb2f7f5?q=80&w=400&auto=format&fit=crop' },
+  { id: 'mother', access: 'rent', accessLabel: 'Rent · €3', kicker: 'Narrative feature', titlePre: 'Mother, ', titleEm: 'weather', meta: 'Yuki Tanaka · JP · 118 min', note: 'A son returns to Hokkaido to come out to his mother through the act of cooking her dinner.', by: "curators' council", tint: 'coral', format: 'Feature', country: 'JP', year: '2024', subs: ['JP spoken', 'EN subs', 'PT subs'], image: 'https://images.unsplash.com/photo-1655367574486-f63675dd69eb?q=80&w=400&auto=format&fit=crop' },
+  { id: 'archive', access: 'member', accessLabel: 'Sustainer', kicker: 'Documentary', titlePre: 'The archive ', titleEm: 'keepers', meta: 'Laila Hassan · EG/UK · 76 min', note: "Cairo's hidden queer archive, smuggled to London, returned in pieces.", by: 'Yara R.', tint: 'plum', format: 'Documentary', country: 'EG/UK', year: '2023', subs: ['EN spoken', 'PT subs', 'AR subs'], image: 'https://images.unsplash.com/photo-1711479898431-9031deb4ff0e?q=80&w=400&auto=format&fit=crop' },
+  { id: 'carta', access: 'free', accessLabel: 'Free', kicker: 'Series · 4 ep', titlePre: 'Carta a quem ', titleEm: 'fica', meta: 'Mateus Ferreira · BR · 4×22 min', note: "Letters from young Brazilians who didn't emigrate, to those who did.", by: 'Sara M.', tint: 'jade', format: 'Series', country: 'BR', year: '2025', subs: ['PT spoken', 'EN subs'], image: 'https://images.unsplash.com/photo-1758232589376-9f3db5aa371d?q=80&w=400&auto=format&fit=crop' },
 ]
 
 export const coverFilm = {
   kicker: 'Cover film · streaming until 14 June',
+  image: 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=600&auto=format&fit=crop',
   titlePre: 'The light ',
   titleEm: 'between',
   titlePost: ' rooms',

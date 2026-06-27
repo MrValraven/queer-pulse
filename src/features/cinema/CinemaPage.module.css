@@ -320,11 +320,11 @@
 }
 .free {
   background: rgba(var(--jade-rgb), 0.32);
-  color: #9be0bd;
+  color: var(--jade-soft);
 }
 .member {
   background: rgba(var(--accent-rgb), 0.32);
-  color: #ffc4af;
+  color: var(--accent-soft);
 }
 .rent {
   background: rgba(247, 243, 238, 0.18);
@@ -616,7 +616,7 @@
 }
 .bgLive {
   background: rgba(var(--accent-rgb), 0.16);
-  color: #ffc4af;
+  color: var(--accent-soft);
 }
 .bgParty {
   background: rgba(247, 243, 238, 0.08);
@@ -624,7 +624,7 @@
 }
 .bgPremiere {
   background: rgba(var(--jade-rgb), 0.18);
-  color: #9be0bd;
+  color: var(--jade-soft);
 }
 
 .ledger {

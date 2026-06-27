@@ -5,21 +5,50 @@ import { LuLandmark } from 'react-icons/lu'
 import { TbPin } from 'react-icons/tb'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { CATS, CAT_STYLE, THREADS } from './forum.data'
+import { routes } from '../../app/routeMap'
+import { CATS, CAT_STYLE, THREADS, type Thread } from './forum.data'
+import { ComposeThreadModal, type NewThreadInput } from './ComposeThreadModal'
 import styles from './ForumPage.module.css'
 
 export function ForumPage() {
-  const { showToast } = useToast()
   const [cat, setCat] = useState('all')
   const [sort, setSort] = useState<'top' | 'new'>('top')
   const [voted, setVoted] = useState<Set<number>>(new Set())
+  const [composing, setComposing] = useState(false)
+  const [extraThreads, setExtraThreads] = useState<Thread[]>([])
+
+  const allThreads = useMemo(() => [...extraThreads, ...THREADS], [extraThreads])
 
   const threads = useMemo(() => {
-    const filtered = THREADS.filter((t) => cat === 'all' || t.cat === cat)
+    const filtered = allThreads.filter((t) => cat === 'all' || t.cat === cat)
     if (sort === 'new') return [...filtered].sort((a, b) => b.id - a.id)
     return [...filtered].sort((a, b) => (b.pinned ? 1000 : 0) + b.upvotes - ((a.pinned ? 1000 : 0) + a.upvotes))
-  }, [cat, sort])
+  }, [allThreads, cat, sort])
+
+  function publishThread({ title, body, cat: postCat }: NewThreadInput) {
+    const id = Date.now()
+    const excerpt = body.length > 160 ? `${body.slice(0, 157)}…` : body
+    setExtraThreads((prev) => [
+      {
+        id,
+        cat: postCat,
+        title,
+        excerpt,
+        author: { i: 'SF', n: 'You', t: 'var(--plum)', tt: 'var(--cream)' },
+        posted: 'just now',
+        views: 1,
+        upvotes: 1,
+        comments: 0,
+        tags: [],
+        body: body.split('\n').map((p) => p.trim()).filter(Boolean),
+        replies: [],
+      },
+      ...prev,
+    ])
+    // Surface the new post regardless of current filter/sort.
+    setCat('all')
+    setSort('new')
+  }
 
   function toggleVote(id: number) {
     setVoted((cur) => {
@@ -42,7 +71,7 @@ export function ForumPage() {
               </h1>
               <p>Questions, proposals, guides, and the slow work of building a community. Members only — be kind, be useful.</p>
             </div>
-            <Button className={styles.newBtn} onClick={() => showToast('Draft started — write your post', 'success')}>
+            <Button className={styles.newBtn} onClick={() => setComposing(true)}>
               + New post
             </Button>
           </div>
@@ -66,16 +95,16 @@ export function ForumPage() {
                 </button>
               ))}
               <div className={styles.sbDivider} />
-              <Link to="/safety" className={styles.sbLink}>
+              <Link to={routes.safety} className={styles.sbLink}>
                 <FiAlertTriangle /> Emergency resources
               </Link>
-              <Link to="/housing" className={styles.sbLink}>
+              <Link to={routes.housing} className={styles.sbLink}>
                 <FiHome /> Housing board
               </Link>
-              <Link to="/jobs" className={styles.sbLink}>
+              <Link to={routes.jobs} className={styles.sbLink}>
                 <FiBriefcase /> Job board
               </Link>
-              <Link to="/governance" className={styles.sbLink}>
+              <Link to={routes.governance} className={styles.sbLink}>
                 <LuLandmark /> Governance &amp; transparency
               </Link>
             </aside>
@@ -149,6 +178,10 @@ export function ForumPage() {
           </div>
         </div>
       </section>
+
+      {composing && (
+        <ComposeThreadModal onClose={() => setComposing(false)} onPublish={publishThread} />
+      )}
     </PageShell>
   )
 }

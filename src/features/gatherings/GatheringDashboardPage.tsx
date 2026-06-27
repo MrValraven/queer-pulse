@@ -28,7 +28,7 @@ export function GatheringDashboardPage() {
   return (
     <div className={styles.page}>
       <div className={styles.topbar}>
-        <Link to="/" className={styles.brand}>
+        <Link to={routes.homepage} className={styles.brand}>
           <span className={styles.brandDot} />
           Queer<span className={styles.brandQ}>Pulse</span>
         </Link>

@@ -1,22 +1,38 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FiHeart } from 'react-icons/fi'
+import { FiHeart, FiPlus, FiCheck } from 'react-icons/fi'
 import { ImageSlot } from '../../shared/components/ui'
+import { useSaved } from '../../app/providers/SavedProvider'
+import { useToast } from '../../shared/components/feedback/useToast'
 import { memberName } from '../members/data/members'
 import { StudioShell } from './StudioShell'
+import { StudioTipModal } from './StudioTipModal'
+import { routes } from '../../app/routeMap'
 import styles from './studio.module.css'
-import { TRACKS, TABS, MORE } from './studioAlbum.data'
+import { TRACKS, TABS, MORE, ALBUM_COVER, ALBUM } from './studioAlbum.data'
 
 const tagClass = { free: styles.tagFree, mem: styles.tagMem }
 
 export function StudioAlbumPage() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Tracklist')
+  const { isSaved, toggleSave } = useSaved()
+  const { showToast } = useToast()
+  const [tipOpen, setTipOpen] = useState(false)
+  const saved = isSaved(ALBUM.id)
+
+  function share() {
+    const url = typeof window !== 'undefined' ? window.location.href : routes.studioAlbum
+    navigator.clipboard?.writeText(url).then(
+      () => showToast('Link copied to clipboard', 'success'),
+      () => showToast('Could not copy link', 'info'),
+    )
+  }
 
   return (
     <StudioShell>
       <section className={styles.detailHero}>
         <div className={styles.detailArt}>
-          <ImageSlot tint="coral" width="100%" height="100%" radius={16} placeholder="cover · Cidade dos santos" style={{ position: 'absolute', inset: 0 }} />
+          <ImageSlot src={ALBUM_COVER} tint="coral" width="100%" height="100%" radius={16} placeholder="cover · Cidade dos santos" style={{ position: 'absolute', inset: 0 }} />
         </div>
         <div>
           <div className={styles.kind}>Album · 11 tracks · 42 min</div>
@@ -27,14 +43,16 @@ export function StudioAlbumPage() {
             by <strong>Mariana Sol</strong> · 2026 · Sintra
           </div>
           <div className={styles.heroActions}>
-            <Link to="/studio" className={styles.playBig} aria-label="Play">
+            <Link to={routes.studio} className={styles.playBig} aria-label="Play">
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
               </svg>
             </Link>
-            <button>＋ Library</button>
-            <button className={styles.tip}><FiHeart /> Tip Mariana</button>
-            <button>Share</button>
+            <button onClick={() => { const now = toggleSave(ALBUM); showToast(now ? 'Album added to your library' : 'Removed from your library', now ? 'success' : 'info') }}>
+              {saved ? <><FiCheck /> In library</> : <><FiPlus /> Library</>}
+            </button>
+            <button className={styles.tip} onClick={() => setTipOpen(true)}><FiHeart /> Tip Mariana</button>
+            <button onClick={share}>Share</button>
           </div>
         </div>
       </section>
@@ -55,7 +73,7 @@ export function StudioAlbumPage() {
                 <div key={t.n} className={[styles.setRow, t.now && styles.setRowNow].filter(Boolean).join(' ')}>
                   <div className={styles.n}>{t.n}</div>
                   <div className={styles.srCov}>
-                    <ImageSlot tint="coral" width={36} height={36} radius={5} placeholder="" />
+                    <ImageSlot src={t.image} tint="coral" width={36} height={36} radius={5} placeholder="" />
                   </div>
                   <div>
                     <h5>
@@ -157,7 +175,7 @@ export function StudioAlbumPage() {
               <span className={styles.k}>Plays this month</span>
               <span className={styles.v}>42,840</span>
             </div>
-            <Link to="/governance" className={styles.cta}>
+            <Link to={routes.governance} className={styles.cta}>
               Full ledger →
             </Link>
           </div>
@@ -175,9 +193,9 @@ export function StudioAlbumPage() {
         </div>
         <div className={styles.rowGrid}>
           {MORE.map((m) => (
-            <Link key={m.pre} to="/studio/album" className={styles.card}>
+            <Link key={m.pre} to={routes.studioAlbum} className={styles.card}>
               <div className={styles.cardCov}>
-                <ImageSlot tint={m.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                <ImageSlot src={m.image} tint={m.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
                 <span className={`${styles.tag} ${tagClass[m.tag]}`}>{m.tagLabel}</span>
               </div>
               <h4>
@@ -189,6 +207,8 @@ export function StudioAlbumPage() {
           ))}
         </div>
       </section>
+
+      {tipOpen && <StudioTipModal recipient="Mariana Sol" onClose={() => setTipOpen(false)} />}
     </StudioShell>
   )
 }

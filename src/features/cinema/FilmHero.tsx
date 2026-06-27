@@ -2,21 +2,41 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, ImageSlot } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { FACTS, TIPS, WATCH_TABS } from './filmPage.data'
+import { useSaved } from '../../app/providers/SavedProvider'
+import { FACTS, FILM_POSTER, TIPS, WATCH_TABS } from './filmPage.data'
 import styles from './FilmPage.module.css'
+import { routes } from '../../app/routeMap'
+
+const FILM_SAVED = {
+  id: 'film:the-light-between-rooms',
+  kind: 'film' as const,
+  title: 'The light between rooms',
+  href: '/film',
+  meta: 'Maria Vasconcelos · 2025',
+}
 
 export function FilmHero() {
   const { showToast } = useToast()
+  const { isSaved, toggleSave } = useSaved()
   const [tip, setTip] = useState(1)
   const [tab, setTab] = useState(0)
+
+  const onWatchlist = isSaved(FILM_SAVED.id)
+  function toggleWatchlist() {
+    const next = toggleSave(FILM_SAVED)
+    showToast(
+      next ? 'Added to your watchlist' : 'Removed from your watchlist',
+      next ? 'success' : 'info',
+    )
+  }
 
   return (
     <section className={styles.hero}>
       <div className={`wrap ${styles.heroInner}`}>
         <div className={styles.posterCol}>
           <div className={styles.poster}>
-            <ImageSlot tint="plum" width="100%" height="100%" radius={18} placeholder="film poster · 3:4" style={{ position: 'absolute', inset: 0 }} />
-            <Link to="/cinema/watch" className={styles.playFab}>
+            <ImageSlot src={FILM_POSTER} tint="plum" width="100%" height="100%" radius={18} placeholder="film poster · 3:4" style={{ position: 'absolute', inset: 0 }} />
+            <Link to={routes.cinemaWatch} className={styles.playFab}>
               <span className={styles.playCircle}>
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M8 5v14l11-7L8 5z" />
@@ -87,15 +107,50 @@ export function FilmHero() {
               ))}
             </div>
             <div className={styles.wbActions}>
-              <Button size="lg" to="/cinema/watch">
+              <Button size="lg" to={routes.cinemaWatch}>
                 ▶ &nbsp;Watch full film · 1h 32m
               </Button>
-              <span className={styles.iconBtn} title="Add to watchlist" onClick={() => showToast('Added to your watchlist', 'success')}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+              <span
+                role="button"
+                tabIndex={0}
+                className={[styles.iconBtn, onWatchlist && styles.iconBtnOn].filter(Boolean).join(' ')}
+                title={onWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+                aria-pressed={onWatchlist}
+                aria-label={onWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+                onClick={toggleWatchlist}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    toggleWatchlist()
+                  }
+                }}
+              >
+                <svg viewBox="0 0 24 24" fill={onWatchlist ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
                   <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
                 </svg>
               </span>
-              <span className={styles.iconBtn} title="Share" onClick={() => showToast('Link copied', 'success')}>
+              <span
+                role="button"
+                tabIndex={0}
+                className={styles.iconBtn}
+                title="Share"
+                aria-label="Copy link to this film"
+                onClick={() => {
+                  void navigator.clipboard
+                    ?.writeText(window.location.href)
+                    .then(() => showToast('Link copied', 'success'))
+                    .catch(() => showToast('Could not copy link', 'error'))
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    void navigator.clipboard
+                      ?.writeText(window.location.href)
+                      .then(() => showToast('Link copied', 'success'))
+                      .catch(() => showToast('Could not copy link', 'error'))
+                  }
+                }}
+              >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
                   <circle cx={18} cy={5} r={3} />
                   <circle cx={6} cy={12} r={3} />

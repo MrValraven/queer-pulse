@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { ResourceHero } from './ResourceHero'
 import { CATEGORIES, GUIDES, POPULAR } from './library.data'
 import res from './resources.module.css'
@@ -103,10 +104,10 @@ export function LibraryPage() {
         title={<>Can't find <em>what you need?</em></>}
         sub="Ask in the forum — someone has usually been through it. Or suggest a guide we should write next."
       >
-        <Button to="/forum" variant="primary" size="lg">
+        <Button to={routes.forum} variant="primary" size="lg">
           Ask the community
         </Button>
-        <Button to="/contact" variant="ghost-dark" size="lg">
+        <Button to={routes.contact} variant="ghost-dark" size="lg">
           Suggest a guide
         </Button>
       </Outro>

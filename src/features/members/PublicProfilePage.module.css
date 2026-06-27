@@ -89,7 +89,7 @@
 .verified svg {
   width: 10px;
   height: 10px;
-  stroke: #fff;
+  stroke: var(--cream);
   stroke-width: 3;
   fill: none;
   stroke-linecap: round;

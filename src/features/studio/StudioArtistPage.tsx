@@ -1,34 +1,37 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FiHeart } from 'react-icons/fi'
+import { FiHeart, FiPlus, FiCheck } from 'react-icons/fi'
 import { ImageSlot } from '../../shared/components/ui'
+import { useSocial } from '../../app/providers/SocialProvider'
+import { useToast } from '../../shared/components/feedback/useToast'
 import { StudioShell } from './StudioShell'
+import { StudioTipModal } from './StudioTipModal'
+import { heroImage, ARTIST_ID, TABS, RELEASES, SINGLES } from './studioArtist.data'
+import { routes } from '../../app/routeMap'
 import styles from './studio.module.css'
 
-const TABS = ['Music', 'Featured in', 'Sheet music', 'About'] as const
-
-const RELEASES = [
-  { pre: 'Cidade dos ', em: 'santos', meta: 'Album · 11 tracks · 2026', buy: 'buy · €8', split: '€6.40 to Mariana', tint: 'coral' as const, to: '/studio/album' },
-  { pre: 'A ', em: 'Beja', meta: 'EP · 5 tracks · 2024', buy: 'buy · €4', split: '€3.20', tint: 'plum' as const, to: '/studio/album' },
-  { pre: 'Devoção', meta: 'Album · 9 tracks · 2023', buy: 'buy · €7', split: '€5.60', tint: 'jade' as const, to: '/studio/album' },
-]
-const SINGLES = [
-  { pre: 'Carta para a ', em: 'santa', meta: 'Single · 2026', tag: 'mem' as const, tint: 'coral' as const },
-  { pre: 'Mãe, ', em: 'vento', meta: 'Single · 2025', tag: 'free' as const, tint: 'jade' as const },
-  { pre: 'Bairro ', em: 'quente', meta: 'Single · 2024', tag: 'free' as const, tint: 'plum' as const },
-  { pre: 'Para a ', em: 'Inês', meta: 'Single · 2023', tag: 'free' as const, tint: 'coral' as const },
-  { pre: 'O ', em: 'silêncio', meta: 'Single · 2022', tag: 'mem' as const, tint: 'plum' as const },
-]
 const tagClass = { free: styles.tagFree, mem: styles.tagMem }
 
 export function StudioArtistPage() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Music')
+  const { isFollowing, toggleFollow } = useSocial()
+  const { showToast } = useToast()
+  const [tipOpen, setTipOpen] = useState(false)
+  const following = isFollowing(ARTIST_ID)
+
+  function share() {
+    const url = typeof window !== 'undefined' ? window.location.href : '/studio/artist'
+    navigator.clipboard?.writeText(url).then(
+      () => showToast('Link copied to clipboard', 'success'),
+      () => showToast('Could not copy link', 'info'),
+    )
+  }
 
   return (
     <StudioShell>
       <section className={styles.detailHero}>
         <div className={styles.detailArt} style={{ borderRadius: '50%' }}>
-          <ImageSlot tint="coral" width="100%" height="100%" radius={9999} shape="circle" placeholder="Mariana Sol" initials="MS" style={{ position: 'absolute', inset: 0 }} />
+          <ImageSlot src={heroImage} tint="coral" width="100%" height="100%" radius={9999} shape="circle" placeholder="Mariana Sol" initials="MS" style={{ position: 'absolute', inset: 0 }} />
         </div>
         <div>
           <div className={styles.kind}>Artist · Sintra</div>
@@ -39,14 +42,16 @@ export function StudioArtistPage() {
             8 releases · 15 sheet-music sets · <strong>4,200 sustainers</strong>
           </div>
           <div className={styles.heroActions}>
-            <Link to="/studio/album" className={styles.playBig} aria-label="Play">
+            <Link to={routes.studioAlbum} className={styles.playBig} aria-label="Play">
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
               </svg>
             </Link>
-            <button>＋ Follow</button>
-            <button className={styles.tip}><FiHeart /> Tip Mariana</button>
-            <button>Share</button>
+            <button onClick={() => { const now = toggleFollow(ARTIST_ID); showToast(now ? 'Following Mariana Sol' : 'Unfollowed Mariana Sol', now ? 'success' : 'info') }}>
+              {following ? <><FiCheck /> Following</> : <><FiPlus /> Follow</>}
+            </button>
+            <button className={styles.tip} onClick={() => setTipOpen(true)}><FiHeart /> Tip Mariana</button>
+            <button onClick={share}>Share</button>
           </div>
           <div className={styles.payPill}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -91,7 +96,7 @@ export function StudioArtistPage() {
                 {RELEASES.map((r) => (
                   <Link key={r.pre} to={r.to} className={styles.card}>
                     <div className={styles.cardCov}>
-                      <ImageSlot tint={r.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                      <ImageSlot src={r.image} tint={r.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
                       <span className={`${styles.tag} ${styles.tagMem}`}>Sustainer</span>
                     </div>
                     <h4>
@@ -114,9 +119,9 @@ export function StudioArtistPage() {
               </div>
               <div className={styles.rowGrid} style={{ gridTemplateColumns: 'repeat(5,1fr)' }}>
                 {SINGLES.map((s) => (
-                  <Link key={s.pre} to="/studio/album" className={styles.card}>
+                  <Link key={s.pre} to={routes.studioAlbum} className={styles.card}>
                     <div className={styles.cardCov}>
-                      <ImageSlot tint={s.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                      <ImageSlot src={s.image} tint={s.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
                       <span className={`${styles.tag} ${tagClass[s.tag]}`}>{s.tag === 'mem' ? 'Sustainer' : 'Free'}</span>
                     </div>
                     <h4>
@@ -146,7 +151,7 @@ export function StudioArtistPage() {
               <Link to="/checkout" className={`${styles.bt} ${styles.btP}`}>
                 Subscribe · €3/mo
               </Link>
-              <button className={styles.bt}>One-off tip</button>
+              <button className={styles.bt} onClick={() => setTipOpen(true)}>One-off tip</button>
             </div>
           </div>
 
@@ -168,7 +173,7 @@ export function StudioArtistPage() {
               <span className={styles.k}>Direct subscribers</span>
               <span className={styles.v}>€<em>612</em></span>
             </div>
-            <Link to="/governance" className={styles.cta}>
+            <Link to={routes.governance} className={styles.cta}>
               Full ledger →
             </Link>
           </div>
@@ -181,13 +186,15 @@ export function StudioArtistPage() {
                 <br />
                 10 Jun · 21:00 Lisbon
               </span>
-              <Link to="/rsvp" className={styles.cta} style={{ marginTop: 0 }}>
+              <Link to={routes.rsvp} className={styles.cta} style={{ marginTop: 0 }}>
                 RSVP
               </Link>
             </div>
           </div>
         </div>
       </section>
+
+      {tipOpen && <StudioTipModal recipient="Mariana Sol" onClose={() => setTipOpen(false)} />}
     </StudioShell>
   )
 }

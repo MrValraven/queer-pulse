@@ -75,7 +75,7 @@
 
 .navItemActive {
   background: rgba(200, 90, 64, 0.08);
-  color: #c85a40;
+  color: var(--accent-ink);
   font-weight: 600;
 }
 
@@ -171,7 +171,7 @@
 }
 
 .optCardDanger.optCardSelected {
-  border-color: #c85a40;
+  border-color: var(--accent-ink);
   box-shadow: 0 0 0 3px rgba(200, 90, 64, 0.1);
 }
 
@@ -192,8 +192,8 @@
 }
 
 .optCardDanger.optCardSelected .optRadio {
-  border-color: #c85a40;
-  background: #c85a40;
+  border-color: var(--accent-ink);
+  background: var(--accent-ink);
 }
 
 .optRadioInner {
@@ -204,7 +204,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--paper);
   opacity: 0;
   transition: opacity 0.15s;
 }
@@ -247,7 +247,7 @@
 }
 
 .optTitleDanger {
-  color: #c85a40;
+  color: var(--accent-ink);
 }
 
 .optDesc {
@@ -274,7 +274,7 @@
 
 .optTagPerm {
   background: rgba(200, 90, 64, 0.1);
-  color: #c85a40;
+  color: var(--accent-ink);
 }
 
 /* Pause strip */
@@ -403,7 +403,7 @@
 }
 
 .cfInputDanger:focus {
-  border-color: #c85a40;
+  border-color: var(--accent-ink);
 }
 
 .cfHint {
@@ -423,8 +423,8 @@
   font-family: var(--sans);
   font-size: 15px;
   font-weight: 600;
-  background: #c85a40;
-  color: #fff;
+  background: var(--accent-ink);
+  color: var(--cream);
   border: none;
   border-radius: 999px;
   padding: 13px 24px;
@@ -434,7 +434,7 @@
 }
 
 .btnDanger:hover {
-  background: #a84430;
+  background: var(--accent-deep);
   transform: translateY(-1px);
 }
 

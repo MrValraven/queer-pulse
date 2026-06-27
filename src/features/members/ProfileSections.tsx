@@ -32,7 +32,7 @@ function CheckIcon() {
     <svg width={13} height={13} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M5 12.5l4 4L19 7"
-        stroke="#fff"
+        stroke="var(--cream)"
         strokeWidth={3}
         strokeLinecap="round"
         strokeLinejoin="round"

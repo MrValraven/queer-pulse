@@ -25,6 +25,27 @@ const FEATURE_IMG2 =
 const FEATURE_IMG3 =
   "https://plus.unsplash.com/premium_photo-1697730015743-cdac31fb9337?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
+const INTERVIEW_IMG1 =
+  "https://images.unsplash.com/photo-1637348318881-03b4c930a723?q=80&w=600&auto=format&fit=crop";
+const INTERVIEW_IMG2 =
+  "https://images.unsplash.com/photo-1545732868-0d48f805c440?q=80&w=800&auto=format&fit=crop";
+const INTERVIEW_IMG3 =
+  "https://images.unsplash.com/photo-1553150858-ad6fda08b9e3?q=80&w=800&auto=format&fit=crop";
+
+const REVIEW_IMG1 =
+  "https://images.unsplash.com/photo-1557247311-67fb597462bf?q=80&w=800&auto=format&fit=crop";
+const REVIEW_IMG2 =
+  "https://images.unsplash.com/photo-1562861039-ce20a5fb38a4?q=80&w=800&auto=format&fit=crop";
+const REVIEW_IMG3 =
+  "https://images.unsplash.com/photo-1581906970826-b179d8d01d56?q=80&w=800&auto=format&fit=crop";
+
+const COMMUNITY_IMG1 =
+  "https://images.unsplash.com/photo-1583853448792-13103c3af99e?q=80&w=800&auto=format&fit=crop";
+const COMMUNITY_IMG2 =
+  "https://images.unsplash.com/photo-1590400146548-7b04a418108e?q=80&w=800&auto=format&fit=crop";
+const COMMUNITY_IMG3 =
+  "https://images.unsplash.com/photo-1600718818756-3f73a7d52f4f?q=80&w=800&auto=format&fit=crop";
+
 export interface ArchiveIssue {
   title: string;
   month: string;
@@ -145,6 +166,7 @@ export const INTERVIEWS: Card[] = [
     initials: MEMBERS.sofia.initials,
     tint: "plum",
     imgDesc: "Kiko Neves at the piano in his Marvila studio",
+    src: INTERVIEW_IMG1,
   },
   {
     id: "beatriz-pinto",
@@ -158,6 +180,7 @@ export const INTERVIEWS: Card[] = [
     initials: MEMBERS.ines.initials,
     tint: "coral",
     imgDesc: "Beatriz Pinto's hands shaping clay in her studio",
+    src: INTERVIEW_IMG2,
   },
   {
     id: "ilga-director",
@@ -170,6 +193,7 @@ export const INTERVIEWS: Card[] = [
     initials: "MC",
     tint: "jade",
     imgDesc: "Portrait in the ILGA Portugal offices",
+    src: INTERVIEW_IMG3,
   },
 ];
 
@@ -190,6 +214,7 @@ export const REVIEWS: Card[] = [
     tint: "plum",
     verdict: "essential",
     imgDesc: "Copy of The Argonauts on a table with coffee",
+    src: REVIEW_IMG1,
   },
   {
     id: "review-levante",
@@ -207,6 +232,7 @@ export const REVIEWS: Card[] = [
     tint: "plum",
     verdict: "essential",
     imgDesc: "Cinema Ideal marquee at night, wet cobblestones",
+    src: REVIEW_IMG2,
   },
   {
     id: "review-sereia",
@@ -220,6 +246,7 @@ export const REVIEWS: Card[] = [
     tint: "jade",
     verdict: "recommended",
     imgDesc: "Bar interior with old tiles, warm low lighting",
+    src: REVIEW_IMG3,
   },
 ];
 
@@ -235,6 +262,7 @@ export const COMMUNITY: Card[] = [
     initials: MEMBERS.ines.initials,
     tint: "jade",
     imgDesc: "Outdoor café tables in Intendente, Sunday afternoon",
+    src: COMMUNITY_IMG1,
   },
   {
     id: "barter-board",
@@ -247,6 +275,7 @@ export const COMMUNITY: Card[] = [
     initials: "MC",
     tint: "coral",
     imgDesc: "Handwritten note on a corkboard",
+    src: COMMUNITY_IMG2,
   },
   {
     id: "archive-night",
@@ -259,6 +288,7 @@ export const COMMUNITY: Card[] = [
     initials: "RF",
     tint: "jade",
     imgDesc: "Someone holding old photographs, warm lamp light",
+    src: COMMUNITY_IMG3,
   },
 ];
 
@@ -286,19 +316,19 @@ export const ARCHIVE: ArchiveIssue[] = [
     title: "The Night We Stopped Pretending",
     month: "May 2026",
     count: "Issue 17 · 8 articles",
-    bg: "#3D2255",
+    bg: "var(--plum)",
   },
   {
     title: "What Solidarity Actually Costs",
     month: "April 2026",
     count: "Issue 16 · 7 articles",
-    bg: "#2A5C42",
+    bg: "var(--jade)",
   },
   {
     title: "Bodies in Translation",
     month: "March 2026",
     count: "Issue 15 · 9 articles",
-    bg: "#7A3820",
+    bg: "var(--accent-ink)",
   },
   {
     title: "The Queer City Guide",

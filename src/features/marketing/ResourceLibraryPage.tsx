@@ -17,13 +17,13 @@ interface Resource {
 
 const CATS = [
   { c: 'all', label: 'All', dot: 'var(--plum)' },
-  { c: 'health', label: 'Health', dot: '#4A8C6F' },
-  { c: 'legal', label: 'Legal', dot: '#C85A40' },
-  { c: 'housing', label: 'Housing', dot: '#2D1B3D' },
-  { c: 'money', label: 'Money', dot: '#4A8C6F' },
-  { c: 'identity', label: 'Identity', dot: '#7050AA' },
-  { c: 'safety', label: 'Safety', dot: '#C85A40' },
-  { c: 'community', label: 'Community', dot: '#4A8C6F' },
+  { c: 'health', label: 'Health', dot: 'var(--jade)' },
+  { c: 'legal', label: 'Legal', dot: 'var(--accent-ink)' },
+  { c: 'housing', label: 'Housing', dot: 'var(--plum)' },
+  { c: 'money', label: 'Money', dot: 'var(--jade)' },
+  { c: 'identity', label: 'Identity', dot: 'var(--violet)' },
+  { c: 'safety', label: 'Safety', dot: 'var(--accent-ink)' },
+  { c: 'community', label: 'Community', dot: 'var(--jade)' },
 ]
 const CAT_META: Record<string, { label: string; dot: string }> = Object.fromEntries(
   CATS.filter((c) => c.c !== 'all').map((c) => [c.c, { label: c.label, dot: c.dot }]),

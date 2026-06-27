@@ -1,21 +1,12 @@
 import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { THERAPISTS, EXPERIENCES, SNS, LANGS } from './mentalHealth.data'
+import { Avatar, Button } from '../../shared/components/ui'
+import { THERAPISTS, EXPERIENCES, SNS, LANGS, type Therapist } from './mentalHealth.data'
+import { TherapistProfileModal } from './TherapistProfileModal'
 import styles from './MentalHealthPage.module.css'
 
-function initials(name: string) {
-  return name
-    .replace(/Dr\.\s*/, '')
-    .split(' ')
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('')
-}
-
 export function TherapistSection() {
-  const { showToast } = useToast()
   const [filter, setFilter] = useState('all')
+  const [active, setActive] = useState<Therapist | null>(null)
 
   const therapists =
     filter === 'all' ? THERAPISTS : THERAPISTS.filter((t) => t.langs.includes(filter))
@@ -48,15 +39,34 @@ export function TherapistSection() {
         </div>
         <div className={styles.therapistGrid}>
           {therapists.map((t) => (
-            <div className={styles.therapistCard} key={t.name}>
+            <button
+              type="button"
+              className={styles.therapistCard}
+              key={t.id}
+              onClick={() => setActive(t)}
+              aria-label={`View ${t.name}'s profile`}
+            >
               <div className={styles.tcTop}>
-                <div className={styles.tcAv} style={{ background: t.avBg, color: t.avCol }}>
-                  {initials(t.name)}
-                </div>
-                <div>
+                <Avatar
+                  initials={t.initials}
+                  size={56}
+                  src={t.photo}
+                  alt={t.name}
+                  className={styles.tcAv}
+                />
+                <div className={styles.tcHeadText}>
                   <div className={styles.tcName}>{t.name}</div>
                   <div className={styles.tcCreds}>{t.creds}</div>
                 </div>
+                <span
+                  className={[
+                    styles.tcStatus,
+                    t.acceptingNew ? styles.tcStatusOpen : styles.tcStatusFull,
+                  ].join(' ')}
+                >
+                  <span className={styles.tcStatusDot} />
+                  {t.acceptingNew ? 'Accepting' : 'Waitlist'}
+                </span>
               </div>
               <div className={styles.tcTags}>
                 {t.langs.map((l) => (
@@ -73,20 +83,15 @@ export function TherapistSection() {
               <p className={styles.tcNote}>{t.note}</p>
               <div className={styles.tcFoot}>
                 <span className={styles.tcFormat}>{t.format}</span>
-                <button
-                  type="button"
-                  className={styles.tcContact}
-                  onClick={() =>
-                    showToast(`Message sent to ${t.name.split(' ').pop()}`, 'success')
-                  }
-                >
-                  Say hello →
-                </button>
+                <span className={styles.tcContact}>View profile →</span>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>
+      {active && (
+        <TherapistProfileModal therapist={active} onClose={() => setActive(null)} />
+      )}
     </section>
   )
 }

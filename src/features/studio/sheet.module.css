@@ -102,7 +102,7 @@
   font-style: normal;
 }
 .pdf {
-  background: #f7f3ee;
+  background: var(--cream);
   border-radius: 12px;
   padding: 36px 40px 0;
   position: relative;
@@ -122,7 +122,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: #2d1b3d;
+  color: var(--plum);
   text-align: center;
 }
 .pdfSub {
@@ -153,7 +153,7 @@
   width: 9px;
   height: 7px;
   border-radius: 50%;
-  background: #2d1b3d;
+  background: var(--plum);
   transform: rotate(-20deg);
 }
 .noteD.s {
@@ -165,7 +165,7 @@
   right: 0;
   bottom: 0;
   height: 140px;
-  background: linear-gradient(to bottom, rgba(247, 243, 238, 0), #f7f3ee 70%);
+  background: linear-gradient(to bottom, rgba(247, 243, 238, 0), var(--cream) 70%);
   display: flex;
   align-items: flex-end;
   justify-content: center;

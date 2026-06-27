@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useToast } from '../../shared/components/feedback/useToast'
 import { BOILER, COVERAGE, DOWNLOADS, FACTS, IMAGES, LOGOS, SWATCHES, TEAM } from './pressKit.data'
 import { PressKitDownloadModal } from './PressKitDownloadModal'
 import { assetFor, logoSvg, type PressAsset } from './pressKitAssets.data'
@@ -213,6 +214,7 @@ export function FactsSection() {
 }
 
 export function CoverageSection() {
+  const { showToast } = useToast()
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
@@ -227,7 +229,15 @@ export function CoverageSection() {
       </p>
       <div className={styles.covList}>
         {COVERAGE.map((c, i) => (
-          <a href="#" className={styles.covRow} key={i} onClick={(e) => e.preventDefault()}>
+          <a
+            href="#"
+            className={styles.covRow}
+            key={i}
+            onClick={(e) => {
+              e.preventDefault()
+              showToast(`Opening coverage in ${c.source.split(' · ')[0]}…`, 'info')
+            }}
+          >
             <div>
               <div className={styles.covSource}>{c.source}</div>
               <div className={styles.covTitle}>{c.title}</div>

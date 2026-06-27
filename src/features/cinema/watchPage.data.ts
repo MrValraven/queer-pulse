@@ -1,3 +1,17 @@
+/**
+ * "Next up" poster overrides, keyed by film id. The watch-page rail shows a
+ * still rather than the shared poster, so images live here. Falls back to
+ * `film.image` when absent.
+ */
+export const NEXT_UP_STILL_BY_ID: Record<string, string> = {
+  paris: 'https://images.unsplash.com/photo-1634733049839-0292be607569?q=80&w=600&auto=format&fit=crop',
+  pharmacy: 'https://images.unsplash.com/photo-1545033539-05e8f9ef8a8f?q=80&w=600&auto=format&fit=crop',
+  mother: 'https://images.unsplash.com/photo-1593795712029-2acb7f88e016?q=80&w=600&auto=format&fit=crop',
+}
+
+/** Cinematic still shown behind the player on the watch screen. */
+export const PLAYER_STILL = 'https://images.unsplash.com/photo-1637059880830-59a90102de77?q=80&w=1000&auto=format&fit=crop'
+
 export const CONTENT_NOTES = [
   { k: 'Grief', detail: 'Throughout', tc: '—' },
   { k: 'Dementia', detail: 'Act two · care', tc: '42:18 – 51:04' },

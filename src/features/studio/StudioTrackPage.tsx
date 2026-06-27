@@ -1,15 +1,30 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FiHeart } from 'react-icons/fi'
+import { FiHeart, FiPlus, FiCheck } from 'react-icons/fi'
 import { ImageSlot } from '../../shared/components/ui'
+import { useSaved } from '../../app/providers/SavedProvider'
+import { useToast } from '../../shared/components/feedback/useToast'
 import { StudioShell } from './StudioShell'
 import { StudioTrackSidebar } from './StudioTrackSidebar'
-import { MORE } from './studioTrack.data'
+import { StudioTipModal } from './StudioTipModal'
+import { MORE, coverImage } from './studioTrack.data'
 import ss from './studio.module.css'
 import t from './track.module.css'
 
+const TRACK = {
+  id: 'post:studio-track-carta-para-a-santa',
+  kind: 'post' as const,
+  title: 'Carta para a santa',
+  href: '/studio/track',
+  meta: 'Mariana Sol · Track 6',
+}
+
 export function StudioTrackPage() {
   const [lang, setLang] = useState('PT')
+  const { isSaved, toggleSave } = useSaved()
+  const { showToast } = useToast()
+  const [tipOpen, setTipOpen] = useState(false)
+  const saved = isSaved(TRACK.id)
 
   return (
     <StudioShell>
@@ -24,7 +39,7 @@ export function StudioTrackPage() {
       <section className={ss.hero} style={{ padding: '24px 0 32px' }}>
         <div className={ss.heroInner}>
           <div className={ss.heroArt}>
-            <ImageSlot tint="coral" width="100%" height="100%" radius={16} placeholder="cover · track 6" style={{ position: 'absolute', inset: 0 }} />
+            <ImageSlot src={coverImage} tint="coral" width="100%" height="100%" radius={16} placeholder="cover · track 6" style={{ position: 'absolute', inset: 0 }} />
           </div>
           <div className={ss.heroInfo}>
             <div className={ss.eb}>
@@ -45,8 +60,10 @@ export function StudioTrackPage() {
               <button className={ss.playBig} aria-label="Play">
                 <svg viewBox="0 0 12 14" fill="currentColor"><path d="M1 1l10 6-10 6z" /></svg>
               </button>
-              <button>＋ Library</button>
-              <button className={ss.tip}><FiHeart /> Tip €2</button>
+              <button onClick={() => { const now = toggleSave(TRACK); showToast(now ? 'Track saved to your library' : 'Removed from your library', now ? 'success' : 'info') }}>
+                {saved ? <><FiCheck /> In library</> : <><FiPlus /> Library</>}
+              </button>
+              <button className={ss.tip} onClick={() => setTipOpen(true)}><FiHeart /> Tip €2</button>
             </div>
             <div className={ss.payPill}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -109,7 +126,7 @@ export function StudioTrackPage() {
           {MORE.map((mr) => (
             <Link key={mr.pre} to="/studio/track" className={ss.card}>
               <div className={ss.cardCov}>
-                <ImageSlot tint={mr.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                <ImageSlot src={mr.image} tint={mr.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
               </div>
               <h4>{mr.pre}{mr.em && <em>{mr.em}</em>}{mr.post}</h4>
               <div className={ss.meta}>{mr.meta}</div>
@@ -117,6 +134,8 @@ export function StudioTrackPage() {
           ))}
         </div>
       </section>
+
+      {tipOpen && <StudioTipModal recipient="Mariana Sol" onClose={() => setTipOpen(false)} />}
     </StudioShell>
   )
 }

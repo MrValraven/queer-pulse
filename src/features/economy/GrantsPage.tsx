@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { routes } from '../../app/routeMap'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { useScrollReveal } from '../../shared/hooks/useScrollReveal'
@@ -121,19 +122,19 @@ export function GrantsPage() {
                   Our <em>Micro Grants</em>
                 </h4>
                 <p>QueerPulse runs its own micro grant programme (€200–€2,000) for community projects in Lisbon. Faster and simpler than most external grants.</p>
-                <Link to="/grants">Apply now →</Link>
+                <Link to={routes.grants}>Apply now →</Link>
               </div>
               <div className={styles.sideCard}>
                 <h4>Skills Exchange</h4>
                 <p>If you need support but grants feel too formal, the barter board connects members who can swap skills — no money involved.</p>
-                <Link to="/barter">Explore the exchange →</Link>
+                <Link to={routes.barter}>Explore the exchange →</Link>
               </div>
-              <div className={styles.sideCard} style={{ background: 'rgba(74,140,111,.05)', borderColor: 'rgba(74,140,111,.2)' }}>
+              <div className={styles.sideCard} style={{ background: 'rgba(var(--jade-rgb),.05)', borderColor: 'rgba(var(--jade-rgb),.2)' }}>
                 <h4>
                   Get <em>application help</em>
                 </h4>
                 <p>Members with grant-writing experience offer workshops and one-to-one support via the skills exchange.</p>
-                <Link to="/skills">Find a mentor →</Link>
+                <Link to={routes.skills}>Find a mentor →</Link>
               </div>
             </aside>
           </div>
@@ -164,7 +165,7 @@ export function GrantsPage() {
         title={<>Your project <em>deserves support.</em></>}
         sub="Found something that fits? Apply with confidence — and if you land it, pay it forward by adding the opportunity for the next member."
       >
-        <Button to="/grants" size="lg">
+        <Button to={routes.grants} size="lg">
           See open grants
         </Button>
       </Outro>

@@ -3,24 +3,103 @@
   flex-wrap: wrap;
   gap: 8px;
 }
+.badgeWrap {
+  position: relative;
+  display: inline-flex;
+}
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--jade);
-  background: rgba(74, 140, 111, 0.1);
-  border: 1px solid rgba(74, 140, 111, 0.22);
   border-radius: 999px;
   padding: 5px 11px;
   white-space: nowrap;
+  cursor: help;
+  transition: filter 0.2s var(--ease);
+}
+.badge:hover {
+  filter: brightness(0.97);
+}
+.badge:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
 }
 .icon {
   display: grid;
   place-items: center;
   font-size: 13px;
 }
+.info {
+  display: grid;
+  place-items: center;
+  opacity: 0.55;
+  margin-left: 1px;
+}
+
+/* tones */
+.safe {
+  color: var(--jade);
+  background: rgba(74, 140, 111, 0.1);
+  border: 1px solid rgba(74, 140, 111, 0.22);
+}
+.run {
+  color: var(--accent-ink);
+  background: rgba(232, 119, 90, 0.12);
+  border: 1px solid rgba(232, 119, 90, 0.28);
+}
+.friendly {
+  color: var(--plum);
+  background: rgba(45, 27, 61, 0.06);
+  border: 1px solid rgba(45, 27, 61, 0.16);
+}
+
+/* popover tooltip */
+.pop {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
+  width: max-content;
+  max-width: 268px;
+  background: var(--plum);
+  color: rgba(247, 243, 238, 0.86);
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.5;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 16px 36px -18px rgba(45, 27, 61, 0.6);
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
+}
+.pop::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 18px;
+  border: 6px solid transparent;
+  border-top-color: var(--plum);
+}
+.popTitle {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+.popOpen {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* compact (inside cards) */
 .compact .badge {
   font-size: 11.5px;
   padding: 3px 9px;
@@ -28,4 +107,10 @@
 }
 .compact .icon {
   font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pop {
+    transition: none;
+  }
 }

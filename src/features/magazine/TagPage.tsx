@@ -35,15 +35,33 @@ const ITEMS: Item[] = [
   { kicker: "Reported essay", read: "· 15 min · Issue 01", title: <>What we owe <em>each other.</em></>, dek: "The inaugural essay. On chosen family, mutual aid, and how the magazine itself got made.", byline: <>By <b>Marta Reis</b> · 12 Jun 2024</>, topics: ["Family", "Activism"] },
 ];
 
+/** The full back-catalogue: the curated pieces plus an archive generated
+ *  deterministically from them, so "Load older" reveals real list rows. */
+const ARCHIVE: Item[] = Array.from({ length: 32 }, (_, i) => {
+  const base = ITEMS[i % ITEMS.length];
+  const issue = 9 - ((i % 9) + 1);
+  return {
+    ...base,
+    read: `· ${12 + (i % 14)} min · Issue 0${Math.max(1, issue)}`,
+    byline: <>{base.byline} · from the archive</>,
+  };
+});
+const ALL_ITEMS: Item[] = [...ITEMS, ...ARCHIVE];
+const PAGE_SIZE = 9;
+
 export function TagPage() {
   const { showToast } = useToast();
   const [activeChip, setActiveChip] = useState(0);
+  const [visible, setVisible] = useState(PAGE_SIZE);
 
-  const filtered = useMemo(() => {
-    if (activeChip === 0) return ITEMS;
+  const matched = useMemo(() => {
+    if (activeChip === 0) return ALL_ITEMS;
     const topic = CHIPS[activeChip];
-    return ITEMS.filter((it) => it.topics.includes(topic));
+    return ALL_ITEMS.filter((it) => it.topics.includes(topic));
   }, [activeChip]);
+
+  const filtered = matched.slice(0, visible);
+  const remaining = matched.length - filtered.length;
 
   return (
     <PageShell>
@@ -90,7 +108,10 @@ export function TagPage() {
                 className={[styles.chip, activeChip === i && styles.chipActive]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => setActiveChip(i)}
+                onClick={() => {
+                  setActiveChip(i);
+                  setVisible(PAGE_SIZE);
+                }}
               >
                 {c}
               </button>
@@ -149,7 +170,7 @@ export function TagPage() {
             icon={<FiFileText />}
             title="No long reads in this category yet"
             description={<>Nothing filed under <em>{CHIPS[activeChip]}</em> in long reads so far. Browse every piece, or get the next one by email.</>}
-            action={{ label: 'Show all long reads', onClick: () => setActiveChip(0) }}
+            action={{ label: 'Show all long reads', onClick: () => { setActiveChip(0); setVisible(PAGE_SIZE); } }}
             secondaryAction={{ label: 'Get long reads by email →', to: NEWSLETTER }}
           />
         ) : (
@@ -167,13 +188,16 @@ export function TagPage() {
           </section>
         )}
 
-        {filtered.length > 0 && (
+        {remaining > 0 && (
           <div className={styles.loadMore}>
             <Button
               type="button" variant="ghost"
-              onClick={() => showToast("Loading older long reads…", "info")}
+              onClick={() => {
+                setVisible((v) => v + PAGE_SIZE);
+                showToast("Loading older long reads…", "info");
+              }}
             >
-              Load 32 older long reads
+              Load {Math.min(PAGE_SIZE, remaining)} older long reads
             </Button>
           </div>
         )}

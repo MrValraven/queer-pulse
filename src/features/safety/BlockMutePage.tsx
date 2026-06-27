@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import s from './flows.module.css'
+import { routes } from '../../app/routeMap'
 
 type State = 'choose' | 'muted' | 'blocked'
 
@@ -14,7 +15,7 @@ export function BlockMutePage() {
   return (
     <div className={s.page}>
       {state === 'choose' && (
-        <div className={s.card}>
+        <div className={`${s.card} ${s.screenIn}`}>
           <div className={s.memberRow}>
             <div className={s.memAv}>SR</div>
             <div>
@@ -104,7 +105,7 @@ export function BlockMutePage() {
       )}
 
       {state === 'muted' && (
-        <div className={`${s.card} ${s.center}`}>
+        <div className={`${s.card} ${s.center} ${s.screenIn}`}>
           <div className={s.icon} style={{ background: 'rgba(45,27,61,.07)' }}>
             <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
               <path d="M5.5 8.5h13M5.5 12h8M5.5 15.5h5" stroke="var(--plum)" strokeWidth={2} strokeLinecap="round" />
@@ -128,7 +129,7 @@ export function BlockMutePage() {
               <span className={s.csVal}>No</span>
             </div>
           </div>
-          <Link to="/account/settings" className={s.manageLink}>
+          <Link to={routes.settings} className={s.manageLink}>
             Manage muted members →
           </Link>
           <span className={s.undoLink} onClick={() => setState('choose')}>
@@ -138,7 +139,7 @@ export function BlockMutePage() {
       )}
 
       {state === 'blocked' && (
-        <div className={`${s.card} ${s.center}`}>
+        <div className={`${s.card} ${s.center} ${s.screenIn}`}>
           <div className={s.icon} style={{ background: 'rgba(45,27,61,.08)' }}>
             <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
               <circle cx={12} cy={12} r={8} stroke="var(--plum)" strokeWidth={2} />
@@ -163,14 +164,14 @@ export function BlockMutePage() {
               <span className={s.csVal}>No</span>
             </div>
           </div>
-          <Link to="/account/settings" className={s.manageLink}>
+          <Link to={routes.settings} className={s.manageLink}>
             Manage blocked members →
           </Link>
           <span className={s.undoLink} onClick={() => setState('choose')}>
             Undo — unblock Sofia
           </span>
           <div className={s.reportNote}>
-            Need to report harmful behaviour? <Link to="/report">File a report →</Link>
+            Need to report harmful behaviour? <Link to={routes.report}>File a report →</Link>
           </div>
         </div>
       )}

@@ -351,6 +351,60 @@
   border-color: rgba(247, 243, 238, 0.4);
 }
 
+.psSuccess {
+  grid-column: 1 / -1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+/* Entrance for the success panel swapped in after posting a swap. */
+.screenIn {
+  animation: screenIn 0.42s var(--ease) both;
+}
+@keyframes screenIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .screenIn {
+    animation: none;
+  }
+}
+.psSuccessIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(74, 140, 111, 0.18);
+  color: var(--jade);
+}
+.psSuccess h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 30px;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+}
+.psSuccess h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.psSuccess p {
+  font-size: 14.5px;
+  color: rgba(247, 243, 238, 0.65);
+  line-height: 1.6;
+  max-width: 420px;
+}
+
 @media (max-width: 760px) {
   .postStrip {
     grid-template-columns: 1fr;

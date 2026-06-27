@@ -78,7 +78,7 @@ export function CancelMembershipPage() {
         </div>
 
         {step === 1 && (
-          <div className={styles.pane}>
+          <div className={`${styles.pane} ${styles.screenIn}`} key={step}>
             <h2>Your current <em>membership</em></h2>
             <div className={styles.curr}>
               <div className={styles.currBadge}>S</div>
@@ -112,7 +112,7 @@ export function CancelMembershipPage() {
         )}
 
         {step === 2 && (
-          <div className={styles.pane}>
+          <div className={`${styles.pane} ${styles.screenIn}`} key={step}>
             <h2>Help us <em>understand.</em></h2>
             <p className={styles.paneSub}>Optional, but useful. We read every response. Pick what fits.</p>
             <div className={styles.reasonList}>
@@ -133,7 +133,7 @@ export function CancelMembershipPage() {
         )}
 
         {step === 3 && (
-          <div className={styles.pane}>
+          <div className={`${styles.pane} ${styles.screenIn}`} key={step}>
             <h2>One last <em>check.</em></h2>
             <p className={styles.paneSub}>Here's what changes when you cancel — and what doesn't.</p>
             <div className={styles.secLabel}>What ends</div>
@@ -161,7 +161,7 @@ export function CancelMembershipPage() {
         )}
 
         {step === 'done' && (
-          <div className={styles.pane}>
+          <div className={`${styles.pane} ${styles.screenIn}`} key={step}>
             <div className={styles.farewell}>
               <div className={styles.farewellIc}><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg></div>
               <h2 className={styles.h1} style={{ margin: '0 auto 10px', fontSize: 36 }}>Until <em>next time.</em></h2>
@@ -169,7 +169,7 @@ export function CancelMembershipPage() {
               <p style={{ fontSize: 15, color: 'var(--ink-60)', lineHeight: 1.65, maxWidth: '42ch', margin: '0 auto 8px' }}>We sent a confirmation to <b style={{ color: 'var(--plum)' }}>tomas@example.com</b> with everything written down.</p>
               <p style={{ fontSize: 13, color: 'var(--ink-40)', marginTop: 12 }}>If this was a mistake, you can resubscribe one-tap from the email or your account settings — no penalty.</p>
               <div className={styles.farewellBtns}>
-                <Button variant="primary" to="/">Back to home</Button>
+                <Button variant="primary" to={routes.homepage}>Back to home</Button>
                 <Button variant="ghost" to={routes.membership}>Resubscribe</Button>
               </div>
             </div>

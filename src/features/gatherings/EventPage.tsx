@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, ImageSlot } from '../../shared/components/ui'
-import { DETAILS } from './eventPage.data'
+import { FiLock } from 'react-icons/fi'
+import { routes } from '../../app/routeMap'
+import { DETAILS, HERO_IMAGE } from './eventPage.data'
 import { EventRsvpCard } from './EventRsvpCard'
+import { JoinVouchCallout } from './JoinVouchCallout'
 import styles from './EventPage.module.css'
 
 export function EventPage() {
@@ -10,7 +13,7 @@ export function EventPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <Link to="/calendar" className={styles.back}>
+          <Link to={routes.calendar} className={styles.back}>
             ← Gatherings
           </Link>
           <div className={styles.type}>Community gathering · Food &amp; conversation</div>
@@ -23,7 +26,7 @@ export function EventPage() {
             <Avatar initials="MC" tint="coral" size={34} />
             <div className={styles.by}>
               Hosted by <strong>Mateus Costa</strong> ·{' '}
-              <Link to="/members" style={{ color: 'rgba(247,243,238,.58)', textDecoration: 'underline' }}>
+              <Link to={routes.members} style={{ color: 'rgba(247,243,238,.58)', textDecoration: 'underline' }}>
                 View profile
               </Link>
             </div>
@@ -35,7 +38,7 @@ export function EventPage() {
             <span className={styles.pill}>5 spots left</span>
           </div>
         </div>
-        <ImageSlot tint="plum" height={320} radius={0} placeholder="Event image — warm dinner setting, long communal table, candlelight" className={styles.imgStrip} />
+        <ImageSlot tint="plum" src={HERO_IMAGE} height={320} radius={0} placeholder="Event image — warm dinner setting, long communal table, candlelight" className={styles.imgStrip} />
       </div>
 
       <main className={styles.body}>
@@ -77,6 +80,18 @@ export function EventPage() {
                     </div>
                   ))}
                 </div>
+                <div className={styles.locReveal}>
+                  <span className={styles.locIcon} aria-hidden>
+                    <FiLock />
+                  </span>
+                  <div>
+                    <div className={styles.locRevealHood}>Intendente</div>
+                    <div className={styles.locRevealNote}>
+                      The exact address and door details are shared with confirmed guests after you
+                      RSVP.
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className={styles.section}>
@@ -106,6 +121,10 @@ export function EventPage() {
                   This event is private. If someone forwarded you this link, ask them to invite you to
                   the network first.
                 </p>
+              </div>
+
+              <div className={styles.calloutWrap}>
+                <JoinVouchCallout />
               </div>
             </div>
           </div>

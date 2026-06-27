@@ -3,6 +3,7 @@ import { FiBell } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
 import { Avatar, Button } from '../../shared/components/ui'
+import { useToast } from '../../shared/components/feedback/useToast'
 import { linkToPath, routes } from '../../app/routeMap'
 import {
   notificationTabs,
@@ -14,12 +15,17 @@ import styles from './NotificationsPage.module.css'
 
 export function NotificationsPage() {
   const navigate = useNavigate()
+  const { showToast } = useToast()
   const [filter, setFilter] = useState<'all' | NotifType>('all')
   const [readIds, setReadIds] = useState<Set<number>>(new Set())
+  const [resolvedIds, setResolvedIds] = useState<Set<number>>(new Set())
 
   const visible = useMemo(
-    () => notifications.filter((n) => filter === 'all' || n.type === filter),
-    [filter],
+    () =>
+      notifications.filter(
+        (n) => (filter === 'all' || n.type === filter) && !resolvedIds.has(n.id),
+      ),
+    [filter, resolvedIds],
   )
   const unreadCount = visible.filter((n) => n.unread && !readIds.has(n.id)).length
 
@@ -31,6 +37,10 @@ export function NotificationsPage() {
   }
   function markAllRead() {
     setReadIds(new Set(notifications.map((n) => n.id)))
+  }
+  function resolve(id: number, toast: string) {
+    setResolvedIds((current) => new Set(current).add(id))
+    showToast(toast, 'success')
   }
 
   function renderItem(notification: Notification) {
@@ -67,7 +77,11 @@ export function NotificationsPage() {
                   ].join(' ')}
                   onClick={(event) => {
                     event.stopPropagation()
-                    if (action.href !== '#') navigate(linkToPath(action.href))
+                    if (action.resolve) {
+                      resolve(notification.id, action.resolve.toast)
+                    } else if (action.href !== '#') {
+                      navigate(linkToPath(action.href))
+                    }
                   }}
                 >
                   {action.label}

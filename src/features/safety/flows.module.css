@@ -41,6 +41,27 @@
   padding: 36px 40px;
   box-shadow: 0 6px 40px -8px rgba(45, 27, 61, 0.12);
 }
+
+/* Entrance for a screen swapped in by a state change. Applied to each
+   card so switching between outcomes/steps rises-and-fades rather than snaps. */
+.screenIn {
+  animation: screenIn 0.4s var(--ease) both;
+}
+@keyframes screenIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .screenIn {
+    animation: none;
+  }
+}
 .cardWide {
   max-width: 560px;
 }
@@ -437,8 +458,8 @@
   font-family: var(--sans);
   font-size: 14.5px;
   font-weight: 600;
-  color: #fff;
-  background: #b91c1c;
+  color: var(--cream);
+  background: var(--danger);
   border: none;
   border-radius: 999px;
   padding: 13px;
@@ -501,13 +522,13 @@
 .tlActive,
 .tlCurrent {
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
   box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.18);
 }
 .tlDone,
 .tlSuccess {
   background: var(--jade);
-  color: #fff;
+  color: var(--cream);
 }
 .tlPending {
   background: rgba(45, 27, 61, 0.1);

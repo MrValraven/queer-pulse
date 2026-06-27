@@ -160,3 +160,39 @@ export const VOUCHED: VouchedConnection[] = [
   { person: { initials: 'RV', tint: 'jade', name: 'Rita Vasquez', pron: 'they/them', role: 'Mutual vouch · 2025' }, note: 'Vouched both ways' },
   { person: { initials: 'LG', tint: 'plum', name: 'Luísa Gomes', pron: 'she/her', role: 'You vouched · 2025' }, note: 'You vouched' },
 ]
+
+/** Additional pages of connections, generated deterministically for "Load more". */
+const MORE_POOL: { name: string; pron: string; role: string; tags: string[]; tint?: Tint }[] = [
+  { name: 'Beatriz Lima', pron: 'she/her', role: 'Illustrator · zine collective', tags: ['Illustration', 'Print'] },
+  { name: 'Tó Cunha', pron: 'he/him', role: 'Riso printmaker · workshop host', tags: ['Print', 'Hosting'], tint: 'jade' },
+  { name: 'Inês Tavares', pron: 'she/her', role: 'GP · Trans & NB Network', tags: ['Health', 'Mentoring'], tint: 'plum' },
+  { name: 'Hugo Branco', pron: 'he/him', role: 'Sound designer · club nights', tags: ['Music', 'Events'] },
+  { name: 'Nadia Saleh', pron: 'they/them', role: 'Researcher · housing rights', tags: ['Activism', 'Research'], tint: 'jade' },
+  { name: 'Pilar Otero', pron: 'she/her', role: 'Editor · community newsletter', tags: ['Editorial'], tint: 'plum' },
+  { name: 'Vasco Pinto', pron: 'he/him', role: 'Carpenter · barter regular', tags: ['Barter', 'Making'] },
+  { name: 'Lena Costa', pron: 'she/her', role: 'Therapist · Wellbeing circle', tags: ['Wellbeing', 'Therapy'], tint: 'jade' },
+]
+
+function initialsOf(name: string): string {
+  return name
+    .split(' ')
+    .map((w) => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
+}
+
+const MORE_PER_PAGE = 4
+
+/** Returns deterministic extra connections for a 0-based page; empty when exhausted. */
+export function moreConnections(page: number): AllConnection[] {
+  const start = page * MORE_PER_PAGE
+  return MORE_POOL.slice(start, start + MORE_PER_PAGE).map((p, i) => ({
+    person: { initials: initialsOf(p.name), tint: p.tint, name: p.name, pron: p.pron, role: p.role },
+    tags: p.tags,
+    meta: { mutuals: 3 + ((start + i) % 9), connected: '2025' },
+    actions: DEFAULT_ACTIONS,
+  }))
+}
+
+export const MORE_PAGES = Math.ceil(MORE_POOL.length / MORE_PER_PAGE)

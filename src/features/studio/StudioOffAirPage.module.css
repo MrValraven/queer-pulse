@@ -236,7 +236,7 @@
   height: 50px;
   border-radius: 50%;
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
   border: none;
   display: flex;
   align-items: center;

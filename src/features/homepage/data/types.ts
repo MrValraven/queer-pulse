@@ -60,6 +60,7 @@ export interface StoryFeature {
   byline: string
   href: string
   tint: 'coral' | 'jade' | 'plum'
+  image?: string
 }
 
 export interface StoryCard {
@@ -69,6 +70,7 @@ export interface StoryCard {
   byline: string
   href: string
   tint: 'coral' | 'jade' | 'plum'
+  image?: string
 }
 
 export interface ChangeMaker {
@@ -78,6 +80,7 @@ export interface ChangeMaker {
   blurb: string
   tags: string[]
   tint: 'coral' | 'jade' | 'plum'
+  image?: string
 }
 
 export type WellbeingTone = 'violet' | 'jade' | 'coral' | 'plum'

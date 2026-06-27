@@ -141,7 +141,7 @@
   background: rgba(45, 27, 61, 0.09);
 }
 .support {
-  color: #7a52b8;
+  color: var(--violet);
   background: rgba(122, 82, 184, 0.1);
 }
 .sports {

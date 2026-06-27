@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { FiMapPin } from 'react-icons/fi'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { routes } from '../../app/routeMap'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button } from '../../shared/components/ui'
 import { getListing, HOUSING_LISTINGS, type Tint } from './housingListings'
@@ -8,9 +9,9 @@ import { MessageModal } from './HousingModals'
 import s from './HousingListingPage.module.css'
 
 const GAL_BG: Record<Tint, string> = {
-  coral: 'rgba(232,119,90,.12)',
-  jade: 'rgba(74,140,111,.12)',
-  plum: 'rgba(45,27,61,.08)',
+  coral: 'rgba(var(--accent-rgb),.12)',
+  jade: 'rgba(var(--jade-rgb),.12)',
+  plum: 'rgba(var(--plum-rgb),.08)',
 }
 
 export function HousingListingPage() {
@@ -18,7 +19,7 @@ export function HousingListingPage() {
   const [messaging, setMessaging] = useState(false)
 
   const l = getListing(slug)
-  if (!l) return <Navigate to="/housing" replace />
+  if (!l) return <Navigate to={routes.housing} replace />
 
   const first = l.poster.fullName.split(' ')[0]
   const similar = HOUSING_LISTINGS.filter((x) => x.slug !== l.slug).slice(0, 3)
@@ -26,7 +27,7 @@ export function HousingListingPage() {
   return (
     <PageShell>
       <div className={s.page}>
-        <Link to="/housing" className={s.back}>← Housing board</Link>
+        <Link to={routes.housing} className={s.back}>← Housing board</Link>
 
         <div className={s.gallery}>
           {l.gallery.map((cap, i) => (
@@ -135,7 +136,7 @@ export function HousingListingPage() {
               <h4>More on the board</h4>
               <div className={s.more}>
                 {similar.map((x) => (
-                  <Link key={x.slug} to={`/housing/${x.slug}`} className={s.moreItem}>
+                  <Link key={x.slug} to={`${routes.housing}/${x.slug}`} className={s.moreItem}>
                     <div className={s.moreThumb} style={{ background: GAL_BG[x.tint] }} />
                     <div>
                       <div className={s.moreName}>{x.title}</div>

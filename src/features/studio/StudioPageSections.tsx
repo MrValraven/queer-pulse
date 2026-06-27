@@ -1,8 +1,21 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiHeart } from "react-icons/fi";
+import { FiHeart, FiPlus, FiCheck } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
-import { SET, TRACKS, type TrackCard } from "./studioPage.data";
+import { useSaved } from "../../app/providers/SavedProvider";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { StudioTipModal } from "./StudioTipModal";
+import { SET, TRACKS, HERO_ART, type TrackCard } from "./studioPage.data";
+import { routes } from "../../app/routeMap";
 import styles from "./studio.module.css";
+
+const HERO_TRACK = {
+  id: "post:studio-carta-para-a-santa",
+  kind: "post" as const,
+  title: "Carta para a santa",
+  href: "/studio",
+  meta: "Mariana Sol",
+};
 
 const tagClass: Record<TrackCard["tag"], string> = {
   free: styles.tagFree,
@@ -10,11 +23,16 @@ const tagClass: Record<TrackCard["tag"], string> = {
 };
 
 export function StudioHero() {
+  const { isSaved, toggleSave } = useSaved();
+  const { showToast } = useToast();
+  const [tipOpen, setTipOpen] = useState(false);
+  const saved = isSaved(HERO_TRACK.id);
+
   return (
     <section className={styles.hero}>
       <div className={styles.heroInner}>
         <div className={styles.heroArt}>
-          <ImageSlot tint="coral" width="100%" height="100%" radius={16} placeholder="cover · Mariana Sol" style={{ position: "absolute", inset: 0 }} />
+          <ImageSlot src={HERO_ART} tint="coral" width="100%" height="100%" radius={16} placeholder="cover · Mariana Sol" style={{ position: "absolute", inset: 0 }} />
         </div>
         <div className={styles.heroInfo}>
           <div className={styles.eb}>
@@ -35,13 +53,15 @@ export function StudioHero() {
             <span>Flac · 24/48</span>
           </div>
           <div className={styles.heroActions}>
-            <Link to="/studio/album" className={styles.playBig} aria-label="Play">
+            <Link to={routes.studioAlbum} className={styles.playBig} aria-label="Play">
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
               </svg>
             </Link>
-            <button>＋ Library</button>
-            <button className={styles.tip}><FiHeart /> Tip €2</button>
+            <button onClick={() => { const now = toggleSave(HERO_TRACK); showToast(now ? "Added to your library" : "Removed from your library", now ? "success" : "info"); }}>
+              {saved ? <><FiCheck /> In library</> : <><FiPlus /> Library</>}
+            </button>
+            <button className={styles.tip} onClick={() => setTipOpen(true)}><FiHeart /> Tip €2</button>
           </div>
           <div className={styles.payPill}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -53,6 +73,7 @@ export function StudioHero() {
           </div>
         </div>
       </div>
+      {tipOpen && <StudioTipModal recipient="Mariana Sol" onClose={() => setTipOpen(false)} />}
     </section>
   );
 }
@@ -76,7 +97,7 @@ export function StudioSetSection() {
             <div key={row.n} className={[styles.setRow, row.now && styles.setRowNow].filter(Boolean).join(" ")}>
               <div className={styles.n}>{row.n}</div>
               <div className={styles.srCov}>
-                <ImageSlot tint={row.cvTint} width={36} height={36} radius={5} placeholder="" />
+                <ImageSlot src={row.image} tint={row.cvTint} width={36} height={36} radius={5} placeholder="" />
               </div>
               <div>
                 <h5>
@@ -155,15 +176,15 @@ export function StudioTracksSection() {
           This week, <em>programmed</em>
         </h2>
         <div className={styles.sub}>Eight singles, each with a curator's name on it. Rotates Monday.</div>
-        <Link to="/studio/album" className={styles.all}>
+        <Link to={routes.studioAlbum} className={styles.all}>
           All →
         </Link>
       </div>
       <div className={styles.rowGrid}>
         {TRACKS.map((t) => (
-          <Link key={t.titlePre} to="/studio/album" className={styles.card}>
+          <Link key={t.titlePre} to={routes.studioAlbum} className={styles.card}>
             <div className={styles.cardCov}>
-              <ImageSlot tint={t.cvTint} width="100%" height="100%" radius={10} placeholder="cover" style={{ position: "absolute", inset: 0 }} />
+              <ImageSlot src={t.image} tint={t.cvTint} width="100%" height="100%" radius={10} placeholder="cover" style={{ position: "absolute", inset: 0 }} />
               <span className={`${styles.tag} ${tagClass[t.tag]}`}>{t.tagLabel}</span>
               <button className={styles.playFab} aria-label="Play">
                 <svg viewBox="0 0 12 14" fill="currentColor">

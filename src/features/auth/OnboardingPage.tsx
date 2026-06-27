@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './OnboardingPage.module.css';
 import { TOTAL_STEPS } from './onboardingPage.data';
+import { routes } from '../../app/routeMap';
 import { StepIntro, StepWelcome, StepPhoto, StepNorms, StepIntents, StepCommunities, StepDone } from './OnboardingSteps';
 
 export function OnboardingPage() {
@@ -26,7 +27,7 @@ export function OnboardingPage() {
         <div className={styles.progressFill} style={{ width: `${progress}%` }} />
       </div>
       <div className={styles.progressLabel}>{stepLabel}</div>
-      <Link to="/" className={styles.brand}>
+      <Link to={routes.homepage} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
         Queer<em>Pulse</em>
       </Link>

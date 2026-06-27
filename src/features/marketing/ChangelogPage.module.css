@@ -133,7 +133,7 @@
 }
 .policy {
   background: rgba(112, 80, 170, 0.1);
-  color: #7050aa;
+  color: var(--violet);
 }
 .magazine {
   background: rgba(180, 136, 60, 0.12);

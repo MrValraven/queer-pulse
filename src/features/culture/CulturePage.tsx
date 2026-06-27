@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import {
   ClubSection,
@@ -10,12 +9,13 @@ import {
   RadioIntro,
 } from './CultureSections'
 import { CultureRadioPanel } from './CultureRadioPanel'
+import { SubmitWorkModal } from './CultureFormModals'
 import { TABS, type TabKey } from './culture.data'
 import styles from './CulturePage.module.css'
 
 export function CulturePage() {
-  const { showToast } = useToast()
   const [tab, setTab] = useState<TabKey>('club')
+  const [submitOpen, setSubmitOpen] = useState(false)
 
   return (
     <PageShell>
@@ -60,13 +60,15 @@ export function CulturePage() {
         title={<>Make something <em>with us.</em></>}
         sub="Culture isn't what happens at events. It's what we build between them — quietly, consistently, together."
       >
-        <Button size="lg" onClick={() => showToast('Submission form opened', 'info')}>
+        <Button size="lg" onClick={() => setSubmitOpen(true)}>
           Submit your work
         </Button>
         <Button size="lg" variant="ghost-dark" to={routes.communities}>
           Explore communities
         </Button>
       </Outro>
+
+      {submitOpen && <SubmitWorkModal onClose={() => setSubmitOpen(false)} />}
     </PageShell>
   )
 }
