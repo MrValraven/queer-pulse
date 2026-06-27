@@ -1,3 +1,4 @@
+import { SkeletonLine } from '../../shared/components/ui'
 import type { Badge, Venue } from './accessibility.data'
 import styles from './AccessibilityPage.module.css'
 
@@ -29,6 +30,27 @@ export function AccessibleVenueCard({ v, onFlag }: { v: Venue; onFlag: () => voi
         <button type="button" className={styles.flagBtn} onClick={onFlag}>
           Flag an issue
         </button>
+      </div>
+    </div>
+  )
+}
+
+export function AccessibleVenueCardSkeleton() {
+  // Mirrors the real .venueCard: name, type, hood, note, feature badges, footer.
+  return (
+    <div className={styles.venueCard} aria-hidden>
+      <SkeletonLine width="70%" height={21} />
+      <SkeletonLine width={90} height={11} style={{ marginTop: 4, marginBottom: 10 }} />
+      <SkeletonLine width="45%" height={13} style={{ marginBottom: 12 }} />
+      <SkeletonLine width="100%" height={13.5} />
+      <SkeletonLine width="88%" height={13.5} style={{ marginTop: 5, marginBottom: 14 }} />
+      <div className={styles.vcFeatures}>
+        <SkeletonLine width={88} height={24} style={{ borderRadius: 7 }} />
+        <SkeletonLine width={104} height={24} style={{ borderRadius: 7 }} />
+        <SkeletonLine width={72} height={24} style={{ borderRadius: 7 }} />
+      </div>
+      <div className={styles.vcFoot}>
+        <SkeletonLine width="50%" height={12} />
       </div>
     </div>
   )

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
+import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
 import styles from "./ChangelogPage.module.css";
 
 type Type = "feature" | "community" | "fix" | "policy" | "magazine";
@@ -49,7 +51,25 @@ const FILTERS: { id: Type | "all"; label: string }[] = [
   { id: "magazine", label: "Magazine" },
 ];
 
+function EntrySkeleton() {
+  // Mirrors a real .entry row: 120px date column + title/body block.
+  return (
+    <div className={styles.entry} aria-hidden>
+      <SkeletonLine width={90} height={13} style={{ marginTop: 3 }} />
+      <div>
+        <div className={styles.entryHead}>
+          <SkeletonLine width={72} height={18} style={{ borderRadius: 6 }} />
+          <SkeletonLine width="50%" height={16} />
+        </div>
+        <SkeletonLine width="100%" height={14.5} style={{ marginTop: 8 }} />
+        <SkeletonLine width="92%" height={14.5} style={{ marginTop: 6 }} />
+      </div>
+    </div>
+  );
+}
+
 export function ChangelogPage() {
+  const loading = useSimulatedLoad();
   const [filter, setFilter] = useState<Type | "all">("all");
 
   return (
@@ -82,32 +102,46 @@ export function ChangelogPage() {
             ))}
           </div>
 
-          {DATA.map((yb) => {
-            const entries = yb.entries.filter((e) => filter === "all" || e.type === filter);
-            if (entries.length === 0) return null;
-            return (
-              <div className={styles.yearBlock} key={yb.year}>
-                <div className={styles.year}>
-                  <em>{yb.year}</em>
-                </div>
-                {entries.map((e, i) => (
-                  <div className={styles.entry} key={i}>
-                    <div className={styles.date}>{e.date}</div>
-                    <div>
-                      <div className={styles.entryHead}>
-                        <span className={`${styles.badge} ${styles[e.type]}`}>{e.badge}</span>
-                        <div className={styles.entryTitle}>{e.title}</div>
-                      </div>
-                      <div className={styles.entryBody}>
-                        <p>{e.body}</p>
-                      </div>
-                      {e.tag && <span className={styles.tag}>{e.tag}</span>}
-                    </div>
-                  </div>
-                ))}
+          {loading ? (
+            <div className={styles.yearBlock}>
+              <div className={styles.year} aria-hidden>
+                <SkeletonLine width={120} height={32} />
               </div>
-            );
-          })}
+              {Array.from({ length: 5 }).map((_, i) => (
+                <EntrySkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            (() => {
+              let row = 0;
+              return DATA.map((yb) => {
+                const entries = yb.entries.filter((e) => filter === "all" || e.type === filter);
+                if (entries.length === 0) return null;
+                return (
+                  <div className={styles.yearBlock} key={yb.year}>
+                    <div className={styles.year}>
+                      <em>{yb.year}</em>
+                    </div>
+                    {entries.map((e, i) => (
+                      <FadeIn className={styles.entry} key={i} delay={Math.min(row++, 8) * 60}>
+                        <div className={styles.date}>{e.date}</div>
+                        <div>
+                          <div className={styles.entryHead}>
+                            <span className={`${styles.badge} ${styles[e.type]}`}>{e.badge}</span>
+                            <div className={styles.entryTitle}>{e.title}</div>
+                          </div>
+                          <div className={styles.entryBody}>
+                            <p>{e.body}</p>
+                          </div>
+                          {e.tag && <span className={styles.tag}>{e.tag}</span>}
+                        </div>
+                      </FadeIn>
+                    ))}
+                  </div>
+                );
+              });
+            })()
+          )}
         </div>
       </div>
     </PageShell>

@@ -2,16 +2,19 @@ import { useRef, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { Button, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { VERIFIED_SPACES, type Category } from './safeSpaces'
 import { FILTERS } from './safeSpacesPage.data'
 import { FlagModal } from './FlagModal'
 import { SafeSpaceCard } from './SafeSpaceCard'
+import { SafeSpaceCardSkeleton } from './SafeSpaceCardSkeleton'
 import { BadgeExplainer, HowSection, NominateSection, RemovedSection } from './SafeSpacesSections'
 import styles from './SafeSpacesPage.module.css'
 
 export function SafeSpacesPage() {
   const { showToast } = useToast()
+  const loading = useSimulatedLoad()
   const [filter, setFilter] = useState<Category | 'all'>('all')
   const [flagging, setFlagging] = useState<string | null>(null)
   const nomRef = useRef<HTMLDivElement>(null)
@@ -78,10 +81,12 @@ export function SafeSpacesPage() {
             ))}
           </div>
 
-          <div className={styles.grid}>
-            {items.map((s) => (
-              <SafeSpaceCard key={s.name} s={s} onFlag={() => setFlagging(s.name)} />
-            ))}
+          <div className={styles.grid} aria-busy={loading}>
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => <SafeSpaceCardSkeleton key={i} />)
+              : items.map((s, i) => (
+                  <SafeSpaceCard key={s.name} s={s} onFlag={() => setFlagging(s.name)} delay={Math.min(i, 8) * 60} />
+                ))}
           </div>
         </div>
       </div>

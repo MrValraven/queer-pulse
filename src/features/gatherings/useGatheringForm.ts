@@ -28,7 +28,7 @@ export function useGatheringForm() {
 
   const selectType = (name: string, icon: IconType) => {
     setType(name)
-    setTypeIcon(icon)
+    setTypeIcon(() => icon)
   }
   const toggleAccess = (name: string) =>
     setAccess((prev) => {

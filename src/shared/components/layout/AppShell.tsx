@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react'
 import { Navbar } from './Navbar'
+import { Footer } from './Footer'
 
 /**
  * Logged-in page frame: the single site-wide Navbar (which reflects auth state)
- * + main content, with no marketing footer. `unreadCount` feeds the nav's
+ * + main content + the full site Footer. `unreadCount` feeds the nav's
  * notifications bell.
  */
 export function AppShell({
@@ -17,6 +18,7 @@ export function AppShell({
     <>
       <Navbar unreadCount={unreadCount} />
       <main>{children}</main>
+      <Footer />
     </>
   )
 }

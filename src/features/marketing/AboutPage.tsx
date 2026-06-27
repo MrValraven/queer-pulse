@@ -134,7 +134,7 @@ export function AboutPage() {
         title={<>A queer network. <em>Rooted in Lisbon.</em></>}
         sub="Invite-only. Community-owned. Built to last."
       >
-        <Button size="lg" to={routes.invite}>
+        <Button size="lg" to={routes.requestInvite}>
           Request an invite
         </Button>
       </Outro>

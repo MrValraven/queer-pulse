@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { AppShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useSaved, type SavedItem } from '../../app/providers/SavedProvider'
 import {
@@ -95,6 +96,38 @@ function CollectionCard({ c, onOpen }: { c: Collection; onOpen: () => void }) {
   )
 }
 
+/** Loading placeholder mirroring CollectionCard — same min-height + rhythm. */
+function CollectionCardSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden>
+      <SkeletonLine width={40} height={38} />
+      <div>
+        <SkeletonLine width="70%" height={20} />
+        <SkeletonLine width="50%" height={12} style={{ marginTop: 8 }} />
+      </div>
+      <SkeletonLine height={42} style={{ marginTop: 'auto', borderRadius: 10 }} />
+      <div className={styles.foot}>
+        <SkeletonLine width="30%" height={11} />
+        <SkeletonLine width="25%" height={11} />
+      </div>
+    </div>
+  )
+}
+
+/** Loading placeholder mirroring RecentSaveRow's 3-column grid. */
+function RecentRowSkeleton() {
+  return (
+    <div className={styles.recentRow} aria-hidden>
+      <SkeletonLine width={30} height={30} style={{ borderRadius: 7, flex: 'none' }} />
+      <div className={styles.recentInfo}>
+        <SkeletonLine width="60%" height={14} />
+        <SkeletonLine width="35%" height={12} style={{ marginTop: 6 }} />
+      </div>
+      <SkeletonLine width={120} height={12} />
+    </div>
+  )
+}
+
 /** A recent, unfiled save — clicking opens the "add to collection" picker. */
 function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
   return (
@@ -112,6 +145,7 @@ function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
 export function CollectionsPage() {
   const { showToast } = useToast()
   const { items: savedItems } = useSaved()
+  const loading = useSimulatedLoad()
 
   const [collections, setCollections] = useState<Collection[]>(COLLECTIONS)
   // collectionId -> the saved items inside it. Seeded from live saves so the
@@ -195,19 +229,26 @@ export function CollectionsPage() {
         <SavedByYou />
 
         <div className={styles.grid}>
-          {collections.map((c) => (
-            <CollectionCard
-              key={c.id}
-              c={c}
-              onOpen={() => setModal({ type: 'view', id: c.id })}
-            />
-          ))}
+          {loading ? (
+            Array.from({ length: 5 }).map((_, i) => <CollectionCardSkeleton key={i} />)
+          ) : (
+            <>
+              {collections.map((c, i) => (
+                <FadeIn key={c.id} delay={Math.min(i, 8) * 60}>
+                  <CollectionCard
+                    c={c}
+                    onOpen={() => setModal({ type: 'view', id: c.id })}
+                  />
+                </FadeIn>
+              ))}
 
-          <button className={styles.newCard} onClick={() => setModal({ type: 'new' })}>
-            <div className={styles.plus}>+</div>
-            <b>New collection</b>
-            <span>Group saves by why they matter</span>
-          </button>
+              <button className={styles.newCard} onClick={() => setModal({ type: 'new' })}>
+                <div className={styles.plus}>+</div>
+                <b>New collection</b>
+                <span>Group saves by why they matter</span>
+              </button>
+            </>
+          )}
         </div>
 
         <div className={styles.secH}>
@@ -215,9 +256,13 @@ export function CollectionsPage() {
           <span className={styles.ct}>+ 7 unfiled</span>
         </div>
         <div className={styles.recentList}>
-          {RECENT_SAVES.map((r) => (
-            <RecentSaveRow key={r.id} r={r} onAdd={() => setModal({ type: 'add', save: r })} />
-          ))}
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => <RecentRowSkeleton key={i} />)
+            : RECENT_SAVES.map((r, i) => (
+                <FadeIn key={r.id} delay={Math.min(i, 8) * 60}>
+                  <RecentSaveRow r={r} onAdd={() => setModal({ type: 'add', save: r })} />
+                </FadeIn>
+              ))}
         </div>
       </div>
 

@@ -237,9 +237,23 @@
 .llCard:hover .llName {
   color: var(--accent-ink);
 }
-.llBadge {
-  font-size: 22px;
+.llAvatar {
+  position: relative;
   flex: none;
+}
+.llBadge {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--jade);
+  color: var(--cream);
+  font-size: 12px;
+  border: 2px solid var(--paper);
 }
 .llName {
   font-size: 15px;

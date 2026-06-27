@@ -1,13 +1,48 @@
 import { useMemo, useState } from "react";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Button, FadeIn, Outro, Reveal, SkeletonAvatar, SkeletonLine } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
 import { BARTERS, MODES, CATS, PRINCIPLES, type Barter, type Mode } from "./barter.data";
 import { BarterCard } from "./BarterCard";
 import { BarterPostStrip } from "./BarterPostStrip";
 import styles from "./BarterPage.module.css";
 
+function BarterSkeleton() {
+  return (
+    <div className={styles.bc} aria-hidden>
+      <div className={styles.bcHead}>
+        <SkeletonAvatar size={40} />
+        <div className={styles.bcMeta}>
+          <SkeletonLine width="60%" height={14} />
+          <SkeletonLine width="40%" height={12} style={{ marginTop: 5 }} />
+        </div>
+        <SkeletonLine width={68} height={20} style={{ borderRadius: 6 }} />
+      </div>
+      <div className={`${styles.bcBlock} ${styles.bcOffer}`}>
+        <SkeletonLine width={56} height={10} />
+        <SkeletonLine width="75%" height={17} style={{ marginTop: 8 }} />
+        <SkeletonLine width="95%" height={13} style={{ marginTop: 6 }} />
+      </div>
+      <div className={`${styles.bcBlock} ${styles.bcWant}`}>
+        <SkeletonLine width={64} height={10} />
+        <SkeletonLine width="70%" height={17} style={{ marginTop: 8 }} />
+        <SkeletonLine width="90%" height={13} style={{ marginTop: 6 }} />
+      </div>
+      <div className={styles.btags}>
+        <SkeletonLine width={62} height={20} style={{ borderRadius: 6 }} />
+        <SkeletonLine width={78} height={20} style={{ borderRadius: 6 }} />
+      </div>
+      <div className={styles.bcFoot}>
+        <SkeletonLine width={70} height={12} />
+        <SkeletonLine width={110} height={13} />
+      </div>
+    </div>
+  );
+}
+
 export function BarterPage() {
+  const loading = useSimulatedLoad();
   const [mode, setMode] = useState<"all" | Mode>("all");
   const [cat, setCat] = useState("all");
   const [query, setQuery] = useState("");
@@ -114,16 +149,22 @@ export function BarterPage() {
       <div className={styles.body}>
         <div className="wrap">
           <div className={styles.grid}>
-            {items.length === 0 && (
-              <div className={styles.empty}>
-                Nothing matches — try broadening the filters.
-              </div>
+            {loading ? (
+              Array.from({ length: 6 }).map((_, i) => <BarterSkeleton key={i} />)
+            ) : (
+              <>
+                {items.length === 0 && (
+                  <div className={styles.empty}>
+                    Nothing matches — try broadening the filters.
+                  </div>
+                )}
+                {items.map((b, index) => (
+                  <FadeIn key={b.id} delay={Math.min(index, 8) * 60}>
+                    <BarterCard barter={b} />
+                  </FadeIn>
+                ))}
+              </>
             )}
-            {items.map((b, index) => (
-              <Reveal key={b.id} delay={Math.min(index, 6) * 50}>
-                <BarterCard barter={b} />
-              </Reveal>
-            ))}
           </div>
 
           <BarterPostStrip onPost={(b) => setPosted((prev) => [b, ...prev])} />
@@ -134,7 +175,7 @@ export function BarterPage() {
         title={<>Skills are <em>the currency.</em></>}
         sub="QueerPulse Barter is open to all members. The more you offer, the more you can ask for."
       >
-        <Button to={routes.invite} size="lg">
+        <Button to={routes.requestInvite} size="lg">
           Join the network
         </Button>
       </Outro>

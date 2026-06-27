@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Avatar, Button } from '../../shared/components/ui'
+import { Footer } from '../../shared/components/layout'
 import { memberName } from '../members/data/members'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
@@ -15,6 +16,7 @@ export function RsvpPage() {
   const { showToast } = useToast()
 
   return (
+    <>
     <div className={styles.root}>
       <div className={styles.brand}>
         <Link to={routes.homepage} className={styles.brandLink}>
@@ -154,5 +156,7 @@ export function RsvpPage() {
         </p>
       </div>
     </div>
+    <Footer />
+    </>
   )
 }

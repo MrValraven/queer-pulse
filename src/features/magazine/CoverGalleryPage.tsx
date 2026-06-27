@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
+import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
 import styles from "./CoverGalleryPage.module.css";
 
 const ISSUE = routes.issue;
@@ -46,7 +48,24 @@ const ILLUS: { initials: string; jade?: boolean; plum?: boolean; name: string; c
   { initials: "8×", name: "Founders (group)", covers: <>Cover <b>01</b> · inaugural</> },
 ];
 
+function CoverTileSkeleton() {
+  return (
+    <div className={styles.tile} aria-hidden>
+      <SkeletonLine height="auto" style={{ aspectRatio: "3 / 4", borderRadius: 14, marginBottom: 18 }} />
+      <div className={styles.tileInfo}>
+        <div className="left" style={{ flex: 1 }}>
+          <SkeletonLine width="60%" height={20} style={{ marginBottom: 8 }} />
+          <SkeletonLine width="80%" height={12} />
+        </div>
+        <SkeletonLine width={32} height={14} />
+      </div>
+    </div>
+  );
+}
+
 export function CoverGalleryPage() {
+  const loading = useSimulatedLoad();
+
   return (
     <PageShell>
       <MagazineMasthead active="covers" />
@@ -67,24 +86,28 @@ export function CoverGalleryPage() {
         </section>
 
         <div className={styles.grid}>
-          {COVERS.map((c) => (
-            <Link to={ISSUE} className={styles.tile} key={c.num}>
-              <div className={`${styles.img} ${styles[TINT_CLASS[c.tint]]}`}>
-                <div className={styles.num}>
-                  №<em>{c.num}</em>
-                </div>
-              </div>
-              <div className={styles.tileInfo}>
-                <div className="left">
-                  <b>{c.title}</b>
-                  <span>{c.meta}</span>
-                </div>
-                <div className="right">
-                  №<em>{c.num}</em>
-                </div>
-              </div>
-            </Link>
-          ))}
+          {loading
+            ? Array.from({ length: COVERS.length }).map((_, i) => (
+                <CoverTileSkeleton key={i} />
+              ))
+            : COVERS.map((c, i) => (
+                <FadeIn as={Link} to={ISSUE} className={styles.tile} key={c.num} delay={Math.min(i, 8) * 60}>
+                  <div className={`${styles.img} ${styles[TINT_CLASS[c.tint]]}`}>
+                    <div className={styles.num}>
+                      №<em>{c.num}</em>
+                    </div>
+                  </div>
+                  <div className={styles.tileInfo}>
+                    <div className="left">
+                      <b>{c.title}</b>
+                      <span>{c.meta}</span>
+                    </div>
+                    <div className="right">
+                      №<em>{c.num}</em>
+                    </div>
+                  </div>
+                </FadeIn>
+              ))}
         </div>
 
         <section className={styles.stats}>

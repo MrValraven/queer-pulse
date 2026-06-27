@@ -1,12 +1,15 @@
 import { useMemo, useState } from 'react'
 import { AppShell } from '../../shared/components/layout'
-import { Avatar } from '../../shared/components/ui'
+import { Avatar, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
+import { MessageThreadListSkeleton } from './MessagesSkeleton'
 import { conversations, type ChatMessage, type Conversation } from './data'
 import { ConversationPanel } from './ConversationPanel'
 import { NewMessageModal } from './NewMessageModal'
 import styles from './MessagesPage.module.css'
 
 export function MessagesPage() {
+  const loading = useSimulatedLoad()
   const [extraThreads, setExtraThreads] = useState<Conversation[]>([])
   const [activeId, setActiveId] = useState(conversations[0].id)
   const [readIds, setReadIds] = useState<Set<string>>(new Set())
@@ -101,11 +104,12 @@ export function MessagesPage() {
           </div>
 
           <div className={styles.threadList}>
-            {visibleThreads.map((thread) => {
+            {loading && <MessageThreadListSkeleton count={6} />}
+            {!loading && visibleThreads.map((thread, i) => {
               const isUnread = thread.unread && !readIds.has(thread.id) && thread.id !== activeId
               return (
+                <FadeIn key={thread.id} delay={Math.min(i, 8) * 60}>
                 <button
-                  key={thread.id}
                   className={[styles.threadRow, thread.id === activeId && styles.threadActive]
                     .filter(Boolean)
                     .join(' ')}
@@ -129,6 +133,7 @@ export function MessagesPage() {
                     </div>
                   </div>
                 </button>
+                </FadeIn>
               )
             })}
           </div>

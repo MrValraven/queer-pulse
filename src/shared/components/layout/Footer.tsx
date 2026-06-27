@@ -1,103 +1,84 @@
-import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiAlertOctagon } from "react-icons/fi";
+import type { IconType } from "react-icons";
+import {
+  FiAlertOctagon,
+  FiInstagram,
+  FiYoutube,
+  FiAtSign,
+  FiMail,
+  FiSun,
+  FiMoon,
+} from "react-icons/fi";
 import { MdAccessible } from "react-icons/md";
-import { linkToPath, routes } from "../../../app/routeMap";
+import { linkToPath } from "../../../app/routeMap";
+import { useTheme } from "../../../app/providers/themeContext";
+import { useTranslation } from "../../i18n/useTranslation";
+import { COLUMNS, BASE_LINKS, SOCIAL_LINKS, type FooterLink } from "./footer.data";
 import styles from "./Footer.module.css";
 
-interface FooterLink {
-  label: ReactNode;
-  key?: string;
-  href: string;
-}
-interface FooterColumn {
-  heading: string;
-  links: FooterLink[];
+const LINK_ICONS: Record<NonNullable<FooterLink["icon"]>, IconType> = {
+  emergency: FiAlertOctagon,
+  accessibility: MdAccessible,
+};
+const SOCIAL_ICONS: Record<(typeof SOCIAL_LINKS)[number]["icon"], IconType> = {
+  instagram: FiInstagram,
+  youtube: FiYoutube,
+  mastodon: FiAtSign,
+  newsletter: FiMail,
+};
+
+function Wordmark({ to }: { to: string }) {
+  return (
+    <Link to={to} className={styles.brand}>
+      <span className={styles.pulseDot} aria-hidden />
+      Queer<span className={styles.brandItalic}>Pulse</span>
+    </Link>
+  );
 }
 
-const COLUMNS: FooterColumn[] = [
-  {
-    heading: "Network",
-    links: [
-      { label: "Members", href: "#discovery" },
-      { label: "Messages", href: routes.messages },
-      { label: "Search", href: routes.search },
-      { label: "Request an invite", href: routes.invite },
-      { label: "Onboarding", href: routes.welcome },
-    ],
-  },
-  {
-    heading: "Community",
-    links: [
-      { label: "Forum", href: routes.forum },
-      { label: "Calendar", href: routes.calendar },
-      { label: "Gatherings", href: "#gather" },
-      { label: "Change Makers", href: routes.changemakers },
-      { label: "Communities", href: routes.communities },
-      { label: "Queer Parents", href: routes.parents },
-      { label: "Coming-Out Support", href: routes.comingOut },
-      { label: "Micro-Grants", href: routes.grants },
-      { label: "Resource Library", href: routes.library },
-      { label: "Volunteer", href: routes.volunteer },
-      { label: "Mentorship", href: routes.mentorship },
-      { label: "Activism", href: routes.activism },
-      { label: "Community Archive", href: routes.archive },
-    ],
-  },
-  {
-    heading: "Lisbon",
-    links: [
-      { label: "Spaces Map", href: routes.map },
-      { label: "Business Directory", href: routes.businessDirectory },
-      { label: "Skills Exchange", href: routes.barter },
-      { label: "Housing Board", href: routes.housing },
-      { label: "Job Board", href: routes.jobs },
-      { label: "Directory", href: routes.directory },
-      { label: "New to Lisbon?", href: routes.arriving },
-      { label: "Queer Platforms", href: routes.platforms },
-      { label: "Accessibility", href: routes.accessibility },
-      { label: "Contact", href: routes.contact },
-    ],
-  },
-  {
-    heading: "Wellbeing",
-    links: [
-      { label: "Wellbeing Hub", href: routes.wellbeing },
-      { label: "Therapist Directory", href: `${routes.wellbeing}#therapists` },
-      { label: "Legal Aid", href: routes.legal },
-      { label: "Employer Reviews", href: routes.employerReviews },
-      { label: "Trans & NB Hub", href: routes.transHub },
-      { label: "Report & Safety", href: routes.report },
-    ],
-  },
-];
+function BaseLink({ link }: { link: FooterLink }) {
+  const Icon = link.icon ? LINK_ICONS[link.icon] : null;
+  return (
+    <Link
+      to={linkToPath(link.href)}
+      className={link.icon === "emergency" ? styles.emergency : undefined}
+    >
+      {Icon && <Icon aria-hidden />}
+      {link.label}
+    </Link>
+  );
+}
 
-const BASE_LINKS: FooterLink[] = [
-  {
-    key: "Emergency",
-    label: (
-      <>
-        <FiAlertOctagon aria-hidden /> Emergency
-      </>
-    ),
-    href: routes.emergency,
-  },
-  { label: "Governance", href: routes.governance },
-  { label: "Community guidelines", href: routes.guidelines },
-  { label: "Privacy", href: routes.privacy },
-  { label: "Cookies", href: routes.cookies },
-  { label: "Data export", href: routes.dataExport },
-  { label: "Security", href: routes.security },
-  {
-    key: "Accessibility",
-    label: (
-      <>
-        <MdAccessible aria-hidden /> Accessibility
-      </>
-    ),
-    href: routes.accessibility,
-  },
-];
+/** Theme toggle + EN/PT language switch, shared by both footer variants. */
+function FooterControls() {
+  const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage } = useTranslation();
+  return (
+    <div className={styles.controls}>
+      <button
+        type="button"
+        className={styles.themeToggle}
+        onClick={toggleTheme}
+        aria-label="Toggle colour theme"
+      >
+        {theme === "dark" ? <FiSun aria-hidden /> : <FiMoon aria-hidden />}
+      </button>
+      <div className={styles.langSwitch} role="group" aria-label="Language">
+        {(["en", "pt"] as const).map((lang) => (
+          <button
+            key={lang}
+            type="button"
+            onClick={() => setLanguage(lang)}
+            aria-pressed={language === lang}
+            className={language === lang ? styles.langActive : undefined}
+          >
+            {lang.toUpperCase()}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function Footer() {
   return (
@@ -105,17 +86,28 @@ export function Footer() {
       <div className="wrap">
         <div className={styles.grid}>
           <div className={styles.brandCol}>
-            <Link to="/" className={styles.brand}>
-              <span className={styles.pulseDot} aria-hidden />
-              Queer<span className={styles.brandItalic}>Pulse</span>
-            </Link>
+            <Wordmark to="/" />
             <p className={styles.blurb}>
               A queer professional network, rooted in Lisbon. Built by and for
               the community — not designed at it.
             </p>
+            <div className={styles.social}>
+              {SOCIAL_LINKS.map((social) => {
+                const Icon = SOCIAL_ICONS[social.icon];
+                return (
+                  <a
+                    key={social.icon}
+                    href={social.href}
+                    aria-label={social.label}
+                  >
+                    <Icon aria-hidden />
+                  </a>
+                );
+              })}
+            </div>
           </div>
 
-          <div className={styles.cols}>
+          <nav className={styles.cols} aria-label="Footer">
             {COLUMNS.map((column) => (
               <div key={column.heading} className={styles.col}>
                 <h4>{column.heading}</h4>
@@ -126,19 +118,19 @@ export function Footer() {
                 ))}
               </div>
             ))}
-          </div>
+          </nav>
         </div>
 
         <div className={styles.base}>
-          <span>© 2026 QueerPulse · Made in Lisbon with care</span>
-          <span>
-            {BASE_LINKS.map((link, index) => (
-              <span key={link.key ?? link.href}>
-                {index > 0 && " · "}
-                <Link to={linkToPath(link.href)}>{link.label}</Link>
-              </span>
-            ))}
+          <span className={styles.copyright}>
+            © 2026 QueerPulse · Made in Lisbon with care
           </span>
+          <nav className={styles.baseLinks} aria-label="Legal">
+            {BASE_LINKS.map((link) => (
+              <BaseLink key={link.href} link={link} />
+            ))}
+          </nav>
+          <FooterControls />
         </div>
       </div>
     </footer>

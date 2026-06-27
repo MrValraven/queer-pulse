@@ -122,6 +122,8 @@
 }
 .starOn {
   color: var(--accent);
+}
+.starOn svg {
   fill: currentColor;
 }
 .textarea {
@@ -174,6 +176,19 @@
   justify-content: center;
 }
 
+.success {
+  animation: hmSuccessIn 0.45s cubic-bezier(0.22, 0.68, 0.16, 1) both;
+}
+@keyframes hmSuccessIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .successIcon {
   width: 56px;
   height: 56px;
@@ -183,6 +198,17 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 18px;
+  animation: hmIconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.08s both;
+}
+@keyframes hmIconPop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 .successIcon svg {
   width: 26px;
@@ -192,4 +218,25 @@
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+.successIcon svg polyline {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: hmCheckDraw 0.4s ease 0.32s forwards;
+}
+@keyframes hmCheckDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal,
+  .success,
+  .successIcon {
+    animation: none;
+  }
+  .successIcon svg polyline {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
 }

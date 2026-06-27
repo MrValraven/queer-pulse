@@ -2,9 +2,12 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
+import { FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { MENTION_TABS, MENTION_DAYS, type Mention } from './mentions.data'
+import { MentionsListSkeleton } from './MentionsSkeleton'
 import styles from './MentionsPage.module.css'
 
 const avClass: Record<Mention['tint'], string> = {
@@ -129,8 +132,10 @@ function MentionRow({ m }: { m: Mention }) {
 }
 
 export function MentionsPage() {
+  const loading = useSimulatedLoad()
   const { showToast } = useToast()
   const [tab, setTab] = useState(0)
+  let rowIndex = 0
 
   return (
     <AppShell unreadCount={3}>
@@ -167,16 +172,20 @@ export function MentionsPage() {
           </button>
         </div>
 
-        {MENTION_DAYS.map((group) => (
-          <div key={group.day}>
-            <div className={styles.day}>{group.day}</div>
-            <div className={styles.list}>
-              {group.items.map((m) => (
-                <MentionRow key={m.id} m={m} />
-              ))}
-            </div>
-          </div>
-        ))}
+        {loading
+          ? <MentionsListSkeleton count={3} />
+          : MENTION_DAYS.map((group) => (
+              <div key={group.day}>
+                <div className={styles.day}>{group.day}</div>
+                <div className={styles.list}>
+                  {group.items.map((m) => (
+                    <FadeIn key={m.id} delay={Math.min(rowIndex++, 8) * 60}>
+                      <MentionRow m={m} />
+                    </FadeIn>
+                  ))}
+                </div>
+              </div>
+            ))}
       </div>
     </AppShell>
   )

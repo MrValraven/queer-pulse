@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Reveal } from '../../shared/components/ui'
+import { Button, FadeIn, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { calendarEvents, calendarLegend, type CalendarEvent } from './data'
 import { MONTHS, MSHORT, CALENDAR_TODAY } from './calendar.data'
@@ -10,6 +11,22 @@ import styles from './CalendarPage.module.css'
 
 function sameDay(a: Date, b: Date) {
   return a.toDateString() === b.toDateString()
+}
+
+function EventCardSkeleton() {
+  return (
+    <div className={styles.eventCard} aria-hidden>
+      <div className={styles.ecDate}>
+        <SkeletonLine width={26} height={26} />
+        <SkeletonLine width={28} height={11} style={{ marginTop: 4 }} />
+      </div>
+      <div style={{ flex: 1 }}>
+        <SkeletonLine width="40%" height={11} />
+        <SkeletonLine width="80%" height={14.5} style={{ marginTop: 6 }} />
+        <SkeletonLine width="55%" height={12.5} style={{ marginTop: 6 }} />
+      </div>
+    </div>
+  )
 }
 
 function EventCard({ event }: { event: CalendarEvent }) {
@@ -44,6 +61,7 @@ export function CalendarPage() {
   const [view, setView] = useState({ year: 2026, month: 5 })
   const [selected, setSelected] = useState<Date | null>(null)
   const [subscribed, setSubscribed] = useState(false)
+  const loading = useSimulatedLoad()
 
   const firstDayOffset = (new Date(view.year, view.month, 1).getDay() + 6) % 7
   const daysInMonth = new Date(view.year, view.month + 1, 0).getDate()
@@ -134,7 +152,13 @@ export function CalendarPage() {
               <div className={styles.allEvents}>
                 <h3>All upcoming events</h3>
                 <div className={styles.eventList}>
-                  {upcoming.map((event, index) => <EventCard key={index} event={event} />)}
+                  {loading
+                    ? Array.from({ length: 5 }).map((_, i) => <EventCardSkeleton key={i} />)
+                    : upcoming.map((event, index) => (
+                        <FadeIn key={index} delay={Math.min(index, 8) * 60}>
+                          <EventCard event={event} />
+                        </FadeIn>
+                      ))}
                 </div>
               </div>
             </div>

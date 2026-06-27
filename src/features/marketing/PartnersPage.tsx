@@ -1,14 +1,44 @@
 import { Link } from 'react-router-dom'
 import { FiMapPin } from 'react-icons/fi'
 import { PageHero, PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { PARTNERS, type Region } from './partnerDetails'
 import { routes } from '../../app/routeMap'
 import s from './PartnersPage.module.css'
 
 const regionClass: Record<Region, string> = { pt: s.pt, eu: s.eu, int: s.int }
 
+function PartnerCardSkeleton() {
+  // Mirrors the real .card: top row (46px avatar + region badge), name, city, desc, tags, foot.
+  return (
+    <div className={s.card} aria-hidden>
+      <div className={s.top}>
+        <SkeletonLine width={46} height={46} style={{ borderRadius: 12 }} />
+        <SkeletonLine width={68} height={20} style={{ borderRadius: 6 }} />
+      </div>
+      <div>
+        <SkeletonLine width="60%" height={19} />
+        <SkeletonLine width="40%" height={12.5} style={{ marginTop: 6 }} />
+      </div>
+      <div style={{ flex: 1 }}>
+        <SkeletonLine width="100%" height={13.5} />
+        <SkeletonLine width="80%" height={13.5} style={{ marginTop: 6 }} />
+      </div>
+      <div className={s.tags}>
+        <SkeletonLine width={54} height={18} style={{ borderRadius: 6 }} />
+        <SkeletonLine width={68} height={18} style={{ borderRadius: 6 }} />
+      </div>
+      <div className={s.foot} style={{ borderTopColor: 'transparent' }}>
+        <SkeletonLine width={110} height={13} />
+      </div>
+    </div>
+  )
+}
+
 export function PartnersPage() {
+  const loading = useSimulatedLoad()
+
   return (
     <PageShell>
       <PageHero
@@ -35,8 +65,11 @@ export function PartnersPage() {
             <p>Partnerships built on shared values, not brand alignment. Each of these organisations is doing real, necessary work.</p>
           </div>
           <div className={s.grid}>
-            {PARTNERS.map((p) => (
-              <Link key={p.name} to={`/partner/${p.slug}`} className={s.card}>
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => <PartnerCardSkeleton key={i} />)
+              : PARTNERS.map((p, i) => (
+              <FadeIn key={p.name} delay={Math.min(i, 8) * 60} style={{ height: '100%' }}>
+              <Link to={`/partner/${p.slug}`} className={s.card} style={{ height: '100%' }}>
                 <div className={s.top}>
                   <span className={s.av} style={{ background: p.bg, color: p.color }}>
                     {p.av}
@@ -57,6 +90,7 @@ export function PartnersPage() {
                 </div>
                 <div className={s.foot}>View partnership →</div>
               </Link>
+              </FadeIn>
             ))}
           </div>
 
@@ -90,7 +124,7 @@ export function PartnersPage() {
         title={<>You don't have to navigate this <em>alone.</em></>}
         sub="QueerPulse, and the organisations we work with, exist so that you don't have to start from zero."
       >
-        <Button size="lg" to={routes.invite}>
+        <Button size="lg" to={routes.requestInvite}>
           Request an invite
         </Button>
       </Outro>

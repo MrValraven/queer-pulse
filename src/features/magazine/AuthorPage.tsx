@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button, ImageSlot } from '../../shared/components/ui'
+import { Button, FadeIn, ImageSlot, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { memberName } from '../members/data/members'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useSocial } from '../../app/providers/SocialProvider'
@@ -30,8 +31,22 @@ const READING = [
   { title: <>On waiting <em>· Maria Tumarkin</em></>, tag: 'essay' },
 ]
 
+function ArtCardSkeleton() {
+  return (
+    <div className={styles.art} aria-hidden>
+      <SkeletonLine width="35%" height={11} />
+      <SkeletonLine width="90%" height={21} />
+      <SkeletonLine width="60%" height={21} />
+      <SkeletonLine width="100%" height={14} style={{ marginTop: 2 }} />
+      <SkeletonLine width="80%" height={14} />
+      <SkeletonLine width="40%" height={12} style={{ marginTop: 8 }} />
+    </div>
+  )
+}
+
 export function AuthorPage() {
   const { showToast } = useToast()
+  const loading = useSimulatedLoad()
   const { isFollowing, toggleFollow } = useSocial()
   const following = isFollowing(AUTHOR_SLUG)
 
@@ -133,14 +148,18 @@ export function AuthorPage() {
           <Link to={routes.magazine}>All 14 articles →</Link>
         </div>
         <div className={styles.articles}>
-          {ARTICLES.map((article, index) => (
-            <Link key={index} to={`/article?id=${article.id}`} className={styles.art}>
-              <div className={styles.artKicker}>{article.kicker}</div>
-              <div className={styles.artTitle}>{article.title}</div>
-              <div className={styles.artDek}>{article.dek}</div>
-              <div className={styles.artMeta}>{article.meta}</div>
-            </Link>
-          ))}
+          {loading
+            ? Array.from({ length: ARTICLES.length }).map((_, i) => (
+                <ArtCardSkeleton key={i} />
+              ))
+            : ARTICLES.map((article, index) => (
+                <FadeIn as={Link} key={index} to={`/article?id=${article.id}`} className={styles.art} delay={Math.min(index, 8) * 60}>
+                  <div className={styles.artKicker}>{article.kicker}</div>
+                  <div className={styles.artTitle}>{article.title}</div>
+                  <div className={styles.artDek}>{article.dek}</div>
+                  <div className={styles.artMeta}>{article.meta}</div>
+                </FadeIn>
+              ))}
         </div>
 
         <div className={styles.readlist}>

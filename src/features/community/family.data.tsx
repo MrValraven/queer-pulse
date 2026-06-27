@@ -7,7 +7,7 @@ export const LEGAL = routes.legal
 export const TRANS_HUB = routes.transHub
 export const FORUM = routes.forum
 export const MENTORSHIP = routes.mentorship
-export const INVITE = routes.invite
+export const INVITE = routes.requestInvite
 
 export interface InfoCard {
   eyebrow: string

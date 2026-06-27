@@ -191,7 +191,7 @@ export function ArrivingPage() {
         title={<>Ready to meet <em>the community?</em></>}
         sub="Request an invite to QueerPulse and get access to the full network — members, gatherings, board, and everything else on this page."
       >
-        <Button to={routes.invite} variant="primary" size="lg">
+        <Button to={routes.requestInvite} variant="primary" size="lg">
           Request an invite →
         </Button>
       </Outro>

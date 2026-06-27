@@ -2,7 +2,8 @@ import type { ReactNode } from 'react'
 import { FiAlertOctagon } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { Button, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useConnect } from '../../app/providers/ConnectProvider'
 import { routes } from '../../app/routeMap'
 import { ResourceHero } from './ResourceHero'
@@ -44,6 +45,25 @@ const LAWYERS = [
 
 const badgeClass = { protected: styles.badgeProtected, know: styles.badgeKnow, practical: styles.badgeKnow }
 
+function LawyerSkeleton() {
+  // Mirrors the lawyer card: name, spec, two tags, footer row (loc + cta).
+  return (
+    <div className={styles.card}>
+      <SkeletonLine width="55%" height={19} />
+      <SkeletonLine width="100%" height={13} style={{ marginTop: 8 }} />
+      <SkeletonLine width="85%" height={13} style={{ marginTop: 6 }} />
+      <div className={styles.tags}>
+        <SkeletonLine width={70} height={20} />
+        <SkeletonLine width={54} height={20} />
+      </div>
+      <div className={styles.cardFoot}>
+        <SkeletonLine width="30%" height={13} />
+        <SkeletonLine width="40%" height={13} />
+      </div>
+    </div>
+  )
+}
+
 function RightsSection({ id, title, lead, cream, rights }: { id: string; title: ReactNode; lead: string; cream?: boolean; rights: Right[] }) {
   return (
     <section className={`${styles.section} ${cream ? styles.sectionCream : styles.sectionPaper}`} id={id}>
@@ -71,6 +91,7 @@ function RightsSection({ id, title, lead, cream, rights }: { id: string; title: 
 
 export function LegalPage() {
   const { openConnect } = useConnect()
+  const loading = useSimulatedLoad()
   return (
     <PageShell>
       <ResourceHero
@@ -115,39 +136,41 @@ export function LegalPage() {
             Vetted by community members, with specific experience in LGBTQ+ cases in Portugal.
             Initial consultations are free for QueerPulse members.
           </Reveal>
-          <div className={styles.grid}>
-            {LAWYERS.map((lawyer, index) => (
-              <Reveal key={lawyer.name} className={styles.card} delay={index * 55}>
-                <div className={styles.cardName} style={{ fontSize: 19 }}>
-                  {lawyer.name}
-                </div>
-                <div className={styles.cardSpec}>{lawyer.spec}</div>
-                <div className={styles.tags}>
-                  {lawyer.tags.map((tag) => (
-                    <span key={tag} className={styles.tag}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div className={styles.cardFoot}>
-                  <span className={styles.cardLoc}>{lawyer.loc}</span>
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    className={styles.cardCta}
-                    onClick={() => openConnect()}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault()
-                        openConnect()
-                      }
-                    }}
-                  >
-                    Request consultation →
-                  </span>
-                </div>
-              </Reveal>
-            ))}
+          <div className={styles.grid} aria-busy={loading}>
+            {loading
+              ? Array.from({ length: LAWYERS.length }).map((_, i) => <LawyerSkeleton key={i} />)
+              : LAWYERS.map((lawyer, index) => (
+                  <FadeIn key={lawyer.name} className={styles.card} delay={Math.min(index, 8) * 60}>
+                    <div className={styles.cardName} style={{ fontSize: 19 }}>
+                      {lawyer.name}
+                    </div>
+                    <div className={styles.cardSpec}>{lawyer.spec}</div>
+                    <div className={styles.tags}>
+                      {lawyer.tags.map((tag) => (
+                        <span key={tag} className={styles.tag}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <div className={styles.cardFoot}>
+                      <span className={styles.cardLoc}>{lawyer.loc}</span>
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        className={styles.cardCta}
+                        onClick={() => openConnect()}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault()
+                            openConnect()
+                          }
+                        }}
+                      >
+                        Request consultation →
+                      </span>
+                    </div>
+                  </FadeIn>
+                ))}
           </div>
 
           <Reveal className={styles.emergencyStrip}>
@@ -172,7 +195,7 @@ export function LegalPage() {
         title={<>You have <em>rights.</em></>}
         sub="Knowledge is the first line of defence. Share these resources with anyone who needs them."
       >
-        <Button to={routes.invite} variant="primary" size="lg">
+        <Button to={routes.requestInvite} variant="primary" size="lg">
           Request an invite
         </Button>
       </Outro>

@@ -24,7 +24,7 @@ export function PublicProfilePage() {
           <Button variant="ghost-dark" to={routes.signIn}>
             Sign in
           </Button>
-          <Button variant="primary" to={routes.invite}>
+          <Button variant="primary" to={routes.requestInvite}>
             Request an invite
           </Button>
         </div>
@@ -73,7 +73,7 @@ export function PublicProfilePage() {
             </div>
 
             <div className={styles.ctaRow}>
-              <Button variant="primary" to={routes.invite}>
+              <Button variant="primary" to={routes.requestInvite}>
                 Request an invite to connect
               </Button>
               <div className={styles.ctaNote}>{m.ctaNote}</div>
@@ -132,7 +132,7 @@ export function PublicProfilePage() {
           title={<>Posts, replies, and DMs are <em>members-only.</em></>}
           body="QueerPulse keeps day-to-day community life behind a sign-in to protect members. Become one and Tomás's feed unlocks immediately — including the ability to message him."
           action={
-            <Button variant="primary" to={routes.invite}>
+            <Button variant="primary" to={routes.requestInvite}>
               Request an invite →
             </Button>
           }

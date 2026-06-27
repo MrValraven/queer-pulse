@@ -1,24 +1,20 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiLink, FiMail } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { currentUser } from '../members/data/members'
+import { InviteEmailForm } from './InviteEmailForm'
+import { InviteLinkPanel } from './InviteLinkPanel'
 import styles from './InvitePage.module.css'
 
-const SENDER_NAME = `${currentUser.first} ${currentUser.last}`
+type Mode = 'email' | 'link'
 
 export function InvitePage() {
-  const { showToast } = useToast()
-  const [first, setFirst] = useState('')
-  const [know, setKnow] = useState('')
-  const [note, setNote] = useState('')
-  const [sent, setSent] = useState(false)
+  const [mode, setMode] = useState<Mode>('email')
+  const [sentName, setSentName] = useState<string | null>(null)
 
-  const inviteeName = first.trim() || 'Rosa'
-
-  if (sent) {
+  if (sentName) {
     return (
       <AppShell>
         <div className={styles.page}>
@@ -30,16 +26,16 @@ export function InvitePage() {
                 </svg>
               </div>
               <div className={styles.sentHead}>
-                Invitation sent to <em>{inviteeName}</em>
+                Invitation sent to <em>{sentName}</em>
               </div>
               <div className={styles.sentSub}>
-                We've sent {inviteeName} an email. They have 7 days to accept. You'll be notified
-                when they join.
+                We've sent {sentName} an email. They have 7 days to accept. You'll be notified when
+                they join.
               </div>
               <div className={styles.summaryCard}>
                 <div className={styles.srRow}>
                   <span className={styles.srLabel}>Invited</span>
-                  <span className={styles.srVal}>{inviteeName} Lima</span>
+                  <span className={styles.srVal}>{sentName} Lima</span>
                 </div>
                 <div className={styles.srRow}>
                   <span className={styles.srLabel}>Sent</span>
@@ -67,7 +63,7 @@ export function InvitePage() {
       <div className={styles.page}>
         <div className={styles.inner}>
           <Link to={routes.accountProfile} className={styles.backLink}>
-            ← Back to profile
+            ← Back to my profile
           </Link>
           <div className={styles.eyebrow}>Invite someone</div>
           <div className={styles.title}>
@@ -78,83 +74,38 @@ export function InvitePage() {
             genuinely vouch for.
           </div>
           <div className={styles.quotaRow}>
-            <div className={styles.quotaChip}>1 invite remaining this month</div>
+            <div className={styles.quotaChip}>1 invite available this month</div>
             <div className={styles.resetNote}>Resets 1 July 2026</div>
           </div>
 
-          <form
-            onSubmit={(event) => {
-              event.preventDefault()
-              setSent(true)
-            }}
-          >
-            <div className={styles.card}>
-              <div className={styles.twoCol}>
-                <div className={styles.field}>
-                  <label>First name</label>
-                  <input type="text" placeholder="Rosa" value={first} onChange={(e) => setFirst(e.target.value)} />
-                </div>
-                <div className={styles.field}>
-                  <label>Last name</label>
-                  <input type="text" placeholder="Lima" />
-                </div>
-              </div>
-              <div className={styles.field}>
-                <label>Their email</label>
-                <input type="email" placeholder="rosa@email.com" />
-              </div>
-              <div className={styles.field}>
-                <label>How you know them</label>
-                <textarea
-                  maxLength={300}
-                  placeholder="How do you know this person, and why do they belong here?"
-                  value={know}
-                  onChange={(e) => setKnow(e.target.value)}
-                />
-                <div className={styles.charCount}>{know.length}/300</div>
-                <div className={styles.helper}>
-                  This becomes part of your vouch — shown to the moderation team, not the invitee.
-                </div>
-              </div>
-              <div className={styles.field}>
-                <label>
-                  Personal note <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: 11 }}>(optional)</span>
-                </label>
-                <textarea
-                  maxLength={200}
-                  placeholder="A message they'll see in their invite email."
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                />
-                <div className={styles.charCount}>{note.length}/200</div>
-              </div>
-            </div>
+          <div className={styles.segmented} role="tablist" aria-label="Delivery method">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === 'email'}
+              className={`${styles.segBtn} ${mode === 'email' ? styles.segBtnActive : ''}`}
+              onClick={() => setMode('email')}
+            >
+              <FiMail aria-hidden />
+              Send via email
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === 'link'}
+              className={`${styles.segBtn} ${mode === 'link' ? styles.segBtnActive : ''}`}
+              onClick={() => setMode('link')}
+            >
+              <FiLink aria-hidden />
+              Share a link
+            </button>
+          </div>
 
-            <div className={styles.epLabel}>What they'll receive</div>
-            <div className={styles.emailPreview}>
-              <div className={styles.epContent}>
-                <div className={styles.epBrand}>
-                  Queer<em>Pulse</em>
-                </div>
-                <div className={styles.epSubject}>{SENDER_NAME} has invited you to QueerPulse</div>
-                <div className={styles.epNote}>
-                  “{note.trim() || "Hi! I think you'd love this community — it's exactly the kind of space we've talked about."}”
-                </div>
-                <div className={styles.epBtn}>Accept your invitation →</div>
-                <div className={styles.epExpire}>Invite expires in 7 days</div>
-              </div>
-            </div>
-
-            <div className={styles.actions}>
-              <Button type="submit">Send invitation</Button>
-              <Button type="button" variant="ghost" onClick={() => showToast('Draft saved', 'info')}>
-                Save as draft
-              </Button>
-            </div>
-            <div className={styles.formNote}>
-              Invites expire after 7 days. If they don't accept, the quota is not returned.
-            </div>
-          </form>
+          {mode === 'email' ? (
+            <InviteEmailForm onSent={(name) => setSentName(name)} />
+          ) : (
+            <InviteLinkPanel />
+          )}
         </div>
       </div>
     </AppShell>

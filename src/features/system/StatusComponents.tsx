@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import {
   SERVICES,
@@ -8,6 +9,7 @@ import {
   STATUS_LABEL,
   type ServiceStatus,
 } from './status.data'
+import { ServiceCardSkeleton, IncidentSkeleton } from './StatusSkeletons'
 import styles from './StatusComponents.module.css'
 
 const PILL_CLASS: Record<ServiceStatus, string> = {
@@ -42,21 +44,28 @@ export function StatusHero() {
 }
 
 export function ServicesGrid() {
+  const loading = useSimulatedLoad()
   return (
     <section className="wrap" style={{ paddingBottom: 60 }}>
       <p className={styles.sectionEye}>Services</p>
-      <div className={styles.svcGrid}>
-        {SERVICES.map((svc) => (
-          <div key={svc.name} className={styles.svcCard}>
-            <div>
-              <div className={styles.svcName}>{svc.name}</div>
-              <div className={styles.svcDesc}>{svc.desc}</div>
-            </div>
-            <span className={`${styles.svcPill} ${PILL_CLASS[svc.status]}`}>
-              {STATUS_LABEL[svc.status]}
-            </span>
-          </div>
-        ))}
+      <div className={styles.svcGrid} aria-busy={loading}>
+        {loading
+          ? Array.from({ length: SERVICES.length }).map((_, i) => (
+              <ServiceCardSkeleton key={i} />
+            ))
+          : SERVICES.map((svc, i) => (
+              <FadeIn key={svc.name} delay={Math.min(i, 8) * 60}>
+                <div className={styles.svcCard}>
+                  <div>
+                    <div className={styles.svcName}>{svc.name}</div>
+                    <div className={styles.svcDesc}>{svc.desc}</div>
+                  </div>
+                  <span className={`${styles.svcPill} ${PILL_CLASS[svc.status]}`}>
+                    {STATUS_LABEL[svc.status]}
+                  </span>
+                </div>
+              </FadeIn>
+            ))}
       </div>
     </section>
   )
@@ -110,13 +119,19 @@ export function UptimeSection() {
 }
 
 export function IncidentsSection() {
+  const loading = useSimulatedLoad()
   return (
     <section className="wrap" style={{ paddingBottom: 80 }}>
       <p className={styles.sectionEye}>Incident history</p>
-      <div className={styles.incList}>
-        {INCIDENTS.map((inc) => (
-          <div
+      <div className={styles.incList} aria-busy={loading}>
+        {loading
+          ? Array.from({ length: INCIDENTS.length }).map((_, i) => (
+              <IncidentSkeleton key={i} />
+            ))
+          : INCIDENTS.map((inc, i) => (
+          <FadeIn
             key={inc.date + inc.title}
+            delay={Math.min(i, 8) * 60}
             className={[styles.incItem, inc.resolved && styles.incItemResolved]
               .filter(Boolean)
               .join(' ')}
@@ -151,7 +166,7 @@ export function IncidentsSection() {
                 {inc.status === 'resolved' ? 'Resolved' : 'Monitoring'}
               </span>
             </div>
-          </div>
+          </FadeIn>
         ))}
       </div>
     </section>

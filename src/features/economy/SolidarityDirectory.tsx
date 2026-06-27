@@ -118,7 +118,7 @@ export function SolidarityDirectory() {
               </p>
             </div>
             <div className={styles.rsCta}>
-              <Button to={routes.invite} variant="primary" size="lg">
+              <Button to={routes.requestInvite} variant="primary" size="lg">
                 Register your practice
               </Button>
               <Link to={routes.contact} className={styles.rsCtaLink}>

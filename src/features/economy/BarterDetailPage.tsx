@@ -1,9 +1,11 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar } from '../../shared/components/ui'
+import { Avatar, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { BARTERS, CATS, BADGE, getMemberInfo } from './barter.data'
 import { BarterProposeCard } from './BarterProposeCard'
+import { BarterDetailSkeleton } from './BarterDetailSkeleton'
 import styles from './BarterDetailPage.module.css'
 
 const STEPS: { title: string; text: string }[] = [
@@ -22,6 +24,7 @@ const SUBLINE: Record<string, string> = {
 export function BarterDetailPage() {
   const { id } = useParams()
   const b = BARTERS.find((x) => x.id === id)
+  const loading = useSimulatedLoad()
   if (!b) return <Navigate to={routes.barter} replace />
 
   const info = getMemberInfo(b)
@@ -37,6 +40,10 @@ export function BarterDetailPage() {
           ← Skill exchange
         </Link>
 
+        {loading ? (
+          <BarterDetailSkeleton />
+        ) : (
+          <FadeIn>
         <header className={styles.head}>
           <div className={styles.eyebrow}>
             <span className={styles.kind}>{BADGE[b.mode]}</span>
@@ -146,6 +153,8 @@ export function BarterDetailPage() {
             </div>
           </aside>
         </div>
+          </FadeIn>
+        )}
       </div>
     </PageShell>
   )

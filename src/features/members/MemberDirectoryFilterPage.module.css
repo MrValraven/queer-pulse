@@ -30,6 +30,14 @@
   font-style: italic;
   color: var(--accent);
 }
+/* Reserve stable space for the counting digits so the trailing words don't
+   reflow frame-to-frame while the number ticks up. */
+.tally {
+  display: inline-block;
+  text-align: right;
+  min-width: 2ch;
+  font-variant-numeric: tabular-nums;
+}
 .lead {
   font-size: 14.5px;
   color: var(--ink-60);

@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { StudioShell } from './StudioShell'
+import { StudioCardGridSkeleton } from './StudioSkeletons'
 import { LIBRARY, TABS } from './studioLibrary.data'
 import ss from './studio.module.css'
 import s from './studioPages.module.css'
@@ -9,6 +11,7 @@ import s from './studioPages.module.css'
 export function StudioLibraryPage() {
   const [tab, setTab] = useState<string>('Albums')
   const items = LIBRARY[tab] ?? []
+  const loading = useSimulatedLoad()
 
   return (
     <StudioShell>
@@ -37,12 +40,14 @@ export function StudioLibraryPage() {
       </div>
 
       <section className={ss.row}>
-        {items.length === 0 ? (
+        {loading ? (
+          <StudioCardGridSkeleton className={ss.rowGrid} count={8} />
+        ) : items.length === 0 ? (
           <p className={s.empty}>Nothing saved here yet.</p>
         ) : (
           <div className={ss.rowGrid}>
-            {items.map((item) => (
-              <Link key={item.pre + item.meta} to={item.to} className={ss.card}>
+            {items.map((item, i) => (
+              <FadeIn key={item.pre + item.meta} delay={Math.min(i, 8) * 60} as={Link} to={item.to} className={ss.card}>
                 <div className={ss.cardCov}>
                   <ImageSlot src={item.image} tint={item.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
                 </div>
@@ -52,7 +57,7 @@ export function StudioLibraryPage() {
                   {item.post}
                 </h4>
                 <div className={ss.meta}>{item.meta}</div>
-              </Link>
+              </FadeIn>
             ))}
           </div>
         )}

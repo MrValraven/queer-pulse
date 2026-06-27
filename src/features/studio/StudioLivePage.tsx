@@ -1,14 +1,32 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiPlus, FiCheck } from 'react-icons/fi'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useSaved } from '../../app/providers/SavedProvider'
 import { StudioShell } from './StudioShell'
+import { StudioLine } from './StudioSkeletons'
 import s from './live.module.css'
 import { WF, PLAYED, SET, CHAT, TABS, coverImage } from './studioLive.data'
 
 const stateClass: Record<string, string> = { played: s.setPlayed, now: s.setNow, upnext: s.setUpNext, queued: s.setQueued }
+
+/** Mirrors live .setRow: number, cover, title, pay, time. */
+function LiveSetRowSkeleton() {
+  return (
+    <div className={s.setRow}>
+      <StudioLine width={14} height={11} />
+      <StudioLine width={34} height={34} style={{ borderRadius: 5 }} />
+      <div>
+        <StudioLine width="55%" height={13} />
+        <StudioLine width="35%" height={11} style={{ marginTop: 6 }} />
+      </div>
+      <StudioLine width={56} height={11} />
+      <StudioLine width={28} height={11} />
+    </div>
+  )
+}
 
 const LIVE_TRACK = {
   id: 'post:studio-live-carta-para-a-santa',
@@ -23,6 +41,7 @@ export function StudioLivePage() {
   const { isSaved, toggleSave } = useSaved()
   const [tab, setTab] = useState('Chat')
   const saved = isSaved(LIVE_TRACK.id)
+  const loading = useSimulatedLoad()
 
   return (
     <StudioShell>
@@ -106,8 +125,10 @@ export function StudioLivePage() {
             </div>
           </div>
           <div className={s.setCard}>
-            {SET.map((r) => (
-              <div key={r.n} className={`${s.setRow} ${stateClass[r.state]}`}>
+            {loading
+              ? Array.from({ length: 8 }).map((_, i) => <LiveSetRowSkeleton key={i} />)
+              : SET.map((r, i) => (
+              <FadeIn key={r.n} delay={Math.min(i, 8) * 60} className={`${s.setRow} ${stateClass[r.state]}`}>
                 <span className={s.srN}>{r.n}</span>
                 <span className={s.srCov}>
                   <ImageSlot src={r.image} tint={r.tint as 'coral' | 'jade' | 'plum'} width={34} height={34} radius={5} placeholder="" />
@@ -125,7 +146,7 @@ export function StudioLivePage() {
                   {r.payEm ? <em style={{ color: 'var(--accent)', fontStyle: 'italic' }}>{r.payEm}</em> : r.pay}
                 </div>
                 <span className={s.srTm}>{r.tm}</span>
-              </div>
+              </FadeIn>
             ))}
           </div>
         </div>

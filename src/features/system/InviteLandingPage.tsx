@@ -75,7 +75,7 @@ export function InviteLandingPage() {
           <div className={styles.loaderBrand}>
             Queer<em>Pulse</em>
           </div>
-          <div className={styles.sealedEyebrow}>A personal invitation awaits</div>
+          <div className={styles.sealedEyebrow}>You've been personally invited</div>
           <h1 className={styles.loaderTitle}>
             <em>{INVITER_NAME}</em> invited you.
           </h1>
@@ -139,11 +139,10 @@ export function InviteLandingPage() {
             </div>
           </div>
           <h1 className={styles.heading}>
-            You've been <em>invited.</em>
+            You belong <em>here.</em>
           </h1>
           <p className={styles.headerNote}>
-            This link was created for you personally. It expires in 7 days and can only be used
-            once.
+            This invitation was created for you personally — it's yours, and yours alone.
           </p>
         </div>
 
@@ -184,7 +183,7 @@ export function InviteLandingPage() {
               <div className={styles.tokenLabel}>Your invite code</div>
               <div className={styles.tokenCode}>{INVITE_CODE}</div>
             </div>
-            <div className={styles.tokenExpiry}>7 days left</div>
+            <div className={styles.tokenExpiry}>Valid for 7 days</div>
           </div>
 
           <div className={styles.expiryRow}>

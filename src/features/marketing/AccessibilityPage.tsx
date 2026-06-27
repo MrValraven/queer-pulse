@@ -1,17 +1,19 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { COMMITMENTS, FILTERS, RESOURCES, VENUES } from './accessibility.data'
-import { AccessibleVenueCard } from './AccessibleVenueCard'
+import { AccessibleVenueCard, AccessibleVenueCardSkeleton } from './AccessibleVenueCard'
 import { AccommodationsModal, FlagVenueModal } from './AccessibilityModals'
 import styles from './AccessibilityPage.module.css'
 
-const INVITE = routes.invite
+const INVITE = routes.requestInvite
 
 export function AccessibilityPage() {
   const { showToast } = useToast()
+  const loading = useSimulatedLoad()
   const [filter, setFilter] = useState('all')
   const [flagVenue, setFlagVenue] = useState<string | null>(null)
   const [accomOpen, setAccomOpen] = useState(false)
@@ -71,14 +73,18 @@ export function AccessibilityPage() {
             ))}
           </div>
           <div className={styles.venueGrid}>
-            {venues.length === 0 ? (
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => <AccessibleVenueCardSkeleton key={i} />)
+            ) : venues.length === 0 ? (
               <div className={styles.venueEmpty}>
                 <p>No venues match that filter yet.</p>
                 <p className={styles.small}>Know of one? Let us know in the forum.</p>
               </div>
             ) : (
-              venues.map((v) => (
-                <AccessibleVenueCard key={v.name} v={v} onFlag={() => setFlagVenue(v.name)} />
+              venues.map((v, i) => (
+                <FadeIn key={v.name} delay={Math.min(i, 8) * 60}>
+                  <AccessibleVenueCard v={v} onFlag={() => setFlagVenue(v.name)} />
+                </FadeIn>
               ))
             )}
           </div>

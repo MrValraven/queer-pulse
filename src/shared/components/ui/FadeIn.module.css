@@ -1,0 +1,15 @@
+/* Mount-entrance: fades + slides up the moment the element mounts (i.e. when
+   real content replaces a skeleton). Uses the global qpGridIn keyframe so the
+   motion matches the staggered grid entrance elsewhere. */
+.fadeIn {
+  animation: qpGridIn var(--dur-slow) var(--ease-out) both;
+  animation-delay: var(--fade-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeIn {
+    animation: none;
+    will-change: auto;
+  }
+}

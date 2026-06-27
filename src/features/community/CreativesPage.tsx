@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
+import { ArtGridSkeleton, MusicGridSkeleton } from './CreativesSkeleton'
 import {
   ART_FILTERS,
   ART_WORKS,
@@ -14,6 +16,7 @@ import { badgeClass } from './creativesBadge'
 import styles from './CreativesPage.module.css'
 
 export function CreativesPage() {
+  const loading = useSimulatedLoad()
   const [featuredIdx, setFeaturedIdx] = useState(0)
   const [mode, setMode] = useState<'art' | 'music'>('art')
   const [filters, setFilters] = useState<string[]>([])
@@ -126,30 +129,41 @@ export function CreativesPage() {
       <main className={styles.body}>
         <div className="wrap">
           {mode === 'art' ? (
-            artItems.length === 0 ? (
+            loading ? (
+              <div className={styles.artGrid}>
+                <ArtGridSkeleton />
+              </div>
+            ) : artItems.length === 0 ? (
               <div className={styles.empty}>
                 <p>No works match those filters.</p>
               </div>
             ) : (
               <div className={styles.artGrid}>
-                {artItems.map((w) => (
-                  <ArtCard w={w} key={w.title} />
+                {artItems.map((w, i) => (
+                  <FadeIn key={w.title} delay={Math.min(i, 8) * 60} style={{ breakInside: 'avoid' }}>
+                    <ArtCard w={w} />
+                  </FadeIn>
                 ))}
               </div>
             )
+          ) : loading ? (
+            <div className={styles.musicGrid}>
+              <MusicGridSkeleton />
+            </div>
           ) : musicItems.length === 0 ? (
             <div className={styles.empty}>
               <p>No artists match those filters.</p>
             </div>
           ) : (
             <div className={styles.musicGrid}>
-              {musicItems.map((a) => (
-                <MusicCard
-                  key={a.id}
-                  a={a}
-                  active={activePlayer === a.id}
-                  onPlay={() => setActivePlayer(a.id)}
-                />
+              {musicItems.map((a, i) => (
+                <FadeIn key={a.id} delay={Math.min(i, 8) * 60}>
+                  <MusicCard
+                    a={a}
+                    active={activePlayer === a.id}
+                    onPlay={() => setActivePlayer(a.id)}
+                  />
+                </FadeIn>
               ))}
             </div>
           )}

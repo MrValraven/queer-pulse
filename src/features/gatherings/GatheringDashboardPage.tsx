@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
+import { Footer } from '../../shared/components/layout'
 import { INITIAL_GUESTS, nowHHMM, type Guest } from './gatheringDashboard.data'
 import { CheckInColumn, GuestListCard, StatsColumn } from './GatheringDashboardCards'
 import styles from './GatheringDashboardPage.module.css'
@@ -26,6 +27,7 @@ export function GatheringDashboardPage() {
   }
 
   return (
+    <>
     <div className={styles.page}>
       <div className={styles.topbar}>
         <Link to={routes.homepage} className={styles.brand}>
@@ -83,5 +85,7 @@ export function GatheringDashboardPage() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   )
 }

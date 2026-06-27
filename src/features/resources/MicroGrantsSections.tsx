@@ -3,7 +3,7 @@ import { Button } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import styles from './MicroGrantsPage.module.css'
 
-const INVITE = routes.invite
+const INVITE = routes.requestInvite
 const CONTRIBUTE_AMOUNTS = ['€5', '€10', '€20', '€50', 'Other']
 
 export function MicroGrantsHero() {

@@ -1,13 +1,16 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { MENTORS } from './mentorship.data'
+import { MentorDetailSkeleton } from './MentorDetailSkeleton'
 import styles from './MentorDetailPage.module.css'
 
 export function MentorDetailPage() {
   const { slug } = useParams()
   const idx = MENTORS.findIndex((m) => m.slug === slug)
+  const loading = useSimulatedLoad()
   if (idx === -1) return <Navigate to={routes.mentorship} replace />
 
   const m = MENTORS[idx]
@@ -37,6 +40,10 @@ export function MentorDetailPage() {
           </Link>
         </div>
 
+        {loading ? (
+          <MentorDetailSkeleton />
+        ) : (
+          <FadeIn>
         <header className={styles.header}>
           <div className={styles.av} style={{ background: m.bg, color: m.color }}>
             {m.initials}
@@ -129,6 +136,8 @@ export function MentorDetailPage() {
             <span className={styles.cycleName}>{next.name}</span>
           </Link>
         </div>
+          </FadeIn>
+        )}
       </div>
     </PageShell>
   )

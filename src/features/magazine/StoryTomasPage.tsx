@@ -37,7 +37,7 @@ export function StoryTomasPage() {
         title={<>Want to join Tomás's table? <em>Join the room first.</em></>}
         sub="The supper club, the network, the gatherings — it all starts with an invitation from someone who knows you."
       >
-        <Button to={routes.invite} variant="primary" size="lg">
+        <Button to={routes.requestInvite} variant="primary" size="lg">
           Request an invite
         </Button>
       </Outro>

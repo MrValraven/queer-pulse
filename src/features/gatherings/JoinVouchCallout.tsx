@@ -23,7 +23,7 @@ export function JoinVouchCallout() {
           you request an invite and a member follows up. It keeps every room safe.
         </p>
         <div className={styles.actions}>
-          <Button variant="ghost-dark" to={routes.invite}>
+          <Button variant="ghost-dark" to={routes.requestInvite}>
             Request an invite
           </Button>
           <Button variant="ghost-dark" to={routes.safety}>

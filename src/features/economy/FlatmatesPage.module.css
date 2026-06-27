@@ -283,12 +283,18 @@
   min-width: 0;
 }
 .name {
+  display: inline-block;
   font-family: var(--serif);
   font-size: 21px;
   color: var(--plum);
   letter-spacing: -0.01em;
   font-weight: 500;
   line-height: 1.1;
+  text-decoration: none;
+  transition: color 0.18s var(--ease);
+}
+.name:hover {
+  color: var(--accent-ink);
 }
 .pronouns {
   font-size: 12.5px;

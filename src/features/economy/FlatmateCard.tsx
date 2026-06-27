@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom'
 import { FiCheck, FiClock, FiMapPin } from 'react-icons/fi'
+import { Avatar } from '../../shared/components/ui'
 import type { Profile } from './flatmates.data'
 import styles from './FlatmatesPage.module.css'
 
@@ -14,11 +16,18 @@ export function FlatmateCard({
   return (
     <div className={styles.card}>
       <div className={styles.cardTop}>
-        <div className={styles.av} style={{ background: p.avBg, color: p.avCol }}>
-          {p.av}
-        </div>
+        <Avatar
+          initials={p.initials}
+          tint={p.tint}
+          src={p.photo}
+          alt={p.name}
+          verified={p.verified}
+          size={52}
+        />
         <div className={styles.identity}>
-          <div className={styles.name}>{p.name}</div>
+          <Link to={`/members/${p.slug}`} className={styles.name}>
+            {p.name}
+          </Link>
           <div className={styles.pronouns}>{p.pronouns}</div>
         </div>
         <span

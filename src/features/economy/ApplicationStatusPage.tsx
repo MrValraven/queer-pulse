@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { FiClock, FiColumns } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, FadeIn } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { AppCardSkeleton } from "./ApplicationStatusSkeleton";
 import {
   APPS,
   BADGE_CLASS,
@@ -137,6 +139,7 @@ interface Group {
 }
 
 export function ApplicationStatusPage() {
+  const loading = useSimulatedLoad();
   const [apps, setApps] = useState<Application[]>(APPS);
   const [tab, setTab] = useState<Cat | "all">("all");
   const [open, setOpen] = useState<OpenModal | null>(null);
@@ -236,42 +239,51 @@ export function ApplicationStatusPage() {
           </span>
         </div>
 
-        <div className={styles.list}>
-          {groups.map((g) => (
-            <section key={g.id} className={styles.group}>
-              {(g.title || (g.compare && canCompare)) && (
-                <div
-                  className={[styles.groupHead, g.muted && styles.groupHeadMuted]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  {g.title && <span className={styles.groupTitle}>{g.title}</span>}
-                  <span className={styles.groupCount}>{g.items.length}</span>
-                  {g.hint && <span className={styles.groupHint}>{g.hint}</span>}
-                  {g.compare && canCompare && (
-                    <Button
-                      size="md"
-                      variant="ghost"
-                      className={styles.compareBtn}
-                      onClick={() => setComparing(true)}
-                    >
-                      <FiColumns size={15} aria-hidden style={{ marginRight: 6 }} /> Compare offers
-                    </Button>
-                  )}
+        <div className={styles.list} aria-busy={loading}>
+          {loading ? (
+            <div className={styles.groupItems}>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <AppCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            groups.map((g) => (
+              <section key={g.id} className={styles.group}>
+                {(g.title || (g.compare && canCompare)) && (
+                  <div
+                    className={[styles.groupHead, g.muted && styles.groupHeadMuted]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
+                    {g.title && <span className={styles.groupTitle}>{g.title}</span>}
+                    <span className={styles.groupCount}>{g.items.length}</span>
+                    {g.hint && <span className={styles.groupHint}>{g.hint}</span>}
+                    {g.compare && canCompare && (
+                      <Button
+                        size="md"
+                        variant="ghost"
+                        className={styles.compareBtn}
+                        onClick={() => setComparing(true)}
+                      >
+                        <FiColumns size={15} aria-hidden style={{ marginRight: 6 }} /> Compare offers
+                      </Button>
+                    )}
+                  </div>
+                )}
+                <div className={styles.groupItems}>
+                  {g.items.map((a, i) => (
+                    <FadeIn key={a.id} delay={Math.min(i, 8) * 60}>
+                      <AppCard
+                        app={a}
+                        muted={g.muted}
+                        onAction={(kind) => setOpen({ action: kind, appId: a.id })}
+                      />
+                    </FadeIn>
+                  ))}
                 </div>
-              )}
-              <div className={styles.groupItems}>
-                {g.items.map((a) => (
-                  <AppCard
-                    key={a.id}
-                    app={a}
-                    muted={g.muted}
-                    onAction={(kind) => setOpen({ action: kind, appId: a.id })}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
+              </section>
+            ))
+          )}
         </div>
       </div>
 

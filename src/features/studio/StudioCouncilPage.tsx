@@ -1,9 +1,32 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { StudioShell } from './StudioShell'
+import { StudioLine } from './StudioSkeletons'
 import { routes } from '../../app/routeMap'
 import s from './council.module.css'
+
+/** Mirrors the council .cur card: avatar row + bio + note + footer. */
+function CouncilCardSkeleton() {
+  return (
+    <div className={s.cur}>
+      <div className={s.curHead}>
+        <StudioLine width={54} height={54} style={{ borderRadius: '50%', flex: 'none' }} />
+        <div style={{ flex: 1 }}>
+          <StudioLine width={70} height={11} />
+          <StudioLine width="55%" height={20} style={{ marginTop: 8 }} />
+          <StudioLine width="40%" height={11} style={{ marginTop: 8 }} />
+        </div>
+      </div>
+      <StudioLine width="100%" height={13} style={{ marginTop: 16 }} />
+      <StudioLine width="85%" height={13} style={{ marginTop: 8 }} />
+      <StudioLine width="100%" height={64} style={{ marginTop: 16, borderRadius: 12 }} />
+      <StudioLine width="60%" height={13} style={{ marginTop: 16 }} />
+      <StudioLine width="100%" height={13} style={{ marginTop: 10 }} />
+    </div>
+  )
+}
 
 const FACTS = [
   { v: <><em>6</em> seats</>, l: '2-year terms · staggered' },
@@ -37,6 +60,7 @@ const MEMBERS: Member[] = [
 ]
 
 export function StudioCouncilPage() {
+  const loading = useSimulatedLoad()
   return (
     <StudioShell>
       <div className={s.wrap}>
@@ -65,8 +89,10 @@ export function StudioCouncilPage() {
         </div>
 
         <div className={s.curators}>
-          {MEMBERS.map((mem) => (
-            <div key={mem.em + mem.seat} className={s.cur}>
+          {loading
+            ? Array.from({ length: 6 }).map((_, i) => <CouncilCardSkeleton key={i} />)
+            : MEMBERS.map((mem, idx) => (
+            <FadeIn key={mem.em + mem.seat} delay={Math.min(idx, 8) * 60} className={s.cur}>
               <div className={s.curHead}>
                 <div className={s.curAv}>
                   <ImageSlot src={mem.image} tint={mem.tint} width={54} height={54} radius={9999} shape="circle" placeholder="" initials={mem.pre[0] + mem.em[0]} />
@@ -112,7 +138,7 @@ export function StudioCouncilPage() {
                   Their slate →
                 </Link>
               </div>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>

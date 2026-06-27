@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react'
 import { FiAward, FiStar } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, ImageSlot, Reveal, SectionHead } from '../../shared/components/ui'
+import { Avatar, FadeIn, ImageSlot, Reveal, SectionHead, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { HOUSING_LISTINGS as LISTINGS } from './housingListings'
 import { LANDLORDS } from './landlords'
 import { ListSpaceModal } from './ListSpaceModal'
@@ -25,7 +26,26 @@ const TIPS = [
   { num: '06', title: 'In an emergency, ask the community', text: "If you're suddenly homeless or in a dangerous living situation, post to the board. The community responds quickly to genuine need." },
 ]
 
+function ListingSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden>
+      <SkeletonLine width="100%" height={150} style={{ borderRadius: 0 }} />
+      <div className={styles.cardBody}>
+        <SkeletonLine width={88} height={20} style={{ borderRadius: 6 }} />
+        <SkeletonLine width="80%" height={19} style={{ marginTop: 4 }} />
+        <SkeletonLine width="60%" height={13} style={{ marginTop: 4 }} />
+        <SkeletonLine width="95%" height={13} style={{ marginTop: 4 }} />
+        <div className={styles.foot}>
+          <SkeletonLine width={70} height={20} />
+          <SkeletonLine width={90} height={13} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function HousingPage() {
+  const loading = useSimulatedLoad()
   const [filter, setFilter] = useState('all')
   const [listing, setListing] = useState(false)
   const visible = useMemo(() => (filter === 'all' ? LISTINGS : LISTINGS.filter((l) => l.type === filter)), [filter])
@@ -69,34 +89,38 @@ export function HousingPage() {
               + List your space
             </Reveal>
           </div>
-          <Reveal as="div" className={styles.grid}>
-            {visible.map((listing) => (
-              <Link key={listing.title} to={`/housing/${listing.slug}`} className={styles.card}>
-                <ImageSlot tint={listing.tint} src={listing.image} height={150} radius={0} placeholder={`Photo · ${listing.hood}`} />
-                <div className={styles.cardBody}>
-                  <span className={styles.type} style={{ background: listing.typeColor, color: listing.typeText }}>
-                    {listing.typeLabel}
-                  </span>
-                  <div className={styles.cardTitle}>{listing.title}</div>
-                  <div className={styles.details}>
-                    <span className={styles.detail}>{listing.hood}</span>
-                    <span className={styles.detail}>{listing.beds}</span>
-                    <span className={styles.detail}>From {listing.avail}</span>
-                  </div>
-                  <p className={styles.cardDesc}>{listing.desc}</p>
-                  <div className={styles.foot}>
-                    <div className={styles.price}>
-                      {listing.price} <span>/ {listing.period}</span>
-                    </div>
-                    <div className={styles.poster}>
-                      <Avatar initials={listing.poster.initials} tint={listing.poster.tint} size={26} />
-                      {listing.poster.name}
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </Reveal>
+          <div className={styles.grid}>
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => <ListingSkeleton key={i} />)
+              : visible.map((listing, i) => (
+                  <FadeIn key={listing.title} delay={Math.min(i, 8) * 60}>
+                    <Link to={`/housing/${listing.slug}`} className={styles.card}>
+                      <ImageSlot tint={listing.tint} src={listing.image} height={150} radius={0} placeholder={`Photo · ${listing.hood}`} />
+                      <div className={styles.cardBody}>
+                        <span className={styles.type} style={{ background: listing.typeColor, color: listing.typeText }}>
+                          {listing.typeLabel}
+                        </span>
+                        <div className={styles.cardTitle}>{listing.title}</div>
+                        <div className={styles.details}>
+                          <span className={styles.detail}>{listing.hood}</span>
+                          <span className={styles.detail}>{listing.beds}</span>
+                          <span className={styles.detail}>From {listing.avail}</span>
+                        </div>
+                        <p className={styles.cardDesc}>{listing.desc}</p>
+                        <div className={styles.foot}>
+                          <div className={styles.price}>
+                            {listing.price} <span>/ {listing.period}</span>
+                          </div>
+                          <div className={styles.poster}>
+                            <Avatar initials={listing.poster.initials} tint={listing.poster.tint} size={26} />
+                            {listing.poster.name}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </FadeIn>
+                ))}
+          </div>
         </div>
       </div>
 
@@ -111,7 +135,10 @@ export function HousingPage() {
           <div className={styles.llGrid}>
             {LANDLORDS.map((ll, i) => (
               <Reveal as={Link} key={ll.name} to={`/landlord/${ll.slug}`} className={styles.llCard} delay={i * 55}>
-                <span className={styles.llBadge}><FiAward /></span>
+                <span className={styles.llAvatar}>
+                  <Avatar initials={ll.initials} tint={ll.tint} src={ll.photo} size={52} />
+                  <span className={styles.llBadge} title="Community-endorsed"><FiAward /></span>
+                </span>
                 <div>
                   <div className={styles.llName}>{ll.name}</div>
                   <div className={styles.llHood}>{ll.hood}</div>

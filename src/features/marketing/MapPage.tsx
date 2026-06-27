@@ -1,12 +1,35 @@
 import { useMemo, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
+import { FadeIn, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { TYPES, VENUES, VIBES, type Venue } from './map.data'
 import { LisbonMapSvg } from './LisbonMapSvg'
 import { MapVenueCard } from './MapVenueCard'
 import s from './MapPage.module.css'
 
+function VenueCardSkeleton() {
+  // Mirrors the collapsed .vc: head (38px icon + name/bairro + type tag) and a vibes row.
+  return (
+    <div className={s.vc} aria-hidden>
+      <div className={s.vcHead}>
+        <SkeletonLine width={38} height={38} style={{ borderRadius: 10, flex: 'none' }} />
+        <div className={s.vcInfo}>
+          <SkeletonLine width="60%" height={15} />
+          <SkeletonLine width="40%" height={12} style={{ marginTop: 5 }} />
+        </div>
+        <SkeletonLine width={54} height={20} style={{ borderRadius: 6, flex: 'none' }} />
+      </div>
+      <div className={s.vcVibes}>
+        <SkeletonLine width={48} height={18} style={{ borderRadius: 6 }} />
+        <SkeletonLine width={62} height={18} style={{ borderRadius: 6 }} />
+      </div>
+    </div>
+  )
+}
+
 export function MapPage() {
+  const loading = useSimulatedLoad()
   const [bairro, setBairro] = useState<string | null>(null)
   const [type, setType] = useState('all')
   const [vibes, setVibes] = useState<string[]>([])
@@ -55,16 +78,17 @@ export function MapPage() {
     setExpanded(null)
   }
 
-  const renderCard = (v: Venue) => (
-    <MapVenueCard
-      key={v.id}
-      v={v}
-      isExpanded={expanded === v.id}
-      beenCount={been[v.id] ?? v.beenHere}
-      marked={been[v.id] !== undefined}
-      onToggle={() => setExpanded(expanded === v.id ? null : v.id)}
-      onMarkBeen={() => setBeen((cur) => ({ ...cur, [v.id]: v.beenHere + 1 }))}
-    />
+  const renderCard = (v: Venue, i: number) => (
+    <FadeIn key={v.id} delay={Math.min(i, 8) * 60}>
+      <MapVenueCard
+        v={v}
+        isExpanded={expanded === v.id}
+        beenCount={been[v.id] ?? v.beenHere}
+        marked={been[v.id] !== undefined}
+        onToggle={() => setExpanded(expanded === v.id ? null : v.id)}
+        onMarkBeen={() => setBeen((cur) => ({ ...cur, [v.id]: v.beenHere + 1 }))}
+      />
+    </FadeIn>
   )
 
   return (
@@ -132,16 +156,18 @@ export function MapPage() {
               )}
             </div>
 
-            {items.length === 0 && <div className={s.empty}>No venues match these filters.</div>}
+            {!loading && items.length === 0 && <div className={s.empty}>No venues match these filters.</div>}
 
-            {groups
-              ? groups.map((g) => (
-                  <div key={g.bairro}>
-                    <div className={s.groupHead}>{g.bairro}</div>
-                    {g.venues.map(renderCard)}
-                  </div>
-                ))
-              : items.map(renderCard)}
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => <VenueCardSkeleton key={i} />)
+              : groups
+                ? groups.map((g) => (
+                    <div key={g.bairro}>
+                      <div className={s.groupHead}>{g.bairro}</div>
+                      {g.venues.map(renderCard)}
+                    </div>
+                  ))
+                : items.map(renderCard)}
           </aside>
         </div>
       </div>

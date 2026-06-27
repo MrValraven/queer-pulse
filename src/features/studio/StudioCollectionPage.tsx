@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import { FiPlus, FiCheck } from 'react-icons/fi'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useSaved } from '../../app/providers/SavedProvider'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { StudioShell } from './StudioShell'
+import { StudioCardGridSkeleton } from './StudioSkeletons'
 import { COLLECTION, HERO_COVER, RELATED, TRACKS } from './studioCollection.data'
 import ss from './studio.module.css'
 import s from './studioPages.module.css'
@@ -20,6 +22,7 @@ export function StudioCollectionPage() {
   const { isSaved, toggleSave } = useSaved()
   const { showToast } = useToast()
   const saved = isSaved(COLLECTION_ITEM.id)
+  const loading = useSimulatedLoad()
 
   return (
     <StudioShell>
@@ -60,21 +63,25 @@ export function StudioCollectionPage() {
             Find more →
           </Link>
         </div>
-        <div className={ss.rowGrid}>
-          {TRACKS.map((track) => (
-            <Link key={track.pre + track.meta} to="/studio/track" className={ss.card}>
-              <div className={ss.cardCov}>
-                <ImageSlot src={track.image} tint={track.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
-              </div>
-              <h4>
-                {track.pre}
-                {track.em && <em>{track.em}</em>}
-                {track.post}
-              </h4>
-              <div className={ss.meta}>{track.meta}</div>
-            </Link>
-          ))}
-        </div>
+        {loading ? (
+          <StudioCardGridSkeleton className={ss.rowGrid} count={8} />
+        ) : (
+          <div className={ss.rowGrid}>
+            {TRACKS.map((track, i) => (
+              <FadeIn key={track.pre + track.meta} delay={Math.min(i, 8) * 60} as={Link} to="/studio/track" className={ss.card}>
+                <div className={ss.cardCov}>
+                  <ImageSlot src={track.image} tint={track.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                </div>
+                <h4>
+                  {track.pre}
+                  {track.em && <em>{track.em}</em>}
+                  {track.post}
+                </h4>
+                <div className={ss.meta}>{track.meta}</div>
+              </FadeIn>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className={ss.row}>
@@ -83,20 +90,24 @@ export function StudioCollectionPage() {
             Related <em>collections</em>
           </h2>
         </div>
-        <div className={ss.rowGrid}>
-          {RELATED.map((item) => (
-            <Link key={item.pre + item.meta} to="/studio/collection" className={ss.card}>
-              <div className={ss.cardCov}>
-                <ImageSlot src={item.image} tint={item.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
-              </div>
-              <h4>
-                {item.pre}
-                {item.em && <em>{item.em}</em>}
-              </h4>
-              <div className={ss.meta}>{item.meta}</div>
-            </Link>
-          ))}
-        </div>
+        {loading ? (
+          <StudioCardGridSkeleton className={ss.rowGrid} count={4} />
+        ) : (
+          <div className={ss.rowGrid}>
+            {RELATED.map((item, i) => (
+              <FadeIn key={item.pre + item.meta} delay={Math.min(i, 8) * 60} as={Link} to="/studio/collection" className={ss.card}>
+                <div className={ss.cardCov}>
+                  <ImageSlot src={item.image} tint={item.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                </div>
+                <h4>
+                  {item.pre}
+                  {item.em && <em>{item.em}</em>}
+                </h4>
+                <div className={ss.meta}>{item.meta}</div>
+              </FadeIn>
+            ))}
+          </div>
+        )}
       </section>
     </StudioShell>
   )

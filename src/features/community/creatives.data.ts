@@ -2,7 +2,7 @@ import { routes } from '../../app/routeMap'
 import { MEMBERS, memberName } from '../members/data/members'
 
 export const PROFILE = routes.members
-export const INVITE = routes.invite
+export const INVITE = routes.requestInvite
 
 export type Tint = 'coral' | 'jade' | 'plum'
 export const TINT_BG: Record<Tint, string> = {

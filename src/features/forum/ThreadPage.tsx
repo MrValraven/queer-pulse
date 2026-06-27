@@ -2,13 +2,16 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { FiStar, FiHeart } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { CATS, CAT_STYLE, REPLY_SORTS, THREADS, type Reply } from './forum.data'
+import { ThreadRepliesSkeleton } from './ThreadRepliesSkeleton'
 import styles from './ThreadPage.module.css'
 
 export function ThreadPage() {
+  const loading = useSimulatedLoad()
   const { showToast } = useToast()
   const { id } = useParams()
   const thread = useMemo(() => THREADS.find((t) => String(t.id) === id) ?? THREADS[0], [id])
@@ -130,8 +133,9 @@ export function ThreadPage() {
           </div>
 
           <div>
-            {replies.map((r, i) => (
-              <div key={i} className={[styles.reply, r.helpful && styles.replyHighlighted].filter(Boolean).join(' ')}>
+            {loading && <ThreadRepliesSkeleton count={3} />}
+            {!loading && replies.map((r, i) => (
+              <FadeIn key={i} delay={Math.min(i, 8) * 60} className={[styles.reply, r.helpful && styles.replyHighlighted].filter(Boolean).join(' ')}>
                 <div className={styles.replyAv} style={{ background: r.bg, color: r.color }}>
                   {r.av}
                 </div>
@@ -157,7 +161,7 @@ export function ThreadPage() {
                     <FiHeart /> {r.reactions}
                   </span>
                 </div>
-              </div>
+              </FadeIn>
             ))}
           </div>
 

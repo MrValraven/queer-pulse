@@ -177,7 +177,7 @@ export function WorldAidsDayPage() {
                 <Button to={GATHERING} variant="ghost-dark">
                   Visit the memorial wall
                 </Button>
-                <Button to={routes.invite} variant="ghost-dark">
+                <Button to={routes.requestInvite} variant="ghost-dark">
                   Fund the testing programme
                 </Button>
               </div>

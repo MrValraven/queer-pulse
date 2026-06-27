@@ -1,13 +1,46 @@
 import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { FiHeart } from 'react-icons/fi'
+import { FiHeart, FiPause, FiArrowDown } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
+import { CancelConfirmModal } from './CancelConfirmModal'
+import { currentUserEmail } from '../members/data/members'
 import styles from './CancelMembershipPage.module.css'
 
-type Step = 1 | 2 | 3 | 'done'
+type Step = 1 | 2 | 3 | 'done' | 'paused' | 'downshifted' | 'solidarity'
+type Alt = 'pause' | 'downshift' | 'solidarity'
+
+const ALT_CONFIRM = {
+  pause: {
+    eyebrow: 'Pause · Sustainer',
+    title: <>Pause for <em>3 months?</em></>,
+    body: <>We'll freeze your renewal for <b>3 months</b>. You keep full access the whole time, and we won't charge you until you resume — you can undo it any time.</>,
+    confirmLabel: 'Yes, pause it',
+    icon: <FiPause />,
+    tone: 'jade',
+    next: 'paused',
+  },
+  downshift: {
+    eyebrow: 'Downshift to Member',
+    title: <>Switch to <em>Member?</em></>,
+    body: <>You'll move to <b>Member · €36/year</b>. You keep all community access, but Sustainer-only perks (Open Studio, ILGA consult, magazine) wind down at the end of your term. Upgrade back any time.</>,
+    confirmLabel: 'Yes, switch to Member',
+    icon: <FiArrowDown />,
+    tone: 'accent',
+    next: 'downshifted',
+  },
+  solidarity: {
+    eyebrow: 'Solidarity rate',
+    title: <>Drop to the <em>solidarity rate?</em></>,
+    body: <>You'll pay <b>€12/year</b>, no questions asked — the community fund covers the difference, genuinely. You keep <b>every Sustainer perk</b> exactly as it is now.</>,
+    confirmLabel: 'Yes, drop to €12/year',
+    icon: <FiHeart />,
+    tone: 'plum',
+    next: 'solidarity',
+  },
+} as const
 
 const REASONS = [
   { id: 'r1', label: <><b>Money is tight.</b> The price isn't right for me right now.</> },
@@ -37,30 +70,32 @@ export function CancelMembershipPage() {
   const [step, setStep] = useState<Step>(1)
   const [checked, setChecked] = useState<Set<string>>(new Set())
   const [confirmed, setConfirmed] = useState(false)
+  const [pending, setPending] = useState<Alt | null>(null)
 
-  function goStep(n: Step) { setStep(n); window.scrollTo({ top: 0, behavior: 'smooth' }) }
-
-  function pickAlt(kind: 'pause' | 'downshift') {
-    if (kind === 'pause') showToast('Membership paused for 3 months — confirmed', 'success')
-    if (kind === 'downshift') showToast('Downshifted to Member · next charge €36', 'success')
-  }
+  function goStep(n: Step) { setStep(n); window.scrollTo({ top: 0, behavior: 'instant' }) }
 
   function doCancel() {
     goStep('done')
     showToast('Membership cancelled · email sent', 'success')
   }
 
-  const stepNum = step === 'done' ? 3 : step
+  const isWizard = step === 1 || step === 2 || step === 3
+  const isFunnel = isWizard || step === 'done'
+  const stepNum = step === 'done' ? 3 : isWizard ? step : 1
 
   return (
     <AppShell>
       <div className={styles.page}>
         <Link to={routes.membership} className={styles.back}>← Membership</Link>
-        <div className={styles.eyebrow}>Cancel · Sustainer (annual)</div>
-        <h1 className={styles.h1}>Sorry to see you <em>thinking about it.</em></h1>
-        <p className={styles.lead}>No dark patterns — three quick steps and you're out, or you can pause or downshift instead. Either way, no shame. Your community access remains.</p>
+        {isWizard && (
+          <>
+            <div className={styles.eyebrow}>Cancel · Sustainer (annual)</div>
+            <h1 className={styles.h1}>Sorry to see you <em>thinking about it.</em></h1>
+            <p className={styles.lead}>No dark patterns — three quick steps and you're out, or you can pause or downshift instead. Either way, no shame. Your community access remains.</p>
+          </>
+        )}
 
-        <div className={styles.stepper}>
+        {isFunnel && <div className={styles.stepper}>
           {[1, 2, 3].map((n, i) => {
             const labels = ['Options', 'Tell us why', 'Confirm']
             const isActive = step !== 'done' && stepNum === n
@@ -75,7 +110,7 @@ export function CancelMembershipPage() {
               </>
             )
           })}
-        </div>
+        </div>}
 
         {step === 1 && (
           <div className={`${styles.pane} ${styles.screenIn}`} key={step}>
@@ -88,21 +123,21 @@ export function CancelMembershipPage() {
             <h2 style={{ marginTop: 14 }}>Before you go — <em>three softer options</em></h2>
             <p className={styles.paneSub}>Each takes 30 seconds. You can always come back to cancel.</p>
             <div className={styles.altList}>
-              <button className={styles.alt} onClick={() => pickAlt('pause')}>
+              <button className={styles.alt} onClick={() => setPending('pause')}>
                 <div className={styles.altIc}>⏸</div>
                 <div className={styles.altText}><div className={styles.altT}>Pause for 3 months</div><div className={styles.altD}>We freeze your renewal. You keep access. We don't charge until you resume.</div></div>
                 <div className={styles.altArrow}>→</div>
               </button>
-              <button className={styles.alt} onClick={() => pickAlt('downshift')}>
+              <button className={styles.alt} onClick={() => setPending('downshift')}>
                 <div className={styles.altIc} style={{ background: 'rgba(var(--accent-rgb),.12)', color: 'var(--accent-ink)' }}>↓</div>
                 <div className={styles.altText}><div className={styles.altT}>Downshift to Member (€36/year)</div><div className={styles.altD}>Keep all community access. Drop Sustainer-only perks (open studio, ILGA consult, magazine).</div></div>
                 <div className={styles.altArrow}>→</div>
               </button>
-              <Link to={routes.solidarity} className={styles.alt}>
+              <button className={styles.alt} onClick={() => setPending('solidarity')}>
                 <div className={styles.altIc} style={{ background: 'rgba(45,27,61,.08)', color: 'var(--plum)' }}><FiHeart /></div>
                 <div className={styles.altText}><div className={styles.altT}>Drop to solidarity rate</div><div className={styles.altD}>€12/year, no questions asked. The fund covers the difference. <b>Genuinely.</b></div></div>
                 <div className={styles.altArrow}>→</div>
-              </Link>
+              </button>
             </div>
             <div className={styles.actions}>
               <Button variant="ghost" onClick={() => goStep(2)}>Continue cancelling →</Button>
@@ -166,7 +201,7 @@ export function CancelMembershipPage() {
               <div className={styles.farewellIc}><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg></div>
               <h2 className={styles.h1} style={{ margin: '0 auto 10px', fontSize: 36 }}>Until <em>next time.</em></h2>
               <p style={{ fontSize: 15, color: 'var(--ink-60)', lineHeight: 1.65, maxWidth: '42ch', margin: '0 auto 8px' }}>Your Sustainer membership won't renew. Access continues through <b style={{ color: 'var(--plum)', fontWeight: 700 }}>6 Jun 2027</b>.</p>
-              <p style={{ fontSize: 15, color: 'var(--ink-60)', lineHeight: 1.65, maxWidth: '42ch', margin: '0 auto 8px' }}>We sent a confirmation to <b style={{ color: 'var(--plum)' }}>tomas@example.com</b> with everything written down.</p>
+              <p style={{ fontSize: 15, color: 'var(--ink-60)', lineHeight: 1.65, maxWidth: '42ch', margin: '0 auto 8px' }}>We sent a confirmation to <b style={{ color: 'var(--plum)' }}>{currentUserEmail}</b> with everything written down.</p>
               <p style={{ fontSize: 13, color: 'var(--ink-40)', marginTop: 12 }}>If this was a mistake, you can resubscribe one-tap from the email or your account settings — no penalty.</p>
               <div className={styles.farewellBtns}>
                 <Button variant="primary" to={routes.homepage}>Back to home</Button>
@@ -175,7 +210,68 @@ export function CancelMembershipPage() {
             </div>
           </div>
         )}
+
+        {step === 'paused' && (
+          <div className={`${styles.pane} ${styles.screenIn}`} key={step}>
+            <div className={styles.farewell}>
+              <div className={`${styles.farewellIc} ${styles.farewellIcJade}`}><FiPause /></div>
+              <h2 className={styles.h1} style={{ margin: '0 auto 10px', fontSize: 36 }}>Paused — <em>see you soon.</em></h2>
+              <p className={styles.fwLead}>We've frozen your Sustainer renewal for <b>3 months</b>. You keep full access the whole time — and we won't charge you a cent until you resume.</p>
+              <p className={styles.fwLead}>Your renewal moves to <b>6 Sep 2027</b>. We sent the details to <b>{currentUserEmail}</b>.</p>
+              <p className={styles.fwNote}>Changed your mind? You can resume any time — it picks up right where you left off, no penalty.</p>
+              <div className={styles.farewellBtns}>
+                <Button variant="primary" to={routes.membership}>Back to membership</Button>
+                <Button variant="ghost" onClick={() => goStep(1)}>Undo pause</Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {step === 'downshifted' && (
+          <div className={`${styles.pane} ${styles.screenIn}`} key={step}>
+            <div className={styles.farewell}>
+              <div className={`${styles.farewellIc} ${styles.farewellIcAccent}`}><FiArrowDown /></div>
+              <h2 className={styles.h1} style={{ margin: '0 auto 10px', fontSize: 36 }}>Welcome to <em>Member.</em></h2>
+              <p className={styles.fwLead}>You're on the <b>Member</b> plan now — <b>€36/year</b>. All your community access stays exactly as it was.</p>
+              <p className={styles.fwLead}>Your Sustainer-only perks (Open Studio, ILGA consult, the print magazine) wind down at the end of your current term. Your next charge is <b>€36 on 6 Jun 2027</b>.</p>
+              <p className={styles.fwNote}>Confirmation is on its way to <b>{currentUserEmail}</b>. You can upgrade back to Sustainer any time.</p>
+              <div className={styles.farewellBtns}>
+                <Button variant="primary" to={routes.membership}>Back to membership</Button>
+                <Button variant="ghost" onClick={() => goStep(1)}>Undo — keep Sustainer</Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {step === 'solidarity' && (
+          <div className={`${styles.pane} ${styles.screenIn}`} key={step}>
+            <div className={styles.farewell}>
+              <div className={styles.farewellIc}><FiHeart /></div>
+              <h2 className={styles.h1} style={{ margin: '0 auto 10px', fontSize: 36 }}>You're on the <em>solidarity rate.</em></h2>
+              <p className={styles.fwLead}>From your next renewal you'll pay <b>€12/year</b> — and you keep <b>every Sustainer perk</b> exactly as it is now. The community fund covers the rest.</p>
+              <p className={styles.fwLead}>Your next charge is <b>€12 on 6 Jun 2027</b>. We sent the details to <b>{currentUserEmail}</b>.</p>
+              <p className={styles.fwNote}>When things ease up, you can move back to the full rate any time — no pressure, no reminder.</p>
+              <div className={styles.farewellBtns}>
+                <Button variant="primary" to={routes.membership}>Back to membership</Button>
+                <Button variant="ghost" onClick={() => goStep(1)}>Undo</Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+
+      {pending && (
+        <CancelConfirmModal
+          eyebrow={ALT_CONFIRM[pending].eyebrow}
+          title={ALT_CONFIRM[pending].title}
+          body={ALT_CONFIRM[pending].body}
+          confirmLabel={ALT_CONFIRM[pending].confirmLabel}
+          icon={ALT_CONFIRM[pending].icon}
+          tone={ALT_CONFIRM[pending].tone}
+          onConfirm={() => { goStep(ALT_CONFIRM[pending].next); setPending(null) }}
+          onClose={() => setPending(null)}
+        />
+      )}
     </AppShell>
   )
 }

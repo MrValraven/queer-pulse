@@ -3,10 +3,12 @@ import { FiStar } from 'react-icons/fi'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { routes } from '../../app/routeMap'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button } from '../../shared/components/ui'
+import { Button, FadeIn, ImageSlot } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { getLandlord, type Tint } from './landlords'
 import { RecommendModal } from './HousingModals'
+import { LandlordSkeleton } from './LandlordSkeleton'
 import s from './LandlordPage.module.css'
 
 const TINT: Record<Tint, string> = { coral: s.tCoral, jade: s.tJade, plum: s.tPlum }
@@ -22,17 +24,39 @@ export function LandlordPage() {
   const { slug } = useParams()
   const { showToast } = useToast()
   const [recommending, setRecommending] = useState(false)
+  const loading = useSimulatedLoad()
 
   const ll = getLandlord(slug)
   if (!ll) return <Navigate to={routes.housing} replace />
+
+  if (loading) {
+    return (
+      <PageShell>
+        <div className={s.page}>
+          <Link to={routes.housing} className={s.back}>← Housing board</Link>
+          <LandlordSkeleton />
+        </div>
+      </PageShell>
+    )
+  }
 
   return (
     <PageShell>
       <div className={s.page}>
         <Link to={routes.housing} className={s.back}>← Housing board</Link>
 
+        <FadeIn>
         <header className={s.hero}>
-          <Avatar initials={ll.initials} tint={ll.tint} size={84} />
+          <ImageSlot
+            className={s.photo}
+            src={ll.photo}
+            alt={ll.name}
+            tint={ll.tint}
+            initials={ll.initials}
+            radius={16}
+            width={160}
+            height={160}
+          />
           <div>
             <div className={s.eyebrow}>Community-endorsed landlord</div>
             <h1 className={s.name}>{ll.name}</h1>
@@ -44,7 +68,7 @@ export function LandlordPage() {
           </div>
           <div className={s.heroAction}>
             <Button variant="primary" onClick={() => setRecommending(true)}>
-              Recommend {ll.name.split(' ')[0]}
+              Recommend {ll.name}
             </Button>
             <span className={s.recCount}>{ll.recommendations.length} member recommendations</span>
           </div>
@@ -53,7 +77,7 @@ export function LandlordPage() {
         <div className={s.grid}>
           <main>
             <section className={s.sec}>
-              <h2>About {ll.name.split(' ')[0]}</h2>
+              <h2>About {ll.name}</h2>
               {ll.about.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
@@ -106,7 +130,7 @@ export function LandlordPage() {
             </div>
 
             <div className={s.recCard}>
-              <h4>Rented from {ll.name.split(' ')[0]}?</h4>
+              <h4>Rented from {ll.name}?</h4>
               <p>
                 Your recommendation is what makes this list trustworthy — and what makes someone
                 else's move so much safer. It takes two minutes.
@@ -130,6 +154,7 @@ export function LandlordPage() {
             </div>
           </aside>
         </div>
+        </FadeIn>
       </div>
 
       {recommending && (

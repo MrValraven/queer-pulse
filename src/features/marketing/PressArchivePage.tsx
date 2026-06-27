@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useSimulatedLoad } from "../../shared/hooks";
 import styles from "./PressArchivePage.module.css";
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn, SkeletonLine } from '../../shared/components/ui'
 
 interface Piece {
   day: string;
@@ -45,7 +46,26 @@ const DATA: YearGroup[] = [
 
 const CHIPS = ["All · 54", "Features · 22", "Interviews · 12", "News · 14", "Critiques · 6"];
 
+function PressRowSkeleton() {
+  // Mirrors the real .row grid: date column (auto), title block (1fr), outlet (auto).
+  return (
+    <div className={styles.row} aria-hidden>
+      <div className={styles.date}>
+        <SkeletonLine width={56} height={17} />
+        <SkeletonLine width={44} height={11} style={{ marginTop: 6 }} />
+      </div>
+      <div>
+        <SkeletonLine width={120} height={11} />
+        <SkeletonLine width="70%" height={18} style={{ marginTop: 8 }} />
+        <SkeletonLine width="45%" height={12} style={{ marginTop: 6 }} />
+      </div>
+      <SkeletonLine width={72} height={12} />
+    </div>
+  );
+}
+
 export function PressArchivePage() {
+  const loading = useSimulatedLoad();
   const { showToast } = useToast();
   const [chip, setChip] = useState(0);
 
@@ -102,40 +122,58 @@ export function PressArchivePage() {
           ))}
         </div>
 
-        {DATA.map((yg) => (
-          <div key={yg.year}>
-            <h2 className={styles.year}>
-              202<em>{yg.year.slice(3)}</em>
-              <span className={styles.ct}>{yg.count}</span>
+        {loading ? (
+          <div>
+            <h2 className={styles.year} aria-hidden>
+              <SkeletonLine width={90} height={42} />
             </h2>
-            {yg.pieces.map((p, i) => (
-              <a
-                href="#"
-                className={styles.row}
-                key={i}
-                onClick={(e) => {
-                  e.preventDefault()
-                  showToast(`Opening on ${p.out}…`, 'info')
-                }}
-              >
-                <div className={styles.date}>
-                  {p.day} <em>{p.month}</em>
-                  <span>{p.kind}</span>
-                </div>
-                <div>
-                  <div className={styles.source} style={p.sourceMuted ? { color: "var(--ink-60)" } : undefined}>
-                    {p.pin && <span className={styles.pin}>Featured</span>}
-                    {p.source}
-                    <span className={styles.kind}>· {p.sourceKind}</span>
-                  </div>
-                  <div className={styles.title}>{p.title}</div>
-                  <div className={styles.meta}>{p.meta}</div>
-                </div>
-                <div className={styles.out}>{p.out}</div>
-              </a>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <PressRowSkeleton key={i} />
             ))}
           </div>
-        ))}
+        ) : (
+          (() => {
+            let n = -1
+            return DATA.map((yg) => (
+              <div key={yg.year}>
+                <h2 className={styles.year}>
+                  202<em>{yg.year.slice(3)}</em>
+                  <span className={styles.ct}>{yg.count}</span>
+                </h2>
+                {yg.pieces.map((p, i) => {
+                  n += 1
+                  return (
+                    <FadeIn key={i} delay={Math.min(n, 8) * 60}>
+                      <a
+                        href="#"
+                        className={styles.row}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          showToast(`Opening on ${p.out}…`, 'info')
+                        }}
+                      >
+                        <div className={styles.date}>
+                          {p.day} <em>{p.month}</em>
+                          <span>{p.kind}</span>
+                        </div>
+                        <div>
+                          <div className={styles.source} style={p.sourceMuted ? { color: "var(--ink-60)" } : undefined}>
+                            {p.pin && <span className={styles.pin}>Featured</span>}
+                            {p.source}
+                            <span className={styles.kind}>· {p.sourceKind}</span>
+                          </div>
+                          <div className={styles.title}>{p.title}</div>
+                          <div className={styles.meta}>{p.meta}</div>
+                        </div>
+                        <div className={styles.out}>{p.out}</div>
+                      </a>
+                    </FadeIn>
+                  )
+                })}
+              </div>
+            ))
+          })()
+        )}
 
         <div className={styles.loadMore}>
           <Button type="button" variant="ghost" onClick={() => showToast("Loading more pieces…", "info")}>

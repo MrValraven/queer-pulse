@@ -8,7 +8,7 @@ import { StoryArticle } from "./StoryArticle";
 
 const PROFILE = routes.members;
 const STORY = routes.story;
-const INVITE = routes.invite;
+const INVITE = routes.requestInvite;
 
 export function StoryPage() {
   return (

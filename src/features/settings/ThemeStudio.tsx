@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   FLAG_SWATCHES,
   COVER_STYLES,
@@ -7,6 +6,7 @@ import {
   type CoverStyle,
   type PatternKey,
 } from './profileTheme.data'
+import { useProfileTheme } from '../../app/providers/ProfileThemeProvider'
 import { currentUser, fullName } from '../members/data/members'
 import styles from './ProfileThemePage.module.css'
 
@@ -36,14 +36,16 @@ function buildCoverBg(colors: string[], coverStyle: CoverStyle, pattern: Pattern
  * to be notified when the host should surface unsaved changes.
  */
 export function ThemeStudio({ onChange }: { onChange?: () => void }) {
-  const [selectedFlag, setSelectedFlag] = useState(0)
-  const [coverStyle, setCoverStyle] = useState<CoverStyle>('gradient')
-  const [pattern, setPattern] = useState<PatternKey>('none')
-  const [showBadges, setShowBadges] = useState(true)
-  const [showLevel, setShowLevel] = useState(true)
+  const { draft, updateDraft } = useProfileTheme()
+  const { flag: selectedFlag, coverStyle, pattern, showBadges, showLevel, badge } = draft
 
-  const coverBg = buildCoverBg(FLAG_SWATCHES[selectedFlag].colors, coverStyle, pattern)
-  const touched = () => onChange?.()
+  const flag = FLAG_SWATCHES[selectedFlag] ?? FLAG_SWATCHES[0]
+  const coverBg = buildCoverBg(flag.colors, coverStyle, pattern)
+  /** Apply an edit and let the host surface the unsaved-changes bar. */
+  const edit = (patch: Parameters<typeof updateDraft>[0]) => {
+    updateDraft(patch)
+    onChange?.()
+  }
 
   return (
     <div className={styles.layout}>
@@ -59,10 +61,7 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
               className={`${styles.flagSwatch} ${i === selectedFlag ? styles.flagSwatchSelected : ''}`}
               style={{ background: f.background }}
               title={f.label}
-              onClick={() => {
-                setSelectedFlag(i)
-                touched()
-              }}
+              onClick={() => edit({ flag: i })}
             />
           ))}
         </div>
@@ -73,10 +72,7 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
             <div
               key={cs.key}
               className={`${styles.csOpt} ${coverStyle === cs.key ? styles.csOptSelected : ''}`}
-              onClick={() => {
-                setCoverStyle(cs.key)
-                touched()
-              }}
+              onClick={() => edit({ coverStyle: cs.key })}
             >
               <div className={styles.csRadio}><div className={styles.csDot} /></div>
               <div className={styles.csLabel}>{cs.label}</div>
@@ -92,10 +88,7 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
               className={`${styles.patSwatch} ${pattern === p.key ? styles.patSwatchSelected : ''}`}
               style={{ background: p.background }}
               title={p.title}
-              onClick={() => {
-                setPattern(p.key)
-                touched()
-              }}
+              onClick={() => edit({ pattern: p.key })}
             />
           ))}
         </div>
@@ -108,10 +101,7 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
               <input
                 type="checkbox"
                 checked={showBadges}
-                onChange={(e) => {
-                  setShowBadges(e.target.checked)
-                  touched()
-                }}
+                onChange={(e) => edit({ showBadges: e.target.checked })}
               />
               <div className={styles.tglTrack} />
               <div className={styles.tglThumb} />
@@ -123,17 +113,18 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
               <input
                 type="checkbox"
                 checked={showLevel}
-                onChange={(e) => {
-                  setShowLevel(e.target.checked)
-                  touched()
-                }}
+                onChange={(e) => edit({ showLevel: e.target.checked })}
               />
               <div className={styles.tglTrack} />
               <div className={styles.tglThumb} />
             </label>
           </div>
         </div>
-        <select className={styles.badgeSelect} onChange={touched}>
+        <select
+          className={styles.badgeSelect}
+          value={badge}
+          onChange={(e) => edit({ badge: e.target.value })}
+        >
           {BADGE_OPTIONS.map((o) => <option key={o}>{o}</option>)}
         </select>
       </div>

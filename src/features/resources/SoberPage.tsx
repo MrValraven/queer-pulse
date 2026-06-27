@@ -3,7 +3,8 @@ import { FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./SoberPage.module.css";
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, FadeIn, Outro, SkeletonLine } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
 import { REASONS, EVENTS, TYPE_CLASS } from "./soberPage.data";
 import { SoberHonestSection, SoberVenuesSection, SoberVoicesSection, SoberRecoverySection } from "./SoberSections";
 import { SoberHostModal } from "./SoberHostModal";
@@ -16,8 +17,27 @@ const RESOURCES = routes.resources;
 
 const LINK_MAP: Record<string, string> = { COMMUNITIES, WELLBEING, MENTORSHIP, RESOURCES };
 
+function EventSkeleton() {
+  // Mirrors the .event grid row: date column, body, RSVP pill.
+  return (
+    <div className={styles.event}>
+      <div className={styles.seDate}>
+        <SkeletonLine width={44} height={36} style={{ margin: "0 auto" }} />
+        <SkeletonLine width={36} height={12} style={{ margin: "6px auto 0" }} />
+      </div>
+      <div>
+        <SkeletonLine width={90} height={18} />
+        <SkeletonLine width="60%" height={19} style={{ marginTop: 8 }} />
+        <SkeletonLine width="45%" height={13} style={{ marginTop: 8 }} />
+      </div>
+      <SkeletonLine width={78} height={36} style={{ borderRadius: 999 }} />
+    </div>
+  );
+}
+
 export function SoberPage() {
   const [hostOpen, setHostOpen] = useState(false);
+  const loading = useSimulatedLoad();
   const [going, setGoing] = useState<Set<number>>(
     () => new Set(EVENTS.filter((e) => e.going).map((e) => e.id)),
   );
@@ -65,11 +85,13 @@ export function SoberPage() {
               + Host or attend a meeting
             </button>
           </div>
-          <div className={styles.events}>
-            {EVENTS.map((e) => {
+          <div className={styles.events} aria-busy={loading}>
+            {loading
+              ? Array.from({ length: EVENTS.length }).map((_, i) => <EventSkeleton key={i} />)
+              : EVENTS.map((e, idx) => {
               const isGoing = going.has(e.id);
               return (
-                <div className={styles.event} key={e.id}>
+                <FadeIn className={styles.event} key={e.id} delay={Math.min(idx, 8) * 60}>
                   <div className={styles.seDate}>
                     <span className={styles.d}>{e.d}</span>
                     <span className={styles.m}>{e.m}</span>
@@ -102,7 +124,7 @@ export function SoberPage() {
                   >
                     {isGoing ? <>Going <FiCheck /></> : "RSVP"}
                   </button>
-                </div>
+                </FadeIn>
               );
             })}
           </div>

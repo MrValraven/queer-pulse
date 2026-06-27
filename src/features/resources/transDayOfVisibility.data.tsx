@@ -6,7 +6,7 @@ import { routes } from '../../app/routeMap'
 
 const PROFILE_PATH = routes.members
 const TRANS_HEALTH = routes.transHealthcare
-const INVITE_PATH = routes.invite
+const INVITE_PATH = routes.requestInvite
 
 export type ProfileTint = 'a' | 'b' | 'c'
 

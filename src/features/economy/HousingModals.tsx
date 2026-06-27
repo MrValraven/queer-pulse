@@ -50,7 +50,7 @@ export function MessageModal({
   return (
     <Shell onClose={onClose}>
       {done ? (
-        <div>
+        <div className={styles.success}>
           <div className={styles.successIcon}>
             <Check />
           </div>
@@ -130,7 +130,7 @@ export function RecommendModal({
   return (
     <Shell onClose={onClose}>
       {done ? (
-        <div>
+        <div className={styles.success}>
           <div className={styles.successIcon}>
             <Check />
           </div>

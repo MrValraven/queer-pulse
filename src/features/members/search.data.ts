@@ -10,18 +10,20 @@ export interface SearchItem {
   sub: string
   href: string
   kw: string
+  /** Member slug, so the palette can show the member's avatar (member rows only). */
+  slug?: string
 }
 
 export const SEARCH_DATA: SearchItem[] = [
-  { t: 'member', name: memberName('ines'), sub: 'Graphic Designer · Príncipe Real', href: '/members/ines', kw: 'design branding type editorial' },
-  { t: 'member', name: memberName('rui'), sub: 'Software Engineer · Marvila', href: '/members/rui', kw: 'tech backend rust engineering' },
-  { t: 'member', name: memberName('sofia'), sub: 'Documentary Filmmaker · Alfama', href: '/members/sofia', kw: 'film directing editing documentary' },
-  { t: 'member', name: memberName('tomas'), sub: 'Chef · Supper Club Host · Mouraria', href: '/members/tomas', kw: 'food supper club fermentation chef' },
-  { t: 'member', name: memberName('mariana'), sub: 'Clinical Psychologist · Estrela', href: '/members/mariana', kw: 'care therapy lgbtq psychologist' },
-  { t: 'member', name: memberName('andre'), sub: 'Portrait Photographer · Cais do Sodré', href: '/members/andre', kw: 'photography analog portrait darkroom' },
-  { t: 'member', name: memberName('carla'), sub: 'Product Manager · Arroios', href: '/members/carla', kw: 'tech product fintech strategy' },
-  { t: 'member', name: memberName('beatriz'), sub: 'Ceramicist · Graça', href: '/members/beatriz', kw: 'craft ceramics studio glazing' },
-  { t: 'member', name: memberName('diogo'), sub: 'Music Producer · Bairro Alto', href: '/members/diogo', kw: 'music electronic dj producing' },
+  { t: 'member', name: memberName('ines'), sub: 'Graphic Designer · Príncipe Real', href: '/members/ines', kw: 'design branding type editorial', slug: 'ines' },
+  { t: 'member', name: memberName('rui'), sub: 'Software Engineer · Marvila', href: '/members/rui', kw: 'tech backend rust engineering', slug: 'rui' },
+  { t: 'member', name: memberName('sofia'), sub: 'Documentary Filmmaker · Alfama', href: '/members/sofia', kw: 'film directing editing documentary', slug: 'sofia' },
+  { t: 'member', name: memberName('tomas'), sub: 'Chef · Supper Club Host · Mouraria', href: '/members/tomas', kw: 'food supper club fermentation chef', slug: 'tomas' },
+  { t: 'member', name: memberName('mariana'), sub: 'Clinical Psychologist · Estrela', href: '/members/mariana', kw: 'care therapy lgbtq psychologist', slug: 'mariana' },
+  { t: 'member', name: memberName('andre'), sub: 'Portrait Photographer · Cais do Sodré', href: '/members/andre', kw: 'photography analog portrait darkroom', slug: 'andre' },
+  { t: 'member', name: memberName('carla'), sub: 'Product Manager · Arroios', href: '/members/carla', kw: 'tech product fintech strategy', slug: 'carla' },
+  { t: 'member', name: memberName('beatriz'), sub: 'Ceramicist · Graça', href: '/members/beatriz', kw: 'craft ceramics studio glazing', slug: 'beatriz' },
+  { t: 'member', name: memberName('diogo'), sub: 'Music Producer · Bairro Alto', href: '/members/diogo', kw: 'music electronic dj producing', slug: 'diogo' },
   { t: 'gathering', name: 'Queer Supper Club №12', sub: 'Mouraria · 6 Jun — 8 seats left', href: '/gathering/supper-club-12', kw: 'food social supper dinner' },
   { t: 'gathering', name: 'Portfolio Night: Designers & Photographers', sub: 'Príncipe Real · 14 Jun — 32 going', href: '/gathering/portfolio-night', kw: 'design photography portfolio mixer' },
   { t: 'gathering', name: "Inside Beatriz's Ceramics Studio", sub: 'Graça · 21 Jun — 3 spots left', href: '/gathering/studio-visit', kw: 'craft ceramics studio visit' },

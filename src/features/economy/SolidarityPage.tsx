@@ -46,7 +46,7 @@ export function SolidarityPage() {
         title={<>Care is a <em>collective act.</em></>}
         sub="QueerPulse connects the community to professionals who believe in access as much as you do."
       >
-        <Button to={routes.invite} variant="primary" size="lg">
+        <Button to={routes.requestInvite} variant="primary" size="lg">
           Join the network
         </Button>
       </Outro>

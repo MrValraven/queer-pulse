@@ -1096,3 +1096,30 @@
     display: none;
   }
 }
+
+/* ── Loading skeletons (light-on-dark, for the dark Studio surface) ── */
+.skel {
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(247, 243, 238, 0.05) 25%,
+    rgba(247, 243, 238, 0.11) 50%,
+    rgba(247, 243, 238, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: qpShimmer 1.5s ease infinite;
+}
+.skelCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.skelCover {
+  aspect-ratio: 1;
+  border-radius: 10px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel {
+    animation: none;
+  }
+}

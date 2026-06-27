@@ -15,7 +15,7 @@ export function Outro() {
             is already here, ask them to vouch for you.
           </Reveal>
           <Reveal delay={140}>
-            <Button size="lg" to={routes.invite}>
+            <Button size="lg" to={routes.requestInvite}>
               Request an invite
             </Button>
           </Reveal>

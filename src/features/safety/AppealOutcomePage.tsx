@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
+import { Footer } from '../../shared/components/layout'
 import s from './flows.module.css'
 
 type State = 'pending' | 'overturned' | 'upheld'
@@ -39,6 +40,7 @@ export function AppealOutcomePage() {
   const [state, setState] = useState<State>('pending')
 
   return (
+    <>
     <div className={s.page}>
       <div className={s.stateBar}>
         {STATES.map((st) => (
@@ -160,5 +162,7 @@ export function AppealOutcomePage() {
         </div>
       )}
     </div>
+    <Footer />
+    </>
   )
 }

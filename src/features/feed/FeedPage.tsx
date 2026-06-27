@@ -81,7 +81,11 @@ export function FeedPage() {
                 {loading ? (
                   Array.from({ length: 4 }).map((_, i) => <FeedSkeleton key={i} />)
                 ) : visibleItems.length > 0 ? (
-                  visibleItems.map(({ key, Card }) => <Card key={key} />)
+                  visibleItems.map(({ key, Card }, i) => (
+                    <div key={key} className={styles.cardReveal} style={{ animationDelay: `${i * 60}ms` }}>
+                      <Card />
+                    </div>
+                  ))
                 ) : (
                   <EmptyState
                     icon={<FiInbox />}
@@ -92,7 +96,7 @@ export function FeedPage() {
                 )}
               </div>
             </div>
-            <FeedSidebar />
+            <FeedSidebar loading={loading} />
           </div>
         </div>
       </div>

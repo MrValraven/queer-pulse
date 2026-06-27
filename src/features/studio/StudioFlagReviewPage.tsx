@@ -1,8 +1,27 @@
 import { useState, type ReactNode } from 'react'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { StudioShell } from './StudioShell'
+import { StudioLine } from './StudioSkeletons'
 import { useToast } from '../../shared/components/feedback/useToast'
 import s from './council.module.css'
+
+/** Mirrors a .flag review card: cover + title row, reason block, action row. */
+function FlagCardSkeleton() {
+  return (
+    <div className={s.flag}>
+      <div className={s.flagTop}>
+        <StudioLine width={46} height={46} style={{ borderRadius: 8, flex: 'none' }} />
+        <div style={{ flex: 1 }}>
+          <StudioLine width="45%" height={17} />
+          <StudioLine width="65%" height={12} style={{ marginTop: 8 }} />
+        </div>
+      </div>
+      <StudioLine width="100%" height={70} style={{ marginTop: 16, borderRadius: 12 }} />
+      <StudioLine width="55%" height={13} style={{ marginTop: 16 }} />
+    </div>
+  )
+}
 
 interface Flag {
   id: string
@@ -47,6 +66,7 @@ const FLAGS: Flag[] = [
 export function StudioFlagReviewPage() {
   const { showToast } = useToast()
   const [resolved, setResolved] = useState<Record<string, string>>({})
+  const loading = useSimulatedLoad()
 
   function resolve(id: string, verb: string, msg: string) {
     setResolved((r) => ({ ...r, [id]: verb }))
@@ -67,10 +87,11 @@ export function StudioFlagReviewPage() {
         </div>
 
         <div className={s.flags}>
-          {FLAGS.map((f) => {
+          {loading && Array.from({ length: 3 }).map((_, i) => <FlagCardSkeleton key={i} />)}
+          {!loading && FLAGS.map((f, idx) => {
             const done = resolved[f.id]
             return (
-              <div key={f.id} className={[s.flag, done && s.flagResolved].filter(Boolean).join(' ')}>
+              <FadeIn key={f.id} delay={Math.min(idx, 8) * 60} className={[s.flag, done && s.flagResolved].filter(Boolean).join(' ')}>
                 <div className={s.flagTop}>
                   <span className={s.flagCv}>
                     <ImageSlot src={f.image} tint={f.tint} width={46} height={46} radius={8} placeholder="" />
@@ -139,12 +160,13 @@ export function StudioFlagReviewPage() {
                     </div>
                   </>
                 )}
-              </div>
+              </FadeIn>
             )
           })}
 
           {/* Already resolved */}
-          <div className={`${s.flag} ${s.flagResolved}`}>
+          {!loading && (
+          <FadeIn delay={Math.min(FLAGS.length, 8) * 60} className={`${s.flag} ${s.flagResolved}`}>
             <div className={s.flagTop}>
               <span className={s.flagCv}>
                 <ImageSlot src={resolvedFlagImage} tint="coral" width={46} height={46} radius={8} placeholder="" />
@@ -161,7 +183,8 @@ export function StudioFlagReviewPage() {
               <span className="av">SM</span>
               Reviewed by <em>Sara Marques</em> · reporter was told the sample is public-domain, with a link
             </div>
-          </div>
+          </FadeIn>
+          )}
         </div>
       </div>
     </StudioShell>

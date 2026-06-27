@@ -25,7 +25,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal className={styles.cta} delay={180}>
-            <Button size="lg" to={routes.invite}>
+            <Button size="lg" to={routes.requestInvite}>
               Request an invite
             </Button>
             <Button size="lg" variant="ghost" href="#discovery">

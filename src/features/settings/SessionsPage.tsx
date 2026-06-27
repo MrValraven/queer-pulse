@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn, SkeletonLine } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { ACTIVE_SESSIONS, TRUSTED_DEVICES, type Session, type TrustedDevice } from './sessions.data'
 import styles from './SessionsPage.module.css'
@@ -91,8 +92,24 @@ function TrustedDeviceCard({ device, onUntrust }: { device: TrustedDevice; onUnt
   )
 }
 
+/** Mirrors a SessionCard / TrustedDeviceCard so there's no layout shift on load. */
+function SessionSkeleton() {
+  return (
+    <div className={styles.card}>
+      <SkeletonLine width={48} height={48} style={{ borderRadius: 14 }} />
+      <div className={styles.details}>
+        <SkeletonLine width="45%" height={19} />
+        <SkeletonLine width="70%" height={13} style={{ marginTop: 8 }} />
+        <SkeletonLine width="55%" height={13} style={{ marginTop: 5 }} />
+      </div>
+      <SkeletonLine width={88} height={36} style={{ borderRadius: 999 }} />
+    </div>
+  )
+}
+
 export function SessionsPage() {
   const { showToast } = useToast()
+  const loading = useSimulatedLoad()
   const [signedOut, setSignedOut] = useState<Set<string>>(new Set())
   const [untrusted, setUntrusted] = useState<Set<string>>(new Set())
 
@@ -132,16 +149,24 @@ export function SessionsPage() {
 
         <div className={styles.sectionH}>Active now</div>
         <div className={styles.list}>
-          {activeSessions.map((s) => (
-            <SessionCard key={s.id} session={s} onSignOut={handleSignOut} />
-          ))}
+          {loading
+            ? Array.from({ length: 5 }).map((_, i) => <SessionSkeleton key={i} />)
+            : activeSessions.map((s, i) => (
+                <FadeIn key={s.id} delay={Math.min(i, 8) * 60}>
+                  <SessionCard session={s} onSignOut={handleSignOut} />
+                </FadeIn>
+              ))}
         </div>
 
         <div className={styles.sectionH}>Trusted devices · skip 2FA</div>
         <div className={styles.list}>
-          {trustedDevices.map((d) => (
-            <TrustedDeviceCard key={d.id} device={d} onUntrust={handleUntrust} />
-          ))}
+          {loading
+            ? Array.from({ length: 2 }).map((_, i) => <SessionSkeleton key={i} />)
+            : trustedDevices.map((d, i) => (
+                <FadeIn key={d.id} delay={Math.min(i, 8) * 60}>
+                  <TrustedDeviceCard device={d} onUntrust={handleUntrust} />
+                </FadeIn>
+              ))}
         </div>
 
         <div className={styles.footNote}>

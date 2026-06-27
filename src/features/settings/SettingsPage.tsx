@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useProfileTheme } from '../../app/providers/ProfileThemeProvider'
 import { useScrollLock } from '../../shared/hooks'
 import { AppShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -21,6 +22,7 @@ import styles from './SettingsPage.module.css'
 
 export function SettingsPage() {
   const { showToast } = useToast()
+  const { commit: commitTheme, discard: discardTheme } = useProfileTheme()
   const [params] = useSearchParams()
   const initialPane = (() => {
     const p = params.get('pane')
@@ -31,6 +33,11 @@ export function SettingsPage() {
   const [dirty, setDirty] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
   useScrollLock(showDelete)
+
+  // Drop any leftover unsaved theme edits when re-entering Settings.
+  useEffect(() => {
+    discardTheme()
+  }, [discardTheme])
 
   const markChanged = () => setDirty(true)
 
@@ -80,12 +87,19 @@ export function SettingsPage() {
         <div className={styles.saveBar}>
           <p>You have unsaved changes.</p>
           <div style={{ display: 'flex', gap: 10 }}>
-            <button className={styles.discard} onClick={() => setDirty(false)}>
+            <button
+              className={styles.discard}
+              onClick={() => {
+                discardTheme()
+                setDirty(false)
+              }}
+            >
               Discard
             </button>
             <button
               className={styles.saveBtn}
               onClick={() => {
+                commitTheme()
                 setDirty(false)
                 showToast('Settings saved', 'success')
               }}

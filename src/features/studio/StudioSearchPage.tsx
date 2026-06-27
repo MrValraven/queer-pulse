@@ -1,14 +1,26 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { StudioShell } from './StudioShell'
 import { FILTERS, RECENT, RESULTS } from './studioSearch.data'
 import ss from './studio.module.css'
 import s from './studioPages.module.css'
 
+function SearchResultSkeleton() {
+  return (
+    <div className={ss.skelCard}>
+      <div className={`${ss.skel} ${ss.skelCover}`} />
+      <div className={ss.skel} style={{ width: '80%', height: 15, marginTop: 2 }} />
+      <div className={ss.skel} style={{ width: '55%', height: 12 }} />
+    </div>
+  )
+}
+
 export function StudioSearchPage() {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('Everything')
+  const loading = useSimulatedLoad()
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -72,22 +84,30 @@ export function StudioSearchPage() {
             {query ? <>Results for <em>{query}</em></> : <>Featured <em>now</em></>}
           </h2>
         </div>
-        {results.length === 0 ? (
+        {loading ? (
+          <div className={ss.rowGrid}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <SearchResultSkeleton key={i} />
+            ))}
+          </div>
+        ) : results.length === 0 ? (
           <p className={s.empty}>Nothing matched that — try a different word or filter.</p>
         ) : (
           <div className={ss.rowGrid}>
-            {results.map((result) => (
-              <Link key={result.pre + result.meta} to={result.to} className={ss.card}>
-                <div className={ss.cardCov}>
-                  <ImageSlot src={result.image} tint={result.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
-                </div>
-                <h4>
-                  {result.pre}
-                  {result.em && <em>{result.em}</em>}
-                  {result.post}
-                </h4>
-                <div className={ss.meta}>{result.meta}</div>
-              </Link>
+            {results.map((result, i) => (
+              <FadeIn key={result.pre + result.meta} delay={Math.min(i, 8) * 60}>
+                <Link to={result.to} className={ss.card}>
+                  <div className={ss.cardCov}>
+                    <ImageSlot src={result.image} tint={result.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                  </div>
+                  <h4>
+                    {result.pre}
+                    {result.em && <em>{result.em}</em>}
+                    {result.post}
+                  </h4>
+                  <div className={ss.meta}>{result.meta}</div>
+                </Link>
+              </FadeIn>
             ))}
           </div>
         )}

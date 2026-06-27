@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn } from '../../shared/components/ui'
+import { useCountUp, useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import {
   DEFAULT_FILTERS,
@@ -16,7 +17,7 @@ import {
   type FilterState,
   type SortKey,
 } from './memberDirectoryFilter.data'
-import { FiltersSidebar, MemberResultCard } from './MemberFilterCards'
+import { FiltersSidebar, MemberResultCard, MemberResultSkeleton } from './MemberFilterCards'
 import styles from './MemberDirectoryFilterPage.module.css'
 
 /** Remove one value from whichever filter group a chip belongs to. */
@@ -40,9 +41,14 @@ function removeChip(filters: FilterState, chip: AppliedChip): FilterState {
 
 export function MemberDirectoryFilterPage() {
   const { showToast } = useToast()
+  const loading = useSimulatedLoad()
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [sort, setSort] = useState<SortKey>('Recently active')
   const [visible, setVisible] = useState(PAGE_SIZE)
+
+  // Count the headline figure up from zero once, on mount — a quick settle that
+  // says "this is a real, countable population". Reduced motion jumps to the total.
+  const countedTotal = useCountUp(TOTAL_MEMBERS)
 
   const filtered = useMemo(() => {
     const matched = MEMBERS.filter((m) => matchesFilters(m, filters))
@@ -66,7 +72,11 @@ export function MemberDirectoryFilterPage() {
         <header className={styles.head}>
           <div className={styles.eyebrow}>Members · advanced filter</div>
           <h1 className={styles.h1}>
-            Find <em>{TOTAL_MEMBERS.toLocaleString()} members,</em> exactly.
+            Find{' '}
+            <em>
+              <span className={styles.tally}>{countedTotal.toLocaleString()}</span> members,
+            </em>{' '}
+            exactly.
           </h1>
           <p className={styles.lead}>
             Filter by what they offer, where they're based, what they're <b>open to</b>. The same
@@ -131,14 +141,22 @@ export function MemberDirectoryFilterPage() {
               </div>
             )}
 
-            {shown.length === 0 ? (
+            {loading ? (
+              <div className={styles.mGrid}>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <MemberResultSkeleton key={i} />
+                ))}
+              </div>
+            ) : shown.length === 0 ? (
               <div className={styles.noResults}>
                 No members match these filters. Try removing a few above.
               </div>
             ) : (
               <div className={styles.mGrid}>
                 {shown.map((member, i) => (
-                  <MemberResultCard key={`${member.slug}-${i}`} member={member} />
+                  <FadeIn key={`${member.slug}-${i}`} delay={Math.min(i, 8) * 60}>
+                    <MemberResultCard member={member} />
+                  </FadeIn>
                 ))}
               </div>
             )}

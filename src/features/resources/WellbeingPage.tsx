@@ -37,7 +37,7 @@ export function WellbeingPage() {
         title={<>You belong <em>here.</em></>}
         sub="If you're not yet a member, request an invite. If you are, everything above is in the member area — no separate login needed."
       >
-        <Button to={routes.invite} variant="primary" size="lg">
+        <Button to={routes.requestInvite} variant="primary" size="lg">
           Request an invite
         </Button>
       </Outro>

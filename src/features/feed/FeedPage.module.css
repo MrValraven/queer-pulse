@@ -8,6 +8,7 @@
   gap: 16px;
   margin-bottom: 6px;
   flex-wrap: wrap;
+  animation: feedEnter 0.5s var(--ease) both;
 }
 .greeting {
   font-family: var(--serif);
@@ -38,6 +39,10 @@
   font-size: 12.5px;
   font-weight: 700;
   color: var(--jade);
+  transition: background 0.2s var(--ease);
+}
+.msgChip:hover {
+  background: rgba(74, 140, 111, 0.14);
 }
 
 .layout {
@@ -89,7 +94,9 @@
   border: 1px solid rgba(45, 27, 61, 0.09);
   border-radius: 18px;
   overflow: hidden;
-  transition: box-shadow 0.2s;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s var(--ease);
 }
 .card:hover {
   box-shadow: 0 4px 16px rgba(45, 27, 61, 0.07);
@@ -98,6 +105,14 @@
   display: block;
   text-decoration: none;
   color: inherit;
+}
+/* Clickable cards lift on hover; static cards keep just the shadow. */
+.cardLink:hover {
+  transform: translateY(-2px);
+}
+/* Staggered fade + rise as feed items swap in from their skeletons. */
+.cardReveal {
+  animation: sbReveal 0.4s var(--ease) both;
 }
 .pad {
   padding: 18px 20px;
@@ -317,6 +332,10 @@
 }
 .postActionOn:hover {
   color: var(--accent-ink);
+}
+/* Quick pulse when a post is liked or saved. */
+.postActionOn svg {
+  animation: iconPop 0.35s var(--ease);
 }
 
 /* three-dot moderation menu */
@@ -728,6 +747,58 @@
   font-size: 14px;
   font-weight: 700;
   color: var(--plum);
+}
+
+/* Fade + rise applied to real rows as they swap in from their skeletons. */
+@keyframes sbReveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.revealRow {
+  animation: sbReveal 0.4s var(--ease) both;
+}
+
+/* One-time page-header entrance. */
+@keyframes feedEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Like/save icon pulse. */
+@keyframes iconPop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revealRow,
+  .cardReveal,
+  .greetingRow,
+  .postActionOn svg {
+    animation: none;
+  }
+  .cardLink:hover {
+    transform: none;
+  }
 }
 
 @media (max-width: 900px) {

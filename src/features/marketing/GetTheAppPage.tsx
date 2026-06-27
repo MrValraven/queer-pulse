@@ -6,7 +6,7 @@ import styles from "./GetTheAppPage.module.css";
 import { Button } from '../../shared/components/ui'
 import { AppNotifyModal, type AppPlatform } from "./AppNotifyModal";
 
-const INVITE = routes.invite;
+const INVITE = routes.requestInvite;
 
 function QrCode({ size = 21, seed = 7 }: { size?: number; seed?: number }) {
   // Deterministic pseudo-random module pattern with three finder squares.

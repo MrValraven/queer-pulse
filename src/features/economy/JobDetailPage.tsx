@@ -2,13 +2,15 @@ import { useState } from 'react'
 import { FaRainbow } from 'react-icons/fa6'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { JOBS } from './jobs.data'
 import { safetyFor } from './employerSafety.data'
 import { SafetyBadges } from './SafetyBadges'
 import { JobApplyForm } from './JobApplyForm'
+import { JobDetailSkeleton } from './JobDetailSkeleton'
 import styles from './JobDetailPage.module.css'
 
 const SalaryIcon = () => (
@@ -42,12 +44,30 @@ export function JobDetailPage() {
   const { slug } = useParams()
   const { showToast } = useToast()
   const [saved, setSaved] = useState(false)
+  const loading = useSimulatedLoad()
 
   const job = JOBS.find((j) => j.slug === slug)
   if (!job) return <Navigate to={routes.jobs} replace />
 
   const d = job.detail
   const deadlineFull = job.deadline === 'Open' ? 'Open' : `${job.deadline} 2026`
+
+  if (loading) {
+    return (
+      <PageShell>
+        <div className={styles.page}>
+          <div className={styles.breadcrumb}>
+            <Link to={routes.jobs}>Jobs</Link>
+            <span className={styles.bcSep}>›</span>
+            <span>{d.category}</span>
+            <span className={styles.bcSep}>›</span>
+            <span className={styles.bcCurrent}>{job.title}</span>
+          </div>
+          <JobDetailSkeleton />
+        </div>
+      </PageShell>
+    )
+  }
 
   function toggleSave() {
     setSaved((s) => {
@@ -67,6 +87,7 @@ export function JobDetailPage() {
           <span className={styles.bcCurrent}>{job.title}</span>
         </div>
 
+        <FadeIn>
         <div className={styles.header}>
           <div className={styles.headerTop}>
             <h1 className={styles.title}>{job.title}</h1>
@@ -208,6 +229,7 @@ export function JobDetailPage() {
             </div>
           </aside>
         </div>
+        </FadeIn>
       </div>
     </PageShell>
   )

@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiHeart, FiPlus, FiCheck } from 'react-icons/fi'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useSocial } from '../../app/providers/SocialProvider'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { StudioShell } from './StudioShell'
 import { StudioTipModal } from './StudioTipModal'
+import { StudioCardGridSkeleton } from './StudioSkeletons'
 import { heroImage, ARTIST_ID, TABS, RELEASES, SINGLES } from './studioArtist.data'
 import { routes } from '../../app/routeMap'
 import styles from './studio.module.css'
@@ -18,6 +20,7 @@ export function StudioArtistPage() {
   const { showToast } = useToast()
   const [tipOpen, setTipOpen] = useState(false)
   const following = isFollowing(ARTIST_ID)
+  const loading = useSimulatedLoad()
 
   function share() {
     const url = typeof window !== 'undefined' ? window.location.href : '/studio/artist'
@@ -92,46 +95,54 @@ export function StudioArtistPage() {
               <div className={styles.rowH} style={{ marginBottom: 14 }}>
                 <h2>Releases</h2>
               </div>
-              <div className={styles.rowGrid} style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
-                {RELEASES.map((r) => (
-                  <Link key={r.pre} to={r.to} className={styles.card}>
-                    <div className={styles.cardCov}>
-                      <ImageSlot src={r.image} tint={r.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
-                      <span className={`${styles.tag} ${styles.tagMem}`}>Sustainer</span>
-                    </div>
-                    <h4>
-                      {r.pre}
-                      {r.em && <em>{r.em}</em>}
-                    </h4>
-                    <div className={styles.meta}>{r.meta}</div>
-                    <div className={styles.payLine}>
-                      <span>{r.buy}</span>
-                      <em>{r.split}</em>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+              {loading ? (
+                <StudioCardGridSkeleton className={styles.rowGrid} count={3} style={{ gridTemplateColumns: 'repeat(3,1fr)' }} />
+              ) : (
+                <div className={styles.rowGrid} style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
+                  {RELEASES.map((r, i) => (
+                    <FadeIn key={r.pre} delay={Math.min(i, 8) * 60} as={Link} to={r.to} className={styles.card}>
+                      <div className={styles.cardCov}>
+                        <ImageSlot src={r.image} tint={r.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                        <span className={`${styles.tag} ${styles.tagMem}`}>Sustainer</span>
+                      </div>
+                      <h4>
+                        {r.pre}
+                        {r.em && <em>{r.em}</em>}
+                      </h4>
+                      <div className={styles.meta}>{r.meta}</div>
+                      <div className={styles.payLine}>
+                        <span>{r.buy}</span>
+                        <em>{r.split}</em>
+                      </div>
+                    </FadeIn>
+                  ))}
+                </div>
+              )}
 
               <div className={styles.rowH} style={{ margin: '32px 0 14px' }}>
                 <h2>
                   Singles &amp; <em>standalones</em>
                 </h2>
               </div>
-              <div className={styles.rowGrid} style={{ gridTemplateColumns: 'repeat(5,1fr)' }}>
-                {SINGLES.map((s) => (
-                  <Link key={s.pre} to={routes.studioAlbum} className={styles.card}>
-                    <div className={styles.cardCov}>
-                      <ImageSlot src={s.image} tint={s.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
-                      <span className={`${styles.tag} ${tagClass[s.tag]}`}>{s.tag === 'mem' ? 'Sustainer' : 'Free'}</span>
-                    </div>
-                    <h4>
-                      {s.pre}
-                      {s.em && <em>{s.em}</em>}
-                    </h4>
-                    <div className={styles.meta}>{s.meta}</div>
-                  </Link>
-                ))}
-              </div>
+              {loading ? (
+                <StudioCardGridSkeleton className={styles.rowGrid} count={5} style={{ gridTemplateColumns: 'repeat(5,1fr)' }} />
+              ) : (
+                <div className={styles.rowGrid} style={{ gridTemplateColumns: 'repeat(5,1fr)' }}>
+                  {SINGLES.map((s, i) => (
+                    <FadeIn key={s.pre} delay={Math.min(i, 8) * 60} as={Link} to={routes.studioAlbum} className={styles.card}>
+                      <div className={styles.cardCov}>
+                        <ImageSlot src={s.image} tint={s.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                        <span className={`${styles.tag} ${tagClass[s.tag]}`}>{s.tag === 'mem' ? 'Sustainer' : 'Free'}</span>
+                      </div>
+                      <h4>
+                        {s.pre}
+                        {s.em && <em>{s.em}</em>}
+                      </h4>
+                      <div className={styles.meta}>{s.meta}</div>
+                    </FadeIn>
+                  ))}
+                </div>
+              )}
             </>
           )}
         </div>

@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiFilm } from 'react-icons/fi'
-import { EmptyState, ImageSlot } from '../../shared/components/ui'
+import { EmptyState, FadeIn, ImageSlot } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { CinemaShell } from './CinemaShell'
+import { CinemaBrowseGridSkeleton } from './CinemaBrowseSkeleton'
 import { CinemaBrowseSidebar, SortDropdown } from './CinemaBrowseControls'
 import {
   ACCESS_FILTERS,
@@ -67,6 +69,7 @@ function FilmCard({ film }: { film: CinemaFilm }) {
 }
 
 export function CinemaBrowsePage() {
+  const loading = useSimulatedLoad()
   const [filters, setFilters] = useState<BrowseFilters>(emptyFilters)
   const [sort, setSort] = useState<SortKey>('curated')
 
@@ -170,7 +173,9 @@ export function CinemaBrowsePage() {
                 <SortDropdown value={sort} onChange={setSort} />
               </div>
 
-              {visible.length === 0 ? (
+              {loading ? (
+                <CinemaBrowseGridSkeleton count={6} />
+              ) : visible.length === 0 ? (
                 <EmptyState
                   icon={<FiFilm />}
                   title="No films match these filters"
@@ -179,8 +184,10 @@ export function CinemaBrowsePage() {
                 />
               ) : (
                 <div className={styles.grid}>
-                  {visible.map((film) => (
-                    <FilmCard key={film.id} film={film} />
+                  {visible.map((film, i) => (
+                    <FadeIn key={film.id} delay={Math.min(i, 8) * 60}>
+                      <FilmCard film={film} />
+                    </FadeIn>
                   ))}
                 </div>
               )}

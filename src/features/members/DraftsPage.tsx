@@ -1,8 +1,25 @@
 import { useState } from 'react'
 import { AppShell } from '../../shared/components/layout'
+import { FadeIn, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { DRAFT_TABS, DRAFTS, type Draft, type MetaVariant } from './drafts.data'
 import styles from './DraftsPage.module.css'
+
+/** Loading placeholder mirroring a draft .row's 3-column grid. */
+function DraftRowSkeleton() {
+  return (
+    <div className={styles.row} aria-hidden>
+      <SkeletonLine width={36} height={36} style={{ borderRadius: 10, flex: 'none' }} />
+      <div className={styles.info}>
+        <SkeletonLine width="45%" height={15} />
+        <SkeletonLine width="80%" height={12} style={{ marginTop: 8 }} />
+        <SkeletonLine width="55%" height={11} style={{ marginTop: 10 }} />
+      </div>
+      <SkeletonLine width={80} height={28} style={{ borderRadius: 8 }} />
+    </div>
+  )
+}
 
 const kindClass: Record<Draft['kindVariant'], string> = {
   job: styles.kindJob,
@@ -19,6 +36,7 @@ const metaClass: Record<MetaVariant, string> = {
 
 export function DraftsPage() {
   const { showToast } = useToast()
+  const loading = useSimulatedLoad()
   const [tab, setTab] = useState(0)
   const [deleted, setDeleted] = useState<Set<string>>(new Set())
 
@@ -58,39 +76,43 @@ export function DraftsPage() {
           ))}
         </div>
 
-        {DRAFTS.map((d) => (
-          <div key={d.id} className={`${styles.row} ${deleted.has(d.id) ? styles.deleted : ''}`}>
-            <div className={`${styles.kind} ${kindClass[d.kindVariant]}`}>{d.kind}</div>
-            <div className={styles.info}>
-              <b>{d.title}</b>
-              <span>{d.desc}</span>
-              <div className={styles.meta}>
-                {d.meta.map((m, i) => (
-                  <span key={i} className={m.variant ? metaClass[m.variant] : undefined}>
-                    {m.label}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className={styles.progress}>
-              <div className={`${styles.bar} ${d.ready ? styles.full : ''}`}>
-                <span style={{ width: `${d.progress}%` }} />
-              </div>
-              {d.ready ? <span className={styles.readyLabel}>Ready</span> : <span>{d.progress}%</span>}
-            </div>
-            <div className={styles.actions}>
-              {d.actions.map((a) => (
-                <button
-                  key={a.label}
-                  className={`${styles.action} ${a.variant === 'primary' ? styles.primary : ''} ${a.variant === 'danger' ? styles.danger : ''}`}
-                  onClick={() => runAction(d, a)}
-                >
-                  {a.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => <DraftRowSkeleton key={i} />)
+          : DRAFTS.map((d, i) => (
+              <FadeIn key={d.id} delay={Math.min(i, 8) * 60}>
+                <div className={`${styles.row} ${deleted.has(d.id) ? styles.deleted : ''}`}>
+                  <div className={`${styles.kind} ${kindClass[d.kindVariant]}`}>{d.kind}</div>
+                  <div className={styles.info}>
+                    <b>{d.title}</b>
+                    <span>{d.desc}</span>
+                    <div className={styles.meta}>
+                      {d.meta.map((m, j) => (
+                        <span key={j} className={m.variant ? metaClass[m.variant] : undefined}>
+                          {m.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className={styles.progress}>
+                    <div className={`${styles.bar} ${d.ready ? styles.full : ''}`}>
+                      <span style={{ width: `${d.progress}%` }} />
+                    </div>
+                    {d.ready ? <span className={styles.readyLabel}>Ready</span> : <span>{d.progress}%</span>}
+                  </div>
+                  <div className={styles.actions}>
+                    {d.actions.map((a) => (
+                      <button
+                        key={a.label}
+                        className={`${styles.action} ${a.variant === 'primary' ? styles.primary : ''} ${a.variant === 'danger' ? styles.danger : ''}`}
+                        onClick={() => runAction(d, a)}
+                      >
+                        {a.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
 
         <div className={styles.dangerBlock}>
           <b>About the 90-day rule:</b> drafts you haven't touched in 87+ days get an email reminder,

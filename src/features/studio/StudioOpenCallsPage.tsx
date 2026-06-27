@@ -1,13 +1,17 @@
 import { useState } from 'react'
+import { FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { StudioShell } from './StudioShell'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { FILTERS, CALLS } from './studioOpenCalls.data'
 import { StudioOpenCallCard } from './StudioOpenCallCard'
+import { StudioOpenCallSkeleton } from './StudioOpenCallSkeleton'
 import s from './funding.module.css'
 
 export function StudioOpenCallsPage() {
   const { showToast } = useToast()
   const [filter, setFilter] = useState('All open')
+  const loading = useSimulatedLoad()
 
   return (
     <StudioShell>
@@ -34,11 +38,18 @@ export function StudioOpenCallsPage() {
         </div>
 
         <div className={s.calls}>
-          {CALLS.map((c) => (
-            <StudioOpenCallCard key={c.id} call={c} />
+          {loading ? (
+            Array.from({ length: 5 }).map((_, i) => <StudioOpenCallSkeleton key={i} />)
+          ) : (
+          <>
+          {CALLS.map((c, i) => (
+            <FadeIn key={c.id} delay={Math.min(i, 8) * 60}>
+              <StudioOpenCallCard call={c} />
+            </FadeIn>
           ))}
 
           {/* Applied state */}
+          <FadeIn delay={Math.min(CALLS.length, 8) * 60}>
           <div className={s.call} style={{ opacity: 0.72 }}>
             <div className={s.callTop}>
               <div className={s.callCur}>
@@ -80,6 +91,9 @@ export function StudioOpenCallsPage() {
               </div>
             </div>
           </div>
+          </FadeIn>
+          </>
+          )}
         </div>
       </div>
     </StudioShell>

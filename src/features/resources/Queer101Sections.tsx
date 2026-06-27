@@ -211,7 +211,7 @@ export function Queer101Outro() {
       title={<>You're welcome <em>here.</em></>}
       sub="Wherever you are in the process. However long it takes. This community isn't going anywhere."
     >
-      <Button to={routes.invite} variant="primary" size="lg">
+      <Button to={routes.requestInvite} variant="primary" size="lg">
         Join QueerPulse
       </Button>
       <Button to={routes.communities} variant="ghost-dark" size="lg">

@@ -1214,3 +1214,21 @@
   max-width: 46ch;
   margin: 0 auto 24px;
 }
+
+/* ── Loading skeletons (light-on-dark, for the dark creator surface) ── */
+.skel {
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(247, 243, 238, 0.05) 25%,
+    rgba(247, 243, 238, 0.11) 50%,
+    rgba(247, 243, 238, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: qpShimmer 1.5s ease infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel {
+    animation: none;
+  }
+}

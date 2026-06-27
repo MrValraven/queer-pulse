@@ -1,0 +1,452 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 31, 0.55);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal {
+  background: var(--paper);
+  border-radius: 28px 28px 0 0;
+  width: 100%;
+  max-width: 540px;
+  position: relative;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: vouchUp 0.4s cubic-bezier(0.22, 0.68, 0.16, 1);
+}
+.scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 34px 38px 44px;
+}
+@media (min-width: 620px) {
+  .overlay {
+    align-items: center;
+  }
+  .modal {
+    border-radius: 28px;
+  }
+}
+@keyframes vouchUp {
+  from {
+    transform: translateY(40px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal {
+    animation: none;
+  }
+}
+.close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(45, 27, 61, 0.07);
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--ink-60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s var(--ease);
+  z-index: 2;
+}
+.close:hover {
+  background: rgba(45, 27, 61, 0.14);
+}
+
+.eye {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(22px, 3vw, 28px);
+  color: var(--plum);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+/* ── Candidate header ── */
+.candidate {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  background: var(--cream);
+  margin-bottom: 24px;
+}
+.candName {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+}
+.candRole {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-top: 2px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.optional {
+  font-weight: 500;
+  color: var(--ink-40);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.opts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--ink);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+.optChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.05);
+}
+.opt input {
+  accent-color: var(--accent);
+  flex: none;
+}
+
+/* ── Skill endorsement chips ── */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border-radius: 999px;
+  background: var(--paper);
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+.chip:hover {
+  border-color: rgba(45, 27, 61, 0.28);
+}
+.chipOn {
+  border-color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.1);
+  color: var(--plum);
+}
+/* The check fades in gently when you mark a skill */
+.chipCheck {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--jade);
+  animation: vmCheckPop var(--dur-base) var(--ease-out) both;
+}
+@keyframes vmCheckPop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.chipCheckPath {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: vmDraw var(--dur-base) var(--ease-out) 0.08s forwards;
+}
+
+.textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.55;
+  transition: border-color 0.25s var(--ease);
+  margin-bottom: 8px;
+}
+.textarea:focus {
+  border-color: var(--accent);
+}
+.counter {
+  font-size: 12px;
+  color: var(--ink-40);
+  text-align: right;
+  margin-bottom: 18px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.full {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Submit spinner (inherits button text colour) */
+.spinner {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  opacity: 0.9;
+  animation: vmSpin 0.7s linear infinite;
+}
+@keyframes vmSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Plum-panel success — the whole sheet turns plum ── */
+.modalDone {
+  background: var(--plum);
+  transition: background 0.5s var(--ease);
+}
+.modalDone .close {
+  background: rgba(247, 243, 238, 0.12);
+  color: var(--cream);
+}
+.modalDone .close:hover {
+  background: rgba(247, 243, 238, 0.22);
+}
+.success {
+  color: var(--cream);
+  text-align: center;
+  padding: 18px 6px 8px;
+}
+
+/* The signature moment: your face slides into their circle of vouches */
+.facePair {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 26px;
+}
+.faceA,
+.faceB {
+  display: inline-flex;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--plum);
+}
+.faceA {
+  animation: vmFacePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s both;
+}
+.faceB {
+  position: relative;
+  margin-left: -20px;
+  animation: vmFaceJoin 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.34s both;
+}
+@keyframes vmFacePop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes vmFaceJoin {
+  from {
+    transform: translateX(34px) scale(0.6);
+    opacity: 0;
+  }
+  65% {
+    transform: translateX(0) scale(1.08);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(0) scale(1);
+  }
+}
+/* Jade check badge on your avatar, draws on after you land */
+.faceCheck {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--jade);
+  border: 3px solid var(--plum);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: vmFacePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.66s both;
+}
+.checkPath {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: vmDraw 0.35s var(--ease) 0.82s forwards;
+}
+@keyframes vmDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+/* Jade ring pulsing outward from behind the pair */
+.ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--jade);
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+  animation: vmRing 0.9s var(--ease) 0.42s both;
+}
+@keyframes vmRing {
+  0% {
+    transform: translate(-50%, -50%) scale(0.55);
+    opacity: 0.55;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.9);
+    opacity: 0;
+  }
+}
+
+.successTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(26px, 4vw, 34px);
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  margin: 0 0 12px;
+  animation: vmRise 0.5s var(--ease) 0.6s both;
+}
+.successTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.successSub {
+  font-size: 14.5px;
+  color: rgba(247, 243, 238, 0.8);
+  line-height: 1.65;
+  margin: 0 auto 26px;
+  max-width: 340px;
+  animation: vmRise 0.5s var(--ease) 0.72s both;
+}
+.successSub b {
+  color: var(--cream);
+  font-weight: 600;
+}
+.doneBtn {
+  min-width: 200px;
+  justify-content: center;
+  animation: vmRise 0.5s var(--ease) 0.84s both;
+}
+@keyframes vmRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modalDone,
+  .spinner,
+  .faceA,
+  .faceB,
+  .faceCheck,
+  .checkPath,
+  .ring,
+  .successTitle,
+  .successSub,
+  .doneBtn,
+  .chipOn,
+  .chipCheck,
+  .chipCheckPath {
+    animation: none;
+  }
+  .checkPath,
+  .chipCheckPath {
+    stroke-dashoffset: 0;
+  }
+  .ring {
+    display: none;
+  }
+}

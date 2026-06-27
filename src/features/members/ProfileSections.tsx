@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCheck, FiEdit3, FiEye } from 'react-icons/fi'
 import {
   Avatar,
   Button,
@@ -11,7 +12,8 @@ import {
 } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { useConnect } from '../../app/providers/ConnectProvider'
-import { memberProfiles, type MemberProfile } from './data/memberProfiles'
+import { useVouch } from '../../app/providers/VouchProvider'
+import { memberProfiles, currentUserSlug, type MemberProfile } from './data/memberProfiles'
 import { discoverCount, earnedBadges, levelInfo } from './badges.data'
 import { availableCount } from './perks.data'
 import { VISIBILITY_LABEL } from './profileSections.data'
@@ -61,8 +63,32 @@ export function Section({
   )
 }
 
-export function ProfileHero({ profile }: { profile: MemberProfile }) {
+export function ProfileHero({
+  profile,
+  asVisitor = false,
+  onEdit,
+  onPreview,
+}: {
+  profile: MemberProfile
+  /** When true, render your own profile exactly as a visitor would see it. */
+  asVisitor?: boolean
+  /** Enter inline edit mode (only used on your own profile). */
+  onEdit?: () => void
+  /** Preview your profile as a visitor (only used on your own profile). */
+  onPreview?: () => void
+}) {
   const { openConnect } = useConnect()
+  const { openVouch, hasVouched } = useVouch()
+  const realSelf = profile.slug === currentUserSlug
+  const isSelf = realSelf && !asVisitor
+  const vouched = hasVouched(profile.slug)
+  const youAdded = vouched && !realSelf && !profile.vouchers.includes(currentUserSlug)
+  const voucherSlugs = youAdded ? [...profile.vouchers, currentUserSlug] : profile.vouchers
+  const namesText = !youAdded
+    ? profile.voucherNames
+    : profile.vouchers.length > 0
+      ? `${profile.voucherNames}, plus you`
+      : 'you'
   return (
     <header className={styles.phero}>
       <div className="wrap">
@@ -91,7 +117,12 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
             <h1 className={styles.name}>
               {profile.first} <em>{profile.last}</em>
             </h1>
-            <div className={styles.role}>{profile.role}</div>
+            <div className={styles.role}>
+              {profile.role}
+              {profile.pronouns && (
+                <span className={styles.pronoun}> · {profile.pronouns}</span>
+              )}
+            </div>
             <div className={styles.where}>
               <span className={styles.loc}>
                 <span className={styles.pin} aria-hidden />
@@ -106,22 +137,42 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
               ))}
             </TagRow>
             <div className={styles.cta}>
-              {profile.visibility === 'private' ? (
-                <Button size="lg" variant="ghost" to={routes.invite}>
-                  Request an intro
-                </Button>
+              {isSelf ? (
+                <>
+                  <Button size="lg" onClick={onEdit}>
+                    <FiEdit3 aria-hidden /> Edit profile
+                  </Button>
+                  <Button size="lg" variant="ghost" onClick={onPreview}>
+                    <FiEye aria-hidden /> View as visitor
+                  </Button>
+                </>
               ) : (
-                <Button size="lg" onClick={() => openConnect(profile.slug)}>
-                  Say hello
-                </Button>
+                <>
+                  {profile.visibility === 'private' ? (
+                    <Button size="lg" variant="ghost" to={routes.invite}>
+                      Request an intro
+                    </Button>
+                  ) : (
+                    <Button size="lg" onClick={() => openConnect(profile.slug)}>
+                      Say hello
+                    </Button>
+                  )}
+                  {!realSelf &&
+                    (vouched ? (
+                      <Button size="lg" variant="jade" disabled>
+                        <FiCheck aria-hidden /> Vouched for {profile.first}
+                      </Button>
+                    ) : (
+                      <Button size="lg" variant="ghost" onClick={() => openVouch(profile.slug)}>
+                        Vouch for {profile.first}
+                      </Button>
+                    ))}
+                </>
               )}
-              <Button size="lg" variant="ghost" to={routes.invite}>
-                Vouch for {profile.first}
-              </Button>
             </div>
             <div className={styles.vouchRow}>
               <div className={styles.vouchFaces}>
-                {profile.vouchers.map((slug, index) => {
+                {voucherSlugs.map((slug, index) => {
                   const voucher = memberProfiles[slug]
                   if (!voucher) return null
                   const name = `${voucher.first} ${voucher.last}`
@@ -132,7 +183,7 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
                       className={styles.vouchFace}
                       style={{
                         marginLeft: index === 0 ? 0 : -12,
-                        zIndex: profile.vouchers.length - index,
+                        zIndex: voucherSlugs.length - index,
                       }}
                     >
                       <span className={styles.vouchTip}>{name}</span>
@@ -148,7 +199,7 @@ export function ProfileHero({ profile }: { profile: MemberProfile }) {
                 })}
               </div>
               <div className={styles.vouchText}>
-                Vouched for by <b>{profile.voucherNames}</b>.
+                Vouched for by <b>{namesText}</b>.
                 <br />
                 That's the only number that matters here.
               </div>

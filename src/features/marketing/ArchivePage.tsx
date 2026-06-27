@@ -1,10 +1,32 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button, ImageSlot, Reveal, SectionHead } from '../../shared/components/ui'
+import { Button, FadeIn, ImageSlot, Reveal, SectionHead, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { FEATURED, ARCHIVE_CARDS, ORAL_QUOTES } from './archive.data'
 import styles from './ArchivePage.module.css'
 
+function ArchiveCardSkeleton() {
+  // Mirrors the real .card: 220px image, then year / quote / desc / by-line.
+  return (
+    <div className={styles.card} aria-hidden>
+      <SkeletonLine width="100%" height={220} style={{ borderRadius: 0 }} />
+      <div className={styles.cardBody}>
+        <SkeletonLine width={96} height={11} />
+        <SkeletonLine width="90%" height={20} style={{ marginTop: 4 }} />
+        <SkeletonLine width="100%" height={14} style={{ marginTop: 4 }} />
+        <SkeletonLine width="80%" height={14} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+          <SkeletonLine width={36} height={36} style={{ borderRadius: 999 }} />
+          <SkeletonLine width="45%" height={14} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function ArchivePage() {
+  const loading = useSimulatedLoad()
+
   return (
     <PageShell>
       <div className={styles.hero}>
@@ -65,8 +87,9 @@ export function ArchivePage() {
             />
           </Reveal>
           <div className={styles.grid}>
-            {ARCHIVE_CARDS.map((c, i) => (
-              <Reveal as="div" key={c.id} className={styles.card} delay={i * 70}>
+            {loading && Array.from({ length: 4 }).map((_, i) => <ArchiveCardSkeleton key={i} />)}
+            {!loading && ARCHIVE_CARDS.map((c, i) => (
+              <FadeIn as="div" key={c.id} className={styles.card} delay={Math.min(i, 8) * 60}>
                 <ImageSlot tint={c.imgTint} src={c.image} height={220} radius={0} placeholder={`Archive · ${c.name}`} />
                 <div className={styles.cardBody}>
                   <div className={styles.acYear}>{c.year}</div>
@@ -82,7 +105,7 @@ export function ArchivePage() {
                     </div>
                   </div>
                 </div>
-              </Reveal>
+              </FadeIn>
             ))}
           </div>
         </div>

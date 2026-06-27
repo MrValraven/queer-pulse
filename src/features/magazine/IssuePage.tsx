@@ -1,12 +1,51 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button, ImageSlot } from '../../shared/components/ui'
+import { Avatar, Button, FadeIn, ImageSlot, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
 import { MagazineMasthead } from './MagazineMasthead'
+import { useSimulatedLoad } from '../../shared/hooks'
 import styles from './IssuePage.module.css'
 import { routes } from '../../app/routeMap'
 import { TOC, CONTRIBUTORS, ISSUE_COVER_IMG, PRINT_EDITION_IMG } from './issue.data'
 
+function TocSectionSkeleton({ rows }: { rows: number }) {
+  return (
+    <div className={styles.section} aria-hidden>
+      <SkeletonLine width={80} height={12} style={{ marginTop: 6 }} />
+      <div className={styles.entries}>
+        {Array.from({ length: rows }).map((_, i) => (
+          <div key={i} className={styles.entry}>
+            <div>
+              <SkeletonLine width="30%" height={11} style={{ marginBottom: 6 }} />
+              <SkeletonLine width="80%" height={24} style={{ marginBottom: 6 }} />
+              <SkeletonLine width="95%" height={15} style={{ marginBottom: 8 }} />
+              <SkeletonLine width="40%" height={12.5} />
+            </div>
+            <SkeletonLine width={40} height={20} />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function ContribCardSkeleton() {
+  return (
+    <div className={styles.contribCard} aria-hidden>
+      <SkeletonAvatar size={38} />
+      <div style={{ flex: 1 }}>
+        <SkeletonLine width="70%" height={14} style={{ marginBottom: 4 }} />
+        <SkeletonLine width="50%" height={11.5} />
+      </div>
+    </div>
+  )
+}
+
+/** Entry counts per TOC section — drives a zero-shift skeleton. */
+const TOC_ROW_COUNTS = TOC.map((section) => section.entries.length)
+
 export function IssuePage() {
+  const loading = useSimulatedLoad()
+
   return (
     <PageShell>
       <MagazineMasthead active="issues" />
@@ -88,27 +127,29 @@ export function IssuePage() {
         </div>
 
         <div>
-          {TOC.map((section) => (
-            <div key={section.heading} className={styles.section}>
-              <div className={styles.sectionH}>{section.heading}</div>
-              <div className={styles.entries}>
-                {section.entries.map((entry) => (
-                  <Link key={entry.page} to={`/article?id=${entry.articleId}`} className={styles.entry}>
-                    <div>
-                      <div className={styles.entryKicker}>{entry.kicker}</div>
-                      <div className={styles.entryTitle}>{entry.title}</div>
-                      <div className={styles.entryDek}>{entry.dek}</div>
-                      <div className={styles.entryByline}>{entry.byline}</div>
-                    </div>
-                    <div className={styles.metaR}>
-                      {entry.page}
-                      <span className="pg">page</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
+          {loading
+            ? TOC_ROW_COUNTS.map((rows, i) => <TocSectionSkeleton key={i} rows={rows} />)
+            : TOC.map((section) => (
+                <div key={section.heading} className={styles.section}>
+                  <div className={styles.sectionH}>{section.heading}</div>
+                  <div className={styles.entries}>
+                    {section.entries.map((entry, i) => (
+                      <FadeIn as={Link} key={entry.page} to={`/article?id=${entry.articleId}`} className={styles.entry} delay={Math.min(i, 8) * 60}>
+                        <div>
+                          <div className={styles.entryKicker}>{entry.kicker}</div>
+                          <div className={styles.entryTitle}>{entry.title}</div>
+                          <div className={styles.entryDek}>{entry.dek}</div>
+                          <div className={styles.entryByline}>{entry.byline}</div>
+                        </div>
+                        <div className={styles.metaR}>
+                          {entry.page}
+                          <span className="pg">page</span>
+                        </div>
+                      </FadeIn>
+                    ))}
+                  </div>
+                </div>
+              ))}
         </div>
       </div>
 
@@ -122,15 +163,19 @@ export function IssuePage() {
             it together.
           </p>
           <div className={styles.contribGrid}>
-            {CONTRIBUTORS.map((person) => (
-              <Link key={person.name} to={routes.author} className={styles.contribCard}>
-                <Avatar initials={person.initials} tint="coral" size={38} />
-                <div>
-                  <div className={styles.contribName}>{person.name}</div>
-                  <div className={styles.contribRole}>{person.role}</div>
-                </div>
-              </Link>
-            ))}
+            {loading
+              ? Array.from({ length: CONTRIBUTORS.length }).map((_, i) => (
+                  <ContribCardSkeleton key={i} />
+                ))
+              : CONTRIBUTORS.map((person, i) => (
+                  <FadeIn as={Link} key={person.name} to={routes.author} className={styles.contribCard} delay={Math.min(i, 8) * 60}>
+                    <Avatar initials={person.initials} tint="coral" size={38} />
+                    <div>
+                      <div className={styles.contribName}>{person.name}</div>
+                      <div className={styles.contribRole}>{person.role}</div>
+                    </div>
+                  </FadeIn>
+                ))}
           </div>
         </div>
       </section>

@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHero, PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { linkToPath, routes } from '../../app/routeMap'
 import s from './ResourceLibraryPage.module.css'
 
@@ -57,7 +58,32 @@ const RESOURCES: Resource[] = [
   { cat: 'community', name: 'Volunteer', desc: 'Ways to give time to the QueerPulse community and partner organisations.', cost: 'free', internal: true, link: routes.volunteer, tags: ['volunteer', 'giving'] },
 ]
 
+function ResourceCardSkeleton() {
+  // Mirrors the real .card: top row (category tag + cost pill), name, two desc lines, tags, foot.
+  return (
+    <div className={s.card} aria-hidden>
+      <div className={s.cardTop}>
+        <SkeletonLine width={80} height={12} />
+        <SkeletonLine width={48} height={18} style={{ borderRadius: 6 }} />
+      </div>
+      <SkeletonLine width="70%" height={17} />
+      <div style={{ flex: 1 }}>
+        <SkeletonLine width="100%" height={13} />
+        <SkeletonLine width="85%" height={13} style={{ marginTop: 6 }} />
+      </div>
+      <div className={s.tags}>
+        <SkeletonLine width={50} height={14} />
+        <SkeletonLine width={62} height={14} />
+      </div>
+      <div className={s.cardFoot} style={{ borderTopColor: 'transparent' }}>
+        <SkeletonLine width={90} height={13} />
+      </div>
+    </div>
+  )
+}
+
 export function ResourceLibraryPage() {
+  const loading = useSimulatedLoad()
   const [cat, setCat] = useState('all')
   const [query, setQuery] = useState('')
 
@@ -116,8 +142,9 @@ export function ResourceLibraryPage() {
       <section className={s.body}>
         <div className="wrap">
           <div className={s.grid}>
-            {visible.length === 0 && <div className={s.empty}>No resources match — try a broader filter.</div>}
-            {visible.map((r) => {
+            {loading && Array.from({ length: 9 }).map((_, i) => <ResourceCardSkeleton key={i} />)}
+            {!loading && visible.length === 0 && <div className={s.empty}>No resources match — try a broader filter.</div>}
+            {!loading && visible.map((r, i) => {
               const meta = CAT_META[r.cat]
               const inner = (
                 <>
@@ -140,14 +167,18 @@ export function ResourceLibraryPage() {
                   <div className={s.cardFoot}>{r.internal ? 'Open guide →' : <span className={s.ext}>Visit site ↗</span>}</div>
                 </>
               )
-              return r.internal ? (
-                <Link key={r.name} to={linkToPath(r.link)} className={s.card}>
-                  {inner}
-                </Link>
-              ) : (
-                <a key={r.name} href={r.link} className={s.card} target="_blank" rel="noreferrer">
-                  {inner}
-                </a>
+              return (
+                <FadeIn key={r.name} delay={Math.min(i, 8) * 60} style={{ height: '100%' }}>
+                  {r.internal ? (
+                    <Link to={linkToPath(r.link)} className={s.card} style={{ height: '100%' }}>
+                      {inner}
+                    </Link>
+                  ) : (
+                    <a href={r.link} className={s.card} target="_blank" rel="noreferrer" style={{ height: '100%' }}>
+                      {inner}
+                    </a>
+                  )}
+                </FadeIn>
               )
             })}
           </div>

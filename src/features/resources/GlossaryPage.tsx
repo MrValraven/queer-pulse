@@ -2,7 +2,8 @@ import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./GlossaryPage.module.css";
-import { Button } from "../../shared/components/ui";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
 import {
   ALPHABET,
   BLOCKS,
@@ -22,9 +23,42 @@ const TYPE_CLASS: Record<TypeKind, string> = {
 
 type Lang = "en" | "pt";
 
+function TermSkeleton() {
+  // Mirrors a .term cell: name + type chip row, then two definition lines.
+  return (
+    <div className={styles.term}>
+      <div className={styles.termRow}>
+        <SkeletonLine width="45%" height={21} />
+        <SkeletonLine width={48} height={16} />
+      </div>
+      <SkeletonLine width="100%" height={15} style={{ marginTop: 6 }} />
+      <SkeletonLine width="80%" height={15} style={{ marginTop: 6 }} />
+    </div>
+  );
+}
+
+function GlossarySkeleton() {
+  // Two letter blocks of term cells — mirrors the real grouped, 2-column list.
+  return (
+    <>
+      {Array.from({ length: 2 }).map((_, b) => (
+        <div className={styles.letterBlock} key={b}>
+          <SkeletonLine width={64} height={72} style={{ marginBottom: 16 }} />
+          <div className={styles.termList}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <TermSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
 export function GlossaryPage() {
   const [lang, setLang] = useState<Lang>("en");
   const [query, setQuery] = useState("");
+  const loading = useSimulatedLoad();
   const q = query.trim().toLowerCase();
   const t = GLOSSARY_COPY[lang];
 
@@ -99,8 +133,16 @@ export function GlossaryPage() {
             ))}
           </div>
 
-          {blocks.map((b) => (
-            <div className={styles.letterBlock} id={b.letter} key={b.letter}>
+          {loading && <GlossarySkeleton />}
+
+          {!loading && blocks.map((b, bi) => (
+            <FadeIn
+              as="div"
+              className={styles.letterBlock}
+              id={b.letter}
+              key={b.letter}
+              delay={Math.min(bi, 8) * 60}
+            >
               <div className={styles.letterH}>{b.letter}</div>
               <div className={styles.termList}>
                 {b.terms.map((term) => (
@@ -120,7 +162,7 @@ export function GlossaryPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </FadeIn>
           ))}
 
           {empty && (

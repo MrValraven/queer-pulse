@@ -124,7 +124,7 @@ export function MagicLinkPage() {
         <Link to={routes.signIn} className={styles.signinLink} style={{ color: 'var(--plum)', fontWeight: 600, fontSize: 13.5 }}>
           Sign in with password instead
         </Link>
-        <Link to={routes.invite} style={{ fontSize: 13.5, color: 'var(--ink-60)', fontWeight: 500 }}>
+        <Link to={routes.requestInvite} style={{ fontSize: 13.5, color: 'var(--ink-60)', fontWeight: 500 }}>
           Not a member yet? Request an invite
         </Link>
       </div>

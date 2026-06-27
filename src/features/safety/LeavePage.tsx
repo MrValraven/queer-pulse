@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
+import { Footer } from '../../shared/components/layout'
 import s from './flows.module.css'
 
 type State = 'considering' | 'pausing' | 'confirmed'
@@ -21,6 +22,7 @@ export function LeavePage() {
   const [dur, setDur] = useState('1 month')
 
   return (
+    <>
     <div className={s.page}>
       {state === 'considering' && (
         <div className={`${s.card} ${s.cardWide} ${s.screenIn}`}>
@@ -176,5 +178,7 @@ export function LeavePage() {
         </div>
       )}
     </div>
+    <Footer />
+    </>
   )
 }

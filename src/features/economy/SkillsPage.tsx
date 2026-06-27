@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button, Outro, Tag, TagRow } from '../../shared/components/ui'
+import { Avatar, Button, FadeIn, Outro, SkeletonAvatar, SkeletonLine, Tag, TagRow } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { useConnect } from '../../app/providers/ConnectProvider'
 import { memberProfiles } from '../members/data/memberProfiles'
@@ -81,7 +82,35 @@ function SkillCard({ skill }: { skill: Skill }) {
   )
 }
 
+function SkillSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden>
+      <div className={styles.cardTop}>
+        <SkeletonAvatar size={40} />
+        <SkeletonLine width={72} height={22} style={{ borderRadius: 6 }} />
+      </div>
+      <div>
+        <SkeletonLine width="80%" height={20} />
+        <SkeletonLine width="45%" height={13} style={{ marginTop: 6 }} />
+      </div>
+      <div>
+        <SkeletonLine width="100%" height={13} />
+        <SkeletonLine width="90%" height={13} style={{ marginTop: 6 }} />
+      </div>
+      <div className={styles.tags}>
+        <SkeletonLine width={64} height={22} style={{ borderRadius: 6 }} />
+        <SkeletonLine width={78} height={22} style={{ borderRadius: 6 }} />
+      </div>
+      <div className={styles.foot}>
+        <SkeletonLine width={80} height={13} />
+        <SkeletonLine width={80} height={13} />
+      </div>
+    </div>
+  )
+}
+
 export function SkillsPage() {
+  const loading = useSimulatedLoad()
   const [active, setActive] = useState('all')
   const filtered = useMemo(() => (active === 'all' ? SKILLS : SKILLS.filter((s) => s.cat === active)), [active])
   const offering = filtered.filter((s) => s.type === 'offering')
@@ -126,40 +155,60 @@ export function SkillsPage() {
             an Ask on the board. If you want to teach something, post an Offer.
           </p>
 
-          {(active === 'all' || offering.length > 0) && (
+          {loading ? (
             <div className={styles.section}>
-              <div className={styles.sectionHead}>
-                <span className={styles.sshDot} style={{ background: 'var(--jade)' }} />
-                <h2>
-                  Members <em>offering</em> to teach
-                </h2>
-              </div>
               <div className={styles.cards}>
-                {offering.length > 0 ? (
-                  offering.map((skill, i) => <SkillCard key={skill.skill + i} skill={skill} />)
-                ) : (
-                  <p className={styles.empty}>No offers in this category yet — be the first to post one.</p>
-                )}
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <SkillSkeleton key={i} />
+                ))}
               </div>
             </div>
-          )}
+          ) : (
+            <>
+              {(active === 'all' || offering.length > 0) && (
+                <div className={styles.section}>
+                  <div className={styles.sectionHead}>
+                    <span className={styles.sshDot} style={{ background: 'var(--jade)' }} />
+                    <h2>
+                      Members <em>offering</em> to teach
+                    </h2>
+                  </div>
+                  <div className={styles.cards}>
+                    {offering.length > 0 ? (
+                      offering.map((skill, i) => (
+                        <FadeIn key={skill.skill + i} delay={Math.min(i, 8) * 60}>
+                          <SkillCard skill={skill} />
+                        </FadeIn>
+                      ))
+                    ) : (
+                      <p className={styles.empty}>No offers in this category yet — be the first to post one.</p>
+                    )}
+                  </div>
+                </div>
+              )}
 
-          {(active === 'all' || looking.length > 0) && (
-            <div className={styles.section}>
-              <div className={styles.sectionHead}>
-                <span className={styles.sshDot} style={{ background: 'var(--accent)' }} />
-                <h2>
-                  Members <em>wanting</em> to learn
-                </h2>
-              </div>
-              <div className={styles.cards}>
-                {looking.length > 0 ? (
-                  looking.map((skill, i) => <SkillCard key={skill.skill + i} skill={skill} />)
-                ) : (
-                  <p className={styles.empty}>No requests in this category yet.</p>
-                )}
-              </div>
-            </div>
+              {(active === 'all' || looking.length > 0) && (
+                <div className={styles.section}>
+                  <div className={styles.sectionHead}>
+                    <span className={styles.sshDot} style={{ background: 'var(--accent)' }} />
+                    <h2>
+                      Members <em>wanting</em> to learn
+                    </h2>
+                  </div>
+                  <div className={styles.cards}>
+                    {looking.length > 0 ? (
+                      looking.map((skill, i) => (
+                        <FadeIn key={skill.skill + i} delay={Math.min(i, 8) * 60}>
+                          <SkillCard skill={skill} />
+                        </FadeIn>
+                      ))
+                    ) : (
+                      <p className={styles.empty}>No requests in this category yet.</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           <div className={styles.offerStrip}>
@@ -180,7 +229,7 @@ export function SkillsPage() {
         title={<>The best way to get better is to <em>know someone further along.</em></>}
         sub="Join the network and find the people who can help you grow — and the people you can help in return."
       >
-        <Button to={routes.invite} variant="primary" size="lg">
+        <Button to={routes.requestInvite} variant="primary" size="lg">
           Request an invite
         </Button>
       </Outro>

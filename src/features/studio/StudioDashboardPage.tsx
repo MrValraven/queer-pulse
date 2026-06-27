@@ -1,10 +1,39 @@
 import { Link } from 'react-router-dom'
+import { FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { StudioCreatorShell } from './StudioCreatorShell'
+import { StudioLine } from './StudioSkeletons'
 import { routes } from '../../app/routeMap'
 import { STATS, BARS, CURATORS, CITIES } from './studioDashboard.data'
 import s from './creator.module.css'
 
+/** Mirrors a creator .row: round avatar + two text lines + trailing meta. */
+function DashRowSkeleton() {
+  return (
+    <div className={s.row}>
+      <StudioLine width={38} height={38} style={{ borderRadius: '50%' }} />
+      <div style={{ flex: 1 }}>
+        <StudioLine width="60%" height={13} />
+        <StudioLine width="40%" height={11} style={{ marginTop: 6 }} />
+      </div>
+      <StudioLine width={40} height={11} />
+    </div>
+  )
+}
+
+/** Mirrors a .cityRow: city name + bar + percent. */
+function CityRowSkeleton() {
+  return (
+    <div className={s.cityRow}>
+      <StudioLine width={80} height={12} />
+      <StudioLine width="100%" height={8} style={{ flex: 1, borderRadius: 4 }} />
+      <StudioLine width={28} height={12} />
+    </div>
+  )
+}
+
 export function StudioDashboardPage() {
+  const loading = useSimulatedLoad()
   return (
     <StudioCreatorShell>
       <section className={s.hero}>
@@ -67,8 +96,10 @@ export function StudioDashboardPage() {
                 Curators &amp; <em>placements</em> · what landed your work this week
               </h3>
             </div>
-            {CURATORS.map((c, i) => (
-              <div key={i} className={s.row}>
+            {loading
+              ? Array.from({ length: 4 }).map((_, i) => <DashRowSkeleton key={i} />)
+              : CURATORS.map((c, i) => (
+              <FadeIn key={i} delay={Math.min(i, 8) * 60} className={s.row}>
                 <span className={s.rowAv} style={c.tone === 'jade' ? { background: 'rgba(74,140,111,.2)', color: 'var(--jade-light)' } : undefined}>
                   {c.av}
                 </span>
@@ -77,7 +108,7 @@ export function StudioDashboardPage() {
                   <div className={s.rowWho}>{c.who}</div>
                 </div>
                 <div className={s.rowWhen}>{c.when}</div>
-              </div>
+              </FadeIn>
             ))}
           </div>
 
@@ -90,8 +121,10 @@ export function StudioDashboardPage() {
             <div className={s.hint}>
               City-level only · we never see street or finer. <em>This is the most we'll ever tell you about a listener.</em>
             </div>
-            {CITIES.map((c) => (
-              <div key={c.nm} className={s.cityRow}>
+            {loading
+              ? Array.from({ length: 4 }).map((_, i) => <CityRowSkeleton key={i} />)
+              : CITIES.map((c, i) => (
+              <FadeIn key={c.nm} delay={Math.min(i, 8) * 60} className={s.cityRow}>
                 <span className={s.cityNm}>{c.nm}</span>
                 <div className={s.barWrap}>
                   <div className={s.barBg}>
@@ -99,7 +132,7 @@ export function StudioDashboardPage() {
                   </div>
                   <span className={s.pct}>{c.pct}%</span>
                 </div>
-              </div>
+              </FadeIn>
             ))}
           </div>
         </div>

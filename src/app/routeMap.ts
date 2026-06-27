@@ -222,6 +222,7 @@ export const routes = {
   // Additional typed entry points (auth, lifecycle, studio & system states),
   // used by the settings → Simulations panel to launch real member journeys.
   pendingReview: '/pending-review',
+  requestInvite: '/request-invite',
   inviteExpired: '/invite-expired',
   confirmEmail: '/confirm-email',
   recoveryCodes: '/recovery-codes',

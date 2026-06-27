@@ -161,7 +161,7 @@ export function TransHubPage() {
         title={<>You're seen <em>here.</em></>}
         sub="QueerPulse is a vouched-for, invite-only network. If someone you trust is already here, ask them to vouch for you."
       >
-        <Button to={routes.invite} variant="primary" size="lg">
+        <Button to={routes.requestInvite} variant="primary" size="lg">
           Request an invite
         </Button>
       </Outro>

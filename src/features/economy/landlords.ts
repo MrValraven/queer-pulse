@@ -16,6 +16,8 @@ export interface Landlord {
   name: string
   initials: string
   tint: Tint
+  /** Friendly portrait shown on the board card and detail hero. */
+  photo: string
   hood: string
   stars: number
   /** Short quote shown on the board card. */
@@ -31,7 +33,9 @@ export interface Landlord {
 
 export const LANDLORDS: Landlord[] = [
   {
-    slug: 'senhor-costa', name: 'Senhor Costa', initials: 'SC', tint: 'plum', hood: 'Arroios · Rooms + flats', stars: 5,
+    slug: 'senhor-costa', name: 'Senhor Costa', initials: 'SC', tint: 'plum',
+    photo: 'https://images.unsplash.com/photo-1758612897972-dba54225048a?q=80&w=400&h=400&auto=format&fit=crop&crop=faces',
+    hood: 'Arroios · Rooms + flats', stars: 5,
     note: '"Completely unfazed by our relationship, fixed things quickly, never dropped by unannounced. Recommended by 3 members."',
     tagline: 'A steady, hands-off Arroios landlord who fixes things fast and minds his own business.',
     about: [
@@ -53,7 +57,9 @@ export const LANDLORDS: Landlord[] = [
     rentingNote: 'Senhor Costa lists through the community board and word of mouth. Ask for a written contract (he always provides one) and exchange references — he expects it too.',
   },
   {
-    slug: 'ana-ferreira', name: 'Ana Ferreira', initials: 'AF', tint: 'coral', hood: 'Mouraria · Studio flats', stars: 5,
+    slug: 'ana-ferreira', name: 'Ana Ferreira', initials: 'AF', tint: 'coral',
+    photo: 'https://images.unsplash.com/photo-1692801439915-ef9194bf0951?q=80&w=400&h=400&auto=format&fit=crop&crop=faces',
+    hood: 'Mouraria · Studio flats', stars: 5,
     note: '"Has been renting to queer tenants for 15 years. Genuinely lovely. Contracts are clear and fair."',
     tagline: 'A Mouraria landlady who has rented to queer tenants for fifteen years — warm, fair, unbothered.',
     about: [
@@ -74,7 +80,9 @@ export const LANDLORDS: Landlord[] = [
     rentingNote: 'Ana prefers an introduction through the community. Request one and mention you found her on the QueerPulse board — she likes knowing tenants come vouched.',
   },
   {
-    slug: 'familia-rodrigues', name: 'Família Rodrigues', initials: 'FR', tint: 'plum', hood: 'Graça · Flats', stars: 4,
+    slug: 'familia-rodrigues', name: 'Família Rodrigues', initials: 'FR', tint: 'plum',
+    photo: 'https://images.unsplash.com/photo-1763573676689-bf2d7b474208?q=80&w=400&h=400&auto=format&fit=crop&crop=faces',
+    hood: 'Graça · Flats', stars: 4,
     note: '"Older couple, very traditional but completely respectful. No problems. Good building, quiet street."',
     tagline: 'A traditional Graça couple — old-fashioned, scrupulously respectful, and entirely reliable.',
     about: [
@@ -95,7 +103,9 @@ export const LANDLORDS: Landlord[] = [
     rentingNote: 'The Rodrigues family rent long-term only and value references and stability. Approach formally, bring your documents (NIF, proof of income), and be patient — they are slow but solid.',
   },
   {
-    slug: 'paulo-matos', name: 'Paulo Matos', initials: 'PM', tint: 'jade', hood: 'Cais do Sodré · Rooms', stars: 5,
+    slug: 'paulo-matos', name: 'Paulo Matos', initials: 'PM', tint: 'jade',
+    photo: 'https://images.unsplash.com/photo-1592234789031-94bf65f630ed?q=80&w=400&h=400&auto=format&fit=crop&crop=faces',
+    hood: 'Cais do Sodré · Rooms', stars: 5,
     note: '"Queer himself. Has a policy of never renting to people he thinks would make tenants uncomfortable."',
     tagline: 'A queer landlord in Cais do Sodré who screens for tenant safety as carefully as for rent.',
     about: [

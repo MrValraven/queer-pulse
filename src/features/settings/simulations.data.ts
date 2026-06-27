@@ -19,9 +19,15 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.inviteLanding,
       },
       {
+        title: 'Invite someone to QueerPulse',
+        desc: 'Step into a member’s shoes and bring someone in — spend your monthly invite, write the vouch, and send it by email or a shareable link.',
+        to: routes.invite,
+      },
+      {
         title: 'Request an invite',
         desc: 'Walk through asking to join — the form a prospective member fills in when they don’t yet have an invitation.',
-        to: routes.invite,
+        to: routes.requestInvite,
+        preview: true,
       },
       {
         title: 'Vouch for someone',

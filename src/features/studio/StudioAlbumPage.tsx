@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiHeart, FiPlus, FiCheck } from 'react-icons/fi'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useSaved } from '../../app/providers/SavedProvider'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { memberName } from '../members/data/members'
 import { StudioShell } from './StudioShell'
 import { StudioTipModal } from './StudioTipModal'
+import { StudioCardGridSkeleton, StudioTrackRowSkeleton } from './StudioSkeletons'
 import { routes } from '../../app/routeMap'
 import styles from './studio.module.css'
 import { TRACKS, TABS, MORE, ALBUM_COVER, ALBUM } from './studioAlbum.data'
@@ -19,6 +21,7 @@ export function StudioAlbumPage() {
   const { showToast } = useToast()
   const [tipOpen, setTipOpen] = useState(false)
   const saved = isSaved(ALBUM.id)
+  const loading = useSimulatedLoad()
 
   function share() {
     const url = typeof window !== 'undefined' ? window.location.href : routes.studioAlbum
@@ -69,8 +72,10 @@ export function StudioAlbumPage() {
         <div>
           {tab === 'Tracklist' && (
             <div className={styles.setCard}>
-              {TRACKS.map((t) => (
-                <div key={t.n} className={[styles.setRow, t.now && styles.setRowNow].filter(Boolean).join(' ')}>
+              {loading
+                ? Array.from({ length: 8 }).map((_, i) => <StudioTrackRowSkeleton key={i} />)
+                : TRACKS.map((t, i) => (
+                <FadeIn key={t.n} delay={Math.min(i, 8) * 60} className={[styles.setRow, t.now && styles.setRowNow].filter(Boolean).join(' ')}>
                   <div className={styles.n}>{t.n}</div>
                   <div className={styles.srCov}>
                     <ImageSlot src={t.image} tint="coral" width={36} height={36} radius={5} placeholder="" />
@@ -93,7 +98,7 @@ export function StudioAlbumPage() {
                     )}
                   </div>
                   <div className={styles.tm}>{t.tm}</div>
-                </div>
+                </FadeIn>
               ))}
             </div>
           )}
@@ -191,21 +196,25 @@ export function StudioAlbumPage() {
             Artist page →
           </Link>
         </div>
-        <div className={styles.rowGrid}>
-          {MORE.map((m) => (
-            <Link key={m.pre} to={routes.studioAlbum} className={styles.card}>
-              <div className={styles.cardCov}>
-                <ImageSlot src={m.image} tint={m.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
-                <span className={`${styles.tag} ${tagClass[m.tag]}`}>{m.tagLabel}</span>
-              </div>
-              <h4>
-                {m.pre}
-                {m.em && <em>{m.em}</em>}
-              </h4>
-              <div className={styles.meta}>{m.meta}</div>
-            </Link>
-          ))}
-        </div>
+        {loading ? (
+          <StudioCardGridSkeleton className={styles.rowGrid} count={4} />
+        ) : (
+          <div className={styles.rowGrid}>
+            {MORE.map((m, i) => (
+              <FadeIn key={m.pre} delay={Math.min(i, 8) * 60} as={Link} to={routes.studioAlbum} className={styles.card}>
+                <div className={styles.cardCov}>
+                  <ImageSlot src={m.image} tint={m.tint} width="100%" height="100%" radius={10} placeholder="cv" style={{ position: 'absolute', inset: 0 }} />
+                  <span className={`${styles.tag} ${tagClass[m.tag]}`}>{m.tagLabel}</span>
+                </div>
+                <h4>
+                  {m.pre}
+                  {m.em && <em>{m.em}</em>}
+                </h4>
+                <div className={styles.meta}>{m.meta}</div>
+              </FadeIn>
+            ))}
+          </div>
+        )}
       </section>
 
       {tipOpen && <StudioTipModal recipient="Mariana Sol" onClose={() => setTipOpen(false)} />}

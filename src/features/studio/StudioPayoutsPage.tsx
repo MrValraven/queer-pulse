@@ -1,7 +1,10 @@
 import { FiZap, FiSettings } from 'react-icons/fi'
+import { FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { StudioCreatorShell } from './StudioCreatorShell'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { SUMMARY, PAYOUTS, BREAKDOWN } from './studioPayouts.data'
+import { PayoutRowSkeleton, BreakdownRowSkeleton } from './StudioPayoutsSkeletons'
 import s from './creator.module.css'
 
 function downloadCsv(filename: string, rows: string[][]) {
@@ -20,6 +23,7 @@ function downloadCsv(filename: string, rows: string[][]) {
 
 export function StudioPayoutsPage() {
   const { showToast } = useToast()
+  const loading = useSimulatedLoad()
 
   function exportCsv() {
     const data: string[][] = [
@@ -80,26 +84,30 @@ export function StudioPayoutsPage() {
                 Export CSV →
               </a>
             </div>
-            {PAYOUTS.map((p) => (
-              <div key={p.m} className={s.payRow}>
-                <div className={s.payDate}>
-                  <div className="d" style={{ fontFamily: 'var(--serif)', fontWeight: 300, fontSize: 26, color: 'var(--text)', lineHeight: 1 }}>
-                    {p.d}
-                  </div>
-                  <div className="m" style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent)' }}>
-                    {p.m}
-                  </div>
-                </div>
-                <div>
-                  <h5>{p.title}</h5>
-                  <div className={s.payMeta}>{p.meta}</div>
-                </div>
-                <div className={s.payAmt}>
-                  €<em>{p.amt}</em>
-                </div>
-                <span className={`${s.payStatus} ${p.status === 'pending' ? s.statusPending : s.statusPaid}`}>{p.status === 'pending' ? 'Pending' : 'Paid'}</span>
-              </div>
-            ))}
+            {loading
+              ? Array.from({ length: PAYOUTS.length }).map((_, i) => <PayoutRowSkeleton key={i} />)
+              : PAYOUTS.map((p, i) => (
+                  <FadeIn key={p.m} delay={Math.min(i, 8) * 60}>
+                    <div className={s.payRow}>
+                      <div className={s.payDate}>
+                        <div className="d" style={{ fontFamily: 'var(--serif)', fontWeight: 300, fontSize: 26, color: 'var(--text)', lineHeight: 1 }}>
+                          {p.d}
+                        </div>
+                        <div className="m" style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent)' }}>
+                          {p.m}
+                        </div>
+                      </div>
+                      <div>
+                        <h5>{p.title}</h5>
+                        <div className={s.payMeta}>{p.meta}</div>
+                      </div>
+                      <div className={s.payAmt}>
+                        €<em>{p.amt}</em>
+                      </div>
+                      <span className={`${s.payStatus} ${p.status === 'pending' ? s.statusPending : s.statusPaid}`}>{p.status === 'pending' ? 'Pending' : 'Paid'}</span>
+                    </div>
+                  </FadeIn>
+                ))}
           </div>
 
           <div className={s.card}>
@@ -111,25 +119,29 @@ export function StudioPayoutsPage() {
                 €0.05 per qualifying play (≥30s, capped 1/listener/track/day). Updates nightly at 02:00 Lisbon.
               </div>
             </div>
-            {BREAKDOWN.map((b, i) => (
-              <div key={i} className={s.bdRow}>
-                <span className="n" style={{ fontFamily: 'monospace', color: 'var(--text40)', fontSize: 12 }}>
-                  {b.n}
-                </span>
-                <span className="nm" style={{ color: 'var(--text)', fontFamily: 'var(--serif)', fontSize: 14 }}>
-                  {b.nm}
-                </span>
-                <span className="plays" style={{ color: 'var(--text60)', whiteSpace: 'nowrap' }}>
-                  {b.plays}
-                </span>
-                <span className="rate" style={{ color: 'var(--text40)', fontSize: 12 }}>
-                  @ €0.05
-                </span>
-                <span className="bdTotal" style={{ fontFamily: 'var(--serif)', color: 'var(--text)', whiteSpace: 'nowrap' }}>
-                  €<em style={{ fontStyle: 'normal', color: 'var(--accent)' }}>{b.total}</em>
-                </span>
-              </div>
-            ))}
+            {loading
+              ? Array.from({ length: BREAKDOWN.length }).map((_, i) => <BreakdownRowSkeleton key={i} />)
+              : BREAKDOWN.map((b, i) => (
+                  <FadeIn key={i} delay={Math.min(i, 8) * 60}>
+                    <div className={s.bdRow}>
+                      <span className="n" style={{ fontFamily: 'monospace', color: 'var(--text40)', fontSize: 12 }}>
+                        {b.n}
+                      </span>
+                      <span className="nm" style={{ color: 'var(--text)', fontFamily: 'var(--serif)', fontSize: 14 }}>
+                        {b.nm}
+                      </span>
+                      <span className="plays" style={{ color: 'var(--text60)', whiteSpace: 'nowrap' }}>
+                        {b.plays}
+                      </span>
+                      <span className="rate" style={{ color: 'var(--text40)', fontSize: 12 }}>
+                        @ €0.05
+                      </span>
+                      <span className="bdTotal" style={{ fontFamily: 'var(--serif)', color: 'var(--text)', whiteSpace: 'nowrap' }}>
+                        €<em style={{ fontStyle: 'normal', color: 'var(--accent)' }}>{b.total}</em>
+                      </span>
+                    </div>
+                  </FadeIn>
+                ))}
             <div className={s.bdFoot}>
               <span>Streaming subtotal · before splits + tips + buys</span>
               <span className="v" style={{ fontFamily: 'var(--serif)', fontSize: 18, color: 'var(--text)' }}>

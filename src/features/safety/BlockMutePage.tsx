@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import s from './flows.module.css'
 import { routes } from '../../app/routeMap'
+import { Footer } from '../../shared/components/layout'
 
 type State = 'choose' | 'muted' | 'blocked'
 
@@ -13,6 +14,7 @@ export function BlockMutePage() {
   const [muteDur, setMuteDur] = useState('Until I unmute')
 
   return (
+    <>
     <div className={s.page}>
       {state === 'choose' && (
         <div className={`${s.card} ${s.screenIn}`}>
@@ -176,5 +178,7 @@ export function BlockMutePage() {
         </div>
       )}
     </div>
+    <Footer />
+    </>
   )
 }

@@ -308,10 +308,25 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
           <span className={styles.checkText}>{text}</span>
         </div>
       ))}
-      <div className={[styles.publishStatus, form.allChecked && styles.publishStatusReady].filter(Boolean).join(' ')}>
-        {form.allChecked
-          ? 'All set — you can publish now.'
-          : `${form.checkedCount} of 3 confirmed — tick the ${remaining === 1 ? 'last box' : `remaining ${remaining} boxes`} to publish.`}
+      <div
+        key={form.checkedCount}
+        className={[styles.publishStatus, form.allChecked && styles.publishStatusReady].filter(Boolean).join(' ')}
+      >
+        {form.allChecked ? (
+          'All set — you can publish now.'
+        ) : (
+          <>
+            <span className={styles.checkCount}>{form.checkedCount}</span> of 3 confirmed — tick the{' '}
+            {remaining === 1 ? (
+              'last box'
+            ) : (
+              <>
+                remaining <span className={styles.checkCount}>{remaining}</span> boxes
+              </>
+            )}{' '}
+            to publish.
+          </>
+        )}
       </div>
     </div>
   )

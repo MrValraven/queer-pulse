@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react'
 import { FiInfo } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { ConnectionsGridSkeleton } from './ConnectionsSkeleton'
 import {
   ALL,
   INCOMING,
@@ -48,6 +50,7 @@ function matches(person: Person, tags: string[], q: string): boolean {
 }
 
 export function ConnectionsPage() {
+  const loading = useSimulatedLoad()
   const { showToast } = useToast()
   const [tab, setTab] = useState<TabId>('all')
   const [query, setQuery] = useState('')
@@ -155,11 +158,15 @@ export function ConnectionsPage() {
           </select>
         </div>
 
-        {tab === 'all' && (
+        {tab === 'all' && (loading ? (
+          <ConnectionsGridSkeleton count={6} />
+        ) : (
           <>
             <div className={styles.grid}>
-              {visibleAll.map((c) => (
-                <AllConnectionCard c={c} key={c.person.name} />
+              {visibleAll.map((c, i) => (
+                <FadeIn key={c.person.name} delay={Math.min(i, 8) * 60}>
+                  <AllConnectionCard c={c} />
+                </FadeIn>
               ))}
             </div>
             {visibleAll.length === 0 && (
@@ -173,34 +180,41 @@ export function ConnectionsPage() {
               </div>
             )}
           </>
-        )}
+        ))}
 
-        {tab === 'incoming' && (
+        {tab === 'incoming' && (loading ? (
+          <ConnectionsGridSkeleton count={4} />
+        ) : (
           <div className={styles.grid}>
-            {incomingList.map((c) => (
-              <IncomingCard
-                key={c.person.name}
-                c={c}
-                onDecline={() => declineRequest(c)}
-                onAccept={() => acceptRequest(c)}
-              />
+            {incomingList.map((c, i) => (
+              <FadeIn key={c.person.name} delay={Math.min(i, 8) * 60}>
+                <IncomingCard
+                  c={c}
+                  onDecline={() => declineRequest(c)}
+                  onAccept={() => acceptRequest(c)}
+                />
+              </FadeIn>
             ))}
             {incomingList.length === 0 && (
               <p className={styles.paneIntro}>No incoming requests right now.</p>
             )}
           </div>
-        )}
+        ))}
 
-        {tab === 'outgoing' && (
+        {tab === 'outgoing' && (loading ? (
+          <ConnectionsGridSkeleton count={4} />
+        ) : (
           <div className={styles.grid}>
-            {outgoingList.map((c) => (
-              <OutgoingCard key={c.person.name} c={c} onWithdraw={() => withdrawRequest(c)} />
+            {outgoingList.map((c, i) => (
+              <FadeIn key={c.person.name} delay={Math.min(i, 8) * 60}>
+                <OutgoingCard c={c} onWithdraw={() => withdrawRequest(c)} />
+              </FadeIn>
             ))}
             {outgoingList.length === 0 && (
               <p className={styles.paneIntro}>No pending sent requests.</p>
             )}
           </div>
-        )}
+        ))}
 
         {tab === 'vouched' && (
           <>
@@ -209,11 +223,17 @@ export function ConnectionsPage() {
               <em>Vouching is a small but meaningful act</em> — it stays attached to that member's
               profile.
             </p>
-            <div className={styles.grid}>
-              {VOUCHED.map((c) => (
-                <VouchedCard c={c} key={c.person.name} />
-              ))}
-            </div>
+            {loading ? (
+              <ConnectionsGridSkeleton count={4} />
+            ) : (
+              <div className={styles.grid}>
+                {VOUCHED.map((c, i) => (
+                  <FadeIn key={c.person.name} delay={Math.min(i, 8) * 60}>
+                    <VouchedCard c={c} />
+                  </FadeIn>
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>

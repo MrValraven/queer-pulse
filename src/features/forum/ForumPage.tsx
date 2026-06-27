@@ -4,13 +4,16 @@ import { FiAlertTriangle, FiHome, FiBriefcase } from 'react-icons/fi'
 import { LuLandmark } from 'react-icons/lu'
 import { TbPin } from 'react-icons/tb'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { CATS, CAT_STYLE, THREADS, type Thread } from './forum.data'
+import { ForumThreadListSkeleton } from './ForumSkeleton'
 import { ComposeThreadModal, type NewThreadInput } from './ComposeThreadModal'
 import styles from './ForumPage.module.css'
 
 export function ForumPage() {
+  const loading = useSimulatedLoad()
   const [cat, setCat] = useState('all')
   const [sort, setSort] = useState<'top' | 'new'>('top')
   const [voted, setVoted] = useState<Set<number>>(new Set())
@@ -124,12 +127,14 @@ export function ForumPage() {
                 </span>
               </div>
 
-              {threads.map((t) => {
+              {loading && <ForumThreadListSkeleton count={5} />}
+              {!loading && threads.map((t, idx) => {
                 const isVoted = voted.has(t.id)
                 const catMeta = CATS.find((c) => c.id === t.cat)
                 const cs = CAT_STYLE[t.cat]
                 return (
-                  <Link key={t.id} to={`/thread/${t.id}`} className={[styles.thread, t.pinned && styles.threadPinned].filter(Boolean).join(' ')}>
+                  <FadeIn key={t.id} delay={Math.min(idx, 8) * 60}>
+                  <Link to={`/thread/${t.id}`} className={[styles.thread, t.pinned && styles.threadPinned].filter(Boolean).join(' ')}>
                     <div
                       className={styles.voteCol}
                       role="button"
@@ -172,6 +177,7 @@ export function ForumPage() {
                       </div>
                     </div>
                   </Link>
+                  </FadeIn>
                 )
               })}
             </div>

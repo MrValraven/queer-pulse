@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHero, PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { VOLUNTEER_OPPORTUNITIES as OPPS } from './volunteerOpportunities'
 import { routes } from '../../app/routeMap'
 import s from './VolunteerPage.module.css'
@@ -17,7 +18,36 @@ const FILTERS = [
   { f: 'Arts', label: 'Arts & Culture' },
 ]
 
+function VolunteerCardSkeleton() {
+  // Mirrors the real .card: org row (40px avatar + name/cause), role, desc, meta pills, skills, foot.
+  return (
+    <div className={s.card} aria-hidden>
+      <div className={s.org}>
+        <SkeletonLine width={40} height={40} style={{ borderRadius: 10, flex: 'none' }} />
+        <div style={{ flex: 1 }}>
+          <SkeletonLine width="55%" height={14} />
+          <SkeletonLine width="35%" height={12} style={{ marginTop: 5 }} />
+        </div>
+      </div>
+      <SkeletonLine width="75%" height={19} />
+      <div style={{ flex: 1 }}>
+        <SkeletonLine width="100%" height={13.5} />
+        <SkeletonLine width="85%" height={13.5} style={{ marginTop: 6 }} />
+      </div>
+      <div className={s.metaRow}>
+        <SkeletonLine width={120} height={20} style={{ borderRadius: 6 }} />
+        <SkeletonLine width={70} height={20} style={{ borderRadius: 6 }} />
+      </div>
+      <div className={s.cardFoot} style={{ borderTopColor: 'transparent' }}>
+        <SkeletonLine width={90} height={13} />
+        <SkeletonLine width={110} height={30} style={{ borderRadius: 999 }} />
+      </div>
+    </div>
+  )
+}
+
 export function VolunteerPage() {
+  const loading = useSimulatedLoad()
   const [filter, setFilter] = useState('all')
 
   const visible = useMemo(
@@ -53,8 +83,11 @@ export function VolunteerPage() {
           </div>
 
           <div className={s.grid}>
-            {visible.map((o) => (
-              <div key={o.role} className={s.card}>
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => <VolunteerCardSkeleton key={i} />)
+              : visible.map((o, i) => (
+              <FadeIn key={o.role} delay={Math.min(i, 8) * 60} style={{ height: '100%' }}>
+              <div className={s.card} style={{ height: '100%' }}>
                 <div className={s.org}>
                   <span className={s.orgAv} style={{ background: o.bg, color: o.color }}>
                     {o.av}
@@ -86,6 +119,7 @@ export function VolunteerPage() {
                   </Link>
                 </div>
               </div>
+              </FadeIn>
             ))}
           </div>
         </div>

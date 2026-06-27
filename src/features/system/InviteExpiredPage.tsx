@@ -51,7 +51,7 @@ export function InviteExpiredPage() {
           <Button to={routes.contact}>
             Ask Catarina to re-send →
           </Button>
-          <Button variant="ghost" to={routes.invite}>
+          <Button variant="ghost" to={routes.requestInvite}>
             Request a fresh invite
           </Button>
         </div>

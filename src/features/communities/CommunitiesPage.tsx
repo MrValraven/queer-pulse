@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { Button, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { communities } from '../homepage/data/communities'
 import type { Community, CommunityType } from '../homepage/data/types'
 import { JoinModal } from './JoinModal'
@@ -18,7 +19,23 @@ const FILTERS: { value: 'all' | CommunityType; label: string }[] = [
   { value: 'professional', label: 'Professional' },
 ]
 
+function CommunityCardSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden>
+      <SkeletonLine width={84} height={20} style={{ borderRadius: 6 }} />
+      <SkeletonLine width="70%" height={21} />
+      <SkeletonLine width="100%" height={14} />
+      <SkeletonLine width="85%" height={14} />
+      <div className={styles.foot}>
+        <SkeletonLine width={90} height={13} />
+        <SkeletonLine width={64} height={13} />
+      </div>
+    </div>
+  )
+}
+
 export function CommunitiesPage() {
+  const loading = useSimulatedLoad()
   const [filter, setFilter] = useState<'all' | CommunityType>('all')
   const [joined, setJoined] = useState<Set<string>>(new Set())
   const [joining, setJoining] = useState<Community | null>(null)
@@ -63,10 +80,12 @@ export function CommunitiesPage() {
           </Reveal>
 
           <div className={styles.grid}>
-            {visible.map((community, index) => {
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => <CommunityCardSkeleton key={i} />)
+              : visible.map((community, index) => {
               const hasJoined = joined.has(community.name)
               return (
-                <Reveal key={community.name} delay={Math.min(index, 6) * 45}>
+                <FadeIn key={community.name} delay={Math.min(index, 8) * 60}>
                   <Link
                     to={`/community/${community.slug}`}
                     className={styles.card}
@@ -105,7 +124,7 @@ export function CommunitiesPage() {
                     )}
                   </div>
                   </Link>
-                </Reveal>
+                </FadeIn>
               )
             })}
           </div>

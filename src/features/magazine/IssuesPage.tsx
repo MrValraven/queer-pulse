@@ -4,7 +4,8 @@ import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
 import styles from "./IssuesPage.module.css";
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 
 const ISSUE = routes.issue;
 
@@ -33,8 +34,33 @@ const ISSUES: Issue[] = [
 ];
 const TINT_CLASS: Record<Tint, string> = { a: "tintA", b: "tintB", c: "tintC", d: "tintD" };
 
+function IssueTileSkeleton() {
+  return (
+    <div className={styles.tile} aria-hidden>
+      <SkeletonLine height="auto" style={{ aspectRatio: "3 / 4", borderRadius: 14, marginBottom: 16 }} />
+      <SkeletonLine width="40%" height={11} style={{ marginBottom: 7 }} />
+      <SkeletonLine width="70%" height={24} style={{ marginBottom: 6 }} />
+      <SkeletonLine width="50%" height={13} />
+    </div>
+  );
+}
+
+function IssueRowSkeleton() {
+  return (
+    <div className={styles.listRow} aria-hidden>
+      <SkeletonLine width={40} height={28} />
+      <div>
+        <SkeletonLine width="55%" height={22} style={{ marginBottom: 8 }} />
+        <SkeletonLine width="85%" height={14} />
+      </div>
+      <SkeletonLine width="80%" height={14} />
+    </div>
+  );
+}
+
 export function IssuesPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
+  const loading = useSimulatedLoad();
 
   return (
     <PageShell>
@@ -98,7 +124,7 @@ export function IssuesPage() {
                 <Button to={ISSUE} variant="primary">
                   Read issue 09 →
                 </Button>
-                <Button to={routes.invite} variant="ghost-dark">
+                <Button to={routes.requestInvite} variant="ghost-dark">
                   Order print · €8
                 </Button>
               </div>
@@ -131,40 +157,48 @@ export function IssuesPage() {
 
           {view === "grid" ? (
             <div className={styles.grid}>
-              {ISSUES.map((iss) => (
-                <Link to={ISSUE} className={styles.tile} key={iss.num}>
-                  <div className={`${styles.tileCover} ${styles[TINT_CLASS[iss.tint]]}`}>
-                    {iss.cover}
-                  </div>
-                  <div
-                    className={[styles.tileNum, iss.current && styles.tileNumCurrent]
-                      .filter(Boolean)
-                      .join(" ")}
-                  >
-                    {iss.numLabel}
-                  </div>
-                  <div className={styles.tileH}>{iss.title}</div>
-                  <div className={styles.tileDate}>{iss.date}</div>
-                </Link>
-              ))}
+              {loading
+                ? Array.from({ length: ISSUES.length }).map((_, i) => (
+                    <IssueTileSkeleton key={i} />
+                  ))
+                : ISSUES.map((iss, i) => (
+                    <FadeIn as={Link} to={ISSUE} className={styles.tile} key={iss.num} delay={Math.min(i, 8) * 60}>
+                      <div className={`${styles.tileCover} ${styles[TINT_CLASS[iss.tint]]}`}>
+                        {iss.cover}
+                      </div>
+                      <div
+                        className={[styles.tileNum, iss.current && styles.tileNumCurrent]
+                          .filter(Boolean)
+                          .join(" ")}
+                      >
+                        {iss.numLabel}
+                      </div>
+                      <div className={styles.tileH}>{iss.title}</div>
+                      <div className={styles.tileDate}>{iss.date}</div>
+                    </FadeIn>
+                  ))}
             </div>
           ) : (
             <div className={styles.list}>
-              {ISSUES.map((iss) => (
-                <Link to={ISSUE} className={styles.listRow} key={iss.num}>
-                  <div className={styles.listNum}>
-                    {iss.current ? <em>{iss.num}</em> : iss.num}
-                  </div>
-                  <div>
-                    <div className={styles.listH}>{iss.title}</div>
-                    <div className={styles.listDek}>{iss.dek}</div>
-                  </div>
-                  <div className={styles.listMeta}>
-                    <b>{iss.meta.season}</b>
-                    {iss.meta.detail}
-                  </div>
-                </Link>
-              ))}
+              {loading
+                ? Array.from({ length: ISSUES.length }).map((_, i) => (
+                    <IssueRowSkeleton key={i} />
+                  ))
+                : ISSUES.map((iss, i) => (
+                    <FadeIn as={Link} to={ISSUE} className={styles.listRow} key={iss.num} delay={Math.min(i, 8) * 60}>
+                      <div className={styles.listNum}>
+                        {iss.current ? <em>{iss.num}</em> : iss.num}
+                      </div>
+                      <div>
+                        <div className={styles.listH}>{iss.title}</div>
+                        <div className={styles.listDek}>{iss.dek}</div>
+                      </div>
+                      <div className={styles.listMeta}>
+                        <b>{iss.meta.season}</b>
+                        {iss.meta.detail}
+                      </div>
+                    </FadeIn>
+                  ))}
             </div>
           )}
         </section>

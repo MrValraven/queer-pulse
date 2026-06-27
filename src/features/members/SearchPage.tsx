@@ -1,9 +1,38 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
+import { FadeIn, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { linkToPath } from '../../app/routeMap'
 import { SEARCH_DATA, TYPE_BG, TYPE_ICON, TYPE_LABEL, RECENTS, TABS, type ResultType, type SearchItem } from './search.data'
 import styles from './SearchPage.module.css'
+
+/** Loading placeholder mirroring ResultCard — same icon + two lines. */
+function ResultSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden>
+      <SkeletonLine width={42} height={42} style={{ borderRadius: 11, flex: 'none' }} />
+      <div className={styles.cardBody}>
+        <SkeletonLine width="30%" height={11} />
+        <SkeletonLine width="70%" height={15} style={{ marginTop: 6 }} />
+        <SkeletonLine width="55%" height={13} style={{ marginTop: 6 }} />
+      </div>
+    </div>
+  )
+}
+
+function SkeletonGroup() {
+  return (
+    <div className={styles.section}>
+      <SkeletonLine width={120} height={12} style={{ marginBottom: 16 }} />
+      <div className={styles.grid}>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <ResultSkeleton key={i} />
+        ))}
+      </div>
+    </div>
+  )
+}
 
 function ResultCard({ item }: { item: SearchItem }) {
   const TypeIcon = TYPE_ICON[item.t]
@@ -25,7 +54,11 @@ function Group({ items, label }: { items: SearchItem[]; label: string }) {
     <div className={styles.section}>
       <div className={styles.secHead}>{label}</div>
       <div className={styles.grid}>
-        {items.map((item) => <ResultCard key={item.name} item={item} />)}
+        {items.map((item, i) => (
+          <FadeIn key={item.name} delay={Math.min(i, 8) * 60}>
+            <ResultCard item={item} />
+          </FadeIn>
+        ))}
       </div>
     </div>
   )
@@ -34,6 +67,7 @@ function Group({ items, label }: { items: SearchItem[]; label: string }) {
 export function SearchPage() {
   // The query lives in the URL (?q=…) so it's shareable, bookmarkable, and can be
   // pre-filled by the global ⌘K command palette.
+  const loading = useSimulatedLoad()
   const [searchParams, setSearchParams] = useSearchParams()
   const query = searchParams.get('q') ?? ''
   const setQuery = (value: string) =>
@@ -42,7 +76,14 @@ export function SearchPage() {
   const q = query.trim().toLowerCase()
 
   let content: React.ReactNode
-  if (!q) {
+  if (loading) {
+    content = (
+      <>
+        <SkeletonGroup />
+        <SkeletonGroup />
+      </>
+    )
+  } else if (!q) {
     content = (
       <>
         <div className={styles.recent}>

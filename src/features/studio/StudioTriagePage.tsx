@@ -1,14 +1,33 @@
 import { useState } from 'react'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { StudioShell } from './StudioShell'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { KPIS, TABS, SUBS, FILE, WF } from './studioTriage.data'
 import s from './council.module.css'
 
+function SubmissionRowSkeleton() {
+  return (
+    <div className={s.subRow}>
+      <div className={s.subTop}>
+        <span className={s.skel} style={{ width: 48, height: 48 }} />
+        <div>
+          <div className={s.skel} style={{ width: '60%', height: 17 }} />
+          <div className={s.skel} style={{ width: '40%', height: 12, marginTop: 8 }} />
+          <div className={s.skel} style={{ width: 120, height: 16, marginTop: 10, borderRadius: 999 }} />
+        </div>
+        <div className={s.skel} style={{ width: 40, height: 28 }} />
+      </div>
+      <div className={s.skel} style={{ width: '85%', height: 13, marginTop: 14 }} />
+    </div>
+  )
+}
+
 export function StudioTriagePage() {
   const { showToast } = useToast()
   const [tab, setTab] = useState('New')
   const [active, setActive] = useState(0)
+  const loading = useSimulatedLoad()
 
   return (
     <StudioShell>
@@ -47,8 +66,11 @@ export function StudioTriagePage() {
 
         <div className={s.trBody}>
           <section className={s.subList}>
-            {SUBS.map((sub, i) => (
-              <div key={i} className={[s.subRow, active === i && s.subRowActive].filter(Boolean).join(' ')} role="button" tabIndex={0} onClick={() => setActive(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(i) } }}>
+            {loading
+              ? Array.from({ length: SUBS.length }).map((_, i) => <SubmissionRowSkeleton key={i} />)
+              : SUBS.map((sub, i) => (
+              <FadeIn key={i} delay={Math.min(i, 8) * 60}>
+              <div className={[s.subRow, active === i && s.subRowActive].filter(Boolean).join(' ')} role="button" tabIndex={0} onClick={() => setActive(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(i) } }}>
                 <div className={s.subTop}>
                   <span className={s.srCov}>
                     <ImageSlot src={sub.image} tint={sub.tint} width={48} height={48} radius={8} placeholder="" />
@@ -79,6 +101,7 @@ export function StudioTriagePage() {
                   ))}
                 </div>
               </div>
+              </FadeIn>
             ))}
           </section>
 

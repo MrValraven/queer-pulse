@@ -1,7 +1,33 @@
+import { getMember, fullName, type Member } from '../members/data/members'
+
 export type ListingType = 'seeking' | 'offering'
+
+/**
+ * A flatmate-board listing. Identity (name, pronouns, avatar, neighbourhood,
+ * member-since) is pulled from the canonical member registry by `slug` — so
+ * everyone posting here is a real member who exists elsewhere on the platform.
+ * Only the listing-specific fields live below.
+ */
+interface Listing {
+  /** Member slug in the registry. */
+  slug: string
+  pronouns: string
+  type: ListingType
+  /** Filterable neighbourhood; defaults to the member's home hood. */
+  neighbourhood?: string
+  /** Display string for the listing (can be broader than the filter value). */
+  neighbourhoodLabel: string
+  budget: string
+  budgetRange: number
+  movein: string
+  moveinKey: string
+  note: string
+  tags: string[]
+}
 
 export interface Profile {
   id: number
+  slug: string
   name: string
   pronouns: string
   type: ListingType
@@ -13,22 +39,136 @@ export interface Profile {
   moveinKey: string
   note: string
   tags: string[]
-  av: string
-  avBg: string
-  avCol: string
+  initials: string
+  tint: Member['tint']
+  photo?: string
+  verified: boolean
   since: string
 }
 
-export const PROFILES: Profile[] = [
-  { id: 1, name: 'Rosa M.', pronouns: 'she/her', type: 'seeking', neighbourhood: 'Arroios', neighbourhoodLabel: 'Arroios or Mouraria', budget: '€700–900', budgetRange: 800, movein: 'July 2026', moveinKey: 'jul', note: "I'm a textile designer working from home. I'm a quiet presence — mornings are sacred, I'll have coffee ready if you want it. Looking for a flat where I won't have to explain my relationship history to a flatmate.", tags: ['Early riser', 'WFH', 'Plant parent', 'Quiet household', 'Cats welcome'], av: 'RM', avBg: 'rgba(var(--accent-rgb),.16)', avCol: 'var(--accent-ink)', since: 'Jan 2025' },
-  { id: 2, name: 'Diogo V.', pronouns: 'he/him', type: 'offering', neighbourhood: 'Marvila', neighbourhoodLabel: 'Marvila', budget: '€750 / month', budgetRange: 750, movein: 'Available now', moveinKey: 'now', note: "Three of us in a warehouse flat in Marvila — a musician, a UX designer (me), and a nurse. Looking for a fourth who's easy-going and doesn't mind the occasional late session. Big kitchen, good light, lots of plants.", tags: ['Sociable', 'Musicians welcome', 'Late nights fine', 'Pets welcome'], av: 'DV', avBg: 'rgba(var(--jade-rgb),.18)', avCol: 'var(--jade)', since: 'Sep 2024' },
-  { id: 3, name: 'Cleo S.', pronouns: 'they/them', type: 'seeking', neighbourhood: 'Príncipe Real', neighbourhoodLabel: 'Príncipe Real or Bairro Alto', budget: '€600–800', budgetRange: 700, movein: 'August 2026', moveinKey: 'aug', note: "PhD researcher, mostly working from cafés and the library. I'm sober and looking for a household that's either sober or relaxed about it. I'm an early riser and will be delighted if you are too. I bake bread sometimes.", tags: ['Sober household', 'Early riser', 'Quiet household', 'WFH'], av: 'CS', avBg: 'rgba(var(--plum-rgb),.12)', avCol: 'var(--plum)', since: 'Mar 2025' },
-  { id: 4, name: 'Inês T.', pronouns: 'she/her', type: 'offering', neighbourhood: 'Príncipe Real', neighbourhoodLabel: 'Príncipe Real', budget: '€950 / month', budgetRange: 950, movein: 'Mid-July', moveinKey: 'jul', note: "I have a beautiful first-floor flat with a second room going spare. I work in film, often irregular hours. Looking for someone calm and self-contained — you'll have your own bathroom. Good light, garden view, very quiet street.", tags: ['WFH', 'Quiet household', 'Introvert-friendly', 'Plant parent'], av: 'IT', avBg: 'rgba(var(--accent-rgb),.16)', avCol: 'var(--accent-ink)', since: 'Nov 2024' },
-  { id: 5, name: 'Marco A.', pronouns: 'he/him', type: 'seeking', neighbourhood: 'Graça', neighbourhoodLabel: 'Graça or Mouraria', budget: '€800–1,000', budgetRange: 900, movein: 'Available now', moveinKey: 'now', note: "Sound engineer and DJ, mainly working evenings. I keep the flat clean and I'm good at it. Looking for somewhere I don't have to justify my schedule or my friends. I'm sociable but I genuinely respect your space.", tags: ['Night owl', 'Sociable', 'Late nights fine', '420-friendly'], av: 'MA', avBg: 'rgba(var(--violet-rgb),.14)', avCol: 'var(--violet)', since: 'Jun 2024' },
-  { id: 6, name: 'Yara B.', pronouns: 'she/they', type: 'offering', neighbourhood: 'Arroios', neighbourhoodLabel: 'Arroios', budget: '€700 / month', budgetRange: 700, movein: '1 August', moveinKey: 'aug', note: "I'm offering the smaller room in my two-bed in Arroios. Graphic designer, very tidy, vegan kitchen (not strict if you have friends visiting). I like a quiet household with good conversation. My cat is already resident.", tags: ['Vegan kitchen', 'Quiet household', 'WFH', 'Plant parent', 'Pets welcome'], av: 'YB', avBg: 'rgba(var(--jade-rgb),.18)', avCol: 'var(--jade)', since: 'Feb 2025' },
-  { id: 7, name: 'Tomé F.', pronouns: 'he/him', type: 'seeking', neighbourhood: 'Mouraria', neighbourhoodLabel: 'Anywhere central', budget: '€600–750', budgetRange: 675, movein: 'Flexible', moveinKey: 'flex', note: 'Just moved to Lisbon from Porto. Working at a bookshop in Chiado. Looking for a calm flatmate setup — I\'m quite private but happy to share dinners now and then. Sober. I have a small cat and she travels with me.', tags: ['Sober household', 'Early riser', 'Quiet household', 'Cats welcome'], av: 'TF', avBg: 'rgba(var(--plum-rgb),.12)', avCol: 'var(--plum)', since: 'May 2025' },
-  { id: 8, name: 'Ana C.', pronouns: 'she/her', type: 'offering', neighbourhood: 'Cais do Sodré', neighbourhoodLabel: 'Cais do Sodré', budget: '€850 / month', budgetRange: 850, movein: 'Mid-July', moveinKey: 'jul', note: 'My flatmate is moving out and I need someone for the big room. Very central, five minutes from the river. Small balcony. I\'m sociable and respect privacy completely. I work in hospitality so evenings are my thing.', tags: ['Sociable', 'Late nights fine', 'Pets welcome', 'Night owl'], av: 'AC', avBg: 'rgba(var(--accent-rgb),.16)', avCol: 'var(--accent-ink)', since: 'Aug 2024' },
+const LISTINGS: Listing[] = [
+  {
+    slug: 'carla',
+    pronouns: 'she/her',
+    type: 'seeking',
+    neighbourhoodLabel: 'Arroios or Anjos',
+    budget: '€700–900',
+    budgetRange: 800,
+    movein: 'Flexible',
+    moveinKey: 'flex',
+    note: "Between roles right now and looking for somewhere settled in Arroios after a summer of subletting. I'm a product manager — tidy, around during the day, and I walk everywhere so I'm rarely underfoot in the evenings. Looking for a household where I don't have to translate myself.",
+    tags: ['WFH', 'Quiet household', 'Sociable', 'Early riser'],
+  },
+  {
+    slug: 'rui',
+    pronouns: 'he/him',
+    type: 'offering',
+    neighbourhoodLabel: 'Marvila',
+    budget: '€750 / month',
+    budgetRange: 750,
+    movein: 'Available now',
+    moveinKey: 'now',
+    note: "There's a room going in our warehouse flat in Marvila — high ceilings, far too many plants, and three of us in tech and music who mostly keep good hours. Looking for a fourth who's easy-going and cares about a calm home. The cat is already in residence.",
+    tags: ['Plant parent', 'WFH', 'Quiet household', 'Pets welcome'],
+  },
+  {
+    slug: 'ines',
+    pronouns: 'she/her',
+    type: 'offering',
+    neighbourhoodLabel: 'Príncipe Real',
+    budget: '€950 / month',
+    budgetRange: 950,
+    movein: 'Mid-July',
+    moveinKey: 'jul',
+    note: "I have a bright first-floor flat in Príncipe Real with a spare room and a garden view. I run my design studio from the back, often at odd hours, so I'm after someone calm and self-contained — you'd have your own bathroom and a very quiet street.",
+    tags: ['WFH', 'Quiet household', 'Introvert-friendly', 'Plant parent'],
+  },
+  {
+    slug: 'kai',
+    pronouns: 'they/them',
+    type: 'seeking',
+    neighbourhoodLabel: 'Cais do Sodré or anywhere central',
+    budget: '€600–800',
+    budgetRange: 700,
+    movein: 'Flexible',
+    moveinKey: 'flex',
+    note: "Just landed in Lisbon and shooting a documentary on the city's queer nightlife, so my hours are honestly all over the place. I'm tidy, easy company, and good at being quiet when you need the flat calm. Looking for somewhere I don't have to explain the 4am returns.",
+    tags: ['Night owl', 'Late nights fine', 'Sociable'],
+  },
+  {
+    slug: 'beatriz',
+    pronouns: 'she/her',
+    type: 'offering',
+    neighbourhoodLabel: 'Graça',
+    budget: '€700 / month',
+    budgetRange: 700,
+    movein: '1 August',
+    moveinKey: 'aug',
+    note: "The smaller room in my place in Graça is opening up — good afternoon light, a tidy-ish kitchen, and me, usually covered in clay and home most days. I like a quiet household with real conversation in it. My cat already runs the place.",
+    tags: ['WFH', 'Quiet household', 'Plant parent', 'Cats welcome'],
+  },
+  {
+    slug: 'anika',
+    pronouns: 'she/they',
+    type: 'seeking',
+    neighbourhoodLabel: 'Mouraria or Arroios',
+    budget: '€600–750',
+    budgetRange: 675,
+    movein: 'Flexible',
+    moveinKey: 'flex',
+    note: "Translator and poet, working from home most days with headphones on and the kettle always going. I'm after a calm flat with people who are happy to share the occasional dinner and otherwise let the quiet be. Sober-friendly, plant-friendly, low drama.",
+    tags: ['WFH', 'Quiet household', 'Sober household', 'Plant parent'],
+  },
+  {
+    slug: 'jordan',
+    pronouns: 'they/them',
+    type: 'seeking',
+    neighbourhoodLabel: 'Graça or Mouraria',
+    budget: '€800–1,000',
+    budgetRange: 900,
+    movein: 'Available now',
+    moveinKey: 'now',
+    note: "Community organiser — after a decade of this work I've learned to protect a calm home. I'm looking for a steady, considerate household in Graça: I cook, I clean up after myself, and I'm very good at keeping the peace. No drama, just a place to land.",
+    tags: ['Quiet household', 'Sociable', 'WFH', 'Early riser'],
+  },
+  {
+    slug: 'andre',
+    pronouns: 'he/him',
+    type: 'offering',
+    neighbourhoodLabel: 'Cais do Sodré',
+    budget: '€850 / month',
+    budgetRange: 850,
+    movein: 'Mid-July',
+    moveinKey: 'jul',
+    note: "Big room going in my flat in Cais do Sodré, five minutes from the river and from my darkroom. I shoot portraits on film so the hours bend a bit, but I respect a shared home completely. Sociable when you want it, invisible when you don't.",
+    tags: ['Sociable', 'Late nights fine', 'Pets welcome', 'Night owl'],
+  },
 ]
+
+export const PROFILES: Profile[] = LISTINGS.map((l, i) => {
+  const m = getMember(l.slug)
+  if (!m) throw new Error(`Flatmates: unknown member slug "${l.slug}"`)
+  return {
+    id: i + 1,
+    slug: l.slug,
+    name: fullName(m),
+    pronouns: l.pronouns,
+    type: l.type,
+    neighbourhood: l.neighbourhood ?? m.hood,
+    neighbourhoodLabel: l.neighbourhoodLabel,
+    budget: l.budget,
+    budgetRange: l.budgetRange,
+    movein: l.movein,
+    moveinKey: l.moveinKey,
+    note: l.note,
+    tags: l.tags,
+    initials: m.initials,
+    tint: m.tint,
+    photo: m.photo,
+    verified: m.verified,
+    since: m.since,
+  }
+})
 
 export const NEIGHBOURHOODS = ['Príncipe Real', 'Mouraria', 'Arroios', 'Graça', 'Bairro Alto', 'Cais do Sodré', 'Marvila', 'Estrela']
 export const LIFESTYLE_TAGS = ['WFH', 'Quiet household', 'Sociable', 'Sober household', 'Early riser', 'Night owl', 'Pets welcome', 'Plant parent', 'Vegan kitchen', '420-friendly']

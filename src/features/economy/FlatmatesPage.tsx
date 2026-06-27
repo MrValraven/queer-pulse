@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { PROFILES, matchesBudget, type ListingType } from './flatmates.data'
 import { FlatmateCard } from './FlatmateCard'
+import { FlatmateSkeleton } from './FlatmateSkeleton'
 import { FlatmatesFilterBar } from './FlatmatesFilterBar'
 import { PostProfileModal } from './PostProfileModal'
 import styles from './FlatmatesPage.module.css'
 
 export function FlatmatesPage() {
+  const loading = useSimulatedLoad()
   const [type, setType] = useState<ListingType | 'all'>('all')
   const [neighbourhood, setNeighbourhood] = useState('all')
   const [budget, setBudget] = useState('all')
@@ -84,22 +87,29 @@ export function FlatmatesPage() {
             </button>
           </div>
           <div className={styles.grid}>
-            {filtered.length === 0 && (
-              <div className={styles.empty}>
-                <div className={styles.emptyTitle}>No profiles match those filters.</div>
-                <div className={styles.emptySub}>
-                  Try removing a filter, or be the first to post in this combination.
-                </div>
-              </div>
+            {loading ? (
+              Array.from({ length: 6 }).map((_, i) => <FlatmateSkeleton key={i} />)
+            ) : (
+              <>
+                {filtered.length === 0 && (
+                  <div className={styles.empty}>
+                    <div className={styles.emptyTitle}>No profiles match those filters.</div>
+                    <div className={styles.emptySub}>
+                      Try removing a filter, or be the first to post in this combination.
+                    </div>
+                  </div>
+                )}
+                {filtered.map((p, i) => (
+                  <FadeIn key={p.id} delay={Math.min(i, 8) * 60}>
+                    <FlatmateCard
+                      p={p}
+                      sent={sent.has(p.id)}
+                      onSayHello={() => setSent((prev) => new Set(prev).add(p.id))}
+                    />
+                  </FadeIn>
+                ))}
+              </>
             )}
-            {filtered.map((p) => (
-              <FlatmateCard
-                key={p.id}
-                p={p}
-                sent={sent.has(p.id)}
-                onSayHello={() => setSent((prev) => new Set(prev).add(p.id))}
-              />
-            ))}
           </div>
         </div>
       </div>

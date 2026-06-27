@@ -2,13 +2,40 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { routes } from '../../app/routeMap'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { Button, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
 import { useScrollReveal } from '../../shared/hooks/useScrollReveal'
 import { useCountUp } from '../../shared/hooks/useCountUp'
+import { useSimulatedLoad } from '../../shared/hooks'
 import styles from './GrantsPage.module.css'
 import { GRANTS, FILTERS, SECTIONS, STATUS_LABEL, STEPS, type Status } from './grants.data'
 
 const STATUS_CLASS: Record<Status, string> = { open: styles.gsOpen, rolling: styles.gsRolling, closed: styles.gsClosed }
+
+function GrantSkeleton() {
+  return (
+    <div className={styles.gc} aria-hidden>
+      <div className={styles.gcTop}>
+        <div style={{ flex: 1 }}>
+          <SkeletonLine width={90} height={12} />
+          <SkeletonLine width="70%" height={19} style={{ marginTop: 6 }} />
+        </div>
+        <SkeletonLine width={64} height={14} />
+      </div>
+      <SkeletonLine width="100%" height={13} />
+      <SkeletonLine width="85%" height={13} style={{ marginTop: 6, marginBottom: 14 }} />
+      <div className={styles.gcFoot}>
+        <div className={styles.gcTags}>
+          <SkeletonLine width={58} height={20} style={{ borderRadius: 6 }} />
+          <SkeletonLine width={72} height={20} style={{ borderRadius: 6 }} />
+        </div>
+        <div className={styles.gcRight}>
+          <SkeletonLine width={58} height={18} style={{ borderRadius: 5 }} />
+          <SkeletonLine width={76} height={13} />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function HeroStat({ target, label }: { target: number; label: string }) {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>()
@@ -22,6 +49,7 @@ function HeroStat({ target, label }: { target: number; label: string }) {
 }
 
 export function GrantsPage() {
+  const loading = useSimulatedLoad()
   const [filter, setFilter] = useState('all')
   const filtered = useMemo(
     () => (filter === 'all' ? GRANTS : GRANTS.filter((g) => g.cats.includes(filter))),
@@ -74,15 +102,24 @@ export function GrantsPage() {
         <div className="wrap">
           <div className={styles.layout}>
             <div>
-              {SECTIONS.map((section) => {
+              {loading ? (
+                <div className={styles.section}>
+                  <div className={styles.grid}>
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <GrantSkeleton key={i} />
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                SECTIONS.map((section) => {
                 const items = filtered.filter((g) => g.sec === section.id)
                 if (items.length === 0) return null
                 return (
                   <div key={section.id} className={styles.section}>
                     <div className={styles.secHead}>{section.label}</div>
                     <div className={styles.grid}>
-                      {items.map((grant) => (
-                        <div key={grant.name} className={styles.gc}>
+                      {items.map((grant, i) => (
+                        <FadeIn as="div" key={grant.name} delay={Math.min(i, 8) * 60} className={styles.gc}>
                           <div className={styles.gcTop}>
                             <div>
                               <div className={styles.gcOrg}>{grant.org}</div>
@@ -108,12 +145,13 @@ export function GrantsPage() {
                               </Link>
                             </div>
                           </div>
-                        </div>
+                        </FadeIn>
                       ))}
                     </div>
                   </div>
                 )
-              })}
+              })
+              )}
             </div>
 
             <aside className={styles.sidebar}>

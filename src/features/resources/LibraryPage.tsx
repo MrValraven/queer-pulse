@@ -1,16 +1,34 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { Button, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { ResourceHero } from './ResourceHero'
 import { CATEGORIES, GUIDES, POPULAR } from './library.data'
 import res from './resources.module.css'
 import s from './library.module.css'
 
+function GuideSkeleton() {
+  // Mirrors the real guide card: meta line, title, description, footer row.
+  return (
+    <div className={res.card}>
+      <SkeletonLine width="40%" height={12} style={{ marginTop: 14 }} />
+      <SkeletonLine width="80%" height={19} style={{ marginTop: 6 }} />
+      <SkeletonLine width="100%" height={13} style={{ marginTop: 8 }} />
+      <SkeletonLine width="90%" height={13} style={{ marginTop: 6 }} />
+      <div className={res.cardFoot}>
+        <SkeletonLine width="30%" height={13} />
+        <SkeletonLine width="35%" height={13} />
+      </div>
+    </div>
+  )
+}
+
 export function LibraryPage() {
   const [cat, setCat] = useState<string>('all')
   const [query, setQuery] = useState('')
+  const loading = useSimulatedLoad()
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -67,12 +85,18 @@ export function LibraryPage() {
             ))}
           </Reveal>
 
-          {results.length === 0 ? (
+          {loading ? (
+            <div className={res.grid} aria-busy="true">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <GuideSkeleton key={i} />
+              ))}
+            </div>
+          ) : results.length === 0 ? (
             <p className={s.empty}>No guides match that yet — try a different search.</p>
           ) : (
             <div className={res.grid}>
               {results.map((guide, index) => (
-                <Reveal key={guide.title} className={res.card} delay={index * 45}>
+                <FadeIn key={guide.title} className={res.card} delay={Math.min(index, 8) * 60}>
                   <span className={s.resMeta}>{guide.catLabel}</span>
                   <div className={res.cardName} style={{ fontSize: 19 }}>
                     {guide.title}
@@ -84,7 +108,7 @@ export function LibraryPage() {
                       Read the guide →
                     </Link>
                   </div>
-                </Reveal>
+                </FadeIn>
               ))}
             </div>
           )}

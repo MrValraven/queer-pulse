@@ -51,6 +51,8 @@ export interface Member {
   first: string;
   last: string;
   role: string;
+  /** Optional pronouns (e.g. "she/her", "they/them"), shown beside the role. */
+  pronouns?: string;
   hood: string;
   tags: string[];
   visibility: VisibilityMode;
@@ -1821,6 +1823,7 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     first: "Tiago",
     last: "Costa",
     role: "Fullstack Developer",
+    pronouns: "he/they",
     hood: "Arroios",
     tags: ["React", "TypeScript", "Node.js", "Poetry"],
     visibility: "open",
@@ -1913,6 +1916,10 @@ export const defaultProfileSlug = "ines";
 export const currentUserSlug = "tiago";
 /** The currently logged-in user object. */
 export const currentUser: Member = MEMBERS[currentUserSlug];
+/** Email for the logged-in user, derived from their slug. Self-surfaces that
+ * echo "we sent this to <you>" (cancel flow, invoices, subscriptions) read it
+ * from here so the address always matches the signed-in account. */
+export const currentUserEmail = `${currentUserSlug}@queerpulse.app`;
 
 export type MemberSlug = keyof typeof ENTRIES;
 

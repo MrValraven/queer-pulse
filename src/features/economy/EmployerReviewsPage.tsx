@@ -1,16 +1,19 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { routes } from '../../app/routeMap'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { FiShield } from 'react-icons/fi'
 import { COMPANIES, HOW, RULES, VERIFY, type Company } from './employerReviews.data'
 import { EmployerReviewCard } from './EmployerReviewCard'
+import { EmployerReviewSkeleton } from './EmployerReviewSkeleton'
 import { WriteReviewModal, type SubmittedReview } from './WriteReviewModal'
 import styles from './EmployerReviewsPage.module.css'
 
-const INVITE = routes.invite
+const INVITE = routes.requestInvite
 
 export function EmployerReviewsPage() {
+  const loading = useSimulatedLoad()
   const [companies, setCompanies] = useState<Company[]>(COMPANIES)
   // null = closed; string = open, pre-selecting that company; '' = open, no preselect.
   const [writeFor, setWriteFor] = useState<string | null>(null)
@@ -88,13 +91,16 @@ export function EmployerReviewsPage() {
             </div>
           </div>
           <div className={styles.companyGrid}>
-            {companies.map((c) => (
-              <EmployerReviewCard
-                company={c}
-                key={c.name}
-                onWriteReview={() => setWriteFor(c.name)}
-              />
-            ))}
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => <EmployerReviewSkeleton key={i} />)
+              : companies.map((c, i) => (
+                  <FadeIn key={c.name} delay={Math.min(i, 8) * 60}>
+                    <EmployerReviewCard
+                      company={c}
+                      onWriteReview={() => setWriteFor(c.name)}
+                    />
+                  </FadeIn>
+                ))}
           </div>
 
           <div className={styles.verifyBox}>

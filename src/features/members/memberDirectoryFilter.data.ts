@@ -171,9 +171,6 @@ export const LANGUAGES: ChipOption[] = [
   { label: 'DE' },
 ]
 
-/** Total directory population — drives the "of N members" line. */
-export const TOTAL_MEMBERS = 1847
-
 const HOODS = ['Anjos', 'Mouraria', 'Graça', 'Alfama', 'Bairro Alto', 'Marvila', 'Príncipe Real']
 const DISCIPLINE_POOL = Object.keys(PROFESSIONS_BY_FIELD)
 const OPEN_POOL: OpenTo[] = [
@@ -269,12 +266,14 @@ function some<T>(arr: T[], r: () => number, min: number, max: number): T[] {
   return out
 }
 
-/** Build a deterministic, filterable directory of `count` members. */
-function buildMembers(count: number): MemberCard[] {
+/** Build a deterministic, filterable directory — one card per real profile, so
+ *  no member ever appears twice. */
+function buildMembers(): MemberCard[] {
+  const count = PROFILE_SLUGS.length
   const out: MemberCard[] = []
   for (let i = 0; i < count; i++) {
     const r = rng(i * 9973 + 7)
-    const slug = PROFILE_SLUGS[i % PROFILE_SLUGS.length]
+    const slug = PROFILE_SLUGS[i]
     const member = memberProfiles[slug]
     // The card describes the *real* member: bio + filter buckets come from the
     // facet table, with a graceful fallback for any slug not yet curated.
@@ -322,8 +321,13 @@ function buildMembers(count: number): MemberCard[] {
   return out
 }
 
-/** The full generated directory. The list shows a page of these at a time. */
-export const MEMBERS: MemberCard[] = buildMembers(360)
+/** The full generated directory — one card per real profile. The list shows a
+ *  page of these at a time. */
+export const MEMBERS: MemberCard[] = buildMembers()
+
+/** Total directory population — the real registry size, not a vanity figure.
+ *  Drives the hero count and the "of N members" line. */
+export const TOTAL_MEMBERS = MEMBERS.length
 
 /** How many cards are shown per page. */
 export const PAGE_SIZE = 12

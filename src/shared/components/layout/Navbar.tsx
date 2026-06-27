@@ -150,7 +150,7 @@ export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
                 <Link to="/sign-in" className={styles.signIn}>
                   Sign in
                 </Link>
-                <Button to={routes.invite}>Request an invite</Button>
+                <Button to={routes.requestInvite}>Request an invite</Button>
               </>
             ))}
 
@@ -225,7 +225,7 @@ export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
                   Sign in
                 </Link>
                 <Button
-                  to={routes.invite}
+                  to={routes.requestInvite}
                   className={styles.drawerCta}
                   onClick={closeDrawer}
                 >

@@ -78,6 +78,7 @@ import { SafetyPage } from '../features/resources/SafetyPage'
 import { SignInPage } from '../features/auth/SignInPage'
 import { CreateAccountPage } from '../features/auth/CreateAccountPage'
 import { InvitePage } from '../features/auth/InvitePage'
+import { RequestInvitePage } from '../features/auth/RequestInvitePage'
 import { OnboardingPage } from '../features/auth/OnboardingPage'
 import { WelcomeTourPage } from '../features/auth/WelcomeTourPage'
 import { JobsPage } from '../features/economy/JobsPage'
@@ -482,6 +483,7 @@ export function AppRoutes() {
       <Route path="/sign-in" element={<SignInPage />} />
       <Route path="/create-account" element={<CreateAccountPage />} />
       <Route path="/invite" element={<InvitePage />} />
+      <Route path="/request-invite" element={<RequestInvitePage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/welcome" element={<OnboardingPage />} />
       <Route path="/welcome-tour" element={<WelcomeTourPage />} />

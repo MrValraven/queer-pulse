@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { FiBookOpen } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, EmptyState, Outro } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn, Outro, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import {
@@ -17,7 +18,32 @@ import { ListGroupStrip } from './ListGroupStrip'
 import { WaitlistPanel } from './WaitlistPanel'
 import styles from './ReadingGroupsPage.module.css'
 
+function ReadingGroupCardSkeleton() {
+  return (
+    <article className={styles.gc} aria-hidden>
+      <div className={styles.gcBook}>
+        <SkeletonLine width={48} height={68} style={{ borderRadius: 6, flex: 'none' }} />
+        <div style={{ flex: 1 }}>
+          <SkeletonLine width="80%" height={17} />
+          <SkeletonLine width="50%" height={13} style={{ marginTop: 8 }} />
+          <SkeletonLine width={90} height={20} style={{ marginTop: 10, borderRadius: 6 }} />
+        </div>
+      </div>
+      <div className={styles.gcBody}>
+        <SkeletonLine width="60%" height={18} />
+        <SkeletonLine width="100%" height={13} />
+        <SkeletonLine width="85%" height={13} />
+      </div>
+      <div className={styles.gcFoot}>
+        <SkeletonLine width={80} height={14} />
+        <SkeletonLine width={110} height={14} />
+      </div>
+    </article>
+  )
+}
+
 export function ReadingGroupsPage() {
+  const loading = useSimulatedLoad()
   const { showToast } = useToast()
   const [genre, setGenre] = useState<Genre | 'all'>('all')
   const [format, setFormat] = useState<Format | 'all'>('all')
@@ -108,7 +134,8 @@ export function ReadingGroupsPage() {
       <main className={styles.body}>
         <div className="wrap">
           <div className={styles.grid}>
-            {items.length === 0 && (
+            {loading && Array.from({ length: 4 }).map((_, i) => <ReadingGroupCardSkeleton key={i} />)}
+            {!loading && items.length === 0 && (
               <EmptyState
                 className={styles.empty}
                 icon={<FiBookOpen />}
@@ -123,15 +150,17 @@ export function ReadingGroupsPage() {
                 }}
               />
             )}
-            {items.map((g) => (
-              <ReadingGroupCard
-                key={g.id}
-                g={g}
-                messagesPath={messages}
-                onWaitlist={() => joinWaitlist(g.id, g.name)}
-                waitlistPosition={waitlist[g.id]}
-              />
-            ))}
+            {!loading &&
+              items.map((g, i) => (
+                <FadeIn key={g.id} delay={Math.min(i, 8) * 60}>
+                  <ReadingGroupCard
+                    g={g}
+                    messagesPath={messages}
+                    onWaitlist={() => joinWaitlist(g.id, g.name)}
+                    waitlistPosition={waitlist[g.id]}
+                  />
+                </FadeIn>
+              ))}
           </div>
 
           <WaitlistPanel waitlist={waitlist} />
@@ -144,7 +173,7 @@ export function ReadingGroupsPage() {
         title={<>Books build <em>community.</em></>}
         sub="QueerPulse reading groups have been running since 2024. Some have turned into friendships, some into collaborations, two into bands."
       >
-        <Button to={routes.invite} variant="primary" size="lg">
+        <Button to={routes.requestInvite} variant="primary" size="lg">
           Join the network
         </Button>
       </Outro>

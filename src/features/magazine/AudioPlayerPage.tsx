@@ -3,6 +3,7 @@ import { type TabId } from './audioPlayer.data'
 import { useAudioPlayer } from './useAudioPlayer'
 import { AudioPlayerMain } from './AudioPlayerMain'
 import { ChaptersTab, NotesTab, TranscriptTab } from './AudioPlayerTabs'
+import { Footer } from '../../shared/components/layout'
 import styles from './AudioPlayerPage.module.css'
 
 export function AudioPlayerPage() {
@@ -10,6 +11,7 @@ export function AudioPlayerPage() {
   const player = useAudioPlayer()
 
   return (
+    <>
     <div className={styles.page}>
       <AudioPlayerMain player={player} />
 
@@ -31,5 +33,7 @@ export function AudioPlayerPage() {
         {tab === 'transcript' && <TranscriptTab player={player} />}
       </section>
     </div>
+    <Footer />
+    </>
   )
 }

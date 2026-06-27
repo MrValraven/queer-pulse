@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Avatar } from '../../shared/components/ui'
+import { Avatar, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
 import { fullName, memberProfiles } from './data/memberProfiles'
 import {
   ALL_PROFESSIONS,
@@ -236,6 +236,31 @@ export function FiltersSidebar({
         <span>{appliedCount} applied</span>
       </div>
     </aside>
+  )
+}
+
+/** Loading placeholder mirroring MemberResultCard exactly — no layout shift. */
+export function MemberResultSkeleton() {
+  return (
+    <div className={styles.mCard} aria-hidden>
+      <div className={styles.mHead}>
+        <SkeletonAvatar size={48} />
+        <div style={{ flex: 1 }}>
+          <SkeletonLine width="62%" height={17} />
+          <SkeletonLine width="40%" height={11} style={{ marginTop: 7 }} />
+        </div>
+      </div>
+      <SkeletonLine width="90%" height={13} />
+      <div className={styles.mTags}>
+        <SkeletonLine width={64} height={18} />
+        <SkeletonLine width={52} height={18} />
+        <SkeletonLine width={72} height={18} />
+      </div>
+      <div className={styles.mFoot}>
+        <SkeletonLine width="35%" height={11} />
+        <SkeletonLine width="22%" height={11} />
+      </div>
+    </div>
   )
 }
 

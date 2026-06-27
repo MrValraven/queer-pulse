@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiMapPin } from 'react-icons/fi'
 import { PageHero, PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { Button, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { DIRECTORY_PLACES as BIZS, type Tint } from './directoryPlaces'
 import { routes } from '../../app/routeMap'
 import s from './DirectoryPage.module.css'
@@ -23,7 +24,32 @@ const CAT_LABEL: Record<string, string> = Object.fromEntries(CATS.map((c) => [c.
 const tintBg: Record<Tint, string> = { coral: 'rgba(232,119,90,.15)', jade: 'rgba(74,140,111,.15)', plum: 'rgba(45,27,61,.1)' }
 const tintFg: Record<Tint, string> = { coral: 'var(--accent-ink)', jade: 'var(--jade)', plum: 'var(--plum)' }
 
+function DirectoryCardSkeleton() {
+  // Mirrors the real .card: top row (44px avatar + badge), name, cat, hood, desc, foot.
+  return (
+    <div className={s.card} aria-hidden>
+      <div className={s.top}>
+        <SkeletonLine width={44} height={44} style={{ borderRadius: 12 }} />
+        <SkeletonLine width={84} height={18} style={{ borderRadius: 6 }} />
+      </div>
+      <div>
+        <SkeletonLine width="65%" height={19} />
+        <SkeletonLine width="40%" height={12} style={{ marginTop: 6 }} />
+        <SkeletonLine width="50%" height={12.5} style={{ marginTop: 6 }} />
+      </div>
+      <div style={{ flex: 1 }}>
+        <SkeletonLine width="100%" height={13.5} />
+        <SkeletonLine width="85%" height={13.5} style={{ marginTop: 6 }} />
+      </div>
+      <div className={s.foot} style={{ borderTopColor: 'transparent' }}>
+        <SkeletonLine width={90} height={13} />
+      </div>
+    </div>
+  )
+}
+
 export function DirectoryPage() {
+  const loading = useSimulatedLoad()
   const [cat, setCat] = useState('all')
   const [query, setQuery] = useState('')
 
@@ -70,12 +96,13 @@ export function DirectoryPage() {
       <section className={s.content}>
         <div className="wrap">
           <Reveal className={s.count}>
-            Showing <b>{visible.length}</b> of {BIZS.length} places
+            {loading ? <>Loading places…</> : <>Showing <b>{visible.length}</b> of {BIZS.length} places</>}
           </Reveal>
           <div className={s.grid}>
-            {visible.length === 0 && <div className={s.empty}>No places match — try a broader filter.</div>}
-            {visible.map((b) => (
-              <Link key={b.name} to={`/space/${b.slug}`} className={s.card}>
+            {loading && Array.from({ length: 6 }).map((_, i) => <DirectoryCardSkeleton key={i} />)}
+            {!loading && visible.length === 0 && <div className={s.empty}>No places match — try a broader filter.</div>}
+            {!loading && visible.map((b, i) => (
+              <FadeIn key={b.name} as={Link} delay={Math.min(i, 8) * 60} to={`/space/${b.slug}`} className={s.card}>
                 <div className={s.top}>
                   <span className={s.av} style={{ background: tintBg[b.tint], color: tintFg[b.tint] }}>
                     {b.av}
@@ -92,7 +119,7 @@ export function DirectoryPage() {
                   {b.member ? <span className={s.memberLink}>Member-run</span> : <span />}
                   <span className={s.visit}>View details →</span>
                 </div>
-              </Link>
+              </FadeIn>
             ))}
           </div>
 
@@ -114,7 +141,7 @@ export function DirectoryPage() {
         title={<>New to Lisbon? <em>You're not starting from zero.</em></>}
         sub="Join the network and get access to the full directory, member recommendations, and a community that knows the city."
       >
-        <Button size="lg" to={routes.invite}>
+        <Button size="lg" to={routes.requestInvite}>
           Request an invite
         </Button>
       </Outro>

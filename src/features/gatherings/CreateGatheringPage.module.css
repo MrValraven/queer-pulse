@@ -470,6 +470,9 @@
   color: #fff;
   font-size: 11px;
 }
+.checkOn svg {
+  animation: qpCheckPop var(--dur-base) var(--ease) both;
+}
 .checkText {
   font-size: 14px;
   color: var(--ink-60);
@@ -544,10 +547,21 @@
   background: rgba(var(--accent-rgb), 0.08);
   border-radius: 10px;
   padding: 9px 14px;
+  transform-origin: left center;
+  transition: color var(--dur-base) var(--ease-std), background var(--dur-base) var(--ease-std);
+  animation: qpBump var(--dur-slow) var(--ease) both;
 }
 .publishStatus::before {
   content: "○";
   font-size: 13px;
+  transition: transform var(--dur-base) var(--ease);
+}
+.checkCount {
+  display: inline-block;
+  min-width: 0.62em;
+  text-align: center;
+  font-weight: 800;
+  animation: qpDigitRoll var(--dur-base) var(--ease) 60ms both;
 }
 .publishStatusReady {
   color: var(--jade);
@@ -555,6 +569,7 @@
 }
 .publishStatusReady::before {
   content: "✓";
+  animation: qpCheckPop var(--dur-base) var(--ease) both;
 }
 
 .success {
@@ -562,10 +577,20 @@
   border-radius: 22px;
   padding: 48px 44px;
   text-align: center;
+  animation: qpToastIn var(--dur-slow) var(--ease-out) both;
 }
 .successIcon {
-  font-size: 52px;
-  margin-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  font-size: 34px;
+  color: var(--jade);
+  background: rgba(74, 140, 111, 0.16);
+  animation: qpCheckPop var(--dur-slow) var(--ease) 160ms both;
 }
 .successTitle {
   font-family: var(--serif);
@@ -574,6 +599,7 @@
   color: var(--cream);
   letter-spacing: -0.02em;
   margin-bottom: 14px;
+  animation: qpGridIn var(--dur-slow) var(--ease-out) 240ms both;
 }
 .successTitle em {
   font-style: italic;
@@ -585,10 +611,12 @@
   line-height: 1.7;
   max-width: 48ch;
   margin: 0 auto 28px;
+  animation: qpGridIn var(--dur-slow) var(--ease-out) 320ms both;
 }
 .successAccess {
   margin: 0 auto 28px;
   max-width: 46ch;
+  animation: qpGridIn var(--dur-slow) var(--ease-out) 400ms both;
 }
 .successAccessLbl {
   display: block;
@@ -626,6 +654,7 @@
   gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
+  animation: qpGridIn var(--dur-slow) var(--ease-out) 460ms both;
 }
 
 .sidebar {

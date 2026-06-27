@@ -1,20 +1,22 @@
 import { useState } from 'react'
 import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { CRITERIA, CURRENT, HOW, PANEL, PAST, RULES } from './microGrants.data'
-import { GrantCard } from './GrantCard'
+import { GrantCard, GrantSkeleton } from './GrantCard'
 import { GrantApplicationModal } from './GrantApplicationModal'
 import { PanelSignupModal } from './PanelSignupModal'
 import { ContributeStrip, MicroGrantsHero } from './MicroGrantsSections'
 import styles from './MicroGrantsPage.module.css'
 
-const INVITE = routes.invite
+const INVITE = routes.requestInvite
 
 export function MicroGrantsPage() {
   const [open, setOpen] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
+  const loading = useSimulatedLoad()
 
   return (
     <PageShell>
@@ -85,10 +87,16 @@ export function MicroGrantsPage() {
                 <div className={styles.gsHead}>
                   Current <em>recipients</em>
                 </div>
-                <div className={styles.grantsGrid}>
-                  {CURRENT.map((g) => (
-                    <GrantCard g={g} key={g.name} />
-                  ))}
+                <div className={styles.grantsGrid} aria-busy={loading}>
+                  {loading
+                    ? Array.from({ length: CURRENT.length }).map((_, i) => (
+                        <GrantSkeleton key={i} />
+                      ))
+                    : CURRENT.map((g, i) => (
+                        <FadeIn key={g.name} delay={Math.min(i, 8) * 60}>
+                          <GrantCard g={g} />
+                        </FadeIn>
+                      ))}
                 </div>
               </div>
 
@@ -96,10 +104,16 @@ export function MicroGrantsPage() {
                 <div className={styles.gsHead}>
                   Past <em>projects</em>
                 </div>
-                <div className={styles.grantsGrid}>
-                  {PAST.map((g) => (
-                    <GrantCard g={g} key={g.name} />
-                  ))}
+                <div className={styles.grantsGrid} aria-busy={loading}>
+                  {loading
+                    ? Array.from({ length: PAST.length }).map((_, i) => (
+                        <GrantSkeleton key={i} />
+                      ))
+                    : PAST.map((g, i) => (
+                        <FadeIn key={g.name} delay={Math.min(i, 8) * 60}>
+                          <GrantCard g={g} />
+                        </FadeIn>
+                      ))}
                 </div>
               </div>
             </div>

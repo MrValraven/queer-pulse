@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FiSearch, FiCornerDownLeft } from 'react-icons/fi'
 import { useScrollLock } from '../../shared/hooks/useScrollLock'
+import { Avatar } from '../../shared/components/ui'
+import { memberAvatar } from './data/members'
 import { linkToPath, routes } from '../../app/routeMap'
 import {
   SEARCH_DATA,
@@ -155,6 +157,7 @@ export function CommandPalette() {
           )}
           {results.map((item, i) => {
             const Icon = TYPE_ICON[item.t]
+            const avatar = item.slug ? memberAvatar(item.slug) : undefined
             return (
               <li key={`${item.t}-${item.name}`} role="option" aria-selected={i === activeIndex}>
                 <button
@@ -165,9 +168,19 @@ export function CommandPalette() {
                   onMouseEnter={() => setActive(i)}
                   onClick={() => goToItem(item)}
                 >
-                  <span className={styles.rowIcon} aria-hidden>
-                    <Icon />
-                  </span>
+                  {avatar ? (
+                    <Avatar
+                      initials={avatar.initials}
+                      tint={avatar.tint}
+                      src={avatar.photo}
+                      alt={item.name}
+                      size={34}
+                    />
+                  ) : (
+                    <span className={styles.rowIcon} aria-hidden>
+                      <Icon />
+                    </span>
+                  )}
                   <span className={styles.rowBody}>
                     <span className={styles.rowName}>{item.name}</span>
                     <span className={styles.rowSub}>{item.sub}</span>

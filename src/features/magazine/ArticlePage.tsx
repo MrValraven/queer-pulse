@@ -1,7 +1,8 @@
 import { useState, type CSSProperties } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button, ImageSlot, Tag } from '../../shared/components/ui'
+import { Avatar, Button, FadeIn, ImageSlot, SkeletonLine, Tag } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { MagazineMasthead } from './MagazineMasthead'
 import {
   articles,
@@ -16,9 +17,21 @@ import { routes } from '../../app/routeMap'
 
 const SIZE_PX: Record<TextSize, number> = { sm: 17, md: 19, lg: 22 }
 
+function RelatedCardSkeleton({ className }: { className: string }) {
+  return (
+    <div className={className} aria-hidden>
+      <SkeletonLine width="40%" height={11} />
+      <SkeletonLine width="90%" height={17} style={{ marginTop: 2 }} />
+      <SkeletonLine width="65%" height={13} style={{ marginTop: 2 }} />
+      <SkeletonLine width={90} height={22} style={{ borderRadius: 999, marginTop: 4 }} />
+    </div>
+  )
+}
+
 export function ArticlePage() {
   const [params] = useSearchParams()
   const [textSize, setTextSize] = useState<TextSize>('md')
+  const loading = useSimulatedLoad()
   const id = params.get('id') ?? defaultArticleId
   const article = articles[id]
 
@@ -108,16 +121,20 @@ export function ArticlePage() {
               Keep <em>reading</em>
             </div>
             <div className={styles.relGrid}>
-              {related.map((rel) => (
-                <Link key={rel.id} to={`/article?id=${rel.id}`} className={styles.relCard}>
-                  <div className={styles.relKicker}>{rel.section}</div>
-                  <div className={styles.relTitle}>{rel.title}</div>
-                  <div className={styles.relMeta}>
-                    {rel.byline} · {rel.readTime}
-                  </div>
-                  <Tag className={styles.relReason}>{relationReason(article, rel)}</Tag>
-                </Link>
-              ))}
+              {loading
+                ? related.map((rel) => (
+                    <RelatedCardSkeleton key={rel.id} className={styles.relCard} />
+                  ))
+                : related.map((rel, i) => (
+                    <FadeIn as={Link} key={rel.id} to={`/article?id=${rel.id}`} className={styles.relCard} delay={Math.min(i, 8) * 60}>
+                      <div className={styles.relKicker}>{rel.section}</div>
+                      <div className={styles.relTitle}>{rel.title}</div>
+                      <div className={styles.relMeta}>
+                        {rel.byline} · {rel.readTime}
+                      </div>
+                      <Tag className={styles.relReason}>{relationReason(article, rel)}</Tag>
+                    </FadeIn>
+                  ))}
             </div>
           </div>
         </div>

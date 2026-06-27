@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
+import { FadeIn, SkeletonLine } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { SIGN_IN_METHODS, CONNECTED_APPS } from './linkedAccounts.data'
 import { LINK_PROVIDERS } from './integrations.data'
@@ -9,9 +11,27 @@ import { LinkProviderModal } from './LinkProviderModal'
 import { IntegrationsModal } from './IntegrationsModal'
 import styles from './LinkedAccountsPage.module.css'
 
+/** Mirrors a connection .row so there's no layout shift when content loads. */
+function ConnectionSkeleton() {
+  return (
+    <div className={styles.row}>
+      <SkeletonLine width={48} height={48} style={{ borderRadius: 12 }} />
+      <div className={styles.info}>
+        <SkeletonLine width="50%" height={15} />
+        <SkeletonLine width="78%" height={13} style={{ marginTop: 7 }} />
+      </div>
+      <div className={styles.state}>
+        <SkeletonLine width={64} height={18} style={{ borderRadius: 5 }} />
+        <SkeletonLine width={78} height={32} style={{ borderRadius: 999 }} />
+      </div>
+    </div>
+  )
+}
+
 export function LinkedAccountsPage() {
   const { showToast } = useToast()
   const navigate = useNavigate()
+  const loading = useSimulatedLoad()
   const [revokedIds, setRevokedIds] = useState<Set<string>>(new Set())
   const [linkedIds, setLinkedIds] = useState<Set<string>>(new Set())
   const [linkProviderId, setLinkProviderId] = useState<string | null>(null)
@@ -54,11 +74,13 @@ export function LinkedAccountsPage() {
 
         <div className={styles.sectionH}>Sign-in methods</div>
         <div className={styles.list}>
-          {SIGN_IN_METHODS.map((m) => {
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => <ConnectionSkeleton key={i} />)
+            : SIGN_IN_METHODS.map((m, i) => {
             const revoked = revokedIds.has(m.id)
             const linked = linkedIds.has(m.id)
             return (
-              <div key={m.id} className={styles.row}>
+              <FadeIn key={m.id} delay={Math.min(i, 8) * 60} className={styles.row}>
                 <div className={`${styles.icon} ${iconClass[m.id] ?? ''}`}>
                   <SignInIcon id={m.id} />
                 </div>
@@ -73,7 +95,7 @@ export function LinkedAccountsPage() {
                   {m.defaultDisabled && <button className={`${styles.rowBtn} ${styles.rowBtnDisabled}`} disabled>Default</button>}
                   {m.canManage && <button className={styles.rowBtn} onClick={() => navigate(routes.sessions)}>Manage</button>}
                 </div>
-              </div>
+              </FadeIn>
             )
           })}
         </div>
@@ -84,10 +106,12 @@ export function LinkedAccountsPage() {
 
         <div className={styles.sectionH}>Connected apps · third-party access</div>
         <div className={styles.list}>
-          {CONNECTED_APPS.map((app) => {
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => <ConnectionSkeleton key={i} />)
+            : CONNECTED_APPS.map((app, i) => {
             const revoked = revokedIds.has(app.id)
             return (
-              <div key={app.id} className={styles.row}>
+              <FadeIn key={app.id} delay={Math.min(i, 8) * 60} className={styles.row}>
                 <div className={`${styles.icon} ${iconClass[app.id] ?? ''}`}>
                   <AppIcon id={app.id} />
                 </div>
@@ -100,7 +124,7 @@ export function LinkedAccountsPage() {
                   {app.canRevoke && !revoked && <button className={`${styles.rowBtn} ${styles.rowBtnUnlink}`} onClick={() => handleUnlink(app.id)}>Revoke</button>}
                   {app.canCopy && <button className={styles.rowBtn} onClick={handleCopyCalendar}>Copy URL</button>}
                 </div>
-              </div>
+              </FadeIn>
             )
           })}
         </div>

@@ -86,6 +86,10 @@
   font-weight: 500;
   margin-top: 16px;
 }
+.pronoun {
+  color: var(--ink-40);
+  font-weight: 400;
+}
 .where {
   display: flex;
   align-items: center;

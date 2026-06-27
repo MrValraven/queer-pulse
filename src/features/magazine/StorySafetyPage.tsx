@@ -29,7 +29,7 @@ export function StorySafetyPage() {
         title={<>Read it and think it sounds <em>right?</em></>}
         sub="We're not for everyone. But if this resonates, you might be for us."
       >
-        <Button to={routes.invite} variant="primary" size="lg">
+        <Button to={routes.requestInvite} variant="primary" size="lg">
           Request an invite
         </Button>
       </Outro>

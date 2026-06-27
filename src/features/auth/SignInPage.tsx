@@ -99,7 +99,7 @@ export function SignInPage() {
 
       <div className={styles.footer}>
         <Link to={routes.passwordReset}>Forgot password?</Link>
-        <Link to={routes.invite} className="invite">
+        <Link to={routes.requestInvite} className="invite">
           Not a member yet? Request an invite
         </Link>
       </div>

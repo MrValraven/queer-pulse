@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { PageHero, PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import s from './PlatformsPage.module.css'
 
@@ -48,7 +49,24 @@ const PLATFORMS: Platform[] = [
 
 const FILTERS = ['all', ...CAT_ORDER]
 
+function PlatformCardSkeleton() {
+  // Mirrors the real .card: 46px icon tile + (category eyebrow, name, two desc lines, url).
+  return (
+    <div className={s.card} aria-hidden>
+      <SkeletonLine width={46} height={46} style={{ borderRadius: 12, flex: 'none' }} />
+      <div style={{ flex: 1 }}>
+        <SkeletonLine width="35%" height={11} />
+        <SkeletonLine width="55%" height={18} style={{ marginTop: 6 }} />
+        <SkeletonLine width="100%" height={13} style={{ marginTop: 8 }} />
+        <SkeletonLine width="80%" height={13} style={{ marginTop: 6 }} />
+        <SkeletonLine width={90} height={12.5} style={{ marginTop: 10 }} />
+      </div>
+    </div>
+  )
+}
+
 export function PlatformsPage() {
+  const loading = useSimulatedLoad()
   const [filter, setFilter] = useState('all')
   const cats = filter === 'all' ? CAT_ORDER : [filter]
 
@@ -79,30 +97,51 @@ export function PlatformsPage() {
             </p>
           </div>
 
-          {cats.map((cat) => {
-            const items = PLATFORMS.filter((p) => p.cat === cat)
-            if (!items.length) return null
-            return (
-              <div key={cat}>
-                <h2 className={s.secTitle}>{CAT_LABELS[cat]}</h2>
-                <div className={s.grid}>
-                  {items.map((p) => (
-                    <a key={p.name} href={`https://${p.url}`} target="_blank" rel="noreferrer" className={s.card}>
-                      <span className={s.icon} style={{ background: p.ic, color: p.it }}>
-                        {p.icon}
-                      </span>
-                      <div>
-                        <div className={s.pCat}>{CAT_LABELS[p.cat]}</div>
-                        <div className={s.pName}>{p.name}</div>
-                        <p className={s.pDesc}>{p.desc}</p>
-                        <div className={s.pUrl}>↗ {p.url}</div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
+          {loading ? (
+            <div>
+              <h2 className={s.secTitle} aria-hidden>
+                <SkeletonLine width={180} height={26} />
+              </h2>
+              <div className={s.grid}>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <PlatformCardSkeleton key={i} />
+                ))}
               </div>
-            )
-          })}
+            </div>
+          ) : (
+            (() => {
+              let n = -1
+              return cats.map((cat) => {
+                const items = PLATFORMS.filter((p) => p.cat === cat)
+                if (!items.length) return null
+                return (
+                  <div key={cat}>
+                    <h2 className={s.secTitle}>{CAT_LABELS[cat]}</h2>
+                    <div className={s.grid}>
+                      {items.map((p) => {
+                        n += 1
+                        return (
+                          <FadeIn key={p.name} delay={Math.min(n, 8) * 60} style={{ height: '100%' }}>
+                            <a href={`https://${p.url}`} target="_blank" rel="noreferrer" className={s.card} style={{ height: '100%' }}>
+                              <span className={s.icon} style={{ background: p.ic, color: p.it }}>
+                                {p.icon}
+                              </span>
+                              <div>
+                                <div className={s.pCat}>{CAT_LABELS[p.cat]}</div>
+                                <div className={s.pName}>{p.name}</div>
+                                <p className={s.pDesc}>{p.desc}</p>
+                                <div className={s.pUrl}>↗ {p.url}</div>
+                              </div>
+                            </a>
+                          </FadeIn>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })
+            })()
+          )}
         </div>
       </section>
 

@@ -2,13 +2,39 @@ import { useState } from 'react'
 import { LuSprout, LuTreeDeciduous } from 'react-icons/lu'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { MENTORS, STATS, VOLUNTEER, type Mode } from './mentorship.data'
 import { MentorMatchModal } from './MentorMatchModal'
 import styles from './MentorshipPage.module.css'
 
+// Mirrors the inline mentorCard shape so there's zero layout shift on swap.
+function MentorSkeleton() {
+  return (
+    <div className={styles.mentorCard} aria-hidden>
+      <div className={styles.mcTop}>
+        <SkeletonAvatar size={46} />
+        <div>
+          <SkeletonLine width={120} height={16} />
+          <SkeletonLine width={88} height={13} style={{ marginTop: 6 }} />
+        </div>
+      </div>
+      <div className={styles.mcAreas}>
+        <SkeletonLine width={72} height={24} style={{ borderRadius: 7 }} />
+        <SkeletonLine width={94} height={24} style={{ borderRadius: 7 }} />
+        <SkeletonLine width={60} height={24} style={{ borderRadius: 7 }} />
+      </div>
+      <div className={styles.mcCap}>
+        <SkeletonLine width="55%" height={13} />
+      </div>
+      <SkeletonLine width="100%" height={40} style={{ borderRadius: 999 }} />
+    </div>
+  )
+}
+
 export function MentorshipPage() {
+  const loading = useSimulatedLoad()
   const [mode, setMode] = useState<Mode | null>(null)
 
   return (
@@ -78,8 +104,11 @@ export function MentorshipPage() {
             </div>
           </div>
           <div className={styles.mentorGrid}>
-            {MENTORS.map((m) => (
-              <Link to={`${routes.mentorship}/${m.slug}`} className={styles.mentorCard} key={m.slug}>
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => <MentorSkeleton key={i} />)
+              : MENTORS.map((m, i) => (
+              <FadeIn key={m.slug} delay={Math.min(i, 8) * 60}>
+              <Link to={`${routes.mentorship}/${m.slug}`} className={styles.mentorCard}>
                 <div className={styles.mcTop}>
                   <div className={styles.mcAv} style={{ background: m.bg, color: m.color }}>
                     {m.initials}
@@ -119,6 +148,7 @@ export function MentorshipPage() {
                   {m.btn}
                 </span>
               </Link>
+              </FadeIn>
             ))}
           </div>
         </div>

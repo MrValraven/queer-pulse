@@ -79,7 +79,7 @@ export function BottomCta() {
         </p>
       </div>
       <div className={styles.bottomCtaActions}>
-        <Button variant="primary" to={routes.invite}>
+        <Button variant="primary" to={routes.requestInvite}>
           Request an invite
         </Button>
         <Button variant="ghost-dark" to={routes.vouch}>

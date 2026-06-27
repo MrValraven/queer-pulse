@@ -2,9 +2,11 @@ import { useMemo, useState } from 'react'
 import { FiBell } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
-import { Avatar, Button } from '../../shared/components/ui'
+import { Avatar, Button, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { linkToPath, routes } from '../../app/routeMap'
+import { NotificationsListSkeleton } from './NotificationsSkeleton'
 import {
   notificationTabs,
   notifications,
@@ -14,6 +16,7 @@ import {
 import styles from './NotificationsPage.module.css'
 
 export function NotificationsPage() {
+  const loading = useSimulatedLoad()
   const navigate = useNavigate()
   const { showToast } = useToast()
   const [filter, setFilter] = useState<'all' | NotifType>('all')
@@ -43,11 +46,12 @@ export function NotificationsPage() {
     showToast(toast, 'success')
   }
 
-  function renderItem(notification: Notification) {
+  function renderItem(notification: Notification, index: number) {
     const isUnread = notification.unread && !readIds.has(notification.id)
     return (
-      <div
+      <FadeIn
         key={notification.id}
+        delay={Math.min(index, 8) * 60}
         className={[styles.item, isUnread && styles.unread].filter(Boolean).join(' ')}
         onClick={() => markRead(notification.id)}
       >
@@ -91,7 +95,7 @@ export function NotificationsPage() {
           )}
         </div>
         <div className={styles.time}>{notification.time}</div>
-      </div>
+      </FadeIn>
     )
   }
 
@@ -128,7 +132,9 @@ export function NotificationsPage() {
             ))}
           </div>
 
-          {visible.length === 0 ? (
+          {loading ? (
+            <NotificationsListSkeleton count={7} />
+          ) : visible.length === 0 ? (
             <div className={styles.empty}>
               <div style={{ fontSize: 40 }}><FiBell /></div>
               <div className={styles.emptyTitle}>All caught up</div>
@@ -137,9 +143,9 @@ export function NotificationsPage() {
           ) : (
             <div className={styles.list}>
               {recent.length > 0 && <div className={styles.day}>Today &amp; recent</div>}
-              {recent.map(renderItem)}
+              {recent.map((n, i) => renderItem(n, i))}
               {earlier.length > 0 && <div className={styles.day}>Earlier</div>}
-              {earlier.map(renderItem)}
+              {earlier.map((n, i) => renderItem(n, recent.length + i))}
             </div>
           )}
         </div>

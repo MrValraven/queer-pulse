@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button, ImageSlot, Reveal } from '../../shared/components/ui'
+import { Button, FadeIn, ImageSlot, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useConnect } from '../../app/providers/ConnectProvider'
 import { CHANGEMAKERS } from './changemakerStories'
@@ -17,7 +18,22 @@ const STATS = [
 const FEATURED = CHANGEMAKERS[0]
 const MAKERS = CHANGEMAKERS.slice(1)
 
+function MakerCardSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden>
+      <SkeletonLine width="100%" height={180} style={{ borderRadius: 0 }} />
+      <div className={styles.cardBody}>
+        <SkeletonLine width={120} height={12} />
+        <SkeletonLine width="65%" height={20} style={{ marginTop: 8 }} />
+        <SkeletonLine width="100%" height={14} style={{ marginTop: 10 }} />
+        <SkeletonLine width="80%" height={14} style={{ marginTop: 4 }} />
+      </div>
+    </div>
+  )
+}
+
 export function ChangemakersPage() {
+  const loading = useSimulatedLoad()
   const { showToast } = useToast()
   const { openConnect } = useConnect()
   const [nominee, setNominee] = useState('')
@@ -82,8 +98,10 @@ export function ChangemakersPage() {
       <section className={styles.profiles}>
         <div className="wrap">
           <div className={styles.grid}>
-            {MAKERS.map((m, i) => (
-              <Reveal as={Link} to={`/changemaker/${m.slug}`} key={m.name} className={styles.card} delay={i * 60}>
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => <MakerCardSkeleton key={i} />)
+              : MAKERS.map((m, i) => (
+              <FadeIn as={Link} to={`/changemaker/${m.slug}`} key={m.name} className={styles.card} delay={Math.min(i, 8) * 60}>
                 <ImageSlot tint={m.tint} src={m.image} width="100%" height={180} radius={0} placeholder={m.name} initials={m.initials} />
                 <div className={styles.cardBody}>
                   <div className={styles.cardCause}>{m.cause}</div>
@@ -100,7 +118,7 @@ export function ChangemakersPage() {
                 <div className={styles.cardFoot}>
                   <span className={styles.read}>Read more →</span>
                 </div>
-              </Reveal>
+              </FadeIn>
             ))}
           </div>
         </div>

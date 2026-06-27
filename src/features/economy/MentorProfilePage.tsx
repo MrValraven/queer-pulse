@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
+import { MentorProfileSkeleton } from './MentorProfileSkeleton'
 import { routes } from '../../app/routeMap'
 import { MentorProfileSidebar } from './MentorProfileSidebar'
 import {
@@ -20,6 +22,8 @@ const avTintClass: Record<'jade' | 'coral' | 'plum', string> = {
 }
 
 export function MentorProfilePage() {
+  const loading = useSimulatedLoad()
+
   return (
     <PageShell>
       <div className={styles.page}>
@@ -27,6 +31,10 @@ export function MentorProfilePage() {
           ← All mentors
         </Link>
 
+        {loading ? (
+          <MentorProfileSkeleton />
+        ) : (
+          <FadeIn>
         <header className={styles.head}>
           <div className={styles.portrait}>{MENTOR.portrait}</div>
           <div>
@@ -122,6 +130,8 @@ export function MentorProfilePage() {
 
           <MentorProfileSidebar />
         </div>
+          </FadeIn>
+        )}
       </div>
     </PageShell>
   )

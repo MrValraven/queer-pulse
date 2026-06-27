@@ -1,14 +1,17 @@
 import { useToast } from '../../shared/components/feedback/useToast'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { linkToPath, routes } from '../../app/routeMap'
 import { Link } from 'react-router-dom'
 import { StudioShell } from './StudioShell'
+import { StudioCardGridSkeleton } from './StudioSkeletons'
 import { OFF_AIR_LIBRARY, QUIET_HOURS, nightcapImage } from './studioOffAir.data'
 import studioStyles from './studio.module.css'
 import styles from './StudioOffAirPage.module.css'
 
 export function StudioOffAirPage() {
   const { showToast } = useToast()
+  const loading = useSimulatedLoad()
 
   return (
     <StudioShell>
@@ -97,9 +100,12 @@ export function StudioOffAirPage() {
             Library →
           </Link>
         </div>
+        {loading ? (
+          <StudioCardGridSkeleton className={studioStyles.rowGrid} count={4} />
+        ) : (
         <div className={studioStyles.rowGrid}>
-          {OFF_AIR_LIBRARY.map((item) => (
-            <Link key={item.title} to={linkToPath(item.to)} className={studioStyles.card}>
+          {OFF_AIR_LIBRARY.map((item, i) => (
+            <FadeIn key={item.title} delay={Math.min(i, 8) * 60} as={Link} to={linkToPath(item.to)} className={studioStyles.card}>
               <div className={studioStyles.cardCov}>
                 <ImageSlot src={item.image} tint={item.tint} width="100%" height="100%" radius={10} placeholder="cover" />
                 {item.tag && (
@@ -114,9 +120,10 @@ export function StudioOffAirPage() {
               </h4>
               <div style={{ fontSize: 12, color: 'rgba(247,243,238,.4)' }}>{item.meta}</div>
               {item.pay && <div style={{ fontSize: 12, color: 'rgba(247,243,238,.4)' }}>per play <em style={{ color: 'var(--accent)' }}>€0.05</em></div>}
-            </Link>
+            </FadeIn>
           ))}
         </div>
+        )}
       </section>
 
       {/* Quiet hours section */}
@@ -132,9 +139,12 @@ export function StudioOffAirPage() {
             All →
           </Link>
         </div>
+        {loading ? (
+          <StudioCardGridSkeleton className={studioStyles.rowGrid} count={4} />
+        ) : (
         <div className={studioStyles.rowGrid}>
-          {QUIET_HOURS.map((item) => (
-            <Link key={item.title} to={linkToPath(item.to)} className={studioStyles.card}>
+          {QUIET_HOURS.map((item, i) => (
+            <FadeIn key={item.title} delay={Math.min(i, 8) * 60} as={Link} to={linkToPath(item.to)} className={studioStyles.card}>
               <div className={studioStyles.cardCov}>
                 <ImageSlot src={item.image} tint={item.tint} width="100%" height="100%" radius={10} placeholder="cover" />
               </div>
@@ -143,9 +153,10 @@ export function StudioOffAirPage() {
                 {item.title} <em>{item.titleEm}</em>
               </h4>
               <div style={{ fontSize: 12, color: 'rgba(247,243,238,.4)' }}>{item.meta}</div>
-            </Link>
+            </FadeIn>
           ))}
         </div>
+        )}
       </section>
     </StudioShell>
   )

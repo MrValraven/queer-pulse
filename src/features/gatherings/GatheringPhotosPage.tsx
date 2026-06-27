@@ -2,12 +2,22 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiPlay } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { DownloadAlbumModal } from "./DownloadAlbumModal";
 import { PhotoViewer } from "./PhotoViewer";
 import { CHIPS, PICS, CONTRIBUTORS } from "./gatheringPhotos.data";
 import styles from "./GatheringPhotosPage.module.css";
+
+function PhotoSkeleton({ span }: { span?: string }) {
+  // Mirror each .pic tile (incl. wide/tall spans) so the grid does not shift on swap.
+  return (
+    <div className={[styles.pic, span && styles[span]].filter(Boolean).join(" ")} aria-hidden>
+      <SkeletonLine width="100%" height="100%" style={{ borderRadius: 8 }} />
+    </div>
+  );
+}
 
 const RECAP = routes.gatheringRecap;
 const MEMBER = routes.members;
@@ -18,6 +28,7 @@ export function GatheringPhotosPage() {
   const [chip, setChip] = useState(0);
   const [viewer, setViewer] = useState<{ index: number; slideshow: boolean } | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const loading = useSimulatedLoad();
 
   return (
     <PageShell>
@@ -85,21 +96,25 @@ export function GatheringPhotosPage() {
       </div>
 
       <div className={styles.mosaic}>
-        {PICS.map((p, i) => (
-          <button
-            key={i}
-            type="button"
-            className={[styles.pic, p.span && styles[p.span], styles[p.tint]].filter(Boolean).join(" ")}
-            onClick={() => setViewer({ index: i, slideshow: false })}
-          >
-            {p.tag && (
-              <span className={[styles.tag, p.tagAccent && styles.tagAccent].filter(Boolean).join(" ")}>
-                {p.tag}
-              </span>
-            )}
-            {p.label}
-          </button>
-        ))}
+        {loading
+          ? PICS.map((p, i) => <PhotoSkeleton key={i} span={p.span} />)
+          : PICS.map((p, i) => (
+              <FadeIn
+                key={i}
+                as="button"
+                type="button"
+                delay={Math.min(i, 8) * 60}
+                className={[styles.pic, p.span && styles[p.span], styles[p.tint]].filter(Boolean).join(" ")}
+                onClick={() => setViewer({ index: i, slideshow: false })}
+              >
+                {p.tag && (
+                  <span className={[styles.tag, p.tagAccent && styles.tagAccent].filter(Boolean).join(" ")}>
+                    {p.tag}
+                  </span>
+                )}
+                {p.label}
+              </FadeIn>
+            ))}
       </div>
 
       <section className={styles.foot}>

@@ -3,9 +3,11 @@ import { FiMapPin } from 'react-icons/fi'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { routes } from '../../app/routeMap'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button } from '../../shared/components/ui'
+import { Avatar, Button, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { getListing, HOUSING_LISTINGS, type Tint } from './housingListings'
 import { MessageModal } from './HousingModals'
+import { HousingListingSkeleton } from './HousingListingSkeleton'
 import s from './HousingListingPage.module.css'
 
 const GAL_BG: Record<Tint, string> = {
@@ -17,9 +19,21 @@ const GAL_BG: Record<Tint, string> = {
 export function HousingListingPage() {
   const { slug } = useParams()
   const [messaging, setMessaging] = useState(false)
+  const loading = useSimulatedLoad()
 
   const l = getListing(slug)
   if (!l) return <Navigate to={routes.housing} replace />
+
+  if (loading) {
+    return (
+      <PageShell>
+        <div className={s.page}>
+          <Link to={routes.housing} className={s.back}>← Housing board</Link>
+          <HousingListingSkeleton />
+        </div>
+      </PageShell>
+    )
+  }
 
   const first = l.poster.fullName.split(' ')[0]
   const similar = HOUSING_LISTINGS.filter((x) => x.slug !== l.slug).slice(0, 3)
@@ -29,6 +43,7 @@ export function HousingListingPage() {
       <div className={s.page}>
         <Link to={routes.housing} className={s.back}>← Housing board</Link>
 
+        <FadeIn>
         <div className={s.gallery}>
           {l.gallery.map((cap, i) => (
             <div key={i} className={s.gCell} style={{ background: GAL_BG[l.tint] }}>
@@ -148,6 +163,7 @@ export function HousingListingPage() {
             </div>
           </aside>
         </div>
+        </FadeIn>
       </div>
 
       {messaging && (

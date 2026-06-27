@@ -1,0 +1,47 @@
+/* Light-on-dark skeletons for the Studio pages (the shared <Skeleton*> shimmer
+   is tuned for cream backgrounds and would be invisible here). Reuses the shared
+   qpShimmer keyframe; animates background-position only. */
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(247, 243, 238, 0.05) 25%,
+    rgba(247, 243, 238, 0.1) 50%,
+    rgba(247, 243, 238, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: qpShimmer 1.5s ease infinite;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer {
+    animation: none;
+  }
+}
+
+/* Mirrors studio.module.css .setRow grid: number, cover, title, pay, time. */
+.setRow {
+  display: grid;
+  grid-template-columns: 24px 36px 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+.setCov {
+  width: 36px;
+  height: 36px;
+  border-radius: 5px;
+}
+
+/* A card that mirrors studio.module.css .card → square cover + title + meta. */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cardCov {
+  aspect-ratio: 1;
+  border-radius: 10px;
+}
