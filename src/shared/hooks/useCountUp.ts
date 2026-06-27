@@ -5,15 +5,21 @@ interface UseCountUpOptions {
   /** Whether the animation should run. Pass the section's reveal state. */
   active?: boolean
   durationMs?: number
+  /** Value the count starts from (default 0). */
+  from?: number
 }
 
 /**
- * Animates a number from 0 to `target` once `active` becomes true. Returns the
- * current value. Under reduced motion it jumps straight to the target.
+ * Animates a number from `from` (default 0) to `target` once `active` becomes
+ * true. Returns the current value. Under reduced motion it jumps straight to the
+ * target.
  */
-export function useCountUp(target: number, { active = true, durationMs = 1100 }: UseCountUpOptions = {}) {
+export function useCountUp(
+  target: number,
+  { active = true, durationMs = 1100, from = 0 }: UseCountUpOptions = {},
+) {
   const prefersReduced = usePrefersReducedMotion()
-  const [value, setValue] = useState(0)
+  const [value, setValue] = useState(from)
   const startedRef = useRef(false)
 
   useEffect(() => {
@@ -27,12 +33,12 @@ export function useCountUp(target: number, { active = true, durationMs = 1100 }:
       const progress = Math.min((now - start) / durationMs, 1)
       // easeOutCubic for a natural settle
       const eased = 1 - Math.pow(1 - progress, 3)
-      setValue(Math.round(target * eased))
+      setValue(Math.round(from + (target - from) * eased))
       if (progress < 1) frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [active, target, durationMs, prefersReduced])
+  }, [active, target, durationMs, from, prefersReduced])
 
   // Under reduced motion, jump straight to the target once active.
   return prefersReduced && active ? target : value

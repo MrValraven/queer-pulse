@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
-import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn } from '../../shared/components/ui'
-import { useCountUp, useSimulatedLoad } from '../../shared/hooks'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { useMemo, useState } from "react";
+import { PageShell } from "../../shared/components/layout";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useCountUp, useSimulatedLoad } from "../../shared/hooks";
+import { useToast } from "../../shared/components/feedback/useToast";
 import {
   DEFAULT_FILTERS,
   MEMBERS,
@@ -16,74 +16,100 @@ import {
   type AppliedChip,
   type FilterState,
   type SortKey,
-} from './memberDirectoryFilter.data'
-import { FiltersSidebar, MemberResultCard, MemberResultSkeleton } from './MemberFilterCards'
-import styles from './MemberDirectoryFilterPage.module.css'
+} from "./memberDirectoryFilter.data";
+import {
+  FiltersSidebar,
+  MemberResultCard,
+  MemberResultSkeleton,
+} from "./MemberFilterCards";
+import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Remove one value from whichever filter group a chip belongs to. */
 function removeChip(filters: FilterState, chip: AppliedChip): FilterState {
-  const drop = (arr: string[]) => arr.filter((v) => v !== chip.value)
+  const drop = (arr: string[]) => arr.filter((v) => v !== chip.value);
   switch (chip.group) {
-    case 'openTo':
-      return { ...filters, openTo: drop(filters.openTo) }
-    case 'hood':
-      return { ...filters, hoods: drop(filters.hoods) }
-    case 'discipline':
-      return { ...filters, disciplines: drop(filters.disciplines) }
-    case 'profession':
-      return { ...filters, professions: drop(filters.professions) }
-    case 'identity':
-      return { ...filters, identities: drop(filters.identities) }
-    case 'language':
-      return { ...filters, languages: drop(filters.languages) }
+    case "openTo":
+      return { ...filters, openTo: drop(filters.openTo) };
+    case "hood":
+      return { ...filters, hoods: drop(filters.hoods) };
+    case "discipline":
+      return { ...filters, disciplines: drop(filters.disciplines) };
+    case "profession":
+      return { ...filters, professions: drop(filters.professions) };
+    case "identity":
+      return { ...filters, identities: drop(filters.identities) };
+    case "language":
+      return { ...filters, languages: drop(filters.languages) };
   }
 }
 
-export function MemberDirectoryFilterPage() {
-  const { showToast } = useToast()
-  const loading = useSimulatedLoad()
-  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
-  const [sort, setSort] = useState<SortKey>('Recently active')
-  const [visible, setVisible] = useState(PAGE_SIZE)
+/** Placeholder for the page header — mirrors the eyebrow / h1 / lead rhythm so
+ *  the real header swaps in with no layout shift. */
+function MemberHeaderSkeleton() {
+  return (
+    <div className={styles.head} aria-busy="true" aria-hidden="true">
+      <SkeletonLine width={200} height={11} style={{ marginBottom: 14 }} />
+      <SkeletonLine width="70%" height={48} style={{ marginBottom: 16 }} />
+      <SkeletonLine width="100%" height={13} style={{ marginTop: 4 }} />
+      <SkeletonLine width="45%" height={13} style={{ marginTop: 8 }} />
+    </div>
+  );
+}
 
-  // Count the headline figure up from zero once, on mount — a quick settle that
-  // says "this is a real, countable population". Reduced motion jumps to the total.
-  const countedTotal = useCountUp(TOTAL_MEMBERS)
+export function MemberDirectoryFilterPage() {
+  const { showToast } = useToast();
+  const loading = useSimulatedLoad();
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
+  const [sort, setSort] = useState<SortKey>("Recently active");
+  const [visible, setVisible] = useState(PAGE_SIZE);
+
+  // Count the headline figure up from 1 once the skeleton clears — a quick
+  // settle that says "this is a real, countable population". Gating on `!loading`
+  // means the count animates in with the content instead of finishing unseen
+  // behind the skeleton. Reduced motion jumps to the total.
+  const countedTotal = useCountUp(TOTAL_MEMBERS, { active: !loading, from: 1 });
 
   const filtered = useMemo(() => {
-    const matched = MEMBERS.filter((m) => matchesFilters(m, filters))
-    return sortMembers(matched, sort)
-  }, [filters, sort])
+    const matched = MEMBERS.filter((m) => matchesFilters(m, filters));
+    return sortMembers(matched, sort);
+  }, [filters, sort]);
 
-  const chips = useMemo(() => appliedChips(filters), [filters])
-  const shown = filtered.slice(0, visible)
-  const remaining = filtered.length - shown.length
+  const chips = useMemo(() => appliedChips(filters), [filters]);
+  const shown = filtered.slice(0, visible);
+  const remaining = filtered.length - shown.length;
 
   // Reset paging whenever the result set changes underneath us, and keep the
   // profession selection coherent with the chosen fields.
   const applyFilters = (next: FilterState) => {
-    setFilters(reconcileProfessions(next))
-    setVisible(PAGE_SIZE)
-  }
+    setFilters(reconcileProfessions(next));
+    setVisible(PAGE_SIZE);
+  };
 
   return (
     <PageShell>
       <div className={styles.page}>
-        <header className={styles.head}>
-          <div className={styles.eyebrow}>Members · advanced filter</div>
-          <h1 className={styles.h1}>
-            Find{' '}
-            <em>
-              <span className={styles.tally}>{countedTotal.toLocaleString()}</span> members,
-            </em>{' '}
-            exactly.
-          </h1>
-          <p className={styles.lead}>
-            Filter by what they offer, where they're based, what they're <b>open to</b>. The same
-            data goes both ways — members appear here because they opted in to be findable for these
-            reasons.
-          </p>
-        </header>
+        {loading ? (
+          <MemberHeaderSkeleton />
+        ) : (
+          <FadeIn as="header" className={styles.head}>
+            <div className={styles.eyebrow}>Members · advanced filter</div>
+            <h1 className={styles.h1}>
+              Find
+              <em>
+                <span className={styles.tally}>
+                  {countedTotal.toLocaleString()}
+                </span>{" "}
+                members,
+              </em>{" "}
+              exactly.
+            </h1>
+            <p className={styles.lead}>
+              Filter by what they offer, where they're based, what they're{" "}
+              <b>open to</b>. The same data goes both ways — members appear here
+              because they opted in to be findable for these reasons.
+            </p>
+          </FadeIn>
+        )}
 
         <div className={styles.grid}>
           <FiltersSidebar
@@ -100,23 +126,26 @@ export function MemberDirectoryFilterPage() {
                 languages: [],
                 yearsFrom: 0,
                 yearsTo: 9,
-              })
-              showToast('Filters cleared', 'info')
+              });
+              showToast("Filters cleared", "info");
             }}
           />
 
           <main>
             <div className={styles.topRow}>
               <div className={styles.count}>
-                Showing{' '}
+                Showing{" "}
                 <b>
                   <em>{filtered.length.toLocaleString()}</em>
-                </b>{' '}
+                </b>{" "}
                 of {TOTAL_MEMBERS.toLocaleString()} members
               </div>
               <div className={styles.sort}>
                 <span className={styles.sortLabel}>Sort</span>
-                <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value as SortKey)}
+                >
                   {SORTS.map((s) => (
                     <option key={s}>{s}</option>
                   ))}
@@ -127,7 +156,10 @@ export function MemberDirectoryFilterPage() {
             {chips.length > 0 && (
               <div className={styles.appliedRow}>
                 {chips.map((chip) => (
-                  <span key={`${chip.group}:${chip.value}`} className={styles.applied}>
+                  <span
+                    key={`${chip.group}:${chip.value}`}
+                    className={styles.applied}
+                  >
                     {chip.label}
                     <button
                       type="button"
@@ -154,7 +186,10 @@ export function MemberDirectoryFilterPage() {
             ) : (
               <div className={styles.mGrid}>
                 {shown.map((member, i) => (
-                  <FadeIn key={`${member.slug}-${i}`} delay={Math.min(i, 8) * 60}>
+                  <FadeIn
+                    key={`${member.slug}-${i}`}
+                    delay={Math.min(i, 8) * 60}
+                  >
                     <MemberResultCard member={member} />
                   </FadeIn>
                 ))}
@@ -176,5 +211,5 @@ export function MemberDirectoryFilterPage() {
         </div>
       </div>
     </PageShell>
-  )
+  );
 }
