@@ -1,5 +1,6 @@
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { downloadBlob } from "./downloadBlob";
 import { routes } from "../../app/routeMap";
 import styles from "./CodeOfConductPage.module.css";
 import { TOC } from "./codeOfConductPage.data";
@@ -14,6 +15,24 @@ import {
 const REPORT = routes.report;
 const EMERGENCY = routes.emergency;
 const CHANGELOG = routes.changelog;
+
+const COC_TEXT = `QueerPulse — Code of Conduct (v2.1)
+====================================
+Binding · ratified at the 2025 Annual Assembly · 14 Jan 2026
+
+A short, actually-followed agreement. Six things that are not negotiable on
+QueerPulse, and what happens if you break them.
+
+§01 Where this applies — every member, every QueerPulse space.
+§02 The six things you must not do.
+§03 What we mean by harm, and what we don't.
+§04 What happens if you break this (the moderation ladder).
+§05 Appeals — how to push back.
+§06 Off-platform conduct.
+§07 Changes & versioning.
+
+This is a mock export from the QueerPulse prototype.
+`;
 
 export function CodeOfConductPage() {
   const { showToast } = useToast();
@@ -70,7 +89,7 @@ export function CodeOfConductPage() {
         />
         <CocChangesSection
           changelogPath={CHANGELOG}
-          onDownload={() => showToast("Downloading code-of-conduct-v2.1.pdf", "success")}
+          onDownload={() => downloadBlob("code-of-conduct-v2.1.txt", COC_TEXT, "text/plain")}
         />
       </article>
     </PageShell>

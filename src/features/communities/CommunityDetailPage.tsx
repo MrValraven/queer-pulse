@@ -1,34 +1,42 @@
 import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { FiCheck } from 'react-icons/fi'
+import { FiCheck, FiClock } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { communities } from '../homepage/data/communities'
 import { memberProfiles } from '../members/data/memberProfiles'
+import { useCommunityMembership } from '../../app/providers/CommunityMembershipProvider'
 import { JoinModal } from './JoinModal'
 import { getCommunityDetail, membersFor, type Thread as ThreadData, type Tint } from './communityDetails'
-import { AboutTab, ForumTab, MembersTab } from './CommunityTabs'
+import { getLiving } from './livingCommunities.data'
+import { LivingHubTabs } from './LivingHubTabs'
+import { FallbackHubTabs } from './FallbackHubTabs'
 import { CommunitySidebar } from './CommunitySidebar'
 import styles from './CommunityDetailPage.module.css'
 
 const HERO_AV: Record<Tint, { background: string; color: string }> = {
-  coral: { background: 'rgba(232,119,90,.22)', color: 'var(--accent-soft)' },
-  jade: { background: 'rgba(74,140,111,.22)', color: 'var(--jade-soft)' },
+  coral: { background: 'rgba(var(--accent-rgb),.22)', color: 'var(--accent-soft)' },
+  jade: { background: 'rgba(var(--jade-rgb),.22)', color: 'var(--jade-soft)' },
   plum: { background: 'rgba(247,243,238,.18)', color: 'rgba(247,243,238,.8)' },
 }
 
-type Tab = 'about' | 'members' | 'forum'
-
 export function CommunityDetailPage() {
   const { slug } = useParams()
-  const [tab, setTab] = useState<Tab>('about')
-  const [joined, setJoined] = useState(false)
+  const { isMember, join, leave, hasRequested, requestToJoin, roleIn } = useCommunityMembership()
   const [joining, setJoining] = useState(false)
 
   const community = communities.find((c) => c.slug === slug)
   const detail = getCommunityDetail(slug)
   if (!community || !detail) return <Navigate to={routes.communities} replace />
+
+  const living = getLiving(slug)
+  const joined = slug ? isMember(slug) : false
+  const requested = slug ? hasRequested(slug) : false
+  const role = slug ? roleIn(slug) : null
+  const tier = living?.accessTier ?? (community.privateBadge ? 'private' : 'public')
+  const joinLabel =
+    tier === 'invite' ? 'Join with invite' : tier === 'public' ? 'Join community' : 'Request to join'
 
   const memberNum = parseInt(community.count, 10)
   const hasCount = !Number.isNaN(memberNum)
@@ -71,9 +79,19 @@ export function CommunityDetailPage() {
             <span>{detail.cadence}</span>
           </div>
           <div className={styles.actRow}>
-            <Button variant={joined ? 'jade' : 'primary'} onClick={() => (joined ? setJoined(false) : setJoining(true))}>
-              {joined ? <><FiCheck /> Joined</> : community.privateBadge ? 'Request access' : 'Join community'}
-            </Button>
+            {joined ? (
+              <Button variant="jade" onClick={() => slug && leave(slug)}>
+                <FiCheck aria-hidden /> Joined
+              </Button>
+            ) : requested ? (
+              <Button variant="ghost" disabled>
+                <FiClock aria-hidden /> Requested
+              </Button>
+            ) : (
+              <Button variant="primary" onClick={() => setJoining(true)}>
+                {joinLabel}
+              </Button>
+            )}
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <div className={styles.avStrip}>
                 {heroAvatars.map((m, i) => {
@@ -111,23 +129,24 @@ export function CommunityDetailPage() {
       <div className={styles.body}>
         <div className="wrap">
           <div className={styles.layout}>
-            <div>
-              <div className={styles.tabs}>
-                <button type="button" className={[styles.tab, tab === 'about' && styles.tabActive].filter(Boolean).join(' ')} onClick={() => setTab('about')}>
-                  About
-                </button>
-                <button type="button" className={[styles.tab, tab === 'members' && styles.tabActive].filter(Boolean).join(' ')} onClick={() => setTab('members')}>
-                  Members {hasCount && <span className={styles.tabCount}>{memberNum}</span>}
-                </button>
-                <button type="button" className={[styles.tab, tab === 'forum' && styles.tabActive].filter(Boolean).join(' ')} onClick={() => setTab('forum')}>
-                  Forum <span className={styles.tabCount}>{threads.length}</span>
-                </button>
-              </div>
-
-              {tab === 'about' && <AboutTab detail={detail} />}
-              {tab === 'members' && <MembersTab members={members} hasCount={hasCount} memberNum={memberNum} />}
-              {tab === 'forum' && <ForumTab threads={threads} />}
-            </div>
+            {living ? (
+              <LivingHubTabs
+                community={community}
+                info={detail}
+                living={living}
+                threads={threads}
+                isMember={joined}
+                role={role}
+              />
+            ) : (
+              <FallbackHubTabs
+                detail={detail}
+                members={members}
+                hasCount={hasCount}
+                memberNum={memberNum}
+                threads={threads}
+              />
+            )}
 
             <CommunitySidebar detail={detail} related={related} />
           </div>
@@ -143,8 +162,10 @@ export function CommunityDetailPage() {
             description: community.description,
             tags: detail.tags,
           }}
+          tier={tier}
           onClose={() => setJoining(false)}
-          onJoined={() => setJoined(true)}
+          onJoined={() => slug && join(slug)}
+          onRequested={() => slug && requestToJoin(slug)}
         />
       )}
     </PageShell>

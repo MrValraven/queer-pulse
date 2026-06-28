@@ -2,12 +2,25 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiFileText } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
+import { useSimulatedLoad } from "../../shared/hooks";
 import styles from "./TagPage.module.css";
-import { Button, EmptyState } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn, SkeletonLine } from '../../shared/components/ui'
 import { memberName } from '../members/data/members'
+
+function ItemSkeleton() {
+  // Mirrors the real .item: kicker line, two-line title, dek, byline.
+  return (
+    <div className={styles.item} aria-hidden>
+      <SkeletonLine width={140} height={11} />
+      <SkeletonLine width="85%" height={24} style={{ marginTop: 4 }} />
+      <SkeletonLine width="60%" height={24} />
+      <SkeletonLine width="95%" height={14} style={{ marginTop: 4 }} />
+      <SkeletonLine width="40%" height={12.5} style={{ marginTop: 4 }} />
+    </div>
+  );
+}
 
 const ARTICLE = routes.article;
 const NEWSLETTER = routes.newsletter;
@@ -50,9 +63,19 @@ const ALL_ITEMS: Item[] = [...ITEMS, ...ARCHIVE];
 const PAGE_SIZE = 9;
 
 export function TagPage() {
-  const { showToast } = useToast();
+  const loading = useSimulatedLoad();
   const [activeChip, setActiveChip] = useState(0);
   const [visible, setVisible] = useState(PAGE_SIZE);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const loadMore = () => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    setTimeout(() => {
+      setVisible((v) => v + PAGE_SIZE);
+      setLoadingMore(false);
+    }, 600);
+  };
 
   const matched = useMemo(() => {
     if (activeChip === 0) return ALL_ITEMS;
@@ -165,7 +188,13 @@ export function TagPage() {
           </div>
         </div>
 
-        {filtered.length === 0 ? (
+        {loading ? (
+          <section className={styles.list}>
+            {Array.from({ length: PAGE_SIZE }).map((_, i) => (
+              <ItemSkeleton key={i} />
+            ))}
+          </section>
+        ) : filtered.length === 0 ? (
           <EmptyState
             icon={<FiFileText />}
             title="No long reads in this category yet"
@@ -176,28 +205,31 @@ export function TagPage() {
         ) : (
           <section className={styles.list}>
             {filtered.map((it, i) => (
-              <Link to={ARTICLE} className={styles.item} key={i}>
+              <FadeIn as={Link} to={ARTICLE} className={styles.item} key={i} delay={Math.min(i % PAGE_SIZE, 8) * 60}>
                 <div className={styles.itemKicker}>
                   {it.kicker} <span className={styles.read}>{it.read}</span>
                 </div>
                 <h3 className={styles.itemH}>{it.title}</h3>
                 <p className={styles.itemDek}>{it.dek}</p>
                 <div className={styles.itemByline}>{it.byline}</div>
-              </Link>
+              </FadeIn>
             ))}
+            {loadingMore &&
+              Array.from({ length: Math.min(PAGE_SIZE, remaining) }).map((_, i) => (
+                <ItemSkeleton key={`more-${i}`} />
+              ))}
           </section>
         )}
 
-        {remaining > 0 && (
+        {!loading && remaining > 0 && (
           <div className={styles.loadMore}>
             <Button
               type="button" variant="ghost"
-              onClick={() => {
-                setVisible((v) => v + PAGE_SIZE);
-                showToast("Loading older long reads…", "info");
-              }}
+              onClick={loadMore}
+              disabled={loadingMore}
+              aria-busy={loadingMore}
             >
-              Load {Math.min(PAGE_SIZE, remaining)} older long reads
+              {loadingMore ? "Loading older long reads…" : `Load ${Math.min(PAGE_SIZE, remaining)} older long reads`}
             </Button>
           </div>
         )}

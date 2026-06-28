@@ -46,6 +46,27 @@ const DATA: YearGroup[] = [
 
 const CHIPS = ["All · 54", "Features · 22", "Interviews · 12", "News · 14", "Critiques · 6"];
 
+/** A deterministic "older archive" generated from the curated pieces, so
+ *  "Load more" appends real rows instead of toasting into the void. */
+const OLDER: YearGroup[] = [
+  {
+    year: "2023",
+    count: "18 pieces",
+    pieces: Array.from({ length: 5 }, (_, i) => {
+      const base = DATA[1].pieces[i % DATA[1].pieces.length];
+      return { ...base, pin: false, sourceKind: `${base.sourceKind} · archive` };
+    }),
+  },
+  {
+    year: "2022",
+    count: "18 pieces",
+    pieces: Array.from({ length: 5 }, (_, i) => {
+      const base = DATA[2].pieces[i % DATA[2].pieces.length];
+      return { ...base, pin: false, sourceKind: `${base.sourceKind} · archive` };
+    }),
+  },
+];
+
 function PressRowSkeleton() {
   // Mirrors the real .row grid: date column (auto), title block (1fr), outlet (auto).
   return (
@@ -68,6 +89,18 @@ export function PressArchivePage() {
   const loading = useSimulatedLoad();
   const { showToast } = useToast();
   const [chip, setChip] = useState(0);
+  const [extra, setExtra] = useState<YearGroup[]>([]);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const loadMore = () => {
+    if (loadingMore || extra.length >= OLDER.length) return;
+    setLoadingMore(true);
+    setTimeout(() => {
+      setExtra((prev) => [...prev, OLDER[prev.length]]);
+      setLoadingMore(false);
+    }, 700);
+  };
+  const allLoaded = extra.length >= OLDER.length;
 
   return (
     <PageShell>
@@ -132,54 +165,66 @@ export function PressArchivePage() {
             ))}
           </div>
         ) : (
-          (() => {
-            let n = -1
-            return DATA.map((yg) => (
-              <div key={yg.year}>
-                <h2 className={styles.year}>
-                  202<em>{yg.year.slice(3)}</em>
-                  <span className={styles.ct}>{yg.count}</span>
-                </h2>
-                {yg.pieces.map((p, i) => {
-                  n += 1
-                  return (
-                    <FadeIn key={i} delay={Math.min(n, 8) * 60}>
-                      <a
-                        href="#"
-                        className={styles.row}
-                        onClick={(e) => {
-                          e.preventDefault()
-                          showToast(`Opening on ${p.out}…`, 'info')
-                        }}
-                      >
-                        <div className={styles.date}>
-                          {p.day} <em>{p.month}</em>
-                          <span>{p.kind}</span>
-                        </div>
-                        <div>
-                          <div className={styles.source} style={p.sourceMuted ? { color: "var(--ink-60)" } : undefined}>
-                            {p.pin && <span className={styles.pin}>Featured</span>}
-                            {p.source}
-                            <span className={styles.kind}>· {p.sourceKind}</span>
-                          </div>
-                          <div className={styles.title}>{p.title}</div>
-                          <div className={styles.meta}>{p.meta}</div>
-                        </div>
-                        <div className={styles.out}>{p.out}</div>
-                      </a>
-                    </FadeIn>
-                  )
-                })}
-              </div>
-            ))
-          })()
+          [...DATA, ...extra].map((yg) => (
+            <div key={yg.year}>
+              <h2 className={styles.year}>
+                202<em>{yg.year.slice(3)}</em>
+                <span className={styles.ct}>{yg.count}</span>
+              </h2>
+              {yg.pieces.map((p, i) => (
+                <FadeIn key={i} delay={Math.min(i, 8) * 60}>
+                  <a
+                    href="#"
+                    className={styles.row}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      showToast(`Opening on ${p.out}…`, 'info')
+                    }}
+                  >
+                    <div className={styles.date}>
+                      {p.day} <em>{p.month}</em>
+                      <span>{p.kind}</span>
+                    </div>
+                    <div>
+                      <div className={styles.source} style={p.sourceMuted ? { color: "var(--ink-60)" } : undefined}>
+                        {p.pin && <span className={styles.pin}>Featured</span>}
+                        {p.source}
+                        <span className={styles.kind}>· {p.sourceKind}</span>
+                      </div>
+                      <div className={styles.title}>{p.title}</div>
+                      <div className={styles.meta}>{p.meta}</div>
+                    </div>
+                    <div className={styles.out}>{p.out}</div>
+                  </a>
+                </FadeIn>
+              ))}
+            </div>
+          ))
         )}
 
-        <div className={styles.loadMore}>
-          <Button type="button" variant="ghost" onClick={() => showToast("Loading more pieces…", "info")}>
-            Load 36 more pieces
-          </Button>
-        </div>
+        {loadingMore && (
+          <div>
+            <h2 className={styles.year} aria-hidden>
+              <SkeletonLine width={90} height={42} />
+            </h2>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <PressRowSkeleton key={i} />
+            ))}
+          </div>
+        )}
+
+        {!loading && !allLoaded && (
+          <div className={styles.loadMore}>
+            <Button type="button" variant="ghost" onClick={loadMore} disabled={loadingMore} aria-busy={loadingMore}>
+              {loadingMore ? "Loading older pieces…" : "Load older coverage"}
+            </Button>
+          </div>
+        )}
+        {!loading && allLoaded && (
+          <div className={styles.loadMore}>
+            <span className={styles.end}>That's the whole archive — 2022 to today.</span>
+          </div>
+        )}
       </div>
     </PageShell>
   );

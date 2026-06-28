@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { CRISIS } from './mentalHealth.data'
 import { TherapistSection, ExperiencesSection, SnsSection } from './MentalHealthSections'
@@ -13,15 +13,15 @@ export function MentalHealthPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Mental Health</div>
-          <h1>
+          <Reveal as="div" className={styles.cat}>Mental Health</Reveal>
+          <Reveal as="h1" delay={60}>
             You don't have to be <em>okay.</em>
-          </h1>
-          <p className={styles.heroSub}>
+          </Reveal>
+          <Reveal as="p" className={styles.heroSub} delay={120}>
             Queer-affirming therapists, honest information about accessing mental health support in
             Lisbon, crisis resources, and a community that understands what you're carrying —
             because we're carrying it too.
-          </p>
+          </Reveal>
         </div>
       </div>
 

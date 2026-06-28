@@ -1,12 +1,15 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiCheck } from 'react-icons/fi'
+import { FiUsers } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
+import { routes } from '../../app/routeMap'
+import { useCommunityMembership } from '../../app/providers/CommunityMembershipProvider'
 import { communities } from '../homepage/data/communities'
 import type { Community, CommunityType } from '../homepage/data/types'
+import { getLiving } from './livingCommunities.data'
 import { JoinModal } from './JoinModal'
+import { CommunityCard } from './CommunityCard'
 import styles from './CommunitiesPage.module.css'
 
 const FILTERS: { value: 'all' | CommunityType; label: string }[] = [
@@ -36,9 +39,13 @@ function CommunityCardSkeleton() {
 
 export function CommunitiesPage() {
   const loading = useSimulatedLoad()
+  const { isMember, join, requestToJoin } = useCommunityMembership()
   const [filter, setFilter] = useState<'all' | CommunityType>('all')
-  const [joined, setJoined] = useState<Set<string>>(new Set())
   const [joining, setJoining] = useState<Community | null>(null)
+
+  const joiningTier = joining
+    ? getLiving(joining.slug)?.accessTier ?? (joining.privateBadge ? 'private' : 'public')
+    : 'public'
 
   const visible = useMemo(
     () => (filter === 'all' ? communities : communities.filter((c) => c.type === filter)),
@@ -60,6 +67,11 @@ export function CommunitiesPage() {
             collectives, activist groups, sports teams, support circles, and professional
             networks — something for where you are right now.
           </Reveal>
+          <Reveal delay={180} className={styles.heroCta}>
+            <Button to={routes.communitiesHome} variant="primary">
+              Go to your hub
+            </Button>
+          </Reveal>
         </div>
       </div>
 
@@ -79,55 +91,28 @@ export function CommunitiesPage() {
             ))}
           </Reveal>
 
+          {!loading && visible.length === 0 ? (
+            <EmptyState
+              icon={<FiUsers />}
+              title="Nothing matches your filters"
+              description="No communities in this category yet. Switch back to all communities to see everything across Lisbon."
+              action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
+            />
+          ) : (
           <div className={styles.grid}>
             {loading
               ? Array.from({ length: 6 }).map((_, i) => <CommunityCardSkeleton key={i} />)
-              : visible.map((community, index) => {
-              const hasJoined = joined.has(community.name)
-              return (
-                <FadeIn key={community.name} delay={Math.min(index, 8) * 60}>
-                  <Link
-                    to={`/community/${community.slug}`}
-                    className={styles.card}
-                  >
-                  <span className={[styles.type, styles[community.type]].join(' ')}>
-                    {community.typeLabel}
-                  </span>
-                  <div className={styles.name}>{community.name}</div>
-                  <p className={styles.desc}>{community.description}</p>
-                  <div className={styles.foot}>
-                    <span className={styles.meta}>{community.count}</span>
-                    {hasJoined ? (
-                      <span className={[styles.joinBtn, styles.joined].join(' ')}><FiCheck /> Joined</span>
-                    ) : community.privateBadge ? (
-                      <span className={styles.joinBtn}>Enter →</span>
-                    ) : (
-                      <span
-                        className={styles.joinBtn}
-                        role="button"
-                        tabIndex={0}
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          setJoining(community)
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            setJoining(community)
-                          }
-                        }}
-                      >
-                        Join
-                      </span>
-                    )}
-                  </div>
-                  </Link>
-                </FadeIn>
-              )
-            })}
+              : visible.map((community, index) => (
+                  <FadeIn key={community.name} delay={Math.min(index, 8) * 60}>
+                    <CommunityCard
+                      community={community}
+                      joined={community.slug ? isMember(community.slug) : false}
+                      onJoin={setJoining}
+                    />
+                  </FadeIn>
+                ))}
           </div>
+          )}
         </div>
       </div>
 
@@ -148,8 +133,10 @@ export function CommunitiesPage() {
             count: joining.count,
             description: joining.description,
           }}
+          tier={joiningTier}
           onClose={() => setJoining(null)}
-          onJoined={() => setJoined((current) => new Set(current).add(joining.name))}
+          onJoined={() => joining.slug && join(joining.slug)}
+          onRequested={() => joining.slug && requestToJoin(joining.slug)}
         />
       )}
     </PageShell>

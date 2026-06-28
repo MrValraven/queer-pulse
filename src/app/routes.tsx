@@ -11,6 +11,7 @@ import { FeedPage } from '../features/feed/FeedPage'
 import { NotificationsPage } from '../features/notifications/NotificationsPage'
 import { MessagesPage } from '../features/messages/MessagesPage'
 import { CommunitiesPage } from '../features/communities/CommunitiesPage'
+import { CommunitiesHomePage } from '../features/communities/CommunitiesHomePage'
 import { CommunityDetailPage } from '../features/communities/CommunityDetailPage'
 import { CalendarPage } from '../features/gatherings/CalendarPage'
 import { GatheringPage } from '../features/gatherings/GatheringPage'
@@ -96,6 +97,17 @@ import { ApplicationStatusPage } from '../features/economy/ApplicationStatusPage
 import { MentorshipPage } from '../features/economy/MentorshipPage'
 import { MentorDetailPage } from '../features/economy/MentorDetailPage'
 import { EconomyPage } from '../features/economy/EconomyPage'
+import { InvoiceGeneratorPage } from '../features/economy/InvoiceGeneratorPage'
+import { ContractGeneratorPage } from '../features/economy/ContractGeneratorPage'
+import { ScopeGeneratorPage } from '../features/economy/ScopeGeneratorPage'
+import { ReciboVerdeGuidePage } from '../features/economy/ReciboVerdeGuidePage'
+import { TakeHomeCalculatorPage } from '../features/economy/TakeHomeCalculatorPage'
+import { IvaTrackerPage } from '../features/economy/IvaTrackerPage'
+import { SetAsidePlannerPage } from '../features/economy/SetAsidePlannerPage'
+import { DayRateCalculatorPage } from '../features/economy/DayRateCalculatorPage'
+import { RateBoardPage } from '../features/economy/RateBoardPage'
+import { SlidingScalePage } from '../features/economy/SlidingScalePage'
+import { ComparatorPage } from '../features/economy/ComparatorPage'
 import { CinemaPage } from '../features/cinema/CinemaPage'
 import { CinemaBrowsePage } from '../features/cinema/CinemaBrowsePage'
 import { CinemaMembershipPage } from '../features/cinema/CinemaMembershipPage'
@@ -402,6 +414,7 @@ export function AppRoutes() {
       <Route path="/account/drafts" element={<DraftsPage />} />
       <Route path="/qr-scanner" element={<QrScannerPage />} />
       <Route path="/communities" element={<CommunitiesPage />} />
+      <Route path="/communities/home" element={<CommunitiesHomePage />} />
       <Route path="/community/:slug" element={<CommunityDetailPage />} />
 
       {/* Gatherings */}
@@ -511,6 +524,17 @@ export function AppRoutes() {
       <Route path="/mentorship/:slug" element={<MentorDetailPage />} />
       <Route path="/mentor-profile" element={<MentorProfilePage />} />
       <Route path="/economy" element={<EconomyPage />} />
+      <Route path="/economy/invoice" element={<InvoiceGeneratorPage />} />
+      <Route path="/economy/contract" element={<ContractGeneratorPage />} />
+      <Route path="/economy/scope" element={<ScopeGeneratorPage />} />
+      <Route path="/economy/recibo-verde-guide" element={<ReciboVerdeGuidePage />} />
+      <Route path="/economy/take-home" element={<TakeHomeCalculatorPage />} />
+      <Route path="/economy/iva-tracker" element={<IvaTrackerPage />} />
+      <Route path="/economy/set-aside" element={<SetAsidePlannerPage />} />
+      <Route path="/economy/day-rate" element={<DayRateCalculatorPage />} />
+      <Route path="/economy/rate-board" element={<RateBoardPage />} />
+      <Route path="/economy/sliding-scale" element={<SlidingScalePage />} />
+      <Route path="/economy/freelance-vs-salaried" element={<ComparatorPage />} />
 
       {/* Cinema */}
       <Route path="/cinema" element={<CinemaPage />} />

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
-import { FadeIn, SkeletonLine } from '../../shared/components/ui'
+import { Button, FadeIn, SkeletonLine } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
@@ -90,10 +90,10 @@ export function LinkedAccountsPage() {
                 </div>
                 <div className={styles.state}>
                   <span className={`${styles.badge} ${m.linked || linked ? styles.badgeLinked : styles.badgeUnlinked}`}>{revoked ? 'Unlinked' : linked ? 'Linked' : m.badgeText}</span>
-                  {m.canUnlink && !revoked && <button className={`${styles.rowBtn} ${styles.rowBtnUnlink}`} onClick={() => handleUnlink(m.id)}>Unlink</button>}
-                  {m.canLink && !linked && <button className={`${styles.rowBtn} ${styles.rowBtnConnect}`} onClick={() => setLinkProviderId(m.id)}>Link</button>}
-                  {m.defaultDisabled && <button className={`${styles.rowBtn} ${styles.rowBtnDisabled}`} disabled>Default</button>}
-                  {m.canManage && <button className={styles.rowBtn} onClick={() => navigate(routes.sessions)}>Manage</button>}
+                  {m.canUnlink && !revoked && <Button variant="ghost" className={`${styles.rowBtn} ${styles.rowBtnUnlink}`} onClick={() => handleUnlink(m.id)}>Unlink</Button>}
+                  {m.canLink && !linked && <Button variant="primary" className={`${styles.rowBtn} ${styles.rowBtnConnect}`} onClick={() => setLinkProviderId(m.id)}>Link</Button>}
+                  {m.defaultDisabled && <Button variant="ghost" className={`${styles.rowBtn} ${styles.rowBtnDisabled}`} disabled>Default</Button>}
+                  {m.canManage && <Button variant="ghost" className={styles.rowBtn} onClick={() => navigate(routes.sessions)}>Manage</Button>}
                 </div>
               </FadeIn>
             )
@@ -121,8 +121,8 @@ export function LinkedAccountsPage() {
                 </div>
                 <div className={styles.state}>
                   <span className={`${styles.badge} ${styles.badgeLinked}`}>{revoked ? 'Revoked' : app.badgeText}</span>
-                  {app.canRevoke && !revoked && <button className={`${styles.rowBtn} ${styles.rowBtnUnlink}`} onClick={() => handleUnlink(app.id)}>Revoke</button>}
-                  {app.canCopy && <button className={styles.rowBtn} onClick={handleCopyCalendar}>Copy URL</button>}
+                  {app.canRevoke && !revoked && <Button variant="ghost" className={`${styles.rowBtn} ${styles.rowBtnUnlink}`} onClick={() => handleUnlink(app.id)}>Revoke</Button>}
+                  {app.canCopy && <Button variant="ghost" className={styles.rowBtn} onClick={handleCopyCalendar}>Copy URL</Button>}
                 </div>
               </FadeIn>
             )
@@ -137,7 +137,7 @@ export function LinkedAccountsPage() {
               <b className={styles.infoName}>Browse available integrations</b>
               <span className={styles.infoDetail}>Stripe (Sustainer billing), Mastodon, Spotify (Audio Rooms), iCal export, and 4 more</span>
             </div>
-            <button className={`${styles.rowBtn} ${styles.rowBtnConnect}`} onClick={() => setGalleryOpen(true)}>Browse</button>
+            <Button variant="primary" className={`${styles.rowBtn} ${styles.rowBtnConnect}`} onClick={() => setGalleryOpen(true)}>Browse</Button>
           </div>
         </div>
 

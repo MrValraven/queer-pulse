@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
+import { FiSearch } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Outro } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn, Outro } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { ArtGridSkeleton, MusicGridSkeleton } from './CreativesSkeleton'
 import {
@@ -134,9 +135,13 @@ export function CreativesPage() {
                 <ArtGridSkeleton />
               </div>
             ) : artItems.length === 0 ? (
-              <div className={styles.empty}>
-                <p>No works match those filters.</p>
-              </div>
+              <EmptyState
+                compact
+                icon={<FiSearch />}
+                title="Nothing matches your filters"
+                description="No works fit these tags right now. Clear them to see everything the community has shared."
+                action={{ label: 'Clear filters', onClick: () => setFilters([]) }}
+              />
             ) : (
               <div className={styles.artGrid}>
                 {artItems.map((w, i) => (
@@ -151,9 +156,13 @@ export function CreativesPage() {
               <MusicGridSkeleton />
             </div>
           ) : musicItems.length === 0 ? (
-            <div className={styles.empty}>
-              <p>No artists match those filters.</p>
-            </div>
+            <EmptyState
+              compact
+              icon={<FiSearch />}
+              title="Nothing matches your filters"
+              description="No artists fit these tags right now. Clear them to hear everyone in the room."
+              action={{ label: 'Clear filters', onClick: () => setFilters([]) }}
+            />
           ) : (
             <div className={styles.musicGrid}>
               {musicItems.map((a, i) => (

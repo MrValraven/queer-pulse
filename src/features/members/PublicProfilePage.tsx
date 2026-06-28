@@ -1,5 +1,6 @@
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button } from '../../shared/components/ui'
+import { Avatar, Button, FadeIn } from '../../shared/components/ui'
+import { useCountUp } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { PublicList, LockedSection, BottomCta } from './PublicProfileSections'
 import {
@@ -12,6 +13,30 @@ import {
 import styles from './PublicProfilePage.module.css'
 
 const m = PUBLIC_MEMBER
+
+/** Splits e.g. "1.4k" → { num: 1.4, suffix: "k" } for animating the leading number. */
+function parseStat(value: string): { num: number; suffix: string; decimals: number } {
+  const match = value.match(/^([\d.]+)(.*)$/)
+  if (!match) return { num: NaN, suffix: value, decimals: 0 }
+  const decimals = match[1].includes('.') ? match[1].split('.')[1].length : 0
+  return { num: parseFloat(match[1]), suffix: match[2], decimals }
+}
+
+function Stat({ value, em, label }: { value: string; em?: boolean; label: string }) {
+  const { num, suffix, decimals } = parseStat(value)
+  const animatable = Number.isFinite(num)
+  // useCountUp rounds to integers, so scale decimals up then back down.
+  const scale = Math.pow(10, decimals)
+  const counted = useCountUp(animatable ? Math.round(num * scale) : 0)
+  const display = animatable ? `${(counted / scale).toFixed(decimals)}${suffix}` : value
+
+  return (
+    <div className={styles.stat}>
+      <b>{em ? <em>{display}</em> : display}</b>
+      <span>{label}</span>
+    </div>
+  )
+}
 
 export function PublicProfilePage() {
   return (
@@ -82,15 +107,14 @@ export function PublicProfilePage() {
         </header>
 
         <div className={styles.stats}>
-          {PUBLIC_STATS.map((s) => (
-            <div key={s.label} className={styles.stat}>
-              <b>{s.em ? <em>{s.value}</em> : s.value}</b>
-              <span>{s.label}</span>
-            </div>
+          {PUBLIC_STATS.map((s, i) => (
+            <FadeIn key={s.label} delay={Math.min(i, 8) * 60}>
+              <Stat value={s.value} em={s.em} label={s.label} />
+            </FadeIn>
           ))}
         </div>
 
-        <section className={styles.sec}>
+        <FadeIn as="section" className={styles.sec} delay={120}>
           <div className={styles.secH}>
             <h2>
               What I'm <em>here for</em>
@@ -104,22 +128,27 @@ export function PublicProfilePage() {
               </span>
             ))}
           </div>
-        </section>
+        </FadeIn>
 
-        <PublicList
-          heading={<>Public <em>writing</em></>}
-          meta="4 articles · QueerPulse Magazine"
-          cards={PUBLIC_WRITING}
-          to={routes.article}
-        />
+        <FadeIn delay={180}>
+          <PublicList
+            heading={<>Public <em>writing</em></>}
+            meta="4 articles · QueerPulse Magazine"
+            cards={PUBLIC_WRITING}
+            to={routes.article}
+          />
+        </FadeIn>
 
-        <PublicList
-          heading={<>Public <em>hosting</em></>}
-          meta="Open events anyone can RSVP to"
-          cards={PUBLIC_HOSTING}
-          to={routes.gathering}
-        />
+        <FadeIn delay={240}>
+          <PublicList
+            heading={<>Public <em>hosting</em></>}
+            meta="Open events anyone can RSVP to"
+            cards={PUBLIC_HOSTING}
+            to={routes.gathering}
+          />
+        </FadeIn>
 
+        <FadeIn delay={300}>
         <LockedSection
           heading={<>Posts &amp; <em>messages</em></>}
           meta="Members only"
@@ -137,7 +166,9 @@ export function PublicProfilePage() {
             </Button>
           }
         />
+        </FadeIn>
 
+        <FadeIn delay={360}>
         <LockedSection
           heading="Connections"
           meta="Members only"
@@ -157,6 +188,7 @@ export function PublicProfilePage() {
             </Button>
           }
         />
+        </FadeIn>
 
         <BottomCta />
       </div>

@@ -6,6 +6,7 @@ import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useSaved } from '../../app/providers/SavedProvider'
 import { StudioShell } from './StudioShell'
+import { StudioTipModal } from './StudioTipModal'
 import { StudioLine } from './StudioSkeletons'
 import s from './live.module.css'
 import { WF, PLAYED, SET, CHAT, TABS, coverImage } from './studioLive.data'
@@ -40,6 +41,7 @@ export function StudioLivePage() {
   const { showToast } = useToast()
   const { isSaved, toggleSave } = useSaved()
   const [tab, setTab] = useState('Chat')
+  const [tipOpen, setTipOpen] = useState(false)
   const saved = isSaved(LIVE_TRACK.id)
   const loading = useSimulatedLoad()
 
@@ -82,7 +84,7 @@ export function StudioLivePage() {
                   <span>4:18</span>
                 </div>
                 <div className={s.liveActions}>
-                  <button className={`${s.bt} ${s.btP}`} onClick={() => showToast('Tipped €2 to Mariana', 'success')}>
+                  <button className={`${s.bt} ${s.btP}`} onClick={() => setTipOpen(true)}>
                     Tip Mariana · €2
                   </button>
                   <button className={s.bt} onClick={() => { const now = toggleSave(LIVE_TRACK); showToast(now ? 'Track saved to your library' : 'Removed from your library', now ? 'success' : 'info') }}>
@@ -194,13 +196,15 @@ export function StudioLivePage() {
               </button>
             </div>
             <div className={s.chatActions}>
-              <button onClick={() => showToast('Tipped €2', 'success')}>Tip €2</button>
-              <button onClick={() => showToast('Tipped €5', 'success')}>Tip €5</button>
-              <button onClick={() => showToast('Choose a tip amount', 'info')}>Tip €__</button>
+              <button onClick={() => setTipOpen(true)}>Tip €2</button>
+              <button onClick={() => setTipOpen(true)}>Tip €5</button>
+              <button onClick={() => setTipOpen(true)}>Tip €__</button>
             </div>
           </div>
         </aside>
       </div>
+
+      {tipOpen && <StudioTipModal recipient="Mariana Sol" onClose={() => setTipOpen(false)} />}
     </StudioShell>
   )
 }

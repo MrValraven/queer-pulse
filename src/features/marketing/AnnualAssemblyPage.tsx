@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { Button } from '../../shared/components/ui'
@@ -6,8 +8,24 @@ import { routes } from '../../app/routeMap'
 import { AgendaSection, VoteSection, AttendCard, PastAssembliesSection } from './AnnualAssemblySections'
 import styles from './AnnualAssemblyPage.module.css'
 
+const TOTAL_SPOTS = 120
+const SPOTS_TAKEN = 87
+
 export function AnnualAssemblyPage() {
   const { showToast } = useToast()
+  const [rsvped, setRsvped] = useState(false)
+  const spotsLeft = TOTAL_SPOTS - (rsvped ? SPOTS_TAKEN + 1 : SPOTS_TAKEN)
+
+  const toggleRsvp = () => {
+    if (rsvped) {
+      setRsvped(false)
+      showToast('RSVP cancelled · your seat is back in the pool', 'info')
+    } else {
+      setRsvped(true)
+      showToast("You're on the list · see you 14 Nov", 'success')
+    }
+  }
+
   return (
     <PageShell>
       <section className={styles.hero}>
@@ -29,7 +47,17 @@ export function AnnualAssemblyPage() {
           </div>
           <div className={styles.ctaRow}>
             <Button href="#vote" variant="primary">Vote now · 11 resolutions</Button>
-            <Button type="button" variant="ghost-dark" onClick={() => showToast('RSVP saved', 'success')}>RSVP in-person · 87 / 120 spots</Button>
+            <Button
+              type="button"
+              variant={rsvped ? 'jade' : 'ghost-dark'}
+              onClick={toggleRsvp}
+            >
+              {rsvped ? (
+                <><FiCheck aria-hidden style={{ marginRight: 6, verticalAlign: '-2px' }} />You're going · tap to cancel</>
+              ) : (
+                <>RSVP in-person · {spotsLeft} of {TOTAL_SPOTS} spots left</>
+              )}
+            </Button>
             <Button type="button" variant="ghost-dark" onClick={() => showToast('Opening Zoom link…', 'info')}>Join online · Zoom link</Button>
           </div>
         </div>

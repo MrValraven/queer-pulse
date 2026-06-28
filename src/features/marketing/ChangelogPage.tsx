@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { FiClock } from "react-icons/fi";
+import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import styles from "./ChangelogPage.module.css";
 
@@ -112,6 +113,14 @@ export function ChangelogPage() {
               ))}
             </div>
           ) : (
+            DATA.every((yb) => yb.entries.every((e) => filter !== "all" && e.type !== filter)) ? (
+              <EmptyState
+                icon={<FiClock />}
+                title="Nothing logged under that filter yet"
+                description="No changes of this kind have shipped so far. Clear the filter to see the full history."
+                action={{ label: "Clear filters", onClick: () => setFilter("all") }}
+              />
+            ) : (
             (() => {
               let row = 0;
               return DATA.map((yb) => {
@@ -141,7 +150,7 @@ export function ChangelogPage() {
                 );
               });
             })()
-          )}
+          ))}
         </div>
       </div>
     </PageShell>

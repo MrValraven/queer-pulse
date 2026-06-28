@@ -1,0 +1,210 @@
+/* ── Form column ─────────────────────────────────────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.rcLabel {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.rcRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 560px) {
+  .rcRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rcInput,
+.rcSelect {
+  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+  transition: border-color 0.25s var(--ease);
+  width: 100%;
+  box-sizing: border-box;
+}
+.rcInput:focus,
+.rcSelect:focus {
+  border-color: var(--accent);
+}
+.rcSelect {
+  cursor: pointer;
+}
+
+/* ── Result column ───────────────────────────────────────────────────────── */
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Plum success/emphasis panel for the headline net figure. */
+.netPanel {
+  background: var(--plum);
+  color: var(--cream);
+  border-radius: var(--radius-card, 22px);
+  padding: 36px;
+  text-align: center;
+}
+
+.netIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(var(--jade-rgb), 0.18);
+  color: var(--jade);
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.netLabel {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: rgba(247, 243, 238, 0.7);
+  margin: 0 0 8px;
+}
+
+.netValue {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(42px, 7vw, 60px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  margin: 0;
+}
+
+.netMonthly {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: rgba(247, 243, 238, 0.8);
+  margin: 12px 0 0;
+}
+.netMonthly strong {
+  color: var(--cream);
+  font-weight: 600;
+}
+
+/* Visual "what you keep" bar. */
+.bar {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(247, 243, 238, 0.14);
+  overflow: hidden;
+  margin: 24px 0 12px;
+}
+.barKept {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--jade);
+  transition: width 0.45s var(--ease);
+}
+
+.barCaption {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: rgba(247, 243, 238, 0.65);
+  margin: 0;
+}
+.barCaption em {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--cream);
+}
+
+/* Step-by-step breakdown on a paper card. */
+.breakdown {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: 12px 28px;
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  font-family: var(--sans);
+}
+.row:last-child {
+  border-bottom: none;
+}
+.row dt {
+  font-size: 15px;
+  color: var(--ink-60);
+  margin: 0;
+}
+.row dd {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.deduct dd {
+  color: var(--accent-ink);
+}
+
+.subtotal dt,
+.subtotal dd {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.total {
+  border-top: 2px solid rgba(45, 27, 61, 0.12);
+}
+.total dt {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--plum);
+}
+.total dd {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+}
+
+.disclaimer {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-40);
+  margin: 0;
+  padding: 0 4px;
+}

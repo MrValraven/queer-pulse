@@ -225,8 +225,8 @@
 }
 
 .rowBtnConnect:hover {
-  background: #1a0f25;
-  border-color: #1a0f25;
+  background: var(--plum-deep);
+  border-color: var(--plum-deep);
   color: var(--cream);
 }
 

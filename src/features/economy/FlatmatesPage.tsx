@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Outro } from '../../shared/components/ui'
+import { FiHome } from 'react-icons/fi'
+import { Button, EmptyState, FadeIn, Outro } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { PROFILES, matchesBudget, type ListingType } from './flatmates.data'
@@ -92,12 +93,21 @@ export function FlatmatesPage() {
             ) : (
               <>
                 {filtered.length === 0 && (
-                  <div className={styles.empty}>
-                    <div className={styles.emptyTitle}>No profiles match those filters.</div>
-                    <div className={styles.emptySub}>
-                      Try removing a filter, or be the first to post in this combination.
-                    </div>
-                  </div>
+                  <EmptyState
+                    icon={<FiHome />}
+                    title="No profiles match those filters"
+                    description="No one fits that exact combination right now. Try widening your filters — or post your own profile and let the right flatmate find you."
+                    action={{
+                      label: 'Clear filters',
+                      onClick: () => {
+                        setType('all')
+                        setNeighbourhood('all')
+                        setBudget('all')
+                        setMovein('all')
+                        setTags([])
+                      },
+                    }}
+                  />
                 )}
                 {filtered.map((p, i) => (
                   <FadeIn key={p.id} delay={Math.min(i, 8) * 60}>

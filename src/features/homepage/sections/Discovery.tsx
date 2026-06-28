@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiUsers } from 'react-icons/fi'
 import {
   Avatar,
+  EmptyState,
   Reveal,
   SectionHead,
   Tag,
@@ -115,11 +117,21 @@ export function Discovery() {
           ))}
         </Reveal>
 
+        {visible.length === 0 ? (
+          <EmptyState
+            compact
+            icon={<FiUsers />}
+            title="No one in that group is around right now"
+            description="People come and go through the day. Clear the filter to see everyone who's in the room at the moment."
+            action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
+          />
+        ) : (
         <div className={styles.grid}>
           {visible.map((member) => (
             <MemberCard key={member.key} member={member} />
           ))}
         </div>
+        )}
       </div>
     </section>
   )

@@ -1,0 +1,32 @@
+/* Print isolation for Economy document generators.
+   On print, hide everything except the document preview ([data-print-root]),
+   so the saved PDF contains only the branded document — no app chrome. */
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  [data-print-root],
+  [data-print-root] * {
+    visibility: visible;
+  }
+
+  [data-print-root] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    max-width: none;
+    /* Keep brand colors when printing. */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  @page {
+    margin: 18mm;
+  }
+}

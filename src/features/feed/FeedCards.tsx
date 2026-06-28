@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FiBookmark, FiCheck, FiHeart, FiCornerUpLeft, FiSend } from 'react-icons/fi'
-import { Avatar } from '../../shared/components/ui'
+import { FiBookmark, FiCheck, FiHeart, FiCornerUpLeft, FiSend, FiMessageCircle } from 'react-icons/fi'
+import { Avatar, EmptyState } from '../../shared/components/ui'
 import { useConnect } from '../../app/providers/ConnectProvider'
 import { useSaved } from '../../app/providers/SavedProvider'
 import { memberAvatar } from '../members/data/members'
@@ -181,6 +181,15 @@ export function PostCard() {
         onSave={() => toggleSave({ id: post.id, kind: 'post', title: post.body.slice(0, 60), meta: post.authorName })}
       />
       {composing && <ReplyComposer onSubmit={addReply} onCancel={() => setComposing(false)} />}
+      {replies.length === 0 && !composing && (
+        <EmptyState
+          compact
+          icon={<FiMessageCircle />}
+          title="No replies yet"
+          description="Be the first to say something kind."
+          action={{ label: 'Write a reply', onClick: () => setComposing(true) }}
+        />
+      )}
       {replies.length > 0 && (
         <ul className={styles.thread}>
           {replies.map((r) => (

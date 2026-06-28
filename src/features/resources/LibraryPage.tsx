@@ -43,7 +43,7 @@ export function LibraryPage() {
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Resource Library"
+        eyebrow="Guide Library"
         eyebrowDotColor="var(--jade)"
         title={<>Every guide, <em>in one place.</em></>}
         lead="Housing, health, legal, finance, and trans-specific guides — written and vetted by the community, kept current, and free to share with anyone who needs them."

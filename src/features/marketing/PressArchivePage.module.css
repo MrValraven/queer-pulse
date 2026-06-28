@@ -247,3 +247,8 @@
   text-align: center;
   padding-top: 24px;
 }
+.end {
+  font-size: 13.5px;
+  color: var(--ink-40);
+  font-style: italic;
+}

@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
-import { FiInfo } from 'react-icons/fi'
+import { FiInbox, FiInfo, FiSearch, FiSend } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { ConnectionsGridSkeleton } from './ConnectionsSkeleton'
@@ -170,7 +171,19 @@ export function ConnectionsPage() {
               ))}
             </div>
             {visibleAll.length === 0 && (
-              <p className={styles.paneIntro}>No connections match “{query}”.</p>
+              <EmptyState
+                compact
+                icon={<FiSearch />}
+                title="Nothing matches your filters"
+                description="No one in your network fits that search just yet. Clear it to see everyone again."
+                action={{
+                  label: 'Clear filters',
+                  onClick: () => {
+                    setQuery('')
+                    setSort('Recently connected')
+                  },
+                }}
+              />
             )}
             {hasMore && (
               <div className={styles.loadMore}>
@@ -196,7 +209,13 @@ export function ConnectionsPage() {
               </FadeIn>
             ))}
             {incomingList.length === 0 && (
-              <p className={styles.paneIntro}>No incoming requests right now.</p>
+              <EmptyState
+                compact
+                icon={<FiInbox />}
+                title="No requests right now"
+                description="When someone you've met asks to connect, they'll land here for you to accept or politely decline."
+                action={{ label: 'Find members', to: routes.members }}
+              />
             )}
           </div>
         ))}
@@ -211,7 +230,13 @@ export function ConnectionsPage() {
               </FadeIn>
             ))}
             {outgoingList.length === 0 && (
-              <p className={styles.paneIntro}>No pending sent requests.</p>
+              <EmptyState
+                compact
+                icon={<FiSend />}
+                title="No requests right now"
+                description="Requests you send sit here until they're accepted. Browse members and reach out to someone you've crossed paths with."
+                action={{ label: 'Find members', to: routes.members }}
+              />
             )}
           </div>
         ))}

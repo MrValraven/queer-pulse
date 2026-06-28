@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
+import { FiRepeat } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FadeIn, Outro, Reveal, SkeletonAvatar, SkeletonLine } from "../../shared/components/ui";
+import { Button, EmptyState, FadeIn, Outro, Reveal, SkeletonAvatar, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { BARTERS, MODES, CATS, PRINCIPLES, type Barter, type Mode } from "./barter.data";
 import { BarterCard } from "./BarterCard";
@@ -154,9 +155,19 @@ export function BarterPage() {
             ) : (
               <>
                 {items.length === 0 && (
-                  <div className={styles.empty}>
-                    Nothing matches — try broadening the filters.
-                  </div>
+                  <EmptyState
+                    icon={<FiRepeat />}
+                    title="Nothing matches your filters"
+                    description="No swaps fit that combination just yet. Try broadening your search — or post what you're offering and let the right trade find you."
+                    action={{
+                      label: "Clear filters",
+                      onClick: () => {
+                        setMode("all");
+                        setCat("all");
+                        setQuery("");
+                      },
+                    }}
+                  />
                 )}
                 {items.map((b, index) => (
                   <FadeIn key={b.id} delay={Math.min(index, 8) * 60}>

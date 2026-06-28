@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { HOW } from './solidarity.data'
 import { SolidarityDirectory } from './SolidarityDirectory'
@@ -29,12 +29,12 @@ export function SolidarityPage() {
       <section className={styles.howStrip}>
         <div className="wrap">
           <div className={styles.howGrid}>
-            {HOW.map((h) => (
-              <div className={styles.howItem} key={h.n}>
+            {HOW.map((h, i) => (
+              <Reveal className={styles.howItem} key={h.n} delay={Math.min(i, 8) * 80}>
                 <div className={styles.howN}>{h.n}</div>
                 <div className={styles.howTitle}>{h.title}</div>
                 <div className={styles.howBody}>{h.body}</div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
-import { FiCheck, FiChevronDown, FiChevronRight, FiSend } from 'react-icons/fi'
+import { FiCheck, FiChevronDown, FiChevronRight, FiSend, FiUsers } from 'react-icons/fi'
 import { MdQrCodeScanner } from 'react-icons/md'
-import { Button } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { RECENT, WAITLIST, type Guest } from './gatheringDashboard.data'
 import { QrScanModal } from './QrScanModal'
@@ -127,6 +127,21 @@ export function GuestListCard({
         </div>
         <input className={styles.attSearch} type="text" placeholder="Search guests…" value={query} onChange={(e) => setQuery(e.target.value)} />
         <div>
+          {visible.length === 0 && (
+            <EmptyState
+              compact
+              icon={<FiUsers />}
+              title="No guests in this view"
+              description="No one matches your current filter or search. Try widening it to see everyone expected."
+              action={{
+                label: 'Clear filters',
+                onClick: () => {
+                  setFilter('all')
+                  setQuery('')
+                },
+              }}
+            />
+          )}
           {visible.map((g) => (
             <div className={styles.attRow} key={g.name}>
               <div className={styles.attAv} style={{ background: g.bg, color: g.color }}>
@@ -143,7 +158,9 @@ export function GuestListCard({
               </div>
               <div>
                 {g.status === 'in' ? (
-                  <div className={`${styles.checkinChip} ${styles.chipIn}`}>Checked in {g.time}</div>
+                  <FadeIn key={g.time} className={`${styles.checkinChip} ${styles.chipIn}`}>
+                    Checked in {g.time}
+                  </FadeIn>
                 ) : (
                   <div className={`${styles.checkinChip} ${styles.chipPending}`}>Expected</div>
                 )}

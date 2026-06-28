@@ -1,6 +1,6 @@
 import { MEMBERS, memberName } from '../members/data/members'
 
-export const FEED_TABS = ['All', 'Gatherings', 'People', 'Posts'] as const
+export const FEED_TABS = ['All', 'Communities', 'Gatherings', 'People', 'Posts'] as const
 export type FeedTab = (typeof FEED_TABS)[number]
 
 const NEW_SLUGS = ['kai', 'bilal-kaya', 'ines-fonseca', 'daniel-oliveira'] as const

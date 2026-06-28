@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
+import { FiClipboard } from 'react-icons/fi'
+import { Button, EmptyState, Reveal, SectionHead } from '../../../shared/components/ui'
 import { linkToPath, routes } from '../../../app/routeMap'
 import { boardFilters, boardPosts } from '../data/boardPosts'
 import { filterBoardPosts } from '../lib/filters'
@@ -51,6 +52,15 @@ export function Board() {
           </Button>
         </Reveal>
 
+        {visible.length === 0 ? (
+          <EmptyState
+            compact
+            icon={<FiClipboard />}
+            title="Nothing on the board for that filter"
+            description="The noticeboard moves with the week. Clear the filter to see what the room is asking for and offering right now."
+            action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
+          />
+        ) : (
         <div className={styles.grid}>
           {visible.map((post) => (
             <Link key={post.href} to={linkToPath(post.href)} className={styles.ask}>
@@ -68,6 +78,7 @@ export function Board() {
             </Link>
           ))}
         </div>
+        )}
       </div>
     </section>
   )

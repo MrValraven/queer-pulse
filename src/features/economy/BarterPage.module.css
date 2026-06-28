@@ -294,14 +294,6 @@
 .bcReach:hover {
   color: var(--accent-ink);
 }
-.empty {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 0;
-  color: var(--ink-40);
-  font-size: 15px;
-}
-
 .postStrip {
   background: var(--plum);
   border-radius: 22px;

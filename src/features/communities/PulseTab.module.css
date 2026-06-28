@@ -1,0 +1,209 @@
+.composer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.composerTa {
+  flex: 1;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: var(--ink);
+  resize: none;
+  line-height: 1.5;
+}
+.joinHint {
+  background: rgba(45, 27, 61, 0.04);
+  border: 1.5px dashed rgba(45, 27, 61, 0.14);
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  margin-bottom: 20px;
+}
+
+.post {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+}
+.pinned {
+  border-color: rgba(var(--jade-rgb), 0.4);
+  background: rgba(var(--jade-rgb), 0.05);
+}
+.pinFlag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jade);
+  margin-bottom: 12px;
+}
+.pinFlag svg {
+  width: 12px;
+  height: 12px;
+}
+
+.pHead {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.pWho {
+  min-width: 0;
+}
+.pName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--plum);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.pTime {
+  font-size: 12px;
+  color: var(--ink-40);
+  margin-top: 1px;
+}
+.pBody {
+  font-size: 14.5px;
+  color: var(--ink-80, var(--ink));
+  line-height: 1.65;
+  margin: 12px 0 0;
+  white-space: pre-wrap;
+}
+.pImg {
+  margin-top: 12px;
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: rgba(45, 27, 61, 0.06);
+}
+.pImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+.replyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+}
+.replyBtn svg {
+  width: 13px;
+  height: 13px;
+}
+.replyBtn:hover {
+  background: rgba(45, 27, 61, 0.06);
+  color: var(--ink);
+}
+
+.reply {
+  display: flex;
+  gap: 10px;
+  padding: 11px 0 0;
+  margin-top: 11px;
+  border-top: 1px solid rgba(45, 27, 61, 0.06);
+}
+.rAv {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex: none;
+  margin-top: 2px;
+}
+.rName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.rTime {
+  font-size: 11.5px;
+  color: var(--ink-40);
+}
+.rText {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-top: 2px;
+}
+.replyBar {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  padding-top: 12px;
+  margin-top: 11px;
+  border-top: 1px solid rgba(45, 27, 61, 0.07);
+}
+.replyTa {
+  flex: 1;
+  font-family: var(--sans);
+  font-size: 14px;
+  padding: 9px 13px;
+  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border-radius: 10px;
+  resize: none;
+  min-height: 38px;
+  color: var(--ink);
+  background: var(--cream);
+  outline: none;
+  line-height: 1.5;
+  box-sizing: border-box;
+  transition: border-color 0.2s var(--ease);
+}
+.replyTa:focus {
+  border-color: rgba(45, 27, 61, 0.3);
+}
+
+.moment {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--ink-60);
+  padding: 10px 18px;
+  margin-bottom: 14px;
+}
+.momentDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+.momentTime {
+  color: var(--ink-40);
+}

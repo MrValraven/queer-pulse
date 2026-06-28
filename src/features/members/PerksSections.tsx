@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
+import { FiCheck } from 'react-icons/fi'
+import { Button, FadeIn } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { levelInfo } from './badges.data'
@@ -44,8 +45,30 @@ function LockMini() {
   )
 }
 
-function PerkFooter({ perk }: { perk: Perk }) {
+function ClaimButton({ label, toast }: { label: string; toast: string }) {
   const { showToast } = useToast()
+  const [claimed, setClaimed] = useState(false)
+
+  if (claimed) {
+    return (
+      <span className={styles.claimedChip}>
+        <FiCheck aria-hidden /> Claimed
+      </span>
+    )
+  }
+  return (
+    <Button
+      onClick={() => {
+        setClaimed(true)
+        showToast(toast, 'success')
+      }}
+    >
+      {label}
+    </Button>
+  )
+}
+
+function PerkFooter({ perk }: { perk: Perk }) {
   const f = perk.footer
   switch (f.type) {
     case 'active-auto':
@@ -62,7 +85,7 @@ function PerkFooter({ perk }: { perk: Perk }) {
     case 'button':
       return (
         <div className={styles.actionRow}>
-          <Button onClick={() => showToast(f.toast, 'success')}>{f.label}</Button>
+          <ClaimButton label={f.label} toast={f.toast} />
         </div>
       )
     case 'link-auto':
@@ -110,13 +133,16 @@ function PerkCard({ perk }: { perk: Perk }) {
 }
 
 export function PerkGroups() {
+  let cardIndex = 0
   return (
     <div>
       {perkGroups.map((group) => (
         <div key={group.label}>
           <div className={styles.groupLabel}>{group.label}</div>
           {group.perks.map((perk) => (
-            <PerkCard key={perk.title} perk={perk} />
+            <FadeIn key={perk.title} delay={Math.min(cardIndex++, 8) * 60}>
+              <PerkCard perk={perk} />
+            </FadeIn>
           ))}
         </div>
       ))}

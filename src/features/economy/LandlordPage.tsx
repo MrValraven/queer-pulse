@@ -8,6 +8,7 @@ import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { getLandlord, type Tint } from './landlords'
 import { RecommendModal } from './HousingModals'
+import { ContactRequestModal } from './ContactRequestModal'
 import { LandlordSkeleton } from './LandlordSkeleton'
 import s from './LandlordPage.module.css'
 
@@ -24,6 +25,7 @@ export function LandlordPage() {
   const { slug } = useParams()
   const { showToast } = useToast()
   const [recommending, setRecommending] = useState(false)
+  const [introducing, setIntroducing] = useState(false)
   const loading = useSimulatedLoad()
 
   const ll = getLandlord(slug)
@@ -147,7 +149,7 @@ export function LandlordPage() {
                 variant="ghost"
                 className={s.sideFull}
                 style={{ marginTop: 14 }}
-                onClick={() => showToast(`Introduction requested with ${ll.name}`, 'success')}
+                onClick={() => setIntroducing(true)}
               >
                 Request an introduction →
               </Button>
@@ -162,6 +164,27 @@ export function LandlordPage() {
           landlordName={ll.name}
           onClose={() => setRecommending(false)}
           onSubmitted={(stars) => showToast(`Recommendation submitted — ${stars} stars`, 'success')}
+        />
+      )}
+
+      {introducing && (
+        <ContactRequestModal
+          toName={ll.name}
+          eyebrow="Housing · Introduction"
+          title="Ask for an"
+          em="introduction."
+          sub={`We'll pass a warm note to ${ll.name} on your behalf. Say a little about what you're looking for and when you'd like to move.`}
+          preset={`Hi ${ll.name.split(' ')[0]}, I found you through the QueerPulse housing board. I'm looking for a place in `}
+          successTitle="Introduction"
+          successEm="requested."
+          successBody={
+            <>
+              We've passed your note to <strong>{ll.name.split(' ')[0]}</strong>. If they have
+              something that fits, they'll reach out here — no pressure either way.
+            </>
+          }
+          sendLabel="Request introduction"
+          onClose={() => setIntroducing(false)}
         />
       )}
     </PageShell>

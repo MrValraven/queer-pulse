@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import type { AccessTier } from "./membership.types";
 import styles from "./JoinModal.module.css";
 
 export interface JoinModalCommunity {
@@ -19,16 +20,24 @@ const INVOLVEMENT = [
 
 export function JoinModal({
   community,
+  tier = "public",
   onClose,
   onJoined,
+  onRequested,
 }: {
   community: JoinModalCommunity;
+  tier?: AccessTier;
   onClose: () => void;
   onJoined?: () => void;
+  onRequested?: () => void;
 }) {
   const [step, setStep] = useState(1);
   const [involvement, setInvolvement] = useState("active");
+  const [inviteCode, setInviteCode] = useState("");
   useScrollLock();
+
+  const isRequest = tier === "request" || tier === "private";
+  const isInvite = tier === "invite";
 
   const total = 3;
   const done = step > total;
@@ -36,7 +45,8 @@ export function JoinModal({
 
   const submit = () => {
     setStep(4);
-    onJoined?.();
+    if (isRequest) onRequested?.();
+    else onJoined?.();
   };
 
   return (
@@ -62,7 +72,9 @@ export function JoinModal({
 
         {step === 1 && (
           <div>
-            <div className={styles.eye}>You're joining</div>
+            <div className={styles.eye}>
+              {isRequest ? 'Asking to join' : isInvite ? 'Joining with an invitation' : 'Joining'}
+            </div>
             <div className={styles.title}>{community.name}</div>
             <div className={styles.meta}>
               {community.typeLabel} · {community.count}
@@ -77,8 +89,19 @@ export function JoinModal({
                 ))}
               </div>
             )}
-            <Button variant="primary" onClick={() => setStep(2)}>
-              Sounds good — continue →
+            {isInvite && (
+              <div className={styles.fields}>
+                <input
+                  className={styles.input}
+                  type="text"
+                  placeholder="Enter your invite code"
+                  value={inviteCode}
+                  onChange={(e) => setInviteCode(e.target.value)}
+                />
+              </div>
+            )}
+            <Button variant="primary" onClick={() => setStep(2)} disabled={isInvite && !inviteCode.trim()}>
+              {isInvite ? 'Verify & continue' : 'Continue'}
             </Button>
           </div>
         )}
@@ -88,15 +111,15 @@ export function JoinModal({
             <div className={styles.eye}>A bit about you</div>
             <div className={styles.title}>How should the community know you?</div>
             <p className={styles.hint}>
-              Optional — but it helps the community welcome you properly.
+              Optional — a little context helps people know who you are.
             </p>
             <div className={styles.fields}>
               <input className={styles.input} type="text" placeholder="Your name" />
-              <input className={styles.input} type="text" placeholder="Your pronouns (optional)" />
+              <input className={styles.input} type="text" placeholder="Pronouns, if you'd like to share" />
               <textarea className={styles.textarea} rows={3} placeholder="A sentence about yourself — what brings you here?" />
             </div>
             <Button variant="primary" onClick={() => setStep(3)}>
-              Continue →
+              Continue
             </Button>
           </div>
         )}
@@ -132,7 +155,7 @@ export function JoinModal({
               </div>
             </div>
             <Button variant="primary" onClick={submit}>
-              Join the community →
+              {isRequest ? 'Send request' : 'Join the community'}
             </Button>
           </div>
         )}
@@ -144,10 +167,21 @@ export function JoinModal({
                 <path d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <div className={styles.title}>You're in!</div>
+            <div className={styles.title}>
+              {isRequest ? 'Your request is with the mods' : `Welcome to ${community.name}`}
+            </div>
             <p className={styles.desc}>
-              Welcome to <strong>{community.name}</strong>. We'll send you a confirmation
-              and connect you with the community coordinators shortly.
+              {isRequest ? (
+                <>
+                  Thanks — the mods of <strong>{community.name}</strong> will read your request
+                  and welcome you in. We'll let you know either way.
+                </>
+              ) : (
+                <>
+                  You're part of <strong>{community.name}</strong> now. Someone will be in touch
+                  to help you find your footing.
+                </>
+              )}
             </p>
             <div className={styles.actions}>
               <Button variant="ghost" onClick={onClose}>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Avatar, Button } from '../../shared/components/ui'
+import { Avatar, Button, Reveal } from '../../shared/components/ui'
 import { THERAPISTS, EXPERIENCES, SNS, LANGS, type Therapist } from './mentalHealth.data'
 import { TherapistProfileModal } from './TherapistProfileModal'
 import styles from './MentalHealthPage.module.css'
@@ -14,7 +14,7 @@ export function TherapistSection() {
   return (
     <section className={styles.sec}>
       <div className="wrap">
-        <div className={styles.secHead}>
+        <Reveal className={styles.secHead}>
           <h2>
             Queer-affirming <em>therapists in Lisbon</em>
           </h2>
@@ -23,7 +23,7 @@ export function TherapistSection() {
             as genuinely queer-affirming — not just "welcoming" but experienced with queer lives,
             identities, and the specific pressures of being queer and an expat in Lisbon.
           </p>
-        </div>
+        </Reveal>
         <div className={styles.thFilter}>
           <span className={styles.thFilterLabel}>Filter</span>
           {LANGS.map((l) => (
@@ -38,11 +38,13 @@ export function TherapistSection() {
           ))}
         </div>
         <div className={styles.therapistGrid}>
-          {therapists.map((t) => (
-            <button
+          {therapists.map((t, i) => (
+            <Reveal
+              key={t.id}
+              as="button"
               type="button"
               className={styles.therapistCard}
-              key={t.id}
+              delay={Math.min(i, 8) * 60}
               onClick={() => setActive(t)}
               aria-label={`View ${t.name}'s profile`}
             >
@@ -85,7 +87,7 @@ export function TherapistSection() {
                 <span className={styles.tcFormat}>{t.format}</span>
                 <span className={styles.tcContact}>View profile →</span>
               </div>
-            </button>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -100,7 +102,7 @@ export function ExperiencesSection() {
   return (
     <section className={`${styles.sec} ${styles.alt}`}>
       <div className="wrap">
-        <div className={styles.secHead}>
+        <Reveal className={styles.secHead}>
           <h2>
             Things the community <em>has felt</em>
           </h2>
@@ -108,16 +110,16 @@ export function ExperiencesSection() {
             Being a queer expat in Lisbon comes with specific pressures. Naming them isn't
             complaining — it's the start of dealing with them.
           </p>
-        </div>
+        </Reveal>
         <div className={styles.expGrid}>
-          {EXPERIENCES.map((e) => (
-            <div className={styles.expCard} key={e.title}>
+          {EXPERIENCES.map((e, i) => (
+            <Reveal className={styles.expCard} key={e.title} delay={Math.min(i, 8) * 60}>
               <div className={styles.expBar} />
               <div>
                 <div className={styles.expTitle}>{e.title}</div>
                 <div className={styles.expText}>{e.text}</div>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -129,7 +131,7 @@ export function SnsSection({ forum, mentorship }: { forum: string; mentorship: s
   return (
     <section className={styles.sec}>
       <div className="wrap">
-        <div className={styles.secHead}>
+        <Reveal className={styles.secHead}>
           <h2>
             Accessing mental health <em>through the SNS</em>
           </h2>
@@ -137,18 +139,18 @@ export function SnsSection({ forum, mentorship }: { forum: string; mentorship: s
             Portugal's public health system covers mental health, including therapy and psychiatry
             — but access is uneven. Here's what to realistically expect.
           </p>
-        </div>
+        </Reveal>
         <div className={styles.snsGrid}>
-          {SNS.map((s) => (
-            <div className={styles.snsCard} key={s.num}>
+          {SNS.map((s, i) => (
+            <Reveal className={styles.snsCard} key={s.num} delay={i * 60}>
               <div className={styles.snsNum}>{s.num}</div>
               <div className={styles.snsTitle}>{s.title}</div>
               <div className={styles.snsText}>{s.text}</div>
-            </div>
+            </Reveal>
           ))}
         </div>
 
-        <div className={styles.peerStrip}>
+        <Reveal className={styles.peerStrip} delay={60}>
           <div>
             <h3>
               Peer support within <em>the community</em>
@@ -167,7 +169,7 @@ export function SnsSection({ forum, mentorship }: { forum: string; mentorship: s
               Find a peer mentor →
             </Button>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   )

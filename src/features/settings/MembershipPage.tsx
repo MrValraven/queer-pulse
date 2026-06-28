@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
+import { FadeIn } from '../../shared/components/ui'
 import { PlanPanel, BillingPanel, AccessPanel } from './MembershipPanels'
 import { routes } from '../../app/routeMap'
 import { MembershipSidebar } from './MembershipSidebar'
@@ -43,9 +44,11 @@ export function MembershipPage() {
               ))}
             </div>
 
-            {tab === 'plan' && <PlanPanel />}
-            {tab === 'billing' && <BillingPanel />}
-            {tab === 'access' && <AccessPanel />}
+            <FadeIn key={tab}>
+              {tab === 'plan' && <PlanPanel />}
+              {tab === 'billing' && <BillingPanel />}
+              {tab === 'access' && <AccessPanel />}
+            </FadeIn>
           </div>
 
           <MembershipSidebar />

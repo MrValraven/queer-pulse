@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FiCheck, FiInfo, FiStar } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { FiCheck, FiInfo, FiMapPin, FiStar } from 'react-icons/fi'
+import { Button, EmptyState } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import {
   CLINICS,
@@ -18,9 +17,10 @@ import {
 import styles from './SexualHealthPage.module.css'
 
 export function TestingTab() {
-  const { showToast } = useToast()
   const [clinicFilter, setClinicFilter] = useState<ClinicType | 'all'>('all')
   const [openClinic, setOpenClinic] = useState<string | null>(null)
+  const [nomination, setNomination] = useState('')
+  const [nominated, setNominated] = useState(false)
   const clinics = CLINICS.filter((c) => clinicFilter === 'all' || c.type === clinicFilter)
 
   return (
@@ -55,6 +55,15 @@ export function TestingTab() {
       </div>
 
       <div className={styles.clinicList}>
+        {clinics.length === 0 && (
+          <EmptyState
+            compact
+            icon={<FiMapPin />}
+            title="No clinics of that type listed yet"
+            description="There are still plenty of welcoming places to get tested. Clear the filter to see every community-reviewed option."
+            action={{ label: 'Clear filters', onClick: () => setClinicFilter('all') }}
+          />
+        )}
         {clinics.map((c) => {
           const isOpen = openClinic === c.name
           return (
@@ -117,18 +126,46 @@ export function TestingTab() {
       </div>
 
       <div className={styles.anonBox}>
-        <h3>Know a service we should add?</h3>
-        <p>Nominate a clinic or service for community review. We verify every listing before it goes live.</p>
-        <input
-          className={styles.anonInput}
-          style={{ minHeight: 52, resize: 'none' }}
-          placeholder="Clinic name, location, and why you'd recommend it…"
-        />
-        <div style={{ marginTop: 12 }}>
-          <button type="button" className={styles.primaryBtn} onClick={() => showToast('Nomination submitted', 'success')}>
-            Submit nomination
-          </button>
-        </div>
+        {nominated ? (
+          <div className={styles.anonDone}>
+            <span className={styles.anonDoneIcon} aria-hidden><FiCheck /></span>
+            <div className={styles.anonDoneTitle}>
+              Thank you — <em>noted.</em>
+            </div>
+            <p className={styles.anonDoneBody}>
+              We'll check it out and review it with the community before it goes live. The board stays
+              trustworthy because members like you keep it current.
+            </p>
+            <Button variant="ghost-dark" onClick={() => setNominated(false)}>
+              Nominate another
+            </Button>
+          </div>
+        ) : (
+          <>
+            <h3>Know a service we should add?</h3>
+            <p>Nominate a clinic or service for community review. We verify every listing before it goes live.</p>
+            <textarea
+              className={styles.anonInput}
+              style={{ minHeight: 52 }}
+              value={nomination}
+              onChange={(e) => setNomination(e.target.value)}
+              placeholder="Clinic name, location, and why you'd recommend it…"
+            />
+            <div style={{ marginTop: 12 }}>
+              <button
+                type="button"
+                className={styles.primaryBtn}
+                disabled={nomination.trim().length < 5}
+                onClick={() => {
+                  setNomination('')
+                  setNominated(true)
+                }}
+              >
+                Submit nomination
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </>
   )
@@ -247,7 +284,8 @@ export function HivTab() {
 }
 
 export function GuidesTab() {
-  const { showToast } = useToast()
+  const [question, setQuestion] = useState('')
+  const [asked, setAsked] = useState(false)
   return (
     <>
       <h2 className={styles.h}>
@@ -275,18 +313,49 @@ export function GuidesTab() {
         ))}
       </div>
       <div className={styles.anonBox}>
-        <h3>Ask anything — anonymously.</h3>
-        <p>
-          Submit a question to the community. Answered by members with relevant knowledge. Nothing is
-          shared or linked to your account.
-        </p>
-        <textarea className={styles.anonInput} placeholder="Your question — no detail is too small or too embarrassing…" />
-        <div className={styles.anonFoot}>
-          <span className={styles.anonNote}>Completely anonymous. No account required.</span>
-          <button type="button" className={styles.primaryBtn} onClick={() => showToast('Question submitted anonymously', 'success')}>
-            Submit question
-          </button>
-        </div>
+        {asked ? (
+          <div className={styles.anonDone}>
+            <span className={styles.anonDoneIcon} aria-hidden><FiCheck /></span>
+            <div className={styles.anonDoneTitle}>
+              Your question is <em>in.</em>
+            </div>
+            <p className={styles.anonDoneBody}>
+              A member with relevant experience will answer it — no name, no account, nothing linked
+              back to you. Check back here in a day or two.
+            </p>
+            <Button variant="ghost-dark" onClick={() => setAsked(false)}>
+              Ask another
+            </Button>
+          </div>
+        ) : (
+          <>
+            <h3>Ask anything — anonymously.</h3>
+            <p>
+              Submit a question to the community. Answered by members with relevant knowledge. Nothing is
+              shared or linked to your account.
+            </p>
+            <textarea
+              className={styles.anonInput}
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Your question — no detail is too small or too embarrassing…"
+            />
+            <div className={styles.anonFoot}>
+              <span className={styles.anonNote}>Completely anonymous. No account required.</span>
+              <button
+                type="button"
+                className={styles.primaryBtn}
+                disabled={question.trim().length < 5}
+                onClick={() => {
+                  setQuestion('')
+                  setAsked(true)
+                }}
+              >
+                Submit question
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </>
   )

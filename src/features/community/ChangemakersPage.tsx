@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiHeart } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, ImageSlot, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn, ImageSlot, Reveal, SkeletonLine } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useConnect } from '../../app/providers/ConnectProvider'
@@ -97,6 +98,13 @@ export function ChangemakersPage() {
 
       <section className={styles.profiles}>
         <div className="wrap">
+          {!loading && MAKERS.length === 0 ? (
+            <EmptyState
+              icon={<FiHeart />}
+              title="No change makers profiled yet"
+              description="This is where we celebrate the people quietly making things better. Know someone doing that work? Nominate them below and we'll start the story."
+            />
+          ) : (
           <div className={styles.grid}>
             {loading
               ? Array.from({ length: 6 }).map((_, i) => <MakerCardSkeleton key={i} />)
@@ -121,6 +129,7 @@ export function ChangemakersPage() {
               </FadeIn>
             ))}
           </div>
+          )}
         </div>
       </section>
 

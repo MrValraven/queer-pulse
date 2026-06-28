@@ -1,0 +1,289 @@
+/* ── Form column ─────────────────────────────────────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.rcLabel {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.rcRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 560px) {
+  .rcRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rcInput,
+.rcSelect {
+  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+  transition: border-color 0.25s var(--ease);
+  width: 100%;
+  box-sizing: border-box;
+}
+.rcInput:focus,
+.rcSelect:focus {
+  border-color: var(--accent);
+}
+.rcSelect {
+  cursor: pointer;
+}
+
+/* ── Result column ───────────────────────────────────────────────────────── */
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Two side-by-side comparison cards (stack on mobile). */
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 560px) {
+  .cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+.col {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: 24px;
+  transition:
+    border-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+/* The richer side gets a subtle jade lift. */
+.colHi {
+  border-color: rgba(var(--jade-rgb), 0.5);
+  box-shadow: 0 8px 28px rgba(var(--jade-rgb), 0.14);
+}
+
+.colLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-60);
+  margin: 0 0 14px;
+}
+
+.colIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  font-size: 15px;
+}
+.colHi .colIcon {
+  background: rgba(var(--jade-rgb), 0.18);
+  color: var(--jade);
+}
+
+.colNet {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(30px, 5vw, 40px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--plum);
+  margin: 0;
+}
+
+.colMonthly {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-60);
+  margin: 8px 0 18px;
+}
+.colMonthly strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.colBreakdown {
+  margin: 0;
+  border-top: 1px solid rgba(45, 27, 61, 0.09);
+}
+
+.colRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  font-family: var(--sans);
+}
+.colRow:last-child {
+  border-bottom: none;
+}
+.colRow dt {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  margin: 0;
+}
+.colRow dd {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Net-difference plum panel ───────────────────────────────────────────── */
+.diffPanel {
+  background: var(--plum);
+  color: var(--cream);
+  border-radius: var(--radius-card, 22px);
+  padding: 32px;
+  text-align: center;
+}
+
+.diffIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(var(--jade-rgb), 0.18);
+  color: var(--jade);
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.diffLabel {
+  font-family: var(--sans);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(247, 243, 238, 0.6);
+  margin: 0 0 10px;
+}
+
+.diffValue {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(24px, 4vw, 30px);
+  line-height: 1.2;
+  color: var(--cream);
+  margin: 0;
+}
+.diffValue em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.diffSub {
+  font-family: var(--sans);
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(247, 243, 238, 0.8);
+  margin: 12px 0 0;
+}
+
+/* ── Hidden-costs list ───────────────────────────────────────────────────── */
+.costs {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: 28px;
+}
+
+.costsTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--plum);
+  margin: 0 0 18px;
+}
+.costsTitle em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+.costsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.costNeg,
+.costPos {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.costIcon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 14px;
+  margin-top: 1px;
+}
+.costNeg .costIcon {
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-ink);
+}
+.costPos .costIcon {
+  background: rgba(var(--jade-rgb), 0.18);
+  color: var(--jade);
+}
+
+.disclaimer {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-40);
+  margin: 0;
+  padding: 0 4px;
+}

@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FiCheck } from 'react-icons/fi'
 import { memberName } from '../members/data/members'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
 import { StudioShell } from './StudioShell'
 import { useToast } from '../../shared/components/feedback/useToast'
 import s from './funding.module.css'
@@ -27,8 +27,23 @@ const PASTE = `00:00  ${memberName('ines')} — A summer in Cascais
 export function StudioSetSubmissionPage() {
   const { showToast } = useToast()
   const [ran, setRan] = useState(true)
+  const [running, setRunning] = useState(false)
+  const timer = useRef<number | undefined>(undefined)
   const matched = TRACKS.filter((t) => t.m).length
   const held = TRACKS.length - matched
+
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  function runMatcher() {
+    if (running) return
+    setRunning(true)
+    setRan(false)
+    timer.current = window.setTimeout(() => {
+      setRunning(false)
+      setRan(true)
+      showToast(`${matched} of ${TRACKS.length} matched · ${held} held for clearance`, 'success')
+    }, 900)
+  }
 
   return (
     <StudioShell>
@@ -79,8 +94,8 @@ export function StudioSetSubmissionPage() {
             <div className={s.pasteHint}>
               One line per track. We accept most formats. <em>Re-run the matcher</em> whenever you edit.
             </div>
-            <button className={`${s.bt} ${s.btP}`} style={{ marginTop: 14 }} onClick={() => { setRan(true); showToast(`${matched} of ${TRACKS.length} matched · ${held} held for clearance`, 'success') }}>
-              ▸ Run the matcher
+            <button className={`${s.bt} ${s.btP}`} style={{ marginTop: 14 }} onClick={runMatcher} disabled={running}>
+              {running ? 'Matching…' : '▸ Run the matcher'}
             </button>
 
             {ran && (
@@ -90,7 +105,7 @@ export function StudioSetSubmissionPage() {
                 </div>
                 <div className={s.matcher}>
                   {TRACKS.map((t, i) => (
-                    <div key={i} className={s.mtRow}>
+                    <FadeIn key={t.tc} delay={Math.min(i, 8) * 60} className={s.mtRow}>
                       <span className={s.tc}>{t.tc}</span>
                       <span className={s.cv}>
                         <ImageSlot src={t.image} tint={t.tint} width={36} height={36} radius={6} placeholder="" />
@@ -113,7 +128,7 @@ export function StudioSetSubmissionPage() {
                           </span>
                         </span>
                       )}
-                    </div>
+                    </FadeIn>
                   ))}
                 </div>
               </>

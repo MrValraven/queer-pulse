@@ -395,24 +395,6 @@
   pointer-events: none;
 }
 
-.empty {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 88px 20px;
-}
-.emptyTitle {
-  font-family: var(--serif);
-  font-size: 24px;
-  color: var(--ink-40);
-  font-weight: 400;
-  font-style: italic;
-  margin-bottom: 10px;
-}
-.emptySub {
-  font-size: 14px;
-  color: var(--ink-40);
-}
-
 .hsStrip {
   background: rgba(45, 27, 61, 0.04);
   border-top: 1px solid rgba(45, 27, 61, 0.07);

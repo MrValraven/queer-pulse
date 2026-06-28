@@ -9,7 +9,9 @@ import { ProfileThemeProvider } from './providers/ProfileThemeProvider'
 import { VouchProvider } from './providers/VouchProvider'
 import { WorkProfileProvider } from './providers/WorkProfileProvider'
 import { SavedProvider } from './providers/SavedProvider'
+import { DraftsProvider } from './providers/DraftsProvider'
 import { SocialProvider } from './providers/SocialProvider'
+import { CommunityMembershipProvider } from './providers/CommunityMembershipProvider'
 import { CommandPalette } from '../features/members/CommandPalette'
 import { RoomLoader } from '../shared/components/feedback/RoomLoader'
 import { ScrollManager } from './ScrollManager'
@@ -29,10 +31,14 @@ export default function App() {
                     <ConnectProvider>
                       <VouchProvider>
                         <SavedProvider>
-                          <SocialProvider>
-                            <AppRoutes />
-                            <CommandPalette />
-                          </SocialProvider>
+                          <DraftsProvider>
+                            <SocialProvider>
+                              <CommunityMembershipProvider>
+                                <AppRoutes />
+                                <CommandPalette />
+                              </CommunityMembershipProvider>
+                            </SocialProvider>
+                          </DraftsProvider>
                         </SavedProvider>
                       </VouchProvider>
                     </ConnectProvider>

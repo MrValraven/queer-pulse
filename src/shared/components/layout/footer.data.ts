@@ -31,7 +31,7 @@ export const COLUMNS: FooterColumn[] = [
     heading: "Lisbon Life",
     links: [
       { label: "Spaces Map", href: routes.map },
-      { label: "Business Directory", href: routes.businessDirectory },
+      { label: "Business Directory", href: routes.directory },
       { label: "Housing Board", href: routes.housing },
       { label: "Job Board", href: routes.jobs },
       { label: "New to Lisbon?", href: routes.arriving },
@@ -45,7 +45,7 @@ export const COLUMNS: FooterColumn[] = [
       { label: "Therapist Directory", href: `${routes.wellbeing}#therapists` },
       { label: "Legal Aid", href: routes.legal },
       { label: "Trans & NB Hub", href: routes.transHub },
-      { label: "Micro-Grants", href: routes.grants },
+      { label: "Grants", href: routes.grants },
       { label: "Report & Safety", href: routes.report },
     ],
   },
@@ -54,7 +54,7 @@ export const COLUMNS: FooterColumn[] = [
     links: [
       { label: "Members", href: "#discovery" },
       { label: "Messages", href: routes.messages },
-      { label: "Resource Library", href: routes.library },
+      { label: "Guide Library", href: routes.library },
       { label: "Mentorship", href: routes.mentorship },
       { label: "Request an invite", href: routes.requestInvite },
     ],

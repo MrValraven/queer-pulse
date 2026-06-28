@@ -57,7 +57,7 @@ export const NAV_MENUS: MegaMenu[] = [
         links: [
           { label: "Volunteer", href: routes.volunteer },
           { label: "Activism", href: routes.activism },
-          { label: "Changemakers", href: routes.changemakers },
+          { label: "Change Makers", href: routes.changemakers },
         ],
       },
     ],
@@ -75,9 +75,9 @@ export const NAV_MENUS: MegaMenu[] = [
       {
         head: "Discover",
         links: [
-          { label: "Queer Map", href: routes.map, featured: true },
+          { label: "Spaces Map", href: routes.map, featured: true },
           { label: "Business Directory", href: routes.directory },
-          { label: "Events Calendar", href: routes.calendar },
+          { label: "Calendar", href: routes.calendar },
           { label: "Safe Spaces", href: routes.safeSpaces },
           { label: "Partners", href: routes.partners },
         ],
@@ -85,8 +85,8 @@ export const NAV_MENUS: MegaMenu[] = [
       {
         head: "Living here",
         links: [
-          { label: "Arriving in Lisbon", href: routes.arriving },
-          { label: "Housing", href: routes.housing },
+          { label: "New to Lisbon?", href: routes.arriving },
+          { label: "Housing Board", href: routes.housing },
           { label: "Flatmates", href: routes.flatmates },
           { label: "Visas & Residency", href: routes.visas },
         ],
@@ -111,17 +111,17 @@ export const NAV_MENUS: MegaMenu[] = [
           { label: "Trans Healthcare", href: routes.transHealthcare },
           { label: "Harm Reduction", href: routes.harmReduction },
           { label: "Sober", href: routes.sober },
-          { label: "Wellbeing", href: routes.wellbeing },
+          { label: "Wellbeing Hub", href: routes.wellbeing },
         ],
       },
       {
         head: "Safety & rights",
         links: [
           { label: "Emergency", href: routes.emergency, featured: true },
-          { label: "Report", href: routes.report },
+          { label: "Report & Safety", href: routes.report },
           { label: "Hate Crime Guide", href: routes.hateCrime },
           { label: "Safety Guide", href: routes.safety },
-          { label: "Legal Resources", href: routes.legal },
+          { label: "Legal Aid", href: routes.legal },
         ],
       },
       {
@@ -134,7 +134,7 @@ export const NAV_MENUS: MegaMenu[] = [
           },
           { label: "Queer 101", href: routes.queer101 },
           { label: "Glossary", href: routes.glossary },
-          { label: "Trans Hub", href: routes.transHub },
+          { label: "Trans & NB Hub", href: routes.transHub },
           {
             label: "Intersectionality",
             href: routes.intersectionality,
@@ -209,7 +209,7 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Career",
         links: [
           { label: "Your Work", href: routes.work, featured: true },
-          { label: "Jobs", href: routes.jobs },
+          { label: "Job Board", href: routes.jobs },
           { label: "Skills & Learning", href: routes.skills },
           { label: "Mentorship", href: routes.mentorship },
           { label: "Employer Reviews", href: routes.employerReviews },
@@ -220,7 +220,7 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Economy",
         links: [
           {
-            label: "Barter Exchange",
+            label: "Skills Exchange",
             href: routes.barter,
             featured: true,
           },

@@ -1,0 +1,441 @@
+/* ---- shared search + chips ---- */
+.searchRow {
+  position: relative;
+  margin-bottom: 18px;
+}
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: var(--ink-40);
+  pointer-events: none;
+}
+.search {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 14px;
+  padding: 11px 14px 11px 38px;
+  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s var(--ease);
+}
+.search:focus {
+  border-color: rgba(45, 27, 61, 0.3);
+}
+.chips {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.chip {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(45, 27, 61, 0.12);
+  background: transparent;
+  color: var(--ink-60);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+}
+.chip:hover {
+  border-color: rgba(45, 27, 61, 0.28);
+  color: var(--ink);
+}
+.chipOn {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: var(--cream);
+}
+
+/* ---- roster cards ---- */
+.rosterAv {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.rosterName {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--plum);
+  margin-bottom: 6px;
+}
+.rosterLink {
+  color: inherit;
+  text-decoration: none;
+}
+.rosterLink:hover {
+  text-decoration: underline;
+}
+.rosterBadgeRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-height: 18px;
+  margin-bottom: 6px;
+}
+.verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--jade);
+}
+.verified svg {
+  width: 11px;
+  height: 11px;
+}
+.rosterMeta {
+  font-size: 12px;
+  color: var(--ink-40);
+  margin-top: 4px;
+}
+.alsoIn {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--jade);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+/* ---- sister communities ---- */
+.sisters {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.sister {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 13px 16px;
+  text-decoration: none;
+  transition:
+    border-color 0.2s var(--ease),
+    transform 0.2s var(--ease);
+}
+.sister:hover {
+  border-color: rgba(45, 27, 61, 0.2);
+  transform: translateY(-1px);
+}
+.sisterIc {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 13px;
+}
+.sisterMain {
+  flex: 1;
+  min-width: 0;
+}
+.sisterName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--plum);
+}
+.sisterShared {
+  font-size: 12.5px;
+  color: var(--jade);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.msgBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-60);
+  cursor: pointer;
+  margin-top: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(45, 27, 61, 0.12);
+  transition: all 0.18s var(--ease);
+}
+.msgBtn svg {
+  width: 12px;
+  height: 12px;
+}
+.msgBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* ---- events ---- */
+.eventRow {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.eventMain {
+  flex: 1;
+  min-width: 0;
+}
+.eventPast {
+  opacity: 0.62;
+  filter: saturate(0.6);
+}
+.recapLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.recapLink svg {
+  width: 13px;
+  height: 13px;
+  transition: transform 0.18s var(--ease);
+}
+.recapLink:hover {
+  color: var(--plum);
+}
+.recapLink:hover svg {
+  transform: translateX(3px);
+}
+
+/* ---- rules ---- */
+.rules {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+}
+.rule {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-bottom: 12px;
+  max-width: 60ch;
+}
+.ruleNum {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(45, 27, 61, 0.07);
+  color: var(--plum);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+/* ---- resource shelf ---- */
+.shelf {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.resource {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 14px 16px;
+  text-decoration: none;
+  transition:
+    border-color 0.2s var(--ease),
+    transform 0.2s var(--ease);
+}
+.resource:hover {
+  border-color: rgba(45, 27, 61, 0.2);
+  transform: translateY(-1px);
+}
+.resourceIc {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.resourceIc svg {
+  width: 17px;
+  height: 17px;
+}
+.resourceMain {
+  flex: 1;
+  min-width: 0;
+}
+.resourceTitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--plum);
+}
+.resourceNote {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-top: 2px;
+}
+.resourceArrow {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--ink-40);
+}
+
+/* ---- mod tools ---- */
+.modRow {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.modMain {
+  flex: 1;
+  min-width: 0;
+}
+.modName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--plum);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.modNote {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+  margin-top: 3px;
+  font-style: italic;
+}
+.modMeta {
+  font-size: 12px;
+  color: var(--ink-40);
+  margin-top: 3px;
+}
+.modActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  flex-wrap: wrap;
+}
+.declineBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(45, 27, 61, 0.14);
+  transition: all 0.18s var(--ease);
+}
+.declineBtn svg {
+  width: 13px;
+  height: 13px;
+}
+.declineBtn:hover {
+  border-color: rgba(45, 27, 61, 0.3);
+  color: var(--ink);
+}
+.removeBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.ownerTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-40);
+}
+.ownerTag svg {
+  width: 12px;
+  height: 12px;
+}
+
+.reportCard {
+  background: var(--paper);
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+}
+.reportReason {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-bottom: 8px;
+}
+.reportReason svg {
+  width: 12px;
+  height: 12px;
+}
+.reportExcerpt {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin: 0 0 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resource,
+  .recapLink svg,
+  .chip,
+  .msgBtn,
+  .declineBtn {
+    transition: none;
+  }
+}

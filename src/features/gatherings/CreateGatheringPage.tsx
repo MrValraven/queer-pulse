@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FiAward, FiCheck } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { PILL_LABELS, TIPS, TOTAL_STEPS } from './createGathering.data'
@@ -77,11 +77,15 @@ export function CreateGatheringPage() {
 
           <div className={styles.layout}>
             <div>
-              {step === 1 && <TypeStep form={form} />}
-              {step === 2 && <DatePlaceStep form={form} />}
-              {step === 3 && <CapacityStep form={form} />}
-              {step === 4 && <PricingStep form={form} />}
-              {step === 5 && <ReviewStep form={form} />}
+              {!isSuccess && (
+                <FadeIn key={step}>
+                  {step === 1 && <TypeStep form={form} />}
+                  {step === 2 && <DatePlaceStep form={form} />}
+                  {step === 3 && <CapacityStep form={form} />}
+                  {step === 4 && <PricingStep form={form} />}
+                  {step === 5 && <ReviewStep form={form} />}
+                </FadeIn>
+              )}
 
               {isSuccess && (
                 <div className={styles.success}>

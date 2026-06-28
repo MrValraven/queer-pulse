@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button, FadeIn, Outro, SkeletonAvatar, SkeletonLine, Tag, TagRow } from '../../shared/components/ui'
+import { FiHeart } from 'react-icons/fi'
+import { Avatar, Button, EmptyState, FadeIn, Outro, SkeletonAvatar, SkeletonLine, Tag, TagRow } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { useConnect } from '../../app/providers/ConnectProvider'
@@ -181,7 +182,13 @@ export function SkillsPage() {
                         </FadeIn>
                       ))
                     ) : (
-                      <p className={styles.empty}>No offers in this category yet — be the first to post one.</p>
+                      <EmptyState
+                        compact
+                        icon={<FiHeart />}
+                        title="Nothing matches your filter"
+                        description="No one's offered to teach in this category yet. Clear the filter to see everything members are sharing."
+                        action={{ label: 'Clear filters', onClick: () => setActive('all') }}
+                      />
                     )}
                   </div>
                 </div>
@@ -203,7 +210,13 @@ export function SkillsPage() {
                         </FadeIn>
                       ))
                     ) : (
-                      <p className={styles.empty}>No requests in this category yet.</p>
+                      <EmptyState
+                        compact
+                        icon={<FiHeart />}
+                        title="Nothing matches your filter"
+                        description="No one's asked to learn in this category yet. Clear the filter to see what the rest of the community is hoping to pick up."
+                        action={{ label: 'Clear filters', onClick: () => setActive('all') }}
+                      />
                     )}
                   </div>
                 </div>

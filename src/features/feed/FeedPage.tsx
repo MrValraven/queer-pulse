@@ -5,6 +5,10 @@ import { AppShell } from '../../shared/components/layout'
 import { routes } from '../../app/routeMap'
 import { SkeletonAvatar, SkeletonLine, EmptyState } from '../../shared/components/ui'
 import { currentUser } from '../members/data/members'
+import { useCommunityMembership } from '../../app/providers/CommunityMembershipProvider'
+import { communities } from '../homepage/data/communities'
+import { getLiving } from '../communities/livingCommunities.data'
+import { HubPulseCard, type HubPost } from '../communities/HubPulseCard'
 import { FEED_TABS, type FeedTab } from './feed.data'
 import { GatheringCard, NewMemberCard, PostCard, SavedArticleCard, RecapCard } from './FeedCards'
 import { FeedSidebar } from './FeedSidebar'
@@ -37,15 +41,28 @@ function FeedSkeleton() {
 export function FeedPage() {
   const [activeTab, setActiveTab] = useState<FeedTab>('All')
   const [loading, setLoading] = useState(true)
+  const { memberships } = useCommunityMembership()
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 600)
     return () => clearTimeout(t)
   }, [])
 
-  const visibleItems = FEED_ITEMS.filter(
-    ({ tab }) => activeTab === 'All' || tab === activeTab,
-  )
+  // Cross-community aggregation: the latest pulse from communities you're in.
+  const communityPulse: HubPost[] = Object.keys(memberships)
+    .map((slug) => ({ slug, living: getLiving(slug), c: communities.find((x) => x.slug === slug) }))
+    .filter((x) => x.living)
+    .flatMap((x) =>
+      [...x.living!.pinned, ...x.living!.pulse]
+        .slice(0, 2)
+        .map((post) => ({ post, communityName: x.c?.name ?? x.slug, communitySlug: x.slug })),
+    )
+    .slice(0, 5)
+
+  const showCommunity = activeTab === 'All' || activeTab === 'Communities'
+  const pulse = showCommunity ? communityPulse : []
+  const staticItems = activeTab === 'Communities' ? [] : FEED_ITEMS.filter(({ tab }) => activeTab === 'All' || tab === activeTab)
+  const empty = pulse.length === 0 && staticItems.length === 0
 
   return (
     <AppShell unreadCount={3}>
@@ -80,19 +97,30 @@ export function FeedPage() {
               <div className={styles.list}>
                 {loading ? (
                   Array.from({ length: 4 }).map((_, i) => <FeedSkeleton key={i} />)
-                ) : visibleItems.length > 0 ? (
-                  visibleItems.map(({ key, Card }, i) => (
-                    <div key={key} className={styles.cardReveal} style={{ animationDelay: `${i * 60}ms` }}>
-                      <Card />
-                    </div>
-                  ))
-                ) : (
+                ) : empty ? (
                   <EmptyState
                     icon={<FiInbox />}
                     title={`Nothing in ${activeTab} yet`}
                     description="When there's activity here, it'll show up in your feed."
                     action={{ label: 'View everything', onClick: () => setActiveTab('All') }}
                   />
+                ) : (
+                  <>
+                    {pulse.map((item, i) => (
+                      <div key={item.post.id} className={styles.cardReveal} style={{ animationDelay: `${i * 60}ms` }}>
+                        <HubPulseCard item={item} />
+                      </div>
+                    ))}
+                    {staticItems.map(({ key, Card }, i) => (
+                      <div
+                        key={key}
+                        className={styles.cardReveal}
+                        style={{ animationDelay: `${(i + pulse.length) * 60}ms` }}
+                      >
+                        <Card />
+                      </div>
+                    ))}
+                  </>
                 )}
               </div>
             </div>

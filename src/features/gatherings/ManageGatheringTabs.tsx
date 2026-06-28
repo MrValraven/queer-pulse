@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { FiSend } from "react-icons/fi";
+import { Button, EmptyState } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { InlineEditModal } from "./InlineEditModal";
@@ -168,6 +169,8 @@ function MessagesTab() {
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState<SentMessage[]>([]);
 
+  const messages = [...sent, ...PREVIOUS_MESSAGES];
+
   const send = () => {
     const text = message.trim();
     if (!text) return;
@@ -199,7 +202,15 @@ function MessagesTab() {
       </div>
       <div className={styles.prevLabel}>Previous messages</div>
       <div className={styles.msgList}>
-        {[...sent, ...PREVIOUS_MESSAGES].map((m) => (
+        {messages.length === 0 && (
+          <EmptyState
+            compact
+            icon={<FiSend />}
+            title="No messages sent yet"
+            description="When you send an update, it shows up here. A quick hello or a what-to-expect note helps your guests feel ready."
+          />
+        )}
+        {messages.map((m) => (
           <div className={styles.msgCard} key={m.subject}>
             <div className={styles.msgHeader}>
               <div className={styles.msgSubject}>{m.subject}</div>

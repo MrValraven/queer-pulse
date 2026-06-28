@@ -11,6 +11,7 @@ export interface ChangemakerStory {
   tags: string[];
   /* card / listing */
   summary: string;
+  image?: string; // optional photo for the card / featured ImageSlot
   /* shared with the featured card */
   impact: string[];
   /* story page */

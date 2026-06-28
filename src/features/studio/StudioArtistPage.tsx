@@ -159,7 +159,7 @@ export function StudioArtistPage() {
               note, and seats at every live broadcast.
             </div>
             <div className={styles.buyActions}>
-              <Link to="/checkout" className={`${styles.bt} ${styles.btP}`}>
+              <Link to={routes.studioCheckout} className={`${styles.bt} ${styles.btP}`}>
                 Subscribe · €3/mo
               </Link>
               <button className={styles.bt} onClick={() => setTipOpen(true)}>One-off tip</button>

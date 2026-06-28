@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FiAlertTriangle, FiHome, FiBriefcase } from 'react-icons/fi'
+import { FiAlertTriangle, FiHome, FiBriefcase, FiMessageSquare } from 'react-icons/fi'
 import { LuLandmark } from 'react-icons/lu'
 import { TbPin } from 'react-icons/tb'
 import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
-import { CATS, CAT_STYLE, THREADS, type Thread } from './forum.data'
+import { CATS, CAT_STYLE, THREADS, SELF_AUTHOR, type Thread } from './forum.data'
+import { ForumAvatar, ProfileSpanLink, OfficialBadge, authorHref } from './ForumAuthor'
 import { ForumThreadListSkeleton } from './ForumSkeleton'
 import { ComposeThreadModal, type NewThreadInput } from './ComposeThreadModal'
 import styles from './ForumPage.module.css'
@@ -21,6 +22,14 @@ export function ForumPage() {
   const [extraThreads, setExtraThreads] = useState<Thread[]>([])
 
   const allThreads = useMemo(() => [...extraThreads, ...THREADS], [extraThreads])
+
+  // Sidebar post counts derived from the real threads (members' posts), so they
+  // stay truthful and update live when a member publishes a new one.
+  const counts = useMemo(() => {
+    const by: Record<string, number> = {}
+    for (const t of allThreads) by[t.cat] = (by[t.cat] ?? 0) + 1
+    return by
+  }, [allThreads])
 
   const threads = useMemo(() => {
     const filtered = allThreads.filter((t) => cat === 'all' || t.cat === cat)
@@ -37,7 +46,7 @@ export function ForumPage() {
         cat: postCat,
         title,
         excerpt,
-        author: { i: 'SF', n: 'You', t: 'var(--plum)', tt: 'var(--cream)' },
+        author: SELF_AUTHOR,
         posted: 'just now',
         views: 1,
         upvotes: 1,
@@ -68,11 +77,17 @@ export function ForumPage() {
         <div className="wrap">
           <div className={styles.heroRow}>
             <div>
-              <div className={styles.cat}>Community forum</div>
+              <div className={styles.cat}>The Public Square · open to every member</div>
               <h1>
                 The <em>commons</em>
               </h1>
-              <p>Questions, proposals, guides, and the slow work of building a community. Members only — be kind, be useful.</p>
+              <p>
+                The one community everyone here belongs to — questions, proposals, guides, and the
+                slow work of building a movement. Take care of each other. Looking for a smaller room?{' '}
+                <Link to={routes.communities} className={styles.heroLink}>
+                  Find your communities →
+                </Link>
+              </p>
             </div>
             <Button className={styles.newBtn} onClick={() => setComposing(true)}>
               + New post
@@ -94,7 +109,7 @@ export function ForumPage() {
                 >
                   <span className={styles.catIcon}><c.icon /></span>
                   <span className={styles.catName}>{c.name}</span>
-                  <span className={styles.catCount}>{c.count}</span>
+                  <span className={styles.catCount}>{c.id === 'all' ? allThreads.length : counts[c.id] ?? 0}</span>
                 </button>
               ))}
               <div className={styles.sbDivider} />
@@ -128,6 +143,14 @@ export function ForumPage() {
               </div>
 
               {loading && <ForumThreadListSkeleton count={5} />}
+              {!loading && threads.length === 0 && (
+                <EmptyState
+                  icon={<FiMessageSquare />}
+                  title="Nothing in this category yet"
+                  description="No posts match this filter right now. Try another category, or start the conversation yourself."
+                  action={{ label: 'Show all posts', onClick: () => setCat('all') }}
+                />
+              )}
               {!loading && threads.map((t, idx) => {
                 const isVoted = voted.has(t.id)
                 const catMeta = CATS.find((c) => c.id === t.cat)
@@ -166,10 +189,20 @@ export function ForumPage() {
                       <div className={styles.threadTitle}>{t.title}</div>
                       <div className={styles.threadExcerpt}>{t.excerpt}</div>
                       <div className={styles.threadMeta}>
-                        <span className={styles.tmAv} style={{ background: t.author.t, color: t.author.tt }}>
-                          {t.author.i}
-                        </span>
-                        <span className={styles.tmAuthor}>{t.author.n}</span>
+                        <ProfileSpanLink
+                          to={authorHref(t.author)}
+                          name={t.author.n}
+                          official={t.author.official}
+                          className={styles.tmWho}
+                        >
+                          <ForumAvatar
+                            className={styles.tmAv}
+                            style={{ background: t.author.t, color: t.author.tt }}
+                            person={{ slug: t.author.slug, photo: t.author.photo, initials: t.author.i, name: t.author.n }}
+                          />
+                          <span className={styles.tmAuthor}>{t.author.n}</span>
+                          {t.author.official && <OfficialBadge />}
+                        </ProfileSpanLink>
                         <span className={styles.tmDot} />
                         <span>{t.posted}</span>
                         <span className={styles.tmDot} />

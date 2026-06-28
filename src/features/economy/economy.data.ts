@@ -1,5 +1,17 @@
 import type { IconType } from 'react-icons'
-import { FiBookOpen, FiClipboard, FiDollarSign, FiFileText } from 'react-icons/fi'
+import {
+  FiBarChart2,
+  FiBookOpen,
+  FiClipboard,
+  FiClock,
+  FiColumns,
+  FiDollarSign,
+  FiFileText,
+  FiHeart,
+  FiShield,
+  FiTarget,
+  FiTrendingUp,
+} from 'react-icons/fi'
 import { routes } from '../../app/routeMap'
 
 export type Tab = 'incubator' | 'freelance' | 'salary'
@@ -15,17 +27,49 @@ export const STEPS = [
   { n: 4, title: 'Demo night', desc: "Share what you've built with the community, investors, and the press. Low-stakes, high-support. You decide how much to reveal.", meta: 'March · Invite-only' },
 ]
 
-export const INC_MENTORS = [
-  { av: 'RL', bg: 'rgba(var(--accent-rgb),.15)', color: 'var(--accent-ink)', name: 'Rita Lopes', role: 'Founder, Arquivo Studio · formerly Farfetch product lead', tags: ['Product', 'B2C', 'Fundraising'] },
-  { av: 'JM', bg: 'rgba(var(--jade-rgb),.15)', color: 'var(--jade)', name: 'João Melo', role: 'Co-founder, Semente Legal · social enterprise lawyer', tags: ['Legal', 'Cooperatives', 'Grants'] },
-  { av: 'AC', bg: 'rgba(var(--plum-rgb),.1)', color: 'var(--plum)', name: 'Ana Catarina', role: 'Angel investor · ex-Unbabel, Feedzai', tags: ['B2B SaaS', 'Pre-seed', 'Hiring'] },
+/** A community member who mentors in the incubator. `slug` ties into the member
+ *  registry (name, role, photo, tint all derive from there); `tags` are what they
+ *  specifically mentor founders on. */
+export interface IncMentor {
+  slug: string
+  tags: string[]
+}
+export const INC_MENTORS: IncMentor[] = [
+  { slug: 'carla', tags: ['Product strategy', 'Fundraising', 'Hiring'] },
+  { slug: 'ines', tags: ['Brand & identity', 'B2C', 'Bootstrapping'] },
+  { slug: 'rui', tags: ['Engineering', 'Infrastructure', 'Open source'] },
+  { slug: 'jordan', tags: ['Team & culture', 'Facilitation', 'Cooperatives'] },
 ]
 
-export const TOOLS: { icon: IconType; title: string; desc: string; cta: string }[] = [
-  { icon: FiFileText, title: 'Service contract (PT/EN)', desc: 'A straightforward freelance services contract in Portuguese and English. Covers scope, payment terms, IP, and cancellation. Reviewed by a lawyer in the community.', cta: 'Download (.docx)' },
-  { icon: FiDollarSign, title: 'Invoice template', desc: 'A clean Portuguese-law-compliant invoice template with NIF field, IVA options, and retention tax. In both recibo verde and standard formats.', cta: 'Download (.xlsx)' },
-  { icon: FiClipboard, title: 'Scope of work template', desc: "Define exactly what you're delivering, what you're not, how many revisions, and what happens if the scope changes. The document that prevents most disputes.", cta: 'Download (.docx)' },
-  { icon: FiBookOpen, title: 'Recibo verde guide', desc: 'A plain-language guide to the Portuguese freelance tax system — what you need to register, when to pay, what you can deduct. Updated for 2025.', cta: 'Read the guide' },
+export interface ToolCard {
+  icon: IconType
+  title: string
+  desc: string
+  cta: string
+  to: string
+}
+
+/** Real document generators (PDF / copyable text), no backend. */
+export const TOOLS: ToolCard[] = [
+  { icon: FiDollarSign, title: 'Invoice maker', desc: 'Build a clean, Portuguese-correct fatura-recibo — NIF, IVA options, the art. 53.º exemption and art. 101.º-B dispensa notes — and save it as a real PDF. Your details are remembered for next time.', cta: 'Open invoice maker', to: routes.invoiceTool },
+  { icon: FiFileText, title: 'Contract builder', desc: 'Assemble a freelance services contract clause by clause — scope, payment, IP, cancellation, confidentiality. Download a PDF or copy the text to edit.', cta: 'Open contract builder', to: routes.contractTool },
+  { icon: FiClipboard, title: 'Scope & quote builder', desc: "Spell out exactly what you're delivering, what you're not, revisions, and timeline — add a price to turn it into a quote. Export a PDF that prevents most disputes.", cta: 'Open scope builder', to: routes.scopeTool },
+  { icon: FiBookOpen, title: 'Recibos verdes guide', desc: 'A plain-language guide to the Portuguese freelance tax system — registering, retention, IVA, Segurança Social, and your first year. Always current.', cta: 'Read the guide', to: routes.reciboVerdeGuide },
+]
+
+/** Live calculators — real math from the dated tax constants. */
+export const CALC_TOOLS: ToolCard[] = [
+  { icon: FiTrendingUp, title: 'Take-home calculator', desc: 'Turn your gross freelance income into what you actually keep — after IRS and Segurança Social, with the regime-simplificado coefficients and your first years built in.', cta: 'Open calculator', to: routes.takeHomeTool },
+  { icon: FiClock, title: 'Day-rate calculator', desc: 'Work back from the income you need to a day (and hourly) rate that actually sustains you — overhead, unpaid days, and IVA included.', cta: 'Open calculator', to: routes.dayRateTool },
+  { icon: FiTarget, title: 'IVA threshold tracker', desc: 'Track your invoiced income against the €15,000 art. 53.º exemption limit, so crossing it never takes you by surprise. Saved on your device.', cta: 'Open tracker', to: routes.ivaTracker },
+  { icon: FiShield, title: 'Tax set-aside planner', desc: 'Work out what slice of every invoice to park now, and keep a running pot, so the IRS and Segurança Social bills never sting later.', cta: 'Open planner', to: routes.setAsideTool },
+  { icon: FiColumns, title: 'Freelance vs salaried', desc: "Compare what you'd actually take home as a freelancer versus an equivalent salary — net for net, with the costs a payslip hides.", cta: 'Compare', to: routes.comparatorTool },
+]
+
+/** Community / solidarity tools. */
+export const COMMUNITY_TOOLS: ToolCard[] = [
+  { icon: FiBarChart2, title: 'Rate transparency board', desc: 'Anonymous day rates shared by the community, by role and experience — so nobody has to guess what to charge. Add yours, see where you stand.', cta: 'Open the board', to: routes.rateBoard },
+  { icon: FiHeart, title: 'Sliding-scale price card', desc: 'Publish a sliding scale so people pay what fits their means and you still get paid fairly. Build a card and export it to share.', cta: 'Build a card', to: routes.slidingScaleTool },
 ]
 
 export interface SalaryRow {

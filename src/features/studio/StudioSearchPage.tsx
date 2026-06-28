@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { FiSearch } from 'react-icons/fi'
+import { ImageSlot, FadeIn, EmptyState } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { StudioShell } from './StudioShell'
 import { FILTERS, RECENT, RESULTS } from './studioSearch.data'
@@ -91,7 +92,24 @@ export function StudioSearchPage() {
             ))}
           </div>
         ) : results.length === 0 ? (
-          <p className={s.empty}>Nothing matched that — try a different word or filter.</p>
+          <EmptyState
+            icon={<FiSearch />}
+            title="Nothing matched that"
+            description={
+              <>
+                We couldn't find anything for <em>{query || filter}</em>. Try a
+                different word, or loosen the filter — the catalogue is bigger
+                than it looks.
+              </>
+            }
+            action={{
+              label: 'Clear search',
+              onClick: () => {
+                setQuery('')
+                setFilter('Everything')
+              },
+            }}
+          />
         ) : (
           <div className={ss.rowGrid}>
             {results.map((result, i) => (

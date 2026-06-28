@@ -1,0 +1,103 @@
+.role {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 2px 7px;
+  line-height: 1.4;
+}
+.role svg {
+  width: 11px;
+  height: 11px;
+}
+.owner {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.14);
+}
+.mod {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.14);
+}
+
+.tier {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-radius: 999px;
+  padding: 3px 10px;
+  line-height: 1.5;
+}
+.tier svg {
+  width: 11px;
+  height: 11px;
+}
+.tierOpen {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+.tierRequest {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.13);
+}
+.tierInvite,
+.tierPrivate {
+  color: var(--plum);
+  background: rgba(45, 27, 61, 0.08);
+}
+
+.reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: rgba(45, 27, 61, 0.05);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 4px 11px;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    transform 0.18s var(--ease);
+}
+.pill svg {
+  width: 13px;
+  height: 13px;
+}
+.pill:hover {
+  background: rgba(45, 27, 61, 0.09);
+  color: var(--ink);
+}
+.pill:active {
+  transform: scale(0.94);
+}
+.pillOn {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.16);
+  border-color: rgba(var(--accent-rgb), 0.3);
+}
+.pillOn:hover {
+  background: rgba(var(--accent-rgb), 0.22);
+  color: var(--accent-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pill {
+    transition: none;
+  }
+}

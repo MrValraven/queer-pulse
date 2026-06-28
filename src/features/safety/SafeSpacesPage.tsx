@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { FiMapPin } from 'react-icons/fi'
+import { Button, EmptyState, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
@@ -88,6 +89,16 @@ export function SafeSpacesPage() {
                   <SafeSpaceCard key={s.name} s={s} onFlag={() => setFlagging(s.name)} delay={Math.min(i, 8) * 60} />
                 ))}
           </div>
+
+          {!loading && items.length === 0 && (
+            <EmptyState
+              icon={<FiMapPin />}
+              title="No verified spaces in this category yet"
+              description="The list grows as members visit and review places. Try another category — or nominate somewhere you already trust, and we'll get it reviewed."
+              action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
+              secondaryAction={{ label: 'Nominate a space', onClick: scrollToNominate }}
+            />
+          )}
         </div>
       </div>
 

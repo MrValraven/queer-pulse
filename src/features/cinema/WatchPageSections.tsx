@@ -134,8 +134,31 @@ export function WatchControls({
   )
 }
 
+interface ChatLine {
+  id: string
+  name: string
+  badge: string
+  when: string
+  body: string
+  mine?: boolean
+}
+
+const SEED_CHAT: ChatLine[] = LOBBY.map((m, i) => ({ id: `seed-${i}`, ...m }))
+
 export function WatchSidePanel() {
   const [tab, setTab] = useState<WatchTab>('Film info')
+  const [messages, setMessages] = useState<ChatLine[]>(SEED_CHAT)
+  const [draft, setDraft] = useState('')
+
+  function send() {
+    const body = draft.trim()
+    if (!body) return
+    setMessages((prev) => [
+      ...prev,
+      { id: `me-${Date.now()}`, name: 'You', badge: '', when: 'now', body, mine: true },
+    ])
+    setDraft('')
+  }
 
   return (
     <aside className={styles.sidePanel}>
@@ -177,8 +200,8 @@ export function WatchSidePanel() {
       {(tab === 'Lobby' || tab === 'Live Q&A') && (
         <>
           <div className={styles.spBody}>
-            {LOBBY.map((m, i) => (
-              <div key={i} className={styles.lobbyMsg}>
+            {messages.map((m) => (
+              <div key={m.id} className={styles.lobbyMsg}>
                 <div className={styles.lobbyHead}>
                   <span className="name">{m.name}</span>
                   {m.badge && <span className="badge">{m.badge}</span>}
@@ -190,11 +213,21 @@ export function WatchSidePanel() {
           </div>
           <div className={styles.spInput}>
             <input
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  send()
+                }
+              }}
               placeholder={
                 tab === 'Live Q&A' ? 'Ask Maria a question…' : 'Say something to the lobby…'
               }
             />
-            <Button style={{ padding: '8px 14px', fontSize: 12.5 }}>Send</Button>
+            <Button style={{ padding: '8px 14px', fontSize: 12.5 }} onClick={send} disabled={!draft.trim()}>
+              Send
+            </Button>
           </div>
         </>
       )}

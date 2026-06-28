@@ -2,18 +2,19 @@ import type { IconType } from 'react-icons'
 import { FiGlobe, FiMessageCircle, FiHome, FiActivity, FiBookOpen, FiBriefcase, FiZap } from 'react-icons/fi'
 import { LuPalette } from 'react-icons/lu'
 import { FaHandFist } from 'react-icons/fa6'
-import { MEMBERS, memberName } from '../members/data/members'
+import type { AvatarTint } from '../../shared/components/ui/Avatar'
+import { MEMBERS, fullName, currentUser } from '../members/data/members'
 
-export const CATS: { id: string; name: string; icon: IconType; count: number }[] = [
-  { id: 'all', name: 'All posts', icon: FiGlobe, count: 61 },
-  { id: 'general', name: 'General', icon: FiMessageCircle, count: 12 },
-  { id: 'housing', name: 'Housing', icon: FiHome, count: 8 },
-  { id: 'health', name: 'Health & Wellbeing', icon: FiActivity, count: 9 },
-  { id: 'arts', name: 'Arts & Culture', icon: LuPalette, count: 6 },
-  { id: 'activism', name: 'Activism & Proposals', icon: FaHandFist, count: 8 },
-  { id: 'guides', name: 'Guides & Resources', icon: FiBookOpen, count: 6 },
-  { id: 'jobs', name: 'Jobs & Skills', icon: FiBriefcase, count: 7 },
-  { id: 'trans', name: 'Trans & Non-Binary', icon: FiZap, count: 5 },
+export const CATS: { id: string; name: string; icon: IconType }[] = [
+  { id: 'all', name: 'All posts', icon: FiGlobe },
+  { id: 'general', name: 'General', icon: FiMessageCircle },
+  { id: 'housing', name: 'Housing', icon: FiHome },
+  { id: 'health', name: 'Health & Wellbeing', icon: FiActivity },
+  { id: 'arts', name: 'Arts & Culture', icon: LuPalette },
+  { id: 'activism', name: 'Activism & Proposals', icon: FaHandFist },
+  { id: 'guides', name: 'Guides & Resources', icon: FiBookOpen },
+  { id: 'jobs', name: 'Jobs & Skills', icon: FiBriefcase },
+  { id: 'trans', name: 'Trans & Non-Binary', icon: FiZap },
 ]
 
 export const CAT_STYLE: Record<string, { bg: string; color: string }> = {
@@ -32,6 +33,14 @@ export interface Reply {
   bg: string
   color: string
   name: string
+  /** Member slug, when the author is a real member (links to their profile). */
+  slug?: string
+  /** Member profile photo, when available. */
+  photo?: string
+  /** True for the institutional QueerPulse account (links to governance, not a profile). */
+  official?: boolean
+  /** Slug of the moderator posting on the platform's behalf (for an official byline). */
+  mod?: string
   time: string
   isOP?: boolean
   helpful?: boolean
@@ -46,7 +55,7 @@ export interface Thread {
   pinned?: boolean
   title: string
   excerpt: string
-  author: { i: string; n: string; t: string; tt: string }
+  author: { i: string; n: string; t: string; tt: string; slug?: string; photo?: string; official?: boolean; mod?: string }
   posted: string
   views: number
   upvotes: number
@@ -57,11 +66,71 @@ export interface Thread {
   replies: Reply[]
 }
 
-// Reusable avatar tints for reply authors.
-const CORAL = { bg: 'rgba(232,119,90,.14)', color: 'var(--accent-ink)' }
-const JADE = { bg: 'rgba(74,140,111,.15)', color: 'var(--jade)' }
-const PLUM = { bg: 'rgba(45,27,61,.1)', color: 'var(--plum)' }
-const PURPLE = { bg: 'rgba(112,80,170,.12)', color: 'var(--violet)' }
+// ── Author / reply identity, driven by the member registry ──────────────────
+// Every human who posts or comments on the forum is a real member from the
+// canonical registry, so their name, initials and avatar tint stay consistent
+// with their profile, directory card and activity everywhere else. The only
+// non-member voice is the institutional QueerPulse account.
+
+// Solid avatar (thread authors) by member tint.
+const SOLID: Partial<Record<AvatarTint, { t: string; tt: string }>> = {
+  coral: { t: 'var(--accent)', tt: 'var(--paper)' },
+  jade: { t: 'var(--jade)', tt: 'var(--paper)' },
+  plum: { t: 'var(--plum)', tt: 'var(--cream)' },
+}
+// Soft avatar (reply authors) by member tint.
+const SOFT: Partial<Record<AvatarTint, { bg: string; color: string }>> = {
+  coral: { bg: 'rgba(232,119,90,.14)', color: 'var(--accent-ink)' },
+  jade: { bg: 'rgba(74,140,111,.15)', color: 'var(--jade)' },
+  plum: { bg: 'rgba(45,27,61,.1)', color: 'var(--plum)' },
+}
+const solid = (tint: AvatarTint) => SOLID[tint] ?? SOLID.plum!
+const soft = (tint: AvatarTint) => SOFT[tint] ?? SOFT.plum!
+
+/** Thread-author block built from a member slug. */
+function author(slug: string): Thread['author'] {
+  const m = MEMBERS[slug]
+  const s = solid(m.tint)
+  return { i: m.initials, n: fullName(m), t: s.t, tt: s.tt, slug, photo: m.photo }
+}
+
+/** Reply block built from a member slug, plus the per-reply content. */
+function reply(slug: string, rest: Omit<Reply, 'av' | 'bg' | 'color' | 'name' | 'slug' | 'photo' | 'official' | 'mod'>): Reply {
+  const m = MEMBERS[slug]
+  const s = soft(m.tint)
+  return { av: m.initials, bg: s.bg, color: s.color, name: fullName(m), slug, photo: m.photo, ...rest }
+}
+
+// The institutional QueerPulse account — the one non-member voice. Each official
+// post is published by a named moderator on the platform's behalf (the `mod`
+// slug), and links to the governance page rather than a personal profile.
+const qpAuthor = (mod: string): Thread['author'] => ({
+  i: 'QP',
+  n: 'QueerPulse',
+  t: 'var(--accent)',
+  tt: 'var(--paper)',
+  official: true,
+  mod,
+})
+const qpReply = (mod: string, rest: Omit<Reply, 'av' | 'bg' | 'color' | 'name' | 'slug' | 'photo' | 'official' | 'mod'>): Reply => ({
+  av: 'QP',
+  bg: 'rgba(232,119,90,.14)',
+  color: 'var(--accent-ink)',
+  name: 'QueerPulse',
+  official: true,
+  mod,
+  ...rest,
+})
+
+/** Author block for the logged-in member, shown when they publish a thread. */
+export const SELF_AUTHOR: Thread['author'] = {
+  i: currentUser.initials,
+  n: 'You',
+  t: solid(currentUser.tint).t,
+  tt: solid(currentUser.tint).tt,
+  slug: currentUser.slug,
+  photo: currentUser.photo,
+}
 
 export const THREADS: Thread[] = [
   {
@@ -71,7 +140,7 @@ export const THREADS: Thread[] = [
     title: 'Master resource guide: LGBTQ+ in Lisbon',
     excerpt:
       'Everything you need to navigate Lisbon as a queer person — organisations, healthcare, housing, legal rights, and community. Updated monthly.',
-    author: { i: 'QP', n: 'QueerPulse', t: 'var(--accent)', tt: 'var(--paper)' },
+    author: qpAuthor('mariana'),
     posted: '2 months ago',
     views: 4120,
     upvotes: 201,
@@ -83,10 +152,7 @@ export const THREADS: Thread[] = [
       'Bookmark this thread. If you only read one thing on the forum, read this one first.',
     ],
     replies: [
-      {
-        av: 'RF',
-        ...CORAL,
-        name: 'Rita Fonseca',
+      reply('rita', {
         time: '6 weeks ago',
         helpful: true,
         body: [
@@ -94,26 +160,19 @@ export const THREADS: Thread[] = [
           'One addition: the AMPLOS parents-and-families group runs a monthly drop-in that isn\'t listed yet. Worth adding under community.',
         ],
         reactions: 14,
-      },
-      {
-        av: 'QP',
-        bg: 'rgba(232,119,90,.14)',
-        color: 'var(--accent-ink)',
-        name: 'QueerPulse',
+      }),
+      qpReply('mariana', {
         time: '6 weeks ago',
         isOP: true,
-        quote: { cite: 'Rita Fonseca', text: 'the AMPLOS parents-and-families group runs a monthly drop-in…' },
-        body: ['Added AMPLOS to the community section — thank you Rita. Keep them coming.'],
+        quote: { cite: fullName(MEMBERS.rita), text: 'the AMPLOS parents-and-families group runs a monthly drop-in…' },
+        body: [`Added AMPLOS to the community section — thank you ${MEMBERS.rita.first}. Keep them coming.`],
         reactions: 5,
-      },
-      {
-        av: 'TB',
-        ...PURPLE,
-        name: 'Tomás B.',
+      }),
+      reply('tomas', {
         time: '3 weeks ago',
         body: ['Could we get a Portuguese translation of the legal-rights section? Happy to draft it if someone can review.'],
         reactions: 9,
-      },
+      }),
     ],
   },
   {
@@ -123,7 +182,7 @@ export const THREADS: Thread[] = [
     title: 'Trans-affirming healthcare in Lisbon — the full guide',
     excerpt:
       'How to find a GP who will treat you with respect, how the SNS system handles trans healthcare, and who to call when it goes wrong.',
-    author: { i: 'JF', n: 'Jonas Ferreira', t: 'var(--jade)', tt: 'var(--paper)' },
+    author: author('jonas'),
     posted: '5 weeks ago',
     views: 2870,
     upvotes: 87,
@@ -135,37 +194,27 @@ export const THREADS: Thread[] = [
       'I will keep this updated as the 2026 protocol changes land. If your experience differs from what is written here, please reply so the picture stays honest.',
     ],
     replies: [
-      {
-        av: 'AQ',
-        ...JADE,
-        name: 'Alex Quintela',
+      reply('daniel-oliveira', {
         time: '5 weeks ago',
         helpful: true,
         body: [
           'The escalation section is the part nobody tells you about. I spent eight months stuck because my GP "forgot" to send the referral twice. The patient-ombudsman letter template here got it moving in a fortnight.',
         ],
         reactions: 19,
-      },
-      {
-        av: 'ML',
-        ...PLUM,
-        name: 'Mara L.',
+      }),
+      reply('mariana', {
         time: '4 weeks ago',
         body: [
           'Adding a data point: the Lapa centro de saúde was genuinely good for me. The GP had clearly worked with trans patients before and didn\'t make me explain the basics.',
         ],
         reactions: 11,
-      },
-      {
-        av: 'JF',
-        bg: 'rgba(74,140,111,.15)',
-        color: 'var(--jade)',
-        name: 'Jonas Ferreira',
+      }),
+      reply('jonas', {
         time: '4 weeks ago',
         isOP: true,
         body: ['Noted Lapa as a recommended centre. Thank you both — this is exactly the kind of ground-truth that makes the guide useful.'],
         reactions: 6,
-      },
+      }),
     ],
   },
   {
@@ -175,7 +224,7 @@ export const THREADS: Thread[] = [
     title: 'Welcome thread — introduce yourself',
     excerpt:
       "Say hello. Tell us who you are, where you're from, what you make, and what brought you to QueerPulse. We read every one.",
-    author: { i: 'QP', n: 'QueerPulse', t: 'var(--accent)', tt: 'var(--paper)' },
+    author: qpAuthor('rui'),
     posted: '3 weeks ago',
     views: 3340,
     upvotes: 156,
@@ -186,32 +235,23 @@ export const THREADS: Thread[] = [
       'No pressure to write an essay — a single line is welcome. The only rule is the one that runs through the whole forum: be kind, be useful.',
     ],
     replies: [
-      {
-        av: MEMBERS.carla.initials,
-        ...CORAL,
-        name: memberName('carla'),
+      reply('carla', {
         time: '3 weeks ago',
         body: [
           'Hi all — Carla, illustrator, moved here from Madrid in January. Still figuring out the city but the welcome here has been real. Looking for studio-share leads and people to draw with.',
         ],
         reactions: 12,
-      },
-      {
-        av: MEMBERS.diogo.initials,
-        ...JADE,
-        name: memberName('diogo'),
+      }),
+      reply('diogo', {
         time: '3 weeks ago',
         body: ['Diogo, sound engineer, Lisbon born and back after six years in Berlin. Here for the music thread and to find collaborators. Say hi if you make anything noisy.'],
         reactions: 8,
-      },
-      {
-        av: 'NK',
-        ...PURPLE,
-        name: 'Noor K.',
+      }),
+      reply('bilal-kaya', {
         time: '2 weeks ago',
-        body: ['Noor, they/them, just arrived from Beirut. Nervous and excited. Grateful this exists.'],
+        body: ['Bilal, they/them, just arrived from Beirut. Nervous and excited. Grateful this exists.'],
         reactions: 21,
-      },
+      }),
     ],
   },
   {
@@ -220,7 +260,7 @@ export const THREADS: Thread[] = [
     title: 'Proposal: Monthly queer film night at Cinema São Jorge',
     excerpt:
       "Sofia is proposing a monthly queer film screening at Cinema São Jorge. She has a relationship with their programming team. Upvote if you'd come.",
-    author: { i: MEMBERS.sofia.initials, n: memberName('sofia'), t: 'var(--jade)', tt: 'var(--paper)' },
+    author: author('sofia'),
     posted: '4 days ago',
     views: 612,
     upvotes: 38,
@@ -232,34 +272,24 @@ export const THREADS: Thread[] = [
       'Upvote if you would come. Reply if you want to help make it happen.',
     ],
     replies: [
-      {
-        av: MEMBERS.ines.initials,
-        ...CORAL,
-        name: memberName('ines'),
+      reply('ines', {
         time: '4 days ago',
         helpful: true,
         body: ['Yes, and yes — I can do the door and bring the bookshop in as a small sponsor. A monthly anchor like this is exactly what the scene is missing.'],
         reactions: 13,
-      },
-      {
-        av: 'RP',
-        ...PURPLE,
-        name: 'Rui P.',
+      }),
+      reply('rui-fernandes', {
         time: '3 days ago',
         body: ['Would absolutely come. Suggestion: keep one slot a quarter for Portuguese-language queer cinema specifically — there is more of it than people think and it never gets screened.'],
         reactions: 7,
-      },
-      {
-        av: MEMBERS.sofia.initials,
-        bg: 'rgba(74,140,111,.15)',
-        color: 'var(--jade)',
-        name: memberName('sofia'),
+      }),
+      reply('sofia', {
         time: '3 days ago',
         isOP: true,
-        quote: { cite: 'Inês', text: 'I can do the door and bring the bookshop in as a small sponsor.' },
-        body: ['Amazing — that covers door and a sponsor in one go. Rui, the Portuguese-cinema slot is a great idea, locking it in. I will draft a first season and post it next week.'],
+        quote: { cite: fullName(MEMBERS.ines), text: 'I can do the door and bring the bookshop in as a small sponsor.' },
+        body: [`Amazing — that covers door and a sponsor in one go. ${MEMBERS['rui-fernandes'].first}, the Portuguese-cinema slot is a great idea, locking it in. I will draft a first season and post it next week.`],
         reactions: 9,
-      },
+      }),
     ],
   },
   {
@@ -268,7 +298,7 @@ export const THREADS: Thread[] = [
     title: 'What queer spaces in Lisbon do you miss or want to see return?',
     excerpt:
       "Bars, clubs, bookshops, community centres — what's been lost, what never existed but should, and what we could build. Share yours.",
-    author: { i: MEMBERS.diogo.initials, n: memberName('diogo'), t: 'var(--jade)', tt: 'var(--paper)' },
+    author: author('diogo'),
     posted: '6 days ago',
     views: 980,
     upvotes: 44,
@@ -279,35 +309,25 @@ export const THREADS: Thread[] = [
       'So: what do you miss, what never existed but should have, and — the real question — what could we actually build now, together? I am asking partly out of nostalgia and partly because I think a list like this is the start of a plan.',
     ],
     replies: [
-      {
-        av: 'CV',
-        ...PLUM,
-        name: 'Catarina Vaz',
+      reply('catarina-vaz', {
         time: '5 days ago',
         body: [
           'A daytime space. Everything queer here is nocturnal and built around drinking. I want somewhere to sit with a coffee and a laptop at 3pm and not be the only one.',
         ],
         reactions: 17,
-      },
-      {
-        av: 'HM',
-        ...CORAL,
-        name: 'Helena M.',
+      }),
+      reply('jordan', {
         time: '5 days ago',
         helpful: true,
         body: ['Seconding the daytime idea. The old Lisbon women\'s collective ran a café-library model in the 90s and it worked because it was useful, not just social. We could do a modern version with the micro-grants fund seeding it.'],
         reactions: 15,
-      },
-      {
-        av: MEMBERS.diogo.initials,
-        bg: 'rgba(74,140,111,.15)',
-        color: 'var(--jade)',
-        name: memberName('diogo'),
+      }),
+      reply('diogo', {
         time: '4 days ago',
         isOP: true,
         body: ['The café-library keeps coming up in DMs too. I am going to pull these into a proper proposal and tag the governance thread. Keep them coming.'],
         reactions: 6,
-      },
+      }),
     ],
   },
   {
@@ -316,7 +336,7 @@ export const THREADS: Thread[] = [
     title: 'Honest guide to finding a flat in Lisbon as a newcomer',
     excerpt:
       "Carla wrote this after three weeks on the rental market. Not encouraging. But useful, and more honest than anything you'll find on a portal.",
-    author: { i: MEMBERS.carla.initials, n: memberName('carla'), t: 'var(--accent)', tt: 'var(--paper)' },
+    author: author('carla'),
     posted: '2 weeks ago',
     views: 1740,
     upvotes: 41,
@@ -328,25 +348,19 @@ export const THREADS: Thread[] = [
       'This is not meant to discourage you. People do find homes here. It just takes longer and costs more than the portals admit, and going in clear-eyed helps.',
     ],
     replies: [
-      {
-        av: 'PS',
-        ...JADE,
-        name: 'Pedro S.',
+      reply('catarina-melo', {
         time: '2 weeks ago',
         helpful: true,
         body: [
           'The fiador workaround section is the most useful thing I have read on this forum. For anyone stuck: some landlords accept a larger deposit in lieu of a guarantor if you ask directly. It is negotiable more often than you think.',
         ],
         reactions: 16,
-      },
-      {
-        av: 'LG',
-        ...PURPLE,
-        name: 'Lena G.',
+      }),
+      reply('luisa', {
         time: '12 days ago',
         body: ['Adding the obvious one people forget: the QueerPulse housing board has flatshares that never touch the public portals. I found my room there in a week after a month of portal misery.'],
         reactions: 10,
-      },
+      }),
     ],
   },
   {
@@ -356,7 +370,7 @@ export const THREADS: Thread[] = [
     title: 'Trans healthcare in Portugal 2026 — the complete SNS guide',
     excerpt:
       'How the SNS pathway works, which gender clinics in Lisbon are actually welcoming, and what to do when the system pushes back.',
-    author: { i: 'JF', n: 'Jonas Ferreira', t: 'var(--jade)', tt: 'var(--paper)' },
+    author: author('jonas'),
     posted: '2 weeks ago',
     views: 2210,
     upvotes: 92,
@@ -368,23 +382,17 @@ export const THREADS: Thread[] = [
       'If the protocol shifts mid-year, I will flag the change here with a date so you can tell old advice from current.',
     ],
     replies: [
-      {
-        av: 'SA',
-        ...CORAL,
-        name: 'Sara A.',
+      reply('sara-pinheiro', {
         time: '11 days ago',
         helpful: true,
         body: ['The realistic-timeline section deserves to be pinned on its own. I went in expecting the protocol numbers and the honest version here stopped me spiralling when month four came and went with no appointment.'],
         reactions: 18,
-      },
-      {
-        av: 'DN',
-        ...PURPLE,
-        name: 'Dani N.',
+      }),
+      reply('daniel-oliveira', {
         time: '9 days ago',
         body: ['For the private-bridge section — worth noting a couple of the endocrinologists listed will coordinate with your SNS team so you are not running two parallel records. Ask before booking.'],
         reactions: 7,
-      },
+      }),
     ],
   },
   {
@@ -393,7 +401,7 @@ export const THREADS: Thread[] = [
     title: 'Vote: Queer film series — what do we watch in July?',
     excerpt:
       "We're doing our first proper screening. Submit and upvote films below. Foreign language films very welcome.",
-    author: { i: MEMBERS.sofia.initials, n: memberName('sofia'), t: 'var(--jade)', tt: 'var(--paper)' },
+    author: author('sofia'),
     posted: '2 days ago',
     views: 430,
     upvotes: 18,
@@ -404,33 +412,23 @@ export const THREADS: Thread[] = [
       'Two asks: foreign-language and Portuguese cinema very welcome, and try to keep it to things we can actually licence for a small one-off screening. I will tally the top three next Friday.',
     ],
     replies: [
-      {
-        av: 'BF',
-        ...PLUM,
-        name: 'Bruno F.',
+      reply('kai', {
         time: '2 days ago',
         body: ['"Tchindas" — a documentary from Cabo Verde, warm, funny, and almost never screened here. Would be a perfect opener.'],
         reactions: 9,
-      },
-      {
-        av: 'MG',
-        ...CORAL,
-        name: 'Marta G.',
+      }),
+      reply('mariana-costa', {
         time: '1 day ago',
         helpful: true,
         body: ['Seconding a Lusophone opener. If we want something with a bit of weight after, "Madame Satã" still holds up and gets people talking afterwards — which is half the point of a screening.'],
         reactions: 11,
-      },
-      {
-        av: MEMBERS.sofia.initials,
-        bg: 'rgba(74,140,111,.15)',
-        color: 'var(--jade)',
-        name: memberName('sofia'),
+      }),
+      reply('sofia', {
         time: '22h ago',
         isOP: true,
         body: ['Both on the shortlist. Keep voting — I will post the final three on Friday and we will run the top one as the July night.'],
         reactions: 4,
-      },
+      }),
     ],
   },
   {
@@ -439,7 +437,7 @@ export const THREADS: Thread[] = [
     title: 'Should QueerPulse be more accessible to non-professionals?',
     excerpt:
       "The invite-only + 'professional network' framing might be excluding people who need community most. Thoughts?",
-    author: { i: 'CV', n: 'Catarina Vaz', t: 'var(--plum)', tt: 'var(--cream)' },
+    author: author('catarina-vaz'),
     posted: '1 week ago',
     views: 1120,
     upvotes: 41,
@@ -450,36 +448,26 @@ export const THREADS: Thread[] = [
       'I am not arguing for throwing the doors open overnight. I am asking whether there is a middle path: a sponsored-membership route, an open resources tier, something. What would we lose, and what would we gain?',
     ],
     replies: [
-      {
-        av: 'AM',
-        ...JADE,
-        name: 'André M.',
+      reply('andre', {
         time: '7 days ago',
         body: ['I came in through a member sponsor with zero "professional" credentials and it changed my year. So I am living proof the middle path works — it just currently depends on knowing the right person, which is the problem you are naming.'],
         reactions: 14,
-      },
-      {
-        av: 'TR',
-        ...PURPLE,
-        name: 'Teresa R.',
+      }),
+      reply('fatima', {
         time: '7 days ago',
         helpful: true,
         body: [
           'A two-tier idea worth costing: keep the curated network as-is, but make the resources, housing board, and emergency contacts fully open with no invite. The stuff that saves lives should not be behind a gate. The social layer can stay curated.',
         ],
         reactions: 22,
-      },
-      {
-        av: 'CV',
-        bg: 'rgba(45,27,61,.1)',
-        color: 'var(--plum)',
-        name: 'Catarina Vaz',
+      }),
+      reply('catarina-vaz', {
         time: '6 days ago',
         isOP: true,
-        quote: { cite: 'Teresa R.', text: 'make the resources, housing board, and emergency contacts fully open…' },
-        body: ['This is the sharpest version of what I was reaching for. I am going to write it up as a governance proposal — open safety layer, curated social layer. Thank you Teresa.'],
+        quote: { cite: fullName(MEMBERS.fatima), text: 'make the resources, housing board, and emergency contacts fully open…' },
+        body: [`This is the sharpest version of what I was reaching for. I am going to write it up as a governance proposal — open safety layer, curated social layer. Thank you ${MEMBERS.fatima.first}.`],
         reactions: 8,
-      },
+      }),
     ],
   },
   {
@@ -488,7 +476,7 @@ export const THREADS: Thread[] = [
     title: 'Micro-grants: Q3 2026 applications now open',
     excerpt:
       'The community fund has €840 available this quarter for projects, events, and emergencies. €50–200 grants, no bureaucracy.',
-    author: { i: 'QP', n: 'QueerPulse', t: 'var(--accent)', tt: 'var(--paper)' },
+    author: qpAuthor('ana'),
     posted: '4 days ago',
     views: 760,
     upvotes: 22,
@@ -500,22 +488,16 @@ export const THREADS: Thread[] = [
       'Reply here or DM a moderator to apply. If you have benefited before, consider topping the fund up — it only exists because members keep it alive.',
     ],
     replies: [
-      {
-        av: 'IT',
-        ...CORAL,
-        name: 'Iris T.',
+      reply('ines-fonseca', {
         time: '3 days ago',
         body: ['Applied for €120 toward materials for a binder-sewing workshop. Whatever the panel decides, thank you for making the process this painless — the no-forms part is why I actually applied.'],
         reactions: 10,
-      },
-      {
-        av: 'GP',
-        ...JADE,
-        name: 'Gonçalo P.',
+      }),
+      reply('nuno', {
         time: '2 days ago',
         body: ['Topped up €30. Got a €150 emergency grant in February that covered a locksmith when I was locked out the week I arrived. Paying it forward.'],
         reactions: 13,
-      },
+      }),
     ],
   },
   {
@@ -524,7 +506,7 @@ export const THREADS: Thread[] = [
     title: 'Queer-run bookshop in Anjos — hiring a bookseller',
     excerpt:
       "The bookshop we've been building is opening in September. Looking for a part-time bookseller with a love of queer literature.",
-    author: { i: MEMBERS.ines.initials, n: memberName('ines'), t: 'var(--accent)', tt: 'var(--paper)' },
+    author: author('ines'),
     posted: '1 day ago',
     views: 540,
     upvotes: 31,
@@ -536,33 +518,23 @@ export const THREADS: Thread[] = [
       'No formal CV required — tell me about a book that changed you and why you want this. Reply here or DM me.',
     ],
     replies: [
-      {
-        av: 'JM',
-        ...PURPLE,
-        name: 'Joana M.',
+      reply('anika', {
         time: '22h ago',
         helpful: true,
         body: ['The book that changed me was "Stone Butch Blues" at nineteen, in a library copy I renewed four times because I couldn\'t afford my own. I have run a till for six years and I would love this. Sending a DM.'],
         reactions: 15,
-      },
-      {
-        av: 'FA',
-        ...CORAL,
-        name: 'Filipe A.',
+      }),
+      reply('tomas-mendes', {
         time: '18h ago',
         body: ['Not applying but — if you need someone to build a few shelves before September, I do carpentry and I will trade it for a launch-night invite. Serious offer.'],
         reactions: 8,
-      },
-      {
-        av: MEMBERS.ines.initials,
-        bg: 'rgba(232,119,90,.14)',
-        color: 'var(--accent-ink)',
-        name: memberName('ines'),
+      }),
+      reply('ines', {
         time: '15h ago',
         isOP: true,
-        body: ['Joana, that is exactly the energy — replied to your DM. Filipe, yes please, the shelves are genuinely on the critical path. Let us talk.'],
+        body: [`${MEMBERS.anika.first}, that is exactly the energy — replied to your DM. ${MEMBERS['tomas-mendes'].first}, yes please, the shelves are genuinely on the critical path. Let us talk.`],
         reactions: 6,
-      },
+      }),
     ],
   },
   {
@@ -571,7 +543,7 @@ export const THREADS: Thread[] = [
     title: 'Legal name change in Portugal — sharing experiences and tips',
     excerpt:
       'Possible since 2018, but in practice it depends heavily on which conservatória and official you see. Share your story.',
-    author: { i: 'CV', n: 'Catarina Vaz', t: 'var(--plum)', tt: 'var(--cream)' },
+    author: author('catarina-vaz'),
     posted: '1 week ago',
     views: 1340,
     upvotes: 34,
@@ -583,37 +555,35 @@ export const THREADS: Thread[] = [
       'Share your experience below — good or bad. Anonymised is fine; just say the area, not your name.',
     ],
     replies: [
-      {
-        av: 'RM',
-        ...JADE,
-        name: 'Rafa M.',
+      reply('raquel-baptista', {
         time: '6 days ago',
         helpful: true,
         body: [
           'Conservatória dos Registos Centrais (Lisbon) was straightforward for me — booked online, brought citizen card and the standard declaration, done in one visit and the new card arrived in about two weeks. The official was completely matter-of-fact about it.',
         ],
         reactions: 16,
-      },
-      {
-        av: 'EP',
-        ...PURPLE,
-        name: 'Elif P.',
+      }),
+      reply('sofia-castano', {
         time: '5 days ago',
         body: ['Less smooth at a smaller office outside the city — got asked for a "medical document" that the law explicitly does not require. I printed the statute, brought it back, and they processed it without comment. Know the law before you go.'],
         reactions: 12,
-      },
-      {
-        av: 'CV',
-        bg: 'rgba(45,27,61,.1)',
-        color: 'var(--plum)',
-        name: 'Catarina Vaz',
+      }),
+      reply('catarina-vaz', {
         time: '5 days ago',
         isOP: true,
-        body: ['Both logged into the map — Registos Centrais green, the smaller office flagged with Elif\'s tip about bringing the statute. This is exactly the ground-truth I hoped for.'],
+        body: [`Both logged into the map — Registos Centrais green, the smaller office flagged with ${MEMBERS['sofia-castano'].first}\'s tip about bringing the statute. This is exactly the ground-truth I hoped for.`],
         reactions: 7,
-      },
+      }),
     ],
   },
 ]
+
+/** Role label for each moderator who posts under the official QueerPulse
+ * account, mirroring the moderation team on the governance page. */
+export const MOD_ROLE: Record<string, string> = {
+  mariana: 'lead moderator',
+  rui: 'moderator',
+  ana: 'moderator (part-time)',
+}
 
 export const REPLY_SORTS = ['Oldest', 'Newest', 'Most helpful'] as const

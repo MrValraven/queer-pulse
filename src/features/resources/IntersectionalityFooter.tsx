@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { COMMITMENTS, COMMUNITIES, CONTACT, FORUM, GOVERNANCE, ORGS } from './intersectionality.data'
 import styles from './IntersectionalityPage.module.css'
 
 export function IntersectionalityFooter() {
   return (
     <>
-      <section className={styles.commitSec}>
+      <Reveal as="section" className={styles.commitSec}>
         <div className="wrap">
           <div className={styles.commitInner}>
             <div className={styles.commitLeft}>
@@ -27,18 +27,20 @@ export function IntersectionalityFooter() {
               </div>
             </div>
             <div className={styles.commitCards}>
-              {COMMITMENTS.map((c) => (
-                <div className={styles.commitCardD} key={c.title}>
-                  <div className={styles.ccdTitle}>{c.title}</div>
-                  <div className={styles.ccdText}>{c.text}</div>
-                </div>
+              {COMMITMENTS.map((c, i) => (
+                <Reveal key={c.title} delay={i * 70}>
+                  <div className={styles.commitCardD}>
+                    <div className={styles.ccdTitle}>{c.title}</div>
+                    <div className={styles.ccdText}>{c.text}</div>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
         </div>
-      </section>
+      </Reveal>
 
-      <section className={styles.sec} id="orgs" style={{ paddingBottom: 100 }}>
+      <Reveal as="section" className={styles.sec} id="orgs" style={{ paddingBottom: 100 }}>
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
@@ -47,19 +49,21 @@ export function IntersectionalityFooter() {
             <p>External organisations relevant to the specific intersections on this page.</p>
           </div>
           <div className={styles.orgsGrid}>
-            {ORGS.map((o) => (
-              <div className={styles.orgCard} key={o.name}>
-                <div className={styles.orgFocus}>{o.focus}</div>
-                <div className={styles.orgName}>{o.name}</div>
-                <div className={styles.orgText}>{o.text}</div>
-                <Link to={o.link.href} className={styles.orgLink}>
-                  {o.link.label}
-                </Link>
-              </div>
+            {ORGS.map((o, i) => (
+              <Reveal key={o.name} delay={Math.min(i, 8) * 60}>
+                <div className={styles.orgCard}>
+                  <div className={styles.orgFocus}>{o.focus}</div>
+                  <div className={styles.orgName}>{o.name}</div>
+                  <div className={styles.orgText}>{o.text}</div>
+                  <Link to={o.link.href} className={styles.orgLink}>
+                    {o.link.label}
+                  </Link>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       <Outro
         title={<>All of you <em>belongs here.</em></>}

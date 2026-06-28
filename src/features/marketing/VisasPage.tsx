@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { FiStar } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, Outro, Reveal } from '../../shared/components/ui'
 import { ARRIVING, FORUM, GROUND, LAWYERS, ROUTES, TABS, type TabId } from './visas.data'
 import { VisasTabContent } from './VisasTabContent'
 import styles from './VisasPage.module.css'
@@ -26,39 +26,41 @@ export function VisasPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Visas &amp; Residency · Portugal</div>
-          <h1>
+          <Reveal as="div" className={styles.cat}>Visas &amp; Residency · Portugal</Reveal>
+          <Reveal as="h1" delay={60}>
             Portugal, legally. <em>Your path to residency.</em>
-          </h1>
-          <p className={styles.heroSub}>
+          </Reveal>
+          <Reveal as="p" className={styles.heroSub} delay={120}>
             Practical information about visas, residency, and citizenship in Portugal — and what queer
             couples and families need to know that the official guidance doesn't always say clearly.
-          </p>
-          <div className={styles.heroNote}>
+          </Reveal>
+          <Reveal className={styles.heroNote} delay={160}>
             <span className={styles.heroNoteDot} />
             Community information, not legal advice. Immigration law changes — always verify with a
             specialist.
-          </div>
+          </Reveal>
         </div>
       </div>
 
       <section className={styles.routeSection}>
         <div className="wrap">
-          <div className={styles.routeLabel}>
+          <Reveal as="div" className={styles.routeLabel}>
             Where are you <em>starting from?</em>
-          </div>
+          </Reveal>
           <div className={styles.routeGrid}>
             {ROUTES.map((r, i) => (
-              <button
+              <Reveal
                 key={r.name}
+                as="button"
                 type="button"
                 className={[styles.routeCard, selectedRoute === i && styles.routeSel].filter(Boolean).join(' ')}
+                delay={i * 60}
                 onClick={() => selectRoute(i, r.tab)}
               >
                 <div className={styles.rcName}>{r.name}</div>
                 <div className={styles.rcDesc}>{r.desc}</div>
                 <div className={styles.rcTo}>{r.to}</div>
-              </button>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -83,19 +85,19 @@ export function VisasPage() {
 
       <section className={styles.groundSec}>
         <div className="wrap">
-          <div className={styles.secHead}>
+          <Reveal className={styles.secHead}>
             <h2>
               On the <em>ground</em>
             </h2>
             <div className={styles.secHeadSub}>Practical first steps regardless of your visa route.</div>
-          </div>
+          </Reveal>
           <div className={styles.groundGrid}>
-            {GROUND.map((g) => (
-              <div className={styles.groundCard} key={g.title}>
+            {GROUND.map((g, i) => (
+              <Reveal className={styles.groundCard} key={g.title} delay={i * 55}>
                 <div className={styles.gcLabel}>{g.label}</div>
                 <div className={styles.gcTitle}>{g.title}</div>
                 <div className={styles.gcBody}>{g.body}</div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -103,14 +105,14 @@ export function VisasPage() {
 
       <section className={styles.lawyerSec}>
         <div className="wrap">
-          <div className={styles.secHead}>
+          <Reveal className={styles.secHead}>
             <h2>
               Community-reviewed <em>immigration lawyers</em>
             </h2>
-          </div>
+          </Reveal>
           <div className={styles.reviewGrid}>
-            {LAWYERS.map((l) => (
-              <div className={styles.reviewCard} key={l.name}>
+            {LAWYERS.map((l, i) => (
+              <Reveal className={styles.reviewCard} key={l.name} delay={i * 60}>
                 <div className={styles.rvTop}>
                   <div className={styles.rvAv} style={{ background: l.bg, color: l.color }}>
                     {l.initials}
@@ -126,14 +128,14 @@ export function VisasPage() {
                   ))}
                 </div>
                 <div className={styles.rvQuote}>{l.quote}</div>
-              </div>
+              </Reveal>
             ))}
           </div>
-          <div className={styles.lawyerCta}>
+          <Reveal className={styles.lawyerCta} delay={60}>
             <Button to={FORUM} variant="ghost">
               Ask the visa forum thread →
             </Button>
-          </div>
+          </Reveal>
         </div>
       </section>
 

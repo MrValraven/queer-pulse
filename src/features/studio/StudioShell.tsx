@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { ImageSlot } from '../../shared/components/ui'
+import { StudioTipModal } from './StudioTipModal'
 import styles from './studio.module.css'
 
 const RAIL_MAIN = [
@@ -31,6 +32,7 @@ const LIBRARY: { name: string; em: string; meta: string; tint: 'coral' | 'plum' 
 
 export function StudioShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate()
+  const [tipOpen, setTipOpen] = useState(false)
   return (
     <div className={styles.root}>
       <div className={styles.app}>
@@ -183,9 +185,13 @@ export function StudioShell({ children }: { children: ReactNode }) {
           <div className={styles.payMini}>
             <b>paying</b>€0.05 to Mariana
           </div>
-          <button className={styles.tipMini}>Tip €2</button>
+          <button type="button" className={styles.tipMini} onClick={() => setTipOpen(true)}>
+            Tip €2
+          </button>
         </div>
       </div>
+
+      {tipOpen && <StudioTipModal recipient="Mariana Sol" onClose={() => setTipOpen(false)} />}
     </div>
   )
 }

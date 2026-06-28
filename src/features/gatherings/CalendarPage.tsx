@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { FiChevronLeft, FiChevronRight, FiCalendar } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn, Reveal, SkeletonLine } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { calendarEvents, calendarLegend, type CalendarEvent } from './data'
@@ -152,13 +152,22 @@ export function CalendarPage() {
               <div className={styles.allEvents}>
                 <h3>All upcoming events</h3>
                 <div className={styles.eventList}>
-                  {loading
-                    ? Array.from({ length: 5 }).map((_, i) => <EventCardSkeleton key={i} />)
-                    : upcoming.map((event, index) => (
-                        <FadeIn key={index} delay={Math.min(index, 8) * 60}>
-                          <EventCard event={event} />
-                        </FadeIn>
-                      ))}
+                  {loading ? (
+                    Array.from({ length: 5 }).map((_, i) => <EventCardSkeleton key={i} />)
+                  ) : upcoming.length === 0 ? (
+                    <EmptyState
+                      icon={<FiCalendar />}
+                      title="No upcoming gatherings"
+                      description="The calendar's quiet for now. Browse what's happening across the community, or be the one to start something."
+                      action={{ label: 'Browse events', to: routes.events }}
+                    />
+                  ) : (
+                    upcoming.map((event, index) => (
+                      <FadeIn key={index} delay={Math.min(index, 8) * 60}>
+                        <EventCard event={event} />
+                      </FadeIn>
+                    ))
+                  )}
                 </div>
               </div>
             </div>

@@ -1,19 +1,23 @@
 import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
+import { Link } from 'react-router-dom'
+import { FiDollarSign } from 'react-icons/fi'
+import { Avatar, Button, EmptyState } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { fullName, getMember } from '../members/data/members'
 import {
   BADGE_CLASS,
+  CALC_TOOLS,
+  COMMUNITY_TOOLS,
   INC_MENTORS,
   SALARIES,
   SAL_FILTERS,
   STEPS,
   TOOLS,
-  euro,
   type Sector,
+  type ToolCard,
 } from './economy.data'
 import { SalarySubmitModal } from './SalarySubmitModal'
 import { CohortApplyModal, MentorSignupModal, RequestSessionModal } from './IncubatorModals'
-import { ToolActionModal, type ToolInfo } from './ToolActionModal'
 import styles from './EconomyPage.module.css'
 
 export function IncubatorTab() {
@@ -78,56 +82,78 @@ export function IncubatorTab() {
             Current <em>mentors.</em>
           </h3>
           <div className={styles.mentorGrid}>
-            {INC_MENTORS.map((m) => (
-              <div className={styles.mentorCard} key={m.name}>
-                <div className={styles.mentorTop}>
-                  <div className={styles.mentorAv} style={{ background: m.bg, color: m.color }}>
-                    {m.av}
+            {INC_MENTORS.map((m) => {
+              const member = getMember(m.slug)
+              if (!member) return null
+              return (
+                <div className={styles.mentorCard} key={m.slug}>
+                  <div className={styles.mentorTop}>
+                    <Avatar
+                      initials={member.initials}
+                      tint={member.tint}
+                      src={member.photo}
+                      verified={member.verified}
+                      size={50}
+                    />
+                    <div>
+                      <Link to={`/members/${member.slug}`} className={styles.mentorName}>
+                        {fullName(member)}
+                      </Link>
+                      <div className={styles.mentorRole}>{member.role}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className={styles.mentorName}>{m.name}</div>
-                    <div className={styles.mentorRole}>{m.role}</div>
+                  <div className={styles.mentorTags}>
+                    {m.tags.map((t) => (
+                      <span key={t} className={styles.mentorTag}>
+                        {t}
+                      </span>
+                    ))}
                   </div>
+                  <button type="button" className={styles.mentorBtn} onClick={() => setSession(m)}>
+                    Request session
+                  </button>
                 </div>
-                <div className={styles.mentorTags}>
-                  {m.tags.map((t) => (
-                    <span key={t} className={styles.mentorTag}>
-                      {t}
-                    </span>
-                  ))}
-                </div>
-                <button type="button" className={styles.mentorBtn} onClick={() => setSession(m)}>
-                  Request session
-                </button>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>
 
       {modal === 'cohort' && <CohortApplyModal onClose={() => setModal(null)} />}
       {modal === 'mentor' && <MentorSignupModal onClose={() => setModal(null)} />}
-      {session && (
-        <RequestSessionModal
-          mentorName={session.name}
-          mentorRole={session.role}
-          onClose={() => setSession(null)}
-        />
-      )}
+      {session &&
+        (() => {
+          const member = getMember(session.slug)
+          if (!member) return null
+          return (
+            <RequestSessionModal
+              mentorName={fullName(member)}
+              mentorRole={member.role}
+              onClose={() => setSession(null)}
+            />
+          )
+        })()}
     </>
   )
 }
 
+/** A grid of launcher cards linking out to the real tool pages. */
+function ToolGrid({ tools }: { tools: ToolCard[] }) {
+  return (
+    <div className={styles.toolsGrid}>
+      {tools.map((t) => (
+        <Link className={styles.toolCard} key={t.title} to={t.to}>
+          <div className={styles.toolIcon}><t.icon /></div>
+          <div className={styles.toolTitle}>{t.title}</div>
+          <div className={styles.toolDesc}>{t.desc}</div>
+          <span className={styles.toolCtaBtn}>{t.cta} →</span>
+        </Link>
+      ))}
+    </div>
+  )
+}
+
 export function FreelanceTab() {
-  const [annual, setAnnual] = useState('40000')
-  const [days, setDays] = useState('180')
-  const [overhead, setOverhead] = useState('20')
-  const [iva, setIva] = useState('23')
-  const [tool, setTool] = useState<ToolInfo | null>(null)
-
-  const base = ((parseFloat(annual) || 0) / (parseFloat(days) || 1)) * (1 + (parseFloat(overhead) || 0) / 100)
-  const withIva = base * (1 + (parseFloat(iva) || 0) / 100)
-
   return (
     <>
       <div className={styles.secHeader}>
@@ -136,70 +162,26 @@ export function FreelanceTab() {
             Freelance <em>tools.</em>
           </h2>
           <p className={styles.econSub}>
-            Templates, calculators, and guides written by and for queer freelancers in Portugal.
-            Free, no sign-up needed.
+            Real, working tools — built by and for queer freelancers in Portugal. Free, no sign-up,
+            and nothing you enter leaves your device.
           </p>
         </div>
       </div>
-      <div className={styles.toolsGrid}>
-        {TOOLS.map((t) => (
-          <div className={styles.toolCard} key={t.title}>
-            <div className={styles.toolIcon}><t.icon /></div>
-            <div className={styles.toolTitle}>{t.title}</div>
-            <div className={styles.toolDesc}>{t.desc}</div>
-            <button type="button" className={styles.toolCtaBtn} onClick={() => setTool(t)}>
-              {t.cta}
-            </button>
-          </div>
-        ))}
-      </div>
 
       <h3 className={styles.rateH}>
-        Day rate <em>calculator.</em>
+        Documents that <em>get you paid.</em>
       </h3>
-      <div className={styles.rateCalc}>
-        <div className={styles.rcRow}>
-          <div>
-            <div className={styles.rcLabel}>Target annual income (€)</div>
-            <input className={styles.rcInput} type="number" value={annual} onChange={(e) => setAnnual(e.target.value)} />
-          </div>
-          <div>
-            <div className={styles.rcLabel}>Billable days per year</div>
-            <input className={styles.rcInput} type="number" value={days} onChange={(e) => setDays(e.target.value)} />
-          </div>
-        </div>
-        <div className={styles.rcRow}>
-          <div>
-            <div className={styles.rcLabel}>Overhead &amp; expenses (% of income)</div>
-            <input className={styles.rcInput} type="number" min={0} max={100} value={overhead} onChange={(e) => setOverhead(e.target.value)} />
-          </div>
-          <div>
-            <div className={styles.rcLabel}>IVA rate</div>
-            <select className={styles.rcSelect} value={iva} onChange={(e) => setIva(e.target.value)}>
-              <option value="0">0% (exempt)</option>
-              <option value="6">6%</option>
-              <option value="13">13%</option>
-              <option value="23">23%</option>
-            </select>
-          </div>
-        </div>
-        <div className={styles.rcResult}>
-          <div>
-            <div className={styles.rcResultLabel}>Minimum day rate (excl. IVA)</div>
-            <div className={styles.rcResultVal}>{euro(base)}</div>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <div className={styles.rcResultLabel}>Including IVA</div>
-            <div className={styles.rcResultVal}>{euro(withIva)}</div>
-          </div>
-        </div>
-      </div>
-      <p className={styles.rateNote}>
-        A starting point only — adjust for your sector, experience, and market. See the salary board
-        for what others in similar roles charge.
-      </p>
+      <ToolGrid tools={TOOLS} />
 
-      {tool && <ToolActionModal tool={tool} onClose={() => setTool(null)} />}
+      <h3 className={styles.rateH}>
+        Know your <em>numbers.</em>
+      </h3>
+      <ToolGrid tools={CALC_TOOLS} />
+
+      <h3 className={styles.rateH}>
+        Stronger <em>together.</em>
+      </h3>
+      <ToolGrid tools={COMMUNITY_TOOLS} />
     </>
   )
 }
@@ -245,21 +227,31 @@ export function SalaryTab() {
           <div className={styles.salHcell}>Experience</div>
           <div className={`${styles.salHcell} ${styles.salTypeCol}`}>Type</div>
         </div>
-        {salaries.map((s, i) => (
-          <div className={styles.salRow} key={i}>
-            <div>
-              <div className={styles.salRole}>{s.role}</div>
-              <div className={styles.salSector}>{s.sectorLabel}</div>
+        {salaries.length === 0 ? (
+          <EmptyState
+            compact
+            icon={<FiDollarSign />}
+            title="No entries in this sector yet"
+            description="Nothing's been shared for this sector so far. Clear the filter to see every submission — or add yours to help the next person negotiate."
+            action={{ label: 'Clear filters', onClick: () => setSector('all') }}
+          />
+        ) : (
+          salaries.map((s, i) => (
+            <div className={styles.salRow} key={i}>
+              <div>
+                <div className={styles.salRole}>{s.role}</div>
+                <div className={styles.salSector}>{s.sectorLabel}</div>
+              </div>
+              <div className={`${styles.salCell} ${styles.salMoney}`}>{s.money}</div>
+              <div className={styles.salCell}>
+                <span className={styles.salExp}>{s.exp}</span>
+              </div>
+              <div className={`${styles.salCell} ${styles.salTypeCol}`}>
+                <span className={`${styles.salBadge} ${styles[BADGE_CLASS[s.type]]}`}>{s.typeLabel}</span>
+              </div>
             </div>
-            <div className={`${styles.salCell} ${styles.salMoney}`}>{s.money}</div>
-            <div className={styles.salCell}>
-              <span className={styles.salExp}>{s.exp}</span>
-            </div>
-            <div className={`${styles.salCell} ${styles.salTypeCol}`}>
-              <span className={`${styles.salBadge} ${styles[BADGE_CLASS[s.type]]}`}>{s.typeLabel}</span>
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
       <div className={styles.salAnon}>
         All entries are anonymous. No name, email, or employer is stored. Entries are reviewed by a

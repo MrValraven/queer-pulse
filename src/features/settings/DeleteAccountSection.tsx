@@ -1,8 +1,11 @@
 import { useState, type FormEvent } from 'react'
+import { FiPause } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { DELETE_CONTENT, type DeleteOption } from './deleteAccount.data'
+import { DestructiveActionFlow } from './DestructiveActionFlow'
+import { DESTRUCTIVE_FLOW } from './destructiveFlows.data'
 import styles from './DeleteAccountPage.module.css'
 
 export function DeleteAccountSection() {
@@ -10,6 +13,7 @@ export function DeleteAccountSection() {
   const [opt, setOpt] = useState<DeleteOption>('deactivate')
   const [password, setPassword] = useState('')
   const [phrase, setPhrase] = useState('')
+  const [flowOpen, setFlowOpen] = useState(false)
 
   const content = DELETE_CONTENT[opt]
   const phraseMatch = content.phrase ? phrase === content.phrase : true
@@ -17,11 +21,7 @@ export function DeleteAccountSection() {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    if (opt === 'deactivate') {
-      showToast('Account deactivated. Sign in any time to reactivate.', 'success')
-    } else {
-      showToast("Account deletion scheduled. We've emailed you confirmation.", 'info')
-    }
+    setFlowOpen(true)
   }
 
   return (
@@ -59,12 +59,18 @@ export function DeleteAccountSection() {
       {opt === 'deactivate' && (
         <div className={styles.pauseStrip}>
           <svg className={styles.pauseStripIcon} viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" /><polyline points="10,5 10,10 13,13" /></svg>
-          <p className={styles.pauseStripText}>
-            Not sure? Consider <strong>pausing notifications</strong> for a month instead —{' '}
-            <button className={styles.pauseStripLink} onClick={() => showToast('All email notifications paused for 30 days.', 'success')}>
-              turn off all emails and digests
-            </button>. You stay a member without the noise.
-          </p>
+          <div>
+            <p className={styles.pauseStripText}>
+              Not sure? Consider <strong>pausing notifications</strong> for a month instead. You stay a member without the noise.
+            </p>
+            <Button
+              variant="ghost"
+              onClick={() => showToast('All email notifications paused for 30 days.', 'success')}
+              style={{ marginTop: 12 }}
+            >
+              <FiPause aria-hidden="true" /> Turn off all emails and digests
+            </Button>
+          </div>
         </div>
       )}
 
@@ -93,14 +99,24 @@ export function DeleteAccountSection() {
           </div>
         )}
         <div className={styles.formActions}>
-          {content.isDanger ? (
-            <button type="submit" className={styles.btnDanger} disabled={!canSubmit}>{content.btnLabel}</button>
-          ) : (
-            <Button type="submit" variant="primary" disabled={!canSubmit}>{content.btnLabel}</Button>
-          )}
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!canSubmit}
+            className={content.isDanger ? styles.btnDanger : undefined}
+          >
+            {content.btnLabel}
+          </Button>
           <Button variant="ghost" to={routes.settings}>Cancel</Button>
         </div>
       </form>
+
+      {flowOpen && (
+        <DestructiveActionFlow
+          content={DESTRUCTIVE_FLOW[opt]}
+          onClose={() => setFlowOpen(false)}
+        />
+      )}
     </>
   )
 }

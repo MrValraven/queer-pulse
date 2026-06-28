@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiHeart } from 'react-icons/fi'
 import { PageHero, PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Outro, SkeletonLine } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn, Outro, SkeletonLine } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { VOLUNTEER_OPPORTUNITIES as OPPS } from './volunteerOpportunities'
 import { routes } from '../../app/routeMap'
@@ -82,6 +83,14 @@ export function VolunteerPage() {
             ))}
           </div>
 
+          {!loading && visible.length === 0 ? (
+            <EmptyState
+              icon={<FiHeart />}
+              title="No opportunities match those filters yet"
+              description="Try widening your search — there are plenty of ways to give your time, and new roles are added often."
+              action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
+            />
+          ) : (
           <div className={s.grid}>
             {loading
               ? Array.from({ length: 6 }).map((_, i) => <VolunteerCardSkeleton key={i} />)
@@ -122,6 +131,7 @@ export function VolunteerPage() {
               </FadeIn>
             ))}
           </div>
+          )}
         </div>
       </section>
 

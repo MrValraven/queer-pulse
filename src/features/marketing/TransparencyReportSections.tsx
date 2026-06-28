@@ -1,5 +1,5 @@
 import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { downloadBlob } from './downloadBlob'
 import {
   ALLOC,
   GOV_STATS,
@@ -226,8 +226,33 @@ export function GovernanceSection() {
   )
 }
 
+const REPORT_TEXT = `QueerPulse — Annual Transparency Report 2025
+============================================
+
+This is a mock export from the QueerPulse prototype. The full 84-page report
+is summarised below.
+
+WHERE THE MONEY CAME FROM (2025): €278,400
+WHERE IT WENT: €267,420 spent · €10,980 carried to reserves
+MODERATION: 184 actions logged · median response 4.2h
+GOVERNMENT/LEGAL DATA REQUESTS: see §04 — no informal asks complied with.
+
+Prepared by Catarina Vaz & André Bento.
+Independently audited by Dra. Helena Faria, Faria Auditoria.
+Questions: transparency@queerpulse.app
+`
+
+const REPORT_CSV = `section,metric,value
+finance,income_eur,278400
+finance,spend_eur,267420
+finance,surplus_eur,10980
+people,members_year_end,1847
+moderation,actions_logged,184
+moderation,median_response_hours,4.2
+governance,assembly_votes_cast,312
+`
+
 export function Signoff() {
-  const { showToast } = useToast()
   return (
     <div className={styles.signoff}>
       <h3>
@@ -258,10 +283,10 @@ export function Signoff() {
         </div>
       </div>
       <div className={styles.trActions}>
-        <Button type="button" variant="primary" onClick={() => showToast('Downloading transparency-report-2025.pdf', 'success')}>
+        <Button type="button" variant="primary" onClick={() => downloadBlob('transparency-report-2025.txt', REPORT_TEXT, 'text/plain')}>
           Download PDF (84 pages)
         </Button>
-        <Button type="button" variant="ghost-dark" onClick={() => showToast('Downloading raw figures CSV', 'success')}>
+        <Button type="button" variant="ghost-dark" onClick={() => downloadBlob('transparency-figures-2025.csv', REPORT_CSV, 'text/csv')}>
           Download raw CSV
         </Button>
       </div>

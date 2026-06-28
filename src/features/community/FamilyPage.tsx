@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { FiCompass } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro } from '../../shared/components/ui'
 import { FORUM, INVITE, LEGAL, MENTORSHIP, SITUATIONS, TABS, TALK_CARDS, type TabId } from './family.data'
 import { FamilyTabContent } from './FamilyTabContent'
 import { ParentNetwork } from './ParentNetwork'
@@ -111,7 +111,9 @@ export function FamilyPage() {
         </div>
       </div>
 
-      <FamilyTabContent tab={tab} />
+      <FadeIn key={active}>
+        <FamilyTabContent tab={tab} />
+      </FadeIn>
 
       <section className={styles.talk}>
         <div className="wrap">

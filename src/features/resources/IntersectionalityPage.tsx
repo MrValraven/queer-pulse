@@ -9,7 +9,9 @@ import {
   RACE_INFO,
   RACE_VOICES,
 } from './intersectionality.data'
-import { InfoCards, VoiceCard } from './IntersectionalityCards'
+import { FadeIn, Reveal } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
+import { InfoCards, VoiceCard, VoiceCardSkeleton } from './IntersectionalityCards'
 import { IntersectionalityFooter } from './IntersectionalityFooter'
 import styles from './IntersectionalityPage.module.css'
 
@@ -20,6 +22,8 @@ function scrollToSection(id: string) {
 }
 
 export function IntersectionalityPage() {
+  const loading = useSimulatedLoad()
+
   return (
     <PageShell>
       <div className={styles.hero}>
@@ -55,7 +59,7 @@ export function IntersectionalityPage() {
         </div>
       </div>
 
-      <section className={styles.sec} id="race">
+      <Reveal as="section" className={styles.sec} id="race">
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
@@ -68,15 +72,19 @@ export function IntersectionalityPage() {
             </p>
           </div>
           <div className={styles.voiceGrid}>
-            {RACE_VOICES.map((v) => (
-              <VoiceCard v={v} key={v.name} />
-            ))}
+            {loading
+              ? Array.from({ length: 3 }).map((_, i) => <VoiceCardSkeleton key={i} />)
+              : RACE_VOICES.map((v, i) => (
+                  <FadeIn key={v.name} delay={Math.min(i, 8) * 60}>
+                    <VoiceCard v={v} />
+                  </FadeIn>
+                ))}
           </div>
-          <InfoCards cards={RACE_INFO} />
+          <InfoCards cards={RACE_INFO} loading={loading} animate={!loading} />
         </div>
-      </section>
+      </Reveal>
 
-      <section className={`${styles.sec} ${styles.alt}`} id="faith">
+      <Reveal as="section" className={`${styles.sec} ${styles.alt}`} id="faith">
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
@@ -89,15 +97,19 @@ export function IntersectionalityPage() {
             </p>
           </div>
           <div className={styles.voiceGrid}>
-            {FAITH_VOICES.map((v) => (
-              <VoiceCard v={v} key={v.name} />
-            ))}
+            {loading
+              ? Array.from({ length: 2 }).map((_, i) => <VoiceCardSkeleton key={i} />)
+              : FAITH_VOICES.map((v, i) => (
+                  <FadeIn key={v.name} delay={Math.min(i, 8) * 60}>
+                    <VoiceCard v={v} />
+                  </FadeIn>
+                ))}
           </div>
-          <InfoCards cards={FAITH_INFO} />
+          <InfoCards cards={FAITH_INFO} loading={loading} animate={!loading} />
         </div>
-      </section>
+      </Reveal>
 
-      <section className={styles.sec} id="class">
+      <Reveal as="section" className={styles.sec} id="class">
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
@@ -118,14 +130,20 @@ export function IntersectionalityPage() {
               to anything here, contact us directly — it will be handled discreetly.
             </div>
           </div>
-          <InfoCards cards={CLASS_INFO} />
+          <InfoCards cards={CLASS_INFO} loading={loading} animate={!loading} />
           <div className={`${styles.voiceGrid} ${styles.voiceGridTop}`}>
-            <VoiceCard v={CLASS_VOICE} />
+            {loading
+              ? <VoiceCardSkeleton />
+              : (
+                  <FadeIn key={CLASS_VOICE.name}>
+                    <VoiceCard v={CLASS_VOICE} />
+                  </FadeIn>
+                )}
           </div>
         </div>
-      </section>
+      </Reveal>
 
-      <section className={`${styles.sec} ${styles.alt}`} id="community">
+      <Reveal as="section" className={`${styles.sec} ${styles.alt}`} id="community">
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
@@ -137,9 +155,9 @@ export function IntersectionalityPage() {
               reason to leave — it's a reason to name it.
             </p>
           </div>
-          <InfoCards cards={COMMUNITY_INFO} />
+          <InfoCards cards={COMMUNITY_INFO} loading={loading} animate={!loading} />
         </div>
-      </section>
+      </Reveal>
 
       <IntersectionalityFooter />
     </PageShell>

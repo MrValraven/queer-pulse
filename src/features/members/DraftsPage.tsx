@@ -1,8 +1,11 @@
 import { useState } from 'react'
+import { FiEdit3 } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
-import { FadeIn, SkeletonLine } from '../../shared/components/ui'
+import { EmptyState, FadeIn, SkeletonLine } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useDrafts } from '../../app/providers/DraftsProvider'
 import { DRAFT_TABS, DRAFTS, type Draft, type MetaVariant } from './drafts.data'
 import styles from './DraftsPage.module.css'
 
@@ -37,12 +40,22 @@ const metaClass: Record<MetaVariant, string> = {
 export function DraftsPage() {
   const { showToast } = useToast()
   const loading = useSimulatedLoad()
+  const { drafts: userDrafts, removeDraft } = useDrafts()
   const [tab, setTab] = useState(0)
   const [deleted, setDeleted] = useState<Set<string>>(new Set())
 
+  // Drafts the user actually started elsewhere (e.g. a saved invite) sit ahead
+  // of the static mock list.
+  const allDrafts = [...userDrafts, ...DRAFTS]
+  const userDraftIds = new Set(userDrafts.map((d) => d.id))
+
   function runAction(d: Draft, action: Draft['actions'][number]) {
     if (action.deletes) {
-      setDeleted((prev) => new Set(prev).add(d.id))
+      if (userDraftIds.has(d.id)) {
+        removeDraft(d.id)
+      } else {
+        setDeleted((prev) => new Set(prev).add(d.id))
+      }
       showToast('Draft deleted', 'info')
     } else {
       showToast(action.label, 'info')
@@ -71,14 +84,25 @@ export function DraftsPage() {
               className={`${styles.tab} ${tab === i ? styles.active : ''}`}
               onClick={() => setTab(i)}
             >
-              {t.label} <span className={styles.tabCount}>{t.count}</span>
+              {t.label}{' '}
+              <span className={styles.tabCount}>
+                {i === 0 ? t.count + userDrafts.length : t.count}
+              </span>
             </button>
           ))}
         </div>
 
-        {loading
-          ? Array.from({ length: 4 }).map((_, i) => <DraftRowSkeleton key={i} />)
-          : DRAFTS.map((d, i) => (
+        {loading ? (
+          Array.from({ length: 4 }).map((_, i) => <DraftRowSkeleton key={i} />)
+        ) : allDrafts.length === 0 ? (
+          <EmptyState
+            icon={<FiEdit3 />}
+            title="No drafts here yet"
+            description="Anything you start — a post, a pitch, an application — saves here automatically until you're ready to send it. Nothing's lost while you find the words."
+            action={{ label: 'Start writing', to: routes.magazine }}
+          />
+        ) : (
+          allDrafts.map((d, i) => (
               <FadeIn key={d.id} delay={Math.min(i, 8) * 60}>
                 <div className={`${styles.row} ${deleted.has(d.id) ? styles.deleted : ''}`}>
                   <div className={`${styles.kind} ${kindClass[d.kindVariant]}`}>{d.kind}</div>
@@ -112,7 +136,8 @@ export function DraftsPage() {
                   </div>
                 </div>
               </FadeIn>
-            ))}
+            ))
+        )}
 
         <div className={styles.dangerBlock}>
           <b>About the 90-day rule:</b> drafts you haven't touched in 87+ days get an email reminder,

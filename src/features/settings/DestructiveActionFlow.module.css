@@ -1,0 +1,100 @@
+/* DestructiveActionFlow — shared confirm → loading → plum-panel result dialog
+   for account deactivation / deletion. */
+.overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(45, 27, 61, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  animation: dafFade 0.2s var(--ease);
+}
+
+/* Confirm card — paper surface, matches CancelConfirmModal. */
+.modal {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 22px;
+  padding: 34px 34px 30px;
+  max-width: 440px; width: 100%;
+  text-align: center;
+  box-shadow: 0 30px 60px -20px rgba(45, 27, 61, 0.4);
+  animation: dafPop 0.4s var(--ease) both;
+}
+
+.icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+  font-size: 24px;
+  animation: dafIconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.06s both;
+}
+.iconAccent { background: rgba(var(--accent-rgb), 0.1); color: var(--accent-ink); }
+.iconPlum { background: rgba(45, 27, 61, 0.06); color: var(--plum); }
+
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.title { font-family: var(--serif); font-weight: 400; font-size: 26px; color: var(--plum); letter-spacing: -0.015em; line-height: 1.12; }
+.title em { font-style: italic; color: var(--accent); }
+.body { font-size: 14.5px; color: var(--ink-60); line-height: 1.65; margin: 12px auto 24px; max-width: 42ch; }
+.body b { color: var(--plum); font-weight: 600; }
+.btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+/* Loading spinner shown after confirm. */
+.spinner {
+  width: 38px; height: 38px;
+  border: 3px solid rgba(45, 27, 61, 0.12);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  margin: 8px auto 18px;
+  animation: dafSpin 0.8s linear infinite;
+}
+.loadingText { font-size: 14.5px; color: var(--ink-60); line-height: 1.6; }
+
+/* Result — plum-panel success pattern. */
+.result {
+  background: var(--plum);
+  color: var(--cream);
+  border-radius: 22px;
+  padding: 38px 36px 32px;
+  max-width: 460px; width: 100%;
+  text-align: center;
+  box-shadow: 0 30px 60px -20px rgba(45, 27, 61, 0.5);
+  position: relative;
+  overflow: hidden;
+  animation: dafPop 0.4s var(--ease) both;
+}
+.result::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(420px circle at 20% -10%, rgba(var(--accent-rgb), 0.16), transparent 60%);
+  pointer-events: none;
+}
+.resultIcon {
+  width: 58px; height: 58px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+  font-size: 26px;
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade);
+  position: relative;
+  animation: dafIconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.08s both;
+}
+.resultTitle {
+  font-family: var(--serif); font-weight: 400; font-size: 28px;
+  letter-spacing: -0.015em; line-height: 1.1; position: relative;
+}
+.resultTitle em { font-style: italic; color: var(--accent); }
+.resultBody {
+  font-size: 14.5px; color: rgba(247, 243, 238, 0.8); line-height: 1.65;
+  margin: 12px auto 26px; max-width: 42ch; position: relative;
+}
+.resultBtns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; position: relative; }
+
+@keyframes dafFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dafPop { from { opacity: 0; transform: translateY(16px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes dafIconPop { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes dafSpin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay, .modal, .result, .icon, .resultIcon { animation: none; }
+  .spinner { animation-duration: 1.6s; }
+}

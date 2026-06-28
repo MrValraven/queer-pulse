@@ -194,11 +194,6 @@
 .reach:hover {
   color: var(--accent-ink);
 }
-.empty {
-  color: var(--ink-60);
-  font-size: 15px;
-}
-
 .offerStrip {
   background: var(--plum);
   color: var(--cream);

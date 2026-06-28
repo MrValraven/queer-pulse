@@ -1,0 +1,153 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(45, 27, 61, 0.42);
+  backdrop-filter: blur(3px);
+  animation: qpToastIn var(--dur-base) var(--ease-out);
+}
+
+.dialog {
+  width: min(440px, 100%);
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.1);
+  border-radius: var(--radius-card, 22px);
+  padding: 28px;
+  box-shadow: 0 24px 60px rgba(45, 27, 61, 0.22);
+  animation: qpRevealIn var(--dur-slow) var(--ease-out);
+}
+
+.dialogConfirm {
+  background: var(--plum);
+  border-color: transparent;
+  text-align: center;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.sub {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin: 8px 0 18px;
+}
+
+.reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reason {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 14px;
+  border: 1px solid rgba(45, 27, 61, 0.14);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-std),
+    background var(--dur-fast) var(--ease-std);
+}
+
+.reason:hover {
+  border-color: var(--plum);
+}
+
+.reasonOn {
+  border-color: var(--plum);
+  background: rgba(45, 27, 61, 0.05);
+}
+
+.radio {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(45, 27, 61, 0.3);
+  transition: border-color var(--dur-fast) var(--ease-std);
+}
+
+.reasonOn .radio {
+  border-color: var(--plum);
+  background:
+    radial-gradient(circle at center, var(--plum) 0 4px, transparent 5px);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(247, 243, 238, 0.45);
+  border-top-color: var(--cream);
+  margin-right: 8px;
+  vertical-align: -2px;
+  animation: qpSpin 0.7s linear infinite;
+}
+
+@keyframes qpSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.confirmIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(74, 140, 111, 0.18);
+  color: var(--jade);
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.confirmTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+}
+
+.confirmTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.confirmBody {
+  font-size: 14px;
+  color: rgba(247, 243, 238, 0.78);
+  line-height: 1.6;
+  max-width: 38ch;
+  margin: 12px auto 0;
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 22px;
+}

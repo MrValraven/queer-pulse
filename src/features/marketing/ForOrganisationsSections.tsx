@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { Button } from "../../shared/components/ui";
+import { Button, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import styles from "./ForOrganisationsPage.module.css";
 
@@ -9,16 +9,16 @@ export function TiersSection() {
   return (
     <section className={styles.doSection}>
       <div className={styles.doInner}>
-        <h2 className={styles.doH2}>
+        <Reveal as="h2" className={styles.doH2}>
           What we <em>do offer</em>
-        </h2>
-        <p className={styles.doSub}>
+        </Reveal>
+        <Reveal as="p" className={styles.doSub} delay={60}>
           Three tiers, each a different kind of relationship. All include the basics:
           pre-listing review, transparent funding disclosure, and the ability for either
           side to disagree publicly.
-        </p>
+        </Reveal>
         <div className={styles.tierGrid}>
-          <div className={styles.tier}>
+          <Reveal className={styles.tier} delay={0}>
             <div className={styles.tierName}>Verified employer</div>
             <div>
               <div className={styles.tierPrice}>€<em>2.4</em>k</div>
@@ -43,9 +43,9 @@ export function TiersSection() {
             <Button type="button" variant="ghost" className={styles.tierBtn} onClick={() => showToast("Opening the review form…", "info")}>
               Start the review
             </Button>
-          </div>
+          </Reveal>
 
-          <div className={`${styles.tier} ${styles.tierFeatured}`}>
+          <Reveal className={`${styles.tier} ${styles.tierFeatured}`} delay={60}>
             <div className={styles.tierName}>Operational <em>partner</em></div>
             <div>
               <div className={styles.tierPrice}>By <em>arrangement</em></div>
@@ -70,9 +70,9 @@ export function TiersSection() {
             <Button href="#start" variant="primary" className={styles.tierBtn} style={{ background: "var(--accent)", color: "var(--cream)" }}>
               Propose a partnership
             </Button>
-          </div>
+          </Reveal>
 
-          <div className={styles.tier}>
+          <Reveal className={styles.tier} delay={120}>
             <div className={styles.tierName}>Programme funder</div>
             <div>
               <div className={styles.tierPrice}>€<em>15</em>k+</div>
@@ -97,7 +97,7 @@ export function TiersSection() {
             <Button type="button" variant="ghost" className={styles.tierBtn} onClick={() => showToast("Opening grant discussion…", "info")}>
               Discuss a grant
             </Button>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>
@@ -109,7 +109,7 @@ export function PartnerContactForm() {
   return (
     <section className={styles.ctaSection} id="start">
       <div className={styles.ctaInner}>
-        <div>
+        <Reveal>
           <h2>Start a <em>conversation.</em></h2>
           <p>
             Tell us about your organisation in a paragraph. We read every message within
@@ -122,7 +122,7 @@ export function PartnerContactForm() {
             <li>Press inquiries → <Link to={routes.pressKit}>Press Kit</Link></li>
             <li>Already a partner with a question → <Link to={routes.contact}>Contact</Link></li>
           </ul>
-        </div>
+        </Reveal>
         <form
           className={styles.partnerForm}
           onSubmit={(e) => {

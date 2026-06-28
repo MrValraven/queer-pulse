@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, Reveal } from '../../shared/components/ui'
 import {
   GATHERING, SAFETY, MANIFESTO, MARCH_META,
 } from './prideMonth.data'
@@ -39,66 +39,66 @@ export function PrideMonthPage() {
 
         <section className={styles.letter}>
           <div className={styles.letterInner}>
-            <div className={styles.letterKicker}>Editor's note · from Marta Reis</div>
-            <h2 className={styles.letterH}>
+            <Reveal as="div" className={styles.letterKicker}>Editor's note · from Marta Reis</Reveal>
+            <Reveal as="h2" className={styles.letterH} delay={60}>
               June is a <em>working month,</em> not a corporate one.
-            </h2>
-            <p className={styles.letterP}>
+            </Reveal>
+            <Reveal as="p" className={styles.letterP} delay={120}>
               Once a year the city goes briefly stripey, the supermarkets get a paint
               job, and twelve airlines launch a "be authentic" campaign.{' '}
               <strong>None of this is for us.</strong> It is for whoever's paying for
               it.
-            </p>
-            <p className={styles.letterP}>
+            </Reveal>
+            <Reveal as="p" className={styles.letterP} delay={160}>
               What this month is actually for, on QueerPulse, is the same thing it was
               when this began: <em>people doing the work</em>, the rooms staying open,
               the lists getting longer, the lawyers showing up at 06:00 with binders.
               The march. The reading. The hand-off between the clinic and the bar. The
               mothers who finally come this year.
-            </p>
-            <p className={styles.letterP}>
+            </Reveal>
+            <Reveal as="p" className={styles.letterP} delay={200}>
               If you read one thing this month, read the{' '}
               <Link to={MANIFESTO}>manifesto</Link>. If you go to one thing, make it{' '}
               <a href="#march">the march</a>.{' '}
               <em>If you do one thing for someone else</em>,
               walk a friend home.
-            </p>
-            <p className={styles.letterSign}>— Marta · 1 June 2026</p>
+            </Reveal>
+            <Reveal as="p" className={styles.letterSign} delay={240}>— Marta · 1 June 2026</Reveal>
           </div>
         </section>
 
         <section className={styles.march} id="march">
           <div className={styles.marchInner}>
             <div>
-              <div className={styles.marchKicker}>The headliner · 21 June</div>
-              <h2 className={styles.marchH}>
+              <Reveal as="div" className={styles.marchKicker}>The headliner · 21 June</Reveal>
+              <Reveal as="h2" className={styles.marchH} delay={60}>
                 Marcha do <em>Orgulho Lisboa 2026.</em>
-              </h2>
-              <p className={styles.marchD}>
+              </Reveal>
+              <Reveal as="p" className={styles.marchD} delay={120}>
                 Twenty-eighth edition. Starts at <b>Marquês de Pombal</b>, ends at{' '}
                 <b>Terreiro do Paço</b>. QueerPulse marches as one block — meeting
                 point at <em>15:30</em>, sign-making at Café Beirão from <em>13:00</em>.
                 Forty trained legal observers on the route, courtesy of our ILGA
                 Portugal partnership.
-              </p>
-              <div className={styles.marchMeta}>
+              </Reveal>
+              <Reveal className={styles.marchMeta} delay={160}>
                 {MARCH_META.map(([k, v]) => (
                   <div className={styles.mmRow} key={k}>
                     <span>{k}</span>
                     <b>{v}</b>
                   </div>
                 ))}
-              </div>
-              <div className={styles.marchBtns}>
+              </Reveal>
+              <Reveal className={styles.marchBtns} delay={200}>
                 <Button to={GATHERING} variant="primary">
                   RSVP to the QP block
                 </Button>
                 <Button to={SAFETY} variant="ghost">
                   Read the safety brief
                 </Button>
-              </div>
+              </Reveal>
             </div>
-            <div className={styles.marchImg}>Marcha do Orgulho · last year's route map</div>
+            <Reveal className={styles.marchImg} delay={80}>Marcha do Orgulho · last year's route map</Reveal>
           </div>
         </section>
 

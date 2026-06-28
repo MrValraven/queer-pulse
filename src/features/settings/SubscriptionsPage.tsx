@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiBell } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, EmptyState } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import {
@@ -12,6 +13,7 @@ import {
   type JobAlert,
 } from './subscriptions.data'
 import { AlertBuilderModal, type AlertDraft } from './AlertBuilderModal'
+import { SaveButton } from './SaveButton'
 import styles from './SubscriptionsPage.module.css'
 
 /** Build a JobAlert card record from a saved-search draft. */
@@ -77,6 +79,8 @@ export function SubscriptionsPage() {
     })
   }
 
+  const visibleAlerts = alerts.filter((a) => !removedAlerts.has(a.id))
+
   function togglePronoun(p: string) {
     setSelectedPronouns((prev) => {
       const next = new Set(prev)
@@ -112,7 +116,15 @@ export function SubscriptionsPage() {
         ))}
 
         <div className={styles.sectionH}>Saved searches &amp; job alerts</div>
-        {alerts.filter((a) => !removedAlerts.has(a.id)).map((alert) => (
+        {visibleAlerts.length === 0 && (
+          <EmptyState
+            icon={<FiBell />}
+            title="No alerts yet"
+            description="Save a search and we'll quietly let you know when something matching it comes up — no inbox noise, only what you asked for."
+            action={{ label: 'Set one up', onClick: () => setBuilderOpen(true) }}
+          />
+        )}
+        {visibleAlerts.map((alert) => (
           <div key={alert.id} className={styles.alertCard}>
             <div className={styles.alertHead}>
               <div className={styles.alertIc}>{alert.ic}</div>
@@ -121,8 +133,8 @@ export function SubscriptionsPage() {
                 <span>{alert.desc}</span>
               </div>
               <div className={styles.alertActions}>
-                <button className={styles.alertAction} onClick={() => setEditingAlert(draftFromAlert(alert))}>Edit</button>
-                <button className={`${styles.alertAction} ${styles.alertActionDanger}`} onClick={() => removeAlert(alert.id)}>Delete</button>
+                <Button variant="ghost" className={styles.alertAction} onClick={() => setEditingAlert(draftFromAlert(alert))}>Edit</Button>
+                <Button variant="ghost" className={`${styles.alertAction} ${styles.alertActionDanger}`} onClick={() => removeAlert(alert.id)}>Delete</Button>
               </div>
             </div>
             <div className={styles.alertCriteria}>
@@ -133,7 +145,7 @@ export function SubscriptionsPage() {
             <div className={styles.alertRow}><span>Last sent</span><b>{alert.lastSent}</b></div>
           </div>
         ))}
-        <button className={styles.addCard} onClick={() => setBuilderOpen(true)}>+ Create a new alert</button>
+        <Button variant="ghost" className={styles.addCard} onClick={() => setBuilderOpen(true)}>+ Create a new alert</Button>
 
         <div className={styles.sectionH}>Pronouns · how you appear across QueerPulse</div>
         <div className={styles.pronCard}>
@@ -168,7 +180,7 @@ export function SubscriptionsPage() {
 
         <div className={styles.saveRow}>
           <span className={styles.saveInfo}>Last saved <b>14 May 2026</b> · all changes saved automatically</span>
-          <Button variant="primary" onClick={() => showToast('Settings saved', 'success')}>Save changes</Button>
+          <SaveButton onSave={() => showToast('Settings saved', 'success')} />
         </div>
 
         <div className={styles.pitchNote}>

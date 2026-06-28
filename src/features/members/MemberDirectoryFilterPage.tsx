@@ -1,6 +1,12 @@
 import { useMemo, useState } from "react";
+import { FiSearch } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useCountUp, useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import {
@@ -180,15 +186,24 @@ export function MemberDirectoryFilterPage() {
                 ))}
               </div>
             ) : shown.length === 0 ? (
-              <div className={styles.noResults}>
-                No members match these filters. Try removing a few above.
-              </div>
+              <EmptyState
+                icon={<FiSearch />}
+                title="Nothing matches your filters"
+                description="No members fit all of these just now. Loosen a filter or two and more people will show up."
+                action={{
+                  label: "Clear filters",
+                  onClick: () => {
+                    applyFilters(DEFAULT_FILTERS);
+                    setSort("Recently active");
+                  },
+                }}
+              />
             ) : (
               <div className={styles.mGrid}>
                 {shown.map((member, i) => (
                   <FadeIn
                     key={`${member.slug}-${i}`}
-                    delay={Math.min(i, 8) * 60}
+                    delay={Math.min(i, 9) * 85}
                   >
                     <MemberResultCard member={member} />
                   </FadeIn>

@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
-import { FiAward, FiStar } from 'react-icons/fi'
+import { FiAward, FiHome, FiStar } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Avatar, FadeIn, ImageSlot, Reveal, SectionHead, SkeletonLine } from '../../shared/components/ui'
+import { Avatar, EmptyState, FadeIn, ImageSlot, Reveal, SectionHead, SkeletonLine } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { HOUSING_LISTINGS as LISTINGS } from './housingListings'
 import { LANDLORDS } from './landlords'
@@ -90,9 +90,17 @@ export function HousingPage() {
             </Reveal>
           </div>
           <div className={styles.grid}>
-            {loading
-              ? Array.from({ length: 6 }).map((_, i) => <ListingSkeleton key={i} />)
-              : visible.map((listing, i) => (
+            {loading ? (
+              Array.from({ length: 6 }).map((_, i) => <ListingSkeleton key={i} />)
+            ) : visible.length === 0 ? (
+              <EmptyState
+                icon={<FiHome />}
+                title="No listings of this kind right now"
+                description="Nothing's posted in this category at the moment. Clear the filter to see every space the community has open — new listings go up often."
+                action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
+              />
+            ) : (
+              visible.map((listing, i) => (
                   <FadeIn key={listing.title} delay={Math.min(i, 8) * 60}>
                     <Link to={`/housing/${listing.slug}`} className={styles.card}>
                       <ImageSlot tint={listing.tint} src={listing.image} height={150} radius={0} placeholder={`Photo · ${listing.hood}`} />
@@ -119,7 +127,8 @@ export function HousingPage() {
                       </div>
                     </Link>
                   </FadeIn>
-                ))}
+                ))
+            )}
           </div>
         </div>
       </div>

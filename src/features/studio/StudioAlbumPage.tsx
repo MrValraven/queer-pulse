@@ -152,11 +152,15 @@ export function StudioAlbumPage() {
             </div>
             <div className={styles.sub}>Buy the album · keep it offline · FLAC + AAC.</div>
             <div className={styles.buyActions}>
-              <Link to="/checkout" className={`${styles.bt} ${styles.btP}`}>
+              <Link to={routes.studioCheckout} className={`${styles.bt} ${styles.btP}`}>
                 Buy · €8
               </Link>
-              <button className={styles.bt}>Pay what you can · €1 min</button>
-              <button className={styles.bt}>Streaming included with Sustain</button>
+              <button type="button" className={styles.bt} onClick={() => setTipOpen(true)}>
+                Pay what you can · €1 min
+              </button>
+              <Link to={routes.cinemaMembership} className={styles.bt}>
+                Streaming included with Sustain
+              </Link>
             </div>
             <div className={styles.splitHint}>
               If you buy at €8 — <em>€6.40 to Mariana</em>, €0.80 to the solidarity fund, €0.80 to

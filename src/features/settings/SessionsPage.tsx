@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
-import { Button, FadeIn, SkeletonLine } from '../../shared/components/ui'
+import { FiShield } from 'react-icons/fi'
+import { Button, EmptyState, FadeIn, SkeletonLine } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
@@ -64,8 +65,8 @@ function SessionCard({ session, onSignOut }: { session: Session; onSignOut: (id:
         </div>
       </div>
       {isCurrent
-        ? <button className={`${styles.action} ${styles.actionCurrent}`}>Current</button>
-        : <button className={`${styles.action} ${isSuspect ? styles.actionSuspect : ''}`} onClick={() => onSignOut(session.id)}>Sign out</button>
+        ? <span className={`${styles.action} ${styles.actionCurrent}`} aria-hidden="true">Current</span>
+        : <Button variant="ghost" className={`${styles.action} ${isSuspect ? styles.actionSuspect : ''}`} onClick={() => onSignOut(session.id)}>Sign out</Button>
       }
     </div>
   )
@@ -87,7 +88,7 @@ function TrustedDeviceCard({ device, onUntrust }: { device: TrustedDevice; onUnt
           {device.extra && <><span className={styles.sep}>·</span><span>{device.extra}</span></>}
         </div>
       </div>
-      <button className={styles.action} onClick={() => onUntrust(device.id)}>Untrust</button>
+      <Button variant="ghost" className={styles.action} onClick={() => onUntrust(device.id)}>Untrust</Button>
     </div>
   )
 }
@@ -160,13 +161,22 @@ export function SessionsPage() {
 
         <div className={styles.sectionH}>Trusted devices · skip 2FA</div>
         <div className={styles.list}>
-          {loading
-            ? Array.from({ length: 2 }).map((_, i) => <SessionSkeleton key={i} />)
-            : trustedDevices.map((d, i) => (
-                <FadeIn key={d.id} delay={Math.min(i, 8) * 60}>
-                  <TrustedDeviceCard device={d} onUntrust={handleUntrust} />
-                </FadeIn>
-              ))}
+          {loading ? (
+            Array.from({ length: 2 }).map((_, i) => <SessionSkeleton key={i} />)
+          ) : trustedDevices.length === 0 ? (
+            <EmptyState
+              compact
+              icon={<FiShield />}
+              title="No trusted devices"
+              description="You'll be asked for a second factor every time you sign in. Mark a device as trusted to skip 2FA on the ones you use most."
+            />
+          ) : (
+            trustedDevices.map((d, i) => (
+              <FadeIn key={d.id} delay={Math.min(i, 8) * 60}>
+                <TrustedDeviceCard device={d} onUntrust={handleUntrust} />
+              </FadeIn>
+            ))
+          )}
         </div>
 
         <div className={styles.footNote}>

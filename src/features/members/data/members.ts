@@ -1817,6 +1817,55 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     ],
   },
 
+  ana: {
+    slug: "ana",
+    first: "Ana",
+    last: "Reis",
+    role: "Librarian · Forum moderator",
+    pronouns: "she/her",
+    hood: "Alvalade",
+    tags: ["Moderation", "Community care", "Archiving", "Reading groups"],
+    visibility: "network",
+    initials: "AR",
+    tint: "coral",
+    photo:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=800&auto=format&fit=crop",
+    verified: true,
+    since: "2024",
+    bio: "I'm a librarian by trade and one of the people who keeps the forum a kind place to be — part-time, on a small honorarium, accountable to the council like the rest of the team. Moderation, for me, is mostly cataloguing of a different sort: keeping the useful things findable and making sure nobody gets lost or shouted down on the way in.",
+    now: "Moderating the forum a few hours a week, and keeping the community resource guide tidy so new arrivals can actually find what they need.",
+    openTo: ["Reporting something quietly", "Help finding a resource", "Reading recommendations"],
+    work: [
+      { category: "Stewardship", title: "Keeper of the master resource guide", year: "2024–" },
+      { category: "Reading", title: "Queer Lisbon reading group", year: "2025" },
+    ],
+    board: [
+      { kind: "offering", title: "A calm second pair of eyes on a forum dispute", slug: "mod-help" },
+    ],
+    vouchers: ["mariana", "jordan"],
+    voucherNames: "Mariana & Jordan",
+    related: ["mariana", "jordan", "anika"],
+    shapings: {
+      film: { title: "The Hours", note: "Three lives, one thread, held together by care. I rewatch it when a week has been heavy." },
+      book: { title: "The Library Book — Susan Orlean", note: "A reminder that a library is a community holding itself together in public." },
+      song: { title: "Casa — Mariza", note: "Home as a feeling you can carry. I play it on the walk back from a long shift." },
+      moment: { title: "Talking two members back from the brink of a flame war", note: "They ended up co-hosting a reading group. That is the whole job, really." },
+    },
+    skills: [
+      { name: "Forum moderation", meta: "Available · report something to me" },
+      { name: "Resource cataloguing", meta: "Keeps the guides findable" },
+      { name: "Reading recommendations", meta: "Free · queer literature" },
+    ],
+    groups: [
+      { name: "QueerPulse Moderation Team", role: "Moderator (part-time)" },
+      { name: "Queer Lisbon Reading Group", role: "Host" },
+    ],
+    activity: [
+      { icon: FiMessageCircle, title: "Posted the Q3 micro-grants call", sub: "On behalf of the team · Forum", to: routes.forum },
+      { icon: FiBookOpen, title: "Tidied the master resource guide", sub: "Monthly update · Forum", to: routes.forum },
+    ],
+  },
+
   // ── The logged-in user (self) ─────────────────────────────────────────────
   tiago: {
     slug: "tiago",

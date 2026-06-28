@@ -613,3 +613,47 @@
   background: var(--accent-ink);
   transform: translateY(-1px);
 }
+.primaryBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Inline confirmation that replaces the form inside the anonBox. */
+.anonDone {
+  background: var(--plum);
+  border-radius: 16px;
+  padding: 26px 28px;
+  text-align: center;
+  animation: qpRevealIn var(--dur-slow) var(--ease-out);
+}
+.anonDoneIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(74, 140, 111, 0.2);
+  color: var(--jade);
+  font-size: 22px;
+  margin-bottom: 14px;
+}
+.anonDoneTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(20px, 2.4vw, 26px);
+  color: var(--cream);
+  letter-spacing: -0.015em;
+}
+.anonDoneTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.anonDoneBody {
+  font-size: 14px;
+  color: rgba(247, 243, 238, 0.8);
+  line-height: 1.6;
+  max-width: 46ch;
+  margin: 10px auto 18px;
+}

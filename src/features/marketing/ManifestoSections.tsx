@@ -28,8 +28,9 @@ export function ManifestoBody() {
           be, we will be smaller than we could be.
         </p>
         <p className={styles.p}>
-          There are no follower counts. There is no algorithm choosing what you see. There is no
-          "for you" feed competing for your evening.{' '}
+          The other platforms are engineered to keep you scrolling; your attention is the product
+          they measure and sell. We sell nothing. There are no follower counts, no algorithm
+          choosing what you see, no "for you" feed competing for your evening.{' '}
           <strong>
             Time spent here is meant to add up to time off the platform
           </strong>{' '}
@@ -95,6 +96,11 @@ export function ManifestoBody() {
           fund that disperses in €50–200 grants, decided by a rotating circle, distributed in 14
           days. <strong>96% of every euro goes to programs.</strong> Full breakdown, every year, in
           the governance report.
+        </p>
+        <p className={styles.p}>
+          Work moves sideways too. The professional network that was supposed to connect us only
+          ever sold us back to recruiters. Here, members hire, mentor, commission, and rent from
+          each other — and the value <em>stays with us</em> instead of being skimmed off the top.
         </p>
         <p className={styles.p}>
           There is a solidarity rate. It is genuinely free. We do not ask why.
@@ -175,7 +181,7 @@ export function ManifestoSigners({ onSign }: { onSign: () => void }) {
         </h3>
         <p className={styles.sub}>
           Members sign by clicking once. There's no obligation — many haven't, and that's also
-          fine. The first 8 below are the founding members.
+          fine. These are some of the people who have.
         </p>
         <div className={styles.sigGrid}>
           {SIGNERS.map((s) => (

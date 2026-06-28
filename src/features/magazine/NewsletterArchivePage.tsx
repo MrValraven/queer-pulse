@@ -91,7 +91,7 @@ export function NewsletterArchivePage() {
           </div>
         </section>
 
-        <NewsletterArchiveList stream={stream} />
+        <NewsletterArchiveList stream={stream} onClearStream={() => selectStream('all')} />
       </div>
     </PageShell>
   )

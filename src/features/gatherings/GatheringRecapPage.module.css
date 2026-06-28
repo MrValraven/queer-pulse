@@ -281,6 +281,25 @@
   font-weight: 600;
   display: block;
 }
+.acSoon {
+  font-size: 13px;
+  color: var(--ink-40);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: not-allowed;
+}
+.acSoonBadge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--jade);
+  background: rgba(74, 140, 111, 0.12);
+  border-radius: 6px;
+  padding: 2px 7px;
+}
 .shareRow {
   display: flex;
   align-items: center;

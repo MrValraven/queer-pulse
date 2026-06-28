@@ -69,7 +69,7 @@ export function ComingOutPage() {
         title={<>You don't owe a <em>perfect speech.</em></>}
         sub="Saying the true thing badly is still saying the true thing. Enter the space whenever you're ready — and leave the moment you are."
       >
-        <Button to="/community/coming-out" variant="primary" size="lg">
+        <Button to={routes.comingOut} variant="primary" size="lg">
           Enter the space →
         </Button>
         <Button to={routes.communities} variant="ghost-dark" size="lg">

@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useMemo, useState } from 'react'
+import { FiInbox } from 'react-icons/fi'
+import { ImageSlot, FadeIn, EmptyState } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { StudioShell } from './StudioShell'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -28,6 +29,23 @@ export function StudioTriagePage() {
   const [tab, setTab] = useState('New')
   const [active, setActive] = useState(0)
   const loading = useSimulatedLoad()
+
+  const subs = useMemo(() => {
+    switch (tab) {
+      case 'Yours':
+        return SUBS.filter((sub) => sub.badges.some((b) => b.cls === 'claimed'))
+      case 'At deadline':
+        return SUBS.filter((sub) => {
+          const day = parseInt(sub.day.replace(/\D/g, ''), 10)
+          return sub.of && day >= 11
+        })
+      case 'Shortlisted':
+      case 'Answered':
+        return []
+      default:
+        return SUBS
+    }
+  }, [tab])
 
   return (
     <StudioShell>
@@ -66,9 +84,23 @@ export function StudioTriagePage() {
 
         <div className={s.trBody}>
           <section className={s.subList}>
-            {loading
-              ? Array.from({ length: SUBS.length }).map((_, i) => <SubmissionRowSkeleton key={i} />)
-              : SUBS.map((sub, i) => (
+            {loading ? (
+              Array.from({ length: SUBS.length }).map((_, i) => <SubmissionRowSkeleton key={i} />)
+            ) : subs.length === 0 ? (
+              <EmptyState
+                compact
+                icon={<FiInbox />}
+                title="Nothing in this queue"
+                description={
+                  <>
+                    No submissions sit in <em>{tab.toLowerCase()}</em> right now.
+                    When something lands, you'll find it waiting here.
+                  </>
+                }
+                action={{ label: 'Back to new', onClick: () => setTab('New') }}
+              />
+            ) : (
+              subs.map((sub, i) => (
               <FadeIn key={i} delay={Math.min(i, 8) * 60}>
               <div className={[s.subRow, active === i && s.subRowActive].filter(Boolean).join(' ')} role="button" tabIndex={0} onClick={() => setActive(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(i) } }}>
                 <div className={s.subTop}>
@@ -102,7 +134,8 @@ export function StudioTriagePage() {
                 </div>
               </div>
               </FadeIn>
-            ))}
+              ))
+            )}
           </section>
 
           <aside className={s.aside}>

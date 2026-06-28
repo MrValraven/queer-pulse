@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { routes } from '../../app/routeMap'
 import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { FiDollarSign } from 'react-icons/fi'
+import { Button, EmptyState, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
 import { useScrollReveal } from '../../shared/hooks/useScrollReveal'
 import { useCountUp } from '../../shared/hooks/useCountUp'
 import { useSimulatedLoad } from '../../shared/hooks'
@@ -110,6 +111,13 @@ export function GrantsPage() {
                     ))}
                   </div>
                 </div>
+              ) : filtered.length === 0 ? (
+                <EmptyState
+                  icon={<FiDollarSign />}
+                  title="Nothing matches your filter"
+                  description="No opportunities fit that category right now. Clear the filter to browse every grant and fellowship members are tracking."
+                  action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
+                />
               ) : (
                 SECTIONS.map((section) => {
                 const items = filtered.filter((g) => g.sec === section.id)

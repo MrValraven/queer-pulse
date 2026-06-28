@@ -19,9 +19,10 @@ export function ManifestoPage() {
               A quiet network for <em>people worth knowing.</em>
             </h1>
             <p className={styles.attrib}>
-              First written in <b>March 2024</b> by the founding members, in the back room of
-              Café Beirão, over five evenings. Revised once, in <b>November 2025</b>, after the
-              second annual assembly. We re-read it each Pride.
+              Written because the platforms we were handed were never built for us — the feeds that
+              profit from our attention, the professional network that never connected us to anyone.
+              First drafted in <b>2024</b>, revised in <b>2025</b>, and revised again whenever the
+              community decides it should be. We re-read it each Pride.
             </p>
           </div>
         </section>

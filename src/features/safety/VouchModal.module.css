@@ -7,6 +7,12 @@
   align-items: flex-end;
   justify-content: center;
   backdrop-filter: blur(4px);
+  animation: vouchOverlayIn 0.3s var(--ease) both;
+}
+@keyframes vouchOverlayIn {
+  from {
+    opacity: 0;
+  }
 }
 .modal {
   background: var(--paper);
@@ -36,13 +42,16 @@
 }
 @keyframes vouchUp {
   from {
+    opacity: 0;
     transform: translateY(40px);
   }
   to {
+    opacity: 1;
     transform: translateY(0);
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .overlay,
   .modal {
     animation: none;
   }

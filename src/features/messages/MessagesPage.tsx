@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
+import { FiMessageCircle, FiSearch } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
-import { Avatar, FadeIn } from '../../shared/components/ui'
+import { Avatar, EmptyState, FadeIn } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { MessageThreadListSkeleton } from './MessagesSkeleton'
 import { conversations, type ChatMessage, type Conversation } from './data'
@@ -105,6 +106,25 @@ export function MessagesPage() {
 
           <div className={styles.threadList}>
             {loading && <MessageThreadListSkeleton count={6} />}
+            {!loading && visibleThreads.length === 0 && (
+              query.trim() ? (
+                <EmptyState
+                  compact
+                  icon={<FiSearch />}
+                  title="No conversations found"
+                  description={<>No one matches “{query.trim()}”. Try a different name.</>}
+                  action={{ label: 'Clear search', onClick: () => setQuery('') }}
+                />
+              ) : (
+                <EmptyState
+                  compact
+                  icon={<FiMessageCircle />}
+                  title="No conversations yet"
+                  description="When you start a chat, it’ll live here — a quiet, private space just for you and the people you reach out to."
+                  action={{ label: 'New message', onClick: () => setComposing(true) }}
+                />
+              )
+            )}
             {!loading && visibleThreads.map((thread, i) => {
               const isUnread = thread.unread && !readIds.has(thread.id) && thread.id !== activeId
               return (

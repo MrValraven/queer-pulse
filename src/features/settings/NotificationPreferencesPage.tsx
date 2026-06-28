@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { MATRIX_ROWS } from './notificationPreferences.data'
+import { SaveButton } from './SaveButton'
 import styles from './NotificationPreferencesPage.module.css'
 
 export function NotificationPreferencesPage() {
@@ -155,7 +155,7 @@ export function NotificationPreferencesPage() {
 
           <div className={styles.saveBar}>
             <p className={styles.saveBarNote}>Changes are saved automatically.</p>
-            <Button variant="primary" onClick={() => showToast('Notification preferences saved.', 'success')}>Save preferences</Button>
+            <SaveButton label="Save preferences" onSave={() => showToast('Notification preferences saved.', 'success')} />
           </div>
         </main>
       </div>

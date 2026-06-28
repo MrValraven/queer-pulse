@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, FadeIn, Outro } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import {
   ClubSection,
@@ -47,10 +47,12 @@ export function CulturePage() {
 
       <div className={styles.body}>
         <div className="wrap">
-          {tab === 'club' && <ClubSection />}
-          {tab === 'commission' && <CommissionsSection />}
-          {tab === 'showcase' && <ShowcaseSection />}
-          {tab === 'radio' && <RadioIntro />}
+          <FadeIn key={tab}>
+            {tab === 'club' && <ClubSection />}
+            {tab === 'commission' && <CommissionsSection />}
+            {tab === 'showcase' && <ShowcaseSection />}
+            {tab === 'radio' && <RadioIntro />}
+          </FadeIn>
         </div>
       </div>
 

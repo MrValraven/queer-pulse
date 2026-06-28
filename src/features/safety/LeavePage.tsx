@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import { Footer } from '../../shared/components/layout'
 import s from './flows.module.css'
 
-type State = 'considering' | 'pausing' | 'confirmed'
+type State = 'considering' | 'pausing' | 'paused' | 'confirmed'
 
 const DELETED = ['Your profile, bio, and display name', 'Your connections and message history', 'Your gathering history and earned badges', 'Your saved articles and reading history', 'Your invite history and vouches given']
 const PAUSE_EFFECTS = ['Your profile becomes invisible to other members', "You won't appear in search or the member directory", 'All notifications are paused', 'All your data, badges, and connections are preserved', 'Sign back in at any time to reactivate instantly']
@@ -17,7 +17,6 @@ const DURATIONS = [
 ]
 
 export function LeavePage() {
-  const { showToast } = useToast()
   const [state, setState] = useState<State>('considering')
   const [dur, setDur] = useState('1 month')
 
@@ -134,10 +133,40 @@ export function LeavePage() {
             ))}
           </div>
           <div className={s.actions}>
-            <Button onClick={() => showToast(`Account paused for ${dur}`, 'success')}>Pause my account</Button>
+            <Button onClick={() => setState('paused')}>Pause my account</Button>
             <button className={s.cancelLink} onClick={() => setState('considering')}>
               Actually, I'd rather delete →
             </button>
+          </div>
+        </div>
+      )}
+
+      {state === 'paused' && (
+        <div className={`${s.card} ${s.pausedCard} ${s.screenIn}`}>
+          <div className={s.pausedIcon}>
+            <FiCheck />
+          </div>
+          <div className={s.title}>
+            Your account is <em>resting.</em>
+          </div>
+          <p className={s.pausedSub}>
+            You're invisible to other members now, and we've stopped every notification. Your
+            people, your badges, your history — all of it is exactly where you left it. Come back
+            the moment you want to.
+          </p>
+          <div className={s.pausedReturn}>
+            <span className={s.pausedReturnLbl}>You'll reactivate automatically</span>
+            <span className={s.pausedReturnVal}>
+              {DURATIONS.find((d) => d.label === dur)?.back ?? dur}
+            </span>
+          </div>
+          <div className={s.pausedActions}>
+            <Button variant="ghost-dark" to={routes.signIn}>
+              Come back early →
+            </Button>
+            <Button variant="ghost-dark" onClick={() => setState('considering')}>
+              Back to settings
+            </Button>
           </div>
         </div>
       )}

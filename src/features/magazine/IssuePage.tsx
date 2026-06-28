@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
 import { Avatar, Button, FadeIn, ImageSlot, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
 import { MagazineMasthead } from './MagazineMasthead'
+import { PrintOrderModal } from './PrintOrderModal'
 import { useSimulatedLoad } from '../../shared/hooks'
 import styles from './IssuePage.module.css'
 import { routes } from '../../app/routeMap'
@@ -45,6 +47,7 @@ const TOC_ROW_COUNTS = TOC.map((section) => section.entries.length)
 
 export function IssuePage() {
   const loading = useSimulatedLoad()
+  const [ordering, setOrdering] = useState(false)
 
   return (
     <PageShell>
@@ -193,7 +196,9 @@ export function IssuePage() {
               contributors.
             </p>
             <div className={styles.poActions}>
-              <Button to="/checkout">Order the print edition — €12</Button>
+              <Button type="button" onClick={() => setOrdering(true)}>
+                Order the print edition — €12
+              </Button>
               <Button variant="ghost" to={routes.magazine}>
                 Read online free
               </Button>
@@ -202,6 +207,8 @@ export function IssuePage() {
           <ImageSlot tint="coral" radius={18} src={PRINT_EDITION_IMG} alt="Print edition mockup · Issue 09" placeholder="Print edition mockup · Issue 09" style={{ aspectRatio: '4/3', height: 'auto' }} />
         </div>
       </section>
+
+      {ordering && <PrintOrderModal onClose={() => setOrdering(false)} />}
     </PageShell>
   )
 }

@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
-import { ImageSlot } from '../../shared/components/ui'
+import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { StudioShell } from './StudioShell'
+import { StudioCardGridSkeleton } from './StudioSkeletons'
 import ss from './studio.module.css'
 import s from './sheet.module.css'
 import { SPECS, SPLIT, ALSO, PAY_METHODS, scoreCoverImage } from './studioSheetStore.data'
@@ -12,6 +14,7 @@ export function StudioSheetStorePage() {
   const { showToast } = useToast()
   const [pm, setPm] = useState(0)
   const [bought, setBought] = useState(false)
+  const loading = useSimulatedLoad()
 
   return (
     <StudioShell>
@@ -180,21 +183,25 @@ export function StudioSheetStorePage() {
           </h2>
           <div className={ss.sub}>Teresa Rocha · 84 sheets · €0.55 reaches her per download</div>
         </div>
-        <div className={ss.rowGrid}>
-          {ALSO.map((a) => (
-            <Link key={a.pre} to="/studio/sheet-store" className={ss.card}>
-              <div className={ss.cardCov} style={{ aspectRatio: '0.77' }}>
-                <ImageSlot src={a.image} tint={a.tint} width="100%" height="100%" radius={10} placeholder="score" style={{ position: 'absolute', inset: 0 }} />
-                <span className={`${ss.tag} ${a.tag === 'Free read' ? ss.tagFree : ss.tagMem}`}>{a.tag}</span>
-              </div>
-              <h4>
-                {a.pre}
-                <em>{a.em}</em>
-              </h4>
-              <div className={ss.meta}>{a.who}</div>
-            </Link>
-          ))}
-        </div>
+        {loading ? (
+          <StudioCardGridSkeleton className={ss.rowGrid} count={ALSO.length} />
+        ) : (
+          <div className={ss.rowGrid}>
+            {ALSO.map((a, i) => (
+              <FadeIn key={a.pre} delay={Math.min(i, 8) * 60} as={Link} to="/studio/sheet-store" className={ss.card}>
+                <div className={ss.cardCov} style={{ aspectRatio: '0.77' }}>
+                  <ImageSlot src={a.image} tint={a.tint} width="100%" height="100%" radius={10} placeholder="score" style={{ position: 'absolute', inset: 0 }} />
+                  <span className={`${ss.tag} ${a.tag === 'Free read' ? ss.tagFree : ss.tagMem}`}>{a.tag}</span>
+                </div>
+                <h4>
+                  {a.pre}
+                  <em>{a.em}</em>
+                </h4>
+                <div className={ss.meta}>{a.who}</div>
+              </FadeIn>
+            ))}
+          </div>
+        )}
       </section>
     </StudioShell>
   )

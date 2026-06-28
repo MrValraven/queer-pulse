@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, FadeIn } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { VOLUNTEER_OPPORTUNITIES, getOpportunity } from "./volunteerOpportunities";
 import styles from "./VolunteerOpportunityPage.module.css";
@@ -20,6 +20,15 @@ const Tick = () => (
 export function VolunteerOpportunityPage() {
   const { slug } = useParams();
   const [applied, setApplied] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const apply = () => {
+    setSubmitting(true);
+    setTimeout(() => {
+      setSubmitting(false);
+      setApplied(true);
+    }, 900);
+  };
 
   const opp = getOpportunity(slug);
   if (!opp) return <Navigate to={routes.volunteer} replace />;
@@ -127,7 +136,7 @@ export function VolunteerOpportunityPage() {
 
           <aside className={styles.side}>
             {applied ? (
-              <div className={styles.appliedCard}>
+              <FadeIn className={styles.appliedCard}>
                 <div className={styles.appliedIcon}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="var(--jade-soft)" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 13l4 4L19 7" />
@@ -140,7 +149,7 @@ export function VolunteerOpportunityPage() {
                 <Button variant="ghost-dark" className={styles.ctaBtn} to={MESSAGES}>
                   Message the team
                 </Button>
-              </div>
+              </FadeIn>
             ) : (
               <div className={styles.card}>
                 <div className={styles.applyHead}>
@@ -161,8 +170,8 @@ export function VolunteerOpportunityPage() {
                   </div>
                 ))}
                 <div className={styles.cta}>
-                  <Button variant="primary" className={styles.ctaBtn} onClick={() => setApplied(true)}>
-                    Apply →
+                  <Button variant="primary" className={styles.ctaBtn} onClick={apply} disabled={submitting} aria-busy={submitting}>
+                    {submitting ? "Sending your application…" : "Apply →"}
                   </Button>
                   <Button variant="ghost" className={styles.ctaBtn} to={MESSAGES}>
                     Ask the team

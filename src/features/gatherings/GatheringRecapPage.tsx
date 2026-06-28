@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiCheck } from 'react-icons/fi'
+import { FiCheck, FiClock } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
-import { Avatar, Button, ImageSlot } from '../../shared/components/ui'
+import { Avatar, Button, FadeIn, ImageSlot, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { PhotoUploadModal, type RecapPhoto } from './PhotoUploadModal'
 import { RECAP_PHOTOS } from './gatheringRecap.data'
@@ -22,6 +22,7 @@ const ATTENDEES = [
 
 export function GatheringRecapPage() {
   const { showToast } = useToast()
+  const loading = useSimulatedLoad()
   const [uploadOpen, setUploadOpen] = useState(false)
   const [submittedPhotos, setSubmittedPhotos] = useState<RecapPhoto[]>([])
 
@@ -71,17 +72,22 @@ export function GatheringRecapPage() {
 
               <div className={styles.photos}>
                 <div className={styles.sectionEyebrow}>From the day</div>
-                <div className={styles.photosGrid}>
-                  {RECAP_PHOTOS.map((photo, index) => (
-                    <ImageSlot
-                      key={index}
-                      tint={photo.tint}
-                      src={photo.image}
-                      height={140}
-                      radius={12}
-                      placeholder="photo from the gathering"
-                    />
-                  ))}
+                <div className={styles.photosGrid} aria-busy={loading}>
+                  {loading
+                    ? Array.from({ length: 6 }).map((_, i) => (
+                        <SkeletonLine key={i} height={140} style={{ borderRadius: 12 }} />
+                      ))
+                    : RECAP_PHOTOS.map((photo, index) => (
+                        <FadeIn key={index} delay={Math.min(index, 8) * 60}>
+                          <ImageSlot
+                            tint={photo.tint}
+                            src={photo.image}
+                            height={140}
+                            radius={12}
+                            placeholder="photo from the gathering"
+                          />
+                        </FadeIn>
+                      ))}
                   {submittedPhotos.map((photo) => (
                     <figure key={photo.id} className={styles.newPhoto}>
                       <ImageSlot tint={photo.tint} height={140} radius={12} placeholder="your photo" />
@@ -105,19 +111,27 @@ export function GatheringRecapPage() {
                 <div className={styles.sectionHead} style={{ fontSize: 'clamp(24px,3vw,34px)', marginBottom: 20 }}>
                   38 members <em>attended</em>
                 </div>
-                <div className={styles.whoGrid}>
-                  {ATTENDEES.map((person) => (
-                    <div key={person.initials} className={styles.whoCard}>
-                      <Avatar
-                        initials={person.initials}
-                        tint={person.tint}
-                        size={44}
-                        style={{ margin: '0 auto' }}
-                      />
-                      <div className={styles.whoName}>{person.name}</div>
-                      <div className={styles.whoPronouns}>{person.pronouns}</div>
-                    </div>
-                  ))}
+                <div className={styles.whoGrid} aria-busy={loading}>
+                  {loading
+                    ? Array.from({ length: 8 }).map((_, i) => (
+                        <div key={i} className={styles.whoCard}>
+                          <SkeletonAvatar size={44} />
+                          <SkeletonLine height={12} width="70%" style={{ margin: '10px auto 6px' }} />
+                          <SkeletonLine height={10} width="45%" style={{ margin: '0 auto' }} />
+                        </div>
+                      ))
+                    : ATTENDEES.map((person, i) => (
+                        <FadeIn key={person.initials} delay={Math.min(i, 8) * 60} className={styles.whoCard}>
+                          <Avatar
+                            initials={person.initials}
+                            tint={person.tint}
+                            size={44}
+                            style={{ margin: '0 auto' }}
+                          />
+                          <div className={styles.whoName}>{person.name}</div>
+                          <div className={styles.whoPronouns}>{person.pronouns}</div>
+                        </FadeIn>
+                      ))}
                 </div>
                 <div className={styles.moreLabel}>+ 30 more members attended</div>
               </div>
@@ -161,9 +175,10 @@ export function GatheringRecapPage() {
                   <span style={{ color: 'var(--jade)' }}><FiCheck /></span>
                   <div className={styles.acText}>You attended this gathering</div>
                 </div>
-                <Link to="/year-in-review" className={styles.acLink}>
-                  Add to your year in review →
-                </Link>
+                <span className={styles.acSoon} aria-disabled="true">
+                  <FiClock /> Add to your year in review
+                  <span className={styles.acSoonBadge}>Soon</span>
+                </span>
               </div>
 
               <div className={styles.sbCard}>

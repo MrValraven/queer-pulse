@@ -1,0 +1,207 @@
+/* ── Hero (plum) ─────────────────────────────────────────────────────────── */
+.hero {
+  background: var(--plum);
+  padding: 140px 0 76px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -12%;
+  right: -6%;
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  pointer-events: none;
+}
+.heroTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 80px);
+  color: var(--cream);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-top: 16px;
+  max-width: 14ch;
+}
+.heroTitle em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.heroLead {
+  font-family: var(--sans);
+  font-size: 17px;
+  color: rgba(247, 243, 238, 0.72);
+  max-width: 58ch;
+  margin-top: 22px;
+  line-height: 1.7;
+}
+
+/* ── Reading body (cream) ────────────────────────────────────────────────── */
+.body {
+  background: var(--cream);
+  padding: 72px 24px 110px;
+}
+.column {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.block {
+  margin-bottom: 56px;
+}
+.blockTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(26px, 3.4vw, 38px);
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  margin-bottom: 20px;
+}
+.blockTitle em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.blockBody {
+  font-family: var(--sans);
+  color: var(--ink-60);
+  font-size: 16.5px;
+  line-height: 1.75;
+}
+.blockBody p {
+  margin: 0 0 16px;
+}
+.blockBody p:last-child {
+  margin-bottom: 0;
+}
+.blockBody strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.blockBody em {
+  font-style: italic;
+}
+.blockBody ul {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+.blockBody li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 12px;
+  line-height: 1.65;
+}
+.blockBody li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 11px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ── Cross-link CTA row ──────────────────────────────────────────────────── */
+.ctaRow {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: 36px 36px 38px;
+  margin: 8px 0 48px;
+}
+.ctaTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 28px;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+.ctaTitle em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.ctaText {
+  font-family: var(--sans);
+  font-size: 15.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  max-width: 52ch;
+  margin-bottom: 24px;
+}
+.ctaButtons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── Disclaimer (plum panel) ─────────────────────────────────────────────── */
+.disclaimer {
+  background: var(--plum);
+  border-radius: var(--radius-card, 22px);
+  padding: 40px 40px 42px;
+  position: relative;
+  overflow: hidden;
+}
+.disclaimer::before {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -8%;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.16), transparent 62%);
+  pointer-events: none;
+}
+.disclaimerIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade);
+  font-size: 22px;
+  margin-bottom: 18px;
+  position: relative;
+}
+.disclaimerTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 30px;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  position: relative;
+}
+.disclaimerTitle em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.disclaimerText {
+  font-family: var(--sans);
+  font-size: 15.5px;
+  color: rgba(247, 243, 238, 0.8);
+  line-height: 1.7;
+  max-width: 56ch;
+  position: relative;
+}
+
+@media (max-width: 640px) {
+  .ctaRow,
+  .disclaimer {
+    padding: 28px 22px 30px;
+  }
+}

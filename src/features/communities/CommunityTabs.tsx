@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
 import type { CommunityDetail, Person, Thread as ThreadData } from './communityDetails'
@@ -53,24 +53,46 @@ export function AboutTab({ detail }: { detail: CommunityDetail }) {
   )
 }
 
-export function MembersTab({ members, hasCount, memberNum }: { members: Person[]; hasCount: boolean; memberNum: number }) {
+export function MembersTab({
+  members,
+  hasCount,
+  memberNum,
+  loading = false,
+}: {
+  members: Person[]
+  hasCount: boolean
+  memberNum: number
+  loading?: boolean
+}) {
   return (
     <div>
-      <div className={styles.memberGrid}>
-        {members.map((m, i) => (
-          <Link to={MEMBER} className={styles.mCard} key={i}>
-            <div className={[styles.mAv, AV_CLASS[m.tint]].join(' ')}>{m.initials}</div>
-            <div className={styles.mName}>{m.name}</div>
-            <div className={styles.mRole}>{m.role}</div>
-          </Link>
-        ))}
+      <div className={styles.memberGrid} aria-busy={loading}>
+        {loading
+          ? Array.from({ length: members.length || 8 }).map((_, i) => (
+              <div className={styles.mCard} key={i}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+                  <SkeletonAvatar size={48} />
+                </div>
+                <SkeletonLine height={12} width="70%" style={{ margin: '0 auto 6px' }} />
+                <SkeletonLine height={10} width="50%" style={{ margin: '0 auto' }} />
+              </div>
+            ))
+          : members.map((m, i) => (
+              <FadeIn as={Link} to={MEMBER} className={styles.mCard} key={i} delay={Math.min(i, 8) * 60}>
+                <div className={[styles.mAv, AV_CLASS[m.tint]].join(' ')}>{m.initials}</div>
+                <div className={styles.mName}>{m.name}</div>
+                <div className={styles.mRole}>{m.role}</div>
+              </FadeIn>
+            ))}
       </div>
-      <p className={styles.showing}>{hasCount ? `Showing 8 of ${memberNum} members` : 'Showing the core members'}</p>
+      {!loading && (
+        <p className={styles.showing}>{hasCount ? `Showing 8 of ${memberNum} members` : 'Showing the core members'}</p>
+      )}
     </div>
   )
 }
 
-export function ForumTab({ threads }: { threads: ThreadData[] }) {
+export function ForumTab({ threads, loading = false }: { threads: ThreadData[]; loading?: boolean }) {
   const { showToast } = useToast()
   const [newPost, setNewPost] = useState('')
   const [extraThreads, setExtraThreads] = useState<ThreadData[]>([])
@@ -95,13 +117,29 @@ export function ForumTab({ threads }: { threads: ThreadData[] }) {
     showToast('Post added to the community forum.', 'success')
   }
 
+  if (loading) {
+    return (
+      <div aria-busy="true">
+        {Array.from({ length: 2 }).map((_, i) => (
+          <div key={i} className={styles.mCard} style={{ textAlign: 'left', marginBottom: 14, padding: 18 }}>
+            <SkeletonLine height={16} width="55%" style={{ marginBottom: 12 }} />
+            <SkeletonLine height={12} style={{ marginBottom: 6 }} />
+            <SkeletonLine height={12} width="80%" />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <div>
       {extraThreads.map((t, i) => (
         <CommunityThread data={t} key={`x${i}`} />
       ))}
       {threads.map((t, i) => (
-        <CommunityThread data={t} key={i} />
+        <FadeIn key={i} delay={Math.min(i, 8) * 60}>
+          <CommunityThread data={t} />
+        </FadeIn>
       ))}
       <div className={styles.newPost}>
         <div className={[styles.rAv, styles.tPlum].join(' ')} style={{ width: 30, height: 30 }}>

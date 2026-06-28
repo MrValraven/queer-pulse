@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
@@ -98,6 +99,45 @@ export function ConnectionCard() {
   const { showToast } = useToast()
   const navigate = useNavigate()
   const c = CONNECTION
+  const [status, setStatus] = useState<'pending' | 'accepted' | 'declined'>('pending')
+
+  function accept() {
+    setStatus('accepted')
+    showToast('Connected with Sofia', 'success')
+  }
+  function decline() {
+    setStatus('declined')
+    showToast('Request declined', 'info')
+  }
+
+  // Decline collapses the card away.
+  if (status === 'declined') {
+    return <div className={styles.cardCollapse} aria-hidden />
+  }
+
+  // Accept flips to the plum-panel success state.
+  if (status === 'accepted') {
+    return (
+      <div className={`${styles.card} ${styles.cardPad} ${styles.connDone}`} role="status">
+        <div className={styles.connDoneIcon}>
+          <FiCheck aria-hidden />
+        </div>
+        <div className={styles.connDoneTitle}>
+          You're <em>connected</em>
+        </div>
+        <p className={styles.connDoneBody}>
+          {c.name.split(' ')[0]} is now part of your network. Messaging and tagged updates are open
+          between you.
+        </p>
+        <div className={styles.connDoneActions}>
+          <Button variant="ghost-dark" onClick={() => navigate(routes.connections)}>
+            View your connections
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`${styles.card} ${styles.cardPad}`}>
       <MemberMini initials={c.initials} tint={c.tint} name={c.name} meta={c.meta} />
@@ -117,10 +157,10 @@ export function ConnectionCard() {
         <div className={styles.mutualLabel}>{c.mutualLabel}</div>
       </button>
       <div className={styles.btnRow}>
-        <Button variant="primary" onClick={() => showToast('Connected with Sofia', 'success')}>
+        <Button variant="primary" onClick={accept}>
           Accept
         </Button>
-        <Button variant="ghost" onClick={() => showToast('Request declined', 'info')}>
+        <Button variant="ghost" onClick={decline}>
           Decline
         </Button>
       </div>

@@ -10,6 +10,17 @@
   justify-content: center;
   padding: 24px;
   backdrop-filter: blur(4px);
+  animation: overlayIn 0.3s var(--ease) both;
+}
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+  }
 }
 
 .modal {

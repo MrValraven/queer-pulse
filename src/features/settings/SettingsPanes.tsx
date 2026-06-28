@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react'
 import { FiShield } from 'react-icons/fi'
-import { useToast } from '../../shared/components/feedback/useToast'
+import { Button } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { TERMS } from './settings.data'
 import { SIM_GROUPS, type SimFlow } from './simulations.data'
 import { SimulationPreviewModal } from './SimulationPreviewModal'
+import { DestructiveActionFlow } from './DestructiveActionFlow'
+import { DESTRUCTIVE_FLOW } from './destructiveFlows.data'
 import { DataCard, Pane, Section, SelectRow, ToggleList, ToggleRow } from './SettingsControls'
 import {
   DataExportModal,
@@ -119,8 +121,8 @@ const EXPORTS: Record<ExportKind, { title: string; filename: string; payload: Re
 }
 
 export function DataPane({ onChange, onDeleteClick }: { onChange: () => void; onDeleteClick: () => void }) {
-  const { showToast } = useToast()
   const [exportKind, setExportKind] = useState<ExportKind | null>(null)
+  const [deactivateOpen, setDeactivateOpen] = useState(false)
   return (
     <Pane title={<>Data &amp; <em>privacy.</em></>} sub="Your data belongs to you. We collect the minimum needed to run the platform and never sell it. You can download or delete everything at any time.">
       <div className={styles.gdprBox}>
@@ -150,18 +152,18 @@ export function DataPane({ onChange, onDeleteClick }: { onChange: () => void; on
               <div className={`${styles.dcTitle} ${styles.dangerTitle}`}>Deactivate account</div>
               <div className={styles.dcDesc}>Your profile becomes invisible and you stop receiving notifications. You can reactivate at any time by logging back in. Your data is retained.</div>
             </div>
-            <button className={`${styles.dcBtn} ${styles.danger}`} onClick={() => showToast('Account deactivated — log back in any time to reactivate', 'info')}>
+            <Button variant="ghost" className={`${styles.dcBtn} ${styles.danger}`} onClick={() => setDeactivateOpen(true)}>
               Deactivate
-            </button>
+            </Button>
           </div>
           <div className={`${styles.dataCard} ${styles.dangerCard}`}>
             <div className={styles.dcText}>
               <div className={`${styles.dcTitle} ${styles.dangerTitle}`}>Delete account permanently</div>
               <div className={styles.dcDesc}>Permanently deletes your profile, messages, and all associated data within 30 days. This cannot be undone.</div>
             </div>
-            <button className={`${styles.dcBtn} ${styles.danger}`} onClick={onDeleteClick}>
+            <Button variant="primary" className={`${styles.dcBtn} ${styles.danger}`} onClick={onDeleteClick}>
               Delete account
-            </button>
+            </Button>
           </div>
         </div>
         <div className={styles.fineprint}>
@@ -174,6 +176,12 @@ export function DataPane({ onChange, onDeleteClick }: { onChange: () => void; on
           filename={EXPORTS[exportKind].filename}
           payload={EXPORTS[exportKind].payload}
           onClose={() => setExportKind(null)}
+        />
+      )}
+      {deactivateOpen && (
+        <DestructiveActionFlow
+          content={DESTRUCTIVE_FLOW.deactivate}
+          onClose={() => setDeactivateOpen(false)}
         />
       )}
     </Pane>

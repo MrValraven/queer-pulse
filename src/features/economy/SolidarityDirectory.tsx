@@ -1,14 +1,18 @@
 import { useState } from 'react'
+import { FiHeart } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn } from '../../shared/components/ui'
+import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { useConnect } from '../../app/providers/ConnectProvider'
 import {
   PRACTITIONERS, FILTERS, TINT_BG, TINT_FG, initials, type Cat,
 } from './solidarity.data'
+import { SolidaritySkeleton } from './SolidaritySkeleton'
 import styles from './SolidarityPage.module.css'
 
 export function SolidarityDirectory() {
+  const loading = useSimulatedLoad()
   const [cat, setCat] = useState<Cat | 'all'>('all')
   const [query, setQuery] = useState('')
   const { openConnect } = useConnect()
@@ -58,13 +62,25 @@ export function SolidarityDirectory() {
       <main className={styles.body}>
         <div className="wrap">
           <div className={styles.grid}>
-            {items.length === 0 && (
-              <div className={styles.empty}>
-                <p>No practitioners match — try different filters.</p>
-              </div>
+            {loading &&
+              Array.from({ length: 6 }).map((_, i) => <SolidaritySkeleton key={i} />)}
+            {!loading && items.length === 0 && (
+              <EmptyState
+                icon={<FiHeart />}
+                title="No practitioners match"
+                description="No one fits that search just yet. Try a different profession or clear your search to see everyone offering sliding-scale care."
+                action={{
+                  label: 'Clear filters',
+                  onClick: () => {
+                    setCat('all')
+                    setQuery('')
+                  },
+                }}
+              />
             )}
-            {items.map((p) => (
-              <article className={styles.pc} key={p.id}>
+            {!loading &&
+              items.map((p, i) => (
+              <FadeIn key={p.id} delay={Math.min(i, 8) * 60} as="article" className={styles.pc}>
                 <div className={styles.pcTop}>
                   <div
                     className={styles.pcAv}
@@ -101,7 +117,7 @@ export function SolidarityDirectory() {
                     Contact →
                   </button>
                 </div>
-              </article>
+              </FadeIn>
             ))}
           </div>
 

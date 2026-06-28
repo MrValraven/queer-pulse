@@ -395,15 +395,3 @@
   color: rgba(247, 243, 238, 0.5);
   text-align: center;
 }
-
-.empty {
-  padding: 60px 0;
-  text-align: center;
-  grid-column: 1 / -1;
-}
-.empty p {
-  font-family: var(--serif);
-  font-size: 19px;
-  color: var(--ink-40);
-  font-style: italic;
-}

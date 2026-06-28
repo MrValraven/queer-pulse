@@ -3,17 +3,19 @@ import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./WorldAidsDayPage.module.css";
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { useSimulatedLoad, useCountUp, useScrollReveal } from '../../shared/hooks'
 
 const LEGAL = routes.legal;
 const GATHERING = routes.gathering;
 const DIRECTORY = routes.directory;
 
+// Numeric targets separated from decorative markup so useCountUp can animate them.
 const STATS = [
-  { lbl: "New diagnoses · 2024", n: <em>820</em>, p: "Down 34% from a decade ago · still ~2 per day" },
-  { lbl: "People living with HIV in PT", n: <>~ 47<em>k</em></>, p: "97% diagnosed · 95% on treatment · 93% U=U" },
-  { lbl: "PrEP users · prescribed", n: <><em>12.4</em>k</>, p: "Up 18% YoY · still well below estimated need" },
-  { lbl: 'Of new diagnoses · "late presenters"', n: <>4<em>2</em>%</>, p: "Diagnosed late — the stat that keeps people awake" },
+  { lbl: "New diagnoses · 2024",           num: 820,  fmt: (n: number) => <em>{n}</em>,                   p: "Down 34% from a decade ago · still ~2 per day" },
+  { lbl: "People living with HIV in PT",    num: 47,   fmt: (n: number) => <>~ {n}<em>k</em></>,            p: "97% diagnosed · 95% on treatment · 93% U=U" },
+  { lbl: "PrEP users · prescribed",         num: 124,  fmt: (n: number) => <><em>{(n / 10).toFixed(1)}</em>k</>, p: "Up 18% YoY · still well below estimated need" },
+  { lbl: 'Of new diagnoses · "late presenters"', num: 42, fmt: (n: number) => <>{Math.floor(n / 10)}<em>{n % 10}</em>%</>, p: "Diagnosed late — the stat that keeps people awake" },
 ];
 
 const UNDO: { n: React.ReactNode; h: React.ReactNode; body: React.ReactNode }[] = [
@@ -21,6 +23,37 @@ const UNDO: { n: React.ReactNode; h: React.ReactNode; body: React.ReactNode }[] 
   { n: <>0<em>2</em></>, h: <>PrEP access for <em>everyone who would benefit</em></>, body: <>PrEP is on the SNS since 2018. But it's still effectively gated by GP relationships, awkward conversations, and clinics that don't know they can prescribe it. <strong>Anyone, any age, who would benefit should be able to get a 90-day script in &lt; 14 days from any GP.</strong> Right now the average is 6 weeks.</> },
   { n: <>0<em>3</em></>, h: <>End the <em>employer disclosure asks</em></>, body: <>HIV status is medical-confidential under EU and Portuguese law. <em>But it is still routinely asked</em> in employment paperwork, insurance forms, and travel documents. <strong>Disclosure should be voluntary, always, with no penalty for declining.</strong> ILGA Portugal's casework team handles ~40 of these incidents per year. <Link to={LEGAL}>Read our legal guide →</Link></> },
 ];
+
+// StatCell animates its number once the stats section scrolls into view.
+// The `active` + `isVisible` wiring is handled by the parent via a shared ref.
+function StatCell({ stat, active }: { stat: typeof STATS[0]; active: boolean }) {
+  const count = useCountUp(stat.num, { active, durationMs: 1200 })
+  return (
+    <div className={styles.stat}>
+      <div className={styles.lbl}>{stat.lbl}</div>
+      <b>{stat.fmt(count)}</b>
+      <p>{stat.p}</p>
+    </div>
+  )
+}
+
+function TestedSkeleton() {
+  return (
+    <div className={styles.testedCard} aria-hidden style={{ pointerEvents: 'none' }}>
+      <SkeletonLine width={140} height={11} />
+      <SkeletonLine width="75%" height={22} style={{ marginTop: 6 }} />
+      <div style={{ flex: 1 }}>
+        <SkeletonLine width="100%" height={13} style={{ marginTop: 4 }} />
+        <SkeletonLine width="90%" height={13} style={{ marginTop: 6 }} />
+        <SkeletonLine width="70%" height={13} style={{ marginTop: 6 }} />
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 12, borderTop: '1px solid rgba(45,27,61,.07)' }}>
+        <SkeletonLine width={110} height={12} />
+        <SkeletonLine width={70} height={12} />
+      </div>
+    </div>
+  )
+}
 
 const TESTED: { tag: string; free?: boolean; name: React.ReactNode; d: React.ReactNode; metaL: string; metaR: string }[] = [
   { tag: "Free · no ID · today", free: true, name: <>Open clinic night · <em>HIV / STI testing</em></>, d: <>Café Beirão back room · Thursday 19:00–21:00. Rapid finger-prick + counsellor. <b>22 slots</b>, walk in. The pharmacist on site can prescribe PrEP next-day.</>, metaL: "Hosted by Trans Hub", metaR: "This Thu" },
@@ -30,6 +63,8 @@ const TESTED: { tag: string; free?: boolean; name: React.ReactNode; d: React.Rea
 
 export function WorldAidsDayPage() {
   const { showToast } = useToast();
+  const loading = useSimulatedLoad();
+  const { ref: statsRef, isVisible: statsVisible } = useScrollReveal<HTMLElement>();
 
   return (
     <PageShell>
@@ -77,7 +112,7 @@ export function WorldAidsDayPage() {
           </div>
         </section>
 
-        <section className={styles.statsSection}>
+        <section className={styles.statsSection} ref={statsRef}>
           <h2>
             Where we stand · <em>Portugal, 2025</em>
           </h2>
@@ -87,16 +122,12 @@ export function WorldAidsDayPage() {
           </p>
           <div className={styles.statsGrid}>
             {STATS.map((s, i) => (
-              <div className={styles.stat} key={i}>
-                <div className={styles.lbl}>{s.lbl}</div>
-                <b>{s.n}</b>
-                <p>{s.p}</p>
-              </div>
+              <StatCell key={i} stat={s} active={statsVisible} />
             ))}
           </div>
         </section>
 
-        <section className={styles.undoSection}>
+        <Reveal as="section" className={styles.undoSection}>
           <div className={styles.undoInner}>
             <div className={styles.undoKicker}>What we want · in 2026</div>
             <h2 className={styles.undoH}>
@@ -108,19 +139,19 @@ export function WorldAidsDayPage() {
             </p>
             <div className={styles.undoList}>
               {UNDO.map((u, i) => (
-                <div className={styles.undoRow} key={i}>
+                <Reveal as="div" className={styles.undoRow} key={i} delay={i * 80}>
                   <div className={styles.undoN}>{u.n}</div>
                   <div>
                     <h3>{u.h}</h3>
                     <p>{u.body}</p>
                   </div>
-                </div>
+                </Reveal>
               ))}
             </div>
           </div>
-        </section>
+        </Reveal>
 
-        <section className={styles.tested}>
+        <Reveal as="section" className={styles.tested}>
           <div className={styles.testedInner}>
             <h2>
               Get tested · <em>this week in Lisbon</em>
@@ -130,28 +161,32 @@ export function WorldAidsDayPage() {
               day.
             </p>
             <div className={styles.testedGrid}>
-              {TESTED.map((t, i) => (
-                <Link to={DIRECTORY} className={styles.testedCard} key={i}>
-                  <div
-                    className={[styles.testedTag, t.free && styles.testedTagFree]
-                      .filter(Boolean)
-                      .join(" ")}
-                  >
-                    {t.tag}
-                  </div>
-                  <div className={styles.testedName}>{t.name}</div>
-                  <p className={styles.testedD}>{t.d}</p>
-                  <div className={styles.testedMeta}>
-                    <span>{t.metaL}</span>
-                    <b>{t.metaR}</b>
-                  </div>
-                </Link>
-              ))}
+              {loading
+                ? Array.from({ length: 3 }).map((_, i) => <TestedSkeleton key={i} />)
+                : TESTED.map((t, i) => (
+                    <FadeIn key={t.metaL} delay={Math.min(i, 8) * 60}>
+                      <Link to={DIRECTORY} className={styles.testedCard}>
+                        <div
+                          className={[styles.testedTag, t.free && styles.testedTagFree]
+                            .filter(Boolean)
+                            .join(" ")}
+                        >
+                          {t.tag}
+                        </div>
+                        <div className={styles.testedName}>{t.name}</div>
+                        <p className={styles.testedD}>{t.d}</p>
+                        <div className={styles.testedMeta}>
+                          <span>{t.metaL}</span>
+                          <b>{t.metaR}</b>
+                        </div>
+                      </Link>
+                    </FadeIn>
+                  ))}
             </div>
           </div>
-        </section>
+        </Reveal>
 
-        <section className={styles.memory}>
+        <Reveal as="section" className={styles.memory}>
           <div className={styles.memoryInner}>
             <div className={styles.memoryKicker}>
               Tonight · 19:00 · Praça das Flores
@@ -183,7 +218,7 @@ export function WorldAidsDayPage() {
               </div>
             </div>
           </div>
-        </section>
+        </Reveal>
 
         <div className={styles.ptNote}>
           <em>Esta página existe também em português</em> ·{" "}

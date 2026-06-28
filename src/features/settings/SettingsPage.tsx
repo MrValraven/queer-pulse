@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useProfileTheme } from '../../app/providers/ProfileThemeProvider'
 import { useScrollLock } from '../../shared/hooks'
 import { AppShell } from '../../shared/components/layout'
+import { FadeIn } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { NAV, type PaneId } from './settings.data'
 import { DeleteAccountSection } from './DeleteAccountSection'
@@ -69,17 +70,19 @@ export function SettingsPage() {
         </aside>
 
         <main className={styles.main}>
-          {pane === 'notifications' && <NotificationsPane onChange={markChanged} />}
-          {pane === 'language' && <LanguagePane onChange={markChanged} />}
-          {pane === 'data' && <DataPane onChange={markChanged} onDeleteClick={() => setShowDelete(true)} />}
-          {pane === 'visibility' && <VisibilityPane onChange={markChanged} />}
-          {pane === 'profile' && <EditProfilePane onChange={markChanged} />}
-          {pane === 'profile-theme' && <ProfileThemePane onChange={markChanged} />}
-          {pane === 'accessibility' && <AccessibilityPane onChange={markChanged} />}
-          {pane === 'interests' && <InterestsPane onChange={markChanged} />}
-          {pane === 'account' && <AccountPane onChange={markChanged} />}
-          {pane === 'simulations' && <SimulationsPane />}
-          {pane === 'delete' && <DeleteAccountSection />}
+          <FadeIn key={pane}>
+            {pane === 'notifications' && <NotificationsPane onChange={markChanged} />}
+            {pane === 'language' && <LanguagePane onChange={markChanged} />}
+            {pane === 'data' && <DataPane onChange={markChanged} onDeleteClick={() => setShowDelete(true)} />}
+            {pane === 'visibility' && <VisibilityPane onChange={markChanged} />}
+            {pane === 'profile' && <EditProfilePane onChange={markChanged} />}
+            {pane === 'profile-theme' && <ProfileThemePane onChange={markChanged} />}
+            {pane === 'accessibility' && <AccessibilityPane onChange={markChanged} />}
+            {pane === 'interests' && <InterestsPane onChange={markChanged} />}
+            {pane === 'account' && <AccountPane onChange={markChanged} />}
+            {pane === 'simulations' && <SimulationsPane />}
+            {pane === 'delete' && <DeleteAccountSection />}
+          </FadeIn>
         </main>
       </div>
 

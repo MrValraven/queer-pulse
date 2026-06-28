@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ImageSlot, FadeIn } from '../../shared/components/ui'
+import { FiBookmark } from 'react-icons/fi'
+import { ImageSlot, FadeIn, EmptyState } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
+import { routes } from '../../app/routeMap'
 import { StudioShell } from './StudioShell'
 import { StudioCardGridSkeleton } from './StudioSkeletons'
 import { LIBRARY, TABS } from './studioLibrary.data'
@@ -43,7 +45,18 @@ export function StudioLibraryPage() {
         {loading ? (
           <StudioCardGridSkeleton className={ss.rowGrid} count={8} />
         ) : items.length === 0 ? (
-          <p className={s.empty}>Nothing saved here yet.</p>
+          <EmptyState
+            icon={<FiBookmark />}
+            title="Your library's empty here"
+            description={
+              <>
+                Nothing in <em>{tab.toLowerCase()}</em> yet. Wander the studio,
+                and anything you save lands right here — yours to come back to.
+              </>
+            }
+            action={{ label: 'Browse the studio', to: routes.studio }}
+            secondaryAction={{ label: 'Search the catalogue', to: routes.studioSearch }}
+          />
         ) : (
           <div className={ss.rowGrid}>
             {items.map((item, i) => (

@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useDrafts } from '../../app/providers/DraftsProvider'
 import { SENDER_NAME } from './invite.data'
 import styles from './InvitePage.module.css'
 
@@ -8,11 +10,51 @@ interface InviteEmailFormProps {
   onSent: (inviteeName: string) => void
 }
 
+type DraftState = 'idle' | 'saving' | 'saved'
+
 export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
   const { showToast } = useToast()
+  const { addDraft, removeDraft } = useDrafts()
   const [first, setFirst] = useState('')
   const [know, setKnow] = useState('')
   const [note, setNote] = useState('')
+  const [draftState, setDraftState] = useState<DraftState>('idle')
+  // One stable id per form session so re-saving updates the same Drafts entry.
+  const [draftId] = useState(() => `invite-${Date.now()}`)
+
+  function saveDraft() {
+    if (draftState === 'saving') return
+    setDraftState('saving')
+    // Simulate a write — flips to a persisted "Saved" confirmation and pushes a
+    // real entry onto the cross-app Drafts store.
+    window.setTimeout(() => {
+      const name = first.trim()
+      const filled = [first, know, note].filter((v) => v.trim()).length
+      removeDraft(draftId) // replace any earlier save of this same draft
+      addDraft({
+        id: draftId,
+        kind: 'INVITE',
+        kindVariant: 'post',
+        title: `Invitation · ${name || 'someone'}`,
+        desc:
+          know.trim() ||
+          'A friend you want to vouch for — invite not sent yet.',
+        meta: [{ label: 'Saved just now', variant: 'pulse' }],
+        progress: Math.min(95, 25 + filled * 25),
+        actions: [
+          { label: 'Resume', variant: 'primary' },
+          { label: 'Delete', variant: 'danger', deletes: true },
+        ],
+      })
+      setDraftState('saved')
+      showToast('Draft saved — find it in Drafts', 'success')
+    }, 650)
+  }
+
+  /** Editing after a save means there's something new to save again. */
+  function markDirty() {
+    setDraftState((s) => (s === 'saved' ? 'idle' : s))
+  }
 
   return (
     <form
@@ -29,7 +71,10 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
               type="text"
               placeholder="Rosa"
               value={first}
-              onChange={(e) => setFirst(e.target.value)}
+              onChange={(e) => {
+                setFirst(e.target.value)
+                markDirty()
+              }}
             />
           </div>
           <div className={styles.field}>
@@ -47,7 +92,10 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
             maxLength={300}
             placeholder="How you met, and what makes them a good fit — this is your vouch."
             value={know}
-            onChange={(e) => setKnow(e.target.value)}
+            onChange={(e) => {
+              setKnow(e.target.value)
+              markDirty()
+            }}
           />
           <div className={styles.charCount}>{know.length}/300</div>
           <div className={styles.helper}>
@@ -67,7 +115,10 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
             maxLength={200}
             placeholder="A message they'll see in their invite email."
             value={note}
-            onChange={(e) => setNote(e.target.value)}
+            onChange={(e) => {
+              setNote(e.target.value)
+              markDirty()
+            }}
           />
           <div className={styles.charCount}>{note.length}/200</div>
         </div>
@@ -93,8 +144,19 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
 
       <div className={styles.actions}>
         <Button type="submit">Send invitation</Button>
-        <Button type="button" variant="ghost" onClick={() => showToast('Draft saved', 'info')}>
-          Save as draft
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={saveDraft}
+          disabled={draftState !== 'idle'}
+        >
+          {draftState === 'saving' && 'Saving…'}
+          {draftState === 'saved' && (
+            <>
+              <FiCheck aria-hidden /> Saved to drafts
+            </>
+          )}
+          {draftState === 'idle' && 'Save as draft'}
         </Button>
       </div>
       <div className={styles.formNote}>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
+import { Button, FadeIn } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import {
   type Badge,
@@ -78,8 +78,10 @@ export function EarnedBadges() {
         {earnedBadges.length} earned · {discoverCount} to discover
       </div>
       <div className={styles.badgeGrid}>
-        {earnedBadges.map((badge) => (
-          <BadgeCard key={badge.name} badge={badge} />
+        {earnedBadges.map((badge, i) => (
+          <FadeIn key={badge.name} delay={Math.min(i, 8) * 60}>
+            <BadgeCard badge={badge} />
+          </FadeIn>
         ))}
       </div>
     </section>
@@ -103,8 +105,10 @@ export function LockedBadges() {
       </div>
       {open && (
         <div className={styles.badgeGrid}>
-          {lockedBadges.map((badge) => (
-            <BadgeCard key={badge.name} badge={badge} locked />
+          {lockedBadges.map((badge, i) => (
+            <FadeIn key={badge.name} delay={Math.min(i, 8) * 60}>
+              <BadgeCard badge={badge} locked />
+            </FadeIn>
           ))}
         </div>
       )}

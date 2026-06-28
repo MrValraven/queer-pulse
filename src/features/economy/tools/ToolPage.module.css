@@ -1,0 +1,78 @@
+.page {
+  background: var(--cream);
+  min-height: 100vh;
+  padding: 100px 0 80px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  margin-bottom: 28px;
+  transition: color 0.2s var(--ease);
+}
+.back:hover {
+  color: var(--accent-ink);
+}
+
+.head {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+.title {
+  font-family: var(--serif);
+  font-size: clamp(34px, 5vw, 52px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin: 14px 0 16px;
+  color: var(--plum);
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  max-width: 620px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.formCol {
+  position: sticky;
+  top: 96px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.previewCol {
+  min-width: 0;
+}
+
+@media (max-width: 920px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .formCol {
+    position: static;
+  }
+}
