@@ -3,6 +3,11 @@ import { Button } from '../../shared/components/ui'
 import { AdminDrawer, AdminAvatar, AdminChip } from './ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { AdminVouchGraph } from './AdminVouchGraph'
+import { AdminVouchGraphModal } from './AdminVouchGraphModal'
+import { personIdByInitials } from './adminVouchGraph.data'
+import { ModerationTimeline, SealedIdentity } from './AdminMemberDrawerSections'
+import { MessageModal, RestrictModal } from './AdminMemberModals'
+import { portrait } from './adminPeople.data'
 import { detailFor, type AdminMember } from './adminMembers.data'
 import styles from './AdminMembersPage.module.css'
 
@@ -11,12 +16,17 @@ interface Props {
   onClose: () => void
 }
 
+const firstName = (full: string) => full.split(' ')[0]
+
 export function AdminMemberDrawer({ member, onClose }: Props) {
   const { showToast } = useToast()
   const [confirming, setConfirming] = useState(false)
+  const [modal, setModal] = useState<'message' | 'restrict' | 'network' | null>(null)
   const detail = detailFor(member)
+  const first = firstName(member.name)
 
   return (
+    <>{/* drawer + its modals */}
     <AdminDrawer
       label={`${member.name} — member detail`}
       onClose={onClose}
@@ -27,6 +37,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
             tone={member.tone}
             size="lg"
             verified={member.verified}
+            src={portrait(member.name)}
           />
           <div>
             <h2 className={styles.dName}>{member.name}</h2>
@@ -51,10 +62,10 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
             <Button variant="jade" size="md" onClick={() => showToast(`${member.name} is verified.`, 'success')}>
               Verify
             </Button>
-            <Button variant="ghost" size="md" onClick={() => showToast(`Message sent to ${member.name}.`, 'info')}>
+            <Button variant="ghost" size="md" onClick={() => setModal('message')}>
               Message
             </Button>
-            <Button variant="ghost" size="md" onClick={() => showToast(`${member.name}'s access is limited.`, 'info')}>
+            <Button variant="ghost" size="md" onClick={() => setModal('restrict')}>
               Restrict…
             </Button>
             <Button variant="danger" size="md" onClick={() => setConfirming(true)}>
@@ -77,11 +88,29 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
       </section>
 
       <section className={styles.dSection}>
-        <h3 className={styles.dHeading}>Vouch network</h3>
-        <div className={styles.graphWrap}>
+        <h3 className={styles.dHeading}>Vouch graph — who trusts them</h3>
+        <div
+          className={styles.graphWrap}
+          role="button"
+          tabIndex={0}
+          aria-label="Open the full trust network"
+          title="Open the full trust network"
+          onClick={() => setModal('network')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              setModal('network')
+            }
+          }}
+        >
           <AdminVouchGraph center={detail.graph.center} nodes={detail.graph.nodes} />
         </div>
-        <p className={styles.dHint}>{detail.graphNote}</p>
+        <div className={styles.graphNoteRow}>
+          <p className={styles.dHint}>{detail.graphNote}</p>
+          <Button variant="ghost" size="md" onClick={() => setModal('network')}>
+            Explore network →
+          </Button>
+        </div>
       </section>
 
       <section className={styles.dSection}>
@@ -107,11 +136,47 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
         </ul>
       </section>
 
-      <section className={styles.dSection}>
-        <h3 className={styles.dHeading}>Reports involving this member</h3>
-        <p className={styles.reportsNote}>{detail.reportsNote}</p>
-      </section>
+      <ModerationTimeline entries={detail.moderationTimeline} />
+
+      <SealedIdentity />
     </AdminDrawer>
+
+    {modal === 'network' && (
+      <AdminVouchGraphModal
+        focusId={personIdByInitials(member.initials)}
+        onClose={() => setModal(null)}
+      />
+    )}
+
+    {modal === 'message' && (
+      <MessageModal
+        name={member.name}
+        onClose={() => setModal(null)}
+        onSend={() => {
+          setModal(null)
+          showToast('Message sent', 'success')
+        }}
+      />
+    )}
+
+    {modal === 'restrict' && (
+      <RestrictModal
+        name={member.name}
+        onClose={() => setModal(null)}
+        onMissingReason={() =>
+          showToast(`A reason is required — ${first} will see it`, 'error')
+        }
+        onApply={(dur, scope) => {
+          setModal(null)
+          onClose()
+          showToast(`Restricted · ${dur} · ${scope} — ${first} notified`, 'success', undefined, {
+            label: 'Undo',
+            onClick: () => showToast('Restriction reversed.', 'info'),
+          })
+        }}
+      />
+    )}
+    </>
   )
 }
 

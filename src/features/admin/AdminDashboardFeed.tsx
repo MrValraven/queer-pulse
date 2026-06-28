@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
 import { FiInfo } from 'react-icons/fi'
+import { SkeletonLine } from '../../shared/components/ui'
 import { ACTIVITY_FEED } from './adminDashboard.data'
 import { routes } from '../../app/routeMap'
 import styles from './AdminDashboardPage.module.css'
 
-export function AdminDashboardFeed() {
+export function AdminDashboardFeed({ loading = false }: { loading?: boolean }) {
   return (
     <div className={styles.feedRail}>
       <div className={styles.feedCard}>
@@ -16,7 +17,13 @@ export function AdminDashboardFeed() {
           </span>
         </div>
         <div className={styles.feed}>
-          {ACTIVITY_FEED.map(({ id, tone, icon: Icon, lead, body, em, bodyAfter, time, to }) => (
+          {loading
+            ? Array.from({ length: 4 }, (_, i) => (
+                <div key={i} className={styles.fItem}>
+                  <SkeletonLine height={42} style={{ borderRadius: 11 }} />
+                </div>
+              ))
+            : ACTIVITY_FEED.map(({ id, tone, icon: Icon, lead, body, em, bodyAfter, time, to }) => (
             <Link key={id} to={to} className={styles.fItem}>
               <span className={[styles.fIco, styles[`fIco_${tone}`]].join(' ')}>
                 <Icon aria-hidden />

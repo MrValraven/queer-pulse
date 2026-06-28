@@ -202,8 +202,28 @@
 .navItemActive .navCountWarn { color: var(--plum); }
 
 /* ── User footer ─────────────────────────────────────────────────────────── */
-.me {
+.backToPlatform {
   margin-top: auto;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  color: rgba(247, 243, 238, 0.7);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background var(--dur, 0.18s) var(--ease, ease), color var(--dur, 0.18s) var(--ease, ease);
+}
+.backToPlatform svg { width: 17px; height: 17px; flex: none; transition: transform var(--dur, 0.18s) var(--ease, ease); }
+.backToPlatform:hover { background: rgba(247, 243, 238, 0.08); color: var(--cream); }
+.backToPlatform:hover svg { transform: translateX(-2px); }
+@media (prefers-reduced-motion: reduce) {
+  .backToPlatform:hover svg { transform: none; }
+}
+
+.me {
   display: flex;
   align-items: center;
   gap: 10px;

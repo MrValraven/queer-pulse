@@ -3,8 +3,92 @@ import { FiAlertTriangle, FiShield, FiInfo } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from './ui'
-import { MOD_ACTIONS, MOD_REASONS, SEVERITY, type ModReport } from './adminModeration.data'
+import { portrait } from './adminPeople.data'
+import {
+  MOD_ACTIONS,
+  MOD_REASONS,
+  SEVERITY,
+  type ModReport,
+  type ReportDetail,
+} from './adminModeration.data'
 import styles from './AdminModerationPage.module.css'
+
+/** Reported content + surrounding thread + people involved (read-only context). */
+function ReportContext({ detail }: { detail: ReportDetail }) {
+  return (
+    <>
+      <section className={styles.dSec}>
+        <h3 className={styles.dSecLabel}>Reported content</h3>
+        <p className={styles.dContentAuthor}>{detail.contentAuthor}</p>
+        <blockquote className={styles.dExcerpt}>{detail.excerpt}</blockquote>
+        {detail.redactionNote && (
+          <p className={styles.dRedact}>
+            <FiShield aria-hidden /> {detail.redactionNote}
+          </p>
+        )}
+      </section>
+
+      <section className={styles.dSec}>
+        <h3 className={styles.dSecLabel}>Surrounding thread</h3>
+        <div className={styles.dThread}>
+          {detail.thread.map((m, i) => (
+            <div
+              key={i}
+              className={[styles.dMsg, m.flagged && styles.dMsgFlag].filter(Boolean).join(' ')}
+            >
+              <AdminAvatar initials={m.initials} tone={m.tone} size="sm" src={portrait(m.author)} />
+              <div className={styles.dMsgBody}>
+                <div className={styles.dMsgMeta}>
+                  <span className={styles.dMsgAuthor}>{m.author}</span>
+                  <span className={styles.dMsgTime}>{m.time}</span>
+                  {m.flagged && (
+                    <span className={styles.dMsgFlagTag}>
+                      <FiAlertTriangle aria-hidden /> Flagged
+                    </span>
+                  )}
+                </div>
+                <p className={styles.dMsgText}>{m.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.dSec}>
+        <h3 className={styles.dSecLabel}>People involved</h3>
+        <div className={styles.dPeople}>
+          {detail.people.map((p) => (
+            <div key={p.role} className={styles.dPerson}>
+              <AdminAvatar
+                initials={p.initials}
+                tone={p.tone}
+                size="md"
+                verified={p.verified}
+                src={portrait(p.name)}
+              />
+              <div className={styles.dPersonTx}>
+                <span className={styles.dPersonName}>
+                  {p.name}
+                  {p.pronoun && <span className={styles.dPersonPronoun}>{p.pronoun}</span>}
+                </span>
+                <span className={styles.dPersonMeta}>{p.meta}</span>
+                {p.chips && p.chips.length > 0 && (
+                  <span className={styles.dPersonChips}>
+                    {p.chips.map((c) => (
+                      <AdminChip key={c.label} tone={c.tone}>
+                        {c.label}
+                      </AdminChip>
+                    ))}
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
+  )
+}
 
 export function AdminReportDrawer({
   report,
@@ -72,72 +156,7 @@ export function AdminReportDrawer({
         </div>
       }
     >
-      {/* Reported content */}
-      <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>Reported content</h3>
-        <p className={styles.dContentAuthor}>{detail.contentAuthor}</p>
-        <blockquote className={styles.dExcerpt}>{detail.excerpt}</blockquote>
-        {detail.redactionNote && (
-          <p className={styles.dRedact}>
-            <FiShield aria-hidden /> {detail.redactionNote}
-          </p>
-        )}
-      </section>
-
-      {/* Surrounding thread */}
-      <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>Surrounding thread</h3>
-        <div className={styles.dThread}>
-          {detail.thread.map((m, i) => (
-            <div
-              key={i}
-              className={[styles.dMsg, m.flagged && styles.dMsgFlag].filter(Boolean).join(' ')}
-            >
-              <AdminAvatar initials={m.initials} tone={m.tone} size="sm" />
-              <div className={styles.dMsgBody}>
-                <div className={styles.dMsgMeta}>
-                  <span className={styles.dMsgAuthor}>{m.author}</span>
-                  <span className={styles.dMsgTime}>{m.time}</span>
-                  {m.flagged && (
-                    <span className={styles.dMsgFlagTag}>
-                      <FiAlertTriangle aria-hidden /> Flagged
-                    </span>
-                  )}
-                </div>
-                <p className={styles.dMsgText}>{m.body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* People involved */}
-      <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>People involved</h3>
-        <div className={styles.dPeople}>
-          {detail.people.map((p) => (
-            <div key={p.role} className={styles.dPerson}>
-              <AdminAvatar initials={p.initials} tone={p.tone} size="md" verified={p.verified} />
-              <div className={styles.dPersonTx}>
-                <span className={styles.dPersonName}>
-                  {p.name}
-                  {p.pronoun && <span className={styles.dPersonPronoun}>{p.pronoun}</span>}
-                </span>
-                <span className={styles.dPersonMeta}>{p.meta}</span>
-                {p.chips && p.chips.length > 0 && (
-                  <span className={styles.dPersonChips}>
-                    {p.chips.map((c) => (
-                      <AdminChip key={c.label} tone={c.tone}>
-                        {c.label}
-                      </AdminChip>
-                    ))}
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <ReportContext detail={detail} />
 
       {/* Action grid */}
       <section className={styles.dSec}>

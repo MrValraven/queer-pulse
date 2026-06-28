@@ -60,12 +60,22 @@
   font-size: 12.5px;
   color: var(--ink-60);
 }
-.score {
+.cardTagWarn { color: var(--accent-ink); font-weight: 600; }
+.scoreBtn {
   flex: none;
   font-family: var(--serif);
   font-size: 26px;
   font-weight: 600;
   line-height: 1;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 2px 4px;
+  transition: background 0.16s var(--ease);
+}
+.scoreBtn:hover { background: rgba(var(--plum-rgb), 0.06); }
+.scoreBtn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
 }
 
 /* ── Sparkline ───────────────────────────────────────────────────────────── */
@@ -154,6 +164,58 @@
   flex-wrap: wrap;
 }
 
+/* Clickable health chip → breakdown modal */
+.healthChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: none;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.16s var(--ease);
+}
+.healthChip:hover { filter: brightness(0.97); }
+.healthChipDot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.hc_jade { background: rgba(var(--jade-rgb), 0.14); color: var(--jade); }
+.hc_amber { background: rgba(var(--amber-rgb), 0.2); color: var(--amber); }
+.hc_coral { background: rgba(var(--accent-rgb), 0.13); color: var(--accent-ink); }
+
+/* ── Detail · support banner ─────────────────────────────────────────────── */
+.supportBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-left: 4px solid var(--accent-ink);
+  border-radius: var(--radius-card, 22px);
+}
+.bannerTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--plum);
+  line-height: 1.2;
+}
+[data-theme='dark'] .bannerTitle { color: var(--ink); }
+.bannerTitle em { color: var(--accent-ink); font-style: italic; }
+.bannerText {
+  margin: 8px 0 0;
+  max-width: 560px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
 /* ── Detail · stat bar ───────────────────────────────────────────────────── */
 .statBar {
   display: grid;
@@ -209,9 +271,10 @@
   width: 4px;
   border-radius: 0 4px 4px 0;
 }
-.sev_high { background: var(--danger); }
-.sev_med { background: var(--amber); }
-.sev_low { background: var(--accent-ink); }
+.sev_danger { background: var(--danger); }
+.sev_coral { background: var(--accent-ink); }
+.sev_amber { background: var(--amber); }
+.sev_jade { background: var(--jade); }
 .reportBody { flex: 1; min-width: 0; }
 .reportTitle {
   margin-top: 8px;
@@ -340,7 +403,136 @@
   gap: 8px;
 }
 
+/* Queue "+ n more" note */
+.queueMore {
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--ink-60);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px dashed rgba(var(--plum-rgb), 0.16);
+  border-radius: var(--radius-card, 22px);
+}
+
+/* Removable moderator chips */
+.modChips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.modChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 6px 5px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+}
+.modChipX {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(var(--jade-rgb), 0.18);
+  color: var(--jade);
+  cursor: pointer;
+  transition: background 0.16s var(--ease);
+}
+.modChipX:hover { background: rgba(var(--jade-rgb), 0.32); }
+.modChipX svg { width: 11px; height: 11px; }
+.addBtn {
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1px dashed rgba(var(--plum-rgb), 0.2);
+  background: transparent;
+  color: var(--ink-60);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.16s var(--ease), color 0.16s var(--ease);
+}
+.addBtn:hover { border-color: var(--plum); color: var(--plum); }
+
+/* Toggle setting rows */
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+}
+.toggleText { min-width: 0; }
+.toggleTitle { font-size: 14.5px; font-weight: 600; color: var(--plum); }
+[data-theme='dark'] .toggleTitle { color: var(--ink); }
+.toggleSub { margin-top: 3px; font-size: 12.5px; line-height: 1.45; color: var(--ink-60); }
+
+/* ── Health-breakdown modal content ──────────────────────────────────────── */
+.modalIntro {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.bdList { display: flex; flex-direction: column; gap: 12px; }
+.bdRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: rgba(var(--plum-rgb), 0.03);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-radius: 16px;
+}
+.ring { flex: none; }
+.ringArc { animation: ringDraw 0.7s var(--ease, ease) both; }
+@keyframes ringDraw {
+  from { stroke-dasharray: 0 999; }
+}
+.bdText { flex: 1; min-width: 0; }
+.bdName { font-size: 14px; font-weight: 600; color: var(--plum); }
+[data-theme='dark'] .bdName { color: var(--ink); }
+.bdDesc { margin-top: 2px; font-size: 12.5px; line-height: 1.4; color: var(--ink-60); }
+.bdScore {
+  flex: none;
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ── Support modal content ───────────────────────────────────────────────── */
+.checkList { display: flex; flex-direction: column; gap: 10px; }
+.noteLabel { display: block; margin-top: 16px; }
+.noteLabelTx {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.noteArea {
+  width: 100%;
+  padding: 11px 13px;
+  font: inherit;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border-radius: 14px;
+  resize: vertical;
+}
+.noteArea:focus-visible {
+  outline: none;
+  border-color: var(--plum);
+}
+.noteArea::placeholder { color: var(--ink-40); }
+
 @media (prefers-reduced-motion: reduce) {
   .card:hover { transform: none; }
-  .sparkLine { animation: none; }
+  .sparkLine, .ringArc { animation: none; }
 }

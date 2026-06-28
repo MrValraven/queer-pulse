@@ -6,8 +6,8 @@ import {
   type ComponentType,
   type ReactNode,
 } from 'react'
-import { FiCheck, FiX, FiInfo } from 'react-icons/fi'
-import { ToastContext, type ToastType } from './toastContext'
+import { FiCheck, FiX, FiInfo, FiRotateCcw } from 'react-icons/fi'
+import { ToastContext, type ToastType, type ToastAction } from './toastContext'
 import styles from './Toast.module.css'
 
 interface ToastItem {
@@ -15,6 +15,7 @@ interface ToastItem {
   message: string
   type: ToastType
   leaving: boolean
+  action?: ToastAction
 }
 
 const ICONS: Record<ToastType, ComponentType> = {
@@ -31,21 +32,30 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setToasts((current) => current.filter((toast) => toast.id !== id))
   }, [])
 
-  const showToast = useCallback(
-    (message: string, type: ToastType = 'success', durationMs = 3400) => {
-      const id = nextId.current++
-      setToasts((current) => [...current, { id, message, type, leaving: false }])
-
-      window.setTimeout(() => {
-        setToasts((current) =>
-          current.map((toast) =>
-            toast.id === id ? { ...toast, leaving: true } : toast,
-          ),
-        )
-        window.setTimeout(() => remove(id), 300)
-      }, durationMs)
+  const dismiss = useCallback(
+    (id: number) => {
+      setToasts((current) =>
+        current.map((toast) => (toast.id === id ? { ...toast, leaving: true } : toast)),
+      )
+      window.setTimeout(() => remove(id), 300)
     },
     [remove],
+  )
+
+  const showToast = useCallback(
+    (
+      message: string,
+      type: ToastType = 'success',
+      durationMs?: number,
+      action?: ToastAction,
+    ) => {
+      const id = nextId.current++
+      // Action toasts (e.g. Undo) linger a little longer so they're reachable.
+      const ms = durationMs ?? (action ? 5200 : 3400)
+      setToasts((current) => [...current, { id, message, type, leaving: false, action }])
+      window.setTimeout(() => dismiss(id), ms)
+    },
+    [dismiss],
   )
 
   const value = useMemo(() => ({ showToast }), [showToast])
@@ -71,6 +81,19 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 <Icon />
               </span>
               {toast.message}
+              {toast.action && (
+                <button
+                  type="button"
+                  className={styles.action}
+                  onClick={() => {
+                    toast.action?.onClick()
+                    dismiss(toast.id)
+                  }}
+                >
+                  <FiRotateCcw aria-hidden />
+                  {toast.action.label}
+                </button>
+              )}
             </div>
           )
         })}

@@ -66,19 +66,45 @@ export interface ContributionItem {
 
 export type CommTone = 'jade' | 'violet' | 'plum' | 'coral' | 'amber' | 'ghost'
 
+/** A single entry in the "for & against" moderation timeline. */
+export interface ModerationEntry {
+  tone: 'good' | 'neutral' | 'bad'
+  title: string
+  meta: string
+  /** when set, the meta ends with a link (e.g. "view") to the audit log */
+  metaLink?: string
+  note?: string
+}
+
 export interface MemberDetail {
   id: string
   glance: DrawerStat[]
   graphNote: string
   communities: { label: string; tone: CommTone }[]
   contributions: ContributionItem[]
-  reportsNote: string
+  moderationTimeline: ModerationEntry[]
   removeBody: string
   /** central node + surrounding bubbles for the vouch graph */
   graph: {
     center: { initials: string; tone: AvatarTone }
     nodes: VouchAvatar[]
   }
+}
+
+/* ── Verify modal (voucher review) ───────────────────────── */
+
+export interface Voucher {
+  name: string
+  initials: string
+  tone: AvatarTone
+  meta: string
+  standing: 'Trusted' | 'Review'
+}
+
+export interface VerifyReview {
+  vouchers: Voucher[]
+  flags: string[]
+  rec: { tone: 'jade' | 'amber'; text: string }
 }
 
 /* ── Verification pending badge ──────────────────────────── */
@@ -258,7 +284,7 @@ export const MEMBER_DETAIL: Record<string, MemberDetail> = {
       { label: 'Reports against', value: '0' },
     ],
     graphNote:
-      '21 members have vouched for Inês. A dense, mutual graph is a sign of a deeply-trusted member — not a metric to optimise.',
+      '21 members vouch for Inês. A dense, mutual graph is a sign of deeply-held trust — not a metric to game.',
     communities: [
       { label: 'Trans & Friends · moderator', tone: 'jade' },
       { label: 'Queer Creatives', tone: 'violet' },
@@ -270,8 +296,25 @@ export const MEMBER_DETAIL: Record<string, MemberDetail> = {
       { what: 'Vouched for Marco Vieira', when: 'May 30' },
       { what: 'Published an essay in the Magazine', when: 'Apr 18' },
     ],
-    reportsNote:
-      'No reports against this member. One report filed by them (harassment, resolved). A clean record built over three years.',
+    moderationTimeline: [
+      {
+        tone: 'good',
+        title: 'No reports against this member',
+        meta: 'In 3 years of membership',
+      },
+      {
+        tone: 'neutral',
+        title: 'Filed a report (harassment) — resolved',
+        meta: 'Jan 2026 · acted on by Júlia S. · ',
+        metaLink: 'view',
+        note: '"Reported misgendering in a thread; the other member was warned."',
+      },
+      {
+        tone: 'good',
+        title: 'Verified identity',
+        meta: 'Mar 2023 · 2 vouches confirmed',
+      },
+    ],
     removeBody:
       "This ends Inês Martins's membership, hides their content, and notifies them with your reason and the right to appeal. Their vouches for others stay valid. This is logged in the audit trail under your name.",
     graph: {
@@ -315,7 +358,18 @@ export function detailFor(member: AdminMember): MemberDetail {
       { what: 'Joined QueerPulse', when: 'this year' },
       { what: 'Posted in a community', when: 'recently' },
     ],
-    reportsNote: 'No reports against this member.',
+    moderationTimeline: [
+      {
+        tone: 'good',
+        title: 'No reports against this member',
+        meta: 'A clean record so far',
+      },
+      {
+        tone: 'good',
+        title: 'Verified identity',
+        meta: `${member.newThisWeek ? 'This month' : 'On joining'} · vouches confirmed`,
+      },
+    ],
     removeBody: `This ends ${member.name}'s membership, hides their content, and notifies them with your reason and the right to appeal. Their vouches for others stay valid. This is logged in the audit trail under your name.`,
     graph: {
       center: { initials: member.initials, tone: member.tone },
@@ -324,4 +378,85 @@ export function detailFor(member: AdminMember): MemberDetail {
         : [{ initials: '?', tone: 'anon' }],
     },
   }
+}
+
+/* ── Identity & privacy (sealed-lock card copy) ──────────── */
+
+export const SEALED_IDENTITY = {
+  title: 'Legacy identity is sealed',
+  body: 'Any prior name is encrypted and shown to no one — not in reports, not here, not to admins. Only the member controls their chosen name.',
+}
+
+/* ── Verify modal review data (keyed by queue id) ────────── */
+
+export const VERIFY_REVIEW: Record<string, VerifyReview> = {
+  marco: {
+    vouchers: [
+      {
+        name: 'Inês Martins',
+        initials: 'IM',
+        tone: 'jade',
+        meta: 'Moderator · 21 vouches · clean record',
+        standing: 'Trusted',
+      },
+      {
+        name: 'Sofia Almeida',
+        initials: 'SA',
+        tone: 'amber',
+        meta: 'Moderator · 14 vouches · clean record',
+        standing: 'Trusted',
+      },
+    ],
+    flags: [],
+    rec: {
+      tone: 'jade',
+      text: 'Both vouchers are trusted moderators with clean records. Safe to welcome in.',
+    },
+  },
+  rui: {
+    vouchers: [
+      {
+        name: 'Devon Okoro',
+        initials: 'DO',
+        tone: 'coral',
+        meta: '8 vouches · clean record',
+        standing: 'Trusted',
+      },
+    ],
+    flags: ['Only one vouch so far — your community policy suggests two before welcoming.'],
+    rec: {
+      tone: 'amber',
+      text: 'One solid vouch, but below the usual threshold. You can welcome them or wait for a second.',
+    },
+  },
+  nadia: {
+    vouchers: [
+      {
+        name: 'Kai Sousa',
+        initials: 'KS',
+        tone: 'plum',
+        meta: 'trusted member · clean record',
+        standing: 'Trusted',
+      },
+      {
+        name: 'Théo Mendes',
+        initials: 'TM',
+        tone: 'violet',
+        meta: 'has 1 open report against them',
+        standing: 'Review',
+      },
+      {
+        name: '1 more member',
+        initials: '+1',
+        tone: 'jade',
+        meta: 'standing confirmed · clean',
+        standing: 'Trusted',
+      },
+    ],
+    flags: ['One voucher (Théo M.) currently has an open report — weigh how much their vouch should count.'],
+    rec: {
+      tone: 'amber',
+      text: "Two clean vouchers and one under review. Probably fine, but worth a glance at Théo's open report first.",
+    },
+  },
 }

@@ -75,6 +75,20 @@ export interface ModReport {
   detail?: ReportDetail
 }
 
+export interface AppealSupporter {
+  initials: string
+  name: string
+  tone: 'plum' | 'coral' | 'jade' | 'violet' | 'amber'
+}
+
+export interface AppealOriginal {
+  action: string
+  by: string
+  when: string
+  reason: string
+  cat: 'danger' | 'coral' | 'jade'
+}
+
 export interface Appeal {
   id: string
   severity: Severity
@@ -82,10 +96,18 @@ export interface Appeal {
   title: string
   preview: string
   appealBy: string
-  decidedBy: string
+  /** Pronoun shown beside the member handle in the drawer. */
+  pronoun: string
+  /** Avatar tint + initials for the appealing member. */
+  initials: string
+  tone: 'plum' | 'coral' | 'jade' | 'violet' | 'amber'
   community?: string
   age: string
   status: { tone: AdminTone; label: string }
+  original: AppealOriginal
+  /** The member's own argument, shown as a coral-bordered serif quote. */
+  argument: string
+  supporters: AppealSupporter[]
 }
 
 export interface ResolvedItem {
@@ -98,7 +120,8 @@ export interface ResolvedItem {
   title: string
   preview: string
   closed: string
-  notified: string
+  /** One or two "X notified" lines, depending on who was informed. */
+  notified: string[]
   status: { tone: AdminTone; label: string }
 }
 
@@ -256,14 +279,30 @@ export const APPEALS: Appeal[] = [
     id: 'a-1',
     severity: 'medium',
     chips: [{ tone: 'amber', label: 'Appeal · restriction' }],
-    title: '"I was muted for a joke that my friends were in on"',
+    title: '"I was muted for a joke my friends were in on"',
     preview:
       'Member restricted for 7 days asks for a second look, says context was missed. Two members have written in support.',
     appealBy: '@dovgrey',
-    decidedBy: 'Inês M.',
+    pronoun: 'they/them',
+    initials: 'DG',
+    tone: 'coral',
     community: 'Lisbon Queers',
     age: '2d',
     status: { tone: 'amber', label: 'Awaiting' },
+    original: {
+      action: 'Restricted · 7 days',
+      by: 'Inês M.',
+      when: '2 days ago',
+      reason:
+        '"Hostile comment in a public thread — restricted for a week after a prior warning."',
+      cat: 'coral',
+    },
+    argument:
+      "\"That thread was three close friends roasting each other — we do it constantly. Whoever reported it doesn't know us. I get how it looked from outside, but muting me for a week feels heavy for an in-joke. Ask Théo or Sofia, they were there.\"",
+    supporters: [
+      { initials: 'TM', name: 'Théo M.', tone: 'violet' },
+      { initials: 'SA', name: 'Sofia A.', tone: 'jade' },
+    ],
   },
   {
     id: 'a-2',
@@ -273,9 +312,47 @@ export const APPEALS: Appeal[] = [
     preview:
       'Claims the person who reported them was the original aggressor. Requests the full thread be re-read.',
     appealBy: '@marsh.k',
-    decidedBy: 'Júlia S.',
+    pronoun: 'she/her',
+    initials: 'MK',
+    tone: 'jade',
+    community: 'Newly Arrived',
     age: '3d',
     status: { tone: 'jade', label: 'Awaiting' },
+    original: {
+      action: 'Removed content',
+      by: 'Júlia S.',
+      when: '3 days ago',
+      reason: '"Reported for an aggressive reply in a housing thread."',
+      cat: 'danger',
+    },
+    argument:
+      "\"The person who reported me started it — they'd been needling me for days. I snapped once and got removed; they're still posting. I'm not asking for them to be punished, just for someone to read the whole thread, not only my last message.\"",
+    supporters: [],
+  },
+  {
+    id: 'a-3',
+    severity: 'low',
+    chips: [{ tone: 'jade', label: 'Appeal · warning' }],
+    title: '"The link I shared was a mutual-aid fund, not spam"',
+    preview:
+      'Member warned for spam says the link was a member fundraiser shared on request. Offers to repost with context.',
+    appealBy: '@studio.vera',
+    pronoun: 'she/her',
+    initials: 'SV',
+    tone: 'amber',
+    community: 'Trans & Friends',
+    age: '20h',
+    status: { tone: 'jade', label: 'Awaiting' },
+    original: {
+      action: 'Warned · spam',
+      by: 'Sofia A.',
+      when: '20h ago',
+      reason: '"Posted an external link in a support thread."',
+      cat: 'coral',
+    },
+    argument:
+      "\"It was a GoFundMe for a member's top surgery, posted because someone asked how to help. I should've added context — that's on me — but calling it spam stings. Happy to repost it properly.\"",
+    supporters: [{ initials: 'KS', name: 'Kai S.', tone: 'plum' }],
   },
 ]
 
@@ -287,12 +364,12 @@ export const RESOLVED: ResolvedItem[] = [
     severity: 'low',
     chips: [{ tone: 'jade', label: 'Resolved' }],
     outcome: 'Restricted · 7 days',
-    outcomeTone: 'coral',
+    outcomeTone: 'jade',
     title: 'Harassment in Trans & Friends',
     preview:
       'Resolved by Inês M. — "Repeated DMs after a clear no. Restricted for 7 days; member notified with the policy excerpt."',
     closed: 'Closed 2 min ago',
-    notified: 'Member was notified',
+    notified: ['Member notified'],
     status: { tone: 'jade', label: 'Logged' },
   },
   {
@@ -305,20 +382,20 @@ export const RESOLVED: ResolvedItem[] = [
     preview:
       'Dismissed by Júlia S. — "Genuine community gathering, not promotion. No action; reporter thanked for caution."',
     closed: 'Closed 1h ago',
-    notified: 'Both parties notified',
+    notified: ['Member notified', 'Reporter notified'],
     status: { tone: 'jade', label: 'Logged' },
   },
   {
     id: 're-3',
     severity: 'emergency',
     chips: [{ tone: 'danger', label: 'Resolved' }],
-    outcome: 'Removed + reported to safety team',
+    outcome: 'Removed + banned · 9 min response',
     outcomeTone: 'danger',
     title: 'Doxxing with intent to intimidate',
     preview:
       'Resolved by Júlia S. — "Address + threat. Content removed within 9 minutes, account banned, member offered safety resources."',
     closed: 'Closed yesterday',
-    notified: 'Affected member supported',
+    notified: ['Affected member supported'],
     status: { tone: 'jade', label: 'Logged' },
   },
 ]

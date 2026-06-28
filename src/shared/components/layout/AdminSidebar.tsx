@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom'
-import { FiSettings } from 'react-icons/fi'
+import { FiSettings, FiArrowLeft } from 'react-icons/fi'
 import { routes } from '../../../app/routeMap'
 import { useToast } from '../feedback/useToast'
 import { AdminRoleSwitcher } from './AdminRoleSwitcher'
@@ -42,6 +42,11 @@ export function AdminSidebar() {
           </NavLink>
         ))}
       </nav>
+
+      <Link to={routes.homepage} className={styles.backToPlatform}>
+        <FiArrowLeft aria-hidden />
+        <span>Back to platform</span>
+      </Link>
 
       <button
         type="button"

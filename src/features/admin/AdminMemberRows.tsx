@@ -1,5 +1,6 @@
 import { FadeIn } from '../../shared/components/ui'
 import { AdminAvatar, AdminChip } from './ui'
+import { portrait } from './adminPeople.data'
 import type { AdminMember, FlaggedMember, VouchAvatar } from './adminMembers.data'
 import styles from './AdminMembersPage.module.css'
 
@@ -32,7 +33,7 @@ export function AdminMemberRows({
               }
             }}
           >
-            <AdminAvatar initials={m.initials} tone={m.tone} size="md" verified={m.verified} />
+            <AdminAvatar initials={m.initials} tone={m.tone} size="md" verified={m.verified} src={portrait(m.name)} />
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>
                 <span className={styles.rowName}>{m.name}</span>

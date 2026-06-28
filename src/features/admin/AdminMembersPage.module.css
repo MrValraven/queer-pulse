@@ -421,6 +421,36 @@
   border: 1px solid rgba(var(--plum-rgb), 0.08);
   border-radius: 16px;
   padding: 8px;
+  cursor: pointer;
+  transition: border-color 0.22s var(--ease), box-shadow 0.22s var(--ease);
+}
+
+.graphWrap:hover,
+.graphWrap:focus-visible {
+  border-color: rgba(var(--plum-rgb), 0.2);
+  box-shadow: 0 14px 30px -24px rgba(var(--plum-rgb), 0.5);
+  outline: none;
+}
+
+.graphNoteRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 9px;
+}
+
+.graphNoteRow .dHint {
+  margin: 0;
+  max-width: 34ch;
+}
+
+.networkWrap {
+  margin: 4px 0 14px;
+  background: rgba(var(--plum-rgb), 0.03);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-radius: 16px;
+  padding: 8px;
 }
 
 .graphSvg {
@@ -486,4 +516,285 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* ── Queue card leave + "showing 3 of 11" note ───────────── */
+.queueShowing {
+  max-width: 70ch;
+  margin: 0 0 22px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+.queueShowing strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.queueCardLeaving {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .queueCardLeaving {
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+}
+
+/* ── Modal shared bits ───────────────────────────────────── */
+.modalIntro {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.fieldLabel {
+  display: block;
+  margin: 18px 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-60);
+}
+
+.fieldLabel:first-child {
+  margin-top: 0;
+}
+
+.textarea {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border-radius: 14px;
+  background: var(--cream);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.textarea::placeholder {
+  color: var(--ink-40);
+}
+
+.textarea:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 1px;
+}
+
+.transparency {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(var(--plum-rgb), 0.05);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* Verify modal — voucher review */
+.voucherList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.voucherRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: 14px;
+  background: var(--paper);
+}
+
+.voucherTx {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.voucherName {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.voucherMeta {
+  font-size: 12px;
+  color: var(--ink-60);
+  margin-top: 2px;
+}
+
+.flagNote,
+.recNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.flagNote {
+  background: rgba(var(--amber-rgb), 0.12);
+  color: var(--amber);
+  border: 1px solid rgba(var(--amber-rgb), 0.28);
+}
+
+.flagNote svg,
+.recNote svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.recNote {
+  margin-bottom: 0;
+}
+
+.recJade {
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade);
+  border: 1px solid rgba(var(--jade-rgb), 0.28);
+}
+
+.recAmber {
+  background: rgba(var(--amber-rgb), 0.12);
+  color: var(--amber);
+  border: 1px solid rgba(var(--amber-rgb), 0.28);
+}
+
+/* Restrict modal — reason list */
+.reasonList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Drawer: moderation timeline ─────────────────────────── */
+.timeline {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 12px;
+}
+
+.timelineMarker {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: rgba(var(--plum-rgb), 0.3);
+}
+
+.tl_good .timelineMarker {
+  background: var(--jade);
+}
+
+.tl_neutral .timelineMarker {
+  background: var(--ink-40);
+}
+
+.tl_bad .timelineMarker {
+  background: var(--danger);
+}
+
+.timelineTx {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timelineTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.timelineMeta {
+  font-size: 12px;
+  color: var(--ink-60);
+}
+
+.timelineLink {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.timelineNote {
+  margin-top: 4px;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink-60);
+}
+
+.auditLink {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+  text-decoration: none;
+}
+
+.auditLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Drawer: sealed identity card ────────────────────────── */
+.sealedCard {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
+}
+
+.sealedIcon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--plum);
+  color: var(--cream);
+  font-size: 17px;
+}
+
+.sealedTitle {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sealedBody {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-60);
 }

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { FiAlertTriangle, FiFlag, FiCheck, FiClock } from 'react-icons/fi'
+import { FiAlertTriangle, FiFlag, FiCheck, FiClock, FiUsers } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { AdminChip, AdminCat } from './ui'
 import { SEVERITY, type ModReport, type Appeal, type ResolvedItem } from './adminModeration.data'
@@ -10,44 +10,69 @@ import styles from './AdminModerationPage.module.css'
 export function ReportCard({
   report,
   leaving,
+  selected,
+  onToggle,
   onOpen,
 }: {
   report: ModReport
   leaving?: boolean
+  selected?: boolean
+  onToggle?: (id: string) => void
   onOpen: (r: ModReport) => void
 }) {
   const sev = SEVERITY[report.severity]
   return (
     <article
-      className={[styles.report, leaving && styles.reportLeaving].filter(Boolean).join(' ')}
+      className={[styles.report, selected && styles.reportSelected, leaving && styles.reportLeaving]
+        .filter(Boolean)
+        .join(' ')}
       style={{ ['--stripe' as string]: sev.stripe }}
-      onClick={() => onOpen(report)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onOpen(report)
-        }
-      }}
     >
-      <div className={styles.reportMain}>
-        <div className={styles.reportTop}>
+      {onToggle && (
+        <span
+          role="checkbox"
+          aria-checked={!!selected}
+          aria-label={`Select report: ${report.title}`}
+          tabIndex={0}
+          className={[styles.selectBox, selected && styles.selectBoxOn].filter(Boolean).join(' ')}
+          onClick={(e) => {
+            e.stopPropagation()
+            onToggle(report.id)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              onToggle(report.id)
+            }
+          }}
+        >
+          {selected && <FiCheck aria-hidden />}
+        </span>
+      )}
+
+      <button
+        type="button"
+        className={[styles.reportMain, onToggle && styles.reportMainNudge]
+          .filter(Boolean)
+          .join(' ')}
+        onClick={() => onOpen(report)}
+      >
+        <span className={styles.reportTop}>
           <AdminCat tone={sev.cat}>{sev.label}</AdminCat>
           {report.chips.map((c) => (
             <AdminChip key={c.label} tone={c.tone} dot={c.dot}>
               {c.label}
             </AdminChip>
           ))}
-        </div>
+        </span>
 
-        <h3 className={styles.reportTitle}>
+        <span className={styles.reportTitle}>
           {report.title} {report.titleEm && <em>{report.titleEm}</em>}{' '}
           {report.titleAfter}
-        </h3>
-        <p className={styles.reportPreview}>{report.preview}</p>
+        </span>
+        <span className={styles.reportPreview}>{report.preview}</span>
 
-        <div className={styles.reportMeta}>
+        <span className={styles.reportMeta}>
           <span>
             Reported by <strong>{report.reporterName}</strong>
           </span>
@@ -62,8 +87,8 @@ export function ReportCard({
               <FiFlag aria-hidden /> {report.priorReports}
             </span>
           )}
-        </div>
-      </div>
+        </span>
+      </button>
 
       <div className={styles.reportSide}>
         <span className={styles.reportAge}>
@@ -75,9 +100,53 @@ export function ReportCard({
   )
 }
 
+/* ── Bulk-action bar (sticky, shown when ≥1 selected) ───────────────────── */
+
+export function BulkBar({
+  count,
+  onDismiss,
+  onSpam,
+  onReassign,
+  onCancel,
+}: {
+  count: number
+  onDismiss: () => void
+  onSpam: () => void
+  onReassign: () => void
+  onCancel: () => void
+}) {
+  return (
+    <div className={styles.bulkBar} role="region" aria-label="Bulk actions">
+      <span className={styles.bulkCount}>{count} selected</span>
+      <div className={styles.bulkActions}>
+        <Button variant="ghost" onClick={onDismiss}>
+          Dismiss
+        </Button>
+        <Button variant="ghost" onClick={onSpam}>
+          Remove as spam
+        </Button>
+        <Button variant="ghost" onClick={onReassign}>
+          Reassign…
+        </Button>
+        <Button variant="ghost-dark" onClick={onCancel}>
+          Cancel
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 /* ── Emergency band wrapper ─────────────────────────────────────────────── */
 
-export function EmergencyBand({ children, count }: { children: ReactNode; count: number }) {
+export function EmergencyBand({
+  children,
+  count,
+  sub,
+}: {
+  children: ReactNode
+  count: number
+  sub: ReactNode
+}) {
   return (
     <section className={styles.emergBand} aria-label="Safety emergencies">
       <div className={styles.emergHead}>
@@ -86,10 +155,7 @@ export function EmergencyBand({ children, count }: { children: ReactNode; count:
         </span>
         <h2 className={styles.emergTitle}>
           {count} safety {count === 1 ? 'emergency' : 'emergencies'}
-          <span className={styles.emergTitleSub}>
-            {' '}
-            · outing &amp; doxxing are treated as urgent harm. Handle these before anything else.
-          </span>
+          <span className={styles.emergTitleSub}> {sub}</span>
         </h2>
       </div>
       <div className={styles.emergList}>{children}</div>
@@ -136,12 +202,32 @@ export function CaughtUpPanel({
   )
 }
 
-/* ── Appeals list ───────────────────────────────────────────────────────── */
+/* ── Appeals list (each card opens the appeal drawer) ───────────────────── */
 
-export function AppealCard({ appeal }: { appeal: Appeal }) {
+export function AppealCard({
+  appeal,
+  leaving,
+  onOpen,
+}: {
+  appeal: Appeal
+  leaving?: boolean
+  onOpen: (a: Appeal) => void
+}) {
   const sev = SEVERITY[appeal.severity]
   return (
-    <article className={styles.report} style={{ ['--stripe' as string]: sev.stripe }}>
+    <article
+      className={[styles.report, leaving && styles.reportLeaving].filter(Boolean).join(' ')}
+      style={{ ['--stripe' as string]: sev.stripe }}
+      onClick={() => onOpen(appeal)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onOpen(appeal)
+        }
+      }}
+    >
       <div className={styles.reportMain}>
         <div className={styles.reportTop}>
           {appeal.chips.map((c) => (
@@ -162,7 +248,7 @@ export function AppealCard({ appeal }: { appeal: Appeal }) {
             ·
           </span>
           <span>
-            Decided by <strong>{appeal.decidedBy}</strong>
+            Decided by <strong>{appeal.original.by}</strong>
           </span>
           {appeal.community && (
             <>
@@ -172,12 +258,11 @@ export function AppealCard({ appeal }: { appeal: Appeal }) {
               <span>{appeal.community}</span>
             </>
           )}
-        </div>
-
-        <div className={styles.appealActions}>
-          <Button variant="ghost">Uphold decision</Button>
-          <Button variant="jade">Overturn</Button>
-          <Button variant="ghost">Request more time</Button>
+          {appeal.supporters.length > 0 && (
+            <span className={styles.supportFlag}>
+              <FiUsers aria-hidden /> {appeal.supporters.length} backing them
+            </span>
+          )}
         </div>
       </div>
 
@@ -196,7 +281,10 @@ export function AppealCard({ appeal }: { appeal: Appeal }) {
 export function ResolvedRow({ item }: { item: ResolvedItem }) {
   const sev = SEVERITY[item.severity]
   return (
-    <article className={styles.report} style={{ ['--stripe' as string]: sev.stripe }}>
+    <article
+      className={[styles.report, styles.reportStatic].join(' ')}
+      style={{ ['--stripe' as string]: sev.stripe }}
+    >
       <div className={styles.reportMain}>
         <div className={styles.reportTop}>
           {item.chips.map((c) => (
@@ -212,13 +300,12 @@ export function ResolvedRow({ item }: { item: ResolvedItem }) {
 
         <div className={styles.reportMeta}>
           <span>{item.closed}</span>
-          <span aria-hidden className={styles.metaDot}>
-            ·
-          </span>
-          <span className={styles.resolvedNotified}>
-            <FiCheck aria-hidden />
-            {item.notified}
-          </span>
+          {item.notified.map((line) => (
+            <span key={line} className={styles.resolvedNotified}>
+              <FiCheck aria-hidden />
+              {line}
+            </span>
+          ))}
         </div>
       </div>
 

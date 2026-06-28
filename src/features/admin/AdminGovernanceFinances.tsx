@@ -1,9 +1,11 @@
 import { FadeIn, Button } from '../../shared/components/ui'
 import { useCountUp } from '../../shared/hooks/useCountUp'
 import { routes } from '../../app/routeMap'
+import { AdminGovernanceChart } from './AdminGovernanceChart'
 import {
   FINANCE_STATS,
   LEDGER,
+  INCOME_LEDGER,
   PANEL_BREAKDOWN,
   type FinanceStat,
   type LedgerRow,
@@ -22,10 +24,18 @@ export function AdminGovernanceFinances() {
       </div>
 
       <FadeIn delay={120}>
-        <div className={styles.govGrid}>
-          <LedgerCard />
-          <LiveMrrPanel />
+        <AdminGovernanceChart />
+      </FadeIn>
+
+      <FadeIn delay={160}>
+        <div className={styles.ledgerGrid}>
+          <IncomeLedgerCard />
+          <SpendLedgerCard />
         </div>
+      </FadeIn>
+
+      <FadeIn delay={200}>
+        <LiveMrrPanel />
       </FadeIn>
     </>
   )
@@ -49,7 +59,29 @@ function FinanceStatCard({ stat }: { stat: FinanceStat }) {
   )
 }
 
-function LedgerCard() {
+function IncomeLedgerCard() {
+  return (
+    <div className={styles.ledgerCard}>
+      <div className={styles.cardHead}>
+        <h2 className={styles.cardTitle}>
+          Where it <em>comes from</em>
+        </h2>
+        <p className={styles.cardSub}>€34,370 / month, in from three honest places.</p>
+      </div>
+      <div className={styles.meters}>
+        {INCOME_LEDGER.map((row) => (
+          <Meter key={row.label} row={row} />
+        ))}
+      </div>
+      <p className={styles.ledgerNote}>
+        No advertising. No data sales. No venture money.{' '}
+        <strong>Two-thirds comes straight from members.</strong>
+      </p>
+    </div>
+  )
+}
+
+function SpendLedgerCard() {
   return (
     <div className={styles.ledgerCard}>
       <div className={styles.cardHead}>

@@ -1,6 +1,7 @@
 import { FiGrid, FiShield, FiUsers, FiGlobe, FiAward } from 'react-icons/fi'
 import type { IconType } from 'react-icons'
 import { routes } from '../../../app/routeMap'
+import { currentUser } from '../../../features/members/data/members'
 
 export interface AdminNavItem {
   label: string
@@ -48,9 +49,10 @@ export const STEWARDED: StewardedCommunity[] = [
   },
 ]
 
-/** The signed-in admin (prototype identity). */
+/** The signed-in admin — same identity as the logged-in member on the main platform. */
 export const ADMIN_PROFILE = {
-  initials: 'JS',
-  name: 'Júlia Saraiva',
+  initials: currentUser.initials,
+  name: `${currentUser.first} ${currentUser.last}`,
+  firstName: currentUser.first,
   role: 'Trust & Safety lead',
 }

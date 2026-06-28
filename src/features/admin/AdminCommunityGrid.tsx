@@ -1,10 +1,16 @@
 import { Button, FadeIn } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { AdminPageHeader, AdminAvatar } from './ui'
-import { COMMUNITIES, healthColor, type CommunityCard } from './adminCommunities.data'
+import { COMMUNITIES, healthColor, type Community } from './adminCommunities.data'
 import styles from './AdminCommunitiesPage.module.css'
 
-export function AdminCommunityGrid({ onOpen }: { onOpen: (slug: string) => void }) {
+export function AdminCommunityGrid({
+  onOpen,
+  onHealth,
+}: {
+  onOpen: (c: Community) => void
+  onHealth: (c: Community) => void
+}) {
   const { showToast } = useToast()
 
   return (
@@ -34,14 +40,7 @@ export function AdminCommunityGrid({ onOpen }: { onOpen: (slug: string) => void 
       <div className={styles.grid}>
         {COMMUNITIES.map((c, i) => (
           <FadeIn key={c.slug} delay={Math.min(i, 8) * 60}>
-            <HealthCard
-              community={c}
-              onClick={() =>
-                c.hasDetail
-                  ? onOpen(c.slug)
-                  : showToast(`${c.name} is healthy — nothing needs you right now`, 'info')
-              }
-            />
+            <HealthCard community={c} onOpen={() => onOpen(c)} onHealth={() => onHealth(c)} />
           </FadeIn>
         ))}
       </div>
@@ -49,20 +48,49 @@ export function AdminCommunityGrid({ onOpen }: { onOpen: (slug: string) => void 
   )
 }
 
-function HealthCard({ community: c, onClick }: { community: CommunityCard; onClick: () => void }) {
+function HealthCard({
+  community: c,
+  onOpen,
+  onHealth,
+}: {
+  community: Community
+  onOpen: () => void
+  onHealth: () => void
+}) {
   const color = healthColor(c.health)
 
   return (
-    <button type="button" className={styles.card} onClick={onClick}>
+    <button type="button" className={styles.card} onClick={onOpen}>
       <div className={styles.cardHead}>
         <AdminAvatar initials={c.initials} tone={c.tone} size="md" />
         <div className={styles.cardMeta}>
           <div className={styles.cardName}>{c.name}</div>
-          <div className={styles.cardTag}>{c.tag}</div>
+          <div className={styles.cardTag}>
+            {c.tag}
+            {c.support && <span className={styles.cardTagWarn}> · needs a hand</span>}
+          </div>
         </div>
-        <div className={styles.score} style={{ color }}>
+        <span
+          role="button"
+          tabIndex={0}
+          className={styles.scoreBtn}
+          style={{ color }}
+          aria-label={`Health ${c.health}, see breakdown`}
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onHealth()
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              e.stopPropagation()
+              onHealth()
+            }
+          }}
+        >
           {c.health}
-        </div>
+        </span>
       </div>
 
       <Sparkline points={c.spark} color={color} />
@@ -72,8 +100,8 @@ function HealthCard({ community: c, onClick }: { community: CommunityCard; onCli
         <Stat label="Activity" value={c.activity} />
         <Stat
           label="Open reports"
-          value={String(c.openReports)}
-          tone={c.openReports > 0 ? 'coral' : 'jade'}
+          value={String(c.reports)}
+          tone={c.reports > 0 ? 'coral' : 'jade'}
         />
       </div>
     </button>

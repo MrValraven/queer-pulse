@@ -1,6 +1,9 @@
-import type { AdminTone, AvatarTone } from './ui'
+import type { AvatarTone } from './ui'
 
-// ── Health colour by score ──────────────────────────────────────────────────
+export type BadgeTone = 'plum' | 'coral' | 'jade' | 'violet' | 'amber'
+export type Visibility = 'private' | 'public' | 'network'
+
+// ── Health colour, card scale ───────────────────────────────────────────────
 // ≥90 jade · ≥78 amber · else coral (accent-ink)
 export function healthColor(score: number): string {
   if (score >= 90) return 'var(--jade)'
@@ -8,39 +11,129 @@ export function healthColor(score: number): string {
   return 'var(--accent-ink)'
 }
 
-export type BadgeTone = 'plum' | 'coral' | 'jade' | 'violet' | 'amber'
+// ── Health colour, breakdown scale (per-signal) ─────────────────────────────
+// ≥85 jade · ≥70 amber · else coral
+export function breakdownColor(score: number): string {
+  if (score >= 85) return 'var(--jade)'
+  if (score >= 70) return 'var(--amber)'
+  return 'var(--accent-ink)'
+}
 
-export interface CommunityCard {
+export function breakdownNarrative(score: number): string {
+  if (score >= 90)
+    return "A strong, balanced score. Nothing here needs your attention — keep doing what works."
+  if (score >= 78) return "Healthy overall, with one or two areas worth a gentle eye."
+  return "Sentiment and safety load are dragging the score down. This is exactly where a little staff support goes a long way."
+}
+
+/** The four health signals, in bd[] order, with name + description. */
+export const BREAKDOWN_META: { name: string; desc: string }[] = [
+  { name: 'Member activity', desc: 'How alive the space feels — posts, replies, attendance' },
+  { name: 'Report resolution', desc: 'Share of reports resolved within the SLA' },
+  { name: 'Member sentiment', desc: 'Quiet pulse-check surveys and reaction signals' },
+  { name: 'Safety load', desc: 'Inverse of harm reports relative to size' },
+]
+
+export type Severity = 'danger' | 'coral' | 'amber' | 'jade'
+
+export interface QueueItem {
+  sev: Severity
+  catTone: 'danger' | 'coral' | 'amber' | 'jade' | 'violet'
+  catLabel: string
+  title: string
+  meta: string
+}
+
+export interface Moderator {
+  initials: string
+  name: string
+  pronouns: string
+  tone: AvatarTone
+  /** Sub-line, e.g. "founded the community · 21 vouches". */
+  role: string
+}
+
+export interface Community {
   slug: string
   name: string
   initials: string
   tone: BadgeTone
   tag: string
-  /** Members shown verbatim as a comma string. */
+  desc: string
   members: string
-  /** Activity descriptor, e.g. "High", "Busy". */
   activity: string
-  openReports: number
+  activePct: number
+  reports: number
+  resolvedPct: number
   health: number
-  /** 8-point sparkline series. */
+  founded: string
   spark: number[]
-  /** True for the one card that opens the inline detail view. */
-  hasDetail?: boolean
+  /** [activity, resolution, sentiment, safety] */
+  bd: [number, number, number, number]
+  join: string
+  code: string
+  vis: Visibility
+  support: boolean
+  mods: Moderator[]
+  queue: QueueItem[]
 }
 
-export const COMMUNITIES: CommunityCard[] = [
+const VIS_LABEL: Record<Visibility, string> = {
+  private: 'Private',
+  public: 'Public',
+  network: 'Network-only',
+}
+export function visLabel(v: Visibility): string {
+  return VIS_LABEL[v]
+}
+
+/** "Inês Martins" → "Inês M." */
+export function shortName(name: string): string {
+  const parts = name.trim().split(/\s+/)
+  if (parts.length < 2) return name
+  return `${parts[0]} ${parts[parts.length - 1][0]}.`
+}
+
+/** First given name only. */
+export function firstName(name: string): string {
+  return name.trim().split(/\s+/)[0]
+}
+
+export const COMMUNITIES: Community[] = [
   {
     slug: 'trans-friends',
     name: 'Trans & Friends',
     initials: 'TR',
     tone: 'jade',
     tag: 'Peer support · private',
+    desc: 'A peer-support and friendship space for trans, non-binary and questioning members.',
     members: '1,204',
     activity: 'High',
-    openReports: 1,
+    activePct: 68,
+    reports: 1,
+    resolvedPct: 100,
     health: 94,
+    founded: 'Mar 2023',
     spark: [5, 6, 5, 7, 6, 8, 7, 9],
-    hasDetail: true,
+    bd: [91, 100, 95, 90],
+    join: 'Vouch-gated · 2 vouches',
+    code: 'Platform Code of Care + 2 additions on deadnaming',
+    vis: 'private',
+    support: false,
+    mods: [
+      { initials: 'IM', name: 'Inês Martins', pronouns: 'she/her', tone: 'jade', role: 'founded the community · 21 vouches' },
+      { initials: 'SA', name: 'Sofia Almeida', pronouns: 'she/they', tone: 'amber', role: 'mutual aid lead · 14 vouches' },
+      { initials: 'DO', name: 'Devon Okoro', pronouns: 'they/them', tone: 'coral', role: '8 vouches' },
+    ],
+    queue: [
+      {
+        sev: 'coral',
+        catTone: 'coral',
+        catLabel: 'Harassment',
+        title: 'Repeated unwanted DMs after being asked to stop',
+        meta: 'Reported by Sofia D. · about a member with 4 prior reports · 3h ago',
+      },
+    ],
   },
   {
     slug: 'queer-creatives',
@@ -48,11 +141,40 @@ export const COMMUNITIES: CommunityCard[] = [
     initials: 'QC',
     tone: 'violet',
     tag: 'Artists & makers',
+    desc: 'A network for queer artists, designers and makers to share work and collaborate.',
     members: '842',
     activity: 'Active',
-    openReports: 2,
+    activePct: 54,
+    reports: 2,
+    resolvedPct: 96,
     health: 88,
+    founded: 'May 2023',
     spark: [4, 5, 6, 5, 7, 6, 8, 7],
+    bd: [82, 96, 88, 84],
+    join: 'Open · with a portfolio',
+    code: 'Platform Code of Care',
+    vis: 'network',
+    support: false,
+    mods: [
+      { initials: 'DO', name: 'Devon Okoro', pronouns: 'they/them', tone: 'coral', role: 'illustrator · 8 vouches' },
+      { initials: 'KS', name: 'Kai Sousa', pronouns: 'xe/xem', tone: 'plum', role: 'DJ · 5 vouches' },
+    ],
+    queue: [
+      {
+        sev: 'amber',
+        catTone: 'violet',
+        catLabel: 'Vouch-abuse',
+        title: 'A cluster of accounts vouching for each other',
+        meta: 'System flag · 5 accounts · 5h ago',
+      },
+      {
+        sev: 'coral',
+        catTone: 'coral',
+        catLabel: 'Harassment',
+        title: 'Misgendering after repeated correction',
+        meta: 'Reported by Devon O. · 4h ago',
+      },
+    ],
   },
   {
     slug: 'lisbon-queers',
@@ -60,11 +182,46 @@ export const COMMUNITIES: CommunityCard[] = [
     initials: 'LQ',
     tone: 'coral',
     tag: 'City-wide · public',
+    desc: 'The big public square — anyone in Lisbon can join. High traffic, and the hardest to keep warm.',
     members: '3,180',
     activity: 'Busy',
-    openReports: 6,
+    activePct: 72,
+    reports: 6,
+    resolvedPct: 84,
     health: 71,
+    founded: 'Jan 2023',
     spark: [8, 7, 9, 8, 10, 9, 11, 10],
+    bd: [88, 84, 62, 58],
+    join: 'Open · public',
+    code: 'Platform Code of Care',
+    vis: 'public',
+    support: true,
+    mods: [
+      { initials: 'TM', name: 'Théo Mendes', pronouns: 'he/him', tone: 'violet', role: 'community organiser · stretched thin' },
+    ],
+    queue: [
+      {
+        sev: 'danger',
+        catTone: 'danger',
+        catLabel: 'Outing / doxxing',
+        title: "A member's private trans status was posted publicly",
+        meta: 'Anonymous · Emergency · 26m ago',
+      },
+      {
+        sev: 'coral',
+        catTone: 'amber',
+        catLabel: 'Spam',
+        title: 'Crypto promo links across 6 threads',
+        meta: '3 reporters · 8h ago',
+      },
+      {
+        sev: 'amber',
+        catTone: 'amber',
+        catLabel: 'Spam',
+        title: 'Repost bot flooding #housing',
+        meta: 'System flag · 6h ago',
+      },
+    ],
   },
   {
     slug: 'newly-arrived',
@@ -72,11 +229,24 @@ export const COMMUNITIES: CommunityCard[] = [
     initials: 'NA',
     tone: 'jade',
     tag: 'Migrants & arrivals',
+    desc: 'A soft landing for queer people new to Lisbon — housing, paperwork, friendship.',
     members: '410',
     activity: 'Growing',
-    openReports: 0,
+    activePct: 61,
+    reports: 0,
+    resolvedPct: 100,
     health: 96,
+    founded: 'Sep 2024',
     spark: [2, 3, 3, 4, 4, 5, 6, 7],
+    bd: [78, 100, 98, 100],
+    join: 'Open · with a welcome chat',
+    code: 'Platform Code of Care',
+    vis: 'network',
+    support: false,
+    mods: [
+      { initials: 'MK', name: 'Marsh K.', pronouns: 'she/her', tone: 'jade', role: 'newcomer buddy · 6 vouches' },
+    ],
+    queue: [],
   },
   {
     slug: 'trans-healthcare',
@@ -84,11 +254,24 @@ export const COMMUNITIES: CommunityCard[] = [
     initials: 'TH',
     tone: 'jade',
     tag: 'Navigators · support',
+    desc: 'Members sharing trusted clinics, hormone resources and healthcare navigation.',
     members: '560',
     activity: 'Steady',
-    openReports: 0,
+    activePct: 49,
+    reports: 0,
+    resolvedPct: 100,
     health: 92,
+    founded: 'Feb 2024',
     spark: [3, 4, 3, 4, 4, 5, 4, 5],
+    bd: [74, 100, 96, 100],
+    join: 'Vouch-gated · 1 vouch',
+    code: 'Platform Code of Care + medical-privacy rules',
+    vis: 'private',
+    support: false,
+    mods: [
+      { initials: 'SA', name: 'Sofia Almeida', pronouns: 'she/they', tone: 'amber', role: 'nurse · 14 vouches' },
+    ],
+    queue: [],
   },
   {
     slug: 'nightlife-afters',
@@ -96,11 +279,46 @@ export const COMMUNITIES: CommunityCard[] = [
     initials: 'NF',
     tone: 'violet',
     tag: 'Events · high traffic',
+    desc: 'Where the parties, afters and DJ line-ups get shared. Fast, loud, occasionally messy.',
     members: '1,640',
     activity: 'Spiky',
-    openReports: 3,
+    activePct: 80,
+    reports: 3,
+    resolvedPct: 88,
     health: 79,
+    founded: 'Apr 2023',
     spark: [6, 9, 5, 10, 6, 11, 7, 9],
+    bd: [94, 88, 70, 66],
+    join: 'Open · public',
+    code: 'Platform Code of Care + consent guidelines',
+    vis: 'public',
+    support: true,
+    mods: [
+      { initials: 'KS', name: 'Kai Sousa', pronouns: 'xe/xem', tone: 'plum', role: 'DJ · 5 vouches' },
+    ],
+    queue: [
+      {
+        sev: 'amber',
+        catTone: 'amber',
+        catLabel: 'Spam',
+        title: 'Ticket-scalping links in event threads',
+        meta: '2 reporters · 5h ago',
+      },
+      {
+        sev: 'coral',
+        catTone: 'coral',
+        catLabel: 'Harassment',
+        title: 'Unwanted advances reported in a thread',
+        meta: 'Reported by a member · 9h ago',
+      },
+      {
+        sev: 'jade',
+        catTone: 'jade',
+        catLabel: 'Off-topic',
+        title: 'A noise complaint about an after',
+        meta: 'Reported · 12h ago',
+      },
+    ],
   },
   {
     slug: 'elders-memory',
@@ -108,11 +326,24 @@ export const COMMUNITIES: CommunityCard[] = [
     initials: 'EM',
     tone: 'amber',
     tag: 'Intergenerational',
+    desc: 'Older members and memory-keepers holding queer history and mentorship.',
     members: '220',
     activity: 'Calm',
-    openReports: 0,
+    activePct: 43,
+    reports: 0,
+    resolvedPct: 100,
     health: 98,
+    founded: 'Nov 2023',
     spark: [2, 2, 3, 2, 3, 3, 2, 3],
+    bd: [68, 100, 100, 100],
+    join: 'Vouch-gated · 1 vouch',
+    code: 'Platform Code of Care',
+    vis: 'private',
+    support: false,
+    mods: [
+      { initials: 'LB', name: 'Lurdes B.', pronouns: 'she/her', tone: 'amber', role: 'elder · memory-keeper' },
+    ],
+    queue: [],
   },
   {
     slug: 'mutual-aid-lisbon',
@@ -120,148 +351,32 @@ export const COMMUNITIES: CommunityCard[] = [
     initials: 'MA',
     tone: 'coral',
     tag: 'Solidarity & care',
+    desc: 'Practical solidarity — fund drives, surplus sharing, crisis support.',
     members: '980',
     activity: 'Active',
-    openReports: 1,
+    activePct: 58,
+    reports: 1,
+    resolvedPct: 97,
     health: 90,
+    founded: 'Jun 2023',
     spark: [5, 5, 6, 6, 5, 7, 6, 7],
+    bd: [80, 97, 92, 90],
+    join: 'Open · with a welcome chat',
+    code: 'Platform Code of Care',
+    vis: 'network',
+    support: false,
+    mods: [
+      { initials: 'SA', name: 'Sofia Almeida', pronouns: 'she/they', tone: 'amber', role: 'mutual aid lead' },
+    ],
+    queue: [
+      {
+        sev: 'jade',
+        catTone: 'jade',
+        catLabel: 'Off-topic',
+        title: 'Self-promotion in a support thread',
+        meta: 'Reported by Kai S. · 11h ago',
+      },
+    ],
   },
 ]
 
-// ── Detail view (Trans & Friends) ───────────────────────────────────────────
-
-export interface DetailStat {
-  label: string
-  value: string
-  tone?: 'jade' | 'coral' | 'plum'
-}
-
-export interface ScopedReport {
-  category: string
-  tone: 'danger' | 'coral' | 'amber' | 'jade'
-  title: string
-  meta: string
-  severity: 'high' | 'med' | 'low'
-}
-
-export interface RosterMember {
-  name: string
-  pronouns: string
-  initials: string
-  tone: AvatarTone
-  verified?: boolean
-  /** Sub-line under the name. */
-  detail: string
-  /** Right-side affordance: a role chip, or a "View" link. */
-  role?: { label: string; tone: AdminTone }
-  link?: string
-}
-
-export interface SettingRow {
-  label: string
-  detail: string
-  /** Trailing affordance: chips, a "View" button, or a single badge. */
-  chips?: { label: string; tone: AdminTone }[]
-  badge?: { label: string; tone: AdminTone }
-  action?: string
-}
-
-export interface CommunityDetail {
-  slug: string
-  name: string
-  initials: string
-  tone: BadgeTone
-  tag: string
-  description: string
-  health: number
-  healthLabel: string
-  stats: DetailStat[]
-  scoped: ScopedReport[]
-  roster: RosterMember[]
-  totalMembers: string
-  settings: SettingRow[]
-}
-
-export const TRANS_FRIENDS_DETAIL: CommunityDetail = {
-  slug: 'trans-friends',
-  name: 'Trans & Friends',
-  initials: 'TR',
-  tone: 'jade',
-  tag: 'Peer support · private',
-  description:
-    "A peer-support and friendship space for trans, non-binary and questioning members. Stewarded by 3 moderators · founded Mar 2023.",
-  health: 94,
-  healthLabel: 'thriving',
-  stats: [
-    { label: 'Members', value: '1,204', tone: 'plum' },
-    { label: 'Active this week', value: '68%', tone: 'plum' },
-    { label: 'Open reports', value: '1', tone: 'coral' },
-    { label: 'Resolved on time', value: '100%', tone: 'jade' },
-  ],
-  scoped: [
-    {
-      category: 'Harassment',
-      tone: 'coral',
-      title: "Repeated unwanted DMs after being asked to stop",
-      meta: "Reported by Sofia D. · about a member with 4 prior reports · 3h ago",
-      severity: 'high',
-    },
-  ],
-  roster: [
-    {
-      name: 'Inês Martins',
-      pronouns: 'she/her',
-      initials: 'IM',
-      tone: 'jade',
-      verified: true,
-      detail: 'Moderator · founded the community · 21 vouches',
-      role: { label: 'Moderator', tone: 'jade' },
-    },
-    {
-      name: 'Sofia Almeida',
-      pronouns: 'she/they',
-      initials: 'SA',
-      tone: 'amber',
-      verified: true,
-      detail: 'Moderator · mutual aid lead · 14 vouches',
-      role: { label: 'Moderator', tone: 'jade' },
-    },
-    {
-      name: 'Devon Okoro',
-      pronouns: 'they/them',
-      initials: 'DO',
-      tone: 'coral',
-      verified: true,
-      detail: 'Member · joined Jun 2025 · 8 vouches',
-      link: 'View',
-    },
-  ],
-  totalMembers: '1,204',
-  settings: [
-    {
-      label: 'Who can join',
-      detail: 'Vouch-gated — a member must be vouched for by 2 existing members.',
-      badge: { label: '2 vouches required', tone: 'plum' },
-    },
-    {
-      label: 'Moderators',
-      detail: 'Three community members hold moderation powers, scoped to this space only.',
-      chips: [
-        { label: 'Inês M.', tone: 'jade' },
-        { label: 'Sofia A.', tone: 'jade' },
-        { label: '+1', tone: 'jade' },
-      ],
-    },
-    {
-      label: 'Code of care',
-      detail:
-        'Uses the platform Code of Care plus 2 community-specific additions about deadnaming.',
-      action: 'View',
-    },
-    {
-      label: 'Visibility',
-      detail: 'Private — not listed publicly. Members find it through invitation only.',
-      badge: { label: 'Private', tone: 'violet' },
-    },
-  ],
-}

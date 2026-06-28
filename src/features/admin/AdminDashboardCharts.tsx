@@ -1,3 +1,4 @@
+import { SkeletonLine } from '../../shared/components/ui'
 import {
   REPORT_WEEKS,
   REPORT_SERIES,
@@ -6,9 +7,11 @@ import {
 } from './adminDashboard.data'
 import styles from './AdminDashboardPage.module.css'
 
+type ChartProps = { loading?: boolean }
+
 // ── 1 · Reports by type (stacked bar) ───────────────────────────────────────
 
-export function ReportsByTypeChart() {
+export function ReportsByTypeChart({ loading = false }: ChartProps) {
   const W = 640, H = 240, padL = 34, padB = 30, padT = 12
   const gw = W - padL - 10, gh = H - padB - padT
   const max = 14
@@ -31,6 +34,9 @@ export function ReportsByTypeChart() {
           ))}
         </div>
       </div>
+      {loading ? (
+        <SkeletonLine height={200} style={{ borderRadius: 14, marginTop: 8 }} />
+      ) : (
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Stacked weekly reports by type">
         {[0, 4, 8, 12].map((v) => {
           const y = padT + gh - (v / max) * gh
@@ -77,6 +83,7 @@ export function ReportsByTypeChart() {
           )
         })}
       </svg>
+      )}
     </figure>
   )
 }
@@ -94,7 +101,7 @@ function smoothPath(pts: [number, number][]) {
   return d
 }
 
-export function MemberGrowthChart() {
+export function MemberGrowthChart({ loading = false }: ChartProps) {
   const W = 360, H = 220, padL = 8, padR = 8, padT = 14, padB = 26
   const gw = W - padL - padR, gh = H - padT - padB
   const max = 560
@@ -111,6 +118,9 @@ export function MemberGrowthChart() {
     <figure className={styles.chartCard}>
       <div className={styles.chTitle}>Member growth</div>
       <div className={styles.chSub}>Joined vs churned · with Pride spike</div>
+      {loading ? (
+        <SkeletonLine height={180} style={{ borderRadius: 14, marginTop: 8 }} />
+      ) : (
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Member growth line chart">
         {[0, 140, 280, 420, 560].map((v) => (
           <line key={v} x1={padL} y1={py(v)} x2={W - padR} y2={py(v)} stroke="rgba(45,27,61,.07)" strokeWidth={1} />
@@ -147,6 +157,7 @@ export function MemberGrowthChart() {
           ) : null,
         )}
       </svg>
+      )}
       <div className={styles.chLegend}>
         <span className={styles.chLeg}><span className={styles.chSwDot} style={{ background: 'var(--jade)' }} />Joined</span>
         <span className={styles.chLeg}><span className={styles.chSwDot} style={{ background: 'var(--accent-ink)' }} />Churned</span>
@@ -157,7 +168,7 @@ export function MemberGrowthChart() {
 
 // ── 3 · Response time (distribution) ────────────────────────────────────────
 
-export function ResponseTimeChart() {
+export function ResponseTimeChart({ loading = false }: ChartProps) {
   const W = 360, H = 220, padL = 8, padR = 8, padT = 14, padB = 30
   const gw = W - padL - padR, gh = H - padT - padB
   const max = 80
@@ -170,6 +181,9 @@ export function ResponseTimeChart() {
     <figure className={styles.chartCard}>
       <div className={styles.chTitle}>Response time</div>
       <div className={styles.chSub}>Distribution · this month</div>
+      {loading ? (
+        <SkeletonLine height={180} style={{ borderRadius: 14, marginTop: 8 }} />
+      ) : (
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Moderation response distribution">
         {[0, 40, 80].map((v) => {
           const y = padT + gh - (v / max) * gh
@@ -204,6 +218,7 @@ export function ResponseTimeChart() {
         <line x1={slaX} y1={padT - 2} x2={slaX} y2={padT + gh} stroke="var(--danger)" strokeWidth={1.4} strokeDasharray="4 4" opacity={0.6} />
         <text x={slaX + 5} y={padT + 8} className={styles.chSla}>6h SLA</text>
       </svg>
+      )}
       <div className={styles.chLegend}>
         <span className={styles.chLeg}><span className={styles.chSw} style={{ background: 'var(--jade)' }} />Within SLA</span>
         <span className={styles.chLeg}><span className={styles.chSw} style={{ background: 'var(--amber)' }} />Over 6h</span>
