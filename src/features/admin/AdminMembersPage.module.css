@@ -1,0 +1,455 @@
+/* ── Tabs ─────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.tab {
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-60);
+  background: transparent;
+  border: 1px solid rgba(45, 27, 61, 0.12);
+  cursor: pointer;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+
+.tab:hover {
+  background: rgba(45, 27, 61, 0.05);
+  color: var(--ink);
+}
+
+.tabActive {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+
+.tabActive:hover {
+  background: var(--plum);
+  color: var(--cream);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+
+/* ── Toolbar ─────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search {
+  flex: 1 1 220px;
+  padding: 9px 14px;
+  border: 1px solid rgba(45, 27, 61, 0.18);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: inherit;
+}
+
+.search::placeholder {
+  color: var(--ink-40);
+}
+
+.search:focus {
+  outline: 2px solid var(--plum);
+  outline-offset: 1px;
+}
+
+.select {
+  padding: 9px 14px;
+  border: 1px solid rgba(45, 27, 61, 0.18);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.select:focus {
+  outline: 2px solid var(--plum);
+  outline-offset: 1px;
+}
+
+/* ── Directory table ─────────────────────────────────────── */
+.table {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 18px);
+  overflow: hidden;
+  width: 100%;
+}
+
+.tableHead {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+  padding: 10px 18px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-60);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 12px 18px;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.15s var(--ease);
+  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row:hover {
+  background: rgba(45, 27, 61, 0.04);
+}
+
+.cell {
+  font-size: 13px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.memberName {
+  font-weight: 500;
+}
+
+/* ── Status badges ───────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.stActive {
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+}
+
+.stSuspended {
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent);
+}
+
+.stBanned {
+  background: rgba(45, 27, 61, 0.14);
+  color: var(--plum);
+}
+
+.roleBadge {
+  background: rgba(45, 27, 61, 0.08);
+  color: var(--ink-60);
+}
+
+/* ── Drawer ──────────────────────────────────────────────── */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 27, 61, 0.4);
+  z-index: 100;
+  opacity: 0;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 420px;
+  height: 100vh;
+  background: var(--paper);
+  border-left: 1px solid rgba(45, 27, 61, 0.12);
+  box-shadow: -4px 0 32px rgba(45, 27, 61, 0.12);
+  z-index: 101;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scrim {
+    transition: opacity 0.2s var(--ease);
+  }
+
+  .drawer {
+    transition: transform 0.24s var(--ease);
+  }
+
+  .nodeCircle {
+    transition: opacity 0.15s var(--ease, ease);
+  }
+}
+
+.scrimOpen {
+  opacity: 1;
+}
+
+.drawerOpen {
+  transform: translateX(0);
+}
+
+/* ── Drawer body ─────────────────────────────────────────── */
+.drawerBody {
+  padding: 0 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.drawerBio {
+  font-size: 14px;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.drawerHeading {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-60);
+  margin: 0 0 8px;
+}
+
+.drawerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.drawerList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modList {
+  gap: 10px;
+}
+
+.drawerRow {
+  font-size: 13px;
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+}
+
+.drawerRowMeta {
+  color: var(--ink-60);
+}
+
+.drawerEmpty {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin: 0;
+}
+
+.modItem {
+  font-size: 13px;
+  color: var(--ink);
+  background: rgba(45, 27, 61, 0.04);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.modItemTitle {
+  font-weight: 600;
+}
+
+.modItemDate {
+  font-weight: 400;
+  color: var(--ink-60);
+}
+
+.modItemNote {
+  color: var(--ink-60);
+  margin-top: 4px;
+}
+
+/* ── Verification cards ──────────────────────────────────── */
+.vGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.vCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 18px);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vCardHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vCardName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.vCardMeta {
+  font-size: 12px;
+  color: var(--ink-60);
+  margin-top: 2px;
+}
+
+.vCardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* ── Vouch network graph ─────────────────────────────────────── */
+.graphWrap {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 18px);
+  padding: 16px;
+}
+
+.graphSvg {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  display: block;
+}
+
+.edge {
+  stroke: rgba(45, 27, 61, 0.18);
+  stroke-width: 0.6;
+}
+
+.node {
+  cursor: pointer;
+}
+
+.node:hover .nodeCircle {
+  opacity: 0.82;
+}
+
+/* Cohort tints */
+.cohort2023 {
+  fill: rgba(var(--jade-rgb), 0.22);
+  stroke: var(--jade);
+  stroke-width: 1;
+}
+
+.cohort2024 {
+  fill: rgba(45, 27, 61, 0.14);
+  stroke: var(--plum);
+  stroke-width: 1;
+}
+
+.cohort2025 {
+  fill: rgba(var(--accent-rgb), 0.14);
+  stroke: var(--accent);
+  stroke-width: 1;
+}
+
+/* Isolated nodes — coral ring override */
+.nodeIsolated {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+/* Highlighted (search match) */
+.nodeHighlight .nodeCircle {
+  stroke-width: 2.5;
+  opacity: 1;
+}
+
+.nodeLabel {
+  font-size: 3.2px;
+  fill: var(--ink);
+  pointer-events: none;
+  text-anchor: middle;
+  font-family: inherit;
+}
+
+.graphControls {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.graphSearch {
+  padding: 6px 10px;
+  border: 1px solid rgba(45, 27, 61, 0.18);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: inherit;
+  width: 140px;
+}
+
+.graphSearch:focus {
+  outline: 2px solid var(--plum);
+  outline-offset: 1px;
+}
+
+.zoomBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(45, 27, 61, 0.18);
+  background: var(--paper);
+  color: var(--ink-60);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zoomBtn:hover {
+  background: rgba(45, 27, 61, 0.06);
+  color: var(--ink);
+}
+
+.zoomBtn:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 1px;
+}

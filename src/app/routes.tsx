@@ -108,6 +108,24 @@ import { DayRateCalculatorPage } from '../features/economy/DayRateCalculatorPage
 import { RateBoardPage } from '../features/economy/RateBoardPage'
 import { SlidingScalePage } from '../features/economy/SlidingScalePage'
 import { ComparatorPage } from '../features/economy/ComparatorPage'
+import { RunningGuidePage } from '../features/resources/RunningGuidePage'
+import { AccessibleLisbonPage } from '../features/resources/AccessibleLisbonPage'
+import { PeerSupportPage } from '../features/resources/PeerSupportPage'
+import { ArtCritGuidePage } from '../features/resources/ArtCritGuidePage'
+import { SharedEquipmentPage } from '../features/resources/SharedEquipmentPage'
+import { GroupShowArchivePage } from '../features/resources/GroupShowArchivePage'
+import { FirstMeetupGuidePage } from '../features/resources/FirstMeetupGuidePage'
+import { QueerPaediatriciansPage } from '../features/resources/QueerPaediatriciansPage'
+import { SchoolFormsGuidePage } from '../features/resources/SchoolFormsGuidePage'
+import { CommunityPrivacyPage } from '../features/resources/CommunityPrivacyPage'
+import { ComingOutAtWorkPage } from '../features/resources/ComingOutAtWorkPage'
+import { LgbtqAgingGuidePage } from '../features/resources/LgbtqAgingGuidePage'
+import { OralHistoryProjectPage } from '../features/resources/OralHistoryProjectPage'
+import { IngredientsMapPage } from '../features/resources/IngredientsMapPage'
+import { QtipocOrganisationsPage } from '../features/resources/QtipocOrganisationsPage'
+import { QtipocArchivePage } from '../features/resources/QtipocArchivePage'
+import { DisabilityHealthcarePage } from '../features/resources/DisabilityHealthcarePage'
+import { SpoonTheoryPage } from '../features/resources/SpoonTheoryPage'
 import { CinemaPage } from '../features/cinema/CinemaPage'
 import { CinemaBrowsePage } from '../features/cinema/CinemaBrowsePage'
 import { CinemaMembershipPage } from '../features/cinema/CinemaMembershipPage'
@@ -225,6 +243,12 @@ import { StudioSetPage } from '../features/studio/StudioSetPage'
 import { StudioSearchPage } from '../features/studio/StudioSearchPage'
 import { StudioLibraryPage } from '../features/studio/StudioLibraryPage'
 import { StudioCheckoutPage } from '../features/studio/StudioCheckoutPage'
+import { AdminDashboardPage } from '../features/admin/AdminDashboardPage'
+import { AdminModerationPage } from '../features/admin/AdminModerationPage'
+import { AdminMembersPage } from '../features/admin/AdminMembersPage'
+import { AdminCommunitiesPage } from '../features/admin/AdminCommunitiesPage'
+import { AdminCommunityModPage } from '../features/admin/AdminCommunityModPage'
+import { ModPanelPage } from '../features/admin/ModPanelPage'
 import { KNOWN_ROUTE_SLUGS } from './routeMap'
 
 /** Top-level slugs that now have real pages — excluded from the placeholder fallback. */
@@ -490,6 +514,24 @@ export function AppRoutes() {
       <Route path="/intersectionality" element={<IntersectionalityPage />} />
       <Route path="/trans-hub" element={<TransHubPage />} />
       <Route path="/legal" element={<LegalPage />} />
+      <Route path="/resources/running-guide" element={<RunningGuidePage />} />
+      <Route path="/resources/accessible-lisbon" element={<AccessibleLisbonPage />} />
+      <Route path="/resources/peer-support" element={<PeerSupportPage />} />
+      <Route path="/resources/art-crit-guide" element={<ArtCritGuidePage />} />
+      <Route path="/resources/shared-equipment" element={<SharedEquipmentPage />} />
+      <Route path="/resources/group-show-archive" element={<GroupShowArchivePage />} />
+      <Route path="/resources/first-meetup-guide" element={<FirstMeetupGuidePage />} />
+      <Route path="/resources/queer-paediatricians" element={<QueerPaediatriciansPage />} />
+      <Route path="/resources/school-forms-guide" element={<SchoolFormsGuidePage />} />
+      <Route path="/resources/community-privacy" element={<CommunityPrivacyPage />} />
+      <Route path="/resources/coming-out-at-work" element={<ComingOutAtWorkPage />} />
+      <Route path="/resources/lgbtq-aging-guide" element={<LgbtqAgingGuidePage />} />
+      <Route path="/resources/oral-history-project" element={<OralHistoryProjectPage />} />
+      <Route path="/resources/ingredients-map" element={<IngredientsMapPage />} />
+      <Route path="/resources/qtipoc-organisations" element={<QtipocOrganisationsPage />} />
+      <Route path="/resources/qtipoc-archive" element={<QtipocArchivePage />} />
+      <Route path="/resources/disability-healthcare" element={<DisabilityHealthcarePage />} />
+      <Route path="/resources/spoon-theory" element={<SpoonTheoryPage />} />
       <Route path="/safety" element={<SafetyPage />} />
 
       {/* Auth & onboarding */}
@@ -657,6 +699,14 @@ export function AppRoutes() {
       <Route path="/vouch" element={<VouchPage />} />
       <Route path="/donate" element={<DonatePage />} />
       <Route path="/submit-story" element={<SubmitStoryPage />} />
+
+      {/* Admin & moderation panel */}
+      <Route path="/admin" element={<AdminDashboardPage />} />
+      <Route path="/admin/moderation" element={<AdminModerationPage />} />
+      <Route path="/admin/members" element={<AdminMembersPage />} />
+      <Route path="/admin/communities" element={<AdminCommunitiesPage />} />
+      <Route path="/admin/communities/:slug/mod" element={<AdminCommunityModPage />} />
+      <Route path="/mod/:slug" element={<ModPanelPage />} />
 
       {/* Legacy aliases → canonical pages */}
       <Route path="/business-directory" element={<Navigate to="/directory" replace />} />

@@ -428,6 +428,138 @@
   }
 }
 
+/* ---- Checklist (Running guide "what to bring", First-meetup) ---- */
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+.checkItem {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+}
+.checkItem:last-child {
+  border-bottom: none;
+}
+.checkIcon {
+  color: var(--jade);
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+/* ---- Feature row (privacy tiers, generic icon + text) ---- */
+.featureRow {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 18px;
+  align-items: start;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+}
+.featureRow:last-child {
+  border-bottom: none;
+}
+.featureIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-ink);
+  font-size: 20px;
+}
+
+/* ---- Spoon illustration (Spoon theory) ---- */
+.spoonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 4px;
+}
+.spoon {
+  font-size: 26px;
+  color: var(--jade);
+}
+.spoonSpent {
+  color: var(--ink-40);
+  opacity: 0.45;
+}
+
+/* ---- Neighbourhood-grouped map (Ingredients map, Accessible Lisbon) ---- */
+.mapGroup {
+  margin-bottom: 40px;
+}
+.mapGroup:last-child {
+  margin-bottom: 0;
+}
+.mapGroupLabel {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+}
+
+/* ---- Archive grid (group show archive, QTIPOC archive) ---- */
+.archiveGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.archiveCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.archiveMeta {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  letter-spacing: 0.02em;
+}
+
+/* ---- Peer-verified tag (Accessible Lisbon, paediatricians) ---- */
+.verifiedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--jade);
+  background: rgba(74, 140, 111, 0.12);
+  border-radius: 6px;
+  padding: 4px 9px;
+  align-self: flex-start;
+}
+
+/* ---- Q&A list (first-meetup FAQ, coming-out-at-work) ---- */
+.qaItem {
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+}
+.qaItem:last-child {
+  border-bottom: none;
+}
+.qaQ {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.qaA {
+  font-size: 14.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+}
+
 :global([data-theme='dark']) .card,
 :global([data-theme='dark']) .rightCard {
   border-color: rgba(247, 243, 238, 0.1);

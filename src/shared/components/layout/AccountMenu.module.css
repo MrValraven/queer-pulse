@@ -84,3 +84,47 @@
 .signOut {
   color: var(--accent-ink);
 }
+
+.itemIcon {
+  margin-right: 8px;
+  vertical-align: -2px;
+  color: var(--ink-60);
+}
+
+.roleLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-40);
+  padding: 4px 12px 2px;
+}
+
+.roleSwitch {
+  display: flex;
+  gap: 4px;
+  padding: 4px 8px 8px;
+}
+
+.roleBtn {
+  flex: 1;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(45, 27, 61, 0.12);
+  background: transparent;
+  font-size: 12px;
+  color: var(--ink-60);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background var(--dur, 0.18s) var(--ease, ease), color var(--dur, 0.18s) var(--ease, ease);
+}
+
+.roleBtn:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+
+.roleBtnActive {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}

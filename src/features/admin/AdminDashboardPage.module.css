@@ -1,0 +1,344 @@
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.statCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: 20px;
+  transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(45, 27, 61, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statCard {
+    transition: none;
+  }
+  .statCard:hover {
+    transform: none;
+  }
+}
+
+.statValue {
+  font-family: var(--serif, 'Fraunces', serif);
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.statValue em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-bottom: 4px;
+}
+
+.statSub {
+  font-size: 12px;
+  color: var(--ink-60);
+}
+
+.statSub.trendUp {
+  color: var(--jade);
+}
+
+.statSub.trendDown {
+  color: var(--jade);
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-60);
+  margin-bottom: 12px;
+  margin-top: 8px;
+}
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.quickCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+
+.quickCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(45, 27, 61, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quickCard {
+    transition: none;
+  }
+  .quickCard:hover {
+    transform: none;
+  }
+}
+
+.quickCard svg {
+  font-size: 20px;
+  color: var(--ink-60);
+}
+
+.quickLabel {
+  font-size: 13px;
+  color: var(--ink-60);
+  flex: 1;
+}
+
+.quickCount {
+  font-family: var(--serif, 'Fraunces', serif);
+  font-size: 34px;
+  font-weight: 500;
+  color: var(--accent);
+  line-height: 1;
+  margin-top: 4px;
+}
+
+/* ── Chart grid (Task 4) ──────────────────────────────────────────────── */
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 760px) {
+  .chartGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartCard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: 20px;
+}
+
+/* Make bar chart span full width across both columns */
+.chartCard:first-child {
+  grid-column: 1 / -1;
+}
+
+.chartTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+
+.chartLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-60);
+}
+
+.legendSwatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.bar {
+  cursor: default;
+}
+
+.barSeg {
+  transition: opacity 0.15s var(--ease);
+}
+
+.barSeg:hover {
+  opacity: 0.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barSeg {
+    transition: none;
+  }
+}
+
+.donutLabel {
+  font-family: var(--serif, 'Fraunces', serif);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--ink);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.donutSub {
+  font-size: 11px;
+  fill: var(--ink-60);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.donut .slice {
+  transition: opacity 0.15s var(--ease);
+  cursor: default;
+}
+
+.donut:hover .slice:not(:hover) {
+  opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .donut .slice {
+    transition: none;
+  }
+}
+
+.donutLegend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.donutLegendRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-60);
+}
+
+.donutLegendVal {
+  margin-left: auto;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.donutLegendPct {
+  color: var(--ink-40);
+  font-size: 11px;
+}
+
+/* ── Dashboard 2-col row + feed (Task 5) ────────────────────────────────── */
+
+.dashRow {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 1000px) {
+  .dashRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feed {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: 16px;
+  position: sticky;
+  top: 80px;
+}
+
+.feedHead {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.feedList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.feedItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: background 0.15s var(--ease);
+}
+
+.feedItem:hover {
+  background: rgba(45, 27, 61, 0.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feedItem {
+    transition: none;
+  }
+}
+
+.feedIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade);
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.feedText {
+  font-size: 13px;
+  color: var(--ink);
+  flex: 1;
+  line-height: 1.35;
+}
+
+.feedMeta {
+  font-size: 12px;
+  color: var(--ink-40);
+  white-space: nowrap;
+  flex-shrink: 0;
+}

@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiShield, FiTool } from 'react-icons/fi'
 import { Avatar } from '../ui'
 import { useAuth } from '../../../app/providers/authContext'
-import { routes } from '../../../app/routeMap'
+import { routes, modPanel } from '../../../app/routeMap'
+import { useAdminRole, DEMO_MOD_SLUG } from '../../../features/admin/adminRole'
 import { currentUser, fullName } from '../../../features/members/data/members'
 import styles from './AccountMenu.module.css'
 
@@ -24,6 +26,7 @@ export const ACCOUNT_GROUPS = [
   [
     { label: 'Feed', to: '/feed' },
     { label: 'Messages', to: routes.messages },
+    { label: 'Communities', to: routes.communitiesHome },
   ],
   [
     { label: 'Settings', to: routes.settings },
@@ -37,6 +40,7 @@ export const ACCOUNT_ITEMS = ACCOUNT_GROUPS.flat()
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
 export function AccountMenu({ name = fullName(currentUser), initials = currentUser.initials }: { name?: string; initials?: string }) {
   const { signOut } = useAuth()
+  const { role, setRole } = useAdminRole()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -89,6 +93,36 @@ export function AccountMenu({ name = fullName(currentUser), initials = currentUs
               ))}
             </div>
           ))}
+          {role === 'staff' && (
+            <>
+              <div className={styles.divider} />
+              <Link to={routes.admin} role="menuitem" className={styles.item} onClick={() => setOpen(false)}>
+                <FiShield aria-hidden className={styles.itemIcon} /> Admin dashboard
+              </Link>
+            </>
+          )}
+          {role === 'mod' && (
+            <>
+              <div className={styles.divider} />
+              <Link to={modPanel(DEMO_MOD_SLUG)} role="menuitem" className={styles.item} onClick={() => setOpen(false)}>
+                <FiTool aria-hidden className={styles.itemIcon} /> Mod tools
+              </Link>
+            </>
+          )}
+          <div className={styles.divider} />
+          <div className={styles.roleLabel}>Acting as</div>
+          <div className={styles.roleSwitch} role="group" aria-label="Simulated team role">
+            {(['staff', 'mod', 'member'] as const).map((r) => (
+              <button
+                key={r}
+                type="button"
+                className={[styles.roleBtn, role === r && styles.roleBtnActive].filter(Boolean).join(' ')}
+                onClick={() => setRole(r)}
+              >
+                {r === 'staff' ? 'Staff' : r === 'mod' ? 'Mod' : 'Member'}
+              </button>
+            ))}
+          </div>
           <div className={styles.divider} />
           <Link
             to="/"

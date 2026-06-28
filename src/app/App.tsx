@@ -3,6 +3,7 @@ import { ThemeProvider } from './providers/ThemeProvider'
 import { AuthProvider } from './providers/AuthProvider'
 import { I18nProvider } from './providers/I18nProvider'
 import { ToastProvider } from '../shared/components/feedback/ToastProvider'
+import { AdminRoleProvider } from './providers/AdminRoleProvider'
 import { ConnectProvider } from './providers/ConnectProvider'
 import { ProfileProvider } from './providers/ProfileProvider'
 import { ProfileThemeProvider } from './providers/ProfileThemeProvider'
@@ -23,6 +24,7 @@ export default function App() {
       <AuthProvider>
         <I18nProvider>
           <ToastProvider>
+            <AdminRoleProvider>
             <BrowserRouter>
               <ScrollManager />
               <WorkProfileProvider>
@@ -47,6 +49,7 @@ export default function App() {
               </WorkProfileProvider>
               <RoomLoader />
             </BrowserRouter>
+            </AdminRoleProvider>
           </ToastProvider>
         </I18nProvider>
       </AuthProvider>

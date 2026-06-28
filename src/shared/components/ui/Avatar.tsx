@@ -30,11 +30,27 @@ export function Avatar({
     fontSize: size * 0.34,
   }
 
+  // For Unsplash images, request a face-aware crop at 2× the render size
+  // so small avatars don't get an off-center or blurry crop.
+  const resolvedSrc = src?.includes('unsplash.com')
+    ? (() => {
+        const url = new URL(src)
+        const px = Math.round(size * 2)
+        url.searchParams.set('w', String(px))
+        url.searchParams.set('h', String(px))
+        url.searchParams.set('fit', 'crop')
+        url.searchParams.set('crop', 'faces')
+        url.searchParams.set('auto', 'format')
+        url.searchParams.set('q', '80')
+        return url.toString()
+      })()
+    : src
+
   return (
     <div className={[styles.wrap, className].filter(Boolean).join(' ')} {...rest}>
       <div className={[styles.avatar, styles[tint]].join(' ')} style={circleStyle}>
-        {src && !imgFailed ? (
-          <img src={src} alt={alt ?? initials} onError={() => setImgFailed(true)} />
+        {resolvedSrc && !imgFailed ? (
+          <img src={resolvedSrc} alt={alt ?? initials} onError={() => setImgFailed(true)} />
         ) : (
           initials
         )}

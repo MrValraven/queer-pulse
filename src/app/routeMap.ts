@@ -53,6 +53,10 @@ export function linkToPath(href: string): string {
  * Values are the exact slugs linkToPath() produces (kept in sync via slugify).
  */
 export const routes = {
+  admin: '/admin',
+  adminCommunities: '/admin/communities',
+  adminMembers: '/admin/members',
+  adminModeration: '/admin/moderation',
   about: '/about',
   accessibility: '/accessibility',
   accessibilityPreferences: '/account/accessibility-preferences',
@@ -111,6 +115,24 @@ export const routes = {
   rateBoard: '/economy/rate-board',
   slidingScaleTool: '/economy/sliding-scale',
   comparatorTool: '/economy/freelance-vs-salaried',
+  runningGuide: '/resources/running-guide',
+  accessibleLisbon: '/resources/accessible-lisbon',
+  peerSupport: '/resources/peer-support',
+  artCritGuide: '/resources/art-crit-guide',
+  sharedEquipment: '/resources/shared-equipment',
+  groupShowArchive: '/resources/group-show-archive',
+  firstMeetupGuide: '/resources/first-meetup-guide',
+  queerPaediatricians: '/resources/queer-paediatricians',
+  schoolFormsGuide: '/resources/school-forms-guide',
+  communityPrivacy: '/resources/community-privacy',
+  comingOutAtWork: '/resources/coming-out-at-work',
+  lgbtqAgingGuide: '/resources/lgbtq-aging-guide',
+  oralHistoryProject: '/resources/oral-history-project',
+  ingredientsMap: '/resources/ingredients-map',
+  qtipocOrganisations: '/resources/qtipoc-organisations',
+  qtipocArchive: '/resources/qtipoc-archive',
+  disabilityHealthcare: '/resources/disability-healthcare',
+  spoonTheory: '/resources/spoon-theory',
   editProfile: '/account/edit-profile',
   emergency: '/emergency',
   employerReviews: '/employer-reviews',
@@ -121,6 +143,7 @@ export const routes = {
   forOrganisations: '/for-organisations',
   forum: '/forum',
   gathering: '/gathering',
+  gatherings: '/gatherings',
   gatheringCancelled: '/gathering-cancelled',
   gatheringDashboard: '/gathering-dashboard',
   gatheringRecap: '/gathering-recap',
@@ -265,6 +288,11 @@ export const routes = {
 } as const
 
 export type RouteKey = keyof typeof routes
+
+/** Staff drill-in to a community's mod panel. */
+export const adminCommunityMod = (slug: string) => `/admin/communities/${slug}/mod`
+/** Direct mod-panel access for a community moderator. */
+export const modPanel = (slug: string) => `/mod/${slug}`
 
 /** Known top-level routes that should render real (or placeholder) pages. */
 export const KNOWN_ROUTE_SLUGS: string[] = [

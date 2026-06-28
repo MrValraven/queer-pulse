@@ -1,0 +1,308 @@
+/* ── Grid ──────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+/* ── Card ──────────────────────────────────────────────────── */
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card, 18px);
+  padding: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card {
+    transition: box-shadow 0.18s var(--ease), transform 0.18s var(--ease);
+  }
+
+  .card:hover {
+    box-shadow: 0 6px 24px rgba(45, 27, 61, 0.12);
+    transform: translateY(-2px);
+  }
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+
+/* ── Card header ───────────────────────────────────────────── */
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cardMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kindBadge {
+  display: inline-block;
+  margin-top: 3px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(45, 27, 61, 0.07);
+  color: var(--ink-60);
+}
+
+/* ── Health arc ────────────────────────────────────────────── */
+.arcWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.score {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ── Stats row ─────────────────────────────────────────────── */
+.stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.statVal {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.statLabel {
+  font-size: 11px;
+  color: var(--ink-60);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.statBad {
+  color: var(--plum);
+}
+
+/* ── Card footer ───────────────────────────────────────────── */
+.cardFooter {
+  margin-top: auto;
+}
+
+/* ── Drawer + scrim ────────────────────────────────────────── */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 27, 61, 0.4);
+  z-index: 100;
+  opacity: 0;
+}
+
+.scrimOpen {
+  opacity: 1;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 440px;
+  height: 100vh;
+  background: var(--paper);
+  border-left: 1px solid rgba(45, 27, 61, 0.12);
+  box-shadow: -4px 0 32px rgba(45, 27, 61, 0.12);
+  z-index: 101;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+}
+
+.drawerOpen {
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scrim {
+    transition: opacity 0.2s var(--ease);
+  }
+
+  .drawer {
+    transition: transform 0.24s var(--ease);
+  }
+}
+
+/* ── Drawer internals ──────────────────────────────────────── */
+.drawerHeader {
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.drawerHeaderRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.drawerBody {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.drawerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drawerHeading {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-60);
+  margin: 0;
+}
+
+/* ── Factor rows ───────────────────────────────────────────── */
+.factor {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.dotGood {
+  background: var(--jade);
+}
+
+.dotWarn {
+  background: var(--accent);
+}
+
+.dotBad {
+  background: var(--plum);
+}
+
+.factorLabel {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.factorDetail {
+  color: var(--ink-60);
+}
+
+/* ── Mod roster ────────────────────────────────────────────── */
+.modRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.modName {
+  flex: 1;
+  font-weight: 500;
+}
+
+.modRole {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(45, 27, 61, 0.07);
+  color: var(--ink-60);
+}
+
+/* ── Escalations ───────────────────────────────────────────── */
+.escalation {
+  background: rgba(45, 27, 61, 0.04);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.escalationTime {
+  color: var(--ink-60);
+  font-size: 11px;
+}
+
+.emptyNote {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin: 0;
+}
+
+/* ── Close button ──────────────────────────────────────────── */
+.closeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-60);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+}
+
+.closeBtn:hover {
+  color: var(--ink);
+  background: rgba(45, 27, 61, 0.06);
+}
+
+.closeBtn:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
