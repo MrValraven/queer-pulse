@@ -6,7 +6,7 @@ import type {
 import { Link, type LinkProps } from 'react-router-dom'
 import styles from './Button.module.css'
 
-export type ButtonVariant = 'primary' | 'ghost' | 'ghost-dark' | 'jade'
+export type ButtonVariant = 'primary' | 'ghost' | 'ghost-dark' | 'jade' | 'danger'
 export type ButtonSize = 'md' | 'lg'
 
 const variantClass: Record<ButtonVariant, string> = {
@@ -14,6 +14,7 @@ const variantClass: Record<ButtonVariant, string> = {
   ghost: styles.ghost,
   'ghost-dark': styles.ghostDark,
   jade: styles.jade,
+  danger: styles.danger,
 }
 
 interface BaseProps {

@@ -81,6 +81,18 @@
   box-shadow: 0 12px 26px -10px rgba(var(--jade-rgb), 0.85);
 }
 
+/* Danger — destructive (remove, ban) */
+.danger {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: 0 8px 22px -10px rgba(var(--danger-rgb), 0.7);
+}
+.danger:hover:not(:disabled) {
+  background: #a01818;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px -10px rgba(var(--danger-rgb), 0.85);
+}
+
 :global([data-theme='dark']) .ghost {
   color: rgba(247, 243, 238, 0.75);
   border-color: rgba(247, 243, 238, 0.22);

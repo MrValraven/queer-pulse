@@ -1,124 +1,197 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AdminShell } from '../../shared/components/layout/AdminShell'
-import { EmptyState, FadeIn } from '../../shared/components/ui'
+import { FadeIn } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { REPORT_QUEUE, APPEALS, ACTION_LOG } from './adminModeration.data'
-import { ReportCard, AppealCard, ActionLogTable, ActionConfirm } from './AdminModerationCards'
+import { AdminPageHeader, AdminTabs } from './ui'
+import {
+  EMERGENCY_REPORTS,
+  OTHER_REPORTS,
+  APPEALS,
+  RESOLVED,
+  type ModReport,
+} from './adminModeration.data'
+import {
+  ReportCard,
+  EmergencyBand,
+  SectionLabel,
+  CaughtUpPanel,
+  AppealCard,
+  ResolvedRow,
+} from './AdminModerationCards'
+import { AdminReportDrawer } from './AdminReportDrawer'
 import styles from './AdminModerationPage.module.css'
 
-const TABS = [
-  { key: 'queue', label: 'Queue' },
-  { key: 'appeals', label: 'Appeals' },
-  { key: 'log', label: 'Action log' },
+type TabId = 'open' | 'appeals' | 'resolved'
+
+const FILTERS = [
+  { id: 'all', label: 'All severities' },
+  { id: 'emergencies', label: 'Emergencies' },
+  { id: 'mine', label: 'My communities' },
 ] as const
+type FilterId = (typeof FILTERS)[number]['id']
 
-type TabKey = (typeof TABS)[number]['key']
-
-const VALID_TABS = TABS.map((t) => t.key)
-
-function isValidTab(v: string | null): v is TabKey {
-  return VALID_TABS.includes(v as TabKey)
-}
+const MY_COMMUNITIES = new Set(['Queer Runners', 'Rainbow Parents'])
 
 export function AdminModerationPage() {
   const [searchParams] = useSearchParams()
-  const rawTab = searchParams.get('tab')
-  const [tab, setTab] = useState<TabKey>(isValidTab(rawTab) ? rawTab : 'queue')
-  const [queue, setQueue] = useState(REPORT_QUEUE)
-  const [appeals, setAppeals] = useState(APPEALS)
-  const [pending, setPending] = useState<{ id: string; action: string; target: string } | null>(null)
+  const deepLink = searchParams.get('tab')
+  const [tab, setTab] = useState<TabId>(
+    deepLink === 'appeals' ? 'appeals' : deepLink === 'resolved' ? 'resolved' : 'open',
+  )
+  const [filter, setFilter] = useState<FilterId>(
+    deepLink === 'emergencies' ? 'emergencies' : 'all',
+  )
+  const [open, setOpen] = useState<ModReport[]>([...EMERGENCY_REPORTS, ...OTHER_REPORTS])
+  const [leaving, setLeaving] = useState<string | null>(null)
+  const [selected, setSelected] = useState<ModReport | null>(null)
   const { showToast } = useToast()
 
-  const handleResolveReport = (id: string, action: string, target: string) => {
-    setPending({ id, action, target })
+  const handleReplay = () => {
+    setLeaving(null)
+    setOpen([...EMERGENCY_REPORTS, ...OTHER_REPORTS])
   }
 
-  const handleConfirm = (_note: string) => {
-    if (!pending) return
-    setQueue((q) => q.filter((r) => r.id !== pending.id))
-    showToast(`${pending.action} applied to ${pending.target}. Note saved.`)
-    setPending(null)
+  const matchesFilter = (r: ModReport) => {
+    if (filter === 'emergencies') return r.severity === 'emergency'
+    if (filter === 'mine') return !!r.community && MY_COMMUNITIES.has(r.community)
+    return true
   }
 
-  const handleResolveAppeal = (id: string, decision: 'uphold' | 'overturn' | 'more-time') => {
-    const labels = { uphold: 'Upheld', overturn: 'Overturned', 'more-time': 'More time requested' }
-    setAppeals((a) => a.filter((ap) => ap.id !== id))
-    showToast(`Appeal ${labels[decision].toLowerCase()}.`)
+  const visible = open.filter(matchesFilter)
+  const emergencies = visible.filter((r) => r.severity === 'emergency')
+  const others = visible.filter((r) => r.severity !== 'emergency')
+
+  const handleResolve = (id: string) => {
+    setLeaving(id)
+    window.setTimeout(() => {
+      setOpen((q) => q.filter((r) => r.id !== id))
+      setLeaving(null)
+    }, 340)
   }
+
+  const openReport = (r: ModReport) => {
+    if (!r.detail) {
+      showToast('No detailed thread for this report yet — actioning from the queue.', 'info')
+      handleResolve(r.id)
+      return
+    }
+    setSelected(r)
+  }
+
+  const renderReport = (r: ModReport, i: number) => (
+    <FadeIn key={r.id} delay={Math.min(i, 6) * 55}>
+      <ReportCard report={r} leaving={leaving === r.id} onOpen={openReport} />
+    </FadeIn>
+  )
 
   return (
-    <AdminShell title={<>Moderation</>}>
-      <div className={styles.tabs}>
-        {TABS.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            className={`${styles.tab} ${tab === key ? styles.tabActive : ''}`}
-            onClick={() => setTab(key)}
-          >
-            {label}
-            {key === 'queue' && queue.length > 0 && ` (${queue.length})`}
-            {key === 'appeals' && appeals.length > 0 && ` (${appeals.length})`}
-          </button>
-        ))}
+    <AdminShell title={<>Moderation · <em>triage</em></>}>
+      <FadeIn>
+        <AdminPageHeader
+          eyebrow="Moderation queue"
+          title={<>Two need you <em>first</em>.</>}
+          sub="Reports are ordered by who's most at risk — not by what arrived first. Outing and doxxing always rise to the top. Every action you take is recorded with a reason, and the member is told what happened and why."
+        />
+      </FadeIn>
+
+      <div className={styles.toolbar}>
+        <AdminTabs
+          tabs={[
+            { id: 'open', label: 'Open', count: 23 },
+            { id: 'appeals', label: 'Appeals', count: 4 },
+            { id: 'resolved', label: 'Resolved' },
+          ]}
+          active={tab}
+          onChange={(id) => setTab(id as TabId)}
+        />
+        {tab === 'open' && (
+          <div className={styles.filters} role="group" aria-label="Filter reports">
+            {FILTERS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                aria-pressed={filter === f.id}
+                className={[styles.filter, filter === f.id && styles.filterOn]
+                  .filter(Boolean)
+                  .join(' ')}
+                onClick={() => setFilter(f.id)}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {tab === 'queue' && (
-        <>
-          <ActionConfirm
-            open={!!pending}
-            action={pending?.action ?? ''}
-            target={pending?.target ?? ''}
-            onConfirm={handleConfirm}
-            onCancel={() => setPending(null)}
-          />
-          {queue.length === 0 ? (
-            <EmptyState
-              compact
-              title="Queue is clear"
-              description="No open reports — nice work."
-            />
+      {/* ── Open queue ───────────────────────────────────────────────── */}
+      {tab === 'open' && (
+        <div className={styles.pane}>
+          {open.length === 0 ? (
+            <FadeIn>
+              <CaughtUpPanel
+                onBack={() => showToast('Heading back to the overview.', 'info')}
+                onReplay={handleReplay}
+              />
+            </FadeIn>
           ) : (
-            <div className={styles.queueList}>
-              {queue.map((report, i) => (
-                <FadeIn key={report.id} delay={Math.min(i, 8) * 55}>
-                  <ReportCard report={report} onResolve={handleResolveReport} />
+            <>
+              {emergencies.length > 0 && (
+                <FadeIn>
+                  <EmergencyBand count={emergencies.length}>
+                    {emergencies.map((r, i) => renderReport(r, i))}
+                  </EmergencyBand>
                 </FadeIn>
-              ))}
-            </div>
+              )}
+
+              {others.length > 0 && (
+                <>
+                  <SectionLabel>Everything else</SectionLabel>
+                  <div className={styles.list}>{others.map((r, i) => renderReport(r, i))}</div>
+                </>
+              )}
+
+              {visible.length === 0 && (
+                <p className={styles.filterEmpty}>
+                  No open reports match this filter. Try “All severities”.
+                </p>
+              )}
+            </>
           )}
-        </>
+        </div>
       )}
 
+      {/* ── Appeals ──────────────────────────────────────────────────── */}
       {tab === 'appeals' && (
-        <>
-          {appeals.length === 0 ? (
-            <EmptyState
-              compact
-              title="No open appeals"
-              description="All appeals have been resolved."
-            />
-          ) : (
-            <div>
-              {appeals.map((appeal, i) => (
-                <FadeIn key={appeal.id} delay={Math.min(i, 8) * 55}>
-                  <AppealCard appeal={appeal} onResolve={handleResolveAppeal} />
-                </FadeIn>
-              ))}
-            </div>
-          )}
-        </>
+        <div className={styles.pane}>
+          {APPEALS.map((a, i) => (
+            <FadeIn key={a.id} delay={Math.min(i, 6) * 55}>
+              <AppealCard appeal={a} />
+            </FadeIn>
+          ))}
+        </div>
       )}
 
-      {tab === 'log' && (
-        <>
-          {ACTION_LOG.length === 0 ? (
-            <EmptyState compact title="No actions logged yet" description="" />
-          ) : (
-            <ActionLogTable rows={ACTION_LOG} />
-          )}
-        </>
+      {/* ── Resolved ─────────────────────────────────────────────────── */}
+      {tab === 'resolved' && (
+        <div className={styles.pane}>
+          <SectionLabel>Recently resolved</SectionLabel>
+          <div className={styles.list}>
+            {RESOLVED.map((item, i) => (
+              <FadeIn key={item.id} delay={Math.min(i, 6) * 55}>
+                <ResolvedRow item={item} />
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {selected && (
+        <AdminReportDrawer
+          report={selected}
+          onClose={() => setSelected(null)}
+          onResolve={handleResolve}
+        />
       )}
     </AdminShell>
   )

@@ -1,270 +1,230 @@
-import { useState } from 'react'
-import { FiAlertCircle, FiInfo, FiX } from 'react-icons/fi'
+import type { ReactNode } from 'react'
+import { FiAlertTriangle, FiFlag, FiCheck, FiClock } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
-import {
-  type ModReportItem,
-  type AppealItem,
-  type ActionLogRow,
-  REPORT_TYPE_LABEL,
-} from './adminModeration.data'
+import { AdminChip, AdminCat } from './ui'
+import { SEVERITY, type ModReport, type Appeal, type ResolvedItem } from './adminModeration.data'
 import styles from './AdminModerationPage.module.css'
 
-// ── ActionConfirm ────────────────────────────────────────────────────────────
+/* ── Severity-striped report card ───────────────────────────────────────── */
 
-interface ActionConfirmProps {
-  open: boolean
-  action: string
-  target: string
-  onConfirm: (note: string) => void
-  onCancel: () => void
-}
-
-export function ActionConfirm({ open, action, target, onConfirm, onCancel }: ActionConfirmProps) {
-  const [note, setNote] = useState('')
-
-  if (!open) return null
-
-  const handleConfirm = () => {
-    if (!note.trim()) return
-    onConfirm(note.trim())
-    setNote('')
-  }
-
-  const handleCancel = () => {
-    setNote('')
-    onCancel()
-  }
-
+export function ReportCard({
+  report,
+  leaving,
+  onOpen,
+}: {
+  report: ModReport
+  leaving?: boolean
+  onOpen: (r: ModReport) => void
+}) {
+  const sev = SEVERITY[report.severity]
   return (
-    <div className={styles.confirm}>
-      <div className={styles.confirmTop}>
-        <FiAlertCircle size={22} className={styles.confirmIcon} aria-hidden />
-        <div>
-          <h3 className={styles.confirmTitle}>
-            Confirm <em>{action}</em> on {target}
-          </h3>
-          <p className={styles.confirmSub}>
-            This action will be logged. Add a note explaining your decision (required).
-          </p>
+    <article
+      className={[styles.report, leaving && styles.reportLeaving].filter(Boolean).join(' ')}
+      style={{ ['--stripe' as string]: sev.stripe }}
+      onClick={() => onOpen(report)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onOpen(report)
+        }
+      }}
+    >
+      <div className={styles.reportMain}>
+        <div className={styles.reportTop}>
+          <AdminCat tone={sev.cat}>{sev.label}</AdminCat>
+          {report.chips.map((c) => (
+            <AdminChip key={c.label} tone={c.tone} dot={c.dot}>
+              {c.label}
+            </AdminChip>
+          ))}
         </div>
-      </div>
-      <textarea
-        className={styles.confirmNote}
-        placeholder="Describe why you are taking this action…"
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        rows={3}
-        required
-        aria-label="Moderator note"
-      />
-      <div className={styles.confirmActions}>
-        <Button
-          variant="jade"
-          size="md"
-          disabled={!note.trim()}
-          onClick={handleConfirm}
-        >
-          Confirm action
-        </Button>
-        <Button variant="ghost-dark" size="md" onClick={handleCancel}>
-          Cancel
-        </Button>
-      </div>
-    </div>
-  )
-}
 
-// ── ReportCard ───────────────────────────────────────────────────────────────
+        <h3 className={styles.reportTitle}>
+          {report.title} {report.titleEm && <em>{report.titleEm}</em>}{' '}
+          {report.titleAfter}
+        </h3>
+        <p className={styles.reportPreview}>{report.preview}</p>
 
-interface ReportCardProps {
-  report: ModReportItem
-  onResolve: (id: string, action: string, target: string) => void
-}
-
-export function ReportCard({ report, onResolve }: ReportCardProps) {
-  const [expanded, setExpanded] = useState(false)
-  const [showSuspend, setShowSuspend] = useState(false)
-
-  const sevClass =
-    report.severity === 'critical'
-      ? styles.sevCritical
-      : report.severity === 'high'
-        ? styles.sevHigh
-        : styles.sevMedium
-
-  const sevLabel =
-    report.severity === 'critical' ? 'Critical' : report.severity === 'high' ? 'High' : 'Medium'
-
-  const resolve = (action: string) => onResolve(report.id, action, report.reported)
-
-  return (
-    <div className={styles.reportCard}>
-      <div className={styles.cardHead}>
-        <span className={`${styles.sev} ${sevClass}`}>{sevLabel}</span>
-        <span className={styles.typeLabel}>{REPORT_TYPE_LABEL[report.type]}</span>
-        <span className={styles.cardId}>#{report.id}</span>
-      </div>
-      <blockquote className={styles.excerpt}>
-        {expanded ? report.excerpt : `${report.excerpt.slice(0, 120)}…`}
-      </blockquote>
-      <button
-        className={styles.expandBtn}
-        onClick={() => setExpanded((v) => !v)}
-        type="button"
-      >
-        {expanded ? 'Collapse' : 'Read full excerpt'}
-      </button>
-      <div className={styles.meta}>
-        <span className={styles.metaItem}>
-          Reporter: <strong>{report.reporter}</strong>
-        </span>
-        <span className={styles.metaItem}>
-          Reported: <strong>{report.reported}</strong>
-        </span>
-        {report.community && (
-          <span className={styles.metaItem}>
-            Community: <strong>{report.community}</strong>
-          </span>
-        )}
-        <span className={styles.metaItem}>{report.time}</span>
-      </div>
-      <div className={styles.actions}>
-        <Button variant="ghost" size="md" onClick={() => resolve('Warning')}>
-          Warn
-        </Button>
-        {showSuspend ? (
-          <div className={styles.suspendOpts}>
-            <span style={{ fontSize: 12, color: 'var(--ink-60)' }}>Suspend for:</span>
-            {['1 day', '7 days', '30 days'].map((d) => (
-              <Button
-                key={d}
-                variant="ghost"
-                size="md"
-                onClick={() => { setShowSuspend(false); resolve(`Suspension (${d})`) }}
-              >
-                {d}
-              </Button>
-            ))}
-            <button
-              type="button"
-              className={styles.suspendOpt}
-              aria-label="Cancel suspend"
-              onClick={() => setShowSuspend(false)}
-            >
-              <FiX size={14} aria-hidden />
-            </button>
-          </div>
-        ) : (
-          <Button variant="ghost" size="md" onClick={() => setShowSuspend(true)}>
-            Suspend
-          </Button>
-        )}
-        <Button variant="primary" size="md" onClick={() => resolve('Ban')}>
-          Ban
-        </Button>
-        <Button variant="ghost" size="md" onClick={() => resolve('Dismiss')}>
-          Dismiss
-        </Button>
-        <Button variant="ghost" size="md" onClick={() => resolve('Escalate to council')}>
-          Escalate
-        </Button>
-      </div>
-    </div>
-  )
-}
-
-// ── AppealCard ───────────────────────────────────────────────────────────────
-
-interface AppealCardProps {
-  appeal: AppealItem
-  onResolve: (id: string, decision: 'uphold' | 'overturn' | 'more-time') => void
-}
-
-export function AppealCard({ appeal, onResolve }: AppealCardProps) {
-  return (
-    <div className={styles.appealCard}>
-      <div className={styles.appealHead}>
-        <div className={styles.appealAction}>{appeal.action}</div>
-        <div className={styles.appealMeta}>
-          {appeal.date} · by {appeal.moderator}
-        </div>
-      </div>
-      <div className={styles.appealSection}>
-        <div className={styles.appealSectionLabel}>Member statement</div>
-        <p className={styles.appealText}>{appeal.statement}</p>
-      </div>
-      <div className={styles.appealSection}>
-        <div className={styles.appealSectionLabel}>Moderator note</div>
-        <p className={styles.appealText}>{appeal.modNote}</p>
-      </div>
-      {appeal.byMe && (
-        <div className={styles.byMeNotice}>
-          <FiInfo size={16} className={styles.byMeIcon} aria-hidden />
+        <div className={styles.reportMeta}>
           <span>
-            You took the original action — route this appeal to another moderator before deciding.
+            Reported by <strong>{report.reporterName}</strong>
           </span>
+          <span aria-hidden className={styles.metaDot}>
+            ·
+          </span>
+          <span>
+            About <strong>{report.reportedName}</strong>
+          </span>
+          {report.priorReports && (
+            <span className={styles.priorFlag}>
+              <FiFlag aria-hidden /> {report.priorReports}
+            </span>
+          )}
         </div>
-      )}
-      <div className={styles.actions}>
-        <Button
-          variant="ghost"
-          size="md"
-          disabled={!!appeal.byMe}
-          onClick={() => onResolve(appeal.id, 'uphold')}
-        >
-          Uphold
+      </div>
+
+      <div className={styles.reportSide}>
+        <span className={styles.reportAge}>
+          <FiClock aria-hidden /> {report.age}
+        </span>
+        <AdminChip tone={report.risk.tone}>{report.risk.label}</AdminChip>
+      </div>
+    </article>
+  )
+}
+
+/* ── Emergency band wrapper ─────────────────────────────────────────────── */
+
+export function EmergencyBand({ children, count }: { children: ReactNode; count: number }) {
+  return (
+    <section className={styles.emergBand} aria-label="Safety emergencies">
+      <div className={styles.emergHead}>
+        <span className={styles.emergIco} aria-hidden>
+          <FiAlertTriangle />
+        </span>
+        <h2 className={styles.emergTitle}>
+          {count} safety {count === 1 ? 'emergency' : 'emergencies'}
+          <span className={styles.emergTitleSub}>
+            {' '}
+            · outing &amp; doxxing are treated as urgent harm. Handle these before anything else.
+          </span>
+        </h2>
+      </div>
+      <div className={styles.emergList}>{children}</div>
+    </section>
+  )
+}
+
+export function SectionLabel({ children }: { children: ReactNode }) {
+  return <p className={styles.sectionLabel}>{children}</p>
+}
+
+/* ── Caught-up plum success panel ───────────────────────────────────────── */
+
+export function CaughtUpPanel({
+  onBack,
+  onReplay,
+}: {
+  onBack: () => void
+  onReplay: () => void
+}) {
+  return (
+    <div className={styles.caughtUp}>
+      <span className={styles.caughtIco} aria-hidden>
+        <FiCheck />
+      </span>
+      <h2 className={styles.caughtTitle}>
+        You&rsquo;re <em>caught up</em>.
+        <br />
+        Nothing needs you right now.
+      </h2>
+      <p className={styles.caughtSub}>
+        Every open report has a human decision attached to it, and every affected member has been
+        told what happened and why. Go rest — the network is safe in your hands.
+      </p>
+      <div className={styles.caughtActions}>
+        <Button variant="ghost-dark" onClick={onBack}>
+          Back to overview
         </Button>
-        <Button
-          variant="primary"
-          size="md"
-          disabled={!!appeal.byMe}
-          onClick={() => onResolve(appeal.id, 'overturn')}
-        >
-          Overturn
-        </Button>
-        <Button
-          variant="ghost"
-          size="md"
-          onClick={() => onResolve(appeal.id, 'more-time')}
-        >
-          Request more time
+        <Button variant="jade" onClick={onReplay}>
+          Replay the queue
         </Button>
       </div>
     </div>
   )
 }
 
-// ── ActionLogTable ───────────────────────────────────────────────────────────
+/* ── Appeals list ───────────────────────────────────────────────────────── */
 
-interface ActionLogTableProps {
-  rows: ActionLogRow[]
+export function AppealCard({ appeal }: { appeal: Appeal }) {
+  const sev = SEVERITY[appeal.severity]
+  return (
+    <article className={styles.report} style={{ ['--stripe' as string]: sev.stripe }}>
+      <div className={styles.reportMain}>
+        <div className={styles.reportTop}>
+          {appeal.chips.map((c) => (
+            <AdminChip key={c.label} tone={c.tone}>
+              {c.label}
+            </AdminChip>
+          ))}
+        </div>
+
+        <h3 className={styles.reportTitle}>{appeal.title}</h3>
+        <p className={styles.reportPreview}>{appeal.preview}</p>
+
+        <div className={styles.reportMeta}>
+          <span>
+            Appeal by <strong>{appeal.appealBy}</strong>
+          </span>
+          <span aria-hidden className={styles.metaDot}>
+            ·
+          </span>
+          <span>
+            Decided by <strong>{appeal.decidedBy}</strong>
+          </span>
+          {appeal.community && (
+            <>
+              <span aria-hidden className={styles.metaDot}>
+                ·
+              </span>
+              <span>{appeal.community}</span>
+            </>
+          )}
+        </div>
+
+        <div className={styles.appealActions}>
+          <Button variant="ghost">Uphold decision</Button>
+          <Button variant="jade">Overturn</Button>
+          <Button variant="ghost">Request more time</Button>
+        </div>
+      </div>
+
+      <div className={styles.reportSide}>
+        <span className={styles.reportAge}>
+          <FiClock aria-hidden /> {appeal.age}
+        </span>
+        <AdminChip tone={appeal.status.tone}>{appeal.status.label}</AdminChip>
+      </div>
+    </article>
+  )
 }
 
-export function ActionLogTable({ rows }: ActionLogTableProps) {
+/* ── Resolved list ──────────────────────────────────────────────────────── */
+
+export function ResolvedRow({ item }: { item: ResolvedItem }) {
+  const sev = SEVERITY[item.severity]
   return (
-    <table className={styles.logTable}>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Moderator</th>
-          <th>Action</th>
-          <th>Target</th>
-          <th>Community</th>
-          <th>Note</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row) => (
-          <tr key={row.id}>
-            <td className={styles.logDate}>{row.date}</td>
-            <td>{row.moderator}</td>
-            <td className={styles.logAction}>{row.action}</td>
-            <td>{row.target}</td>
-            <td>{row.community ?? '—'}</td>
-            <td className={styles.logNote}>{row.note}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <article className={styles.report} style={{ ['--stripe' as string]: sev.stripe }}>
+      <div className={styles.reportMain}>
+        <div className={styles.reportTop}>
+          {item.chips.map((c) => (
+            <AdminChip key={c.label} tone={c.tone}>
+              {c.label}
+            </AdminChip>
+          ))}
+          <AdminCat tone={item.outcomeTone}>{item.outcome}</AdminCat>
+        </div>
+
+        <h3 className={styles.reportTitle}>{item.title}</h3>
+        <p className={styles.reportPreview}>{item.preview}</p>
+
+        <div className={styles.reportMeta}>
+          <span>{item.closed}</span>
+          <span aria-hidden className={styles.metaDot}>
+            ·
+          </span>
+          <span className={styles.resolvedNotified}>
+            <FiCheck aria-hidden />
+            {item.notified}
+          </span>
+        </div>
+      </div>
+
+      <div className={styles.reportSide}>
+        <AdminChip tone={item.status.tone}>{item.status.label}</AdminChip>
+      </div>
+    </article>
   )
 }

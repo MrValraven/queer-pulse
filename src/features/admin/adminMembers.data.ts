@@ -1,310 +1,327 @@
-import type { AvatarTint } from '../../shared/components/ui'
+import type { AvatarTone } from './ui'
 
-export type MemberStatus = 'active' | 'suspended' | 'banned'
-export type MemberRole = 'member' | 'mod' | 'staff' | 'founder'
-export type Tier = 'standard' | 'solidarity' | 'sustainer'
+/* ── Types ────────────────────────────────────────────────── */
+
+export type MemberStatus = 'active' | 'review' | 'frozen' | 'limited'
+
+export interface VouchAvatar {
+  initials: string
+  tone: AvatarTone
+}
 
 export interface AdminMember {
   id: string
   name: string
   initials: string
-  tint: AvatarTint
-  role: MemberRole
-  status: MemberStatus
-  vouches: number
-  tier: Tier
-  joined: string
-  lastSeen: string
-  bio: string
-  vouchedBy: { name: string; when: string }[]
-  modHistory: { action: string; date: string; note: string }[]
+  tone: AvatarTone
+  pronoun: string
+  verified: boolean
+  /** short status chip label, e.g. "Verified", "1 open report" */
+  statusLabel: string
+  /** tone for the status chip */
+  statusTone: 'jade' | 'amber' | 'coral' | 'violet' | 'plum' | 'ghost'
+  /** used by the "New this week" filter */
+  newThisWeek: boolean
+  meta: string
+  vouchCount: number
+  /** the small stacked vouch avatars to preview on the row */
+  vouchedBy: VouchAvatar[]
 }
 
-export interface VerificationItem {
+export interface VerifyQueueItem {
   id: string
   name: string
   initials: string
-  tint: AvatarTint
-  docType: string
-  waiting: string
-  vouches: number
+  tone: AvatarTone
+  pronoun: string
+  vouchedByLine: string
+  appliedLine: string
+  /** when set, shows the amber "wait for 2?" nudge */
+  oneVouchNudge: boolean
 }
+
+export interface FlaggedMember {
+  id: string
+  handle: string
+  initials: string
+  tone: AvatarTone
+  /** left category chip, e.g. "4 reports" */
+  catLabel: string
+  catTone: 'danger' | 'amber' | 'violet' | 'coral'
+  meta: string
+  /** right status chip, e.g. "Under review" */
+  statusLabel: string
+  statusTone: 'danger' | 'amber' | 'violet' | 'coral'
+}
+
+export interface DrawerStat {
+  label: string
+  value: string
+}
+
+export interface ContributionItem {
+  what: string
+  when: string
+}
+
+export type CommTone = 'jade' | 'violet' | 'plum' | 'coral' | 'amber' | 'ghost'
+
+export interface MemberDetail {
+  id: string
+  glance: DrawerStat[]
+  graphNote: string
+  communities: { label: string; tone: CommTone }[]
+  contributions: ContributionItem[]
+  reportsNote: string
+  removeBody: string
+  /** central node + surrounding bubbles for the vouch graph */
+  graph: {
+    center: { initials: string; tone: AvatarTone }
+    nodes: VouchAvatar[]
+  }
+}
+
+/* ── Verification pending badge ──────────────────────────── */
+
+/** The tab badge reads 11 even though only 3 cards are shown (per design). */
+export const VERIFY_PENDING_COUNT = 11
+
+/* ── All members (directory) ─────────────────────────────── */
 
 export const MEMBERS: AdminMember[] = [
   {
-    id: 'm1',
-    name: 'Marta Jiménez',
-    initials: 'MJ',
-    tint: 'coral',
-    role: 'founder',
-    status: 'active',
-    vouches: 12,
-    tier: 'sustainer',
-    joined: 'Jan 2022',
-    lastSeen: 'Today',
-    bio: 'Co-founder of QueerPulse. Community organiser and activist based in Lisbon.',
-    vouchedBy: [],
-    modHistory: [],
-  },
-  {
-    id: 'm2',
-    name: 'Pedro Vargas',
-    initials: 'PV',
-    tint: 'jade',
-    role: 'staff',
-    status: 'active',
-    vouches: 8,
-    tier: 'sustainer',
-    joined: 'Mar 2022',
-    lastSeen: 'Yesterday',
-    bio: 'Platform mod and design contributor. He/him.',
-    vouchedBy: [{ name: 'Marta Jiménez', when: 'Mar 2022' }],
-    modHistory: [],
-  },
-  {
-    id: 'm3',
-    name: 'Sam Rivera',
-    initials: 'SR',
-    tint: 'plum',
-    role: 'mod',
-    status: 'active',
-    vouches: 5,
-    tier: 'solidarity',
-    joined: 'Jun 2022',
-    lastSeen: '2 days ago',
-    bio: 'Running-club mod and queer sports advocate. They/them.',
+    id: 'ines',
+    name: 'Inês Martins',
+    initials: 'IM',
+    tone: 'jade',
+    pronoun: 'she/her',
+    verified: true,
+    statusLabel: 'Verified',
+    statusTone: 'jade',
+    newThisWeek: false,
+    meta: 'Joined Mar 2023 · Founder, Maré Records · Trans & Friends · Queer Creatives',
+    vouchCount: 21,
     vouchedBy: [
-      { name: 'Marta Jiménez', when: 'Jun 2022' },
-      { name: 'Pedro Vargas', when: 'Jun 2022' },
-    ],
-    modHistory: [],
-  },
-  {
-    id: 'm4',
-    name: 'Anya Kovač',
-    initials: 'AK',
-    tint: 'coral',
-    role: 'member',
-    status: 'active',
-    vouches: 3,
-    tier: 'standard',
-    joined: 'Sep 2022',
-    lastSeen: '5 days ago',
-    bio: 'Artist and illustrator. Illustrates zines and community posters.',
-    vouchedBy: [{ name: 'Sam Rivera', when: 'Sep 2022' }],
-    modHistory: [],
-  },
-  {
-    id: 'm5',
-    name: 'Tomas Brandt',
-    initials: 'TB',
-    tint: 'jade',
-    role: 'member',
-    status: 'suspended',
-    vouches: 1,
-    tier: 'standard',
-    joined: 'Jan 2023',
-    lastSeen: '3 weeks ago',
-    bio: 'Joined via referral. Currently suspended pending review.',
-    vouchedBy: [{ name: 'Anya Kovač', when: 'Jan 2023' }],
-    modHistory: [
-      {
-        action: 'Suspended (7 days)',
-        date: 'Jun 2026',
-        note: 'Multiple reports of aggressive DMs in running club thread.',
-      },
+      { initials: 'TM', tone: 'violet' },
+      { initials: 'AL', tone: 'coral' },
+      { initials: 'DO', tone: 'coral' },
     ],
   },
   {
-    id: 'm6',
-    name: 'Léa Fontaine',
-    initials: 'LF',
-    tint: 'plum',
-    role: 'member',
-    status: 'active',
-    vouches: 4,
-    tier: 'solidarity',
-    joined: 'Apr 2023',
-    lastSeen: 'Today',
-    bio: 'Writer and zine editor. Based in Paris. She/her.',
+    id: 'devon',
+    name: 'Devon Okoro',
+    initials: 'DO',
+    tone: 'coral',
+    pronoun: 'they/them',
+    verified: true,
+    statusLabel: 'Verified',
+    statusTone: 'jade',
+    newThisWeek: false,
+    meta: 'Joined Jun 2025 · Illustrator · Queer Creatives',
+    vouchCount: 10,
     vouchedBy: [
-      { name: 'Marta Jiménez', when: 'Apr 2023' },
-      { name: 'Anya Kovač', when: 'May 2023' },
-    ],
-    modHistory: [],
-  },
-  {
-    id: 'm7',
-    name: 'Rui Nunes',
-    initials: 'RN',
-    tint: 'coral',
-    role: 'member',
-    status: 'active',
-    vouches: 0,
-    tier: 'standard',
-    joined: 'May 2024',
-    lastSeen: '2 weeks ago',
-    bio: 'New member — still building vouch connections.',
-    vouchedBy: [],
-    modHistory: [],
-  },
-  {
-    id: 'm8',
-    name: 'Zeynep Aydın',
-    initials: 'ZA',
-    tint: 'jade',
-    role: 'member',
-    status: 'banned',
-    vouches: 0,
-    tier: 'standard',
-    joined: 'Jul 2023',
-    lastSeen: '4 months ago',
-    bio: 'Account permanently banned after repeated outing violations.',
-    vouchedBy: [],
-    modHistory: [
-      {
-        action: 'Warning',
-        date: 'Sep 2023',
-        note: 'First outing report — formal warning issued.',
-      },
-      {
-        action: 'Suspended (30 days)',
-        date: 'Nov 2023',
-        note: 'Second outing incident. 30-day suspension.',
-      },
-      {
-        action: 'Banned',
-        date: 'Jan 2024',
-        note: 'Third violation — permanent ban upheld by council.',
-      },
+      { initials: 'IM', tone: 'jade' },
+      { initials: 'KS', tone: 'plum' },
     ],
   },
   {
-    id: 'm9',
-    name: 'Ingrid Halvorsen',
-    initials: 'IH',
-    tint: 'plum',
-    role: 'member',
-    status: 'active',
-    vouches: 2,
-    tier: 'solidarity',
-    joined: 'Oct 2023',
-    lastSeen: '1 week ago',
-    bio: 'Photographer and visual storyteller. She/her.',
-    vouchedBy: [{ name: 'Léa Fontaine', when: 'Oct 2023' }],
-    modHistory: [],
-  },
-  {
-    id: 'm10',
-    name: 'Dani Park',
-    initials: 'DP',
-    tint: 'coral',
-    role: 'member',
-    status: 'active',
-    vouches: 0,
-    tier: 'standard',
-    joined: 'Feb 2026',
-    lastSeen: '3 days ago',
-    bio: 'Newly joined — identity verification pending.',
-    vouchedBy: [],
-    modHistory: [],
-  },
-  {
-    id: 'm11',
-    name: 'Camille Moreau',
-    initials: 'CM',
-    tint: 'jade',
-    role: 'mod',
-    status: 'active',
-    vouches: 6,
-    tier: 'sustainer',
-    joined: 'Nov 2022',
-    lastSeen: 'Today',
-    bio: 'Mod for cinema and arts spaces. She/they. Based in Lyon.',
+    id: 'theo',
+    name: 'Théo Mendes',
+    initials: 'TM',
+    tone: 'violet',
+    pronoun: 'he/him',
+    verified: false,
+    statusLabel: '1 open report',
+    statusTone: 'coral',
+    newThisWeek: false,
+    meta: 'Joined Sep 2024 · Community organiser · Lisbon Queers',
+    vouchCount: 7,
     vouchedBy: [
-      { name: 'Marta Jiménez', when: 'Nov 2022' },
-      { name: 'Sam Rivera', when: 'Dec 2022' },
+      { initials: 'IM', tone: 'jade' },
+      { initials: 'SA', tone: 'amber' },
     ],
-    modHistory: [],
+  },
+  {
+    id: 'sofia',
+    name: 'Sofia Almeida',
+    initials: 'SA',
+    tone: 'amber',
+    pronoun: 'she/they',
+    verified: true,
+    statusLabel: 'Verified',
+    statusTone: 'jade',
+    newThisWeek: false,
+    meta: 'Joined Jan 2024 · Nurse · mutual aid lead · Trans & Friends',
+    vouchCount: 14,
+    vouchedBy: [
+      { initials: 'DO', tone: 'coral' },
+      { initials: 'TM', tone: 'violet' },
+    ],
+  },
+  {
+    id: 'kai',
+    name: 'Kai Sousa',
+    initials: 'KS',
+    tone: 'plum',
+    pronoun: 'xe/xem',
+    verified: true,
+    statusLabel: 'Verified',
+    statusTone: 'jade',
+    newThisWeek: true,
+    meta: 'Joined Nov 2025 · DJ · night-life · Queer Creatives',
+    vouchCount: 4,
+    vouchedBy: [{ initials: 'SA', tone: 'amber' }],
   },
 ]
 
-export const VERIFICATION_QUEUE: VerificationItem[] = [
+/* ── Verification pending ────────────────────────────────── */
+
+export const VERIFY_QUEUE: VerifyQueueItem[] = [
   {
-    id: 'v1',
-    name: 'Dani Park',
-    initials: 'DP',
-    tint: 'coral',
-    docType: 'Government ID',
-    waiting: '2 days',
-    vouches: 0,
+    id: 'marco',
+    name: 'Marco Vieira',
+    initials: 'MV',
+    tone: 'coral',
+    pronoun: 'he/him',
+    vouchedByLine: 'Vouched by Inês M. & Sofia A.',
+    appliedLine: 'Applied 2 days ago',
+    oneVouchNudge: false,
   },
   {
-    id: 'v2',
-    name: 'Rui Nunes',
-    initials: 'RN',
-    tint: 'coral',
-    docType: 'Community letter',
-    waiting: '5 days',
-    vouches: 0,
+    id: 'rui',
+    name: 'Rui Antunes',
+    initials: 'RA',
+    tone: 'jade',
+    pronoun: 'he/they',
+    vouchedByLine: 'Vouched by Devon O.',
+    appliedLine: 'Applied 3 days ago',
+    oneVouchNudge: true,
   },
   {
-    id: 'v3',
-    name: 'Sasha Bloom',
-    initials: 'SB',
-    tint: 'plum',
-    docType: 'Government ID',
-    waiting: '1 week',
-    vouches: 1,
+    id: 'nadia',
+    name: 'Nadia Lopes',
+    initials: 'NL',
+    tone: 'violet',
+    pronoun: 'she/her',
+    vouchedByLine: 'Vouched by Kai S., Théo M. & 1 more',
+    appliedLine: 'Applied 5 days ago',
+    oneVouchNudge: false,
   },
 ]
 
-/* ── Vouch network graph ──────────────────────────────────────── */
+/* ── Flagged ─────────────────────────────────────────────── */
 
-export interface VouchNode {
-  id: string
-  label: string
-  x: number
-  y: number
-  cohort: 2023 | 2024 | 2025
-  vouches: number
+export const FLAGGED: FlaggedMember[] = [
+  {
+    id: 'nightowl',
+    handle: '@nightowl',
+    initials: 'N',
+    tone: 'plum',
+    catLabel: '4 reports',
+    catTone: 'danger',
+    meta: 'Joined Sep 2024 · Pattern: repeated DMs after blocks',
+    statusLabel: 'Under review',
+    statusTone: 'coral',
+  },
+  {
+    id: 'anon_4471',
+    handle: '@anon_4471',
+    initials: 'A',
+    tone: 'anon',
+    catLabel: 'Doxxing report',
+    catTone: 'danger',
+    meta: 'New account · 1h old · 0 vouches · Auto-frozen pending review',
+    statusLabel: 'Frozen',
+    statusTone: 'danger',
+  },
+  {
+    id: 'coin_daily',
+    handle: '@coin_daily',
+    initials: 'CD',
+    tone: 'amber',
+    catLabel: 'Spam',
+    catTone: 'amber',
+    meta: 'Joined last week · Crypto links across 6 threads',
+    statusLabel: 'Limited',
+    statusTone: 'amber',
+  },
+]
+
+/* ── Drawer detail (keyed by member id) ──────────────────── */
+
+export const MEMBER_DETAIL: Record<string, MemberDetail> = {
+  ines: {
+    id: 'ines',
+    glance: [
+      { label: 'Vouches', value: '21' },
+      { label: 'Member for', value: '3yr' },
+      { label: 'Reports against', value: '0' },
+    ],
+    graphNote:
+      '21 members have vouched for Inês. A dense, mutual graph is a sign of a deeply-trusted member — not a metric to optimise.',
+    communities: [
+      { label: 'Trans & Friends · moderator', tone: 'jade' },
+      { label: 'Queer Creatives', tone: 'violet' },
+      { label: 'Lisbon Queers', tone: 'plum' },
+    ],
+    contributions: [
+      { what: 'Resolved a harassment report in Trans & Friends', when: '2 min ago' },
+      { what: 'Hosted "Queer founders breakfast" — 34 attended', when: 'Jun 12' },
+      { what: 'Vouched for Marco Vieira', when: 'May 30' },
+      { what: 'Published an essay in the Magazine', when: 'Apr 18' },
+    ],
+    reportsNote:
+      'No reports against this member. One report filed by them (harassment, resolved). A clean record built over three years.',
+    removeBody:
+      "This ends Inês Martins's membership, hides their content, and notifies them with your reason and the right to appeal. Their vouches for others stay valid. This is logged in the audit trail under your name.",
+    graph: {
+      center: { initials: 'IM', tone: 'jade' },
+      nodes: [
+        { initials: 'TM', tone: 'violet' },
+        { initials: 'AL', tone: 'coral' },
+        { initials: 'DO', tone: 'coral' },
+        { initials: 'SA', tone: 'amber' },
+        { initials: 'KS', tone: 'plum' },
+        { initials: 'MV', tone: 'coral' },
+        { initials: 'NL', tone: 'violet' },
+        { initials: 'RA', tone: 'jade' },
+        { initials: 'PE', tone: 'plum' },
+        { initials: 'YC', tone: 'jade' },
+        { initials: 'JO', tone: 'amber' },
+        { initials: 'BR', tone: 'violet' },
+      ],
+    },
+  },
 }
 
-export interface VouchEdge {
-  from: string
-  to: string
+/** Fallback detail so any member opens a populated drawer. */
+export function detailFor(member: AdminMember): MemberDetail {
+  const found = MEMBER_DETAIL[member.id]
+  if (found) return found
+  const first = member.name.split(' ')[0]
+  return {
+    id: member.id,
+    glance: [
+      { label: 'Vouches', value: String(member.vouchCount) },
+      { label: 'Member for', value: member.newThisWeek ? 'new' : '1yr+' },
+      { label: 'Reports against', value: '0' },
+    ],
+    graphNote: `${member.vouchCount} members have vouched for ${first}. A mutual graph is a sign of trust — not a metric to optimise.`,
+    communities: [
+      { label: 'Trans & Friends', tone: 'jade' },
+      { label: 'Queer Creatives', tone: 'violet' },
+    ],
+    contributions: [
+      { what: 'Joined QueerPulse', when: 'this year' },
+      { what: 'Posted in a community', when: 'recently' },
+    ],
+    reportsNote: 'No reports against this member.',
+    removeBody: `This ends ${member.name}'s membership, hides their content, and notifies them with your reason and the right to appeal. Their vouches for others stay valid. This is logged in the audit trail under your name.`,
+    graph: {
+      center: { initials: member.initials, tone: member.tone },
+      nodes: member.vouchedBy.length
+        ? member.vouchedBy
+        : [{ initials: '?', tone: 'anon' }],
+    },
+  }
 }
-
-/** Hand-placed nodes (x/y in 0–100 space). id overlaps MEMBERS where possible. */
-export const VOUCH_NODES: VouchNode[] = [
-  // 2023 cohort — jade tint
-  { id: 'm1', label: 'Marta J.', x: 50, y: 12, cohort: 2023, vouches: 12 },
-  { id: 'm2', label: 'Pedro V.', x: 30, y: 26, cohort: 2023, vouches: 8 },
-  { id: 'm3', label: 'Sam R.', x: 68, y: 26, cohort: 2023, vouches: 5 },
-  { id: 'm11', label: 'Camille M.', x: 50, y: 38, cohort: 2023, vouches: 6 },
-  // 2024 cohort — plum tint
-  { id: 'm4', label: 'Anya K.', x: 20, y: 48, cohort: 2024, vouches: 3 },
-  { id: 'm6', label: 'Léa F.', x: 40, y: 52, cohort: 2024, vouches: 4 },
-  { id: 'm9', label: 'Ingrid H.', x: 62, y: 50, cohort: 2024, vouches: 2 },
-  { id: 'm5', label: 'Tomas B.', x: 80, y: 42, cohort: 2024, vouches: 1 },
-  // 2025 cohort — coral tint
-  { id: 'm7', label: 'Rui N.', x: 15, y: 70, cohort: 2025, vouches: 0 },
-  { id: 'm10', label: 'Dani P.', x: 52, y: 75, cohort: 2025, vouches: 0 },
-  { id: 'n1', label: 'Sasha B.', x: 78, y: 68, cohort: 2025, vouches: 1 },
-  { id: 'n2', label: 'Alex M.', x: 34, y: 82, cohort: 2025, vouches: 0 },
-]
-
-/** Vouch edges — isolated nodes (vouches===0) have no edges. */
-export const VOUCH_EDGES: VouchEdge[] = [
-  { from: 'm1', to: 'm2' },
-  { from: 'm1', to: 'm3' },
-  { from: 'm1', to: 'm11' },
-  { from: 'm2', to: 'm4' },
-  { from: 'm2', to: 'm6' },
-  { from: 'm3', to: 'm9' },
-  { from: 'm3', to: 'm5' },
-  { from: 'm11', to: 'm6' },
-  { from: 'm4', to: 'm5' },
-  { from: 'm6', to: 'm9' },
-  { from: 'm9', to: 'n1' },
-]

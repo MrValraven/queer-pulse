@@ -248,6 +248,7 @@ import { AdminModerationPage } from '../features/admin/AdminModerationPage'
 import { AdminMembersPage } from '../features/admin/AdminMembersPage'
 import { AdminCommunitiesPage } from '../features/admin/AdminCommunitiesPage'
 import { AdminCommunityModPage } from '../features/admin/AdminCommunityModPage'
+import { AdminGovernancePage } from '../features/admin/AdminGovernancePage'
 import { ModPanelPage } from '../features/admin/ModPanelPage'
 import { KNOWN_ROUTE_SLUGS } from './routeMap'
 
@@ -705,6 +706,7 @@ export function AppRoutes() {
       <Route path="/admin/moderation" element={<AdminModerationPage />} />
       <Route path="/admin/members" element={<AdminMembersPage />} />
       <Route path="/admin/communities" element={<AdminCommunitiesPage />} />
+      <Route path="/admin/governance" element={<AdminGovernancePage />} />
       <Route path="/admin/communities/:slug/mod" element={<AdminCommunityModPage />} />
       <Route path="/mod/:slug" element={<ModPanelPage />} />
 

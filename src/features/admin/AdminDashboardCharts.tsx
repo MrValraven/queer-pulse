@@ -1,81 +1,57 @@
 import {
   REPORT_WEEKS,
+  REPORT_SERIES,
   MEMBER_GROWTH,
-  ACTION_BREAKDOWN,
+  RESPONSE_DIST,
 } from './adminDashboard.data'
 import styles from './AdminDashboardPage.module.css'
 
-export function AdminDashboardCharts() {
-  return (
-    <section className={styles.chartGrid}>
-      <StackedBarChart />
-      <GrowthLineChart />
-      <ActionDonut />
-    </section>
-  )
-}
+// ── 1 · Reports by type (stacked bar) ───────────────────────────────────────
 
-// ── StackedBarChart ──────────────────────────────────────────────────────────
-
-const BAR_COLORS = {
-  harassment: 'var(--accent)',
-  outing: 'var(--plum)',
-  spam: 'var(--jade)',
-  vouch: 'rgba(45,27,61,.4)',
-} as const
-
-const BAR_LEGEND = [
-  { key: 'harassment', label: 'Harassment' },
-  { key: 'outing', label: 'Outing' },
-  { key: 'spam', label: 'Spam' },
-  { key: 'vouch', label: 'Vouch abuse' },
-] as const
-
-function StackedBarChart() {
-  const W = 480
-  const H = 160
-  const PAD = { top: 8, right: 8, bottom: 24, left: 4 }
-  const chartH = H - PAD.top - PAD.bottom
-  const chartW = W - PAD.left - PAD.right
-
-  const totals = REPORT_WEEKS.map(
-    (w) => w.harassment + w.outing + w.spam + w.vouch,
-  )
-  const maxTotal = Math.max(...totals)
-  const barW = Math.floor(chartW / REPORT_WEEKS.length)
-  const gap = 4
+export function ReportsByTypeChart() {
+  const W = 640, H = 240, padL = 34, padB = 30, padT = 12
+  const gw = W - padL - 10, gh = H - padB - padT
+  const max = 14
+  const colW = gw / REPORT_WEEKS.length
+  const bw = colW * 0.52
 
   return (
-    <figure className={styles.chartCard} style={{ margin: 0 }}>
-      <h3 className={styles.chartTitle}>Reports by week (12 weeks)</h3>
-      <div className={styles.chartLegend}>
-        {BAR_LEGEND.map(({ key, label }) => (
-          <span key={key} className={styles.legendItem}>
-            <span
-              className={styles.legendSwatch}
-              style={{ background: BAR_COLORS[key] }}
-            />
-            {label}
-          </span>
-        ))}
+    <figure className={styles.chartCard}>
+      <div className={styles.chHead}>
+        <div>
+          <div className={styles.chTitle}>Reports by type</div>
+          <div className={styles.chSub}>Last 8 weeks · weekly volume</div>
+        </div>
+        <div className={styles.chLegend}>
+          {REPORT_SERIES.map((s) => (
+            <span key={s.key} className={styles.chLeg}>
+              <span className={styles.chSw} style={{ background: s.color }} />
+              {s.key}
+            </span>
+          ))}
+        </div>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" aria-label="Stacked bar chart of reports by week">
-        {REPORT_WEEKS.map((w, i) => {
-          const x = PAD.left + i * barW + gap / 2
-          const bw = barW - gap
-          const segments: { color: string; h: number }[] = [
-            { color: BAR_COLORS.vouch, h: (w.vouch / maxTotal) * chartH },
-            { color: BAR_COLORS.spam, h: (w.spam / maxTotal) * chartH },
-            { color: BAR_COLORS.outing, h: (w.outing / maxTotal) * chartH },
-            { color: BAR_COLORS.harassment, h: (w.harassment / maxTotal) * chartH },
-          ]
-          let yOffset = PAD.top + chartH
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Stacked weekly reports by type">
+        {[0, 4, 8, 12].map((v) => {
+          const y = padT + gh - (v / max) * gh
           return (
-            <g key={w.week} className={styles.bar} role="img" aria-label={w.week}>
-              {segments.map((seg, si) => {
-                if (seg.h === 0) return null
-                yOffset -= seg.h
-                const y = yOffset
+            <g key={v}>
+              <line x1={padL} y1={y} x2={W - 6} y2={y} stroke="rgba(45,27,61,.08)" strokeWidth={1} />
+              <text x={padL - 8} y={y + 4} textAnchor="end" className={styles.chAxisSerif}>{v}</text>
+            </g>
+          )
+        })}
+        {REPORT_WEEKS.map((wk, i) => {
+          const x = padL + (i + 0.5) * colW - bw / 2
+          let acc = 0
+          const recent = i >= REPORT_WEEKS.length - 2
+          return (
+            <g key={wk.week}>
+              {wk.values.map((val, si) => {
+                if (val === 0) return null
+                const bh = (val / max) * gh
+                const y = padT + gh - acc - bh
+                acc += bh
                 return (
                   <rect
                     key={si}
@@ -83,20 +59,19 @@ function StackedBarChart() {
                     x={x}
                     y={y}
                     width={bw}
-                    height={seg.h}
-                    fill={seg.color}
-                    rx={si === segments.length - 1 ? 3 : 0}
+                    height={bh}
+                    fill={REPORT_SERIES[si].color}
+                    style={{ animationDelay: `${i * 55 + si * 20}ms` }}
                   />
                 )
               })}
               <text
-                x={x + bw / 2}
-                y={PAD.top + chartH + 14}
+                x={padL + (i + 0.5) * colW}
+                y={H - 10}
                 textAnchor="middle"
-                fontSize={9}
-                fill="var(--ink-60)"
+                className={recent ? styles.chLabelStrong : styles.chLabel}
               >
-                {w.week}
+                {wk.week}
               </text>
             </g>
           )
@@ -106,182 +81,132 @@ function StackedBarChart() {
   )
 }
 
-// ── GrowthLineChart ──────────────────────────────────────────────────────────
+// ── 2 · Member growth (line) ────────────────────────────────────────────────
 
-function GrowthLineChart() {
-  const W = 480
-  const H = 200
-  const PAD = { top: 12, right: 12, bottom: 28, left: 8 }
-  const chartH = H - PAD.top - PAD.bottom
-  const chartW = W - PAD.left - PAD.right
+function smoothPath(pts: [number, number][]) {
+  let d = `M${pts[0][0]} ${pts[0][1]}`
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1]
+    const [x1, y1] = pts[i]
+    const mx = (x0 + x1) / 2
+    d += ` C${mx} ${y0} ${mx} ${y1} ${x1} ${y1}`
+  }
+  return d
+}
 
-  const maxJoined = Math.max(...MEMBER_GROWTH.map((p) => p.joined))
+export function MemberGrowthChart() {
+  const W = 360, H = 220, padL = 8, padR = 8, padT = 14, padB = 26
+  const gw = W - padL - padR, gh = H - padT - padB
+  const max = 560
   const n = MEMBER_GROWTH.length
-
-  const px = (i: number) => PAD.left + (i / (n - 1)) * chartW
-  const pyJoined = (v: number) => PAD.top + chartH - (v / maxJoined) * chartH
-  const pyChurned = (v: number) =>
-    PAD.top + chartH - (v / maxJoined) * chartH
-
-  const joinedPts = MEMBER_GROWTH.map((p, i) => `${px(i)},${pyJoined(p.joined)}`).join(' ')
-  const churnedPts = MEMBER_GROWTH.map((p, i) => `${px(i)},${pyChurned(p.churned)}`).join(' ')
-
-  // Area under joined line: polygon = joined polyline + bottom-right + bottom-left
-  const areaPoints =
-    MEMBER_GROWTH.map((p, i) => `${px(i)},${pyJoined(p.joined)}`).join(' ') +
-    ` ${px(n - 1)},${PAD.top + chartH} ${px(0)},${PAD.top + chartH}`
+  const px = (i: number) => padL + i * (gw / (n - 1))
+  const py = (v: number) => padT + gh - (v / max) * gh
+  const joined = MEMBER_GROWTH.map((p, i): [number, number] => [px(i), py(p.joined)])
+  const churned = MEMBER_GROWTH.map((p, i): [number, number] => [px(i), py(p.churned)])
+  const area = `${smoothPath(joined)} L${joined[n - 1][0]} ${padT + gh} L${joined[0][0]} ${padT + gh} Z`
+  const spikeIdx = MEMBER_GROWTH.findIndex((p) => p.spike)
+  const spike = joined[spikeIdx]
 
   return (
-    <figure className={styles.chartCard} style={{ margin: 0 }}>
-      <h3 className={styles.chartTitle}>Member growth (12 months)</h3>
-      <div className={styles.chartLegend}>
-        <span className={styles.legendItem}>
-          <span className={styles.legendSwatch} style={{ background: 'var(--plum)' }} />
-          Joined
-        </span>
-        <span className={styles.legendItem}>
-          <span className={styles.legendSwatch} style={{ background: 'var(--accent)' }} />
-          Churned
-        </span>
-        <span className={styles.legendItem}>
-          <span className={styles.legendSwatch} style={{ background: 'var(--plum)', transform: 'rotate(45deg)', display: 'inline-block' }} />
-          Milestone
-        </span>
-      </div>
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" aria-label="Dual line chart of member growth">
-        {/* Area fill under joined */}
-        <polygon points={areaPoints} fill="var(--plum)" opacity={0.1} />
-        {/* Churned line */}
-        <polyline
-          points={churnedPts}
-          fill="none"
-          stroke="var(--accent)"
-          strokeWidth={2}
-          strokeLinejoin="round"
-        />
-        {/* Joined line */}
-        <polyline
-          points={joinedPts}
-          fill="none"
-          stroke="var(--plum)"
-          strokeWidth={2.5}
-          strokeLinejoin="round"
-        />
-        {/* Milestone diamonds */}
-        {MEMBER_GROWTH.map((p, i) => {
-          if (!p.milestone) return null
-          const cx = px(i)
-          const cy = pyJoined(p.joined)
-          const s = 6
-          return (
-            <g key={p.month}>
-              <rect
-                x={cx - s / Math.SQRT2}
-                y={cy - s / Math.SQRT2}
-                width={s * Math.SQRT2}
-                height={s * Math.SQRT2}
-                fill="var(--plum)"
-                transform={`rotate(45 ${cx} ${cy})`}
-              />
-              <text
-                x={cx}
-                y={cy - 12}
-                textAnchor="middle"
-                fontSize={8}
-                fill="var(--plum)"
-              >
-                {p.milestone}
-              </text>
-            </g>
-          )
-        })}
-        {/* X-axis labels */}
-        {MEMBER_GROWTH.map((p, i) => (
-          <text
-            key={p.month}
-            x={px(i)}
-            y={H - 6}
-            textAnchor="middle"
-            fontSize={9}
-            fill="var(--ink-60)"
-          >
-            {p.month}
-          </text>
+    <figure className={styles.chartCard}>
+      <div className={styles.chTitle}>Member growth</div>
+      <div className={styles.chSub}>Joined vs churned · with Pride spike</div>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Member growth line chart">
+        {[0, 140, 280, 420, 560].map((v) => (
+          <line key={v} x1={padL} y1={py(v)} x2={W - padR} y2={py(v)} stroke="rgba(45,27,61,.07)" strokeWidth={1} />
         ))}
+        <path d={area} fill="rgba(var(--jade-rgb),.10)" />
+        <path
+          d={smoothPath(churned)}
+          fill="none"
+          stroke="var(--accent-ink)"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray="1 5"
+        />
+        <path
+          className={styles.lineDraw}
+          d={smoothPath(joined)}
+          pathLength={1}
+          fill="none"
+          stroke="var(--jade)"
+          strokeWidth={2.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        {spike && (
+          <>
+            <circle cx={spike[0]} cy={spike[1]} r={5} fill="var(--accent)" stroke="var(--paper)" strokeWidth={2} />
+            <text x={spike[0]} y={spike[1] - 12} textAnchor="middle" className={styles.chSpike}>Pride</text>
+          </>
+        )}
+        {MEMBER_GROWTH.map((p, i) =>
+          p.month ? (
+            <text key={i} x={px(i)} y={H - 8} textAnchor="middle" className={styles.chLabel}>{p.month}</text>
+          ) : null,
+        )}
       </svg>
+      <div className={styles.chLegend}>
+        <span className={styles.chLeg}><span className={styles.chSwDot} style={{ background: 'var(--jade)' }} />Joined</span>
+        <span className={styles.chLeg}><span className={styles.chSwDot} style={{ background: 'var(--accent-ink)' }} />Churned</span>
+      </div>
     </figure>
   )
 }
 
-// ── ActionDonut ──────────────────────────────────────────────────────────────
+// ── 3 · Response time (distribution) ────────────────────────────────────────
 
-function ActionDonut() {
-  const SIZE = 200
-  const cx = SIZE / 2
-  const cy = SIZE / 2
-  const R = 70
-  const SW = 28
-  const CIRC = 2 * Math.PI * R
-
-  const total = ACTION_BREAKDOWN.reduce((s, d) => s + d.value, 0)
-
-  // Compute stroke-dasharray offsets per slice
-  let offset = 0
-  const slices = ACTION_BREAKDOWN.map((slice) => {
-    const fraction = slice.value / total
-    const dash = fraction * CIRC
-    const gap = CIRC - dash
-    const rotation = (offset / CIRC) * 360 - 90 // start at top
-    offset += dash
-    return { ...slice, dash, gap, rotation }
-  })
+export function ResponseTimeChart() {
+  const W = 360, H = 220, padL = 8, padR = 8, padT = 14, padB = 30
+  const gw = W - padL - padR, gh = H - padT - padB
+  const max = 80
+  const slaIdx = RESPONSE_DIST.findIndex((b) => b.overSla)
+  const colW = gw / RESPONSE_DIST.length
+  const bw = colW * 0.6
+  const slaX = padL + slaIdx * colW
 
   return (
-    <figure className={styles.chartCard} style={{ margin: 0 }}>
-      <h3 className={styles.chartTitle}>Actions this quarter</h3>
-      <svg
-        viewBox={`0 0 ${SIZE} ${SIZE}`}
-        width="100%"
-        className={styles.donut}
-        aria-label="Donut chart of moderation actions"
-      >
-        {slices.map((sl) => (
-          <circle
-            key={sl.label}
-            className={styles.slice}
-            cx={cx}
-            cy={cy}
-            r={R}
-            fill="none"
-            stroke={sl.color}
-            strokeWidth={SW}
-            strokeDasharray={`${sl.dash} ${sl.gap}`}
-            strokeDashoffset={0}
-            transform={`rotate(${sl.rotation} ${cx} ${cy})`}
-          />
-        ))}
-        {/* Center total */}
-        <text x={cx} y={cy - 8} className={styles.donutLabel}>
-          {total}
-        </text>
-        <text x={cx} y={cy + 16} className={styles.donutSub}>
-          total actions
-        </text>
+    <figure className={styles.chartCard}>
+      <div className={styles.chTitle}>Response time</div>
+      <div className={styles.chSub}>Distribution · this month</div>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Moderation response distribution">
+        {[0, 40, 80].map((v) => {
+          const y = padT + gh - (v / max) * gh
+          return (
+            <g key={v}>
+              <line x1={padL} y1={y} x2={W - padR} y2={y} stroke="rgba(45,27,61,.07)" strokeWidth={1} />
+              <text x={padL} y={y - 4} className={styles.chAxisSerif}>{v}</text>
+            </g>
+          )
+        })}
+        {RESPONSE_DIST.map((b, i) => {
+          const bh = (b.value / max) * gh
+          const x = padL + (i + 0.5) * colW - bw / 2
+          const y = padT + gh - bh
+          return (
+            <g key={b.label}>
+              <rect
+                className={styles.barSeg}
+                x={x}
+                y={y}
+                width={bw}
+                height={bh}
+                rx={6}
+                fill={b.overSla ? 'var(--amber)' : 'var(--jade)'}
+                opacity={b.overSla ? 0.92 : 1}
+                style={{ animationDelay: `${i * 55}ms` }}
+              />
+              <text x={padL + (i + 0.5) * colW} y={H - 12} textAnchor="middle" className={styles.chLabel}>{b.label}</text>
+            </g>
+          )
+        })}
+        <line x1={slaX} y1={padT - 2} x2={slaX} y2={padT + gh} stroke="var(--danger)" strokeWidth={1.4} strokeDasharray="4 4" opacity={0.6} />
+        <text x={slaX + 5} y={padT + 8} className={styles.chSla}>6h SLA</text>
       </svg>
-      <div className={styles.donutLegend}>
-        {ACTION_BREAKDOWN.map((sl) => (
-          <div key={sl.label} className={styles.donutLegendRow}>
-            <span
-              className={styles.legendSwatch}
-              style={{ background: sl.color, flexShrink: 0 }}
-            />
-            <span>{sl.label}</span>
-            <span className={styles.donutLegendVal}>{sl.value}</span>
-            <span className={styles.donutLegendPct}>
-              {Math.round((sl.value / total) * 100)}%
-            </span>
-          </div>
-        ))}
+      <div className={styles.chLegend}>
+        <span className={styles.chLeg}><span className={styles.chSw} style={{ background: 'var(--jade)' }} />Within SLA</span>
+        <span className={styles.chLeg}><span className={styles.chSw} style={{ background: 'var(--amber)' }} />Over 6h</span>
       </div>
     </figure>
   )

@@ -23,6 +23,7 @@
 
   /* ── Amber (warning / medium states) ── */
   --amber:    #E8B44A;
+  --amber-rgb: 232, 180, 74;
 
   /* ── Danger (destructive actions: delete, block, report, emergency) ── */
   --danger:     #B91C1C;

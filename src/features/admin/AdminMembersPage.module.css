@@ -1,455 +1,489 @@
-/* ── Tabs ─────────────────────────────────────────────────── */
-.tabs {
+/* ── Toolbar (tabs + filter pills) ───────────────────────── */
+.toolbar {
   display: flex;
-  gap: 6px;
-  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 20px 0 24px;
 }
 
-.tab {
-  padding: 8px 18px;
-  border-radius: 999px;
-  font-size: 14px;
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filterPill {
+  padding: 7px 16px;
+  border-radius: var(--radius-pill, 999px);
+  font-family: var(--sans);
+  font-size: 13px;
   font-weight: 500;
   color: var(--ink-60);
-  background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  background: var(--paper);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   cursor: pointer;
-  transition: background 0.18s var(--ease), color 0.18s var(--ease), border-color 0.18s var(--ease);
+  transition: background 0.18s var(--ease), color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
 }
 
-.tab:hover {
-  background: rgba(45, 27, 61, 0.05);
+.filterPill:hover {
   color: var(--ink);
+  border-color: rgba(var(--plum-rgb), 0.24);
 }
 
-.tabActive {
+.filterPillOn {
   background: var(--plum);
   color: var(--cream);
   border-color: var(--plum);
 }
 
-.tabActive:hover {
-  background: var(--plum);
+.filterPillOn:hover {
   color: var(--cream);
 }
 
-.tab:focus-visible {
+.filterPill:focus-visible {
   outline: 2px solid var(--plum);
   outline-offset: 2px;
 }
 
-/* ── Toolbar ─────────────────────────────────────────────── */
-.toolbar {
+/* ── Member / flagged rows ───────────────────────────────── */
+.rows {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
-  align-items: center;
-  margin-bottom: 20px;
 }
 
-.search {
-  flex: 1 1 220px;
-  padding: 9px 14px;
-  border: 1px solid rgba(45, 27, 61, 0.18);
-  border-radius: 10px;
+.emptyLine {
   font-size: 14px;
-  color: var(--ink);
-  background: var(--paper);
-  font-family: inherit;
-}
-
-.search::placeholder {
-  color: var(--ink-40);
-}
-
-.search:focus {
-  outline: 2px solid var(--plum);
-  outline-offset: 1px;
-}
-
-.select {
-  padding: 9px 14px;
-  border: 1px solid rgba(45, 27, 61, 0.18);
-  border-radius: 10px;
-  font-size: 14px;
-  color: var(--ink);
-  background: var(--paper);
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.select:focus {
-  outline: 2px solid var(--plum);
-  outline-offset: 1px;
-}
-
-/* ── Directory table ─────────────────────────────────────── */
-.table {
-  background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: var(--radius-card, 18px);
-  overflow: hidden;
-  width: 100%;
-}
-
-.tableHead {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-  padding: 10px 18px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: var(--ink-60);
+  margin: 8px 0;
 }
 
 .row {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+  display: flex;
   align-items: center;
-  padding: 12px 18px;
-  gap: 8px;
+  gap: 16px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
   cursor: pointer;
-  transition: background 0.15s var(--ease);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
-}
-
-.row:last-child {
-  border-bottom: none;
+  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease),
+    transform 0.18s var(--ease);
 }
 
 .row:hover {
-  background: rgba(45, 27, 61, 0.04);
+  border-color: rgba(var(--plum-rgb), 0.2);
+  box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.08);
 }
 
-.cell {
-  font-size: 13px;
-  color: var(--ink);
+.row:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+
+.rowFlagged {
+  cursor: default;
+  background: rgba(var(--danger-rgb), 0.03);
+  border-color: rgba(var(--danger-rgb), 0.16);
+}
+
+.rowFlagged:hover {
+  border-color: rgba(var(--danger-rgb), 0.16);
+  box-shadow: none;
+}
+
+.rowMain {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.rowTop {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.memberName {
-  font-weight: 500;
-}
-
-/* ── Status badges ───────────────────────────────────────── */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.stActive {
-  background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade);
-}
-
-.stSuspended {
-  background: rgba(var(--accent-rgb), 0.14);
-  color: var(--accent);
-}
-
-.stBanned {
-  background: rgba(45, 27, 61, 0.14);
-  color: var(--plum);
-}
-
-.roleBadge {
-  background: rgba(45, 27, 61, 0.08);
-  color: var(--ink-60);
-}
-
-/* ── Drawer ──────────────────────────────────────────────── */
-.scrim {
-  position: fixed;
-  inset: 0;
-  background: rgba(45, 27, 61, 0.4);
-  z-index: 100;
-  opacity: 0;
-}
-
-.drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 420px;
-  height: 100vh;
-  background: var(--paper);
-  border-left: 1px solid rgba(45, 27, 61, 0.12);
-  box-shadow: -4px 0 32px rgba(45, 27, 61, 0.12);
-  z-index: 101;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .scrim {
-    transition: opacity 0.2s var(--ease);
-  }
-
-  .drawer {
-    transition: transform 0.24s var(--ease);
-  }
-
-  .nodeCircle {
-    transition: opacity 0.15s var(--ease, ease);
-  }
-}
-
-.scrimOpen {
-  opacity: 1;
-}
-
-.drawerOpen {
-  transform: translateX(0);
-}
-
-/* ── Drawer body ─────────────────────────────────────────── */
-.drawerBody {
-  padding: 0 22px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.drawerBio {
-  font-size: 14px;
-  color: var(--ink);
-  margin: 0;
-  line-height: 1.6;
-}
-
-.drawerHeading {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink-60);
-  margin: 0 0 8px;
-}
-
-.drawerActions {
-  display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.drawerList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.modList {
-  gap: 10px;
-}
-
-.drawerRow {
-  font-size: 13px;
-  color: var(--ink);
-  display: flex;
-  justify-content: space-between;
-}
-
-.drawerRowMeta {
-  color: var(--ink-60);
-}
-
-.drawerEmpty {
-  font-size: 13px;
-  color: var(--ink-60);
-  margin: 0;
-}
-
-.modItem {
-  font-size: 13px;
-  color: var(--ink);
-  background: rgba(45, 27, 61, 0.04);
-  border-radius: 10px;
-  padding: 10px 12px;
-}
-
-.modItemTitle {
+.rowName {
+  font-family: var(--serif);
+  font-size: 18px;
   font-weight: 600;
+  color: var(--ink);
 }
 
-.modItemDate {
-  font-weight: 400;
-  color: var(--ink-60);
-}
-
-.modItemNote {
-  color: var(--ink-60);
-  margin-top: 4px;
-}
-
-/* ── Verification cards ──────────────────────────────────── */
-.vGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-.vCard {
-  background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: var(--radius-card, 18px);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.vCardHead {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.vCardName {
+.rowHandle {
+  font-family: var(--sans);
   font-size: 15px;
   font-weight: 600;
   color: var(--ink);
 }
 
-.vCardMeta {
-  font-size: 12px;
+.pronoun {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: var(--radius-pill, 999px);
+  background: rgba(var(--plum-rgb), 0.07);
   color: var(--ink-60);
-  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 500;
 }
 
-.vCardActions {
+.rowMeta {
+  margin-top: 5px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+/* ── Vouch strip (stacked avatars) ───────────────────────── */
+.vouchStrip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.stack {
+  display: flex;
+  align-items: center;
+}
+
+.stackItem {
+  display: inline-flex;
+  margin-left: -8px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--paper);
+}
+
+.stackItem:first-child {
+  margin-left: 0;
+}
+
+.stackMore {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  margin-left: -8px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill, 999px);
+  background: rgba(var(--plum-rgb), 0.1);
+  color: var(--plum);
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: 0 0 0 2px var(--paper);
+}
+
+.vouchLabel {
+  font-size: 11px;
+  color: var(--ink-40);
+  letter-spacing: 0.02em;
+}
+
+/* ── Verification queue ──────────────────────────────────── */
+.queueIntro {
+  max-width: 60ch;
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.queueIntroEm {
+  max-width: 60ch;
+  margin: 0 0 22px;
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--accent-ink);
+}
+
+.queueIntroEm em {
+  font-style: italic;
+}
+
+.queueEmpty {
+  padding: 8px 0;
+}
+
+.queueGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.queueCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+}
+
+.queueHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.queueName {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.queueVouch {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+.queueApplied {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+.queueActions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* ── Drawer ──────────────────────────────────────────────── */
+.dHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dName {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.dChips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.dSection {
+  margin-bottom: 24px;
+}
+
+.dSection:last-child {
+  margin-bottom: 0;
+}
+
+.dHeading {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-60);
+}
+
+.dHint {
+  margin: -4px 0 12px;
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+/* At a glance grid */
+.glanceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.glanceStat {
+  padding: 14px 12px;
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-radius: 14px;
+  text-align: center;
+}
+
+.glanceValue {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--plum);
+  line-height: 1;
+}
+
+.glanceLabel {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--ink-60);
+}
+
+/* Communities */
+.commChips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 4px;
 }
 
-/* ── Vouch network graph ─────────────────────────────────────── */
-.graphWrap {
-  position: relative;
-  background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: var(--radius-card, 18px);
+/* Contribution history */
+.contribList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contribItem {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.contribWhen {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+.reportsNote {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-60);
+  font-style: italic;
+}
+
+/* Drawer footer */
+.dFoot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Remove confirm panel */
+.removePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   padding: 16px;
+  background: rgba(var(--danger-rgb), 0.06);
+  border: 1px solid rgba(var(--danger-rgb), 0.22);
+  border-radius: 16px;
+}
+
+.removeTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.removeText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.removeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ── Vouch graph (SVG) ───────────────────────────────────── */
+.graphWrap {
+  background: rgba(var(--plum-rgb), 0.03);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-radius: 16px;
+  padding: 8px;
 }
 
 .graphSvg {
   width: 100%;
-  aspect-ratio: 3 / 2;
+  height: auto;
   display: block;
 }
 
-.edge {
-  stroke: rgba(45, 27, 61, 0.18);
-  stroke-width: 0.6;
+.graphEdge {
+  stroke: rgba(var(--plum-rgb), 0.18);
+  stroke-width: 1.25;
 }
 
-.node {
-  cursor: pointer;
-}
-
-.node:hover .nodeCircle {
-  opacity: 0.82;
-}
-
-/* Cohort tints */
-.cohort2023 {
-  fill: rgba(var(--jade-rgb), 0.22);
-  stroke: var(--jade);
-  stroke-width: 1;
-}
-
-.cohort2024 {
-  fill: rgba(45, 27, 61, 0.14);
-  stroke: var(--plum);
-  stroke-width: 1;
-}
-
-.cohort2025 {
-  fill: rgba(var(--accent-rgb), 0.14);
-  stroke: var(--accent);
-  stroke-width: 1;
-}
-
-/* Isolated nodes — coral ring override */
-.nodeIsolated {
-  stroke: var(--accent);
-  stroke-width: 2;
-}
-
-/* Highlighted (search match) */
-.nodeHighlight .nodeCircle {
-  stroke-width: 2.5;
-  opacity: 1;
-}
-
-.nodeLabel {
-  font-size: 3.2px;
-  fill: var(--ink);
-  pointer-events: none;
+.graphNodeText,
+.graphCenterText {
   text-anchor: middle;
-  font-family: inherit;
+  dominant-baseline: central;
+  font-family: var(--sans);
+  font-weight: 600;
+  pointer-events: none;
 }
 
-.graphControls {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.graphNodeText {
+  font-size: 11px;
+  fill: var(--ink);
 }
 
-.graphSearch {
-  padding: 6px 10px;
-  border: 1px solid rgba(45, 27, 61, 0.18);
-  border-radius: 8px;
-  font-size: 12px;
-  color: var(--ink);
-  background: var(--paper);
-  font-family: inherit;
-  width: 140px;
+.graphCenterText {
+  font-size: 15px;
+  fill: var(--cream);
 }
 
-.graphSearch:focus {
-  outline: 2px solid var(--plum);
-  outline-offset: 1px;
+@media (prefers-reduced-motion: no-preference) {
+  .graphEdge {
+    opacity: 0;
+    animation: graphFade 0.4s var(--ease) forwards;
+    animation-delay: var(--gdelay, 0ms);
+  }
+
+  .graphNode {
+    opacity: 0;
+    transform: scale(0.6);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: graphPop 0.4s var(--ease) forwards;
+    animation-delay: var(--gdelay, 0ms);
+  }
+
+  .graphCenter {
+    opacity: 0;
+    animation: graphFade 0.35s var(--ease) forwards;
+  }
 }
 
-.zoomBtn {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  border: 1px solid rgba(45, 27, 61, 0.18);
-  background: var(--paper);
-  color: var(--ink-60);
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
+@keyframes graphFade {
+  to {
+    opacity: 1;
+  }
 }
 
-.zoomBtn:hover {
-  background: rgba(45, 27, 61, 0.06);
-  color: var(--ink);
-}
-
-.zoomBtn:focus-visible {
-  outline: 2px solid var(--plum);
-  outline-offset: 1px;
+@keyframes graphPop {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

@@ -1,0 +1,60 @@
+import { Link, NavLink } from 'react-router-dom'
+import { FiSettings } from 'react-icons/fi'
+import { routes } from '../../../app/routeMap'
+import { useToast } from '../feedback/useToast'
+import { AdminRoleSwitcher } from './AdminRoleSwitcher'
+import { ADMIN_NAV, ADMIN_PROFILE } from './adminNav.data'
+import styles from './AdminShell.module.css'
+
+export function AdminSidebar() {
+  const { showToast } = useToast()
+
+  return (
+    <aside className={styles.sidebar}>
+      <Link to={routes.admin} className={styles.brand}>
+        <span className={styles.brandDot} aria-hidden />
+        <span className={styles.brandName}>
+          Queer<em>Pulse</em>
+        </span>
+        <span className={styles.brandBadge}>Admin</span>
+      </Link>
+
+      <AdminRoleSwitcher />
+
+      <nav className={styles.nav}>
+        <div className={styles.navHead}>Oversight</div>
+        {ADMIN_NAV.map(({ label, to, icon: Icon, end, count, tone }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            className={({ isActive }) =>
+              [styles.navItem, isActive && styles.navItemActive].filter(Boolean).join(' ')
+            }
+          >
+            <Icon aria-hidden />
+            <span className={styles.navLabel}>{label}</span>
+            {count != null && (
+              <span className={[styles.navCount, tone === 'alert' ? styles.navCountAlert : styles.navCountWarn].join(' ')}>
+                {count}
+              </span>
+            )}
+          </NavLink>
+        ))}
+      </nav>
+
+      <button
+        type="button"
+        className={styles.me}
+        onClick={() => showToast('Your admin profile', 'info')}
+      >
+        <span className={styles.meAv}>{ADMIN_PROFILE.initials}</span>
+        <span className={styles.meTx}>
+          <span className={styles.meName}>{ADMIN_PROFILE.name}</span>
+          <span className={styles.meRole}>{ADMIN_PROFILE.role}</span>
+        </span>
+        <FiSettings className={styles.meGear} aria-hidden />
+      </button>
+    </aside>
+  )
+}

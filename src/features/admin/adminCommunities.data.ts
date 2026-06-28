@@ -1,163 +1,267 @@
-export interface CommunityHealth {
+import type { AdminTone, AvatarTone } from './ui'
+
+// ── Health colour by score ──────────────────────────────────────────────────
+// ≥90 jade · ≥78 amber · else coral (accent-ink)
+export function healthColor(score: number): string {
+  if (score >= 90) return 'var(--jade)'
+  if (score >= 78) return 'var(--amber)'
+  return 'var(--accent-ink)'
+}
+
+export type BadgeTone = 'plum' | 'coral' | 'jade' | 'violet' | 'amber'
+
+export interface CommunityCard {
   slug: string
   name: string
   initials: string
-  tint: string
-  kind: 'Living' | 'Interest' | 'Support'
-  score: number
-  members: number
-  mods: number
+  tone: BadgeTone
+  tag: string
+  /** Members shown verbatim as a comma string. */
+  members: string
+  /** Activity descriptor, e.g. "High", "Busy". */
+  activity: string
   openReports: number
-  factors: { label: string; status: 'good' | 'warn' | 'bad'; detail: string }[]
-  mods_roster: { name: string; initials: string; tint: string; role: 'owner' | 'mod' }[]
-  escalations: { text: string; time: string }[]
+  health: number
+  /** 8-point sparkline series. */
+  spark: number[]
+  /** True for the one card that opens the inline detail view. */
+  hasDetail?: boolean
 }
 
-export function healthColor(score: number): string {
-  if (score >= 70) return 'var(--jade)'
-  if (score >= 40) return 'var(--accent)'
-  return 'var(--plum)'
-}
-
-export const COMMUNITIES: CommunityHealth[] = [
+export const COMMUNITIES: CommunityCard[] = [
   {
-    slug: 'queer-runners',
-    name: 'Queer Runners',
-    initials: 'QR',
-    tint: 'jade',
-    kind: 'Living',
-    score: 84,
-    members: 214,
-    mods: 3,
+    slug: 'trans-friends',
+    name: 'Trans & Friends',
+    initials: 'TR',
+    tone: 'jade',
+    tag: 'Peer support · private',
+    members: '1,204',
+    activity: 'High',
     openReports: 1,
-    factors: [
-      { label: 'Active moderation', status: 'good', detail: 'Reports resolved within 24 h on average.' },
-      { label: 'Member growth', status: 'good', detail: '+18 members in the past 30 days.' },
-      { label: 'Open reports', status: 'warn', detail: '1 report awaiting review.' },
-      { label: 'Rule compliance', status: 'good', detail: 'No recurring violators this quarter.' },
-    ],
-    mods_roster: [
-      { name: 'Kai Nakamura', initials: 'KN', tint: 'jade', role: 'owner' },
-      { name: 'Priya Osei', initials: 'PO', tint: 'plum', role: 'mod' },
-      { name: 'Sam Rivera', initials: 'SR', tint: 'coral', role: 'mod' },
-    ],
-    escalations: [],
+    health: 94,
+    spark: [5, 6, 5, 7, 6, 8, 7, 9],
+    hasDetail: true,
   },
   {
-    slug: 'trans-hub',
-    name: 'Trans Hub',
-    initials: 'TH',
-    tint: 'plum',
-    kind: 'Support',
-    score: 72,
-    members: 147,
-    mods: 2,
-    openReports: 3,
-    factors: [
-      { label: 'Active moderation', status: 'good', detail: 'Mods responding within 48 h.' },
-      { label: 'Open reports', status: 'warn', detail: '3 reports open — 1 escalated to staff.' },
-      { label: 'Join-request backlog', status: 'warn', detail: '7 pending requests older than 72 h.' },
-      { label: 'Rule compliance', status: 'good', detail: 'No repeat offenders this month.' },
-    ],
-    mods_roster: [
-      { name: 'Alex Chen', initials: 'AC', tint: 'plum', role: 'owner' },
-      { name: 'Jordan Ellis', initials: 'JE', tint: 'jade', role: 'mod' },
-    ],
-    escalations: [
-      { text: 'Harassing DMs reported by 2 members — escalated by mod.', time: '2 days ago' },
-    ],
+    slug: 'queer-creatives',
+    name: 'Queer Creatives',
+    initials: 'QC',
+    tone: 'violet',
+    tag: 'Artists & makers',
+    members: '842',
+    activity: 'Active',
+    openReports: 2,
+    health: 88,
+    spark: [4, 5, 6, 5, 7, 6, 8, 7],
   },
   {
-    slug: 'rainbow-arts',
-    name: 'Rainbow Arts',
-    initials: 'RA',
-    tint: 'coral',
-    kind: 'Interest',
-    score: 91,
-    members: 128,
-    mods: 2,
-    openReports: 0,
-    factors: [
-      { label: 'Active moderation', status: 'good', detail: 'All reports resolved within 12 h.' },
-      { label: 'Open reports', status: 'good', detail: 'No open reports.' },
-      { label: 'Member engagement', status: 'good', detail: 'Highest post-per-member ratio this month.' },
-      { label: 'Rule compliance', status: 'good', detail: 'Zero violations in the past 60 days.' },
-    ],
-    mods_roster: [
-      { name: 'Mara López', initials: 'ML', tint: 'coral', role: 'owner' },
-      { name: 'Teo Vasquez', initials: 'TV', tint: 'jade', role: 'mod' },
-    ],
-    escalations: [],
-  },
-  {
-    slug: 'queer-social',
-    name: 'Queer Social',
-    initials: 'QS',
-    tint: 'plum',
-    kind: 'Living',
-    score: 63,
-    members: 312,
-    mods: 2,
+    slug: 'lisbon-queers',
+    name: 'Lisbon Queers',
+    initials: 'LQ',
+    tone: 'coral',
+    tag: 'City-wide · public',
+    members: '3,180',
+    activity: 'Busy',
     openReports: 6,
-    factors: [
-      { label: 'Active moderation', status: 'warn', detail: 'Average resolution time over 72 h.' },
-      { label: 'Open reports', status: 'warn', detail: '6 reports unresolved — 2 over 5 days old.' },
-      { label: 'Mod coverage', status: 'warn', detail: 'Only 2 mods for 312 members — recommend adding 1.' },
-      { label: 'Member growth', status: 'good', detail: '+24 this month, steady.' },
-    ],
-    mods_roster: [
-      { name: 'Nico Adeyemi', initials: 'NA', tint: 'plum', role: 'owner' },
-      { name: 'Bex Morrison', initials: 'BM', tint: 'coral', role: 'mod' },
-    ],
-    escalations: [
-      { text: 'Off-topic spam wave on 24 Jun — 4 posts removed.', time: '4 days ago' },
-      { text: 'Member dispute over event access — mediated by mod.', time: '1 week ago' },
-    ],
+    health: 71,
+    spark: [8, 7, 9, 8, 10, 9, 11, 10],
   },
   {
-    slug: 'trans-mutual-aid',
-    name: 'Trans Mutual Aid',
-    initials: 'TM',
-    tint: 'jade',
-    kind: 'Support',
-    score: 78,
-    members: 89,
-    mods: 2,
+    slug: 'newly-arrived',
+    name: 'Newly Arrived',
+    initials: 'NA',
+    tone: 'jade',
+    tag: 'Migrants & arrivals',
+    members: '410',
+    activity: 'Growing',
+    openReports: 0,
+    health: 96,
+    spark: [2, 3, 3, 4, 4, 5, 6, 7],
+  },
+  {
+    slug: 'trans-healthcare',
+    name: 'Trans Healthcare',
+    initials: 'TH',
+    tone: 'jade',
+    tag: 'Navigators · support',
+    members: '560',
+    activity: 'Steady',
+    openReports: 0,
+    health: 92,
+    spark: [3, 4, 3, 4, 4, 5, 4, 5],
+  },
+  {
+    slug: 'nightlife-afters',
+    name: 'Nightlife & Afters',
+    initials: 'NF',
+    tone: 'violet',
+    tag: 'Events · high traffic',
+    members: '1,640',
+    activity: 'Spiky',
+    openReports: 3,
+    health: 79,
+    spark: [6, 9, 5, 10, 6, 11, 7, 9],
+  },
+  {
+    slug: 'elders-memory',
+    name: 'Elders & Memory',
+    initials: 'EM',
+    tone: 'amber',
+    tag: 'Intergenerational',
+    members: '220',
+    activity: 'Calm',
+    openReports: 0,
+    health: 98,
+    spark: [2, 2, 3, 2, 3, 3, 2, 3],
+  },
+  {
+    slug: 'mutual-aid-lisbon',
+    name: 'Mutual Aid Lisbon',
+    initials: 'MA',
+    tone: 'coral',
+    tag: 'Solidarity & care',
+    members: '980',
+    activity: 'Active',
     openReports: 1,
-    factors: [
-      { label: 'Active moderation', status: 'good', detail: 'Reports resolved promptly.' },
-      { label: 'Open reports', status: 'warn', detail: '1 report under review.' },
-      { label: 'Privacy compliance', status: 'good', detail: 'Reduced-visibility defaults enforced.' },
-      { label: 'Member wellbeing', status: 'good', detail: 'No distress escalations in 30 days.' },
-    ],
-    mods_roster: [
-      { name: 'River Tran', initials: 'RT', tint: 'jade', role: 'owner' },
-      { name: 'Sage Okonkwo', initials: 'SO', tint: 'plum', role: 'mod' },
-    ],
-    escalations: [],
-  },
-  {
-    slug: 'queer-parents',
-    name: 'Queer Parents',
-    initials: 'QP',
-    tint: 'coral',
-    kind: 'Support',
-    score: 35,
-    members: 74,
-    mods: 1,
-    openReports: 8,
-    factors: [
-      { label: 'Active moderation', status: 'bad', detail: 'Owner inactive for 14 days — no report resolution.' },
-      { label: 'Open reports', status: 'bad', detail: '8 open reports, oldest 9 days old.' },
-      { label: 'Mod coverage', status: 'bad', detail: 'Single mod — urgent to recruit a second.' },
-      { label: 'Member growth', status: 'warn', detail: 'Flat; 0 new members this month.' },
-    ],
-    mods_roster: [
-      { name: 'Dana Ferreira', initials: 'DF', tint: 'coral', role: 'owner' },
-    ],
-    escalations: [
-      { text: 'Owner unresponsive — staff intervention may be needed.', time: '5 days ago' },
-      { text: 'Misgendering incident reported x3 by same member.', time: '9 days ago' },
-    ],
+    health: 90,
+    spark: [5, 5, 6, 6, 5, 7, 6, 7],
   },
 ]
+
+// ── Detail view (Trans & Friends) ───────────────────────────────────────────
+
+export interface DetailStat {
+  label: string
+  value: string
+  tone?: 'jade' | 'coral' | 'plum'
+}
+
+export interface ScopedReport {
+  category: string
+  tone: 'danger' | 'coral' | 'amber' | 'jade'
+  title: string
+  meta: string
+  severity: 'high' | 'med' | 'low'
+}
+
+export interface RosterMember {
+  name: string
+  pronouns: string
+  initials: string
+  tone: AvatarTone
+  verified?: boolean
+  /** Sub-line under the name. */
+  detail: string
+  /** Right-side affordance: a role chip, or a "View" link. */
+  role?: { label: string; tone: AdminTone }
+  link?: string
+}
+
+export interface SettingRow {
+  label: string
+  detail: string
+  /** Trailing affordance: chips, a "View" button, or a single badge. */
+  chips?: { label: string; tone: AdminTone }[]
+  badge?: { label: string; tone: AdminTone }
+  action?: string
+}
+
+export interface CommunityDetail {
+  slug: string
+  name: string
+  initials: string
+  tone: BadgeTone
+  tag: string
+  description: string
+  health: number
+  healthLabel: string
+  stats: DetailStat[]
+  scoped: ScopedReport[]
+  roster: RosterMember[]
+  totalMembers: string
+  settings: SettingRow[]
+}
+
+export const TRANS_FRIENDS_DETAIL: CommunityDetail = {
+  slug: 'trans-friends',
+  name: 'Trans & Friends',
+  initials: 'TR',
+  tone: 'jade',
+  tag: 'Peer support · private',
+  description:
+    "A peer-support and friendship space for trans, non-binary and questioning members. Stewarded by 3 moderators · founded Mar 2023.",
+  health: 94,
+  healthLabel: 'thriving',
+  stats: [
+    { label: 'Members', value: '1,204', tone: 'plum' },
+    { label: 'Active this week', value: '68%', tone: 'plum' },
+    { label: 'Open reports', value: '1', tone: 'coral' },
+    { label: 'Resolved on time', value: '100%', tone: 'jade' },
+  ],
+  scoped: [
+    {
+      category: 'Harassment',
+      tone: 'coral',
+      title: "Repeated unwanted DMs after being asked to stop",
+      meta: "Reported by Sofia D. · about a member with 4 prior reports · 3h ago",
+      severity: 'high',
+    },
+  ],
+  roster: [
+    {
+      name: 'Inês Martins',
+      pronouns: 'she/her',
+      initials: 'IM',
+      tone: 'jade',
+      verified: true,
+      detail: 'Moderator · founded the community · 21 vouches',
+      role: { label: 'Moderator', tone: 'jade' },
+    },
+    {
+      name: 'Sofia Almeida',
+      pronouns: 'she/they',
+      initials: 'SA',
+      tone: 'amber',
+      verified: true,
+      detail: 'Moderator · mutual aid lead · 14 vouches',
+      role: { label: 'Moderator', tone: 'jade' },
+    },
+    {
+      name: 'Devon Okoro',
+      pronouns: 'they/them',
+      initials: 'DO',
+      tone: 'coral',
+      verified: true,
+      detail: 'Member · joined Jun 2025 · 8 vouches',
+      link: 'View',
+    },
+  ],
+  totalMembers: '1,204',
+  settings: [
+    {
+      label: 'Who can join',
+      detail: 'Vouch-gated — a member must be vouched for by 2 existing members.',
+      badge: { label: '2 vouches required', tone: 'plum' },
+    },
+    {
+      label: 'Moderators',
+      detail: 'Three community members hold moderation powers, scoped to this space only.',
+      chips: [
+        { label: 'Inês M.', tone: 'jade' },
+        { label: 'Sofia A.', tone: 'jade' },
+        { label: '+1', tone: 'jade' },
+      ],
+    },
+    {
+      label: 'Code of care',
+      detail:
+        'Uses the platform Code of Care plus 2 community-specific additions about deadnaming.',
+      action: 'View',
+    },
+    {
+      label: 'Visibility',
+      detail: 'Private — not listed publicly. Members find it through invitation only.',
+      badge: { label: 'Private', tone: 'violet' },
+    },
+  ],
+}

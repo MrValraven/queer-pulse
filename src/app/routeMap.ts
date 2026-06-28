@@ -57,6 +57,7 @@ export const routes = {
   adminCommunities: '/admin/communities',
   adminMembers: '/admin/members',
   adminModeration: '/admin/moderation',
+  adminGovernance: '/admin/governance',
   about: '/about',
   accessibility: '/accessibility',
   accessibilityPreferences: '/account/accessibility-preferences',

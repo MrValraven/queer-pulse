@@ -1,108 +1,271 @@
-import { FiFlag, FiUserCheck, FiMessageSquare, FiAlertCircle, FiUserPlus, FiCheckCircle, FiUsers, type IconType } from 'react-icons/fi'
+import {
+  FiUsers,
+  FiShield,
+  FiClock,
+  FiDollarSign,
+  FiAlertTriangle,
+  FiMessageSquare,
+  FiCheckCircle,
+  FiArchive,
+  FiUserPlus,
+  FiStar,
+} from 'react-icons/fi'
+import type { IconType } from 'react-icons'
 import { routes, adminCommunityMod } from '../../app/routeMap'
+
+// ── Hero stats ────────────────────────────────────────────────────────────────
 
 export interface StatCard {
   label: string
-  value: string
-  sub: string
-  trend?: 'up' | 'down' | 'flat'
+  icon: IconType
+  /** Numeric target the value counts up to. */
+  value: number
+  /** Render the value with thousands separators. */
+  comma?: boolean
+  /** Keep one decimal place (e.g. 3.2). */
+  decimal?: boolean
+  prefix?: string
+  suffix?: string
+  trend: { dir: 'up' | 'down' | 'warn'; label: string }
+  foot: string
 }
 
 export const METRICS: StatCard[] = [
-  { label: 'Active members', value: '1,847', sub: '+18% vs last month', trend: 'up' },
-  { label: 'Open reports', value: '7', sub: 'Oldest: 14h ago', trend: 'flat' },
-  { label: 'Median response', value: '4.2h', sub: 'Target 6h · on track', trend: 'down' },
-  { label: 'Sustainer MRR', value: '€23,150', sub: '+€340 this month', trend: 'up' },
+  {
+    label: 'Active members',
+    icon: FiUsers,
+    value: 8412,
+    comma: true,
+    trend: { dir: 'up', label: '▲ 3.9%' },
+    foot: '+312 this month',
+  },
+  {
+    label: 'Open reports',
+    icon: FiShield,
+    value: 23,
+    trend: { dir: 'warn', label: 'oldest 14h' },
+    foot: '2 are emergencies',
+  },
+  {
+    label: 'Median response',
+    icon: FiClock,
+    value: 3.2,
+    decimal: true,
+    suffix: 'h',
+    trend: { dir: 'up', label: '▼ well under' },
+    foot: '6h SLA target',
+  },
+  {
+    label: 'Sustainer MRR',
+    icon: FiDollarSign,
+    value: 23150,
+    comma: true,
+    prefix: '€',
+    trend: { dir: 'up', label: '▲ 4.1%' },
+    foot: '1,842 sustainers',
+  },
 ]
 
-export interface QuickAction {
-  label: string
+// ── "Needs a human" triage queue ────────────────────────────────────────────
+
+export type QueueTone = 'danger' | 'coral' | 'jade' | 'amber'
+
+export interface QueueRow {
+  title: string
+  sub: string
+  subEm?: string
   count: number
-  to: string
+  tone: QueueTone
   icon: IconType
+  to: string
 }
 
-export const QUICK_ACTIONS: QuickAction[] = [
-  { label: 'Open reports to review', count: 7, to: routes.adminModeration, icon: FiFlag },
-  { label: 'Identity verifications pending', count: 3, to: `${routes.adminMembers}?tab=verification`, icon: FiUserCheck },
-  { label: 'Appeals awaiting decision', count: 2, to: `${routes.adminModeration}?tab=appeals`, icon: FiMessageSquare },
+export const TRIAGE_QUEUE: QueueRow[] = [
+  {
+    title: 'Safety emergencies',
+    sub: 'Outing & doxxing —',
+    subEm: 'handle these first',
+    count: 2,
+    tone: 'danger',
+    icon: FiAlertTriangle,
+    to: `${routes.adminModeration}?tab=emergencies`,
+  },
+  {
+    title: 'Open reports',
+    sub: 'Harassment, spam, vouch-abuse',
+    count: 21,
+    tone: 'coral',
+    icon: FiMessageSquare,
+    to: routes.adminModeration,
+  },
+  {
+    title: 'Identity verifications',
+    sub: 'Members waiting to be welcomed in',
+    count: 11,
+    tone: 'jade',
+    icon: FiCheckCircle,
+    to: `${routes.adminMembers}?tab=verification`,
+  },
+  {
+    title: 'Appeals awaiting decision',
+    sub: 'Members asking you to look again',
+    count: 4,
+    tone: 'amber',
+    icon: FiArchive,
+    to: `${routes.adminModeration}?tab=appeals`,
+  },
 ]
 
-// ── Chart data (Task 4) ──────────────────────────────────────────────────────
+// ── Reports-by-type stacked bar (last 8 weeks) ──────────────────────────────
 
 export interface WeekBar {
   week: string
-  harassment: number
-  outing: number
-  spam: number
-  vouch: number
+  /** Stacking order: outing → harassment → spam → vouch. */
+  values: [outing: number, harassment: number, spam: number, vouch: number]
 }
 
 export const REPORT_WEEKS: WeekBar[] = [
-  { week: 'W1', harassment: 3, outing: 1, spam: 4, vouch: 0 },
-  { week: 'W2', harassment: 2, outing: 0, spam: 3, vouch: 1 },
-  { week: 'W3', harassment: 4, outing: 2, spam: 2, vouch: 0 },
-  { week: 'W4', harassment: 3, outing: 1, spam: 5, vouch: 1 },
-  { week: 'W5', harassment: 6, outing: 3, spam: 4, vouch: 2 }, // Pride spike
-  { week: 'W6', harassment: 8, outing: 4, spam: 3, vouch: 1 },
-  { week: 'W7', harassment: 5, outing: 2, spam: 4, vouch: 0 },
-  { week: 'W8', harassment: 3, outing: 1, spam: 3, vouch: 1 },
-  { week: 'W9', harassment: 4, outing: 2, spam: 2, vouch: 0 },
-  { week: 'W10', harassment: 2, outing: 1, spam: 4, vouch: 1 },
-  { week: 'W11', harassment: 3, outing: 0, spam: 3, vouch: 0 },
-  { week: 'W12', harassment: 2, outing: 1, spam: 2, vouch: 1 },
+  { week: 'w-7', values: [1, 4, 3, 2] },
+  { week: 'w-6', values: [0, 3, 4, 2] },
+  { week: 'w-5', values: [2, 5, 3, 1] },
+  { week: 'w-4', values: [1, 4, 5, 3] },
+  { week: 'w-3', values: [0, 3, 2, 2] },
+  { week: 'w-2', values: [2, 6, 3, 2] },
+  { week: 'last', values: [1, 5, 4, 3] },
+  { week: 'this', values: [2, 7, 5, 3] },
 ]
+
+export const REPORT_SERIES = [
+  { key: 'Outing/doxxing', color: 'var(--danger)' },
+  { key: 'Harassment', color: 'var(--accent)' },
+  { key: 'Spam', color: 'var(--amber)' },
+  { key: 'Vouch-abuse', color: 'var(--violet)' },
+] as const
+
+// ── Member growth line ──────────────────────────────────────────────────────
 
 export interface GrowthPoint {
   month: string
   joined: number
   churned: number
-  milestone?: string
+  /** Labelled marker on the joined line (e.g. the Pride spike). */
+  spike?: string
 }
 
 export const MEMBER_GROWTH: GrowthPoint[] = [
-  { month: 'Jul', joined: 42, churned: 8 },
-  { month: 'Aug', joined: 51, churned: 11 },
-  { month: 'Sep', joined: 47, churned: 9 },
-  { month: 'Oct', joined: 63, churned: 12 },
-  { month: 'Nov', joined: 58, churned: 14 },
-  { month: 'Dec', joined: 44, churned: 16 },
-  { month: 'Jan', joined: 71, churned: 10, milestone: 'Studio launch' },
-  { month: 'Feb', joined: 66, churned: 13 },
-  { month: 'Mar', joined: 82, churned: 11 },
-  { month: 'Apr', joined: 74, churned: 12 },
-  { month: 'May', joined: 119, churned: 9, milestone: 'Pride 2025' },
-  { month: 'Jun', joined: 97, churned: 15 },
+  { month: 'Jan', joined: 180, churned: 60 },
+  { month: '', joined: 210, churned: 70 },
+  { month: 'Mar', joined: 240, churned: 55 },
+  { month: '', joined: 225, churned: 80 },
+  { month: 'May', joined: 260, churned: 65 },
+  { month: 'Jun', joined: 290, churned: 72 },
+  { month: '', joined: 520, churned: 120, spike: 'Pride' },
+  { month: 'Aug', joined: 410, churned: 95 },
+  { month: '', joined: 360, churned: 70 },
+  { month: 'Oct', joined: 395, churned: 68 },
 ]
 
-export interface DonutSlice {
+// ── Response-time distribution ──────────────────────────────────────────────
+
+export interface DistBucket {
   label: string
   value: number
-  color: string
+  /** True once the bucket is past the 6h SLA. */
+  overSla: boolean
 }
 
-export const ACTION_BREAKDOWN: DonutSlice[] = [
-  { label: 'Warnings', value: 96, color: 'var(--jade)' },
-  { label: 'Suspensions', value: 41, color: 'var(--accent)' },
-  { label: 'Bans', value: 18, color: 'var(--plum)' },
-  { label: 'Dismissed', value: 129, color: 'rgba(45, 27, 61, 0.3)' },
+export const RESPONSE_DIST: DistBucket[] = [
+  { label: '<1h', value: 34, overSla: false },
+  { label: '1–2h', value: 58, overSla: false },
+  { label: '2–4h', value: 71, overSla: false },
+  { label: '4–6h', value: 40, overSla: false },
+  { label: '6–8h', value: 14, overSla: true },
+  { label: '8h+', value: 7, overSla: true },
 ]
 
-// ── Activity feed (Task 5) ───────────────────────────────────────────────────
+// ── Live activity feed ──────────────────────────────────────────────────────
+
+export type FeedTone = 'jade' | 'coral' | 'danger' | 'violet' | 'amber'
 
 export interface FeedItem {
   id: string
+  tone: FeedTone
   icon: IconType
-  text: string
-  meta: string
+  /** Lead actor / subject, rendered bold. */
+  lead: string
+  /** Remaining sentence; the emphasised fragment is wrapped in <em>. */
+  body: string
+  em?: string
+  bodyAfter?: string
+  time: string
   to: string
 }
 
 export const ACTIVITY_FEED: FeedItem[] = [
-  { id: 'f1', icon: FiFlag, text: 'Report #142 filed · harassment', meta: '3 min ago', to: routes.adminModeration },
-  { id: 'f2', icon: FiUserPlus, text: 'New member @marta_j vouched · pending review', meta: '24 min ago', to: routes.adminMembers },
-  { id: 'f3', icon: FiAlertCircle, text: 'Appeal #18 submitted', meta: '1h ago', to: `${routes.adminModeration}?tab=appeals` },
-  { id: 'f4', icon: FiUsers, text: 'Queer Runners · 3 join requests waiting', meta: '2h ago', to: adminCommunityMod('queer-runners') },
-  { id: 'f5', icon: FiCheckCircle, text: '@pedro_v identity verified', meta: '2h ago', to: routes.adminMembers },
-  { id: 'f6', icon: FiFlag, text: 'Report #141 resolved · post removed', meta: '4h ago', to: routes.adminModeration },
+  {
+    id: 'f1',
+    tone: 'jade',
+    icon: FiCheckCircle,
+    lead: 'Inês M.',
+    body: 'resolved a harassment report in',
+    em: 'Trans & Friends',
+    bodyAfter: '— restricted for 7 days.',
+    time: '2 min ago',
+    to: routes.adminModeration,
+  },
+  {
+    id: 'f2',
+    tone: 'coral',
+    icon: FiUserPlus,
+    lead: '3 new members',
+    body: 'joined via vouch from',
+    em: 'Queer Creatives',
+    bodyAfter: '.',
+    time: '11 min ago',
+    to: routes.adminMembers,
+  },
+  {
+    id: 'f3',
+    tone: 'danger',
+    icon: FiAlertTriangle,
+    lead: 'Emergency report',
+    body: 'filed — possible',
+    em: 'outing',
+    bodyAfter: 'in a public thread. Auto-escalated.',
+    time: '26 min ago',
+    to: `${routes.adminModeration}?tab=emergencies`,
+  },
+  {
+    id: 'f4',
+    tone: 'jade',
+    icon: FiCheckCircle,
+    lead: 'Marco V.',
+    body: 'was identity-verified by',
+    em: 'Júlia S.',
+    bodyAfter: '',
+    time: '42 min ago',
+    to: `${routes.adminMembers}?tab=verification`,
+  },
+  {
+    id: 'f5',
+    tone: 'violet',
+    icon: FiStar,
+    lead: 'Devon O.',
+    body: 'received their',
+    em: '10th vouch',
+    bodyAfter: '— now a trusted member.',
+    time: '1h ago',
+    to: routes.adminMembers,
+  },
+  {
+    id: 'f6',
+    tone: 'amber',
+    icon: FiArchive,
+    lead: 'Appeal opened',
+    body: 'by a member restricted in',
+    em: 'Lisbon Queers',
+    bodyAfter: '.',
+    time: '1h ago',
+    to: adminCommunityMod('queer-social'),
+  },
 ]
