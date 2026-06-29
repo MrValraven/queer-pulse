@@ -25,6 +25,7 @@ export const ACCOUNT_GROUPS = [
   ],
   [
     { label: 'Feed', to: '/feed' },
+    { label: 'Events', to: routes.myEvents },
     { label: 'Messages', to: routes.messages },
     { label: 'Communities', to: routes.communitiesHome },
   ],

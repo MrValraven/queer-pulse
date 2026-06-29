@@ -17,6 +17,7 @@ import { CalendarPage } from '../features/gatherings/CalendarPage'
 import { GatheringPage } from '../features/gatherings/GatheringPage'
 import { EventPage } from '../features/gatherings/EventPage'
 import { EventsPage } from '../features/gatherings/EventsPage'
+import { MyEventsPage } from '../features/myevents/MyEventsPage'
 import { RsvpPage } from '../features/gatherings/RsvpPage'
 import { GatheringRecapPage } from '../features/gatherings/GatheringRecapPage'
 import { HostPage } from '../features/gatherings/HostPage'
@@ -399,6 +400,7 @@ const ACCOUNT_REDIRECTS: [string, string][] = [
   ['/cancel-membership', '/account/cancel-membership'],
   ['/membership', '/account/membership'],
   ['/gift-membership', '/account/gift-membership'],
+  ['/my-events', '/account/events'],
 ]
 
 /** Legacy public-profile path `/profile/:slug` → its new home `/members/:slug`. */
@@ -428,6 +430,7 @@ export function AppRoutes() {
       <Route path="/account/badges" element={<BadgesPage />} />
       <Route path="/account/perks" element={<PerksPage />} />
       <Route path="/account/connections" element={<ConnectionsPage />} />
+      <Route path="/account/events" element={<MyEventsPage />} />
       <Route path="/dating" element={<DatingPage />} />
       <Route path="/reading-groups" element={<ReadingGroupsPage />} />
       <Route path="/family" element={<FamilyPage />} />

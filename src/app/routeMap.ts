@@ -182,6 +182,7 @@ export const routes = {
   mentalHealth: '/mental-health',
   mentorship: '/mentorship',
   messages: '/messages',
+  myEvents: '/account/events',
   microGrants: '/micro-grants',
   newsletter: '/newsletter',
   newsletterArchive: '/newsletter-archive',
