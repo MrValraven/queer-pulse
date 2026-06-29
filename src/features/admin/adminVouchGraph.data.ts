@@ -3,6 +3,8 @@
    Static trust network + pure graph helpers. No React here.
    ============================================================ */
 
+import { portrait } from './adminPeople.data'
+
 export type VouchTone = 'coral' | 'jade' | 'violet' | 'amber' | 'plum' | 'danger'
 export type SceneKey = 'tf' | 'creatives' | 'nightlife' | 'newly' | 'elders' | 'ring'
 export type Standing = 'trusted' | 'warned' | 'new' | 'flagged'
@@ -237,4 +239,10 @@ export function nodeRadius(id: string, focusId: string): number {
 export function personIdByInitials(initials: string): string {
   const match = PEOPLE.find((p) => p.initials.toLowerCase() === initials.toLowerCase())
   return match ? match.id : 'ines'
+}
+
+/** portrait for a network member by initials, or undefined (→ initials fallback) */
+export function portraitByInitials(initials: string): string | undefined {
+  const match = PEOPLE.find((p) => p.initials.toLowerCase() === initials.toLowerCase())
+  return match ? portrait(match.name) : undefined
 }

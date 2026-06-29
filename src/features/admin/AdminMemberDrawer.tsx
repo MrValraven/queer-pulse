@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from '../../shared/components/ui'
 import { AdminDrawer, AdminAvatar, AdminChip } from './ui'
 import { useToast } from '../../shared/components/feedback/useToast'
-import { AdminVouchGraph } from './AdminVouchGraph'
+import { VouchGraphPreview } from './VouchGraphPreview'
 import { AdminVouchGraphModal } from './AdminVouchGraphModal'
 import { personIdByInitials } from './adminVouchGraph.data'
 import { ModerationTimeline, SealedIdentity } from './AdminMemberDrawerSections'
@@ -24,6 +24,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
   const [modal, setModal] = useState<'message' | 'restrict' | 'network' | null>(null)
   const detail = detailFor(member)
   const first = firstName(member.name)
+  const focusId = personIdByInitials(member.initials)
 
   return (
     <>{/* drawer + its modals */}
@@ -103,7 +104,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
             }
           }}
         >
-          <AdminVouchGraph center={detail.graph.center} nodes={detail.graph.nodes} />
+          <VouchGraphPreview focusId={focusId} />
         </div>
         <div className={styles.graphNoteRow}>
           <p className={styles.dHint}>{detail.graphNote}</p>
@@ -142,10 +143,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
     </AdminDrawer>
 
     {modal === 'network' && (
-      <AdminVouchGraphModal
-        focusId={personIdByInitials(member.initials)}
-        onClose={() => setModal(null)}
-      />
+      <AdminVouchGraphModal focusId={focusId} onClose={() => setModal(null)} />
     )}
 
     {modal === 'message' && (

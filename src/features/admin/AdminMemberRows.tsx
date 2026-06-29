@@ -1,6 +1,7 @@
 import { FadeIn } from '../../shared/components/ui'
 import { AdminAvatar, AdminChip } from './ui'
 import { portrait } from './adminPeople.data'
+import { portraitByInitials } from './adminVouchGraph.data'
 import type { AdminMember, FlaggedMember, VouchAvatar } from './adminMembers.data'
 import styles from './AdminMembersPage.module.css'
 
@@ -60,7 +61,7 @@ function VouchStrip({ vouchedBy, total }: { vouchedBy: VouchAvatar[]; total: num
       <div className={styles.stack}>
         {shown.map((v, i) => (
           <span key={i} className={styles.stackItem} style={{ zIndex: shown.length - i }}>
-            <AdminAvatar initials={v.initials} tone={v.tone} size="sm" />
+            <AdminAvatar initials={v.initials} tone={v.tone} size="sm" src={portraitByInitials(v.initials)} />
           </span>
         ))}
         {more > 0 && <span className={styles.stackMore}>+{more}</span>}
