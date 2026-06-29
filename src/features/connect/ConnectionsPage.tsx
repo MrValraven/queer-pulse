@@ -1,100 +1,98 @@
 import { useMemo, useState } from 'react'
-import { FiInbox, FiInfo, FiSearch, FiSend } from 'react-icons/fi'
+import { FiInfo, FiSearch } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { Button, EmptyState, FadeIn } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { useConnect } from '../../app/providers/ConnectProvider'
+import { useConnections } from '../../app/providers/ConnectionsProvider'
+import { useSocial } from '../../app/providers/SocialProvider'
+import { useVouch } from '../../app/providers/VouchProvider'
 import { ConnectionsGridSkeleton } from './ConnectionsSkeleton'
 import {
-  ALL,
-  INCOMING,
-  MORE_PAGES,
-  OUTGOING,
-  TABS,
-  VOUCHED,
-  moreConnections,
-  type AllConnection,
-  type IncomingRequest,
-  type OutgoingRequest,
-  type Person,
+  CONNECTION_META,
+  MORE_POOL,
+  MORE_PER_PAGE,
+  connectionViews,
+  vouchNote,
+  type ConnectionView,
   type TabId,
 } from './connections.data'
-import { MESSAGES, PROFILE } from './connections.data'
-import {
-  AllConnectionCard,
-  IncomingCard,
-  OutgoingCard,
-  VouchedCard,
-} from './ConnectionCards'
+import { AllConnectionCard } from './ConnectionCards'
+import { BlockedPanel, IncomingPanel, SentPanel, VouchedPanel } from './ConnectionsPanels'
 import styles from './ConnectionsPage.module.css'
 
-const SORTS = ['Recently connected', 'A to Z', 'Closest mutuals', 'Recently active'] as const
+const SORTS = ['Recently connected', 'A to Z', 'Closest mutuals'] as const
 type Sort = (typeof SORTS)[number]
 
-/** Build an "All" connection card from a just-accepted incoming request. */
-function acceptedToConnection(req: IncomingRequest): AllConnection {
-  return {
-    person: req.person,
-    tags: [],
-    meta: { mutuals: req.meta.mutuals, connected: 'Just now' },
-    actions: [
-      { label: 'Message', to: MESSAGES, variant: 'ghost' },
-      { label: 'View profile', to: PROFILE, variant: 'primary' },
-    ],
-  }
-}
-
-function matches(person: Person, tags: string[], q: string): boolean {
-  const haystack = [person.name, person.pron, person.role, ...tags].join(' ').toLowerCase()
-  return haystack.includes(q)
+function matchesView(v: ConnectionView, q: string): boolean {
+  return [v.name, v.pron ?? '', v.role, ...v.tags].join(' ').toLowerCase().includes(q)
 }
 
 export function ConnectionsPage() {
   const loading = useSimulatedLoad()
   const { showToast } = useToast()
+  const { openConnect } = useConnect()
+  const { connected, incoming, sent, accept, decline, withdraw } = useConnections()
+  const { blocked, isBlocked, toggleBlock } = useSocial()
+  const { vouched, hasVouched } = useVouch()
+
   const [tab, setTab] = useState<TabId>('all')
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState<Sort>('Recently connected')
-  const [allList, setAllList] = useState<AllConnection[]>(ALL)
-  const [incomingList, setIncomingList] = useState<IncomingRequest[]>(INCOMING)
-  const [outgoingList, setOutgoingList] = useState<OutgoingRequest[]>(OUTGOING)
-  const [page, setPage] = useState(0)
+  const [morePages, setMorePages] = useState(0)
+
+  const revealed = MORE_POOL.slice(0, morePages * MORE_PER_PAGE)
+  const hasMore = revealed.length < MORE_POOL.length
+
+  const blockedViews = useMemo(() => connectionViews(blocked), [blocked])
+
+  const vouchedSlugs = useMemo(() => {
+    const set = new Set<string>(vouched)
+    for (const [slug, meta] of Object.entries(CONNECTION_META)) {
+      if (meta.vouchBadge) set.add(slug)
+    }
+    return [...set]
+  }, [vouched])
 
   const visibleAll = useMemo(() => {
+    const seen = new Set<string>()
+    const slugs = [...connected, ...revealed].filter((s) => !seen.has(s) && seen.add(s))
     const q = query.trim().toLowerCase()
-    const filtered = q ? allList.filter((c) => matches(c.person, c.tags, q)) : allList
-    const sorted = [...filtered]
+    let views = connectionViews(slugs)
+    if (q) views = views.filter((v) => matchesView(v, q))
     if (sort === 'A to Z') {
-      sorted.sort((a, b) => a.person.name.localeCompare(b.person.name))
+      views = [...views].sort((a, b) => a.name.localeCompare(b.name))
     } else if (sort === 'Closest mutuals') {
-      sorted.sort((a, b) => (b.meta.mutuals ?? 0) - (a.meta.mutuals ?? 0))
+      views = [...views].sort((a, b) => (b.meta.mutuals ?? 0) - (a.meta.mutuals ?? 0))
     }
-    // 'Recently connected' / 'Recently active' keep insertion order (newest accepted first
-    // are unshifted onto the list).
-    return sorted
-  }, [allList, query, sort])
+    return views
+  }, [connected, revealed, query, sort])
 
-  function acceptRequest(req: IncomingRequest) {
-    setIncomingList((prev) => prev.filter((r) => r.person.name !== req.person.name))
-    setAllList((prev) => [acceptedToConnection(req), ...prev])
-    showToast(`Connected with ${req.person.name.split(' ')[0]}`, 'success')
+  const tabs: { id: TabId; label: string; count: number; accent?: boolean }[] = [
+    { id: 'all', label: 'All connections', count: connected.length },
+    { id: 'incoming', label: 'Incoming requests', count: incoming.length, accent: incoming.length > 0 },
+    { id: 'sent', label: 'Sent', count: sent.length },
+    { id: 'blocked', label: 'Blocked', count: blockedViews.length },
+    { id: 'vouched', label: 'Vouched-for', count: vouchedSlugs.length },
+  ]
+
+  function acceptRequest(v: ConnectionView) {
+    accept(v.slug)
+    showToast(`Connected with ${v.name.split(' ')[0]}`, 'success')
   }
-  function declineRequest(req: IncomingRequest) {
-    setIncomingList((prev) => prev.filter((r) => r.person.name !== req.person.name))
+  function declineRequest(v: ConnectionView) {
+    decline(v.slug)
     showToast('Politely declined', 'info')
   }
-  function withdrawRequest(req: OutgoingRequest) {
-    setOutgoingList((prev) => prev.filter((r) => r.person.name !== req.person.name))
+  function withdrawRequest(v: ConnectionView) {
+    withdraw(v.slug)
     showToast('Request withdrawn', 'info')
   }
-  function loadMore() {
-    const next = moreConnections(page)
-    setAllList((prev) => [...prev, ...next])
-    setPage((p) => p + 1)
+  function unblock(v: ConnectionView) {
+    toggleBlock(v.slug)
+    showToast(`Unblocked ${v.name.split(' ')[0]}`, 'success')
   }
-
-  const hasMore = page < MORE_PAGES
 
   return (
     <PageShell>
@@ -120,7 +118,7 @@ export function ConnectionsPage() {
         </div>
 
         <div className={styles.tabs}>
-          {TABS.map((t) => (
+          {tabs.map((t) => (
             <button
               key={t.id}
               type="button"
@@ -135,38 +133,45 @@ export function ConnectionsPage() {
           ))}
         </div>
 
-        <div className={styles.filters}>
-          <div className={styles.searchInput}>
-            <svg viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="7" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search by name, role, or community"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
+        {tab === 'all' && (
+          <div className={styles.filters}>
+            <div className={styles.searchInput}>
+              <svg viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search by name, role, or community"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+            <select
+              className={styles.sortSel}
+              value={sort}
+              onChange={(e) => setSort(e.target.value as Sort)}
+            >
+              {SORTS.map((s) => (
+                <option key={s}>{s}</option>
+              ))}
+            </select>
           </div>
-          <select
-            className={styles.sortSel}
-            value={sort}
-            onChange={(e) => setSort(e.target.value as Sort)}
-          >
-            {SORTS.map((s) => (
-              <option key={s}>{s}</option>
-            ))}
-          </select>
-        </div>
+        )}
 
         {tab === 'all' && (loading ? (
           <ConnectionsGridSkeleton count={6} />
         ) : (
           <>
             <div className={styles.grid}>
-              {visibleAll.map((c, i) => (
-                <FadeIn key={c.person.name} delay={Math.min(i, 8) * 60}>
-                  <AllConnectionCard c={c} />
+              {visibleAll.map((v, i) => (
+                <FadeIn key={v.slug} delay={Math.min(i, 8) * 60}>
+                  <AllConnectionCard
+                    view={v}
+                    blocked={isBlocked(v.slug)}
+                    onUnblock={() => unblock(v)}
+                    onMessage={() => openConnect(v.slug)}
+                  />
                 </FadeIn>
               ))}
             </div>
@@ -185,9 +190,9 @@ export function ConnectionsPage() {
                 }}
               />
             )}
-            {hasMore && (
+            {hasMore && query.trim() === '' && (
               <div className={styles.loadMore}>
-                <Button type="button" variant="ghost" onClick={loadMore}>
+                <Button type="button" variant="ghost" onClick={() => setMorePages((p) => p + 1)}>
                   Load more connections
                 </Button>
               </div>
@@ -195,71 +200,29 @@ export function ConnectionsPage() {
           </>
         ))}
 
-        {tab === 'incoming' && (loading ? (
-          <ConnectionsGridSkeleton count={4} />
-        ) : (
-          <div className={styles.grid}>
-            {incomingList.map((c, i) => (
-              <FadeIn key={c.person.name} delay={Math.min(i, 8) * 60}>
-                <IncomingCard
-                  c={c}
-                  onDecline={() => declineRequest(c)}
-                  onAccept={() => acceptRequest(c)}
-                />
-              </FadeIn>
-            ))}
-            {incomingList.length === 0 && (
-              <EmptyState
-                compact
-                icon={<FiInbox />}
-                title="No requests right now"
-                description="When someone you've met asks to connect, they'll land here for you to accept or politely decline."
-                action={{ label: 'Find members', to: routes.members }}
-              />
-            )}
-          </div>
-        ))}
+        {tab === 'incoming' && (
+          <IncomingPanel
+            loading={loading}
+            views={connectionViews(incoming)}
+            onAccept={acceptRequest}
+            onDecline={declineRequest}
+          />
+        )}
 
-        {tab === 'outgoing' && (loading ? (
-          <ConnectionsGridSkeleton count={4} />
-        ) : (
-          <div className={styles.grid}>
-            {outgoingList.map((c, i) => (
-              <FadeIn key={c.person.name} delay={Math.min(i, 8) * 60}>
-                <OutgoingCard c={c} onWithdraw={() => withdrawRequest(c)} />
-              </FadeIn>
-            ))}
-            {outgoingList.length === 0 && (
-              <EmptyState
-                compact
-                icon={<FiSend />}
-                title="No requests right now"
-                description="Requests you send sit here until they're accepted. Browse members and reach out to someone you've crossed paths with."
-                action={{ label: 'Find members', to: routes.members }}
-              />
-            )}
-          </div>
-        ))}
+        {tab === 'sent' && (
+          <SentPanel loading={loading} views={connectionViews(sent)} onWithdraw={withdrawRequest} />
+        )}
+
+        {tab === 'blocked' && (
+          <BlockedPanel loading={loading} views={blockedViews} onUnblock={unblock} />
+        )}
 
         {tab === 'vouched' && (
-          <>
-            <p className={styles.paneIntro}>
-              People you've vouched for, or who've vouched for you.{' '}
-              <em>Vouching is a small but meaningful act</em> — it stays attached to that member's
-              profile.
-            </p>
-            {loading ? (
-              <ConnectionsGridSkeleton count={4} />
-            ) : (
-              <div className={styles.grid}>
-                {VOUCHED.map((c, i) => (
-                  <FadeIn key={c.person.name} delay={Math.min(i, 8) * 60}>
-                    <VouchedCard c={c} />
-                  </FadeIn>
-                ))}
-              </div>
-            )}
-          </>
+          <VouchedPanel
+            loading={loading}
+            views={connectionViews(vouchedSlugs)}
+            noteFor={(v) => vouchNote(v.slug, hasVouched(v.slug))}
+          />
         )}
       </div>
     </PageShell>

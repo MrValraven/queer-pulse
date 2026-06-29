@@ -1,198 +1,150 @@
 import { routes } from '../../app/routeMap'
-import { MEMBERS, memberName } from '../members/data/members'
+import { MEMBERS } from '../members/data/members'
+import type { AvatarTint } from '../../shared/components/ui'
 
-export type Tint = 'jade' | 'plum' | undefined
-export type TabId = 'all' | 'incoming' | 'outgoing' | 'vouched'
+export type TabId = 'all' | 'incoming' | 'sent' | 'blocked' | 'vouched'
 
-export const PROFILE = routes.members
 export const MESSAGES = routes.messages
 
-export interface Person {
-  initials: string
-  tint?: Tint
-  name: string
-  pron: string
-  role: string
+/** Path to a member's public profile. */
+export function profilePath(slug: string): string {
+  return `/members/${slug}`
 }
 
-/** Structured connection metadata, rendered by the card rather than stored as JSX. */
-export interface MetaInfo {
-  badge?: string
+/**
+ * Relationship metadata that is NOT derivable from the member registry — keyed by
+ * member slug. The registry owns name, role, tags and avatar; this owns the
+ * connection-specific bits (pronouns, mutuals, when you connected, the vouch
+ * relationship, a request's message). "You vouched" is read live from
+ * VouchProvider; the seed flag below covers "vouched for you" / "mutual", which
+ * the registry can't express for the current user.
+ */
+export interface ConnectionMeta {
+  pron?: string
   mutuals?: number
-  mutualsNote?: string
-  connected?: string
-  sent?: string
-  awaiting?: string
-  muted?: string
+  since?: string
+  vouchBadge?: 'vouched-for-you' | 'you-vouched' | 'mutual'
+  requestMessage?: string
+  sentAgo?: string
 }
 
-export interface ActionLink {
-  label: string
-  to: string
-  variant: 'ghost' | 'primary'
+export const CONNECTION_META: Record<string, ConnectionMeta> = {
+  // — connected —
+  'catarina-vaz': { pron: 'she/her', mutuals: 11, since: 'Mar 2025', vouchBadge: 'vouched-for-you' },
+  jonas: { pron: 'he/him', mutuals: 8, since: 'Dec 2024' },
+  luisa: { pron: 'she/her', mutuals: 14, vouchBadge: 'you-vouched' },
+  anika: { pron: 'she/her', mutuals: 6, since: 'Jan 2026' },
+  rita: { pron: 'they/them', mutuals: 9, since: 'Nov 2024', vouchBadge: 'mutual' },
+  nuno: { pron: 'he/him', mutuals: 11, since: 'Feb 2025' },
+  'sofia-castano': { pron: 'she/her', mutuals: 4, since: 'Apr 2026' },
+  'sara-pinheiro': { pron: 'she/her', mutuals: 13, since: 'Sep 2025' },
+  // — incoming requests —
+  'daniel-oliveira': {
+    pron: 'he/him',
+    mutuals: 1,
+    sentAgo: '2h ago',
+    requestMessage:
+      '"Hi Tiago — we met briefly at the harm-reduction workshop. I\'d love to stay in touch and compare notes sometime."',
+  },
+  'mariana-costa': { pron: 'she/her', mutuals: 2, sentAgo: 'yesterday' },
+  'bilal-kaya': { pron: 'he/him', mutuals: 3, sentAgo: '3 days ago' },
+  'ines-fonseca': { pron: 'she/her', mutuals: 0, sentAgo: '5 days ago' },
+  // — sent —
+  'raquel-baptista': { pron: 'she/her', sentAgo: '2 days ago' },
+  'catarina-melo': { pron: 'she/her', sentAgo: '5 days ago' },
+  // — "Load more" pool —
+  beatriz: { pron: 'she/her', mutuals: 3, since: '2025' },
+  kai: { pron: 'they/them', mutuals: 5, since: '2025' },
+  monica: { pron: 'she/her', mutuals: 4, since: '2025' },
+  andre: { pron: 'he/him', mutuals: 6, since: '2025' },
+  carla: { pron: 'she/her', mutuals: 7, since: '2025' },
+  diogo: { pron: 'he/him', mutuals: 2, since: '2025' },
+  jordan: { pron: 'they/them', mutuals: 8, since: '2025' },
+  fatima: { pron: 'she/her', mutuals: 5, since: '2025' },
+  'rui-fernandes': { pron: 'he/him', mutuals: 4, since: '2025' },
 }
 
-export interface AllConnection {
-  person: Person
+/** Initial buckets (real member slugs). The ConnectionsProvider seeds from these. */
+export const SEED_CONNECTED = [
+  'catarina-vaz',
+  'jonas',
+  'luisa',
+  'anika',
+  'rita',
+  'nuno',
+  'sofia-castano',
+  'sara-pinheiro',
+]
+export const SEED_INCOMING = ['daniel-oliveira', 'mariana-costa', 'bilal-kaya', 'ines-fonseca']
+export const SEED_SENT = ['raquel-baptista', 'catarina-melo']
+
+/** Extra members revealed by "Load more" in the All tab. */
+export const MORE_POOL = [
+  'beatriz',
+  'kai',
+  'monica',
+  'andre',
+  'carla',
+  'diogo',
+  'jordan',
+  'fatima',
+  'rui-fernandes',
+]
+export const MORE_PER_PAGE = 4
+
+/** Everything a connection card needs, merged from the registry + relationship meta. */
+export interface ConnectionView {
+  slug: string
+  name: string
+  initials: string
+  tint: AvatarTint
+  photo?: string
+  role: string
+  pron?: string
   tags: string[]
-  meta: MetaInfo
-  actions: ActionLink[]
-}
-export interface IncomingRequest {
-  person: Person
-  meta: MetaInfo
-  message?: string
-}
-export interface OutgoingRequest {
-  person: Person
-  meta: MetaInfo
-}
-export interface VouchedConnection {
-  person: Person
-  note: string
+  meta: ConnectionMeta
 }
 
-const DEFAULT_ACTIONS: ActionLink[] = [
-  { label: 'Message', to: MESSAGES, variant: 'ghost' },
-  { label: 'View profile', to: PROFILE, variant: 'primary' },
-]
-
-export const TABS: { id: TabId; label: string; count: string; accent?: boolean }[] = [
-  { id: 'all', label: 'All connections', count: '47' },
-  { id: 'incoming', label: 'Incoming requests', count: '4', accent: true },
-  { id: 'outgoing', label: 'Sent', count: '2' },
-  { id: 'vouched', label: 'Vouched-for', count: '11' },
-]
-
-export const ALL: AllConnection[] = [
-  {
-    person: { initials: MEMBERS['catarina-vaz'].initials, name: memberName('catarina-vaz'), pron: 'she/her', role: 'Trans Hub coordinator · long-form writer' },
-    tags: ['Activism', 'Writing', 'Trans Hub'],
-    meta: { badge: 'Vouched for you', mutuals: 11, connected: 'Mar 2025' },
-    actions: DEFAULT_ACTIONS,
-  },
-  {
-    person: { initials: MEMBERS.jonas.initials, tint: 'jade', name: memberName('jonas'), pron: 'he/him', role: 'Reporter, QueerPulse Magazine' },
-    tags: ['Editorial', 'Reportage'],
-    meta: { mutuals: 8, connected: 'Dec 2024' },
-    actions: DEFAULT_ACTIONS,
-  },
-  {
-    person: { initials: MEMBERS.luisa.initials, tint: 'plum', name: memberName('luisa'), pron: 'she/her', role: 'Design director · ex-Atelier Pulso' },
-    tags: ['Design', 'Mentoring'],
-    meta: { badge: 'You vouched', mutuals: 14 },
-    actions: [
-      { label: 'Book review', to: routes.offer, variant: 'ghost' },
-      { label: 'Message', to: MESSAGES, variant: 'primary' },
-    ],
-  },
-  {
-    person: { initials: MEMBERS.anika.initials, name: memberName('anika'), pron: 'she/her', role: 'Healthcare designer · Trans & NB Network' },
-    tags: ['Design', 'Health', 'Hosting'],
-    meta: { mutuals: 6, connected: 'Jan 2026' },
-    actions: [
-      { label: 'Co-host', to: routes.host, variant: 'ghost' },
-      { label: 'Message', to: MESSAGES, variant: 'primary' },
-    ],
-  },
-  {
-    person: { initials: 'RV', tint: 'jade', name: 'Rita Vasquez', pron: 'they/them', role: 'Therapist · Café Beirão regular' },
-    tags: ['Wellbeing', 'Therapy'],
-    meta: { badge: 'Mutual vouch', mutuals: 9 },
-    actions: DEFAULT_ACTIONS,
-  },
-  {
-    person: { initials: MEMBERS.nuno.initials, tint: 'plum', name: memberName('nuno'), pron: 'he/him', role: 'Trans Hub coordinator' },
-    tags: ['Activism', 'Trans Hub'],
-    meta: { mutuals: 11, connected: 'Feb 2025' },
-    actions: DEFAULT_ACTIONS,
-  },
-  {
-    person: { initials: MEMBERS['sofia-castano'].initials, name: memberName('sofia-castano'), pron: 'she/her', role: 'Service designer · reading group host' },
-    tags: ['Design', 'Reading'],
-    meta: { mutuals: 4, connected: 'Apr 2026' },
-    actions: DEFAULT_ACTIONS,
-  },
-  {
-    person: { initials: 'SP', tint: 'jade', name: 'Sara Pinheiro', pron: 'she/her', role: 'Contributing editor · Magazine' },
-    tags: ['Editorial', 'Health'],
-    meta: { mutuals: 13, connected: 'Sep 2025' },
-    actions: [
-      { label: 'Message', to: MESSAGES, variant: 'ghost' },
-      { label: 'View profile', to: routes.author, variant: 'primary' },
-    ],
-  },
-]
-
-export const INCOMING: IncomingRequest[] = [
-  {
-    person: { initials: 'EM', name: 'Emília Marques', pron: 'she/her', role: 'Photographer · met at Riso open-house' },
-    meta: { mutuals: 3, mutualsNote: 'including Anika', sent: '2h ago' },
-    message: '"Hi Tomás! We met briefly at the riso night, I\'m working on a series and would love to chat sometime."',
-  },
-  {
-    person: { initials: 'DR', tint: 'jade', name: 'Daniel Reis', pron: 'he/him', role: 'Junior designer · seen your portfolio piece' },
-    meta: { mutuals: 1, mutualsNote: 'Luísa', sent: 'yesterday' },
-  },
-  {
-    person: { initials: 'MM', tint: 'plum', name: 'Mira Martín', pron: 'they/them', role: 'New member · vouched-for by Catarina' },
-    meta: { mutuals: 2, sent: '3 days ago' },
-  },
-  {
-    person: { initials: 'PV', name: 'Pedro Vinhas', pron: 'he/him', role: "No mutuals · we don't see why" },
-    meta: { muted: 'No mutuals — review carefully' },
-  },
-]
-
-export const OUTGOING: OutgoingRequest[] = [
-  {
-    person: { initials: 'MR', name: 'Marta Reis', pron: 'she/her', role: 'Editor · QueerPulse Magazine' },
-    meta: { awaiting: '2 days ago' },
-  },
-  {
-    person: { initials: 'FL', tint: 'jade', name: 'Filipa Lopes', pron: 'she/her', role: 'Riso open-house · met last weekend' },
-    meta: { awaiting: '5 days ago' },
-  },
-]
-
-export const VOUCHED: VouchedConnection[] = [
-  { person: { initials: 'CV', name: 'Catarina Vaz', pron: 'she/her', role: 'Mutual vouch · 2024' }, note: 'Vouched both ways' },
-  { person: { initials: 'RV', tint: 'jade', name: 'Rita Vasquez', pron: 'they/them', role: 'Mutual vouch · 2025' }, note: 'Vouched both ways' },
-  { person: { initials: 'LG', tint: 'plum', name: 'Luísa Gomes', pron: 'she/her', role: 'You vouched · 2025' }, note: 'You vouched' },
-]
-
-/** Additional pages of connections, generated deterministically for "Load more". */
-const MORE_POOL: { name: string; pron: string; role: string; tags: string[]; tint?: Tint }[] = [
-  { name: 'Beatriz Lima', pron: 'she/her', role: 'Illustrator · zine collective', tags: ['Illustration', 'Print'] },
-  { name: 'Tó Cunha', pron: 'he/him', role: 'Riso printmaker · workshop host', tags: ['Print', 'Hosting'], tint: 'jade' },
-  { name: 'Inês Tavares', pron: 'she/her', role: 'GP · Trans & NB Network', tags: ['Health', 'Mentoring'], tint: 'plum' },
-  { name: 'Hugo Branco', pron: 'he/him', role: 'Sound designer · club nights', tags: ['Music', 'Events'] },
-  { name: 'Nadia Saleh', pron: 'they/them', role: 'Researcher · housing rights', tags: ['Activism', 'Research'], tint: 'jade' },
-  { name: 'Pilar Otero', pron: 'she/her', role: 'Editor · community newsletter', tags: ['Editorial'], tint: 'plum' },
-  { name: 'Vasco Pinto', pron: 'he/him', role: 'Carpenter · barter regular', tags: ['Barter', 'Making'] },
-  { name: 'Lena Costa', pron: 'she/her', role: 'Therapist · Wellbeing circle', tags: ['Wellbeing', 'Therapy'], tint: 'jade' },
-]
-
-function initialsOf(name: string): string {
-  return name
-    .split(' ')
-    .map((w) => w[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
+/** Build a card view for a member slug, or null if the slug isn't a real member. */
+export function connectionView(slug: string): ConnectionView | null {
+  const m = MEMBERS[slug]
+  if (!m) return null
+  return {
+    slug,
+    name: `${m.first} ${m.last}`,
+    initials: m.initials,
+    tint: m.tint,
+    photo: m.photo,
+    role: m.role,
+    pron: CONNECTION_META[slug]?.pron,
+    tags: m.tags,
+    meta: CONNECTION_META[slug] ?? {},
+  }
 }
 
-const MORE_PER_PAGE = 4
-
-/** Returns deterministic extra connections for a 0-based page; empty when exhausted. */
-export function moreConnections(page: number): AllConnection[] {
-  const start = page * MORE_PER_PAGE
-  return MORE_POOL.slice(start, start + MORE_PER_PAGE).map((p, i) => ({
-    person: { initials: initialsOf(p.name), tint: p.tint, name: p.name, pron: p.pron, role: p.role },
-    tags: p.tags,
-    meta: { mutuals: 3 + ((start + i) % 9), connected: '2025' },
-    actions: DEFAULT_ACTIONS,
-  }))
+/** Resolve a list of slugs to views, dropping any that aren't real members. */
+export function connectionViews(slugs: string[]): ConnectionView[] {
+  return slugs.map(connectionView).filter((v): v is ConnectionView => v !== null)
 }
 
-export const MORE_PAGES = Math.ceil(MORE_POOL.length / MORE_PER_PAGE)
+const VOUCH_LABEL: Record<NonNullable<ConnectionMeta['vouchBadge']>, string> = {
+  'vouched-for-you': 'Vouched for you',
+  'you-vouched': 'You vouched',
+  mutual: 'Mutual vouch',
+}
+
+/** Short label for a connection's vouch relationship, if any. */
+export function vouchBadgeLabel(meta: ConnectionMeta): string | undefined {
+  return meta.vouchBadge ? VOUCH_LABEL[meta.vouchBadge] : undefined
+}
+
+/** The note shown on a card in the Vouched-for tab. */
+export function vouchNote(slug: string, youVouched: boolean): string {
+  const badge = CONNECTION_META[slug]?.vouchBadge
+  const theyVouched = badge === 'vouched-for-you' || badge === 'mutual'
+  if (youVouched && theyVouched) return 'Vouched both ways'
+  if (youVouched) return 'You vouched'
+  if (badge === 'vouched-for-you') return 'Vouched for you'
+  if (badge === 'mutual') return 'Vouched both ways'
+  return 'You vouched'
+}

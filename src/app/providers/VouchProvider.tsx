@@ -10,6 +10,8 @@ import {
 import { VouchMemberModal } from '../../features/members/VouchMemberModal'
 
 interface VouchContextValue {
+  /** Member slugs the current user has vouched for, most-recent first. */
+  vouched: string[]
   /** Has the current user already vouched for this member slug? */
   hasVouched: (slug: string) => boolean
   /** Open the vouch modal addressed to a member slug. */
@@ -58,6 +60,7 @@ export function VouchProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<VouchContextValue>(
     () => ({
+      vouched,
       hasVouched: (slug) => vouched.includes(slug),
       openVouch,
       addVouch,

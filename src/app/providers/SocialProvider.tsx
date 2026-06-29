@@ -15,6 +15,10 @@ interface SocialState {
 }
 
 interface SocialContextValue {
+  /** Ids the user has blocked, most-recent first. */
+  blocked: string[]
+  /** Ids the user has muted, most-recent first. */
+  muted: string[]
   isFollowing: (id: string) => boolean
   /** Toggle follow; returns the new state (true = now following). */
   toggleFollow: (id: string) => boolean
@@ -80,6 +84,8 @@ export function SocialProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<SocialContextValue>(
     () => ({
+      blocked: state.blocked,
+      muted: state.muted,
       isFollowing: (id) => state.following.includes(id),
       toggleFollow: makeToggle('following'),
       isMuted: (id) => state.muted.includes(id),

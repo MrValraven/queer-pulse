@@ -5,6 +5,7 @@ import { I18nProvider } from './providers/I18nProvider'
 import { ToastProvider } from '../shared/components/feedback/ToastProvider'
 import { AdminRoleProvider } from './providers/AdminRoleProvider'
 import { ConnectProvider } from './providers/ConnectProvider'
+import { ConnectionsProvider } from './providers/ConnectionsProvider'
 import { ProfileProvider } from './providers/ProfileProvider'
 import { ProfileThemeProvider } from './providers/ProfileThemeProvider'
 import { VouchProvider } from './providers/VouchProvider'
@@ -30,6 +31,7 @@ export default function App() {
               <WorkProfileProvider>
                 <ProfileProvider>
                   <ProfileThemeProvider>
+                    <ConnectionsProvider>
                     <ConnectProvider>
                       <VouchProvider>
                         <SavedProvider>
@@ -44,6 +46,7 @@ export default function App() {
                         </SavedProvider>
                       </VouchProvider>
                     </ConnectProvider>
+                    </ConnectionsProvider>
                   </ProfileThemeProvider>
                 </ProfileProvider>
               </WorkProfileProvider>
