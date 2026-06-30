@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FadeIn } from '../../shared/components/ui'
+import { FadeIn, Tabs } from '../../shared/components/ui'
 import type { CommunityDetail, Person, Thread as ThreadData } from './communityDetails'
 import { AboutTab, ForumTab, MembersTab } from './CommunityTabs'
 import styles from './CommunityDetailPage.module.css'
@@ -41,17 +41,17 @@ export function FallbackHubTabs({
 
   return (
     <div>
-      <div className={styles.tabs}>
-        <button type="button" className={[styles.tab, tab === 'about' && styles.tabActive].filter(Boolean).join(' ')} onClick={() => setTab('about')}>
-          About
-        </button>
-        <button type="button" className={[styles.tab, tab === 'members' && styles.tabActive].filter(Boolean).join(' ')} onClick={() => setTab('members')}>
-          Members {hasCount && <span className={styles.tabCount}>{memberNum}</span>}
-        </button>
-        <button type="button" className={[styles.tab, tab === 'forum' && styles.tabActive].filter(Boolean).join(' ')} onClick={() => setTab('forum')}>
-          Forum <span className={styles.tabCount}>{threads.length}</span>
-        </button>
-      </div>
+      <Tabs
+        className={styles.tabs}
+        variant="underline"
+        tabs={[
+          { id: 'about', label: 'About' },
+          { id: 'members', label: 'Members', count: hasCount ? memberNum : undefined },
+          { id: 'forum', label: 'Forum', count: threads.length },
+        ]}
+        active={tab}
+        onChange={(id) => setTab(id as Tab)}
+      />
 
       <FadeIn key={tab}>
         {tab === 'about' && <AboutTab detail={detail} />}

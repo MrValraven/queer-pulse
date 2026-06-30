@@ -24,6 +24,10 @@ interface Props {
   articleTitle?: string
   /** Small supporting line (author · read time). */
   articleMeta?: string
+  /** Short blurb shown on the saved card. */
+  articleDescription?: string
+  /** Read-length pill for the saved card, e.g. "6 min read". */
+  articleReadTime?: string
 }
 
 /** Derive a stable slug + href from the current URL when props aren't passed. */
@@ -41,6 +45,8 @@ export function ArticleToolbar({
   articleId,
   articleTitle,
   articleMeta,
+  articleDescription,
+  articleReadTime,
 }: Props) {
   const { showToast } = useToast()
   const { isSaved, toggleSave: toggleSaved } = useSaved()
@@ -64,6 +70,8 @@ export function ArticleToolbar({
       title,
       href,
       meta: articleMeta,
+      description: articleDescription,
+      readTime: articleReadTime,
     })
     showToast(
       next ? 'Saved to your reading list' : 'Removed from your reading list',

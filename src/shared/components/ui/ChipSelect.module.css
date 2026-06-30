@@ -1,0 +1,82 @@
+/* Interactive toggle chips — single- or multi-select.
+   Distinct from <Tag> (display-only). Consolidates the ~12 hand-rolled
+   .chip/.chipOn/.chipActive/.chipSelected rows across features. */
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  background: var(--paper);
+  color: var(--ink-60);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.16s var(--ease), color 0.16s var(--ease), background 0.16s var(--ease);
+}
+.chip:hover {
+  border-color: rgba(var(--plum-rgb), 0.3);
+  color: var(--plum);
+}
+.chipOn {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: var(--cream);
+}
+.chipOn:hover {
+  background: var(--plum);
+  color: var(--cream);
+}
+.chip svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ── tone: jade active (light) ───────────────────────────────────────────── */
+.tone_jade.chipOn {
+  background: rgba(var(--jade-rgb), 0.1);
+  color: var(--jade);
+  border-color: rgba(var(--jade-rgb), 0.32);
+}
+.tone_jade.chipOn:hover {
+  background: rgba(var(--jade-rgb), 0.1);
+  color: var(--jade);
+}
+
+/* ── tint: dark (for plum/dark surfaces, e.g. cinema) ────────────────────── */
+.dark.chip {
+  background: transparent;
+  border-color: rgba(247, 243, 238, 0.16);
+  color: rgba(247, 243, 238, 0.66);
+}
+.dark.chip:hover {
+  border-color: rgba(247, 243, 238, 0.4);
+  color: var(--cream);
+}
+.dark.chipOn {
+  background: rgba(247, 243, 238, 0.14);
+  border-color: rgba(247, 243, 238, 0.4);
+  color: var(--cream);
+}
+.dark.tone_jade.chipOn {
+  background: rgba(var(--jade-rgb), 0.22);
+  border-color: rgba(var(--jade-rgb), 0.4);
+  color: var(--jade-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+}

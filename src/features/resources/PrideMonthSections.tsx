@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Reveal } from '../../shared/components/ui'
+import { Button, FilterChips, Reveal } from '../../shared/components/ui'
 import {
   CHIPS, EVENTS, MORE_EVENTS, SAFETY_CARDS, READING, GATHERING,
 } from './prideMonth.data'
 import styles from './PrideMonthPage.module.css'
 
 export function PrideMonthCalendar() {
-  const [activeChip, setActiveChip] = useState(0)
+  const [activeChip, setActiveChip] = useState(CHIPS[0]!)
   const [expanded, setExpanded] = useState(false)
   const events = expanded ? [...EVENTS, ...MORE_EVENTS] : EVENTS
 
@@ -19,20 +19,12 @@ export function PrideMonthCalendar() {
         </h2>
         <span className={styles.meta}>Hosted by 14 members and 6 partner spaces</span>
       </Reveal>
-      <div className={styles.calChips}>
-        {CHIPS.map((c, i) => (
-          <button
-            key={c}
-            type="button"
-            className={[styles.calChip, activeChip === i && styles.calChipActive]
-              .filter(Boolean)
-              .join(' ')}
-            onClick={() => setActiveChip(i)}
-          >
-            {c}
-          </button>
-        ))}
-      </div>
+      <FilterChips
+        className={styles.calChips}
+        options={CHIPS}
+        value={activeChip}
+        onChange={setActiveChip}
+      />
       <div className={styles.calList}>
         {events.map((e, i) => (
           <Reveal

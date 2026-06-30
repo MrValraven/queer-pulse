@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { FiBell } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import { AppShell } from '../../shared/components/layout'
-import { Avatar, Button, FadeIn } from '../../shared/components/ui'
+import { Avatar, Button, FadeIn, Tabs } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { linkToPath, routes } from '../../app/routeMap'
@@ -118,19 +118,13 @@ export function NotificationsPage() {
             </div>
           </div>
 
-          <div className={styles.tabs}>
-            {notificationTabs.map((tab) => (
-              <button
-                key={tab.value}
-                className={[styles.tab, filter === tab.value && styles.tabActive]
-                  .filter(Boolean)
-                  .join(' ')}
-                onClick={() => setFilter(tab.value)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          <Tabs
+            className={styles.tabs}
+            variant="underline"
+            tabs={notificationTabs.map((tab) => ({ id: tab.value, label: tab.label }))}
+            active={filter}
+            onChange={(id) => setFilter(id as 'all' | NotifType)}
+          />
 
           {loading ? (
             <NotificationsListSkeleton count={7} />

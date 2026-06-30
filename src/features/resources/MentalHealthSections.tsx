@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Avatar, Button, Reveal } from '../../shared/components/ui'
+import { Avatar, Button, FilterChips, Reveal } from '../../shared/components/ui'
 import { THERAPISTS, EXPERIENCES, SNS, LANGS, type Therapist } from './mentalHealth.data'
 import { TherapistProfileModal } from './TherapistProfileModal'
 import styles from './MentalHealthPage.module.css'
@@ -26,16 +26,12 @@ export function TherapistSection() {
         </Reveal>
         <div className={styles.thFilter}>
           <span className={styles.thFilterLabel}>Filter</span>
-          {LANGS.map((l) => (
-            <button
-              key={l}
-              type="button"
-              className={[styles.thChip, filter === l && styles.thChipOn].filter(Boolean).join(' ')}
-              onClick={() => setFilter(l)}
-            >
-              {l === 'all' ? 'All languages' : l}
-            </button>
-          ))}
+          <FilterChips
+            tone="jade"
+            value={filter}
+            onChange={setFilter}
+            options={LANGS.map((l) => ({ value: l, label: l === 'all' ? 'All languages' : l }))}
+          />
         </div>
         <div className={styles.therapistGrid}>
           {therapists.map((t, i) => (

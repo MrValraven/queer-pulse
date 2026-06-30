@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
+import { Button, Outro, Tabs } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { TABS, type TabId } from './sexualHealth.data'
 import { GuidesTab, HivTab, PrepTab, TestingTab } from './SexualHealthTabs'
@@ -21,18 +21,13 @@ export function SexualHealthPage() {
             Direct, queer-specific, non-judgmental. Testing, PrEP, HIV resources, and a
             community-reviewed provider directory — all in one place.
           </p>
-          <div className={styles.tabs}>
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                className={[styles.tab, tab === t.id && styles.tabActive].filter(Boolean).join(' ')}
-                onClick={() => setTab(t.id)}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+          <Tabs
+            variant="underline"
+            tint="dark"
+            tabs={TABS}
+            active={tab}
+            onChange={(id) => setTab(id as TabId)}
+          />
         </div>
       </div>
 

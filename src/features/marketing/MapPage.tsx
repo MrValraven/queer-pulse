@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { FadeIn, SkeletonLine } from '../../shared/components/ui'
+import { FadeIn, FilterChips, SkeletonLine } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { TYPES, VENUES, VIBES, type Venue } from './map.data'
 import { LisbonMapSvg } from './LisbonMapSvg'
@@ -121,11 +121,11 @@ export function MapPage() {
         <div className="wrap">
           <div className={s.fbInner}>
             <span className={s.fbLabel}>Type</span>
-            {TYPES.map((t) => (
-              <button key={t.t} className={[s.chip, type === t.t && s.chipOn].filter(Boolean).join(' ')} onClick={() => { setType(t.t); setExpanded(null) }}>
-                {t.label}
-              </button>
-            ))}
+            <FilterChips
+              options={TYPES.map((t) => ({ value: t.t, label: t.label }))}
+              value={type}
+              onChange={(v) => { setType(v); setExpanded(null) }}
+            />
             <span className={s.fbSep} />
             <span className={s.fbLabel}>Vibe</span>
             {VIBES.map((v) => (

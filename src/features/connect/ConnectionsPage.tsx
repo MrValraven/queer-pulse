@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { FiInfo, FiSearch, FiUserPlus } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
 import { routes } from '../../app/routeMap'
-import { Button, EmptyState, FadeIn } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn, SearchInput } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useConnect } from '../../app/providers/ConnectProvider'
@@ -144,18 +144,13 @@ export function ConnectionsPage() {
 
         {tab === 'all' && (
           <div className={styles.filters}>
-            <div className={styles.searchInput}>
-              <svg viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="7" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search by name, role, or community"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-            </div>
+            <SearchInput
+              className={styles.searchInput}
+              value={query}
+              onChange={setQuery}
+              placeholder="Search by name, role, or community"
+              ariaLabel="Search connections"
+            />
             <select
               className={styles.sortSel}
               value={sort}

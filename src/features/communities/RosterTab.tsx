@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FiSearch, FiCheck, FiMessageCircle } from 'react-icons/fi'
-import { Avatar } from '../../shared/components/ui'
+import { FiCheck, FiMessageCircle } from 'react-icons/fi'
+import { Avatar, SearchInput } from '../../shared/components/ui'
 import { useConnect } from '../../app/providers/ConnectProvider'
 import type { RosterMember } from './community.model'
 import { photoOf } from './communityPeople'
@@ -27,16 +27,13 @@ export function RosterTab({ roster, total, slug }: { roster: RosterMember[]; tot
 
   return (
     <div>
-      <div className={styles.searchRow}>
-        <FiSearch aria-hidden className={styles.searchIcon} />
-        <input
-          className={styles.search}
-          aria-label="Search members"
-          placeholder="Search members by name, role or neighbourhood…"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-      </div>
+      <SearchInput
+        className={styles.searchRow}
+        ariaLabel="Search members"
+        placeholder="Search members by name, role or neighbourhood…"
+        value={q}
+        onChange={setQ}
+      />
 
       <div className={detail.memberGrid}>
         {shown.map((m) => (

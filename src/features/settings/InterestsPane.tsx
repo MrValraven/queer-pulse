@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ChipSelect, useChipSet } from '../../shared/components/ui'
 import { Pane, Section, ToggleList, ToggleRow } from './SettingsControls'
 import {
   AGE_LABELS,
@@ -20,28 +21,18 @@ function ChipField({
   group: ChipGroup
   onChange: () => void
 }) {
-  const [selected, setSelected] = useState<string[]>(group.defaults)
-
-  function toggle(label: string) {
-    setSelected((prev) =>
-      prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label],
-    )
-    onChange()
-  }
+  const { selected, toggle } = useChipSet(group.defaults)
 
   return (
-    <div className={styles.chipWrap}>
-      {group.options.map((label) => (
-        <button
-          key={label}
-          type="button"
-          className={`${styles.chip} ${selected.includes(label) ? styles.chipOn : ''}`}
-          onClick={() => toggle(label)}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
+    <ChipSelect
+      tick={false}
+      options={group.options}
+      selected={selected}
+      onToggle={(label) => {
+        toggle(label)
+        onChange()
+      }}
+    />
   )
 }
 

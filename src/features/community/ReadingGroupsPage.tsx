@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FiBookOpen } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, EmptyState, FadeIn, Outro, SkeletonLine } from '../../shared/components/ui'
+import { Button, EmptyState, FadeIn, FilterChips, Outro, SkeletonLine } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { routes } from '../../app/routeMap'
@@ -102,28 +102,18 @@ export function ReadingGroupsPage() {
       <div className={styles.filterBar}>
         <div className={styles.fbInner}>
           <span className={styles.fbLabel}>Genre</span>
-          {GENRE_FILTERS.map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              className={[styles.chip, genre === f.id && styles.chipActive].filter(Boolean).join(' ')}
-              onClick={() => setGenre(f.id)}
-            >
-              {f.label}
-            </button>
-          ))}
+          <FilterChips
+            options={GENRE_FILTERS.map((f) => ({ value: f.id, label: f.label }))}
+            value={genre}
+            onChange={(v) => setGenre(v as Genre | 'all')}
+          />
           <div className={styles.fbSep} />
           <span className={styles.fbLabel}>Format</span>
-          {FORMAT_FILTERS.map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              className={[styles.chip, format === f.id && styles.chipActive].filter(Boolean).join(' ')}
-              onClick={() => setFormat(f.id)}
-            >
-              {f.label}
-            </button>
-          ))}
+          <FilterChips
+            options={FORMAT_FILTERS.map((f) => ({ value: f.id, label: f.label }))}
+            value={format}
+            onChange={(v) => setFormat(v as Format | 'all')}
+          />
           <div className={styles.fbSep} />
           <div className={styles.count}>
             <b>{items.length}</b> group{items.length !== 1 ? 's' : ''}

@@ -88,56 +88,6 @@
   line-height: 1.6;
   margin-bottom: 30px;
 }
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-.field label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink-60);
-  letter-spacing: 0.02em;
-}
-.req {
-  color: var(--accent);
-  margin-left: 1px;
-}
-.field input:disabled,
-.field textarea:disabled,
-.field select:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-.field input,
-.field textarea,
-.field select {
-  font-family: var(--sans);
-  font-size: 15.5px;
-  color: var(--ink);
-  background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
-  border-radius: 12px;
-  padding: 13px 15px;
-  transition:
-    border-color var(--dur-base) var(--ease),
-    box-shadow var(--dur-base) var(--ease);
-  outline: none;
-  width: 100%;
-}
-.field textarea {
-  resize: vertical;
-  min-height: 120px;
-  line-height: 1.6;
-}
-.field input:focus,
-.field textarea:focus,
-.field select:focus {
-  border-color: var(--plum);
-  box-shadow: 0 0 0 4px rgba(45, 27, 61, 0.08);
-  background: var(--paper);
-}
 .note {
   font-size: 12.5px;
   color: var(--ink-40);
@@ -166,26 +116,6 @@
 .back:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-/* Sending — inline spinner inside the Send button */
-.sending {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-}
-.spinner {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  border: 2px solid rgba(247, 243, 238, 0.35);
-  border-top-color: var(--cream);
-  animation: connectSpin 0.7s linear infinite;
-}
-@keyframes connectSpin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 /* Success — plum-panel pattern per the design system */
@@ -332,8 +262,7 @@
   .sent p,
   .sent > :last-child,
   .autoClose,
-  .autoCloseBar,
-  .spinner {
+  .autoCloseBar {
     animation: none;
   }
   .tyCheck {

@@ -42,37 +42,6 @@
   opacity: 0.4;
 }
 
-/* Chips */
-.chipWrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.chip {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
-  background: transparent;
-  color: var(--ink-60);
-  cursor: pointer;
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease),
-    border-color 0.2s var(--ease);
-}
-.chip:hover {
-  border-color: var(--plum);
-  color: var(--plum);
-}
-.chipOn {
-  background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
-}
-
 /* World fields */
 .worldGrid {
   display: grid;

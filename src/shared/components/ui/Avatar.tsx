@@ -1,4 +1,5 @@
 import { useState, type CSSProperties, type HTMLAttributes } from 'react'
+import { resolveAvatarSrc } from '../../lib/avatarUrl'
 import styles from './Avatar.module.css'
 
 export type AvatarTint = 'default' | 'coral' | 'jade' | 'plum' | 'auth'
@@ -30,12 +31,13 @@ export function Avatar({
     fontSize: size * 0.34,
   }
 
+  const px = Math.round(size * 2)
   // For Unsplash images, request a face-aware crop at 2× the render size
-  // so small avatars don't get an off-center or blurry crop.
+  // so small avatars don't get an off-center or blurry crop. Google/OAuth
+  // avatars get their size directive bumped the same way (see resolveAvatarSrc).
   const resolvedSrc = src?.includes('unsplash.com')
     ? (() => {
         const url = new URL(src)
-        const px = Math.round(size * 2)
         url.searchParams.set('w', String(px))
         url.searchParams.set('h', String(px))
         url.searchParams.set('fit', 'crop')
@@ -44,13 +46,18 @@ export function Avatar({
         url.searchParams.set('q', '80')
         return url.toString()
       })()
-    : src
+    : resolveAvatarSrc(src, px)
 
   return (
     <div className={[styles.wrap, className].filter(Boolean).join(' ')} {...rest}>
       <div className={[styles.avatar, styles[tint]].join(' ')} style={circleStyle}>
         {resolvedSrc && !imgFailed ? (
-          <img src={resolvedSrc} alt={alt ?? initials} onError={() => setImgFailed(true)} />
+          <img
+            src={resolvedSrc}
+            alt={alt ?? initials}
+            referrerPolicy="no-referrer"
+            onError={() => setImgFailed(true)}
+          />
         ) : (
           initials
         )}

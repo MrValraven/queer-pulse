@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
+import { Button, FormField } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import styles from './PrintOrderModal.module.css'
 
@@ -102,10 +102,11 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
               </span>
             </div>
 
-            <div className={styles.field}>
-              <label htmlFor="po-email">
-                Email for shipping updates <span className={styles.req}>*</span>
-              </label>
+            <FormField
+              label="Email for shipping updates"
+              required
+              helper="We only use this to tell you when your copy ships."
+            >
               <input
                 id="po-email"
                 type="email"
@@ -114,8 +115,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                 placeholder="you@example.com"
                 disabled={stage === 'placing'}
               />
-              <span className={styles.hint}>We only use this to tell you when your copy ships.</span>
-            </div>
+            </FormField>
 
             <div className={styles.foot}>
               <button

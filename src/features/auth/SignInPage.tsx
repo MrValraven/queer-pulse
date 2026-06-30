@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
+import { Button, FormField } from '../../shared/components/ui'
 import { useAuth } from '../../app/providers/authContext'
 import { routes } from '../../app/routeMap'
 import { AuthLayout } from './AuthLayout'
@@ -21,7 +21,7 @@ export function SignInPage() {
     if (googleLoading) return
     setGoogleLoading(true)
     setTimeout(() => {
-      signIn()
+      signIn('/feed')
       navigate('/feed')
     }, 1100)
   }
@@ -41,56 +41,49 @@ export function SignInPage() {
         onSubmit={(event) => {
           event.preventDefault()
           if (canSubmit) {
-            signIn()
+            signIn('/feed')
             navigate('/feed')
           }
         }}
       >
-        <div className={styles.field}>
-          <label htmlFor="si-email">Email</label>
-          <div className={styles.fieldWrap}>
-            <input
-              id="si-email"
-              type="email"
-              placeholder="you@example.com"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onBlur={() => setTouched(true)}
-            />
-          </div>
-          {emailError && (
-            <span style={{ fontSize: 12.5, color: 'var(--accent-ink)', fontWeight: 500 }}>
-              Please enter a valid email address.
-            </span>
-          )}
-        </div>
+        <FormField
+          label="Email"
+          error={emailError ? 'Please enter a valid email address.' : undefined}
+        >
+          <input
+            id="si-email"
+            type="email"
+            placeholder="you@example.com"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onBlur={() => setTouched(true)}
+            aria-invalid={emailError}
+          />
+        </FormField>
 
-        <div className={styles.field} style={{ marginBottom: 26 }}>
-          <label htmlFor="si-pw">Password</label>
-          <div className={styles.fieldWrap}>
-            <input
-              id="si-pw"
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Your password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={{ paddingRight: 48 }}
-            />
-            <button
-              type="button"
-              className={styles.pwToggle}
-              onClick={() => setShowPassword((s) => !s)}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx={12} cy={12} r={3} />
-              </svg>
-            </button>
-          </div>
-        </div>
+        <FormField label="Password" className={styles.pwField}>
+          <input
+            id="si-pw"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Your password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ paddingRight: 48 }}
+          />
+          <button
+            type="button"
+            className={styles.pwToggle}
+            onClick={() => setShowPassword((s) => !s)}
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+          >
+            <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx={12} cy={12} r={3} />
+            </svg>
+          </button>
+        </FormField>
 
         <Button type="submit" className={styles.authBtn} disabled={!canSubmit}>
           Sign in →

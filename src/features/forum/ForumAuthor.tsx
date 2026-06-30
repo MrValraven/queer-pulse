@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiShield } from 'react-icons/fi'
 import { routes } from '../../app/routeMap'
+import { resolveAvatarSrc } from '../../shared/lib/avatarUrl'
 import styles from './ForumAuthor.module.css'
 
 /** Profile path for a member slug (canonical member page). */
@@ -38,7 +39,11 @@ export function ForumAvatar({
 }) {
   return (
     <span className={className} style={style}>
-      {person.photo ? <img src={person.photo} alt={person.name} /> : person.initials}
+      {person.photo ? (
+        <img src={resolveAvatarSrc(person.photo)} alt={person.name} referrerPolicy="no-referrer" />
+      ) : (
+        person.initials
+      )}
     </span>
   )
 }

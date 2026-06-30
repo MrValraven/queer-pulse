@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
+import { Button, FormField } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import { GatheringSuccessPanel } from './GatheringSuccessPanel'
 import styles from './GatheringModals.module.css'
@@ -69,47 +69,18 @@ export function EditDetailsModal({
           </p>
 
           <div className={styles.fields}>
-            <div className={styles.field}>
-              <label className={styles.label}>
-                Title <span className={styles.req}>*</span>
-              </label>
-              <input
-                className={styles.input}
-                type="text"
-                value={draft.title}
-                onChange={(e) => set('title', e.target.value)}
-              />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label}>
-                Date &amp; time <span className={styles.req}>*</span>
-              </label>
-              <input
-                className={styles.input}
-                type="text"
-                value={draft.date}
-                onChange={(e) => set('date', e.target.value)}
-              />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label}>
-                Location <span className={styles.req}>*</span>
-              </label>
-              <input
-                className={styles.input}
-                type="text"
-                value={draft.location}
-                onChange={(e) => set('location', e.target.value)}
-              />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label}>Description</label>
-              <textarea
-                className={styles.textarea}
-                value={draft.description}
-                onChange={(e) => set('description', e.target.value)}
-              />
-            </div>
+            <FormField label="Title" required>
+              <input type="text" value={draft.title} onChange={(e) => set('title', e.target.value)} />
+            </FormField>
+            <FormField label="Date & time" required>
+              <input type="text" value={draft.date} onChange={(e) => set('date', e.target.value)} />
+            </FormField>
+            <FormField label="Location" required>
+              <input type="text" value={draft.location} onChange={(e) => set('location', e.target.value)} />
+            </FormField>
+            <FormField label="Description">
+              <textarea value={draft.description} onChange={(e) => set('description', e.target.value)} />
+            </FormField>
           </div>
 
           <div className={styles.actions}>

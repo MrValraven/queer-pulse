@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
+import { Button, Sending } from '../../shared/components/ui'
 import { GLOSSARY } from './queer101.data'
 import { ResourceModal, PlumSuccess } from './ResourceModal'
 import styles from './ResourceModal.module.css'
@@ -58,11 +58,7 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
               Cancel
             </Button>
             <Button type="button" variant="primary" onClick={submit} disabled={!valid || phase === 'loading'}>
-              {phase === 'loading' ? (
-                <><span className={styles.spinner} />Sending…</>
-              ) : (
-                'Send suggestion'
-              )}
+              {phase === 'loading' ? <Sending label="Sending…" /> : 'Send suggestion'}
             </Button>
           </div>
         </>

@@ -1,5 +1,5 @@
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, FormField } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import s from './ReportPage.module.css'
 import { routes } from '../../app/routeMap'
@@ -72,9 +72,8 @@ export function ReportPage() {
                   showToast("Report received — we'll follow up within 24 hours.", 'success')
                 }}
               >
-                <div className={s.field}>
-                  <label>What are you reporting?</label>
-                  <select className={s.select} defaultValue="">
+                <FormField label="What are you reporting?">
+                  <select defaultValue="">
                     <option value="" disabled>
                       Select a category
                     </option>
@@ -85,19 +84,16 @@ export function ReportPage() {
                     <option>Unsafe behaviour at a gathering</option>
                     <option>Something else</option>
                   </select>
-                </div>
-                <div className={s.field}>
-                  <label>Member or content involved (optional)</label>
-                  <input className={s.input} type="text" placeholder="Username or URL" />
-                </div>
-                <div className={s.field}>
-                  <label>What happened?</label>
-                  <textarea className={s.textarea} placeholder="Tell us what happened, with as much detail as you're comfortable sharing. There are no wrong answers." />
-                </div>
-                <div className={s.field}>
-                  <label>Your contact email (optional — for follow-up)</label>
-                  <input className={s.input} type="email" placeholder="you@email.com" />
-                </div>
+                </FormField>
+                <FormField label="Member or content involved (optional)">
+                  <input type="text" placeholder="Username or URL" />
+                </FormField>
+                <FormField label="What happened?">
+                  <textarea placeholder="Tell us what happened, with as much detail as you're comfortable sharing. There are no wrong answers." />
+                </FormField>
+                <FormField label="Your contact email (optional — for follow-up)">
+                  <input type="email" placeholder="you@email.com" />
+                </FormField>
                 <div style={{ marginTop: 16 }}>
                   <Button type="submit">Submit report</Button>
                 </div>

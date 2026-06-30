@@ -117,11 +117,6 @@
   min-height: 82px;
   line-height: 1.6;
 }
-.helper {
-  font-size: 12px;
-  color: var(--ink-40);
-  line-height: 1.5;
-}
 .twoCol {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -222,27 +217,6 @@
   flex: none;
   width: 16px;
   height: 16px;
-}
-
-/* Inline button spinner while the invite is being generated. */
-.spinner {
-  width: 15px;
-  height: 15px;
-  margin-inline-end: 9px;
-  border-radius: 50%;
-  border: 2px solid rgba(247, 243, 238, 0.35);
-  border-top-color: var(--cream);
-  animation: spin 0.7s linear infinite;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .spinner {
-    animation: none;
-  }
 }
 
 /* ── Ready state: plum success panel revealed after generating the link ── */

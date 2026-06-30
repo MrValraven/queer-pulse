@@ -133,38 +133,7 @@
 .searchInput {
   flex: 1;
   min-width: 260px;
-  position: relative;
   max-width: 380px;
-}
-.searchInput input {
-  width: 100%;
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
-  border-radius: 11px;
-  padding: 11px 14px 11px 38px;
-  outline: none;
-  transition:
-    border-color 0.2s var(--ease),
-    box-shadow 0.2s var(--ease);
-}
-.searchInput input:focus {
-  border-color: var(--plum);
-  box-shadow: 0 0 0 3px rgba(45, 27, 61, 0.06);
-}
-.searchInput svg {
-  position: absolute;
-  left: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 14px;
-  height: 14px;
-  stroke: var(--ink-40);
-  stroke-width: 2;
-  fill: none;
-  pointer-events: none;
 }
 .sortSel {
   font-family: var(--sans);

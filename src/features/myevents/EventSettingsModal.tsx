@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
+import { Button, SegmentedControl, Toggle } from '../../shared/components/ui'
 import { sx } from './myEvents.styles'
 import { useMyEvents } from './MyEventsContext'
 
@@ -9,6 +9,9 @@ const VIS: { v: string; label: string }[] = [
   { v: 'connections', label: 'Connections' },
   { v: 'private', label: 'Just me' },
 ]
+const VIS_LABELS = VIS.map((o) => o.label)
+const labelForVis = (v: string) => VIS.find((o) => o.v === v)?.label ?? 'Everyone'
+const visForLabel = (label: string) => VIS.find((o) => o.label === label)?.v ?? 'public'
 
 /** Event preferences: reminder lead, default visibility, channels, sync. */
 export function EventSettingsModal() {
@@ -28,25 +31,26 @@ export function EventSettingsModal() {
       <div className={sx('modal-body')}>
         <div className={sx('field')}>
           <label className={sx('field-label')}>Remind me before an event</label>
-          <div className={sx('seg')}>
-            {LEADS.map((l) => <button key={l} type="button" className={sx(`seg-btn${lead === l ? ' on' : ''}`)} onClick={() => setLead(l)}>{l}</button>)}
-          </div>
+          <SegmentedControl fullWidth options={LEADS} value={lead} onChange={setLead} />
         </div>
         <div className={sx('field')}>
           <label className={sx('field-label')}>By default, who sees what I'm attending</label>
-          <div className={sx('seg')}>
-            {VIS.map((o) => <button key={o.v} type="button" className={sx(`seg-btn${vis === o.v ? ' on' : ''}`)} onClick={() => setVis(o.v)}>{o.label}</button>)}
-          </div>
+          <SegmentedControl
+            fullWidth
+            options={VIS_LABELS}
+            value={labelForVis(vis)}
+            onChange={(label) => setVis(visForLabel(label))}
+          />
         </div>
         <div className={sx('field')}>
           <label className={sx('field-label')}>How we reach you</label>
           <div className={sx('set-row')}>
             <div className={sx('set-info')}><div className={sx('set-t')}>Email</div><div className={sx('set-d')}>Reminders, changes, and invites by email.</div></div>
-            <label className={sx('qtgl')}><input type="checkbox" checked={email} onChange={(e) => setEmail(e.target.checked)} /><span className={sx('tk')} /><span className={sx('th')} /></label>
+            <Toggle checked={email} onChange={setEmail} label="Email reminders" />
           </div>
           <div className={sx('set-row')}>
             <div className={sx('set-info')}><div className={sx('set-t')}>Push notifications</div><div className={sx('set-d')}>On your phone, for time-sensitive changes.</div></div>
-            <label className={sx('qtgl')}><input type="checkbox" checked={push} onChange={(e) => setPush(e.target.checked)} /><span className={sx('tk')} /><span className={sx('th')} /></label>
+            <Toggle checked={push} onChange={setPush} label="Push notifications" />
           </div>
         </div>
         <div className={sx('field')}>

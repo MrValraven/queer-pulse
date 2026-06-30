@@ -6,6 +6,7 @@ import { Button } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { communities } from '../homepage/data/communities'
 import { memberProfiles } from '../members/data/memberProfiles'
+import { resolveAvatarSrc } from '../../shared/lib/avatarUrl'
 import { useCommunityMembership } from '../../app/providers/CommunityMembershipProvider'
 import { JoinModal } from './JoinModal'
 import { getCommunityDetail, membersFor, type Thread as ThreadData, type Tint } from './communityDetails'
@@ -100,7 +101,11 @@ export function CommunityDetailPage() {
                     <>
                       <span className={styles.heroAvTip}>{m.name}</span>
                       <span className={styles.sav} style={HERO_AV[m.tint]}>
-                        {photo ? <img src={photo} alt={m.name} /> : m.initials}
+                        {photo ? (
+                          <img src={resolveAvatarSrc(photo)} alt={m.name} referrerPolicy="no-referrer" />
+                        ) : (
+                          m.initials
+                        )}
                       </span>
                     </>
                   )

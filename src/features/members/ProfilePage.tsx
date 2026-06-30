@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { FiUserX } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
+import { Button, EmptyState, Spinner } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { useProfile } from '../../app/providers/ProfileProvider'
 import { useAuth } from '../../app/providers/authContext'
@@ -15,6 +16,7 @@ import editStyles from './ProfileEdit.module.css'
 
 export function ProfilePage() {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const { profile: liveProfile, isEditing, startEditing } = useProfile()
   const { user } = useAuth()
   const [previewing, setPreviewing] = useState(false)
@@ -33,8 +35,9 @@ export function ProfilePage() {
   if (!isSelf && isLoading) {
     return (
       <PageShell>
-        <div className="wrap" style={{ padding: '4rem 0', textAlign: 'center', color: 'var(--ink)' }}>
-          Loading profile…
+        <div className={styles.stateWrap} role="status" aria-live="polite">
+          <Spinner />
+          <span>Loading profile…</span>
         </div>
       </PageShell>
     )
@@ -43,9 +46,15 @@ export function ProfilePage() {
   if (!isSelf && !otherMember) {
     return (
       <PageShell>
-        <div className="wrap" style={{ padding: '4rem 0', textAlign: 'center' }}>
-          <p style={{ color: 'var(--ink)' }}>This profile isn&apos;t available.</p>
-          <Button to={routes.members} variant="ghost">Back to the room</Button>
+        <div className={styles.stateWrap}>
+          <EmptyState
+            className={styles.stateEmpty}
+            icon={<FiUserX />}
+            title="This profile isn't here"
+            description="It may have been set to private, the member might have left, or this link could be out of date. Nothing's wrong on your end."
+            action={{ label: 'Back to Members', to: routes.members }}
+            secondaryAction={{ label: '← Go back', onClick: () => navigate(-1) }}
+          />
         </div>
       </PageShell>
     )

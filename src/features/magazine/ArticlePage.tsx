@@ -51,6 +51,11 @@ export function ArticlePage() {
     .map((relatedId) => articles[relatedId])
     .filter((value): value is NonNullable<typeof value> => Boolean(value))
 
+  // First plain-text paragraph doubles as the saved-card blurb.
+  const blurb = article.body.find(
+    (block): block is string => typeof block === 'string',
+  )
+
   return (
     <PageShell>
       <MagazineMasthead />
@@ -88,6 +93,8 @@ export function ArticlePage() {
             articleId={id}
             articleTitle={typeof article.title === 'string' ? article.title : undefined}
             articleMeta={`${article.byline} · ${article.readTime}`}
+            articleDescription={blurb}
+            articleReadTime={article.readTime}
           />
           <div
             className={styles.body}

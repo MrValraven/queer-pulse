@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FadeIn } from '../../shared/components/ui'
+import { FadeIn, Tabs } from '../../shared/components/ui'
 import type { Community } from '../homepage/data/types'
 import type { CommunityDetail, Thread as ThreadData } from './communityDetails'
 import type { LivingCommunity } from './community.model'
@@ -54,19 +54,13 @@ export function LivingHubTabs({
 
   return (
     <div>
-      <div className={styles.tabs}>
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            className={[styles.tab, active === t.id && styles.tabActive].filter(Boolean).join(' ')}
-            onClick={() => setTab(t.id)}
-          >
-            {t.label}
-            {count[t.id] != null && <span className={styles.tabCount}>{count[t.id]}</span>}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        className={styles.tabs}
+        variant="underline"
+        tabs={tabs.map((t) => ({ id: t.id, label: t.label, count: count[t.id] }))}
+        active={active}
+        onChange={(id) => setTab(id as Tab)}
+      />
 
       <FadeIn key={active}>
         {active === 'pulse' && <PulseTab community={living} name={community.name} isMember={isMember} />}

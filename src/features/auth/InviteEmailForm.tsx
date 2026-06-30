@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FiCheck } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
+import { Button, FormField } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useDrafts } from '../../app/providers/DraftsProvider'
 import { SENDER_NAME } from './invite.data'
@@ -65,8 +65,7 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
     >
       <div className={styles.card}>
         <div className={styles.twoCol}>
-          <div className={styles.field}>
-            <label>First name</label>
+          <FormField label="First name">
             <input
               type="text"
               placeholder="Rosa"
@@ -76,18 +75,19 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
                 markDirty()
               }}
             />
-          </div>
-          <div className={styles.field}>
-            <label>Last name</label>
+          </FormField>
+          <FormField label="Last name">
             <input type="text" placeholder="Lima" />
-          </div>
+          </FormField>
         </div>
-        <div className={styles.field}>
-          <label>Their email</label>
+        <FormField label="Their email">
           <input type="email" placeholder="rosa@email.com" />
-        </div>
-        <div className={styles.field}>
-          <label>How you know them</label>
+        </FormField>
+        <FormField
+          label="How you know them"
+          labelAside={`${know.length}/300`}
+          helper="This becomes part of your vouch — shown to the moderation team, not the invitee."
+        >
           <textarea
             maxLength={300}
             placeholder="How you met, and what makes them a good fit — this is your vouch."
@@ -97,20 +97,20 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
               markDirty()
             }}
           />
-          <div className={styles.charCount}>{know.length}/300</div>
-          <div className={styles.helper}>
-            This becomes part of your vouch — shown to the moderation team, not the invitee.
-          </div>
-        </div>
-        <div className={styles.field}>
-          <label>
-            Personal note{' '}
-            <span
-              style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: 11 }}
-            >
-              (optional)
-            </span>
-          </label>
+        </FormField>
+        <FormField
+          label={
+            <>
+              Personal note{' '}
+              <span
+                style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: 11 }}
+              >
+                (optional)
+              </span>
+            </>
+          }
+          labelAside={`${note.length}/200`}
+        >
           <textarea
             maxLength={200}
             placeholder="A message they'll see in their invite email."
@@ -120,8 +120,7 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
               markDirty()
             }}
           />
-          <div className={styles.charCount}>{note.length}/200</div>
-        </div>
+        </FormField>
       </div>
 
       <div className={styles.epLabel}>What they'll receive</div>

@@ -1,15 +1,17 @@
 import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
+import { Button, SegmentedControl, Toggle } from '../../shared/components/ui'
 import { sx } from './myEvents.styles'
 import { useMyEvents } from './MyEventsContext'
 
 const VIS = ['Everyone', 'Connections', 'Just me']
+const VIS_DEFAULT = 'Connections'
 
 /** "Anything we should know?" RSVP details editor. */
 export function RsvpDetailsModal() {
   const { details, closeDetails, byId, toast } = useMyEvents()
   const [guest, setGuest] = useState(false)
-  const [vis, setVis] = useState(1)
+  const [vis, setVis] = useState(VIS_DEFAULT)
+  const [quiet, setQuiet] = useState(false)
   const ev = details.evId ? byId(details.evId) : undefined
 
   const save = () => { closeDetails(); toast('Saved — only the host can see this', 'success') }
@@ -56,16 +58,12 @@ export function RsvpDetailsModal() {
         </div>
         <div className={sx('field')}>
           <label className={sx('field-label')}>Who can see you're going?</label>
-          <div className={sx('seg')}>
-            {VIS.map((v, i) => (
-              <button key={v} type="button" className={sx(`seg-btn${vis === i ? ' on' : ''}`)} onClick={() => setVis(i)}>{v}</button>
-            ))}
-          </div>
+          <SegmentedControl fullWidth options={VIS} value={vis} onChange={setVis} />
         </div>
         <div className={sx('field')}>
           <div className={sx('set-row flush')}>
             <div className={sx('set-info')}><div className={sx('set-t')}>Attend quietly</div><div className={sx('set-d')}>Come along without your name showing on the guest list.</div></div>
-            <label className={sx('qtgl')}><input type="checkbox" /><span className={sx('tk')} /><span className={sx('th')} /></label>
+            <Toggle checked={quiet} onChange={setQuiet} label="Attend quietly" />
           </div>
         </div>
       </div>

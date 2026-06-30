@@ -293,27 +293,6 @@
   margin-bottom: 24px;
   flex-wrap: wrap;
 }
-.calChip {
-  background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.16);
-  color: var(--ink-60);
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 999px;
-  padding: 7px 14px;
-  cursor: pointer;
-  transition: all 0.2s var(--ease);
-}
-.calChip:hover {
-  border-color: rgba(45, 27, 61, 0.35);
-  color: var(--plum);
-}
-.calChipActive {
-  background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
-}
 .calList {
   display: flex;
   flex-direction: column;

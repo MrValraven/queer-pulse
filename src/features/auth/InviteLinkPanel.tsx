@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FiAlertCircle, FiCheck, FiCopy, FiLink } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
+import { Button, Sending } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { ApiError } from '../../shared/api/client'
 import { routes } from '../../app/routeMap'
@@ -200,10 +200,7 @@ export function InviteLinkPanel() {
           aria-busy={generating}
         >
           {generating ? (
-            <>
-              <span className={styles.spinner} aria-hidden />
-              Generating link…
-            </>
+            <Sending label="Generating link…" />
           ) : (
             <>
               <FiLink aria-hidden style={{ marginRight: 8 }} />

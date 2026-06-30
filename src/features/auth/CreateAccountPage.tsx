@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
+import { Button, FormField } from '../../shared/components/ui'
 import { getMember } from '../members/data/members'
 import { routes } from '../../app/routeMap'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useAcceptInvite } from './api/useAcceptInvite'
 import { consumePendingInvite, readInviteWelcome } from './api/pendingInvite'
+import { resolveAvatarSrc } from '../../shared/lib/avatarUrl'
 import { AuthLayout } from './AuthLayout'
 import styles from './auth.module.css'
 
@@ -56,11 +57,9 @@ function AboutAndVisibility({ pronouns, setPronouns, bio, setBio, visibility, se
     <>
       <div className={styles.section}>
         <div className={styles.sectionLabel}>About you</div>
-        <div className={styles.field}>
-          <label>Display name</label>
+        <FormField label="Display name" helper="What members see. Can differ from your legal name.">
           <input type="text" placeholder="Tiago C." />
-          <div className={styles.helper}>What members see. Can differ from your legal name.</div>
-        </div>
+        </FormField>
         <div className={styles.field}>
           <label>Pronouns</label>
           <input
@@ -77,20 +76,17 @@ function AboutAndVisibility({ pronouns, setPronouns, bio, setBio, visibility, se
             ))}
           </div>
         </div>
-        <div className={styles.field}>
-          <label>Location</label>
+        <FormField label="Location">
           <input type="text" placeholder="Lisbon, Portugal" />
-        </div>
-        <div className={styles.field}>
-          <label>Short bio</label>
+        </FormField>
+        <FormField label="Short bio" labelAside={`${bio.length}/280`}>
           <textarea
             maxLength={280}
             placeholder="A sentence or two about you…"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
           />
-          <div className={styles.charCount}>{bio.length}/280</div>
-        </div>
+        </FormField>
       </div>
 
       <div className={styles.section}>
@@ -176,8 +172,9 @@ export function CreateAccountPage() {
         <div className={styles.vouchAv} aria-hidden>
           {inviter.photo ? (
             <img
-              src={inviter.photo}
+              src={resolveAvatarSrc(inviter.photo)}
               alt=""
+              referrerPolicy="no-referrer"
               style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
             />
           ) : (
@@ -201,8 +198,7 @@ export function CreateAccountPage() {
         <div className={styles.section}>
           <div className={styles.sectionLabel}>Your account</div>
           <div className={styles.twoCol}>
-            <div className={styles.field}>
-              <label>First name <span className={styles.req}>*</span></label>
+            <FormField label="First name" required error={touched.first ? errors.first : undefined}>
               <input
                 type="text"
                 placeholder="Tiago"
@@ -211,10 +207,8 @@ export function CreateAccountPage() {
                 onBlur={() => touch('first')}
                 aria-invalid={touched.first && !!errors.first}
               />
-              {touched.first && errors.first && <div className={styles.fieldError}>{errors.first}</div>}
-            </div>
-            <div className={styles.field}>
-              <label>Last name <span className={styles.req}>*</span></label>
+            </FormField>
+            <FormField label="Last name" required error={touched.last ? errors.last : undefined}>
               <input
                 type="text"
                 placeholder="Costa"
@@ -223,14 +217,11 @@ export function CreateAccountPage() {
                 onBlur={() => touch('last')}
                 aria-invalid={touched.last && !!errors.last}
               />
-              {touched.last && errors.last && <div className={styles.fieldError}>{errors.last}</div>}
-            </div>
+            </FormField>
           </div>
-          <div className={styles.field}>
-            <label>Email address</label>
+          <FormField label="Email address" helper="Taken from your invite — not editable">
             <input type="email" value="tiago@gmail.com" disabled />
-            <div className={styles.helper}>Taken from your invite — not editable</div>
-          </div>
+          </FormField>
           <div className={styles.field}>
             <label>Password <span className={styles.req}>*</span></label>
             <input
@@ -259,8 +250,12 @@ export function CreateAccountPage() {
             )}
             <div className={styles.helper}>At least {PW_MIN} characters. Add numbers or symbols for a stronger password.</div>
           </div>
-          <div className={styles.field}>
-            <label>Confirm password <span className={styles.req}>*</span></label>
+          <FormField
+            label="Confirm password"
+            required
+            error={touched.confirm ? errors.confirm : undefined}
+            ok={touched.confirm && !errors.confirm && confirm ? 'Passwords match.' : undefined}
+          >
             <input
               type="password"
               placeholder="Confirm your password"
@@ -269,11 +264,7 @@ export function CreateAccountPage() {
               onBlur={() => touch('confirm')}
               aria-invalid={touched.confirm && !!errors.confirm}
             />
-            {touched.confirm && errors.confirm && <div className={styles.fieldError}>{errors.confirm}</div>}
-            {touched.confirm && !errors.confirm && confirm && (
-              <div className={styles.fieldOk}>Passwords match.</div>
-            )}
-          </div>
+          </FormField>
         </div>
 
         <AboutAndVisibility

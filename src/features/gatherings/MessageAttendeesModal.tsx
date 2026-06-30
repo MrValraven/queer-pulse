@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
+import { Button, FormField } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import { GatheringSuccessPanel } from './GatheringSuccessPanel'
 import styles from './GatheringModals.module.css'
@@ -60,29 +60,21 @@ export function MessageAttendeesModal({
           </p>
 
           <div className={styles.fields}>
-            <div className={styles.field}>
-              <label className={styles.label}>
-                Subject <span className={styles.req}>*</span>
-              </label>
+            <FormField label="Subject" required>
               <input
-                className={styles.input}
                 type="text"
                 placeholder="e.g. One small change to the start time"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
               />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label}>
-                Message <span className={styles.req}>*</span>
-              </label>
+            </FormField>
+            <FormField label="Message" required>
               <textarea
-                className={styles.textarea}
                 placeholder="Write an update for your guests…"
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
               />
-            </div>
+            </FormField>
           </div>
 
           <div className={styles.actions}>

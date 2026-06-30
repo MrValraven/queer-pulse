@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { resolveAvatarSrc } from '../../lib/avatarUrl'
 import styles from './ImageSlot.module.css'
 
 export type ImageSlotTint = 'default' | 'coral' | 'jade' | 'plum'
@@ -39,6 +40,9 @@ export function ImageSlot({
   style,
 }: ImageSlotProps) {
   const borderRadius = shape === 'circle' ? '50%' : radius
+  // Only Google/OAuth avatar URLs are rewritten (for a crisp 2× crop); every
+  // other src — Unsplash covers, magazine art — passes through unchanged.
+  const resolvedSrc = resolveAvatarSrc(src, typeof width === 'number' ? Math.round(width * 2) : 256)
   const cls = [
     styles.slot,
     styles[tint],
@@ -51,7 +55,7 @@ export function ImageSlot({
   return (
     <div className={cls} style={{ width, height, borderRadius, ...style }}>
       {src ? (
-        <img src={src} alt={alt} />
+        <img src={resolvedSrc} alt={alt} referrerPolicy="no-referrer" />
       ) : initials ? (
         <span className={styles.initials} style={{ fontSize: 22 }}>
           {initials}

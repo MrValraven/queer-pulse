@@ -3,58 +3,11 @@
   position: relative;
   margin-bottom: 18px;
 }
-.searchIcon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 15px;
-  height: 15px;
-  color: var(--ink-40);
-  pointer-events: none;
-}
-.search {
-  width: 100%;
-  font-family: var(--sans);
-  font-size: 14px;
-  padding: 11px 14px 11px 38px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
-  border-radius: 12px;
-  background: var(--paper);
-  color: var(--ink);
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.2s var(--ease);
-}
-.search:focus {
-  border-color: rgba(45, 27, 61, 0.3);
-}
 .chips {
   display: flex;
   gap: 8px;
   margin-bottom: 22px;
   flex-wrap: wrap;
-}
-.chip {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  border: 1px solid rgba(45, 27, 61, 0.12);
-  background: transparent;
-  color: var(--ink-60);
-  border-radius: 999px;
-  padding: 6px 14px;
-  cursor: pointer;
-  transition: all 0.18s var(--ease);
-}
-.chip:hover {
-  border-color: rgba(45, 27, 61, 0.28);
-  color: var(--ink);
-}
-.chipOn {
-  background: var(--plum);
-  border-color: var(--plum);
-  color: var(--cream);
 }
 
 /* ---- roster cards ---- */
@@ -433,7 +386,6 @@
 @media (prefers-reduced-motion: reduce) {
   .resource,
   .recapLink svg,
-  .chip,
   .msgBtn,
   .declineBtn {
     transition: none;

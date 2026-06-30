@@ -8,6 +8,8 @@ export const ALBUM = {
   title: 'Cidade dos santos',
   href: routes.studioAlbum,
   meta: 'Mariana Sol · Album',
+  description:
+    'A nine-track meditation on faith, the city, and queer longing — recorded live in Lisbon.',
 }
 
 export const TRACKS: { n: number; pre: string; em?: string; post?: string; who: string; tm: string; now?: boolean; image?: string }[] = [

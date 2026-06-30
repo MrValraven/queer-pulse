@@ -153,28 +153,6 @@
   text-transform: uppercase;
   color: var(--ink-40);
 }
-.thChip {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 500;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
-  border-radius: 999px;
-  padding: 7px 14px;
-  cursor: pointer;
-  transition: all 0.2s var(--ease);
-  color: var(--ink-60);
-  background: transparent;
-}
-.thChip:hover {
-  border-color: rgba(45, 27, 61, 0.28);
-  color: var(--ink);
-}
-.thChipOn {
-  background: rgba(var(--jade-rgb), 0.1);
-  color: var(--jade);
-  border-color: rgba(var(--jade-rgb), 0.32);
-}
-
 .therapistGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

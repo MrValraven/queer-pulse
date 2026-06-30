@@ -55,33 +55,8 @@
   margin: 6px 0 16px;
 }
 
-.searchWrap {
-  position: relative;
+.searchField {
   margin-bottom: 12px;
-}
-.searchIcon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--ink-40);
-  pointer-events: none;
-}
-.search {
-  width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
-  border-radius: 11px;
-  padding: 10px 14px 10px 36px;
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--ink);
-  background: var(--cream);
-  outline: none;
-  transition: border-color 0.2s var(--ease);
-}
-.search:focus {
-  border-color: var(--plum);
-  background: var(--paper);
 }
 
 .list {

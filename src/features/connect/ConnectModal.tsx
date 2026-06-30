@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Avatar, Button } from '../../shared/components/ui'
+import { Avatar, Button, FormField, Sending } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import { useConnections } from '../../app/providers/ConnectionsProvider'
 import { defaultProfileSlug, memberProfiles } from '../members/data/memberProfiles'
@@ -133,10 +133,7 @@ export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => 
               watching. Just a real message.
             </p>
 
-            <div className={styles.field}>
-              <label htmlFor="connect-name">
-                Your name <span className={styles.req}>*</span>
-              </label>
+            <FormField label="Your name" required>
               <input
                 id="connect-name"
                 type="text"
@@ -145,11 +142,8 @@ export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => 
                 onChange={(event) => setName(event.target.value)}
                 disabled={phase === 'sending'}
               />
-            </div>
-            <div className={styles.field}>
-              <label htmlFor="connect-email">
-                Your email <span className={styles.req}>*</span>
-              </label>
+            </FormField>
+            <FormField label="Your email" required>
               <input
                 id="connect-email"
                 type="email"
@@ -158,9 +152,8 @@ export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => 
                 onChange={(event) => setEmail(event.target.value)}
                 disabled={phase === 'sending'}
               />
-            </div>
-            <div className={styles.field}>
-              <label htmlFor="connect-about">What's this about?</label>
+            </FormField>
+            <FormField label="What's this about?">
               <select
                 id="connect-about"
                 value={reason}
@@ -172,11 +165,8 @@ export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => 
                   <option key={reasonOption}>{reasonOption}</option>
                 ))}
               </select>
-            </div>
-            <div className={styles.field}>
-              <label htmlFor="connect-msg">
-                Your message <span className={styles.req}>*</span>
-              </label>
+            </FormField>
+            <FormField label="Your message" required>
               <textarea
                 id="connect-msg"
                 placeholder="Write naturally. There's no template."
@@ -184,7 +174,7 @@ export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => 
                 onChange={(event) => setMessage(event.target.value)}
                 disabled={phase === 'sending'}
               />
-            </div>
+            </FormField>
 
             <div className={styles.note}>
               Messages from people not yet in the network are held briefly and reviewed by the
@@ -201,13 +191,7 @@ export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => 
                 ← Cancel
               </button>
               <Button size="lg" type="submit" disabled={!canSend || phase === 'sending'}>
-                {phase === 'sending' ? (
-                  <span className={styles.sending}>
-                    <span className={styles.spinner} aria-hidden /> Sending…
-                  </span>
-                ) : (
-                  'Send →'
-                )}
+                {phase === 'sending' ? <Sending label="Sending…" /> : 'Send →'}
               </Button>
             </div>
           </form>

@@ -30,6 +30,7 @@ const SET_ITEM = {
   title: 'Studio set',
   href: '/studio/set',
   meta: 'Set',
+  description: 'A late-night live set from the studio, captured in one continuous take.',
 }
 
 export function StudioSetPage() {

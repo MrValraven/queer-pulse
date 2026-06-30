@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { PageShell } from '../../shared/components/layout'
 import { FiMapPin } from 'react-icons/fi'
-import { Button, EmptyState, Outro } from '../../shared/components/ui'
+import { Button, EmptyState, FilterChips, Outro } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
@@ -69,18 +69,12 @@ export function SafeSpacesPage() {
             </button>
           </div>
 
-          <div className={styles.filters}>
-            {FILTERS.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                className={[styles.chip, filter === f.id && styles.chipActive].filter(Boolean).join(' ')}
-                onClick={() => setFilter(f.id)}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
+          <FilterChips
+            className={styles.filters}
+            options={FILTERS.map((f) => ({ value: f.id, label: f.label }))}
+            value={filter}
+            onChange={(v) => setFilter(v as Category | 'all')}
+          />
 
           <div className={styles.grid} aria-busy={loading}>
             {loading

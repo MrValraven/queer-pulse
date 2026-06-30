@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
+import { Button, FormField } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import styles from './GatheringModals.module.css'
 
@@ -42,24 +42,13 @@ export function InlineEditModal({
         <div className={styles.title}>{label}</div>
 
         <div className={styles.fields}>
-          <div className={styles.field}>
+          <FormField>
             {multiline ? (
-              <textarea
-                className={styles.textarea}
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                autoFocus
-              />
+              <textarea value={value} onChange={(e) => setValue(e.target.value)} autoFocus />
             ) : (
-              <input
-                className={styles.input}
-                type="text"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                autoFocus
-              />
+              <input type="text" value={value} onChange={(e) => setValue(e.target.value)} autoFocus />
             )}
-          </div>
+          </FormField>
         </div>
 
         <div className={styles.actions}>

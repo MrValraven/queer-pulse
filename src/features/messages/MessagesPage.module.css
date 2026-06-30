@@ -47,32 +47,6 @@
 .composeBtn:hover {
   background: rgba(45, 27, 61, 0.13);
 }
-.searchWrap {
-  position: relative;
-}
-.searchIcon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--ink-40);
-  pointer-events: none;
-}
-.search {
-  width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
-  border-radius: 10px;
-  padding: 8px 12px 8px 34px;
-  font-family: var(--sans);
-  font-size: 13.5px;
-  color: var(--ink);
-  background: var(--cream);
-  outline: none;
-  transition: border-color 0.2s;
-}
-.search:focus {
-  border-color: var(--plum);
-}
 .threadList {
   flex: 1;
   overflow-y: auto;

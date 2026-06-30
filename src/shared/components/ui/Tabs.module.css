@@ -1,0 +1,100 @@
+/* Pill tab row. Promoted from admin/ui (ax-tabs). */
+
+.tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink-60);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease), border-color 0.16s var(--ease);
+}
+.tab:hover {
+  color: var(--plum);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+.tabOn {
+  background: var(--plum);
+  color: var(--cream);
+}
+.tabOn:hover {
+  background: var(--plum);
+  color: var(--cream);
+}
+.tabCount {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  background: rgba(var(--plum-rgb), 0.1);
+  color: var(--plum);
+}
+.tabOn .tabCount {
+  background: rgba(247, 243, 238, 0.2);
+  color: var(--cream);
+}
+
+/* ── variant: underline (bottom-border tabs) ─────────────────────────────── */
+.underline {
+  gap: 0;
+  border-bottom: 1.5px solid rgba(var(--plum-rgb), 0.1);
+}
+.underline .tab {
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font-size: 14.5px;
+  padding: 10px 24px;
+}
+.underline .tab:hover {
+  background: transparent;
+  color: var(--ink);
+}
+.underline .tabOn {
+  background: transparent;
+  color: var(--plum);
+  border-bottom-color: var(--plum);
+}
+.underline .tabCount {
+  background: transparent;
+  color: var(--ink-40);
+  font-weight: 400;
+  padding: 0;
+  margin-left: 4px;
+}
+
+/* ── tint: dark (underline tabs on a dark/plum hero) ─────────────────────── */
+.underline.dark {
+  border-bottom-color: rgba(247, 243, 238, 0.16);
+}
+.underline.dark .tab {
+  color: rgba(247, 243, 238, 0.45);
+}
+.underline.dark .tab:hover {
+  color: rgba(247, 243, 238, 0.75);
+}
+.underline.dark .tabOn {
+  color: var(--cream);
+  border-bottom-color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+}

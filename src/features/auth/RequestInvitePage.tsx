@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
+import { Button, FormField } from '../../shared/components/ui'
 import { AuthLayout } from './AuthLayout'
 import { routes } from '../../app/routeMap'
 import { WHAT_NEXT } from './requestInvite.data'
@@ -79,8 +79,7 @@ export function RequestInvitePage() {
 
       <form onSubmit={handleSubmit}>
         <div className={styles.twoCol}>
-          <div className={styles.field}>
-            <label htmlFor="ri-first">Your name</label>
+          <FormField label="Your name">
             <input
               id="ri-first"
               type="text"
@@ -89,15 +88,17 @@ export function RequestInvitePage() {
               value={first}
               onChange={(e) => setFirst(e.target.value)}
             />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="ri-city">City</label>
+          </FormField>
+          <FormField label="City">
             <input id="ri-city" type="text" placeholder="Lisbon" autoComplete="address-level2" />
-          </div>
+          </FormField>
         </div>
 
-        <div className={styles.field}>
-          <label htmlFor="ri-email">Email <span className={styles.req}>*</span></label>
+        <FormField
+          label="Email"
+          required
+          error={emailError ? "That email doesn't look right — mind checking it?" : undefined}
+        >
           <input
             id="ri-email"
             type="email"
@@ -108,19 +109,21 @@ export function RequestInvitePage() {
             onBlur={() => setTouched(true)}
             aria-invalid={emailError}
           />
-          {emailError && (
-            <span className={styles.fieldError}>That email doesn't look right — mind checking it?</span>
-          )}
-        </div>
+        </FormField>
 
-        <div className={styles.field}>
-          <label htmlFor="ri-mutual">Anyone here you know <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: 11 }}>(optional)</span></label>
+        <FormField
+          label={
+            <>
+              Anyone here you know{' '}
+              <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: 11 }}>(optional)</span>
+            </>
+          }
+          helper="Naming a mutual is the fastest route in — but it's not required."
+        >
           <input id="ri-mutual" type="text" placeholder="A member who can vouch for you" />
-          <span className={styles.helper}>Naming a mutual is the fastest route in — but it's not required.</span>
-        </div>
+        </FormField>
 
-        <div className={styles.field}>
-          <label htmlFor="ri-why">Why QueerPulse <span className={styles.req}>*</span></label>
+        <FormField label="Why QueerPulse" required labelAside={`${why.length}/400`}>
           <textarea
             id="ri-why"
             maxLength={400}
@@ -128,8 +131,7 @@ export function RequestInvitePage() {
             value={why}
             onChange={(e) => setWhy(e.target.value)}
           />
-          <div className={styles.charCount}>{why.length}/400</div>
-        </div>
+        </FormField>
 
         <div className={styles.agreeRow}>
           <input

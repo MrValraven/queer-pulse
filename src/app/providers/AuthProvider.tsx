@@ -75,13 +75,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [demoMode])
 
-  const signIn = useCallback(() => {
+  const signIn = useCallback((redirectTo?: string, invite?: string) => {
     if (demoMode) {
       setLoggedIn(true)
       setPreparing(true)
       return
     }
-    redirectToGoogle()
+    redirectToGoogle(redirectTo, invite)
   }, [demoMode])
 
   const signOut = useCallback(() => {

@@ -39,6 +39,7 @@ function JobCard({ job }: { job: Job }) {
       title: job.title,
       href: `${routes.jobs}/${job.slug}`,
       meta: `${job.org} · ${job.location}`,
+      description: job.desc,
     })
     showToast(now ? `Saved ${job.title}` : `Removed ${job.title} from saved`, 'success')
   }

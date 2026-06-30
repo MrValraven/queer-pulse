@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { FiMessageCircle, FiSearch } from 'react-icons/fi'
 import { AppShell } from '../../shared/components/layout'
-import { Avatar, EmptyState, FadeIn } from '../../shared/components/ui'
+import { Avatar, EmptyState, FadeIn, SearchInput } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { MessageThreadListSkeleton } from './MessagesSkeleton'
 import { conversations, type ChatMessage, type Conversation } from './data'
@@ -89,19 +89,12 @@ export function MessagesPage() {
                 </svg>
               </button>
             </div>
-            <div className={styles.searchWrap}>
-              <svg className={styles.searchIcon} width={14} height={14} viewBox="0 0 14 14" fill="none" aria-hidden>
-                <circle cx={6} cy={6} r={4.5} stroke="currentColor" strokeWidth={1.4} />
-                <path d="M9.5 9.5l3 3" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" />
-              </svg>
-              <input
-                className={styles.search}
-                type="text"
-                placeholder="Search conversations…"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-              />
-            </div>
+            <SearchInput
+              value={query}
+              onChange={setQuery}
+              placeholder="Search conversations…"
+              ariaLabel="Search conversations"
+            />
           </div>
 
           <div className={styles.threadList}>

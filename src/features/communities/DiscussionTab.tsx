@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
-import { FiSearch } from 'react-icons/fi'
-import { Button, FadeIn, EmptyState } from '../../shared/components/ui'
+import { Button, FadeIn, EmptyState, SearchInput, FilterChips } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
 import type { Thread as ThreadData } from './communityDetails'
 import { CommunityThread } from './CommunityThread'
@@ -39,28 +38,19 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
 
   return (
     <div>
-      <div className={styles.searchRow}>
-        <FiSearch aria-hidden className={styles.searchIcon} />
-        <input
-          className={styles.search}
-          aria-label="Search discussions"
-          placeholder="Search this community's discussions…"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-      </div>
-      <div className={styles.chips}>
-        {CHIPS.map((c) => (
-          <button
-            key={c}
-            type="button"
-            className={[styles.chip, chip === c && styles.chipOn].filter(Boolean).join(' ')}
-            onClick={() => setChip(c)}
-          >
-            {c}
-          </button>
-        ))}
-      </div>
+      <SearchInput
+        className={styles.searchRow}
+        ariaLabel="Search discussions"
+        placeholder="Search this community's discussions…"
+        value={q}
+        onChange={setQ}
+      />
+      <FilterChips
+        className={styles.chips}
+        options={CHIPS}
+        value={chip}
+        onChange={(c) => setChip(c as Chip)}
+      />
 
       {shown.length === 0 ? (
         <EmptyState title="Nothing matches yet" description="Try a different search, or start the discussion below." />

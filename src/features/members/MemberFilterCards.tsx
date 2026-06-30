@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Avatar, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
+import { Avatar, ChipSelect, SearchInput, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
 import { fullName, memberProfiles } from './data/memberProfiles'
 import { initialsOf, tintForSlug } from './api/members.adapters'
 import {
@@ -13,7 +13,6 @@ import {
   OPEN_TO,
   PROFESSIONS_BY_FIELD,
   professionsForFields,
-  type ChipOption,
   type FilterState,
   type MemberCard,
 } from './memberDirectoryFilter.data'
@@ -22,36 +21,6 @@ import styles from './MemberDirectoryFilterPage.module.css'
 /** Toggle a value within a string[] immutably. */
 function toggle(arr: string[], value: string): string[] {
   return arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value]
-}
-
-/** A controlled row of selectable chips driven by `selected`. */
-function ChipGroup({
-  options,
-  selected,
-  onToggle,
-}: {
-  options: ChipOption[]
-  selected: string[]
-  onToggle: (value: string) => void
-}) {
-  return (
-    <div className={styles.chipRow}>
-      {options.map((opt) => {
-        const on = selected.includes(opt.label)
-        return (
-          <button
-            key={opt.label}
-            type="button"
-            aria-pressed={on}
-            className={[styles.chip, on && styles.chipActive].filter(Boolean).join(' ')}
-            onClick={() => onToggle(opt.label)}
-          >
-            {opt.label}
-          </button>
-        )
-      })}
-    </div>
-  )
 }
 
 export function FiltersSidebar({
@@ -127,27 +96,26 @@ export function FiltersSidebar({
 
       <div className={styles.filterCard}>
         <h4>Where they're based</h4>
-        <ChipGroup
-          options={NEIGHBOURHOODS}
-          selected={filters.hoods}
+        <ChipSelect
+          options={NEIGHBOURHOODS.map((o) => o.label)}
+          selected={new Set(filters.hoods)}
           onToggle={(value) => onChange({ ...filters, hoods: toggle(filters.hoods, value) })}
         />
       </div>
 
       <div className={styles.filterCard}>
         <h4>What they do</h4>
-        <input
-          type="search"
-          className={styles.search}
+        <SearchInput
+          className={styles.searchField}
           placeholder="Search a field or profession…"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search fields and professions"
+          onChange={setQuery}
+          ariaLabel="Search fields and professions"
         />
         {disciplineOptions.length > 0 ? (
-          <ChipGroup
-            options={disciplineOptions}
-            selected={filters.disciplines}
+          <ChipSelect
+            options={disciplineOptions.map((o) => o.label)}
+            selected={new Set(filters.disciplines)}
             onToggle={(value) =>
               onChange({ ...filters, disciplines: toggle(filters.disciplines, value) })
             }
@@ -162,9 +130,9 @@ export function FiltersSidebar({
       <div className={styles.filterCard}>
         <h4>Profession</h4>
         {professionPool.length > 0 ? (
-          <ChipGroup
-            options={professionPool.map((p) => ({ label: p }))}
-            selected={filters.professions}
+          <ChipSelect
+            options={professionPool}
+            selected={new Set(filters.professions)}
             onToggle={toggleProfession}
           />
         ) : (
@@ -232,9 +200,9 @@ export function FiltersSidebar({
 
       <div className={styles.filterCard}>
         <h4>Languages</h4>
-        <ChipGroup
-          options={LANGUAGES}
-          selected={filters.languages}
+        <ChipSelect
+          options={LANGUAGES.map((o) => o.label)}
+          selected={new Set(filters.languages)}
           onToggle={(value) =>
             onChange({ ...filters, languages: toggle(filters.languages, value) })
           }

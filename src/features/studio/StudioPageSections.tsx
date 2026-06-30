@@ -15,6 +15,8 @@ const HERO_TRACK = {
   title: "Carta para a santa",
   href: "/studio",
   meta: "Mariana Sol",
+  description:
+    "A letter to the saint who never wrote back — solo voice and piano, in one take.",
 };
 
 const tagClass: Record<TrackCard["tag"], string> = {

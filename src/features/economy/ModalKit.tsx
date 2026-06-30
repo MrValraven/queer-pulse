@@ -1,38 +1,17 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { FiCheck, FiFile } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import styles from './ApplicationModals.module.css'
 
+// Consolidated into the shared UI/hooks layer — re-exported here so existing
+// `./ModalKit` consumers keep their imports unchanged.
+export { Sending } from '../../shared/components/ui'
+export { useSubmitFlow, type FlowStatus } from '../../shared/hooks'
+
 /** Small file glyph used in attachment rows. */
 export function FileIcon() {
   return <FiFile className={styles.attachIcon} size={16} aria-hidden />
-}
-
-/** Spinner + label shown inside a button while a flow is submitting. */
-export function Sending({ label }: { label: string }) {
-  return (
-    <span className={styles.loading}>
-      <span className={styles.spinner} aria-hidden /> {label}
-    </span>
-  )
-}
-
-export type FlowStatus = 'idle' | 'sending' | 'done'
-
-/** Drives the idle → sending → done transition that powers loading + success. */
-export function useSubmitFlow() {
-  const [status, setStatus] = useState<FlowStatus>('idle')
-  const timer = useRef<number | undefined>(undefined)
-  useEffect(() => () => window.clearTimeout(timer.current), [])
-  const submit = (onComplete?: () => void, ms = 1000) => {
-    setStatus('sending')
-    timer.current = window.setTimeout(() => {
-      onComplete?.()
-      setStatus('done')
-    }, ms)
-  }
-  return { status, submit, sending: status === 'sending', done: status === 'done' }
 }
 
 /** Shared bottom-sheet modal frame: backdrop, close button, scroll lock. */

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiArrowRight, FiCheck } from 'react-icons/fi';
-import { Button, ImageSlot } from '../../shared/components/ui';
+import { FiArrowRight, FiCheck, FiCamera } from 'react-icons/fi';
+import { Button, ImageSlot, ChipSelect, useChipSet } from '../../shared/components/ui';
 import { routes } from '../../app/routeMap';
 import { useAuth } from '../../app/providers/authContext';
 import { currentUser, getMember } from '../members/data/members';
@@ -124,10 +124,28 @@ export function StepWelcome({ stepLabel, onNext }: { stepLabel: string; onNext: 
 export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
   const { user } = useAuth();
   // Prefill from the Google account they signed in with; fall back to initials.
-  const photo = user?.profile.avatarUrl ?? undefined;
+  const googlePhoto = user?.profile.avatarUrl ?? undefined;
   const initials = user
     ? `${user.profile.firstName.charAt(0)}${user.profile.lastName.charAt(0)}`.toUpperCase()
     : 'S';
+  // Local preview for a photo they pick here — a genuine client-side swap, no upload backend.
+  const [preview, setPreview] = useState<string | null>(null);
+  const shownPhoto = preview ?? googlePhoto;
+
+  function handleFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    if (preview) URL.revokeObjectURL(preview);
+    setPreview(url);
+  }
+
+  const caption = preview
+    ? 'Looking good — tap the photo to change it'
+    : googlePhoto
+      ? 'From your Google account — tap the photo to change it'
+      : 'Tap to upload a photo';
+
   return (
     <>
       <div className={styles.eye}>{stepLabel}</div>
@@ -138,19 +156,29 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
         A photo helps members feel comfortable connecting with you. You can always add this later.
       </div>
       <div className={styles.photoWrap}>
-        <ImageSlot
-          shape="circle"
-          tint="coral"
-          width={130}
-          height={130}
-          placeholder="your photo"
-          src={photo}
-          initials={initials}
-          alt="Your profile photo"
-        />
-        <div style={{ fontSize: 13, color: 'var(--ink-40)', marginTop: 10 }}>
-          {photo ? 'From your Google account — you can change it anytime' : 'Drag a photo here, or click to upload'}
-        </div>
+        <label className={styles.photoFrame}>
+          <input
+            type="file"
+            accept="image/*"
+            className={styles.photoInput}
+            onChange={handleFile}
+            aria-label="Upload a profile photo"
+          />
+          <ImageSlot
+            shape="circle"
+            tint="coral"
+            width={132}
+            height={132}
+            placeholder="your photo"
+            src={shownPhoto}
+            initials={initials}
+            alt="Your profile photo"
+          />
+          <span className={styles.photoEdit} aria-hidden>
+            <FiCamera />
+          </span>
+        </label>
+        <p className={styles.photoCaption}>{caption}</p>
       </div>
       <div className={styles.nav}>
         <Button onClick={onNext}>Continue</Button>
@@ -195,17 +223,11 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
 }
 
 export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
-  const [selectedIntents, setSelectedIntents] = useState<Set<string>>(
-    new Set(['Community', 'Professional connections', 'Creative collaboration']),
-  );
-  function toggleIntent(intent: string) {
-    setSelectedIntents((current) => {
-      const next = new Set(current);
-      if (next.has(intent)) next.delete(intent);
-      else next.add(intent);
-      return next;
-    });
-  }
+  const { selected: selectedIntents, toggle: toggleIntent } = useChipSet([
+    'Community',
+    'Professional connections',
+    'Creative collaboration',
+  ]);
   // At least one intent is required so we can actually personalize the experience.
   const hasSelection = selectedIntents.size > 0;
   return (
@@ -215,18 +237,12 @@ export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
         What brings you <em>here?</em>
       </div>
       <div className={styles.chipHint}>Pick at least one — choose as many as fit.</div>
-      <div className={styles.chips}>
-        {INTENTS.map((intent) => (
-          <button
-            key={intent}
-            type="button"
-            className={[styles.chip, selectedIntents.has(intent) && styles.chipSelected].filter(Boolean).join(' ')}
-            onClick={() => toggleIntent(intent)}
-          >
-            {intent}
-          </button>
-        ))}
-      </div>
+      <ChipSelect
+        className={styles.chips}
+        options={INTENTS}
+        selected={selectedIntents}
+        onToggle={toggleIntent}
+      />
       <div className={styles.nav}>
         <Button onClick={onNext} disabled={!hasSelection}>Continue</Button>
         <button type="button" className={styles.back} onClick={onBack}>← Back</button>

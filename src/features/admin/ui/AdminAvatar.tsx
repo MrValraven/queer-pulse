@@ -1,14 +1,16 @@
 import { useState, type ReactNode } from 'react'
 import { FiCheck } from 'react-icons/fi'
+import { resolveAvatarSrc } from '../../../shared/lib/avatarUrl'
 import styles from './adminUi.module.css'
 
 export type AvatarTone = 'plum' | 'coral' | 'jade' | 'violet' | 'amber' | 'anon'
 
 const SIZE_PX: Record<'sm' | 'md' | 'lg', number> = { sm: 30, md: 40, lg: 56 }
 
-/** Request a face-aware square crop from Unsplash so small avatars stay sharp. */
+/** Request a face-aware square crop from Unsplash so small avatars stay sharp;
+ *  Google/OAuth avatars get their size directive bumped via resolveAvatarSrc. */
 function faceCrop(src: string, px: number): string {
-  if (!src.includes('unsplash.com')) return src
+  if (!src.includes('unsplash.com')) return resolveAvatarSrc(src, px * 2) ?? src
   const url = new URL(src)
   const size = String(px * 2)
   url.searchParams.set('w', size)
@@ -53,6 +55,7 @@ export function AdminAvatar({
           src={resolved}
           alt={alt ?? (typeof initials === 'string' ? initials : '')}
           loading="lazy"
+          referrerPolicy="no-referrer"
           onError={() => setFailed(true)}
         />
       ) : (

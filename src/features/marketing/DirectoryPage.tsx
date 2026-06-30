@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiMapPin } from 'react-icons/fi'
 import { PageHero, PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { Button, FadeIn, FilterChips, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { DIRECTORY_PLACES as BIZS, type Tint } from './directoryPlaces'
 import { routes } from '../../app/routeMap'
@@ -83,13 +83,11 @@ export function DirectoryPage() {
             </svg>
             <input type="text" placeholder="Search by name, neighbourhood, or type…" value={query} onChange={(e) => setQuery(e.target.value)} />
           </div>
-          <div className={s.pills}>
-            {CATS.map((c) => (
-              <button key={c.c} className={[s.pill, cat === c.c && s.pillOn].filter(Boolean).join(' ')} onClick={() => setCat(c.c)}>
-                {c.label}
-              </button>
-            ))}
-          </div>
+          <FilterChips
+            options={CATS.map((c) => ({ value: c.c, label: c.label }))}
+            value={cat}
+            onChange={setCat}
+          />
         </div>
       </div>
 

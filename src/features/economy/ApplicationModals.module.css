@@ -584,27 +584,6 @@
   }
 }
 
-/* ── Button loading state ────────────────────────────────────────────── */
-.loading {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex: none;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .modal,
   .successIcon,

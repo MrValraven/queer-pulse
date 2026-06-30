@@ -4,7 +4,7 @@ import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./DsarPage.module.css";
-import { Button } from '../../shared/components/ui'
+import { Button, FormField } from '../../shared/components/ui'
 
 const PRIVACY = routes.privacy;
 
@@ -91,19 +91,16 @@ export function DsarPage() {
           </h2>
           <p className={styles.formSub}>{right.formSub}</p>
 
-          <div className={styles.field}>
-            <label>Member account · pre-filled from your session</label>
+          <FormField label="Member account · pre-filled from your session">
             <input type="text" value="tomas@example.com · Tomás Mendes" readOnly style={{ opacity: 0.7 }} />
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label>What needs to change</label>
+          <FormField
+            label="What needs to change"
+            helper="Be specific. Quote the existing value if you can. We'll send you a confirmation before any change goes live."
+          >
             <textarea placeholder="My recorded city is Lisbon. It should be Porto, where I've been based since March 2026. This affects which city's gatherings I see by default." />
-            <div className={styles.fieldHint}>
-              Be specific. Quote the existing value if you can. We'll send you a
-              confirmation before any change goes live.
-            </div>
-          </div>
+          </FormField>
 
           <div className={styles.field}>
             <label>Which records · scope</label>
@@ -131,21 +128,16 @@ export function DsarPage() {
             </div>
           </div>
 
-          <div className={styles.field}>
-            <label>
-              Supporting documents <span className={styles.opt}>— optional · helpful if available</span>
-            </label>
+          <FormField
+            label={<>Supporting documents <span className={styles.opt}>— optional · helpful if available</span></>}
+            helper={<>For rectification: anything showing the correct value (e.g. utility bill for city). <em>Documents are deleted after verification.</em></>}
+          >
             <input type="file" multiple style={{ padding: "8px 12px", background: "transparent", borderStyle: "dashed" }} />
-            <div className={styles.fieldHint}>
-              For rectification: anything showing the correct value (e.g. utility bill
-              for city). <em>Documents are deleted after verification.</em>
-            </div>
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label>Anything we should know · context</label>
+          <FormField label="Anything we should know · context">
             <textarea placeholder="Optional · e.g. if you need a faster response for a specific reason" />
-          </div>
+          </FormField>
 
           <div className={styles.legalStrip}>
             <b>Legal note:</b> certain records cannot be erased even on request —

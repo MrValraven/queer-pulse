@@ -1,31 +1,15 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import styles from './CultureModals.module.css'
 
-/** Spinner + label shown inside a submit button while a flow is sending. */
-export function Sending({ label }: { label: string }) {
-  return (
-    <span className={styles.loading}>
-      <span className={styles.spinner} aria-hidden /> {label}
-    </span>
-  )
-}
-
-type FlowStatus = 'idle' | 'sending' | 'done'
-
-/** Drives the idle → sending → done transition that powers loading + success. */
-export function useSubmitFlow() {
-  const [status, setStatus] = useState<FlowStatus>('idle')
-  const timer = useRef<number | undefined>(undefined)
-  useEffect(() => () => window.clearTimeout(timer.current), [])
-  const submit = (ms = 950) => {
-    setStatus('sending')
-    timer.current = window.setTimeout(() => setStatus('done'), ms)
-  }
-  return { sending: status === 'sending', done: status === 'done', submit }
-}
+// Consolidated into the shared UI/hooks layer — re-exported here so existing
+// `./CultureModalKit` consumers keep their imports unchanged. (All call sites
+// invoke `submit()` with no args, so the shared `submit(onComplete?, ms)`
+// signature is a drop-in.)
+export { Sending } from '../../shared/components/ui'
+export { useSubmitFlow } from '../../shared/hooks'
 
 /** Shared bottom-sheet frame: backdrop, close button, scroll lock. */
 export function ModalShell({

@@ -78,13 +78,14 @@ export function InviteLandingPage() {
     setPhase(prefersReduced ? 'invite' : 'opening')
   }
 
-  // "Continue with Google" authenticates through the exact same call the sign-in
-  // page uses. Live mode → a real /auth/google redirect; the stashed code + welcome
-  // (above) carry the recipient into onboarding on return. Demo mode has no real
+  // "Register with Google" authenticates through the same OAuth call the sign-in
+  // page uses. Live mode → a real /auth/google redirect carrying the invite code
+  // (so the backend redeems it during signup — a new Google user with no invite
+  // is rejected) and a redirect into /onboarding on return. Demo mode has no real
   // Google, so redeem now and reveal onboarding inline, as the prototype does.
   async function joinWithGoogle() {
     if (!demoMode) {
-      signIn()
+      signIn('/onboarding', invite!.code)
       return
     }
     try {

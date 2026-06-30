@@ -36,31 +36,7 @@
   line-height: 1.68;
 }
 .filter {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
   margin-bottom: 40px;
-}
-.chip {
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
-  color: var(--ink-60);
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.18s var(--ease);
-  font-family: var(--sans);
-}
-.chip:hover {
-  border-color: rgba(45, 27, 61, 0.28);
-  color: var(--ink);
-}
-.chipActive {
-  background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
 }
 .yearBlock {
   margin-bottom: 60px;

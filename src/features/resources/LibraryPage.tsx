@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
+import { Button, FadeIn, FilterChips, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { routes } from '../../app/routeMap'
 import { ResourceHero } from './ResourceHero'
@@ -72,17 +72,13 @@ export function LibraryPage() {
             </label>
           </Reveal>
 
-          <Reveal as="div" className={s.chips} delay={60}>
-            {CATEGORIES.map((category) => (
-              <button
-                key={category.id}
-                type="button"
-                className={`${s.chip} ${cat === category.id ? s.chipOn : ''}`}
-                onClick={() => setCat(category.id)}
-              >
-                {category.label}
-              </button>
-            ))}
+          <Reveal as="div" delay={60}>
+            <FilterChips
+              className={s.chips}
+              options={CATEGORIES.map((category) => ({ value: category.id, label: category.label }))}
+              value={cat}
+              onChange={setCat}
+            />
           </Reveal>
 
           {loading ? (

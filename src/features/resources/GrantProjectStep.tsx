@@ -1,3 +1,4 @@
+import { FormField } from '../../shared/components/ui'
 import styles from './MicroGrantsPage.module.css'
 
 /* Step 2 — project details */
@@ -21,44 +22,38 @@ export function ProjectStep({
         Be specific and honest. The review panel reads everything. Plain language beats formal
         language every time.
       </p>
-      <label className={styles.label}>Project name</label>
-      <input
-        className={styles.input}
-        type="text"
-        placeholder="A short, clear title"
-        value={projName}
-        onChange={(e) => setProjName(e.target.value)}
-      />
-      <label className={styles.label}>What will you make or do?</label>
-      <textarea
-        className={styles.textarea}
-        placeholder="Describe the project in plain terms. What will exist or happen that doesn't exist now?"
-        value={projWhat}
-        maxLength={400}
-        onChange={(e) => setProjWhat(e.target.value)}
-      />
-      <div className={styles.char}>{projWhat.length} / 400</div>
-      <label className={styles.label}>Who benefits, and how?</label>
-      <textarea
-        className={styles.textarea}
-        placeholder="Who in the queer community will this reach? How will it make a difference to them?"
-        style={{ minHeight: 90 }}
-      />
+      <FormField label="Project name">
+        <input
+          type="text"
+          placeholder="A short, clear title"
+          value={projName}
+          onChange={(e) => setProjName(e.target.value)}
+        />
+      </FormField>
+      <FormField label="What will you make or do?" labelAside={`${projWhat.length} / 400`}>
+        <textarea
+          placeholder="Describe the project in plain terms. What will exist or happen that doesn't exist now?"
+          value={projWhat}
+          maxLength={400}
+          onChange={(e) => setProjWhat(e.target.value)}
+        />
+      </FormField>
+      <FormField label="Who benefits, and how?">
+        <textarea placeholder="Who in the queer community will this reach? How will it make a difference to them?" />
+      </FormField>
       <div className={styles.row2}>
-        <div>
-          <label className={styles.label}>Timeline</label>
-          <input className={styles.input} type="text" placeholder="e.g. August–October 2026" />
-        </div>
-        <div>
-          <label className={styles.label}>Project stage</label>
-          <select className={styles.select} defaultValue="">
+        <FormField label="Timeline">
+          <input type="text" placeholder="e.g. August–October 2026" />
+        </FormField>
+        <FormField label="Project stage">
+          <select defaultValue="">
             <option value="">Select…</option>
             <option>Idea — not yet started</option>
             <option>In development</option>
             <option>Ready to go — just needs funding</option>
             <option>Ongoing — this would expand it</option>
           </select>
-        </div>
+        </FormField>
       </div>
     </>
   )

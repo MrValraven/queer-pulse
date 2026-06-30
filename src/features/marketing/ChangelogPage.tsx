@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { FiClock } from "react-icons/fi";
-import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { EmptyState, FadeIn, FilterChips, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import styles from "./ChangelogPage.module.css";
 
@@ -90,18 +90,12 @@ export function ChangelogPage() {
             </p>
           </div>
 
-          <div className={styles.filter}>
-            {FILTERS.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                className={[styles.chip, filter === f.id && styles.chipActive].filter(Boolean).join(" ")}
-                onClick={() => setFilter(f.id)}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
+          <FilterChips
+            className={styles.filter}
+            options={FILTERS.map((f) => ({ value: f.id, label: f.label }))}
+            value={filter}
+            onChange={(v) => setFilter(v as Type | "all")}
+          />
 
           {loading ? (
             <div className={styles.yearBlock}>

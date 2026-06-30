@@ -623,13 +623,6 @@
   resize: vertical;
   line-height: 1.6;
 }
-.char {
-  font-size: 12px;
-  color: var(--ink-40);
-  text-align: right;
-  margin-top: -12px;
-  margin-bottom: 14px;
-}
 .row2 {
   display: grid;
   grid-template-columns: 1fr 1fr;

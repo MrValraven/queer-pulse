@@ -18,6 +18,10 @@ export interface SavedItem {
   href?: string
   /** Small supporting line (author, org, neighbourhood…). */
   meta?: string
+  /** One- to two-line blurb shown on the saved card. */
+  description?: string
+  /** Short read/length pill, e.g. "6 min". Falls back to a "N min" parsed from meta. */
+  readTime?: string
 }
 
 interface SavedContextValue {

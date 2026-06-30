@@ -13,6 +13,9 @@ const FILM_SAVED = {
   title: 'The light between rooms',
   href: '/film',
   meta: 'Maria Vasconcelos · 2025',
+  description:
+    'A chamber drama about two strangers sharing a house in Lisbon — and the light that passes between their rooms.',
+  readTime: '1h 48m',
 }
 
 export function FilmHero() {

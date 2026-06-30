@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { ChipSelect } from '../../shared/components/ui'
 import {
   ACCESS_FILTERS,
   FORMATS,
@@ -16,42 +17,8 @@ function FilterGroup({ label, children }: { label: string; children: ReactNode }
   return (
     <div className={styles.group}>
       <div className={styles.gLabel}>{label}</div>
-      <div className={styles.gChips}>{children}</div>
+      {children}
     </div>
-  )
-}
-
-/** A multi-select chip group bound to a Set in the filter state. */
-function ChipGroup({
-  label,
-  options,
-  selected,
-  onToggle,
-  jade,
-}: {
-  label: string
-  options: readonly string[]
-  selected: Set<string>
-  onToggle: (value: string) => void
-  jade?: boolean
-}) {
-  return (
-    <FilterGroup label={label}>
-      {options.map((opt) => {
-        const on = selected.has(opt)
-        return (
-          <button
-            key={opt}
-            type="button"
-            aria-pressed={on}
-            className={[styles.chip, jade && styles.chipJade, on && styles.chipOn].filter(Boolean).join(' ')}
-            onClick={() => onToggle(opt)}
-          >
-            {opt}
-          </button>
-        )
-      })}
-    </FilterGroup>
   )
 }
 
@@ -66,6 +33,10 @@ export function CinemaBrowseSidebar({
   setFormat: (value: string) => void
   onClear: () => void
 }) {
+  // Format is single-select with click-active-to-clear; modelled as a max-one
+  // ChipSelect so setFormat keeps its toggle-back-to-null behaviour.
+  const formatSelected = filters.format ? new Set([filters.format]) : new Set<string>()
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sfHead}>
@@ -89,37 +60,38 @@ export function CinemaBrowseSidebar({
       </div>
 
       <FilterGroup label="Access">
-        {ACCESS_FILTERS.map((a) => (
-          <button
-            key={a.value}
-            type="button"
-            aria-pressed={filters.access.has(a.value)}
-            className={[styles.chip, filters.access.has(a.value) && styles.chipOn].filter(Boolean).join(' ')}
-            onClick={() => toggleSet('access', a.value)}
-          >
-            {a.label}
-          </button>
-        ))}
+        <ChipSelect
+          tint="dark"
+          tick={false}
+          options={ACCESS_FILTERS.map((a) => ({ value: a.value, label: a.label }))}
+          selected={filters.access}
+          onToggle={(v) => toggleSet('access', v)}
+        />
       </FilterGroup>
 
       <FilterGroup label="Format">
-        {FORMATS.map((f) => (
-          <button
-            key={f}
-            type="button"
-            aria-pressed={filters.format === f}
-            className={[styles.chip, filters.format === f && styles.chipOn].filter(Boolean).join(' ')}
-            onClick={() => setFormat(f)}
-          >
-            {f}
-          </button>
-        ))}
+        <ChipSelect tint="dark" tick={false} options={FORMATS} selected={formatSelected} onToggle={setFormat} />
       </FilterGroup>
 
-      <ChipGroup label="Made by" options={MADE_BY} selected={filters.madeBy} onToggle={(v) => toggleSet('madeBy', v)} />
-      <ChipGroup label="Country of origin" options={COUNTRIES} selected={filters.country} onToggle={(v) => toggleSet('country', v)} />
-      <ChipGroup label="Accessibility" options={ACCESSIBILITY} selected={filters.accessibility} onToggle={(v) => toggleSet('accessibility', v)} jade />
-      <ChipGroup label="Mood" options={MOODS} selected={filters.mood} onToggle={(v) => toggleSet('mood', v)} />
+      <FilterGroup label="Made by">
+        <ChipSelect tint="dark" tick={false} options={MADE_BY} selected={filters.madeBy} onToggle={(v) => toggleSet('madeBy', v)} />
+      </FilterGroup>
+      <FilterGroup label="Country of origin">
+        <ChipSelect tint="dark" tick={false} options={COUNTRIES} selected={filters.country} onToggle={(v) => toggleSet('country', v)} />
+      </FilterGroup>
+      <FilterGroup label="Accessibility">
+        <ChipSelect
+          tint="dark"
+          tone="jade"
+          tick={false}
+          options={ACCESSIBILITY}
+          selected={filters.accessibility}
+          onToggle={(v) => toggleSet('accessibility', v)}
+        />
+      </FilterGroup>
+      <FilterGroup label="Mood">
+        <ChipSelect tint="dark" tick={false} options={MOODS} selected={filters.mood} onToggle={(v) => toggleSet('mood', v)} />
+      </FilterGroup>
     </aside>
   )
 }

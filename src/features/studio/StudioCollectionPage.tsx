@@ -16,6 +16,7 @@ const COLLECTION_ITEM = {
   title: 'Studio collection',
   href: '/studio/collection',
   meta: 'Collection',
+  description: 'A hand-picked run of studio sessions and one-take recordings.',
 }
 
 export function StudioCollectionPage() {

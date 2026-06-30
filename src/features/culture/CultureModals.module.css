@@ -208,26 +208,6 @@
   margin-top: 4px;
 }
 
-/* ── Loading button state ────────────────────────────────────────────── */
-.loading {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex: none;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 
 /* ── Success (plum panel) ────────────────────────────────────────────── */
 .success {
@@ -364,8 +344,7 @@
   .success h2,
   .success p,
   .successBtn,
-  .steps,
-  .spinner {
+  .steps {
     animation: none;
   }
 }

@@ -1,5 +1,6 @@
-import { type ReactNode, useEffect } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Toggle } from '../../shared/components/ui'
 import styles from './SettingsPage.module.css'
 
 export function Pane({ title, sub, children }: { title: ReactNode; sub: string; children: ReactNode }) {
@@ -36,17 +37,24 @@ export function ToggleRow({
   defaultChecked?: boolean
   onChange: () => void
 }) {
+  // Lift the previously-uncontrolled checkbox to local state, seeded from the
+  // existing default — same external behavior, controlled shared <Toggle>.
+  const [checked, setChecked] = useState(!!defaultChecked)
   return (
     <div className={styles.toggleRow}>
       <div className={styles.toggleLabel}>
         <div className={styles.toggleTitle}>{title}</div>
         {desc && <div className={styles.toggleDesc}>{desc}</div>}
       </div>
-      <label className={styles.switch}>
-        <input type="checkbox" defaultChecked={defaultChecked} onChange={onChange} />
-        <span className={styles.track} />
-        <span className={styles.thumb} />
-      </label>
+      <Toggle
+        tone="coral"
+        checked={checked}
+        onChange={(next) => {
+          setChecked(next)
+          onChange()
+        }}
+        label={title}
+      />
     </div>
   )
 }

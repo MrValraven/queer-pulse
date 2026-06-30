@@ -161,6 +161,10 @@
 .fieldWrap {
   position: relative;
 }
+/* Sign-in password field keeps a wider gap before the submit button. */
+.pwField {
+  margin-bottom: 26px;
+}
 .field input,
 .field textarea,
 .field select {
@@ -214,20 +218,9 @@
   line-height: 1.45;
   font-weight: 600;
 }
-.fieldOk {
-  font-size: 12px;
-  color: var(--jade);
-  line-height: 1.45;
-  font-weight: 600;
-}
 .field input[aria-invalid='true'],
 .field textarea[aria-invalid='true'] {
   border-color: rgba(var(--accent-rgb), 0.6);
-}
-.charCount {
-  font-size: 12px;
-  color: var(--ink-40);
-  text-align: right;
 }
 .twoCol {
   display: grid;

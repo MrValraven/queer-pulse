@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { FiSearch, FiX } from 'react-icons/fi'
-import { Avatar } from '../../shared/components/ui'
+import { FiX } from 'react-icons/fi'
+import { Avatar, SearchInput } from '../../shared/components/ui'
 import { useScrollLock } from '../../shared/hooks'
 import { conversations, type Conversation } from './data'
 import styles from './NewMessageModal.module.css'
@@ -47,17 +47,13 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
           </button>
         </div>
         <p className={styles.sub}>Pick a connection to start a conversation.</p>
-        <div className={styles.searchWrap}>
-          <FiSearch className={styles.searchIcon} aria-hidden />
-          <input
-            className={styles.search}
-            type="text"
-            placeholder="Search connections…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            autoFocus
-          />
-        </div>
+        <SearchInput
+          className={styles.searchField}
+          value={query}
+          onChange={setQuery}
+          placeholder="Search connections…"
+          ariaLabel="Search connections"
+        />
         <ul className={styles.list}>
           {people.map((person) => (
             <li key={person.id}>

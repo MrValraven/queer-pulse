@@ -194,28 +194,6 @@
   gap: 12px;
   padding: 22px 28px 0;
 }
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(247, 243, 238, 0.35);
-  border-top-color: var(--cream);
-  border-radius: 50%;
-  display: inline-block;
-  animation: rmSpin 0.7s linear infinite;
-  vertical-align: -2px;
-  margin-right: 8px;
-}
-@keyframes rmSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .spinner {
-    animation-duration: 1.4s;
-  }
-}
-
 /* plum-panel success */
 .success {
   background: var(--plum);

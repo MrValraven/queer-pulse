@@ -178,7 +178,7 @@ export function PostCard() {
         replyCount={replies.length}
         onToggleReply={() => setComposing((c) => !c)}
         saved={saved}
-        onSave={() => toggleSave({ id: post.id, kind: 'post', title: post.body.slice(0, 60), meta: post.authorName })}
+        onSave={() => toggleSave({ id: post.id, kind: 'post', title: post.body.slice(0, 60), meta: post.authorName, description: post.body })}
       />
       {composing && <ReplyComposer onSubmit={addReply} onCancel={() => setComposing(false)} />}
       {replies.length === 0 && !composing && (

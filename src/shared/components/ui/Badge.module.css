@@ -1,0 +1,77 @@
+/* Tone-based status badge + stronger category label. Promoted from admin/ui
+   (ax-chip / ax-cat). Distinct from <Tag> (neutral content tag). */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.badge_danger {
+  background: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger);
+}
+.badge_coral {
+  background: rgba(var(--accent-rgb), 0.13);
+  color: var(--accent-ink);
+}
+.badge_amber {
+  background: rgba(var(--amber-rgb), 0.2);
+  color: var(--amber);
+}
+.badge_jade {
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+}
+.badge_violet {
+  background: rgba(var(--violet-rgb), 0.13);
+  color: var(--violet);
+}
+.badge_plum {
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--plum);
+}
+[data-theme='dark'] .badge_plum {
+  background: rgba(247, 243, 238, 0.1);
+  color: var(--ink);
+}
+.badge_ghost {
+  background: transparent;
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  color: var(--ink-60);
+}
+
+/* Stronger, square-cornered category label. */
+.cat {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.cat_danger {
+  background: var(--danger);
+  color: #fff;
+}
+.cat_coral {
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--accent-ink);
+}
+.cat_jade {
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade);
+}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { IconType } from 'react-icons'
 import { FiMail, FiShield, FiFileText, FiUsers } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
+import { Button, FormField, Outro, Reveal } from '../../shared/components/ui'
 import s from './ContactPage.module.css'
 
 const ROUTES: { icon: IconType; bg: string; title: string; desc: string; email: string }[] = [
@@ -72,17 +72,14 @@ export function ContactPage() {
                   Write to <em>us.</em>
                 </h2>
                 <p className={s.sub}>If you prefer a form to an email, use this. We read it the same way.</p>
-                <div className={s.field}>
-                  <label>Your name</label>
-                  <input className={s.input} type="text" placeholder="How you'd like to be addressed" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                </div>
-                <div className={s.field}>
-                  <label>Email</label>
-                  <input className={s.input} type="email" placeholder="So we can write back" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-                </div>
-                <div className={s.field}>
-                  <label>What's this about?</label>
-                  <select className={s.select} value={form.topic} onChange={(e) => setForm({ ...form, topic: e.target.value })}>
+                <FormField label="Your name">
+                  <input type="text" placeholder="How you'd like to be addressed" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                </FormField>
+                <FormField label="Email">
+                  <input type="email" placeholder="So we can write back" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                </FormField>
+                <FormField label="What's this about?">
+                  <select value={form.topic} onChange={(e) => setForm({ ...form, topic: e.target.value })}>
                     <option value="">Pick a topic</option>
                     <option>General question or feedback</option>
                     <option>Safety concern</option>
@@ -90,11 +87,10 @@ export function ContactPage() {
                     <option>Partnership proposal</option>
                     <option>Something else</option>
                   </select>
-                </div>
-                <div className={s.field}>
-                  <label>Your message</label>
-                  <textarea className={s.textarea} placeholder="Write naturally. There's no template and no word count." value={form.msg} onChange={(e) => setForm({ ...form, msg: e.target.value })} />
-                </div>
+                </FormField>
+                <FormField label="Your message">
+                  <textarea placeholder="Write naturally. There's no template and no word count." value={form.msg} onChange={(e) => setForm({ ...form, msg: e.target.value })} />
+                </FormField>
                 <Button type="submit" size="lg" disabled={!valid} style={{ width: '100%', justifyContent: 'center' }}>
                   Send →
                 </Button>

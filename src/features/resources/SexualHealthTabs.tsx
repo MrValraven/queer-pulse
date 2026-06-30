@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiCheck, FiInfo, FiMapPin, FiStar } from 'react-icons/fi'
-import { Button, EmptyState } from '../../shared/components/ui'
+import { Button, EmptyState, FilterChips } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import {
   CLINICS,
@@ -41,18 +41,12 @@ export function TestingTab() {
         ))}
       </div>
 
-      <div className={styles.clinicFilters}>
-        {CLINIC_FILTERS.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            className={[styles.cChip, clinicFilter === f.id && styles.cChipActive].filter(Boolean).join(' ')}
-            onClick={() => setClinicFilter(f.id)}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
+      <FilterChips
+        className={styles.clinicFilters}
+        options={CLINIC_FILTERS.map((f) => ({ value: f.id, label: f.label }))}
+        value={clinicFilter}
+        onChange={(v) => setClinicFilter(v as ClinicType | 'all')}
+      />
 
       <div className={styles.clinicList}>
         {clinics.length === 0 && (

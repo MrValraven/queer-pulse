@@ -1,0 +1,146 @@
+/* Form/toggle controls. Promoted from admin/ui (ax-seg, ax-toggle, ax-check-line). */
+
+/* ── Segmented control ───────────────────────────────────────────────────── */
+.seg {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.06);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
+}
+.segBtn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-60);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease);
+}
+.segBtn:hover {
+  color: var(--plum);
+}
+.segOn {
+  background: var(--paper);
+  color: var(--plum);
+  box-shadow: 0 2px 8px -3px rgba(var(--plum-rgb), 0.25);
+}
+.segOn:hover {
+  color: var(--plum);
+}
+/* full-width variant — segments stretch and square slightly (rounded-rect). */
+.segFull {
+  display: flex;
+  width: 100%;
+  border-radius: 11px;
+}
+.segFull .segBtn {
+  flex: 1;
+  border-radius: 8px;
+}
+
+/* ── Toggle switch ───────────────────────────────────────────────────────── */
+.toggle {
+  flex: none;
+  width: 44px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.18);
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s var(--ease);
+}
+.toggleOn {
+  background: var(--jade);
+}
+.toggleOn.toggle_coral {
+  background: var(--accent);
+}
+.toggleKnob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s var(--ease);
+}
+.toggleOn .toggleKnob {
+  transform: translateX(18px);
+}
+
+/* ── Check-line ──────────────────────────────────────────────────────────── */
+.checkLine {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border-radius: 14px;
+  background: var(--paper);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.16s var(--ease), background 0.16s var(--ease);
+}
+.checkLine:hover {
+  border-color: rgba(var(--plum-rgb), 0.28);
+}
+.checkLineOn {
+  border-color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.06);
+}
+.checkBox {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 7px;
+  border: 1.5px solid rgba(var(--plum-rgb), 0.22);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  transition: background 0.16s var(--ease), border-color 0.16s var(--ease);
+}
+.checkLineOn .checkBox {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+.checkBox svg {
+  width: 13px;
+  height: 13px;
+}
+.checkTx {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.checkTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.checkSub {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segBtn,
+  .toggle,
+  .toggleKnob,
+  .checkLine,
+  .checkBox {
+    transition: none;
+  }
+}

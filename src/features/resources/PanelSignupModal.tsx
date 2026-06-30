@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
+import { Button, Sending } from '../../shared/components/ui'
 import { ResourceModal, PlumSuccess } from './ResourceModal'
 import styles from './ResourceModal.module.css'
 
@@ -64,11 +64,7 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
               Cancel
             </Button>
             <Button type="button" variant="primary" onClick={submit} disabled={!valid || phase === 'loading'}>
-              {phase === 'loading' ? (
-                <><span className={styles.spinner} />Sending…</>
-              ) : (
-                'Add me to the panel'
-              )}
+              {phase === 'loading' ? <Sending label="Sending…" /> : 'Add me to the panel'}
             </Button>
           </div>
         </>

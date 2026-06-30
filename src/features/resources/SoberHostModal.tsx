@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FiPlusCircle, FiUsers } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
+import { Button, Sending } from '../../shared/components/ui'
 import { ResourceModal, PlumSuccess } from './ResourceModal'
 import styles from './ResourceModal.module.css'
 
@@ -102,7 +102,7 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
             </Button>
             <Button type="button" variant="primary" onClick={submit} disabled={!valid || phase === 'loading'}>
               {phase === 'loading' ? (
-                <><span className={styles.spinner} />Sending…</>
+                <Sending label="Sending…" />
               ) : mode === 'host' ? (
                 'Submit gathering'
               ) : (
