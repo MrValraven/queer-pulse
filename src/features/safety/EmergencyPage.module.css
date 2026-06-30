@@ -46,7 +46,11 @@
   width: 400px;
   height: 400px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.14),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .cat {

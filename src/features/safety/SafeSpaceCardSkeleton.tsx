@@ -1,5 +1,5 @@
-import { SkeletonLine } from '../../shared/components/ui'
-import styles from './SafeSpacesPage.module.css'
+import { SkeletonLine } from "../../shared/components/ui";
+import styles from "./SafeSpacesPage.module.css";
 
 // Mirrors SafeSpaceCard's shape exactly (same .card container → same padding,
 // border, radius and 12px gap rhythm) so there's zero layout shift on swap.
@@ -23,5 +23,5 @@ export function SafeSpaceCardSkeleton() {
         <SkeletonLine width={48} height={14} />
       </div>
     </div>
-  )
+  );
 }

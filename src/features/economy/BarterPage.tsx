@@ -2,9 +2,24 @@ import { useMemo, useState } from "react";
 import { FiRepeat } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
-import { Button, EmptyState, FadeIn, Outro, Reveal, SkeletonAvatar, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  Outro,
+  Reveal,
+  SkeletonAvatar,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { BARTERS, MODES, CATS, PRINCIPLES, type Barter, type Mode } from "./barter.data";
+import {
+  BARTERS,
+  MODES,
+  CATS,
+  PRINCIPLES,
+  type Barter,
+  type Mode,
+} from "./barter.data";
 import { BarterCard } from "./BarterCard";
 import { BarterPostStrip } from "./BarterPostStrip";
 import styles from "./BarterPage.module.css";
@@ -151,7 +166,9 @@ export function BarterPage() {
         <div className="wrap">
           <div className={styles.grid}>
             {loading ? (
-              Array.from({ length: 6 }).map((_, i) => <BarterSkeleton key={i} />)
+              Array.from({ length: 6 }).map((_, i) => (
+                <BarterSkeleton key={i} />
+              ))
             ) : (
               <>
                 {items.length === 0 && (
@@ -183,7 +200,11 @@ export function BarterPage() {
       </div>
 
       <Outro
-        title={<>Skills are <em>the currency.</em></>}
+        title={
+          <>
+            Skills are <em>the currency.</em>
+          </>
+        }
         sub="QueerPulse Barter is open to all members. The more you offer, the more you can ask for."
       >
         <Button to={routes.requestInvite} size="lg">

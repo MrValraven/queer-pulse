@@ -1,7 +1,14 @@
-import { Link } from 'react-router-dom'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
-import { COMMITMENTS, COMMUNITIES, CONTACT, FORUM, GOVERNANCE, ORGS } from './intersectionality.data'
-import styles from './IntersectionalityPage.module.css'
+import { Link } from "react-router-dom";
+import { Button, Outro, Reveal } from "../../shared/components/ui";
+import {
+  COMMITMENTS,
+  COMMUNITIES,
+  CONTACT,
+  FORUM,
+  GOVERNANCE,
+  ORGS,
+} from "./intersectionality.data";
+import styles from "./IntersectionalityPage.module.css";
 
 export function IntersectionalityFooter() {
   return (
@@ -14,8 +21,8 @@ export function IntersectionalityFooter() {
                 What QueerPulse <em>commits to.</em>
               </h2>
               <p>
-                These are specific things, not aspirations. We're accountable to them — if we're not
-                doing them, say so.
+                These are specific things, not aspirations. We're accountable to
+                them — if we're not doing them, say so.
               </p>
               <div className={styles.commitBtns}>
                 <Button to={GOVERNANCE} variant="ghost-dark">
@@ -40,13 +47,21 @@ export function IntersectionalityFooter() {
         </div>
       </Reveal>
 
-      <Reveal as="section" className={styles.sec} id="orgs" style={{ paddingBottom: 100 }}>
+      <Reveal
+        as="section"
+        className={styles.sec}
+        id="orgs"
+        style={{ paddingBottom: 100 }}
+      >
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
               Organisations &amp; <em>resources</em>
             </h2>
-            <p>External organisations relevant to the specific intersections on this page.</p>
+            <p>
+              External organisations relevant to the specific intersections on
+              this page.
+            </p>
           </div>
           <div className={styles.orgsGrid}>
             {ORGS.map((o, i) => (
@@ -66,7 +81,11 @@ export function IntersectionalityFooter() {
       </Reveal>
 
       <Outro
-        title={<>All of you <em>belongs here.</em></>}
+        title={
+          <>
+            All of you <em>belongs here.</em>
+          </>
+        }
         sub="Not the parts that are easiest to hold. All of it."
       >
         <Button to={COMMUNITIES} variant="primary" size="lg">
@@ -77,5 +96,5 @@ export function IntersectionalityFooter() {
         </Button>
       </Outro>
     </>
-  )
+  );
 }

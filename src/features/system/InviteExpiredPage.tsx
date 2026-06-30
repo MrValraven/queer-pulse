@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
-import { SystemStateShell } from '../../shared/components/layout'
-import { routes } from '../../app/routeMap'
-import styles from './InviteExpiredPage.module.css'
+import { Link } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
+import { SystemStateShell } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
+import styles from "./InviteExpiredPage.module.css";
 
 export function InviteExpiredPage() {
   return (
@@ -21,8 +21,8 @@ export function InviteExpiredPage() {
           This link has <em>timed out.</em>
         </h1>
         <p className={styles.lead}>
-          Invites stay live for 14 days. Yours was sent a while ago, so the slot we held for you
-          has rotated back into the pool.
+          Invites stay live for 14 days. Yours was sent a while ago, so the slot
+          we held for you has rotated back into the pool.
         </p>
 
         <div className={styles.inviteDetails}>
@@ -48,9 +48,7 @@ export function InviteExpiredPage() {
         </div>
 
         <div className={styles.actions}>
-          <Button to={routes.contact}>
-            Ask Catarina to re-send →
-          </Button>
+          <Button to={routes.contact}>Ask Catarina to re-send →</Button>
           <Button variant="ghost" to={routes.requestInvite}>
             Request a fresh invite
           </Button>
@@ -58,15 +56,13 @@ export function InviteExpiredPage() {
 
         <div className={styles.foot}>
           <div>
-            Already a member?{' '}
-            <Link to={routes.signIn}>Sign in</Link>
+            Already a member? <Link to={routes.signIn}>Sign in</Link>
           </div>
           <div>
-            Need help?{' '}
-            <Link to={routes.help}>Ask the team</Link>
+            Need help? <Link to={routes.help}>Ask the team</Link>
           </div>
         </div>
       </div>
     </SystemStateShell>
-  )
+  );
 }

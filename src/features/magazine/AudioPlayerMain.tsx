@@ -1,18 +1,18 @@
-import { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiMoon, FiX } from 'react-icons/fi'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { HOME, MEMBER, SHOW, SPEEDS, secToTime } from './audioPlayer.data'
-import { CastModal, SleepTimerModal } from './AudioPlayerModals'
-import type { AudioPlayer } from './useAudioPlayer'
-import styles from './AudioPlayerPage.module.css'
+import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { FiMoon, FiX } from "react-icons/fi";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { HOME, MEMBER, SHOW, SPEEDS, secToTime } from "./audioPlayer.data";
+import { CastModal, SleepTimerModal } from "./AudioPlayerModals";
+import type { AudioPlayer } from "./useAudioPlayer";
+import styles from "./AudioPlayerPage.module.css";
 
 function PlayerTopbar({ onCast }: { onCast: () => void }) {
-  const { showToast } = useToast()
+  const { showToast } = useToast();
   const share = () => {
-    if (navigator.clipboard) navigator.clipboard.writeText(location.href)
-    showToast('Link copied', 'success')
-  }
+    if (navigator.clipboard) navigator.clipboard.writeText(location.href);
+    showToast("Link copied", "success");
+  };
   return (
     <div className={styles.topbar}>
       <Link to={SHOW} className={styles.back}>
@@ -23,7 +23,12 @@ function PlayerTopbar({ onCast }: { onCast: () => void }) {
         Queer<span className={styles.brandItalic}>Pulse</span>
       </Link>
       <div className={styles.extra}>
-        <button type="button" className={styles.iconBtn} title="Share" onClick={share}>
+        <button
+          type="button"
+          className={styles.iconBtn}
+          title="Share"
+          onClick={share}
+        >
           <svg viewBox="0 0 24 24">
             <circle cx="18" cy="5" r="3" />
             <circle cx="6" cy="12" r="3" />
@@ -32,7 +37,12 @@ function PlayerTopbar({ onCast }: { onCast: () => void }) {
             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
           </svg>
         </button>
-        <button type="button" className={styles.iconBtn} title="Cast / AirPlay" onClick={onCast}>
+        <button
+          type="button"
+          className={styles.iconBtn}
+          title="Cast / AirPlay"
+          onClick={onCast}
+        >
           <svg viewBox="0 0 24 24">
             <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6" />
             <line x1="2" y1="20" x2="2.01" y2="20" />
@@ -40,24 +50,24 @@ function PlayerTopbar({ onCast }: { onCast: () => void }) {
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
-  const [saved, setSaved] = useState(false)
-  const [liked, setLiked] = useState(false)
-  const [castOpen, setCastOpen] = useState(false)
-  const [sleepOpen, setSleepOpen] = useState(false)
-  const barRef = useRef<HTMLDivElement>(null)
+  const [saved, setSaved] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [castOpen, setCastOpen] = useState(false);
+  const [sleepOpen, setSleepOpen] = useState(false);
+  const barRef = useRef<HTMLDivElement>(null);
 
   const seekFromEvent = (clientX: number) => {
-    const el = barRef.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    player.seekFraction((clientX - rect.left) / rect.width)
-  }
+    const el = barRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    player.seekFraction((clientX - rect.left) / rect.width);
+  };
 
-  const pct = (player.currentTime / player.duration) * 100
+  const pct = (player.currentTime / player.duration) * 100;
 
   return (
     <>
@@ -73,10 +83,10 @@ export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
             Dr. Inês Pereira on <em>fifteen minutes of someone else's time.</em>
           </h1>
           <p className={styles.guest}>
-            In conversation with{' '}
+            In conversation with{" "}
             <Link to={MEMBER}>
               <b>Catarina Vaz</b>
-            </Link>{' '}
+            </Link>{" "}
             · recorded 6 May at Café Beirão · 52 min
           </p>
 
@@ -92,12 +102,12 @@ export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
               aria-valuenow={Math.floor(player.currentTime)}
               onClick={(e) => seekFromEvent(e.clientX)}
               onKeyDown={(e) => {
-                if (e.key === 'ArrowRight') {
-                  e.preventDefault()
-                  player.nudge(5)
-                } else if (e.key === 'ArrowLeft') {
-                  e.preventDefault()
-                  player.nudge(-5)
+                if (e.key === "ArrowRight") {
+                  e.preventDefault();
+                  player.nudge(5);
+                } else if (e.key === "ArrowLeft") {
+                  e.preventDefault();
+                  player.nudge(-5);
                 }
               }}
             >
@@ -112,19 +122,34 @@ export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
           </div>
 
           <div className={styles.controls}>
-            <button type="button" className={styles.ctrl} title="Previous chapter" onClick={player.prevChapter}>
+            <button
+              type="button"
+              className={styles.ctrl}
+              title="Previous chapter"
+              onClick={player.prevChapter}
+            >
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="19 20 9 12 19 4 19 20" />
                 <line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" />
               </svg>
             </button>
-            <button type="button" className={styles.ctrl} title="-15s" onClick={() => player.nudge(-15)}>
+            <button
+              type="button"
+              className={styles.ctrl}
+              title="-15s"
+              onClick={() => player.nudge(-15)}
+            >
               <svg viewBox="0 0 24 24">
                 <path d="M2.5 2v6h6" />
                 <path d="M21.5 12A9 9 0 1 1 6 5.3L2.5 8" />
               </svg>
             </button>
-            <button type="button" className={styles.playBtn} onClick={player.togglePlay} title={player.playing ? 'Pause' : 'Play'}>
+            <button
+              type="button"
+              className={styles.playBtn}
+              onClick={player.togglePlay}
+              title={player.playing ? "Pause" : "Play"}
+            >
               {player.playing ? (
                 <svg viewBox="0 0 24 24">
                   <rect x="6" y="4" width="4" height="16" />
@@ -136,13 +161,23 @@ export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
                 </svg>
               )}
             </button>
-            <button type="button" className={styles.ctrl} title="+30s" onClick={() => player.nudge(30)}>
+            <button
+              type="button"
+              className={styles.ctrl}
+              title="+30s"
+              onClick={() => player.nudge(30)}
+            >
               <svg viewBox="0 0 24 24">
                 <path d="M21.5 2v6h-6" />
                 <path d="M2.5 12A9 9 0 1 0 18 5.3L21.5 8" />
               </svg>
             </button>
-            <button type="button" className={styles.ctrl} title="Next chapter" onClick={player.nextChapter}>
+            <button
+              type="button"
+              className={styles.ctrl}
+              title="Next chapter"
+              onClick={player.nextChapter}
+            >
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="5 4 15 12 5 20 5 4" />
                 <line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" />
@@ -153,19 +188,41 @@ export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
           <div className={styles.secondary}>
             <div className={styles.speed}>
               {SPEEDS.map((sp) => (
-                <button key={sp} type="button" className={[styles.speedBtn, player.speed === sp && styles.speedActive].filter(Boolean).join(' ')} onClick={() => player.setSpeed(sp)}>
+                <button
+                  key={sp}
+                  type="button"
+                  className={[
+                    styles.speedBtn,
+                    player.speed === sp && styles.speedActive,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  onClick={() => player.setSpeed(sp)}
+                >
                   {sp}
                 </button>
               ))}
             </div>
             <div className={styles.actionsRow}>
-              <button type="button" className={[styles.actionBtn, saved && styles.actionActive].filter(Boolean).join(' ')} onClick={() => setSaved((v) => !v)}>
+              <button
+                type="button"
+                className={[styles.actionBtn, saved && styles.actionActive]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => setSaved((v) => !v)}
+              >
                 <svg viewBox="0 0 24 24">
                   <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
                 </svg>
                 Save
               </button>
-              <button type="button" className={[styles.actionBtn, liked && styles.actionActive].filter(Boolean).join(' ')} onClick={() => setLiked((v) => !v)}>
+              <button
+                type="button"
+                className={[styles.actionBtn, liked && styles.actionActive]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => setLiked((v) => !v)}
+              >
                 <svg viewBox="0 0 24 24">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                 </svg>
@@ -175,12 +232,21 @@ export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
                 <span className={styles.sleepChip}>
                   <FiMoon />
                   {secToTime(player.sleepRemaining)}
-                  <button type="button" className={styles.sleepChipX} title="Cancel sleep timer" onClick={player.cancelSleep}>
+                  <button
+                    type="button"
+                    className={styles.sleepChipX}
+                    title="Cancel sleep timer"
+                    onClick={player.cancelSleep}
+                  >
                     <FiX />
                   </button>
                 </span>
               ) : (
-                <button type="button" className={styles.actionBtn} onClick={() => setSleepOpen(true)}>
+                <button
+                  type="button"
+                  className={styles.actionBtn}
+                  onClick={() => setSleepOpen(true)}
+                >
                   <svg viewBox="0 0 24 24">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </svg>
@@ -202,5 +268,5 @@ export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
         />
       )}
     </>
-  )
+  );
 }

@@ -1,17 +1,17 @@
-import { Link } from 'react-router-dom'
-import { FiCheck, FiClock, FiMapPin } from 'react-icons/fi'
-import { Avatar } from '../../shared/components/ui'
-import type { Profile } from './flatmates.data'
-import styles from './FlatmatesPage.module.css'
+import { Link } from "react-router-dom";
+import { FiCheck, FiClock, FiMapPin } from "react-icons/fi";
+import { Avatar } from "../../shared/components/ui";
+import type { Profile } from "./flatmates.data";
+import styles from "./FlatmatesPage.module.css";
 
 export function FlatmateCard({
   p,
   sent,
   onSayHello,
 }: {
-  p: Profile
-  sent: boolean
-  onSayHello: () => void
+  p: Profile;
+  sent: boolean;
+  onSayHello: () => void;
 }) {
   return (
     <div className={styles.card}>
@@ -31,14 +31,21 @@ export function FlatmateCard({
           <div className={styles.pronouns}>{p.pronouns}</div>
         </div>
         <span
-          className={[styles.badge, p.type === 'seeking' ? styles.badgeSeeking : styles.badgeOffering].join(' ')}
+          className={[
+            styles.badge,
+            p.type === "seeking" ? styles.badgeSeeking : styles.badgeOffering,
+          ].join(" ")}
         >
-          {p.type === 'seeking' ? 'Seeking a room' : 'Offering a room'}
+          {p.type === "seeking" ? "Seeking a room" : "Offering a room"}
         </span>
       </div>
       <div className={styles.details}>
-        <span className={styles.detail}><FiMapPin /> {p.neighbourhoodLabel}</span>
-        <span className={styles.detail}><FiClock /> {p.movein}</span>
+        <span className={styles.detail}>
+          <FiMapPin /> {p.neighbourhoodLabel}
+        </span>
+        <span className={styles.detail}>
+          <FiClock /> {p.movein}
+        </span>
         <span className={styles.detail}>{p.budget}</span>
       </div>
       <p className={styles.note}>{p.note}</p>
@@ -53,12 +60,20 @@ export function FlatmateCard({
         <span className={styles.since}>Member since {p.since}</span>
         <button
           type="button"
-          className={[styles.sayBtn, sent && styles.sayBtnSent].filter(Boolean).join(' ')}
+          className={[styles.sayBtn, sent && styles.sayBtnSent]
+            .filter(Boolean)
+            .join(" ")}
           onClick={onSayHello}
         >
-          {sent ? <><FiCheck /> Hello sent</> : 'Say hello →'}
+          {sent ? (
+            <>
+              <FiCheck /> Hello sent
+            </>
+          ) : (
+            "Say hello →"
+          )}
         </button>
       </div>
     </div>
-  )
+  );
 }

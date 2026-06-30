@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { ImageSlot, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
-import { featureStory, storyCards } from '../data/stories'
-import styles from './Stories.module.css'
+import { Link } from "react-router-dom";
+import { ImageSlot, Reveal, SectionHead } from "../../../shared/components/ui";
+import { linkToPath } from "../../../app/routeMap";
+import { featureStory, storyCards } from "../data/stories";
+import styles from "./Stories.module.css";
 
 export function Stories() {
   return (
@@ -34,7 +34,9 @@ export function Stories() {
               <h3>{featureStory.title}</h3>
               <p>{featureStory.excerpt}</p>
               <div className={styles.byline}>
-                <span className={styles.avMini}>{featureStory.bylineInitials}</span>
+                <span className={styles.avMini}>
+                  {featureStory.bylineInitials}
+                </span>
                 {featureStory.byline}
               </div>
             </div>
@@ -65,5 +67,5 @@ export function Stories() {
         </div>
       </div>
     </section>
-  )
+  );
 }

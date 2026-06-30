@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath, routes } from '../../../app/routeMap'
-import { platforms } from '../data/platforms'
-import styles from './Platforms.module.css'
+import { Link } from "react-router-dom";
+import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { linkToPath, routes } from "../../../app/routeMap";
+import { platforms } from "../data/platforms";
+import styles from "./Platforms.module.css";
 
 export function Platforms() {
   return (
@@ -26,12 +26,16 @@ export function Platforms() {
 
         <Reveal className={styles.row}>
           {platforms.map((platform) => (
-            <Link key={platform.name} to={linkToPath(platform.href)} className={styles.badge}>
-              <span className={[styles.ic, styles[platform.tone]].join(' ')}>
+            <Link
+              key={platform.name}
+              to={linkToPath(platform.href)}
+              className={styles.badge}
+            >
+              <span className={[styles.ic, styles[platform.tone]].join(" ")}>
                 {platform.badge}
               </span>
               <span>
-                <span className={styles.name} style={{ display: 'block' }}>
+                <span className={styles.name} style={{ display: "block" }}>
                   {platform.name}
                 </span>
                 <span className={styles.cat}>{platform.category}</span>
@@ -40,11 +44,14 @@ export function Platforms() {
           ))}
           <Link
             to={routes.platforms}
-            className={[styles.badge, styles.dashed].join(' ')}
+            className={[styles.badge, styles.dashed].join(" ")}
           >
-            <span className={[styles.ic, styles.plus].join(' ')}>+</span>
+            <span className={[styles.ic, styles.plus].join(" ")}>+</span>
             <span>
-              <span className={[styles.name, styles.nameMuted].join(' ')} style={{ display: 'block' }}>
+              <span
+                className={[styles.name, styles.nameMuted].join(" ")}
+                style={{ display: "block" }}
+              >
                 24 more
               </span>
               <span className={styles.cat}>Browse all →</span>
@@ -53,5 +60,5 @@ export function Platforms() {
         </Reveal>
       </div>
     </section>
-  )
+  );
 }

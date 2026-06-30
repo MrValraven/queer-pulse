@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { ChipSelect, useChipSet } from '../../shared/components/ui'
-import { Pane, Section, ToggleList, ToggleRow } from './SettingsControls'
+import { useState } from "react";
+import { ChipSelect, useChipSet } from "../../shared/components/ui";
+import { Pane, Section, ToggleList, ToggleRow } from "./SettingsControls";
 import {
   AGE_LABELS,
   CONTENT_SETTINGS,
@@ -11,17 +11,17 @@ import {
   LOOKING_FOR,
   READING_PREFS,
   type ChipGroup,
-} from './interests.data'
-import styles from './InterestsPane.module.css'
+} from "./interests.data";
+import styles from "./InterestsPane.module.css";
 
 function ChipField({
   group,
   onChange,
 }: {
-  group: ChipGroup
-  onChange: () => void
+  group: ChipGroup;
+  onChange: () => void;
 }) {
-  const { selected, toggle } = useChipSet(group.defaults)
+  const { selected, toggle } = useChipSet(group.defaults);
 
   return (
     <ChipSelect
@@ -29,24 +29,30 @@ function ChipField({
       options={group.options}
       selected={selected}
       onToggle={(label) => {
-        toggle(label)
-        onChange()
+        toggle(label);
+        onChange();
       }}
     />
-  )
+  );
 }
 
 export function InterestsPane({ onChange }: { onChange: () => void }) {
-  const [identitiesSkipped, setIdentitiesSkipped] = useState(false)
-  const [ageIndex, setAgeIndex] = useState(DEFAULT_AGE_INDEX)
-  const [freq, setFreq] = useState(DEFAULT_FREQ)
+  const [identitiesSkipped, setIdentitiesSkipped] = useState(false);
+  const [ageIndex, setAgeIndex] = useState(DEFAULT_AGE_INDEX);
+  const [freq, setFreq] = useState(DEFAULT_FREQ);
 
   return (
     <Pane
-      title={<>Shape what you <em>see.</em></>}
+      title={
+        <>
+          Shape what you <em>see.</em>
+        </>
+      }
       sub="These are private — not shown on your profile. They help us surface gatherings, members, and content that's relevant to you. Change them any time."
     >
-      <div className={`${styles.prefSection} ${identitiesSkipped ? styles.skipped : ''}`}>
+      <div
+        className={`${styles.prefSection} ${identitiesSkipped ? styles.skipped : ""}`}
+      >
         <div className={styles.psHead}>
           Which identities feel like yours?
           <button
@@ -54,12 +60,12 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             className={styles.psSkip}
             onClick={() => setIdentitiesSkipped((v) => !v)}
           >
-            {identitiesSkipped ? 'Skipped' : 'Skip'}
+            {identitiesSkipped ? "Skipped" : "Skip"}
           </button>
         </div>
         <div className={styles.psHelper}>
-          Select as many as feel right. We use these to suggest relevant communities and content —
-          not to categorise you.
+          Select as many as feel right. We use these to suggest relevant
+          communities and content — not to categorise you.
         </div>
         <ChipField group={IDENTITIES} onChange={onChange} />
       </div>
@@ -73,22 +79,34 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
       <div className={styles.prefSection}>
         <div className={styles.psHead}>
           A bit about your life
-          <span className={styles.psHeadNote}>(private — helps with local suggestions)</span>
+          <span className={styles.psHeadNote}>
+            (private — helps with local suggestions)
+          </span>
         </div>
         <div className={styles.worldGrid}>
           <div className={styles.field}>
             <label>City / region</label>
-            <input type="text" defaultValue="Lisbon, Portugal" onChange={onChange} />
+            <input
+              type="text"
+              defaultValue="Lisbon, Portugal"
+              onChange={onChange}
+            />
           </div>
           <div className={styles.field}>
             <label>Languages</label>
-            <input type="text" placeholder="e.g. Portuguese, English" onChange={onChange} />
+            <input
+              type="text"
+              placeholder="e.g. Portuguese, English"
+              onChange={onChange}
+            />
           </div>
         </div>
         <div className={styles.field}>
           <label>
-            Your age range{' '}
-            <span className={styles.fieldNote}>(optional — never shown to other members)</span>
+            Your age range{" "}
+            <span className={styles.fieldNote}>
+              (optional — never shown to other members)
+            </span>
           </label>
           <input
             type="range"
@@ -98,8 +116,8 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             step={1}
             value={ageIndex}
             onChange={(e) => {
-              setAgeIndex(Number(e.target.value))
-              onChange()
+              setAgeIndex(Number(e.target.value));
+              onChange();
             }}
           />
           <div className={styles.ageLabelRow}>
@@ -115,22 +133,31 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
         <div className={styles.psHead}>What do you like reading?</div>
         <ToggleList>
           {READING_PREFS.map((title) => (
-            <ToggleRow key={title} title={title} defaultChecked onChange={onChange} />
+            <ToggleRow
+              key={title}
+              title={title}
+              defaultChecked
+              onChange={onChange}
+            />
           ))}
         </ToggleList>
-        <div className={styles.subHead}>How often do you want to hear from us?</div>
+        <div className={styles.subHead}>
+          How often do you want to hear from us?
+        </div>
         <div className={styles.freqOpts}>
           {FREQ_OPTIONS.map((opt) => (
             <button
               key={opt.key}
               type="button"
-              className={`${styles.freqOpt} ${freq === opt.key ? styles.freqOptSelected : ''}`}
+              className={`${styles.freqOpt} ${freq === opt.key ? styles.freqOptSelected : ""}`}
               onClick={() => {
-                setFreq(opt.key)
-                onChange()
+                setFreq(opt.key);
+                onChange();
               }}
             >
-              <div className={styles.foRadio}><div className={styles.foDot} /></div>
+              <div className={styles.foRadio}>
+                <div className={styles.foDot} />
+              </div>
               <div>
                 <div className={styles.foTitle}>{opt.title}</div>
                 <div className={styles.foDesc}>{opt.desc}</div>
@@ -142,11 +169,17 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
 
       <Section label="Content settings">
         <div className={styles.psHelper}>
-          Turning these off never affects your community access — only your feed.
+          Turning these off never affects your community access — only your
+          feed.
         </div>
         <ToggleList>
           {CONTENT_SETTINGS.map((title) => (
-            <ToggleRow key={title} title={title} defaultChecked onChange={onChange} />
+            <ToggleRow
+              key={title}
+              title={title}
+              defaultChecked
+              onChange={onChange}
+            />
           ))}
         </ToggleList>
         <div className={styles.legalNote}>
@@ -154,5 +187,5 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
         </div>
       </Section>
     </Pane>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { SkeletonLine } from '../../shared/components/ui'
-import styles from './StatusComponents.module.css'
+import { SkeletonLine } from "../../shared/components/ui";
+import styles from "./StatusComponents.module.css";
 
 /** Mirrors a real .svcCard: name + desc on the left, status pill on the right. */
 export function ServiceCardSkeleton() {
@@ -9,9 +9,13 @@ export function ServiceCardSkeleton() {
         <SkeletonLine width="55%" height={14} />
         <SkeletonLine width="78%" height={11} style={{ marginTop: 6 }} />
       </div>
-      <SkeletonLine width={84} height={22} style={{ borderRadius: 999, flex: 'none' }} />
+      <SkeletonLine
+        width={84}
+        height={22}
+        style={{ borderRadius: 999, flex: "none" }}
+      />
     </div>
-  )
+  );
 }
 
 /** Mirrors a real .incItem: timeline dot + date/title/text/tag block. */
@@ -21,7 +25,7 @@ export function IncidentSkeleton() {
       <SkeletonLine
         width={37}
         height={37}
-        style={{ borderRadius: '50%', flex: 'none' }}
+        style={{ borderRadius: "50%", flex: "none" }}
       />
       <div style={{ flex: 1 }}>
         <SkeletonLine width="22%" height={11} style={{ marginBottom: 8 }} />
@@ -31,5 +35,5 @@ export function IncidentSkeleton() {
         <SkeletonLine width={92} height={22} style={{ borderRadius: 999 }} />
       </div>
     </div>
-  )
+  );
 }

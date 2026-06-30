@@ -1,5 +1,5 @@
-import { SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
-import styles from './FlatmatesPage.module.css'
+import { SkeletonAvatar, SkeletonLine } from "../../shared/components/ui";
+import styles from "./FlatmatesPage.module.css";
 
 // Mirrors FlatmateCard's shape so there's zero layout shift on swap.
 export function FlatmateSkeleton() {
@@ -33,5 +33,5 @@ export function FlatmateSkeleton() {
         <SkeletonLine width={96} height={36} style={{ borderRadius: 999 }} />
       </div>
     </div>
-  )
+  );
 }

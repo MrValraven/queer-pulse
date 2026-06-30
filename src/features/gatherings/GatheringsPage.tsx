@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { FEATURED, HOODS, WAYS } from './gatheringsPage.data'
-import styles from './GatheringsPage.module.css'
+import { Link } from "react-router-dom";
+import { PageShell } from "../../shared/components/layout";
+import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { FEATURED, HOODS, WAYS } from "./gatheringsPage.data";
+import styles from "./GatheringsPage.module.css";
 
 export function GatheringsPage() {
   return (
@@ -15,9 +15,9 @@ export function GatheringsPage() {
             The community, <em>in the same room.</em>
           </Reveal>
           <Reveal as="p" className={styles.lead} delay={120}>
-            Supper clubs, mixers, studio visits, screenings, and skill swaps — real-world gatherings
-            across Lisbon, hosted by members for members. This is where the platform stops being a
-            screen.
+            Supper clubs, mixers, studio visits, screenings, and skill swaps —
+            real-world gatherings across Lisbon, hosted by members for members.
+            This is where the platform stops being a screen.
           </Reveal>
           <Reveal className={styles.hoods} delay={160}>
             {HOODS.map((hood) => (
@@ -35,13 +35,19 @@ export function GatheringsPage() {
             Find your way <em>in.</em>
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            Whether you're turning up for the first time or hosting your tenth supper club, start
-            here.
+            Whether you're turning up for the first time or hosting your tenth
+            supper club, start here.
           </Reveal>
           <div className={styles.grid}>
             {WAYS.map((way, index) => (
-              <Reveal key={way.title} className={styles.wayCard} delay={index * 55}>
-                <div className={styles.wayIcon}><way.icon /></div>
+              <Reveal
+                key={way.title}
+                className={styles.wayCard}
+                delay={index * 55}
+              >
+                <div className={styles.wayIcon}>
+                  <way.icon />
+                </div>
                 <div className={styles.wayTitle}>{way.title}</div>
                 <div className={styles.wayBody}>{way.body}</div>
                 <Link to={way.to} className={styles.wayLink}>
@@ -59,11 +65,18 @@ export function GatheringsPage() {
             Happening <em>soon.</em>
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            A taste of the next few weeks. The full board lives on the events page.
+            A taste of the next few weeks. The full board lives on the events
+            page.
           </Reveal>
           <div className={styles.events}>
             {FEATURED.map((event, index) => (
-              <Reveal key={event.title} as={Link} to={event.to} className={styles.event} delay={index * 55}>
+              <Reveal
+                key={event.title}
+                as={Link}
+                to={event.to}
+                className={styles.event}
+                delay={index * 55}
+              >
                 <div className={styles.date}>
                   <div className={styles.dateDd}>{event.dd}</div>
                   <div className={styles.dateMm}>{event.mm}</div>
@@ -81,7 +94,11 @@ export function GatheringsPage() {
       </section>
 
       <Outro
-        title={<>Bring people <em>together.</em></>}
+        title={
+          <>
+            Bring people <em>together.</em>
+          </>
+        }
         sub="Every gathering started with one member deciding to host. The platform handles the rest — tickets, sliding scale, and a listing on the board."
       >
         <Button to={routes.events} variant="primary" size="lg">
@@ -92,5 +109,5 @@ export function GatheringsPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

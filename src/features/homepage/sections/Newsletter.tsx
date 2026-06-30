@@ -1,24 +1,24 @@
-import { useState, type FormEvent } from 'react'
-import { FiCheckCircle, FiMail } from 'react-icons/fi'
-import { Button, Reveal } from '../../../shared/components/ui'
-import { useToast } from '../../../shared/components/feedback/useToast'
-import { digestPreview } from '../data/digestPreview'
-import styles from './Newsletter.module.css'
+import { useState, type FormEvent } from "react";
+import { FiCheckCircle, FiMail } from "react-icons/fi";
+import { Button, Reveal } from "../../../shared/components/ui";
+import { useToast } from "../../../shared/components/feedback/useToast";
+import { digestPreview } from "../data/digestPreview";
+import styles from "./Newsletter.module.css";
 
 export function Newsletter() {
-  const { showToast } = useToast()
-  const [email, setEmail] = useState('')
-  const [submitted, setSubmitted] = useState<string | null>(null)
+  const { showToast } = useToast();
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState<string | null>(null);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+    event.preventDefault();
     if (!email.trim()) {
-      showToast('Please enter your email', 'info')
-      return
+      showToast("Please enter your email", "info");
+      return;
     }
-    setSubmitted(email.trim())
-    showToast("You're on the list — see you Thursday", 'success')
-    setEmail('')
+    setSubmitted(email.trim());
+    showToast("You're on the list — see you Thursday", "success");
+    setEmail("");
   }
 
   return (
@@ -30,9 +30,9 @@ export function Newsletter() {
               Stay connected. <em>Weekly, not daily.</em>
             </Reveal>
             <Reveal as="p" className={styles.sub} delay={60}>
-              The QueerPulse digest lands every Thursday — new members to meet, upcoming
-              gatherings, open skill swaps, and one piece of writing worth your time. No
-              noise.
+              The QueerPulse digest lands every Thursday — new members to meet,
+              upcoming gatherings, open skill swaps, and one piece of writing
+              worth your time. No noise.
             </Reveal>
             {submitted ? (
               <Reveal className={styles.success}>
@@ -43,12 +43,12 @@ export function Newsletter() {
                   You're on the list, <em>almost.</em>
                 </h3>
                 <p className={styles.successBody}>
-                  We'll start sending the <strong>Weekly digest</strong> to{' '}
+                  We'll start sending the <strong>Weekly digest</strong> to{" "}
                   <strong>{submitted}</strong> every Thursday.
                 </p>
                 <p className={styles.successNext}>
-                  <FiMail aria-hidden /> Check your inbox to confirm your subscription —
-                  the link expires in 48 hours.
+                  <FiMail aria-hidden /> Check your inbox to confirm your
+                  subscription — the link expires in 48 hours.
                 </p>
                 <Button variant="ghost-dark" onClick={() => setSubmitted(null)}>
                   Use a different email
@@ -90,5 +90,5 @@ export function Newsletter() {
         </div>
       </div>
     </section>
-  )
+  );
 }

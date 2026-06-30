@@ -1,7 +1,7 @@
-import { Button, Eyebrow, Reveal } from '../../../shared/components/ui'
-import { routes } from '../../../app/routeMap'
-import { neighbourhoods } from '../data/gatherings'
-import styles from './Hero.module.css'
+import { Button, Eyebrow, Reveal } from "../../../shared/components/ui";
+import { routes } from "../../../app/routeMap";
+import { neighbourhoods } from "../data/gatherings";
+import styles from "./Hero.module.css";
 
 export function Hero() {
   return (
@@ -19,9 +19,9 @@ export function Hero() {
           </Reveal>
 
           <Reveal as="p" className={styles.sub} delay={120}>
-            A quiet, vouched-for network for LGBTQ+ professionals in the city. No
-            follower counts, no hustle, no performing — just people worth knowing,
-            and a room that already feels like yours.
+            A quiet, vouched-for network for LGBTQ+ professionals in the city.
+            No follower counts, no hustle, no performing — just people worth
+            knowing, and a room that already feels like yours.
           </Reveal>
 
           <Reveal className={styles.cta} delay={180}>
@@ -48,5 +48,5 @@ export function Hero() {
         </div>
       </div>
     </header>
-  )
+  );
 }

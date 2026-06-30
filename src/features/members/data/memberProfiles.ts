@@ -12,11 +12,11 @@ export {
   fullName,
   memberName,
   memberAvatar,
-} from './members'
+} from "./members";
 export type {
   Member as MemberProfile,
   MemberSlug,
   ShapingItem,
   WorkItem,
   BoardItem,
-} from './members'
+} from "./members";

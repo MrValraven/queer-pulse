@@ -12,7 +12,11 @@
   width: 440px;
   height: 440px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.12), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.12),
+    transparent 62%
+  );
 }
 .eye {
   font-size: 11px;

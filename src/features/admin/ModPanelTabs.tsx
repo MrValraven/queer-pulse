@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react";
 import {
   FiCheck,
   FiX,
@@ -7,46 +7,49 @@ import {
   FiUserPlus,
   FiShield,
   FiAlertTriangle,
-} from 'react-icons/fi'
-import { Avatar, Button, EmptyState } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { useCommunityMembership } from '../../app/providers/CommunityMembershipProvider'
-import type { LivingCommunity } from '../communities/community.model'
-import { photoOf } from '../communities/communityPeople'
-import { RoleBadge } from '../communities/CommunityBadges'
-import { defaultSettings } from './adminMod.data'
-import styles from './ModPanel.module.css'
+} from "react-icons/fi";
+import { Avatar, Button, EmptyState } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
+import type { LivingCommunity } from "../communities/community.model";
+import { photoOf } from "../communities/communityPeople";
+import { RoleBadge } from "../communities/CommunityBadges";
+import { defaultSettings } from "./adminMod.data";
+import styles from "./ModPanel.module.css";
 
 /* -------------------------------------------------------------------------- */
 /* RequestsTab                                                                  */
 /* -------------------------------------------------------------------------- */
 
 export function RequestsTab({ living }: { living: LivingCommunity }) {
-  const { showToast } = useToast()
-  const { approveRequest } = useCommunityMembership()
-  const [requests, setRequests] = useState(living.joinRequests ?? [])
-  const [search, setSearch] = useState('')
+  const { showToast } = useToast();
+  const { approveRequest } = useCommunityMembership();
+  const [requests, setRequests] = useState(living.joinRequests ?? []);
+  const [search, setSearch] = useState("");
 
   const filtered = requests.filter((r) =>
     r.person.name.toLowerCase().includes(search.toLowerCase()),
-  )
+  );
 
   const resolveRequest = (id: string, name: string, approved: boolean) => {
-    setRequests((prev) => prev.filter((r) => r.id !== id))
-    if (approved) approveRequest(living.slug)
+    setRequests((prev) => prev.filter((r) => r.id !== id));
+    if (approved) approveRequest(living.slug);
     showToast(
       approved
         ? `${name} approved — welcome them in.`
         : `${name}'s request wasn't approved this time.`,
-      approved ? 'success' : 'info',
-    )
-  }
+      approved ? "success" : "info",
+    );
+  };
 
   const approveAll = () => {
-    requests.forEach(() => approveRequest(living.slug))
-    setRequests([])
-    showToast(`All ${requests.length} requests approved — the community grows.`, 'success')
-  }
+    requests.forEach(() => approveRequest(living.slug));
+    setRequests([]);
+    showToast(
+      `All ${requests.length} requests approved — the community grows.`,
+      "success",
+    );
+  };
 
   return (
     <div>
@@ -67,7 +70,7 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
         </div>
       )}
       <div className={styles.secLbl}>
-        Requests{' '}
+        Requests{" "}
         {requests.length > 0 && (
           <span className={styles.tabCount}>{requests.length}</span>
         )}
@@ -106,9 +109,9 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
                 className={styles.declineBtn}
                 onClick={() => resolveRequest(r.id, r.person.name, false)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
-                    resolveRequest(r.id, r.person.name, false)
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    resolveRequest(r.id, r.person.name, false);
                   }
                 }}
               >
@@ -119,7 +122,7 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
         ))
       )}
     </div>
-  )
+  );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -127,33 +130,33 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
 /* -------------------------------------------------------------------------- */
 
 export function ReportsTab({ living }: { living: LivingCommunity }) {
-  const { showToast } = useToast()
-  const [reports, setReports] = useState(living.reports ?? [])
+  const { showToast } = useToast();
+  const [reports, setReports] = useState(living.reports ?? []);
 
   const removeReport = (id: string) => {
-    setReports((prev) => prev.filter((r) => r.id !== id))
-    showToast('Post removed. The author has been notified.', 'success')
-  }
+    setReports((prev) => prev.filter((r) => r.id !== id));
+    showToast("Post removed. The author has been notified.", "success");
+  };
   const warnAuthor = (id: string, authorName: string) => {
-    setReports((prev) => prev.filter((r) => r.id !== id))
-    showToast(`A warning has been sent to ${authorName}.`, 'info')
-  }
+    setReports((prev) => prev.filter((r) => r.id !== id));
+    showToast(`A warning has been sent to ${authorName}.`, "info");
+  };
   const dismissReport = (id: string) => {
-    setReports((prev) => prev.filter((r) => r.id !== id))
-    showToast('Report dismissed.', 'info')
-  }
+    setReports((prev) => prev.filter((r) => r.id !== id));
+    showToast("Report dismissed.", "info");
+  };
   const escalate = (id: string) => {
-    setReports((prev) => prev.filter((r) => r.id !== id))
+    setReports((prev) => prev.filter((r) => r.id !== id));
     showToast(
-      'Escalated to the QueerPulse team — it\'s now in the platform queue.',
-      'info',
-    )
-  }
+      "Escalated to the QueerPulse team — it's now in the platform queue.",
+      "info",
+    );
+  };
 
   return (
     <div>
       <div className={styles.secLbl}>
-        Reported posts{' '}
+        Reported posts{" "}
         {reports.length > 0 && (
           <span className={styles.tabCount}>{reports.length}</span>
         )}
@@ -172,13 +175,17 @@ export function ReportsTab({ living }: { living: LivingCommunity }) {
             </div>
             <p className={styles.reportExcerpt}>"{rep.postExcerpt}"</p>
             <div className={styles.modMeta}>
-              From {rep.author.name} · flagged by {rep.reporter.name} · {rep.time} ago
+              From {rep.author.name} · flagged by {rep.reporter.name} ·{" "}
+              {rep.time} ago
             </div>
             <div className={styles.modActions} style={{ marginTop: 12 }}>
               <Button variant="primary" onClick={() => removeReport(rep.id)}>
                 Remove post
               </Button>
-              <Button variant="ghost" onClick={() => warnAuthor(rep.id, rep.author.name)}>
+              <Button
+                variant="ghost"
+                onClick={() => warnAuthor(rep.id, rep.author.name)}
+              >
                 Warn author
               </Button>
               <Button variant="ghost" onClick={() => dismissReport(rep.id)}>
@@ -192,7 +199,7 @@ export function ReportsTab({ living }: { living: LivingCommunity }) {
         ))
       )}
     </div>
-  )
+  );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -200,45 +207,50 @@ export function ReportsTab({ living }: { living: LivingCommunity }) {
 /* -------------------------------------------------------------------------- */
 
 const ROLE_FILTERS = [
-  ['all', 'All'],
-  ['mod', 'Mods'],
-  ['member', 'Members'],
-] as const
+  ["all", "All"],
+  ["mod", "Mods"],
+  ["member", "Members"],
+] as const;
 
 export function MembersTab({ living }: { living: LivingCommunity }) {
-  const { showToast } = useToast()
-  const { promoteToMod } = useCommunityMembership()
-  const [promoted, setPromoted] = useState<string[]>([])
-  const [removed, setRemoved] = useState<string[]>([])
-  const [roleFilter, setRoleFilter] = useState<'all' | 'mod' | 'member'>('all')
-  const [search, setSearch] = useState('')
+  const { showToast } = useToast();
+  const { promoteToMod } = useCommunityMembership();
+  const [promoted, setPromoted] = useState<string[]>([]);
+  const [removed, setRemoved] = useState<string[]>([]);
+  const [roleFilter, setRoleFilter] = useState<"all" | "mod" | "member">("all");
+  const [search, setSearch] = useState("");
 
-  const memberKey = (slug?: string, name?: string) => slug ?? name ?? ''
+  const memberKey = (slug?: string, name?: string) => slug ?? name ?? "";
 
   const promote = (slug: string | undefined, name: string) => {
-    const key = memberKey(slug, name)
-    setPromoted((p) => [...p, key])
-    promoteToMod(living.slug, key)
-    showToast(`${name} is now a mod.`, 'success')
-  }
+    const key = memberKey(slug, name);
+    setPromoted((p) => [...p, key]);
+    promoteToMod(living.slug, key);
+    showToast(`${name} is now a mod.`, "success");
+  };
   const demote = (slug: string | undefined, name: string) => {
-    const key = memberKey(slug, name)
-    setPromoted((p) => p.filter((k) => k !== key))
-    showToast(`${name} is no longer a mod.`, 'info')
-  }
+    const key = memberKey(slug, name);
+    setPromoted((p) => p.filter((k) => k !== key));
+    showToast(`${name} is no longer a mod.`, "info");
+  };
   const removeMember = (slug: string | undefined, name: string) => {
-    setRemoved((p) => [...p, memberKey(slug, name)])
-    showToast(`${name} has been removed from the community.`, 'info')
-  }
+    setRemoved((p) => [...p, memberKey(slug, name)]);
+    showToast(`${name} has been removed from the community.`, "info");
+  };
 
   const manageable = living.roster
     .filter((m) => !removed.includes(memberKey(m.slug, m.name)))
     .filter((m) => m.name.toLowerCase().includes(search.toLowerCase()))
     .filter((m) => {
-      if (roleFilter === 'all') return true
-      const effectiveRole = promoted.includes(memberKey(m.slug, m.name)) ? 'mod' : m.role
-      return effectiveRole === roleFilter || (roleFilter === 'mod' && m.role === 'owner')
-    })
+      if (roleFilter === "all") return true;
+      const effectiveRole = promoted.includes(memberKey(m.slug, m.name))
+        ? "mod"
+        : m.role;
+      return (
+        effectiveRole === roleFilter ||
+        (roleFilter === "mod" && m.role === "owner")
+      );
+    });
 
   return (
     <div>
@@ -256,7 +268,9 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
           <button
             key={val}
             type="button"
-            className={[styles.chip, roleFilter === val && styles.chipOn].filter(Boolean).join(' ')}
+            className={[styles.chip, roleFilter === val && styles.chipOn]
+              .filter(Boolean)
+              .join(" ")}
             onClick={() => setRoleFilter(val)}
           >
             {label}
@@ -267,9 +281,9 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
         Members <span className={styles.tabCount}>{manageable.length}</span>
       </div>
       {manageable.map((m) => {
-        const key = memberKey(m.slug, m.name)
-        const isMod = m.role !== 'member' || promoted.includes(key)
-        const isPromotedMod = promoted.includes(key) && m.role === 'member'
+        const key = memberKey(m.slug, m.name);
+        const isMod = m.role !== "member" || promoted.includes(key);
+        const isPromotedMod = promoted.includes(key) && m.role === "member";
         return (
           <div className={styles.modRow} key={key}>
             <Avatar
@@ -281,7 +295,7 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
             />
             <div className={styles.modMain}>
               <div className={styles.modName}>
-                {m.name} <RoleBadge role={isPromotedMod ? 'mod' : m.role} />
+                {m.name} <RoleBadge role={isPromotedMod ? "mod" : m.role} />
               </div>
               {m.title && <div className={styles.modMeta}>{m.title}</div>}
             </div>
@@ -293,9 +307,9 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
                   className={styles.declineBtn}
                   onClick={() => promote(m.slug, m.name)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      promote(m.slug, m.name)
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      promote(m.slug, m.name);
                     }
                   }}
                 >
@@ -309,42 +323,42 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
                   className={styles.declineBtn}
                   onClick={() => demote(m.slug, m.name)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      demote(m.slug, m.name)
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      demote(m.slug, m.name);
                     }
                   }}
                 >
                   <FiX aria-hidden /> Remove mod
                 </span>
               )}
-              {m.role !== 'owner' && (
+              {m.role !== "owner" && (
                 <span
                   role="button"
                   tabIndex={0}
-                  className={[styles.declineBtn, styles.removeBtn].join(' ')}
+                  className={[styles.declineBtn, styles.removeBtn].join(" ")}
                   onClick={() => removeMember(m.slug, m.name)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      removeMember(m.slug, m.name)
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      removeMember(m.slug, m.name);
                     }
                   }}
                 >
                   <FiX aria-hidden /> Remove
                 </span>
               )}
-              {m.role === 'owner' && (
+              {m.role === "owner" && (
                 <span className={styles.ownerTag}>
                   <FiShield aria-hidden /> Owner
                 </span>
               )}
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -352,30 +366,33 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
 /* -------------------------------------------------------------------------- */
 
 export function SettingsTab({ living }: { living: LivingCommunity }) {
-  const { showToast } = useToast()
-  const init = defaultSettings(living)
-  const [name, setName] = useState(init.name)
-  const [description, setDescription] = useState(init.description)
-  const [mode, setMode] = useState(init.membershipMode)
-  const [rules, setRules] = useState(init.rules)
+  const { showToast } = useToast();
+  const init = defaultSettings(living);
+  const [name, setName] = useState(init.name);
+  const [description, setDescription] = useState(init.description);
+  const [mode, setMode] = useState(init.membershipMode);
+  const [rules, setRules] = useState(init.rules);
 
   const MODES = [
-    ['open', 'Open'],
-    ['request', 'Request to join'],
-    ['invite', 'Invite only'],
-  ] as const
+    ["open", "Open"],
+    ["request", "Request to join"],
+    ["invite", "Invite only"],
+  ] as const;
 
   const save = () => {
-    showToast('Community settings saved.', 'success')
-  }
+    showToast("Community settings saved.", "success");
+  };
 
   const archive = () => {
-    showToast('Community archived. Members have been notified.', 'info')
-  }
+    showToast("Community archived. Members have been notified.", "info");
+  };
 
   const transfer = () => {
-    showToast('Ownership transfer initiated — the new owner will receive an invite.', 'info')
-  }
+    showToast(
+      "Ownership transfer initiated — the new owner will receive an invite.",
+      "info",
+    );
+  };
 
   return (
     <div>
@@ -409,7 +426,12 @@ export function SettingsTab({ living }: { living: LivingCommunity }) {
             <button
               key={val}
               type="button"
-              className={[styles.modeChip, mode === val && styles.modeChipActive].filter(Boolean).join(' ')}
+              className={[
+                styles.modeChip,
+                mode === val && styles.modeChipActive,
+              ]
+                .filter(Boolean)
+                .join(" ")}
               onClick={() => setMode(val)}
             >
               {label}
@@ -453,7 +475,8 @@ export function SettingsTab({ living }: { living: LivingCommunity }) {
           <div className={styles.dangerInfo}>
             <div className={styles.dangerTitle}>Transfer ownership</div>
             <div className={styles.dangerDesc}>
-              Hand the community to another member. You'll lose owner permissions.
+              Hand the community to another member. You'll lose owner
+              permissions.
             </div>
           </div>
           <Button variant="ghost" onClick={transfer}>
@@ -462,5 +485,5 @@ export function SettingsTab({ living }: { living: LivingCommunity }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
-import styles from './ThreadPage.module.css'
+import { SkeletonAvatar, SkeletonLine } from "../../shared/components/ui";
+import styles from "./ThreadPage.module.css";
 
 /** Mirrors a reply row: avatar + name line + body paragraphs. */
 function ReplySkeleton() {
@@ -16,7 +16,7 @@ function ReplySkeleton() {
         <SkeletonLine width="40%" height={14} style={{ marginTop: 6 }} />
       </div>
     </div>
-  )
+  );
 }
 
 export function ThreadRepliesSkeleton({ count = 3 }: { count?: number }) {
@@ -26,5 +26,5 @@ export function ThreadRepliesSkeleton({ count = 3 }: { count?: number }) {
         <ReplySkeleton key={i} />
       ))}
     </>
-  )
+  );
 }

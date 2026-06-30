@@ -1,9 +1,15 @@
-import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
-import { MusicPlayer } from './MusicPlayer'
-import { PROFILE, TINT_BG, TINT_FG, type ArtWork, type MusicArtist } from './creatives.data'
-import { badgeClass } from './creativesBadge'
-import styles from './CreativesPage.module.css'
+import { Link } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
+import { MusicPlayer } from "./MusicPlayer";
+import {
+  PROFILE,
+  TINT_BG,
+  TINT_FG,
+  type ArtWork,
+  type MusicArtist,
+} from "./creatives.data";
+import { badgeClass } from "./creativesBadge";
+import styles from "./CreativesPage.module.css";
 
 export function ArtCard({ w }: { w: ArtWork }) {
   return (
@@ -17,7 +23,11 @@ export function ArtCard({ w }: { w: ArtWork }) {
           <div className={styles.artBadges}>
             {w.badges.map((b) => (
               <span key={b} className={`${styles.badge} ${badgeClass(b)}`}>
-                {b === 'commission' ? 'Commission open' : b === 'exhibition' ? 'Exhibition' : b}
+                {b === "commission"
+                  ? "Commission open"
+                  : b === "exhibition"
+                    ? "Exhibition"
+                    : b}
               </span>
             ))}
           </div>
@@ -25,7 +35,10 @@ export function ArtCard({ w }: { w: ArtWork }) {
         <div className={styles.artTitle}>{w.title}</div>
         <div className={styles.artStatement}>{w.statement}</div>
         <div className={styles.artFoot}>
-          <div className={styles.artAv} style={{ background: TINT_BG[w.tint], color: TINT_FG[w.tint] }}>
+          <div
+            className={styles.artAv}
+            style={{ background: TINT_BG[w.tint], color: TINT_FG[w.tint] }}
+          >
             {w.initials}
           </div>
           <div>
@@ -38,7 +51,7 @@ export function ArtCard({ w }: { w: ArtWork }) {
         </div>
       </div>
     </article>
-  )
+  );
 }
 
 export function MusicCard({
@@ -46,9 +59,9 @@ export function MusicCard({
   active,
   onPlay,
 }: {
-  a: MusicArtist
-  active: boolean
-  onPlay: () => void
+  a: MusicArtist;
+  active: boolean;
+  onPlay: () => void;
 }) {
   return (
     <article className={styles.musicCard}>
@@ -69,7 +82,11 @@ export function MusicCard({
             </span>
           ))}
         </div>
-        <Button to={PROFILE} variant="ghost" style={{ fontSize: 13, padding: '9px 16px' }}>
+        <Button
+          to={PROFILE}
+          variant="ghost"
+          style={{ fontSize: 13, padding: "9px 16px" }}
+        >
           View profile
         </Button>
       </div>
@@ -78,5 +95,5 @@ export function MusicCard({
         <MusicPlayer artist={a} active={active} onPlay={onPlay} />
       </div>
     </article>
-  )
+  );
 }

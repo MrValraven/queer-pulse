@@ -1,6 +1,6 @@
-import { SkeletonLine } from '../../shared/components/ui'
-import type { Grant } from './microGrants.data'
-import styles from './MicroGrantsPage.module.css'
+import { SkeletonLine } from "../../shared/components/ui";
+import type { Grant } from "./microGrants.data";
+import styles from "./MicroGrantsPage.module.css";
 
 export function GrantSkeleton() {
   // Mirrors the .gc row: amount column, body (name + desc + tag foot), status.
@@ -17,7 +17,7 @@ export function GrantSkeleton() {
       </div>
       <SkeletonLine width={70} height={18} />
     </div>
-  )
+  );
 }
 
 export function GrantCard({ g }: { g: Grant }) {
@@ -36,10 +36,13 @@ export function GrantCard({ g }: { g: Grant }) {
         </div>
       </div>
       <span
-        className={[styles.gcStatus, g.status === 'awarded' ? styles.gsAwarded : styles.gsInProgress].join(' ')}
+        className={[
+          styles.gcStatus,
+          g.status === "awarded" ? styles.gsAwarded : styles.gsInProgress,
+        ].join(" ")}
       >
         {g.statusLabel}
       </span>
     </div>
-  )
+  );
 }

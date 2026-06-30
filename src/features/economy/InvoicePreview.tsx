@@ -1,59 +1,76 @@
-import type { Issuer } from './tools/useIssuer'
-import { DocPreview } from './tools/DocPreview'
+import type { Issuer } from "./tools/useIssuer";
+import { DocPreview } from "./tools/DocPreview";
 import {
   TAX_DISCLAIMER,
   IVA_EXEMPT_NOTE,
   RETENTION_DISPENSA_NOTE,
-} from './tax.constants'
-import { euro } from './economy.data'
-import { type LineItem, type InvoiceClient, lineTotal } from './invoice.data'
-import styles from './InvoiceGeneratorPage.module.css'
+} from "./tax.constants";
+import { euro } from "./economy.data";
+import { type LineItem, type InvoiceClient, lineTotal } from "./invoice.data";
+import styles from "./InvoiceGeneratorPage.module.css";
 
 export interface InvoicePreviewProps {
-  issuer: Issuer
-  client: InvoiceClient
-  invoiceNumber: string
-  issueDate: string
-  dueDate: string
-  lineItems: LineItem[]
-  ivaRate: number
-  exempt53: boolean
-  dispensaRetention: boolean
-  notes: string
-  subtotal: number
-  ivaAmount: number
-  total: number
+  issuer: Issuer;
+  client: InvoiceClient;
+  invoiceNumber: string;
+  issueDate: string;
+  dueDate: string;
+  lineItems: LineItem[];
+  ivaRate: number;
+  exempt53: boolean;
+  dispensaRetention: boolean;
+  notes: string;
+  subtotal: number;
+  ivaAmount: number;
+  total: number;
 }
 
 const fmtDate = (iso: string) => {
-  if (!iso) return '—'
-  const d = new Date(iso)
+  if (!iso) return "—";
+  const d = new Date(iso);
   return Number.isNaN(d.getTime())
     ? iso
-    : d.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' })
-}
+    : d.toLocaleDateString("pt-PT", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+};
 
 /** A branded, printable fatura-recibo rendered inside the DocPreview sheet. */
 export function InvoicePreview(props: InvoicePreviewProps) {
   const {
-    issuer, client, invoiceNumber, issueDate, dueDate, lineItems,
-    ivaRate, exempt53, dispensaRetention, notes, subtotal, ivaAmount, total,
-  } = props
+    issuer,
+    client,
+    invoiceNumber,
+    issueDate,
+    dueDate,
+    lineItems,
+    ivaRate,
+    exempt53,
+    dispensaRetention,
+    notes,
+    subtotal,
+    ivaAmount,
+    total,
+  } = props;
 
-  const effectiveIva = exempt53 ? 0 : ivaRate
+  const effectiveIva = exempt53 ? 0 : ivaRate;
 
   return (
     <DocPreview>
       <header className={styles.docHead}>
         <div>
-          <div className={styles.docBiz}>{issuer.name || 'Your name'}</div>
-          {issuer.address && <div className={styles.docMeta}>{issuer.address}</div>}
+          <div className={styles.docBiz}>{issuer.name || "Your name"}</div>
+          {issuer.address && (
+            <div className={styles.docMeta}>{issuer.address}</div>
+          )}
           {issuer.nif && <div className={styles.docMeta}>NIF {issuer.nif}</div>}
           {issuer.email && <div className={styles.docMeta}>{issuer.email}</div>}
         </div>
         <div className={styles.docHeadRight}>
           <div className={styles.docLabel}>Fatura-Recibo</div>
-          <div className={styles.docNo}>{invoiceNumber || '—'}</div>
+          <div className={styles.docNo}>{invoiceNumber || "—"}</div>
           <div className={styles.docMeta}>Issued {fmtDate(issueDate)}</div>
           <div className={styles.docMeta}>Due {fmtDate(dueDate)}</div>
         </div>
@@ -62,9 +79,11 @@ export function InvoicePreview(props: InvoicePreviewProps) {
       <section className={styles.docParties}>
         <div>
           <div className={styles.docPartyLabel}>Billed to</div>
-          <div className={styles.docPartyName}>{client.name || '—'}</div>
+          <div className={styles.docPartyName}>{client.name || "—"}</div>
           {client.nif && <div className={styles.docMeta}>NIF {client.nif}</div>}
-          {client.address && <div className={styles.docMeta}>{client.address}</div>}
+          {client.address && (
+            <div className={styles.docMeta}>{client.address}</div>
+          )}
         </div>
       </section>
 
@@ -80,12 +99,16 @@ export function InvoicePreview(props: InvoicePreviewProps) {
         <tbody>
           {lineItems.map((l) => (
             <tr key={l.id}>
-              <td className={styles.docTd}>{l.desc || '—'}</td>
+              <td className={styles.docTd}>{l.desc || "—"}</td>
               <td className={`${styles.docTd} ${styles.docNumCol}`}>
                 {Number.isFinite(l.qty) ? l.qty : 0}
               </td>
-              <td className={`${styles.docTd} ${styles.docNumCol}`}>{euro(l.unit || 0)}</td>
-              <td className={`${styles.docTd} ${styles.docNumCol}`}>{euro(lineTotal(l))}</td>
+              <td className={`${styles.docTd} ${styles.docNumCol}`}>
+                {euro(l.unit || 0)}
+              </td>
+              <td className={`${styles.docTd} ${styles.docNumCol}`}>
+                {euro(lineTotal(l))}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -122,5 +145,5 @@ export function InvoicePreview(props: InvoicePreviewProps) {
 
       <footer className={styles.docFootnote}>{TAX_DISCLAIMER}</footer>
     </DocPreview>
-  )
+  );
 }

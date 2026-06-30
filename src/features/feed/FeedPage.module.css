@@ -674,6 +674,12 @@
   display: block;
   margin-top: 10px;
 }
+.sbEmpty {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin: 2px 0 4px;
+}
 .upcomingRow {
   display: flex;
   align-items: center;
@@ -807,7 +813,7 @@
   }
 }
 
-:global([data-theme='dark']) .card,
-:global([data-theme='dark']) .sbCard {
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .sbCard {
   border-color: rgba(247, 243, 238, 0.1);
 }

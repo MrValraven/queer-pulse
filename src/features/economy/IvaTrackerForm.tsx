@@ -1,53 +1,57 @@
-import { useId, useState, type FormEvent } from 'react'
-import { FiPlus, FiX } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { euro } from './economy.data'
-import { newId, type IvaEntry } from './ivaTracker.data'
-import styles from './IvaTrackerPage.module.css'
+import { useId, useState, type FormEvent } from "react";
+import { FiPlus, FiX } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { euro } from "./economy.data";
+import { newId, type IvaEntry } from "./ivaTracker.data";
+import styles from "./IvaTrackerPage.module.css";
 
 interface IvaTrackerFormProps {
-  entries: IvaEntry[]
-  setEntries: (next: IvaEntry[] | ((prev: IvaEntry[]) => IvaEntry[])) => void
+  entries: IvaEntry[];
+  setEntries: (next: IvaEntry[] | ((prev: IvaEntry[]) => IvaEntry[])) => void;
 }
 
 /** Today as YYYY-MM-DD for the default date input value. */
 function today(): string {
-  return new Date().toISOString().slice(0, 10)
+  return new Date().toISOString().slice(0, 10);
 }
 
 /** Form to add an invoiced amount, plus the editable list of logged entries. */
 export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
-  const [label, setLabel] = useState('')
-  const [amount, setAmount] = useState('')
-  const [date, setDate] = useState(today())
+  const [label, setLabel] = useState("");
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState(today());
 
-  const labelId = useId()
-  const amountId = useId()
-  const dateId = useId()
+  const labelId = useId();
+  const amountId = useId();
+  const dateId = useId();
 
-  const parsed = Number.parseFloat(amount)
-  const valid = label.trim().length > 0 && Number.isFinite(parsed) && parsed > 0 && date !== ''
+  const parsed = Number.parseFloat(amount);
+  const valid =
+    label.trim().length > 0 &&
+    Number.isFinite(parsed) &&
+    parsed > 0 &&
+    date !== "";
 
   function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    if (!valid) return
+    e.preventDefault();
+    if (!valid) return;
     const entry: IvaEntry = {
       id: newId(),
       label: label.trim(),
       amount: Math.round(parsed * 100) / 100,
       date,
-    }
-    setEntries((prev) => [...prev, entry])
-    setLabel('')
-    setAmount('')
-    setDate(today())
+    };
+    setEntries((prev) => [...prev, entry]);
+    setLabel("");
+    setAmount("");
+    setDate(today());
   }
 
   function remove(id: string) {
-    setEntries((prev) => prev.filter((entry) => entry.id !== id))
+    setEntries((prev) => prev.filter((entry) => entry.id !== id));
   }
 
-  const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date))
+  const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
 
   return (
     <div className={styles.formCard}>
@@ -97,7 +101,12 @@ export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
           </div>
         </div>
 
-        <Button type="submit" variant="primary" disabled={!valid} className={styles.addBtn}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={!valid}
+          className={styles.addBtn}
+        >
           <FiPlus aria-hidden /> Add invoice
         </Button>
       </form>
@@ -107,7 +116,9 @@ export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
       </div>
 
       {entries.length === 0 ? (
-        <p className={styles.empty}>Nothing logged yet. Add your first invoice above.</p>
+        <p className={styles.empty}>
+          Nothing logged yet. Add your first invoice above.
+        </p>
       ) : (
         <ul className={styles.list}>
           {sorted.map((entry) => (
@@ -130,5 +141,5 @@ export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
         </ul>
       )}
     </div>
-  )
+  );
 }

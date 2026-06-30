@@ -1,6 +1,6 @@
-import { Button } from '../../shared/components/ui'
-import type { NextAction } from './work.data'
-import styles from './WorkHubPage.module.css'
+import { Button } from "../../shared/components/ui";
+import type { NextAction } from "./work.data";
+import styles from "./WorkHubPage.module.css";
 
 /** The cross-silo "what needs you" list — the hub's prioritised action queue. */
 export function WorkNextActions({ actions }: { actions: NextAction[] }) {
@@ -9,7 +9,9 @@ export function WorkNextActions({ actions }: { actions: NextAction[] }) {
       {actions.map((a) => (
         <div
           key={a.id}
-          className={[styles.row, a.urgent && styles.rowUrgent].filter(Boolean).join(' ')}
+          className={[styles.row, a.urgent && styles.rowUrgent]
+            .filter(Boolean)
+            .join(" ")}
         >
           <span className={styles.rowIcon} aria-hidden>
             {a.icon}
@@ -21,7 +23,7 @@ export function WorkNextActions({ actions }: { actions: NextAction[] }) {
                 <span
                   className={[styles.urgency, a.urgent && styles.urgencyUrgent]
                     .filter(Boolean)
-                    .join(' ')}
+                    .join(" ")}
                 >
                   {a.urgency}
                 </span>
@@ -35,5 +37,5 @@ export function WorkNextActions({ actions }: { actions: NextAction[] }) {
         </div>
       ))}
     </div>
-  )
+  );
 }

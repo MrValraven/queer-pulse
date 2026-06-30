@@ -1,24 +1,29 @@
-import { useState } from 'react'
-import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Outro } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { routes } from '../../app/routeMap'
-import { COMMITMENTS, FILTERS, RESOURCES, VENUES } from './accessibility.data'
-import { AccessibleVenueCard, AccessibleVenueCardSkeleton } from './AccessibleVenueCard'
-import { AccommodationsModal, FlagVenueModal } from './AccessibilityModals'
-import styles from './AccessibilityPage.module.css'
+import { useState } from "react";
+import { PageShell } from "../../shared/components/layout";
+import { Button, FadeIn, Outro } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
+import { COMMITMENTS, FILTERS, RESOURCES, VENUES } from "./accessibility.data";
+import {
+  AccessibleVenueCard,
+  AccessibleVenueCardSkeleton,
+} from "./AccessibleVenueCard";
+import { AccommodationsModal, FlagVenueModal } from "./AccessibilityModals";
+import styles from "./AccessibilityPage.module.css";
 
-const INVITE = routes.requestInvite
+const INVITE = routes.requestInvite;
 
 export function AccessibilityPage() {
-  const { showToast } = useToast()
-  const loading = useSimulatedLoad()
-  const [filter, setFilter] = useState('all')
-  const [flagVenue, setFlagVenue] = useState<string | null>(null)
-  const [accomOpen, setAccomOpen] = useState(false)
+  const { showToast } = useToast();
+  const loading = useSimulatedLoad();
+  const [filter, setFilter] = useState("all");
+  const [flagVenue, setFlagVenue] = useState<string | null>(null);
+  const [accomOpen, setAccomOpen] = useState(false);
 
-  const venues = VENUES.filter((v) => filter === 'all' || v.featureTags.includes(filter))
+  const venues = VENUES.filter(
+    (v) => filter === "all" || v.featureTags.includes(filter),
+  );
 
   return (
     <PageShell>
@@ -29,12 +34,17 @@ export function AccessibilityPage() {
             Accessible. <em>Genuinely.</em>
           </h1>
           <p className={styles.heroSub}>
-            We don't want disability to be a footnote. This page is for disabled and chronically ill
-            members — practical, honest information about accessible spaces, what QueerPulse commits
-            to, and community support.
+            We don't want disability to be a footnote. This page is for disabled
+            and chronically ill members — practical, honest information about
+            accessible spaces, what QueerPulse commits to, and community
+            support.
           </p>
           <div className={styles.heroActions}>
-            <Button type="button" variant="primary" onClick={() => setAccomOpen(true)}>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => setAccomOpen(true)}
+            >
               Request event accommodations
             </Button>
             <Button href="#spaces" variant="ghost">
@@ -43,7 +53,8 @@ export function AccessibilityPage() {
           </div>
           <div className={styles.heroNote}>
             <span className={styles.dot} />
-            Venue information reviewed by disabled community members · updated quarterly
+            Venue information reviewed by disabled community members · updated
+            quarterly
           </div>
         </div>
       </div>
@@ -55,8 +66,9 @@ export function AccessibilityPage() {
               Accessible <em>spaces</em>
             </h2>
             <p>
-              Not a binary accessible/not-accessible list. Real detail, reviewed by disabled members
-              of this community. Filter by what matters to you.
+              Not a binary accessible/not-accessible list. Real detail, reviewed
+              by disabled members of this community. Filter by what matters to
+              you.
             </p>
           </div>
           <div className={styles.venueFilter}>
@@ -65,7 +77,9 @@ export function AccessibilityPage() {
               <button
                 key={f.id}
                 type="button"
-                className={[styles.vfChip, filter === f.id && styles.vfChipOn].filter(Boolean).join(' ')}
+                className={[styles.vfChip, filter === f.id && styles.vfChipOn]
+                  .filter(Boolean)
+                  .join(" ")}
                 onClick={() => setFilter(f.id)}
               >
                 {f.label}
@@ -74,16 +88,23 @@ export function AccessibilityPage() {
           </div>
           <div className={styles.venueGrid}>
             {loading ? (
-              Array.from({ length: 4 }).map((_, i) => <AccessibleVenueCardSkeleton key={i} />)
+              Array.from({ length: 4 }).map((_, i) => (
+                <AccessibleVenueCardSkeleton key={i} />
+              ))
             ) : venues.length === 0 ? (
               <div className={styles.venueEmpty}>
                 <p>No venues match that filter yet.</p>
-                <p className={styles.small}>Know of one? Let us know in the forum.</p>
+                <p className={styles.small}>
+                  Know of one? Let us know in the forum.
+                </p>
               </div>
             ) : (
               venues.map((v, i) => (
                 <FadeIn key={v.name} delay={Math.min(i, 8) * 60}>
-                  <AccessibleVenueCard v={v} onFlag={() => setFlagVenue(v.name)} />
+                  <AccessibleVenueCard
+                    v={v}
+                    onFlag={() => setFlagVenue(v.name)}
+                  />
                 </FadeIn>
               ))
             )}
@@ -98,16 +119,23 @@ export function AccessibilityPage() {
               Our <em>commitments</em>
             </h2>
             <p>
-              These are what QueerPulse does to make gatherings, events, and the platform more
-              accessible. Not a brochure — a baseline we're accountable to, and want to keep
-              improving.
+              These are what QueerPulse does to make gatherings, events, and the
+              platform more accessible. Not a brochure — a baseline we're
+              accountable to, and want to keep improving.
             </p>
           </div>
           <div className={styles.commitGrid}>
             {COMMITMENTS.map((c) => (
               <div className={styles.commitCard} key={c.title}>
                 <div className={styles.ccIcon}>
-                  <svg viewBox="0 0 20 20" fill="none" stroke="var(--jade)" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="var(--jade)"
+                    strokeWidth={1.8}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     {c.icon}
                   </svg>
                 </div>
@@ -121,11 +149,15 @@ export function AccessibilityPage() {
             <div>
               <h3>Need something specific for a QueerPulse event?</h3>
               <p>
-                Request accommodations in advance and we'll do everything we can. No need to justify
-                or explain — just tell us what you need.
+                Request accommodations in advance and we'll do everything we
+                can. No need to justify or explain — just tell us what you need.
               </p>
             </div>
-            <Button type="button" variant="primary" onClick={() => setAccomOpen(true)}>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => setAccomOpen(true)}
+            >
               Request accommodations
             </Button>
           </div>
@@ -139,8 +171,8 @@ export function AccessibilityPage() {
               Resources for disabled <em>queer people in Lisbon</em>
             </h2>
             <p>
-              Practical support for navigating disability as a queer person in Portugal — benefits,
-              healthcare, and community.
+              Practical support for navigating disability as a queer person in
+              Portugal — benefits, healthcare, and community.
             </p>
           </div>
           <div className={styles.resourceGrid}>
@@ -150,7 +182,9 @@ export function AccessibilityPage() {
                 <div className={styles.rcTitle}>{r.title}</div>
                 <div className={styles.rcBody}>{r.body}</div>
                 <div className={styles.rcLink}>
-                  <a onClick={() => showToast('Opening resource…', 'info')}>{r.link}</a>
+                  <a onClick={() => showToast("Opening resource…", "info")}>
+                    {r.link}
+                  </a>
                 </div>
               </div>
             ))}
@@ -161,12 +195,17 @@ export function AccessibilityPage() {
                 Peer support — <em>disabled &amp; chronically ill members</em>
               </h3>
               <p>
-                A closed community group within QueerPulse for disabled and chronically ill members.
-                No inspiration required. Just people who understand.
+                A closed community group within QueerPulse for disabled and
+                chronically ill members. No inspiration required. Just people
+                who understand.
               </p>
             </div>
             <div className={styles.peerActions}>
-              <Button type="button" variant="primary" onClick={() => showToast('Joining the group…', 'success')}>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => showToast("Joining the group…", "success")}
+              >
                 Join the group
               </Button>
               <Button to={routes.mentorship} variant="ghost-dark">
@@ -178,7 +217,11 @@ export function AccessibilityPage() {
       </section>
 
       <Outro
-        title={<>You belong <em>here</em> — fully.</>}
+        title={
+          <>
+            You belong <em>here</em> — fully.
+          </>
+        }
         sub="Not as an afterthought. Not with a separate entrance. As a full member of this community."
       >
         <Button to={INVITE} variant="primary" size="lg">
@@ -186,8 +229,10 @@ export function AccessibilityPage() {
         </Button>
       </Outro>
 
-      {flagVenue !== null && <FlagVenueModal venue={flagVenue} onClose={() => setFlagVenue(null)} />}
+      {flagVenue !== null && (
+        <FlagVenueModal venue={flagVenue} onClose={() => setFlagVenue(null)} />
+      )}
       {accomOpen && <AccommodationsModal onClose={() => setAccomOpen(false)} />}
     </PageShell>
-  )
+  );
 }

@@ -434,6 +434,6 @@
   }
 }
 
-:global([data-theme='dark']) .contribCard {
+:global([data-theme="dark"]) .contribCard {
   border-color: rgba(247, 243, 238, 0.1);
 }

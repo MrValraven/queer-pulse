@@ -29,6 +29,7 @@ Code lives in `src/features/<domain>/` (e.g. `gatherings`, `magazine`, `cinema`,
 - extracted presentational sub-components: `XSections.tsx`, `XTabs.tsx`, `XCard.tsx`, `XModal.tsx`, `XSteps.tsx`, `XSidebar.tsx`
 
 **Enforced conventions** (see the `component-decomposition` skill in `.claude/skills/`):
+
 - **No single component exceeds 200 lines.** A file may hold several small components totalling more than 200, but no individual component may.
 - **Each component's mock/static data lives in its own colocated `*.data.ts(x)` file** — except a `Record<…>` mapping to `styles.xxx` (CSS-module class map), which stays in the component file because it depends on the CSS module import.
 
@@ -53,6 +54,7 @@ Every page wraps itself in one of two frames (don't hand-roll nav/footer):
 ### Shared layer
 
 `src/shared/`:
+
 - `components/ui` — design-system primitives with a barrel `index.ts` (`Button`, `Card`, `Tag`, `Avatar`, `ImageSlot`, `Eyebrow`, `SectionHead`, `VisibilityBadge`, `Skeleton`, `Reveal`).
 - `components/layout` — shells + nav/footer.
 - `hooks` — `useScrollLock`, `useScrolled`, `useScrollReveal`, `useCountUp`, `useMediaQuery`, `usePrefersReducedMotion`.
@@ -62,6 +64,7 @@ Self-contained modals own their state and call `useScrollLock()` unconditionally
 ## Design files
 
 The design reference lives in **`docs/`**, as markdown:
+
 - `docs/STYLE-RULES.md` — the short, non-negotiable UI checklist
 - `docs/design-system.md` — the full design-system reference
 

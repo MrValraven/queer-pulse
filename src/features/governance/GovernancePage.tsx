@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import { PageShell } from '../../shared/components/layout'
-import { Reveal } from '../../shared/components/ui'
-import { NAV } from './governance.data'
+import { useEffect, useState } from "react";
+import { PageShell } from "../../shared/components/layout";
+import { Reveal } from "../../shared/components/ui";
+import { NAV } from "./governance.data";
 import {
   CouncilSection,
   DecisionsSection,
@@ -10,27 +10,27 @@ import {
   ModerationSection,
   PrinciplesSection,
   RaiseSection,
-} from './GovernanceSections'
-import styles from './GovernancePage.module.css'
+} from "./GovernanceSections";
+import styles from "./GovernancePage.module.css";
 
 export function GovernancePage() {
-  const [active, setActive] = useState('health')
+  const [active, setActive] = useState("health");
 
   useEffect(() => {
     const onScroll = () => {
-      const y = window.scrollY + 140
+      const y = window.scrollY + 140;
       for (const { id } of NAV) {
-        const el = document.getElementById(id)
+        const el = document.getElementById(id);
         if (el && el.offsetTop <= y && el.offsetTop + el.offsetHeight > y) {
-          setActive(id)
-          break
+          setActive(id);
+          break;
         }
       }
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <PageShell>
@@ -43,8 +43,9 @@ export function GovernancePage() {
             How we run this, and who <em>decides.</em>
           </Reveal>
           <Reveal as="p" delay={120}>
-            QueerPulse is a community platform. That means being transparent about how it's governed,
-            how decisions are made, and what happens when things go wrong. This page is that record.
+            QueerPulse is a community platform. That means being transparent
+            about how it's governed, how decisions are made, and what happens
+            when things go wrong. This page is that record.
           </Reveal>
         </div>
       </section>
@@ -57,7 +58,12 @@ export function GovernancePage() {
                 <a
                   key={item.id}
                   href={`#${item.id}`}
-                  className={[styles.navItem, active === item.id && styles.navItemActive].filter(Boolean).join(' ')}
+                  className={[
+                    styles.navItem,
+                    active === item.id && styles.navItemActive,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                 >
                   {item.label}
                 </a>
@@ -77,5 +83,5 @@ export function GovernancePage() {
         </div>
       </section>
     </PageShell>
-  )
+  );
 }

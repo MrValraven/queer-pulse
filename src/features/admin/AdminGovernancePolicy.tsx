@@ -1,13 +1,17 @@
-import { useState } from 'react'
-import { FiCheck, FiInfo } from 'react-icons/fi'
-import { FadeIn } from '../../shared/components/ui'
-import { AdminChip } from './ui'
-import { CARE_VERSIONS, PRINCIPLES, type CareVersion } from './adminGovernance.data'
-import { AdminGovernanceDiffModal } from './AdminGovernanceDiffModal'
-import styles from './AdminGovernancePage.module.css'
+import { useState } from "react";
+import { FiCheck, FiInfo } from "react-icons/fi";
+import { FadeIn } from "../../shared/components/ui";
+import { AdminChip } from "./ui";
+import {
+  CARE_VERSIONS,
+  PRINCIPLES,
+  type CareVersion,
+} from "./adminGovernance.data";
+import { AdminGovernanceDiffModal } from "./AdminGovernanceDiffModal";
+import styles from "./AdminGovernancePage.module.css";
 
 export function AdminGovernancePolicy() {
-  const [diffOpen, setDiffOpen] = useState(false)
+  const [diffOpen, setDiffOpen] = useState(false);
 
   return (
     <FadeIn>
@@ -18,9 +22,11 @@ export function AdminGovernancePolicy() {
           <TransparencyNote />
         </div>
       </div>
-      {diffOpen && <AdminGovernanceDiffModal onClose={() => setDiffOpen(false)} />}
+      {diffOpen && (
+        <AdminGovernanceDiffModal onClose={() => setDiffOpen(false)} />
+      )}
     </FadeIn>
-  )
+  );
 }
 
 function VersionTimeline({ onSeeDiff }: { onSeeDiff: () => void }) {
@@ -30,7 +36,9 @@ function VersionTimeline({ onSeeDiff }: { onSeeDiff: () => void }) {
         <h2 className={styles.cardTitle}>
           Code of Care <em>versions</em>
         </h2>
-        <p className={styles.cardSub}>Every change to how we keep each other safe, dated and open.</p>
+        <p className={styles.cardSub}>
+          Every change to how we keep each other safe, dated and open.
+        </p>
       </div>
       <ol className={styles.timeline}>
         {CARE_VERSIONS.map((v) => (
@@ -38,13 +46,28 @@ function VersionTimeline({ onSeeDiff }: { onSeeDiff: () => void }) {
         ))}
       </ol>
     </div>
-  )
+  );
 }
 
-function TimelineItem({ v, onSeeDiff }: { v: CareVersion; onSeeDiff: () => void }) {
+function TimelineItem({
+  v,
+  onSeeDiff,
+}: {
+  v: CareVersion;
+  onSeeDiff: () => void;
+}) {
   return (
-    <li className={[styles.tlItem, v.current && styles.tlItemOn].filter(Boolean).join(' ')}>
-      <span className={[styles.tlDot, v.current && styles.tlDotOn].filter(Boolean).join(' ')} aria-hidden />
+    <li
+      className={[styles.tlItem, v.current && styles.tlItemOn]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <span
+        className={[styles.tlDot, v.current && styles.tlDotOn]
+          .filter(Boolean)
+          .join(" ")}
+        aria-hidden
+      />
       <div className={styles.tlBody}>
         <div className={styles.tlHead}>
           <span className={styles.tlVersion}>{v.version}</span>
@@ -53,13 +76,17 @@ function TimelineItem({ v, onSeeDiff }: { v: CareVersion; onSeeDiff: () => void 
         </div>
         <p className={styles.tlNote}>{v.note}</p>
         {v.current && (
-          <button type="button" className={styles.tlDiffLink} onClick={onSeeDiff}>
+          <button
+            type="button"
+            className={styles.tlDiffLink}
+            onClick={onSeeDiff}
+          >
             See what changed →
           </button>
         )}
       </div>
     </li>
-  )
+  );
 }
 
 function PrinciplesCard() {
@@ -81,7 +108,7 @@ function PrinciplesCard() {
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
 function TransparencyNote() {
@@ -89,9 +116,10 @@ function TransparencyNote() {
     <div className={styles.transpCard}>
       <FiInfo className={styles.transpIco} aria-hidden />
       <p className={styles.transpText}>
-        Policy changes are proposed in the open and ratified at the community assembly. Anyone can
-        read the full edit history &mdash; nothing here is decided behind closed doors.
+        Policy changes are proposed in the open and ratified at the community
+        assembly. Anyone can read the full edit history &mdash; nothing here is
+        decided behind closed doors.
       </p>
     </div>
-  )
+  );
 }

@@ -1,8 +1,8 @@
-import { ToolPage } from './tools/ToolPage'
-import { useLocalStorage } from './tools/useLocalStorage'
-import { IvaTrackerForm } from './IvaTrackerForm'
-import { IvaTrackerStatus } from './IvaTrackerStatus'
-import { IVA_SEED, type IvaEntry } from './ivaTracker.data'
+import { ToolPage } from "./tools/ToolPage";
+import { useLocalStorage } from "./tools/useLocalStorage";
+import { IvaTrackerForm } from "./IvaTrackerForm";
+import { IvaTrackerStatus } from "./IvaTrackerStatus";
+import { IVA_SEED, type IvaEntry } from "./ivaTracker.data";
 
 /**
  * Client-side IVA threshold tracker. A freelancer logs invoiced amounts; we sum
@@ -10,7 +10,10 @@ import { IVA_SEED, type IvaEntry } from './ivaTracker.data'
  * localStorage. No backend — saved on this device only.
  */
 export function IvaTrackerPage() {
-  const [entries, setEntries] = useLocalStorage<IvaEntry[]>('qp.economy.ivaEntries', IVA_SEED)
+  const [entries, setEntries] = useLocalStorage<IvaEntry[]>(
+    "qp.economy.ivaEntries",
+    IVA_SEED,
+  );
 
   return (
     <ToolPage
@@ -24,5 +27,5 @@ export function IvaTrackerPage() {
       form={<IvaTrackerForm entries={entries} setEntries={setEntries} />}
       preview={<IvaTrackerStatus entries={entries} />}
     />
-  )
+  );
 }

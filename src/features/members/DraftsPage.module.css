@@ -66,7 +66,7 @@
   color: var(--plum);
 }
 .tab.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -1px;
   left: 16px;
@@ -98,7 +98,10 @@
   border-radius: 14px;
   margin-bottom: 10px;
   align-items: center;
-  transition: transform 0.2s var(--ease), border-color 0.2s, opacity 0.2s;
+  transition:
+    transform 0.2s var(--ease),
+    border-color 0.2s,
+    opacity 0.2s;
 }
 .row:hover {
   transform: translateY(-1px);
@@ -189,7 +192,7 @@
   font-weight: 700;
 }
 .metaPulse::before {
-  content: '● ';
+  content: "● ";
 }
 .metaDeadline {
   color: var(--accent-ink);

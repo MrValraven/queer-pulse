@@ -12,7 +12,11 @@
   width: 440px;
   height: 440px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.12), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.12),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .hero::after {
@@ -23,7 +27,11 @@
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.1), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.1),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .heroInner {
@@ -138,11 +146,13 @@
   border-radius: 8px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
+  transition:
+    opacity 0.18s var(--ease),
+    transform 0.18s var(--ease);
   z-index: 30;
 }
 .heroAvTip::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;
@@ -612,7 +622,11 @@
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.15), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.15),
+    transparent 60%
+  );
 }
 .sbEDd {
   font-family: var(--serif);

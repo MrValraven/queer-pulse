@@ -13,7 +13,12 @@ import { MdAccessible } from "react-icons/md";
 import { linkToPath } from "../../../app/routeMap";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useTranslation } from "../../i18n/useTranslation";
-import { COLUMNS, BASE_LINKS, SOCIAL_LINKS, type FooterLink } from "./footer.data";
+import {
+  COLUMNS,
+  BASE_LINKS,
+  SOCIAL_LINKS,
+  type FooterLink,
+} from "./footer.data";
 import styles from "./Footer.module.css";
 
 const LINK_ICONS: Record<NonNullable<FooterLink["icon"]>, IconType> = {

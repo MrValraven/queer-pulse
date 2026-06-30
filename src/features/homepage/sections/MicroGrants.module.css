@@ -91,7 +91,7 @@
   }
 }
 
-:global([data-theme='dark']) .row {
+:global([data-theme="dark"]) .row {
   background: rgba(247, 243, 238, 0.06);
   border-color: rgba(247, 243, 238, 0.1);
 }

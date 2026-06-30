@@ -1,14 +1,14 @@
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { APPS, CULTURE, EVENTS, RECOGNITION, STRUCTURES } from './dating.data'
-import { DatingAppCard } from './DatingAppCard'
-import styles from './DatingPage.module.css'
+import { PageShell } from "../../shared/components/layout";
+import { Button, Outro } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { APPS, CULTURE, EVENTS, RECOGNITION, STRUCTURES } from "./dating.data";
+import { DatingAppCard } from "./DatingAppCard";
+import styles from "./DatingPage.module.css";
 
 export function DatingPage() {
-  const calendar = routes.calendar
-  const forum = routes.forum
-  const legal = routes.legal
+  const calendar = routes.calendar;
+  const forum = routes.forum;
+  const legal = routes.legal;
 
   return (
     <PageShell>
@@ -19,8 +19,9 @@ export function DatingPage() {
             Connection, <em>on your own terms.</em>
           </h1>
           <p className={styles.heroSub}>
-            The app landscape, dating culture in Lisbon, relationship structures, legal recognition —
-            and where the community actually meets when it's not on a phone screen.
+            The app landscape, dating culture in Lisbon, relationship
+            structures, legal recognition — and where the community actually
+            meets when it's not on a phone screen.
           </p>
         </div>
       </div>
@@ -31,7 +32,10 @@ export function DatingPage() {
             <h2>
               Apps in <em>Lisbon</em>
             </h2>
-            <p>What the community actually uses — honest takes, not marketing copy.</p>
+            <p>
+              What the community actually uses — honest takes, not marketing
+              copy.
+            </p>
           </div>
           <div className={styles.appGrid}>
             {APPS.map((app) => (
@@ -47,7 +51,10 @@ export function DatingPage() {
             <h2>
               Dating culture <em>in Lisbon</em>
             </h2>
-            <p>Things the community wishes someone had told them before they started dating here.</p>
+            <p>
+              Things the community wishes someone had told them before they
+              started dating here.
+            </p>
           </div>
           <div className={styles.cultureGrid}>
             {CULTURE.map((c) => (
@@ -69,7 +76,10 @@ export function DatingPage() {
             <h2>
               Relationship <em>structures</em>
             </h2>
-            <p>Lisbon has an active, visible community across all relationship structures. No default assumed here.</p>
+            <p>
+              Lisbon has an active, visible community across all relationship
+              structures. No default assumed here.
+            </p>
           </div>
           <div className={styles.structuresGrid}>
             {STRUCTURES.map((s) => (
@@ -89,8 +99,18 @@ export function DatingPage() {
               <div className={styles.recItem} key={r.title}>
                 <h4>{r.title}</h4>
                 <p>{r.text}</p>
-                <div className={[styles.recStatus, r.partial ? styles.recPartial : styles.recYes].join(' ')}>
-                  <span className={styles.recDot} style={{ background: r.partial ? 'var(--accent)' : 'var(--jade)' }} />
+                <div
+                  className={[
+                    styles.recStatus,
+                    r.partial ? styles.recPartial : styles.recYes,
+                  ].join(" ")}
+                >
+                  <span
+                    className={styles.recDot}
+                    style={{
+                      background: r.partial ? "var(--accent)" : "var(--jade)",
+                    }}
+                  />
                   {r.status}
                 </div>
               </div>
@@ -112,9 +132,10 @@ export function DatingPage() {
                 Meet people <em>in person.</em>
               </h2>
               <p>
-                Apps are fine. But the QueerPulse community tends to actually meet at events —
-                socials, dinners, gatherings specifically for connection. Less transactional than a
-                dating app; more honest about what you're there for.
+                Apps are fine. But the QueerPulse community tends to actually
+                meet at events — socials, dinners, gatherings specifically for
+                connection. Less transactional than a dating app; more honest
+                about what you're there for.
               </p>
               <div className={styles.socialActions}>
                 <Button to={calendar} variant="primary">
@@ -139,7 +160,11 @@ export function DatingPage() {
       </section>
 
       <Outro
-        title={<>Real connection <em>exists here.</em></>}
+        title={
+          <>
+            Real connection <em>exists here.</em>
+          </>
+        }
         sub="It takes a little time and a little showing up. The community makes it easier."
       >
         <Button to={calendar} variant="primary" size="lg">
@@ -147,5 +172,5 @@ export function DatingPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

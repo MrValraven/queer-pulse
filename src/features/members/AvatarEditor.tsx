@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
-import { FiCamera, FiTrash2 } from 'react-icons/fi'
-import { ImageSlot, type ImageSlotTint } from '../../shared/components/ui'
-import styles from './ProfileEdit.module.css'
+import { useEffect, useRef } from "react";
+import { FiCamera, FiTrash2 } from "react-icons/fi";
+import { ImageSlot, type ImageSlotTint } from "../../shared/components/ui";
+import styles from "./ProfileEdit.module.css";
 
 /**
  * The hero portrait in edit mode: shows the current photo (or initials) with a
@@ -16,28 +16,28 @@ export function AvatarEditor({
   onChange,
   onRemove,
 }: {
-  photo?: string
-  initials: string
-  tint: ImageSlotTint
-  name: string
-  onChange: (url: string) => void
-  onRemove: () => void
+  photo?: string;
+  initials: string;
+  tint: ImageSlotTint;
+  name: string;
+  onChange: (url: string) => void;
+  onRemove: () => void;
 }) {
-  const fileRef = useRef<HTMLInputElement>(null)
-  const createdUrl = useRef<string | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null);
+  const createdUrl = useRef<string | null>(null);
 
   useEffect(
     () => () => {
-      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current)
+      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
     },
     [],
-  )
+  );
 
   function pick(file: File) {
-    if (createdUrl.current) URL.revokeObjectURL(createdUrl.current)
-    const url = URL.createObjectURL(file)
-    createdUrl.current = url
-    onChange(url)
+    if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
+    const url = URL.createObjectURL(file);
+    createdUrl.current = url;
+    onChange(url);
   }
 
   return (
@@ -57,7 +57,7 @@ export function AvatarEditor({
           onClick={() => fileRef.current?.click()}
         >
           <FiCamera size={15} />
-          {photo ? 'Change photo' : 'Add photo'}
+          {photo ? "Change photo" : "Add photo"}
         </button>
         {photo && (
           <button
@@ -66,10 +66,10 @@ export function AvatarEditor({
             aria-label="Remove photo"
             onClick={() => {
               if (createdUrl.current) {
-                URL.revokeObjectURL(createdUrl.current)
-                createdUrl.current = null
+                URL.revokeObjectURL(createdUrl.current);
+                createdUrl.current = null;
               }
-              onRemove()
+              onRemove();
             }}
           >
             <FiTrash2 size={15} />
@@ -82,11 +82,11 @@ export function AvatarEditor({
         accept="image/*"
         hidden
         onChange={(e) => {
-          const f = e.target.files?.[0]
-          if (f) pick(f)
-          e.target.value = ''
+          const f = e.target.files?.[0];
+          if (f) pick(f);
+          e.target.value = "";
         }}
       />
     </div>
-  )
+  );
 }

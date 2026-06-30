@@ -23,7 +23,10 @@ export function TransHealthcarePage() {
             <button
               key={p.id}
               type="button"
-              className={[styles.pathBtn, active === p.id && styles.pathBtnActive]
+              className={[
+                styles.pathBtn,
+                active === p.id && styles.pathBtnActive,
+              ]
                 .filter(Boolean)
                 .join(" ")}
               onClick={() => setActive(p.id)}

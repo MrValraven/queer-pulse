@@ -1,28 +1,28 @@
-import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import { MODAL_TAGS, NEIGHBOURHOODS, type ListingType } from './flatmates.data'
-import styles from './FlatmatesPage.module.css'
+import { useState } from "react";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import { MODAL_TAGS, NEIGHBOURHOODS, type ListingType } from "./flatmates.data";
+import styles from "./FlatmatesPage.module.css";
 
 export function PostProfileModal({ onClose }: { onClose: () => void }) {
-  useScrollLock()
-  const [submitted, setSubmitted] = useState(false)
-  const [modalType, setModalType] = useState<ListingType>('seeking')
-  const [modalTags, setModalTags] = useState<Set<string>>(new Set())
+  useScrollLock();
+  const [submitted, setSubmitted] = useState(false);
+  const [modalType, setModalType] = useState<ListingType>("seeking");
+  const [modalTags, setModalTags] = useState<Set<string>>(new Set());
 
   const toggleTag = (t: string) =>
     setModalTags((prev) => {
-      const next = new Set(prev)
-      if (next.has(t)) next.delete(t)
-      else next.add(t)
-      return next
-    })
+      const next = new Set(prev);
+      if (next.has(t)) next.delete(t);
+      else next.add(t);
+      return next;
+    });
 
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className={styles.modal}>
@@ -32,7 +32,14 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
         {submitted ? (
           <div className={styles.success}>
             <div className={styles.successIcon}>
-              <svg viewBox="0 0 28 28" fill="none" stroke="var(--jade)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 28 28"
+                fill="none"
+                stroke="var(--jade)"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M5 14l6 6L23 8" />
               </svg>
             </div>
@@ -40,8 +47,8 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
               You're on the <em>board.</em>
             </h2>
             <p>
-              Your profile is live. Members will reach out directly — keep an eye on your QueerPulse
-              messages.
+              Your profile is live. Members will reach out directly — keep an
+              eye on your QueerPulse messages.
             </p>
             <Button type="button" variant="ghost" onClick={onClose}>
               Back to profiles
@@ -51,25 +58,34 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
           <>
             <div className={styles.modalTitle}>Post your profile</div>
             <p className={styles.modalSub}>
-              Takes about two minutes. Your profile goes live straight away — members reach out
-              directly, no matching algorithm.
+              Takes about two minutes. Your profile goes live straight away —
+              members reach out directly, no matching algorithm.
             </p>
             <div className={styles.fields}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>What are you looking for?</label>
+                <label className={styles.fieldLabel}>
+                  What are you looking for?
+                </label>
                 <div className={styles.typeToggle}>
-                  {(['seeking', 'offering'] as const).map((t) => (
+                  {(["seeking", "offering"] as const).map((t) => (
                     <button
                       key={t}
                       type="button"
-                      className={[styles.ttOpt, modalType === t && styles.ttOptOn].filter(Boolean).join(' ')}
+                      className={[
+                        styles.ttOpt,
+                        modalType === t && styles.ttOptOn,
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                       onClick={() => setModalType(t)}
                     >
-                      <div className={styles.ttTitle}>{t === 'seeking' ? 'Seeking a room' : 'Offering a room'}</div>
+                      <div className={styles.ttTitle}>
+                        {t === "seeking" ? "Seeking a room" : "Offering a room"}
+                      </div>
                       <div className={styles.ttDesc}>
-                        {t === 'seeking'
+                        {t === "seeking"
                           ? "You're looking for a room in a flat or house"
-                          : 'You have a room or flat share to offer'}
+                          : "You have a room or flat share to offer"}
                       </div>
                     </button>
                   ))}
@@ -78,11 +94,21 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
               <div className={styles.row}>
                 <div className={styles.fieldGroup}>
                   <label className={styles.fieldLabel}>Your name</label>
-                  <input className={styles.input} type="text" placeholder="First name or nickname" />
+                  <input
+                    className={styles.input}
+                    type="text"
+                    placeholder="First name or nickname"
+                  />
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Pronouns (optional)</label>
-                  <input className={styles.input} type="text" placeholder="e.g. she/her, they/them" />
+                  <label className={styles.fieldLabel}>
+                    Pronouns (optional)
+                  </label>
+                  <input
+                    className={styles.input}
+                    type="text"
+                    placeholder="e.g. she/her, they/them"
+                  />
                 </div>
               </div>
               <div className={styles.row}>
@@ -99,11 +125,17 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
                 </div>
                 <div className={styles.fieldGroup}>
                   <label className={styles.fieldLabel}>Budget / month</label>
-                  <input className={styles.input} type="text" placeholder="e.g. €700–900" />
+                  <input
+                    className={styles.input}
+                    type="text"
+                    placeholder="e.g. €700–900"
+                  />
                 </div>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Available / move-in from</label>
+                <label className={styles.fieldLabel}>
+                  Available / move-in from
+                </label>
                 <select className={styles.select} defaultValue="">
                   <option value="">When?</option>
                   <option>Available now</option>
@@ -114,7 +146,9 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
                 </select>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>About you &amp; what you're looking for in a home</label>
+                <label className={styles.fieldLabel}>
+                  About you &amp; what you're looking for in a home
+                </label>
                 <textarea
                   className={styles.textarea}
                   rows={4}
@@ -128,7 +162,12 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
                     <button
                       key={t}
                       type="button"
-                      className={[styles.lfOpt, modalTags.has(t) && styles.lfOptOn].filter(Boolean).join(' ')}
+                      className={[
+                        styles.lfOpt,
+                        modalTags.has(t) && styles.lfOptOn,
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                       onClick={() => toggleTag(t)}
                     >
                       {t}
@@ -137,12 +176,22 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
                 </div>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Your email (not shown publicly)</label>
-                <input className={styles.input} type="email" placeholder="So members can reach you via QueerPulse" />
+                <label className={styles.fieldLabel}>
+                  Your email (not shown publicly)
+                </label>
+                <input
+                  className={styles.input}
+                  type="email"
+                  placeholder="So members can reach you via QueerPulse"
+                />
               </div>
             </div>
             <div className={styles.modalActions}>
-              <Button type="button" variant="primary" onClick={() => setSubmitted(true)}>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => setSubmitted(true)}
+              >
                 Post profile →
               </Button>
               <Button type="button" variant="ghost" onClick={onClose}>
@@ -153,5 +202,5 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
         )}
       </div>
     </div>
-  )
+  );
 }

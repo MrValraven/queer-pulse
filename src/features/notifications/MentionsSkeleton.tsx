@@ -1,20 +1,24 @@
-import { SkeletonLine } from '../../shared/components/ui'
-import styles from './MentionsPage.module.css'
+import { SkeletonLine } from "../../shared/components/ui";
+import styles from "./MentionsPage.module.css";
 
 /** Mirrors a mention row: head (avatar + who + when) + content + where. */
 function MentionRowSkeleton() {
   return (
     <div className={styles.row} aria-hidden>
       <div className={styles.headRow}>
-        <SkeletonLine width={32} height={32} style={{ borderRadius: 999, flex: 'none' }} />
+        <SkeletonLine
+          width={32}
+          height={32}
+          style={{ borderRadius: 999, flex: "none" }}
+        />
         <SkeletonLine width={180} height={13} />
-        <SkeletonLine width={56} height={12} style={{ marginLeft: 'auto' }} />
+        <SkeletonLine width={56} height={12} style={{ marginLeft: "auto" }} />
       </div>
       <SkeletonLine width="100%" height={14} style={{ marginTop: 2 }} />
       <SkeletonLine width="80%" height={14} style={{ marginTop: 6 }} />
       <SkeletonLine width={140} height={12} style={{ marginTop: 10 }} />
     </div>
-  )
+  );
 }
 
 export function MentionsListSkeleton({ count = 3 }: { count?: number }) {
@@ -27,5 +31,5 @@ export function MentionsListSkeleton({ count = 3 }: { count?: number }) {
         ))}
       </div>
     </div>
-  )
+  );
 }

@@ -121,7 +121,9 @@
   cursor: pointer;
 }
 .zone {
-  transition: opacity 0.2s, stroke-width 0.2s;
+  transition:
+    opacity 0.2s,
+    stroke-width 0.2s;
   stroke-width: 1.5;
 }
 .bairro:hover .zone {
@@ -217,7 +219,9 @@
   padding: 16px 18px;
   margin-bottom: 10px;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 .vc:hover {
   border-color: rgba(45, 27, 61, 0.2);
@@ -351,6 +355,6 @@
   }
 }
 
-:global([data-theme='dark']) .vc {
+:global([data-theme="dark"]) .vc {
   border-color: rgba(247, 243, 238, 0.1);
 }

@@ -16,7 +16,11 @@
   width: 560px;
   height: 560px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.2) 0%, transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.2) 0%,
+    transparent 60%
+  );
   pointer-events: none;
 }
 .heroInner {

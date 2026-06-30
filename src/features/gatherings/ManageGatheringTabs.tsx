@@ -22,12 +22,23 @@ type Tab = "overview" | "attendees" | "messages" | "settings";
 
 const Pencil = () => (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-    <path d="M8 1.5L10.5 4l-6 6H2V7.5l6-6Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+    <path
+      d="M8 1.5L10.5 4l-6 6H2V7.5l6-6Z"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 const Check = () => (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-    <path d="M1 6l3 3 7-7" stroke="var(--jade)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M1 6l3 3 7-7"
+      stroke="var(--jade)"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
@@ -38,15 +49,26 @@ interface OverviewTabProps {
   onUpdateDescription: (value: string) => void;
 }
 
-function OverviewTab({ details, description, onUpdateDetail, onUpdateDescription }: OverviewTabProps) {
+function OverviewTab({
+  details,
+  description,
+  onUpdateDetail,
+  onUpdateDescription,
+}: OverviewTabProps) {
   const [editing, setEditing] = useState<
-    { kind: "detail"; label: string; value: string } | { kind: "description"; value: string } | null
+    | { kind: "detail"; label: string; value: string }
+    | { kind: "description"; value: string }
+    | null
   >(null);
 
   return (
     <div>
       <div className={styles.statsRow}>
-        {[["14", "Going"], ["3", "Waitlist"], ["6", "Spots left"]].map(([n, l]) => (
+        {[
+          ["14", "Going"],
+          ["3", "Waitlist"],
+          ["6", "Spots left"],
+        ].map(([n, l]) => (
           <div className={styles.statChip} key={l}>
             <div className={styles.scN}>{n}</div>
             <div className={styles.scL}>{l}</div>
@@ -61,7 +83,9 @@ function OverviewTab({ details, description, onUpdateDetail, onUpdateDescription
             <button
               type="button"
               className={styles.drEdit}
-              onClick={() => setEditing({ kind: "detail", label: d.label, value: d.value })}
+              onClick={() =>
+                setEditing({ kind: "detail", label: d.label, value: d.value })
+              }
             >
               <Pencil /> Edit
             </button>
@@ -74,7 +98,9 @@ function OverviewTab({ details, description, onUpdateDetail, onUpdateDescription
           <button
             type="button"
             className={styles.drEdit}
-            onClick={() => setEditing({ kind: "description", value: description })}
+            onClick={() =>
+              setEditing({ kind: "description", value: description })
+            }
           >
             Edit
           </button>
@@ -109,8 +135,16 @@ function AttendeesTab() {
   return (
     <div>
       <div className={styles.attToolbar}>
-        <input className={styles.attSearch} type="text" placeholder="Search attendees…" />
-        <Button variant="ghost" className={styles.actionBtn} onClick={() => showToast("CSV exported", "success")}>
+        <input
+          className={styles.attSearch}
+          type="text"
+          placeholder="Search attendees…"
+        />
+        <Button
+          variant="ghost"
+          className={styles.actionBtn}
+          onClick={() => showToast("CSV exported", "success")}
+        >
           Export list
         </Button>
       </div>
@@ -127,13 +161,23 @@ function AttendeesTab() {
       <div className={styles.attList}>
         {GOING_ATTENDEES.map((a) => (
           <div className={styles.attRow} key={a.id}>
-            <div className={styles.attAv} style={{ background: a.bg, color: a.color }}>{a.initials}</div>
+            <div
+              className={styles.attAv}
+              style={{ background: a.bg, color: a.color }}
+            >
+              {a.initials}
+            </div>
             <div className={styles.attInfo}>
               <div className={styles.attName}>{a.name}</div>
               <div className={styles.attMeta}>{a.meta}</div>
             </div>
             <div className={styles.attActions}>
-              <button type="button" aria-label={`Remove ${a.name} from guest list`} className={`${styles.attActionBtn} ${styles.remove}`} onClick={() => showToast("Removed from guest list", "info")}>
+              <button
+                type="button"
+                aria-label={`Remove ${a.name} from guest list`}
+                className={`${styles.attActionBtn} ${styles.remove}`}
+                onClick={() => showToast("Removed from guest list", "info")}
+              >
                 Remove
               </button>
             </div>
@@ -141,17 +185,34 @@ function AttendeesTab() {
         ))}
         <div className={styles.moreRow}>+ 10 more attendees</div>
       </div>
-      <div className={styles.attSectionLabel} style={{ marginTop: 20 }}>Waitlist (3)</div>
+      <div className={styles.attSectionLabel} style={{ marginTop: 20 }}>
+        Waitlist (3)
+      </div>
       <div className={styles.attList}>
         {WAITLIST_ATTENDEES.map((a) => (
           <div className={styles.attRow} key={a.id}>
-            <div className={styles.attAv} style={{ background: a.bg, color: a.color }}>{a.initials}</div>
+            <div
+              className={styles.attAv}
+              style={{ background: a.bg, color: a.color }}
+            >
+              {a.initials}
+            </div>
             <div className={styles.attInfo}>
               <div className={styles.attName}>{a.name}</div>
               <div className={styles.attMeta}>{a.meta}</div>
             </div>
             <div className={styles.attActions}>
-              <button type="button" aria-label={`Promote ${a.name} to guest list`} className={`${styles.attActionBtn} ${styles.promote}`} onClick={() => showToast(`${a.name.split(" ")[0]} promoted to guest list`, "success")}>
+              <button
+                type="button"
+                aria-label={`Promote ${a.name} to guest list`}
+                className={`${styles.attActionBtn} ${styles.promote}`}
+                onClick={() =>
+                  showToast(
+                    `${a.name.split(" ")[0]} promoted to guest list`,
+                    "success",
+                  )
+                }
+              >
                 Promote
               </button>
             </div>
@@ -162,7 +223,13 @@ function AttendeesTab() {
   );
 }
 
-type SentMessage = { id: string; subject: string; time: string; preview: string; opened: string };
+type SentMessage = {
+  id: string;
+  subject: string;
+  time: string;
+  preview: string;
+  opened: string;
+};
 
 function MessagesTab() {
   const { showToast } = useToast();
@@ -176,7 +243,13 @@ function MessagesTab() {
     if (!text) return;
     const subject = text.length > 48 ? `${text.slice(0, 45)}…` : text;
     setSent((prev) => [
-      { id: `sent-${prev.length}-${text.length}-${text.slice(0, 8)}`, subject, time: "just now", preview: text, opened: "0 / 14 opened" },
+      {
+        id: `sent-${prev.length}-${text.length}-${text.slice(0, 8)}`,
+        subject,
+        time: "just now",
+        preview: text,
+        opened: "0 / 14 opened",
+      },
       ...prev,
     ]);
     setMessage("");
@@ -194,7 +267,9 @@ function MessagesTab() {
           onChange={(e) => setMessage(e.target.value)}
         />
         <div className={styles.compFooter}>
-          <div className={styles.compHint}>Sent to all 14 confirmed attendees.</div>
+          <div className={styles.compHint}>
+            Sent to all 14 confirmed attendees.
+          </div>
           <Button variant="primary" disabled={!message.trim()} onClick={send}>
             Send update
           </Button>
@@ -250,7 +325,9 @@ function SettingsTab({ onCancel }: SettingsTabProps) {
               <input
                 type="checkbox"
                 checked={toggles[s.title] ?? false}
-                onChange={() => setToggles((prev) => ({ ...prev, [s.title]: !prev[s.title] }))}
+                onChange={() =>
+                  setToggles((prev) => ({ ...prev, [s.title]: !prev[s.title] }))
+                }
               />
               <div className={styles.tglTrack} />
               <div className={styles.tglThumb} />
@@ -262,8 +339,8 @@ function SettingsTab({ onCancel }: SettingsTabProps) {
       <div className={styles.dangerZone}>
         <div className={styles.dzLabel}>Cancel this gathering</div>
         <div className={styles.dzText}>
-          All attendees will be notified and RSVPs will be released. This
-          cannot be undone. A cancellation message will be sent automatically.
+          All attendees will be notified and RSVPs will be released. This cannot
+          be undone. A cancellation message will be sent automatically.
         </div>
         <Button variant="ghost" className={styles.cancelBtn} onClick={onCancel}>
           Cancel gathering
@@ -277,7 +354,9 @@ interface ManageGatheringSidebarProps {
   onCopyLink: () => void;
 }
 
-export function ManageGatheringSidebar({ onCopyLink }: ManageGatheringSidebarProps) {
+export function ManageGatheringSidebar({
+  onCopyLink,
+}: ManageGatheringSidebarProps) {
   const GATHERING = routes.gathering;
   const CONTACT = routes.contact;
   return (
@@ -294,8 +373,14 @@ export function ManageGatheringSidebar({ onCopyLink }: ManageGatheringSidebarPro
           <div className={styles.sbTitle}>Pride Brunch — June</div>
           <div className={styles.sbMeta}>Sat 21 June · Príncipe Real</div>
           <div className={styles.shareRow}>
-            <div className={styles.shareUrl}>queerpulse.com/g/pride-brunch-jun</div>
-            <button type="button" className={styles.copyBtn} onClick={onCopyLink}>
+            <div className={styles.shareUrl}>
+              queerpulse.com/g/pride-brunch-jun
+            </div>
+            <button
+              type="button"
+              className={styles.copyBtn}
+              onClick={onCopyLink}
+            >
               Copy
             </button>
           </div>
@@ -306,7 +391,8 @@ export function ManageGatheringSidebar({ onCopyLink }: ManageGatheringSidebarPro
       </div>
       <div className={styles.supportCard}>
         <div className={styles.supText}>
-          Need help with your gathering? <Link to={CONTACT}>Message the QueerPulse team →</Link>
+          Need help with your gathering?{" "}
+          <Link to={CONTACT}>Message the QueerPulse team →</Link>
         </div>
       </div>
     </div>
@@ -334,16 +420,20 @@ export function ManageGatheringTabs({
   return (
     <div>
       <div className={styles.tabBar}>
-        {(["overview", "attendees", "messages", "settings"] as Tab[]).map((t) => (
-          <button
-            key={t}
-            type="button"
-            className={[styles.tabBtn, tab === t && styles.tabBtnActive].filter(Boolean).join(" ")}
-            onClick={() => setTab(t)}
-          >
-            {t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
+        {(["overview", "attendees", "messages", "settings"] as Tab[]).map(
+          (t) => (
+            <button
+              key={t}
+              type="button"
+              className={[styles.tabBtn, tab === t && styles.tabBtnActive]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => setTab(t)}
+            >
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+            </button>
+          ),
+        )}
       </div>
       {tab === "overview" && (
         <OverviewTab

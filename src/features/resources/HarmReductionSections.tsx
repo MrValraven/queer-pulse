@@ -31,7 +31,11 @@ function SectionCard({ section }: { section: HrSection }) {
           </div>
         ))}
         {section.link && (
-          <Button to={section.link.href} variant="ghost" className={styles.sectionBtn}>
+          <Button
+            to={section.link.href}
+            variant="ghost"
+            className={styles.sectionBtn}
+          >
             {section.link.label}
           </Button>
         )}
@@ -96,16 +100,15 @@ export function NaloxoneCard() {
         </div>
         <p className={styles.ncBody}>
           Naloxone (Narcan) reverses an opioid overdose in minutes. It is
-          available free of charge in Portugal through harm reduction
-          services and some pharmacies. It is safe, easy to use, and
-          non-prescription. Carry it if you or anyone around you uses
-          opioids — including fentanyl, heroin, or strong prescription
-          painkillers.
+          available free of charge in Portugal through harm reduction services
+          and some pharmacies. It is safe, easy to use, and non-prescription.
+          Carry it if you or anyone around you uses opioids — including
+          fentanyl, heroin, or strong prescription painkillers.
         </p>
         <p className={styles.ncBody}>
-          In Lisbon: GAT Lisboa, APDES, and the Ares do Pinhal harm
-          reduction team distribute naloxone free of charge. Ask at your
-          nearest harm reduction service or contact GAT directly.
+          In Lisbon: GAT Lisboa, APDES, and the Ares do Pinhal harm reduction
+          team distribute naloxone free of charge. Ask at your nearest harm
+          reduction service or contact GAT directly.
         </p>
       </div>
       <div className={styles.ncSteps}>
@@ -141,7 +144,11 @@ export function HarmReductionGrid() {
 export function HarmReductionOutro() {
   return (
     <Outro
-      title={<>Take care of <em>each other.</em></>}
+      title={
+        <>
+          Take care of <em>each other.</em>
+        </>
+      }
       sub="Harm reduction is a community practice. The more people who know this, the safer our nights are."
     >
       <Button to={routes.sexualHealth} variant="primary" size="lg">

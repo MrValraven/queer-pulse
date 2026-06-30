@@ -30,7 +30,9 @@
   border-radius: 999px;
   padding: 11px 16px 11px 40px;
   outline: none;
-  transition: border-color 0.16s var(--ease), box-shadow 0.16s var(--ease);
+  transition:
+    border-color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease);
 }
 .input::placeholder {
   color: var(--ink-40);

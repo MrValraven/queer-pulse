@@ -8,14 +8,18 @@
   overflow: hidden;
 }
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -20%;
   right: -8%;
   width: 480px;
   height: 480px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.15), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.15),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .eyebrow {
@@ -560,7 +564,7 @@
   line-height: 1.65;
 }
 
-:global([data-theme='dark']) .card,
-:global([data-theme='dark']) .rightCard {
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .rightCard {
   border-color: rgba(247, 243, 238, 0.1);
 }

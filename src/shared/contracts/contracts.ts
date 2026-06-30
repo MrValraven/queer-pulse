@@ -10,16 +10,16 @@ import type {
   SubmissionStatus,
   UserStatus,
   Visibility,
-} from './enums';
+} from "./enums";
 
 export type ReportSubjectType =
-  | 'user'
-  | 'profile'
-  | 'community_post'
-  | 'forum_post'
-  | 'message'
-  | 'gathering'
-  | 'article';
+  | "user"
+  | "profile"
+  | "community_post"
+  | "forum_post"
+  | "message"
+  | "gathering"
+  | "article";
 
 export interface ReportResponse {
   id: string;
@@ -31,7 +31,7 @@ export interface ReportResponse {
   createdAt: string;
 }
 
-export type AppealStatus = 'open' | 'upheld' | 'overturned';
+export type AppealStatus = "open" | "upheld" | "overturned";
 
 export interface AppealResponse {
   id: string;
@@ -97,13 +97,13 @@ export interface InviteResponse {
 export interface ConnectionResponse {
   id: string;
   state: ConnectionState;
-  direction: 'incoming' | 'outgoing';
+  direction: "incoming" | "outgoing";
   profile: ProfileResponse;
   createdAt: string;
   respondedAt: string | null;
 }
 
-export type CommunityMembershipState = 'active' | 'pending' | 'left' | null;
+export type CommunityMembershipState = "active" | "pending" | "left" | null;
 
 export interface CommunitySummary {
   slug: string;
@@ -151,7 +151,7 @@ export interface MessageResponse {
 
 export interface ConversationResponse {
   id: string;
-  type: 'dm' | 'group';
+  type: "dm" | "group";
   otherParticipant: AuthorSummary | null;
   lastMessage: MessageResponse | null;
   unreadCount: number;
@@ -294,7 +294,7 @@ export interface GlossaryTermResponse {
 
 // --- Feed (read-time aggregation) ---
 
-export type FeedItemType = 'community_post' | 'forum_thread' | 'gathering';
+export type FeedItemType = "community_post" | "forum_thread" | "gathering";
 
 export interface FeedItem {
   id: string;
@@ -308,7 +308,7 @@ export interface FeedItem {
 
 // --- Media ---
 
-export type MediaKind = 'image' | 'audio' | 'video' | 'pdf' | 'doc';
+export type MediaKind = "image" | "audio" | "video" | "pdf" | "doc";
 
 export interface MediaUploadTicket {
   mediaId: string;
@@ -320,12 +320,12 @@ export interface MediaAssetResponse {
   id: string;
   kind: MediaKind;
   url: string | null;
-  processingState: 'pending' | 'ready' | 'failed';
+  processingState: "pending" | "ready" | "failed";
 }
 
 // --- Search ---
 
-export type SearchType = 'member' | 'gathering' | 'community' | 'article';
+export type SearchType = "member" | "gathering" | "community" | "article";
 
 export interface SearchHit {
   type: SearchType;
@@ -362,11 +362,11 @@ export interface DataExportResponse {
 }
 
 export interface DeletionRequestResponse {
-  state: 'scheduled' | 'cancelled' | 'completed';
+  state: "scheduled" | "cancelled" | "completed";
   scheduledFor: string;
 }
 
 /** Login may complete, or require a second factor. */
 export type LoginResult =
-  | { status: 'authenticated'; user: MeResponse }
-  | { status: '2fa_required'; challengeToken: string };
+  | { status: "authenticated"; user: MeResponse }
+  | { status: "2fa_required"; challengeToken: string };

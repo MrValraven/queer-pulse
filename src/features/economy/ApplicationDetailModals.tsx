@@ -29,7 +29,13 @@ function downloadAttachment(fileName: string, app: Application) {
 }
 
 /** Read-only view of what was submitted for an application. */
-export function SubmissionModal({ app, onClose }: { app: Application; onClose: () => void }) {
+export function SubmissionModal({
+  app,
+  onClose,
+}: {
+  app: Application;
+  onClose: () => void;
+}) {
   const s = app.submission;
   return (
     <ModalShell onClose={onClose}>
@@ -83,7 +89,13 @@ export function SubmissionModal({ app, onClose }: { app: Application; onClose: (
 }
 
 /** Snapshot of the company behind an application. */
-export function CompanyModal({ app, onClose }: { app: Application; onClose: () => void }) {
+export function CompanyModal({
+  app,
+  onClose,
+}: {
+  app: Application;
+  onClose: () => void;
+}) {
   const c = app.companyInfo;
   return (
     <ModalShell onClose={onClose}>
@@ -135,7 +147,13 @@ export function CompanyModal({ app, onClose }: { app: Application; onClose: () =
 }
 
 /** The note a company left when closing an application — plum reading panel. */
-export function NoteModal({ app, onClose }: { app: Application; onClose: () => void }) {
+export function NoteModal({
+  app,
+  onClose,
+}: {
+  app: Application;
+  onClose: () => void;
+}) {
   useScrollLock();
   const n = app.note;
   return (
@@ -146,7 +164,12 @@ export function NoteModal({ app, onClose }: { app: Application; onClose: () => v
       }}
     >
       <div className={`${styles.modal} ${styles.readModal}`}>
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           ×
         </button>
         <div className={styles.readEyebrow}>A note from {app.companyName}</div>

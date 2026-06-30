@@ -1,28 +1,28 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, ImageSlot } from '../../shared/components/ui'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button, ImageSlot } from "../../shared/components/ui";
 import {
   WatchOverlay,
   WatchPlayState,
   WatchControls,
   WatchSidePanel,
   WatchBelow,
-} from './WatchPageSections'
-import { PLAYER_STILL } from './watchPage.data'
-import styles from './WatchPage.module.css'
-import { routes } from '../../app/routeMap'
+} from "./WatchPageSections";
+import { PLAYER_STILL } from "./watchPage.data";
+import styles from "./WatchPage.module.css";
+import { routes } from "../../app/routeMap";
 
 export function WatchPage() {
-  const [showOverlay, setShowOverlay] = useState(true)
-  const [cc, setCc] = useState(true)
-  const [ad, setAd] = useState(false)
+  const [showOverlay, setShowOverlay] = useState(true);
+  const [cc, setCc] = useState(true);
+  const [ad, setAd] = useState(false);
 
   return (
     <div className={styles.root}>
       <nav className={styles.nav}>
         <Link to={routes.film} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
-          Queer<em style={{ fontStyle: 'italic' }}>Pulse</em>
+          Queer<em style={{ fontStyle: "italic" }}>Pulse</em>
           <span className={styles.cin}>Cinema</span>
         </Link>
         <div className={styles.navLinks}>
@@ -33,7 +33,11 @@ export function WatchPage() {
           <span>
             Watching as <strong>Anon</strong>
           </span>
-          <Button variant="ghost-dark" to={routes.signIn} style={{ padding: '8px 16px' }}>
+          <Button
+            variant="ghost-dark"
+            to={routes.signIn}
+            style={{ padding: "8px 16px" }}
+          >
             Sign in to save progress
           </Button>
         </div>
@@ -49,7 +53,7 @@ export function WatchPage() {
               height="100%"
               radius={0}
               placeholder="film frame · cinematic still"
-              style={{ position: 'absolute', inset: 0 }}
+              style={{ position: "absolute", inset: 0 }}
             />
 
             {showOverlay ? (
@@ -72,5 +76,5 @@ export function WatchPage() {
 
       <WatchBelow />
     </div>
-  )
+  );
 }

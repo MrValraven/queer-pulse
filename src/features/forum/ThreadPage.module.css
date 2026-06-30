@@ -297,7 +297,9 @@
   padding: 0;
   cursor: pointer;
   margin-top: 4px;
-  transition: color var(--dur-fast) var(--ease-std), transform var(--dur-fast) var(--ease-std);
+  transition:
+    color var(--dur-fast) var(--ease-std),
+    transform var(--dur-fast) var(--ease-std);
 }
 .replyReact:hover {
   color: var(--accent-ink);
@@ -392,7 +394,7 @@
   margin-top: 12px;
 }
 
-:global([data-theme='dark']) .opCard,
-:global([data-theme='dark']) .compose {
+:global([data-theme="dark"]) .opCard,
+:global([data-theme="dark"]) .compose {
   border-color: rgba(247, 243, 238, 0.1);
 }

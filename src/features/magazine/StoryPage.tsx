@@ -26,7 +26,7 @@ export function StoryPage() {
             <div className={styles.heroByline}>
               <span className={styles.bylineAv}>IT</span>
               <span>
-                Words by <Link to={PROFILE}>{memberName('ines')}</Link>
+                Words by <Link to={PROFILE}>{memberName("ines")}</Link>
               </span>
               <span className={styles.bDot} />
               <span>6 min read</span>
@@ -37,7 +37,11 @@ export function StoryPage() {
         </div>
       </div>
 
-      <StoryArticle profilePath={PROFILE} storyPath={STORY} invitePath={INVITE} />
+      <StoryArticle
+        profilePath={PROFILE}
+        storyPath={STORY}
+        invitePath={INVITE}
+      />
     </PageShell>
   );
 }

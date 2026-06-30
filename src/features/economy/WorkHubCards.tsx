@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
-import { FiArrowRight } from 'react-icons/fi'
-import type { StatusCard } from './work.data'
-import styles from './WorkHubPage.module.css'
+import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
+import type { StatusCard } from "./work.data";
+import styles from "./WorkHubPage.module.css";
 
 /** Per-silo status cards — each summarises state and deep-links into that area. */
 export function WorkHubCards({ cards }: { cards: StatusCard[] }) {
@@ -21,5 +21,5 @@ export function WorkHubCards({ cards }: { cards: StatusCard[] }) {
         </Link>
       ))}
     </div>
-  )
+  );
 }

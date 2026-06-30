@@ -5,25 +5,33 @@
   overflow: hidden;
 }
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10%;
   right: -5%;
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.14),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .hero::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -20%;
   left: -8%;
   width: 360px;
   height: 360px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.12), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.12),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .eyebrow {
@@ -255,6 +263,6 @@
   transform: none;
 }
 
-:global([data-theme='dark']) .card {
+:global([data-theme="dark"]) .card {
   border-color: rgba(247, 243, 238, 0.1);
 }

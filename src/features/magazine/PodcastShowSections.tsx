@@ -38,10 +38,18 @@ export function PodcastHero() {
             Hosted by <b>Catarina Vaz</b> · produced by <b>Jonas Ferreira</b>
           </p>
           <div className={styles.meta}>
-            <span><b>34</b> episodes</span>
-            <span><b>~ 45 min</b> avg</span>
-            <span><b>Bi-weekly</b> · Thursdays</span>
-            <span>Since <b>Aug 2024</b></span>
+            <span>
+              <b>34</b> episodes
+            </span>
+            <span>
+              <b>~ 45 min</b> avg
+            </span>
+            <span>
+              <b>Bi-weekly</b> · Thursdays
+            </span>
+            <span>
+              Since <b>Aug 2024</b>
+            </span>
           </div>
           <div className={styles.actions}>
             <Button to={EPISODE_PATH} variant="primary">
@@ -76,7 +84,9 @@ export function PodcastListenRow() {
           </button>
         ))}
       </div>
-      {listenOpen && <PodcastListenModal onClose={() => setListenOpen(false)} />}
+      {listenOpen && (
+        <PodcastListenModal onClose={() => setListenOpen(false)} />
+      )}
     </div>
   );
 }
@@ -85,7 +95,8 @@ function EpisodeRow({ e }: { e: Episode }) {
   return (
     <div className={styles.epRow}>
       <div className={styles.epNum}>
-        {e.num}<em>{e.numEm}</em>
+        {e.num}
+        <em>{e.numEm}</em>
       </div>
       <div className={styles.epInfo}>
         <h3>
@@ -112,28 +123,33 @@ export function PodcastEpisodes() {
   return (
     <main>
       <div className={styles.epH}>
-        <h2>About the <em>show</em></h2>
+        <h2>
+          About the <em>show</em>
+        </h2>
       </div>
       <p className={styles.aboutP}>
         Slow conversations between queer people doing the work of building
         community in Lisbon. Activists, clinicians, organisers, artists — one
-        guest per episode, recorded in the back room of Café Beirão after closing
-        time. <em>No interruptions, no time limit.</em>
+        guest per episode, recorded in the back room of Café Beirão after
+        closing time. <em>No interruptions, no time limit.</em>
       </p>
       <p className={`${styles.aboutP} ${styles.aboutPLast}`}>
-        If our magazine is what we write down, this is what we say out loud. Pair
-        it with a coffee in the morning or a walk in the late afternoon.
+        If our magazine is what we write down, this is what we say out loud.
+        Pair it with a coffee in the morning or a walk in the late afternoon.
       </p>
 
       <div className={styles.epH}>
-        <h2>Episodes · <em>34</em></h2>
+        <h2>
+          Episodes · <em>34</em>
+        </h2>
         <span className={styles.meta}>Newest first</span>
       </div>
 
       <div className={styles.epFeat}>
         <div className={styles.epFeatKicker}>Latest · 5 days ago · 52 min</div>
         <h3>
-          34 · Dr. Inês Pereira on <em>fifteen minutes of someone else's time</em>
+          34 · Dr. Inês Pereira on{" "}
+          <em>fifteen minutes of someone else's time</em>
         </h3>
         <p>
           The Anjos GP who treats trans patients as adults — and changed the
@@ -141,7 +157,11 @@ export function PodcastEpisodes() {
           prescription lists, and why she answers her own phone.
         </p>
         <div className={styles.epFeatRow}>
-          <Link to={EPISODE_PATH} className={`${styles.play} ${styles.playLg}`} title="Play episode 34">
+          <Link
+            to={EPISODE_PATH}
+            className={`${styles.play} ${styles.playLg}`}
+            title="Play episode 34"
+          >
             <PlayIcon />
           </Link>
           <Link to={EPISODE_PATH} className={styles.epFeatNotes}>
@@ -162,7 +182,11 @@ export function PodcastEpisodes() {
             <Button
               type="button"
               variant="ghost"
-              onClick={() => setShown((n) => Math.min(OLDER_EPISODES.length, n + OLDER_BATCH))}
+              onClick={() =>
+                setShown((n) =>
+                  Math.min(OLDER_EPISODES.length, n + OLDER_BATCH),
+                )
+              }
             >
               Show {Math.min(OLDER_BATCH, remaining)} older episodes
             </Button>
@@ -188,7 +212,13 @@ export function PodcastSidebar() {
           </div>
         </div>
         <div className={styles.hostRow}>
-          <div className={styles.hostAv} style={{ background: "rgba(var(--jade-rgb),.16)", color: "var(--jade)" }}>
+          <div
+            className={styles.hostAv}
+            style={{
+              background: "rgba(var(--jade-rgb),.16)",
+              color: "var(--jade)",
+            }}
+          >
             JF
           </div>
           <div>
@@ -220,7 +250,11 @@ export function PodcastSidebar() {
           We get this often. We don't typically take pitches, but if you're
           doing something genuinely worth an hour, tell us.
         </p>
-        <Button to={CONTACT_PATH} variant="ghost-dark" className={styles.guestBtn}>
+        <Button
+          to={CONTACT_PATH}
+          variant="ghost-dark"
+          className={styles.guestBtn}
+        >
           Write to the team
         </Button>
       </div>

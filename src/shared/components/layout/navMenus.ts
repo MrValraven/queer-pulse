@@ -178,7 +178,11 @@ export const NAV_MENUS: MegaMenu[] = [
       {
         head: "Makers & Scene",
         links: [
-          { label: "Studio · queer music", href: routes.studio, featured: true },
+          {
+            label: "Studio · queer music",
+            href: routes.studio,
+            featured: true,
+          },
           { label: "Creatives", href: routes.creatives },
           { label: "Platforms", href: routes.platforms },
           { label: "Reading Groups", href: routes.readingGroups },
@@ -189,7 +193,10 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Mark the Year",
         links: [
           { label: "Pride Month", href: routes.prideMonth },
-          { label: "Trans Day of Visibility", href: routes.transDayOfVisibility },
+          {
+            label: "Trans Day of Visibility",
+            href: routes.transDayOfVisibility,
+          },
           { label: "World AIDS Day", href: routes.worldAidsDay },
         ],
       },

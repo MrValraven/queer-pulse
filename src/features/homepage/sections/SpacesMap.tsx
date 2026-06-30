@@ -1,14 +1,19 @@
-import { useState } from 'react'
-import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { routes } from '../../../app/routeMap'
-import { mapFilters, mapLegend, mapSpaces, MAP_COLORS } from '../data/mapSpaces'
-import { visibleSpaces } from '../lib/filters'
-import type { MapSpaceType } from '../data/types'
-import styles from './SpacesMap.module.css'
+import { useState } from "react";
+import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { routes } from "../../../app/routeMap";
+import {
+  mapFilters,
+  mapLegend,
+  mapSpaces,
+  MAP_COLORS,
+} from "../data/mapSpaces";
+import { visibleSpaces } from "../lib/filters";
+import type { MapSpaceType } from "../data/types";
+import styles from "./SpacesMap.module.css";
 
 export function SpacesMap() {
-  const [filter, setFilter] = useState<'all' | MapSpaceType>('all')
-  const visible = visibleSpaces(mapSpaces, filter)
+  const [filter, setFilter] = useState<"all" | MapSpaceType>("all");
+  const visible = visibleSpaces(mapSpaces, filter);
 
   return (
     <section className={styles.section} id="map">
@@ -36,9 +41,12 @@ export function SpacesMap() {
               <button
                 key={option.value}
                 type="button"
-                className={[styles.chip, filter === option.value && styles.chipActive]
+                className={[
+                  styles.chip,
+                  filter === option.value && styles.chipActive,
+                ]
                   .filter(Boolean)
-                  .join(' ')}
+                  .join(" ")}
                 onClick={() => setFilter(option.value)}
               >
                 {option.label}
@@ -46,7 +54,11 @@ export function SpacesMap() {
             ))}
           </div>
 
-          <svg className={styles.svg} viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            className={styles.svg}
+            viewBox="0 0 900 400"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <defs>
               <radialGradient id="qp-map-bg" cx="45%" cy="42%" r="65%">
                 <stop offset="0%" stopColor="#1e0e38" />
@@ -60,7 +72,11 @@ export function SpacesMap() {
               d="M0 330 C 220 300, 420 360, 640 312 S 900 300, 900 320 L900 400 L0 400 Z"
               fill="rgba(74,140,111,.05)"
             />
-            <g fill="rgba(247,243,238,.028)" stroke="rgba(247,243,238,.04)" strokeWidth={0.5}>
+            <g
+              fill="rgba(247,243,238,.028)"
+              stroke="rgba(247,243,238,.04)"
+              strokeWidth={0.5}
+            >
               <rect x={152} y={200} width={38} height={22} rx={1} />
               <rect x={194} y={200} width={40} height={22} rx={1} />
               <rect x={152} y={226} width={84} height={24} rx={1} />
@@ -106,14 +122,19 @@ export function SpacesMap() {
           <div className={styles.legend}>
             {mapLegend.map((item) => (
               <div key={item.type} className={styles.legendItem}>
-                <span className={styles.legendDot} style={{ background: MAP_COLORS[item.type] }} />
+                <span
+                  className={styles.legendDot}
+                  style={{ background: MAP_COLORS[item.type] }}
+                />
                 {item.label}
               </div>
             ))}
-            <span className={styles.legendCount}>48 spaces · member-curated</span>
+            <span className={styles.legendCount}>
+              48 spaces · member-curated
+            </span>
           </div>
         </Reveal>
       </div>
     </section>
-  )
+  );
 }

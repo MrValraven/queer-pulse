@@ -1,4 +1,4 @@
-import { CinemaShell } from './CinemaShell'
+import { CinemaShell } from "./CinemaShell";
 import {
   AskStrip,
   CinemaCover,
@@ -9,8 +9,8 @@ import {
   LiveSection,
   MadeHereSection,
   ProgrammeSection,
-} from './CinemaSections'
-import styles from './CinemaPage.module.css'
+} from "./CinemaSections";
+import styles from "./CinemaPage.module.css";
 
 export function CinemaPage() {
   return (
@@ -31,5 +31,5 @@ export function CinemaPage() {
 
       <CinemaOutro />
     </CinemaShell>
-  )
+  );
 }

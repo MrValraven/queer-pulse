@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import styles from './MicroGrantsPage.module.css'
+import { useState } from "react";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import styles from "./MicroGrantsPage.module.css";
 
-const INVITE = routes.requestInvite
-const CONTRIBUTE_AMOUNTS = ['€5', '€10', '€20', '€50', 'Other']
+const INVITE = routes.requestInvite;
+const CONTRIBUTE_AMOUNTS = ["€5", "€10", "€20", "€50", "Other"];
 
 export function MicroGrantsHero() {
   return (
@@ -17,8 +17,9 @@ export function MicroGrantsHero() {
           <em>Real impact.</em>
         </h1>
         <p className={styles.sub}>
-          Micro-grants of €200–2000 for queer community projects in Lisbon. Funded by members,
-          allocated by members, reported back to members. No gatekeepers.
+          Micro-grants of €200–2000 for queer community projects in Lisbon.
+          Funded by members, allocated by members, reported back to members. No
+          gatekeepers.
         </p>
         <div className={styles.fund}>
           <div className={styles.fundItem}>
@@ -45,11 +46,11 @@ export function MicroGrantsHero() {
         </div>
       </div>
     </header>
-  )
+  );
 }
 
 export function ContributeStrip() {
-  const [amount, setAmount] = useState('€20')
+  const [amount, setAmount] = useState("€20");
   return (
     <div className={styles.contributeStrip}>
       <div className={styles.csInner}>
@@ -58,15 +59,20 @@ export function ContributeStrip() {
             Add to the <em>pot.</em>
           </h3>
           <p>
-            The fund is sustained by members who contribute what they can. There is no minimum. Every
-            amount makes the next round possible.
+            The fund is sustained by members who contribute what they can. There
+            is no minimum. Every amount makes the next round possible.
           </p>
           <div className={styles.csAmounts}>
             {CONTRIBUTE_AMOUNTS.map((a) => (
               <button
                 key={a}
                 type="button"
-                className={[styles.csAmount, amount === a && styles.csAmountSelected].filter(Boolean).join(' ')}
+                className={[
+                  styles.csAmount,
+                  amount === a && styles.csAmountSelected,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 onClick={() => setAmount(a)}
               >
                 {a}
@@ -79,10 +85,11 @@ export function ContributeStrip() {
             Contribute to the fund
           </Button>
           <span className={styles.csNote}>
-            Contributions are voluntary. Members only. Not tax-deductible under current Portuguese law.
+            Contributions are voluntary. Members only. Not tax-deductible under
+            current Portuguese law.
           </span>
         </div>
       </div>
     </div>
-  )
+  );
 }

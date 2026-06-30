@@ -1,43 +1,49 @@
-import { Link } from 'react-router-dom'
-import { FiBookmark } from 'react-icons/fi'
-import { FaBookmark } from 'react-icons/fa6'
-import { EmptyState, FadeIn } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { useSaved, type SavedItem } from '../../app/providers/SavedProvider'
-import { linkToPath, routes } from '../../app/routeMap'
-import { KIND_CARD, type KindCard } from './savedByYou.data'
-import styles from './SavedByYou.module.css'
+import { Link } from "react-router-dom";
+import { FiBookmark } from "react-icons/fi";
+import { FaBookmark } from "react-icons/fa6";
+import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useSaved, type SavedItem } from "../../app/providers/SavedProvider";
+import { linkToPath, routes } from "../../app/routeMap";
+import { KIND_CARD, type KindCard } from "./savedByYou.data";
+import styles from "./SavedByYou.module.css";
 
-const variantClass: Record<KindCard['variant'], string> = {
+const variantClass: Record<KindCard["variant"], string> = {
   magazine: styles.vMagazine!,
   film: styles.vFilm!,
   job: styles.vJob!,
   event: styles.vEvent!,
   thread: styles.vThread!,
   group: styles.vGroup!,
-}
+};
 
 /** Pull a "N min" read-length out of a meta string, returning the pill text and
  * the meta with that segment removed so it isn't shown twice. */
 function splitReadTime(meta?: string): { meta?: string; readTime?: string } {
-  if (!meta) return {}
-  const match = meta.match(/(\d+)\s*min(?:\s*read)?/i)
-  if (!match) return { meta }
+  if (!meta) return {};
+  const match = meta.match(/(\d+)\s*min(?:\s*read)?/i);
+  if (!match) return { meta };
   const cleaned = meta
-    .replace(match[0], '')
-    .replace(/\s*·\s*$/, '')
-    .replace(/^\s*·\s*/, '')
-    .trim()
-  return { meta: cleaned || undefined, readTime: `${match[1]} min` }
+    .replace(match[0], "")
+    .replace(/\s*·\s*$/, "")
+    .replace(/^\s*·\s*/, "")
+    .trim();
+  return { meta: cleaned || undefined, readTime: `${match[1]} min` };
 }
 
 /** A single saved item, rendered as a rich card matching the design prototype. */
-function SaveCard({ item, onUnsave }: { item: SavedItem; onUnsave: () => void }) {
-  const cfg = KIND_CARD[item.kind]
+function SaveCard({
+  item,
+  onUnsave,
+}: {
+  item: SavedItem;
+  onUnsave: () => void;
+}) {
+  const cfg = KIND_CARD[item.kind];
   // Prefer an explicit readTime; otherwise lift one out of the meta line.
-  const derived = splitReadTime(item.meta)
-  const readTime = item.readTime ?? derived.readTime
-  const metaText = item.readTime ? item.meta : derived.meta
+  const derived = splitReadTime(item.meta);
+  const readTime = item.readTime ?? derived.readTime;
+  const metaText = item.readTime ? item.meta : derived.meta;
 
   return (
     <article className={`${styles.card} ${variantClass[cfg.variant]}`}>
@@ -79,7 +85,7 @@ function SaveCard({ item, onUnsave }: { item: SavedItem; onUnsave: () => void })
         </div>
       )}
     </article>
-  )
+  );
 }
 
 /**
@@ -89,8 +95,8 @@ function SaveCard({ item, onUnsave }: { item: SavedItem; onUnsave: () => void })
  * Shows an EmptyState when nothing is saved.
  */
 export function SavedByYou() {
-  const { items, unsave } = useSaved()
-  const { showToast } = useToast()
+  const { items, unsave } = useSaved();
+  const { showToast } = useToast();
 
   if (items.length === 0) {
     return (
@@ -102,11 +108,11 @@ export function SavedByYou() {
           icon={<FiBookmark />}
           title="Nothing saved yet"
           description="Save articles, films, jobs and posts as you explore — they'll gather here so you can come back to them and sort them into collections."
-          action={{ label: 'Browse the magazine', to: routes.magazine }}
-          secondaryAction={{ label: 'Explore cinema', to: routes.cinema }}
+          action={{ label: "Browse the magazine", to: routes.magazine }}
+          secondaryAction={{ label: "Explore cinema", to: routes.cinema }}
         />
       </section>
-    )
+    );
   }
 
   return (
@@ -122,13 +128,13 @@ export function SavedByYou() {
             <SaveCard
               item={item}
               onUnsave={() => {
-                unsave(item.id)
-                showToast('Removed from saved', 'info')
+                unsave(item.id);
+                showToast("Removed from saved", "info");
               }}
             />
           </FadeIn>
         ))}
       </div>
     </section>
-  )
+  );
 }

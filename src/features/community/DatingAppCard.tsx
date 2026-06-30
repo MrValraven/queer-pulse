@@ -1,11 +1,14 @@
-import type { App } from './dating.data'
-import styles from './DatingPage.module.css'
+import type { App } from "./dating.data";
+import styles from "./DatingPage.module.css";
 
 export function DatingAppCard({ app }: { app: App }) {
   return (
     <div className={styles.appCard}>
       <div className={styles.appTop}>
-        <div className={styles.appIcon} style={{ background: app.iconBg, color: app.iconColor }}>
+        <div
+          className={styles.appIcon}
+          style={{ background: app.iconBg, color: app.iconColor }}
+        >
           {app.icon}
         </div>
         <div>
@@ -23,5 +26,5 @@ export function DatingAppCard({ app }: { app: App }) {
       </div>
       <p className={styles.appCommunity}>{app.quote}</p>
     </div>
-  )
+  );
 }

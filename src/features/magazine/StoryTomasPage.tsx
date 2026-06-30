@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { memberName } from '../members/data/members'
-import { Button, Outro } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { StoryTomasArticle } from './StoryTomasArticle'
-import styles from './StoryTomasPage.module.css'
+import { Link } from "react-router-dom";
+import { PageShell } from "../../shared/components/layout";
+import { memberName } from "../members/data/members";
+import { Button, Outro } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { StoryTomasArticle } from "./StoryTomasArticle";
+import styles from "./StoryTomasPage.module.css";
 
 export function StoryTomasPage() {
   return (
@@ -20,7 +20,7 @@ export function StoryTomasPage() {
             <div className={styles.heroByline}>
               <span className={styles.bylineAv}>SA</span>
               <span>
-                Words by <Link to={routes.members}>{memberName('sofia')}</Link>
+                Words by <Link to={routes.members}>{memberName("sofia")}</Link>
               </span>
               <span className={styles.bDot} />
               <span>4 min read</span>
@@ -34,7 +34,11 @@ export function StoryTomasPage() {
       <StoryTomasArticle />
 
       <Outro
-        title={<>Want to join Tomás's table? <em>Join the room first.</em></>}
+        title={
+          <>
+            Want to join Tomás's table? <em>Join the room first.</em>
+          </>
+        }
         sub="The supper club, the network, the gatherings — it all starts with an invitation from someone who knows you."
       >
         <Button to={routes.requestInvite} variant="primary" size="lg">
@@ -42,5 +46,5 @@ export function StoryTomasPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

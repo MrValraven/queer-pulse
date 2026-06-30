@@ -1,16 +1,29 @@
-import { Link } from 'react-router-dom'
-import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath, routes } from '../../../app/routeMap'
-import { communities } from '../data/communities'
-import styles from './Communities.module.css'
+import { Link } from "react-router-dom";
+import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { linkToPath, routes } from "../../../app/routeMap";
+import { communities } from "../data/communities";
+import styles from "./Communities.module.css";
 
 function PrivateIcon() {
   return (
     <svg width={9} height={9} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x={3} y={11} width={18} height={11} rx={2.5} stroke="currentColor" strokeWidth={2.5} />
-      <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" />
+      <rect
+        x={3}
+        y={11}
+        width={18}
+        height={11}
+        rx={2.5}
+        stroke="currentColor"
+        strokeWidth={2.5}
+      />
+      <path
+        d="M7 11V7a5 5 0 0110 0v4"
+        stroke="currentColor"
+        strokeWidth={2.5}
+        strokeLinecap="round"
+      />
     </svg>
-  )
+  );
 }
 
 export function Communities() {
@@ -40,9 +53,11 @@ export function Communities() {
                 to={linkToPath(community.href)}
                 className={[styles.card, community.dashed && styles.dashed]
                   .filter(Boolean)
-                  .join(' ')}
+                  .join(" ")}
               >
-                <span className={[styles.type, styles[community.type]].join(' ')}>
+                <span
+                  className={[styles.type, styles[community.type]].join(" ")}
+                >
                   {community.privateBadge && <PrivateIcon />}
                   {community.typeLabel}
                 </span>
@@ -58,5 +73,5 @@ export function Communities() {
         </div>
       </div>
     </section>
-  )
+  );
 }

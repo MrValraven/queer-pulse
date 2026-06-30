@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react";
 import {
   FiBriefcase,
   FiAward,
@@ -8,145 +8,145 @@ import {
   FiStar,
   FiClock,
   FiMessageCircle,
-} from 'react-icons/fi'
-import { routes } from '../../app/routeMap'
-import { currentUser, fullName } from '../members/data/members'
-import type { VisibilityMode } from '../../shared/components/ui'
-import { APPS } from './applicationStatus.data'
-import { MENTORS } from './mentorship.data'
+} from "react-icons/fi";
+import { routes } from "../../app/routeMap";
+import { currentUser, fullName } from "../members/data/members";
+import type { VisibilityMode } from "../../shared/components/ui";
+import { APPS } from "./applicationStatus.data";
+import { MENTORS } from "./mentorship.data";
 
-const activeApps = APPS.filter((a) => a.cat === 'active').length
-const sentApps = APPS.filter((a) => a.cat !== 'draft').length
-const offers = APPS.filter((a) => a.cat === 'offer').length
-const openMentors = MENTORS.filter((m) => m.btn !== 'Join waitlist').length
+const activeApps = APPS.filter((a) => a.cat === "active").length;
+const sentApps = APPS.filter((a) => a.cat !== "draft").length;
+const offers = APPS.filter((a) => a.cat === "offer").length;
+const openMentors = MENTORS.filter((m) => m.btn !== "Join waitlist").length;
 
 /** The signed-in member's work identity, as it currently stands. */
 export const workIdentity = {
   name: fullName(currentUser),
   first: currentUser.first,
   initials: currentUser.initials,
-  pronouns: 'they/them',
+  pronouns: "they/them",
   headline: currentUser.role,
-  location: 'Lisbon · open to remote',
+  location: "Lisbon · open to remote",
   /** Out-at-work state shown on the hub — 'network' = verified employers only. */
-  outAtWork: 'network' as VisibilityMode,
+  outAtWork: "network" as VisibilityMode,
   completeness: 70,
-}
+};
 
 /** A live one-line summary of where work stands, derived from the data above. */
-export const workStatusLine = `${activeApps} active application${activeApps === 1 ? '' : 's'} · ${
-  offers ? `${offers} offer to respond to` : 'no offers yet'
-} · 2 mentor threads`
+export const workStatusLine = `${activeApps} active application${activeApps === 1 ? "" : "s"} · ${
+  offers ? `${offers} offer to respond to` : "no offers yet"
+} · 2 mentor threads`;
 
 export interface NextAction {
-  id: string
-  icon: ReactNode
-  label: string
-  context: string
+  id: string;
+  icon: ReactNode;
+  label: string;
+  context: string;
   /** Short urgency chip, e.g. "Closes in 3 days". */
-  urgency?: string
+  urgency?: string;
   /** When true the chip + row read as urgent (coral). */
-  urgent?: boolean
-  to: string
-  cta: string
+  urgent?: boolean;
+  to: string;
+  cta: string;
 }
 
 /** Cross-silo "what needs you" list — the spine's prioritised next actions. */
 export const NEXT_ACTIONS: NextAction[] = [
   {
-    id: 'offer',
+    id: "offer",
     icon: <FiClock />,
-    label: 'Respond to your offer from Casa Viva',
-    context: 'They’re waiting on your decision.',
-    urgency: 'Closes in 3 days',
+    label: "Respond to your offer from Casa Viva",
+    context: "They’re waiting on your decision.",
+    urgency: "Closes in 3 days",
     urgent: true,
     to: routes.applicationStatus,
-    cta: 'Review offer',
+    cta: "Review offer",
   },
   {
-    id: 'mentor',
+    id: "mentor",
     icon: <FiMessageCircle />,
-    label: 'Inês replied about your mentor match',
-    context: 'A first intro call is on the table.',
+    label: "Inês replied about your mentor match",
+    context: "A first intro call is on the table.",
     to: routes.mentorship,
-    cta: 'Read reply',
+    cta: "Read reply",
   },
   {
-    id: 'grant',
+    id: "grant",
     icon: <FiDollarSign />,
-    label: 'Micro-grant deadline this Friday',
-    context: 'Queer Creators Fund · up to €500.',
-    urgency: 'Due Fri',
+    label: "Micro-grant deadline this Friday",
+    context: "Queer Creators Fund · up to €500.",
+    urgency: "Due Fri",
     to: routes.grants,
-    cta: 'See grant',
+    cta: "See grant",
   },
   {
-    id: 'profile',
+    id: "profile",
     icon: <FiStar />,
-    label: 'Your work profile is 70% complete',
-    context: 'Add your out-at-work preference to be matched safely.',
+    label: "Your work profile is 70% complete",
+    context: "Add your out-at-work preference to be matched safely.",
     to: routes.workProfile,
-    cta: 'Finish profile',
+    cta: "Finish profile",
   },
-]
+];
 
 export interface StatusCard {
-  key: string
-  icon: ReactNode
-  label: string
-  primary: string
-  next: string
-  to: string
+  key: string;
+  icon: ReactNode;
+  label: string;
+  primary: string;
+  next: string;
+  to: string;
 }
 
 /** One card per Work-section silo, summarising state + a deep link. */
 export const STATUS_CARDS: StatusCard[] = [
   {
-    key: 'apps',
+    key: "apps",
     icon: <FiBriefcase />,
-    label: 'Applications',
+    label: "Applications",
     primary: `${activeApps} active / ${sentApps} sent`,
-    next: offers ? `${offers} offer to respond to` : 'No offers yet',
+    next: offers ? `${offers} offer to respond to` : "No offers yet",
     to: routes.applicationStatus,
   },
   {
-    key: 'mentor',
+    key: "mentor",
     icon: <FiAward />,
-    label: 'Mentorship',
-    primary: '1 active mentorship',
+    label: "Mentorship",
+    primary: "1 active mentorship",
     next: `${openMentors} mentors with open spots`,
     to: routes.mentorship,
   },
   {
-    key: 'skills',
+    key: "skills",
     icon: <FiBookOpen />,
-    label: 'Skills exchange',
-    primary: 'Teaching 2 · Learning 1',
-    next: 'A new request matches you',
+    label: "Skills exchange",
+    primary: "Teaching 2 · Learning 1",
+    next: "A new request matches you",
     to: routes.skills,
   },
   {
-    key: 'saved',
+    key: "saved",
     icon: <FiBookmark />,
-    label: 'Saved roles',
-    primary: '5 saved jobs',
-    next: '2 closing this week',
+    label: "Saved roles",
+    primary: "5 saved jobs",
+    next: "2 closing this week",
     to: routes.jobs,
   },
   {
-    key: 'grants',
+    key: "grants",
     icon: <FiDollarSign />,
-    label: 'Grants & funding',
-    primary: '2 deadlines this month',
-    next: 'Queer Creators Fund opens soon',
+    label: "Grants & funding",
+    primary: "2 deadlines this month",
+    next: "Queer Creators Fund opens soon",
     to: routes.grants,
   },
   {
-    key: 'reviews',
+    key: "reviews",
     icon: <FiStar />,
-    label: 'Employer reviews',
-    primary: 'You’ve reviewed 2',
-    next: '1 draft to finish',
+    label: "Employer reviews",
+    primary: "You’ve reviewed 2",
+    next: "1 draft to finish",
     to: routes.employerReviews,
   },
-]
+];

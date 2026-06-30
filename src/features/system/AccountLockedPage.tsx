@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
-import { routes } from '../../app/routeMap'
-import { SystemStateShell } from '../../shared/components/layout'
-import styles from './AccountLockedPage.module.css'
+import { Link } from "react-router-dom";
+import { routes } from "../../app/routeMap";
+import { SystemStateShell } from "../../shared/components/layout";
+import styles from "./AccountLockedPage.module.css";
 
 export function AccountLockedPage() {
   return (
@@ -19,8 +19,9 @@ export function AccountLockedPage() {
           Your account is <em>on pause.</em>
         </h1>
         <p className={styles.lead}>
-          We spotted unusual sign-in activity on your account and locked it as a precaution. You're
-          not in trouble — we'd rather over-react than risk it.
+          We spotted unusual sign-in activity on your account and locked it as a
+          precaution. You're not in trouble — we'd rather over-react than risk
+          it.
         </p>
 
         <div className={styles.reasonList}>
@@ -32,7 +33,8 @@ export function AccountLockedPage() {
               </svg>
             </div>
             <div className={styles.reasonText}>
-              <b>5 failed sign-in attempts</b> in the last 12 minutes, from two devices.
+              <b>5 failed sign-in attempts</b> in the last 12 minutes, from two
+              devices.
             </div>
           </div>
           <div className={styles.reasonRow}>
@@ -42,8 +44,8 @@ export function AccountLockedPage() {
               </svg>
             </div>
             <div className={styles.reasonText}>
-              <b>New location:</b> attempt from <b>Madrid, Spain</b> — you usually sign in from
-              Lisbon.
+              <b>New location:</b> attempt from <b>Madrid, Spain</b> — you
+              usually sign in from Lisbon.
             </div>
           </div>
           <div className={styles.reasonRow}>
@@ -54,8 +56,8 @@ export function AccountLockedPage() {
               </svg>
             </div>
             <div className={styles.reasonText}>
-              <b>Lock will lift automatically</b> in 23 minutes — or use one of the options below
-              to unlock now.
+              <b>Lock will lift automatically</b> in 23 minutes — or use one of
+              the options below to unlock now.
             </div>
           </div>
         </div>
@@ -69,31 +71,41 @@ export function AccountLockedPage() {
                 Quickest if you're the rightful owner — we'll send a link.
               </div>
             </div>
-            <span className={styles.wnArrow} aria-hidden>→</span>
+            <span className={styles.wnArrow} aria-hidden>
+              →
+            </span>
           </Link>
           <Link to={routes.magicLink} className={styles.wnRow}>
             <div className={styles.wnNum}>2</div>
             <div className={styles.wnText}>
               <div className={styles.wnTitle}>Sign in with a magic link</div>
-              <div className={styles.wnDesc}>Skip the password — confirm via email.</div>
+              <div className={styles.wnDesc}>
+                Skip the password — confirm via email.
+              </div>
             </div>
-            <span className={styles.wnArrow} aria-hidden>→</span>
+            <span className={styles.wnArrow} aria-hidden>
+              →
+            </span>
           </Link>
           <Link to={routes.contact} className={styles.wnRow}>
             <div className={styles.wnNum}>3</div>
             <div className={styles.wnText}>
               <div className={styles.wnTitle}>Contact the team</div>
               <div className={styles.wnDesc}>
-                If none of the above work, write to us and we'll verify you by hand.
+                If none of the above work, write to us and we'll verify you by
+                hand.
               </div>
             </div>
-            <span className={styles.wnArrow} aria-hidden>→</span>
+            <span className={styles.wnArrow} aria-hidden>
+              →
+            </span>
           </Link>
         </div>
 
         <div className={styles.foot}>
           <span>
-            Incident <span className={styles.incidentId}>QP-8423-LOCK</span> · 14:08 WET
+            Incident <span className={styles.incidentId}>QP-8423-LOCK</span> ·
+            14:08 WET
           </span>
           <span>
             <Link to={routes.help}>Why does this happen?</Link>
@@ -101,5 +113,5 @@ export function AccountLockedPage() {
         </div>
       </div>
     </SystemStateShell>
-  )
+  );
 }

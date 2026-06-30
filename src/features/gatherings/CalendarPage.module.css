@@ -5,14 +5,18 @@
   overflow: hidden;
 }
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10%;
   right: -5%;
   width: 420px;
   height: 420px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.13), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.13),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .eyebrow {
@@ -328,7 +332,7 @@
   }
 }
 
-:global([data-theme='dark']) .grid,
-:global([data-theme='dark']) .eventCard {
+:global([data-theme="dark"]) .grid,
+:global([data-theme="dark"]) .eventCard {
   border-color: rgba(247, 243, 238, 0.1);
 }

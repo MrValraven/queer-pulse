@@ -5,14 +5,18 @@
   overflow: hidden;
 }
 .section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10%;
   right: -4%;
   width: 480px;
   height: 480px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.13), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.13),
+    transparent 60%
+  );
   pointer-events: none;
 }
 .top {

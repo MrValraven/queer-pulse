@@ -37,7 +37,9 @@
   background: transparent;
   width: 100%;
   text-align: left;
-  transition: background 0.18s, color 0.18s;
+  transition:
+    background 0.18s,
+    color 0.18s;
 }
 .navItem:hover {
   background: rgba(45, 27, 61, 0.05);
@@ -130,7 +132,6 @@
   margin-top: 3px;
   line-height: 1.5;
 }
-
 
 .selectRow {
   display: flex;
@@ -448,10 +449,10 @@
   }
 }
 
-:global([data-theme='dark']) .toggleList,
-:global([data-theme='dark']) .selectRow,
-:global([data-theme='dark']) .dataCard,
-:global([data-theme='dark']) .termRow,
-:global([data-theme='dark']) .input {
+:global([data-theme="dark"]) .toggleList,
+:global([data-theme="dark"]) .selectRow,
+:global([data-theme="dark"]) .dataCard,
+:global([data-theme="dark"]) .termRow,
+:global([data-theme="dark"]) .input {
   border-color: rgba(247, 243, 238, 0.1);
 }

@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { FiDownload } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { ToolPage } from './tools/ToolPage'
-import { usePrintDocument } from './tools/usePrintDocument'
-import { useIssuer } from './tools/useIssuer'
-import { SlidingScaleForm } from './SlidingScaleForm'
-import { SlidingScalePreview } from './SlidingScalePreview'
-import { DEFAULT_SCALE, type SlidingScale } from './slidingScale.data'
+import { useState } from "react";
+import { FiDownload } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { ToolPage } from "./tools/ToolPage";
+import { usePrintDocument } from "./tools/usePrintDocument";
+import { useIssuer } from "./tools/useIssuer";
+import { SlidingScaleForm } from "./SlidingScaleForm";
+import { SlidingScalePreview } from "./SlidingScalePreview";
+import { DEFAULT_SCALE, type SlidingScale } from "./slidingScale.data";
 
 /**
  * Client-side sliding-scale price-card generator. A maker frames an ethical
@@ -14,22 +14,23 @@ import { DEFAULT_SCALE, type SlidingScale } from './slidingScale.data'
  * printable card via the browser's print-to-PDF.
  */
 export function SlidingScalePage() {
-  const [scale, setScale] = useState<SlidingScale>(DEFAULT_SCALE)
-  const [issuer, updateIssuer] = useIssuer()
-  const print = usePrintDocument()
+  const [scale, setScale] = useState<SlidingScale>(DEFAULT_SCALE);
+  const [issuer, updateIssuer] = useIssuer();
+  const print = usePrintDocument();
 
-  const update = (patch: Partial<SlidingScale>) => setScale((prev) => ({ ...prev, ...patch }))
+  const update = (patch: Partial<SlidingScale>) =>
+    setScale((prev) => ({ ...prev, ...patch }));
 
   const actions = (
     <Button
       variant="primary"
       size="lg"
       type="button"
-      onClick={() => print(`sliding-scale-${scale.service || 'card'}`)}
+      onClick={() => print(`sliding-scale-${scale.service || "card"}`)}
     >
       <FiDownload aria-hidden /> Download PDF
     </Button>
-  )
+  );
 
   return (
     <ToolPage
@@ -51,5 +52,5 @@ export function SlidingScalePage() {
       preview={<SlidingScalePreview scale={scale} makerName={issuer.name} />}
       actions={actions}
     />
-  )
+  );
 }

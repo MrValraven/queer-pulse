@@ -33,7 +33,7 @@
 }
 
 .icon::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: -6px;
   border-radius: 26px;
@@ -100,14 +100,18 @@
 }
 
 .posCard::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -30%;
   right: -10%;
   width: 240px;
   height: 240px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.18), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.18),
+    transparent 60%
+  );
   pointer-events: none;
 }
 

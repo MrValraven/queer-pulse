@@ -1,17 +1,28 @@
-import { useState, type ChangeEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FiArrowRight, FiCheck, FiCamera } from 'react-icons/fi';
-import { Button, ImageSlot, ChipSelect, useChipSet } from '../../shared/components/ui';
-import { routes } from '../../app/routeMap';
-import { useAuth } from '../../app/providers/authContext';
-import { currentUser, getMember } from '../members/data/members';
-import { clearInviteWelcome, readInviteWelcome } from './api/pendingInvite';
-import { NORMS, INTENTS, COMMUNITIES_LIST, QUICK_STARTS, ONBOARDING_PREVIEW } from './onboardingPage.data';
-import styles from './OnboardingPage.module.css';
+import { useState, type ChangeEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FiArrowRight, FiCheck, FiCamera } from "react-icons/fi";
+import {
+  Button,
+  ImageSlot,
+  ChipSelect,
+  useChipSet,
+} from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { useAuth } from "../../app/providers/authContext";
+import { currentUser, getMember } from "../members/data/members";
+import { clearInviteWelcome, readInviteWelcome } from "./api/pendingInvite";
+import {
+  NORMS,
+  INTENTS,
+  COMMUNITIES_LIST,
+  QUICK_STARTS,
+  ONBOARDING_PREVIEW,
+} from "./onboardingPage.data";
+import styles from "./OnboardingPage.module.css";
 
-const INVITER = getMember('ines')!;
+const INVITER = getMember("ines")!;
 const INVITER_NAME = `${INVITER.first} ${INVITER.last}`;
-const INVITER_ROLE = INVITER.role.split(' · ')[0];
+const INVITER_ROLE = INVITER.role.split(" · ")[0];
 
 interface StepProps {
   stepLabel: string;
@@ -20,7 +31,13 @@ interface StepProps {
 }
 
 /** A clearly-styled "skip for now" affordance for non-critical steps. */
-function SkipLink({ onSkip, label = 'Skip for now — you can add this later' }: { onSkip: () => void; label?: string }) {
+function SkipLink({
+  onSkip,
+  label = "Skip for now — you can add this later",
+}: {
+  onSkip: () => void;
+  label?: string;
+}) {
   return (
     <button type="button" className={styles.skip} onClick={onSkip}>
       {label} <FiArrowRight aria-hidden />
@@ -28,7 +45,13 @@ function SkipLink({ onSkip, label = 'Skip for now — you can add this later' }:
   );
 }
 
-export function StepIntro({ stepLabel, onNext }: { stepLabel: string; onNext: () => void }) {
+export function StepIntro({
+  stepLabel,
+  onNext,
+}: {
+  stepLabel: string;
+  onNext: () => void;
+}) {
   return (
     <>
       <div className={styles.eye}>{stepLabel} · Welcome to QueerPulse</div>
@@ -36,8 +59,8 @@ export function StepIntro({ stepLabel, onNext }: { stepLabel: string; onNext: ()
         Let's start your <em>onboarding</em>
       </div>
       <div className={styles.p}>
-        A few quick steps to set up your profile and find your people. It takes about two minutes —
-        and you can change anything later.
+        A few quick steps to set up your profile and find your people. It takes
+        about two minutes — and you can change anything later.
       </div>
       <div className={styles.normCards}>
         {ONBOARDING_PREVIEW.map((item) => (
@@ -57,7 +80,13 @@ export function StepIntro({ stepLabel, onNext }: { stepLabel: string; onNext: ()
   );
 }
 
-export function StepWelcome({ stepLabel, onNext }: { stepLabel: string; onNext: () => void }) {
+export function StepWelcome({
+  stepLabel,
+  onNext,
+}: {
+  stepLabel: string;
+  onNext: () => void;
+}) {
   const { user } = useAuth();
   // Who vouched + their words, stashed by the invite landing; falls back to the
   // mock inviter when onboarding is reached without an invite in flight.
@@ -74,7 +103,7 @@ export function StepWelcome({ stepLabel, onNext }: { stepLabel: string; onNext: 
   const inviterMeta = welcome
     ? inviter.since
       ? `Member since ${inviter.since}`
-      : 'Invited you'
+      : "Invited you"
     : `Member since ${INVITER.since} · ${INVITER_ROLE}`;
   const vouchText =
     welcome?.vouch ??
@@ -98,7 +127,12 @@ export function StepWelcome({ stepLabel, onNext }: { stepLabel: string; onNext: 
             <img
               src={inviter.photo}
               alt=""
-              style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
             />
           ) : (
             inviter.initials
@@ -111,8 +145,8 @@ export function StepWelcome({ stepLabel, onNext }: { stepLabel: string; onNext: 
         </div>
       </div>
       <div className={styles.p}>
-        QueerPulse is a cared-for professional network rooted in Lisbon. You were invited
-        because someone here knows your worth.
+        QueerPulse is a cared-for professional network rooted in Lisbon. You
+        were invited because someone here knows your worth.
       </div>
       <div className={styles.nav}>
         <Button onClick={onNext}>Let's get started</Button>
@@ -127,7 +161,7 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
   const googlePhoto = user?.profile.avatarUrl ?? undefined;
   const initials = user
     ? `${user.profile.firstName.charAt(0)}${user.profile.lastName.charAt(0)}`.toUpperCase()
-    : 'S';
+    : "S";
   // Local preview for a photo they pick here — a genuine client-side swap, no upload backend.
   const [preview, setPreview] = useState<string | null>(null);
   const shownPhoto = preview ?? googlePhoto;
@@ -141,10 +175,10 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
   }
 
   const caption = preview
-    ? 'Looking good — tap the photo to change it'
+    ? "Looking good — tap the photo to change it"
     : googlePhoto
-      ? 'From your Google account — tap the photo to change it'
-      : 'Tap to upload a photo';
+      ? "From your Google account — tap the photo to change it"
+      : "Tap to upload a photo";
 
   return (
     <>
@@ -153,7 +187,8 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
         Put a face to the <em>name</em>
       </div>
       <div className={styles.p}>
-        A photo helps members feel comfortable connecting with you. You can always add this later.
+        A photo helps members feel comfortable connecting with you. You can
+        always add this later.
       </div>
       <div className={styles.photoWrap}>
         <label className={styles.photoFrame}>
@@ -183,7 +218,9 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
       <div className={styles.nav}>
         <Button onClick={onNext}>Continue</Button>
         <SkipLink onSkip={onNext} />
-        <button type="button" className={styles.back} onClick={onBack}>← Back</button>
+        <button type="button" className={styles.back} onClick={onBack}>
+          ← Back
+        </button>
       </div>
     </>
   );
@@ -209,14 +246,23 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
         ))}
       </div>
       <label className={styles.agreeRow}>
-        <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+        <input
+          type="checkbox"
+          checked={agreed}
+          onChange={(e) => setAgreed(e.target.checked)}
+        />
         <span className={styles.agreeLabel}>
-          I've read and agree to the <Link to={routes.guidelines}>Community Guidelines</Link>
+          I've read and agree to the{" "}
+          <Link to={routes.guidelines}>Community Guidelines</Link>
         </span>
       </label>
       <div className={styles.nav}>
-        <Button onClick={onNext} disabled={!agreed}>I agree, continue</Button>
-        <button type="button" className={styles.back} onClick={onBack}>← Back</button>
+        <Button onClick={onNext} disabled={!agreed}>
+          I agree, continue
+        </Button>
+        <button type="button" className={styles.back} onClick={onBack}>
+          ← Back
+        </button>
       </div>
     </>
   );
@@ -224,9 +270,9 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
 
 export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
   const { selected: selectedIntents, toggle: toggleIntent } = useChipSet([
-    'Community',
-    'Professional connections',
-    'Creative collaboration',
+    "Community",
+    "Professional connections",
+    "Creative collaboration",
   ]);
   // At least one intent is required so we can actually personalize the experience.
   const hasSelection = selectedIntents.size > 0;
@@ -236,7 +282,9 @@ export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
       <div className={styles.h}>
         What brings you <em>here?</em>
       </div>
-      <div className={styles.chipHint}>Pick at least one — choose as many as fit.</div>
+      <div className={styles.chipHint}>
+        Pick at least one — choose as many as fit.
+      </div>
       <ChipSelect
         className={styles.chips}
         options={INTENTS}
@@ -244,15 +292,19 @@ export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
         onToggle={toggleIntent}
       />
       <div className={styles.nav}>
-        <Button onClick={onNext} disabled={!hasSelection}>Continue</Button>
-        <button type="button" className={styles.back} onClick={onBack}>← Back</button>
+        <Button onClick={onNext} disabled={!hasSelection}>
+          Continue
+        </Button>
+        <button type="button" className={styles.back} onClick={onBack}>
+          ← Back
+        </button>
       </div>
     </>
   );
 }
 
 export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
-  const [joined, setJoined] = useState<Set<string>>(new Set(['cc1']));
+  const [joined, setJoined] = useState<Set<string>>(new Set(["cc1"]));
   function toggleJoin(id: string) {
     setJoined((current) => {
       const next = new Set(current);
@@ -276,17 +328,27 @@ export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
           return (
             <div
               key={community.id}
-              className={[styles.commCard, isJoined && styles.commJoined].filter(Boolean).join(' ')}
+              className={[styles.commCard, isJoined && styles.commJoined]
+                .filter(Boolean)
+                .join(" ")}
             >
               <div className={styles.ccName}>{community.name}</div>
               <div className={styles.ccCount}>{community.count}</div>
               <div className={styles.ccDesc}>{community.desc}</div>
               <button
                 type="button"
-                className={[styles.ccJoin, isJoined && styles.ccJoinActive].filter(Boolean).join(' ')}
+                className={[styles.ccJoin, isJoined && styles.ccJoinActive]
+                  .filter(Boolean)
+                  .join(" ")}
                 onClick={() => toggleJoin(community.id)}
               >
-                {isJoined ? <><FiCheck /> Joined</> : 'Join'}
+                {isJoined ? (
+                  <>
+                    <FiCheck /> Joined
+                  </>
+                ) : (
+                  "Join"
+                )}
               </button>
             </div>
           );
@@ -294,8 +356,13 @@ export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <Button onClick={onNext}>Continue</Button>
-        <SkipLink onSkip={onNext} label="Skip for now — explore and join later" />
-        <button type="button" className={styles.back} onClick={onBack}>← Back</button>
+        <SkipLink
+          onSkip={onNext}
+          label="Skip for now — explore and join later"
+        />
+        <button type="button" className={styles.back} onClick={onBack}>
+          ← Back
+        </button>
       </div>
     </>
   );
@@ -312,7 +379,9 @@ export function StepDone({ stepLabel }: { stepLabel: string }) {
       <div className={styles.quickStart}>
         {QUICK_STARTS.map((qs) => (
           <Link key={qs.to} to={qs.to} className={styles.qsCard}>
-            <span className={styles.qsIcon} style={{ background: qs.iconBg }}><qs.icon /></span>
+            <span className={styles.qsIcon} style={{ background: qs.iconBg }}>
+              <qs.icon />
+            </span>
             <div className={styles.qsBody}>
               <div className={styles.qsTitle}>{qs.title}</div>
               <div className={styles.qsDesc}>{qs.desc}</div>
@@ -325,7 +394,7 @@ export function StepDone({ stepLabel }: { stepLabel: string }) {
         <Button
           onClick={() => {
             clearInviteWelcome();
-            navigate('/feed');
+            navigate("/feed");
           }}
         >
           Go to my home

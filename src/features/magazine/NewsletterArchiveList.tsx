@@ -1,16 +1,21 @@
-import { useEffect, useState, type ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { FiMail } from 'react-icons/fi'
-import { Button, EmptyState, FadeIn, SkeletonLine } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
+import { useEffect, useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
+import { FiMail } from "react-icons/fi";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  SkeletonLine,
+} from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import {
   YEARS,
   INITIAL_YEARS,
   STREAM_CLASS,
   type Row,
   type Stream,
-} from './newsletterArchive.data'
-import styles from './NewsletterArchivePage.module.css'
+} from "./newsletterArchive.data";
+import styles from "./NewsletterArchivePage.module.css";
 
 function RowSkeleton() {
   // Mirrors the real .row grid: num column, title block, meta, stats.
@@ -27,42 +32,43 @@ function RowSkeleton() {
       <SkeletonLine width={120} height={13} />
       <SkeletonLine width={70} height={20} />
     </div>
-  )
+  );
 }
 
 interface Props {
-  stream: Stream | 'all'
+  stream: Stream | "all";
   /** Reset the stream filter back to "all" — used by the empty-state action. */
-  onClearStream?: () => void
+  onClearStream?: () => void;
 }
 
 function olderIssueCount(fromYear: number): number {
-  return YEARS.slice(fromYear).reduce((sum, y) => sum + y.rows.length, 0)
+  return YEARS.slice(fromYear).reduce((sum, y) => sum + y.rows.length, 0);
 }
 
 export function NewsletterArchiveList({ stream, onClearStream }: Props) {
-  const navigate = useNavigate()
-  const [shownYears, setShownYears] = useState(INITIAL_YEARS)
-  const [swapping, setSwapping] = useState(false)
+  const navigate = useNavigate();
+  const [shownYears, setShownYears] = useState(INITIAL_YEARS);
+  const [swapping, setSwapping] = useState(false);
 
   // Brief skeleton swap whenever the active stream changes, so the list
   // transitions instead of hard-cutting.
   useEffect(() => {
-    setSwapping(true)
-    const t = setTimeout(() => setSwapping(false), 450)
-    return () => clearTimeout(t)
-  }, [stream])
+    setSwapping(true);
+    const t = setTimeout(() => setSwapping(false), 450);
+    return () => clearTimeout(t);
+  }, [stream]);
 
   const openIssue = (r: Row) =>
-    navigate(`${routes.newsletterArchive}/${r.num}`)
+    navigate(`${routes.newsletterArchive}/${r.num}`);
 
-  const remaining = olderIssueCount(shownYears)
+  const remaining = olderIssueCount(shownYears);
 
   const shownRows = YEARS.slice(0, shownYears).reduce(
     (sum, y) =>
-      sum + y.rows.filter((r) => stream === 'all' || r.stream === stream).length,
+      sum +
+      y.rows.filter((r) => stream === "all" || r.stream === stream).length,
     0,
-  )
+  );
 
   if (swapping) {
     return (
@@ -75,7 +81,7 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
           <RowSkeleton key={i} />
         ))}
       </section>
-    )
+    );
   }
 
   if (shownRows === 0) {
@@ -93,12 +99,12 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
           }
           action={
             onClearStream
-              ? { label: 'Clear filters', onClick: onClearStream }
+              ? { label: "Clear filters", onClick: onClearStream }
               : undefined
           }
         />
       </section>
-    )
+    );
   }
 
   return (
@@ -110,18 +116,29 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
             <div className={styles.yearMeta}>{y.meta}</div>
           </div>
           {y.rows
-            .filter((r) => stream === 'all' || r.stream === stream)
+            .filter((r) => stream === "all" || r.stream === stream)
             .map((r, ri) => (
               <FadeIn
                 as="button"
                 type="button"
                 key={ri}
                 delay={Math.min(ri, 8) * 60}
-                className={[styles.row, STREAM_CLASS[r.stream] && styles[STREAM_CLASS[r.stream] as keyof typeof styles]]
+                className={[
+                  styles.row,
+                  STREAM_CLASS[r.stream] &&
+                    styles[STREAM_CLASS[r.stream] as keyof typeof styles],
+                ]
                   .filter(Boolean)
-                  .join(' ')}
+                  .join(" ")}
                 onClick={() => openIssue(r)}
-                style={{ textAlign: 'left', border: 'none', background: 'none', width: '100%', font: 'inherit', cursor: 'pointer' }}
+                style={{
+                  textAlign: "left",
+                  border: "none",
+                  background: "none",
+                  width: "100%",
+                  font: "inherit",
+                  cursor: "pointer",
+                }}
               >
                 <div>
                   <div className={styles.rowNum}>
@@ -160,5 +177,5 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
         </div>
       )}
     </section>
-  )
+  );
 }

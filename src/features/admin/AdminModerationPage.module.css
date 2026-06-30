@@ -22,7 +22,9 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.16s var(--ease), color 0.16s var(--ease),
+  transition:
+    border-color 0.16s var(--ease),
+    color 0.16s var(--ease),
     background 0.16s var(--ease);
 }
 .filter:hover {
@@ -85,7 +87,7 @@
   line-height: 1.15;
   color: var(--plum);
 }
-[data-theme='dark'] .emergTitle {
+[data-theme="dark"] .emergTitle {
   color: var(--ink);
 }
 .emergTitle em {
@@ -135,11 +137,13 @@
   overflow: hidden;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease),
+  transition:
+    border-color 0.18s var(--ease),
+    box-shadow 0.18s var(--ease),
     transform 0.18s var(--ease);
 }
 .report::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -206,7 +210,9 @@ button.reportMain {
   cursor: pointer;
   color: inherit;
   border-radius: 6px;
-  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
+  transition:
+    opacity 0.18s var(--ease),
+    transform 0.18s var(--ease);
 }
 button.reportMain:focus-visible {
   outline: 2px solid var(--plum);
@@ -234,7 +240,7 @@ button.reportMain:focus-visible {
   line-height: 1.2;
   color: var(--plum);
 }
-[data-theme='dark'] .reportTitle {
+[data-theme="dark"] .reportTitle {
   color: var(--ink);
 }
 .reportTitle em {
@@ -260,7 +266,7 @@ button.reportMain:focus-visible {
   color: var(--plum);
   font-weight: 600;
 }
-[data-theme='dark'] .reportMeta strong {
+[data-theme="dark"] .reportMeta strong {
   color: var(--ink);
 }
 .metaDot {
@@ -321,7 +327,9 @@ button.reportMain:focus-visible {
   background: var(--paper);
   color: var(--cream);
   cursor: pointer;
-  transition: background 0.16s var(--ease), border-color 0.16s var(--ease);
+  transition:
+    background 0.16s var(--ease),
+    border-color 0.16s var(--ease);
 }
 .selectBox:hover {
   border-color: var(--plum);
@@ -464,7 +472,7 @@ button.reportMain:focus-visible {
   line-height: 1.15;
   color: var(--plum);
 }
-[data-theme='dark'] .dTitle {
+[data-theme="dark"] .dTitle {
   color: var(--ink);
 }
 .dTitle em {
@@ -507,7 +515,7 @@ button.reportMain:focus-visible {
   line-height: 1.55;
   color: var(--plum);
 }
-[data-theme='dark'] .dExcerpt {
+[data-theme="dark"] .dExcerpt {
   color: var(--ink);
 }
 .dRedact {
@@ -561,7 +569,7 @@ button.reportMain:focus-visible {
   font-size: 13px;
   color: var(--plum);
 }
-[data-theme='dark'] .dMsgAuthor {
+[data-theme="dark"] .dMsgAuthor {
   color: var(--ink);
 }
 .dMsgTime {
@@ -615,7 +623,7 @@ button.reportMain:focus-visible {
   font-size: 14px;
   color: var(--plum);
 }
-[data-theme='dark'] .dPersonName {
+[data-theme="dark"] .dPersonName {
   color: var(--ink);
 }
 .dPersonPronoun {
@@ -657,7 +665,9 @@ button.reportMain:focus-visible {
   background: var(--paper);
   cursor: pointer;
   font: inherit;
-  transition: border-color 0.16s var(--ease), background 0.16s var(--ease),
+  transition:
+    border-color 0.16s var(--ease),
+    background 0.16s var(--ease),
     box-shadow 0.16s var(--ease);
 }
 .dAction:hover {
@@ -668,7 +678,7 @@ button.reportMain:focus-visible {
   font-size: 14px;
   color: var(--plum);
 }
-[data-theme='dark'] .dActionLabel {
+[data-theme="dark"] .dActionLabel {
   color: var(--ink);
 }
 .dActionDesc {
@@ -807,7 +817,7 @@ button.reportMain:focus-visible {
   font-weight: 600;
   color: var(--plum);
 }
-[data-theme='dark'] .appealBy {
+[data-theme="dark"] .appealBy {
   color: var(--ink);
 }
 
@@ -864,7 +874,7 @@ button.reportMain:focus-visible {
   line-height: 1.6;
   color: var(--plum);
 }
-[data-theme='dark'] .appealArg {
+[data-theme="dark"] .appealArg {
   color: var(--ink);
 }
 
@@ -885,7 +895,7 @@ button.reportMain:focus-visible {
   font-weight: 600;
   color: var(--plum);
 }
-[data-theme='dark'] .appealSupporter {
+[data-theme="dark"] .appealSupporter {
   color: var(--ink);
 }
 .appealNoSupport {
@@ -917,7 +927,9 @@ button.reportMain:focus-visible {
   background: var(--paper);
   cursor: pointer;
   font: inherit;
-  transition: border-color 0.16s var(--ease), background 0.16s var(--ease),
+  transition:
+    border-color 0.16s var(--ease),
+    background 0.16s var(--ease),
     box-shadow 0.16s var(--ease);
 }
 .decOption:hover {
@@ -933,7 +945,7 @@ button.reportMain:focus-visible {
   background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
-[data-theme='dark'] .decIco {
+[data-theme="dark"] .decIco {
   color: var(--ink);
 }
 .decIco svg {
@@ -951,7 +963,7 @@ button.reportMain:focus-visible {
   font-size: 15px;
   color: var(--plum);
 }
-[data-theme='dark'] .decTitle {
+[data-theme="dark"] .decTitle {
   color: var(--ink);
 }
 .decSub {

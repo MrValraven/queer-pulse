@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback } from "react";
 
 /**
  * Native browser print-to-PDF. Temporarily swaps `document.title` (which drives
@@ -12,15 +12,15 @@ import { useCallback } from 'react'
  */
 export function usePrintDocument() {
   return useCallback((filename: string) => {
-    const previous = document.title
+    const previous = document.title;
     const restore = () => {
-      document.title = previous
-      window.removeEventListener('afterprint', restore)
-    }
-    document.title = filename
-    window.addEventListener('afterprint', restore)
-    window.print()
+      document.title = previous;
+      window.removeEventListener("afterprint", restore);
+    };
+    document.title = filename;
+    window.addEventListener("afterprint", restore);
+    window.print();
     // Fallback for browsers that don't fire afterprint reliably.
-    window.setTimeout(restore, 1000)
-  }, [])
+    window.setTimeout(restore, 1000);
+  }, []);
 }

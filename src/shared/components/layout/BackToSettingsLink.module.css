@@ -16,7 +16,9 @@
   font-weight: 600;
   color: var(--plum);
   text-decoration: none;
-  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
 
 .back:hover {

@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom'
-import { FiAlertCircle, FiPhone } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { CRISIS_LINES } from './crisisStrip.data'
-import styles from './crisisStrip.module.css'
+import { Link } from "react-router-dom";
+import { FiAlertCircle, FiPhone } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { CRISIS_LINES } from "./crisisStrip.data";
+import styles from "./crisisStrip.module.css";
 
 /**
  * High-contrast crisis panel placed near the top of the Wellbeing page.
@@ -24,8 +24,9 @@ export function CrisisStrip() {
                 In crisis <em>right now?</em>
               </h2>
               <p className={styles.sub}>
-                If you are in immediate danger, call <strong>112</strong>. These lines are free and
-                confidential — tap to call, or copy the number.
+                If you are in immediate danger, call <strong>112</strong>. These
+                lines are free and confidential — tap to call, or copy the
+                number.
               </p>
             </div>
           </div>
@@ -53,5 +54,5 @@ export function CrisisStrip() {
         </div>
       </div>
     </section>
-  )
+  );
 }

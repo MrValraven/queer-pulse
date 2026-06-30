@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
-import { routes } from '../../app/routeMap'
-import { CONTRIBUTION, STATUS } from './membership.data'
-import styles from './MembershipPage.module.css'
+import { Link } from "react-router-dom";
+import { routes } from "../../app/routeMap";
+import { CONTRIBUTION, STATUS } from "./membership.data";
+import styles from "./MembershipPage.module.css";
 
 export function MembershipSidebar() {
   return (
@@ -33,5 +33,5 @@ export function MembershipSidebar() {
         </Link>
       </div>
     </aside>
-  )
+  );
 }

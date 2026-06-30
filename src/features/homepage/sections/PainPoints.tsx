@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath } from '../../../app/routeMap'
-import { painPoints } from '../data/painPoints'
-import styles from './PainPoints.module.css'
+import { Link } from "react-router-dom";
+import { Reveal, SectionHead } from "../../../shared/components/ui";
+import { linkToPath } from "../../../app/routeMap";
+import { painPoints } from "../data/painPoints";
+import styles from "./PainPoints.module.css";
 
 export function PainPoints() {
   return (
@@ -22,7 +22,11 @@ export function PainPoints() {
 
         <div className={styles.grid}>
           {painPoints.map((point, index) => (
-            <Reveal key={point.headingPrefix} className={styles.card} delay={index * 40}>
+            <Reveal
+              key={point.headingPrefix}
+              className={styles.card}
+              delay={index * 40}
+            >
               <div className={styles.question}>{point.question}</div>
               <h3 className={styles.title}>
                 {point.headingPrefix}
@@ -38,5 +42,5 @@ export function PainPoints() {
         </div>
       </div>
     </section>
-  )
+  );
 }

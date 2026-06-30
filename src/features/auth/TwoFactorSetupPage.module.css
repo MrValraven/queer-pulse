@@ -100,7 +100,9 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  transition: background 0.25s, color 0.25s;
+  transition:
+    background 0.25s,
+    color 0.25s;
 }
 .stepActive .stepNum {
   background: var(--plum);
@@ -190,7 +192,10 @@
   border: 1.5px solid rgba(45, 27, 61, 0.1);
   border-radius: 16px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s var(--ease);
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.2s var(--ease);
   background: var(--paper);
   text-align: left;
 }
@@ -364,7 +369,9 @@
   border: 1.5px solid rgba(45, 27, 61, 0.16);
   border-radius: 12px;
   outline: none;
-  transition: border-color 0.22s, box-shadow 0.22s;
+  transition:
+    border-color 0.22s,
+    box-shadow 0.22s;
 }
 .codeRow input:focus {
   border-color: var(--plum);

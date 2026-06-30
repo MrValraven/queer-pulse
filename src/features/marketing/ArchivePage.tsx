@@ -1,9 +1,16 @@
-import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, ImageSlot, Reveal, SectionHead, SkeletonLine } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { routes } from '../../app/routeMap'
-import { FEATURED, ARCHIVE_CARDS, ORAL_QUOTES } from './archive.data'
-import styles from './ArchivePage.module.css'
+import { PageShell } from "../../shared/components/layout";
+import {
+  Button,
+  FadeIn,
+  ImageSlot,
+  Reveal,
+  SectionHead,
+  SkeletonLine,
+} from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
+import { FEATURED, ARCHIVE_CARDS, ORAL_QUOTES } from "./archive.data";
+import styles from "./ArchivePage.module.css";
 
 function ArchiveCardSkeleton() {
   // Mirrors the real .card: 220px image, then year / quote / desc / by-line.
@@ -15,17 +22,24 @@ function ArchiveCardSkeleton() {
         <SkeletonLine width="90%" height={20} style={{ marginTop: 4 }} />
         <SkeletonLine width="100%" height={14} style={{ marginTop: 4 }} />
         <SkeletonLine width="80%" height={14} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            marginTop: 6,
+          }}
+        >
           <SkeletonLine width={36} height={36} style={{ borderRadius: 999 }} />
           <SkeletonLine width="45%" height={14} />
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function ArchivePage() {
-  const loading = useSimulatedLoad()
+  const loading = useSimulatedLoad();
 
   return (
     <PageShell>
@@ -38,9 +52,9 @@ export function ArchivePage() {
             Stories that shouldn't <em>be forgotten.</em>
           </Reveal>
           <Reveal as="p" className={styles.heroSub} delay={120}>
-            An ongoing archive of oral histories, testimonials, and personal accounts from queer
-            people in Lisbon — past and present. Stories that document who we are, what we've built,
-            and what it cost.
+            An ongoing archive of oral histories, testimonials, and personal
+            accounts from queer people in Lisbon — past and present. Stories
+            that document who we are, what we've built, and what it cost.
           </Reveal>
         </div>
       </div>
@@ -61,7 +75,10 @@ export function ArchivePage() {
             <div className={styles.featBody}>
               <div className={styles.featQuote}>{FEATURED.quote}</div>
               <div className={styles.featBy}>
-                <div className={styles.featAv} style={{ background: FEATURED.avBg, color: FEATURED.avColor }}>
+                <div
+                  className={styles.featAv}
+                  style={{ background: FEATURED.avBg, color: FEATURED.avColor }}
+                >
                   {FEATURED.initials}
                 </div>
                 <div>
@@ -70,7 +87,11 @@ export function ArchivePage() {
                 </div>
               </div>
               <p className={styles.featExcerpt}>{FEATURED.excerpt}</p>
-              <Button to={routes.story} variant="ghost" style={{ alignSelf: 'flex-start' }}>
+              <Button
+                to={routes.story}
+                variant="ghost"
+                style={{ alignSelf: "flex-start" }}
+              >
                 Read her story →
               </Button>
             </div>
@@ -82,31 +103,53 @@ export function ArchivePage() {
         <div className="wrap">
           <Reveal>
             <SectionHead
-              title={<>From the <em>archive</em></>}
+              title={
+                <>
+                  From the <em>archive</em>
+                </>
+              }
               subtitle="Personal accounts from community members, past and present."
             />
           </Reveal>
           <div className={styles.grid}>
-            {loading && Array.from({ length: 4 }).map((_, i) => <ArchiveCardSkeleton key={i} />)}
-            {!loading && ARCHIVE_CARDS.map((c, i) => (
-              <FadeIn as="div" key={c.id} className={styles.card} delay={Math.min(i, 8) * 60}>
-                <ImageSlot tint={c.imgTint} src={c.image} height={220} radius={0} placeholder={`Archive · ${c.name}`} />
-                <div className={styles.cardBody}>
-                  <div className={styles.acYear}>{c.year}</div>
-                  <div className={styles.acQuote}>{c.quote}</div>
-                  <p className={styles.acDesc}>{c.desc}</p>
-                  <div className={styles.acBy}>
-                    <div className={styles.acAv} style={{ background: c.avBg, color: c.avColor }}>
-                      {c.initials}
-                    </div>
-                    <div>
-                      <div className={styles.acName}>{c.name}</div>
-                      <span className={styles.acMeta}>{c.meta}</span>
+            {loading &&
+              Array.from({ length: 4 }).map((_, i) => (
+                <ArchiveCardSkeleton key={i} />
+              ))}
+            {!loading &&
+              ARCHIVE_CARDS.map((c, i) => (
+                <FadeIn
+                  as="div"
+                  key={c.id}
+                  className={styles.card}
+                  delay={Math.min(i, 8) * 60}
+                >
+                  <ImageSlot
+                    tint={c.imgTint}
+                    src={c.image}
+                    height={220}
+                    radius={0}
+                    placeholder={`Archive · ${c.name}`}
+                  />
+                  <div className={styles.cardBody}>
+                    <div className={styles.acYear}>{c.year}</div>
+                    <div className={styles.acQuote}>{c.quote}</div>
+                    <p className={styles.acDesc}>{c.desc}</p>
+                    <div className={styles.acBy}>
+                      <div
+                        className={styles.acAv}
+                        style={{ background: c.avBg, color: c.avColor }}
+                      >
+                        {c.initials}
+                      </div>
+                      <div>
+                        <div className={styles.acName}>{c.name}</div>
+                        <span className={styles.acMeta}>{c.meta}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </FadeIn>
-            ))}
+                </FadeIn>
+              ))}
           </div>
         </div>
       </section>
@@ -117,11 +160,18 @@ export function ArchivePage() {
             <h2 className={styles.oralH}>
               In their own <em>words.</em>
             </h2>
-            <div className={styles.oralSub}>Short excerpts from longer oral histories in the archive.</div>
+            <div className={styles.oralSub}>
+              Short excerpts from longer oral histories in the archive.
+            </div>
           </Reveal>
           <div className={styles.oralGrid}>
             {ORAL_QUOTES.map((q, i) => (
-              <Reveal as="div" key={q.name} className={styles.oralCard} delay={i * 70}>
+              <Reveal
+                as="div"
+                key={q.name}
+                className={styles.oralCard}
+                delay={i * 70}
+              >
                 <div className={styles.ocName}>{q.name}</div>
                 <div className={styles.ocRole}>{q.role}</div>
                 <div className={styles.ocQuote}>{q.quote}</div>
@@ -139,9 +189,10 @@ export function ArchivePage() {
               Your story <em>belongs here too.</em>
             </h2>
             <p>
-              The archive grows through community contribution. If you have a story you want to tell —
-              about Lisbon, about your community, about what brought you here or what kept you going —
-              we want to hear it. All formats welcome: written, audio, video, photos.
+              The archive grows through community contribution. If you have a
+              story you want to tell — about Lisbon, about your community, about
+              what brought you here or what kept you going — we want to hear it.
+              All formats welcome: written, audio, video, photos.
             </p>
             <Button to={routes.contact} variant="primary" size="lg">
               Submit your story →
@@ -150,5 +201,5 @@ export function ArchivePage() {
         </div>
       </section>
     </PageShell>
-  )
+  );
 }

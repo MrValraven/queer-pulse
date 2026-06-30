@@ -1,24 +1,28 @@
-import { Link, NavLink } from 'react-router-dom'
-import { Button } from '../ui'
-import { useScrolled } from '../../hooks/useScrolled'
-import { useTheme } from '../../../app/providers/themeContext'
-import { AccountMenu } from './AccountMenu'
-import styles from './AppNav.module.css'
+import { Link, NavLink } from "react-router-dom";
+import { Button } from "../ui";
+import { useScrolled } from "../../hooks/useScrolled";
+import { useTheme } from "../../../app/providers/themeContext";
+import { AccountMenu } from "./AccountMenu";
+import styles from "./AppNav.module.css";
 
 const APP_LINKS = [
-  { label: 'Home', to: '/feed' },
-  { label: 'Members', to: '/members' },
-  { label: 'Communities', to: '/communities' },
-  { label: 'Messages', to: '/messages' },
-]
+  { label: "Home", to: "/feed" },
+  { label: "Members", to: "/members" },
+  { label: "Communities", to: "/communities" },
+  { label: "Messages", to: "/messages" },
+];
 
 /** Logged-in navigation: brand, app links, notifications bell, profile + messages. */
 export function AppNav({ unreadCount = 3 }: { unreadCount?: number }) {
-  const scrolled = useScrolled(8)
-  const { theme, toggleTheme } = useTheme()
+  const scrolled = useScrolled(8);
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <nav className={[styles.nav, scrolled && styles.scrolled].filter(Boolean).join(' ')}>
+    <nav
+      className={[styles.nav, scrolled && styles.scrolled]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <Link to="/feed" className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
         Queer<span className={styles.brandItalic}>Pulse</span>
@@ -30,7 +34,9 @@ export function AppNav({ unreadCount = 3 }: { unreadCount?: number }) {
             key={item.to}
             to={item.to}
             className={({ isActive }) =>
-              [styles.link, isActive && styles.linkActive].filter(Boolean).join(' ')
+              [styles.link, isActive && styles.linkActive]
+                .filter(Boolean)
+                .join(" ")
             }
           >
             {item.label}
@@ -45,11 +51,21 @@ export function AppNav({ unreadCount = 3 }: { unreadCount?: number }) {
           onClick={toggleTheme}
           aria-label="Toggle colour theme"
         >
-          {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+          {theme === "dark" ? <SunIcon /> : <MoonIcon />}
         </button>
 
-        <Link to="/notifications" className={styles.bell} aria-label="Notifications">
-          <svg width={20} height={20} viewBox="0 0 20 20" fill="none" aria-hidden>
+        <Link
+          to="/notifications"
+          className={styles.bell}
+          aria-label="Notifications"
+        >
+          <svg
+            width={20}
+            height={20}
+            viewBox="0 0 20 20"
+            fill="none"
+            aria-hidden
+          >
             <path
               d="M10 2a6 6 0 0 1 6 6v3l1.5 2.5H2.5L4 11V8a6 6 0 0 1 6-6ZM8 16.5a2 2 0 0 0 4 0"
               stroke="currentColor"
@@ -58,14 +74,16 @@ export function AppNav({ unreadCount = 3 }: { unreadCount?: number }) {
               strokeLinejoin="round"
             />
           </svg>
-          {unreadCount > 0 && <span className={styles.bellBadge}>{unreadCount}</span>}
+          {unreadCount > 0 && (
+            <span className={styles.bellBadge}>{unreadCount}</span>
+          )}
         </Link>
 
         <AccountMenu />
         <Button to="/messages">Messages</Button>
       </div>
     </nav>
-  )
+  );
 }
 
 function MoonIcon() {
@@ -78,7 +96,7 @@ function MoonIcon() {
         strokeLinejoin="round"
       />
     </svg>
-  )
+  );
 }
 function SunIcon() {
   return (
@@ -91,5 +109,5 @@ function SunIcon() {
         strokeLinecap="round"
       />
     </svg>
-  )
+  );
 }

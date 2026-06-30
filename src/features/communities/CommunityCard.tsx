@@ -1,30 +1,38 @@
-import { Link } from 'react-router-dom'
-import { FiCheck, FiActivity, FiMessageCircle } from 'react-icons/fi'
-import { Avatar } from '../../shared/components/ui'
-import type { Community } from '../homepage/data/types'
-import { getLiving } from './livingCommunities.data'
-import { photoOf } from './communityPeople'
-import { AccessTierBadge } from './CommunityBadges'
-import styles from './CommunitiesPage.module.css'
+import { Link } from "react-router-dom";
+import { FiCheck, FiActivity, FiMessageCircle } from "react-icons/fi";
+import { Avatar } from "../../shared/components/ui";
+import type { Community } from "../homepage/data/types";
+import { getLiving } from "./livingCommunities.data";
+import { photoOf } from "./communityPeople";
+import { AccessTierBadge } from "./CommunityBadges";
+import styles from "./CommunitiesPage.module.css";
 
 export function CommunityCard({
   community,
   joined,
   onJoin,
 }: {
-  community: Community
-  joined: boolean
-  onJoin: (c: Community) => void
+  community: Community;
+  joined: boolean;
+  onJoin: (c: Community) => void;
 }) {
-  const living = getLiving(community.slug)
-  const tier = living?.accessTier ?? (community.privateBadge ? 'private' : 'public')
-  const roster = living?.roster.slice(0, 4) ?? []
-  const joinLabel = tier === 'public' ? 'Join' : tier === 'invite' ? 'Join with invite' : 'Request'
+  const living = getLiving(community.slug);
+  const tier =
+    living?.accessTier ?? (community.privateBadge ? "private" : "public");
+  const roster = living?.roster.slice(0, 4) ?? [];
+  const joinLabel =
+    tier === "public"
+      ? "Join"
+      : tier === "invite"
+        ? "Join with invite"
+        : "Request";
 
   return (
     <Link to={`/community/${community.slug}`} className={styles.card}>
       <div className={styles.cardTop}>
-        <span className={[styles.type, styles[community.type]].join(' ')}>{community.typeLabel}</span>
+        <span className={[styles.type, styles[community.type]].join(" ")}>
+          {community.typeLabel}
+        </span>
         <AccessTierBadge tier={tier} />
       </div>
       <div className={styles.name}>{community.name}</div>
@@ -33,7 +41,8 @@ export function CommunityCard({
       {living && (
         <div className={styles.statsRow}>
           <span className={styles.stat}>
-            <FiActivity aria-hidden /> {living.stats.activeThisWeek} active this week
+            <FiActivity aria-hidden /> {living.stats.activeThisWeek} active this
+            week
           </span>
           <span className={styles.stat}>
             <FiMessageCircle aria-hidden /> {living.stats.postsThisWeek} posts
@@ -46,7 +55,13 @@ export function CommunityCard({
           <div className={styles.cardAvStack}>
             {roster.map((m) => (
               <span className={styles.cardAv} key={m.slug ?? m.name}>
-                <Avatar initials={m.initials} tint={m.tint} src={photoOf(m)} size={26} alt={m.name} />
+                <Avatar
+                  initials={m.initials}
+                  tint={m.tint}
+                  src={photoOf(m)}
+                  size={26}
+                  alt={m.name}
+                />
               </span>
             ))}
             <span className={styles.meta}>{community.count}</span>
@@ -56,10 +71,10 @@ export function CommunityCard({
         )}
 
         {joined ? (
-          <span className={[styles.joinBtn, styles.joined].join(' ')}>
+          <span className={[styles.joinBtn, styles.joined].join(" ")}>
             <FiCheck aria-hidden /> Joined
           </span>
-        ) : tier === 'private' ? (
+        ) : tier === "private" ? (
           <span className={styles.joinBtn}>View</span>
         ) : (
           <span
@@ -67,15 +82,15 @@ export function CommunityCard({
             role="button"
             tabIndex={0}
             onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              onJoin(community)
+              e.preventDefault();
+              e.stopPropagation();
+              onJoin(community);
             }}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                e.stopPropagation()
-                onJoin(community)
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                e.stopPropagation();
+                onJoin(community);
               }
             }}
           >
@@ -84,5 +99,5 @@ export function CommunityCard({
         )}
       </div>
     </Link>
-  )
+  );
 }

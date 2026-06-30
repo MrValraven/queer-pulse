@@ -12,14 +12,18 @@
   overflow: hidden;
 }
 .panel::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -40%;
   right: -6%;
   width: 360px;
   height: 360px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.16), transparent 64%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.16),
+    transparent 64%
+  );
   pointer-events: none;
 }
 .head {

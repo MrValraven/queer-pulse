@@ -1,26 +1,26 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { FiSearch, FiCornerDownLeft } from 'react-icons/fi'
-import { useScrollLock } from '../../shared/hooks/useScrollLock'
-import { Avatar } from '../../shared/components/ui'
-import { memberAvatar } from './data/members'
-import { linkToPath, routes } from '../../app/routeMap'
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FiSearch, FiCornerDownLeft } from "react-icons/fi";
+import { useScrollLock } from "../../shared/hooks/useScrollLock";
+import { Avatar } from "../../shared/components/ui";
+import { memberAvatar } from "./data/members";
+import { linkToPath, routes } from "../../app/routeMap";
 import {
   SEARCH_DATA,
   TYPE_ICON,
   TYPE_LABEL,
   RECENTS,
   type SearchItem,
-} from './search.data'
-import styles from './CommandPalette.module.css'
+} from "./search.data";
+import styles from "./CommandPalette.module.css";
 
-const MAX_RESULTS = 8
+const MAX_RESULTS = 8;
 
 /** Custom event any control can dispatch to open the palette (e.g. the navbar search button). */
-export const OPEN_SEARCH_EVENT = 'qp:open-search'
+export const OPEN_SEARCH_EVENT = "qp:open-search";
 
 function matches(item: SearchItem, q: string) {
-  return `${item.name} ${item.sub} ${item.kw}`.toLowerCase().includes(q)
+  return `${item.name} ${item.sub} ${item.kw}`.toLowerCase().includes(q);
 }
 
 /**
@@ -30,85 +30,89 @@ function matches(item: SearchItem, q: string) {
  * /search page with the query preserved in the URL.
  */
 export function CommandPalette() {
-  const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState('')
-  const [active, setActive] = useState(0)
-  const navigate = useNavigate()
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [active, setActive] = useState(0);
+  const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  useScrollLock(open)
+  useScrollLock(open);
 
   const close = useCallback(() => {
-    setOpen(false)
-    setQuery('')
-    setActive(0)
-  }, [])
+    setOpen(false);
+    setQuery("");
+    setActive(0);
+  }, []);
 
-  const openPalette = useCallback(() => setOpen(true), [])
+  const openPalette = useCallback(() => setOpen(true), []);
 
   // Global open triggers: ⌘K / Ctrl+K and the custom event.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault()
-        setOpen((v) => !v)
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setOpen((v) => !v);
       }
-    }
-    window.addEventListener('keydown', onKey)
-    window.addEventListener(OPEN_SEARCH_EVENT, openPalette)
+    };
+    window.addEventListener("keydown", onKey);
+    window.addEventListener(OPEN_SEARCH_EVENT, openPalette);
     return () => {
-      window.removeEventListener('keydown', onKey)
-      window.removeEventListener(OPEN_SEARCH_EVENT, openPalette)
-    }
-  }, [openPalette])
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener(OPEN_SEARCH_EVENT, openPalette);
+    };
+  }, [openPalette]);
 
   // Focus the input when it opens.
   useEffect(() => {
-    if (open) inputRef.current?.focus()
-  }, [open])
+    if (open) inputRef.current?.focus();
+  }, [open]);
 
-  const q = query.trim().toLowerCase()
+  const q = query.trim().toLowerCase();
   const results = useMemo(() => {
-    if (!q) return SEARCH_DATA.slice(0, MAX_RESULTS)
-    return SEARCH_DATA.filter((d) => matches(d, q)).slice(0, MAX_RESULTS)
-  }, [q])
+    if (!q) return SEARCH_DATA.slice(0, MAX_RESULTS);
+    return SEARCH_DATA.filter((d) => matches(d, q)).slice(0, MAX_RESULTS);
+  }, [q]);
 
   // Clamp during render so a shrinking result list can't leave a stale selection.
-  const activeIndex = Math.min(active, Math.max(0, results.length - 1))
+  const activeIndex = Math.min(active, Math.max(0, results.length - 1));
 
   const goToAll = useCallback(() => {
-    const trimmed = query.trim()
-    navigate(trimmed ? `${routes.search}?q=${encodeURIComponent(trimmed)}` : routes.search)
-    close()
-  }, [query, navigate, close])
+    const trimmed = query.trim();
+    navigate(
+      trimmed
+        ? `${routes.search}?q=${encodeURIComponent(trimmed)}`
+        : routes.search,
+    );
+    close();
+  }, [query, navigate, close]);
 
   const goToItem = useCallback(
     (item: SearchItem) => {
-      navigate(linkToPath(item.href))
-      close()
+      navigate(linkToPath(item.href));
+      close();
     },
     [navigate, close],
-  )
+  );
 
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      e.preventDefault()
-      close()
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setActive((a) => Math.min(a + 1, results.length - 1))
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      setActive((a) => Math.max(a - 1, 0))
-    } else if (e.key === 'Enter') {
-      e.preventDefault()
-      const hit = results[activeIndex]
-      if (hit) goToItem(hit)
-      else goToAll()
+    if (e.key === "Escape") {
+      e.preventDefault();
+      close();
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActive((a) => Math.min(a + 1, results.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive((a) => Math.max(a - 1, 0));
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      const hit = results[activeIndex];
+      if (hit) goToItem(hit);
+      else goToAll();
     }
-  }
+  };
 
-  if (!open) return null
+  if (!open) return null;
 
   return (
     <div className={styles.overlay} role="presentation" onClick={close}>
@@ -156,15 +160,19 @@ export function CommandPalette() {
             <li className={styles.noResults}>No matches — try another word.</li>
           )}
           {results.map((item, i) => {
-            const Icon = TYPE_ICON[item.t]
-            const avatar = item.slug ? memberAvatar(item.slug) : undefined
+            const Icon = TYPE_ICON[item.t];
+            const avatar = item.slug ? memberAvatar(item.slug) : undefined;
             return (
-              <li key={`${item.t}-${item.name}`} role="option" aria-selected={i === activeIndex}>
+              <li
+                key={`${item.t}-${item.name}`}
+                role="option"
+                aria-selected={i === activeIndex}
+              >
                 <button
                   type="button"
                   className={[styles.row, i === activeIndex && styles.rowActive]
                     .filter(Boolean)
-                    .join(' ')}
+                    .join(" ")}
                   onMouseEnter={() => setActive(i)}
                   onClick={() => goToItem(item)}
                 >
@@ -188,7 +196,7 @@ export function CommandPalette() {
                   <span className={styles.rowType}>{TYPE_LABEL[item.t]}</span>
                 </button>
               </li>
-            )
+            );
           })}
         </ul>
 
@@ -199,10 +207,10 @@ export function CommandPalette() {
               See all results for “<b>{query.trim()}</b>”
             </>
           ) : (
-            'Open full search'
+            "Open full search"
           )}
         </button>
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import type { StringCatalog } from './types'
+import type { StringCatalog } from "./types";
 
 /**
  * English string catalog for shared chrome (nav, footer, common CTAs).
@@ -8,30 +8,30 @@ import type { StringCatalog } from './types'
  */
 export const en: StringCatalog = {
   // Brand
-  'brand.name': 'QueerPulse',
-  'brand.tagline': 'A queer professional network, rooted in Lisbon.',
+  "brand.name": "QueerPulse",
+  "brand.tagline": "A queer professional network, rooted in Lisbon.",
 
   // Primary CTAs
-  'cta.requestInvite': 'Request an invite',
-  'cta.exploreMembers': 'Explore members',
-  'cta.backHome': 'Back to home',
+  "cta.requestInvite": "Request an invite",
+  "cta.exploreMembers": "Explore members",
+  "cta.backHome": "Back to home",
 
   // Nav
-  'nav.members': 'Members',
-  'nav.gatherings': 'Gatherings',
-  'nav.forum': 'Forum',
-  'nav.calendar': 'Calendar',
-  'nav.communities': 'Communities',
-  'nav.arriving': 'New to Lisbon?',
-  'nav.skills': 'Skills',
-  'nav.toggleTheme': 'Toggle colour theme',
-  'nav.openMenu': 'Open menu',
-  'nav.closeMenu': 'Close menu',
+  "nav.members": "Members",
+  "nav.gatherings": "Gatherings",
+  "nav.forum": "Forum",
+  "nav.calendar": "Calendar",
+  "nav.communities": "Communities",
+  "nav.arriving": "New to Lisbon?",
+  "nav.skills": "Skills",
+  "nav.toggleTheme": "Toggle colour theme",
+  "nav.openMenu": "Open menu",
+  "nav.closeMenu": "Close menu",
 
   // Footer column heads
-  'footer.network': 'Network',
-  'footer.community': 'Community',
-  'footer.lisbon': 'Lisbon',
-  'footer.wellbeing': 'Wellbeing',
-  'footer.copyright': '© 2026 QueerPulse · Made in Lisbon with care',
-}
+  "footer.network": "Network",
+  "footer.community": "Community",
+  "footer.lisbon": "Lisbon",
+  "footer.wellbeing": "Wellbeing",
+  "footer.copyright": "© 2026 QueerPulse · Made in Lisbon with care",
+};

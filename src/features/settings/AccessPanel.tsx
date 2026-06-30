@@ -1,13 +1,13 @@
-import { ACCESS_ITEMS } from './membership.data'
-import { CheckIcon } from './MembershipIcons'
-import styles from './MembershipPage.module.css'
+import { ACCESS_ITEMS } from "./membership.data";
+import { CheckIcon } from "./MembershipIcons";
+import styles from "./MembershipPage.module.css";
 
 export function AccessPanel() {
   return (
     <div className={styles.panel}>
       <p className={styles.accessLead}>
-        Everything your Sustaining membership unlocks. Changing tiers doesn't affect access until the
-        current cycle ends.
+        Everything your Sustaining membership unlocks. Changing tiers doesn't
+        affect access until the current cycle ends.
       </p>
       <div className={styles.acList}>
         {ACCESS_ITEMS.map((item) => (
@@ -21,5 +21,5 @@ export function AccessPanel() {
         ))}
       </div>
     </div>
-  )
+  );
 }

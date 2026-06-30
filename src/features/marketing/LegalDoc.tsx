@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import { PageShell } from "../../shared/components/layout";
 import styles from "./LegalDoc.module.css";
-import { Button } from '../../shared/components/ui'
+import { Button } from "../../shared/components/ui";
 
 export interface LegalSection {
   id: string;
@@ -18,7 +18,15 @@ export interface LegalDocProps {
   contact: { text: ReactNode; email: string };
 }
 
-export function LegalDoc({ eyebrow, title, meta, plain, toc, sections, contact }: LegalDocProps) {
+export function LegalDoc({
+  eyebrow,
+  title,
+  meta,
+  plain,
+  toc,
+  sections,
+  contact,
+}: LegalDocProps) {
   return (
     <PageShell>
       <div className={styles.page}>

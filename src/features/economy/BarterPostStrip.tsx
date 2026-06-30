@@ -5,7 +5,11 @@ import type { Barter } from "./barter.data";
 import styles from "./BarterPage.module.css";
 
 /** Post-a-swap strip: a short offer/want form that prepends a live post, with an animated success state. */
-export function BarterPostStrip({ onPost }: { onPost: (barter: Barter) => void }) {
+export function BarterPostStrip({
+  onPost,
+}: {
+  onPost: (barter: Barter) => void;
+}) {
   const [offerText, setOfferText] = useState("");
   const [wantText, setWantText] = useState("");
   const [submitted, setSubmitted] = useState(false);

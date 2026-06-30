@@ -1,27 +1,27 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { type TabId, type TagKind, TABS, buildPanels } from './hateCrime.data'
-import { routes } from '../../app/routeMap'
-import styles from './HateCrimePage.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { type TabId, type TagKind, TABS, buildPanels } from "./hateCrime.data";
+import { routes } from "../../app/routeMap";
+import styles from "./HateCrimePage.module.css";
 
-const MENTAL = routes.mentalHealth
-const FORUM = routes.forum
-const LEGAL = routes.legal
+const MENTAL = routes.mentalHealth;
+const FORUM = routes.forum;
+const LEGAL = routes.legal;
 
-const PANELS = buildPanels({ MENTAL, FORUM, LEGAL })
+const PANELS = buildPanels({ MENTAL, FORUM, LEGAL });
 
 const TAG_CLASS: Record<TagKind, string> = {
-  immediate: 'tagImmediate',
-  optional: 'tagOptional',
-  recommended: 'tagRecommended',
-}
+  immediate: "tagImmediate",
+  optional: "tagOptional",
+  recommended: "tagRecommended",
+};
 
 export function HateCrimeTabBar({
   tab,
   setTab,
 }: {
-  tab: TabId
-  setTab: (t: TabId) => void
+  tab: TabId;
+  setTab: (t: TabId) => void;
 }) {
   return (
     <div className={styles.tabBar}>
@@ -32,7 +32,7 @@ export function HateCrimeTabBar({
             type="button"
             className={[styles.tabBtn, tab === t.id && styles.tabBtnActive]
               .filter(Boolean)
-              .join(' ')}
+              .join(" ")}
             onClick={() => setTab(t.id)}
           >
             {t.label}
@@ -40,11 +40,11 @@ export function HateCrimeTabBar({
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export function HateCrimePanel() {
-  const [tab, setTab] = useState<TabId>('immediate')
+  const [tab, setTab] = useState<TabId>("immediate");
 
   return (
     <>
@@ -54,25 +54,25 @@ export function HateCrimePanel() {
           <div className={styles.layout}>
             <div>
               {PANELS[tab].map((b, i) => {
-                if (b.kind === 'preamble')
+                if (b.kind === "preamble")
                   return (
                     <p className={styles.preamble} key={i}>
                       {b.text}
                     </p>
-                  )
-                if (b.kind === 'sectionHead')
+                  );
+                if (b.kind === "sectionHead")
                   return (
                     <div className={styles.sectionHead} key={i}>
                       {b.node}
                     </div>
-                  )
-                if (b.kind === 'note')
+                  );
+                if (b.kind === "note")
                   return (
                     <p className={styles.note} key={i}>
                       {b.text}
                     </p>
-                  )
-                if (b.kind === 'def')
+                  );
+                if (b.kind === "def")
                   return (
                     <div className={styles.defBox} key={i}>
                       <h4>{b.h4}</h4>
@@ -80,7 +80,7 @@ export function HateCrimePanel() {
                         <p key={j}>{p}</p>
                       ))}
                     </div>
-                  )
+                  );
                 return (
                   <div className={styles.hcs} key={i}>
                     <div className={styles.hcsNum}>{b.num}</div>
@@ -101,7 +101,7 @@ export function HateCrimePanel() {
                       )}
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
 
@@ -110,7 +110,7 @@ export function HateCrimePanel() {
         </div>
       </main>
     </>
-  )
+  );
 }
 
 function HateCrimeSidebar() {
@@ -128,7 +128,9 @@ function HateCrimeSidebar() {
           <div className={styles.sbcNum}>116 006</div>
         </div>
         <div className={styles.sbcItem}>
-          <div className={styles.sbcOrg}>SOS Racismo (also covers identity)</div>
+          <div className={styles.sbcOrg}>
+            SOS Racismo (also covers identity)
+          </div>
           <div className={styles.sbcNum}>21 314 85 82</div>
         </div>
       </div>
@@ -136,13 +138,17 @@ function HateCrimeSidebar() {
         <div className={styles.sbcTitle}>Legal &amp; advocacy</div>
         <div className={styles.sbcItem}>
           <div className={styles.sbcOrg}>ILGA Portugal</div>
-          <div className={styles.sbcRole}>Free legal accompaniment, hate crime monitoring</div>
+          <div className={styles.sbcRole}>
+            Free legal accompaniment, hate crime monitoring
+          </div>
           <div className={styles.sbcNum}>213 887 615</div>
           <span className={styles.sbcAnon}>Anonymous reporting</span>
         </div>
         <div className={styles.sbcItem}>
           <div className={styles.sbcOrg}>Provedor de Justiça</div>
-          <div className={styles.sbcRole}>Ombudsman — if authorities fail to act</div>
+          <div className={styles.sbcRole}>
+            Ombudsman — if authorities fail to act
+          </div>
           <div className={styles.sbcNum}>provedor-jus.pt</div>
         </div>
         <div className={styles.sbcItem}>
@@ -175,5 +181,5 @@ function HateCrimeSidebar() {
         </div>
       </div>
     </aside>
-  )
+  );
 }

@@ -1,40 +1,64 @@
-import { useState, type ReactNode } from 'react'
-import { FiCast, FiCheck, FiClock, FiDownload, FiMoon } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { CAST_TARGETS, SLEEP_PRESETS, TRANSCRIPT, buildTranscriptText } from './audioPlayer.data'
-import styles from './AudioPlayerModals.module.css'
+import { useState, type ReactNode } from "react";
+import { FiCast, FiCheck, FiClock, FiDownload, FiMoon } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import { useToast } from "../../shared/components/feedback/useToast";
+import {
+  CAST_TARGETS,
+  SLEEP_PRESETS,
+  TRANSCRIPT,
+  buildTranscriptText,
+} from "./audioPlayer.data";
+import styles from "./AudioPlayerModals.module.css";
 
-function Overlay({ onClose, wide, children }: { onClose: () => void; wide?: boolean; children: ReactNode }) {
-  useScrollLock()
+function Overlay({
+  onClose,
+  wide,
+  children,
+}: {
+  onClose: () => void;
+  wide?: boolean;
+  children: ReactNode;
+}) {
+  useScrollLock();
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={[styles.modal, wide && styles.modalWide].filter(Boolean).join(' ')} role="dialog" aria-modal="true">
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+      <div
+        className={[styles.modal, wide && styles.modalWide]
+          .filter(Boolean)
+          .join(" ")}
+        role="dialog"
+        aria-modal="true"
+      >
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           ×
         </button>
         {children}
       </div>
     </div>
-  )
+  );
 }
 
 export function CastModal({ onClose }: { onClose: () => void }) {
-  const [connected, setConnected] = useState<string | null>(null)
-  const { showToast } = useToast()
+  const [connected, setConnected] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const connect = (id: string, name: string) => {
-    setConnected(id)
-    showToast(`Connected to ${name}`, 'success')
-  }
+    setConnected(id);
+    showToast(`Connected to ${name}`, "success");
+  };
 
-  const device = CAST_TARGETS.find((d) => d.id === connected)
+  const device = CAST_TARGETS.find((d) => d.id === connected);
 
   return (
     <Overlay onClose={onClose}>
@@ -46,8 +70,10 @@ export function CastModal({ onClose }: { onClose: () => void }) {
           <h3 className={styles.title}>
             Streaming to <em>{device.name}</em>
           </h3>
-          <p className={styles.sub}>{device.kind} · audio is now playing on this device.</p>
-          <div className={styles.actions} style={{ justifyContent: 'center' }}>
+          <p className={styles.sub}>
+            {device.kind} · audio is now playing on this device.
+          </p>
+          <div className={styles.actions} style={{ justifyContent: "center" }}>
             <Button variant="ghost-dark" onClick={() => setConnected(null)}>
               Choose another
             </Button>
@@ -60,10 +86,17 @@ export function CastModal({ onClose }: { onClose: () => void }) {
         <>
           <div className={styles.eye}>Cast · AirPlay</div>
           <h3 className={styles.title}>Nearby devices</h3>
-          <p className={styles.sub}>Pick a speaker or screen to stream this episode to.</p>
+          <p className={styles.sub}>
+            Pick a speaker or screen to stream this episode to.
+          </p>
           <div className={styles.list}>
             {CAST_TARGETS.map((d) => (
-              <button key={d.id} type="button" className={styles.row} onClick={() => connect(d.id, d.name)}>
+              <button
+                key={d.id}
+                type="button"
+                className={styles.row}
+                onClick={() => connect(d.id, d.name)}
+              >
                 <span className={styles.rowIcon}>
                   <FiCast />
                 </span>
@@ -77,7 +110,7 @@ export function CastModal({ onClose }: { onClose: () => void }) {
         </>
       )}
     </Overlay>
-  )
+  );
 }
 
 export function SleepTimerModal({
@@ -86,19 +119,21 @@ export function SleepTimerModal({
   onPick,
   onCancel,
 }: {
-  active: number | null
-  onClose: () => void
-  onPick: (minutes: number) => void
-  onCancel: () => void
+  active: number | null;
+  onClose: () => void;
+  onPick: (minutes: number) => void;
+  onCancel: () => void;
 }) {
   return (
     <Overlay onClose={onClose}>
       <div className={styles.eye}>
-        <FiMoon style={{ verticalAlign: '-2px', marginRight: 6 }} />
+        <FiMoon style={{ verticalAlign: "-2px", marginRight: 6 }} />
         Sleep timer
       </div>
       <h3 className={styles.title}>Stop playing after…</h3>
-      <p className={styles.sub}>Playback fades out and pauses when the timer reaches zero.</p>
+      <p className={styles.sub}>
+        Playback fades out and pauses when the timer reaches zero.
+      </p>
       <div className={styles.presets}>
         {SLEEP_PRESETS.map((m) => (
           <button
@@ -106,8 +141,8 @@ export function SleepTimerModal({
             type="button"
             className={styles.preset}
             onClick={() => {
-              onPick(m)
-              onClose()
+              onPick(m);
+              onClose();
             }}
           >
             {m}
@@ -120,8 +155,8 @@ export function SleepTimerModal({
           <Button
             variant="ghost-dark"
             onClick={() => {
-              onCancel()
-              onClose()
+              onCancel();
+              onClose();
             }}
           >
             Turn off timer
@@ -129,30 +164,34 @@ export function SleepTimerModal({
         </div>
       )}
     </Overlay>
-  )
+  );
 }
 
 export function TranscriptDownloadModal({ onClose }: { onClose: () => void }) {
   const download = () => {
-    const blob = new Blob([buildTranscriptText()], { type: 'text/plain;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'the-back-room-ep34-transcript.txt'
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([buildTranscriptText()], {
+      type: "text/plain;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "the-back-room-ep34-transcript.txt";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <Overlay onClose={onClose} wide>
       <div className={styles.eye}>
-        <FiClock style={{ verticalAlign: '-2px', marginRight: 6 }} />
+        <FiClock style={{ verticalAlign: "-2px", marginRight: 6 }} />
         Transcript · Episode 34
       </div>
       <h3 className={styles.title}>Preview &amp; download</h3>
-      <p className={styles.sub}>Full transcript with speaker labels and timestamps.</p>
+      <p className={styles.sub}>
+        Full transcript with speaker labels and timestamps.
+      </p>
       <div className={styles.preview}>
         {TRANSCRIPT.map((t, i) => (
           <div key={i} className={styles.previewBlock}>
@@ -165,7 +204,7 @@ export function TranscriptDownloadModal({ onClose }: { onClose: () => void }) {
       </div>
       <div className={styles.actions}>
         <Button variant="primary" onClick={download}>
-          <FiDownload style={{ verticalAlign: '-2px', marginRight: 7 }} />
+          <FiDownload style={{ verticalAlign: "-2px", marginRight: 7 }} />
           Download .txt
         </Button>
         <Button variant="ghost-dark" onClick={onClose}>
@@ -173,5 +212,5 @@ export function TranscriptDownloadModal({ onClose }: { onClose: () => void }) {
         </Button>
       </div>
     </Overlay>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * State persisted to localStorage under `key`, degrading silently to in-memory
@@ -16,28 +16,30 @@ export function useLocalStorage<T>(
 ): [T, (next: T | ((prev: T) => T)) => void] {
   const [value, setValue] = useState<T>(() => {
     try {
-      const raw = localStorage.getItem(key)
+      const raw = localStorage.getItem(key);
       if (raw != null) {
-        const parsed = JSON.parse(raw)
-        if (!validate || validate(parsed)) return parsed as T
+        const parsed = JSON.parse(raw);
+        if (!validate || validate(parsed)) return parsed as T;
       }
     } catch {
       // ignore — fall back to initial
     }
-    return initial
-  })
+    return initial;
+  });
 
   useEffect(() => {
     try {
-      localStorage.setItem(key, JSON.stringify(value))
+      localStorage.setItem(key, JSON.stringify(value));
     } catch {
       // ignore — keep working in-memory
     }
-  }, [key, value])
+  }, [key, value]);
 
   const update = useCallback((next: T | ((prev: T) => T)) => {
-    setValue((prev) => (typeof next === 'function' ? (next as (p: T) => T)(prev) : next))
-  }, [])
+    setValue((prev) =>
+      typeof next === "function" ? (next as (p: T) => T)(prev) : next,
+    );
+  }, []);
 
-  return [value, update]
+  return [value, update];
 }

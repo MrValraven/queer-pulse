@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from "react";
 
-export type FlowStatus = 'idle' | 'sending' | 'done'
+export type FlowStatus = "idle" | "sending" | "done";
 
 /**
  * Drives the idle → sending → done transition that powers a simulated submit
@@ -15,19 +15,26 @@ export type FlowStatus = 'idle' | 'sending' | 'done'
  * {done && <SuccessPanel … />}
  */
 export function useSubmitFlow() {
-  const [status, setStatus] = useState<FlowStatus>('idle')
-  const timer = useRef<number | undefined>(undefined)
-  useEffect(() => () => window.clearTimeout(timer.current), [])
+  const [status, setStatus] = useState<FlowStatus>("idle");
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
   const submit = (onComplete?: () => void, ms = 1000) => {
-    setStatus('sending')
+    setStatus("sending");
     timer.current = window.setTimeout(() => {
-      onComplete?.()
-      setStatus('done')
-    }, ms)
-  }
+      onComplete?.();
+      setStatus("done");
+    }, ms);
+  };
   const reset = () => {
-    window.clearTimeout(timer.current)
-    setStatus('idle')
-  }
-  return { status, submit, reset, idle: status === 'idle', sending: status === 'sending', done: status === 'done' }
+    window.clearTimeout(timer.current);
+    setStatus("idle");
+  };
+  return {
+    status,
+    submit,
+    reset,
+    idle: status === "idle",
+    sending: status === "sending",
+    done: status === "done",
+  };
 }

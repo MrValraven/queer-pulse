@@ -32,7 +32,7 @@
 }
 
 .pulseDot::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
@@ -41,8 +41,15 @@
 }
 
 @keyframes errPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(2.2); opacity: 0; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }
 
 .wordmark {
@@ -78,26 +85,34 @@
 }
 
 .errOrbRight::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -12%;
   right: -6%;
   width: 560px;
   height: 560px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.12), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.12),
+    transparent 62%
+  );
   pointer-events: none;
 }
 
 .errOrbLeft::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -12%;
   left: -6%;
   width: 560px;
   height: 560px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.12), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.12),
+    transparent 62%
+  );
   pointer-events: none;
 }
 
@@ -303,7 +318,7 @@
   margin-top: 22px;
   font-size: 11.5px;
   color: var(--text40);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   letter-spacing: 0.02em;
 }
 
@@ -323,7 +338,9 @@
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  transition: opacity 0.18s, transform 0.18s;
+  transition:
+    opacity 0.18s,
+    transform 0.18s;
 }
 
 .btPrimary:hover {
@@ -346,7 +363,9 @@
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: border-color 0.18s, background 0.18s;
+  transition:
+    border-color 0.18s,
+    background 0.18s;
 }
 
 .btGhost:hover {

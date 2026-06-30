@@ -84,9 +84,7 @@ export function MemberDirectoryFilterPage() {
   const countedTotal = useCountUp(totalMembers, { active: !loading, from: 1 });
 
   const filtered = useMemo(() => {
-    const matched = sourceMembers.filter((m) =>
-      matchesFilters(m, filters)
-    );
+    const matched = sourceMembers.filter((m) => matchesFilters(m, filters));
     return sortMembers(matched, sort);
   }, [sourceMembers, filters, sort]);
 

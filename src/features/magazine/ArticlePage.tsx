@@ -1,21 +1,28 @@
-import { useState, type CSSProperties } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { routes } from '../../app/routeMap'
-import { Avatar, Button, FadeIn, ImageSlot, SkeletonLine, Tag } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { MagazineMasthead } from './MagazineMasthead'
+import { useState, type CSSProperties } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { PageShell } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
+import {
+  Avatar,
+  Button,
+  FadeIn,
+  ImageSlot,
+  SkeletonLine,
+  Tag,
+} from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { MagazineMasthead } from "./MagazineMasthead";
 import {
   articles,
   defaultArticleId,
   isPullQuote,
   relationReason,
-} from './data/articles'
-import { ArticleToolbar, type TextSize } from './ArticleToolbar'
+} from "./data/articles";
+import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
 
-import styles from './ArticlePage.module.css'
+import styles from "./ArticlePage.module.css";
 
-const SIZE_PX: Record<TextSize, number> = { sm: 17, md: 19, lg: 22 }
+const SIZE_PX: Record<TextSize, number> = { sm: 17, md: 19, lg: 22 };
 
 function RelatedCardSkeleton({ className }: { className: string }) {
   return (
@@ -23,17 +30,21 @@ function RelatedCardSkeleton({ className }: { className: string }) {
       <SkeletonLine width="40%" height={11} />
       <SkeletonLine width="90%" height={17} style={{ marginTop: 2 }} />
       <SkeletonLine width="65%" height={13} style={{ marginTop: 2 }} />
-      <SkeletonLine width={90} height={22} style={{ borderRadius: 999, marginTop: 4 }} />
+      <SkeletonLine
+        width={90}
+        height={22}
+        style={{ borderRadius: 999, marginTop: 4 }}
+      />
     </div>
-  )
+  );
 }
 
 export function ArticlePage() {
-  const [params] = useSearchParams()
-  const [textSize, setTextSize] = useState<TextSize>('md')
-  const loading = useSimulatedLoad()
-  const id = params.get('id') ?? defaultArticleId
-  const article = articles[id]
+  const [params] = useSearchParams();
+  const [textSize, setTextSize] = useState<TextSize>("md");
+  const loading = useSimulatedLoad();
+  const id = params.get("id") ?? defaultArticleId;
+  const article = articles[id];
 
   if (!article) {
     return (
@@ -44,17 +55,17 @@ export function ArticlePage() {
           <Button to={routes.magazine}>Back to the magazine</Button>
         </div>
       </PageShell>
-    )
+    );
   }
 
   const related = article.related
     .map((relatedId) => articles[relatedId])
-    .filter((value): value is NonNullable<typeof value> => Boolean(value))
+    .filter((value): value is NonNullable<typeof value> => Boolean(value));
 
   // First plain-text paragraph doubles as the saved-card blurb.
   const blurb = article.body.find(
-    (block): block is string => typeof block === 'string',
-  )
+    (block): block is string => typeof block === "string",
+  );
 
   return (
     <PageShell>
@@ -70,7 +81,9 @@ export function ArticlePage() {
             <Avatar initials={article.initials} tint={article.tint} size={36} />
             <div>
               <div className={styles.author}>{article.byline}</div>
-              {article.role && <div className={styles.role}>{article.role}</div>}
+              {article.role && (
+                <div className={styles.role}>{article.role}</div>
+              )}
             </div>
             <div className={styles.pills}>
               <span className={styles.pill}>{article.date}</span>
@@ -81,7 +94,14 @@ export function ArticlePage() {
       </div>
 
       <div className={styles.hero}>
-        <ImageSlot tint={article.tint === 'auth' ? 'plum' : article.tint} height={480} radius={0} src={article.image} alt={article.imgDesc} placeholder={article.imgDesc} />
+        <ImageSlot
+          tint={article.tint === "auth" ? "plum" : article.tint}
+          height={480}
+          radius={0}
+          src={article.image}
+          alt={article.imgDesc}
+          placeholder={article.imgDesc}
+        />
         <div className={styles.heroStrip} />
       </div>
 
@@ -91,14 +111,20 @@ export function ArticlePage() {
             textSize={textSize}
             onTextSize={setTextSize}
             articleId={id}
-            articleTitle={typeof article.title === 'string' ? article.title : undefined}
+            articleTitle={
+              typeof article.title === "string" ? article.title : undefined
+            }
             articleMeta={`${article.byline} · ${article.readTime}`}
             articleDescription={blurb}
             articleReadTime={article.readTime}
           />
           <div
             className={styles.body}
-            style={{ '--article-body-size': `${SIZE_PX[textSize]}px` } as CSSProperties}
+            style={
+              {
+                "--article-body-size": `${SIZE_PX[textSize]}px`,
+              } as CSSProperties
+            }
           >
             {article.body.map((block, index) =>
               isPullQuote(block) ? (
@@ -130,16 +156,27 @@ export function ArticlePage() {
             <div className={styles.relGrid}>
               {loading
                 ? related.map((rel) => (
-                    <RelatedCardSkeleton key={rel.id} className={styles.relCard!} />
+                    <RelatedCardSkeleton
+                      key={rel.id}
+                      className={styles.relCard!}
+                    />
                   ))
                 : related.map((rel, i) => (
-                    <FadeIn as={Link} key={rel.id} to={`${routes.article}?id=${rel.id}`} className={styles.relCard} delay={Math.min(i, 8) * 60}>
+                    <FadeIn
+                      as={Link}
+                      key={rel.id}
+                      to={`${routes.article}?id=${rel.id}`}
+                      className={styles.relCard}
+                      delay={Math.min(i, 8) * 60}
+                    >
                       <div className={styles.relKicker}>{rel.section}</div>
                       <div className={styles.relTitle}>{rel.title}</div>
                       <div className={styles.relMeta}>
                         {rel.byline} · {rel.readTime}
                       </div>
-                      <Tag className={styles.relReason}>{relationReason(article, rel)}</Tag>
+                      <Tag className={styles.relReason}>
+                        {relationReason(article, rel)}
+                      </Tag>
                     </FadeIn>
                   ))}
             </div>
@@ -147,5 +184,5 @@ export function ArticlePage() {
         </div>
       )}
     </PageShell>
-  )
+  );
 }

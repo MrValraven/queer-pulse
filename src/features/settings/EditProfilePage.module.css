@@ -474,8 +474,14 @@ span.navIcon svg {
 }
 
 @keyframes savedSlide {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

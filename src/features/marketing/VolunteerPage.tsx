@@ -1,30 +1,40 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiHeart } from 'react-icons/fi'
-import { PageHero, PageShell } from '../../shared/components/layout'
-import { Button, EmptyState, FadeIn, Outro, SkeletonLine } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { VOLUNTEER_OPPORTUNITIES as OPPS } from './volunteerOpportunities'
-import { routes } from '../../app/routeMap'
-import s from './VolunteerPage.module.css'
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { FiHeart } from "react-icons/fi";
+import { PageHero, PageShell } from "../../shared/components/layout";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  Outro,
+  SkeletonLine,
+} from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { VOLUNTEER_OPPORTUNITIES as OPPS } from "./volunteerOpportunities";
+import { routes } from "../../app/routeMap";
+import s from "./VolunteerPage.module.css";
 
 const FILTERS = [
-  { f: 'all', label: 'All opportunities' },
-  { f: 'low', label: 'Low commitment' },
-  { f: 'medium', label: 'Medium commitment' },
-  { f: 'Rights', label: 'LGBTQ+ Rights' },
-  { f: 'Health', label: 'Health & Wellbeing' },
-  { f: 'Youth', label: 'Youth' },
-  { f: 'Housing', label: 'Housing' },
-  { f: 'Arts', label: 'Arts & Culture' },
-]
+  { f: "all", label: "All opportunities" },
+  { f: "low", label: "Low commitment" },
+  { f: "medium", label: "Medium commitment" },
+  { f: "Rights", label: "LGBTQ+ Rights" },
+  { f: "Health", label: "Health & Wellbeing" },
+  { f: "Youth", label: "Youth" },
+  { f: "Housing", label: "Housing" },
+  { f: "Arts", label: "Arts & Culture" },
+];
 
 function VolunteerCardSkeleton() {
   // Mirrors the real .card: org row (40px avatar + name/cause), role, desc, meta pills, skills, foot.
   return (
     <div className={s.card} aria-hidden>
       <div className={s.org}>
-        <SkeletonLine width={40} height={40} style={{ borderRadius: 10, flex: 'none' }} />
+        <SkeletonLine
+          width={40}
+          height={40}
+          style={{ borderRadius: 10, flex: "none" }}
+        />
         <div style={{ flex: 1 }}>
           <SkeletonLine width="55%" height={14} />
           <SkeletonLine width="35%" height={12} style={{ marginTop: 5 }} />
@@ -39,37 +49,42 @@ function VolunteerCardSkeleton() {
         <SkeletonLine width={120} height={20} style={{ borderRadius: 6 }} />
         <SkeletonLine width={70} height={20} style={{ borderRadius: 6 }} />
       </div>
-      <div className={s.cardFoot} style={{ borderTopColor: 'transparent' }}>
+      <div className={s.cardFoot} style={{ borderTopColor: "transparent" }}>
         <SkeletonLine width={90} height={13} />
         <SkeletonLine width={110} height={30} style={{ borderRadius: 999 }} />
       </div>
     </div>
-  )
+  );
 }
 
 export function VolunteerPage() {
-  const loading = useSimulatedLoad()
-  const [filter, setFilter] = useState('all')
+  const loading = useSimulatedLoad();
+  const [filter, setFilter] = useState("all");
 
   const visible = useMemo(
     () =>
       OPPS.filter((o) => {
-        if (filter === 'all') return true
-        if (filter === 'low' || filter === 'medium') return o.commit === filter
-        return o.cause === filter
+        if (filter === "all") return true;
+        if (filter === "low" || filter === "medium") return o.commit === filter;
+        return o.cause === filter;
       }),
     [filter],
-  )
+  );
 
   return (
     <PageShell>
       <PageHero
         eyebrow="Volunteer"
-        title={<>Give your time to the <em>community</em> around you.</>}
+        title={
+          <>
+            Give your time to the <em>community</em> around you.
+          </>
+        }
         sub="You don't need to be an activist. You need two free hours and a willingness to show up. Below are organisations in Lisbon genuinely looking for people like you."
       >
         <div className={s.note}>
-          <span className={s.dot} /> Every organisation below has been vetted by the QueerPulse community
+          <span className={s.dot} /> Every organisation below has been vetted by
+          the QueerPulse community
         </div>
       </PageHero>
 
@@ -77,7 +92,13 @@ export function VolunteerPage() {
         <div className="wrap">
           <div className={s.filters}>
             {FILTERS.map((f) => (
-              <button key={f.f} className={[s.chip, filter === f.f && s.chipOn].filter(Boolean).join(' ')} onClick={() => setFilter(f.f)}>
+              <button
+                key={f.f}
+                className={[s.chip, filter === f.f && s.chipOn]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => setFilter(f.f)}
+              >
                 {f.label}
               </button>
             ))}
@@ -88,55 +109,78 @@ export function VolunteerPage() {
               icon={<FiHeart />}
               title="No opportunities match those filters yet"
               description="Try widening your search — there are plenty of ways to give your time, and new roles are added often."
-              action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
+              action={{
+                label: "Clear filters",
+                onClick: () => setFilter("all"),
+              }}
             />
           ) : (
-          <div className={s.grid}>
-            {loading
-              ? Array.from({ length: 6 }).map((_, i) => <VolunteerCardSkeleton key={i} />)
-              : visible.map((o, i) => (
-              <FadeIn key={o.role} delay={Math.min(i, 8) * 60} style={{ height: '100%' }}>
-              <div className={s.card} style={{ height: '100%' }}>
-                <div className={s.org}>
-                  <span className={s.orgAv} style={{ background: o.bg, color: o.color }}>
-                    {o.av}
-                  </span>
-                  <div>
-                    <div className={s.orgName}>{o.org}</div>
-                    <div className={s.orgCause}>{o.cause}</div>
-                  </div>
-                </div>
-                <div className={s.role}>{o.role}</div>
-                <p className={s.desc}>{o.desc}</p>
-                <div className={s.metaRow}>
-                  <span className={`${s.commit} ${o.commit === 'low' ? s.commitGreen : s.commitAmber}`}>
-                    {o.commit === 'low' ? 'Low commitment' : 'Medium commitment'}
-                  </span>
-                  <span className={s.metaPill}>{o.location}</span>
-                </div>
-                <div className={s.skills}>
-                  {o.skills.map((sk) => (
-                    <span key={sk} className={s.skill}>
-                      #{sk}
-                    </span>
+            <div className={s.grid}>
+              {loading
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <VolunteerCardSkeleton key={i} />
+                  ))
+                : visible.map((o, i) => (
+                    <FadeIn
+                      key={o.role}
+                      delay={Math.min(i, 8) * 60}
+                      style={{ height: "100%" }}
+                    >
+                      <div className={s.card} style={{ height: "100%" }}>
+                        <div className={s.org}>
+                          <span
+                            className={s.orgAv}
+                            style={{ background: o.bg, color: o.color }}
+                          >
+                            {o.av}
+                          </span>
+                          <div>
+                            <div className={s.orgName}>{o.org}</div>
+                            <div className={s.orgCause}>{o.cause}</div>
+                          </div>
+                        </div>
+                        <div className={s.role}>{o.role}</div>
+                        <p className={s.desc}>{o.desc}</p>
+                        <div className={s.metaRow}>
+                          <span
+                            className={`${s.commit} ${o.commit === "low" ? s.commitGreen : s.commitAmber}`}
+                          >
+                            {o.commit === "low"
+                              ? "Low commitment"
+                              : "Medium commitment"}
+                          </span>
+                          <span className={s.metaPill}>{o.location}</span>
+                        </div>
+                        <div className={s.skills}>
+                          {o.skills.map((sk) => (
+                            <span key={sk} className={s.skill}>
+                              #{sk}
+                            </span>
+                          ))}
+                        </div>
+                        <div className={s.cardFoot}>
+                          <span className={s.time}>{o.time}</span>
+                          <Link
+                            className={s.express}
+                            to={`${routes.volunteer}/opportunity/${o.slug}`}
+                          >
+                            Express interest →
+                          </Link>
+                        </div>
+                      </div>
+                    </FadeIn>
                   ))}
-                </div>
-                <div className={s.cardFoot}>
-                  <span className={s.time}>{o.time}</span>
-                  <Link className={s.express} to={`${routes.volunteer}/opportunity/${o.slug}`}>
-                    Express interest →
-                  </Link>
-                </div>
-              </div>
-              </FadeIn>
-            ))}
-          </div>
+            </div>
           )}
         </div>
       </section>
 
       <Outro
-        title={<>Want to connect <em>more deeply?</em></>}
+        title={
+          <>
+            Want to connect <em>more deeply?</em>
+          </>
+        }
         sub="Find the change makers already working on the causes you care about."
       >
         <Button size="lg" to={routes.changemakers}>
@@ -144,5 +188,5 @@ export function VolunteerPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

@@ -189,7 +189,7 @@
 }
 
 .flag::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -202,7 +202,7 @@
 }
 
 .flag::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 0;
   top: 0;

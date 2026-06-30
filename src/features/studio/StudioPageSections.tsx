@@ -34,7 +34,15 @@ export function StudioHero() {
     <section className={styles.hero}>
       <div className={styles.heroInner}>
         <div className={styles.heroArt}>
-          <ImageSlot src={HERO_ART} tint="coral" width="100%" height="100%" radius={16} placeholder="cover · Mariana Sol" style={{ position: "absolute", inset: 0 }} />
+          <ImageSlot
+            src={HERO_ART}
+            tint="coral"
+            width="100%"
+            height="100%"
+            radius={16}
+            placeholder="cover · Mariana Sol"
+            style={{ position: "absolute", inset: 0 }}
+          />
         </div>
         <div className={styles.heroInfo}>
           <div className={styles.eb}>
@@ -45,37 +53,73 @@ export function StudioHero() {
             Carta para a <em>santa</em>
           </h1>
           <div className={styles.by}>
-            by <strong>Mariana Sol</strong> · from <em>Cidade dos santos</em> · 2026 · Sintra
+            by <strong>Mariana Sol</strong> · from <em>Cidade dos santos</em> ·
+            2026 · Sintra
           </div>
           <div className={styles.stats}>
-            <span><em>312</em> listening</span>
+            <span>
+              <em>312</em> listening
+            </span>
             <span className={styles.dot} />
             <span>Track 6 of 11 · 4:18</span>
             <span className={styles.dot} />
             <span>Flac · 24/48</span>
           </div>
           <div className={styles.heroActions}>
-            <Link to={routes.studioAlbum} className={styles.playBig} aria-label="Play">
+            <Link
+              to={routes.studioAlbum}
+              className={styles.playBig}
+              aria-label="Play"
+            >
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
               </svg>
             </Link>
-            <button onClick={() => { const now = toggleSave(HERO_TRACK); showToast(now ? "Added to your library" : "Removed from your library", now ? "success" : "info"); }}>
-              {saved ? <><FiCheck /> In library</> : <><FiPlus /> Library</>}
+            <button
+              onClick={() => {
+                const now = toggleSave(HERO_TRACK);
+                showToast(
+                  now ? "Added to your library" : "Removed from your library",
+                  now ? "success" : "info",
+                );
+              }}
+            >
+              {saved ? (
+                <>
+                  <FiCheck /> In library
+                </>
+              ) : (
+                <>
+                  <FiPlus /> Library
+                </>
+              )}
             </button>
-            <button className={styles.tip} onClick={() => setTipOpen(true)}><FiHeart /> Tip €2</button>
+            <button className={styles.tip} onClick={() => setTipOpen(true)}>
+              <FiHeart /> Tip €2
+            </button>
           </div>
           <div className={styles.payPill}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
             </svg>
             <span>
-              This listen pays Mariana <em>€0.05</em>. <span className={styles.small}>Tip on top? 100% to her.</span>
+              This listen pays Mariana <em>€0.05</em>.{" "}
+              <span className={styles.small}>Tip on top? 100% to her.</span>
             </span>
           </div>
         </div>
       </div>
-      {tipOpen && <StudioTipModal recipient="Mariana Sol" onClose={() => setTipOpen(false)} />}
+      {tipOpen && (
+        <StudioTipModal
+          recipient="Mariana Sol"
+          onClose={() => setTipOpen(false)}
+        />
+      )}
     </section>
   );
 }
@@ -87,19 +131,35 @@ export function StudioSetSection() {
         <h2>
           The Wednesday <em>set</em>
         </h2>
-        <div className={styles.sub}>Programmed by Sara Marques · synchronous · 312 in the room</div>
+        <div className={styles.sub}>
+          Programmed by Sara Marques · synchronous · 312 in the room
+        </div>
       </div>
       <div className={styles.split}>
         <div className={styles.setCard}>
           <h3>
             Vespertina, <em>vol. iv</em>
           </h3>
-          <div className={styles.setDesc}>Twelve tracks for the hour between sunset and the second bottle.</div>
+          <div className={styles.setDesc}>
+            Twelve tracks for the hour between sunset and the second bottle.
+          </div>
           {SET.map((row) => (
-            <div key={row.n} className={[styles.setRow, row.now && styles.setRowNow].filter(Boolean).join(" ")}>
+            <div
+              key={row.n}
+              className={[styles.setRow, row.now && styles.setRowNow]
+                .filter(Boolean)
+                .join(" ")}
+            >
               <div className={styles.n}>{row.n}</div>
               <div className={styles.srCov}>
-                <ImageSlot src={row.image} tint={row.cvTint} width={36} height={36} radius={5} placeholder="" />
+                <ImageSlot
+                  src={row.image}
+                  tint={row.cvTint}
+                  width={36}
+                  height={36}
+                  radius={5}
+                  placeholder=""
+                />
               </div>
               <div>
                 <h5>
@@ -137,7 +197,12 @@ function StudioSideCol() {
         <div className={styles.sub}>89 sustainers · 223 casual · 41 cities</div>
         <div className={styles.avStack}>
           {["JR", "RT", "SC", "YR", "PL", "DO"].map((a, i) => (
-            <span key={a} className={[styles.av, i % 2 === 1 && styles.jade].filter(Boolean).join(" ")}>
+            <span
+              key={a}
+              className={[styles.av, i % 2 === 1 && styles.jade]
+                .filter(Boolean)
+                .join(" ")}
+            >
               {a}
             </span>
           ))}
@@ -148,7 +213,9 @@ function StudioSideCol() {
         <div className={styles.head}>Ledger · this month</div>
         <div className={styles.lrow}>
           <span className={styles.k}>Paid to artists</span>
-          <span className={styles.v}>€<em>11,940</em></span>
+          <span className={styles.v}>
+            €<em>11,940</em>
+          </span>
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>Plays</span>
@@ -156,11 +223,15 @@ function StudioSideCol() {
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>Artist share</span>
-          <span className={styles.v}><em>80.3</em>%</span>
+          <span className={styles.v}>
+            <em>80.3</em>%
+          </span>
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>Per play</span>
-          <span className={styles.v}>€<em>0.05</em></span>
+          <span className={styles.v}>
+            €<em>0.05</em>
+          </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>
           Read the plan →
@@ -177,17 +248,33 @@ export function StudioTracksSection() {
         <h2>
           This week, <em>programmed</em>
         </h2>
-        <div className={styles.sub}>Eight singles, each with a curator's name on it. Rotates Monday.</div>
+        <div className={styles.sub}>
+          Eight singles, each with a curator's name on it. Rotates Monday.
+        </div>
         <Link to={routes.studioAlbum} className={styles.all}>
           All →
         </Link>
       </div>
       <div className={styles.rowGrid}>
         {TRACKS.map((t) => (
-          <Link key={t.titlePre} to={routes.studioAlbum} className={styles.card}>
+          <Link
+            key={t.titlePre}
+            to={routes.studioAlbum}
+            className={styles.card}
+          >
             <div className={styles.cardCov}>
-              <ImageSlot src={t.image} tint={t.cvTint} width="100%" height="100%" radius={10} placeholder="cover" style={{ position: "absolute", inset: 0 }} />
-              <span className={`${styles.tag} ${tagClass[t.tag]}`}>{t.tagLabel}</span>
+              <ImageSlot
+                src={t.image}
+                tint={t.cvTint}
+                width="100%"
+                height="100%"
+                radius={10}
+                placeholder="cover"
+                style={{ position: "absolute", inset: 0 }}
+              />
+              <span className={`${styles.tag} ${tagClass[t.tag]}`}>
+                {t.tagLabel}
+              </span>
               <button className={styles.playFab} aria-label="Play">
                 <svg viewBox="0 0 12 14" fill="currentColor">
                   <path d="M1 1l10 6-10 6z" />

@@ -19,7 +19,7 @@ From `docs/design-system.md` → Content fundamentals:
 
 - **Warm, direct, second person** ("you"). Never corporate. Never condescending.
 - **Sentence case** everywhere. ALL CAPS only for eyebrows, footer column heads, category chips.
-- **Emphasis = one Fraunces italic `<em>` in the coral accent** — never bold, never ALL CAPS, never an exclamation mark. Emphasise the *one* word that carries the feeling.
+- **Emphasis = one Fraunces italic `<em>` in the coral accent** — never bold, never ALL CAPS, never an exclamation mark. Emphasise the _one_ word that carries the feeling.
 - **No emoji** in headings or body (toasts / wellbeing widget / notifications only).
 - **Numbers are used sparingly and meaningfully** — "247 members", "6 spots left" — as trust signals, not hype.
 - **Tone is safety-conscious, community-first, non-transactional. Avoid FOMO.**
@@ -27,33 +27,33 @@ From `docs/design-system.md` → Content fundamentals:
 
 ## Seven principles for queer-community copy
 
-1. **Belonging over conversion.** Sell *membership in something*, not a signup. Lead with what it *feels like to be inside*, not features or urgency. "You belong here" beats "Join now — limited spots!"
+1. **Belonging over conversion.** Sell _membership in something_, not a signup. Lead with what it _feels like to be inside_, not features or urgency. "You belong here" beats "Join now — limited spots!"
 2. **Safety and consent are features, not fine print.** Name privacy, invite-only, no-ads, no-algorithm, quick-exit as reassurances people can feel. Never imply surveillance, ranking, or exposure ("get noticed", "grow your reach" are off-brand).
 3. **Let people name themselves.** Mirror the language a member uses for their identity, partners, and pronouns; never assign labels or assume a binary. Default to **they/them** and "folks / people / everyone" — never "you guys", "ladies and gentlemen", "men and women".
 4. **Specific and human beats broad and slick.** Concrete community texture ("a monthly magazine, a mental-health fund, a forum that's actually quiet") earns more trust than abstract uplift ("a vibrant platform for connection").
-5. **Non-transactional warmth.** No dark patterns, no manufactured scarcity, no guilt. If a number creates pressure, cut it. Invitations are *offered*, not *claimed*.
+5. **Non-transactional warmth.** No dark patterns, no manufactured scarcity, no guilt. If a number creates pressure, cut it. Invitations are _offered_, not _claimed_.
 6. **Respect the reader's intelligence and history.** Don't over-explain queerness to queer people, don't tokenise ("celebrate diversity!"), don't moralise. Understatement reads as respect.
 7. **Plain, kind, clear.** Short sentences. Say what happens next. Empathy from the reader's point of view. Clarity is a form of care.
 
 ## Inclusive terminology — quick rules
 
-| Prefer | Avoid | Why |
-| --- | --- | --- |
-| names / pronouns | "preferred pronouns/name" | "preferred" implies the real one is optional |
-| "they" (singular, no explanation) | "he/she", "(s)he" | binary erases non-binary people |
-| "trans women are women" — no qualifier | "biologically", "born a…" | qualifiers delegitimise identity |
-| "person with HIV" | "suffers from / HIV patient" | no pity / pathologising framing |
-| LGBTQ+ / queer and trans / "our community" | outdated: "homosexual", "transsexual", "transgendered", "lifestyle" | dated or clinical terms read as othering |
-| "folks", "people", "everyone", "y'all" | "you guys", "ladies and gentlemen" | gender-neutral group address |
-| Pride (event) / pride (feeling) | — | capitalise the event, lowercase the sentiment |
+| Prefer                                     | Avoid                                                               | Why                                           |
+| ------------------------------------------ | ------------------------------------------------------------------- | --------------------------------------------- |
+| names / pronouns                           | "preferred pronouns/name"                                           | "preferred" implies the real one is optional  |
+| "they" (singular, no explanation)          | "he/she", "(s)he"                                                   | binary erases non-binary people               |
+| "trans women are women" — no qualifier     | "biologically", "born a…"                                           | qualifiers delegitimise identity              |
+| "person with HIV"                          | "suffers from / HIV patient"                                        | no pity / pathologising framing               |
+| LGBTQ+ / queer and trans / "our community" | outdated: "homosexual", "transsexual", "transgendered", "lifestyle" | dated or clinical terms read as othering      |
+| "folks", "people", "everyone", "y'all"     | "you guys", "ladies and gentlemen"                                  | gender-neutral group address                  |
+| Pride (event) / pride (feeling)            | —                                                                   | capitalise the event, lowercase the sentiment |
 
-When in doubt, write for *one specific member* you can picture, and ask: would this
+When in doubt, write for _one specific member_ you can picture, and ask: would this
 make them feel safer and more at home, or more like a metric?
 
 ## Microcopy patterns
 
-- **Headlines:** evocative, one coral `<em>`. Carry a feeling, not a command. ("Bring someone *in*", "You belong *here*".)
-- **Subtitles/explainers:** one plain warm sentence that says *what this is*, concretely. Good place for the no-ads / no-algorithm / invite-only reassurance.
+- **Headlines:** evocative, one coral `<em>`. Carry a feeling, not a command. ("Bring someone _in_", "You belong _here_".)
+- **Subtitles/explainers:** one plain warm sentence that says _what this is_, concretely. Good place for the no-ads / no-algorithm / invite-only reassurance.
 - **Buttons:** plain verbs in sentence case via the `<Button>` component ("Send invitation", "Open invitation", "Create an account"). Never "Submit", "Click here", or hypey CTAs.
 - **Empty states:** kind and oriented — what this space is for + the one next step. Never a dead-end or a scold.
 - **Errors:** no blame, plainly recoverable. "Couldn't copy — select and copy the link" not "Error: clipboard failed".
@@ -77,7 +77,7 @@ Run this on any copy before shipping it:
 ## Before → after (from this repo's surfaces)
 
 - Invite hero — ❌ "You're invited" / "Invite-only · 247 members"
-  → ✅ "You belong *here*" / "Where queer Lisbon gathers — no ads, no algorithm."
+  → ✅ "You belong _here_" / "Where queer Lisbon gathers — no ads, no algorithm."
 - CTA — ❌ "Sign up now to unlock the community!" → ✅ "Create an account"
 - Empty forum — ❌ "No posts yet." → ✅ "Quiet in here for now — start the conversation when you're ready."
 - Error — ❌ "Invalid email." → ✅ "That email doesn't look right — mind checking it?"

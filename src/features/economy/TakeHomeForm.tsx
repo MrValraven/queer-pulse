@@ -1,4 +1,4 @@
-import type { TaxYear } from './tax.calc'
+import type { TaxYear } from "./tax.calc";
 import {
   ACTIVITY_OPTIONS,
   STARTUP_OPTIONS,
@@ -7,24 +7,24 @@ import {
   type ActivityKey,
   type StartupYear,
   type WorkerStatus,
-} from './takeHome.data'
-import styles from './TakeHomeCalculatorPage.module.css'
+} from "./takeHome.data";
+import styles from "./TakeHomeCalculatorPage.module.css";
 
 export interface TakeHomeFormProps {
-  gross: string
-  activity: ActivityKey
-  year: TaxYear
-  startupYear: StartupYear
-  status: WorkerStatus
+  gross: string;
+  activity: ActivityKey;
+  year: TaxYear;
+  startupYear: StartupYear;
+  status: WorkerStatus;
   onChange: (
     patch: Partial<{
-      gross: string
-      activity: ActivityKey
-      year: TaxYear
-      startupYear: StartupYear
-      status: WorkerStatus
+      gross: string;
+      activity: ActivityKey;
+      year: TaxYear;
+      startupYear: StartupYear;
+      status: WorkerStatus;
     }>,
-  ) => void
+  ) => void;
 }
 
 /** The input column: labelled gross, activity, year, startup and status fields. */
@@ -63,7 +63,9 @@ export function TakeHomeForm({
           id="th-activity"
           className={styles.rcSelect}
           value={activity}
-          onChange={(e) => onChange({ activity: e.target.value as ActivityKey })}
+          onChange={(e) =>
+            onChange({ activity: e.target.value as ActivityKey })
+          }
         >
           {ACTIVITY_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
@@ -100,7 +102,9 @@ export function TakeHomeForm({
             id="th-year"
             className={styles.rcSelect}
             value={year}
-            onChange={(e) => onChange({ year: Number(e.target.value) as TaxYear })}
+            onChange={(e) =>
+              onChange({ year: Number(e.target.value) as TaxYear })
+            }
           >
             {YEAR_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
@@ -118,7 +122,9 @@ export function TakeHomeForm({
             id="th-startup"
             className={styles.rcSelect}
             value={startupYear}
-            onChange={(e) => onChange({ startupYear: Number(e.target.value) as StartupYear })}
+            onChange={(e) =>
+              onChange({ startupYear: Number(e.target.value) as StartupYear })
+            }
           >
             {STARTUP_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
@@ -129,5 +135,5 @@ export function TakeHomeForm({
         </div>
       </div>
     </div>
-  )
+  );
 }

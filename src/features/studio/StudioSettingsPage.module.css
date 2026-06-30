@@ -38,14 +38,18 @@
   max-width: 58ch;
   margin-bottom: 0;
 }
-.dek em { color: var(--accent); }
+.dek em {
+  color: var(--accent);
+}
 
 /* Section */
 .sec {
   padding: 30px 0;
   border-bottom: 1px solid rgba(247, 243, 238, 0.08);
 }
-.sec:last-child { border-bottom: none; }
+.sec:last-child {
+  border-bottom: none;
+}
 .secLbl {
   font-size: 11px;
   font-weight: 700;
@@ -54,7 +58,9 @@
   color: var(--accent);
   margin-bottom: 6px;
 }
-.secLblDanger { color: var(--accent-soft); }
+.secLblDanger {
+  color: var(--accent-soft);
+}
 .sec h2 {
   font-family: var(--serif);
   font-weight: 400;
@@ -63,7 +69,10 @@
   letter-spacing: -0.015em;
   margin-bottom: 6px;
 }
-.sec h2 em { font-style: italic; color: var(--accent); }
+.sec h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
 .secDek {
   font-family: var(--serif);
   font-style: italic;
@@ -73,7 +82,9 @@
   margin-bottom: 22px;
   max-width: 60ch;
 }
-.secDek em { color: var(--accent); }
+.secDek em {
+  color: var(--accent);
+}
 
 /* Option row */
 .opt {
@@ -83,9 +94,16 @@
   padding: 16px 0;
   border-top: 1px solid rgba(247, 243, 238, 0.08);
 }
-.opt:first-of-type { border-top: none; }
-.optBlock { display: block; }
-.ot { flex: 1; min-width: 0; }
+.opt:first-of-type {
+  border-top: none;
+}
+.optBlock {
+  display: block;
+}
+.ot {
+  flex: 1;
+  min-width: 0;
+}
 .ot h4 {
   font-family: var(--serif);
   font-weight: 500;
@@ -94,7 +112,10 @@
   letter-spacing: -0.005em;
   margin-bottom: 3px;
 }
-.ot h4 em { font-style: italic; color: var(--accent); }
+.ot h4 em {
+  font-style: italic;
+  color: var(--accent);
+}
 .ot p {
   font-family: var(--serif);
   font-style: italic;
@@ -104,7 +125,9 @@
   margin: 0;
   max-width: 56ch;
 }
-.ot p em { color: var(--accent); }
+.ot p em {
+  color: var(--accent);
+}
 
 /* Toggle */
 .tgSw {
@@ -117,9 +140,11 @@
   flex: none;
   transition: background 0.25s;
 }
-.tgSwOn { background: var(--accent); }
+.tgSwOn {
+  background: var(--accent);
+}
 .tgSw::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 3px;
   top: 3px;
@@ -129,7 +154,9 @@
   background: var(--paper);
   transition: transform 0.25s;
 }
-.tgSwOn::after { transform: translateX(20px); }
+.tgSwOn::after {
+  transform: translateX(20px);
+}
 
 /* Segmented control */
 .seg {
@@ -153,10 +180,17 @@
   transition: all 0.2s;
   white-space: nowrap;
 }
-.segBtnOn { background: var(--accent); color: var(--cream); }
+.segBtnOn {
+  background: var(--accent);
+  color: var(--cream);
+}
 
 /* Radio cards */
-.rcards { display: grid; gap: 10px; margin-top: 4px; }
+.rcards {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
 .rcard {
   display: flex;
   gap: 14px;
@@ -168,7 +202,9 @@
   cursor: pointer;
   transition: all 0.2s;
 }
-.rcard:hover { background: rgba(247, 243, 238, 0.06); }
+.rcard:hover {
+  background: rgba(247, 243, 238, 0.06);
+}
 .rcardOn {
   border-color: rgba(var(--accent-rgb), 0.5);
   background: rgba(var(--accent-rgb), 0.08);
@@ -182,9 +218,11 @@
   margin-top: 2px;
   position: relative;
 }
-.rcardOn .rdot { border-color: var(--accent); }
+.rcardOn .rdot {
+  border-color: var(--accent);
+}
 .rcardOn .rdot::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 3px;
   border-radius: 50%;
@@ -197,7 +235,10 @@
   color: rgba(247, 243, 238, 0.92);
   letter-spacing: -0.005em;
 }
-.rcard h5 em { font-style: italic; color: var(--accent); }
+.rcard h5 em {
+  font-style: italic;
+  color: var(--accent);
+}
 .rcard p {
   font-family: var(--serif);
   font-style: italic;
@@ -220,7 +261,12 @@
 }
 
 /* Chips */
-.chips { display: flex; gap: 8px; flex-wrap: wrap; flex: none; }
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: none;
+}
 .chip {
   font-family: var(--serif);
   font-size: 15px;
@@ -259,7 +305,9 @@
   padding: 6px 22px;
   margin-top: 6px;
 }
-.danger .opt { border-color: rgba(232, 119, 90, 0.18); }
+.danger .opt {
+  border-color: rgba(232, 119, 90, 0.18);
+}
 .btDanger {
   background: transparent;
   border: 1.5px solid rgba(232, 119, 90, 0.5);
@@ -273,7 +321,11 @@
   transition: all 0.2s;
   flex: none;
 }
-.btDanger:hover { background: rgba(var(--accent-rgb), 0.16); color: var(--cream); border-color: var(--accent); }
+.btDanger:hover {
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--cream);
+  border-color: var(--accent);
+}
 .bt {
   background: transparent;
   border: 1.5px solid rgba(247, 243, 238, 0.18);
@@ -287,7 +339,10 @@
   transition: all 0.2s;
   flex: none;
 }
-.bt:hover { border-color: rgba(247, 243, 238, 0.4); color: rgba(247, 243, 238, 0.92); }
+.bt:hover {
+  border-color: rgba(247, 243, 238, 0.4);
+  color: rgba(247, 243, 238, 0.92);
+}
 .eraseNote {
   font-family: var(--serif);
   font-style: italic;
@@ -295,5 +350,9 @@
   color: rgba(247, 243, 238, 0.38);
   margin-top: 2px;
 }
-.eraseNote em { color: var(--accent); }
-.rcardsWide { width: 340px; }
+.eraseNote em {
+  color: var(--accent);
+}
+.rcardsWide {
+  width: 340px;
+}

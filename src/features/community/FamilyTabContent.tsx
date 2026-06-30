@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
-import { FiStar } from 'react-icons/fi'
-import type { Tab } from './family.data'
-import styles from './FamilyPage.module.css'
+import { Link } from "react-router-dom";
+import { FiStar } from "react-icons/fi";
+import type { Tab } from "./family.data";
+import styles from "./FamilyPage.module.css";
 
 export function FamilyTabContent({ tab }: { tab: Tab }) {
   return (
@@ -35,13 +35,18 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
           </div>
         )}
 
-        {tab.reviewHead && <h2 className={styles.reviewHead}>{tab.reviewHead}</h2>}
+        {tab.reviewHead && (
+          <h2 className={styles.reviewHead}>{tab.reviewHead}</h2>
+        )}
         {tab.reviews && (
           <div className={styles.reviewGrid}>
             {tab.reviews.map((r) => (
               <div className={styles.reviewCard} key={r.name}>
                 <div className={styles.rvTop}>
-                  <div className={styles.rvAv} style={{ background: r.bg, color: r.color }}>
+                  <div
+                    className={styles.rvAv}
+                    style={{ background: r.bg, color: r.color }}
+                  >
                     {r.initials}
                   </div>
                   <div>
@@ -49,9 +54,15 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
                     <div className={styles.rvContext}>{r.context}</div>
                   </div>
                 </div>
-                <div className={styles.rvStars} aria-label={`${r.stars} out of 5`}>
+                <div
+                  className={styles.rvStars}
+                  aria-label={`${r.stars} out of 5`}
+                >
                   {Array.from({ length: 5 }, (_, i) => (
-                    <FiStar key={i} fill={i < r.stars ? 'currentColor' : 'none'} />
+                    <FiStar
+                      key={i}
+                      fill={i < r.stars ? "currentColor" : "none"}
+                    />
                   ))}
                 </div>
                 <div className={styles.rvQuote}>{r.quote}</div>
@@ -68,7 +79,9 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
                 <div className={styles.psInfo}>
                   <div className={styles.psTitle}>{step.title}</div>
                   <div className={styles.psText}>{step.text}</div>
-                  {step.time && <div className={styles.psTime}>{step.time}</div>}
+                  {step.time && (
+                    <div className={styles.psTime}>{step.time}</div>
+                  )}
                 </div>
               </div>
             ))}
@@ -76,5 +89,5 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
         )}
       </div>
     </div>
-  )
+  );
 }

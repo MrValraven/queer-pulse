@@ -1,27 +1,27 @@
-import { FiPlus, FiX } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { euro } from './economy.data'
-import { type LineItem, lineTotal, emptyLine } from './invoice.data'
-import styles from './InvoiceGeneratorPage.module.css'
+import { FiPlus, FiX } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { euro } from "./economy.data";
+import { type LineItem, lineTotal, emptyLine } from "./invoice.data";
+import styles from "./InvoiceGeneratorPage.module.css";
 
 interface InvoiceLineItemsProps {
-  items: LineItem[]
-  onChange: (items: LineItem[]) => void
+  items: LineItem[];
+  onChange: (items: LineItem[]) => void;
 }
 
 /** Editable invoice line rows: description / qty / unit, with add + remove. */
 export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
   const patch = (id: string, change: Partial<LineItem>) =>
-    onChange(items.map((l) => (l.id === id ? { ...l, ...change } : l)))
+    onChange(items.map((l) => (l.id === id ? { ...l, ...change } : l)));
 
-  const remove = (id: string) => onChange(items.filter((l) => l.id !== id))
-  const add = () => onChange([...items, emptyLine()])
+  const remove = (id: string) => onChange(items.filter((l) => l.id !== id));
+  const add = () => onChange([...items, emptyLine()]);
 
   // Parse to a number, treating an empty/invalid field as 0.
   const num = (v: string) => {
-    const n = Number(v)
-    return Number.isFinite(n) ? n : 0
-  }
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
 
   return (
     <fieldset className={styles.lines}>
@@ -58,7 +58,7 @@ export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
             type="number"
             min={0}
             step="any"
-            value={Number.isFinite(l.qty) ? l.qty : ''}
+            value={Number.isFinite(l.qty) ? l.qty : ""}
             onChange={(e) => patch(l.id, { qty: num(e.target.value) })}
           />
 
@@ -71,7 +71,7 @@ export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
             type="number"
             min={0}
             step="any"
-            value={Number.isFinite(l.unit) ? l.unit : ''}
+            value={Number.isFinite(l.unit) ? l.unit : ""}
             onChange={(e) => patch(l.id, { unit: num(e.target.value) })}
           />
 
@@ -89,9 +89,15 @@ export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
         </div>
       ))}
 
-      <Button variant="ghost" size="md" type="button" onClick={add} className={styles.addLine}>
+      <Button
+        variant="ghost"
+        size="md"
+        type="button"
+        onClick={add}
+        className={styles.addLine}
+      >
         <FiPlus aria-hidden /> Add line
       </Button>
     </fieldset>
-  )
+  );
 }

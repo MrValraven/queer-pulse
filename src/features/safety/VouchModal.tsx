@@ -1,15 +1,15 @@
-import { useState } from 'react'
-import { FiShield } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import styles from './VouchModal.module.css'
+import { useState } from "react";
+import { FiShield } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import styles from "./VouchModal.module.css";
 
 const RELATIONSHIPS = [
-  'I go here regularly',
+  "I go here regularly",
   "I've been once or twice",
-  'I work or volunteer here',
-  'I came with a friend who needed it',
-]
+  "I work or volunteer here",
+  "I came with a friend who needed it",
+];
 
 /**
  * Add a safety vouch for a verified space. A short relationship + note form that
@@ -20,36 +20,41 @@ export function VouchModal({
   spaceName,
   onClose,
 }: {
-  spaceName: string
-  onClose: () => void
+  spaceName: string;
+  onClose: () => void;
 }) {
-  const [relationship, setRelationship] = useState(RELATIONSHIPS[0])
-  const [note, setNote] = useState('')
-  const [status, setStatus] = useState<'form' | 'loading' | 'done'>('form')
-  useScrollLock()
+  const [relationship, setRelationship] = useState(RELATIONSHIPS[0]);
+  const [note, setNote] = useState("");
+  const [status, setStatus] = useState<"form" | "loading" | "done">("form");
+  useScrollLock();
 
-  const canSubmit = note.trim().length >= 12
+  const canSubmit = note.trim().length >= 12;
 
   const submit = () => {
-    if (!canSubmit) return
-    setStatus('loading')
-    window.setTimeout(() => setStatus('done'), 1100)
-  }
+    if (!canSubmit) return;
+    setStatus("loading");
+    window.setTimeout(() => setStatus("done"), 1100);
+  };
 
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className={styles.modal}>
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           ×
         </button>
 
         <div className={styles.scroll}>
-          {status === 'done' ? (
+          {status === "done" ? (
             <div className={styles.success}>
               <div className={styles.successIcon}>
                 <FiShield size={28} />
@@ -58,12 +63,16 @@ export function VouchModal({
                 Your vouch is <em>in.</em>
               </div>
               <p className={styles.successSub}>
-                Thank you for standing behind <b>{spaceName}</b>. Member vouches are how
-                others know a space is safe before they ever walk in — yours will appear
-                once a moderator confirms it.
+                Thank you for standing behind <b>{spaceName}</b>. Member vouches
+                are how others know a space is safe before they ever walk in —
+                yours will appear once a moderator confirms it.
               </p>
               <div className={styles.successActions}>
-                <Button variant="ghost-dark" className={styles.full} onClick={onClose}>
+                <Button
+                  variant="ghost-dark"
+                  className={styles.full}
+                  onClick={onClose}
+                >
                   Done
                 </Button>
               </div>
@@ -75,8 +84,8 @@ export function VouchModal({
                 Stand behind <em>{spaceName}</em>
               </div>
               <p className={styles.sub}>
-                A vouch is a short, honest note about why this space feels safe to you.
-                Specifics help other members trust it.
+                A vouch is a short, honest note about why this space feels safe
+                to you. Specifics help other members trust it.
               </p>
 
               <div className={styles.label}>How do you know this space?</div>
@@ -84,9 +93,12 @@ export function VouchModal({
                 {RELATIONSHIPS.map((r) => (
                   <label
                     key={r}
-                    className={[styles.opt, relationship === r && styles.optChecked]
+                    className={[
+                      styles.opt,
+                      relationship === r && styles.optChecked,
+                    ]
                       .filter(Boolean)
-                      .join(' ')}
+                      .join(" ")}
                   >
                     <input
                       type="radio"
@@ -121,9 +133,9 @@ export function VouchModal({
                   variant="primary"
                   className={styles.full}
                   onClick={submit}
-                  disabled={!canSubmit || status === 'loading'}
+                  disabled={!canSubmit || status === "loading"}
                 >
-                  {status === 'loading' ? 'Submitting…' : 'Add my vouch'}
+                  {status === "loading" ? "Submitting…" : "Add my vouch"}
                 </Button>
               </div>
             </div>
@@ -131,5 +143,5 @@ export function VouchModal({
         </div>
       </div>
     </div>
-  )
+  );
 }

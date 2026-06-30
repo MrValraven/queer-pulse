@@ -69,7 +69,12 @@ export function withdrawnPatch(): Partial<Application> {
       { label: "—", state: "" },
       { label: "—", state: "" },
     ],
-    status: <>You withdrew this application just now. The company has been notified politely.</>,
+    status: (
+      <>
+        You withdrew this application just now. The company has been notified
+        politely.
+      </>
+    ),
     actions: [],
   };
 }
@@ -80,8 +85,8 @@ export function followedUpPatch(): Partial<Application> {
     badge: { kind: "in-review", label: "Followed up", pulse: true },
     status: (
       <>
-        <b>Follow-up sent just now.</b> They've been nudged gently — you'll usually hear back within
-        a couple of days.
+        <b>Follow-up sent just now.</b> They've been nudged gently — you'll
+        usually hear back within a couple of days.
       </>
     ),
     actions: [
@@ -102,7 +107,12 @@ export function submittedDraftPatch(): Partial<Application> {
       { label: "Interview", state: "" },
       { label: "Decision", state: "" },
     ],
-    status: <>Submitted just now. Their stated turnaround is 7 days — we'll watch the clock for you.</>,
+    status: (
+      <>
+        Submitted just now. Their stated turnaround is 7 days — we'll watch the
+        clock for you.
+      </>
+    ),
     actions: [
       { label: "Message recruiter →", kind: "message" },
       { label: "View submission", kind: "submission", muted: true },
@@ -123,7 +133,8 @@ export function acceptedOfferPatch(): Partial<Application> {
     ],
     status: (
       <>
-        <b>Offer accepted.</b> They'll send the contract to your email within two working days.
+        <b>Offer accepted.</b> They'll send the contract to your email within
+        two working days.
       </>
     ),
     actions: [{ label: "Open conversation", kind: "conversation" }],
@@ -155,7 +166,9 @@ export function declinedOfferPatch(): Partial<Application> {
       { label: "Interview", state: "done" },
       { label: "Declined", state: "rejected" },
     ],
-    status: <>You declined this offer. They've been thanked warmly on your behalf.</>,
+    status: (
+      <>You declined this offer. They've been thanked warmly on your behalf.</>
+    ),
     actions: [],
   };
 }

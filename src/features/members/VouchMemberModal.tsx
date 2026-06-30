@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useScrollLock } from '../../shared/hooks'
-import { memberProfiles } from './data/memberProfiles'
-import { RELATIONSHIPS } from './vouchMember.data'
-import { VouchForm, VouchSuccess } from './VouchMemberModalParts'
-import styles from './VouchMemberModal.module.css'
+import { useState } from "react";
+import { useScrollLock } from "../../shared/hooks";
+import { memberProfiles } from "./data/memberProfiles";
+import { RELATIONSHIPS } from "./vouchMember.data";
+import { VouchForm, VouchSuccess } from "./VouchMemberModalParts";
+import styles from "./VouchMemberModal.module.css";
 
 /**
  * Publicly co-sign an existing member. A short relationship + optional skill
@@ -17,51 +17,60 @@ export function VouchMemberModal({
   onClose,
   onVouched,
 }: {
-  slug: string
-  onClose: () => void
+  slug: string;
+  onClose: () => void;
   /** Called once, when the vouch is confirmed (success state reached). */
-  onVouched: () => void
+  onVouched: () => void;
 }) {
-  const [relationship, setRelationship] = useState<string>(RELATIONSHIPS[0])
-  const [endorsed, setEndorsed] = useState<string[]>([])
-  const [note, setNote] = useState('')
-  const [status, setStatus] = useState<'form' | 'loading' | 'done'>('form')
-  useScrollLock()
+  const [relationship, setRelationship] = useState<string>(RELATIONSHIPS[0]);
+  const [endorsed, setEndorsed] = useState<string[]>([]);
+  const [note, setNote] = useState("");
+  const [status, setStatus] = useState<"form" | "loading" | "done">("form");
+  useScrollLock();
 
-  const profile = memberProfiles[slug]
-  if (!profile) return null
+  const profile = memberProfiles[slug];
+  if (!profile) return null;
 
-  const first = profile.first
-  const canSubmit = note.trim().length >= 12
+  const first = profile.first;
+  const canSubmit = note.trim().length >= 12;
 
   const toggleTag = (tag: string) =>
-    setEndorsed((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
+    setEndorsed((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    );
 
   const submit = () => {
-    if (!canSubmit || status !== 'form') return
-    setStatus('loading')
+    if (!canSubmit || status !== "form") return;
+    setStatus("loading");
     window.setTimeout(() => {
-      onVouched()
-      setStatus('done')
-    }, 1100)
-  }
+      onVouched();
+      setStatus("done");
+    }, 1100);
+  };
 
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget && status !== 'loading') onClose()
+        if (e.target === e.currentTarget && status !== "loading") onClose();
       }}
     >
-      <div className={`${styles.modal} ${status === 'done' ? styles.modalDone : ''}`}>
-        {status !== 'loading' && (
-          <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+      <div
+        className={`${styles.modal} ${status === "done" ? styles.modalDone : ""}`}
+      >
+        {status !== "loading" && (
+          <button
+            type="button"
+            className={styles.close}
+            onClick={onClose}
+            aria-label="Close"
+          >
             ×
           </button>
         )}
 
         <div className={styles.scroll}>
-          {status === 'done' ? (
+          {status === "done" ? (
             <VouchSuccess profile={profile} first={first} onClose={onClose} />
           ) : (
             <VouchForm
@@ -82,5 +91,5 @@ export function VouchMemberModal({
         </div>
       </div>
     </div>
-  )
+  );
 }

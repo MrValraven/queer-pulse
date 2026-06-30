@@ -1,33 +1,35 @@
-import { useEffect, useMemo, useState } from 'react'
-import { FiX } from 'react-icons/fi'
-import { Avatar, SearchInput } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import { conversations, type Conversation } from './data'
-import styles from './NewMessageModal.module.css'
+import { useEffect, useMemo, useState } from "react";
+import { FiX } from "react-icons/fi";
+import { Avatar, SearchInput } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import { conversations, type Conversation } from "./data";
+import styles from "./NewMessageModal.module.css";
 
 interface NewMessageModalProps {
-  onClose: () => void
-  onPick: (recipient: Conversation) => void
+  onClose: () => void;
+  onPick: (recipient: Conversation) => void;
 }
 
 /** Self-contained recipient picker — opens (or reuses) a thread for the chosen member. */
 export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
-  useScrollLock()
-  const [query, setQuery] = useState('')
+  useScrollLock();
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
+      if (e.key === "Escape") onClose();
     }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [onClose])
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
   const people = useMemo(() => {
-    const candidates = conversations.filter((c) => !c.official)
-    const q = query.trim().toLowerCase()
-    return q ? candidates.filter((c) => c.name.toLowerCase().includes(q)) : candidates
-  }, [query])
+    const candidates = conversations.filter((c) => !c.official);
+    const q = query.trim().toLowerCase();
+    return q
+      ? candidates.filter((c) => c.name.toLowerCase().includes(q))
+      : candidates;
+  }, [query]);
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -58,7 +60,11 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
           {people.map((person) => (
             <li key={person.id}>
               <button className={styles.row} onClick={() => onPick(person)}>
-                <Avatar initials={person.initials} tint={person.tint} size={40} />
+                <Avatar
+                  initials={person.initials}
+                  tint={person.tint}
+                  size={40}
+                />
                 <div className={styles.rowBody}>
                   <span className={styles.rowName}>{person.name}</span>
                   <span className={styles.rowMeta}>{person.pronouns}</span>
@@ -66,9 +72,11 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
               </button>
             </li>
           ))}
-          {people.length === 0 && <li className={styles.empty}>No connections match “{query}”.</li>}
+          {people.length === 0 && (
+            <li className={styles.empty}>No connections match “{query}”.</li>
+          )}
         </ul>
       </div>
     </div>
-  )
+  );
 }

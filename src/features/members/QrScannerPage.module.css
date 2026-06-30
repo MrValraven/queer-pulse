@@ -95,13 +95,18 @@
   overflow: hidden;
 }
 .view::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 30% 40%, #2d1b3d 0%, #0a0512 60%, #000 100%);
+  background: radial-gradient(
+    ellipse at 30% 40%,
+    #2d1b3d 0%,
+    #0a0512 60%,
+    #000 100%
+  );
 }
 .view::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background-image: repeating-linear-gradient(
@@ -121,7 +126,7 @@
 }
 .target::before,
 .target::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 48px;
   height: 48px;

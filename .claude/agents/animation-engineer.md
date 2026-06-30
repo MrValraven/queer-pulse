@@ -14,8 +14,8 @@ first and treat it as the source of truth. If your instincts diverge from the
 skill, the skill wins.
 
 Motion here serves feeling — warm, calm, alive — never decoration for its own
-sake. Make the interface communicate *what changed, where it came from, and that
-it's working*. If an animation says nothing, don't add it.
+sake. Make the interface communicate _what changed, where it came from, and that
+it's working_. If an animation says nothing, don't add it.
 
 ## Before you touch anything
 

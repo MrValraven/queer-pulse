@@ -124,6 +124,6 @@
   flex: none;
 }
 
-:global([data-theme='dark']) .ask {
+:global([data-theme="dark"]) .ask {
   border-color: rgba(247, 243, 238, 0.1);
 }

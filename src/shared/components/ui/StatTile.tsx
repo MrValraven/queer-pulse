@@ -1,22 +1,30 @@
-import type { ComponentType, ReactNode } from 'react'
-import { SkeletonLine } from './Skeleton'
-import styles from './StatTile.module.css'
+import type { ComponentType, ReactNode } from "react";
+import { SkeletonLine } from "./Skeleton";
+import styles from "./StatTile.module.css";
 
 interface StatTileProps {
-  label: ReactNode
+  label: ReactNode;
   /** Pre-formatted value (string or number). Wrap a `useCountUp` result here if animating. */
-  value: ReactNode
-  icon?: ComponentType<{ className?: string; 'aria-hidden'?: boolean }>
+  value: ReactNode;
+  icon?: ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
   /** Small trailing unit shown after the value (e.g. "%"). */
-  suffix?: ReactNode
+  suffix?: ReactNode;
   /** Footnote line under the value; pair with `trend` for a coloured prefix. */
-  foot?: ReactNode
-  trend?: { dir: 'up' | 'down' | 'flat'; label: string }
-  loading?: boolean
+  foot?: ReactNode;
+  trend?: { dir: "up" | "down" | "flat"; label: string };
+  loading?: boolean;
 }
 
 /** A single metric tile: label + big number + optional trend footnote. */
-export function StatTile({ label, value, icon: Icon, suffix, foot, trend, loading = false }: StatTileProps) {
+export function StatTile({
+  label,
+  value,
+  icon: Icon,
+  suffix,
+  foot,
+  trend,
+  loading = false,
+}: StatTileProps) {
   return (
     <div className={styles.tile}>
       <span className={styles.label}>
@@ -24,7 +32,7 @@ export function StatTile({ label, value, icon: Icon, suffix, foot, trend, loadin
         {label}
       </span>
       {loading ? (
-        <SkeletonLine height={30} width="68%" style={{ margin: '2px 0 4px' }} />
+        <SkeletonLine height={30} width="68%" style={{ margin: "2px 0 4px" }} />
       ) : (
         <span className={styles.num}>
           {value}
@@ -33,15 +41,31 @@ export function StatTile({ label, value, icon: Icon, suffix, foot, trend, loadin
       )}
       {(foot || trend) && (
         <span className={styles.foot}>
-          {trend && <span className={[styles.trend, styles[`trend_${trend.dir}`]].join(' ')}>{trend.label}</span>}{' '}
+          {trend && (
+            <span
+              className={[styles.trend, styles[`trend_${trend.dir}`]].join(" ")}
+            >
+              {trend.label}
+            </span>
+          )}{" "}
           {foot}
         </span>
       )}
     </div>
-  )
+  );
 }
 
 /** Responsive grid wrapper for a set of `<StatTile>`s. */
-export function StatGrid({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={[styles.grid, className].filter(Boolean).join(' ')}>{children}</div>
+export function StatGrid({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={[styles.grid, className].filter(Boolean).join(" ")}>
+      {children}
+    </div>
+  );
 }

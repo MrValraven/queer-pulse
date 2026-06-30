@@ -4,7 +4,7 @@ import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./DsarPage.module.css";
-import { Button, FormField } from '../../shared/components/ui'
+import { Button, FormField } from "../../shared/components/ui";
 
 const PRIVACY = routes.privacy;
 
@@ -16,15 +16,62 @@ interface Right {
   formSub: string;
 }
 const RIGHTS: Right[] = [
-  { art: 15, label: <>Access · <em>copy of all</em></>, desc: "The full record of what we hold on you · including internal notes.", formTitle: "Article 15 · access", formSub: "We'll compile the full record of what we hold on you. Delivered as a downloadable archive, usually within 7 working days." },
-  { art: 16, label: <>Rectification</>, desc: "Correct data we hold that is wrong, outdated, or incomplete.", formTitle: "Article 16 · rectification", formSub: "Tell us what's wrong and what it should be. We verify, then update — usually within 7 working days." },
-  { art: 17, label: <>Erasure · <em>"forget me"</em></>, desc: "Permanently delete what we hold · within 30 days · with carve-outs.", formTitle: "Article 17 · erasure", formSub: "We'll permanently delete what we hold, within 30 days, except records we're legally required to retain." },
-  { art: 21, label: <>Object · <em>specific use</em></>, desc: "Object to specific processing (e.g. analytics, partner sharing) without deleting.", formTitle: "Article 21 · objection", formSub: "Object to a specific kind of processing without deleting your account. Tell us which use you object to." },
+  {
+    art: 15,
+    label: (
+      <>
+        Access · <em>copy of all</em>
+      </>
+    ),
+    desc: "The full record of what we hold on you · including internal notes.",
+    formTitle: "Article 15 · access",
+    formSub:
+      "We'll compile the full record of what we hold on you. Delivered as a downloadable archive, usually within 7 working days.",
+  },
+  {
+    art: 16,
+    label: <>Rectification</>,
+    desc: "Correct data we hold that is wrong, outdated, or incomplete.",
+    formTitle: "Article 16 · rectification",
+    formSub:
+      "Tell us what's wrong and what it should be. We verify, then update — usually within 7 working days.",
+  },
+  {
+    art: 17,
+    label: (
+      <>
+        Erasure · <em>"forget me"</em>
+      </>
+    ),
+    desc: "Permanently delete what we hold · within 30 days · with carve-outs.",
+    formTitle: "Article 17 · erasure",
+    formSub:
+      "We'll permanently delete what we hold, within 30 days, except records we're legally required to retain.",
+  },
+  {
+    art: 21,
+    label: (
+      <>
+        Object · <em>specific use</em>
+      </>
+    ),
+    desc: "Object to specific processing (e.g. analytics, partner sharing) without deleting.",
+    formTitle: "Article 21 · objection",
+    formSub:
+      "Object to a specific kind of processing without deleting your account. Tell us which use you object to.",
+  },
 ];
 
 const SCOPES = [
-  { b: "Profile data", s: "Name, pronouns, city, bio, interests", checked: true },
-  { b: "Connections & vouches", s: "Who you've vouched for · who's vouched for you" },
+  {
+    b: "Profile data",
+    s: "Name, pronouns, city, bio, interests",
+    checked: true,
+  },
+  {
+    b: "Connections & vouches",
+    s: "Who you've vouched for · who's vouched for you",
+  },
   { b: "Activity & posts", s: "What you've written · saved · RSVP'd to" },
   { b: "Billing & receipts", s: "Receipts, donations, membership history" },
   { b: "Moderation records", s: "Any reports, warnings, or appeals about you" },
@@ -33,7 +80,9 @@ const SCOPES = [
 export function DsarPage() {
   const { showToast } = useToast();
   const [art, setArt] = useState(16);
-  const [scopes, setScopes] = useState<boolean[]>(SCOPES.map((s) => !!s.checked));
+  const [scopes, setScopes] = useState<boolean[]>(
+    SCOPES.map((s) => !!s.checked),
+  );
   const right = RIGHTS.find((r) => r.art === art)!;
 
   return (
@@ -47,15 +96,15 @@ export function DsarPage() {
           Your data, <em>your rights.</em>
         </h1>
         <p className={styles.lead}>
-          Use this form to exercise any of the four GDPR rights below. Requests are
-          handled by a real person on the privacy team, <b>not automated</b>. We respond
-          within <em>30 days</em>, usually within 7.
+          Use this form to exercise any of the four GDPR rights below. Requests
+          are handled by a real person on the privacy team, <b>not automated</b>
+          . We respond within <em>30 days</em>, usually within 7.
         </p>
 
         <div className={styles.gdprStrip}>
-          <b>Quick win:</b> if you only want a copy of your data, the self-serve data
-          export is faster — instant download, no review required. Use this form for
-          everything else.
+          <b>Quick win:</b> if you only want a copy of your data, the self-serve
+          data export is faster — instant download, no review required. Use this
+          form for everything else.
         </div>
 
         <div className={styles.rightLabel}>Which right are you exercising?</div>
@@ -64,7 +113,10 @@ export function DsarPage() {
             <button
               key={r.art}
               type="button"
-              className={[styles.rightCard, art === r.art && styles.rightCardSelected]
+              className={[
+                styles.rightCard,
+                art === r.art && styles.rightCardSelected,
+              ]
                 .filter(Boolean)
                 .join(" ")}
               onClick={() => {
@@ -83,7 +135,11 @@ export function DsarPage() {
           className={styles.form}
           onSubmit={(e) => {
             e.preventDefault();
-            showToast("Request submitted · ref QP-DSAR-2026-0019", "success", 3500);
+            showToast(
+              "Request submitted · ref QP-DSAR-2026-0019",
+              "success",
+              3500,
+            );
           }}
         >
           <h2>
@@ -92,7 +148,12 @@ export function DsarPage() {
           <p className={styles.formSub}>{right.formSub}</p>
 
           <FormField label="Member account · pre-filled from your session">
-            <input type="text" value="tomas@example.com · Tomás Mendes" readOnly style={{ opacity: 0.7 }} />
+            <input
+              type="text"
+              value="tomas@example.com · Tomás Mendes"
+              readOnly
+              style={{ opacity: 0.7 }}
+            />
           </FormField>
 
           <FormField
@@ -108,7 +169,10 @@ export function DsarPage() {
               {SCOPES.map((sc, i) => (
                 <label
                   key={sc.b}
-                  className={[styles.scopeRow, scopes[i] && styles.scopeRowChecked]
+                  className={[
+                    styles.scopeRow,
+                    scopes[i] && styles.scopeRowChecked,
+                  ]
                     .filter(Boolean)
                     .join(" ")}
                 >
@@ -116,7 +180,9 @@ export function DsarPage() {
                     type="checkbox"
                     checked={scopes[i]}
                     onChange={() =>
-                      setScopes((prev) => prev.map((v, j) => (j === i ? !v : v)))
+                      setScopes((prev) =>
+                        prev.map((v, j) => (j === i ? !v : v)),
+                      )
                     }
                   />
                   <div>
@@ -129,10 +195,31 @@ export function DsarPage() {
           </div>
 
           <FormField
-            label={<>Supporting documents <span className={styles.opt}>— optional · helpful if available</span></>}
-            helper={<>For rectification: anything showing the correct value (e.g. utility bill for city). <em>Documents are deleted after verification.</em></>}
+            label={
+              <>
+                Supporting documents{" "}
+                <span className={styles.opt}>
+                  — optional · helpful if available
+                </span>
+              </>
+            }
+            helper={
+              <>
+                For rectification: anything showing the correct value (e.g.
+                utility bill for city).{" "}
+                <em>Documents are deleted after verification.</em>
+              </>
+            }
           >
-            <input type="file" multiple style={{ padding: "8px 12px", background: "transparent", borderStyle: "dashed" }} />
+            <input
+              type="file"
+              multiple
+              style={{
+                padding: "8px 12px",
+                background: "transparent",
+                borderStyle: "dashed",
+              }}
+            />
           </FormField>
 
           <FormField label="Anything we should know · context">
@@ -140,17 +227,19 @@ export function DsarPage() {
           </FormField>
 
           <div className={styles.legalStrip}>
-            <b>Legal note:</b> certain records cannot be erased even on request —
-            moderation case files retained for 36 months under Constitution §8·3,
-            financial records retained for 10 years under Portuguese tax law, and content
-            authored by you that has been quoted by other members under their own
-            copyright. <Link to={`${PRIVACY}#retention`}>Full retention schedule →</Link>
+            <b>Legal note:</b> certain records cannot be erased even on request
+            — moderation case files retained for 36 months under Constitution
+            §8·3, financial records retained for 10 years under Portuguese tax
+            law, and content authored by you that has been quoted by other
+            members under their own copyright.{" "}
+            <Link to={`${PRIVACY}#retention`}>Full retention schedule →</Link>
           </div>
 
           <div className={styles.actions}>
             <div className="info">
-              Goes directly to the privacy team. Response within <b>30 days max</b>,
-              usually 7. You'll get a written reply by email.
+              Goes directly to the privacy team. Response within{" "}
+              <b>30 days max</b>, usually 7. You'll get a written reply by
+              email.
             </div>
             <Button variant="primary" type="submit">
               Submit request
@@ -162,16 +251,22 @@ export function DsarPage() {
         <div className={styles.pastRow}>
           <span className={styles.num}>QP-DSAR-2026-018</span>
           <span>
-            <b>Article 15 · access</b> · submitted 14 Mar 2026 · responded 17 Mar (3 days)
+            <b>Article 15 · access</b> · submitted 14 Mar 2026 · responded 17
+            Mar (3 days)
           </span>
-          <span className={`${styles.status} ${styles.statusDone}`}>Resolved</span>
+          <span className={`${styles.status} ${styles.statusDone}`}>
+            Resolved
+          </span>
         </div>
         <div className={styles.pastRow}>
           <span className={styles.num}>QP-DSAR-2025-184</span>
           <span>
-            <b>Article 21 · object to analytics</b> · submitted 11 Nov 2025 · responded 13 Nov
+            <b>Article 21 · object to analytics</b> · submitted 11 Nov 2025 ·
+            responded 13 Nov
           </span>
-          <span className={`${styles.status} ${styles.statusDone}`}>Resolved</span>
+          <span className={`${styles.status} ${styles.statusDone}`}>
+            Resolved
+          </span>
         </div>
       </div>
     </PageShell>

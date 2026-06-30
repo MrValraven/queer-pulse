@@ -56,14 +56,18 @@
   overflow: hidden;
 }
 .levelCard::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -30%;
   right: -10%;
   width: 240px;
   height: 240px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.14),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .lcLevel {

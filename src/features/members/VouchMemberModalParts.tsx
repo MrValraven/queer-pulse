@@ -1,7 +1,7 @@
-import { Avatar, Button } from '../../shared/components/ui'
-import { currentUser, type MemberProfile } from './data/memberProfiles'
-import { RELATIONSHIPS } from './vouchMember.data'
-import styles from './VouchMemberModal.module.css'
+import { Avatar, Button } from "../../shared/components/ui";
+import { currentUser, type MemberProfile } from "./data/memberProfiles";
+import { RELATIONSHIPS } from "./vouchMember.data";
+import styles from "./VouchMemberModal.module.css";
 
 /**
  * Animated plum-panel success state: the candidate's face and the current
@@ -12,9 +12,9 @@ export function VouchSuccess({
   first,
   onClose,
 }: {
-  profile: MemberProfile
-  first: string
-  onClose: () => void
+  profile: MemberProfile;
+  first: string;
+  onClose: () => void;
 }) {
   return (
     <div className={styles.success}>
@@ -23,7 +23,7 @@ export function VouchSuccess({
         <span className={styles.faceA}>
           <Avatar
             initials={profile.initials}
-            tint={profile.tint === 'auth' ? 'plum' : profile.tint}
+            tint={profile.tint === "auth" ? "plum" : profile.tint}
             size={74}
             src={profile.photo}
             alt={`${first} ${profile.last}`}
@@ -55,14 +55,19 @@ export function VouchSuccess({
         That's <em>{first}</em>, backed.
       </h2>
       <p className={styles.successSub}>
-        Your face just joined <b>{first}</b>'s circle of vouches — that's how trust
-        travels here. Member by member, name by name.
+        Your face just joined <b>{first}</b>'s circle of vouches — that's how
+        trust travels here. Member by member, name by name.
       </p>
-      <Button variant="ghost-dark" size="lg" className={styles.doneBtn} onClick={onClose}>
+      <Button
+        variant="ghost-dark"
+        size="lg"
+        className={styles.doneBtn}
+        onClick={onClose}
+      >
         Done
       </Button>
     </div>
-  )
+  );
 }
 
 /**
@@ -84,18 +89,18 @@ export function VouchForm({
   onClose,
   onSubmit,
 }: {
-  profile: MemberProfile
-  first: string
-  relationship: string
-  setRelationship: (r: string) => void
-  endorsed: string[]
-  toggleTag: (tag: string) => void
-  note: string
-  setNote: (n: string) => void
-  canSubmit: boolean
-  status: 'form' | 'loading' | 'done'
-  onClose: () => void
-  onSubmit: () => void
+  profile: MemberProfile;
+  first: string;
+  relationship: string;
+  setRelationship: (r: string) => void;
+  endorsed: string[];
+  toggleTag: (tag: string) => void;
+  note: string;
+  setNote: (n: string) => void;
+  canSubmit: boolean;
+  status: "form" | "loading" | "done";
+  onClose: () => void;
+  onSubmit: () => void;
 }) {
   return (
     <div>
@@ -104,15 +109,16 @@ export function VouchForm({
         Stand behind <em>{first}</em>
       </div>
       <p className={styles.sub}>
-        A vouch is you, publicly, saying you know {first} and trust them in community
-        spaces. It carries weight here — QueerPulse is invite-and-vouch, and your name
-        goes on their profile beside the others who've backed them.
+        A vouch is you, publicly, saying you know {first} and trust them in
+        community spaces. It carries weight here — QueerPulse is
+        invite-and-vouch, and your name goes on their profile beside the others
+        who've backed them.
       </p>
 
       <div className={styles.candidate}>
         <Avatar
           initials={profile.initials}
-          tint={profile.tint === 'auth' ? 'plum' : profile.tint}
+          tint={profile.tint === "auth" ? "plum" : profile.tint}
           size={48}
           src={profile.photo}
         />
@@ -131,7 +137,7 @@ export function VouchForm({
             key={r}
             className={[styles.opt, relationship === r && styles.optChecked]
               .filter(Boolean)
-              .join(' ')}
+              .join(" ")}
           >
             <input
               type="radio"
@@ -148,23 +154,30 @@ export function VouchForm({
       {profile.tags.length > 0 && (
         <>
           <div className={styles.label}>
-            What can you vouch they're great at?{' '}
+            What can you vouch they're great at?{" "}
             <span className={styles.optional}>optional</span>
           </div>
           <div className={styles.chips}>
             {profile.tags.map((tag) => {
-              const on = endorsed.includes(tag)
+              const on = endorsed.includes(tag);
               return (
                 <button
                   type="button"
                   key={tag}
-                  className={[styles.chip, on && styles.chipOn].filter(Boolean).join(' ')}
+                  className={[styles.chip, on && styles.chipOn]
+                    .filter(Boolean)
+                    .join(" ")}
                   onClick={() => toggleTag(tag)}
                   aria-pressed={on}
                 >
                   {on && (
                     <span className={styles.chipCheck} aria-hidden>
-                      <svg width={13} height={13} viewBox="0 0 24 24" fill="none">
+                      <svg
+                        width={13}
+                        height={13}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
                         <path
                           className={styles.chipCheckPath}
                           d="M5 12.5l4 4L19 7"
@@ -178,7 +191,7 @@ export function VouchForm({
                   )}
                   {tag}
                 </button>
-              )
+              );
             })}
           </div>
         </>
@@ -205,9 +218,9 @@ export function VouchForm({
           variant="primary"
           className={styles.full}
           onClick={onSubmit}
-          disabled={!canSubmit || status === 'loading'}
+          disabled={!canSubmit || status === "loading"}
         >
-          {status === 'loading' ? (
+          {status === "loading" ? (
             <>
               <span className={styles.spinner} aria-hidden />
               Sending your vouch…
@@ -218,5 +231,5 @@ export function VouchForm({
         </Button>
       </div>
     </div>
-  )
+  );
 }

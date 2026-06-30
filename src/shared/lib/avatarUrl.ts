@@ -12,14 +12,17 @@
  * Pair it with `referrerPolicy="no-referrer"` on the `<img>`: Google's avatar
  * CDN can answer 403/429 when the request carries a `Referer`.
  */
-export function resolveAvatarSrc(src: string | undefined, px = 256): string | undefined {
-  if (!src) return src
+export function resolveAvatarSrc(
+  src: string | undefined,
+  px = 256,
+): string | undefined {
+  if (!src) return src;
   if (/googleusercontent\.com|ggpht\.com/.test(src)) {
-    const size = Math.max(1, Math.round(px))
+    const size = Math.max(1, Math.round(px));
     // Newer URLs encode size as an `=s96-c` directive...
-    if (/=s\d+/.test(src)) return src.replace(/=s\d+/, `=s${size}`)
+    if (/=s\d+/.test(src)) return src.replace(/=s\d+/, `=s${size}`);
     // ...older ones use a `?sz=96` query param.
-    if (/[?&]sz=\d+/.test(src)) return src.replace(/([?&]sz=)\d+/, `$1${size}`)
+    if (/[?&]sz=\d+/.test(src)) return src.replace(/([?&]sz=)\d+/, `$1${size}`);
   }
-  return src
+  return src;
 }

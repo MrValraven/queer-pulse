@@ -1,36 +1,36 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, ImageSlot } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { useSaved } from '../../app/providers/SavedProvider'
-import { FACTS, FILM_POSTER, TIPS, WATCH_TABS } from './filmPage.data'
-import styles from './FilmPage.module.css'
-import { routes } from '../../app/routeMap'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button, ImageSlot } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useSaved } from "../../app/providers/SavedProvider";
+import { FACTS, FILM_POSTER, TIPS, WATCH_TABS } from "./filmPage.data";
+import styles from "./FilmPage.module.css";
+import { routes } from "../../app/routeMap";
 
 const FILM_SAVED = {
-  id: 'film:the-light-between-rooms',
-  kind: 'film' as const,
-  title: 'The light between rooms',
-  href: '/film',
-  meta: 'Maria Vasconcelos · 2025',
+  id: "film:the-light-between-rooms",
+  kind: "film" as const,
+  title: "The light between rooms",
+  href: "/film",
+  meta: "Maria Vasconcelos · 2025",
   description:
-    'A chamber drama about two strangers sharing a house in Lisbon — and the light that passes between their rooms.',
-  readTime: '1h 48m',
-}
+    "A chamber drama about two strangers sharing a house in Lisbon — and the light that passes between their rooms.",
+  readTime: "1h 48m",
+};
 
 export function FilmHero() {
-  const { showToast } = useToast()
-  const { isSaved, toggleSave } = useSaved()
-  const [tip, setTip] = useState(1)
-  const [tab, setTab] = useState(0)
+  const { showToast } = useToast();
+  const { isSaved, toggleSave } = useSaved();
+  const [tip, setTip] = useState(1);
+  const [tab, setTab] = useState(0);
 
-  const onWatchlist = isSaved(FILM_SAVED.id)
+  const onWatchlist = isSaved(FILM_SAVED.id);
   function toggleWatchlist() {
-    const next = toggleSave(FILM_SAVED)
+    const next = toggleSave(FILM_SAVED);
     showToast(
-      next ? 'Added to your watchlist' : 'Removed from your watchlist',
-      next ? 'success' : 'info',
-    )
+      next ? "Added to your watchlist" : "Removed from your watchlist",
+      next ? "success" : "info",
+    );
   }
 
   return (
@@ -38,7 +38,15 @@ export function FilmHero() {
       <div className={`wrap ${styles.heroInner}`}>
         <div className={styles.posterCol}>
           <div className={styles.poster}>
-            <ImageSlot src={FILM_POSTER} tint="plum" width="100%" height="100%" radius={18} placeholder="film poster · 3:4" style={{ position: 'absolute', inset: 0 }} />
+            <ImageSlot
+              src={FILM_POSTER}
+              tint="plum"
+              width="100%"
+              height="100%"
+              radius={18}
+              placeholder="film poster · 3:4"
+              style={{ position: "absolute", inset: 0 }}
+            />
             <Link to={routes.cinemaWatch} className={styles.playFab}>
               <span className={styles.playCircle}>
                 <svg viewBox="0 0 24 24" fill="currentColor">
@@ -46,7 +54,9 @@ export function FilmHero() {
                 </svg>
               </span>
             </Link>
-            <div className={styles.posterCaption}>Press play · trailer 1:42</div>
+            <div className={styles.posterCaption}>
+              Press play · trailer 1:42
+            </div>
           </div>
 
           <div className={styles.tipjar}>
@@ -54,15 +64,20 @@ export function FilmHero() {
             <div className={styles.tipjarName}>
               Maria <em>Vasconcelos</em>
             </div>
-            <div className={styles.tipjarSub}>100% goes to Maria. No fees skimmed.</div>
+            <div className={styles.tipjarSub}>
+              100% goes to Maria. No fees skimmed.
+            </div>
             <div className={styles.tipRow}>
               {TIPS.map((t, i) => (
                 <button
                   key={t}
-                  className={[styles.tipChip, tip === i && styles.tipChipOn].filter(Boolean).join(' ')}
+                  className={[styles.tipChip, tip === i && styles.tipChipOn]
+                    .filter(Boolean)
+                    .join(" ")}
                   onClick={() => {
-                    setTip(i)
-                    if (t !== '···') showToast(`Tipped ${t} to Maria`, 'success')
+                    setTip(i);
+                    if (t !== "···")
+                      showToast(`Tipped ${t} to Maria`, "success");
                   }}
                 >
                   {t}
@@ -84,14 +99,17 @@ export function FilmHero() {
           <h1 className={styles.title}>
             The light <em>between</em> rooms
           </h1>
-          <div className={styles.meta}>Maria Vasconcelos · Portugal, 2025 · 92 min · documentary</div>
+          <div className={styles.meta}>
+            Maria Vasconcelos · Portugal, 2025 · 92 min · documentary
+          </div>
 
           <div className={styles.curatorPull}>
             <div className={styles.cpAv}>JR</div>
             <div className={styles.cpText}>
-              “A patient, generous film about Lisbon's working-class queer elders, made over three
-              years in the kitchens that raised them. <em>Stay for the second hour</em> — it's where
-              the film stops being about loss and starts being about teaching.”
+              “A patient, generous film about Lisbon's working-class queer
+              elders, made over three years in the kitchens that raised them.{" "}
+              <em>Stay for the second hour</em> — it's where the film stops
+              being about loss and starts being about teaching.”
               <span className="who">— João Ribeiro · programming lead</span>
             </div>
           </div>
@@ -101,7 +119,9 @@ export function FilmHero() {
               {WATCH_TABS.map((t, i) => (
                 <div
                   key={t.label}
-                  className={[styles.wbTab, tab === i && styles.wbTabActive].filter(Boolean).join(' ')}
+                  className={[styles.wbTab, tab === i && styles.wbTabActive]
+                    .filter(Boolean)
+                    .join(" ")}
                   onClick={() => setTab(i)}
                 >
                   <span>{t.label}</span>
@@ -116,19 +136,32 @@ export function FilmHero() {
               <span
                 role="button"
                 tabIndex={0}
-                className={[styles.iconBtn, onWatchlist && styles.iconBtnOn].filter(Boolean).join(' ')}
-                title={onWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+                className={[styles.iconBtn, onWatchlist && styles.iconBtnOn]
+                  .filter(Boolean)
+                  .join(" ")}
+                title={
+                  onWatchlist ? "Remove from watchlist" : "Add to watchlist"
+                }
                 aria-pressed={onWatchlist}
-                aria-label={onWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+                aria-label={
+                  onWatchlist ? "Remove from watchlist" : "Add to watchlist"
+                }
                 onClick={toggleWatchlist}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
-                    toggleWatchlist()
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleWatchlist();
                   }
                 }}
               >
-                <svg viewBox="0 0 24 24" fill={onWatchlist ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill={onWatchlist ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  strokeWidth={2.2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
                 </svg>
               </span>
@@ -141,20 +174,27 @@ export function FilmHero() {
                 onClick={() => {
                   void navigator.clipboard
                     ?.writeText(window.location.href)
-                    .then(() => showToast('Link copied', 'success'))
-                    .catch(() => showToast('Could not copy link', 'error'))
+                    .then(() => showToast("Link copied", "success"))
+                    .catch(() => showToast("Could not copy link", "error"));
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
                     void navigator.clipboard
                       ?.writeText(window.location.href)
-                      .then(() => showToast('Link copied', 'success'))
-                      .catch(() => showToast('Could not copy link', 'error'))
+                      .then(() => showToast("Link copied", "success"))
+                      .catch(() => showToast("Could not copy link", "error"));
                   }
                 }}
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <circle cx={18} cy={5} r={3} />
                   <circle cx={6} cy={12} r={3} />
                   <circle cx={18} cy={19} r={3} />
@@ -164,14 +204,22 @@ export function FilmHero() {
               </span>
             </div>
             <div className={styles.wbSplit}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <circle cx={12} cy={12} r={10} />
                 <path d="M12 6v6l4 2" />
               </svg>
               <div>
-                When you rent at €3, <strong>€2.40 goes to Maria.</strong> €0.36 covers payment
-                processing. €0.24 covers hosting &amp; captions. The split is the same for every
-                filmmaker. <Link to={routes.governance}>Read the deed →</Link>
+                When you rent at €3, <strong>€2.40 goes to Maria.</strong> €0.36
+                covers payment processing. €0.24 covers hosting &amp; captions.
+                The split is the same for every filmmaker.{" "}
+                <Link to={routes.governance}>Read the deed →</Link>
               </div>
             </div>
           </div>
@@ -179,8 +227,11 @@ export function FilmHero() {
           <div className={styles.liveStrip}>
             <span className="live" />
             <div>
-              <strong>Live Q&amp;A with Maria · Wed 10 June, 21:00 Lisbon.</strong> Co-hosted with
-              Casa do Comum. <em>Live captions in EN &amp; PT.</em>
+              <strong>
+                Live Q&amp;A with Maria · Wed 10 June, 21:00 Lisbon.
+              </strong>{" "}
+              Co-hosted with Casa do Comum.{" "}
+              <em>Live captions in EN &amp; PT.</em>
             </div>
             <Link to="/rsvp">RSVP →</Link>
           </div>
@@ -192,7 +243,13 @@ export function FilmHero() {
                 <div className="v">
                   {f.ok && (
                     <span className="ok">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2.6}
+                        strokeLinecap="round"
+                      >
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
                     </span>
@@ -205,5 +262,5 @@ export function FilmHero() {
         </div>
       </div>
     </section>
-  )
+  );
 }

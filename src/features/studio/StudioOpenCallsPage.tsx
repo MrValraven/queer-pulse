@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { FadeIn } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { StudioShell } from './StudioShell'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { FILTERS, CALLS } from './studioOpenCalls.data'
-import { StudioOpenCallCard } from './StudioOpenCallCard'
-import { StudioOpenCallSkeleton } from './StudioOpenCallSkeleton'
-import s from './funding.module.css'
+import { useState } from "react";
+import { FadeIn } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { StudioShell } from "./StudioShell";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { FILTERS, CALLS } from "./studioOpenCalls.data";
+import { StudioOpenCallCard } from "./StudioOpenCallCard";
+import { StudioOpenCallSkeleton } from "./StudioOpenCallSkeleton";
+import s from "./funding.module.css";
 
 export function StudioOpenCallsPage() {
-  const { showToast } = useToast()
-  const [filter, setFilter] = useState('All open')
-  const loading = useSimulatedLoad()
+  const { showToast } = useToast();
+  const [filter, setFilter] = useState("All open");
+  const loading = useSimulatedLoad();
 
   return (
     <StudioShell>
@@ -22,13 +22,21 @@ export function StudioOpenCallsPage() {
             Open <em>calls</em> &amp; commissions.
           </h1>
           <div className={s.dek}>
-            Briefs the council and co-op have funded. Apply inline — attach a <em>single track or release</em> from your catalogue. No cover letters, no portfolios; the work speaks.
+            Briefs the council and co-op have funded. Apply inline — attach a{" "}
+            <em>single track or release</em> from your catalogue. No cover
+            letters, no portfolios; the work speaks.
           </div>
         </div>
 
         <div className={s.filter}>
           {FILTERS.map((f) => (
-            <button key={f} className={[s.chip, filter === f && s.chipOn].filter(Boolean).join(' ')} onClick={() => setFilter(f)}>
+            <button
+              key={f}
+              className={[s.chip, filter === f && s.chipOn]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => setFilter(f)}
+            >
               {f}
             </button>
           ))}
@@ -39,63 +47,99 @@ export function StudioOpenCallsPage() {
 
         <div className={s.calls}>
           {loading ? (
-            Array.from({ length: 5 }).map((_, i) => <StudioOpenCallSkeleton key={i} />)
+            Array.from({ length: 5 }).map((_, i) => (
+              <StudioOpenCallSkeleton key={i} />
+            ))
           ) : (
-          <>
-          {CALLS.map((c, i) => (
-            <FadeIn key={c.id} delay={Math.min(i, 8) * 60}>
-              <StudioOpenCallCard call={c} />
-            </FadeIn>
-          ))}
+            <>
+              {CALLS.map((c, i) => (
+                <FadeIn key={c.id} delay={Math.min(i, 8) * 60}>
+                  <StudioOpenCallCard call={c} />
+                </FadeIn>
+              ))}
 
-          {/* Applied state */}
-          <FadeIn delay={Math.min(CALLS.length, 8) * 60}>
-          <div className={s.call} style={{ opacity: 0.72 }}>
-            <div className={s.callTop}>
-              <div className={s.callCur}>
-                <span className={`${s.av} ${s.jade}`}>SM</span>
-                <div>
-                  <div className={s.nm}>Sara Marques</div>
-                  <div className={s.ro}>Council · seat 1</div>
+              {/* Applied state */}
+              <FadeIn delay={Math.min(CALLS.length, 8) * 60}>
+                <div className={s.call} style={{ opacity: 0.72 }}>
+                  <div className={s.callTop}>
+                    <div className={s.callCur}>
+                      <span className={`${s.av} ${s.jade}`}>SM</span>
+                      <div>
+                        <div className={s.nm}>Sara Marques</div>
+                        <div className={s.ro}>Council · seat 1</div>
+                      </div>
+                    </div>
+                    <div className={s.callMain}>
+                      <div className={s.callTags}>
+                        <span className={`${s.callTag} ${s.tagCommission}`}>
+                          Commission
+                        </span>
+                        <span className={`${s.callTag} ${s.tagApplied}`}>
+                          Applied · 2 Jun
+                        </span>
+                      </div>
+                      <h3>
+                        Closing theme for the <em>Pride assembly</em>
+                      </h3>
+                      <p className={s.brief}>
+                        You attached <em>A Beja</em> and a note. Sara claimed it
+                        on 4 June. Decision by 18 June — you'll hear back here
+                        and by email, with a sentence either way.
+                      </p>
+                    </div>
+                    <div className={s.callAmt}>
+                      <div
+                        className="v"
+                        style={{
+                          fontFamily: "var(--serif)",
+                          fontWeight: 300,
+                          fontSize: 28,
+                          color: "var(--cream)",
+                        }}
+                      >
+                        €
+                        <em
+                          style={{
+                            fontStyle: "normal",
+                            color: "var(--accent)",
+                          }}
+                        >
+                          500
+                        </em>
+                      </div>
+                      <div
+                        className="l"
+                        style={{ fontSize: 11, color: "rgba(247,243,238,.4)" }}
+                      >
+                        flat
+                      </div>
+                    </div>
+                  </div>
+                  <div className={s.callFoot}>
+                    <div className={s.callMeta}>
+                      <span>
+                        Status · <em>in review with Sara</em>
+                      </span>
+                      <span className={s.dot} />
+                      <span>decision by 18 Jun</span>
+                    </div>
+                    <div className={s.callActions}>
+                      <button
+                        className={s.bt}
+                        onClick={() =>
+                          showToast("Application withdrawn", "info")
+                        }
+                      >
+                        Withdraw
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className={s.callMain}>
-                <div className={s.callTags}>
-                  <span className={`${s.callTag} ${s.tagCommission}`}>Commission</span>
-                  <span className={`${s.callTag} ${s.tagApplied}`}>Applied · 2 Jun</span>
-                </div>
-                <h3>
-                  Closing theme for the <em>Pride assembly</em>
-                </h3>
-                <p className={s.brief}>
-                  You attached <em>A Beja</em> and a note. Sara claimed it on 4 June. Decision by 18 June — you'll hear back here and by email, with a sentence either way.
-                </p>
-              </div>
-              <div className={s.callAmt}>
-                <div className="v" style={{ fontFamily: 'var(--serif)', fontWeight: 300, fontSize: 28, color: 'var(--cream)' }}>
-                  €<em style={{ fontStyle: 'normal', color: 'var(--accent)' }}>500</em>
-                </div>
-                <div className="l" style={{ fontSize: 11, color: 'rgba(247,243,238,.4)' }}>flat</div>
-              </div>
-            </div>
-            <div className={s.callFoot}>
-              <div className={s.callMeta}>
-                <span>Status · <em>in review with Sara</em></span>
-                <span className={s.dot} />
-                <span>decision by 18 Jun</span>
-              </div>
-              <div className={s.callActions}>
-                <button className={s.bt} onClick={() => showToast('Application withdrawn', 'info')}>
-                  Withdraw
-                </button>
-              </div>
-            </div>
-          </div>
-          </FadeIn>
-          </>
+              </FadeIn>
+            </>
           )}
         </div>
       </div>
     </StudioShell>
-  )
+  );
 }

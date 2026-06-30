@@ -1,53 +1,62 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { AuthLayout } from './AuthLayout'
-import { routes } from '../../app/routeMap'
-import styles from './auth.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { AuthLayout } from "./AuthLayout";
+import { routes } from "../../app/routeMap";
+import styles from "./auth.module.css";
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function PasswordResetPage() {
-  const { showToast } = useToast()
-  const [email, setEmail] = useState('')
-  const [touched, setTouched] = useState(false)
-  const [sent, setSent] = useState(false)
-  const [resendLabel, setResendLabel] = useState('Resend link')
+  const { showToast } = useToast();
+  const [email, setEmail] = useState("");
+  const [touched, setTouched] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [resendLabel, setResendLabel] = useState("Resend link");
 
-  const emailValid = EMAIL_RE.test(email.trim())
-  const emailError = touched && email.trim().length > 0 && !emailValid
+  const emailValid = EMAIL_RE.test(email.trim());
+  const emailError = touched && email.trim().length > 0 && !emailValid;
 
   function handleSend(e: React.FormEvent) {
-    e.preventDefault()
-    if (!emailValid) return
-    setSent(true)
+    e.preventDefault();
+    if (!emailValid) return;
+    setSent(true);
   }
 
   function handleResend() {
-    setResendLabel('Sending…')
+    setResendLabel("Sending…");
     setTimeout(() => {
-      showToast('Reset link sent again', 'success')
-      let secs = 30
-      setResendLabel(`Resend in ${secs}s`)
+      showToast("Reset link sent again", "success");
+      let secs = 30;
+      setResendLabel(`Resend in ${secs}s`);
       const iv = setInterval(() => {
-        secs--
+        secs--;
         if (secs <= 0) {
-          clearInterval(iv)
-          setResendLabel('Resend link')
+          clearInterval(iv);
+          setResendLabel("Resend link");
         } else {
-          setResendLabel(`Resend in ${secs}s`)
+          setResendLabel(`Resend in ${secs}s`);
         }
-      }, 1000)
-    }, 900)
+      }, 1000);
+    }, 900);
   }
 
   if (sent) {
     return (
       <AuthLayout>
-        <div className={styles.screenIn} style={{ textAlign: 'center' }}>
+        <div className={styles.screenIn} style={{ textAlign: "center" }}>
           <div className={styles.successIcon}>
-            <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="var(--jade)" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width={26}
+              height={26}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--jade)"
+              strokeWidth={1.8}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <rect x={2} y={4} width={20} height={16} rx={2} />
               <polyline points="22,6 12,13 2,6" />
             </svg>
@@ -55,10 +64,28 @@ export function PasswordResetPage() {
           <h1>
             Check your <em>inbox.</em>
           </h1>
-          <p className={styles.sub} style={{ maxWidth: '32ch', margin: '0 auto 24px' }}>
-            We've sent a reset link to <strong style={{ color: 'var(--plum)', fontWeight: 600, wordBreak: 'break-all' }}>{email}</strong>. It may take a minute — check your spam folder if it doesn't arrive.
+          <p
+            className={styles.sub}
+            style={{ maxWidth: "32ch", margin: "0 auto 24px" }}
+          >
+            We've sent a reset link to{" "}
+            <strong
+              style={{
+                color: "var(--plum)",
+                fontWeight: 600,
+                wordBreak: "break-all",
+              }}
+            >
+              {email}
+            </strong>
+            . It may take a minute — check your spam folder if it doesn't
+            arrive.
           </p>
-          <Button variant="ghost" className={styles.authBtn} onClick={handleResend}>
+          <Button
+            variant="ghost"
+            className={styles.authBtn}
+            onClick={handleResend}
+          >
             {resendLabel}
           </Button>
           <div className={styles.footer} style={{ marginTop: 16 }}>
@@ -66,7 +93,7 @@ export function PasswordResetPage() {
           </div>
         </div>
       </AuthLayout>
-    )
+    );
   }
 
   return (
@@ -74,7 +101,9 @@ export function PasswordResetPage() {
       <h1>
         Reset your <em>password.</em>
       </h1>
-      <p className={styles.sub}>Enter your email and we'll send you a link to set a new one.</p>
+      <p className={styles.sub}>
+        Enter your email and we'll send you a link to set a new one.
+      </p>
 
       <form onSubmit={handleSend}>
         <div className={styles.field} style={{ marginBottom: 26 }}>
@@ -91,7 +120,13 @@ export function PasswordResetPage() {
             />
           </div>
           {emailError && (
-            <span style={{ fontSize: 12.5, color: 'var(--accent-ink)', fontWeight: 500 }}>
+            <span
+              style={{
+                fontSize: 12.5,
+                color: "var(--accent-ink)",
+                fontWeight: 500,
+              }}
+            >
               Please enter a valid email address.
             </span>
           )}
@@ -106,5 +141,5 @@ export function PasswordResetPage() {
         <Link to={routes.signIn}>← Back to sign in</Link>
       </div>
     </AuthLayout>
-  )
+  );
 }

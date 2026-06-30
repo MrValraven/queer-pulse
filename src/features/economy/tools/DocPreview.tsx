@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import styles from './DocPreview.module.css'
+import type { ReactNode } from "react";
+import styles from "./DocPreview.module.css";
 
 /**
  * The printable "paper" surface. Renders its children inside a
@@ -11,5 +11,5 @@ export function DocPreview({ children }: { children: ReactNode }) {
     <div className={styles.sheet} data-print-root>
       {children}
     </div>
-  )
+  );
 }

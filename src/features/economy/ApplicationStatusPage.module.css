@@ -271,7 +271,11 @@
 }
 .appOverdue {
   border-color: rgba(var(--accent-rgb), 0.4);
-  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.04), var(--paper) 120px);
+  background: linear-gradient(
+    90deg,
+    rgba(var(--accent-rgb), 0.04),
+    var(--paper) 120px
+  );
 }
 .appOverdue::before {
   background: var(--accent);

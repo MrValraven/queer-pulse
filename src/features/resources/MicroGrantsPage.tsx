@@ -1,22 +1,22 @@
-import { useState } from 'react'
-import { FiCheck } from 'react-icons/fi'
-import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Outro } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { routes } from '../../app/routeMap'
-import { CRITERIA, CURRENT, HOW, PANEL, PAST, RULES } from './microGrants.data'
-import { GrantCard, GrantSkeleton } from './GrantCard'
-import { GrantApplicationModal } from './GrantApplicationModal'
-import { PanelSignupModal } from './PanelSignupModal'
-import { ContributeStrip, MicroGrantsHero } from './MicroGrantsSections'
-import styles from './MicroGrantsPage.module.css'
+import { useState } from "react";
+import { FiCheck } from "react-icons/fi";
+import { PageShell } from "../../shared/components/layout";
+import { Button, FadeIn, Outro } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
+import { CRITERIA, CURRENT, HOW, PANEL, PAST, RULES } from "./microGrants.data";
+import { GrantCard, GrantSkeleton } from "./GrantCard";
+import { GrantApplicationModal } from "./GrantApplicationModal";
+import { PanelSignupModal } from "./PanelSignupModal";
+import { ContributeStrip, MicroGrantsHero } from "./MicroGrantsSections";
+import styles from "./MicroGrantsPage.module.css";
 
-const INVITE = routes.requestInvite
+const INVITE = routes.requestInvite;
 
 export function MicroGrantsPage() {
-  const [open, setOpen] = useState(false)
-  const [panelOpen, setPanelOpen] = useState(false)
-  const loading = useSimulatedLoad()
+  const [open, setOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const loading = useSimulatedLoad();
 
   return (
     <PageShell>
@@ -49,9 +49,10 @@ export function MicroGrantsPage() {
                   This round: <em>Making things together.</em>
                 </div>
                 <p className={styles.rcDesc}>
-                  This quarter we are prioritising projects that create something — events,
-                  publications, spaces, tools — that the wider queer community in Lisbon can access
-                  and benefit from. Solo projects and collaborations both welcome.
+                  This quarter we are prioritising projects that create
+                  something — events, publications, spaces, tools — that the
+                  wider queer community in Lisbon can access and benefit from.
+                  Solo projects and collaborations both welcome.
                 </p>
                 <div className={styles.rcMeta}>
                   <div className={styles.rcm}>
@@ -72,13 +73,19 @@ export function MicroGrantsPage() {
                   <div className={styles.critList}>
                     {CRITERIA.map((c) => (
                       <div className={styles.crit} key={c}>
-                        <span className={styles.critCheck}><FiCheck /></span>
+                        <span className={styles.critCheck}>
+                          <FiCheck />
+                        </span>
                         <span>{c}</span>
                       </div>
                     ))}
                   </div>
                 </div>
-                <Button type="button" variant="primary" onClick={() => setOpen(true)}>
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => setOpen(true)}
+                >
                   Apply for this round
                 </Button>
               </div>
@@ -153,7 +160,11 @@ export function MicroGrantsPage() {
       </main>
 
       <Outro
-        title={<>The community <em>funds itself.</em></>}
+        title={
+          <>
+            The community <em>funds itself.</em>
+          </>
+        }
         sub="Every project here was made possible by members contributing what they could spare. The fund grows with the network."
       >
         <Button to={INVITE} variant="primary" size="lg">
@@ -164,5 +175,5 @@ export function MicroGrantsPage() {
       {open && <GrantApplicationModal onClose={() => setOpen(false)} />}
       {panelOpen && <PanelSignupModal onClose={() => setPanelOpen(false)} />}
     </PageShell>
-  )
+  );
 }

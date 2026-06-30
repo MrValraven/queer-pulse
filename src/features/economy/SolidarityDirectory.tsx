@@ -1,31 +1,37 @@
-import { useState } from 'react'
-import { FiHeart } from 'react-icons/fi'
-import { Link } from 'react-router-dom'
-import { Button, EmptyState, FadeIn } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { routes } from '../../app/routeMap'
-import { useConnect } from '../../app/providers/ConnectProvider'
+import { useState } from "react";
+import { FiHeart } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
+import { useConnect } from "../../app/providers/ConnectProvider";
 import {
-  PRACTITIONERS, FILTERS, TINT_BG, TINT_FG, initials, type Cat,
-} from './solidarity.data'
-import { SolidaritySkeleton } from './SolidaritySkeleton'
-import styles from './SolidarityPage.module.css'
+  PRACTITIONERS,
+  FILTERS,
+  TINT_BG,
+  TINT_FG,
+  initials,
+  type Cat,
+} from "./solidarity.data";
+import { SolidaritySkeleton } from "./SolidaritySkeleton";
+import styles from "./SolidarityPage.module.css";
 
 export function SolidarityDirectory() {
-  const loading = useSimulatedLoad()
-  const [cat, setCat] = useState<Cat | 'all'>('all')
-  const [query, setQuery] = useState('')
-  const { openConnect } = useConnect()
-  const q = query.toLowerCase()
+  const loading = useSimulatedLoad();
+  const [cat, setCat] = useState<Cat | "all">("all");
+  const [query, setQuery] = useState("");
+  const { openConnect } = useConnect();
+  const q = query.toLowerCase();
 
   const items = PRACTITIONERS.filter((p) => {
-    if (cat !== 'all' && p.cat !== cat) return false
+    if (cat !== "all" && p.cat !== cat) return false;
     if (q) {
-      const hay = `${p.name}${p.spec}${p.hood}${p.tags.join(' ')}${p.desc}`.toLowerCase()
-      if (!hay.includes(q)) return false
+      const hay =
+        `${p.name}${p.spec}${p.hood}${p.tags.join(" ")}${p.desc}`.toLowerCase();
+      if (!hay.includes(q)) return false;
     }
-    return true
-  })
+    return true;
+  });
 
   return (
     <>
@@ -38,7 +44,7 @@ export function SolidarityDirectory() {
               type="button"
               className={[styles.chip, cat === f.id && styles.chipActive]
                 .filter(Boolean)
-                .join(' ')}
+                .join(" ")}
               onClick={() => setCat(f.id)}
             >
               {f.label}
@@ -54,7 +60,7 @@ export function SolidarityDirectory() {
             />
           </div>
           <div className={styles.count}>
-            <b>{items.length}</b> practitioner{items.length !== 1 ? 's' : ''}
+            <b>{items.length}</b> practitioner{items.length !== 1 ? "s" : ""}
           </div>
         </div>
       </div>
@@ -63,74 +69,94 @@ export function SolidarityDirectory() {
         <div className="wrap">
           <div className={styles.grid}>
             {loading &&
-              Array.from({ length: 6 }).map((_, i) => <SolidaritySkeleton key={i} />)}
+              Array.from({ length: 6 }).map((_, i) => (
+                <SolidaritySkeleton key={i} />
+              ))}
             {!loading && items.length === 0 && (
               <EmptyState
                 icon={<FiHeart />}
                 title="No practitioners match"
                 description="No one fits that search just yet. Try a different profession or clear your search to see everyone offering sliding-scale care."
                 action={{
-                  label: 'Clear filters',
+                  label: "Clear filters",
                   onClick: () => {
-                    setCat('all')
-                    setQuery('')
+                    setCat("all");
+                    setQuery("");
                   },
                 }}
               />
             )}
             {!loading &&
               items.map((p, i) => (
-              <FadeIn key={p.id} delay={Math.min(i, 8) * 60} as="article" className={styles.pc}>
-                <div className={styles.pcTop}>
-                  <div
-                    className={styles.pcAv}
-                    style={{ background: TINT_BG[p.tint], color: TINT_FG[p.tint] }}
-                  >
-                    {initials(p.name)}
+                <FadeIn
+                  key={p.id}
+                  delay={Math.min(i, 8) * 60}
+                  as="article"
+                  className={styles.pc}
+                >
+                  <div className={styles.pcTop}>
+                    <div
+                      className={styles.pcAv}
+                      style={{
+                        background: TINT_BG[p.tint],
+                        color: TINT_FG[p.tint],
+                      }}
+                    >
+                      {initials(p.name)}
+                    </div>
+                    <div className={styles.pcMeta}>
+                      <div className={styles.pcName}>{p.name}</div>
+                      <div className={styles.pcSpec}>
+                        {p.spec} · {p.hood}
+                      </div>
+                    </div>
+                    <span
+                      className={[
+                        styles.pcBadge,
+                        p.isMember ? styles.badgeMember : styles.badgeVerified,
+                      ].join(" ")}
+                    >
+                      {p.isMember ? "Member" : "Verified"}
+                    </span>
                   </div>
-                  <div className={styles.pcMeta}>
-                    <div className={styles.pcName}>{p.name}</div>
-                    <div className={styles.pcSpec}>{p.spec} · {p.hood}</div>
+                  <div className={styles.pcPricing}>
+                    <div className={styles.pcPriceLabel}>Sliding scale</div>
+                    <div className={styles.pcPriceRange}>{p.range}</div>
+                    <div className={styles.pcPriceNote}>{p.scaleNote}</div>
                   </div>
-                  <span className={[styles.pcBadge, p.isMember ? styles.badgeMember : styles.badgeVerified].join(' ')}>
-                    {p.isMember ? 'Member' : 'Verified'}
-                  </span>
-                </div>
-                <div className={styles.pcPricing}>
-                  <div className={styles.pcPriceLabel}>Sliding scale</div>
-                  <div className={styles.pcPriceRange}>{p.range}</div>
-                  <div className={styles.pcPriceNote}>{p.scaleNote}</div>
-                </div>
-                <div className={styles.pcDesc}>{p.desc}</div>
-                <div className={styles.pcTags}>
-                  {p.tags.map((t) => (
-                    <span key={t} className={styles.ptag}>{t}</span>
-                  ))}
-                </div>
-                <div className={styles.pcFoot}>
-                  <span className={styles.pcLang}>{p.langs.join(' · ')}</span>
-                  <button
-                    type="button"
-                    className={styles.pcContact}
-                    onClick={() => openConnect(p.id)}
-                  >
-                    Contact →
-                  </button>
-                </div>
-              </FadeIn>
-            ))}
+                  <div className={styles.pcDesc}>{p.desc}</div>
+                  <div className={styles.pcTags}>
+                    {p.tags.map((t) => (
+                      <span key={t} className={styles.ptag}>
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  <div className={styles.pcFoot}>
+                    <span className={styles.pcLang}>{p.langs.join(" · ")}</span>
+                    <button
+                      type="button"
+                      className={styles.pcContact}
+                      onClick={() => openConnect(p.id)}
+                    >
+                      Contact →
+                    </button>
+                  </div>
+                </FadeIn>
+              ))}
           </div>
 
           <div className={styles.regStrip}>
             <div className={styles.rsText}>
               <h3>
-                Do you offer<br />
+                Do you offer
+                <br />
                 <em>solidarity pricing?</em>
               </h3>
               <p>
                 If you are a professional in the community and already offer
-                sliding-scale fees, add yourself to this list. It takes ten minutes
-                and helps people find you.
+                sliding-scale fees, add yourself to this list. It takes ten
+                minutes and helps people find you.
               </p>
             </div>
             <div className={styles.rsCta}>
@@ -145,5 +171,5 @@ export function SolidarityDirectory() {
         </div>
       </main>
     </>
-  )
+  );
 }

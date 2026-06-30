@@ -116,15 +116,34 @@
   color: #fff;
 }
 
-.iconGoogle { background: linear-gradient(135deg, #4285F4, #34A853); }
-.iconApple { background: #000; }
-.iconMagic { background: #5856d6; }
-.iconPasskey { background: #1a1a1a; }
-.iconDiscord { background: #5865F2; }
-.iconBluesky { background: #000; }
-.iconArena { background: #FF4500; }
-.iconCalendar { background: #0061ff; }
-.iconAdd { background: rgba(45, 27, 61, 0.1); color: var(--plum); }
+.iconGoogle {
+  background: linear-gradient(135deg, #4285f4, #34a853);
+}
+.iconApple {
+  background: #000;
+}
+.iconMagic {
+  background: #5856d6;
+}
+.iconPasskey {
+  background: #1a1a1a;
+}
+.iconDiscord {
+  background: #5865f2;
+}
+.iconBluesky {
+  background: #000;
+}
+.iconArena {
+  background: #ff4500;
+}
+.iconCalendar {
+  background: #0061ff;
+}
+.iconAdd {
+  background: rgba(45, 27, 61, 0.1);
+  color: var(--plum);
+}
 
 .iconSvg {
   width: 22px;

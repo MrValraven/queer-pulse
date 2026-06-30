@@ -1,40 +1,57 @@
-import { useMemo, useState } from 'react'
-import { Button, FadeIn, EmptyState, SearchInput, FilterChips } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import type { Thread as ThreadData } from './communityDetails'
-import { CommunityThread } from './CommunityThread'
-import detail from './CommunityDetailPage.module.css'
-import styles from './CommunityHubTabs.module.css'
+import { useMemo, useState } from "react";
+import {
+  Button,
+  FadeIn,
+  EmptyState,
+  SearchInput,
+  FilterChips,
+} from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import type { Thread as ThreadData } from "./communityDetails";
+import { CommunityThread } from "./CommunityThread";
+import detail from "./CommunityDetailPage.module.css";
+import styles from "./CommunityHubTabs.module.css";
 
-const CHIPS = ['All', 'Pinned', 'Newest'] as const
-type Chip = (typeof CHIPS)[number]
+const CHIPS = ["All", "Pinned", "Newest"] as const;
+type Chip = (typeof CHIPS)[number];
 
 export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
-  const { showToast } = useToast()
-  const [q, setQ] = useState('')
-  const [chip, setChip] = useState<Chip>('All')
-  const [newPost, setNewPost] = useState('')
-  const [extra, setExtra] = useState<ThreadData[]>([])
+  const { showToast } = useToast();
+  const [q, setQ] = useState("");
+  const [chip, setChip] = useState<Chip>("All");
+  const [newPost, setNewPost] = useState("");
+  const [extra, setExtra] = useState<ThreadData[]>([]);
 
   const shown = useMemo(() => {
-    const term = q.trim().toLowerCase()
-    let list = [...extra, ...threads]
-    if (term) list = list.filter((t) => `${t.title} ${t.post}`.toLowerCase().includes(term))
-    if (chip === 'Newest') list = [...list].sort((a, b) => b.votes - a.votes)
-    return list
-  }, [q, chip, extra, threads])
+    const term = q.trim().toLowerCase();
+    let list = [...extra, ...threads];
+    if (term)
+      list = list.filter((t) =>
+        `${t.title} ${t.post}`.toLowerCase().includes(term),
+      );
+    if (chip === "Newest") list = [...list].sort((a, b) => b.votes - a.votes);
+    return list;
+  }, [q, chip, extra, threads]);
 
   const post = () => {
-    const text = newPost.trim()
-    if (!text) return
-    const title = text.length > 70 ? `${text.slice(0, 67)}…` : text
+    const text = newPost.trim();
+    if (!text) return;
+    const title = text.length > 70 ? `${text.slice(0, 67)}…` : text;
     setExtra((prev) => [
-      { votes: 1, title, author: { initials: 'Me', name: 'You', tint: 'plum' }, time: 'just now', replyCount: 0, post: text, replies: [] },
+      {
+        votes: 1,
+        title,
+        author: { initials: "Me", name: "You", tint: "plum" },
+        time: "just now",
+        replyCount: 0,
+        post: text,
+        replies: [],
+      },
       ...prev,
-    ])
-    setNewPost('')
-    showToast('Discussion started.', 'success')
-  }
+    ]);
+    setNewPost("");
+    showToast("Discussion started.", "success");
+  };
 
   return (
     <div>
@@ -53,7 +70,10 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
       />
 
       {shown.length === 0 ? (
-        <EmptyState title="Nothing matches yet" description="Try a different search, or start the discussion below." />
+        <EmptyState
+          title="Nothing matches yet"
+          description="Try a different search, or start the discussion below."
+        />
       ) : (
         shown.map((t, i) => (
           <FadeIn key={t.title} delay={Math.min(i, 8) * 55}>
@@ -63,7 +83,10 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
       )}
 
       <div className={detail.newPost} style={{ marginTop: 16 }}>
-        <div className={[detail.rAv, detail.tPlum].join(' ')} style={{ width: 30, height: 30 }}>
+        <div
+          className={[detail.rAv, detail.tPlum].join(" ")}
+          style={{ width: 30, height: 30 }}
+        >
           Me
         </div>
         <textarea
@@ -73,10 +96,14 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
           value={newPost}
           onChange={(e) => setNewPost(e.target.value)}
         />
-        <Button variant="ghost" onClick={post} style={{ whiteSpace: 'nowrap', fontSize: 13 }}>
+        <Button
+          variant="ghost"
+          onClick={post}
+          style={{ whiteSpace: "nowrap", fontSize: 13 }}
+        >
           Post
         </Button>
       </div>
     </div>
-  )
+  );
 }

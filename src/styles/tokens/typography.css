@@ -4,32 +4,32 @@
 :root {
   /* ── Font families ── */
   --serif: "Fraunces", Georgia, serif;
-  --sans:  "DM Sans", system-ui, -apple-system, sans-serif;
+  --sans: "DM Sans", system-ui, -apple-system, sans-serif;
 
   /* ── Fluid display scale (clamp) ── */
-  --text-hero:    clamp(50px, 8.2vw, 118px);
-  --text-display: clamp(34px, 4.4vw,  58px);
-  --text-title:   clamp(28px, 3.5vw,  46px);
-  --text-heading: clamp(22px, 2.4vw,  32px);
+  --text-hero: clamp(50px, 8.2vw, 118px);
+  --text-display: clamp(34px, 4.4vw, 58px);
+  --text-title: clamp(28px, 3.5vw, 46px);
+  --text-heading: clamp(22px, 2.4vw, 32px);
   --text-subhead: 20px;
 
   /* ── Body / UI scale ── */
   --text-body-lg: 17px;
-  --text-body:    15px;
+  --text-body: 15px;
   --text-body-sm: 14px;
   --text-caption: 13px;
-  --text-label:   12.5px;
-  --text-eyebrow: 13px;   /* always uppercase + tracked */
+  --text-label: 12.5px;
+  --text-eyebrow: 13px; /* always uppercase + tracked */
 
   /* ── Line heights ── */
   --lh-display: 1.02;
-  --lh-title:   1.1;
-  --lh-body:    1.55;
+  --lh-title: 1.1;
+  --lh-body: 1.55;
   --lh-body-lg: 1.65;
 
   /* ── Letter spacing ── */
-  --ls-display: -.02em;
-  --ls-heading: -.01em;
-  --ls-eyebrow: .04em;
-  --ls-label:   .1em;
+  --ls-display: -0.02em;
+  --ls-heading: -0.01em;
+  --ls-eyebrow: 0.04em;
+  --ls-label: 0.1em;
 }

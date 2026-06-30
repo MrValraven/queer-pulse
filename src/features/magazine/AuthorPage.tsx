@@ -1,35 +1,129 @@
-import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, ImageSlot, SkeletonLine } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { memberName } from '../members/data/members'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { useSocial } from '../../app/providers/SocialProvider'
-import { MagazineMasthead } from './MagazineMasthead'
-import { AUTHOR_PORTRAIT_IMG, AUTHOR_FEATURE_IMG } from './authorPage.data'
-import styles from './AuthorPage.module.css'
-import { routes } from '../../app/routeMap'
+import { Link } from "react-router-dom";
+import { PageShell } from "../../shared/components/layout";
+import {
+  Button,
+  FadeIn,
+  ImageSlot,
+  SkeletonLine,
+} from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { memberName } from "../members/data/members";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useSocial } from "../../app/providers/SocialProvider";
+import { MagazineMasthead } from "./MagazineMasthead";
+import { AUTHOR_PORTRAIT_IMG, AUTHOR_FEATURE_IMG } from "./authorPage.data";
+import styles from "./AuthorPage.module.css";
+import { routes } from "../../app/routeMap";
 
-const AUTHOR_SLUG = 'sara-pinheiro'
+const AUTHOR_SLUG = "sara-pinheiro";
 
-const BEATS = ['Health & access', 'Migration & visas', 'Public services', 'Long reads', 'Interviews', 'Reported essays']
+const BEATS = [
+  "Health & access",
+  "Migration & visas",
+  "Public services",
+  "Long reads",
+  "Interviews",
+  "Reported essays",
+];
 
 const ARTICLES = [
-  { id: 'visibility-politics', kicker: 'Long read · 14 min', title: <>What the SNS gets right (and where it <em>still leaves you waiting</em>).</>, dek: 'Six months reporting inside three regional health centres in Lisbon and the Algarve.', meta: 'Issue 07 · Apr 2026' },
-  { id: 'kiko-neves', kicker: 'Interview', title: <>Dr. Inês Pereira on <em>fifteen minutes of someone else's time.</em></>, dek: 'The Anjos GP who treats trans patients as adults — and changed the protocol for an entire clinic.', meta: 'Issue 06 · Feb 2026' },
-  { id: 'i-arrived', kicker: 'Reported essay', title: <>The visa queue is <em>a kind of closet.</em></>, dek: 'Three queer migrants on what it means to wait for a residency permit while not being out to your case officer.', meta: 'Issue 05 · Dec 2025' },
-  { id: 'politics-of-staying', kicker: 'Opinion', title: <>Stop calling it "access." <em>Call it care.</em></>, dek: 'A small change in language that changes how clinics get funded — and who gets seen.', meta: 'Issue 04 · Oct 2025' },
-  { id: 'last-bar', kicker: 'Reporting', title: <>Inside the back room of <em>Café Beirão.</em></>, dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure.", meta: 'Issue 03 · Aug 2025' },
-  { id: 'mouraria-family', kicker: `Interview · with ${memberName('sofia')}`, title: <>Mariza Câmara, <em>district health director.</em></>, dek: "An hour-long conversation about queer health policy in Lisbon's Câmara Municipal.", meta: 'Issue 02 · Jun 2025' },
-]
+  {
+    id: "visibility-politics",
+    kicker: "Long read · 14 min",
+    title: (
+      <>
+        What the SNS gets right (and where it <em>still leaves you waiting</em>
+        ).
+      </>
+    ),
+    dek: "Six months reporting inside three regional health centres in Lisbon and the Algarve.",
+    meta: "Issue 07 · Apr 2026",
+  },
+  {
+    id: "kiko-neves",
+    kicker: "Interview",
+    title: (
+      <>
+        Dr. Inês Pereira on <em>fifteen minutes of someone else's time.</em>
+      </>
+    ),
+    dek: "The Anjos GP who treats trans patients as adults — and changed the protocol for an entire clinic.",
+    meta: "Issue 06 · Feb 2026",
+  },
+  {
+    id: "i-arrived",
+    kicker: "Reported essay",
+    title: (
+      <>
+        The visa queue is <em>a kind of closet.</em>
+      </>
+    ),
+    dek: "Three queer migrants on what it means to wait for a residency permit while not being out to your case officer.",
+    meta: "Issue 05 · Dec 2025",
+  },
+  {
+    id: "politics-of-staying",
+    kicker: "Opinion",
+    title: (
+      <>
+        Stop calling it "access." <em>Call it care.</em>
+      </>
+    ),
+    dek: "A small change in language that changes how clinics get funded — and who gets seen.",
+    meta: "Issue 04 · Oct 2025",
+  },
+  {
+    id: "last-bar",
+    kicker: "Reporting",
+    title: (
+      <>
+        Inside the back room of <em>Café Beirão.</em>
+      </>
+    ),
+    dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure.",
+    meta: "Issue 03 · Aug 2025",
+  },
+  {
+    id: "mouraria-family",
+    kicker: `Interview · with ${memberName("sofia")}`,
+    title: (
+      <>
+        Mariza Câmara, <em>district health director.</em>
+      </>
+    ),
+    dek: "An hour-long conversation about queer health policy in Lisbon's Câmara Municipal.",
+    meta: "Issue 02 · Jun 2025",
+  },
+];
 
 const READING = [
-  { title: <>The Right to Maim <em>· Jasbir K. Puar</em></>, tag: 'book' },
-  { title: 'How a queer GP rebuilt her practice', tag: 'FT Magazine, 2024' },
-  { title: <>Lisboa pulse — visual notes <em>· Editora Anjos</em></>, tag: 'zine' },
-  { title: 'The SNS, in numbers', tag: '2025 annual report' },
-  { title: <>On waiting <em>· Maria Tumarkin</em></>, tag: 'essay' },
-]
+  {
+    title: (
+      <>
+        The Right to Maim <em>· Jasbir K. Puar</em>
+      </>
+    ),
+    tag: "book",
+  },
+  { title: "How a queer GP rebuilt her practice", tag: "FT Magazine, 2024" },
+  {
+    title: (
+      <>
+        Lisboa pulse — visual notes <em>· Editora Anjos</em>
+      </>
+    ),
+    tag: "zine",
+  },
+  { title: "The SNS, in numbers", tag: "2025 annual report" },
+  {
+    title: (
+      <>
+        On waiting <em>· Maria Tumarkin</em>
+      </>
+    ),
+    tag: "essay",
+  },
+];
 
 function ArtCardSkeleton() {
   return (
@@ -41,14 +135,14 @@ function ArtCardSkeleton() {
       <SkeletonLine width="80%" height={14} />
       <SkeletonLine width="40%" height={12} style={{ marginTop: 8 }} />
     </div>
-  )
+  );
 }
 
 export function AuthorPage() {
-  const { showToast } = useToast()
-  const loading = useSimulatedLoad()
-  const { isFollowing, toggleFollow } = useSocial()
-  const following = isFollowing(AUTHOR_SLUG)
+  const { showToast } = useToast();
+  const loading = useSimulatedLoad();
+  const { isFollowing, toggleFollow } = useSocial();
+  const following = isFollowing(AUTHOR_SLUG);
 
   return (
     <PageShell>
@@ -60,22 +154,28 @@ export function AuthorPage() {
             <h1 className={styles.name}>
               Sara <em>Pinheiro.</em>
             </h1>
-            <div className={styles.role}>Contributing editor, health &amp; access</div>
+            <div className={styles.role}>
+              Contributing editor, health &amp; access
+            </div>
             <p className={styles.bio}>
-              Sara writes about queer life and the systems that surround it — clinics, classrooms,
-              courtrooms, neighbourhoods. She joined QueerPulse Magazine in 2023 after a decade in
-              public-health reporting at <em>Público</em> and <em>Mensagem de Lisboa</em>. Born in
-              Setúbal, lives in Anjos.
+              Sara writes about queer life and the systems that surround it —
+              clinics, classrooms, courtrooms, neighbourhoods. She joined
+              QueerPulse Magazine in 2023 after a decade in public-health
+              reporting at <em>Público</em> and <em>Mensagem de Lisboa</em>.
+              Born in Setúbal, lives in Anjos.
             </p>
             <div className={styles.metaRow}>
               <Button
-                variant={following ? 'ghost' : 'primary'}
+                variant={following ? "ghost" : "primary"}
                 onClick={() => {
-                  const now = toggleFollow(AUTHOR_SLUG)
-                  showToast(now ? 'Following Sara' : 'Unfollowed Sara', now ? 'success' : 'info')
+                  const now = toggleFollow(AUTHOR_SLUG);
+                  showToast(
+                    now ? "Following Sara" : "Unfollowed Sara",
+                    now ? "success" : "info",
+                  );
                 }}
               >
-                {following ? 'Following' : 'Follow writer'}
+                {following ? "Following" : "Follow writer"}
               </Button>
               <Button variant="ghost" to={routes.newsletter}>
                 Subscribe to her column
@@ -90,13 +190,16 @@ export function AuthorPage() {
             src={AUTHOR_PORTRAIT_IMG}
             alt="Portrait of Sara Pinheiro"
             placeholder="Portrait of Sara Pinheiro"
-            style={{ aspectRatio: '4/5', height: 'auto' }}
+            style={{ aspectRatio: "4/5", height: "auto" }}
           />
         </header>
 
         <div className={styles.stats}>
           <div className={styles.stat}>
-            <b><em>14</em></b>Articles published
+            <b>
+              <em>14</em>
+            </b>
+            Articles published
           </div>
           <div className={styles.stat}>
             <b>3</b>Years contributing
@@ -105,7 +208,10 @@ export function AuthorPage() {
             <b>1.8k</b>Subscribers to her column
           </div>
           <div className={styles.stat}>
-            <b><em>2</em></b>Issue covers · 2025
+            <b>
+              <em>2</em>
+            </b>
+            Issue covers · 2025
           </div>
         </div>
 
@@ -114,7 +220,9 @@ export function AuthorPage() {
             <Link
               key={beat}
               to={routes.tag}
-              className={[styles.beat, index === 0 && styles.beatPrimary].filter(Boolean).join(' ')}
+              className={[styles.beat, index === 0 && styles.beatPrimary]
+                .filter(Boolean)
+                .join(" ")}
             >
               {beat}
             </Link>
@@ -128,19 +236,33 @@ export function AuthorPage() {
         </div>
         <div className={styles.featured}>
           <div>
-            <div className={styles.featKicker}>Cover story · Issue 09 · Health</div>
+            <div className={styles.featKicker}>
+              Cover story · Issue 09 · Health
+            </div>
             <h3 className={styles.featTitle}>
               <Link to={`${routes.article}?id=city-changed`}>
-                Five things I learned <em>navigating Lisbon's trans health system.</em>
+                Five things I learned{" "}
+                <em>navigating Lisbon's trans health system.</em>
               </Link>
             </h3>
             <p className={styles.featDek}>
-              From the SNS to private clinics, what nobody tells you about waiting lists, referrals,
-              and how to actually get a hormone prescription without losing a year of your life.
+              From the SNS to private clinics, what nobody tells you about
+              waiting lists, referrals, and how to actually get a hormone
+              prescription without losing a year of your life.
             </p>
-            <p className={styles.featMeta}>Published 6 Jun 2026 · 8 min read · 284 reads this week</p>
+            <p className={styles.featMeta}>
+              Published 6 Jun 2026 · 8 min read · 284 reads this week
+            </p>
           </div>
-          <ImageSlot tint="jade" className={styles.featImg} radius={18} src={AUTHOR_FEATURE_IMG} alt="Hero image: cover story 09" placeholder="Hero image: cover story 09" style={{ height: 'auto' }} />
+          <ImageSlot
+            tint="jade"
+            className={styles.featImg}
+            radius={18}
+            src={AUTHOR_FEATURE_IMG}
+            alt="Hero image: cover story 09"
+            placeholder="Hero image: cover story 09"
+            style={{ height: "auto" }}
+          />
         </div>
 
         <div className={styles.sec}>
@@ -153,7 +275,13 @@ export function AuthorPage() {
                 <ArtCardSkeleton key={i} />
               ))
             : ARTICLES.map((article, index) => (
-                <FadeIn as={Link} key={index} to={`${routes.article}?id=${article.id}`} className={styles.art} delay={Math.min(index, 8) * 60}>
+                <FadeIn
+                  as={Link}
+                  key={index}
+                  to={`${routes.article}?id=${article.id}`}
+                  className={styles.art}
+                  delay={Math.min(index, 8) * 60}
+                >
                   <div className={styles.artKicker}>{article.kicker}</div>
                   <div className={styles.artTitle}>{article.title}</div>
                   <div className={styles.artDek}>{article.dek}</div>
@@ -167,7 +295,10 @@ export function AuthorPage() {
             <h3>
               What Sara is <em>reading.</em>
             </h3>
-            <p>Curated by the writer herself — books, longforms, and resources she returns to when reporting.</p>
+            <p>
+              Curated by the writer herself — books, longforms, and resources
+              she returns to when reporting.
+            </p>
             <Button to={routes.library} style={{ marginTop: 8 }}>
               See all 22 picks →
             </Button>
@@ -190,10 +321,18 @@ export function AuthorPage() {
           <a href="mailto:sara@queerpulse.app">
             sara@queerpulse.app <span>· pitch direct</span>
           </a>
-          <a href="https://www.are.na/sara-pinheiro" target="_blank" rel="noreferrer">
+          <a
+            href="https://www.are.na/sara-pinheiro"
+            target="_blank"
+            rel="noreferrer"
+          >
             Are.na <span>· /sara-pinheiro</span>
           </a>
-          <a href="https://bsky.app/profile/sarapinheiro.bsky.social" target="_blank" rel="noreferrer">
+          <a
+            href="https://bsky.app/profile/sarapinheiro.bsky.social"
+            target="_blank"
+            rel="noreferrer"
+          >
             Bluesky <span>· @sarapinheiro</span>
           </a>
           <Link to={routes.members}>
@@ -202,5 +341,5 @@ export function AuthorPage() {
         </div>
       </div>
     </PageShell>
-  )
+  );
 }

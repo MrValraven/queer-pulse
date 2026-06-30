@@ -15,9 +15,50 @@ const Tick = () => (
 );
 
 const ALTS = [
-  { primary: true, d: "19", m: "Jul", title: <>Studio visit · <em>Atelier Pulso · July</em></>, meta: "Largo do Carmo · 14:00 · same host · new press!", spots: <b>RSVPs open</b> },
-  { primary: false, d: "22", m: "Jun", title: <>Sunday risograph workshop — <em>Bairro Alto</em></>, meta: "Editora Anjos · 11:00 · open to 8 people", spots: <><b>3 spots</b> left</> },
-  { primary: false, d: "28", m: "Jun", title: <>Portfolio night — <em>creatives only</em></>, meta: "Café Beirão back room · 18:00 · informal", spots: <><b>11 spots</b> left</> },
+  {
+    primary: true,
+    d: "19",
+    m: "Jul",
+    title: (
+      <>
+        Studio visit · <em>Atelier Pulso · July</em>
+      </>
+    ),
+    meta: "Largo do Carmo · 14:00 · same host · new press!",
+    spots: <b>RSVPs open</b>,
+  },
+  {
+    primary: false,
+    d: "22",
+    m: "Jun",
+    title: (
+      <>
+        Sunday risograph workshop — <em>Bairro Alto</em>
+      </>
+    ),
+    meta: "Editora Anjos · 11:00 · open to 8 people",
+    spots: (
+      <>
+        <b>3 spots</b> left
+      </>
+    ),
+  },
+  {
+    primary: false,
+    d: "28",
+    m: "Jun",
+    title: (
+      <>
+        Portfolio night — <em>creatives only</em>
+      </>
+    ),
+    meta: "Café Beirão back room · 18:00 · informal",
+    spots: (
+      <>
+        <b>11 spots</b> left
+      </>
+    ),
+  },
 ];
 
 export function GatheringCancelledPage() {
@@ -38,8 +79,8 @@ export function GatheringCancelledPage() {
           <div>
             <h2>This event has been cancelled.</h2>
             <p>
-              Host illness · cancelled <b>4 hours ago</b>. You were on the list — here's
-              everything that happens next.
+              Host illness · cancelled <b>4 hours ago</b>. You were on the list
+              — here's everything that happens next.
             </p>
           </div>
         </div>
@@ -66,10 +107,11 @@ export function GatheringCancelledPage() {
           <div className={styles.explainer}>
             <h3>Why it was cancelled</h3>
             <p>
-              Marta is out sick — she dropped us a message yesterday and we waited 24h
-              hoping a co-host could step in. <em>Nobody available this week.</em> We're not
-              rescheduling immediately because the studio's painting work starts Monday,
-              but the next visit is already on the calendar for <b>19 July</b>.
+              Marta is out sick — she dropped us a message yesterday and we
+              waited 24h hoping a co-host could step in.{" "}
+              <em>Nobody available this week.</em> We're not rescheduling
+              immediately because the studio's painting work starts Monday, but
+              the next visit is already on the calendar for <b>19 July</b>.
             </p>
           </div>
           <div className={styles.host}>
@@ -93,7 +135,9 @@ export function GatheringCancelledPage() {
             </div>
             <div>
               <b>Your €5 ticket is refunded — automatically</b>
-              <span>Refunded to Visa ending 4729 within 3–5 business days.</span>
+              <span>
+                Refunded to Visa ending 4729 within 3–5 business days.
+              </span>
             </div>
           </div>
           <div className={styles.infoRow}>
@@ -102,7 +146,9 @@ export function GatheringCancelledPage() {
             </div>
             <div>
               <b>You've been removed from the headcount</b>
-              <span>The studio knew exactly who was coming. Nothing else to do.</span>
+              <span>
+                The studio knew exactly who was coming. Nothing else to do.
+              </span>
             </div>
           </div>
           <div className={styles.infoRow}>
@@ -112,8 +158,9 @@ export function GatheringCancelledPage() {
             <div>
               <b>July visit is open for RSVPs</b>
               <span>
-                You can lock in 19 July right now — Marta usually opens it later, but we're
-                early because of this. <a href="#july">Skip to it ↓</a>
+                You can lock in 19 July right now — Marta usually opens it
+                later, but we're early because of this.{" "}
+                <a href="#july">Skip to it ↓</a>
               </span>
             </div>
           </div>
@@ -126,8 +173,8 @@ export function GatheringCancelledPage() {
             <div>
               <b>Something feels off?</b>
               <span>
-                If you have concerns about the cancellation or want to flag a pattern, talk
-                to the team →
+                If you have concerns about the cancellation or want to flag a
+                pattern, talk to the team →
               </span>
             </div>
           </div>
@@ -136,16 +183,17 @@ export function GatheringCancelledPage() {
         <div className={styles.noteCard}>
           <div className={styles.noteEyebrow}>A short note · from Marta</div>
           <h3>
-            "I'm so sorry, especially to the three of you <em>who travelled in.</em>"
+            "I'm so sorry, especially to the three of you{" "}
+            <em>who travelled in.</em>"
           </h3>
           <p>
-            It's a chest cold and not anything dramatic, but I lose my voice the moment I
-            try to talk for more than ten minutes — and a studio visit where I can't talk
-            is a tour, not a visit.
+            It's a chest cold and not anything dramatic, but I lose my voice the
+            moment I try to talk for more than ten minutes — and a studio visit
+            where I can't talk is a tour, not a visit.
           </p>
           <p>
-            July 19 will happen. The painting is done by then and we'll have the new riso
-            press set up. Promise.
+            July 19 will happen. The painting is done by then and we'll have the
+            new riso press set up. Promise.
           </p>
           <div className={styles.noteSign}>
             — <b>Marta</b> · sent 4 hours ago via the host tools
@@ -159,7 +207,9 @@ export function GatheringCancelledPage() {
           {ALTS.map((a, i) => (
             <Link
               to={GATHERING}
-              className={[styles.altRow, a.primary && styles.altRowPrimary].filter(Boolean).join(" ")}
+              className={[styles.altRow, a.primary && styles.altRowPrimary]
+                .filter(Boolean)
+                .join(" ")}
               key={i}
             >
               <div className={styles.altDate}>

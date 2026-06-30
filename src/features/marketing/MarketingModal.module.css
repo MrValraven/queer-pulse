@@ -224,8 +224,16 @@
   border-radius: 18px;
   overflow: hidden;
   background:
-    radial-gradient(120% 120% at 20% 10%, rgba(var(--accent-rgb), 0.22), transparent 55%),
-    radial-gradient(120% 120% at 90% 90%, rgba(var(--jade-rgb), 0.2), transparent 55%),
+    radial-gradient(
+      120% 120% at 20% 10%,
+      rgba(var(--accent-rgb), 0.22),
+      transparent 55%
+    ),
+    radial-gradient(
+      120% 120% at 90% 90%,
+      rgba(var(--jade-rgb), 0.2),
+      transparent 55%
+    ),
     var(--plum);
   display: flex;
   align-items: center;
@@ -360,9 +368,9 @@
   font-weight: 600;
 }
 
-:global([data-theme='dark']) .modal {
+:global([data-theme="dark"]) .modal {
   border: 1px solid rgba(247, 243, 238, 0.1);
 }
-:global([data-theme='dark']) .modalSuccess {
+:global([data-theme="dark"]) .modalSuccess {
   border-color: transparent;
 }

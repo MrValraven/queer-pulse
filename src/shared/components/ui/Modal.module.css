@@ -59,7 +59,7 @@
   color: var(--plum);
   margin: 0;
 }
-[data-theme='dark'] .modalTitle {
+[data-theme="dark"] .modalTitle {
   color: var(--ink);
 }
 .modalTitle em {
@@ -83,7 +83,9 @@
   background: var(--paper);
   color: var(--ink-60);
   cursor: pointer;
-  transition: background 0.16s var(--ease), color 0.16s var(--ease);
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease);
 }
 .modalX:hover {
   background: var(--cream);
@@ -162,7 +164,9 @@
   font-size: 20px;
   line-height: 1;
   cursor: pointer;
-  transition: background 0.16s var(--ease), color 0.16s var(--ease);
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease);
 }
 .close:hover {
   background: rgba(var(--plum-rgb), 0.16);

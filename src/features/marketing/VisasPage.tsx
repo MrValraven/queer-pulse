@@ -1,43 +1,57 @@
-import { useRef, useState } from 'react'
-import { FiStar } from 'react-icons/fi'
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
-import { ARRIVING, FORUM, GROUND, LAWYERS, ROUTES, TABS, type TabId } from './visas.data'
-import { VisasTabContent } from './VisasTabContent'
-import styles from './VisasPage.module.css'
+import { useRef, useState } from "react";
+import { FiStar } from "react-icons/fi";
+import { PageShell } from "../../shared/components/layout";
+import { Button, Outro, Reveal } from "../../shared/components/ui";
+import {
+  ARRIVING,
+  FORUM,
+  GROUND,
+  LAWYERS,
+  ROUTES,
+  TABS,
+  type TabId,
+} from "./visas.data";
+import { VisasTabContent } from "./VisasTabContent";
+import styles from "./VisasPage.module.css";
 
 export function VisasPage() {
-  const [active, setActive] = useState<TabId>('eu')
-  const [selectedRoute, setSelectedRoute] = useState<number | null>(null)
-  const tabNavRef = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState<TabId>("eu");
+  const [selectedRoute, setSelectedRoute] = useState<number | null>(null);
+  const tabNavRef = useRef<HTMLDivElement>(null);
 
   const selectRoute = (index: number, tab: TabId) => {
-    setSelectedRoute(index)
-    setActive(tab)
-    const el = tabNavRef.current
+    setSelectedRoute(index);
+    setActive(tab);
+    const el = tabNavRef.current;
     if (el) {
-      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' })
+      window.scrollTo({
+        top: el.getBoundingClientRect().top + window.scrollY - 80,
+        behavior: "smooth",
+      });
     }
-  }
+  };
 
-  const tab = TABS.find((t) => t.id === active) ?? TABS[0]!
+  const tab = TABS.find((t) => t.id === active) ?? TABS[0]!;
 
   return (
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <Reveal as="div" className={styles.cat}>Visas &amp; Residency · Portugal</Reveal>
+          <Reveal as="div" className={styles.cat}>
+            Visas &amp; Residency · Portugal
+          </Reveal>
           <Reveal as="h1" delay={60}>
             Portugal, legally. <em>Your path to residency.</em>
           </Reveal>
           <Reveal as="p" className={styles.heroSub} delay={120}>
-            Practical information about visas, residency, and citizenship in Portugal — and what queer
-            couples and families need to know that the official guidance doesn't always say clearly.
+            Practical information about visas, residency, and citizenship in
+            Portugal — and what queer couples and families need to know that the
+            official guidance doesn't always say clearly.
           </Reveal>
           <Reveal className={styles.heroNote} delay={160}>
             <span className={styles.heroNoteDot} />
-            Community information, not legal advice. Immigration law changes — always verify with a
-            specialist.
+            Community information, not legal advice. Immigration law changes —
+            always verify with a specialist.
           </Reveal>
         </div>
       </div>
@@ -53,7 +67,12 @@ export function VisasPage() {
                 key={r.name}
                 as="button"
                 type="button"
-                className={[styles.routeCard, selectedRoute === i && styles.routeSel].filter(Boolean).join(' ')}
+                className={[
+                  styles.routeCard,
+                  selectedRoute === i && styles.routeSel,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 delay={i * 60}
                 onClick={() => selectRoute(i, r.tab)}
               >
@@ -72,7 +91,9 @@ export function VisasPage() {
             <button
               key={t.id}
               type="button"
-              className={[styles.tabBtn, active === t.id && styles.tabBtnActive].filter(Boolean).join(' ')}
+              className={[styles.tabBtn, active === t.id && styles.tabBtnActive]
+                .filter(Boolean)
+                .join(" ")}
               onClick={() => setActive(t.id)}
             >
               {t.label}
@@ -81,7 +102,7 @@ export function VisasPage() {
         </div>
       </div>
 
-      <VisasTabContent tab={tab} onPartnerLink={() => setActive('partner')} />
+      <VisasTabContent tab={tab} onPartnerLink={() => setActive("partner")} />
 
       <section className={styles.groundSec}>
         <div className="wrap">
@@ -89,11 +110,17 @@ export function VisasPage() {
             <h2>
               On the <em>ground</em>
             </h2>
-            <div className={styles.secHeadSub}>Practical first steps regardless of your visa route.</div>
+            <div className={styles.secHeadSub}>
+              Practical first steps regardless of your visa route.
+            </div>
           </Reveal>
           <div className={styles.groundGrid}>
             {GROUND.map((g, i) => (
-              <Reveal className={styles.groundCard} key={g.title} delay={i * 55}>
+              <Reveal
+                className={styles.groundCard}
+                key={g.title}
+                delay={i * 55}
+              >
                 <div className={styles.gcLabel}>{g.label}</div>
                 <div className={styles.gcTitle}>{g.title}</div>
                 <div className={styles.gcBody}>{g.body}</div>
@@ -114,7 +141,10 @@ export function VisasPage() {
             {LAWYERS.map((l, i) => (
               <Reveal className={styles.reviewCard} key={l.name} delay={i * 60}>
                 <div className={styles.rvTop}>
-                  <div className={styles.rvAv} style={{ background: l.bg, color: l.color }}>
+                  <div
+                    className={styles.rvAv}
+                    style={{ background: l.bg, color: l.color }}
+                  >
                     {l.initials}
                   </div>
                   <div>
@@ -124,7 +154,10 @@ export function VisasPage() {
                 </div>
                 <div className={styles.rvStars}>
                   {[1, 2, 3, 4, 5].map((n) => (
-                    <FiStar key={n} className={n <= l.stars ? styles.rvStarOn : undefined} />
+                    <FiStar
+                      key={n}
+                      className={n <= l.stars ? styles.rvStarOn : undefined}
+                    />
                   ))}
                 </div>
                 <div className={styles.rvQuote}>{l.quote}</div>
@@ -140,7 +173,11 @@ export function VisasPage() {
       </section>
 
       <Outro
-        title={<>You're building a life <em>here.</em></>}
+        title={
+          <>
+            You're building a life <em>here.</em>
+          </>
+        }
         sub="The paperwork is temporary. The community is permanent."
       >
         <Button to={ARRIVING} variant="primary" size="lg">
@@ -151,5 +188,5 @@ export function VisasPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

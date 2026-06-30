@@ -3,7 +3,11 @@
   width: 100%;
   height: 520px;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(var(--jade-rgb), 0.32), rgba(45, 27, 61, 0.32));
+  background: linear-gradient(
+    135deg,
+    rgba(var(--jade-rgb), 0.32),
+    rgba(45, 27, 61, 0.32)
+  );
 }
 .heroOverlay {
   position: absolute;
@@ -293,7 +297,9 @@
   color: var(--plum);
   margin-top: 10px;
   text-decoration: none;
-  transition: color 0.25s var(--ease), gap 0.25s var(--ease);
+  transition:
+    color 0.25s var(--ease),
+    gap 0.25s var(--ease);
 }
 .authorLink:hover {
   color: var(--accent-ink);

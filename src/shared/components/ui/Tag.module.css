@@ -45,7 +45,7 @@
   background: rgba(45, 27, 61, 0.06);
 }
 
-:global([data-theme='dark']) .tag {
+:global([data-theme="dark"]) .tag {
   background: rgba(247, 243, 238, 0.08);
   color: rgba(247, 243, 238, 0.6);
 }

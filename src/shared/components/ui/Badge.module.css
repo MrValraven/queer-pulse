@@ -43,7 +43,7 @@
   background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
-[data-theme='dark'] .badge_plum {
+[data-theme="dark"] .badge_plum {
   background: rgba(247, 243, 238, 0.1);
   color: var(--ink);
 }

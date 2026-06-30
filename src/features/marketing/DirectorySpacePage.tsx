@@ -1,26 +1,32 @@
-import { Link, Navigate, useParams } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { getPlace, type Tint } from './directoryPlaces'
-import { routes } from '../../app/routeMap'
-import { DirectorySpaceMain } from './DirectorySpaceMain'
-import { DirectorySpaceAside } from './DirectorySpaceAside'
-import s from './DirectorySpacePage.module.css'
+import { Link, Navigate, useParams } from "react-router-dom";
+import { PageShell } from "../../shared/components/layout";
+import { getPlace, type Tint } from "./directoryPlaces";
+import { routes } from "../../app/routeMap";
+import { DirectorySpaceMain } from "./DirectorySpaceMain";
+import { DirectorySpaceAside } from "./DirectorySpaceAside";
+import s from "./DirectorySpacePage.module.css";
 
-const GCELL: Record<Tint, string> = { coral: '', jade: s.gCellJade!, plum: s.gCellPlum! }
+const GCELL: Record<Tint, string> = {
+  coral: "",
+  jade: s.gCellJade!,
+  plum: s.gCellPlum!,
+};
 
 export function DirectorySpacePage() {
-  const { slug } = useParams()
-  const place = getPlace(slug)
-  if (!place) return <Navigate to={routes.directory} replace />
+  const { slug } = useParams();
+  const place = getPlace(slug);
+  if (!place) return <Navigate to={routes.directory} replace />;
 
   return (
     <PageShell>
       <div className={s.cover}>
         <div className={s.coverInner}>
-          <Link to={routes.directory} className={s.back}>← Directory</Link>
+          <Link to={routes.directory} className={s.back}>
+            ← Directory
+          </Link>
           <div className={s.gallery}>
             {place.gallery.map((cap, i) => (
-              <div key={i} className={[s.gCell, GCELL[place.tint]].join(' ')}>
+              <div key={i} className={[s.gCell, GCELL[place.tint]].join(" ")}>
                 <span className={s.gCap}>{cap}</span>
               </div>
             ))}
@@ -35,5 +41,5 @@ export function DirectorySpacePage() {
         </div>
       </div>
     </PageShell>
-  )
+  );
 }

@@ -17,7 +17,7 @@
   color: rgba(247, 243, 238, 0.85);
 }
 .guestLbl::before {
-  content: '';
+  content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -240,7 +240,9 @@
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.25s var(--ease), border-color 0.2s;
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.2s;
 }
 .card:hover {
   transform: translateY(-2px);
@@ -293,7 +295,11 @@
 /* Locked */
 .locked {
   padding: 32px 28px;
-  background: linear-gradient(180deg, rgba(45, 27, 61, 0.03), rgba(var(--accent-rgb), 0.04));
+  background: linear-gradient(
+    180deg,
+    rgba(45, 27, 61, 0.03),
+    rgba(var(--accent-rgb), 0.04)
+  );
   border: 1px dashed rgba(45, 27, 61, 0.18);
   border-radius: 18px;
   text-align: center;

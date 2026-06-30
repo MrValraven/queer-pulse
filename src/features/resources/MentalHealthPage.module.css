@@ -13,7 +13,11 @@
   width: 520px;
   height: 520px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.07), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.07),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .cat {

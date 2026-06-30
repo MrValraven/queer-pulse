@@ -316,7 +316,10 @@
   background: transparent;
   border: 1.5px solid rgba(247, 243, 238, 0.3);
   cursor: pointer;
-  transition: background 0.22s var(--ease), border-color 0.22s var(--ease), color 0.22s var(--ease);
+  transition:
+    background 0.22s var(--ease),
+    border-color 0.22s var(--ease),
+    color 0.22s var(--ease);
 }
 .readyCopyBtn svg {
   width: 15px;
@@ -363,7 +366,10 @@
   color: var(--cream);
   background: transparent;
   border: 1.5px solid rgba(247, 243, 238, 0.28);
-  transition: border-color 0.22s var(--ease), background 0.22s var(--ease), transform 0.22s var(--ease);
+  transition:
+    border-color 0.22s var(--ease),
+    background 0.22s var(--ease),
+    transform 0.22s var(--ease);
 }
 .readyShareChip svg {
   width: 16px;
@@ -489,7 +495,10 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: background 0.22s var(--ease), color 0.22s var(--ease), box-shadow 0.22s var(--ease);
+  transition:
+    background 0.22s var(--ease),
+    color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease);
 }
 .segBtn svg {
   width: 15px;
@@ -535,7 +544,10 @@
   background: var(--paper);
   border: 1.5px solid rgba(45, 27, 61, 0.14);
   cursor: pointer;
-  transition: background 0.22s var(--ease), color 0.22s var(--ease), border-color 0.22s var(--ease);
+  transition:
+    background 0.22s var(--ease),
+    color 0.22s var(--ease),
+    border-color 0.22s var(--ease);
 }
 .copyBtn svg {
   width: 15px;
@@ -567,7 +579,9 @@
   color: var(--plum);
   background: var(--cream);
   border: 1.5px solid rgba(45, 27, 61, 0.14);
-  transition: border-color 0.22s var(--ease), transform 0.22s var(--ease);
+  transition:
+    border-color 0.22s var(--ease),
+    transform 0.22s var(--ease);
 }
 .shareChip svg {
   width: 16px;
@@ -661,13 +675,13 @@
   overflow: hidden;
 }
 
-:global([data-theme='dark']) .card,
-:global([data-theme='dark']) .epContent,
-:global([data-theme='dark']) .previewWrap,
-:global([data-theme='dark']) .segmented {
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .epContent,
+:global([data-theme="dark"]) .previewWrap,
+:global([data-theme="dark"]) .segmented {
   border-color: rgba(247, 243, 238, 0.1);
 }
-:global([data-theme='dark']) .segBtnActive,
-:global([data-theme='dark']) .copyBtn {
+:global([data-theme="dark"]) .segBtnActive,
+:global([data-theme="dark"]) .copyBtn {
   border-color: rgba(247, 243, 238, 0.12);
 }

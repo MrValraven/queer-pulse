@@ -9,6 +9,8 @@ export const CHANGEMAKERS: ChangemakerStory[] = [
   ...STORIES_PART_2,
 ];
 
-export function getChangemaker(slug: string | undefined): ChangemakerStory | undefined {
+export function getChangemaker(
+  slug: string | undefined,
+): ChangemakerStory | undefined {
   return CHANGEMAKERS.find((c) => c.slug === slug);
 }

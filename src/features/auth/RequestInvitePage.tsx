@@ -1,46 +1,58 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, FormField } from '../../shared/components/ui'
-import { AuthLayout } from './AuthLayout'
-import { routes } from '../../app/routeMap'
-import { WHAT_NEXT } from './requestInvite.data'
-import styles from './auth.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button, FormField } from "../../shared/components/ui";
+import { AuthLayout } from "./AuthLayout";
+import { routes } from "../../app/routeMap";
+import { WHAT_NEXT } from "./requestInvite.data";
+import styles from "./auth.module.css";
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function RequestInvitePage() {
-  const [first, setFirst] = useState('')
-  const [email, setEmail] = useState('')
-  const [touched, setTouched] = useState(false)
-  const [why, setWhy] = useState('')
-  const [agreed, setAgreed] = useState(false)
-  const [sent, setSent] = useState(false)
+  const [first, setFirst] = useState("");
+  const [email, setEmail] = useState("");
+  const [touched, setTouched] = useState(false);
+  const [why, setWhy] = useState("");
+  const [agreed, setAgreed] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const emailValid = EMAIL_RE.test(email.trim())
-  const emailError = touched && email.trim().length > 0 && !emailValid
-  const canSubmit = emailValid && why.trim().length > 0 && agreed
+  const emailValid = EMAIL_RE.test(email.trim());
+  const emailError = touched && email.trim().length > 0 && !emailValid;
+  const canSubmit = emailValid && why.trim().length > 0 && agreed;
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!canSubmit) return
-    setSent(true)
+    e.preventDefault();
+    if (!canSubmit) return;
+    setSent(true);
   }
 
   if (sent) {
     return (
       <AuthLayout wide>
-        <div className={styles.screenIn} style={{ textAlign: 'center' }}>
+        <div className={styles.screenIn} style={{ textAlign: "center" }}>
           <div className={styles.sentIc}>
-            <svg viewBox="0 0 24 24" width={32} height={32} fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              width={32}
+              height={32}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.7}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="m5 12 5 5L20 7" />
             </svg>
           </div>
           <h1>
             You're on the <em>list.</em>
           </h1>
-          <p className={styles.sub} style={{ maxWidth: '34ch', margin: '0 auto 28px' }}>
-            Thanks{first.trim() ? `, ${first.trim()}` : ''} — your request to join QueerPulse is in.
-            Here's what happens from here.
+          <p
+            className={styles.sub}
+            style={{ maxWidth: "34ch", margin: "0 auto 28px" }}
+          >
+            Thanks{first.trim() ? `, ${first.trim()}` : ""} — your request to
+            join QueerPulse is in. Here's what happens from here.
           </p>
 
           <ol className={styles.nextList}>
@@ -56,13 +68,20 @@ export function RequestInvitePage() {
           </ol>
 
           <div className={styles.footer}>
-            <Link to={routes.homepage} style={{ fontSize: 13.5, color: 'var(--ink-60)', fontWeight: 500 }}>
+            <Link
+              to={routes.homepage}
+              style={{
+                fontSize: 13.5,
+                color: "var(--ink-60)",
+                fontWeight: 500,
+              }}
+            >
               ← Back to home
             </Link>
           </div>
         </div>
       </AuthLayout>
-    )
+    );
   }
 
   return (
@@ -72,9 +91,9 @@ export function RequestInvitePage() {
         Ask to come <em>in.</em>
       </h1>
       <p className={styles.sub}>
-        QueerPulse grows through trust, not advertising. The surest way in is a member who'll vouch
-        for you — if you know someone here, ask them. If you don't, tell us a little about you and
-        we'll take it from there.
+        QueerPulse grows through trust, not advertising. The surest way in is a
+        member who'll vouch for you — if you know someone here, ask them. If you
+        don't, tell us a little about you and we'll take it from there.
       </p>
 
       <form onSubmit={handleSubmit}>
@@ -90,14 +109,23 @@ export function RequestInvitePage() {
             />
           </FormField>
           <FormField label="City">
-            <input id="ri-city" type="text" placeholder="Lisbon" autoComplete="address-level2" />
+            <input
+              id="ri-city"
+              type="text"
+              placeholder="Lisbon"
+              autoComplete="address-level2"
+            />
           </FormField>
         </div>
 
         <FormField
           label="Email"
           required
-          error={emailError ? "That email doesn't look right — mind checking it?" : undefined}
+          error={
+            emailError
+              ? "That email doesn't look right — mind checking it?"
+              : undefined
+          }
         >
           <input
             id="ri-email"
@@ -114,16 +142,33 @@ export function RequestInvitePage() {
         <FormField
           label={
             <>
-              Anyone here you know{' '}
-              <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: 11 }}>(optional)</span>
+              Anyone here you know{" "}
+              <span
+                style={{
+                  fontWeight: 400,
+                  textTransform: "none",
+                  letterSpacing: 0,
+                  fontSize: 11,
+                }}
+              >
+                (optional)
+              </span>
             </>
           }
           helper="Naming a mutual is the fastest route in — but it's not required."
         >
-          <input id="ri-mutual" type="text" placeholder="A member who can vouch for you" />
+          <input
+            id="ri-mutual"
+            type="text"
+            placeholder="A member who can vouch for you"
+          />
         </FormField>
 
-        <FormField label="Why QueerPulse" required labelAside={`${why.length}/400`}>
+        <FormField
+          label="Why QueerPulse"
+          required
+          labelAside={`${why.length}/400`}
+        >
           <textarea
             id="ri-why"
             maxLength={400}
@@ -141,10 +186,10 @@ export function RequestInvitePage() {
             onChange={(e) => setAgreed(e.target.checked)}
           />
           <label htmlFor="ri-agree">
-            I've read the{' '}
+            I've read the{" "}
             <Link to={routes.guidelines} onClick={(e) => e.stopPropagation()}>
               community guidelines
-            </Link>{' '}
+            </Link>{" "}
             and I'm here in good faith.
           </label>
         </div>
@@ -155,10 +200,13 @@ export function RequestInvitePage() {
       </form>
 
       <div className={styles.footer}>
-        <Link to={routes.signIn} style={{ fontSize: 13.5, color: 'var(--ink-60)', fontWeight: 500 }}>
+        <Link
+          to={routes.signIn}
+          style={{ fontSize: 13.5, color: "var(--ink-60)", fontWeight: 500 }}
+        >
           Already a member? Sign in
         </Link>
       </div>
     </AuthLayout>
-  )
+  );
 }

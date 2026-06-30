@@ -1,9 +1,9 @@
-import styles from './Tabs.module.css'
+import styles from "./Tabs.module.css";
 
 export interface Tab {
-  id: string
-  label: string
-  count?: number
+  id: string;
+  label: string;
+  count?: number;
 }
 
 /**
@@ -16,27 +16,27 @@ export function Tabs({
   tabs,
   active,
   onChange,
-  variant = 'pill',
-  tint = 'light',
+  variant = "pill",
+  tint = "light",
   className,
 }: {
-  tabs: Tab[]
-  active: string
-  onChange: (id: string) => void
-  variant?: 'pill' | 'underline'
-  tint?: 'light' | 'dark'
-  className?: string
+  tabs: Tab[];
+  active: string;
+  onChange: (id: string) => void;
+  variant?: "pill" | "underline";
+  tint?: "light" | "dark";
+  className?: string;
 }) {
   return (
     <div
       className={[
         styles.tabs,
-        variant === 'underline' && styles.underline,
-        tint === 'dark' && styles.dark,
+        variant === "underline" && styles.underline,
+        tint === "dark" && styles.dark,
         className,
       ]
         .filter(Boolean)
-        .join(' ')}
+        .join(" ")}
       role="tablist"
     >
       {tabs.map((t) => (
@@ -45,13 +45,17 @@ export function Tabs({
           type="button"
           role="tab"
           aria-selected={active === t.id}
-          className={[styles.tab, active === t.id && styles.tabOn].filter(Boolean).join(' ')}
+          className={[styles.tab, active === t.id && styles.tabOn]
+            .filter(Boolean)
+            .join(" ")}
           onClick={() => onChange(t.id)}
         >
           {t.label}
-          {t.count != null && <span className={styles.tabCount}>{t.count}</span>}
+          {t.count != null && (
+            <span className={styles.tabCount}>{t.count}</span>
+          )}
         </button>
       ))}
     </div>
-  )
+  );
 }

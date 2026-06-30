@@ -362,8 +362,8 @@
   }
 }
 
-:global([data-theme='dark']) .featured,
-:global([data-theme='dark']) .art,
-:global([data-theme='dark']) .elsewhere a {
+:global([data-theme="dark"]) .featured,
+:global([data-theme="dark"]) .art,
+:global([data-theme="dark"]) .elsewhere a {
   border-color: rgba(247, 243, 238, 0.1);
 }

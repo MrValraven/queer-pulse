@@ -1,6 +1,6 @@
-import { type ReactNode } from 'react'
-import { FiCheck } from 'react-icons/fi'
-import styles from './adminUi.module.css'
+import { type ReactNode } from "react";
+import { FiCheck } from "react-icons/fi";
+import styles from "./adminUi.module.css";
 
 /** Segmented pill control — one value selected at a time. */
 export function AdminSeg({
@@ -8,9 +8,9 @@ export function AdminSeg({
   value,
   onChange,
 }: {
-  options: string[]
-  value: string
-  onChange: (value: string) => void
+  options: string[];
+  value: string;
+  onChange: (value: string) => void;
 }) {
   return (
     <div className={styles.seg} role="group">
@@ -19,14 +19,16 @@ export function AdminSeg({
           key={o}
           type="button"
           aria-pressed={value === o}
-          className={[styles.segBtn, value === o && styles.segOn].filter(Boolean).join(' ')}
+          className={[styles.segBtn, value === o && styles.segOn]
+            .filter(Boolean)
+            .join(" ")}
           onClick={() => onChange(o)}
         >
           {o}
         </button>
       ))}
     </div>
-  )
+  );
 }
 
 /** Switch toggle. */
@@ -35,9 +37,9 @@ export function AdminToggle({
   onChange,
   label,
 }: {
-  checked: boolean
-  onChange: (checked: boolean) => void
-  label?: string
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label?: string;
 }) {
   return (
     <button
@@ -45,12 +47,14 @@ export function AdminToggle({
       role="switch"
       aria-checked={checked}
       aria-label={label}
-      className={[styles.toggle, checked && styles.toggleOn].filter(Boolean).join(' ')}
+      className={[styles.toggle, checked && styles.toggleOn]
+        .filter(Boolean)
+        .join(" ")}
       onClick={() => onChange(!checked)}
     >
       <span className={styles.toggleKnob} aria-hidden />
     </button>
-  )
+  );
 }
 
 /** Selectable check-line — a checkbox row with a title + sub. */
@@ -60,16 +64,18 @@ export function AdminCheckLine({
   title,
   sub,
 }: {
-  checked: boolean
-  onChange: (checked: boolean) => void
-  title: ReactNode
-  sub?: ReactNode
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  title: ReactNode;
+  sub?: ReactNode;
 }) {
   return (
     <button
       type="button"
       aria-pressed={checked}
-      className={[styles.checkLine, checked && styles.checkLineOn].filter(Boolean).join(' ')}
+      className={[styles.checkLine, checked && styles.checkLineOn]
+        .filter(Boolean)
+        .join(" ")}
       onClick={() => onChange(!checked)}
     >
       <span className={styles.checkBox} aria-hidden>
@@ -80,5 +86,5 @@ export function AdminCheckLine({
         {sub && <span className={styles.checkSub}>{sub}</span>}
       </span>
     </button>
-  )
+  );
 }

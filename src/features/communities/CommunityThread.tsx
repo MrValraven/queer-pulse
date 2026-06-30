@@ -1,24 +1,24 @@
-import { useState } from 'react'
-import { FiMessageCircle } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import type { Thread as ThreadData } from './communityDetails'
-import { AV_CLASS } from './communityAvatar'
-import styles from './CommunityDetailPage.module.css'
+import { useState } from "react";
+import { FiMessageCircle } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import type { Thread as ThreadData } from "./communityDetails";
+import { AV_CLASS } from "./communityAvatar";
+import styles from "./CommunityDetailPage.module.css";
 
 export function CommunityThread({ data }: { data: ThreadData }) {
-  const { showToast } = useToast()
-  const [open, setOpen] = useState(false)
-  const [voted, setVoted] = useState(false)
-  const [reply, setReply] = useState('')
-  const [extra, setExtra] = useState<{ name: string; text: string }[]>([])
+  const { showToast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [voted, setVoted] = useState(false);
+  const [reply, setReply] = useState("");
+  const [extra, setExtra] = useState<{ name: string; text: string }[]>([]);
 
   const post = () => {
-    if (!reply.trim()) return
-    setExtra((e) => [...e, { name: 'You', text: reply.trim() }])
-    setReply('')
-    showToast('Reply posted.', 'success')
-  }
+    if (!reply.trim()) return;
+    setExtra((e) => [...e, { name: "You", text: reply.trim() }]);
+    setReply("");
+    showToast("Reply posted.", "success");
+  };
 
   return (
     <div className={styles.thread}>
@@ -29,19 +29,21 @@ export function CommunityThread({ data }: { data: ThreadData }) {
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            setOpen((o) => !o)
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((o) => !o);
           }
         }}
       >
         <div className={styles.thVote}>
           <button
             type="button"
-            className={[styles.vbtn, voted && styles.vbtnVoted].filter(Boolean).join(' ')}
+            className={[styles.vbtn, voted && styles.vbtnVoted]
+              .filter(Boolean)
+              .join(" ")}
             onClick={(e) => {
-              e.stopPropagation()
-              setVoted((v) => !v)
+              e.stopPropagation();
+              setVoted((v) => !v);
             }}
           >
             ▲
@@ -51,10 +53,16 @@ export function CommunityThread({ data }: { data: ThreadData }) {
         <div className={styles.thMain}>
           <div className={styles.thTitle}>{data.title}</div>
           <div className={styles.thMeta}>
-            <div className={[styles.thAv, AV_CLASS[data.author.tint]].join(' ')}>{data.author.initials}</div>
+            <div
+              className={[styles.thAv, AV_CLASS[data.author.tint]].join(" ")}
+            >
+              {data.author.initials}
+            </div>
             <span className={styles.thName}>{data.author.name}</span>
             <span>{data.time}</span>
-            <span className={styles.thReplies}><FiMessageCircle /> {data.replyCount} replies</span>
+            <span className={styles.thReplies}>
+              <FiMessageCircle /> {data.replyCount} replies
+            </span>
           </div>
         </div>
       </div>
@@ -63,7 +71,9 @@ export function CommunityThread({ data }: { data: ThreadData }) {
           <p className={styles.postText}>{data.post}</p>
           {data.replies.map((r, i) => (
             <div className={styles.reply} key={i}>
-              <div className={[styles.rAv, AV_CLASS[r.tint]].join(' ')}>{r.initials}</div>
+              <div className={[styles.rAv, AV_CLASS[r.tint]].join(" ")}>
+                {r.initials}
+              </div>
               <div>
                 <div className={styles.rName}>{r.name}</div>
                 <div className={styles.rText}>{r.text}</div>
@@ -72,7 +82,7 @@ export function CommunityThread({ data }: { data: ThreadData }) {
           ))}
           {extra.map((r, i) => (
             <div className={styles.reply} key={`x${i}`}>
-              <div className={[styles.rAv, styles.tPlum].join(' ')}>Me</div>
+              <div className={[styles.rAv, styles.tPlum].join(" ")}>Me</div>
               <div>
                 <div className={styles.rName}>{r.name}</div>
                 <div className={styles.rText}>{r.text}</div>
@@ -80,7 +90,7 @@ export function CommunityThread({ data }: { data: ThreadData }) {
             </div>
           ))}
           <div className={styles.replyBar}>
-            <div className={[styles.rAv, styles.tPlum].join(' ')}>Me</div>
+            <div className={[styles.rAv, styles.tPlum].join(" ")}>Me</div>
             <textarea
               className={styles.replyTa}
               rows={1}
@@ -88,12 +98,16 @@ export function CommunityThread({ data }: { data: ThreadData }) {
               value={reply}
               onChange={(e) => setReply(e.target.value)}
             />
-            <Button variant="primary" onClick={post} style={{ padding: '9px 16px', fontSize: 13 }}>
+            <Button
+              variant="primary"
+              onClick={post}
+              style={{ padding: "9px 16px", fontSize: 13 }}
+            >
               Reply
             </Button>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

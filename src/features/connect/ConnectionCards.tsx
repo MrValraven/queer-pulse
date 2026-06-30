@@ -1,12 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiFlag, FiMessageCircle, FiSlash, FiVolumeX } from 'react-icons/fi'
-import { Avatar, Button } from '../../shared/components/ui'
-import { useConnect } from '../../app/providers/ConnectProvider'
-import { useSocial } from '../../app/providers/SocialProvider'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { profilePath, vouchBadgeLabel, type ConnectionView } from './connections.data'
-import styles from './ConnectionsPage.module.css'
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { FiFlag, FiMessageCircle, FiSlash, FiVolumeX } from "react-icons/fi";
+import { Avatar, Button } from "../../shared/components/ui";
+import { useConnect } from "../../app/providers/ConnectProvider";
+import { useSocial } from "../../app/providers/SocialProvider";
+import { useToast } from "../../shared/components/feedback/useToast";
+import {
+  profilePath,
+  vouchBadgeLabel,
+  type ConnectionView,
+} from "./connections.data";
+import styles from "./ConnectionsPage.module.css";
 
 const MoreIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -14,48 +18,71 @@ const MoreIcon = () => (
     <circle cx="12" cy="12" r="2" />
     <circle cx="12" cy="19" r="2" />
   </svg>
-)
+);
 
 /** Keyboard-accessible per-connection menu: Message / Mute / Block / Report. */
 function ConnectionMoreMenu({ slug, name }: { slug: string; name: string }) {
-  const { openConnect } = useConnect()
-  const { isBlocked, isMuted, toggleMute, toggleBlock } = useSocial()
-  const { showToast } = useToast()
-  const [open, setOpen] = useState(false)
-  const wrapRef = useRef<HTMLDivElement>(null)
-  const first = name.split(' ')[0]
+  const { openConnect } = useConnect();
+  const { isBlocked, isMuted, toggleMute, toggleBlock } = useSocial();
+  const { showToast } = useToast();
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const first = name.split(" ")[0];
 
   useEffect(() => {
-    if (!open) return
+    if (!open) return;
     function onDocClick(e: MouseEvent) {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false)
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node))
+        setOpen(false);
     }
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false)
+      if (e.key === "Escape") setOpen(false);
     }
-    document.addEventListener('mousedown', onDocClick)
-    document.addEventListener('keydown', onKey)
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener('mousedown', onDocClick)
-      document.removeEventListener('keydown', onKey)
-    }
-  }, [open])
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
-  const items: { label: string; icon: React.ReactNode; danger?: boolean; run: () => void }[] = [
-    { label: 'Message', icon: <FiMessageCircle />, run: () => openConnect(slug) },
+  const items: {
+    label: string;
+    icon: React.ReactNode;
+    danger?: boolean;
+    run: () => void;
+  }[] = [
     {
-      label: `${isMuted(slug) ? 'Unmute' : 'Mute'} ${first}`,
-      icon: <FiVolumeX />,
-      run: () => showToast(toggleMute(slug) ? `Muted ${first}` : `Unmuted ${first}`, 'success'),
+      label: "Message",
+      icon: <FiMessageCircle />,
+      run: () => openConnect(slug),
     },
     {
-      label: `${isBlocked(slug) ? 'Unblock' : 'Block'} ${first}`,
+      label: `${isMuted(slug) ? "Unmute" : "Mute"} ${first}`,
+      icon: <FiVolumeX />,
+      run: () =>
+        showToast(
+          toggleMute(slug) ? `Muted ${first}` : `Unmuted ${first}`,
+          "success",
+        ),
+    },
+    {
+      label: `${isBlocked(slug) ? "Unblock" : "Block"} ${first}`,
       icon: <FiSlash />,
       danger: true,
-      run: () => showToast(toggleBlock(slug) ? `Blocked ${first}` : `Unblocked ${first}`, 'success'),
+      run: () =>
+        showToast(
+          toggleBlock(slug) ? `Blocked ${first}` : `Unblocked ${first}`,
+          "success",
+        ),
     },
-    { label: 'Report', icon: <FiFlag />, danger: true, run: () => showToast(`Report sent for ${first}`, 'info') },
-  ]
+    {
+      label: "Report",
+      icon: <FiFlag />,
+      danger: true,
+      run: () => showToast(`Report sent for ${first}`, "info"),
+    },
+  ];
 
   return (
     <div className={styles.moreWrap} ref={wrapRef}>
@@ -76,10 +103,12 @@ function ConnectionMoreMenu({ slug, name }: { slug: string; name: string }) {
               key={item.label}
               type="button"
               role="menuitem"
-              className={[styles.menuItem, item.danger && styles.menuDanger].filter(Boolean).join(' ')}
+              className={[styles.menuItem, item.danger && styles.menuDanger]
+                .filter(Boolean)
+                .join(" ")}
               onClick={() => {
-                setOpen(false)
-                item.run()
+                setOpen(false);
+                item.run();
               }}
             >
               <span aria-hidden>{item.icon}</span>
@@ -89,15 +118,31 @@ function ConnectionMoreMenu({ slug, name }: { slug: string; name: string }) {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export function CardHead({ view, more }: { view: ConnectionView; more?: boolean }) {
-  const to = profilePath(view.slug)
+export function CardHead({
+  view,
+  more,
+}: {
+  view: ConnectionView;
+  more?: boolean;
+}) {
+  const to = profilePath(view.slug);
   return (
     <div className={styles.cardHead}>
-      <Link to={to} aria-label={`${view.name}'s profile`} className={styles.avLink}>
-        <Avatar initials={view.initials} tint={view.tint} src={view.photo} size={54} alt={view.name} />
+      <Link
+        to={to}
+        aria-label={`${view.name}'s profile`}
+        className={styles.avLink}
+      >
+        <Avatar
+          initials={view.initials}
+          tint={view.tint}
+          src={view.photo}
+          size={54}
+          alt={view.name}
+        />
       </Link>
       <div>
         <div className={styles.name}>
@@ -108,7 +153,7 @@ export function CardHead({ view, more }: { view: ConnectionView; more?: boolean 
       </div>
       {more && <ConnectionMoreMenu slug={view.slug} name={view.name} />}
     </div>
-  )
+  );
 }
 
 /**
@@ -119,33 +164,33 @@ export function CardHead({ view, more }: { view: ConnectionView; more?: boolean 
  * visible count is computed in a single pass without a setState-in-effect loop.
  */
 function ConnectionTags({ tags }: { tags: string[] }) {
-  const measureRef = useRef<HTMLDivElement>(null)
-  const [visible, setVisible] = useState(tags.length)
+  const measureRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(tags.length);
 
   useEffect(() => {
-    const el = measureRef.current
-    if (!el || typeof ResizeObserver === 'undefined') return
+    const el = measureRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
     const ro = new ResizeObserver(() => {
-      const children = Array.from(el.children) as HTMLElement[]
-      const lineTops: number[] = []
+      const children = Array.from(el.children) as HTMLElement[];
+      const lineTops: number[] = [];
       for (const c of children) {
-        if (!lineTops.includes(c.offsetTop)) lineTops.push(c.offsetTop)
+        if (!lineTops.includes(c.offsetTop)) lineTops.push(c.offsetTop);
       }
       if (lineTops.length <= 2) {
-        setVisible(tags.length)
-        return
+        setVisible(tags.length);
+        return;
       }
       // Chips on lines 1–2, minus one slot reserved for the "+N" pill.
-      const fit = children.filter((c) => c.offsetTop <= lineTops[1]!).length
-      setVisible(Math.max(1, fit - 1))
-    })
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [tags])
+      const fit = children.filter((c) => c.offsetTop <= lineTops[1]!).length;
+      setVisible(Math.max(1, fit - 1));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [tags]);
 
-  if (tags.length === 0) return null
-  const shown = tags.slice(0, visible)
-  const hidden = tags.slice(visible)
+  if (tags.length === 0) return null;
+  const shown = tags.slice(0, visible);
+  const hidden = tags.slice(visible);
 
   return (
     <div className={styles.tagsWrap}>
@@ -163,18 +208,21 @@ function ConnectionTags({ tags }: { tags: string[] }) {
           </span>
         ))}
         {hidden.length > 0 && (
-          <span className={`${styles.tag} ${styles.tagMore}`} title={`Also: ${hidden.join(', ')}`}>
+          <span
+            className={`${styles.tag} ${styles.tagMore}`}
+            title={`Also: ${hidden.join(", ")}`}
+          >
             +{hidden.length}
           </span>
         )}
       </div>
     </div>
-  )
+  );
 }
 
 function ConnectionMeta({ view }: { view: ConnectionView }) {
-  const badge = vouchBadgeLabel(view.meta)
-  const { mutuals, since } = view.meta
+  const badge = vouchBadgeLabel(view.meta);
+  const { mutuals, since } = view.meta;
   return (
     <div className={styles.meta}>
       {badge && <span className={styles.vouched}>{badge}</span>}
@@ -189,7 +237,7 @@ function ConnectionMeta({ view }: { view: ConnectionView }) {
         </span>
       )}
     </div>
-  )
+  );
 }
 
 export function AllConnectionCard({
@@ -198,13 +246,17 @@ export function AllConnectionCard({
   onUnblock,
   onMessage,
 }: {
-  view: ConnectionView
-  blocked: boolean
-  onUnblock: () => void
-  onMessage: () => void
+  view: ConnectionView;
+  blocked: boolean;
+  onUnblock: () => void;
+  onMessage: () => void;
 }) {
   return (
-    <div className={[styles.card, blocked && styles.blocked].filter(Boolean).join(' ')}>
+    <div
+      className={[styles.card, blocked && styles.blocked]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <CardHead view={view} more />
       {blocked && <span className={styles.blockedBadge}>Blocked</span>}
       <ConnectionTags tags={view.tags} />
@@ -226,7 +278,7 @@ export function AllConnectionCard({
         )}
       </div>
     </div>
-  )
+  );
 }
 
 export function IncomingCard({
@@ -234,11 +286,11 @@ export function IncomingCard({
   onAccept,
   onDecline,
 }: {
-  view: ConnectionView
-  onAccept: () => void
-  onDecline: () => void
+  view: ConnectionView;
+  onAccept: () => void;
+  onDecline: () => void;
 }) {
-  const { mutuals, sentAgo, requestMessage } = view.meta
+  const { mutuals, sentAgo, requestMessage } = view.meta;
   return (
     <div className={`${styles.card} ${styles.pending}`}>
       <CardHead view={view} />
@@ -248,7 +300,9 @@ export function IncomingCard({
             <b>{mutuals}</b> mutuals
           </span>
         ) : (
-          <span className={styles.metaMuted}>No mutuals — review carefully</span>
+          <span className={styles.metaMuted}>
+            No mutuals — review carefully
+          </span>
         )}
         {sentAgo && (
           <span>
@@ -266,16 +320,22 @@ export function IncomingCard({
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
-export function SentCard({ view, onWithdraw }: { view: ConnectionView; onWithdraw: () => void }) {
+export function SentCard({
+  view,
+  onWithdraw,
+}: {
+  view: ConnectionView;
+  onWithdraw: () => void;
+}) {
   return (
     <div className={styles.card}>
       <CardHead view={view} />
       <div className={styles.meta}>
         <span className={styles.metaMuted}>
-          Awaiting reply{view.meta.sentAgo ? ' · sent ' : ''}
+          Awaiting reply{view.meta.sentAgo ? " · sent " : ""}
           {view.meta.sentAgo && <b>{view.meta.sentAgo}</b>}
         </span>
       </div>
@@ -285,16 +345,24 @@ export function SentCard({ view, onWithdraw }: { view: ConnectionView; onWithdra
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
-export function BlockedCard({ view, onUnblock }: { view: ConnectionView; onUnblock: () => void }) {
+export function BlockedCard({
+  view,
+  onUnblock,
+}: {
+  view: ConnectionView;
+  onUnblock: () => void;
+}) {
   return (
     <div className={`${styles.card} ${styles.blocked}`}>
       <CardHead view={view} />
       <span className={styles.blockedBadge}>Blocked</span>
       <div className={styles.meta}>
-        <span className={styles.metaMuted}>They can't message you or see your updates.</span>
+        <span className={styles.metaMuted}>
+          They can't message you or see your updates.
+        </span>
       </div>
       <div className={styles.actions}>
         <Button type="button" variant="ghost" onClick={onUnblock}>
@@ -305,10 +373,16 @@ export function BlockedCard({ view, onUnblock }: { view: ConnectionView; onUnblo
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
-export function VouchedCard({ view, note }: { view: ConnectionView; note: string }) {
+export function VouchedCard({
+  view,
+  note,
+}: {
+  view: ConnectionView;
+  note: string;
+}) {
   return (
     <div className={styles.card}>
       <CardHead view={view} />
@@ -321,5 +395,5 @@ export function VouchedCard({ view, note }: { view: ConnectionView; note: string
         </Button>
       </div>
     </div>
-  )
+  );
 }

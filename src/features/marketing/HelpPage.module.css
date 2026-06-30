@@ -114,6 +114,6 @@
   margin-top: 4px;
 }
 
-:global([data-theme='dark']) .helpContact {
+:global([data-theme="dark"]) .helpContact {
   border-color: rgba(247, 243, 238, 0.12);
 }

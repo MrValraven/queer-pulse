@@ -11,26 +11,34 @@
 }
 
 .page::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -15%;
   right: -5%;
   width: 560px;
   height: 560px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.07), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.07),
+    transparent 62%
+  );
   pointer-events: none;
 }
 
 .page::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -10%;
   left: -4%;
   width: 420px;
   height: 420px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.06), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.06),
+    transparent 62%
+  );
   pointer-events: none;
 }
 

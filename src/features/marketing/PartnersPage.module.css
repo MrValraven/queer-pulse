@@ -62,7 +62,9 @@
   flex-direction: column;
   gap: 12px;
   color: inherit;
-  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
 }
 .card:hover {
   transform: translateY(-3px);
@@ -210,7 +212,7 @@
   }
 }
 
-:global([data-theme='dark']) .card,
-:global([data-theme='dark']) .become {
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .become {
   border-color: rgba(247, 243, 238, 0.1);
 }

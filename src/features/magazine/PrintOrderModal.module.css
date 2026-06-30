@@ -260,9 +260,9 @@
   font-weight: 600;
 }
 
-:global([data-theme='dark']) .modal {
+:global([data-theme="dark"]) .modal {
   border: 1px solid rgba(247, 243, 238, 0.1);
 }
-:global([data-theme='dark']) .modalSuccess {
+:global([data-theme="dark"]) .modalSuccess {
   border-color: transparent;
 }

@@ -1,14 +1,14 @@
-import { TAX_DISCLAIMER } from './tax.constants'
-import { euro } from './economy.data'
-import styles from './DayRateCalculatorPage.module.css'
+import { TAX_DISCLAIMER } from "./tax.constants";
+import { euro } from "./economy.data";
+import styles from "./DayRateCalculatorPage.module.css";
 
 interface DayRateResultProps {
   /** Minimum day rate excluding IVA. */
-  base: number
+  base: number;
   /** Day rate including IVA. */
-  withIva: number
+  withIva: number;
   /** Hourly rate excluding IVA. */
-  hourly: number
+  hourly: number;
 }
 
 /** The live plum-panel preview: three emphasized rate cards plus disclaimers. */
@@ -37,5 +37,5 @@ export function DayRateResult({ base, withIva, hourly }: DayRateResultProps) {
       </p>
       <p className={styles.disclaimer}>{TAX_DISCLAIMER}</p>
     </div>
-  )
+  );
 }

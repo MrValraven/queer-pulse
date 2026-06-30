@@ -1,15 +1,15 @@
-import { useState } from 'react'
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { DonateModal } from './DonateModal'
-import { ALLOCATION, AMOUNTS, TRUST } from './donate.data'
-import styles from './DonatePage.module.css'
+import { useState } from "react";
+import { PageShell } from "../../shared/components/layout";
+import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { DonateModal } from "./DonateModal";
+import { ALLOCATION, AMOUNTS, TRUST } from "./donate.data";
+import styles from "./DonatePage.module.css";
 
 export function DonatePage() {
-  const [monthly, setMonthly] = useState(true)
-  const [selected, setSelected] = useState(1)
-  const [giving, setGiving] = useState(false)
+  const [monthly, setMonthly] = useState(true);
+  const [selected, setSelected] = useState(1);
+  const [giving, setGiving] = useState(false);
 
   return (
     <PageShell>
@@ -20,22 +20,23 @@ export function DonatePage() {
             Members keep this <em>alive.</em>
           </Reveal>
           <Reveal as="p" className={styles.lead} delay={120}>
-            No ads, no investors, no data sold. QueerPulse runs on the people who use it — and every
-            euro goes back into mutual aid, gatherings, and paying queer creatives fairly.
+            No ads, no investors, no data sold. QueerPulse runs on the people
+            who use it — and every euro goes back into mutual aid, gatherings,
+            and paying queer creatives fairly.
           </Reveal>
 
           <Reveal className={styles.card} delay={160}>
             <div className={styles.toggle}>
               <button
                 type="button"
-                className={`${styles.toggleBtn} ${monthly ? styles.toggleOn : ''}`}
+                className={`${styles.toggleBtn} ${monthly ? styles.toggleOn : ""}`}
                 onClick={() => setMonthly(true)}
               >
                 Monthly
               </button>
               <button
                 type="button"
-                className={`${styles.toggleBtn} ${!monthly ? styles.toggleOn : ''}`}
+                className={`${styles.toggleBtn} ${!monthly ? styles.toggleOn : ""}`}
                 onClick={() => setMonthly(false)}
               >
                 One-off
@@ -46,12 +47,16 @@ export function DonatePage() {
                 <button
                   key={amount.value}
                   type="button"
-                  className={`${styles.amount} ${selected === index ? styles.amountOn : ''}`}
+                  className={`${styles.amount} ${selected === index ? styles.amountOn : ""}`}
                   onClick={() => setSelected(index)}
                 >
-                  {amount.featured && <span className={styles.ribbon}>{amount.note}</span>}
+                  {amount.featured && (
+                    <span className={styles.ribbon}>{amount.note}</span>
+                  )}
                   <div className={styles.amountVal}>{amount.value}</div>
-                  {!amount.featured && <div className={styles.amountNote}>{amount.note}</div>}
+                  {!amount.featured && (
+                    <div className={styles.amountNote}>{amount.note}</div>
+                  )}
                 </button>
               ))}
             </div>
@@ -59,10 +64,10 @@ export function DonatePage() {
               variant="jade"
               size="lg"
               onClick={() => setGiving(true)}
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
             >
               Give {AMOUNTS[selected]!.value}
-              {monthly ? ' / month' : ''} →
+              {monthly ? " / month" : ""} →
             </Button>
           </Reveal>
         </div>
@@ -74,11 +79,16 @@ export function DonatePage() {
             Where it <em>actually goes.</em>
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            Not overheads and salaries for people you'll never meet. Here's the real split.
+            Not overheads and salaries for people you'll never meet. Here's the
+            real split.
           </Reveal>
           <div className={styles.alloc}>
             {ALLOCATION.map((row, index) => (
-              <Reveal key={row.label} className={styles.allocRow} delay={index * 50}>
+              <Reveal
+                key={row.label}
+                className={styles.allocRow}
+                delay={index * 50}
+              >
                 <div className={styles.allocPct}>{row.pct}</div>
                 <div>
                   <div className={styles.allocLabel}>{row.label}</div>
@@ -100,8 +110,14 @@ export function DonatePage() {
           </Reveal>
           <div className={styles.trust}>
             {TRUST.map((item, index) => (
-              <Reveal key={item.title} className={styles.trustCard} delay={index * 55}>
-                <div className={styles.trustIcon}><item.icon /></div>
+              <Reveal
+                key={item.title}
+                className={styles.trustCard}
+                delay={index * 55}
+              >
+                <div className={styles.trustIcon}>
+                  <item.icon />
+                </div>
                 <div className={styles.trustTitle}>{item.title}</div>
                 <div className={styles.trustBody}>{item.body}</div>
               </Reveal>
@@ -111,7 +127,11 @@ export function DonatePage() {
       </section>
 
       <Outro
-        title={<>Or give your <em>time instead.</em></>}
+        title={
+          <>
+            Or give your <em>time instead.</em>
+          </>
+        }
         sub="Money is one way in. Volunteering, hosting, and showing up are just as much the point."
       >
         <Button to={routes.volunteer} variant="primary" size="lg">
@@ -130,5 +150,5 @@ export function DonatePage() {
         />
       )}
     </PageShell>
-  )
+  );
 }

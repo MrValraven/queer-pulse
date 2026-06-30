@@ -75,10 +75,12 @@
   opacity: 0;
   transform: translateY(4px);
   pointer-events: none;
-  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
+  transition:
+    opacity 0.18s var(--ease),
+    transform 0.18s var(--ease);
 }
 .pop::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 18px;

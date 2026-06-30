@@ -1,24 +1,24 @@
-import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { useScrollReveal } from '../../../shared/hooks/useScrollReveal'
-import { useCountUp } from '../../../shared/hooks/useCountUp'
-import { routes } from '../../../app/routeMap'
-import { grantItems, grantStats } from '../data/grants'
-import type { GrantStat } from '../data/types'
-import styles from './MicroGrants.module.css'
+import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { useScrollReveal } from "../../../shared/hooks/useScrollReveal";
+import { useCountUp } from "../../../shared/hooks/useCountUp";
+import { routes } from "../../../app/routeMap";
+import { grantItems, grantStats } from "../data/grants";
+import type { GrantStat } from "../data/types";
+import styles from "./MicroGrants.module.css";
 
 function StatTile({ stat }: { stat: GrantStat }) {
-  const { ref, isVisible } = useScrollReveal<HTMLDivElement>()
-  const count = useCountUp(stat.countTo ?? 0, { active: isVisible })
+  const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
+  const count = useCountUp(stat.countTo ?? 0, { active: isVisible });
   const display = stat.countTo
-    ? `${stat.prefix ?? ''}${count.toLocaleString('en-US')}${stat.suffix ?? ''}`
-    : stat.value
+    ? `${stat.prefix ?? ""}${count.toLocaleString("en-US")}${stat.suffix ?? ""}`
+    : stat.value;
 
   return (
     <div className={styles.stat} ref={ref}>
       <div className={styles.statValue}>{display}</div>
       <div className={styles.statLabel}>{stat.label}</div>
     </div>
-  )
+  );
 }
 
 export function MicroGrants() {
@@ -68,5 +68,5 @@ export function MicroGrants() {
         </Reveal>
       </div>
     </section>
-  )
+  );
 }

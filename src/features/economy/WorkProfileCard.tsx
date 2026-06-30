@@ -1,20 +1,25 @@
-import { Avatar, Button, VisibilityBadge, type VisibilityMode } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { useWorkProfile } from '../../app/providers/WorkProfileProvider'
-import { workIdentity } from './work.data'
-import styles from './WorkHubPage.module.css'
+import {
+  Avatar,
+  Button,
+  VisibilityBadge,
+  type VisibilityMode,
+} from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { useWorkProfile } from "../../app/providers/WorkProfileProvider";
+import { workIdentity } from "./work.data";
+import styles from "./WorkHubPage.module.css";
 
 /** Maps the out-at-work spectrum to the shared VisibilityBadge modes. */
 const OUT_TO_MODE: Record<string, VisibilityMode> = {
-  out: 'open',
-  verified: 'network',
-  private: 'private',
-}
+  out: "open",
+  verified: "network",
+  private: "private",
+};
 
 /** The Work Profile summary module — identity at the centre of the workspace. */
 export function WorkProfileCard() {
-  const { outAtWork } = useWorkProfile()
-  const mode = OUT_TO_MODE[outAtWork] ?? 'network'
+  const { outAtWork } = useWorkProfile();
+  const mode = OUT_TO_MODE[outAtWork] ?? "network";
   return (
     <div className={styles.pCard}>
       <div className={styles.pHead}>
@@ -31,9 +36,14 @@ export function WorkProfileCard() {
       </div>
 
       <div className={styles.pMeterRow}>
-        <span className={styles.pMeterLabel}>Profile {workIdentity.completeness}% complete</span>
+        <span className={styles.pMeterLabel}>
+          Profile {workIdentity.completeness}% complete
+        </span>
         <div className={styles.meter}>
-          <div className={styles.meterFill} style={{ width: `${workIdentity.completeness}%` }} />
+          <div
+            className={styles.meterFill}
+            style={{ width: `${workIdentity.completeness}%` }}
+          />
         </div>
       </div>
 
@@ -46,5 +56,5 @@ export function WorkProfileCard() {
         </Button>
       </div>
     </div>
-  )
+  );
 }

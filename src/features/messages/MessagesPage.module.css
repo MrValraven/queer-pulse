@@ -276,12 +276,12 @@
   }
 }
 
-:global([data-theme='dark']) .threadPanel,
-:global([data-theme='dark']) .topbar,
-:global([data-theme='dark']) .composer,
-:global([data-theme='dark']) .officialBar {
+:global([data-theme="dark"]) .threadPanel,
+:global([data-theme="dark"]) .topbar,
+:global([data-theme="dark"]) .composer,
+:global([data-theme="dark"]) .officialBar {
   border-color: rgba(247, 243, 238, 0.1);
 }
-:global([data-theme='dark']) .received {
+:global([data-theme="dark"]) .received {
   border-color: rgba(247, 243, 238, 0.1);
 }

@@ -39,7 +39,10 @@ export function MagazineCover() {
             has tripled. The bars have closed and reopened and closed again.
             What survived the decade, and what did we lose in the process?
           </p>
-          <Link className={styles.csRead} to={`${routes.article}?id=city-changed`}>
+          <Link
+            className={styles.csRead}
+            to={`${routes.article}?id=city-changed`}
+          >
             Read the full feature <span>→</span>
           </Link>
         </div>

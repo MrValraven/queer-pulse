@@ -28,7 +28,7 @@
   position: relative;
 }
 .pulseDot::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
@@ -46,14 +46,18 @@
   position: relative;
 }
 .page::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10%;
   right: -5%;
   width: 440px;
   height: 440px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.1), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.1),
+    transparent 62%
+  );
   pointer-events: none;
 }
 

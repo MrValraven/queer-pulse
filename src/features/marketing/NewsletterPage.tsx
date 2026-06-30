@@ -22,24 +22,97 @@ interface Section {
 }
 
 const INITIAL: Section[] = [
-  { title: "Magazine", prefs: [
-    { id: "mag-issue", title: "Monthly magazine issue", sub: "A full issue email on the first of every month — cover story, links to all articles, letters from the editors.", freq: "Monthly · 1st of the month", checked: true },
-    { id: "mag-picks", title: "Editor's picks", sub: "When an article gets a strong community response, we'll send it to you mid-month. No more than twice a month.", freq: "Occasional · up to 2× per month", checked: true },
-  ] },
-  { title: "Events & gatherings", prefs: [
-    { id: "ev-confirm", title: "Event confirmations & reminders", sub: "Confirmation when you RSVP, plus a reminder 48 hours before each event you're attending.", freq: "Transactional · per RSVP", checked: true },
-    { id: "ev-near", title: "New events near you", sub: "A weekly digest of new events and gatherings listed in the past seven days. Only if you've saved location preferences.", freq: "Weekly · Thursdays", checked: false },
-    { id: "ev-reading", title: "Reading group activity", sub: "Updates from reading groups you're a member of — new sessions, books selected, messages from the group organiser.", freq: "As activity happens", checked: true },
-  ] },
-  { title: "Community & network", prefs: [
-    { id: "com-announce", title: "Community announcements", sub: "Major community news — new features, governance decisions, significant platform changes. Sent only when something important happens.", freq: "Occasional · never more than weekly", checked: true },
-    { id: "com-connect", title: "Connection requests & messages", sub: "Email notifications when someone sends you a connection request or a message. Can also be managed via in-app notifications.", freq: "Per event", checked: true },
-    { id: "com-forum", title: "Forum mentions & replies", sub: "When someone replies to your forum post or mentions you in a thread.", freq: "Per event", checked: false },
-  ] },
-  { title: "Safety & account", prefs: [
-    { id: "safe-alerts", title: "Safety alerts", sub: "Critical alerts about your account — password changes, unusual activity, or community safety notices. These cannot be turned off and we will only send them when genuinely necessary.", freq: "Urgent · cannot be disabled", checked: true, disabled: true },
-    { id: "safe-report", title: "Quarterly community report", sub: "The community health and financial report published every quarter. Contains moderation statistics, platform finances, and governance updates.", freq: "Quarterly", checked: true },
-  ] },
+  {
+    title: "Magazine",
+    prefs: [
+      {
+        id: "mag-issue",
+        title: "Monthly magazine issue",
+        sub: "A full issue email on the first of every month — cover story, links to all articles, letters from the editors.",
+        freq: "Monthly · 1st of the month",
+        checked: true,
+      },
+      {
+        id: "mag-picks",
+        title: "Editor's picks",
+        sub: "When an article gets a strong community response, we'll send it to you mid-month. No more than twice a month.",
+        freq: "Occasional · up to 2× per month",
+        checked: true,
+      },
+    ],
+  },
+  {
+    title: "Events & gatherings",
+    prefs: [
+      {
+        id: "ev-confirm",
+        title: "Event confirmations & reminders",
+        sub: "Confirmation when you RSVP, plus a reminder 48 hours before each event you're attending.",
+        freq: "Transactional · per RSVP",
+        checked: true,
+      },
+      {
+        id: "ev-near",
+        title: "New events near you",
+        sub: "A weekly digest of new events and gatherings listed in the past seven days. Only if you've saved location preferences.",
+        freq: "Weekly · Thursdays",
+        checked: false,
+      },
+      {
+        id: "ev-reading",
+        title: "Reading group activity",
+        sub: "Updates from reading groups you're a member of — new sessions, books selected, messages from the group organiser.",
+        freq: "As activity happens",
+        checked: true,
+      },
+    ],
+  },
+  {
+    title: "Community & network",
+    prefs: [
+      {
+        id: "com-announce",
+        title: "Community announcements",
+        sub: "Major community news — new features, governance decisions, significant platform changes. Sent only when something important happens.",
+        freq: "Occasional · never more than weekly",
+        checked: true,
+      },
+      {
+        id: "com-connect",
+        title: "Connection requests & messages",
+        sub: "Email notifications when someone sends you a connection request or a message. Can also be managed via in-app notifications.",
+        freq: "Per event",
+        checked: true,
+      },
+      {
+        id: "com-forum",
+        title: "Forum mentions & replies",
+        sub: "When someone replies to your forum post or mentions you in a thread.",
+        freq: "Per event",
+        checked: false,
+      },
+    ],
+  },
+  {
+    title: "Safety & account",
+    prefs: [
+      {
+        id: "safe-alerts",
+        title: "Safety alerts",
+        sub: "Critical alerts about your account — password changes, unusual activity, or community safety notices. These cannot be turned off and we will only send them when genuinely necessary.",
+        freq: "Urgent · cannot be disabled",
+        checked: true,
+        disabled: true,
+      },
+      {
+        id: "safe-report",
+        title: "Quarterly community report",
+        sub: "The community health and financial report published every quarter. Contains moderation statistics, platform finances, and governance updates.",
+        freq: "Quarterly",
+        checked: true,
+      },
+    ],
+  },
 ];
 
 export function NewsletterPage() {
@@ -50,7 +123,12 @@ export function NewsletterPage() {
     setSections((prev) =>
       prev.map((s, i) =>
         i === si
-          ? { ...s, prefs: s.prefs.map((p, j) => (j === pi ? { ...p, checked: !p.checked } : p)) }
+          ? {
+              ...s,
+              prefs: s.prefs.map((p, j) =>
+                j === pi ? { ...p, checked: !p.checked } : p,
+              ),
+            }
           : s,
       ),
     );
@@ -58,7 +136,10 @@ export function NewsletterPage() {
 
   const unsubAll = () => {
     setSections((prev) =>
-      prev.map((s) => ({ ...s, prefs: s.prefs.map((p) => (p.disabled ? p : { ...p, checked: false })) })),
+      prev.map((s) => ({
+        ...s,
+        prefs: s.prefs.map((p) => (p.disabled ? p : { ...p, checked: false })),
+      })),
     );
     showToast("Unsubscribed from all optional emails", "success");
   };
@@ -67,7 +148,9 @@ export function NewsletterPage() {
     <AppShell>
       <div className={styles.page}>
         <div className={`wrap ${styles.wrap}`}>
-          <Link to={SETTINGS} className={styles.back}>← Settings</Link>
+          <Link to={SETTINGS} className={styles.back}>
+            ← Settings
+          </Link>
           <div className={styles.header}>
             <div className={styles.eye}>Email preferences</div>
             <h1 className={styles.title}>
@@ -76,9 +159,9 @@ export function NewsletterPage() {
               and when.
             </h1>
             <p className={styles.sub}>
-              You control everything. Toggle off anything you don't want. Safety alerts
-              are the only emails we'll ever send regardless of your settings — and only
-              if something urgent affects your account.
+              You control everything. Toggle off anything you don't want. Safety
+              alerts are the only emails we'll ever send regardless of your
+              settings — and only if something urgent affects your account.
             </p>
           </div>
 
@@ -119,20 +202,23 @@ export function NewsletterPage() {
           ))}
 
           <div className={styles.save}>
-            <Button variant="primary" onClick={() => showToast("Preferences saved", "success")}>
+            <Button
+              variant="primary"
+              onClick={() => showToast("Preferences saved", "success")}
+            >
               Save preferences
             </Button>
             <div className={styles.saveNote}>
-              Changes take effect immediately. You may still receive emails already
-              queued.
+              Changes take effect immediately. You may still receive emails
+              already queued.
             </div>
           </div>
 
           <div className={styles.unsubStrip}>
             <div className={styles.unsubTitle}>Unsubscribe from everything</div>
             <div className={styles.unsubText}>
-              This turns off all optional emails at once, except safety alerts. You can
-              re-enable individual categories above at any time.
+              This turns off all optional emails at once, except safety alerts.
+              You can re-enable individual categories above at any time.
             </div>
             <Button variant="ghost" onClick={unsubAll}>
               Unsubscribe from all emails

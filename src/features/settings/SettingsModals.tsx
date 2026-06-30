@@ -1,27 +1,38 @@
-import { useEffect, useState, type ReactNode } from 'react'
-import { FiCheck, FiDownload, FiLoader } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import styles from './SettingsModal.module.css'
+import { useEffect, useState, type ReactNode } from "react";
+import { FiCheck, FiDownload, FiLoader } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import styles from "./SettingsModal.module.css";
 
 /** Shared modal shell with overlay click-to-close and a close button. */
-function ModalShell({ onClose, children }: { onClose: () => void; children: ReactNode }) {
-  useScrollLock()
+function ModalShell({
+  onClose,
+  children,
+}: {
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  useScrollLock();
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className={styles.modal}>
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           ×
         </button>
         {children}
       </div>
     </div>
-  )
+  );
 }
 
 function Spinner() {
@@ -29,7 +40,7 @@ function Spinner() {
     <span className={styles.spin}>
       <FiLoader size={16} />
     </span>
-  )
+  );
 }
 
 /** Plum-panel success state shown after a simulated submission. */
@@ -38,9 +49,9 @@ function SuccessPanel({
   children,
   onClose,
 }: {
-  title: ReactNode
-  children: ReactNode
-  onClose: () => void
+  title: ReactNode;
+  children: ReactNode;
+  onClose: () => void;
 }) {
   return (
     <div className={styles.success}>
@@ -55,38 +66,48 @@ function SuccessPanel({
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
-type Phase = 'form' | 'saving' | 'done'
+type Phase = "form" | "saving" | "done";
 
 /* ── Email change ─────────────────────────────────────────────────── */
 export function EmailChangeModal({
   currentEmail,
   onClose,
 }: {
-  currentEmail: string
-  onClose: () => void
+  currentEmail: string;
+  onClose: () => void;
 }) {
-  const [phase, setPhase] = useState<Phase>('form')
-  const [email, setEmail] = useState('')
-  const [confirm, setConfirm] = useState('')
+  const [phase, setPhase] = useState<Phase>("form");
+  const [email, setEmail] = useState("");
+  const [confirm, setConfirm] = useState("");
   const valid =
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email === confirm && email !== currentEmail
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
+    email === confirm &&
+    email !== currentEmail;
 
   function submit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!valid) return
-    setPhase('saving')
-    setTimeout(() => setPhase('done'), 1200)
+    e.preventDefault();
+    if (!valid) return;
+    setPhase("saving");
+    setTimeout(() => setPhase("done"), 1200);
   }
 
   return (
     <ModalShell onClose={onClose}>
-      {phase === 'done' ? (
-        <SuccessPanel title={<>Almost <em>there.</em></>} onClose={onClose}>
-          We've sent a confirmation link to <strong>{email}</strong>. Click it to finish moving your
-          account email. Until then, you'll keep signing in with {currentEmail}.
+      {phase === "done" ? (
+        <SuccessPanel
+          title={
+            <>
+              Almost <em>there.</em>
+            </>
+          }
+          onClose={onClose}
+        >
+          We've sent a confirmation link to <strong>{email}</strong>. Click it
+          to finish moving your account email. Until then, you'll keep signing
+          in with {currentEmail}.
         </SuccessPanel>
       ) : (
         <form onSubmit={submit}>
@@ -95,8 +116,8 @@ export function EmailChangeModal({
             Change your <em>email.</em>
           </h2>
           <p className={styles.desc}>
-            Currently <strong>{currentEmail}</strong>. We'll send a confirmation link to the new
-            address before anything changes.
+            Currently <strong>{currentEmail}</strong>. We'll send a confirmation
+            link to the new address before anything changes.
           </p>
           <div className={styles.fields}>
             <div className={styles.field}>
@@ -128,53 +149,71 @@ export function EmailChangeModal({
                 required
               />
               {confirm.length > 0 && confirm !== email && (
-                <span className={styles.hint}>The two emails don't match yet.</span>
+                <span className={styles.hint}>
+                  The two emails don't match yet.
+                </span>
               )}
             </div>
           </div>
           <div className={styles.actions}>
-            <Button variant="primary" type="submit" disabled={!valid || phase === 'saving'}>
-              {phase === 'saving' ? (
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={!valid || phase === "saving"}
+            >
+              {phase === "saving" ? (
                 <>
                   <Spinner /> Sending…
                 </>
               ) : (
-                'Send confirmation'
+                "Send confirmation"
               )}
             </Button>
-            <Button variant="ghost" type="button" onClick={onClose} disabled={phase === 'saving'}>
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={onClose}
+              disabled={phase === "saving"}
+            >
               Cancel
             </Button>
           </div>
         </form>
       )}
     </ModalShell>
-  )
+  );
 }
 
 /* ── Password change ──────────────────────────────────────────────── */
 export function PasswordChangeModal({ onClose }: { onClose: () => void }) {
-  const [phase, setPhase] = useState<Phase>('form')
-  const [current, setCurrent] = useState('')
-  const [next, setNext] = useState('')
-  const [confirm, setConfirm] = useState('')
-  const tooShort = next.length > 0 && next.length < 8
-  const mismatch = confirm.length > 0 && confirm !== next
-  const valid = current.length > 0 && next.length >= 8 && next === confirm
+  const [phase, setPhase] = useState<Phase>("form");
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const tooShort = next.length > 0 && next.length < 8;
+  const mismatch = confirm.length > 0 && confirm !== next;
+  const valid = current.length > 0 && next.length >= 8 && next === confirm;
 
   function submit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!valid) return
-    setPhase('saving')
-    setTimeout(() => setPhase('done'), 1200)
+    e.preventDefault();
+    if (!valid) return;
+    setPhase("saving");
+    setTimeout(() => setPhase("done"), 1200);
   }
 
   return (
     <ModalShell onClose={onClose}>
-      {phase === 'done' ? (
-        <SuccessPanel title={<>Password <em>updated.</em></>} onClose={onClose}>
-          Your new password is live. You'll stay signed in here, but you'll need the new password on
-          any other device.
+      {phase === "done" ? (
+        <SuccessPanel
+          title={
+            <>
+              Password <em>updated.</em>
+            </>
+          }
+          onClose={onClose}
+        >
+          Your new password is live. You'll stay signed in here, but you'll need
+          the new password on any other device.
         </SuccessPanel>
       ) : (
         <form onSubmit={submit}>
@@ -183,7 +222,8 @@ export function PasswordChangeModal({ onClose }: { onClose: () => void }) {
             Change your <em>password.</em>
           </h2>
           <p className={styles.desc}>
-            Choose something at least 8 characters long. We'll sign you out of other devices.
+            Choose something at least 8 characters long. We'll sign you out of
+            other devices.
           </p>
           <div className={styles.fields}>
             <div className={styles.field}>
@@ -212,7 +252,9 @@ export function PasswordChangeModal({ onClose }: { onClose: () => void }) {
                 onChange={(e) => setNext(e.target.value)}
                 required
               />
-              {tooShort && <span className={styles.hint}>At least 8 characters.</span>}
+              {tooShort && (
+                <span className={styles.hint}>At least 8 characters.</span>
+              )}
             </div>
             <div className={styles.field}>
               <label className={styles.label} htmlFor="conf-pw">
@@ -226,49 +268,74 @@ export function PasswordChangeModal({ onClose }: { onClose: () => void }) {
                 onChange={(e) => setConfirm(e.target.value)}
                 required
               />
-              {mismatch && <span className={styles.hint}>Passwords don't match yet.</span>}
+              {mismatch && (
+                <span className={styles.hint}>Passwords don't match yet.</span>
+              )}
             </div>
           </div>
           <div className={styles.actions}>
-            <Button variant="primary" type="submit" disabled={!valid || phase === 'saving'}>
-              {phase === 'saving' ? (
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={!valid || phase === "saving"}
+            >
+              {phase === "saving" ? (
                 <>
                   <Spinner /> Updating…
                 </>
               ) : (
-                'Update password'
+                "Update password"
               )}
             </Button>
-            <Button variant="ghost" type="button" onClick={onClose} disabled={phase === 'saving'}>
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={onClose}
+              disabled={phase === "saving"}
+            >
               Cancel
             </Button>
           </div>
         </form>
       )}
     </ModalShell>
-  )
+  );
 }
 
 /* ── Suggest an edit (terminology) ────────────────────────────────── */
-export function SuggestEditModal({ term, onClose }: { term: string; onClose: () => void }) {
-  const [phase, setPhase] = useState<Phase>('form')
-  const [suggestion, setSuggestion] = useState('')
-  const [why, setWhy] = useState('')
-  const valid = suggestion.trim().length > 2
+export function SuggestEditModal({
+  term,
+  onClose,
+}: {
+  term: string;
+  onClose: () => void;
+}) {
+  const [phase, setPhase] = useState<Phase>("form");
+  const [suggestion, setSuggestion] = useState("");
+  const [why, setWhy] = useState("");
+  const valid = suggestion.trim().length > 2;
 
   function submit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!valid) return
-    setPhase('saving')
-    setTimeout(() => setPhase('done'), 1100)
+    e.preventDefault();
+    if (!valid) return;
+    setPhase("saving");
+    setTimeout(() => setPhase("done"), 1100);
   }
 
   return (
     <ModalShell onClose={onClose}>
-      {phase === 'done' ? (
-        <SuccessPanel title={<>Thank you — <em>noted.</em></>} onClose={onClose}>
-          Your suggested edit to <strong>{term}</strong> is with our community editors. Terminology
-          changes are reviewed before going live; we'll let you know what happens.
+      {phase === "done" ? (
+        <SuccessPanel
+          title={
+            <>
+              Thank you — <em>noted.</em>
+            </>
+          }
+          onClose={onClose}
+        >
+          Your suggested edit to <strong>{term}</strong> is with our community
+          editors. Terminology changes are reviewed before going live; we'll let
+          you know what happens.
         </SuccessPanel>
       ) : (
         <form onSubmit={submit}>
@@ -277,8 +344,8 @@ export function SuggestEditModal({ term, onClose }: { term: string; onClose: () 
             Refine <em>{term}.</em>
           </h2>
           <p className={styles.desc}>
-            This guide is edited by the community. Suggest a clearer wording or a correction — every
-            change is reviewed before publishing.
+            This guide is edited by the community. Suggest a clearer wording or
+            a correction — every change is reviewed before publishing.
           </p>
           <div className={styles.fields}>
             <div className={styles.field}>
@@ -311,23 +378,32 @@ export function SuggestEditModal({ term, onClose }: { term: string; onClose: () 
             </div>
           </div>
           <div className={styles.actions}>
-            <Button variant="primary" type="submit" disabled={!valid || phase === 'saving'}>
-              {phase === 'saving' ? (
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={!valid || phase === "saving"}
+            >
+              {phase === "saving" ? (
                 <>
                   <Spinner /> Sending…
                 </>
               ) : (
-                'Send suggestion'
+                "Send suggestion"
               )}
             </Button>
-            <Button variant="ghost" type="button" onClick={onClose} disabled={phase === 'saving'}>
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={onClose}
+              disabled={phase === "saving"}
+            >
               Cancel
             </Button>
           </div>
         </form>
       )}
     </ModalShell>
-  )
+  );
 }
 
 /* ── Data export (simulated, with mock Blob download) ─────────────── */
@@ -337,56 +413,73 @@ export function DataExportModal({
   payload,
   onClose,
 }: {
-  title: string
-  filename: string
-  payload: Record<string, unknown>
-  onClose: () => void
+  title: string;
+  filename: string;
+  payload: Record<string, unknown>;
+  onClose: () => void;
 }) {
-  const [phase, setPhase] = useState<'preparing' | 'ready'>('preparing')
+  const [phase, setPhase] = useState<"preparing" | "ready">("preparing");
 
   // Kick off the simulated export as soon as the modal mounts.
   useEffect(() => {
-    const t = setTimeout(() => setPhase('ready'), 1500)
-    return () => clearTimeout(t)
-  }, [])
+    const t = setTimeout(() => setPhase("ready"), 1500);
+    return () => clearTimeout(t);
+  }, []);
 
   function download() {
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    URL.revokeObjectURL(url)
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   }
 
   return (
     <ModalShell onClose={onClose}>
-      {phase === 'preparing' ? (
-        <div style={{ textAlign: 'center', padding: '20px 8px' }}>
+      {phase === "preparing" ? (
+        <div style={{ textAlign: "center", padding: "20px 8px" }}>
           <div className={styles.eye}>Data &amp; privacy</div>
           <h2 className={styles.title}>{title}</h2>
           <p className={styles.desc}>
-            Gathering your data and packaging it as a JSON file. This usually takes a moment…
+            Gathering your data and packaging it as a JSON file. This usually
+            takes a moment…
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', color: 'var(--plum)' }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              color: "var(--plum)",
+            }}
+          >
             <Spinner />
           </div>
         </div>
       ) : (
-        <SuccessPanel title={<>Your export is <em>ready.</em></>} onClose={onClose}>
-          We've packaged your data as <strong>{filename}</strong>. In the real product we'd also
-          email you a secure link — here you can download it now.
-          <span style={{ display: 'block', marginTop: 18 }}>
+        <SuccessPanel
+          title={
+            <>
+              Your export is <em>ready.</em>
+            </>
+          }
+          onClose={onClose}
+        >
+          We've packaged your data as <strong>{filename}</strong>. In the real
+          product we'd also email you a secure link — here you can download it
+          now.
+          <span style={{ display: "block", marginTop: 18 }}>
             <Button variant="jade" onClick={download}>
-              <FiDownload style={{ verticalAlign: '-2px', marginRight: 8 }} />
+              <FiDownload style={{ verticalAlign: "-2px", marginRight: 8 }} />
               Download {filename}
             </Button>
           </span>
         </SuccessPanel>
       )}
     </ModalShell>
-  )
+  );
 }

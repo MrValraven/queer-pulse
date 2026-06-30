@@ -9,7 +9,11 @@
 .heroBg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.35), rgba(45, 27, 61, 0.3));
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent-rgb), 0.35),
+    rgba(45, 27, 61, 0.3)
+  );
 }
 .heroOverlay {
   position: absolute;

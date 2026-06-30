@@ -18,7 +18,7 @@
   transition: background var(--dur, 0.18s) var(--ease, ease);
 }
 .trigger:hover,
-.trigger[aria-expanded='true'] {
+.trigger[aria-expanded="true"] {
   background: rgba(45, 27, 61, 0.06);
 }
 
@@ -188,7 +188,9 @@
   color: var(--ink-60);
   cursor: pointer;
   font-family: inherit;
-  transition: background var(--dur, 0.18s) var(--ease, ease), color var(--dur, 0.18s) var(--ease, ease);
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
 }
 
 .roleBtn:focus-visible {

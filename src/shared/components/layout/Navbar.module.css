@@ -83,7 +83,7 @@
   flex: none;
 }
 .pulseDot::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
@@ -104,7 +104,7 @@
   transition: color var(--dur-base) var(--ease);
 }
 .link::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: -5px;
@@ -223,19 +223,19 @@
   }
 }
 
-:global([data-theme='dark']) .nav {
+:global([data-theme="dark"]) .nav {
   background: rgba(14, 8, 32, 0.82);
   border-color: rgba(247, 243, 238, 0.1);
 }
-:global([data-theme='dark']) .scrolled {
+:global([data-theme="dark"]) .scrolled {
   background: rgba(14, 8, 32, 0.94);
 }
-:global([data-theme='dark']) .brand,
-:global([data-theme='dark']) .themeToggle,
-:global([data-theme='dark']) .menuButton,
-:global([data-theme='dark']) .signIn {
+:global([data-theme="dark"]) .brand,
+:global([data-theme="dark"]) .themeToggle,
+:global([data-theme="dark"]) .menuButton,
+:global([data-theme="dark"]) .signIn {
   color: var(--cream);
 }
-:global([data-theme='dark']) .drawerPanel {
+:global([data-theme="dark"]) .drawerPanel {
   background: var(--paper);
 }

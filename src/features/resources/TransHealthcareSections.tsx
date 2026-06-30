@@ -15,9 +15,9 @@ export function TransHealthcareHero() {
           <em>step by step.</em>
         </h1>
         <p className={styles.sub}>
-          How to access gender-affirming healthcare in Portugal — through the SNS
-          or privately. Legal name change. What to bring, who to call, what to
-          expect.
+          How to access gender-affirming healthcare in Portugal — through the
+          SNS or privately. Legal name change. What to bring, who to call, what
+          to expect.
         </p>
         <p className={styles.disclaimer}>
           This guide reflects the system as of June 2026. Always verify current
@@ -90,7 +90,9 @@ export function TransHealthcareSidebar() {
           <Link to={routes.solidarity} className={styles.sbcLink}>
             Solidarity Pricing Registry →
           </Link>
-          <div className={styles.sbcRole}>Trans-affirming GPs, psychiatrists</div>
+          <div className={styles.sbcRole}>
+            Trans-affirming GPs, psychiatrists
+          </div>
         </div>
         <div className={styles.sbcItem}>
           <Link to={routes.legal} className={styles.sbcLink}>
@@ -112,7 +114,11 @@ export function TransHealthcareSidebar() {
 export function TransHealthcareOutro() {
   return (
     <Outro
-      title={<>You deserve <em>good care.</em></>}
+      title={
+        <>
+          You deserve <em>good care.</em>
+        </>
+      }
       sub="The QueerPulse community includes trans-affirming GPs, therapists, and legal professionals. You do not have to navigate this alone."
     >
       <Button to={routes.solidarity} variant="primary" size="lg">

@@ -1,3 +1,3 @@
-export { PlanPanel } from './PlanPanel'
-export { BillingPanel } from './BillingPanel'
-export { AccessPanel } from './AccessPanel'
+export { PlanPanel } from "./PlanPanel";
+export { BillingPanel } from "./BillingPanel";
+export { AccessPanel } from "./AccessPanel";

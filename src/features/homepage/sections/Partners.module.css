@@ -75,7 +75,7 @@
   color: var(--ink-40);
 }
 
-:global([data-theme='dark']) .badge {
+:global([data-theme="dark"]) .badge {
   background: var(--paper);
   border-color: rgba(247, 243, 238, 0.1);
 }

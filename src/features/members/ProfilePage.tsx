@@ -1,36 +1,36 @@
-import { useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { FiUserX } from 'react-icons/fi'
-import { PageShell } from '../../shared/components/layout'
-import { Button, EmptyState, Spinner } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { useProfile } from '../../app/providers/ProfileProvider'
-import { useAuth } from '../../app/providers/authContext'
-import { currentUserSlug } from './data/memberProfiles'
-import { useMemberProfile } from './api/useMemberProfile'
-import { ProfileHero, ProfileContent } from './ProfileSections'
-import { EditableProfileHero } from './EditableProfileHero'
-import { ProfileEditBar } from './ProfileEditBar'
-import styles from './ProfilePage.module.css'
-import editStyles from './ProfileEdit.module.css'
+import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { FiUserX } from "react-icons/fi";
+import { PageShell } from "../../shared/components/layout";
+import { Button, EmptyState, Spinner } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { useProfile } from "../../app/providers/ProfileProvider";
+import { useAuth } from "../../app/providers/authContext";
+import { currentUserSlug } from "./data/memberProfiles";
+import { useMemberProfile } from "./api/useMemberProfile";
+import { ProfileHero, ProfileContent } from "./ProfileSections";
+import { EditableProfileHero } from "./EditableProfileHero";
+import { ProfileEditBar } from "./ProfileEditBar";
+import styles from "./ProfilePage.module.css";
+import editStyles from "./ProfileEdit.module.css";
 
 export function ProfilePage() {
-  const { slug } = useParams()
-  const navigate = useNavigate()
-  const { profile: liveProfile, isEditing, startEditing } = useProfile()
-  const { user } = useAuth()
-  const [previewing, setPreviewing] = useState(false)
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const { profile: liveProfile, isEditing, startEditing } = useProfile();
+  const { user } = useAuth();
+  const [previewing, setPreviewing] = useState(false);
 
-  const selfSlug = user?.profile.slug ?? currentUserSlug
-  const isSelf = !slug || slug === selfSlug
+  const selfSlug = user?.profile.slug ?? currentUserSlug;
+  const isSelf = !slug || slug === selfSlug;
 
-  const { data, isLoading } = useMemberProfile(isSelf ? undefined : slug)
-  const otherMember = data?.member ?? null
-  const limited = data?.limited ?? false
+  const { data, isLoading } = useMemberProfile(isSelf ? undefined : slug);
+  const otherMember = data?.member ?? null;
+  const limited = data?.limited ?? false;
 
-  const profile = isSelf ? liveProfile : otherMember
+  const profile = isSelf ? liveProfile : otherMember;
 
-  const selfView = isSelf && !previewing
+  const selfView = isSelf && !previewing;
 
   if (!isSelf && isLoading) {
     return (
@@ -40,7 +40,7 @@ export function ProfilePage() {
           <span>Loading profile…</span>
         </div>
       </PageShell>
-    )
+    );
   }
 
   if (!isSelf && !otherMember) {
@@ -52,21 +52,24 @@ export function ProfilePage() {
             icon={<FiUserX />}
             title="This profile isn't here"
             description="It may have been set to private, the member might have left, or this link could be out of date. Nothing's wrong on your end."
-            action={{ label: 'Back to Members', to: routes.members }}
-            secondaryAction={{ label: '← Go back', onClick: () => navigate(-1) }}
+            action={{ label: "Back to Members", to: routes.members }}
+            secondaryAction={{
+              label: "← Go back",
+              onClick: () => navigate(-1),
+            }}
           />
         </div>
       </PageShell>
-    )
+    );
   }
 
   // At this point: isSelf → profile = liveProfile (always non-null from ProfileProvider);
   // !isSelf → otherMember is non-null (guarded by the not-found early-return above).
   // limited: adapter already zeros out bio/work/openTo; ProfileHero/ProfileContent don't
   // accept a `limited` prop, so we rely on the sparse fields the adapter returns.
-  void limited
+  void limited;
   // profile is non-null here by the invariant above; assert to satisfy ProfileHero/ProfileContent.
-  const resolvedProfile = profile!
+  const resolvedProfile = profile!;
 
   return (
     <PageShell>
@@ -81,6 +84,7 @@ export function ProfilePage() {
       ) : (
         <ProfileHero
           profile={resolvedProfile}
+          self={isSelf}
           asVisitor={isSelf && previewing}
           onEdit={startEditing}
           onPreview={() => setPreviewing(true)}
@@ -101,5 +105,5 @@ export function ProfilePage() {
         </div>
       )}
     </PageShell>
-  )
+  );
 }

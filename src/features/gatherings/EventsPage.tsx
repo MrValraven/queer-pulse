@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiCalendar } from 'react-icons/fi'
-import { PageShell } from '../../shared/components/layout'
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { FiCalendar } from "react-icons/fi";
+import { PageShell } from "../../shared/components/layout";
 import {
   Button,
   EmptyState,
@@ -10,12 +10,12 @@ import {
   SectionHead,
   SkeletonLine,
   Tag,
-} from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { calendarEvents, type CalendarEvent } from './data'
-import { MONTHS, MSHORT } from './calendar.data'
-import { EVENT_CATEGORIES, eventsHeader } from './eventsPage.data'
-import styles from './EventsPage.module.css'
+} from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { calendarEvents, type CalendarEvent } from "./data";
+import { MONTHS, MSHORT } from "./calendar.data";
+import { EVENT_CATEGORIES, eventsHeader } from "./eventsPage.data";
+import styles from "./EventsPage.module.css";
 
 function EventCard({ event }: { event: CalendarEvent }) {
   return (
@@ -31,8 +31,12 @@ function EventCard({ event }: { event: CalendarEvent }) {
           <span className={styles.org} style={{ color: event.orgColor }}>
             {event.org}
           </span>
-          <Tag className={event.kind === 'event' ? styles.badgeEvent : styles.badgeGathering}>
-            {event.kind === 'event' ? 'Event' : 'Gathering'}
+          <Tag
+            className={
+              event.kind === "event" ? styles.badgeEvent : styles.badgeGathering
+            }
+          >
+            {event.kind === "event" ? "Event" : "Gathering"}
           </Tag>
         </div>
         <h3 className={styles.cardTitle}>{event.title}</h3>
@@ -46,7 +50,7 @@ function EventCard({ event }: { event: CalendarEvent }) {
         →
       </span>
     </Link>
-  )
+  );
 }
 
 function EventSkeleton() {
@@ -61,34 +65,34 @@ function EventSkeleton() {
         <SkeletonLine width="55%" height={12} style={{ marginTop: 10 }} />
       </div>
     </div>
-  )
+  );
 }
 
 export function EventsPage() {
-  const [active, setActive] = useState('all')
-  const [loading, setLoading] = useState(true)
+  const [active, setActive] = useState("all");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 600)
-    return () => clearTimeout(t)
-  }, [])
+    const t = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(t);
+  }, []);
 
   const filtered = useMemo(() => {
-    const cat = EVENT_CATEGORIES.find((c) => c.key === active)
-    if (!cat?.colors) return calendarEvents
-    return calendarEvents.filter((e) => cat.colors!.includes(e.orgColor))
-  }, [active])
+    const cat = EVENT_CATEGORIES.find((c) => c.key === active);
+    if (!cat?.colors) return calendarEvents;
+    return calendarEvents.filter((e) => cat.colors!.includes(e.orgColor));
+  }, [active]);
 
   const months = useMemo(() => {
-    const map = new Map<string, CalendarEvent[]>()
+    const map = new Map<string, CalendarEvent[]>();
     for (const event of filtered) {
-      const key = `${MONTHS[event.date.getMonth()]} ${event.date.getFullYear()}`
-      const list = map.get(key) ?? []
-      list.push(event)
-      map.set(key, list)
+      const key = `${MONTHS[event.date.getMonth()]} ${event.date.getFullYear()}`;
+      const list = map.get(key) ?? [];
+      list.push(event);
+      map.set(key, list);
     }
-    return [...map.entries()]
-  }, [filtered])
+    return [...map.entries()];
+  }, [filtered]);
 
   return (
     <PageShell>
@@ -113,17 +117,25 @@ export function EventsPage() {
 
       <main className={styles.body}>
         <div className="wrap">
-          <div className={styles.filters} role="tablist" aria-label="Filter events">
+          <div
+            className={styles.filters}
+            role="tablist"
+            aria-label="Filter events"
+          >
             {EVENT_CATEGORIES.map((cat) => (
               <button
                 key={cat.key}
                 type="button"
                 role="tab"
                 aria-selected={active === cat.key}
-                className={`${styles.chip} ${active === cat.key ? styles.chipActive : ''}`}
+                className={`${styles.chip} ${active === cat.key ? styles.chipActive : ""}`}
                 onClick={() => setActive(cat.key)}
               >
-                <span className={styles.chipDot} style={{ background: cat.dot }} aria-hidden />
+                <span
+                  className={styles.chipDot}
+                  style={{ background: cat.dot }}
+                  aria-hidden
+                />
                 {cat.label}
               </button>
             ))}
@@ -142,7 +154,10 @@ export function EventsPage() {
                   <h2 className={styles.groupTitle}>{label}</h2>
                   <div className={styles.list}>
                     {events.map((event, index) => (
-                      <Reveal key={`${event.title}-${event.date.toISOString()}`} delay={index * 40}>
+                      <Reveal
+                        key={`${event.title}-${event.date.toISOString()}`}
+                        delay={index * 40}
+                      >
                         <EventCard event={event} />
                       </Reveal>
                     ))}
@@ -155,8 +170,14 @@ export function EventsPage() {
                   icon={<FiCalendar />}
                   title="Nothing in this category yet"
                   description="No events match this filter for the season. Try another category, or browse everything that's on."
-                  action={{ label: 'Show all events', onClick: () => setActive('all') }}
-                  secondaryAction={{ label: 'View as calendar', to: '/calendar' }}
+                  action={{
+                    label: "Show all events",
+                    onClick: () => setActive("all"),
+                  }}
+                  secondaryAction={{
+                    label: "View as calendar",
+                    to: "/calendar",
+                  }}
                 />
               )}
             </>
@@ -164,5 +185,5 @@ export function EventsPage() {
         </div>
       </main>
     </PageShell>
-  )
+  );
 }

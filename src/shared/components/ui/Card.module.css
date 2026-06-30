@@ -27,9 +27,9 @@
   margin: 0 calc(-1 * var(--card-pad));
 }
 
-:global([data-theme='dark']) .card {
+:global([data-theme="dark"]) .card {
   border-color: rgba(247, 243, 238, 0.1);
 }
-:global([data-theme='dark']) .divider {
+:global([data-theme="dark"]) .divider {
   border-top-color: rgba(247, 243, 238, 0.1);
 }

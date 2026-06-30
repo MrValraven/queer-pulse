@@ -1,13 +1,19 @@
-import { useScrollLock } from '../../shared/hooks'
-import styles from './EconomyPage.module.css'
+import { useScrollLock } from "../../shared/hooks";
+import styles from "./EconomyPage.module.css";
 
-export function SalarySubmitModal({ onClose, onSubmit }: { onClose: () => void; onSubmit: () => void }) {
-  useScrollLock()
+export function SalarySubmitModal({
+  onClose,
+  onSubmit,
+}: {
+  onClose: () => void;
+  onSubmit: () => void;
+}) {
+  useScrollLock();
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className={styles.modal}>
@@ -17,13 +23,31 @@ export function SalarySubmitModal({ onClose, onSubmit }: { onClose: () => void; 
             ×
           </button>
         </div>
-        <div className={styles.modalSub}>Completely anonymous. Nothing that could identify you is stored.</div>
+        <div className={styles.modalSub}>
+          Completely anonymous. Nothing that could identify you is stored.
+        </div>
         <div className={styles.modalFields}>
-          <input className={styles.modalInput} type="text" placeholder="Job title / role" />
-          <input className={styles.modalInput} type="text" placeholder="Sector (e.g. Tech, NGO, Design)" />
+          <input
+            className={styles.modalInput}
+            type="text"
+            placeholder="Job title / role"
+          />
+          <input
+            className={styles.modalInput}
+            type="text"
+            placeholder="Sector (e.g. Tech, NGO, Design)"
+          />
           <div className={styles.modalRow2}>
-            <input className={styles.modalInput} type="number" placeholder="Annual salary (€)" />
-            <input className={styles.modalInput} type="number" placeholder="Years of experience" />
+            <input
+              className={styles.modalInput}
+              type="number"
+              placeholder="Annual salary (€)"
+            />
+            <input
+              className={styles.modalInput}
+              type="number"
+              placeholder="Years of experience"
+            />
           </div>
           <select className={styles.modalSelect} defaultValue="">
             <option value="">Employment type</option>
@@ -33,10 +57,14 @@ export function SalarySubmitModal({ onClose, onSubmit }: { onClose: () => void; 
             <option>Contract</option>
           </select>
         </div>
-        <button type="button" className={`${styles.primaryBtn} ${styles.modalSubmit}`} onClick={onSubmit}>
+        <button
+          type="button"
+          className={`${styles.primaryBtn} ${styles.modalSubmit}`}
+          onClick={onSubmit}
+        >
           Submit anonymously
         </button>
       </div>
     </div>
-  )
+  );
 }

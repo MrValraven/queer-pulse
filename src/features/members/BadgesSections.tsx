@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { Button, FadeIn } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
+import { useState } from "react";
+import { Button, FadeIn } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import {
   type Badge,
   type PerkLadderRow,
@@ -10,20 +10,20 @@ import {
   levelLadder,
   lockedBadges,
   perksLadder,
-} from './badges.data'
-import styles from './BadgesPage.module.css'
+} from "./badges.data";
+import styles from "./BadgesPage.module.css";
 
 const tintClass = {
   jade: styles.iconJade,
   accent: styles.iconAccent,
   plum: styles.iconPlum,
-} as const
+} as const;
 
 const rarityClass = {
   common: styles.rarityCommon,
   rare: styles.rarityRare,
   legendary: styles.rarityLegendary,
-} as const
+} as const;
 
 export function LevelCard() {
   return (
@@ -33,16 +33,22 @@ export function LevelCard() {
       </div>
       <div className={styles.xpBarWrap}>
         <div className={styles.xpBar}>
-          <div className={styles.xpFill} style={{ width: `${levelInfo.percent}%` }} />
+          <div
+            className={styles.xpFill}
+            style={{ width: `${levelInfo.percent}%` }}
+          />
         </div>
         <div className={styles.xpLabel}>
-          {levelInfo.xp} / {levelInfo.xpMax} XP to Level {levelInfo.level + 1} ·{' '}
+          {levelInfo.xp} / {levelInfo.xpMax} XP to Level {levelInfo.level + 1} ·{" "}
           {levelInfo.nextName}
         </div>
       </div>
       <div className={styles.levelLadder}>
         {levelLadder.map((pill) => (
-          <div key={pill.num} className={`${styles.llPill} ${styles[pill.state]}`}>
+          <div
+            key={pill.num}
+            className={`${styles.llPill} ${styles[pill.state]}`}
+          >
             {pill.num} · {pill.name}
           </div>
         ))}
@@ -51,19 +57,21 @@ export function LevelCard() {
         How to earn XP →
       </a>
     </div>
-  )
+  );
 }
 
 function BadgeCard({ badge, locked }: { badge: Badge; locked?: boolean }) {
   return (
-    <div className={`${styles.badgeCard} ${locked ? styles.lockedCard : ''}`}>
-      <div className={`${styles.badgeIconWrap} ${tintClass[badge.tint]}`}>{badge.icon}</div>
+    <div className={`${styles.badgeCard} ${locked ? styles.lockedCard : ""}`}>
+      <div className={`${styles.badgeIconWrap} ${tintClass[badge.tint]}`}>
+        {badge.icon}
+      </div>
       <div className={styles.badgeCat}>{badge.cat}</div>
       <div className={styles.badgeName}>{badge.name}</div>
       <div className={styles.badgeWhen}>{badge.when}</div>
       <div className={`${styles.rarityBar} ${rarityClass[badge.rarity]}`} />
     </div>
-  )
+  );
 }
 
 export function EarnedBadges() {
@@ -85,19 +93,22 @@ export function EarnedBadges() {
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 export function LockedBadges() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   return (
     <section className={styles.section}>
       <div className={styles.sectionRow}>
         <h2 className={styles.sectionHead}>
           <em>Locked</em> badges
         </h2>
-        <button className={styles.expandLink} onClick={() => setOpen((v) => !v)}>
-          {open ? 'Hide ▴' : `Show ${discoverCount} more ▾`}
+        <button
+          className={styles.expandLink}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? "Hide ▴" : `Show ${discoverCount} more ▾`}
         </button>
       </div>
       <div className={styles.sectionSub}>
@@ -113,47 +124,68 @@ export function LockedBadges() {
         </div>
       )}
     </section>
-  )
+  );
 }
 
-function PipIcon({ state }: { state: PerkLadderRow['state'] }) {
-  if (state === 'locked') {
+function PipIcon({ state }: { state: PerkLadderRow["state"] }) {
+  if (state === "locked") {
     return (
       <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden>
-        <rect x="2" y="3.5" width="4" height="3" rx=".5" stroke="var(--ink-40)" strokeWidth="1.2" />
-        <path d="M3 3.5V2.5a1 1 0 0 1 2 0v1" stroke="var(--ink-40)" strokeWidth="1.2" strokeLinecap="round" />
+        <rect
+          x="2"
+          y="3.5"
+          width="4"
+          height="3"
+          rx=".5"
+          stroke="var(--ink-40)"
+          strokeWidth="1.2"
+        />
+        <path
+          d="M3 3.5V2.5a1 1 0 0 1 2 0v1"
+          stroke="var(--ink-40)"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+        />
       </svg>
-    )
+    );
   }
-  const color = state === 'current' ? 'var(--accent)' : 'var(--jade)'
+  const color = state === "current" ? "var(--accent)" : "var(--jade)";
   return (
     <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden>
-      <path d="M1.5 4l2 2 3-3" stroke={color} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M1.5 4l2 2 3-3"
+        stroke={color}
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
-  )
+  );
 }
 
 function PerkRow({ row }: { row: PerkLadderRow }) {
   const colClass =
-    row.state === 'achieved'
+    row.state === "achieved"
       ? styles.colAchieved
-      : row.state === 'current'
+      : row.state === "current"
         ? styles.colCurrent
-        : styles.colLocked
+        : styles.colLocked;
   const pipClass =
-    row.state === 'achieved'
+    row.state === "achieved"
       ? styles.pipDone
-      : row.state === 'current'
+      : row.state === "current"
         ? styles.pipActive
-        : styles.pipLocked
+        : styles.pipLocked;
   const chipClass =
-    row.state === 'achieved'
+    row.state === "achieved"
       ? styles.chipAchieved
-      : row.state === 'current'
+      : row.state === "current"
         ? styles.chipCurrent
-        : styles.chipLocked
+        : styles.chipLocked;
   return (
-    <div className={`${styles.perkRow} ${row.state === 'current' ? styles.perkRowCurrent : ''}`}>
+    <div
+      className={`${styles.perkRow} ${row.state === "current" ? styles.perkRowCurrent : ""}`}
+    >
       <div className={`${styles.prLevelCol} ${colClass}`}>
         <div className={styles.prlNum}>{row.num}</div>
         <div className={styles.prlName}>{row.name}</div>
@@ -162,7 +194,7 @@ function PerkRow({ row }: { row: PerkLadderRow }) {
         {row.perks.map((perk) => (
           <div
             key={perk}
-            className={`${styles.perkItem} ${row.state === 'locked' ? styles.perkItemLocked : ''}`}
+            className={`${styles.perkItem} ${row.state === "locked" ? styles.perkItemLocked : ""}`}
           >
             <div className={`${styles.piCheck} ${pipClass}`}>
               <PipIcon state={row.state} />
@@ -175,7 +207,7 @@ function PerkRow({ row }: { row: PerkLadderRow }) {
         <div className={`${styles.prChip} ${chipClass}`}>{row.status}</div>
       </div>
     </div>
-  )
+  );
 }
 
 export function PerksLadder() {
@@ -196,5 +228,5 @@ export function PerksLadder() {
         <Button to={routes.perks}>Redeem your perks →</Button>
       </div>
     </section>
-  )
+  );
 }

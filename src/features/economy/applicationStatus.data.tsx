@@ -1,4 +1,9 @@
-import type { Application, BadgeKind, StageState, LogoTint } from "./applicationStatus.types";
+import type {
+  Application,
+  BadgeKind,
+  StageState,
+  LogoTint,
+} from "./applicationStatus.types";
 
 // Types now live in ./applicationStatus.types and the state-transition /
 // negotiation helpers in ./applicationStatus.patches. Both are re-exported so
@@ -50,8 +55,9 @@ export const APPS: Application[] = [
     ],
     status: (
       <>
-        <b>In review by Marta R.</b> · <span className="ago">submitted 4 hours ago</span> · they
-        reply within 10 days
+        <b>In review by Marta R.</b> ·{" "}
+        <span className="ago">submitted 4 hours ago</span> · they reply within
+        10 days
       </>
     ),
     badge: { kind: "in-review", label: "In review", pulse: true },
@@ -59,9 +65,18 @@ export const APPS: Application[] = [
       { label: "Message recruiter →", kind: "message" },
       { label: "View submission", kind: "submission", muted: true },
     ],
-    recruiter: { name: "Marta Reis", role: "Studio lead · Atelier Pulso", initials: "MR", tint: "coral" },
+    recruiter: {
+      name: "Marta Reis",
+      role: "Studio lead · Atelier Pulso",
+      initials: "MR",
+      tint: "coral",
+    },
     thread: [
-      { from: "system", when: "26 Jun", text: "You applied for Junior Graphic Designer." },
+      {
+        from: "system",
+        when: "26 Jun",
+        text: "You applied for Junior Graphic Designer.",
+      },
       {
         from: "them",
         name: "Marta",
@@ -74,7 +89,11 @@ export const APPS: Application[] = [
       role: "Junior Graphic Designer",
       coverLetter:
         "I've followed Atelier Pulso's identity work for years — the Casa da Música rebrand especially. I'd bring a typographic eye, a love of risograph texture, and three years of editorial layout to your team.",
-      attachments: ["Sofia-Marques-CV.pdf", "Portfolio-2026.pdf", "Cover-letter.pdf"],
+      attachments: [
+        "Sofia-Marques-CV.pdf",
+        "Portfolio-2026.pdf",
+        "Cover-letter.pdf",
+      ],
       answers: [
         { q: "Earliest start date?", a: "Two weeks' notice — early July." },
         { q: "Portfolio link", a: "sofiamarques.work" },
@@ -102,8 +121,8 @@ export const APPS: Application[] = [
     ],
     status: (
       <>
-        <b>Round 2 scheduled · Wed 11 Jun, 16:00</b> with João (CTO) and Liv (Design lead) ·{" "}
-        <span className="ago">arranged 2 days ago</span>
+        <b>Round 2 scheduled · Wed 11 Jun, 16:00</b> with João (CTO) and Liv
+        (Design lead) · <span className="ago">arranged 2 days ago</span>
       </>
     ),
     badge: { kind: "interview", label: "Interview", pulse: true },
@@ -112,15 +131,27 @@ export const APPS: Application[] = [
       { label: "View company", kind: "company", muted: true },
     ],
     thread: [
-      { from: "system", when: "20 May", text: "You applied for Senior Product Designer." },
+      {
+        from: "system",
+        when: "20 May",
+        text: "You applied for Senior Product Designer.",
+      },
       {
         from: "them",
         name: "João",
         when: "9 Jun",
         text: "Really strong first round. We'd like to invite you to a round two — does Wed 11 Jun at 16:00 work?",
       },
-      { from: "you", when: "9 Jun", text: "It does — thank you! See you both then." },
-      { from: "system", when: "9 Jun", text: "Round 2 scheduled · Wed 11 Jun, 16:00." },
+      {
+        from: "you",
+        when: "9 Jun",
+        text: "It does — thank you! See you both then.",
+      },
+      {
+        from: "system",
+        when: "9 Jun",
+        text: "Round 2 scheduled · Wed 11 Jun, 16:00.",
+      },
     ],
     interview: {
       title: "Round 2 · Senior Product Designer",
@@ -128,7 +159,8 @@ export const APPS: Application[] = [
       durationMin: 60,
       location: "Google Meet (link sent the morning of)",
       attendees: ["João Tavares — CTO", "Liv Andersson — Design lead"],
-      notes: "A portfolio walk-through plus a short whiteboard exercise. They've shared the brief in advance.",
+      notes:
+        "A portfolio walk-through plus a short whiteboard exercise. They've shared the brief in advance.",
     },
     companyInfo: {
       about:
@@ -162,8 +194,8 @@ export const APPS: Application[] = [
     ],
     status: (
       <>
-        <b>Offer received · €42k + 25 days holiday</b> · <span className="ago">3 days ago</span> ·
-        respond by Sat 14 Jun
+        <b>Offer received · €42k + 25 days holiday</b> ·{" "}
+        <span className="ago">3 days ago</span> · respond by Sat 14 Jun
       </>
     ),
     badge: { kind: "offer", label: "Offer · respond" },
@@ -172,31 +204,53 @@ export const APPS: Application[] = [
       { label: "Open conversation", kind: "conversation", muted: true },
       { label: "Negotiate help", kind: "negotiate", muted: true },
     ],
-    recruiter: { name: "Inês Carvalho", role: "Publisher · Equip Editions", initials: "IC", tint: "plum" },
+    recruiter: {
+      name: "Inês Carvalho",
+      role: "Publisher · Equip Editions",
+      initials: "IC",
+      tint: "plum",
+    },
     thread: [
-      { from: "system", when: "12 May", text: "You applied for Editorial Lead, Magazine." },
+      {
+        from: "system",
+        when: "12 May",
+        text: "You applied for Editorial Lead, Magazine.",
+      },
       {
         from: "them",
         name: "Inês",
         when: "15 May",
         text: "Sofia — your portfolio is wonderful. Could we talk this Thursday afternoon?",
       },
-      { from: "you", when: "15 May", text: "Absolutely, Thursday works. Looking forward to it." },
-      { from: "system", when: "19 May", text: "Interview held with Inês Carvalho." },
+      {
+        from: "you",
+        when: "15 May",
+        text: "Absolutely, Thursday works. Looking forward to it.",
+      },
+      {
+        from: "system",
+        when: "19 May",
+        text: "Interview held with Inês Carvalho.",
+      },
       {
         from: "them",
         name: "Inês",
         when: "8 Jun",
         text: "It was unanimous — we'd love to offer you the role. Full details are on the way.",
       },
-      { from: "system", when: "8 Jun", text: "Offer received · €42k + 25 days holiday." },
+      {
+        from: "system",
+        when: "8 Jun",
+        text: "Offer received · €42k + 25 days holiday.",
+      },
     ],
     offer: {
       salary: "€42,000 / year (pro-rata, 4 days)",
       holiday: "25 days + public holidays",
       start: "Flexible — ideally September 2026",
       respondBy: "Saturday 14 June 2026",
-      market: "Editorial leads in Lisbon earn €40–52k. Your offer sits at the lower-middle — there's room.",
+      market:
+        "Editorial leads in Lisbon earn €40–52k. Your offer sits at the lower-middle — there's room.",
       terms: [
         "Permanent contract after a 3-month settling period",
         "Hybrid — two days in the Lisbon studio",
@@ -228,8 +282,8 @@ export const APPS: Application[] = [
     ],
     status: (
       <>
-        <b>Offer received · €48k + 23 days holiday</b> · <span className="ago">yesterday</span> ·
-        respond by Fri 20 Jun
+        <b>Offer received · €48k + 23 days holiday</b> ·{" "}
+        <span className="ago">yesterday</span> · respond by Fri 20 Jun
       </>
     ),
     badge: { kind: "offer", label: "Offer · respond" },
@@ -237,13 +291,19 @@ export const APPS: Application[] = [
       { label: "Respond to offer →", kind: "offer", solid: true },
       { label: "Negotiate help", kind: "negotiate", muted: true },
     ],
-    recruiter: { name: "Tomás Lima", role: "Founder · Casa Rua Studio", initials: "TL", tint: "jade" },
+    recruiter: {
+      name: "Tomás Lima",
+      role: "Founder · Casa Rua Studio",
+      initials: "TL",
+      tint: "jade",
+    },
     offer: {
       salary: "€48,000 / year",
       holiday: "23 days + public holidays",
       start: "As soon as you're free",
       respondBy: "Friday 20 June 2026",
-      market: "Senior designers in Lisbon earn €44–58k. This sits comfortably in range.",
+      market:
+        "Senior designers in Lisbon earn €44–58k. This sits comfortably in range.",
       terms: [
         "Permanent from day one",
         "Hybrid — three days in the studio",
@@ -274,8 +334,8 @@ export const APPS: Application[] = [
     accent: "overdue",
     status: (
       <>
-        Submitted <b>28 May</b> · their stated turnaround was 10 days — <b>11 days in</b>, a nudge is
-        more than fair.
+        Submitted <b>28 May</b> · their stated turnaround was 10 days —{" "}
+        <b>11 days in</b>, a nudge is more than fair.
       </>
     ),
     badge: { kind: "attention", label: "Overdue · 11 days", pulse: true },
@@ -283,7 +343,12 @@ export const APPS: Application[] = [
       { label: "Follow up →", kind: "followup" },
       { label: "Withdraw", kind: "withdraw", muted: true },
     ],
-    recruiter: { name: "Hiring team", role: "Bairro Vivo", initials: "BV", tint: "coral" },
+    recruiter: {
+      name: "Hiring team",
+      role: "Bairro Vivo",
+      initials: "BV",
+      tint: "coral",
+    },
   },
   {
     id: "novamente",
@@ -304,7 +369,12 @@ export const APPS: Application[] = [
       { label: "Interview", state: "" },
       { label: "Decision", state: "" },
     ],
-    status: <>Their inbox is open and they reply quickly. Verified queer-friendly by 4 members.</>,
+    status: (
+      <>
+        Their inbox is open and they reply quickly. Verified queer-friendly by 4
+        members.
+      </>
+    ),
     badge: { kind: "in-review", label: "Just sent", pulse: true },
     actions: [{ label: "View details →", kind: "submission" }],
     submission: {
@@ -315,7 +385,10 @@ export const APPS: Application[] = [
       attachments: ["Sofia-Marques-CV.pdf", "Research-samples.pdf"],
       answers: [
         { q: "Notice period", a: "Available immediately." },
-        { q: "Comfortable fully remote?", a: "Yes — home studio set up in Lisbon." },
+        {
+          q: "Comfortable fully remote?",
+          a: "Yes — home studio set up in Lisbon.",
+        },
       ],
     },
   },
@@ -336,8 +409,8 @@ export const APPS: Application[] = [
     ],
     status: (
       <>
-        They went with someone with more motion experience. <b>Left a kind, specific note</b> —
-        worth reading.
+        They went with someone with more motion experience.{" "}
+        <b>Left a kind, specific note</b> — worth reading.
       </>
     ),
     badge: { kind: "rejected", label: "Closed · 21 May" },
@@ -362,7 +435,9 @@ export const APPS: Application[] = [
       { label: "—", state: "" },
       { label: "—", state: "" },
     ],
-    status: <>You withdrew this one — accepted the Pixel Mode interview instead.</>,
+    status: (
+      <>You withdrew this one — accepted the Pixel Mode interview instead.</>
+    ),
     badge: { kind: "rejected", label: "Withdrawn" },
     actions: [],
   },
@@ -379,7 +454,8 @@ export const APPS: Application[] = [
     stages: [],
     status: (
       <>
-        Draft started <b>2 days ago</b> · 60% complete · closes <b>18 Jun</b> — don't forget.
+        Draft started <b>2 days ago</b> · 60% complete · closes <b>18 Jun</b> —
+        don't forget.
       </>
     ),
     badge: { kind: "draft", label: "Draft · 60%" },

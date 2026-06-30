@@ -1,5 +1,9 @@
 import { type Application, type ActionKind } from "./applicationStatus.data";
-import { SubmissionModal, CompanyModal, NoteModal } from "./ApplicationDetailModals";
+import {
+  SubmissionModal,
+  CompanyModal,
+  NoteModal,
+} from "./ApplicationDetailModals";
 import { MessageModal } from "./MessageModals";
 import { CalendarModal } from "./CalendarModal";
 import { WithdrawModal } from "./WithdrawModal";
@@ -32,11 +36,32 @@ export function ApplicationModal({
 }) {
   switch (action) {
     case "message":
-      return <MessageModal app={app} variant="message" onClose={onClose} onPatch={onPatch} />;
+      return (
+        <MessageModal
+          app={app}
+          variant="message"
+          onClose={onClose}
+          onPatch={onPatch}
+        />
+      );
     case "followup":
-      return <MessageModal app={app} variant="followup" onClose={onClose} onPatch={onPatch} />;
+      return (
+        <MessageModal
+          app={app}
+          variant="followup"
+          onClose={onClose}
+          onPatch={onPatch}
+        />
+      );
     case "conversation":
-      return <MessageModal app={app} variant="conversation" onClose={onClose} onPatch={onPatch} />;
+      return (
+        <MessageModal
+          app={app}
+          variant="conversation"
+          onClose={onClose}
+          onPatch={onPatch}
+        />
+      );
     case "calendar":
       return <CalendarModal app={app} onClose={onClose} />;
     case "company":
@@ -50,7 +75,9 @@ export function ApplicationModal({
     case "resume":
       return <ResumeModal app={app} onClose={onClose} onPatch={onPatch} />;
     case "offer":
-      return <OfferRespondModal app={app} onClose={onClose} onPatch={onPatch} />;
+      return (
+        <OfferRespondModal app={app} onClose={onClose} onPatch={onPatch} />
+      );
     case "withdraw":
       return <WithdrawModal app={app} onClose={onClose} onPatch={onPatch} />;
   }

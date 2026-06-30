@@ -1,22 +1,22 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { AppShell } from '../../shared/components/layout'
-import { FadeIn } from '../../shared/components/ui'
-import { PlanPanel, BillingPanel, AccessPanel } from './MembershipPanels'
-import { routes } from '../../app/routeMap'
-import { MembershipSidebar } from './MembershipSidebar'
-import styles from './MembershipPage.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { AppShell } from "../../shared/components/layout";
+import { FadeIn } from "../../shared/components/ui";
+import { PlanPanel, BillingPanel, AccessPanel } from "./MembershipPanels";
+import { routes } from "../../app/routeMap";
+import { MembershipSidebar } from "./MembershipSidebar";
+import styles from "./MembershipPage.module.css";
 
-type Tab = 'plan' | 'billing' | 'access'
+type Tab = "plan" | "billing" | "access";
 
 const TABS: { key: Tab; label: string }[] = [
-  { key: 'plan', label: 'Plan' },
-  { key: 'billing', label: 'Billing' },
-  { key: 'access', label: 'Access' },
-]
+  { key: "plan", label: "Plan" },
+  { key: "billing", label: "Billing" },
+  { key: "access", label: "Access" },
+];
 
 export function MembershipPage() {
-  const [tab, setTab] = useState<Tab>('plan')
+  const [tab, setTab] = useState<Tab>("plan");
 
   return (
     <AppShell>
@@ -36,7 +36,7 @@ export function MembershipPage() {
               {TABS.map((t) => (
                 <button
                   key={t.key}
-                  className={`${styles.tab} ${tab === t.key ? styles.active : ''}`}
+                  className={`${styles.tab} ${tab === t.key ? styles.active : ""}`}
                   onClick={() => setTab(t.key)}
                 >
                   {t.label}
@@ -45,9 +45,9 @@ export function MembershipPage() {
             </div>
 
             <FadeIn key={tab}>
-              {tab === 'plan' && <PlanPanel />}
-              {tab === 'billing' && <BillingPanel />}
-              {tab === 'access' && <AccessPanel />}
+              {tab === "plan" && <PlanPanel />}
+              {tab === "billing" && <BillingPanel />}
+              {tab === "access" && <AccessPanel />}
             </FadeIn>
           </div>
 
@@ -55,5 +55,5 @@ export function MembershipPage() {
         </div>
       </div>
     </AppShell>
-  )
+  );
 }

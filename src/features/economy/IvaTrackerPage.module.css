@@ -152,7 +152,9 @@
   color: var(--ink-40);
   cursor: pointer;
   font-size: 16px;
-  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 .remove:hover {
   background: rgba(var(--danger-rgb), 0.1);
@@ -205,7 +207,9 @@
   height: 100%;
   border-radius: 999px;
   background: var(--bar);
-  transition: width 0.55s var(--ease), background-color 0.35s var(--ease);
+  transition:
+    width 0.55s var(--ease),
+    background-color 0.35s var(--ease);
 }
 .barCap {
   position: absolute;

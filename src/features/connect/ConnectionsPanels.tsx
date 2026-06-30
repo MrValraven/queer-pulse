@@ -1,12 +1,17 @@
-import { FiInbox, FiSend, FiSlash } from 'react-icons/fi'
-import { EmptyState, FadeIn } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { ConnectionsGridSkeleton } from './ConnectionsSkeleton'
-import { BlockedCard, IncomingCard, SentCard, VouchedCard } from './ConnectionCards'
-import type { ConnectionView } from './connections.data'
-import styles from './ConnectionsPage.module.css'
+import { FiInbox, FiSend, FiSlash } from "react-icons/fi";
+import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { ConnectionsGridSkeleton } from "./ConnectionsSkeleton";
+import {
+  BlockedCard,
+  IncomingCard,
+  SentCard,
+  VouchedCard,
+} from "./ConnectionCards";
+import type { ConnectionView } from "./connections.data";
+import styles from "./ConnectionsPage.module.css";
 
-const stagger = (i: number) => Math.min(i, 8) * 60
+const stagger = (i: number) => Math.min(i, 8) * 60;
 
 export function IncomingPanel({
   loading,
@@ -14,17 +19,21 @@ export function IncomingPanel({
   onAccept,
   onDecline,
 }: {
-  loading: boolean
-  views: ConnectionView[]
-  onAccept: (v: ConnectionView) => void
-  onDecline: (v: ConnectionView) => void
+  loading: boolean;
+  views: ConnectionView[];
+  onAccept: (v: ConnectionView) => void;
+  onDecline: (v: ConnectionView) => void;
 }) {
-  if (loading) return <ConnectionsGridSkeleton count={4} />
+  if (loading) return <ConnectionsGridSkeleton count={4} />;
   return (
     <div className={styles.grid}>
       {views.map((v, i) => (
         <FadeIn key={v.slug} delay={stagger(i)}>
-          <IncomingCard view={v} onAccept={() => onAccept(v)} onDecline={() => onDecline(v)} />
+          <IncomingCard
+            view={v}
+            onAccept={() => onAccept(v)}
+            onDecline={() => onDecline(v)}
+          />
         </FadeIn>
       ))}
       {views.length === 0 && (
@@ -33,11 +42,11 @@ export function IncomingPanel({
           icon={<FiInbox />}
           title="No requests right now"
           description="When someone you've met asks to connect, they'll land here for you to accept or politely decline."
-          action={{ label: 'Find members', to: routes.members }}
+          action={{ label: "Find members", to: routes.members }}
         />
       )}
     </div>
-  )
+  );
 }
 
 export function SentPanel({
@@ -45,11 +54,11 @@ export function SentPanel({
   views,
   onWithdraw,
 }: {
-  loading: boolean
-  views: ConnectionView[]
-  onWithdraw: (v: ConnectionView) => void
+  loading: boolean;
+  views: ConnectionView[];
+  onWithdraw: (v: ConnectionView) => void;
 }) {
-  if (loading) return <ConnectionsGridSkeleton count={4} />
+  if (loading) return <ConnectionsGridSkeleton count={4} />;
   return (
     <div className={styles.grid}>
       {views.map((v, i) => (
@@ -63,11 +72,11 @@ export function SentPanel({
           icon={<FiSend />}
           title="No requests right now"
           description="Requests you send sit here until they're accepted. Browse members and reach out to someone you've crossed paths with."
-          action={{ label: 'Find members', to: routes.members }}
+          action={{ label: "Find members", to: routes.members }}
         />
       )}
     </div>
-  )
+  );
 }
 
 export function BlockedPanel({
@@ -75,11 +84,11 @@ export function BlockedPanel({
   views,
   onUnblock,
 }: {
-  loading: boolean
-  views: ConnectionView[]
-  onUnblock: (v: ConnectionView) => void
+  loading: boolean;
+  views: ConnectionView[];
+  onUnblock: (v: ConnectionView) => void;
 }) {
-  if (loading) return <ConnectionsGridSkeleton count={2} />
+  if (loading) return <ConnectionsGridSkeleton count={2} />;
   return (
     <div className={styles.grid}>
       {views.map((v, i) => (
@@ -96,7 +105,7 @@ export function BlockedPanel({
         />
       )}
     </div>
-  )
+  );
 }
 
 export function VouchedPanel({
@@ -104,16 +113,16 @@ export function VouchedPanel({
   views,
   noteFor,
 }: {
-  loading: boolean
-  views: ConnectionView[]
-  noteFor: (v: ConnectionView) => string
+  loading: boolean;
+  views: ConnectionView[];
+  noteFor: (v: ConnectionView) => string;
 }) {
   return (
     <>
       <p className={styles.paneIntro}>
-        People you've vouched for, or who've vouched for you.{' '}
-        <em>Vouching is a small but meaningful act</em> — it stays attached to that member's
-        profile.
+        People you've vouched for, or who've vouched for you.{" "}
+        <em>Vouching is a small but meaningful act</em> — it stays attached to
+        that member's profile.
       </p>
       {loading ? (
         <ConnectionsGridSkeleton count={4} />
@@ -127,5 +136,5 @@ export function VouchedPanel({
         </div>
       )}
     </>
-  )
+  );
 }

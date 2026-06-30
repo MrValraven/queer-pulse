@@ -79,7 +79,9 @@
   border-radius: 16px;
   padding: 20px 22px;
   color: inherit;
-  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
 }
 .card:hover {
   transform: translateY(-2px);
@@ -130,7 +132,7 @@
   }
 }
 
-:global([data-theme='dark']) .card,
-:global([data-theme='dark']) .note {
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .note {
   border-color: rgba(247, 243, 238, 0.1);
 }

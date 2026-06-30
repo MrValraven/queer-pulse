@@ -1,16 +1,16 @@
-import { FiPlus, FiX } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import type { ScopeState } from './scope.data'
-import styles from './ScopeGeneratorPage.module.css'
+import { FiPlus, FiX } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import type { ScopeState } from "./scope.data";
+import styles from "./ScopeGeneratorPage.module.css";
 
 interface EditableListProps {
-  legend: string
-  hint: string
-  items: string[]
-  idPrefix: string
-  placeholder: string
-  addLabel: string
-  onChange: (items: string[]) => void
+  legend: string;
+  hint: string;
+  items: string[];
+  idPrefix: string;
+  placeholder: string;
+  addLabel: string;
+  onChange: (items: string[]) => void;
 }
 
 /** A labelled add/remove list of free-text rows (deliverables, exclusions). */
@@ -24,9 +24,9 @@ function EditableList({
   onChange,
 }: EditableListProps) {
   const patch = (i: number, value: string) =>
-    onChange(items.map((it, idx) => (idx === i ? value : it)))
-  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
-  const add = () => onChange([...items, ''])
+    onChange(items.map((it, idx) => (idx === i ? value : it)));
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i));
+  const add = () => onChange([...items, ""]);
 
   return (
     <fieldset className={styles.fieldset}>
@@ -58,16 +58,22 @@ function EditableList({
         </div>
       ))}
 
-      <Button variant="ghost" size="md" type="button" onClick={add} className={styles.addRow}>
+      <Button
+        variant="ghost"
+        size="md"
+        type="button"
+        onClick={add}
+        className={styles.addRow}
+      >
         <FiPlus aria-hidden /> {addLabel}
       </Button>
     </fieldset>
-  )
+  );
 }
 
 interface ScopeFormProps {
-  scope: ScopeState
-  onChange: (patch: Partial<ScopeState>) => void
+  scope: ScopeState;
+  onChange: (patch: Partial<ScopeState>) => void;
 }
 
 /** The input column for the scope generator. */
@@ -180,5 +186,5 @@ export function ScopeForm({ scope, onChange }: ScopeFormProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

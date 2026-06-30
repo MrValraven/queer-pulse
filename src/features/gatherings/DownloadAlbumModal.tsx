@@ -1,29 +1,29 @@
-import { useEffect, useState } from 'react'
-import { useScrollLock } from '../../shared/hooks'
-import { GatheringSuccessPanel } from './GatheringSuccessPanel'
-import styles from './GatheringModals.module.css'
+import { useEffect, useState } from "react";
+import { useScrollLock } from "../../shared/hooks";
+import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
+import styles from "./GatheringModals.module.css";
 
 export function DownloadAlbumModal({
   photoCount,
   onClose,
 }: {
-  photoCount: number
-  onClose: () => void
+  photoCount: number;
+  onClose: () => void;
 }) {
-  useScrollLock()
-  const [ready, setReady] = useState(false)
+  useScrollLock();
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setReady(true), 1800)
-    return () => clearTimeout(timer)
-  }, [])
+    const timer = setTimeout(() => setReady(true), 1800);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
         // Only allow dismissing once the album is ready.
-        if (ready && e.target === e.currentTarget) onClose()
+        if (ready && e.target === e.currentTarget) onClose();
       }}
     >
       {ready ? (
@@ -35,9 +35,9 @@ export function DownloadAlbumModal({
           }
           sub={
             <>
-              We've zipped all <b>{photoCount} photos</b> into <b>album.zip</b> and started the
-              download. Faces stay blurred unless the person opted in by name — that's baked into
-              the export.
+              We've zipped all <b>{photoCount} photos</b> into <b>album.zip</b>{" "}
+              and started the download. Faces stay blurred unless the person
+              opted in by name — that's baked into the export.
             </>
           }
           meta={`album.zip · ${photoCount} photos`}
@@ -54,5 +54,5 @@ export function DownloadAlbumModal({
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -144,7 +144,9 @@
   background: var(--paper);
   color: var(--ink-60);
   cursor: pointer;
-  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
 .lineRemove:hover:not(:disabled) {
   color: var(--accent);

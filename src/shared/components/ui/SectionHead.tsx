@@ -1,18 +1,21 @@
-import type { HTMLAttributes, ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import styles from './SectionHead.module.css'
+import type { HTMLAttributes, ReactNode } from "react";
+import { Link } from "react-router-dom";
+import styles from "./SectionHead.module.css";
 
-interface SectionHeadProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+interface SectionHeadProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "title"
+> {
   /** Title content — pass `<>…<em>accent</em></>` for the accent emphasis. */
-  title: ReactNode
-  subtitle?: ReactNode
-  linkLabel?: string
+  title: ReactNode;
+  subtitle?: ReactNode;
+  linkLabel?: string;
   /** Internal route path. */
-  linkTo?: string
+  linkTo?: string;
   /** Right-aligned action (e.g. a ghost button). */
-  action?: ReactNode
+  action?: ReactNode;
   /** Use on plum/dark sections. */
-  dark?: boolean
+  dark?: boolean;
 }
 
 export function SectionHead({
@@ -25,19 +28,23 @@ export function SectionHead({
   className,
   ...rest
 }: SectionHeadProps) {
-  const cls = [styles.head, dark && styles.dark, className].filter(Boolean).join(' ')
-  const hasAside = subtitle || linkLabel || action
+  const cls = [styles.head, dark && styles.dark, className]
+    .filter(Boolean)
+    .join(" ");
+  const hasAside = subtitle || linkLabel || action;
   return (
     <div className={cls} {...rest}>
       <div className={styles.titleBlock}>
         <h2 className={styles.title}>{title}</h2>
-        {subtitle && action && <p className={styles.subtitleLeft}>{subtitle}</p>}
+        {subtitle && action && (
+          <p className={styles.subtitleLeft}>{subtitle}</p>
+        )}
       </div>
       {hasAside && (
         <div className={styles.aside}>
           {subtitle && !action && <p className={styles.subtitle}>{subtitle}</p>}
           {linkLabel && (
-            <Link to={linkTo ?? '#'} className={styles.link}>
+            <Link to={linkTo ?? "#"} className={styles.link}>
               {linkLabel}
             </Link>
           )}
@@ -45,5 +52,5 @@ export function SectionHead({
         </div>
       )}
     </div>
-  )
+  );
 }

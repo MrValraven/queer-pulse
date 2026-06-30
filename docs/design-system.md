@@ -8,16 +8,16 @@ A queer professional network rooted in Lisbon. QueerPulse connects LGBTQ+ profes
 
 ## Products & surfaces
 
-| Surface | Description |
-|---|---|
-| **Homepage** | Marketing/landing — hero, manifesto, member discovery grid, gatherings, stories |
-| **Member platform** | Feed, profiles, connect, messages, communities, dating |
-| **Magazine** | Monthly editorial — features, essays, interviews, reviews |
-| **Resources** | Health, legal, safety, trans hub, harm reduction, library |
-| **Gatherings** | Event listings, RSVP, host tools, recap |
-| **Jobs & economy** | Job board, barter exchange, micro-grants, skills |
-| **Governance** | Transparency reports, moderation, finances |
-| **Settings** | Accessibility, notifications, privacy, security, data export |
+| Surface             | Description                                                                     |
+| ------------------- | ------------------------------------------------------------------------------- |
+| **Homepage**        | Marketing/landing — hero, manifesto, member discovery grid, gatherings, stories |
+| **Member platform** | Feed, profiles, connect, messages, communities, dating                          |
+| **Magazine**        | Monthly editorial — features, essays, interviews, reviews                       |
+| **Resources**       | Health, legal, safety, trans hub, harm reduction, library                       |
+| **Gatherings**      | Event listings, RSVP, host tools, recap                                         |
+| **Jobs & economy**  | Job board, barter exchange, micro-grants, skills                                |
+| **Governance**      | Transparency reports, moderation, finances                                      |
+| **Settings**        | Accessibility, notifications, privacy, security, data export                    |
 
 All surfaces share `qp-base.css`, `qp-common.js`, and `qp-nav-extras.js`.
 
@@ -26,6 +26,7 @@ All surfaces share `qp-base.css`, `qp-common.js`, and `qp-nav-extras.js`.
 ## Visual foundations
 
 ### Colors
+
 - **Plum** `#2D1B3D` — brand anchor. Nav, headings, plum-background sections, auth avatar.
 - **Accent** `#E8775A` — coral/terracotta. Primary CTA, italic emphasis, live dot. Swappable via Tweaks.
 - **Cream** `#F7F3EE` — warm off-white page background. Never pure white.
@@ -34,30 +35,37 @@ All surfaces share `qp-base.css`, `qp-common.js`, and `qp-nav-extras.js`.
 - **Ink** `#1A1A1F` → 60% → 40% opacity steps for body / secondary / tertiary text.
 
 ### Typography
+
 - **Fraunces** (optical-size serif) — all display, H1–H3, editorial pull quotes, manifesto. Weight 300–500. Italic in `<em>` → coral accent. Tight letter-spacing (–.02em), low line-height (1.0–1.1).
 - **DM Sans** — all UI, body copy, buttons, labels, nav. Weight 400–700.
 - **No monospace font** used on any surface.
 
 ### Backgrounds & sections
+
 Pages alternate between two background modes:
+
 1. **Cream** (`#F7F3EE`) — default. White paper cards sit on top.
 2. **Plum** (`#2D1B3D`) — manifesto, gatherings, skills, outro. Text is cream; accent italic for emphasis.
 
 Decorative radial gradient orbs (coral + jade, low opacity 12–18%) float in hero and plum sections as `::before`/`::after` pseudos. Never use solid blocks of colour as decoration.
 
 ### Cards
+
 - `border-radius: 22px` (--radius-card)
 - `background: var(--paper)`, `border: 1px solid rgba(45,27,61,.09)`
 - Resting shadow: `0 1px 2px rgba(45,27,61,.04)`
 - Hover: `translateY(-4px)` + `0 22px 44px -26px rgba(45,27,61,.4)`
 
 ### Navigation
+
 Floating glass pill — `backdrop-filter: blur(18px) saturate(1.5)`, cream bg at 66% opacity, plum border. Fixed 18px from top. Contains mega-nav dropdowns (mode A: full-width, mode B: cursor-following card).
 
 ### Buttons
+
 Pill shape (`border-radius: 999px`). Three variants: **primary** (coral bg), **ghost** (outlined plum), **ghost-dark** (outlined cream on plum sections). Hover: `translateY(-1px)` + colour shift.
 
 ### Motion
+
 - Primary easing: `cubic-bezier(.22,.68,.16,1)` — spring-like, used everywhere
 - Scroll reveal: opacity 0→1 + translateY(22px→0), 900ms
 - Grid stagger: 40ms delay per `--i` variable
@@ -65,9 +73,11 @@ Pill shape (`border-radius: 999px`). Three variants: **primary** (coral bg), **g
 - All animations gate on `@media (prefers-reduced-motion: no-preference)`
 
 ### Imagery
+
 No illustrations drawn in SVG. Image slots are `<image-slot>` web components with tinted placeholder frames (coral, jade, plum tints). Avatars use initials on tinted circle backgrounds — never photos for static demos.
 
 ### Hover / press states
+
 - Cards: lift (`translateY(-4px)`) + heavier shadow
 - Buttons: lift + darken
 - Nav links: accent underline slides in from left
@@ -75,9 +85,11 @@ No illustrations drawn in SVG. Image slots are `<image-slot>` web components wit
 - Gathering rows: pad-left increase + bg wash
 
 ### Dark mode
+
 `[data-theme="dark"]` swaps `--cream` → `#0e0820`, `--paper` → `#1a1030`, `--ink` inverts to rgba-cream. Plum and accent unchanged.
 
 ### Corner radii (full scale)
+
 `7px` tag → `10px` badge → `14px` badge-lg → `16px` panel-sm → `20px` panel → `22px` card → `999px` pill → `50%` avatar
 
 ---

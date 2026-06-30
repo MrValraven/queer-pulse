@@ -1,16 +1,128 @@
-import type { Community } from './types'
-import { routes } from '../../../app/routeMap'
+import type { Community } from "./types";
+import { routes } from "../../../app/routeMap";
 
 export const communities: Community[] = [
-  { slug: 'queer-social', href: `${routes.communities}#queer-social`, type: 'social', typeLabel: 'Social', name: 'Queer Social Lisbon', description: 'Monthly casual meetups across the city. No agenda, no networking pressure — just queer people being in the same room.', count: '340 members', joinLabel: 'Join →' },
-  { slug: 'rainbow-arts', href: `${routes.communities}#rainbow-arts`, type: 'arts', typeLabel: 'Arts', name: 'Rainbow Arts Collective', description: 'An open studio collective for queer visual artists and makers. Monthly crits, shared resources, and group shows.', count: '128 members', joinLabel: 'Join →' },
-  { slug: 'trans-mutual-aid', href: `${routes.communities}#trans-mutual-aid`, type: 'support', typeLabel: 'Support', name: 'Trans Mutual Aid Network', description: 'Peer support, resource sharing, and practical help for trans people in Lisbon. Run by and for the community.', count: '89 members', joinLabel: 'Join →' },
-  { slug: 'queer-runners', href: `${routes.communities}#queer-runners`, type: 'sports', typeLabel: 'Sports', name: 'Queer Runners Lisboa', description: "Weekly runs along the Tejo and through the city's parks. All paces welcome — inclusive, social, no performance pressure.", count: '214 members', joinLabel: 'Join →' },
-  { slug: 'queer-parents', href: `${routes.communities}#queer-parents`, type: 'support', typeLabel: 'Support', name: 'Queer Parent Network', description: 'For LGBTQ+ parents, co-parents, and people navigating parenthood. Often overlooked in queer spaces — not here.', count: '62 members', joinLabel: 'Join →' },
-  { slug: 'coming-out', href: `${routes.communities}#coming-out`, type: 'support', typeLabel: 'Private', name: 'Coming-Out Support', description: 'A private, low-visibility space for people navigating coming out — at work, to family, or to themselves. Additional privacy controls apply.', count: 'Members only', joinLabel: 'Enter →', dashed: true, privateBadge: true },
-  { slug: 'trans-hub', href: `${routes.communities}#trans-hub`, type: 'support', typeLabel: 'Trans & NB', name: 'Trans & Non-Binary Hub', description: 'Healthcare navigation, legal guides, peer support, and community — a dedicated space, not an afterthought in a broader network.', count: '147 members', joinLabel: 'Join →' },
-  { slug: 'queer-elders', href: `${routes.communities}#elders`, type: 'social', typeLabel: 'Elders 50+', name: 'Queer Elders', description: 'For LGBTQ+ members 50 and over. Enormous lived wisdom, long memories, and a community that sees and genuinely honours you.', count: '38 members', joinLabel: 'Join →' },
-  { slug: 'queer-youth', href: `${routes.communities}#youth`, type: 'arts', typeLabel: 'Youth 18–25', name: 'Queer Youth Network', description: 'Career starting points, city navigation, and peer support for members 18–25 — the community we all needed and mostly didn\'t have at that age.', count: '93 members', joinLabel: 'Join →' },
-  { slug: 'queer-poc', href: `${routes.communities}#poc`, type: 'activism', typeLabel: 'Queer POC', name: 'Queer & of Colour', description: "An intersectional space for queer people of colour in Lisbon. Race and queerness aren't separate conversations — not here.", count: '76 members', joinLabel: 'Join →' },
-  { slug: 'disabled-queers', href: `${routes.communities}#disabled`, type: 'support', typeLabel: 'Access & Care', name: 'Disabled Queers', description: 'Disability, chronic illness, and queerness intersect in ways most platforms ignore. Both identities belong here — fully, not partially.', count: '44 members', joinLabel: 'Join →' },
-]
+  {
+    slug: "queer-social",
+    href: `${routes.communities}#queer-social`,
+    type: "social",
+    typeLabel: "Social",
+    name: "Queer Social Lisbon",
+    description:
+      "Monthly casual meetups across the city. No agenda, no networking pressure — just queer people being in the same room.",
+    count: "340 members",
+    joinLabel: "Join →",
+  },
+  {
+    slug: "rainbow-arts",
+    href: `${routes.communities}#rainbow-arts`,
+    type: "arts",
+    typeLabel: "Arts",
+    name: "Rainbow Arts Collective",
+    description:
+      "An open studio collective for queer visual artists and makers. Monthly crits, shared resources, and group shows.",
+    count: "128 members",
+    joinLabel: "Join →",
+  },
+  {
+    slug: "trans-mutual-aid",
+    href: `${routes.communities}#trans-mutual-aid`,
+    type: "support",
+    typeLabel: "Support",
+    name: "Trans Mutual Aid Network",
+    description:
+      "Peer support, resource sharing, and practical help for trans people in Lisbon. Run by and for the community.",
+    count: "89 members",
+    joinLabel: "Join →",
+  },
+  {
+    slug: "queer-runners",
+    href: `${routes.communities}#queer-runners`,
+    type: "sports",
+    typeLabel: "Sports",
+    name: "Queer Runners Lisboa",
+    description:
+      "Weekly runs along the Tejo and through the city's parks. All paces welcome — inclusive, social, no performance pressure.",
+    count: "214 members",
+    joinLabel: "Join →",
+  },
+  {
+    slug: "queer-parents",
+    href: `${routes.communities}#queer-parents`,
+    type: "support",
+    typeLabel: "Support",
+    name: "Queer Parent Network",
+    description:
+      "For LGBTQ+ parents, co-parents, and people navigating parenthood. Often overlooked in queer spaces — not here.",
+    count: "62 members",
+    joinLabel: "Join →",
+  },
+  {
+    slug: "coming-out",
+    href: `${routes.communities}#coming-out`,
+    type: "support",
+    typeLabel: "Private",
+    name: "Coming-Out Support",
+    description:
+      "A private, low-visibility space for people navigating coming out — at work, to family, or to themselves. Additional privacy controls apply.",
+    count: "Members only",
+    joinLabel: "Enter →",
+    dashed: true,
+    privateBadge: true,
+  },
+  {
+    slug: "trans-hub",
+    href: `${routes.communities}#trans-hub`,
+    type: "support",
+    typeLabel: "Trans & NB",
+    name: "Trans & Non-Binary Hub",
+    description:
+      "Healthcare navigation, legal guides, peer support, and community — a dedicated space, not an afterthought in a broader network.",
+    count: "147 members",
+    joinLabel: "Join →",
+  },
+  {
+    slug: "queer-elders",
+    href: `${routes.communities}#elders`,
+    type: "social",
+    typeLabel: "Elders 50+",
+    name: "Queer Elders",
+    description:
+      "For LGBTQ+ members 50 and over. Enormous lived wisdom, long memories, and a community that sees and genuinely honours you.",
+    count: "38 members",
+    joinLabel: "Join →",
+  },
+  {
+    slug: "queer-youth",
+    href: `${routes.communities}#youth`,
+    type: "arts",
+    typeLabel: "Youth 18–25",
+    name: "Queer Youth Network",
+    description:
+      "Career starting points, city navigation, and peer support for members 18–25 — the community we all needed and mostly didn't have at that age.",
+    count: "93 members",
+    joinLabel: "Join →",
+  },
+  {
+    slug: "queer-poc",
+    href: `${routes.communities}#poc`,
+    type: "activism",
+    typeLabel: "Queer POC",
+    name: "Queer & of Colour",
+    description:
+      "An intersectional space for queer people of colour in Lisbon. Race and queerness aren't separate conversations — not here.",
+    count: "76 members",
+    joinLabel: "Join →",
+  },
+  {
+    slug: "disabled-queers",
+    href: `${routes.communities}#disabled`,
+    type: "support",
+    typeLabel: "Access & Care",
+    name: "Disabled Queers",
+    description:
+      "Disability, chronic illness, and queerness intersect in ways most platforms ignore. Both identities belong here — fully, not partially.",
+    count: "44 members",
+    joinLabel: "Join →",
+  },
+];

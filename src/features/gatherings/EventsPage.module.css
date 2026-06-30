@@ -26,7 +26,10 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.2s var(--ease), background 0.2s var(--ease), color 0.2s var(--ease);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 .chip:hover {
   border-color: rgba(45, 27, 61, 0.3);
@@ -71,7 +74,10 @@
   border-radius: 16px;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  transition:
+    border-color 0.2s var(--ease),
+    transform 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
 }
 .card:hover {
   border-color: rgba(45, 27, 61, 0.18);
@@ -161,13 +167,14 @@
 .cta {
   font-size: 20px;
   color: rgba(45, 27, 61, 0.3);
-  transition: color 0.2s var(--ease), transform 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    transform 0.2s var(--ease);
 }
 .card:hover .cta {
   color: var(--accent);
   transform: translateX(3px);
 }
-
 
 @media (max-width: 560px) {
   .card {

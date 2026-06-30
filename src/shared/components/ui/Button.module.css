@@ -93,11 +93,11 @@
   box-shadow: 0 12px 26px -10px rgba(var(--danger-rgb), 0.85);
 }
 
-:global([data-theme='dark']) .ghost {
+:global([data-theme="dark"]) .ghost {
   color: rgba(247, 243, 238, 0.75);
   border-color: rgba(247, 243, 238, 0.22);
 }
-:global([data-theme='dark']) .ghost:hover {
+:global([data-theme="dark"]) .ghost:hover {
   background: rgba(247, 243, 238, 0.08);
   border-color: rgba(247, 243, 238, 0.42);
   color: var(--cream);

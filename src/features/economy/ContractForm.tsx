@@ -1,16 +1,16 @@
-import { LANG_OPTIONS, type ContractCtx, type Lang } from './contract.data'
-import { ContractClauses } from './ContractClauses'
-import styles from './ContractGeneratorPage.module.css'
+import { LANG_OPTIONS, type ContractCtx, type Lang } from "./contract.data";
+import { ContractClauses } from "./ContractClauses";
+import styles from "./ContractGeneratorPage.module.css";
 
 interface ContractFormProps {
-  ctx: ContractCtx
+  ctx: ContractCtx;
   /** Patch one or more context fields. */
-  onChange: (patch: Partial<ContractCtx>) => void
-  selected: string[]
-  onToggleClause: (id: string) => void
+  onChange: (patch: Partial<ContractCtx>) => void;
+  selected: string[];
+  onToggleClause: (id: string) => void;
   /** Active output-document language. */
-  lang: Lang
-  onLangChange: (lang: Lang) => void
+  lang: Lang;
+  onLangChange: (lang: Lang) => void;
 }
 
 /** The input column: language, parties, project, scope, fee, terms, clauses. */
@@ -26,14 +26,21 @@ export function ContractForm({
     <div className={styles.form}>
       <fieldset className={styles.group}>
         <legend className={styles.groupLegend}>Document language</legend>
-        <div className={styles.langToggle} role="group" aria-label="Document language">
+        <div
+          className={styles.langToggle}
+          role="group"
+          aria-label="Document language"
+        >
           {LANG_OPTIONS.map((opt) => (
             <button
               key={opt.value}
               type="button"
-              className={[styles.langBtn, lang === opt.value && styles.langBtnOn]
+              className={[
+                styles.langBtn,
+                lang === opt.value && styles.langBtnOn,
+              ]
                 .filter(Boolean)
-                .join(' ')}
+                .join(" ")}
               aria-pressed={lang === opt.value}
               onClick={() => onLangChange(opt.value)}
             >
@@ -184,7 +191,11 @@ export function ContractForm({
         </div>
       </div>
 
-      <ContractClauses selected={selected} onToggle={onToggleClause} lang={lang} />
+      <ContractClauses
+        selected={selected}
+        onToggle={onToggleClause}
+        lang={lang}
+      />
     </div>
-  )
+  );
 }

@@ -106,13 +106,16 @@ export function MagazineSections() {
               quietly became yourself and one day looked around and noticed
               everyone already knew?
             </p>
-            <Link className={styles.feRead} to={`${routes.article}?id=i-arrived`}>
+            <Link
+              className={styles.feRead}
+              to={`${routes.article}?id=i-arrived`}
+            >
               Read the essay <span>→</span>
             </Link>
           </div>
           <div className={styles.fePull}>
-            "The community did not follow my identity. My identity followed
-            the community."
+            "The community did not follow my identity. My identity followed the
+            community."
           </div>
         </Reveal>
 
@@ -130,11 +133,7 @@ export function MagazineSections() {
                 <div className={styles.ecTitle}>{card.title}</div>
                 <p className={styles.acExcerpt}>{card.excerpt}</p>
                 <div className={styles.acMeta}>
-                  <Avatar
-                    initials={card.initials}
-                    tint={card.tint}
-                    size={20}
-                  />
+                  <Avatar initials={card.initials} tint={card.tint} size={20} />
                   {card.author} · {card.meta}
                 </div>
               </Reveal>
@@ -234,7 +233,11 @@ export function MagazineSections() {
               something worth saying.
             </p>
           </div>
-          <Button href="mailto:magazine@queerpulse.pt" variant="primary" size="lg">
+          <Button
+            href="mailto:magazine@queerpulse.pt"
+            variant="primary"
+            size="lg"
+          >
             Pitch us
           </Button>
         </div>

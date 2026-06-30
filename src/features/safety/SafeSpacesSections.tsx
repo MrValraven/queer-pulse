@@ -1,11 +1,11 @@
-import { useState, type RefObject } from 'react'
-import { Link } from 'react-router-dom'
-import { FiCheck } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { REMOVED_SPACES } from './safeSpaces'
-import { CRITERIA, HOW } from './safeSpacesPage.data'
-import styles from './SafeSpacesPage.module.css'
+import { useState, type RefObject } from "react";
+import { Link } from "react-router-dom";
+import { FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { REMOVED_SPACES } from "./safeSpaces";
+import { CRITERIA, HOW } from "./safeSpacesPage.data";
+import styles from "./SafeSpacesPage.module.css";
 
 export function BadgeExplainer() {
   return (
@@ -14,7 +14,9 @@ export function BadgeExplainer() {
         <div className={styles.beGrid}>
           <div className={styles.beBadge}>
             <div className={styles.badgeVisual}>
-              <div className={styles.bvCheck}><FiCheck /></div>
+              <div className={styles.bvCheck}>
+                <FiCheck />
+              </div>
               <div className={styles.bvName}>
                 Community
                 <br />
@@ -22,21 +24,26 @@ export function BadgeExplainer() {
               </div>
               <div className={styles.bvSub}>QueerPulse</div>
             </div>
-            <div className={styles.badgeCaption}>The badge venues can display — earned, not purchased</div>
+            <div className={styles.badgeCaption}>
+              The badge venues can display — earned, not purchased
+            </div>
           </div>
           <div className={styles.beText}>
             <h2>
               What <em>"verified"</em> actually means.
             </h2>
             <p>
-              Any venue can put a rainbow flag in the window during Pride. Verification means
-              something different — it means community members have been there, assessed it against a
-              clear set of criteria, and agreed it meets the standard. And it can be revoked.
+              Any venue can put a rainbow flag in the window during Pride.
+              Verification means something different — it means community
+              members have been there, assessed it against a clear set of
+              criteria, and agreed it meets the standard. And it can be revoked.
             </p>
             <div className={styles.criteriaList}>
               {CRITERIA.map((c) => (
                 <div className={styles.critItem} key={c.lead}>
-                  <div className={styles.critDot}><c.icon /></div>
+                  <div className={styles.critDot}>
+                    <c.icon />
+                  </div>
                   <div className={styles.critText}>
                     <strong>{c.lead}</strong>
                     {c.rest}
@@ -48,7 +55,7 @@ export function BadgeExplainer() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function HowSection() {
@@ -69,7 +76,7 @@ export function HowSection() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function RemovedSection() {
@@ -81,8 +88,9 @@ export function RemovedSection() {
             When a space <em>loses</em> its badge.
           </h2>
           <p>
-            Verification can be revoked — and is. A listing isn't a reward a venue keeps forever;
-            it's a standard they keep meeting. When they stop, we say so, and we say why. We removed{' '}
+            Verification can be revoked — and is. A listing isn't a reward a
+            venue keeps forever; it's a standard they keep meeting. When they
+            stop, we say so, and we say why. We removed{" "}
             {REMOVED_SPACES.length > 0 ? 6 : 0} spaces this year.
           </p>
         </div>
@@ -97,12 +105,17 @@ export function RemovedSection() {
             <span>Removed</span> if criteria fail or owners won't engage.
           </div>
           <div className={styles.rStep}>
-            <span>Public reason</span> — every removal is recorded openly, never quietly.
+            <span>Public reason</span> — every removal is recorded openly, never
+            quietly.
           </div>
         </div>
         <div className={styles.removedList}>
           {REMOVED_SPACES.map((r) => (
-            <Link key={r.slug} to={`${routes.safeSpaces}/${r.slug}`} className={styles.removedCard}>
+            <Link
+              key={r.slug}
+              to={`${routes.safeSpaces}/${r.slug}`}
+              className={styles.removedCard}
+            >
               <div className={styles.rcTop}>
                 <span className={styles.rcType}>
                   {r.typeLabel} · {r.hood}
@@ -120,12 +133,16 @@ export function RemovedSection() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export function NominateSection({ sectionRef }: { sectionRef: RefObject<HTMLDivElement | null> }) {
-  const [nominated, setNominated] = useState(false)
-  const [nomName, setNomName] = useState('')
+export function NominateSection({
+  sectionRef,
+}: {
+  sectionRef: RefObject<HTMLDivElement | null>;
+}) {
+  const [nominated, setNominated] = useState(false);
+  const [nomName, setNomName] = useState("");
 
   return (
     <div className={styles.nomSection} ref={sectionRef}>
@@ -142,19 +159,27 @@ export function NominateSection({ sectionRef }: { sectionRef: RefObject<HTMLDivE
                 Thank you. We're <em>on it.</em>
               </h3>
               <p className={styles.nomThanksText}>
-                Your nomination{nomName.trim() ? <> for <strong>{nomName.trim()}</strong></> : null} is in.
-                The community is the reason this list means anything — adding to it is genuinely a gift.
+                Your nomination
+                {nomName.trim() ? (
+                  <>
+                    {" "}
+                    for <strong>{nomName.trim()}</strong>
+                  </>
+                ) : null}{" "}
+                is in. The community is the reason this list means anything —
+                adding to it is genuinely a gift.
               </p>
               <p className={styles.nomThanksSub}>
-                Here's what happens next: we acknowledge every nomination within<strong> 48 hours</strong>.
-                Then three verified members visit independently and review it against the criteria before
-                a volunteer panel decides. We'll keep you posted.
+                Here's what happens next: we acknowledge every nomination within
+                <strong> 48 hours</strong>. Then three verified members visit
+                independently and review it against the criteria before a
+                volunteer panel decides. We'll keep you posted.
               </p>
               <Button
                 variant="ghost-dark"
                 onClick={() => {
-                  setNominated(false)
-                  setNomName('')
+                  setNominated(false);
+                  setNomName("");
                 }}
               >
                 Nominate another space
@@ -166,17 +191,20 @@ export function NominateSection({ sectionRef }: { sectionRef: RefObject<HTMLDivE
                 <h3>
                   Nominate a <em>space.</em>
                 </h3>
-                <p>You've found somewhere that genuinely feels safe. Tell us about it. We do the rest.</p>
+                <p>
+                  You've found somewhere that genuinely feels safe. Tell us
+                  about it. We do the rest.
+                </p>
                 <div className={styles.nomFlagNote}>
-                  You can also flag a verified space that's changed — use the flag button on any
-                  listing, or contact us directly.
+                  You can also flag a verified space that's changed — use the
+                  flag button on any listing, or contact us directly.
                 </div>
               </div>
               <form
                 className={styles.nomFields}
                 onSubmit={(e) => {
-                  e.preventDefault()
-                  setNominated(true)
+                  e.preventDefault();
+                  setNominated(true);
                 }}
               >
                 <input
@@ -187,7 +215,11 @@ export function NominateSection({ sectionRef }: { sectionRef: RefObject<HTMLDivE
                   onChange={(e) => setNomName(e.target.value)}
                   required
                 />
-                <input className={styles.nomInput} type="text" placeholder="Address or neighbourhood" />
+                <input
+                  className={styles.nomInput}
+                  type="text"
+                  placeholder="Address or neighbourhood"
+                />
                 <select className={styles.nomSelect} defaultValue="">
                   <option value="">Type of space</option>
                   <option>Bar</option>
@@ -212,5 +244,5 @@ export function NominateSection({ sectionRef }: { sectionRef: RefObject<HTMLDivE
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -6,9 +6,9 @@
 export const RELATIONSHIPS = [
   "We've collaborated",
   "We're friends",
-  'Same collective or group',
-  'Met through QueerPulse',
+  "Same collective or group",
+  "Met through QueerPulse",
   "We're neighbours",
-] as const
+] as const;
 
-export type Relationship = (typeof RELATIONSHIPS)[number]
+export type Relationship = (typeof RELATIONSHIPS)[number];

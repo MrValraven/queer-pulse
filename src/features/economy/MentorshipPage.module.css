@@ -12,7 +12,11 @@
   width: 460px;
   height: 460px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.14), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.14),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .hero::after {
@@ -23,7 +27,11 @@
   width: 340px;
   height: 340px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.11), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.11),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .cat {
@@ -176,7 +184,10 @@
   text-decoration: none;
   color: inherit;
   cursor: pointer;
-  transition: transform 0.25s var(--ease), border-color 0.2s, box-shadow 0.25s var(--ease);
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.2s,
+    box-shadow 0.25s var(--ease);
 }
 .mentorCard:hover {
   transform: translateY(-3px);
@@ -240,7 +251,7 @@
   gap: 7px;
 }
 .mcCap::before {
-  content: '';
+  content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;

@@ -1,12 +1,21 @@
-import { useState } from 'react'
-import type { FinLine } from './governance.data'
-import styles from './GovernancePage.module.css'
+import { useState } from "react";
+import type { FinLine } from "./governance.data";
+import styles from "./GovernancePage.module.css";
 
 function FinanceRow({ line, color }: { line: FinLine; color: string }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   return (
-    <div className={[styles.finLine, open && styles.finLineOpen].filter(Boolean).join(' ')}>
-      <button type="button" className={styles.finSummary} aria-expanded={open} onClick={() => setOpen((o) => !o)}>
+    <div
+      className={[styles.finLine, open && styles.finLineOpen]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <button
+        type="button"
+        className={styles.finSummary}
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+      >
         <div className={styles.finLineTop}>
           <span className={styles.finLineLabel}>{line.label}</span>
           <span className={styles.finLineRight}>
@@ -16,7 +25,10 @@ function FinanceRow({ line, color }: { line: FinLine; color: string }) {
         </div>
         <div className={styles.finLineNote}>{line.note}</div>
         <div className={styles.finTrack}>
-          <div className={styles.finFill} style={{ width: `${line.width}%`, background: color }} />
+          <div
+            className={styles.finFill}
+            style={{ width: `${line.width}%`, background: color }}
+          />
         </div>
       </button>
       <div className={styles.finDetailWrap}>
@@ -37,10 +49,18 @@ function FinanceRow({ line, color }: { line: FinLine; color: string }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export function FinanceLines({ lines, color, total }: { lines: FinLine[]; color: string; total: string }) {
+export function FinanceLines({
+  lines,
+  color,
+  total,
+}: {
+  lines: FinLine[];
+  color: string;
+  total: string;
+}) {
   return (
     <>
       {lines.map((line) => (
@@ -50,5 +70,5 @@ export function FinanceLines({ lines, color, total }: { lines: FinLine[]; color:
         <span className={styles.finTotalLabel}>{total}</span>
       </div>
     </>
-  )
+  );
 }

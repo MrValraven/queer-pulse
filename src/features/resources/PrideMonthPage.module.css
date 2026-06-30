@@ -16,7 +16,11 @@
   width: 600px;
   height: 600px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.22), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.22),
+    transparent 60%
+  );
   pointer-events: none;
 }
 .hero::after {
@@ -27,7 +31,11 @@
   width: 520px;
   height: 520px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.18), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.18),
+    transparent 60%
+  );
   pointer-events: none;
 }
 .heroInner {

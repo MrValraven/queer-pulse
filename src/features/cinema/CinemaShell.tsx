@@ -1,22 +1,26 @@
-import type { ReactNode } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
-import { useScrolled } from '../../shared/hooks/useScrolled'
-import styles from './CinemaShell.module.css'
-import { routes } from '../../app/routeMap'
+import type { ReactNode } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
+import { useScrolled } from "../../shared/hooks/useScrolled";
+import styles from "./CinemaShell.module.css";
+import { routes } from "../../app/routeMap";
 
 const LINKS = [
-  { label: 'This week', to: '/cinema' },
-  { label: 'Browse', to: '/cinema/browse' },
-  { label: 'Membership', to: '/cinema/membership' },
-]
+  { label: "This week", to: "/cinema" },
+  { label: "Browse", to: "/cinema/browse" },
+  { label: "Membership", to: "/cinema/membership" },
+];
 
 /** Dark co-op cinema frame: floating dark nav + cinema footer. */
 export function CinemaShell({ children }: { children: ReactNode }) {
-  const scrolled = useScrolled(8)
+  const scrolled = useScrolled(8);
   return (
     <div className={styles.root}>
-      <nav className={[styles.nav, scrolled && styles.scrolled].filter(Boolean).join(' ')}>
+      <nav
+        className={[styles.nav, scrolled && styles.scrolled]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <Link to={routes.cinema} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
           Queer<em>Pulse</em>
@@ -26,9 +30,13 @@ export function CinemaShell({ children }: { children: ReactNode }) {
           {LINKS.map((item) => (
             <NavLink
               key={item.to}
-              end={item.to === '/cinema'}
+              end={item.to === "/cinema"}
               to={item.to}
-              className={({ isActive }) => [styles.link, isActive && styles.linkActive].filter(Boolean).join(' ')}
+              className={({ isActive }) =>
+                [styles.link, isActive && styles.linkActive]
+                  .filter(Boolean)
+                  .join(" ")
+              }
             >
               {item.label}
             </NavLink>
@@ -49,7 +57,10 @@ export function CinemaShell({ children }: { children: ReactNode }) {
                 <span className={styles.pulseDot} aria-hidden />
                 Queer<em>Pulse</em>
               </Link>
-              <p>A queer professional network rooted in Lisbon. Cinema is one of its rooms.</p>
+              <p>
+                A queer professional network rooted in Lisbon. Cinema is one of
+                its rooms.
+              </p>
             </div>
             <div className={styles.footCols}>
               <div className={styles.footCol}>
@@ -80,5 +91,5 @@ export function CinemaShell({ children }: { children: ReactNode }) {
         </div>
       </footer>
     </div>
-  )
+  );
 }

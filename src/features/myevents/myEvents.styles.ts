@@ -1,4 +1,4 @@
-import styles from './MyEvents.module.css'
+import styles from "./MyEvents.module.css";
 
 /**
  * The CSS module keeps the prototype's kebab-case class names. `sx` maps a
@@ -9,9 +9,9 @@ export function sx(names: string): string {
   return names
     .split(/\s+/)
     .filter(Boolean)
-    .map((n) => styles[n] ?? '')
+    .map((n) => styles[n] ?? "")
     .filter(Boolean)
-    .join(' ')
+    .join(" ");
 }
 
-export { styles }
+export { styles };

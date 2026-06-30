@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
-import { Navbar } from './Navbar'
-import { Footer } from './Footer'
+import type { ReactNode } from "react";
+import { Navbar } from "./Navbar";
+import { Footer } from "./Footer";
 
 /** Standard page frame: fixed Navbar, main content, plum Footer. */
 export function PageShell({ children }: { children: ReactNode }) {
@@ -10,5 +10,5 @@ export function PageShell({ children }: { children: ReactNode }) {
       <main>{children}</main>
       <Footer />
     </>
-  )
+  );
 }

@@ -13,7 +13,10 @@ import styles from "./GatheringPhotosPage.module.css";
 function PhotoSkeleton({ span }: { span?: string }) {
   // Mirror each .pic tile (incl. wide/tall spans) so the grid does not shift on swap.
   return (
-    <div className={[styles.pic, span && styles[span]].filter(Boolean).join(" ")} aria-hidden>
+    <div
+      className={[styles.pic, span && styles[span]].filter(Boolean).join(" ")}
+      aria-hidden
+    >
       <SkeletonLine width="100%" height="100%" style={{ borderRadius: 8 }} />
     </div>
   );
@@ -26,7 +29,10 @@ const REPORT = routes.report;
 
 export function GatheringPhotosPage() {
   const [chip, setChip] = useState(0);
-  const [viewer, setViewer] = useState<{ index: number; slideshow: boolean } | null>(null);
+  const [viewer, setViewer] = useState<{
+    index: number;
+    slideshow: boolean;
+  } | null>(null);
   const [downloading, setDownloading] = useState(false);
   const loading = useSimulatedLoad();
 
@@ -48,10 +54,12 @@ export function GatheringPhotosPage() {
             Open clinic night · <em>12 Jun.</em>
           </h1>
           <p className={styles.dek}>
-            A photo album from the back room of Café Beirão. Photos by André Bento and
-            three attending members who opted to share. <em>Faces are blurred by default
-            unless the person opted in by name</em> — that's our standard policy on
-            gathering photography.
+            A photo album from the back room of Café Beirão. Photos by André
+            Bento and three attending members who opted to share.{" "}
+            <em>
+              Faces are blurred by default unless the person opted in by name
+            </em>{" "}
+            — that's our standard policy on gathering photography.
           </p>
           <div className={styles.meta}>
             <span>
@@ -73,7 +81,9 @@ export function GatheringPhotosPage() {
             <button
               key={c}
               type="button"
-              className={[styles.chip, chip === i && styles.chipActive].filter(Boolean).join(" ")}
+              className={[styles.chip, chip === i && styles.chipActive]
+                .filter(Boolean)
+                .join(" ")}
               onClick={() => setChip(i)}
             >
               {c}
@@ -81,7 +91,11 @@ export function GatheringPhotosPage() {
             </button>
           ))}
           <div className={styles.right}>
-            <button type="button" className={styles.action} onClick={() => setDownloading(true)}>
+            <button
+              type="button"
+              className={styles.action}
+              onClick={() => setDownloading(true)}
+            >
               Download all
             </button>
             <button
@@ -89,7 +103,8 @@ export function GatheringPhotosPage() {
               className={styles.action}
               onClick={() => setViewer({ index: 0, slideshow: true })}
             >
-              <FiPlay style={{ verticalAlign: "-2px", marginRight: 4 }} /> Slideshow
+              <FiPlay style={{ verticalAlign: "-2px", marginRight: 4 }} />{" "}
+              Slideshow
             </button>
           </div>
         </div>
@@ -104,11 +119,21 @@ export function GatheringPhotosPage() {
                 as="button"
                 type="button"
                 delay={Math.min(i, 8) * 60}
-                className={[styles.pic, p.span && styles[p.span], styles[p.tint]].filter(Boolean).join(" ")}
+                className={[
+                  styles.pic,
+                  p.span && styles[p.span],
+                  styles[p.tint],
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 onClick={() => setViewer({ index: i, slideshow: false })}
               >
                 {p.tag && (
-                  <span className={[styles.tag, p.tagAccent && styles.tagAccent].filter(Boolean).join(" ")}>
+                  <span
+                    className={[styles.tag, p.tagAccent && styles.tagAccent]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
                     {p.tag}
                   </span>
                 )}
@@ -123,16 +148,18 @@ export function GatheringPhotosPage() {
             How we handle <em>gathering photos</em>
           </h3>
           <p>
-            Every photo here was taken by an attending member with consent from the people
-            in the frame. <b>Faces are blurred by default</b> unless the person
-            specifically opted in by name. This isn't a privacy nicety — it's how we make
-            sure people show up next time.
+            Every photo here was taken by an attending member with consent from
+            the people in the frame. <b>Faces are blurred by default</b> unless
+            the person specifically opted in by name. This isn't a privacy
+            nicety — it's how we make sure people show up next time.
           </p>
           <p>
-            If you see yourself in a photo and want it removed (or unblurred), email{" "}
-            <a href="mailto:photos@queerpulse.app">photos@queerpulse.app</a> — we'll handle
-            it within 24 hours, no questions. <em>You can also untick "appear in event
-            photos" globally</em> in <Link to={routes.privacy}>Privacy settings</Link>.
+            If you see yourself in a photo and want it removed (or unblurred),
+            email{" "}
+            <a href="mailto:photos@queerpulse.app">photos@queerpulse.app</a> —
+            we'll handle it within 24 hours, no questions.{" "}
+            <em>You can also untick "appear in event photos" globally</em> in{" "}
+            <Link to={routes.privacy}>Privacy settings</Link>.
           </p>
 
           <h3 style={{ marginTop: 24 }}>
@@ -141,7 +168,10 @@ export function GatheringPhotosPage() {
           <div className={styles.contrib}>
             {CONTRIBUTORS.map((c) => (
               <Link to={MEMBER} className={styles.pill} key={c.name}>
-                <span className={styles.pillAv} style={{ background: c.bg, color: c.color }}>
+                <span
+                  className={styles.pillAv}
+                  style={{ background: c.bg, color: c.color }}
+                >
                   {c.initials}
                 </span>
                 <b>{c.name}</b>
@@ -174,7 +204,10 @@ export function GatheringPhotosPage() {
       )}
 
       {downloading && (
-        <DownloadAlbumModal photoCount={28} onClose={() => setDownloading(false)} />
+        <DownloadAlbumModal
+          photoCount={28}
+          onClose={() => setDownloading(false)}
+        />
       )}
     </PageShell>
   );

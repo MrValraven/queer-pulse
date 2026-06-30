@@ -438,14 +438,18 @@
   overflow: hidden;
 }
 .removedBanner::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -20%;
   right: -8%;
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.16), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.16),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .removedSeal {

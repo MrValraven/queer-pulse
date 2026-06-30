@@ -1,5 +1,5 @@
 /** A member's role within a single community. */
-export type CommunityRole = 'owner' | 'mod' | 'member'
+export type CommunityRole = "owner" | "mod" | "member";
 
 /**
  * How a community gates joining (and whether it shows in Discover).
@@ -8,11 +8,11 @@ export type CommunityRole = 'owner' | 'mod' | 'member'
  * - `invite`  — needs an invite link/code; listed but gated.
  * - `private` — hidden from Discover unless you're invited (e.g. coming-out).
  */
-export type AccessTier = 'public' | 'request' | 'invite' | 'private'
+export type AccessTier = "public" | "request" | "invite" | "private";
 
 /** The current user's standing in one community. */
 export interface Membership {
-  role: CommunityRole
+  role: CommunityRole;
   /** Human-readable join label for display (mock; e.g. "just now"). */
-  joinedAt: string
+  joinedAt: string;
 }

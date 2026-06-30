@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Tabs } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { TABS, type TabId } from './sexualHealth.data'
-import { GuidesTab, HivTab, PrepTab, TestingTab } from './SexualHealthTabs'
-import styles from './SexualHealthPage.module.css'
+import { useState } from "react";
+import { PageShell } from "../../shared/components/layout";
+import { Button, Outro, Tabs } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { TABS, type TabId } from "./sexualHealth.data";
+import { GuidesTab, HivTab, PrepTab, TestingTab } from "./SexualHealthTabs";
+import styles from "./SexualHealthPage.module.css";
 
 export function SexualHealthPage() {
-  const [tab, setTab] = useState<TabId>('testing')
+  const [tab, setTab] = useState<TabId>("testing");
 
   return (
     <PageShell>
@@ -18,8 +18,9 @@ export function SexualHealthPage() {
             Your health, on your <em>own terms.</em>
           </h1>
           <p className={styles.lead}>
-            Direct, queer-specific, non-judgmental. Testing, PrEP, HIV resources, and a
-            community-reviewed provider directory — all in one place.
+            Direct, queer-specific, non-judgmental. Testing, PrEP, HIV
+            resources, and a community-reviewed provider directory — all in one
+            place.
           </p>
           <Tabs
             variant="underline"
@@ -33,15 +34,19 @@ export function SexualHealthPage() {
 
       <div className={styles.body}>
         <div className="wrap">
-          {tab === 'testing' && <TestingTab />}
-          {tab === 'prep' && <PrepTab />}
-          {tab === 'hiv' && <HivTab />}
-          {tab === 'guides' && <GuidesTab />}
+          {tab === "testing" && <TestingTab />}
+          {tab === "prep" && <PrepTab />}
+          {tab === "hiv" && <HivTab />}
+          {tab === "guides" && <GuidesTab />}
         </div>
       </div>
 
       <Outro
-        title={<>Your health <em>matters.</em></>}
+        title={
+          <>
+            Your health <em>matters.</em>
+          </>
+        }
         sub="Questions, concerns, or just not sure where to start — the community is here."
       >
         <Button to={routes.wellbeing} variant="primary" size="lg">
@@ -52,5 +57,5 @@ export function SexualHealthPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

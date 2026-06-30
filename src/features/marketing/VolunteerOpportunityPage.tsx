@@ -3,7 +3,10 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { VOLUNTEER_OPPORTUNITIES, getOpportunity } from "./volunteerOpportunities";
+import {
+  VOLUNTEER_OPPORTUNITIES,
+  getOpportunity,
+} from "./volunteerOpportunities";
 import styles from "./VolunteerOpportunityPage.module.css";
 
 const MEMBER = routes.members;
@@ -33,7 +36,9 @@ export function VolunteerOpportunityPage() {
   const opp = getOpportunity(slug);
   if (!opp) return <Navigate to={routes.volunteer} replace />;
 
-  const alternatives = VOLUNTEER_OPPORTUNITIES.filter((o) => o.slug !== opp.slug).slice(0, 3);
+  const alternatives = VOLUNTEER_OPPORTUNITIES.filter(
+    (o) => o.slug !== opp.slug,
+  ).slice(0, 3);
 
   return (
     <PageShell>
@@ -124,7 +129,10 @@ export function VolunteerOpportunityPage() {
               <div className={styles.teamRow}>
                 {opp.team.map((m) => (
                   <Link to={MEMBER} className={styles.teamPill} key={m.name}>
-                    <div className={styles.av} style={{ background: m.bg, color: m.color }}>
+                    <div
+                      className={styles.av}
+                      style={{ background: m.bg, color: m.color }}
+                    >
                       {m.initials}
                     </div>
                     {m.name}
@@ -138,7 +146,14 @@ export function VolunteerOpportunityPage() {
             {applied ? (
               <FadeIn className={styles.appliedCard}>
                 <div className={styles.appliedIcon}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--jade-soft)" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="var(--jade-soft)"
+                    strokeWidth={2.4}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
@@ -146,7 +161,11 @@ export function VolunteerOpportunityPage() {
                   You're <em>on the list.</em>
                 </div>
                 <p className={styles.appliedText}>{opp.applyConfirm}</p>
-                <Button variant="ghost-dark" className={styles.ctaBtn} to={MESSAGES}>
+                <Button
+                  variant="ghost-dark"
+                  className={styles.ctaBtn}
+                  to={MESSAGES}
+                >
                   Message the team
                 </Button>
               </FadeIn>
@@ -170,16 +189,27 @@ export function VolunteerOpportunityPage() {
                   </div>
                 ))}
                 <div className={styles.cta}>
-                  <Button variant="primary" className={styles.ctaBtn} onClick={apply} disabled={submitting} aria-busy={submitting}>
+                  <Button
+                    variant="primary"
+                    className={styles.ctaBtn}
+                    onClick={apply}
+                    disabled={submitting}
+                    aria-busy={submitting}
+                  >
                     {submitting ? "Sending your application…" : "Apply →"}
                   </Button>
-                  <Button variant="ghost" className={styles.ctaBtn} to={MESSAGES}>
+                  <Button
+                    variant="ghost"
+                    className={styles.ctaBtn}
+                    to={MESSAGES}
+                  >
                     Ask the team
                   </Button>
                 </div>
                 <p className={styles.footNote}>
-                  Returning volunteers: <Link to={MEMBER}>use last year's profile →</Link> ·
-                  skips the screen.
+                  Returning volunteers:{" "}
+                  <Link to={MEMBER}>use last year's profile →</Link> · skips the
+                  screen.
                 </p>
               </div>
             )}
@@ -200,7 +230,10 @@ export function VolunteerOpportunityPage() {
               <p className={styles.altText}>Other ways to help right now:</p>
               <div className={styles.altList}>
                 {alternatives.map((a) => (
-                  <Link key={a.slug} to={`${routes.volunteer}/opportunity/${a.slug}`}>
+                  <Link
+                    key={a.slug}
+                    to={`${routes.volunteer}/opportunity/${a.slug}`}
+                  >
                     → {a.role} · {a.org}
                   </Link>
                 ))}

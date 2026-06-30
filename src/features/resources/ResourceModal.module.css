@@ -210,7 +210,11 @@
   left: -10%;
   width: 60%;
   height: 80%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.16), transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.16),
+    transparent 70%
+  );
   pointer-events: none;
 }
 .success::after {
@@ -220,7 +224,11 @@
   right: -10%;
   width: 60%;
   height: 80%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.16), transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.16),
+    transparent 70%
+  );
   pointer-events: none;
 }
 .successIcon {

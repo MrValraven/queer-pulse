@@ -1,38 +1,50 @@
-import { useState } from 'react'
-import { FaRainbow } from 'react-icons/fa6'
-import { FiCheck } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from './ModalKit'
-import styles from './ApplicationModals.module.css'
+import { useState } from "react";
+import { FaRainbow } from "react-icons/fa6";
+import { FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
+import styles from "./ApplicationModals.module.css";
 
-const JOB_TYPES = ['Full-time', 'Part-time', 'Freelance', 'Contract', 'Internship']
+const JOB_TYPES = [
+  "Full-time",
+  "Part-time",
+  "Freelance",
+  "Contract",
+  "Internship",
+];
 
 export function PostJobModal({ onClose }: { onClose: () => void }) {
-  const [role, setRole] = useState('')
-  const [company, setCompany] = useState('')
-  const [location, setLocation] = useState('')
-  const [type, setType] = useState('')
-  const [salaryFrom, setSalaryFrom] = useState('')
-  const [salaryTo, setSalaryTo] = useState('')
-  const [queerRun, setQueerRun] = useState(false)
-  const [desc, setDesc] = useState('')
-  const { sending, done, submit } = useSubmitFlow()
+  const [role, setRole] = useState("");
+  const [company, setCompany] = useState("");
+  const [location, setLocation] = useState("");
+  const [type, setType] = useState("");
+  const [salaryFrom, setSalaryFrom] = useState("");
+  const [salaryTo, setSalaryTo] = useState("");
+  const [queerRun, setQueerRun] = useState(false);
+  const [desc, setDesc] = useState("");
+  const { sending, done, submit } = useSubmitFlow();
   const valid =
     role.trim().length > 2 &&
     company.trim().length > 1 &&
     location.trim().length > 1 &&
     !!type &&
     salaryFrom.trim().length > 0 &&
-    desc.trim().length >= 40
+    desc.trim().length >= 40;
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
-        <SuccessPanel title="Submitted for" em="review." onClose={onClose} closeLabel="Done">
-          Thanks for posting <strong>{role}</strong> at <strong>{company}</strong>. Our team reviews
-          every posting within <strong>~3 working days</strong> — we check that employers are
-          genuinely queer-inclusive, not just rainbow-washing. You'll get an email the moment your
-          listing is live.
+        <SuccessPanel
+          title="Submitted for"
+          em="review."
+          onClose={onClose}
+          closeLabel="Done"
+        >
+          Thanks for posting <strong>{role}</strong> at{" "}
+          <strong>{company}</strong>. Our team reviews every posting within{" "}
+          <strong>~3 working days</strong> — we check that employers are
+          genuinely queer-inclusive, not just rainbow-washing. You'll get an
+          email the moment your listing is live.
         </SuccessPanel>
       ) : (
         <>
@@ -41,8 +53,9 @@ export function PostJobModal({ onClose }: { onClose: () => void }) {
             Post a <em>job.</em>
           </h2>
           <p className={styles.sub}>
-            Hiring? Reach queer talent who can show up as themselves. Listings are community-vetted —
-            we only publish employers who are genuinely inclusive.
+            Hiring? Reach queer talent who can show up as themselves. Listings
+            are community-vetted — we only publish employers who are genuinely
+            inclusive.
           </p>
 
           <div className={styles.field}>
@@ -68,7 +81,11 @@ export function PostJobModal({ onClose }: { onClose: () => void }) {
           <div className={styles.fieldRow}>
             <div className={styles.field}>
               <label htmlFor="pj-type">Type *</label>
-              <select id="pj-type" value={type} onChange={(e) => setType(e.target.value)}>
+              <select
+                id="pj-type"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+              >
                 <option value="">Choose one…</option>
                 {JOB_TYPES.map((t) => (
                   <option key={t} value={t}>
@@ -119,7 +136,9 @@ export function PostJobModal({ onClose }: { onClose: () => void }) {
             type="button"
             role="checkbox"
             aria-checked={queerRun}
-            className={[styles.checkRow, queerRun && styles.checkRowOn].filter(Boolean).join(' ')}
+            className={[styles.checkRow, queerRun && styles.checkRowOn]
+              .filter(Boolean)
+              .join(" ")}
             onClick={() => setQueerRun((v) => !v)}
           >
             <span className={styles.checkBox} aria-hidden>
@@ -130,8 +149,8 @@ export function PostJobModal({ onClose }: { onClose: () => void }) {
                 <FaRainbow aria-hidden /> This is a queer-run organisation
               </span>
               <span className={styles.checkHint}>
-                Led or owned by queer people — not only queer-friendly. We confirm this during
-                vetting.
+                Led or owned by queer people — not only queer-friendly. We
+                confirm this during vetting.
               </span>
             </span>
           </button>
@@ -148,19 +167,24 @@ export function PostJobModal({ onClose }: { onClose: () => void }) {
           <p className={styles.note}>
             {desc.trim().length < 40
               ? `${40 - desc.trim().length} more characters in the description to submit.`
-              : 'Tell us how you support queer staff — vetting looks for substance, not slogans.'}
+              : "Tell us how you support queer staff — vetting looks for substance, not slogans."}
           </p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
               Cancel
             </button>
-            <Button variant="primary" size="lg" disabled={!valid || sending} onClick={() => valid && submit()}>
-              {sending ? <Sending label="Submitting…" /> : 'Submit for review'}
+            <Button
+              variant="primary"
+              size="lg"
+              disabled={!valid || sending}
+              onClick={() => valid && submit()}
+            >
+              {sending ? <Sending label="Submitting…" /> : "Submit for review"}
             </Button>
           </div>
         </>
       )}
     </ModalShell>
-  )
+  );
 }

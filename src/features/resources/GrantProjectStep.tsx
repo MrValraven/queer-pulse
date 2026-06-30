@@ -1,5 +1,5 @@
-import { FormField } from '../../shared/components/ui'
-import styles from './MicroGrantsPage.module.css'
+import { FormField } from "../../shared/components/ui";
+import styles from "./MicroGrantsPage.module.css";
 
 /* Step 2 — project details */
 export function ProjectStep({
@@ -8,10 +8,10 @@ export function ProjectStep({
   projWhat,
   setProjWhat,
 }: {
-  projName: string
-  setProjName: (v: string) => void
-  projWhat: string
-  setProjWhat: (v: string) => void
+  projName: string;
+  setProjName: (v: string) => void;
+  projWhat: string;
+  setProjWhat: (v: string) => void;
 }) {
   return (
     <>
@@ -19,8 +19,8 @@ export function ProjectStep({
         Tell us about <em>the project.</em>
       </div>
       <p className={styles.stepSub}>
-        Be specific and honest. The review panel reads everything. Plain language beats formal
-        language every time.
+        Be specific and honest. The review panel reads everything. Plain
+        language beats formal language every time.
       </p>
       <FormField label="Project name">
         <input
@@ -30,7 +30,10 @@ export function ProjectStep({
           onChange={(e) => setProjName(e.target.value)}
         />
       </FormField>
-      <FormField label="What will you make or do?" labelAside={`${projWhat.length} / 400`}>
+      <FormField
+        label="What will you make or do?"
+        labelAside={`${projWhat.length} / 400`}
+      >
         <textarea
           placeholder="Describe the project in plain terms. What will exist or happen that doesn't exist now?"
           value={projWhat}
@@ -56,5 +59,5 @@ export function ProjectStep({
         </FormField>
       </div>
     </>
-  )
+  );
 }

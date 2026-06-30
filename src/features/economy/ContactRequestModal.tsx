@@ -1,34 +1,34 @@
-import { useState, type ReactNode } from 'react'
-import { Button } from '../../shared/components/ui'
-import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from './ModalKit'
-import styles from './ApplicationModals.module.css'
+import { useState, type ReactNode } from "react";
+import { Button } from "../../shared/components/ui";
+import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
+import styles from "./ApplicationModals.module.css";
 
 interface ContactRequestModalProps {
   /** Who the request goes to — used in the heading and success copy. */
-  toName: string
+  toName: string;
   /** Optional small eyebrow above the title (e.g. "Housing · Introduction"). */
-  eyebrow?: string
+  eyebrow?: string;
   /** Title text before the coral <em>. Defaults to "Send a". */
-  title?: string
+  title?: string;
   /** The emphasised word (coral italic). Defaults to "request." */
-  em?: string
+  em?: string;
   /** One warm sentence describing what this is. */
-  sub?: string
+  sub?: string;
   /** Pre-filled message body. */
-  preset?: string
+  preset?: string;
   /** Success-panel title before the <em>. Defaults to "Request". */
-  successTitle?: string
+  successTitle?: string;
   /** Success-panel emphasised word. Defaults to "sent." */
-  successEm?: string
+  successEm?: string;
   /** Success-panel body. */
-  successBody?: ReactNode
+  successBody?: ReactNode;
   /** Verb on the send button. Defaults to "Send request". */
-  sendLabel?: string
+  sendLabel?: string;
   /** Spinner label while sending. Defaults to "Sending…". */
-  sendingLabel?: string
+  sendingLabel?: string;
   /** Minimum characters before the button enables. */
-  minChars?: number
-  onClose: () => void
+  minChars?: number;
+  onClose: () => void;
 }
 
 /**
@@ -39,39 +39,45 @@ interface ContactRequestModalProps {
 export function ContactRequestModal({
   toName,
   eyebrow,
-  title = 'Send a',
-  em = 'request.',
+  title = "Send a",
+  em = "request.",
   sub,
-  preset = '',
-  successTitle = 'Request',
-  successEm = 'sent.',
+  preset = "",
+  successTitle = "Request",
+  successEm = "sent.",
   successBody,
-  sendLabel = 'Send request',
-  sendingLabel = 'Sending…',
+  sendLabel = "Send request",
+  sendingLabel = "Sending…",
   minChars = 20,
   onClose,
 }: ContactRequestModalProps) {
-  const [message, setMessage] = useState(preset)
-  const { sending, done, submit } = useSubmitFlow()
-  const valid = message.trim().length >= minChars
-  const firstName = toName.split(' ')[0]
+  const [message, setMessage] = useState(preset);
+  const { sending, done, submit } = useSubmitFlow();
+  const valid = message.trim().length >= minChars;
+  const firstName = toName.split(" ")[0];
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
-        <SuccessPanel title={successTitle} em={successEm} onClose={onClose} closeLabel="Done">
+        <SuccessPanel
+          title={successTitle}
+          em={successEm}
+          onClose={onClose}
+          closeLabel="Done"
+        >
           {successBody ?? (
             <>
-              Your message is on its way to <strong>{firstName}</strong>. They'll reply straight to
-              your inbox here — contact details are shared once you both agree to take it further.
+              Your message is on its way to <strong>{firstName}</strong>.
+              They'll reply straight to your inbox here — contact details are
+              shared once you both agree to take it further.
             </>
           )}
         </SuccessPanel>
       ) : (
         <form
           onSubmit={(e) => {
-            e.preventDefault()
-            if (valid) submit()
+            e.preventDefault();
+            if (valid) submit();
           }}
         >
           {eyebrow && <div className={styles.eyebrow}>{eyebrow}</div>}
@@ -92,19 +98,29 @@ export function ContactRequestModal({
           <p className={styles.note}>
             {message.trim().length < minChars
               ? `${minChars - message.trim().length} more characters so they have context.`
-              : 'Looks good — keep the conversation here until you both decide to take it further.'}
+              : "Looks good — keep the conversation here until you both decide to take it further."}
           </p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
-            <button type="button" className={styles.back} onClick={onClose} disabled={sending}>
+            <button
+              type="button"
+              className={styles.back}
+              onClick={onClose}
+              disabled={sending}
+            >
               Cancel
             </button>
-            <Button variant="primary" size="lg" type="submit" disabled={!valid || sending}>
+            <Button
+              variant="primary"
+              size="lg"
+              type="submit"
+              disabled={!valid || sending}
+            >
               {sending ? <Sending label={sendingLabel} /> : sendLabel}
             </Button>
           </div>
         </form>
       )}
     </ModalShell>
-  )
+  );
 }

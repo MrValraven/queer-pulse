@@ -22,7 +22,8 @@ export function CompareOffersModal({
         Two offers, <em>side by side.</em>
       </h2>
       <p className={styles.sub}>
-        A calm view of what's on the table. Compare the numbers, then respond when you're ready.
+        A calm view of what's on the table. Compare the numbers, then respond
+        when you're ready.
       </p>
 
       <div className={styles.scroll}>
@@ -56,7 +57,12 @@ export function CompareOffersModal({
                   <ul className={styles.terms}>
                     {a.offer?.terms.map((t) => (
                       <li key={t}>
-                        <FiCheck className={styles.tick} size={14} aria-hidden /> {t}
+                        <FiCheck
+                          className={styles.tick}
+                          size={14}
+                          aria-hidden
+                        />{" "}
+                        {t}
                       </li>
                     ))}
                   </ul>
@@ -67,7 +73,11 @@ export function CompareOffersModal({
               <th className={styles.rowHead} />
               {offers.map((a) => (
                 <td key={a.id} className={styles.cell}>
-                  <Button size="md" variant="primary" onClick={() => onRespond(a.id)}>
+                  <Button
+                    size="md"
+                    variant="primary"
+                    onClick={() => onRespond(a.id)}
+                  >
                     Respond →
                   </Button>
                 </td>

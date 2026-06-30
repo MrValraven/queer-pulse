@@ -12,10 +12,20 @@ import styles from "./ApplicationModals.module.css";
 export type MsgVariant = "message" | "followup" | "conversation";
 
 function recipientOf(app: Application): Recruiter {
-  return app.recruiter ?? { name: app.companyName, role: "Hiring team", initials: app.logo, tint: "coral" };
+  return (
+    app.recruiter ?? {
+      name: app.companyName,
+      role: "Hiring team",
+      initials: app.logo,
+      tint: "coral",
+    }
+  );
 }
 
-const MSG_COPY: Record<MsgVariant, { title: string; em: string; sub: string; preset: string }> = {
+const MSG_COPY: Record<
+  MsgVariant,
+  { title: string; em: string; sub: string; preset: string }
+> = {
   message: {
     title: "Message the",
     em: "recruiter.",
@@ -38,7 +48,13 @@ const MSG_COPY: Record<MsgVariant, { title: string; em: string; sub: string; pre
 };
 
 /** The scrollable conversation history: chat bubbles + process events. */
-function ThreadView({ entries, fromIndex }: { entries: ThreadEntry[]; fromIndex: number }) {
+function ThreadView({
+  entries,
+  fromIndex,
+}: {
+  entries: ThreadEntry[];
+  fromIndex: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (ref.current) ref.current.scrollTop = ref.current.scrollHeight;
@@ -79,7 +95,11 @@ export function MessageModal(props: {
   onClose: () => void;
   onPatch: (id: string, patch: Partial<Application>) => void;
 }) {
-  return props.app.thread?.length ? <ConversationModal {...props} /> : <ColdMessageModal {...props} />;
+  return props.app.thread?.length ? (
+    <ConversationModal {...props} />
+  ) : (
+    <ColdMessageModal {...props} />
+  );
 }
 
 /** Live conversation: full history with the recruiter, plus a reply box. */
@@ -98,7 +118,9 @@ function ConversationModal({
   const copy = MSG_COPY[variant];
   const originalLen = app.thread?.length ?? 0;
   const [entries, setEntries] = useState<ThreadEntry[]>(app.thread ?? []);
-  const [msg, setMsg] = useState(variant === "followup" ? MSG_COPY.followup.preset : "");
+  const [msg, setMsg] = useState(
+    variant === "followup" ? MSG_COPY.followup.preset : "",
+  );
   const [sending, setSending] = useState(false);
   const timer = useRef<number | undefined>(undefined);
   const patched = useRef(false);
@@ -132,7 +154,8 @@ function ConversationModal({
         {copy.title} <em>{copy.em}</em>
       </h2>
       <p className={styles.sub}>
-        The full history with {to.name.split(" ")[0]} — every message and milestone, in order.
+        The full history with {to.name.split(" ")[0]} — every message and
+        milestone, in order.
       </p>
       <ThreadView entries={entries} fromIndex={originalLen} />
       <div className={styles.field}>
@@ -175,7 +198,8 @@ function ColdMessageModal({
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel title="Message" em="sent." onClose={onClose}>
-          Your message to {to.name.split(" ")[0]} is on its way. They'll reply straight to your inbox.
+          Your message to {to.name.split(" ")[0]} is on its way. They'll reply
+          straight to your inbox.
         </SuccessPanel>
       ) : (
         <form
@@ -207,7 +231,12 @@ function ColdMessageModal({
             />
           </div>
           <div className={styles.foot}>
-            <button type="button" className={styles.back} onClick={onClose} disabled={sending}>
+            <button
+              type="button"
+              className={styles.back}
+              onClick={onClose}
+              disabled={sending}
+            >
               ← Cancel
             </button>
             <Button size="lg" type="submit" disabled={sending || !msg.trim()}>

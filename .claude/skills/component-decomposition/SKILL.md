@@ -19,9 +19,9 @@ mock/static data into colocated data files — without changing public APIs.
 
 ## The two rules
 
-1. **Per-component line limit (default 200).** Every *individual* component must be
+1. **Per-component line limit (default 200).** Every _individual_ component must be
    under the limit. A single file MAY hold several small cohesive components whose
-   *total* exceeds the limit, as long as no single component does. Confirm the
+   _total_ exceeds the limit, as long as no single component does. Confirm the
    intended interpretation with the user if unstated — "per component" vs "per file"
    changes the work substantially.
 2. **Data in its own file.** Inline mock/static data (arrays, lookup tables, config
@@ -79,7 +79,7 @@ mock/static data into colocated data files — without changing public APIs.
   don't churn untouched files.
 - Never nest a `<button>` inside a router `<Link>` (invalid HTML). Use
   `<span role="button" tabIndex={0}>` with `onClick` (preventDefault + stopPropagation)
-  + `onKeyDown`.
+  - `onKeyDown`.
 
 ## Parallel fan-out for large sweeps
 

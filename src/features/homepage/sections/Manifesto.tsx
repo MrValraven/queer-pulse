@@ -1,5 +1,5 @@
-import { Reveal } from '../../../shared/components/ui'
-import styles from './Manifesto.module.css'
+import { Reveal } from "../../../shared/components/ui";
+import styles from "./Manifesto.module.css";
 
 export function Manifesto() {
   return (
@@ -11,12 +11,12 @@ export function Manifesto() {
           vouched-for, and unmistakably ours.
         </Reveal>
         <Reveal as="p" className={styles.sign} delay={120}>
-          QueerPulse is for the designers, engineers, chefs, filmmakers and carers
-          who make Lisbon what it is. You won't find leaderboards or endorsements
-          here. You'll find people, their work, and a way to reach them when it
-          matters.
+          QueerPulse is for the designers, engineers, chefs, filmmakers and
+          carers who make Lisbon what it is. You won't find leaderboards or
+          endorsements here. You'll find people, their work, and a way to reach
+          them when it matters.
         </Reveal>
       </div>
     </section>
-  )
+  );
 }

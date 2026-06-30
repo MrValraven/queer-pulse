@@ -238,7 +238,8 @@
   justify-content: center;
   font-size: 26px;
   margin: 0 auto 16px;
-  animation: connPop 0.45s var(--ease, cubic-bezier(0.22, 1, 0.36, 1)) 0.08s both;
+  animation: connPop 0.45s var(--ease, cubic-bezier(0.22, 1, 0.36, 1)) 0.08s
+    both;
 }
 .connDoneTitle {
   font-family: var(--serif);
@@ -313,10 +314,14 @@
   overflow: hidden;
 }
 .evCover::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 50%, rgba(var(--accent-rgb), 0.25), transparent 60%);
+  background: radial-gradient(
+    circle at 30% 50%,
+    rgba(var(--accent-rgb), 0.25),
+    transparent 60%
+  );
 }
 .evBadge {
   position: absolute;

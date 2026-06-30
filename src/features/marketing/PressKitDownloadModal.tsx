@@ -1,14 +1,14 @@
-import { useState, type ReactNode } from 'react'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import { downloadBlob } from './downloadBlob'
-import { type PressAsset } from './pressKitAssets.data'
-import styles from './MarketingModal.module.css'
+import { useState, type ReactNode } from "react";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import { downloadBlob } from "./downloadBlob";
+import { type PressAsset } from "./pressKitAssets.data";
+import styles from "./MarketingModal.module.css";
 
 export interface PreviewRow {
-  ic: string
-  title: string
-  desc: string
+  ic: string;
+  title: string;
+  desc: string;
 }
 
 export function PressKitDownloadModal({
@@ -21,33 +21,38 @@ export function PressKitDownloadModal({
   buttonLabel,
   onClose,
 }: {
-  eyebrow: string
-  title: ReactNode
-  lead: ReactNode
-  rows?: PreviewRow[]
-  asset: PressAsset
+  eyebrow: string;
+  title: ReactNode;
+  lead: ReactNode;
+  rows?: PreviewRow[];
+  asset: PressAsset;
   /** Optional custom preview node (e.g. a rendered logo stage). */
-  preview?: ReactNode
-  buttonLabel: string
-  onClose: () => void
+  preview?: ReactNode;
+  buttonLabel: string;
+  onClose: () => void;
 }) {
-  const [done, setDone] = useState(false)
-  useScrollLock()
+  const [done, setDone] = useState(false);
+  useScrollLock();
 
   const download = () => {
-    downloadBlob(asset.filename, asset.content, asset.mime)
-    setDone(true)
-  }
+    downloadBlob(asset.filename, asset.content, asset.mime);
+    setDone(true);
+  };
 
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={`${styles.modal} ${done ? styles.modalSuccess : ''}`}>
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+      <div className={`${styles.modal} ${done ? styles.modalSuccess : ""}`}>
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           ×
         </button>
 
@@ -62,8 +67,8 @@ export function PressKitDownloadModal({
               Download <em>started.</em>
             </h2>
             <p>
-              <b>{asset.filename}</b> is saving to your device. Check your downloads folder — and
-              thanks for crediting QueerPulse.
+              <b>{asset.filename}</b> is saving to your device. Check your
+              downloads folder — and thanks for crediting QueerPulse.
             </p>
             <Button size="lg" variant="ghost-dark" onClick={onClose}>
               Close
@@ -103,5 +108,5 @@ export function PressKitDownloadModal({
         )}
       </div>
     </div>
-  )
+  );
 }

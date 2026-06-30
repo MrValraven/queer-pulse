@@ -1,22 +1,24 @@
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { PRIVACY, STAGES } from './comingOut.data'
-import styles from './ComingOutPage.module.css'
+import { PageShell } from "../../shared/components/layout";
+import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { PRIVACY, STAGES } from "./comingOut.data";
+import styles from "./ComingOutPage.module.css";
 
 export function ComingOutPage() {
   return (
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <Reveal className={styles.eyebrow}>Coming-Out Support · Private space</Reveal>
+          <Reveal className={styles.eyebrow}>
+            Coming-Out Support · Private space
+          </Reveal>
           <Reveal as="h1" className={styles.title} delay={60}>
             A place to say it <em>before you say it.</em>
           </Reveal>
           <Reveal as="p" className={styles.lead} delay={120}>
-            A private, low-visibility space for people navigating coming out — at work, to family,
-            or to themselves. There's no pressure to be "out" to join, and nothing here is visible
-            from your public profile.
+            A private, low-visibility space for people navigating coming out —
+            at work, to family, or to themselves. There's no pressure to be
+            "out" to join, and nothing here is visible from your public profile.
           </Reveal>
         </div>
       </header>
@@ -27,13 +29,20 @@ export function ComingOutPage() {
             Built for <em>privacy</em>, first.
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            This space carries additional controls beyond the rest of QueerPulse. They exist so you
-            can be here without it costing you anything elsewhere.
+            This space carries additional controls beyond the rest of
+            QueerPulse. They exist so you can be here without it costing you
+            anything elsewhere.
           </Reveal>
           <div className={styles.grid}>
             {PRIVACY.map((item, index) => (
-              <Reveal key={item.title} className={styles.card} delay={index * 55}>
-                <div className={styles.cardIcon}><item.icon /></div>
+              <Reveal
+                key={item.title}
+                className={styles.card}
+                delay={index * 55}
+              >
+                <div className={styles.cardIcon}>
+                  <item.icon />
+                </div>
                 <div className={styles.cardTitle}>{item.title}</div>
                 <div className={styles.cardBody}>{item.body}</div>
               </Reveal>
@@ -48,8 +57,8 @@ export function ComingOutPage() {
             However you <em>need to use it.</em>
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            Facilitated with a light hand by Mariana, a clinical psychologist who holds
-            confidentiality as the first rule and the last.
+            Facilitated with a light hand by Mariana, a clinical psychologist
+            who holds confidentiality as the first rule and the last.
           </Reveal>
           <div className={styles.steps}>
             {STAGES.map((stage, index) => (
@@ -66,7 +75,11 @@ export function ComingOutPage() {
       </section>
 
       <Outro
-        title={<>You don't owe a <em>perfect speech.</em></>}
+        title={
+          <>
+            You don't owe a <em>perfect speech.</em>
+          </>
+        }
         sub="Saying the true thing badly is still saying the true thing. Enter the space whenever you're ready — and leave the moment you are."
       >
         <Button to={routes.comingOut} variant="primary" size="lg">
@@ -77,5 +90,5 @@ export function ComingOutPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

@@ -96,6 +96,6 @@
   text-align: center;
 }
 
-:global([data-theme='dark']) .card {
+:global([data-theme="dark"]) .card {
   border-color: rgba(247, 243, 238, 0.1);
 }

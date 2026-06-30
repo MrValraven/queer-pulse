@@ -1,21 +1,21 @@
-import { type ReactNode } from 'react'
-import { FiCheck } from 'react-icons/fi'
-import { Button } from './Button'
-import styles from './SuccessPanel.module.css'
+import { type ReactNode } from "react";
+import { FiCheck } from "react-icons/fi";
+import { Button } from "./Button";
+import styles from "./SuccessPanel.module.css";
 
 interface SuccessPanelProps {
   /** Title text; `em` is appended in coral italic per the design-system pattern. */
-  title: string
-  em?: string
-  children: ReactNode
-  onClose: () => void
-  closeLabel?: string
+  title: string;
+  em?: string;
+  children: ReactNode;
+  onClose: () => void;
+  closeLabel?: string;
   /** Optional checklist of next steps, each rendered with a jade tick. */
-  steps?: ReactNode[]
+  steps?: ReactNode[];
   /** Optional content below the primary action — e.g. an undo affordance. */
-  footer?: ReactNode
+  footer?: ReactNode;
   /** Override the default jade check glyph. */
-  icon?: ReactNode
+  icon?: ReactNode;
 }
 
 /**
@@ -28,14 +28,16 @@ export function SuccessPanel({
   em,
   children,
   onClose,
-  closeLabel = 'Done',
+  closeLabel = "Done",
   steps,
   footer,
   icon,
 }: SuccessPanelProps) {
   return (
     <div className={styles.panel}>
-      <div className={styles.icon}>{icon ?? <FiCheck size={26} color="var(--jade)" aria-hidden />}</div>
+      <div className={styles.icon}>
+        {icon ?? <FiCheck size={26} color="var(--jade)" aria-hidden />}
+      </div>
       <h2 className={styles.title}>
         {title} {em && <em>{em}</em>}
       </h2>
@@ -57,5 +59,5 @@ export function SuccessPanel({
       </div>
       {footer && <div className={styles.footer}>{footer}</div>}
     </div>
-  )
+  );
 }

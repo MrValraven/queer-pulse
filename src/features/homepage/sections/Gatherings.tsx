@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { Reveal, SectionHead } from '../../../shared/components/ui'
-import { routes } from '../../../app/routeMap'
-import { gatherings } from '../data/gatherings'
-import styles from './Gatherings.module.css'
+import { Link } from "react-router-dom";
+import { Reveal, SectionHead } from "../../../shared/components/ui";
+import { routes } from "../../../app/routeMap";
+import { gatherings } from "../data/gatherings";
+import styles from "./Gatherings.module.css";
 
 export function Gatherings() {
   return (
@@ -43,7 +43,8 @@ export function Gatherings() {
                   </div>
                   <div className={styles.right}>
                     <div className={styles.spots}>
-                      {event.spotsValue ? <b>{event.spotsValue}</b> : null} {event.spotsLabel}
+                      {event.spotsValue ? <b>{event.spotsValue}</b> : null}{" "}
+                      {event.spotsLabel}
                     </div>
                     <span className={styles.cta}>{event.ctaLabel}</span>
                   </div>
@@ -54,5 +55,5 @@ export function Gatherings() {
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
-import { FiCheck } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import styles from './StudioTipModal.module.css'
+import { useEffect, useRef, useState } from "react";
+import { FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import styles from "./StudioTipModal.module.css";
 
-const PRESETS = [2, 5, 10]
+const PRESETS = [2, 5, 10];
 
-type Phase = 'pick' | 'sending' | 'done'
+type Phase = "pick" | "sending" | "done";
 
 /**
  * Reusable tip modal for the Studio section. Amount presets + custom →
@@ -17,37 +17,48 @@ export function StudioTipModal({
   recipient,
   onClose,
 }: {
-  recipient: string
-  onClose: () => void
+  recipient: string;
+  onClose: () => void;
 }) {
-  useScrollLock()
-  const [phase, setPhase] = useState<Phase>('pick')
-  const [amount, setAmount] = useState(2)
-  const [custom, setCustom] = useState('')
-  const timer = useRef<number | undefined>(undefined)
+  useScrollLock();
+  const [phase, setPhase] = useState<Phase>("pick");
+  const [amount, setAmount] = useState(2);
+  const [custom, setCustom] = useState("");
+  const timer = useRef<number | undefined>(undefined);
 
-  useEffect(() => () => window.clearTimeout(timer.current), [])
+  useEffect(() => () => window.clearTimeout(timer.current), []);
 
-  const value = custom ? Number(custom) : amount
-  const canSend = value > 0 && !Number.isNaN(value)
+  const value = custom ? Number(custom) : amount;
+  const canSend = value > 0 && !Number.isNaN(value);
 
   function send() {
-    if (!canSend) return
-    setPhase('sending')
-    timer.current = window.setTimeout(() => setPhase('done'), 1100)
+    if (!canSend) return;
+    setPhase("sending");
+    timer.current = window.setTimeout(() => setPhase("done"), 1100);
   }
 
-  const success = phase === 'done'
+  const success = phase === "done";
 
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={[styles.modal, success && styles.modalSuccess].filter(Boolean).join(' ')} role="dialog" aria-modal="true">
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+      <div
+        className={[styles.modal, success && styles.modalSuccess]
+          .filter(Boolean)
+          .join(" ")}
+        role="dialog"
+        aria-modal="true"
+      >
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           ×
         </button>
 
@@ -59,7 +70,10 @@ export function StudioTipModal({
             <h2>
               Thank you — that's <em>€{value}</em> to {recipient}.
             </h2>
-            <p>100% of your tip reaches {recipient} directly. No platform cut, no processing skimmed off the top.</p>
+            <p>
+              100% of your tip reaches {recipient} directly. No platform cut, no
+              processing skimmed off the top.
+            </p>
             <Button variant="ghost-dark" size="lg" onClick={onClose}>
               Back to the music
             </Button>
@@ -79,10 +93,15 @@ export function StudioTipModal({
                 <button
                   key={p}
                   type="button"
-                  className={[styles.amount, !custom && amount === p && styles.amountOn].filter(Boolean).join(' ')}
+                  className={[
+                    styles.amount,
+                    !custom && amount === p && styles.amountOn,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                   onClick={() => {
-                    setAmount(p)
-                    setCustom('')
+                    setAmount(p);
+                    setCustom("");
                   }}
                 >
                   €{p}
@@ -102,8 +121,14 @@ export function StudioTipModal({
               />
             </div>
 
-            <Button variant="primary" size="lg" onClick={send} disabled={!canSend || phase === 'sending'} style={{ width: '100%' }}>
-              {phase === 'sending' ? (
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={send}
+              disabled={!canSend || phase === "sending"}
+              style={{ width: "100%" }}
+            >
+              {phase === "sending" ? (
                 <>
                   <span className={styles.spinner} aria-hidden /> Sending…
                 </>
@@ -119,5 +144,5 @@ export function StudioTipModal({
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,157 +1,157 @@
-import type { ReactNode } from 'react'
-import { FiCheck } from 'react-icons/fi'
-import { currentUser, fullName } from './data/members'
+import type { ReactNode } from "react";
+import { FiCheck } from "react-icons/fi";
+import { currentUser, fullName } from "./data/members";
 
-export type BadgeRarity = 'common' | 'rare' | 'legendary'
-export type BadgeTint = 'jade' | 'accent' | 'plum'
+export type BadgeRarity = "common" | "rare" | "legendary";
+export type BadgeTint = "jade" | "accent" | "plum";
 
 export interface Badge {
-  cat: string
-  name: string
-  when: string
-  rarity: BadgeRarity
-  tint: BadgeTint
-  icon: ReactNode
+  cat: string;
+  name: string;
+  when: string;
+  rarity: BadgeRarity;
+  tint: BadgeTint;
+  icon: ReactNode;
 }
 
 export interface LevelInfo {
-  level: number
-  name: string
-  xp: number
-  xpMax: number
-  percent: number
-  xpToNext: number
-  nextName: string
-  member: string
-  since: string
+  level: number;
+  name: string;
+  xp: number;
+  xpMax: number;
+  percent: number;
+  xpToNext: number;
+  nextName: string;
+  member: string;
+  since: string;
 }
 
 export interface LadderPill {
-  num: number
-  name: string
-  state: 'done' | 'current' | 'locked'
+  num: number;
+  name: string;
+  state: "done" | "current" | "locked";
 }
 
-export type PerkRowState = 'achieved' | 'current' | 'locked'
+export type PerkRowState = "achieved" | "current" | "locked";
 
 export interface PerkLadderRow {
-  num: number
-  name: string
-  state: PerkRowState
-  perks: string[]
-  status: ReactNode
+  num: number;
+  name: string;
+  state: PerkRowState;
+  perks: string[];
+  status: ReactNode;
 }
 
 /** Total badges still to discover (more exist in the catalogue than are shown). */
-export const discoverCount = 28
+export const discoverCount = 28;
 
 export const levelInfo: LevelInfo = {
   level: 4,
-  name: 'Familiar',
+  name: "Familiar",
   xp: 680,
   xpMax: 1000,
   percent: 68,
   xpToNext: 320,
-  nextName: 'Trusted',
+  nextName: "Trusted",
   member: fullName(currentUser),
-  since: 'Jan 2025',
-}
+  since: "Jan 2025",
+};
 
 export const levelLadder: LadderPill[] = [
-  { num: 1, name: 'Newcomer', state: 'done' },
-  { num: 2, name: 'Explorer', state: 'done' },
-  { num: 3, name: 'Regular', state: 'done' },
-  { num: 4, name: 'Familiar', state: 'current' },
-  { num: 5, name: 'Trusted', state: 'locked' },
-  { num: 6, name: 'Anchor', state: 'locked' },
-  { num: 7, name: 'Pillar', state: 'locked' },
-]
+  { num: 1, name: "Newcomer", state: "done" },
+  { num: 2, name: "Explorer", state: "done" },
+  { num: 3, name: "Regular", state: "done" },
+  { num: 4, name: "Familiar", state: "current" },
+  { num: 5, name: "Trusted", state: "locked" },
+  { num: 6, name: "Anchor", state: "locked" },
+  { num: 7, name: "Pillar", state: "locked" },
+];
 
-export { earnedBadges, lockedBadges } from './badges.icons'
+export { earnedBadges, lockedBadges } from "./badges.icons";
 
 export const perksLadder: PerkLadderRow[] = [
   {
     num: 1,
-    name: 'Newcomer',
-    state: 'achieved',
+    name: "Newcomer",
+    state: "achieved",
     status: (
       <>
         <FiCheck /> Done
       </>
     ),
     perks: [
-      'Browse the member directory',
-      'Join gatherings & RSVP',
-      'Access the resource library',
+      "Browse the member directory",
+      "Join gatherings & RSVP",
+      "Access the resource library",
     ],
   },
   {
     num: 2,
-    name: 'Explorer',
-    state: 'achieved',
+    name: "Explorer",
+    state: "achieved",
     status: (
       <>
         <FiCheck /> Done
       </>
     ),
     perks: [
-      'Message other members directly',
-      'Save articles & resources',
-      'Join communities',
+      "Message other members directly",
+      "Save articles & resources",
+      "Join communities",
     ],
   },
   {
     num: 3,
-    name: 'Regular',
-    state: 'achieved',
+    name: "Regular",
+    state: "achieved",
     status: (
       <>
         <FiCheck /> Done
       </>
     ),
     perks: [
-      'Vouch for new members on the waitlist',
-      'Apply to host a gathering',
+      "Vouch for new members on the waitlist",
+      "Apply to host a gathering",
     ],
   },
   {
     num: 4,
-    name: 'Familiar',
-    state: 'current',
-    status: 'Current',
+    name: "Familiar",
+    state: "current",
+    status: "Current",
     perks: [
-      '48-hour early RSVP access to new gatherings',
-      'Access to the Trusted Lounge community',
+      "48-hour early RSVP access to new gatherings",
+      "Access to the Trusted Lounge community",
     ],
   },
   {
     num: 5,
-    name: 'Trusted',
-    state: 'locked',
-    status: '320 XP away',
+    name: "Trusted",
+    state: "locked",
+    status: "320 XP away",
     perks: [
-      'Host gatherings without approval review',
-      'Monthly invite quota increases to 3',
+      "Host gatherings without approval review",
+      "Monthly invite quota increases to 3",
     ],
   },
   {
     num: 6,
-    name: 'Anchor',
-    state: 'locked',
-    status: 'Locked',
+    name: "Anchor",
+    state: "locked",
+    status: "Locked",
     perks: [
-      'Permanent founding discount on future paid features',
+      "Permanent founding discount on future paid features",
       '"Anchor" legendary badge unlocked',
     ],
   },
   {
     num: 7,
-    name: 'Pillar',
-    state: 'locked',
-    status: 'Locked',
+    name: "Pillar",
+    state: "locked",
+    status: "Locked",
     perks: [
-      'Advisory board eligibility',
+      "Advisory board eligibility",
       'Lifetime "Pillar" status — permanent badge',
     ],
   },
-]
+];

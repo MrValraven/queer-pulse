@@ -1,55 +1,55 @@
-import type { CSSProperties } from 'react'
-import { usePrefersReducedMotion } from '../../shared/hooks'
-import type { VouchAvatar } from './adminMembers.data'
-import type { AvatarTone } from './ui'
-import styles from './AdminMembersPage.module.css'
+import type { CSSProperties } from "react";
+import { usePrefersReducedMotion } from "../../shared/hooks";
+import type { VouchAvatar } from "./adminMembers.data";
+import type { AvatarTone } from "./ui";
+import styles from "./AdminMembersPage.module.css";
 
 interface Props {
-  center: { initials: string; tone: AvatarTone }
-  nodes: VouchAvatar[]
+  center: { initials: string; tone: AvatarTone };
+  nodes: VouchAvatar[];
 }
 
 /** token-backed fill/stroke for each avatar tone in the SVG */
 const TONE_FILL: Record<AvatarTone, string> = {
-  plum: 'rgba(var(--plum-rgb), .14)',
-  coral: 'rgba(var(--accent-rgb), .16)',
-  jade: 'rgba(var(--jade-rgb), .16)',
-  violet: 'rgba(var(--violet-rgb), .16)',
-  amber: 'rgba(var(--amber-rgb), .18)',
-  anon: 'rgba(var(--plum-rgb), .08)',
-}
+  plum: "rgba(var(--plum-rgb), .14)",
+  coral: "rgba(var(--accent-rgb), .16)",
+  jade: "rgba(var(--jade-rgb), .16)",
+  violet: "rgba(var(--violet-rgb), .16)",
+  amber: "rgba(var(--amber-rgb), .18)",
+  anon: "rgba(var(--plum-rgb), .08)",
+};
 
 const TONE_STROKE: Record<AvatarTone, string> = {
-  plum: 'var(--plum)',
-  coral: 'var(--accent-deep)',
-  jade: 'var(--jade)',
-  violet: 'var(--violet)',
-  amber: 'var(--amber)',
-  anon: 'rgba(var(--plum-rgb), .35)',
-}
+  plum: "var(--plum)",
+  coral: "var(--accent-deep)",
+  jade: "var(--jade)",
+  violet: "var(--violet)",
+  amber: "var(--amber)",
+  anon: "rgba(var(--plum-rgb), .35)",
+};
 
-const W = 320
-const H = 240
-const CX = W / 2
-const CY = H / 2
-const RX = 128 // ellipse radius x
-const RY = 92 // ellipse radius y
-const CENTER_R = 26
-const NODE_R = 16
+const W = 320;
+const H = 240;
+const CX = W / 2;
+const CY = H / 2;
+const RX = 128; // ellipse radius x
+const RY = 92; // ellipse radius y
+const CENTER_R = 26;
+const NODE_R = 16;
 
 export function AdminVouchGraph({ center, nodes }: Props) {
-  const reduced = usePrefersReducedMotion()
-  const count = nodes.length
+  const reduced = usePrefersReducedMotion();
+  const count = nodes.length;
 
   const placed = nodes.map((n, i) => {
     // distribute around the ellipse, starting at the top
-    const angle = -Math.PI / 2 + (i / count) * Math.PI * 2
+    const angle = -Math.PI / 2 + (i / count) * Math.PI * 2;
     return {
       ...n,
       x: CX + Math.cos(angle) * RX,
       y: CY + Math.sin(angle) * RY,
-    }
-  })
+    };
+  });
 
   return (
     <svg
@@ -68,7 +68,11 @@ export function AdminVouchGraph({ center, nodes }: Props) {
             x2={n.x}
             y2={n.y}
             className={styles.graphEdge}
-            style={reduced ? undefined : ({ '--gdelay': `${120 + i * 50}ms` } as CSSProperties)}
+            style={
+              reduced
+                ? undefined
+                : ({ "--gdelay": `${120 + i * 50}ms` } as CSSProperties)
+            }
           />
         ))}
       </g>
@@ -79,7 +83,11 @@ export function AdminVouchGraph({ center, nodes }: Props) {
           <g
             key={`n-${i}`}
             className={styles.graphNode}
-            style={reduced ? undefined : ({ '--gdelay': `${200 + i * 50}ms` } as CSSProperties)}
+            style={
+              reduced
+                ? undefined
+                : ({ "--gdelay": `${200 + i * 50}ms` } as CSSProperties)
+            }
           >
             <circle
               cx={n.x}
@@ -111,5 +119,5 @@ export function AdminVouchGraph({ center, nodes }: Props) {
         </text>
       </g>
     </svg>
-  )
+  );
 }

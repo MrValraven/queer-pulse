@@ -1,9 +1,9 @@
-import { useMemo, useState, type ReactNode } from 'react'
-import { AppShell } from '../../shared/components/layout'
-import { Button, FadeIn, SkeletonLine } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { useSaved, type SavedItem } from '../../app/providers/SavedProvider'
+import { useMemo, useState, type ReactNode } from "react";
+import { AppShell } from "../../shared/components/layout";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useSaved, type SavedItem } from "../../app/providers/SavedProvider";
 import {
   COLLECTIONS,
   RECENT_SAVES,
@@ -11,26 +11,26 @@ import {
   type Privacy,
   type Thumb,
   type RecentSave,
-} from './collections.data'
-import { SavedByYou } from './SavedByYou'
+} from "./collections.data";
+import { SavedByYou } from "./SavedByYou";
 import {
   AddToCollectionModal,
   NewCollectionModal,
   ViewCollectionModal,
-} from './CollectionsModals'
-import styles from './CollectionsPage.module.css'
+} from "./CollectionsModals";
+import styles from "./CollectionsPage.module.css";
 
 type ModalState =
-  | { type: 'new' }
-  | { type: 'view'; id: string }
-  | { type: 'add'; save: RecentSave }
-  | null
+  | { type: "new" }
+  | { type: "view"; id: string }
+  | { type: "add"; save: RecentSave }
+  | null;
 
 const PRIVACY_LABEL: Record<Privacy, string> = {
-  private: 'Private',
-  shared: 'Shared',
-  public: 'Public',
-}
+  private: "Private",
+  shared: "Shared",
+  public: "Public",
+};
 
 const thumbClass: Record<Thumb, string> = {
   a: styles.thumbA!,
@@ -38,13 +38,13 @@ const thumbClass: Record<Thumb, string> = {
   c: styles.thumbC!,
   d: styles.thumbD!,
   e: styles.thumbE!,
-}
+};
 
-const kindClass: Record<RecentSave['kindVariant'], string> = {
+const kindClass: Record<RecentSave["kindVariant"], string> = {
   therapist: styles.kindTherapist!,
   article: styles.kindArticle!,
   business: styles.kindBusiness!,
-}
+};
 
 const privacyIcon: Record<Privacy, ReactNode> = {
   private: (
@@ -65,13 +65,13 @@ const privacyIcon: Record<Privacy, ReactNode> = {
       <circle cx="12" cy="12" r="9" />
     </svg>
   ),
-}
+};
 
 /** A single collection card in the grid. */
 function CollectionCard({ c, onOpen }: { c: Collection; onOpen: () => void }) {
   return (
     <button
-      className={`${styles.card} ${c.featured ? styles.featured : ''}`}
+      className={`${styles.card} ${c.featured ? styles.featured : ""}`}
       onClick={onOpen}
     >
       <div className={styles.ic}>{c.count}</div>
@@ -93,7 +93,7 @@ function CollectionCard({ c, onOpen }: { c: Collection; onOpen: () => void }) {
         <span>{c.updated}</span>
       </div>
     </button>
-  )
+  );
 }
 
 /** Loading placeholder mirroring CollectionCard — same min-height + rhythm. */
@@ -105,123 +105,140 @@ function CollectionCardSkeleton() {
         <SkeletonLine width="70%" height={20} />
         <SkeletonLine width="50%" height={12} style={{ marginTop: 8 }} />
       </div>
-      <SkeletonLine height={42} style={{ marginTop: 'auto', borderRadius: 10 }} />
+      <SkeletonLine
+        height={42}
+        style={{ marginTop: "auto", borderRadius: 10 }}
+      />
       <div className={styles.foot}>
         <SkeletonLine width="30%" height={11} />
         <SkeletonLine width="25%" height={11} />
       </div>
     </div>
-  )
+  );
 }
 
 /** Loading placeholder mirroring RecentSaveRow's 3-column grid. */
 function RecentRowSkeleton() {
   return (
     <div className={styles.recentRow} aria-hidden>
-      <SkeletonLine width={30} height={30} style={{ borderRadius: 7, flex: 'none' }} />
+      <SkeletonLine
+        width={30}
+        height={30}
+        style={{ borderRadius: 7, flex: "none" }}
+      />
       <div className={styles.recentInfo}>
         <SkeletonLine width="60%" height={14} />
         <SkeletonLine width="35%" height={12} style={{ marginTop: 6 }} />
       </div>
       <SkeletonLine width={120} height={12} />
     </div>
-  )
+  );
 }
 
 /** A recent, unfiled save — clicking opens the "add to collection" picker. */
 function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
   return (
     <button className={styles.recentRow} onClick={onAdd}>
-      <div className={`${styles.recentKind} ${kindClass[r.kindVariant]}`}>{r.kind}</div>
+      <div className={`${styles.recentKind} ${kindClass[r.kindVariant]}`}>
+        {r.kind}
+      </div>
       <div className={styles.recentInfo}>
         <b>{r.title}</b>
         <span>{r.saved}</span>
       </div>
       <span className={styles.recentAdd}>+ Add to collection →</span>
     </button>
-  )
+  );
 }
 
 export function CollectionsPage() {
-  const { showToast } = useToast()
-  const { items: savedItems } = useSaved()
-  const loading = useSimulatedLoad()
+  const { showToast } = useToast();
+  const { items: savedItems } = useSaved();
+  const loading = useSimulatedLoad();
 
-  const [collections, setCollections] = useState<Collection[]>(COLLECTIONS)
+  const [collections, setCollections] = useState<Collection[]>(COLLECTIONS);
   // collectionId -> the saved items inside it. Seeded from live saves so the
   // view modal has real content to show, then grown via "Add to collection".
-  const [contents, setContents] = useState<Record<string, SavedItem[]>>({})
-  const [modal, setModal] = useState<ModalState>(null)
+  const [contents, setContents] = useState<Record<string, SavedItem[]>>({});
+  const [modal, setModal] = useState<ModalState>(null);
 
   // For each collection, blend any seeded saves with items the user has added.
   const contentsFor = useMemo(() => {
     return (id: string): SavedItem[] => {
-      if (contents[id]) return contents[id]
+      if (contents[id]) return contents[id];
       // Seed deterministically from the live saved store the first time.
-      const seed = savedItems.slice(0, 3)
-      return seed
-    }
-  }, [contents, savedItems])
+      const seed = savedItems.slice(0, 3);
+      return seed;
+    };
+  }, [contents, savedItems]);
 
   const createCollection = (name: string, privacy: Privacy) => {
-    const id = `c-${Date.now()}`
+    const id = `c-${Date.now()}`;
     setCollections((prev) => [
       {
         id,
-        count: '0',
+        count: "0",
         name,
-        meta: 'Just created — start adding saves',
-        thumbs: ['a', 'b', 'c'],
-        more: '',
+        meta: "Just created — start adding saves",
+        thumbs: ["a", "b", "c"],
+        more: "",
         privacy,
         privacyLabel: PRIVACY_LABEL[privacy],
-        updated: 'Updated just now',
+        updated: "Updated just now",
       },
       ...prev,
-    ])
-    setModal(null)
-    showToast('Collection created', 'success')
-  }
+    ]);
+    setModal(null);
+    showToast("Collection created", "success");
+  };
 
   const addSaveToCollection = (collectionId: string, save: RecentSave) => {
     const item: SavedItem = {
       id: `recent:${save.id}`,
-      kind: 'article',
+      kind: "article",
       title: save.title,
       meta: save.saved,
-    }
+    };
     setContents((prev) => {
-      const existing = prev[collectionId] ?? savedItems.slice(0, 3)
-      if (existing.some((it) => it.id === item.id)) return prev
-      return { ...prev, [collectionId]: [item, ...existing] }
-    })
+      const existing = prev[collectionId] ?? savedItems.slice(0, 3);
+      if (existing.some((it) => it.id === item.id)) return prev;
+      return { ...prev, [collectionId]: [item, ...existing] };
+    });
     setCollections((prev) =>
       prev.map((c) =>
         c.id === collectionId
-          ? { ...c, count: String((Number(c.count) || 0) + 1), updated: 'Updated just now' }
+          ? {
+              ...c,
+              count: String((Number(c.count) || 0) + 1),
+              updated: "Updated just now",
+            }
           : c,
       ),
-    )
-  }
+    );
+  };
 
   const viewing =
-    modal?.type === 'view' ? collections.find((c) => c.id === modal.id) ?? null : null
+    modal?.type === "view"
+      ? (collections.find((c) => c.id === modal.id) ?? null)
+      : null;
 
   return (
     <AppShell>
       <div className={styles.page}>
         <header className={styles.head}>
           <div>
-            <div className={styles.eyebrow}>Collections · folders for saves</div>
+            <div className={styles.eyebrow}>
+              Collections · folders for saves
+            </div>
             <h1 className={styles.h1}>
               Things you keep <em>coming back to.</em>
             </h1>
             <p className={styles.lead}>
-              Saved items, grouped however makes sense to you. Folders can be private (default),
-              shared with specific members, or public.
+              Saved items, grouped however makes sense to you. Folders can be
+              private (default), shared with specific members, or public.
             </p>
           </div>
-          <Button variant="primary" onClick={() => setModal({ type: 'new' })}>
+          <Button variant="primary" onClick={() => setModal({ type: "new" })}>
             + New collection
           </Button>
         </header>
@@ -230,19 +247,24 @@ export function CollectionsPage() {
 
         <div className={styles.grid}>
           {loading ? (
-            Array.from({ length: 5 }).map((_, i) => <CollectionCardSkeleton key={i} />)
+            Array.from({ length: 5 }).map((_, i) => (
+              <CollectionCardSkeleton key={i} />
+            ))
           ) : (
             <>
               {collections.map((c, i) => (
                 <FadeIn key={c.id} delay={Math.min(i, 8) * 60}>
                   <CollectionCard
                     c={c}
-                    onOpen={() => setModal({ type: 'view', id: c.id })}
+                    onOpen={() => setModal({ type: "view", id: c.id })}
                   />
                 </FadeIn>
               ))}
 
-              <button className={styles.newCard} onClick={() => setModal({ type: 'new' })}>
+              <button
+                className={styles.newCard}
+                onClick={() => setModal({ type: "new" })}
+              >
                 <div className={styles.plus}>+</div>
                 <b>New collection</b>
                 <span>Group saves by why they matter</span>
@@ -257,17 +279,25 @@ export function CollectionsPage() {
         </div>
         <div className={styles.recentList}>
           {loading
-            ? Array.from({ length: 4 }).map((_, i) => <RecentRowSkeleton key={i} />)
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <RecentRowSkeleton key={i} />
+              ))
             : RECENT_SAVES.map((r, i) => (
                 <FadeIn key={r.id} delay={Math.min(i, 8) * 60}>
-                  <RecentSaveRow r={r} onAdd={() => setModal({ type: 'add', save: r })} />
+                  <RecentSaveRow
+                    r={r}
+                    onAdd={() => setModal({ type: "add", save: r })}
+                  />
                 </FadeIn>
               ))}
         </div>
       </div>
 
-      {modal?.type === 'new' && (
-        <NewCollectionModal onClose={() => setModal(null)} onCreate={createCollection} />
+      {modal?.type === "new" && (
+        <NewCollectionModal
+          onClose={() => setModal(null)}
+          onCreate={createCollection}
+        />
       )}
       {viewing && (
         <ViewCollectionModal
@@ -276,7 +306,7 @@ export function CollectionsPage() {
           onClose={() => setModal(null)}
         />
       )}
-      {modal?.type === 'add' && (
+      {modal?.type === "add" && (
         <AddToCollectionModal
           itemTitle={modal.save.title}
           collections={collections}
@@ -285,5 +315,5 @@ export function CollectionsPage() {
         />
       )}
     </AppShell>
-  )
+  );
 }

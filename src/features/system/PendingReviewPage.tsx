@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
-import { SystemStateShell } from '../../shared/components/layout'
-import { routes } from '../../app/routeMap'
-import { InterestsEditorModal } from './InterestsEditorModal'
-import styles from './PendingReviewPage.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
+import { SystemStateShell } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
+import { InterestsEditorModal } from "./InterestsEditorModal";
+import styles from "./PendingReviewPage.module.css";
 
 export function PendingReviewPage() {
-  const [editing, setEditing] = useState(false)
+  const [editing, setEditing] = useState(false);
 
   return (
     <SystemStateShell orbTone="jade">
@@ -24,8 +24,9 @@ export function PendingReviewPage() {
           You're <em>184th</em> in line.
         </h1>
         <p className={styles.lead}>
-          We open membership in cohorts. Your request to <b>tomas@example.com</b> is in the queue
-          and a vouching member will review it within <b>~ 3 weeks</b>.
+          We open membership in cohorts. Your request to{" "}
+          <b>tomas@example.com</b> is in the queue and a vouching member will
+          review it within <b>~ 3 weeks</b>.
         </p>
 
         <div className={styles.posCard}>
@@ -36,8 +37,8 @@ export function PendingReviewPage() {
             <div className={styles.posInfo}>
               <b>Your position</b>
               <p>
-                Out of 1,247 in queue · we admit <b>about 60 / month</b> · ETA for you:{' '}
-                <b>late Jun / early Jul 2026</b>
+                Out of 1,247 in queue · we admit <b>about 60 / month</b> · ETA
+                for you: <b>late Jun / early Jul 2026</b>
               </p>
             </div>
           </div>
@@ -55,7 +56,10 @@ export function PendingReviewPage() {
             <div className={`${styles.dot} ${styles.dotActive}`} />
             <div>
               <b>Awaiting vouching member</b>
-              <span>A current member is matching your interests · this takes 2–3 weeks</span>
+              <span>
+                A current member is matching your interests · this takes 2–3
+                weeks
+              </span>
             </div>
           </div>
           <div className={`${styles.tlStep} ${styles.tlStepPending}`}>
@@ -84,16 +88,15 @@ export function PendingReviewPage() {
           </Button>
         </div>
         <p className={styles.foot}>
-          Already know a member who can vouch?{' '}
+          Already know a member who can vouch?{" "}
           <Link to={routes.vouch}>Send them a one-click vouch link</Link> —
           bumps you ahead in the queue.
           <br />
-          Want to withdraw?{' '}
-          <Link to={routes.contact}>Write to the team</Link>.
+          Want to withdraw? <Link to={routes.contact}>Write to the team</Link>.
         </p>
       </div>
 
       {editing && <InterestsEditorModal onClose={() => setEditing(false)} />}
     </SystemStateShell>
-  )
+  );
 }

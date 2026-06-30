@@ -1,26 +1,26 @@
-import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath, routes } from '../../../app/routeMap'
-import { wellbeingResources } from '../data/wellbeing'
-import type { WellbeingIcon, WellbeingTone } from '../data/types'
-import styles from './Wellbeing.module.css'
+import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { linkToPath, routes } from "../../../app/routeMap";
+import { wellbeingResources } from "../data/wellbeing";
+import type { WellbeingIcon, WellbeingTone } from "../data/types";
+import styles from "./Wellbeing.module.css";
 
 const TONE_COLOR: Record<WellbeingTone, string> = {
-  violet: 'var(--violet)',
-  jade: 'var(--jade)',
-  coral: 'var(--accent)',
-  plum: 'var(--plum)',
-}
+  violet: "var(--violet)",
+  jade: "var(--jade)",
+  coral: "var(--accent)",
+  plum: "var(--plum)",
+};
 const TONE_BG: Record<WellbeingTone, string> = {
-  violet: 'rgba(122,82,184,.1)',
-  jade: 'rgba(74,140,111,.1)',
-  coral: 'rgba(232,119,90,.1)',
-  plum: 'rgba(45,27,61,.07)',
-}
+  violet: "rgba(122,82,184,.1)",
+  jade: "rgba(74,140,111,.1)",
+  coral: "rgba(232,119,90,.1)",
+  plum: "rgba(45,27,61,.07)",
+};
 
 function Icon({ name, color }: { name: WellbeingIcon; color: string }) {
-  const common = { stroke: color, strokeWidth: 2, fill: 'none' } as const
+  const common = { stroke: color, strokeWidth: 2, fill: "none" } as const;
   const paths: Record<WellbeingIcon, ReactNode> = {
     heart: (
       <path
@@ -31,9 +31,17 @@ function Icon({ name, color }: { name: WellbeingIcon; color: string }) {
     ),
     people: (
       <>
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" {...common} strokeLinecap="round" />
+        <path
+          d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+          {...common}
+          strokeLinecap="round"
+        />
         <circle cx={9} cy={7} r={4} {...common} />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" {...common} strokeLinecap="round" />
+        <path
+          d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
+          {...common}
+          strokeLinecap="round"
+        />
       </>
     ),
     phone: (
@@ -44,7 +52,11 @@ function Icon({ name, color }: { name: WellbeingIcon; color: string }) {
       />
     ),
     shield: (
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" {...common} strokeLinejoin="round" />
+      <path
+        d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+        {...common}
+        strokeLinejoin="round"
+      />
     ),
     briefcase: (
       <>
@@ -55,16 +67,31 @@ function Icon({ name, color }: { name: WellbeingIcon; color: string }) {
     info: (
       <>
         <circle cx={12} cy={12} r={10} {...common} />
-        <line x1={12} y1={8} x2={12} y2={12} {...common} strokeLinecap="round" />
-        <line x1={12} y1={16} x2={12.01} y2={16} stroke={color} strokeWidth={3} strokeLinecap="round" />
+        <line
+          x1={12}
+          y1={8}
+          x2={12}
+          y2={12}
+          {...common}
+          strokeLinecap="round"
+        />
+        <line
+          x1={12}
+          y1={16}
+          x2={12.01}
+          y2={16}
+          stroke={color}
+          strokeWidth={3}
+          strokeLinecap="round"
+        />
       </>
     ),
-  }
+  };
   return (
     <svg width={20} height={20} viewBox="0 0 24 24" fill="none" aria-hidden>
       {paths[name]}
     </svg>
-  )
+  );
 }
 
 export function Wellbeing() {
@@ -95,7 +122,10 @@ export function Wellbeing() {
                   className={styles.icon}
                   style={{ background: TONE_BG[resource.tone] }}
                 >
-                  <Icon name={resource.icon} color={TONE_COLOR[resource.tone]} />
+                  <Icon
+                    name={resource.icon}
+                    color={TONE_COLOR[resource.tone]}
+                  />
                 </span>
                 <div className={styles.name}>{resource.title}</div>
                 <p className={styles.desc}>{resource.description}</p>
@@ -106,5 +136,5 @@ export function Wellbeing() {
         </div>
       </div>
     </section>
-  )
+  );
 }

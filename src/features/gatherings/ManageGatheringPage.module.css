@@ -592,7 +592,11 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 50%, rgba(var(--accent-rgb), 0.2), transparent 60%);
+  background: radial-gradient(
+    circle at 30% 50%,
+    rgba(var(--accent-rgb), 0.2),
+    transparent 60%
+  );
 }
 .sbImgLabel {
   font-family: monospace;

@@ -1,16 +1,20 @@
-import { useState, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { AppShell } from '../../shared/components/layout'
-import { routes } from '../../app/routeMap'
+import { useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { AppShell } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
 import {
   ConnectionCard,
   GatheringCard,
   ReplyCard,
   MentionCard,
   ModerationCard,
-} from './NotificationDeepLinkCards'
-import { NOTIF_TYPES, SUMMARIES, type NotifType } from './notificationDeepLink.data'
-import styles from './NotificationDeepLinkPage.module.css'
+} from "./NotificationDeepLinkCards";
+import {
+  NOTIF_TYPES,
+  SUMMARIES,
+  type NotifType,
+} from "./notificationDeepLink.data";
+import styles from "./NotificationDeepLinkPage.module.css";
 
 const cardFor: Record<NotifType, ReactNode> = {
   connection: <ConnectionCard />,
@@ -18,10 +22,10 @@ const cardFor: Record<NotifType, ReactNode> = {
   reply: <ReplyCard />,
   mention: <MentionCard />,
   moderation: <ModerationCard />,
-}
+};
 
 export function NotificationDeepLinkPage() {
-  const [type, setType] = useState<NotifType>('connection')
+  const [type, setType] = useState<NotifType>("connection");
 
   return (
     <AppShell>
@@ -38,7 +42,7 @@ export function NotificationDeepLinkPage() {
           {NOTIF_TYPES.map((t) => (
             <button
               key={t.id}
-              className={`${styles.typeBtn} ${type === t.id ? styles.active : ''}`}
+              className={`${styles.typeBtn} ${type === t.id ? styles.active : ""}`}
               onClick={() => setType(t.id)}
             >
               {t.label}
@@ -49,5 +53,5 @@ export function NotificationDeepLinkPage() {
         <div className={styles.contentArea}>{cardFor[type]}</div>
       </div>
     </AppShell>
-  )
+  );
 }

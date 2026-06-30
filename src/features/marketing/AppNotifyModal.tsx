@@ -1,26 +1,37 @@
-import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import styles from './MarketingModal.module.css'
+import { useState } from "react";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import styles from "./MarketingModal.module.css";
 
-export type AppPlatform = 'iOS' | 'Android'
+export type AppPlatform = "iOS" | "Android";
 
-export function AppNotifyModal({ platform, onClose }: { platform: AppPlatform; onClose: () => void }) {
-  const [email, setEmail] = useState('')
-  const [sent, setSent] = useState(false)
-  useScrollLock()
+export function AppNotifyModal({
+  platform,
+  onClose,
+}: {
+  platform: AppPlatform;
+  onClose: () => void;
+}) {
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+  useScrollLock();
 
-  const valid = /.+@.+\..+/.test(email)
+  const valid = /.+@.+\..+/.test(email);
 
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={`${styles.modal} ${sent ? styles.modalSuccess : ''}`}>
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+      <div className={`${styles.modal} ${sent ? styles.modalSuccess : ""}`}>
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           ×
         </button>
 
@@ -35,8 +46,8 @@ export function AppNotifyModal({ platform, onClose }: { platform: AppPlatform; o
               We'll let you <em>know.</em>
             </h2>
             <p>
-              You're on the list for the {platform} launch. We'll email <b>{email}</b> the day it lands
-              — and nothing else.
+              You're on the list for the {platform} launch. We'll email{" "}
+              <b>{email}</b> the day it lands — and nothing else.
             </p>
             <Button size="lg" variant="ghost-dark" onClick={onClose}>
               Close
@@ -45,17 +56,20 @@ export function AppNotifyModal({ platform, onClose }: { platform: AppPlatform; o
         ) : (
           <form
             onSubmit={(e) => {
-              e.preventDefault()
-              if (valid) setSent(true)
+              e.preventDefault();
+              if (valid) setSent(true);
             }}
           >
-            <div className={styles.eye}>{platform === 'iOS' ? 'App Store' : 'Google Play'} · coming soon</div>
+            <div className={styles.eye}>
+              {platform === "iOS" ? "App Store" : "Google Play"} · coming soon
+            </div>
             <h2 className={styles.title}>
               QueerPulse is coming to <em>{platform}.</em>
             </h2>
             <p className={styles.lead}>
-              The app isn't in the store yet. Drop your email and we'll let you know the moment the{' '}
-              {platform} build is live. No marketing, no lists you didn't ask for.
+              The app isn't in the store yet. Drop your email and we'll let you
+              know the moment the {platform} build is live. No marketing, no
+              lists you didn't ask for.
             </p>
             <div className={styles.field}>
               <label htmlFor="notify-email">
@@ -69,7 +83,9 @@ export function AppNotifyModal({ platform, onClose }: { platform: AppPlatform; o
                 placeholder="you@example.com"
                 autoFocus
               />
-              <span className={styles.hint}>We'll only use this for the launch heads-up.</span>
+              <span className={styles.hint}>
+                We'll only use this for the launch heads-up.
+              </span>
             </div>
             <div className={styles.foot}>
               <button type="button" className={styles.back} onClick={onClose}>
@@ -83,5 +99,5 @@ export function AppNotifyModal({ platform, onClose }: { platform: AppPlatform; o
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -23,7 +23,10 @@
   line-height: 1.2;
   white-space: nowrap;
   cursor: pointer;
-  transition: border-color 0.16s var(--ease), color 0.16s var(--ease), background 0.16s var(--ease);
+  transition:
+    border-color 0.16s var(--ease),
+    color 0.16s var(--ease),
+    background 0.16s var(--ease);
 }
 .chip:hover {
   border-color: rgba(var(--plum-rgb), 0.3);

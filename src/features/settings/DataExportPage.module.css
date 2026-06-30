@@ -13,7 +13,11 @@
   width: 480px;
   height: 480px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.12), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.12),
+    transparent 60%
+  );
   pointer-events: none;
 }
 
@@ -236,7 +240,9 @@
   border-radius: 12px;
   padding: 14px 16px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
   user-select: none;
 }
 
@@ -260,7 +266,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .dtItemChecked .dtCheck {

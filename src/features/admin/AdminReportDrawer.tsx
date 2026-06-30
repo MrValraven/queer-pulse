@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { FiAlertTriangle, FiShield, FiInfo } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from './ui'
-import { portrait } from './adminPeople.data'
+import { useState } from "react";
+import { FiAlertTriangle, FiShield, FiInfo } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from "./ui";
+import { portrait } from "./adminPeople.data";
 import {
   MOD_ACTIONS,
   MOD_REASONS,
   SEVERITY,
   type ModReport,
   type ReportDetail,
-} from './adminModeration.data'
-import styles from './AdminModerationPage.module.css'
+} from "./adminModeration.data";
+import styles from "./AdminModerationPage.module.css";
 
 /** Reported content + surrounding thread + people involved (read-only context). */
 function ReportContext({ detail }: { detail: ReportDetail }) {
@@ -34,9 +34,16 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
           {detail.thread.map((m, i) => (
             <div
               key={i}
-              className={[styles.dMsg, m.flagged && styles.dMsgFlag].filter(Boolean).join(' ')}
+              className={[styles.dMsg, m.flagged && styles.dMsgFlag]
+                .filter(Boolean)
+                .join(" ")}
             >
-              <AdminAvatar initials={m.initials} tone={m.tone} size="sm" src={portrait(m.author)} />
+              <AdminAvatar
+                initials={m.initials}
+                tone={m.tone}
+                size="sm"
+                src={portrait(m.author)}
+              />
               <div className={styles.dMsgBody}>
                 <div className={styles.dMsgMeta}>
                   <span className={styles.dMsgAuthor}>{m.author}</span>
@@ -69,7 +76,9 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
               <div className={styles.dPersonTx}>
                 <span className={styles.dPersonName}>
                   {p.name}
-                  {p.pronoun && <span className={styles.dPersonPronoun}>{p.pronoun}</span>}
+                  {p.pronoun && (
+                    <span className={styles.dPersonPronoun}>{p.pronoun}</span>
+                  )}
                 </span>
                 <span className={styles.dPersonMeta}>{p.meta}</span>
                 {p.chips && p.chips.length > 0 && (
@@ -87,7 +96,7 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
         </div>
       </section>
     </>
-  )
+  );
 }
 
 export function AdminReportDrawer({
@@ -95,35 +104,41 @@ export function AdminReportDrawer({
   onClose,
   onResolve,
 }: {
-  report: ModReport
-  onClose: () => void
+  report: ModReport;
+  onClose: () => void;
   /** Called when a report leaves the open queue (confirm or escalate). */
-  onResolve: (id: string) => void
+  onResolve: (id: string) => void;
 }) {
-  const { showToast } = useToast()
-  const [action, setAction] = useState<string | null>(null)
-  const [reason, setReason] = useState<string | null>(null)
-  const [note, setNote] = useState('')
+  const { showToast } = useToast();
+  const [action, setAction] = useState<string | null>(null);
+  const [reason, setReason] = useState<string | null>(null);
+  const [note, setNote] = useState("");
 
-  const sev = SEVERITY[report.severity]
-  const detail = report.detail!
+  const sev = SEVERITY[report.severity];
+  const detail = report.detail!;
 
   const handleConfirm = () => {
     if (!action) {
-      showToast('Pick an action before confirming.', 'error')
-      return
+      showToast("Pick an action before confirming.", "error");
+      return;
     }
-    const chosen = MOD_ACTIONS.find((a) => a.id === action)
-    onResolve(report.id)
-    showToast(`${report.reportedName} ${chosen?.done ?? 'actioned'}. The member has been notified.`, 'success')
-    onClose()
-  }
+    const chosen = MOD_ACTIONS.find((a) => a.id === action);
+    onResolve(report.id);
+    showToast(
+      `${report.reportedName} ${chosen?.done ?? "actioned"}. The member has been notified.`,
+      "success",
+    );
+    onClose();
+  };
 
   const handleEscalate = () => {
-    onResolve(report.id)
-    showToast('Escalated to the safety team. They will take it from here.', 'success')
-    onClose()
-  }
+    onResolve(report.id);
+    showToast(
+      "Escalated to the safety team. They will take it from here.",
+      "success",
+    );
+    onClose();
+  };
 
   return (
     <AdminDrawer
@@ -173,7 +188,7 @@ export function AdminReportDrawer({
                 action === a.id && styles.dActionOn,
               ]
                 .filter(Boolean)
-                .join(' ')}
+                .join(" ")}
               onClick={() => setAction(a.id)}
             >
               <span className={styles.dActionLabel}>{a.label}</span>
@@ -185,7 +200,9 @@ export function AdminReportDrawer({
 
       {/* Reason + note */}
       <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>Reason — required, shown to the member</h3>
+        <h3 className={styles.dSecLabel}>
+          Reason — required, shown to the member
+        </h3>
         <div className={styles.dReasons} role="radiogroup" aria-label="Reason">
           {MOD_REASONS.map((r) => (
             <label key={r.id} className={styles.dReason}>
@@ -210,10 +227,10 @@ export function AdminReportDrawer({
           onChange={(e) => setNote(e.target.value)}
         />
         <p className={styles.dTransparency}>
-          <FiInfo aria-hidden /> {report.reportedName} will be told exactly what was actioned and
-          why, with a link to appeal. Nothing happens silently.
+          <FiInfo aria-hidden /> {report.reportedName} will be told exactly what
+          was actioned and why, with a link to appeal. Nothing happens silently.
         </p>
       </section>
     </AdminDrawer>
-  )
+  );
 }

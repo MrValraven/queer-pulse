@@ -1,28 +1,31 @@
-import { useState } from 'react'
-import { ToolPage } from './tools/ToolPage'
-import { DayRateResult } from './DayRateResult'
-import { DAY_RATE_DEFAULTS } from './dayRate.data'
-import { IVA_RATES } from './tax.constants'
-import styles from './DayRateCalculatorPage.module.css'
+import { useState } from "react";
+import { ToolPage } from "./tools/ToolPage";
+import { DayRateResult } from "./DayRateResult";
+import { DAY_RATE_DEFAULTS } from "./dayRate.data";
+import { IVA_RATES } from "./tax.constants";
+import styles from "./DayRateCalculatorPage.module.css";
 
 /** Parse a controlled-input string to a non-negative number, NaN → fallback. */
 const num = (s: string, fallback = 0) => {
-  const n = parseFloat(s)
-  return Number.isFinite(n) ? n : fallback
-}
+  const n = parseFloat(s);
+  return Number.isFinite(n) ? n : fallback;
+};
 
 export function DayRateCalculatorPage() {
-  const [annual, setAnnual] = useState<string>(DAY_RATE_DEFAULTS.annual)
-  const [days, setDays] = useState<string>(DAY_RATE_DEFAULTS.days)
-  const [overhead, setOverhead] = useState<string>(DAY_RATE_DEFAULTS.overhead)
-  const [hoursPerDay, setHoursPerDay] = useState<string>(DAY_RATE_DEFAULTS.hoursPerDay)
-  const [iva, setIva] = useState<string>(DAY_RATE_DEFAULTS.iva)
+  const [annual, setAnnual] = useState<string>(DAY_RATE_DEFAULTS.annual);
+  const [days, setDays] = useState<string>(DAY_RATE_DEFAULTS.days);
+  const [overhead, setOverhead] = useState<string>(DAY_RATE_DEFAULTS.overhead);
+  const [hoursPerDay, setHoursPerDay] = useState<string>(
+    DAY_RATE_DEFAULTS.hoursPerDay,
+  );
+  const [iva, setIva] = useState<string>(DAY_RATE_DEFAULTS.iva);
 
-  const daysN = num(days)
-  const hoursN = num(hoursPerDay)
-  const base = daysN > 0 ? (num(annual) / daysN) * (1 + num(overhead) / 100) : 0
-  const withIva = base * (1 + num(iva) / 100)
-  const hourly = hoursN > 0 ? base / hoursN : 0
+  const daysN = num(days);
+  const hoursN = num(hoursPerDay);
+  const base =
+    daysN > 0 ? (num(annual) / daysN) * (1 + num(overhead) / 100) : 0;
+  const withIva = base * (1 + num(iva) / 100);
+  const hourly = hoursN > 0 ? base / hoursN : 0;
 
   const form = (
     <div className={styles.form}>
@@ -53,7 +56,9 @@ export function DayRateCalculatorPage() {
 
       <div className={styles.row}>
         <label className={styles.field}>
-          <span className={styles.label}>Overhead &amp; expenses (% of income)</span>
+          <span className={styles.label}>
+            Overhead &amp; expenses (% of income)
+          </span>
           <input
             className={styles.input}
             type="number"
@@ -93,7 +98,7 @@ export function DayRateCalculatorPage() {
         </select>
       </label>
     </div>
-  )
+  );
 
   return (
     <ToolPage
@@ -107,5 +112,5 @@ export function DayRateCalculatorPage() {
       form={form}
       preview={<DayRateResult base={base} withIva={withIva} hourly={hourly} />}
     />
-  )
+  );
 }

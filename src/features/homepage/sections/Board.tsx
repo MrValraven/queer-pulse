@@ -1,17 +1,22 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiClipboard } from 'react-icons/fi'
-import { Button, EmptyState, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath, routes } from '../../../app/routeMap'
-import { boardFilters, boardPosts } from '../data/boardPosts'
-import { filterBoardPosts } from '../lib/filters'
-import styles from './Board.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiClipboard } from "react-icons/fi";
+import {
+  Button,
+  EmptyState,
+  Reveal,
+  SectionHead,
+} from "../../../shared/components/ui";
+import { linkToPath, routes } from "../../../app/routeMap";
+import { boardFilters, boardPosts } from "../data/boardPosts";
+import { filterBoardPosts } from "../lib/filters";
+import styles from "./Board.module.css";
 
-type BoardFilter = (typeof boardFilters)[number]['value']
+type BoardFilter = (typeof boardFilters)[number]["value"];
 
 export function Board() {
-  const [filter, setFilter] = useState<BoardFilter>('all')
-  const visible = filterBoardPosts(boardPosts, filter)
+  const [filter, setFilter] = useState<BoardFilter>("all");
+  const visible = filterBoardPosts(boardPosts, filter);
 
   return (
     <section className={styles.board} id="board">
@@ -34,9 +39,12 @@ export function Board() {
               <button
                 key={option.value}
                 type="button"
-                className={[styles.chip, filter === option.value && styles.chipActive]
+                className={[
+                  styles.chip,
+                  filter === option.value && styles.chipActive,
+                ]
                   .filter(Boolean)
-                  .join(' ')}
+                  .join(" ")}
                 onClick={() => setFilter(option.value)}
               >
                 {option.label}
@@ -46,7 +54,7 @@ export function Board() {
           <Button
             variant="ghost"
             to={routes.offer}
-            style={{ fontSize: 13, padding: '9px 17px' }}
+            style={{ fontSize: 13, padding: "9px 17px" }}
           >
             + Post something
           </Button>
@@ -58,28 +66,32 @@ export function Board() {
             icon={<FiClipboard />}
             title="Nothing on the board for that filter"
             description="The noticeboard moves with the week. Clear the filter to see what the room is asking for and offering right now."
-            action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
+            action={{ label: "Clear filters", onClick: () => setFilter("all") }}
           />
         ) : (
-        <div className={styles.grid}>
-          {visible.map((post) => (
-            <Link key={post.href} to={linkToPath(post.href)} className={styles.ask}>
-              <span className={[styles.kind, styles[post.kind]].join(' ')}>
-                {post.kind === 'looking' ? 'Looking for' : 'Offering'}
-              </span>
-              <h3 className={styles.title}>{post.title}</h3>
-              <div className={styles.poster}>
-                <span className={styles.avMini}>{post.posterInitials}</span>
-                <div className={styles.who}>
-                  <b>{post.posterName}</b> · <span>{post.posterMeta}</span>
+          <div className={styles.grid}>
+            {visible.map((post) => (
+              <Link
+                key={post.href}
+                to={linkToPath(post.href)}
+                className={styles.ask}
+              >
+                <span className={[styles.kind, styles[post.kind]].join(" ")}>
+                  {post.kind === "looking" ? "Looking for" : "Offering"}
+                </span>
+                <h3 className={styles.title}>{post.title}</h3>
+                <div className={styles.poster}>
+                  <span className={styles.avMini}>{post.posterInitials}</span>
+                  <div className={styles.who}>
+                    <b>{post.posterName}</b> · <span>{post.posterMeta}</span>
+                  </div>
+                  <span className={styles.age}>{post.age}</span>
                 </div>
-                <span className={styles.age}>{post.age}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
         )}
       </div>
     </section>
-  )
+  );
 }

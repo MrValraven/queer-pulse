@@ -175,7 +175,9 @@
   padding: 18px 20px;
   margin-bottom: 12px;
   cursor: pointer;
-  transition: border-color 0.18s, background 0.18s;
+  transition:
+    border-color 0.18s,
+    background 0.18s;
 }
 .optionSelected {
   border-color: var(--plum);
@@ -596,10 +598,10 @@
   font-weight: 600;
 }
 
-:global([data-theme='dark']) .page {
+:global([data-theme="dark"]) .page {
   background: var(--plum);
 }
-:global([data-theme='dark']) .card {
+:global([data-theme="dark"]) .card {
   border-color: rgba(247, 243, 238, 0.1);
 }
 

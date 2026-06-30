@@ -75,7 +75,9 @@
   padding: 5px 12px;
   font-size: 0.82rem;
   cursor: pointer;
-  transition: border-color 0.18s var(--ease), color 0.18s var(--ease);
+  transition:
+    border-color 0.18s var(--ease),
+    color 0.18s var(--ease);
 }
 
 .recentChip:hover {

@@ -1,46 +1,50 @@
-import { useQuery } from '@tanstack/react-query'
-import { useDemoMode } from '../../../app/providers/DemoModeProvider'
-import { getMember } from '../../members/data/members'
-import { getInvite, type InviteDTO } from './invite.api'
+import { useQuery } from "@tanstack/react-query";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { getMember } from "../../members/data/members";
+import { getInvite, type InviteDTO } from "./invite.api";
 
 /** Page-ready, presentation-normalized invite (status + the inviter's details). */
 export interface InviteView {
-  code: string
-  status: InviteDTO['status']
+  code: string;
+  status: InviteDTO["status"];
   inviter: {
-    slug: string
-    name: string
-    firstName: string
-    initials: string
-    photo?: string
-    since?: string
-  }
-  note?: string
+    slug: string;
+    name: string;
+    firstName: string;
+    initials: string;
+    photo?: string;
+    since?: string;
+  };
+  note?: string;
   /** The inviter's vouch — why they're inviting you — surfaced at onboarding. */
-  vouch?: string
+  vouch?: string;
   /** Pre-formatted expiry, e.g. "12 June 2026". */
-  expiryLabel: string
-  validForDays: number
-  memberCount: number
+  expiryLabel: string;
+  validForDays: number;
+  memberCount: number;
 }
 
 const DEMO_NOTE =
-  '"I\'ve been part of this community for two years now. It\'s the one platform I\'m genuinely glad exists. I think you\'d belong here."'
+  "\"I've been part of this community for two years now. It's the one platform I'm genuinely glad exists. I think you'd belong here.\"";
 const DEMO_VOUCH =
-  'They’re exactly the kind of person this community was built for — thoughtful, creative, and genuinely invested in making queer spaces better.'
+  "They’re exactly the kind of person this community was built for — thoughtful, creative, and genuinely invested in making queer spaces better.";
 
 function initialsOf(first: string, last: string): string {
-  return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase()
+  return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase();
 }
 
 function formatExpiry(iso: string): string {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return ''
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 function dtoToView(dto: InviteDTO): InviteView {
-  const { inviter } = dto
+  const { inviter } = dto;
   return {
     code: dto.code,
     status: dto.status,
@@ -57,15 +61,15 @@ function dtoToView(dto: InviteDTO): InviteView {
     expiryLabel: formatExpiry(dto.expiresAt),
     validForDays: dto.validForDays,
     memberCount: dto.memberCount,
-  }
+  };
 }
 
 /** Demo fallback: the mock inviter (Inês), so the journey works with no backend. */
 function demoInvite(code: string): InviteView {
-  const ines = getMember('ines')!
+  const ines = getMember("ines")!;
   return {
     code,
-    status: 'valid',
+    status: "valid",
     inviter: {
       slug: ines.slug,
       name: `${ines.first} ${ines.last}`,
@@ -76,10 +80,10 @@ function demoInvite(code: string): InviteView {
     },
     note: DEMO_NOTE,
     vouch: DEMO_VOUCH,
-    expiryLabel: '12 June 2026',
+    expiryLabel: "12 June 2026",
     validForDays: 7,
     memberCount: 247,
-  }
+  };
 }
 
 /**
@@ -88,15 +92,15 @@ function demoInvite(code: string): InviteView {
  * real person who sent it (and routes expired/used codes to the expired page).
  */
 export function useInvite(code: string | undefined) {
-  const { demoMode } = useDemoMode()
+  const { demoMode } = useDemoMode();
   return useQuery<InviteView>({
-    queryKey: ['invite', demoMode, code],
+    queryKey: ["invite", demoMode, code],
     enabled: Boolean(code),
     retry: false, // a 404 on a bad code shouldn't be retried
     queryFn: async () => {
-      if (!code) throw new Error('Missing invite code')
-      if (demoMode) return demoInvite(code)
-      return dtoToView(await getInvite(code))
+      if (!code) throw new Error("Missing invite code");
+      if (demoMode) return demoInvite(code);
+      return dtoToView(await getInvite(code));
     },
-  })
+  });
 }

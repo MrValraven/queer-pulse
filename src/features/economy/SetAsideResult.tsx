@@ -1,25 +1,29 @@
-import { useMemo } from 'react'
-import { FiShield } from 'react-icons/fi'
-import { TAX_DISCLAIMER } from './tax.constants'
-import { euro } from './economy.data'
-import type { PotEntry } from './setAside.data'
-import styles from './SetAsidePlannerPage.module.css'
+import { useMemo } from "react";
+import { FiShield } from "react-icons/fi";
+import { TAX_DISCLAIMER } from "./tax.constants";
+import { euro } from "./economy.data";
+import type { PotEntry } from "./setAside.data";
+import styles from "./SetAsidePlannerPage.module.css";
 
 interface SetAsideResultProps {
-  gross: number
-  setAsidePct: number
-  pot: PotEntry[]
+  gross: number;
+  setAsidePct: number;
+  pot: PotEntry[];
 }
 
-export function SetAsideResult({ gross, setAsidePct, pot }: SetAsideResultProps) {
-  const frac = setAsidePct / 100
-  const annualPark = gross * frac
-  const monthlyPark = annualPark / 12
+export function SetAsideResult({
+  gross,
+  setAsidePct,
+  pot,
+}: SetAsideResultProps) {
+  const frac = setAsidePct / 100;
+  const annualPark = gross * frac;
+  const monthlyPark = annualPark / 12;
 
   const { logged, potOwed } = useMemo(() => {
-    const total = pot.reduce((sum, e) => sum + e.amount, 0)
-    return { logged: total, potOwed: total * frac }
-  }, [pot, frac])
+    const total = pot.reduce((sum, e) => sum + e.amount, 0);
+    return { logged: total, potOwed: total * frac };
+  }, [pot, frac]);
 
   return (
     <div className={styles.result}>
@@ -31,8 +35,9 @@ export function SetAsideResult({ gross, setAsidePct, pot }: SetAsideResultProps)
           Set aside <em>{setAsidePct}%</em> of every euro you invoice.
         </h2>
         <p className={styles.panelBody}>
-          On your expected {euro(gross)}, that's about {euro(monthlyPark)} a month
-          you keep aside for the IRS and Segurança Social — and don't spend.
+          On your expected {euro(gross)}, that's about {euro(monthlyPark)} a
+          month you keep aside for the IRS and Segurança Social — and don't
+          spend.
         </p>
       </div>
 
@@ -51,18 +56,18 @@ export function SetAsideResult({ gross, setAsidePct, pot }: SetAsideResultProps)
         <div className={styles.potHead}>
           <span className={styles.potLabel}>Your set-aside pot</span>
           <span className={styles.potCount}>
-            {pot.length} invoice{pot.length === 1 ? '' : 's'} logged
+            {pot.length} invoice{pot.length === 1 ? "" : "s"} logged
           </span>
         </div>
         <p className={styles.potTotal}>{euro(potOwed)}</p>
         <p className={styles.potSub}>
           {pot.length === 0
-            ? 'Log your first invoice to start the pot.'
+            ? "Log your first invoice to start the pot."
             : `${setAsidePct}% of the ${euro(logged)} you've logged so far. Keep this much untouched.`}
         </p>
       </div>
 
       <p className={styles.disclaimer}>{TAX_DISCLAIMER}</p>
     </div>
-  )
+  );
 }

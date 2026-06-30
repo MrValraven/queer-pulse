@@ -26,7 +26,7 @@
   font-size: clamp(38px, 5.5vw, 72px);
   color: var(--plum);
   letter-spacing: -0.025em;
-  line-height: 1.0;
+  line-height: 1;
   max-width: 18ch;
   margin: 0 auto;
 }
@@ -340,8 +340,8 @@
   }
 }
 
-:global([data-theme='dark']) .tier,
-:global([data-theme='dark']) .payCard,
-:global([data-theme='dark']) .ls {
+:global([data-theme="dark"]) .tier,
+:global([data-theme="dark"]) .payCard,
+:global([data-theme="dark"]) .ls {
   border-color: rgba(247, 243, 238, 0.1);
 }

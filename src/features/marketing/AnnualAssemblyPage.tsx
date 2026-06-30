@@ -1,64 +1,105 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiCheck } from 'react-icons/fi'
-import { PageShell } from '../../shared/components/layout'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { Button } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { AgendaSection, VoteSection, AttendCard, PastAssembliesSection } from './AnnualAssemblySections'
-import styles from './AnnualAssemblyPage.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiCheck } from "react-icons/fi";
+import { PageShell } from "../../shared/components/layout";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import {
+  AgendaSection,
+  VoteSection,
+  AttendCard,
+  PastAssembliesSection,
+} from "./AnnualAssemblySections";
+import styles from "./AnnualAssemblyPage.module.css";
 
-const TOTAL_SPOTS = 120
-const SPOTS_TAKEN = 87
+const TOTAL_SPOTS = 120;
+const SPOTS_TAKEN = 87;
 
 export function AnnualAssemblyPage() {
-  const { showToast } = useToast()
-  const [rsvped, setRsvped] = useState(false)
-  const spotsLeft = TOTAL_SPOTS - (rsvped ? SPOTS_TAKEN + 1 : SPOTS_TAKEN)
+  const { showToast } = useToast();
+  const [rsvped, setRsvped] = useState(false);
+  const spotsLeft = TOTAL_SPOTS - (rsvped ? SPOTS_TAKEN + 1 : SPOTS_TAKEN);
 
   const toggleRsvp = () => {
     if (rsvped) {
-      setRsvped(false)
-      showToast('RSVP cancelled · your seat is back in the pool', 'info')
+      setRsvped(false);
+      showToast("RSVP cancelled · your seat is back in the pool", "info");
     } else {
-      setRsvped(true)
-      showToast("You're on the list · see you 14 Nov", 'success')
+      setRsvped(true);
+      showToast("You're on the list · see you 14 Nov", "success");
     }
-  }
+  };
 
   return (
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <div className={styles.eyebrow}>Annual Assembly · 14 November 2026 · Lisbon</div>
+          <div className={styles.eyebrow}>
+            Annual Assembly · 14 November 2026 · Lisbon
+          </div>
           <h1 className={styles.h1}>
             Two days, eleven <em>resolutions.</em>
           </h1>
           <p className={styles.dek}>
-            QueerPulse's binding annual gathering. Where the manifesto gets revised, the budget gets approved,
-            and any decision that can't be made by a circle goes to a member vote.{' '}
-            <em>You can attend in person, online, or just read the minutes after</em> — but your vote counts the same.
+            QueerPulse's binding annual gathering. Where the manifesto gets
+            revised, the budget gets approved, and any decision that can't be
+            made by a circle goes to a member vote.{" "}
+            <em>
+              You can attend in person, online, or just read the minutes after
+            </em>{" "}
+            — but your vote counts the same.
           </p>
           <div className={styles.meta}>
-            <span><b>14 — 15 Nov</b>Two days · Sat &amp; Sun</span>
-            <span><b><em>Atelier Pulso</em></b>+ video link</span>
-            <span><b>1,847</b>Members eligible to vote</span>
-            <span><b><em>184</em></b>Quorum · met</span>
+            <span>
+              <b>14 — 15 Nov</b>Two days · Sat &amp; Sun
+            </span>
+            <span>
+              <b>
+                <em>Atelier Pulso</em>
+              </b>
+              + video link
+            </span>
+            <span>
+              <b>1,847</b>Members eligible to vote
+            </span>
+            <span>
+              <b>
+                <em>184</em>
+              </b>
+              Quorum · met
+            </span>
           </div>
           <div className={styles.ctaRow}>
-            <Button href="#vote" variant="primary">Vote now · 11 resolutions</Button>
+            <Button href="#vote" variant="primary">
+              Vote now · 11 resolutions
+            </Button>
             <Button
               type="button"
-              variant={rsvped ? 'jade' : 'ghost-dark'}
+              variant={rsvped ? "jade" : "ghost-dark"}
               onClick={toggleRsvp}
             >
               {rsvped ? (
-                <><FiCheck aria-hidden style={{ marginRight: 6, verticalAlign: '-2px' }} />You're going · tap to cancel</>
+                <>
+                  <FiCheck
+                    aria-hidden
+                    style={{ marginRight: 6, verticalAlign: "-2px" }}
+                  />
+                  You're going · tap to cancel
+                </>
               ) : (
-                <>RSVP in-person · {spotsLeft} of {TOTAL_SPOTS} spots left</>
+                <>
+                  RSVP in-person · {spotsLeft} of {TOTAL_SPOTS} spots left
+                </>
               )}
             </Button>
-            <Button type="button" variant="ghost-dark" onClick={() => showToast('Opening Zoom link…', 'info')}>Join online · Zoom link</Button>
+            <Button
+              type="button"
+              variant="ghost-dark"
+              onClick={() => showToast("Opening Zoom link…", "info")}
+            >
+              Join online · Zoom link
+            </Button>
           </div>
         </div>
       </section>
@@ -69,9 +110,11 @@ export function AnnualAssemblyPage() {
         <AttendCard />
         <PastAssembliesSection />
         <div className={styles.footer}>
-          Questions about your eligibility? <Link to={routes.help}>Help →</Link> · Want to submit a member proposal for next year? <Link to={routes.contact}>Write to us</Link>.
+          Questions about your eligibility? <Link to={routes.help}>Help →</Link>{" "}
+          · Want to submit a member proposal for next year?{" "}
+          <Link to={routes.contact}>Write to us</Link>.
         </div>
       </div>
     </PageShell>
-  )
+  );
 }

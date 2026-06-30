@@ -1,9 +1,9 @@
-import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import type { PublicCard } from './publicProfile.data'
-import styles from './PublicProfilePage.module.css'
+import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import type { PublicCard } from "./publicProfile.data";
+import styles from "./PublicProfilePage.module.css";
 
 export function PublicList({
   heading,
@@ -11,10 +11,10 @@ export function PublicList({
   cards,
   to,
 }: {
-  heading: ReactNode
-  meta: string
-  cards: PublicCard[]
-  to: string
+  heading: ReactNode;
+  meta: string;
+  cards: PublicCard[];
+  to: string;
 }) {
   return (
     <section className={styles.sec}>
@@ -32,7 +32,7 @@ export function PublicList({
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 export function LockedSection({
@@ -43,12 +43,12 @@ export function LockedSection({
   body,
   action,
 }: {
-  heading: ReactNode
-  meta: string
-  icon: ReactNode
-  title: ReactNode
-  body: string
-  action: ReactNode
+  heading: ReactNode;
+  meta: string;
+  icon: ReactNode;
+  title: ReactNode;
+  body: string;
+  action: ReactNode;
 }) {
   return (
     <section className={styles.sec}>
@@ -63,7 +63,7 @@ export function LockedSection({
         {action}
       </div>
     </section>
-  )
+  );
 }
 
 export function BottomCta() {
@@ -74,8 +74,8 @@ export function BottomCta() {
           Want the <em>full picture?</em>
         </h3>
         <p>
-          QueerPulse is invite-based — Tomás can vouch for you if you've met in person. Or request an
-          invite from us directly.
+          QueerPulse is invite-based — Tomás can vouch for you if you've met in
+          person. Or request an invite from us directly.
         </p>
       </div>
       <div className={styles.bottomCtaActions}>
@@ -87,5 +87,5 @@ export function BottomCta() {
         </Button>
       </div>
     </div>
-  )
+  );
 }

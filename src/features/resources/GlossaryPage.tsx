@@ -64,7 +64,10 @@ export function GlossaryPage() {
 
   const blocks = BLOCKS.map((b) => ({
     ...b,
-    terms: b.terms.filter((term) => !q || term.search.includes(q) || term.name.toLowerCase().includes(q)),
+    terms: b.terms.filter(
+      (term) =>
+        !q || term.search.includes(q) || term.name.toLowerCase().includes(q),
+    ),
   })).filter((b) => b.terms.length > 0);
 
   const empty = q && blocks.length === 0;
@@ -79,10 +82,12 @@ export function GlossaryPage() {
               A working <em>glossary.</em>
             </h1>
             <p className={styles.dek}>
-              Words used here — across the platform, in the magazine, at gatherings.{" "}
-              <b>Definitions are working drafts.</b> Where a term is contested, we say
-              so. Where it's Lisbon-specific, we mark it.{" "}
-              <em>Suggest edits at the bottom; the editors look at them weekly.</em>
+              Words used here — across the platform, in the magazine, at
+              gatherings. <b>Definitions are working drafts.</b> Where a term is
+              contested, we say so. Where it's Lisbon-specific, we mark it.{" "}
+              <em>
+                Suggest edits at the bottom; the editors look at them weekly.
+              </em>
             </p>
           </div>
         </section>
@@ -135,35 +140,49 @@ export function GlossaryPage() {
 
           {loading && <GlossarySkeleton />}
 
-          {!loading && blocks.map((b, bi) => (
-            <FadeIn
-              as="div"
-              className={styles.letterBlock}
-              id={b.letter}
-              key={b.letter}
-              delay={Math.min(bi, 8) * 60}
-            >
-              <div className={styles.letterH}>{b.letter}</div>
-              <div className={styles.termList}>
-                {b.terms.map((term) => (
-                  <div className={styles.term} key={term.name}>
-                    <div className={styles.termRow}>
-                      <div className={styles.termName}>{term.name}</div>
-                      <span className={[styles.termType, term.typeKind && styles[TYPE_CLASS[term.typeKind]]].filter(Boolean).join(" ")}>
-                        {lang === "pt" ? term.typePt : term.type}
-                      </span>
-                    </div>
-                    <div className={styles.termDef}>{lang === "pt" ? term.defPt : term.def}</div>
-                    {(lang === "pt" ? term.metaPt ?? term.meta : term.meta) && (
-                      <div className={styles.termMeta}>
-                        {lang === "pt" ? term.metaPt ?? term.meta : term.meta}
+          {!loading &&
+            blocks.map((b, bi) => (
+              <FadeIn
+                as="div"
+                className={styles.letterBlock}
+                id={b.letter}
+                key={b.letter}
+                delay={Math.min(bi, 8) * 60}
+              >
+                <div className={styles.letterH}>{b.letter}</div>
+                <div className={styles.termList}>
+                  {b.terms.map((term) => (
+                    <div className={styles.term} key={term.name}>
+                      <div className={styles.termRow}>
+                        <div className={styles.termName}>{term.name}</div>
+                        <span
+                          className={[
+                            styles.termType,
+                            term.typeKind && styles[TYPE_CLASS[term.typeKind]],
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                        >
+                          {lang === "pt" ? term.typePt : term.type}
+                        </span>
                       </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </FadeIn>
-          ))}
+                      <div className={styles.termDef}>
+                        {lang === "pt" ? term.defPt : term.def}
+                      </div>
+                      {(lang === "pt"
+                        ? (term.metaPt ?? term.meta)
+                        : term.meta) && (
+                        <div className={styles.termMeta}>
+                          {lang === "pt"
+                            ? (term.metaPt ?? term.meta)
+                            : term.meta}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </FadeIn>
+            ))}
 
           {empty && (
             <div className={styles.noResults}>
@@ -180,10 +199,12 @@ export function GlossaryPage() {
           <div className={styles.footInner}>
             <h3>{t.footTitle}</h3>
             <p>
-              This is a working document. Suggestions are read by the editorial team
-              weekly and discussed at the monthly assembly.{" "}
-              <em>We will get things wrong; we'd rather get them wrong publicly and
-              fix them.</em>
+              This is a working document. Suggestions are read by the editorial
+              team weekly and discussed at the monthly assembly.{" "}
+              <em>
+                We will get things wrong; we'd rather get them wrong publicly
+                and fix them.
+              </em>
             </p>
             <Button to={CONTACT} variant="primary">
               {t.suggestEdit}

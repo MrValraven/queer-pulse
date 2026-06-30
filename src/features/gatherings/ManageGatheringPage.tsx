@@ -4,7 +4,10 @@ import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
-import { ManageGatheringTabs, ManageGatheringSidebar } from "./ManageGatheringTabs";
+import {
+  ManageGatheringTabs,
+  ManageGatheringSidebar,
+} from "./ManageGatheringTabs";
 import { EditDetailsModal } from "./EditDetailsModal";
 import { MessageAttendeesModal } from "./MessageAttendeesModal";
 import {
@@ -39,8 +42,10 @@ export function ManageGatheringPage() {
   const [editOpen, setEditOpen] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
 
-  const dateDetail = GATHERING_DETAILS.find((d) => d.label === "Date")?.value ?? "";
-  const venueDetail = GATHERING_DETAILS.find((d) => d.label === "Venue")?.value ?? "";
+  const dateDetail =
+    GATHERING_DETAILS.find((d) => d.label === "Date")?.value ?? "";
+  const venueDetail =
+    GATHERING_DETAILS.find((d) => d.label === "Venue")?.value ?? "";
 
   const [gathering, setGathering] = useState<GatheringState>({
     title: GATHERING_TITLE,
@@ -51,7 +56,9 @@ export function ManageGatheringPage() {
   });
 
   const cancelGathering = () => {
-    if (window.confirm("Cancel Pride Brunch? All 14 attendees will be notified.")) {
+    if (
+      window.confirm("Cancel Pride Brunch? All 14 attendees will be notified.")
+    ) {
       navigate(routes.gatheringCancelled);
     }
   };
@@ -78,13 +85,25 @@ export function ManageGatheringPage() {
                 <div className={styles.statusDot} /> Approved · 12 days to go
               </div>
               <div className={styles.actions}>
-                <Button variant="ghost" className={styles.actionBtn} onClick={() => setEditOpen(true)}>
+                <Button
+                  variant="ghost"
+                  className={styles.actionBtn}
+                  onClick={() => setEditOpen(true)}
+                >
                   Edit details
                 </Button>
-                <Button variant="ghost" className={styles.actionBtn} onClick={() => setMessageOpen(true)}>
+                <Button
+                  variant="ghost"
+                  className={styles.actionBtn}
+                  onClick={() => setMessageOpen(true)}
+                >
                   Message attendees
                 </Button>
-                <Button variant="primary" className={styles.actionBtn} to={routes.gatheringDashboard}>
+                <Button
+                  variant="primary"
+                  className={styles.actionBtn}
+                  to={routes.gatheringDashboard}
+                >
                   Day-of dashboard →
                 </Button>
               </div>
@@ -97,9 +116,13 @@ export function ManageGatheringPage() {
               details={gathering.details}
               description={gathering.description}
               onUpdateDetail={updateDetail}
-              onUpdateDescription={(value) => setGathering((g) => ({ ...g, description: value }))}
+              onUpdateDescription={(value) =>
+                setGathering((g) => ({ ...g, description: value }))
+              }
             />
-            <ManageGatheringSidebar onCopyLink={() => showToast("Link copied!", "success")} />
+            <ManageGatheringSidebar
+              onCopyLink={() => showToast("Link copied!", "success")}
+            />
           </div>
         </div>
       </div>
@@ -121,7 +144,11 @@ export function ManageGatheringPage() {
               location: draft.location,
               description: draft.description,
               details: g.details.map((d) =>
-                d.label === "Date" ? { ...d, value: draft.date } : d.label === "Venue" ? { ...d, value: draft.location } : d,
+                d.label === "Date"
+                  ? { ...d, value: draft.date }
+                  : d.label === "Venue"
+                    ? { ...d, value: draft.location }
+                    : d,
               ),
             }))
           }
@@ -129,7 +156,10 @@ export function ManageGatheringPage() {
       )}
 
       {messageOpen && (
-        <MessageAttendeesModal attendeeCount={ATTENDEE_COUNT} onClose={() => setMessageOpen(false)} />
+        <MessageAttendeesModal
+          attendeeCount={ATTENDEE_COUNT}
+          onClose={() => setMessageOpen(false)}
+        />
       )}
     </PageShell>
   );

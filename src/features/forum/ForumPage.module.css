@@ -308,6 +308,6 @@
   }
 }
 
-:global([data-theme='dark']) .voteUp {
+:global([data-theme="dark"]) .voteUp {
   border-color: rgba(247, 243, 238, 0.14);
 }

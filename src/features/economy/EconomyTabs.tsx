@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiDollarSign } from 'react-icons/fi'
-import { Avatar, Button, EmptyState } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { fullName, getMember } from '../members/data/members'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiDollarSign } from "react-icons/fi";
+import { Avatar, Button, EmptyState } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { fullName, getMember } from "../members/data/members";
 import {
   BADGE_CLASS,
   CALC_TOOLS,
@@ -15,14 +15,20 @@ import {
   TOOLS,
   type Sector,
   type ToolCard,
-} from './economy.data'
-import { SalarySubmitModal } from './SalarySubmitModal'
-import { CohortApplyModal, MentorSignupModal, RequestSessionModal } from './IncubatorModals'
-import styles from './EconomyPage.module.css'
+} from "./economy.data";
+import { SalarySubmitModal } from "./SalarySubmitModal";
+import {
+  CohortApplyModal,
+  MentorSignupModal,
+  RequestSessionModal,
+} from "./IncubatorModals";
+import styles from "./EconomyPage.module.css";
 
 export function IncubatorTab() {
-  const [modal, setModal] = useState<'cohort' | 'mentor' | null>(null)
-  const [session, setSession] = useState<(typeof INC_MENTORS)[number] | null>(null)
+  const [modal, setModal] = useState<"cohort" | "mentor" | null>(null);
+  const [session, setSession] = useState<(typeof INC_MENTORS)[number] | null>(
+    null,
+  );
   return (
     <>
       <div className={styles.incHeroBox}>
@@ -31,14 +37,24 @@ export function IncubatorTab() {
             A space to build <em>your</em> thing.
           </div>
           <p className={styles.incP}>
-            The QueerPulse incubator supports queer founders in Lisbon with six months of structured
-            mentorship, peer accountability, and connections to investors and collaborators who get it.
+            The QueerPulse incubator supports queer founders in Lisbon with six
+            months of structured mentorship, peer accountability, and
+            connections to investors and collaborators who get it.
           </p>
           <div className={styles.incBtns}>
-            <Button type="button" variant="primary" onClick={() => setModal('cohort')}>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => setModal("cohort")}
+            >
               Apply for cohort 3
             </Button>
-            <Button type="button" variant="ghost-dark" onClick={() => setModal('mentor')} style={{ fontSize: 14 }}>
+            <Button
+              type="button"
+              variant="ghost-dark"
+              onClick={() => setModal("mentor")}
+              style={{ fontSize: 14 }}
+            >
               Become a mentor
             </Button>
           </div>
@@ -83,8 +99,8 @@ export function IncubatorTab() {
           </h3>
           <div className={styles.mentorGrid}>
             {INC_MENTORS.map((m) => {
-              const member = getMember(m.slug)
-              if (!member) return null
+              const member = getMember(m.slug);
+              if (!member) return null;
               return (
                 <div className={styles.mentorCard} key={m.slug}>
                   <div className={styles.mentorTop}>
@@ -96,7 +112,10 @@ export function IncubatorTab() {
                       size={50}
                     />
                     <div>
-                      <Link to={`/members/${member.slug}`} className={styles.mentorName}>
+                      <Link
+                        to={`/members/${member.slug}`}
+                        className={styles.mentorName}
+                      >
                         {fullName(member)}
                       </Link>
                       <div className={styles.mentorRole}>{member.role}</div>
@@ -109,32 +128,40 @@ export function IncubatorTab() {
                       </span>
                     ))}
                   </div>
-                  <button type="button" className={styles.mentorBtn} onClick={() => setSession(m)}>
+                  <button
+                    type="button"
+                    className={styles.mentorBtn}
+                    onClick={() => setSession(m)}
+                  >
                     Request session
                   </button>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
       </div>
 
-      {modal === 'cohort' && <CohortApplyModal onClose={() => setModal(null)} />}
-      {modal === 'mentor' && <MentorSignupModal onClose={() => setModal(null)} />}
+      {modal === "cohort" && (
+        <CohortApplyModal onClose={() => setModal(null)} />
+      )}
+      {modal === "mentor" && (
+        <MentorSignupModal onClose={() => setModal(null)} />
+      )}
       {session &&
         (() => {
-          const member = getMember(session.slug)
-          if (!member) return null
+          const member = getMember(session.slug);
+          if (!member) return null;
           return (
             <RequestSessionModal
               mentorName={fullName(member)}
               mentorRole={member.role}
               onClose={() => setSession(null)}
             />
-          )
+          );
         })()}
     </>
-  )
+  );
 }
 
 /** A grid of launcher cards linking out to the real tool pages. */
@@ -143,14 +170,16 @@ function ToolGrid({ tools }: { tools: ToolCard[] }) {
     <div className={styles.toolsGrid}>
       {tools.map((t) => (
         <Link className={styles.toolCard} key={t.title} to={t.to}>
-          <div className={styles.toolIcon}><t.icon /></div>
+          <div className={styles.toolIcon}>
+            <t.icon />
+          </div>
           <div className={styles.toolTitle}>{t.title}</div>
           <div className={styles.toolDesc}>{t.desc}</div>
           <span className={styles.toolCtaBtn}>{t.cta} →</span>
         </Link>
       ))}
     </div>
-  )
+  );
 }
 
 export function FreelanceTab() {
@@ -162,8 +191,9 @@ export function FreelanceTab() {
             Freelance <em>tools.</em>
           </h2>
           <p className={styles.econSub}>
-            Real, working tools — built by and for queer freelancers in Portugal. Free, no sign-up,
-            and nothing you enter leaves your device.
+            Real, working tools — built by and for queer freelancers in
+            Portugal. Free, no sign-up, and nothing you enter leaves your
+            device.
           </p>
         </div>
       </div>
@@ -183,14 +213,16 @@ export function FreelanceTab() {
       </h3>
       <ToolGrid tools={COMMUNITY_TOOLS} />
     </>
-  )
+  );
 }
 
 export function SalaryTab() {
-  const { showToast } = useToast()
-  const [sector, setSector] = useState<Sector | 'all'>('all')
-  const [modal, setModal] = useState(false)
-  const salaries = SALARIES.filter((s) => sector === 'all' || s.sector === sector)
+  const { showToast } = useToast();
+  const [sector, setSector] = useState<Sector | "all">("all");
+  const [modal, setModal] = useState(false);
+  const salaries = SALARIES.filter(
+    (s) => sector === "all" || s.sector === sector,
+  );
 
   return (
     <>
@@ -200,11 +232,15 @@ export function SalaryTab() {
             Salary <em>transparency.</em>
           </h2>
           <p className={styles.econSub}>
-            Anonymous submissions from the community. Filter by sector, role, or type. Knowledge is
-            power.
+            Anonymous submissions from the community. Filter by sector, role, or
+            type. Knowledge is power.
           </p>
         </div>
-        <button type="button" className={styles.primaryBtn} onClick={() => setModal(true)}>
+        <button
+          type="button"
+          className={styles.primaryBtn}
+          onClick={() => setModal(true)}
+        >
           + Submit yours
         </button>
       </div>
@@ -213,7 +249,9 @@ export function SalaryTab() {
           <button
             key={f.id}
             type="button"
-            className={[styles.salChip, sector === f.id && styles.salChipActive].filter(Boolean).join(' ')}
+            className={[styles.salChip, sector === f.id && styles.salChipActive]
+              .filter(Boolean)
+              .join(" ")}
             onClick={() => setSector(f.id)}
           >
             {f.label}
@@ -233,7 +271,7 @@ export function SalaryTab() {
             icon={<FiDollarSign />}
             title="No entries in this sector yet"
             description="Nothing's been shared for this sector so far. Clear the filter to see every submission — or add yours to help the next person negotiate."
-            action={{ label: 'Clear filters', onClick: () => setSector('all') }}
+            action={{ label: "Clear filters", onClick: () => setSector("all") }}
           />
         ) : (
           salaries.map((s, i) => (
@@ -242,27 +280,38 @@ export function SalaryTab() {
                 <div className={styles.salRole}>{s.role}</div>
                 <div className={styles.salSector}>{s.sectorLabel}</div>
               </div>
-              <div className={`${styles.salCell} ${styles.salMoney}`}>{s.money}</div>
+              <div className={`${styles.salCell} ${styles.salMoney}`}>
+                {s.money}
+              </div>
               <div className={styles.salCell}>
                 <span className={styles.salExp}>{s.exp}</span>
               </div>
               <div className={`${styles.salCell} ${styles.salTypeCol}`}>
-                <span className={`${styles.salBadge} ${styles[BADGE_CLASS[s.type]]}`}>{s.typeLabel}</span>
+                <span
+                  className={`${styles.salBadge} ${styles[BADGE_CLASS[s.type]]}`}
+                >
+                  {s.typeLabel}
+                </span>
               </div>
             </div>
           ))
         )}
       </div>
       <div className={styles.salAnon}>
-        All entries are anonymous. No name, email, or employer is stored. Entries are reviewed by a
-        moderator before appearing.
+        All entries are anonymous. No name, email, or employer is stored.
+        Entries are reviewed by a moderator before appearing.
       </div>
       <div className={styles.salSubmitBox}>
         <p>
-          Help the community by sharing what you earn. The more entries, the more useful this becomes
-          for everyone — especially people just starting to negotiate.
+          Help the community by sharing what you earn. The more entries, the
+          more useful this becomes for everyone — especially people just
+          starting to negotiate.
         </p>
-        <button type="button" className={styles.primaryBtn} onClick={() => setModal(true)}>
+        <button
+          type="button"
+          className={styles.primaryBtn}
+          onClick={() => setModal(true)}
+        >
           Submit your salary
         </button>
       </div>
@@ -271,11 +320,11 @@ export function SalaryTab() {
         <SalarySubmitModal
           onClose={() => setModal(false)}
           onSubmit={() => {
-            setModal(false)
-            showToast('Submitted anonymously — thank you', 'success')
+            setModal(false);
+            showToast("Submitted anonymously — thank you", "success");
           }}
         />
       )}
     </>
-  )
+  );
 }

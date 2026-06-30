@@ -29,8 +29,8 @@ export function SoberHonestSection(_props: SoberHonestSectionProps) {
               opting out.
             </p>
             <p>
-              This space is for people who want community and joy without alcohol
-              at the centre — for any reason, no explanation required.
+              This space is for people who want community and joy without
+              alcohol at the centre — for any reason, no explanation required.
             </p>
           </div>
           <div className={styles.stats}>
@@ -51,7 +51,9 @@ interface SoberVenuesSectionProps {
   safeSpacesPath: string;
 }
 
-export function SoberVenuesSection({ safeSpacesPath }: SoberVenuesSectionProps) {
+export function SoberVenuesSection({
+  safeSpacesPath,
+}: SoberVenuesSectionProps) {
   return (
     <div className={`${styles.sec} ${styles.secCream}`}>
       <div className="wrap">
@@ -71,7 +73,9 @@ export function SoberVenuesSection({ safeSpacesPath }: SoberVenuesSectionProps) 
               <div className={styles.vcDesc}>{v.desc}</div>
               <div className={styles.vcTags}>
                 {v.tags.map((t) => (
-                  <span key={t} className={styles.vcTag}>{t}</span>
+                  <span key={t} className={styles.vcTag}>
+                    {t}
+                  </span>
                 ))}
               </div>
             </div>
@@ -102,7 +106,10 @@ export function SoberVoicesSection() {
             <div className={styles.voiceCard} key={v.name}>
               <div className={styles.voiceQuote}>{v.quote}</div>
               <div className={styles.voiceWho}>
-                <div className={styles.voiceAv} style={{ background: v.avBg, color: v.avCol }}>
+                <div
+                  className={styles.voiceAv}
+                  style={{ background: v.avBg, color: v.avCol }}
+                >
                   {v.av}
                 </div>
                 <div>
@@ -132,8 +139,8 @@ export function SoberRecoverySection({ linkMap }: SoberRecoverySectionProps) {
           </h3>
           <p>
             This isn't only about lifestyle preference. If you're in recovery —
-            from alcohol, substances, or anything else — there are people here who
-            understand. No advice unless you ask for it.
+            from alcohol, substances, or anything else — there are people here
+            who understand. No advice unless you ask for it.
           </p>
           <div className={styles.recoveryOpts}>
             {RECOVERY_OPTS.map((o) => (

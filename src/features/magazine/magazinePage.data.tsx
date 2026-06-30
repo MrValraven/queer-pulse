@@ -62,7 +62,7 @@ export const FEATURES: Card[] = [
   {
     id: "mouraria-family",
     kicker: "Community",
-    title:"Mouraria's chosen family, ten years later",
+    title: "Mouraria's chosen family, ten years later",
     excerpt:
       "The original group is scattered. Some left Lisbon. Two died. The rest still meet on the same corner. A decade on, what holds a chosen family together?",
     author: memberName("ines"),
@@ -75,7 +75,7 @@ export const FEATURES: Card[] = [
   {
     id: "last-bar",
     kicker: "Nightlife",
-    title:"The last queer bar in Bairro Alto that isn't trying",
+    title: "The last queer bar in Bairro Alto that isn't trying",
     excerpt:
       "No Instagram. No theme nights. No cocktail menu. Just a room, a sound system, and forty years of the community walking through the same door.",
     author: memberName("diogo"),
@@ -89,7 +89,7 @@ export const FEATURES: Card[] = [
   {
     id: "housing-law",
     kicker: "Politics",
-    title:"What the new housing law actually means for us",
+    title: "What the new housing law actually means for us",
     excerpt:
       "The legislation passed in April. We spoke to three housing lawyers and four community members already living its consequences.",
     author: "Mariana Costa",
@@ -158,7 +158,7 @@ export const INTERVIEWS: Card[] = [
   {
     id: "kiko-neves",
     kicker: "Music",
-    title:'"The audience at my worst gig taught me more than my best one"',
+    title: '"The audience at my worst gig taught me more than my best one"',
     excerpt:
       "Kiko Neves on improvisation, Marvila, and what it means to make queer jazz in a city that hasn't quite decided what it is yet.",
     author: memberName("sofia"),
@@ -171,8 +171,7 @@ export const INTERVIEWS: Card[] = [
   {
     id: "beatriz-pinto",
     kicker: "Art & Craft",
-    title:
-      "Beatriz Pinto: making things that will outlast the conversation",
+    title: "Beatriz Pinto: making things that will outlast the conversation",
     excerpt:
       "The ceramicist on slowness, the politics of functional objects, and why she hasn't installed a social media account.",
     author: memberName("ines"),
@@ -185,7 +184,7 @@ export const INTERVIEWS: Card[] = [
   {
     id: "ilga-director",
     kicker: "Activism",
-    title:"ILGA Portugal's new director on what the next decade requires",
+    title: "ILGA Portugal's new director on what the next decade requires",
     excerpt:
       "A conversation about what has changed, what hasn't, and why the movement's most important work is happening in places that aren't visible yet.",
     author: "Mariana Costa",
@@ -237,7 +236,7 @@ export const REVIEWS: Card[] = [
   {
     id: "review-sereia",
     kicker: "Venue",
-    title:"Sereia, Intendente — a bar that wants to be boring",
+    title: "Sereia, Intendente — a bar that wants to be boring",
     excerpt:
       "Six weeks old, no theme nights, no Instagram. Sereia is attempting something rare in a new queer bar: to simply be somewhere you can drink slowly and talk.",
     author: memberName("sofia"),
@@ -254,7 +253,7 @@ export const COMMUNITY: Card[] = [
   {
     id: "sunday-table",
     kicker: "Gathering",
-    title:"The Sunday table at Esplanada do Intendente",
+    title: "The Sunday table at Esplanada do Intendente",
     excerpt:
       "Three years of eight to twenty-three people gathering every Sunday for an event that has no organiser, no invitation, and no agenda. A portrait.",
     author: memberName("ines"),
@@ -267,7 +266,7 @@ export const COMMUNITY: Card[] = [
   {
     id: "barter-board",
     kicker: "Economy",
-    title:"How the barter board actually works",
+    title: "How the barter board actually works",
     excerpt:
       "Legal advice for language lessons. Ceramics for photography. Therapy for dog-sitting. Eighteen months in, the barter board has become something nobody predicted.",
     author: "Mariana Costa",
@@ -280,7 +279,7 @@ export const COMMUNITY: Card[] = [
   {
     id: "archive-night",
     kicker: "Memory",
-    title:"The Archive Night: memory as infrastructure",
+    title: "The Archive Night: memory as infrastructure",
     excerpt:
       "On the last Friday of each month, a room in Mouraria fills with people talking about queer Lisbon history — the kind held in boxes under beds, not institutions.",
     author: "Rui Fernandes",

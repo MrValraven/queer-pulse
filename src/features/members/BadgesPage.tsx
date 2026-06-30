@@ -1,9 +1,14 @@
-import { Link } from 'react-router-dom'
-import { AppShell } from '../../shared/components/layout'
-import { routes } from '../../app/routeMap'
-import { LevelCard, EarnedBadges, LockedBadges, PerksLadder } from './BadgesSections'
-import { levelInfo } from './badges.data'
-import styles from './BadgesPage.module.css'
+import { Link } from "react-router-dom";
+import { AppShell } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
+import {
+  LevelCard,
+  EarnedBadges,
+  LockedBadges,
+  PerksLadder,
+} from "./BadgesSections";
+import { levelInfo } from "./badges.data";
+import styles from "./BadgesPage.module.css";
 
 export function BadgesPage() {
   return (
@@ -31,5 +36,5 @@ export function BadgesPage() {
         </div>
       </div>
     </AppShell>
-  )
+  );
 }

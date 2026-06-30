@@ -47,7 +47,9 @@
   border-radius: 999px;
   padding: 8px 16px;
   cursor: pointer;
-  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
 }
 .sbToggle:hover {
   border-color: var(--plum);
@@ -60,14 +62,18 @@
   overflow: hidden;
 }
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10%;
   right: -5%;
   width: 460px;
   height: 460px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.13), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.13),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .cat {
@@ -182,7 +188,9 @@
   display: flex;
   gap: 18px;
   align-items: flex-start;
-  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  transition:
+    transform 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
   text-decoration: none;
   color: inherit;
   cursor: pointer;
@@ -383,7 +391,7 @@
   align-self: flex-start;
 }
 
-:global([data-theme='dark']) .card,
-:global([data-theme='dark']) .empCard {
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .empCard {
   border-color: rgba(247, 243, 238, 0.1);
 }

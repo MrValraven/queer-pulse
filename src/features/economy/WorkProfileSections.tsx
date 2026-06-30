@@ -1,13 +1,13 @@
-import { Tag, TagRow } from '../../shared/components/ui'
-import { workIdentity } from './work.data'
+import { Tag, TagRow } from "../../shared/components/ui";
+import { workIdentity } from "./work.data";
 import {
   OUT_AT_WORK,
   TRANS_SUPPORT,
   VIS_MATRIX,
   WORK_SKILLS,
   FOCUS_AREAS,
-} from './workProfile.data'
-import styles from './WorkProfilePage.module.css'
+} from "./workProfile.data";
+import styles from "./WorkProfilePage.module.css";
 
 /** Section 1 — professional identity: how you're named and described. */
 export function IdentitySection() {
@@ -16,36 +16,61 @@ export function IdentitySection() {
       <h2 className={styles.sectionTitle}>
         Professional <em>identity</em>
       </h2>
-      <p className={styles.sectionSub}>How you're named and described to employers.</p>
+      <p className={styles.sectionSub}>
+        How you're named and described to employers.
+      </p>
 
       <div className={styles.fieldRow}>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>Name in use</div>
-          <input className={styles.fieldInput} type="text" defaultValue={workIdentity.name} />
+          <input
+            className={styles.fieldInput}
+            type="text"
+            defaultValue={workIdentity.name}
+          />
         </div>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>
-            Legal name <span className={styles.fieldOptional}>kept private</span>
+            Legal name{" "}
+            <span className={styles.fieldOptional}>kept private</span>
           </div>
-          <input className={styles.fieldInput} type="text" placeholder="Only where legally required" />
-          <div className={styles.fieldHint}>Stored privately and used only where the law requires it.</div>
+          <input
+            className={styles.fieldInput}
+            type="text"
+            placeholder="Only where legally required"
+          />
+          <div className={styles.fieldHint}>
+            Stored privately and used only where the law requires it.
+          </div>
         </div>
       </div>
 
       <div className={styles.fieldRow}>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>Pronouns</div>
-          <input className={styles.fieldInput} type="text" defaultValue={workIdentity.pronouns} />
+          <input
+            className={styles.fieldInput}
+            type="text"
+            defaultValue={workIdentity.pronouns}
+          />
         </div>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>Headline</div>
-          <input className={styles.fieldInput} type="text" defaultValue={workIdentity.headline} />
+          <input
+            className={styles.fieldInput}
+            type="text"
+            defaultValue={workIdentity.headline}
+          />
         </div>
       </div>
 
       <div className={styles.field}>
         <div className={styles.fieldLabel}>Location</div>
-        <input className={styles.fieldInput} type="text" defaultValue={workIdentity.location} />
+        <input
+          className={styles.fieldInput}
+          type="text"
+          defaultValue={workIdentity.location}
+        />
       </div>
 
       <div className={styles.field}>
@@ -56,16 +81,16 @@ export function IdentitySection() {
         />
       </div>
     </section>
-  )
+  );
 }
 
 interface ShowUpProps {
-  outChoice: string
-  onOut: (v: string) => void
-  trans: string[]
-  onToggleTrans: (id: string) => void
-  safeOnly: boolean
-  onSafeOnly: (v: boolean) => void
+  outChoice: string;
+  onOut: (v: string) => void;
+  trans: string[];
+  onToggleTrans: (id: string) => void;
+  safeOnly: boolean;
+  onSafeOnly: (v: boolean) => void;
 }
 
 /** Section 2 — the queer-specific safety core: out-at-work spectrum + visibility. */
@@ -77,14 +102,15 @@ export function ShowUpAtWorkSection({
   safeOnly,
   onSafeOnly,
 }: ShowUpProps) {
-  const activeOut = OUT_AT_WORK.find((o) => o.value === outChoice)
+  const activeOut = OUT_AT_WORK.find((o) => o.value === outChoice);
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>
         How you show up <em>at work</em>
       </h2>
       <p className={styles.sectionSub}>
-        You decide what employers see. Nothing here is shared without your say-so.
+        You decide what employers see. Nothing here is shared without your
+        say-so.
       </p>
 
       <div className={styles.field}>
@@ -98,7 +124,7 @@ export function ShowUpAtWorkSection({
               aria-checked={outChoice === o.value}
               className={[styles.segBtn, outChoice === o.value && styles.segOn]
                 .filter(Boolean)
-                .join(' ')}
+                .join(" ")}
               onClick={() => onOut(o.value)}
             >
               {o.label}
@@ -110,21 +136,29 @@ export function ShowUpAtWorkSection({
 
       <div className={styles.field}>
         <div className={styles.fieldLabel}>
-          Trans &amp; non-binary support <span className={styles.fieldOptional}>optional</span>
+          Trans &amp; non-binary support{" "}
+          <span className={styles.fieldOptional}>optional</span>
         </div>
         <div className={styles.toggleList}>
           {TRANS_SUPPORT.map((t) => {
-            const on = trans.includes(t.id)
+            const on = trans.includes(t.id);
             return (
               <button
                 key={t.id}
                 type="button"
                 role="switch"
                 aria-checked={on}
-                className={[styles.toggleRow, on && styles.toggleRowOn].filter(Boolean).join(' ')}
+                className={[styles.toggleRow, on && styles.toggleRowOn]
+                  .filter(Boolean)
+                  .join(" ")}
                 onClick={() => onToggleTrans(t.id)}
               >
-                <span className={[styles.toggle, on && styles.toggleOn].filter(Boolean).join(' ')} aria-hidden>
+                <span
+                  className={[styles.toggle, on && styles.toggleOn]
+                    .filter(Boolean)
+                    .join(" ")}
+                  aria-hidden
+                >
                   <span className={styles.toggleKnob} />
                 </span>
                 <span className={styles.toggleText}>
@@ -132,15 +166,17 @@ export function ShowUpAtWorkSection({
                   <span className={styles.toggleDesc}>{t.desc}</span>
                 </span>
               </button>
-            )
+            );
           })}
         </div>
       </div>
 
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>What employers see vs the community</div>
+        <div className={styles.fieldLabel}>
+          What employers see vs the community
+        </div>
         <div className={styles.matrix}>
-          <div className={[styles.matrixRow, styles.matrixHead].join(' ')}>
+          <div className={[styles.matrixRow, styles.matrixHead].join(" ")}>
             <span className={styles.matrixField}>Field</span>
             <span className={styles.matrixCell}>Employers see</span>
             <span className={styles.matrixCell}>Community sees</span>
@@ -159,19 +195,30 @@ export function ShowUpAtWorkSection({
         type="button"
         role="switch"
         aria-checked={safeOnly}
-        className={[styles.toggleRow, safeOnly && styles.toggleRowOn].filter(Boolean).join(' ')}
+        className={[styles.toggleRow, safeOnly && styles.toggleRowOn]
+          .filter(Boolean)
+          .join(" ")}
         onClick={() => onSafeOnly(!safeOnly)}
       >
-        <span className={[styles.toggle, safeOnly && styles.toggleOn].filter(Boolean).join(' ')} aria-hidden>
+        <span
+          className={[styles.toggle, safeOnly && styles.toggleOn]
+            .filter(Boolean)
+            .join(" ")}
+          aria-hidden
+        >
           <span className={styles.toggleKnob} />
         </span>
         <span className={styles.toggleText}>
-          <span className={styles.toggleLabel}>Only surface me to community-verified-safe employers</span>
-          <span className={styles.toggleDesc}>Skip everything that hasn't been vetted by the network.</span>
+          <span className={styles.toggleLabel}>
+            Only surface me to community-verified-safe employers
+          </span>
+          <span className={styles.toggleDesc}>
+            Skip everything that hasn't been vetted by the network.
+          </span>
         </span>
       </button>
     </section>
-  )
+  );
 }
 
 /** Section 3 — skills offered/sought and focus areas. */
@@ -201,5 +248,5 @@ export function SkillsFocusSection() {
         </TagRow>
       </div>
     </section>
-  )
+  );
 }

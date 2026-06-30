@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import styles from './adminUi.module.css'
+import type { ReactNode } from "react";
+import styles from "./adminUi.module.css";
 
 export function AdminPageHeader({
   eyebrow,
@@ -7,10 +7,10 @@ export function AdminPageHeader({
   sub,
   actions,
 }: {
-  eyebrow: ReactNode
-  title: ReactNode
-  sub?: ReactNode
-  actions?: ReactNode
+  eyebrow: ReactNode;
+  title: ReactNode;
+  sub?: ReactNode;
+  actions?: ReactNode;
 }) {
   return (
     <div className={styles.ph}>
@@ -24,5 +24,5 @@ export function AdminPageHeader({
       </div>
       {actions && <div className={styles.phActions}>{actions}</div>}
     </div>
-  )
+  );
 }

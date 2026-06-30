@@ -1,23 +1,33 @@
-import { useState } from 'react'
-import { FiCheck } from 'react-icons/fi'
-import { PageShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { routes } from '../../app/routeMap'
-import { useWorkProfile } from '../../app/providers/WorkProfileProvider'
-import { IdentitySection, ShowUpAtWorkSection, SkillsFocusSection } from './WorkProfileSections'
-import styles from './WorkProfilePage.module.css'
+import { useState } from "react";
+import { FiCheck } from "react-icons/fi";
+import { PageShell } from "../../shared/components/layout";
+import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { routes } from "../../app/routeMap";
+import { useWorkProfile } from "../../app/providers/WorkProfileProvider";
+import {
+  IdentitySection,
+  ShowUpAtWorkSection,
+  SkillsFocusSection,
+} from "./WorkProfileSections";
+import styles from "./WorkProfilePage.module.css";
 
 /** The Work Profile — identity & safety controls at the heart of the workspace. */
 export function WorkProfilePage() {
-  const { showToast } = useToast()
-  const { outAtWork, setOutAtWork, transSupport, toggleTransSupport, safeOnly, setSafeOnly } =
-    useWorkProfile()
-  const [saved, setSaved] = useState(false)
+  const { showToast } = useToast();
+  const {
+    outAtWork,
+    setOutAtWork,
+    transSupport,
+    toggleTransSupport,
+    safeOnly,
+    setSafeOnly,
+  } = useWorkProfile();
+  const [saved, setSaved] = useState(false);
 
   function save() {
-    setSaved(true)
-    showToast('Work profile saved', 'success')
+    setSaved(true);
+    showToast("Work profile saved", "success");
   }
 
   if (saved) {
@@ -32,7 +42,8 @@ export function WorkProfilePage() {
               Your work profile is <em>set.</em>
             </h1>
             <p className={styles.successSub}>
-              You appear to employers exactly as you choose to — and never otherwise.
+              You appear to employers exactly as you choose to — and never
+              otherwise.
             </p>
             <div className={styles.successActions}>
               <Button variant="ghost-dark" to={routes.work}>
@@ -45,7 +56,7 @@ export function WorkProfilePage() {
           </div>
         </div>
       </PageShell>
-    )
+    );
   }
 
   return (
@@ -57,8 +68,8 @@ export function WorkProfilePage() {
             How you show up <em>at work.</em>
           </h1>
           <p className={styles.sub}>
-            This controls what employers see — and what stays yours. Nothing here is shared without
-            your say-so.
+            This controls what employers see — and what stays yours. Nothing
+            here is shared without your say-so.
           </p>
         </header>
 
@@ -80,5 +91,5 @@ export function WorkProfilePage() {
         </div>
       </div>
     </PageShell>
-  )
+  );
 }

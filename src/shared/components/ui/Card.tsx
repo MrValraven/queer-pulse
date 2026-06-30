@@ -1,25 +1,35 @@
-import type { HTMLAttributes } from 'react'
-import styles from './Card.module.css'
+import type { HTMLAttributes } from "react";
+import styles from "./Card.module.css";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   /** Lift + shadow on hover. Defaults to true. */
-  hover?: boolean
+  hover?: boolean;
 }
 
-export function Card({ hover = true, className, children, ...rest }: CardProps) {
+export function Card({
+  hover = true,
+  className,
+  children,
+  ...rest
+}: CardProps) {
   const cls = [styles.card, hover && styles.hoverable, className]
     .filter(Boolean)
-    .join(' ')
+    .join(" ");
   return (
     <div className={cls} {...rest}>
       {children}
     </div>
-  )
+  );
 }
 
 export function CardDivider({
   className,
   ...rest
 }: HTMLAttributes<HTMLHRElement>) {
-  return <hr className={[styles.divider, className].filter(Boolean).join(' ')} {...rest} />
+  return (
+    <hr
+      className={[styles.divider, className].filter(Boolean).join(" ")}
+      {...rest}
+    />
+  );
 }

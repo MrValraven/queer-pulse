@@ -1,6 +1,6 @@
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro, Reveal } from '../../shared/components/ui'
-import styles from './SafetyPage.module.css'
+import { PageShell } from "../../shared/components/layout";
+import { Button, Outro, Reveal } from "../../shared/components/ui";
+import styles from "./SafetyPage.module.css";
 
 export function SafetyPage() {
   return (
@@ -12,8 +12,9 @@ export function SafetyPage() {
             Your visibility. <em>Your choice.</em>
           </h1>
           <p className={styles.intro}>
-            QueerPulse is a space where being out — or not, or somewhere in between — is nobody's
-            business but yours. Here's how we protect that.
+            QueerPulse is a space where being out — or not, or somewhere in
+            between — is nobody's business but yours. Here's how we protect
+            that.
           </p>
         </div>
       </header>
@@ -24,9 +25,9 @@ export function SafetyPage() {
             How <em>visibility</em> works
           </h2>
           <p>
-            Every member chooses their own visibility level. It's not a setting buried in a profile
-            — it's a first-class part of how you exist in the network. Think of it as a dimmer, not
-            a switch.
+            Every member chooses their own visibility level. It's not a setting
+            buried in a profile — it's a first-class part of how you exist in
+            the network. Think of it as a dimmer, not a switch.
           </p>
           <div className={styles.visCards}>
             <div className={`${styles.visCard} ${styles.viOpen}`}>
@@ -36,8 +37,9 @@ export function SafetyPage() {
               <div>
                 <h3>Open to connect</h3>
                 <p>
-                  Your profile is visible to all members. Anyone in the network can reach out
-                  directly. You can change this at any time — there's no penalty for stepping back.
+                  Your profile is visible to all members. Anyone in the network
+                  can reach out directly. You can change this at any time —
+                  there's no penalty for stepping back.
                 </p>
               </div>
             </div>
@@ -48,8 +50,9 @@ export function SafetyPage() {
               <div>
                 <h3>Network only</h3>
                 <p>
-                  Your profile is visible to members, but direct contact requires a shared
-                  connection. You're reachable, but with a layer of warmth built in.
+                  Your profile is visible to members, but direct contact
+                  requires a shared connection. You're reachable, but with a
+                  layer of warmth built in.
                 </p>
               </div>
             </div>
@@ -60,9 +63,10 @@ export function SafetyPage() {
               <div>
                 <h3>Private</h3>
                 <p>
-                  Your profile is visible only to the team and your voucher. You appear in the
-                  network count but not in browsing. The right setting if you're newly out, in a
-                  sensitive situation, or just not ready. No explanation required.
+                  Your profile is visible only to the team and your voucher. You
+                  appear in the network count but not in browsing. The right
+                  setting if you're newly out, in a sensitive situation, or just
+                  not ready. No explanation required.
                 </p>
               </div>
             </div>
@@ -76,21 +80,24 @@ export function SafetyPage() {
             The <em>vouching</em> model
           </h2>
           <p>
-            Every member is vouched for by at least one person already in the network. This isn't
-            gatekeeping — it's the mechanism that makes the room feel trustworthy. When someone
-            vouches for you, they're saying: <b>I know this person, and I think they belong here.</b>
+            Every member is vouched for by at least one person already in the
+            network. This isn't gatekeeping — it's the mechanism that makes the
+            room feel trustworthy. When someone vouches for you, they're saying:{" "}
+            <b>I know this person, and I think they belong here.</b>
           </p>
           <p>
-            Vouchers aren't responsible for the people they vouch for, but they are accountable in a
-            real way. If a vouched member behaves harmfully, their voucher is part of the
-            conversation about what happens next.
+            Vouchers aren't responsible for the people they vouch for, but they
+            are accountable in a real way. If a vouched member behaves
+            harmfully, their voucher is part of the conversation about what
+            happens next.
           </p>
           <div className={styles.callout}>
             <div className={styles.calloutHead}>On being newly out</div>
             <p>
-              If you're not yet out in your professional life, you can be Private within QueerPulse
-              while still benefiting from the community. We will never share your membership
-              externally without explicit consent.
+              If you're not yet out in your professional life, you can be
+              Private within QueerPulse while still benefiting from the
+              community. We will never share your membership externally without
+              explicit consent.
             </p>
           </div>
         </Reveal>
@@ -102,18 +109,20 @@ export function SafetyPage() {
             What we <em>don't do</em> with your data
           </h2>
           <p>
-            We don't sell it. We don't train models on it. We don't share it with third parties. We
-            don't run advertising. We're a small, member-supported network — your data is not the
-            product.
+            We don't sell it. We don't train models on it. We don't share it
+            with third parties. We don't run advertising. We're a small,
+            member-supported network — your data is not the product.
           </p>
           <p>
-            What we store: your name, email, profile content, and visibility setting. What we don't
-            store: your location beyond the neighbourhood you choose to share, your browsing
-            behaviour, or anything you tell us in private messages.
+            What we store: your name, email, profile content, and visibility
+            setting. What we don't store: your location beyond the neighbourhood
+            you choose to share, your browsing behaviour, or anything you tell
+            us in private messages.
           </p>
           <p>
-            You can request everything we hold about you, or ask us to delete your account, at any
-            time. Send an email to <b>hello@queerpulse.pt</b>.
+            You can request everything we hold about you, or ask us to delete
+            your account, at any time. Send an email to{" "}
+            <b>hello@queerpulse.pt</b>.
           </p>
         </Reveal>
 
@@ -124,19 +133,21 @@ export function SafetyPage() {
             If something <em>feels wrong</em>
           </h2>
           <p>
-            We take safety concerns seriously, and we respond to them ourselves — not an automated
-            system. If someone has made you feel unsafe, if a message crossed a line, if something
-            doesn't sit right, tell us.
+            We take safety concerns seriously, and we respond to them ourselves
+            — not an automated system. If someone has made you feel unsafe, if a
+            message crossed a line, if something doesn't sit right, tell us.
           </p>
           <p>
-            We handle every report with discretion. You will not be identified to the person you're
-            reporting unless you choose to be. We will follow up.
+            We handle every report with discretion. You will not be identified
+            to the person you're reporting unless you choose to be. We will
+            follow up.
           </p>
           <div className={styles.reportBox}>
             <h3>Get in touch with the team</h3>
             <p>
-              If you need to report a concern, reach out directly. We read everything sent to this
-              address and aim to respond within 24 hours.
+              If you need to report a concern, reach out directly. We read
+              everything sent to this address and aim to respond within 24
+              hours.
             </p>
             <Button href="mailto:safe@queerpulse.pt">safe@queerpulse.pt</Button>
           </div>
@@ -149,20 +160,26 @@ export function SafetyPage() {
             Leaving the <em>network</em>
           </h2>
           <p>
-            You can leave at any time. When you do, your profile is removed from the directory
-            immediately. Any messages you've sent remain with their recipients — we can't unsend
-            them. Board posts are removed. Your data is deleted within 30 days unless you ask us to
-            keep it for a specific reason.
+            You can leave at any time. When you do, your profile is removed from
+            the directory immediately. Any messages you've sent remain with
+            their recipients — we can't unsend them. Board posts are removed.
+            Your data is deleted within 30 days unless you ask us to keep it for
+            a specific reason.
           </p>
           <p>
-            There is no dark pattern here. No "are you sure?" loop. No 30-day cooling-off period
-            before deletion. You leave, you're gone, and we wish you well.
+            There is no dark pattern here. No "are you sure?" loop. No 30-day
+            cooling-off period before deletion. You leave, you're gone, and we
+            wish you well.
           </p>
         </Reveal>
       </div>
 
       <Outro
-        title={<>Safety is a feature, <em>not a footnote.</em></>}
+        title={
+          <>
+            Safety is a feature, <em>not a footnote.</em>
+          </>
+        }
         sub="Any questions about how the network works? Write to us."
       >
         <Button href="mailto:hello@queerpulse.pt" variant="primary" size="lg">
@@ -170,5 +187,5 @@ export function SafetyPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

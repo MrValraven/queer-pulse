@@ -6,25 +6,33 @@
   overflow: hidden;
 }
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10%;
   right: -5%;
   width: 480px;
   height: 480px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.12), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.12),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .hero::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -20%;
   left: -6%;
   width: 360px;
   height: 360px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.1), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.1),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .cat {
@@ -103,7 +111,7 @@
   margin-bottom: 24px;
 }
 .featQuote::before {
-  content: '“';
+  content: "“";
   font-size: 1.8em;
   line-height: 0.7;
   display: block;
@@ -162,7 +170,9 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  transition:
+    transform 0.4s var(--ease),
+    box-shadow 0.4s var(--ease);
 }
 .card:hover {
   transform: translateY(-3px);
@@ -233,14 +243,18 @@
   overflow: hidden;
 }
 .oral::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10%;
   right: -5%;
   width: 420px;
   height: 420px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.12), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.12),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .oralHead {
@@ -301,11 +315,11 @@
   letter-spacing: -0.005em;
 }
 .ocQuote::before {
-  content: '“';
+  content: "“";
   color: var(--accent);
 }
 .ocQuote::after {
-  content: '”';
+  content: "”";
   color: var(--accent);
 }
 .ocYear {

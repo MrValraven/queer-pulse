@@ -45,7 +45,13 @@ function googleCalUrl(app: Application) {
 }
 
 /** Confirm interview details and add to a calendar (Google or .ics). */
-export function CalendarModal({ app, onClose }: { app: Application; onClose: () => void }) {
+export function CalendarModal({
+  app,
+  onClose,
+}: {
+  app: Application;
+  onClose: () => void;
+}) {
   const i = app.interview;
   const [method, setMethod] = useState<null | "ics" | "google">(null);
   const { submit, sending, done } = useSubmitFlow();
@@ -82,7 +88,12 @@ export function CalendarModal({ app, onClose }: { app: Application; onClose: () 
             </div>
           </div>
           <div className={styles.foot}>
-            <button type="button" className={styles.back} onClick={onClose} disabled={sending}>
+            <button
+              type="button"
+              className={styles.back}
+              onClick={onClose}
+              disabled={sending}
+            >
               ← Close
             </button>
             <div className={styles.calBtns}>
@@ -100,7 +111,12 @@ export function CalendarModal({ app, onClose }: { app: Application; onClose: () 
                   <Sending label="Adding…" />
                 ) : (
                   <>
-                    <FiDownload size={15} style={{ marginRight: 6 }} aria-hidden /> .ics file
+                    <FiDownload
+                      size={15}
+                      style={{ marginRight: 6 }}
+                      aria-hidden
+                    />{" "}
+                    .ics file
                   </>
                 )}
               </Button>
@@ -109,7 +125,11 @@ export function CalendarModal({ app, onClose }: { app: Application; onClose: () 
                 disabled={sending}
                 onClick={() => {
                   setMethod("google");
-                  window.open(googleCalUrl(app), "_blank", "noopener,noreferrer");
+                  window.open(
+                    googleCalUrl(app),
+                    "_blank",
+                    "noopener,noreferrer",
+                  );
                   submit();
                 }}
               >
@@ -117,7 +137,12 @@ export function CalendarModal({ app, onClose }: { app: Application; onClose: () 
                   <Sending label="Adding…" />
                 ) : (
                   <>
-                    <FiCalendar size={15} style={{ marginRight: 6 }} aria-hidden /> Google Calendar →
+                    <FiCalendar
+                      size={15}
+                      style={{ marginRight: 6 }}
+                      aria-hidden
+                    />{" "}
+                    Google Calendar →
                   </>
                 )}
               </Button>

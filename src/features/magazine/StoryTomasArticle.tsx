@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
-import { routes } from '../../app/routeMap'
-import styles from './StoryTomasPage.module.css'
-import { memberName } from '../members/data/members'
+import { Link } from "react-router-dom";
+import { routes } from "../../app/routeMap";
+import styles from "./StoryTomasPage.module.css";
+import { memberName } from "../members/data/members";
 
 function QA({ q, a }: { q: string; a: string }) {
   return (
@@ -15,7 +15,7 @@ function QA({ q, a }: { q: string; a: string }) {
         <p>{a}</p>
       </div>
     </div>
-  )
+  );
 }
 
 export function StoryTomasArticle() {
@@ -34,44 +34,51 @@ export function StoryTomasArticle() {
 
         <div className={styles.body}>
           <p>
-            Tomás Beto's apartment smells like vinegar and something fermenting in a jar he won't tell
-            me about. There are twelve chairs stacked in the corner, a whiteboard with a menu written
-            in pencil, and a cat asleep on a pile of linen napkins. In three hours, strangers will sit
-            down at his dining table and eat whatever he decides to cook.
+            Tomás Beto's apartment smells like vinegar and something fermenting
+            in a jar he won't tell me about. There are twelve chairs stacked in
+            the corner, a whiteboard with a menu written in pencil, and a cat
+            asleep on a pile of linen napkins. In three hours, strangers will
+            sit down at his dining table and eat whatever he decides to cook.
           </p>
           <p>
-            This is Queer Supper Club №12. Tomás has been doing this for just over two years — hosting
-            intimate dinners for members of the QueerPulse community out of his apartment in Mouraria.
-            No fixed menu. No Instagram. Twelve seats, and a waiting list that he mostly ignores in
-            favour of people he's heard about through the network.
+            This is Queer Supper Club №12. Tomás has been doing this for just
+            over two years — hosting intimate dinners for members of the
+            QueerPulse community out of his apartment in Mouraria. No fixed
+            menu. No Instagram. Twelve seats, and a waiting list that he mostly
+            ignores in favour of people he's heard about through the network.
           </p>
           <p>
-            Until 2023, he was a product manager at a fintech startup in Parque das Nações, commuting
-            forty minutes each way, managing a team of eight, and making a salary that looked good on
-            paper. He left in March of that year, with no plan except a fermentation kit and a kitchen
-            he'd been under-using for years.
+            Until 2023, he was a product manager at a fintech startup in Parque
+            das Nações, commuting forty minutes each way, managing a team of
+            eight, and making a salary that looked good on paper. He left in
+            March of that year, with no plan except a fermentation kit and a
+            kitchen he'd been under-using for years.
           </p>
 
           <blockquote className={styles.quote}>
             <p>
-              I wasn't unhappy. I was just completely disconnected from anything that felt like mine.
-              The job was fine. The money was fine. But I'd go to work and come home and go to a bar
-              and nothing felt like it had anything to do with who I actually was.
+              I wasn't unhappy. I was just completely disconnected from anything
+              that felt like mine. The job was fine. The money was fine. But I'd
+              go to work and come home and go to a bar and nothing felt like it
+              had anything to do with who I actually was.
             </p>
-            <cite>— {memberName('tomas')}</cite>
+            <cite>— {memberName("tomas")}</cite>
           </blockquote>
 
           <p>
-            We talked for two hours on a Tuesday afternoon, between his prep work. The conversation
-            ranged from the politics of food to how he sources his wine to why he thinks queer
-            hospitality is a fundamentally different project from hospitality in general.
+            We talked for two hours on a Tuesday afternoon, between his prep
+            work. The conversation ranged from the politics of food to how he
+            sources his wine to why he thinks queer hospitality is a
+            fundamentally different project from hospitality in general.
           </p>
 
           <div className={styles.imgInline}>
-            <div className={styles.inlineImg}>Tomás in his kitchen, February 2026</div>
+            <div className={styles.inlineImg}>
+              Tomás in his kitchen, February 2026
+            </div>
             <div className={styles.imgCaption}>
-              Tomás in his kitchen before supper club №11, February 2026. Photographed by André
-              Quintela.
+              Tomás in his kitchen before supper club №11, February 2026.
+              Photographed by André Quintela.
             </div>
           </div>
 
@@ -95,8 +102,8 @@ export function StoryTomasArticle() {
             On queer hospitality and <em>why it's different</em>
           </h2>
           <p>
-            I ask Tomás what he means by queer hospitality. He's quiet for a moment, stirring
-            something on the stove.
+            I ask Tomás what he means by queer hospitality. He's quiet for a
+            moment, stirring something on the stove.
           </p>
           <QA
             q="You've described what you do as &quot;queer hospitality&quot; in a few conversations I've heard about. What do you mean by that?"
@@ -105,10 +112,11 @@ export function StoryTomasArticle() {
 
           <blockquote className={styles.quote}>
             <p>
-              Hospitality is the art of making someone feel like they don't have to earn their place
-              at the table. That's not a political position. It's just what I'm trying to do.
+              Hospitality is the art of making someone feel like they don't have
+              to earn their place at the table. That's not a political position.
+              It's just what I'm trying to do.
             </p>
-            <cite>— {memberName('tomas')}</cite>
+            <cite>— {memberName("tomas")}</cite>
           </blockquote>
 
           <h2>
@@ -124,20 +132,24 @@ export function StoryTomasArticle() {
           />
 
           <p>
-            Supper Club №12 is tonight. Tomás won't tell me the menu. "If I tell you, you'll be
-            disappointed when I change it at the last minute," he says, and goes back to the vinegar
-            and the jar and the cat on the napkins. I leave with the feeling that something good is
-            about to happen in this apartment, and that the city is lucky to have it.
+            Supper Club №12 is tonight. Tomás won't tell me the menu. "If I tell
+            you, you'll be disappointed when I change it at the last minute," he
+            says, and goes back to the vinegar and the jar and the cat on the
+            napkins. I leave with the feeling that something good is about to
+            happen in this apartment, and that the city is lucky to have it.
           </p>
 
           <div className={styles.authorCard}>
             <div className={styles.authorAv}>SA</div>
             <div>
-              <div className={styles.authorName}>{memberName('sofia')}</div>
-              <div className={styles.authorRole}>Documentary Filmmaker · Alfama</div>
+              <div className={styles.authorName}>{memberName("sofia")}</div>
+              <div className={styles.authorRole}>
+                Documentary Filmmaker · Alfama
+              </div>
               <div className={styles.authorBio}>
-                Sofia makes documentaries about people who wouldn't think to be documented. She is
-                currently in post-production on a 28-minute film about Lisbon's disappearing tascas.
+                Sofia makes documentaries about people who wouldn't think to be
+                documented. She is currently in post-production on a 28-minute
+                film about Lisbon's disappearing tascas.
               </div>
               <Link to={routes.members} className={styles.authorLink}>
                 View her profile →
@@ -154,9 +166,12 @@ export function StoryTomasArticle() {
                 <div className={styles.moreImg} />
                 <div className={styles.mcCat}>Field Notes</div>
                 <div className={styles.mcTitle}>
-                  How a Príncipe Real studio became a quiet home for queer designers
+                  How a Príncipe Real studio became a quiet home for queer
+                  designers
                 </div>
-                <div className={styles.mcBy}>{memberName('ines')} · 6 min read</div>
+                <div className={styles.mcBy}>
+                  {memberName("ines")} · 6 min read
+                </div>
               </Link>
               <Link to={routes.storySafety} className={styles.moreCard}>
                 <div className={styles.moreImg} />
@@ -164,12 +179,14 @@ export function StoryTomasArticle() {
                 <div className={styles.mcTitle}>
                   Why we stayed invite-only: safety as a feature, not a gate
                 </div>
-                <div className={styles.mcBy}>The QueerPulse team · 3 min read</div>
+                <div className={styles.mcBy}>
+                  The QueerPulse team · 3 min read
+                </div>
               </Link>
             </div>
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }

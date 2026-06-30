@@ -1,6 +1,6 @@
-import { type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { FiCheck, FiEdit3, FiEye } from 'react-icons/fi'
+import { type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { FiCheck, FiEdit3, FiEye } from "react-icons/fi";
 import {
   Avatar,
   Button,
@@ -9,14 +9,18 @@ import {
   Reveal,
   Tag,
   TagRow,
-} from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { useConnect } from '../../app/providers/ConnectProvider'
-import { useVouch } from '../../app/providers/VouchProvider'
-import { memberProfiles, currentUserSlug, type MemberProfile } from './data/memberProfiles'
-import { discoverCount, earnedBadges, levelInfo } from './badges.data'
-import { availableCount } from './perks.data'
-import { VISIBILITY_LABEL } from './profileSections.data'
+} from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { useConnect } from "../../app/providers/ConnectProvider";
+import { useVouch } from "../../app/providers/VouchProvider";
+import {
+  memberProfiles,
+  currentUserSlug,
+  type MemberProfile,
+} from "./data/memberProfiles";
+import { discoverCount, earnedBadges, levelInfo } from "./badges.data";
+import { availableCount } from "./perks.data";
+import { VISIBILITY_LABEL } from "./profileSections.data";
 import {
   ActivitySection,
   BoardSection,
@@ -26,8 +30,8 @@ import {
   SelectedWorkSection,
   ShapingsSection,
   SkillsSection,
-} from './ProfileContentSections'
-import styles from './ProfilePage.module.css'
+} from "./ProfileContentSections";
+import styles from "./ProfilePage.module.css";
 
 function CheckIcon() {
   return (
@@ -40,7 +44,7 @@ function CheckIcon() {
         strokeLinejoin="round"
       />
     </svg>
-  )
+  );
 }
 
 export function Section({
@@ -48,9 +52,9 @@ export function Section({
   subtitle,
   children,
 }: {
-  title: string
-  subtitle: string
-  children: ReactNode
+  title: string;
+  subtitle: string;
+  children: ReactNode;
 }) {
   return (
     <Reveal as="section" className={styles.section}>
@@ -60,42 +64,52 @@ export function Section({
       </div>
       {children}
     </Reveal>
-  )
+  );
 }
 
 export function ProfileHero({
   profile,
+  self,
   asVisitor = false,
   onEdit,
   onPreview,
 }: {
-  profile: MemberProfile
+  profile: MemberProfile;
+  /**
+   * Whether this is the viewer's own profile. Passed down from the page, which
+   * resolves it against the authenticated user — don't re-derive it from a
+   * hardcoded slug here, because in live mode the user's slug isn't `currentUserSlug`.
+   */
+  self?: boolean;
   /** When true, render your own profile exactly as a visitor would see it. */
-  asVisitor?: boolean
+  asVisitor?: boolean;
   /** Enter inline edit mode (only used on your own profile). */
-  onEdit?: () => void
+  onEdit?: () => void;
   /** Preview your profile as a visitor (only used on your own profile). */
-  onPreview?: () => void
+  onPreview?: () => void;
 }) {
-  const { openConnect } = useConnect()
-  const { openVouch, hasVouched } = useVouch()
-  const realSelf = profile.slug === currentUserSlug
-  const isSelf = realSelf && !asVisitor
-  const vouched = hasVouched(profile.slug)
-  const youAdded = vouched && !realSelf && !profile.vouchers.includes(currentUserSlug)
-  const voucherSlugs = youAdded ? [...profile.vouchers, currentUserSlug] : profile.vouchers
+  const { openConnect } = useConnect();
+  const { openVouch, hasVouched } = useVouch();
+  const realSelf = self ?? profile.slug === currentUserSlug;
+  const isSelf = realSelf && !asVisitor;
+  const vouched = hasVouched(profile.slug);
+  const youAdded =
+    vouched && !realSelf && !profile.vouchers.includes(currentUserSlug);
+  const voucherSlugs = youAdded
+    ? [...profile.vouchers, currentUserSlug]
+    : profile.vouchers;
   const namesText = !youAdded
     ? profile.voucherNames
     : profile.vouchers.length > 0
       ? `${profile.voucherNames}, plus you`
-      : 'you'
+      : "you";
   return (
     <header className={styles.phero}>
       <div className="wrap">
         <div className={styles.pheroGrid}>
           <Reveal className={styles.portraitWrap}>
             <ImageSlot
-              tint={profile.tint === 'auth' ? 'plum' : profile.tint}
+              tint={profile.tint === "auth" ? "plum" : profile.tint}
               src={profile.photo}
               initials={profile.initials}
               height={430}
@@ -148,7 +162,7 @@ export function ProfileHero({
                 </>
               ) : (
                 <>
-                  {profile.visibility === 'private' ? (
+                  {profile.visibility === "private" ? (
                     <Button size="lg" variant="ghost" to={routes.invite}>
                       Request an intro
                     </Button>
@@ -163,7 +177,11 @@ export function ProfileHero({
                         <FiCheck aria-hidden /> Vouched for {profile.first}
                       </Button>
                     ) : (
-                      <Button size="lg" variant="ghost" onClick={() => openVouch(profile.slug)}>
+                      <Button
+                        size="lg"
+                        variant="ghost"
+                        onClick={() => openVouch(profile.slug)}
+                      >
                         Vouch for {profile.first}
                       </Button>
                     ))}
@@ -173,9 +191,9 @@ export function ProfileHero({
             <div className={styles.vouchRow}>
               <div className={styles.vouchFaces}>
                 {voucherSlugs.map((slug, index) => {
-                  const voucher = memberProfiles[slug]
-                  if (!voucher) return null
-                  const name = `${voucher.first} ${voucher.last}`
+                  const voucher = memberProfiles[slug];
+                  if (!voucher) return null;
+                  const name = `${voucher.first} ${voucher.last}`;
                   return (
                     <Link
                       key={slug}
@@ -195,7 +213,7 @@ export function ProfileHero({
                         alt={name}
                       />
                     </Link>
-                  )
+                  );
                 })}
               </div>
               <div className={styles.vouchText}>
@@ -208,7 +226,7 @@ export function ProfileHero({
         </div>
       </div>
     </header>
-  )
+  );
 }
 
 export function RecognitionSection() {
@@ -226,7 +244,10 @@ export function RecognitionSection() {
             {earnedBadges.length} earned · {discoverCount} to discover
           </div>
           <div className={styles.recogXpBar}>
-            <div className={styles.recogXpFill} style={{ width: `${levelInfo.percent}%` }} />
+            <div
+              className={styles.recogXpFill}
+              style={{ width: `${levelInfo.percent}%` }}
+            />
           </div>
           <div className={styles.recogArrow}>See badges &amp; level →</div>
         </Link>
@@ -239,21 +260,22 @@ export function RecognitionSection() {
           </div>
           <div className={styles.recogTitle}>Member perks</div>
           <div className={styles.recogDesc}>
-            Bonuses your level unlocks — early RSVP access, the Trusted Lounge and more.
+            Bonuses your level unlocks — early RSVP access, the Trusted Lounge
+            and more.
           </div>
           <div className={styles.recogArrow}>Redeem your perks →</div>
         </Link>
       </div>
     </Section>
-  )
+  );
 }
 
 export function ProfileContent({
   profile,
   isSelf,
 }: {
-  profile: MemberProfile
-  isSelf?: boolean
+  profile: MemberProfile;
+  isSelf?: boolean;
 }) {
   return (
     <div className="wrap">
@@ -267,5 +289,5 @@ export function ProfileContent({
       <ActivitySection profile={profile} />
       <RelatedSection profile={profile} />
     </div>
-  )
+  );
 }

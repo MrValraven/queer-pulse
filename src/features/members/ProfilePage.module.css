@@ -47,14 +47,18 @@
   overflow: hidden;
 }
 .phero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -12%;
   right: -6%;
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.14),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .pheroGrid {
@@ -185,11 +189,13 @@
   border-radius: 8px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
+  transition:
+    opacity 0.18s var(--ease),
+    transform 0.18s var(--ease);
   z-index: 30;
 }
 .vouchTip::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;
@@ -432,14 +438,14 @@
   }
 }
 
-:global([data-theme='dark']) .nowCard,
-:global([data-theme='dark']) .ask,
-:global([data-theme='dark']) .shapingCard,
-:global([data-theme='dark']) .relCard,
-:global([data-theme='dark']) .recogCard,
-:global([data-theme='dark']) .skillCard,
-:global([data-theme='dark']) .groupCard,
-:global([data-theme='dark']) .actItem {
+:global([data-theme="dark"]) .nowCard,
+:global([data-theme="dark"]) .ask,
+:global([data-theme="dark"]) .shapingCard,
+:global([data-theme="dark"]) .relCard,
+:global([data-theme="dark"]) .recogCard,
+:global([data-theme="dark"]) .skillCard,
+:global([data-theme="dark"]) .groupCard,
+:global([data-theme="dark"]) .actItem {
   border-color: rgba(247, 243, 238, 0.1);
 }
 

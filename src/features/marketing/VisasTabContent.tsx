@@ -1,8 +1,14 @@
-import { Link } from 'react-router-dom'
-import type { Tab } from './visas.data'
-import styles from './VisasPage.module.css'
+import { Link } from "react-router-dom";
+import type { Tab } from "./visas.data";
+import styles from "./VisasPage.module.css";
 
-export function VisasTabContent({ tab, onPartnerLink }: { tab: Tab; onPartnerLink: () => void }) {
+export function VisasTabContent({
+  tab,
+  onPartnerLink,
+}: {
+  tab: Tab;
+  onPartnerLink: () => void;
+}) {
   return (
     <div className={styles.tabContent}>
       <div className="wrap">
@@ -17,17 +23,32 @@ export function VisasTabContent({ tab, onPartnerLink }: { tab: Tab; onPartnerLin
               <div className={styles.icTitle}>{card.title}</div>
               <div className={styles.icBody}>{card.body}</div>
               {card.tag && (
-                <span className={[styles.icTag, card.tag.kind === 'jade' ? styles.tagJade : styles.tagAccent].join(' ')}>
+                <span
+                  className={[
+                    styles.icTag,
+                    card.tag.kind === "jade"
+                      ? styles.tagJade
+                      : styles.tagAccent,
+                  ].join(" ")}
+                >
                   {card.tag.label}
                 </span>
               )}
               {card.link && (
                 <div className={styles.icLink}>
-                  {card.link.href === '#' ? (
+                  {card.link.href === "#" ? (
                     <button
                       type="button"
                       onClick={onPartnerLink}
-                      style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit', color: 'inherit', textDecoration: 'underline' }}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        padding: 0,
+                        cursor: "pointer",
+                        font: "inherit",
+                        color: "inherit",
+                        textDecoration: "underline",
+                      }}
                     >
                       {card.link.label}
                     </button>
@@ -48,7 +69,9 @@ export function VisasTabContent({ tab, onPartnerLink }: { tab: Tab; onPartnerLin
                 <div className={styles.stepInfo}>
                   <div className={styles.stepTitle}>{step.title}</div>
                   <div className={styles.stepText}>{step.text}</div>
-                  {step.note && <div className={styles.stepNote}>{step.note}</div>}
+                  {step.note && (
+                    <div className={styles.stepNote}>{step.note}</div>
+                  )}
                 </div>
               </div>
             ))}
@@ -63,5 +86,5 @@ export function VisasTabContent({ tab, onPartnerLink }: { tab: Tab; onPartnerLin
         )}
       </div>
     </div>
-  )
+  );
 }

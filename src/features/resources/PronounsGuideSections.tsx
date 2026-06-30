@@ -1,6 +1,11 @@
-import { useState, type ReactNode } from 'react'
-import { NAME_TABLE, WHERE_CARDS, PRONOUN_FAQS, type WhereIcon } from './pronounsGuide.data'
-import styles from './PronounsGuidePage.module.css'
+import { useState, type ReactNode } from "react";
+import {
+  NAME_TABLE,
+  WHERE_CARDS,
+  PRONOUN_FAQS,
+  type WhereIcon,
+} from "./pronounsGuide.data";
+import styles from "./PronounsGuidePage.module.css";
 
 const whereIcons: Record<WhereIcon, ReactNode> = {
   profile: (
@@ -26,7 +31,7 @@ const whereIcons: Record<WhereIcon, ReactNode> = {
       <path d="M7 3v12M3 7h12" />
     </svg>
   ),
-}
+};
 
 export function NameTable() {
   return (
@@ -38,17 +43,19 @@ export function NameTable() {
       </div>
       {NAME_TABLE.map((r) => (
         <div key={r.field} className={styles.tRow}>
-          <div className={`${styles.tCell} ${styles.tCellLabel}`}>{r.field}</div>
+          <div className={`${styles.tCell} ${styles.tCellLabel}`}>
+            {r.field}
+          </div>
           <div className={styles.tCell}>{r.use}</div>
           <div
-            className={`${styles.tCell} ${r.whoVariant === 'jade' ? styles.tCellJade : styles.tCellAccent}`}
+            className={`${styles.tCell} ${r.whoVariant === "jade" ? styles.tCellJade : styles.tCellAccent}`}
           >
             {r.who}
           </div>
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 export function WhereGrid() {
@@ -56,25 +63,35 @@ export function WhereGrid() {
     <div className={styles.whereGrid}>
       {WHERE_CARDS.map((c) => (
         <div key={c.title} className={styles.whereCard}>
-          <div className={`${styles.whereIcon} ${c.jade ? styles.jade : ''}`}>
+          <div className={`${styles.whereIcon} ${c.jade ? styles.jade : ""}`}>
             {whereIcons[c.icon]}
           </div>
           <div className={styles.whereTitle}>{c.title}</div>
           <div className={styles.whereText}>{c.text}</div>
-          <div className={`${styles.whereTiming} ${c.delay ? styles.delay : ''}`}>{c.timing}</div>
+          <div
+            className={`${styles.whereTiming} ${c.delay ? styles.delay : ""}`}
+          >
+            {c.timing}
+          </div>
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 export function FaqList() {
-  const [open, setOpen] = useState<number | null>(null)
+  const [open, setOpen] = useState<number | null>(null);
   return (
     <div>
       {PRONOUN_FAQS.map((f, i) => (
-        <div key={f.q} className={`${styles.faqItem} ${open === i ? styles.open : ''}`}>
-          <button className={styles.faqQ} onClick={() => setOpen(open === i ? null : i)}>
+        <div
+          key={f.q}
+          className={`${styles.faqItem} ${open === i ? styles.open : ""}`}
+        >
+          <button
+            className={styles.faqQ}
+            onClick={() => setOpen(open === i ? null : i)}
+          >
             <span className={styles.faqQText}>{f.q}</span>
             <span className={styles.faqArrow}>▼</span>
           </button>
@@ -82,5 +99,5 @@ export function FaqList() {
         </div>
       ))}
     </div>
-  )
+  );
 }

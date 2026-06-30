@@ -2,13 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Outro } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import {
-  FAQ,
-  GLOSSARY,
-  RESOURCES,
-  TALK,
-  type ResType,
-} from "./queer101.data";
+import { FAQ, GLOSSARY, RESOURCES, TALK, type ResType } from "./queer101.data";
 import { SuggestEditModal } from "./SuggestEditModal";
 import styles from "./Queer101Page.module.css";
 
@@ -28,9 +22,9 @@ export function Queer101Hero() {
           Start here, wherever <em>here</em> is.
         </h1>
         <p className={styles.lead}>
-          For people newly exploring their identity — or just looking for language
-          that fits. You don't need to have anything figured out. This is not a
-          test.
+          For people newly exploring their identity — or just looking for
+          language that fits. You don't need to have anything figured out. This
+          is not a test.
         </p>
         <div className={styles.reassure}>
           <div className={styles.reassureNote}>
@@ -138,8 +132,8 @@ export function Queer101Glossary() {
         </div>
         <div className={styles.glossNotice}>
           This glossary is a starting point, not an authority. Language evolves,
-          people disagree, and definitions that feel right for one person may not
-          for another.
+          people disagree, and definitions that feel right for one person may
+          not for another.
         </div>
       </div>
       {editOpen && <SuggestEditModal onClose={() => setEditOpen(false)} />}
@@ -208,7 +202,11 @@ export function Queer101TalkOptions() {
 export function Queer101Outro() {
   return (
     <Outro
-      title={<>You're welcome <em>here.</em></>}
+      title={
+        <>
+          You're welcome <em>here.</em>
+        </>
+      }
       sub="Wherever you are in the process. However long it takes. This community isn't going anywhere."
     >
       <Button to={routes.requestInvite} variant="primary" size="lg">

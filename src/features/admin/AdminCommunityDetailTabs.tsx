@@ -1,17 +1,17 @@
-import { FiCheck } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { AdminChip, AdminCat, AdminAvatar } from './ui'
-import { portrait } from './adminPeople.data'
-import { type Community, type QueueItem } from './adminCommunities.data'
-import styles from './AdminCommunitiesPage.module.css'
+import { FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { AdminChip, AdminCat, AdminAvatar } from "./ui";
+import { portrait } from "./adminPeople.data";
+import { type Community, type QueueItem } from "./adminCommunities.data";
+import styles from "./AdminCommunitiesPage.module.css";
 
-const SHOWN = 2
+const SHOWN = 2;
 
 // ── Scoped queue pane ───────────────────────────────────────────────────────
 
 export function ScopedQueuePane({ community }: { community: Community }) {
-  const { queue, resolvedPct } = community
+  const { queue, resolvedPct } = community;
 
   if (queue.length === 0) {
     return (
@@ -24,16 +24,16 @@ export function ScopedQueuePane({ community }: { community: Community }) {
             Nothing open, <em>nothing owed</em>.
           </h3>
           <p className={styles.calmText}>
-            This community resolves everything itself — a {resolvedPct}% on-time record. Its
-            moderators rarely need you.
+            This community resolves everything itself — a {resolvedPct}% on-time
+            record. Its moderators rarely need you.
           </p>
         </div>
       </div>
-    )
+    );
   }
 
-  const shown = queue.slice(0, SHOWN)
-  const extra = queue.length - shown.length
+  const shown = queue.slice(0, SHOWN);
+  const extra = queue.length - shown.length;
 
   return (
     <div className={styles.pane}>
@@ -46,14 +46,22 @@ export function ScopedQueuePane({ community }: { community: Community }) {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function ReportRow({ item }: { item: QueueItem }) {
-  const catTone = item.catTone === 'danger' ? 'danger' : item.catTone === 'jade' ? 'jade' : 'coral'
+  const catTone =
+    item.catTone === "danger"
+      ? "danger"
+      : item.catTone === "jade"
+        ? "jade"
+        : "coral";
   return (
     <div className={styles.reportRow}>
-      <span className={`${styles.severity} ${styles[`sev_${item.sev}`]}`} aria-hidden />
+      <span
+        className={`${styles.severity} ${styles[`sev_${item.sev}`]}`}
+        aria-hidden
+      />
       <div className={styles.reportBody}>
         <AdminCat tone={catTone}>{item.catLabel}</AdminCat>
         <div className={styles.reportTitle}>{item.title}</div>
@@ -63,7 +71,7 @@ function ReportRow({ item }: { item: QueueItem }) {
         Review →
       </Button>
     </div>
-  )
+  );
 }
 
 // ── Members pane ────────────────────────────────────────────────────────────
@@ -83,7 +91,8 @@ export function MembersPane({ community }: { community: Community }) {
           />
           <div className={styles.memberMeta}>
             <div className={styles.memberName}>
-              {m.name} <span className={styles.memberPronouns}>{m.pronouns}</span>
+              {m.name}{" "}
+              <span className={styles.memberPronouns}>{m.pronouns}</span>
             </div>
             <div className={styles.memberDetail}>{m.role}</div>
           </div>
@@ -95,5 +104,5 @@ export function MembersPane({ community }: { community: Community }) {
         See all {community.members} members →
       </Button>
     </div>
-  )
+  );
 }

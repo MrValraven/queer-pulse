@@ -150,12 +150,16 @@
   padding: 40px 36px;
 }
 .panel::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: auto -60px -80px auto;
   width: 240px;
   height: 240px;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.16), transparent 65%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.16),
+    transparent 65%
+  );
   pointer-events: none;
 }
 .panelIcon {

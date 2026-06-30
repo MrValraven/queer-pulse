@@ -60,7 +60,9 @@
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
-  transition: background 0.18s, color 0.18s;
+  transition:
+    background 0.18s,
+    color 0.18s;
   border: none;
   background: transparent;
   width: 100%;

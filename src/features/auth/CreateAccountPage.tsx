@@ -1,63 +1,102 @@
-import { useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Button, FormField } from '../../shared/components/ui'
-import { getMember } from '../members/data/members'
-import { routes } from '../../app/routeMap'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { useAcceptInvite } from './api/useAcceptInvite'
-import { consumePendingInvite, readInviteWelcome } from './api/pendingInvite'
-import { resolveAvatarSrc } from '../../shared/lib/avatarUrl'
-import { AuthLayout } from './AuthLayout'
-import styles from './auth.module.css'
+import { useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, FormField } from "../../shared/components/ui";
+import { getMember } from "../members/data/members";
+import { routes } from "../../app/routeMap";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useAcceptInvite } from "./api/useAcceptInvite";
+import { consumePendingInvite, readInviteWelcome } from "./api/pendingInvite";
+import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
+import { AuthLayout } from "./AuthLayout";
+import styles from "./auth.module.css";
 
-const INVITER = getMember('ines')!
-const INVITER_NAME = `${INVITER.first} ${INVITER.last}`
+const INVITER = getMember("ines")!;
+const INVITER_NAME = `${INVITER.first} ${INVITER.last}`;
 /** The mock inviter, shown when the page is reached without an invite in flight. */
 const FALLBACK_INVITER = {
   name: INVITER_NAME,
   initials: INVITER.initials,
   photo: INVITER.photo,
-}
+};
 
-type Visibility = 'open' | 'network' | 'private'
-const PRONOUNS = ['he/him', 'she/her', 'they/them', 'she/they', 'he/they']
+type Visibility = "open" | "network" | "private";
+const PRONOUNS = ["he/him", "she/her", "they/them", "she/they", "he/they"];
 
-const STRENGTH_LABELS = ['At least 10 characters', 'Weak', 'Fair', 'Good', 'Strong']
-const STRENGTH_COLORS = ['var(--ink-40)', 'var(--accent-ink)', 'var(--amber)', 'var(--jade)', 'var(--jade)']
-const PW_MIN = 10
+const STRENGTH_LABELS = [
+  "At least 10 characters",
+  "Weak",
+  "Fair",
+  "Good",
+  "Strong",
+];
+const STRENGTH_COLORS = [
+  "var(--ink-40)",
+  "var(--accent-ink)",
+  "var(--amber)",
+  "var(--jade)",
+  "var(--jade)",
+];
+const PW_MIN = 10;
 
 function passwordScore(value: string): number {
-  let score = 0
-  if (value.length >= 10) score++
-  if (value.length >= 14) score++
-  if (/[0-9]/.test(value) || /[^a-zA-Z0-9]/.test(value)) score++
-  if (value.length >= 18) score++
-  return Math.min(score, 4)
+  let score = 0;
+  if (value.length >= 10) score++;
+  if (value.length >= 14) score++;
+  if (/[0-9]/.test(value) || /[^a-zA-Z0-9]/.test(value)) score++;
+  if (value.length >= 18) score++;
+  return Math.min(score, 4);
 }
 
-type Touched = { first: boolean; last: boolean; password: boolean; confirm: boolean }
+type Touched = {
+  first: boolean;
+  last: boolean;
+  password: boolean;
+  confirm: boolean;
+};
 
 interface AboutProps {
-  pronouns: string
-  setPronouns: (v: string) => void
-  bio: string
-  setBio: (v: string) => void
-  visibility: Visibility
-  setVisibility: (v: Visibility) => void
+  pronouns: string;
+  setPronouns: (v: string) => void;
+  bio: string;
+  setBio: (v: string) => void;
+  visibility: Visibility;
+  setVisibility: (v: Visibility) => void;
 }
 
 const VIS_OPTS = [
-  { value: 'open', label: 'Visible to all members', sub: 'Your profile appears in the member directory' },
-  { value: 'network', label: 'Visible to connections only', sub: "Only people you've connected with can see your full profile" },
-  { value: 'private', label: 'Private', sub: 'Your profile is hidden; you can still browse and join gatherings' },
-] as const
+  {
+    value: "open",
+    label: "Visible to all members",
+    sub: "Your profile appears in the member directory",
+  },
+  {
+    value: "network",
+    label: "Visible to connections only",
+    sub: "Only people you've connected with can see your full profile",
+  },
+  {
+    value: "private",
+    label: "Private",
+    sub: "Your profile is hidden; you can still browse and join gatherings",
+  },
+] as const;
 
-function AboutAndVisibility({ pronouns, setPronouns, bio, setBio, visibility, setVisibility }: AboutProps) {
+function AboutAndVisibility({
+  pronouns,
+  setPronouns,
+  bio,
+  setBio,
+  visibility,
+  setVisibility,
+}: AboutProps) {
   return (
     <>
       <div className={styles.section}>
         <div className={styles.sectionLabel}>About you</div>
-        <FormField label="Display name" helper="What members see. Can differ from your legal name.">
+        <FormField
+          label="Display name"
+          helper="What members see. Can differ from your legal name."
+        >
           <input type="text" placeholder="Tiago C." />
         </FormField>
         <div className={styles.field}>
@@ -70,7 +109,12 @@ function AboutAndVisibility({ pronouns, setPronouns, bio, setBio, visibility, se
           />
           <div className={styles.pronounChips}>
             {PRONOUNS.map((p) => (
-              <button key={p} type="button" className={styles.pChip} onClick={() => setPronouns(p)}>
+              <button
+                key={p}
+                type="button"
+                className={styles.pChip}
+                onClick={() => setPronouns(p)}
+              >
                 {p}
               </button>
             ))}
@@ -95,7 +139,12 @@ function AboutAndVisibility({ pronouns, setPronouns, bio, setBio, visibility, se
           {VIS_OPTS.map((opt) => (
             <label
               key={opt.value}
-              className={[styles.visOpt, visibility === opt.value && styles.visOptSelected].filter(Boolean).join(' ')}
+              className={[
+                styles.visOpt,
+                visibility === opt.value && styles.visOptSelected,
+              ]
+                .filter(Boolean)
+                .join(" ")}
             >
               <input
                 type="radio"
@@ -112,58 +161,68 @@ function AboutAndVisibility({ pronouns, setPronouns, bio, setBio, visibility, se
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export function CreateAccountPage() {
-  const navigate = useNavigate()
-  const { showToast } = useToast()
-  const acceptInvite = useAcceptInvite()
+  const navigate = useNavigate();
+  const { showToast } = useToast();
+  const acceptInvite = useAcceptInvite();
   // Who invited them, stashed by the invite landing — falls back to the mock.
-  const [welcome] = useState(readInviteWelcome)
-  const inviter = welcome?.inviter ?? FALLBACK_INVITER
-  const [first, setFirst] = useState('')
-  const [last, setLast] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirm, setConfirm] = useState('')
-  const [pronouns, setPronouns] = useState('')
-  const [bio, setBio] = useState('')
-  const [visibility, setVisibility] = useState<Visibility>('open')
-  const [touched, setTouched] = useState<Touched>({ first: false, last: false, password: false, confirm: false })
+  const [welcome] = useState(readInviteWelcome);
+  const inviter = welcome?.inviter ?? FALLBACK_INVITER;
+  const [first, setFirst] = useState("");
+  const [last, setLast] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [pronouns, setPronouns] = useState("");
+  const [bio, setBio] = useState("");
+  const [visibility, setVisibility] = useState<Visibility>("open");
+  const [touched, setTouched] = useState<Touched>({
+    first: false,
+    last: false,
+    password: false,
+    confirm: false,
+  });
 
-  const score = useMemo(() => passwordScore(password), [password])
+  const score = useMemo(() => passwordScore(password), [password]);
 
   const errors = useMemo(() => {
-    const e: Partial<Record<keyof Touched, string>> = {}
-    if (!first.trim()) e.first = 'First name is required.'
-    if (!last.trim()) e.last = 'Last name is required.'
-    if (!password) e.password = 'Choose a password.'
-    else if (password.length < PW_MIN) e.password = `Use at least ${PW_MIN} characters.`
-    if (!confirm) e.confirm = 'Re-enter your password.'
-    else if (confirm !== password) e.confirm = "Passwords don't match."
-    return e
-  }, [first, last, password, confirm])
+    const e: Partial<Record<keyof Touched, string>> = {};
+    if (!first.trim()) e.first = "First name is required.";
+    if (!last.trim()) e.last = "Last name is required.";
+    if (!password) e.password = "Choose a password.";
+    else if (password.length < PW_MIN)
+      e.password = `Use at least ${PW_MIN} characters.`;
+    if (!confirm) e.confirm = "Re-enter your password.";
+    else if (confirm !== password) e.confirm = "Passwords don't match.";
+    return e;
+  }, [first, last, password, confirm]);
 
-  const isValid = Object.keys(errors).length === 0
-  const touch = (key: keyof Touched) => setTouched((t) => ({ ...t, [key]: true }))
+  const isValid = Object.keys(errors).length === 0;
+  const touch = (key: keyof Touched) =>
+    setTouched((t) => ({ ...t, [key]: true }));
 
   async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault()
+    event.preventDefault();
     if (!isValid) {
-      setTouched({ first: true, last: true, password: true, confirm: true })
-      return
+      setTouched({ first: true, last: true, password: true, confirm: true });
+      return;
     }
     // Account created — redeem the invite that brought them here (if any) before
     // onboarding, promoting them to an active member. Best-effort in this prototype.
-    const code = consumePendingInvite()
+    const code = consumePendingInvite();
     if (code) {
       try {
-        await acceptInvite.mutateAsync(code)
+        await acceptInvite.mutateAsync(code);
       } catch (err) {
-        showToast(err instanceof Error ? err.message : 'Could not redeem this invite', 'error')
+        showToast(
+          err instanceof Error ? err.message : "Could not redeem this invite",
+          "error",
+        );
       }
     }
-    navigate('/onboarding')
+    navigate("/onboarding");
   }
 
   return (
@@ -175,7 +234,12 @@ export function CreateAccountPage() {
               src={resolveAvatarSrc(inviter.photo)}
               alt=""
               referrerPolicy="no-referrer"
-              style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
             />
           ) : (
             inviter.initials
@@ -198,38 +262,51 @@ export function CreateAccountPage() {
         <div className={styles.section}>
           <div className={styles.sectionLabel}>Your account</div>
           <div className={styles.twoCol}>
-            <FormField label="First name" required error={touched.first ? errors.first : undefined}>
+            <FormField
+              label="First name"
+              required
+              error={touched.first ? errors.first : undefined}
+            >
               <input
                 type="text"
                 placeholder="Tiago"
                 value={first}
                 onChange={(e) => setFirst(e.target.value)}
-                onBlur={() => touch('first')}
+                onBlur={() => touch("first")}
                 aria-invalid={touched.first && !!errors.first}
               />
             </FormField>
-            <FormField label="Last name" required error={touched.last ? errors.last : undefined}>
+            <FormField
+              label="Last name"
+              required
+              error={touched.last ? errors.last : undefined}
+            >
               <input
                 type="text"
                 placeholder="Costa"
                 value={last}
                 onChange={(e) => setLast(e.target.value)}
-                onBlur={() => touch('last')}
+                onBlur={() => touch("last")}
                 aria-invalid={touched.last && !!errors.last}
               />
             </FormField>
           </div>
-          <FormField label="Email address" helper="Taken from your invite — not editable">
+          <FormField
+            label="Email address"
+            helper="Taken from your invite — not editable"
+          >
             <input type="email" value="tiago@gmail.com" disabled />
           </FormField>
           <div className={styles.field}>
-            <label>Password <span className={styles.req}>*</span></label>
+            <label>
+              Password <span className={styles.req}>*</span>
+            </label>
             <input
               type="password"
               placeholder="Choose a password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onBlur={() => touch('password')}
+              onBlur={() => touch("password")}
               aria-invalid={touched.password && !!errors.password}
             />
             <div className={styles.strengthBar}>
@@ -237,31 +314,44 @@ export function CreateAccountPage() {
                 <div
                   key={seg}
                   className={styles.strengthSeg}
-                  style={{ background: seg <= score ? STRENGTH_COLORS[score] : undefined }}
+                  style={{
+                    background:
+                      seg <= score ? STRENGTH_COLORS[score] : undefined,
+                  }}
                 />
               ))}
             </div>
             {touched.password && errors.password ? (
               <div className={styles.fieldError}>{errors.password}</div>
             ) : (
-              <div className={styles.strengthLabel} style={{ color: STRENGTH_COLORS[score] }}>
+              <div
+                className={styles.strengthLabel}
+                style={{ color: STRENGTH_COLORS[score] }}
+              >
                 {STRENGTH_LABELS[score]}
               </div>
             )}
-            <div className={styles.helper}>At least {PW_MIN} characters. Add numbers or symbols for a stronger password.</div>
+            <div className={styles.helper}>
+              At least {PW_MIN} characters. Add numbers or symbols for a
+              stronger password.
+            </div>
           </div>
           <FormField
             label="Confirm password"
             required
             error={touched.confirm ? errors.confirm : undefined}
-            ok={touched.confirm && !errors.confirm && confirm ? 'Passwords match.' : undefined}
+            ok={
+              touched.confirm && !errors.confirm && confirm
+                ? "Passwords match."
+                : undefined
+            }
           >
             <input
               type="password"
               placeholder="Confirm your password"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
-              onBlur={() => touch('confirm')}
+              onBlur={() => touch("confirm")}
               aria-invalid={touched.confirm && !!errors.confirm}
             />
           </FormField>
@@ -276,11 +366,17 @@ export function CreateAccountPage() {
           setVisibility={setVisibility}
         />
 
-        <Button type="submit" className={styles.authBtn} disabled={!isValid} aria-disabled={!isValid}>
+        <Button
+          type="submit"
+          className={styles.authBtn}
+          disabled={!isValid}
+          aria-disabled={!isValid}
+        >
           Create account
         </Button>
         <div className={styles.legalNote}>
-          By creating an account you agree to our <Link to={routes.terms}>Terms of Use</Link> and{' '}
+          By creating an account you agree to our{" "}
+          <Link to={routes.terms}>Terms of Use</Link> and{" "}
           <Link to={routes.privacy}>Privacy Policy</Link>
         </div>
         <div className={styles.signinLink}>
@@ -288,5 +384,5 @@ export function CreateAccountPage() {
         </div>
       </form>
     </AuthLayout>
-  )
+  );
 }

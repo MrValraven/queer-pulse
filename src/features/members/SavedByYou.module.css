@@ -181,9 +181,9 @@ a.title:hover {
   flex: none;
 }
 
-:global([data-theme='dark']) .card {
+:global([data-theme="dark"]) .card {
   border-color: rgba(247, 243, 238, 0.12);
 }
-:global([data-theme='dark']) .footer {
+:global([data-theme="dark"]) .footer {
   border-top-color: rgba(247, 243, 238, 0.1);
 }

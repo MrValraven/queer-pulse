@@ -461,6 +461,6 @@
   }
 }
 
-:global([data-theme='dark']) .ec {
+:global([data-theme="dark"]) .ec {
   border-color: rgba(247, 243, 238, 0.1);
 }

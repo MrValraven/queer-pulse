@@ -1,6 +1,6 @@
-import { AppShell } from '../../shared/components/layout'
-import { MyEventsProvider } from './MyEventsProvider'
-import { MyEventsBody } from './MyEventsBody'
+import { AppShell } from "../../shared/components/layout";
+import { MyEventsProvider } from "./MyEventsProvider";
+import { MyEventsBody } from "./MyEventsBody";
 
 /**
  * "Your events" — the dashboard for managing gatherings you're going to,
@@ -14,5 +14,5 @@ export function MyEventsPage() {
         <MyEventsBody />
       </MyEventsProvider>
     </AppShell>
-  )
+  );
 }

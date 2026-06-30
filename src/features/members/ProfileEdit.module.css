@@ -280,6 +280,10 @@
   flex: none;
   animation: pulse 1.8s var(--ease) infinite;
 }
+.saveError {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
 .saveActions {
   display: flex;
   gap: 10px;

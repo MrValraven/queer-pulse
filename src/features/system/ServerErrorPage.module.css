@@ -73,12 +73,20 @@
 }
 
 .cardTop::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 80% 20%, rgba(var(--accent-rgb), 0.2), transparent 55%),
-    radial-gradient(ellipse at 10% 90%, rgba(var(--jade-rgb), 0.12), transparent 50%);
+    radial-gradient(
+      ellipse at 80% 20%,
+      rgba(var(--accent-rgb), 0.2),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 10% 90%,
+      rgba(var(--jade-rgb), 0.12),
+      transparent 50%
+    );
   pointer-events: none;
 }
 
@@ -190,8 +198,13 @@
 }
 
 @keyframes errPulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2); }
-  50% { box-shadow: 0 0 0 7px rgba(var(--accent-rgb), 0); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(var(--accent-rgb), 0);
+  }
 }
 
 .statusText {

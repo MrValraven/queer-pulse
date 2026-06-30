@@ -2,51 +2,51 @@
    All hues are warm-tinted. Plum is the brand anchor; accent is swappable via Tweaks. */
 :root {
   /* ── Brand ── */
-  --plum:        #2D1B3D;
-  --plum-rgb:    45, 27, 61;
-  --plum-deep:   #241430;
+  --plum: #2d1b3d;
+  --plum-rgb: 45, 27, 61;
+  --plum-deep: #241430;
 
   /* ── Accent (coral / terracotta — swappable) ── */
-  --accent:      #E8775A;
-  --accent-rgb:  232, 119, 90;
-  --accent-ink:  #C85A40;
-  --accent-deep: #A84430;   /* darker accent — pressed/hover on accent-ink */
+  --accent: #e8775a;
+  --accent-rgb: 232, 119, 90;
+  --accent-ink: #c85a40;
+  --accent-deep: #a84430; /* darker accent — pressed/hover on accent-ink */
 
   /* ── Surfaces ── */
-  --cream:  #F7F3EE;   /* page background */
-  --paper:  #FFFFFF;   /* card surface */
+  --cream: #f7f3ee; /* page background */
+  --paper: #ffffff; /* card surface */
 
   /* ── Jade (success / live / verified) ── */
-  --jade:     #4A8C6F;
+  --jade: #4a8c6f;
   --jade-rgb: 74, 140, 111;
-  --jade-soft: #7CD7AD;   /* light jade — text/icons on jade-tinted surfaces */
+  --jade-soft: #7cd7ad; /* light jade — text/icons on jade-tinted surfaces */
 
   /* ── Amber (warning / medium states) ── */
-  --amber:    #E8B44A;
+  --amber: #e8b44a;
   --amber-rgb: 232, 180, 74;
 
   /* ── Danger (destructive actions: delete, block, report, emergency) ── */
-  --danger:     #B91C1C;
+  --danger: #b91c1c;
   --danger-rgb: 185, 28, 28;
 
   /* ── Soft accent (light coral — text/icons on accent-tinted surfaces) ── */
-  --accent-soft: #FFC4AF;
+  --accent-soft: #ffc4af;
 
   /* ── Violet (Culture category accent — design/digital) ── */
-  --violet:     #7A52B8;
+  --violet: #7a52b8;
   --violet-rgb: 122, 82, 184;
 
   /* ── Ink (text) ── */
-  --ink:    #1A1A1F;
-  --ink-60: rgba(26, 26, 31, .62);  /* body copy */
-  --ink-40: rgba(26, 26, 31, .42);  /* metadata, placeholders */
+  --ink: #1a1a1f;
+  --ink-60: rgba(26, 26, 31, 0.62); /* body copy */
+  --ink-40: rgba(26, 26, 31, 0.42); /* metadata, placeholders */
 }
 
 /* ── Dark mode overrides ── */
 [data-theme="dark"] {
   --cream: #0e0820;
   --paper: #1a1030;
-  --ink:    rgba(247, 243, 238, .92);
-  --ink-60: rgba(247, 243, 238, .62);
-  --ink-40: rgba(247, 243, 238, .42);
+  --ink: rgba(247, 243, 238, 0.92);
+  --ink-60: rgba(247, 243, 238, 0.62);
+  --ink-40: rgba(247, 243, 238, 0.42);
 }

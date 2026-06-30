@@ -12,7 +12,11 @@
   width: 420px;
   height: 420px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.13), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.13),
+    transparent 62%
+  );
 }
 .hero::after {
   content: "";
@@ -22,7 +26,11 @@
   width: 340px;
   height: 340px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.09), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.09),
+    transparent 62%
+  );
 }
 .eye {
   font-size: 11px;

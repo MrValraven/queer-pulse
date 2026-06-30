@@ -59,7 +59,8 @@
   font-weight: 500;
   color: var(--ink);
   cursor: pointer;
-  transition: border-color var(--dur-fast) var(--ease-std),
+  transition:
+    border-color var(--dur-fast) var(--ease-std),
     background var(--dur-fast) var(--ease-std);
 }
 
@@ -83,8 +84,11 @@
 
 .reasonOn .radio {
   border-color: var(--plum);
-  background:
-    radial-gradient(circle at center, var(--plum) 0 4px, transparent 5px);
+  background: radial-gradient(
+    circle at center,
+    var(--plum) 0 4px,
+    transparent 5px
+  );
 }
 
 .actions {

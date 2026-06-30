@@ -7,7 +7,8 @@ import { CHANGEMAKERS, getChangemaker, type Tint } from "./changemakerStories";
 import styles from "./ChangemakerStoryPage.module.css";
 
 const HERO_GRADIENT: Record<Tint, string> = {
-  coral: "linear-gradient(135deg, rgba(var(--accent-rgb),.42), rgba(45,27,61,.5))",
+  coral:
+    "linear-gradient(135deg, rgba(var(--accent-rgb),.42), rgba(45,27,61,.5))",
   jade: "linear-gradient(135deg, rgba(var(--jade-rgb),.42), rgba(45,27,61,.5))",
   plum: "linear-gradient(135deg, rgba(45,27,61,.55), rgba(45,27,61,.35))",
 };
@@ -42,7 +43,10 @@ export function ChangemakerStoryPage() {
         </div>
       </div>
 
-      <div className={styles.hero} style={{ background: HERO_GRADIENT[cm.tint] }}>
+      <div
+        className={styles.hero}
+        style={{ background: HERO_GRADIENT[cm.tint] }}
+      >
         <div className={styles.heroInitials}>{cm.initials}</div>
         <div className={styles.heroOverlay} />
         <div className={styles.heroLabel}>
@@ -85,7 +89,9 @@ export function ChangemakerStoryPage() {
           </blockquote>
 
           <div className={styles.impactCard}>
-            <div className={styles.impactLabel}>Why we highlight {cm.name.split(" ")[0]}</div>
+            <div className={styles.impactLabel}>
+              Why we highlight {cm.name.split(" ")[0]}
+            </div>
             {cm.impact.map((row) => (
               <div className={styles.impactRow} key={row}>
                 <span className={styles.impactIc}>
@@ -103,7 +109,11 @@ export function ChangemakerStoryPage() {
       </article>
 
       <Outro
-        title={<>Want to support <em>{cm.name.split(" ")[0]}'s</em> work?</>}
+        title={
+          <>
+            Want to support <em>{cm.name.split(" ")[0]}'s</em> work?
+          </>
+        }
         sub="Change makers do this alongside their day jobs. A message, an introduction, or an hour of your time goes further than you'd think."
       >
         <Button variant="primary" onClick={() => openConnect()}>
@@ -118,8 +128,14 @@ export function ChangemakerStoryPage() {
         <div className={styles.moreLabel}>More change makers</div>
         <div className={styles.moreGrid}>
           {others.map((o) => (
-            <Link key={o.slug} to={`/changemaker/${o.slug}`} className={styles.moreCard}>
-              <div className={[styles.moreAv, styles[AV_CLASS[o.tint]]].join(" ")}>
+            <Link
+              key={o.slug}
+              to={`/changemaker/${o.slug}`}
+              className={styles.moreCard}
+            >
+              <div
+                className={[styles.moreAv, styles[AV_CLASS[o.tint]]].join(" ")}
+              >
                 {o.initials}
               </div>
               <div>

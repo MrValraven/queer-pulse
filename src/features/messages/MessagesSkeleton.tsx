@@ -1,5 +1,5 @@
-import { SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
-import styles from './MessagesPage.module.css'
+import { SkeletonAvatar, SkeletonLine } from "../../shared/components/ui";
+import styles from "./MessagesPage.module.css";
 
 /** Mirrors a thread row: avatar + name/time header + preview line. */
 function ThreadRowSkeleton() {
@@ -16,7 +16,7 @@ function ThreadRowSkeleton() {
         <SkeletonLine width="80%" height={13} style={{ marginTop: 4 }} />
       </div>
     </div>
-  )
+  );
 }
 
 export function MessageThreadListSkeleton({ count = 6 }: { count?: number }) {
@@ -26,5 +26,5 @@ export function MessageThreadListSkeleton({ count = 6 }: { count?: number }) {
         <ThreadRowSkeleton key={i} />
       ))}
     </>
-  )
+  );
 }

@@ -40,7 +40,10 @@ export function OfferRespondModal({
   const choose = (kind: "accept" | "decline") => {
     setPending(kind);
     timer.current = window.setTimeout(() => {
-      onPatch(app.id, kind === "accept" ? acceptedOfferPatch() : declinedOfferPatch());
+      onPatch(
+        app.id,
+        kind === "accept" ? acceptedOfferPatch() : declinedOfferPatch(),
+      );
       setOutcome(kind);
       setLeft(UNDO_SECONDS);
       tick.current = window.setInterval(() => {
@@ -75,7 +78,11 @@ export function OfferRespondModal({
                   <span className={styles.undoText}>
                     Changed your mind? You can undo for {left}s.
                   </span>
-                  <button type="button" className={styles.undoBtn} onClick={undo}>
+                  <button
+                    type="button"
+                    className={styles.undoBtn}
+                    onClick={undo}
+                  >
                     Undo
                   </button>
                 </>
@@ -95,11 +102,15 @@ export function OfferRespondModal({
 
   return (
     <ModalShell onClose={onClose}>
-      <div className={styles.eyebrow}>Your offer · respond by {o?.respondBy}</div>
+      <div className={styles.eyebrow}>
+        Your offer · respond by {o?.respondBy}
+      </div>
       <h2 className={styles.title}>
         {app.companyName} <em>said yes.</em>
       </h2>
-      <p className={styles.sub}>Here's everything on the table. Take your time — then choose.</p>
+      <p className={styles.sub}>
+        Here's everything on the table. Take your time — then choose.
+      </p>
       <div className={styles.panel}>
         <div className={styles.rows}>
           <div className={styles.row}>
@@ -130,10 +141,23 @@ export function OfferRespondModal({
           disabled={pending !== null}
           onClick={() => choose("decline")}
         >
-          {pending === "decline" ? <Sending label="Declining…" /> : "Decline politely"}
+          {pending === "decline" ? (
+            <Sending label="Declining…" />
+          ) : (
+            "Decline politely"
+          )}
         </button>
-        <Button size="lg" variant="jade" disabled={pending !== null} onClick={() => choose("accept")}>
-          {pending === "accept" ? <Sending label="Accepting…" /> : "Accept offer →"}
+        <Button
+          size="lg"
+          variant="jade"
+          disabled={pending !== null}
+          onClick={() => choose("accept")}
+        >
+          {pending === "accept" ? (
+            <Sending label="Accepting…" />
+          ) : (
+            "Accept offer →"
+          )}
         </Button>
       </div>
     </ModalShell>

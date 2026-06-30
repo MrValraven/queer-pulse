@@ -91,7 +91,7 @@
   margin-top: 0;
 }
 .groupLabel::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: rgba(var(--plum-rgb), 0.09);

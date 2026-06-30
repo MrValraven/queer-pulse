@@ -1,48 +1,49 @@
-import { FiCheck, FiX } from 'react-icons/fi'
-import { DocPreview } from './tools/DocPreview'
-import type { Issuer } from './tools/useIssuer'
-import { euro } from './economy.data'
-import { formatDate } from '../../shared/lib/date'
-import { TAX_DISCLAIMER } from './tax.constants'
-import type { ScopeState } from './scope.data'
-import styles from './ScopeGeneratorPage.module.css'
+import { FiCheck, FiX } from "react-icons/fi";
+import { DocPreview } from "./tools/DocPreview";
+import type { Issuer } from "./tools/useIssuer";
+import { euro } from "./economy.data";
+import { formatDate } from "../../shared/lib/date";
+import { TAX_DISCLAIMER } from "./tax.constants";
+import type { ScopeState } from "./scope.data";
+import styles from "./ScopeGeneratorPage.module.css";
 
 /** Reword the shared tax disclaimer as a general scope/quote disclaimer. */
 const SCOPE_DISCLAIMER =
-  'This document is a working scope, not a binding contract. Anything not listed under ' +
+  "This document is a working scope, not a binding contract. Anything not listed under " +
   "“What's included” is out of scope and quoted separately. " +
-  TAX_DISCLAIMER
+  TAX_DISCLAIMER;
 
 interface ScopePreviewProps {
-  scope: ScopeState
-  issuer: Issuer
+  scope: ScopeState;
+  issuer: Issuer;
 }
 
 /** The branded, printable scope/quote document. */
 export function ScopePreview({ scope, issuer }: ScopePreviewProps) {
-  const priceNum = Number(scope.price)
-  const hasPrice = scope.price.trim() !== '' && Number.isFinite(priceNum)
-  const deliverables = scope.deliverables.filter((d) => d.trim())
-  const exclusions = scope.outOfScope.filter((d) => d.trim())
-  const today = new Date().toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
+  const priceNum = Number(scope.price);
+  const hasPrice = scope.price.trim() !== "" && Number.isFinite(priceNum);
+  const deliverables = scope.deliverables.filter((d) => d.trim());
+  const exclusions = scope.outOfScope.filter((d) => d.trim());
+  const today = new Date().toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   return (
     <DocPreview>
       <header className={styles.docHead}>
         <div>
-          <p className={styles.docIssuer}>{issuer.name || 'Your name'}</p>
+          <p className={styles.docIssuer}>{issuer.name || "Your name"}</p>
           {issuer.email && <p className={styles.docMeta}>{issuer.email}</p>}
         </div>
-        <p className={styles.docKind}>{hasPrice ? 'Quote' : 'Scope of Work'}</p>
+        <p className={styles.docKind}>{hasPrice ? "Quote" : "Scope of Work"}</p>
       </header>
 
-      <h2 className={styles.docTitle}>{scope.project || 'Untitled project'}</h2>
+      <h2 className={styles.docTitle}>{scope.project || "Untitled project"}</h2>
       <p className={styles.docSubMeta}>
-        {scope.clientName ? `For ${scope.clientName}` : 'For your client'} · {today}
+        {scope.clientName ? `For ${scope.clientName}` : "For your client"} ·{" "}
+        {today}
       </p>
 
       <section className={styles.docSection}>
@@ -51,7 +52,8 @@ export function ScopePreview({ scope, issuer }: ScopePreviewProps) {
           <ul className={styles.docList}>
             {deliverables.map((d, i) => (
               <li key={`inc-${i}`} className={styles.docItem}>
-                <FiCheck className={styles.iconYes} aria-hidden /> <span>{d}</span>
+                <FiCheck className={styles.iconYes} aria-hidden />{" "}
+                <span>{d}</span>
               </li>
             ))}
           </ul>
@@ -95,10 +97,12 @@ export function ScopePreview({ scope, issuer }: ScopePreviewProps) {
       )}
 
       {scope.validUntil && (
-        <p className={styles.docValid}>Valid until {formatDate(scope.validUntil)}</p>
+        <p className={styles.docValid}>
+          Valid until {formatDate(scope.validUntil)}
+        </p>
       )}
 
       <footer className={styles.docFoot}>{SCOPE_DISCLAIMER}</footer>
     </DocPreview>
-  )
+  );
 }

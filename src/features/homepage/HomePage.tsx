@@ -1,4 +1,4 @@
-import { PageShell } from '../../shared/components/layout'
+import { PageShell } from "../../shared/components/layout";
 import {
   Barter,
   Board,
@@ -21,7 +21,7 @@ import {
   Stories,
   TrustStrip,
   Wellbeing,
-} from './sections'
+} from "./sections";
 
 /**
  * QueerPulse marketing homepage — composes the sections in the order from
@@ -52,5 +52,5 @@ export function HomePage() {
       <Newsletter />
       <Outro />
     </PageShell>
-  )
+  );
 }

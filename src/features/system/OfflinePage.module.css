@@ -30,7 +30,7 @@
 }
 
 .ic::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 18px;
   right: 18px;
@@ -178,7 +178,7 @@
 }
 
 .status::before {
-  content: '';
+  content: "";
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -187,8 +187,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 .retryBtn {

@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { useProfileTheme } from '../../app/providers/ProfileThemeProvider'
-import { useScrollLock } from '../../shared/hooks'
-import { AppShell } from '../../shared/components/layout'
-import { FadeIn } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { NAV, type PaneId } from './settings.data'
-import { DeleteAccountSection } from './DeleteAccountSection'
-import { EditProfilePane } from './EditProfilePane'
-import { ProfileThemePane, AccessibilityPane } from './SettingsPersonalisation'
-import { InterestsPane } from './InterestsPane'
-import { DeleteAccountModal } from './SettingsControls'
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useProfileTheme } from "../../app/providers/ProfileThemeProvider";
+import { useScrollLock } from "../../shared/hooks";
+import { AppShell } from "../../shared/components/layout";
+import { FadeIn } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { NAV, type PaneId } from "./settings.data";
+import { DeleteAccountSection } from "./DeleteAccountSection";
+import { EditProfilePane } from "./EditProfilePane";
+import { ProfileThemePane, AccessibilityPane } from "./SettingsPersonalisation";
+import { InterestsPane } from "./InterestsPane";
+import { DeleteAccountModal } from "./SettingsControls";
 import {
   AccountPane,
   DataPane,
@@ -18,29 +18,29 @@ import {
   NotificationsPane,
   SimulationsPane,
   VisibilityPane,
-} from './SettingsPanes'
-import styles from './SettingsPage.module.css'
+} from "./SettingsPanes";
+import styles from "./SettingsPage.module.css";
 
 export function SettingsPage() {
-  const { showToast } = useToast()
-  const { commit: commitTheme, discard: discardTheme } = useProfileTheme()
-  const [params] = useSearchParams()
+  const { showToast } = useToast();
+  const { commit: commitTheme, discard: discardTheme } = useProfileTheme();
+  const [params] = useSearchParams();
   const initialPane = (() => {
-    const p = params.get('pane')
-    const valid = NAV.flatMap((g) => g.items.map((i) => i.id))
-    return p && valid.includes(p as PaneId) ? (p as PaneId) : 'notifications'
-  })()
-  const [pane, setPane] = useState<PaneId>(initialPane)
-  const [dirty, setDirty] = useState(false)
-  const [showDelete, setShowDelete] = useState(false)
-  useScrollLock(showDelete)
+    const p = params.get("pane");
+    const valid = NAV.flatMap((g) => g.items.map((i) => i.id));
+    return p && valid.includes(p as PaneId) ? (p as PaneId) : "notifications";
+  })();
+  const [pane, setPane] = useState<PaneId>(initialPane);
+  const [dirty, setDirty] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  useScrollLock(showDelete);
 
   // Drop any leftover unsaved theme edits when re-entering Settings.
   useEffect(() => {
-    discardTheme()
-  }, [discardTheme])
+    discardTheme();
+  }, [discardTheme]);
 
-  const markChanged = () => setDirty(true)
+  const markChanged = () => setDirty(true);
 
   return (
     <AppShell>
@@ -58,10 +58,12 @@ export function SettingsPage() {
                     pane === item.id && styles.navItemActive,
                   ]
                     .filter(Boolean)
-                    .join(' ')}
+                    .join(" ")}
                   onClick={() => setPane(item.id)}
                 >
-                  <span className={styles.icon}><item.icon /></span>
+                  <span className={styles.icon}>
+                    <item.icon />
+                  </span>
                   {item.label}
                 </button>
               ))}
@@ -71,17 +73,28 @@ export function SettingsPage() {
 
         <main className={styles.main}>
           <FadeIn key={pane}>
-            {pane === 'notifications' && <NotificationsPane onChange={markChanged} />}
-            {pane === 'language' && <LanguagePane onChange={markChanged} />}
-            {pane === 'data' && <DataPane onChange={markChanged} onDeleteClick={() => setShowDelete(true)} />}
-            {pane === 'visibility' && <VisibilityPane onChange={markChanged} />}
-            {pane === 'profile' && <EditProfilePane onChange={markChanged} />}
-            {pane === 'profile-theme' && <ProfileThemePane onChange={markChanged} />}
-            {pane === 'accessibility' && <AccessibilityPane onChange={markChanged} />}
-            {pane === 'interests' && <InterestsPane onChange={markChanged} />}
-            {pane === 'account' && <AccountPane onChange={markChanged} />}
-            {pane === 'simulations' && <SimulationsPane />}
-            {pane === 'delete' && <DeleteAccountSection />}
+            {pane === "notifications" && (
+              <NotificationsPane onChange={markChanged} />
+            )}
+            {pane === "language" && <LanguagePane onChange={markChanged} />}
+            {pane === "data" && (
+              <DataPane
+                onChange={markChanged}
+                onDeleteClick={() => setShowDelete(true)}
+              />
+            )}
+            {pane === "visibility" && <VisibilityPane onChange={markChanged} />}
+            {pane === "profile" && <EditProfilePane onChange={markChanged} />}
+            {pane === "profile-theme" && (
+              <ProfileThemePane onChange={markChanged} />
+            )}
+            {pane === "accessibility" && (
+              <AccessibilityPane onChange={markChanged} />
+            )}
+            {pane === "interests" && <InterestsPane onChange={markChanged} />}
+            {pane === "account" && <AccountPane onChange={markChanged} />}
+            {pane === "simulations" && <SimulationsPane />}
+            {pane === "delete" && <DeleteAccountSection />}
           </FadeIn>
         </main>
       </div>
@@ -89,12 +102,12 @@ export function SettingsPage() {
       {dirty && (
         <div className={styles.saveBar}>
           <p>You have unsaved changes.</p>
-          <div style={{ display: 'flex', gap: 10 }}>
+          <div style={{ display: "flex", gap: 10 }}>
             <button
               className={styles.discard}
               onClick={() => {
-                discardTheme()
-                setDirty(false)
+                discardTheme();
+                setDirty(false);
               }}
             >
               Discard
@@ -102,9 +115,9 @@ export function SettingsPage() {
             <button
               className={styles.saveBtn}
               onClick={() => {
-                commitTheme()
-                setDirty(false)
-                showToast('Settings saved', 'success')
+                commitTheme();
+                setDirty(false);
+                showToast("Settings saved", "success");
               }}
             >
               Save changes
@@ -117,11 +130,14 @@ export function SettingsPage() {
         <DeleteAccountModal
           onClose={() => setShowDelete(false)}
           onConfirm={() => {
-            setShowDelete(false)
-            showToast("Account deletion requested — you'll get a confirmation email within 24 hours", 'info')
+            setShowDelete(false);
+            showToast(
+              "Account deletion requested — you'll get a confirmation email within 24 hours",
+              "info",
+            );
           }}
         />
       )}
     </AppShell>
-  )
+  );
 }

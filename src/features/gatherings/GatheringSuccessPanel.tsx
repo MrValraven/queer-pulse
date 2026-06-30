@@ -1,24 +1,29 @@
-import type { ReactNode } from 'react'
-import { FiX, FiCheck } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import styles from './GatheringModals.module.css'
+import type { ReactNode } from "react";
+import { FiX, FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import styles from "./GatheringModals.module.css";
 
 export function GatheringSuccessPanel({
   title,
   sub,
   meta,
   onClose,
-  closeLabel = 'Done',
+  closeLabel = "Done",
 }: {
-  title: ReactNode
-  sub: ReactNode
-  meta?: ReactNode
-  onClose: () => void
-  closeLabel?: string
+  title: ReactNode;
+  sub: ReactNode;
+  meta?: ReactNode;
+  onClose: () => void;
+  closeLabel?: string;
 }) {
   return (
     <div className={styles.successPanel}>
-      <button type="button" className={styles.successClose} onClick={onClose} aria-label="Close">
+      <button
+        type="button"
+        className={styles.successClose}
+        onClick={onClose}
+        aria-label="Close"
+      >
         <FiX />
       </button>
       <div className={styles.successIcon}>
@@ -33,5 +38,5 @@ export function GatheringSuccessPanel({
         </Button>
       </div>
     </div>
-  )
+  );
 }

@@ -1,21 +1,21 @@
-import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { FiArrowLeft } from 'react-icons/fi'
-import { PageShell } from '../../../shared/components/layout'
-import { Eyebrow } from '../../../shared/components/ui'
-import { routes } from '../../../app/routeMap'
-import styles from './ToolPage.module.css'
+import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
+import { PageShell } from "../../../shared/components/layout";
+import { Eyebrow } from "../../../shared/components/ui";
+import { routes } from "../../../app/routeMap";
+import styles from "./ToolPage.module.css";
 
 interface ToolPageProps {
-  eyebrow: string
-  title: ReactNode
-  sub: ReactNode
+  eyebrow: string;
+  title: ReactNode;
+  sub: ReactNode;
   /** The input column. */
-  form: ReactNode
+  form: ReactNode;
   /** The live document preview column (a <DocPreview>). */
-  preview: ReactNode
+  preview: ReactNode;
   /** Action buttons (Download PDF, Copy…) rendered under the form. */
-  actions?: ReactNode
+  actions?: ReactNode;
 }
 
 /**
@@ -23,7 +23,14 @@ interface ToolPageProps {
  * Fraunces header with a "Back to Economy" link, and a two-pane
  * form | preview layout that stacks on mobile.
  */
-export function ToolPage({ eyebrow, title, sub, form, preview, actions }: ToolPageProps) {
+export function ToolPage({
+  eyebrow,
+  title,
+  sub,
+  form,
+  preview,
+  actions,
+}: ToolPageProps) {
   return (
     <PageShell>
       <div className={styles.page}>
@@ -47,5 +54,5 @@ export function ToolPage({ eyebrow, title, sub, form, preview, actions }: ToolPa
         </div>
       </div>
     </PageShell>
-  )
+  );
 }

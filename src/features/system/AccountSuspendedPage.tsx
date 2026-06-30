@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { SystemStateShell } from '../../shared/components/layout'
-import styles from './AccountSuspendedPage.module.css'
+import { Link } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { SystemStateShell } from "../../shared/components/layout";
+import styles from "./AccountSuspendedPage.module.css";
 
 export function AccountSuspendedPage() {
   return (
@@ -21,10 +21,10 @@ export function AccountSuspendedPage() {
           Your account is <em>suspended</em> for 7 days.
         </h1>
         <p className={styles.lead}>
-          A moderator reviewed a report and decided your recent message in{' '}
+          A moderator reviewed a report and decided your recent message in{" "}
           <b>#trans-mutual-aid</b> crossed §02·02 of the Code of Conduct (
-          <em>repeated misgendering</em>). This is a <b>temporary suspension at rung 3</b> of the
-          moderation ladder.
+          <em>repeated misgendering</em>). This is a{" "}
+          <b>temporary suspension at rung 3</b> of the moderation ladder.
         </p>
 
         <div className={styles.detailList}>
@@ -72,12 +72,12 @@ export function AccountSuspendedPage() {
           </Button>
         </div>
         <p className={styles.foot}>
-          11% of appeals are overturned. We publish the number annually.{' '}
+          11% of appeals are overturned. We publish the number annually.{" "}
           <Link to={routes.transparencyReport}>
             See 2025 moderation stats →
           </Link>
         </p>
       </div>
     </SystemStateShell>
-  )
+  );
 }

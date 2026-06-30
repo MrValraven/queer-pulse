@@ -96,6 +96,6 @@
   }
 }
 
-:global([data-theme='dark']) .clause {
+:global([data-theme="dark"]) .clause {
   border-color: rgba(247, 243, 238, 0.1);
 }

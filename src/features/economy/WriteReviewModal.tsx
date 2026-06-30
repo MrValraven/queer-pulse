@@ -1,19 +1,25 @@
-import { useState, type FormEvent } from 'react'
-import { FiStar } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from './ModalKit'
-import type { Company, Review } from './employerReviews.data'
-import styles from './WriteReviewModal.module.css'
-import shell from './ApplicationModals.module.css'
+import { useState, type FormEvent } from "react";
+import { FiStar } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
+import type { Company, Review } from "./employerReviews.data";
+import styles from "./WriteReviewModal.module.css";
+import shell from "./ApplicationModals.module.css";
 
 export interface SubmittedReview {
   /** Company the review is about. */
-  companyName: string
-  review: Review
+  companyName: string;
+  review: Review;
 }
 
 /** Star rating picker, 1–5. */
-function StarRating({ value, onChange }: { value: number; onChange: (n: number) => void }) {
+function StarRating({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (n: number) => void;
+}) {
   return (
     <div className={styles.stars} role="radiogroup" aria-label="Overall rating">
       {[1, 2, 3, 4, 5].map((n) => (
@@ -22,15 +28,17 @@ function StarRating({ value, onChange }: { value: number; onChange: (n: number) 
           type="button"
           role="radio"
           aria-checked={value === n}
-          aria-label={`${n} star${n === 1 ? '' : 's'}`}
-          className={[styles.star, n <= value && styles.starOn].filter(Boolean).join(' ')}
+          aria-label={`${n} star${n === 1 ? "" : "s"}`}
+          className={[styles.star, n <= value && styles.starOn]
+            .filter(Boolean)
+            .join(" ")}
           onClick={() => onChange(n)}
         >
           <FiStar size={26} aria-hidden />
         </button>
       ))}
     </div>
-  )
+  );
 }
 
 /**
@@ -44,43 +52,46 @@ export function WriteReviewModal({
   onClose,
   onSubmit,
 }: {
-  companies: Company[]
-  initialCompany?: string
-  onClose: () => void
-  onSubmit: (review: SubmittedReview) => void
+  companies: Company[];
+  initialCompany?: string;
+  onClose: () => void;
+  onSubmit: (review: SubmittedReview) => void;
 }) {
-  const [company, setCompany] = useState(initialCompany ?? companies[0]?.name ?? '')
-  const [rating, setRating] = useState(0)
-  const [role, setRole] = useState('')
-  const [pros, setPros] = useState('')
-  const [cons, setCons] = useState('')
-  const { submit, sending, done } = useSubmitFlow()
+  const [company, setCompany] = useState(
+    initialCompany ?? companies[0]?.name ?? "",
+  );
+  const [rating, setRating] = useState(0);
+  const [role, setRole] = useState("");
+  const [pros, setPros] = useState("");
+  const [cons, setCons] = useState("");
+  const { submit, sending, done } = useSubmitFlow();
 
   const canSubmit =
     company.trim().length > 0 &&
     rating > 0 &&
     role.trim().length > 0 &&
-    (pros.trim().length > 0 || cons.trim().length > 0)
+    (pros.trim().length > 0 || cons.trim().length > 0);
 
   const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    if (!canSubmit) return
-    const parts: string[] = []
-    if (pros.trim()) parts.push(`The good: ${pros.trim()}`)
-    if (cons.trim()) parts.push(`The hard parts: ${cons.trim()}`)
+    e.preventDefault();
+    if (!canSubmit) return;
+    const parts: string[] = [];
+    if (pros.trim()) parts.push(`The good: ${pros.trim()}`);
+    if (cons.trim()) parts.push(`The hard parts: ${cons.trim()}`);
     const review: Review = {
-      text: `"${parts.join(' ')}"`,
-      meta: [role.trim(), `Rated ${rating}/5`, 'just now'],
-    }
-    submit(() => onSubmit({ companyName: company, review }))
-  }
+      text: `"${parts.join(" ")}"`,
+      meta: [role.trim(), `Rated ${rating}/5`, "just now"],
+    };
+    submit(() => onSubmit({ companyName: company, review }));
+  };
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel title="Review" em="posted." onClose={onClose}>
-          Thank you — your anonymous review of {company} is live. Your name is never stored with it,
-          and {company} can't edit or remove what you wrote.
+          Thank you — your anonymous review of {company} is live. Your name is
+          never stored with it, and {company} can't edit or remove what you
+          wrote.
         </SuccessPanel>
       ) : (
         <form onSubmit={handleSubmit}>
@@ -89,8 +100,9 @@ export function WriteReviewModal({
             What was it <em>actually like?</em>
           </h2>
           <p className={shell.sub}>
-            Your honest account helps the next queer person decide whether to take the interview.
-            Verified by membership, never attached to your name.
+            Your honest account helps the next queer person decide whether to
+            take the interview. Verified by membership, never attached to your
+            name.
           </p>
 
           <div className={shell.field}>
@@ -143,15 +155,20 @@ export function WriteReviewModal({
           </div>
 
           <div className={shell.foot}>
-            <button type="button" className={shell.back} onClick={onClose} disabled={sending}>
+            <button
+              type="button"
+              className={shell.back}
+              onClick={onClose}
+              disabled={sending}
+            >
               ← Cancel
             </button>
             <Button size="lg" type="submit" disabled={sending || !canSubmit}>
-              {sending ? <Sending label="Posting…" /> : 'Post review →'}
+              {sending ? <Sending label="Posting…" /> : "Post review →"}
             </Button>
           </div>
         </form>
       )}
     </ModalShell>
-  )
+  );
 }

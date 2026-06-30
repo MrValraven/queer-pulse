@@ -1,66 +1,66 @@
-import { useState } from 'react'
-import { FiCheck } from 'react-icons/fi'
-import { Button, FormField } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { useDrafts } from '../../app/providers/DraftsProvider'
-import { SENDER_NAME } from './invite.data'
-import styles from './InvitePage.module.css'
+import { useState } from "react";
+import { FiCheck } from "react-icons/fi";
+import { Button, FormField } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useDrafts } from "../../app/providers/DraftsProvider";
+import { SENDER_NAME } from "./invite.data";
+import styles from "./InvitePage.module.css";
 
 interface InviteEmailFormProps {
-  onSent: (inviteeName: string) => void
+  onSent: (inviteeName: string) => void;
 }
 
-type DraftState = 'idle' | 'saving' | 'saved'
+type DraftState = "idle" | "saving" | "saved";
 
 export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
-  const { showToast } = useToast()
-  const { addDraft, removeDraft } = useDrafts()
-  const [first, setFirst] = useState('')
-  const [know, setKnow] = useState('')
-  const [note, setNote] = useState('')
-  const [draftState, setDraftState] = useState<DraftState>('idle')
+  const { showToast } = useToast();
+  const { addDraft, removeDraft } = useDrafts();
+  const [first, setFirst] = useState("");
+  const [know, setKnow] = useState("");
+  const [note, setNote] = useState("");
+  const [draftState, setDraftState] = useState<DraftState>("idle");
   // One stable id per form session so re-saving updates the same Drafts entry.
-  const [draftId] = useState(() => `invite-${Date.now()}`)
+  const [draftId] = useState(() => `invite-${Date.now()}`);
 
   function saveDraft() {
-    if (draftState === 'saving') return
-    setDraftState('saving')
+    if (draftState === "saving") return;
+    setDraftState("saving");
     // Simulate a write — flips to a persisted "Saved" confirmation and pushes a
     // real entry onto the cross-app Drafts store.
     window.setTimeout(() => {
-      const name = first.trim()
-      const filled = [first, know, note].filter((v) => v.trim()).length
-      removeDraft(draftId) // replace any earlier save of this same draft
+      const name = first.trim();
+      const filled = [first, know, note].filter((v) => v.trim()).length;
+      removeDraft(draftId); // replace any earlier save of this same draft
       addDraft({
         id: draftId,
-        kind: 'INVITE',
-        kindVariant: 'post',
-        title: `Invitation · ${name || 'someone'}`,
+        kind: "INVITE",
+        kindVariant: "post",
+        title: `Invitation · ${name || "someone"}`,
         desc:
           know.trim() ||
-          'A friend you want to vouch for — invite not sent yet.',
-        meta: [{ label: 'Saved just now', variant: 'pulse' }],
+          "A friend you want to vouch for — invite not sent yet.",
+        meta: [{ label: "Saved just now", variant: "pulse" }],
         progress: Math.min(95, 25 + filled * 25),
         actions: [
-          { label: 'Resume', variant: 'primary' },
-          { label: 'Delete', variant: 'danger', deletes: true },
+          { label: "Resume", variant: "primary" },
+          { label: "Delete", variant: "danger", deletes: true },
         ],
-      })
-      setDraftState('saved')
-      showToast('Draft saved — find it in Drafts', 'success')
-    }, 650)
+      });
+      setDraftState("saved");
+      showToast("Draft saved — find it in Drafts", "success");
+    }, 650);
   }
 
   /** Editing after a save means there's something new to save again. */
   function markDirty() {
-    setDraftState((s) => (s === 'saved' ? 'idle' : s))
+    setDraftState((s) => (s === "saved" ? "idle" : s));
   }
 
   return (
     <form
       onSubmit={(event) => {
-        event.preventDefault()
-        onSent(first.trim() || 'Rosa')
+        event.preventDefault();
+        onSent(first.trim() || "Rosa");
       }}
     >
       <div className={styles.card}>
@@ -71,8 +71,8 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
               placeholder="Rosa"
               value={first}
               onChange={(e) => {
-                setFirst(e.target.value)
-                markDirty()
+                setFirst(e.target.value);
+                markDirty();
               }}
             />
           </FormField>
@@ -93,17 +93,22 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
             placeholder="How you met, and what makes them a good fit — this is your vouch."
             value={know}
             onChange={(e) => {
-              setKnow(e.target.value)
-              markDirty()
+              setKnow(e.target.value);
+              markDirty();
             }}
           />
         </FormField>
         <FormField
           label={
             <>
-              Personal note{' '}
+              Personal note{" "}
               <span
-                style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: 11 }}
+                style={{
+                  fontWeight: 400,
+                  textTransform: "none",
+                  letterSpacing: 0,
+                  fontSize: 11,
+                }}
               >
                 (optional)
               </span>
@@ -116,8 +121,8 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
             placeholder="A message they'll see in their invite email."
             value={note}
             onChange={(e) => {
-              setNote(e.target.value)
-              markDirty()
+              setNote(e.target.value);
+              markDirty();
             }}
           />
         </FormField>
@@ -129,7 +134,9 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
           <div className={styles.epBrand}>
             Queer<em>Pulse</em>
           </div>
-          <div className={styles.epSubject}>{SENDER_NAME} has invited you to QueerPulse</div>
+          <div className={styles.epSubject}>
+            {SENDER_NAME} has invited you to QueerPulse
+          </div>
           <div className={styles.epNote}>
             “
             {note.trim() ||
@@ -147,20 +154,20 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
           type="button"
           variant="ghost"
           onClick={saveDraft}
-          disabled={draftState !== 'idle'}
+          disabled={draftState !== "idle"}
         >
-          {draftState === 'saving' && 'Saving…'}
-          {draftState === 'saved' && (
+          {draftState === "saving" && "Saving…"}
+          {draftState === "saved" && (
             <>
               <FiCheck aria-hidden /> Saved to drafts
             </>
           )}
-          {draftState === 'idle' && 'Save as draft'}
+          {draftState === "idle" && "Save as draft"}
         </Button>
       </div>
       <div className={styles.formNote}>
         Your invitation is valid for 7 days. Unused invites don't roll over.
       </div>
     </form>
-  )
+  );
 }

@@ -53,10 +53,30 @@ export const J = "var(--jade)";
 export const P = "var(--plum)";
 
 export const TEAM_POOL: TeamMember[] = [
-  { initials: "CV", bg: "rgba(var(--accent-rgb),.14)", color: C, name: "Catarina V." },
-  { initials: "JF", bg: "rgba(var(--jade-rgb),.16)", color: J, name: "Jonas F." },
+  {
+    initials: "CV",
+    bg: "rgba(var(--accent-rgb),.14)",
+    color: C,
+    name: "Catarina V.",
+  },
+  {
+    initials: "JF",
+    bg: "rgba(var(--jade-rgb),.16)",
+    color: J,
+    name: "Jonas F.",
+  },
   { initials: "NA", bg: "rgba(45,27,61,.10)", color: P, name: "Nuno A." },
-  { initials: "RV", bg: "rgba(var(--accent-rgb),.14)", color: C, name: "Rita V." },
-  { initials: "AK", bg: "rgba(var(--jade-rgb),.16)", color: J, name: "Anika K." },
+  {
+    initials: "RV",
+    bg: "rgba(var(--accent-rgb),.14)",
+    color: C,
+    name: "Rita V.",
+  },
+  {
+    initials: "AK",
+    bg: "rgba(var(--jade-rgb),.16)",
+    color: J,
+    name: "Anika K.",
+  },
   { initials: "SC", bg: "rgba(45,27,61,.10)", color: P, name: "Sofia C." },
 ];

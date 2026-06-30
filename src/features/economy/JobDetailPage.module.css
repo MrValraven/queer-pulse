@@ -84,7 +84,9 @@
   stroke: var(--plum);
   stroke-width: 1.8;
   fill: none;
-  transition: stroke 0.2s, fill 0.2s;
+  transition:
+    stroke 0.2s,
+    fill 0.2s;
 }
 .save:hover svg,
 .save.saved svg {

@@ -64,7 +64,7 @@
 }
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: rgba(45, 27, 61, 0.1);
@@ -94,6 +94,6 @@
   flex: none;
 }
 
-:global([data-theme='dark']) .card {
+:global([data-theme="dark"]) .card {
   border-color: rgba(247, 243, 238, 0.1);
 }

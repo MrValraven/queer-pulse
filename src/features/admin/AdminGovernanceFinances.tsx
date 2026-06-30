@@ -1,7 +1,7 @@
-import { FadeIn, Button } from '../../shared/components/ui'
-import { useCountUp } from '../../shared/hooks/useCountUp'
-import { routes } from '../../app/routeMap'
-import { AdminGovernanceChart } from './AdminGovernanceChart'
+import { FadeIn, Button } from "../../shared/components/ui";
+import { useCountUp } from "../../shared/hooks/useCountUp";
+import { routes } from "../../app/routeMap";
+import { AdminGovernanceChart } from "./AdminGovernanceChart";
 import {
   FINANCE_STATS,
   LEDGER,
@@ -9,8 +9,8 @@ import {
   PANEL_BREAKDOWN,
   type FinanceStat,
   type LedgerRow,
-} from './adminGovernance.data'
-import styles from './AdminGovernancePage.module.css'
+} from "./adminGovernance.data";
+import styles from "./AdminGovernancePage.module.css";
 
 export function AdminGovernanceFinances() {
   return (
@@ -38,25 +38,29 @@ export function AdminGovernanceFinances() {
         <LiveMrrPanel />
       </FadeIn>
     </>
-  )
+  );
 }
 
 function FinanceStatCard({ stat }: { stat: FinanceStat }) {
-  const { label, value, prefix, suffix, comma, jade, foot } = stat
-  const n = useCountUp(value, { durationMs: 1200 })
-  const display = comma ? n.toLocaleString('en-US') : String(n)
+  const { label, value, prefix, suffix, comma, jade, foot } = stat;
+  const n = useCountUp(value, { durationMs: 1200 });
+  const display = comma ? n.toLocaleString("en-US") : String(n);
 
   return (
     <div className={styles.statCard}>
       <span className={styles.statLabel}>{label}</span>
-      <span className={[styles.statNum, jade && styles.statNumJade].filter(Boolean).join(' ')}>
+      <span
+        className={[styles.statNum, jade && styles.statNumJade]
+          .filter(Boolean)
+          .join(" ")}
+      >
         {prefix}
         {display}
         {suffix && <small>{suffix}</small>}
       </span>
       <span className={styles.statFoot}>{foot}</span>
     </div>
-  )
+  );
 }
 
 function IncomeLedgerCard() {
@@ -66,7 +70,9 @@ function IncomeLedgerCard() {
         <h2 className={styles.cardTitle}>
           Where it <em>comes from</em>
         </h2>
-        <p className={styles.cardSub}>€34,370 / month, in from three honest places.</p>
+        <p className={styles.cardSub}>
+          €34,370 / month, in from three honest places.
+        </p>
       </div>
       <div className={styles.meters}>
         {INCOME_LEDGER.map((row) => (
@@ -74,11 +80,11 @@ function IncomeLedgerCard() {
         ))}
       </div>
       <p className={styles.ledgerNote}>
-        No advertising. No data sales. No venture money.{' '}
+        No advertising. No data sales. No venture money.{" "}
         <strong>Two-thirds comes straight from members.</strong>
       </p>
     </div>
-  )
+  );
 }
 
 function SpendLedgerCard() {
@@ -88,7 +94,9 @@ function SpendLedgerCard() {
         <h2 className={styles.cardTitle}>
           Where it <em>goes</em>
         </h2>
-        <p className={styles.cardSub}>€29,500 / month &mdash; every euro accounted for, line by line.</p>
+        <p className={styles.cardSub}>
+          €29,500 / month &mdash; every euro accounted for, line by line.
+        </p>
       </div>
       <div className={styles.meters}>
         {LEDGER.map((row) => (
@@ -96,7 +104,7 @@ function SpendLedgerCard() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 function Meter({ row }: { row: LedgerRow }) {
@@ -108,16 +116,16 @@ function Meter({ row }: { row: LedgerRow }) {
       </div>
       <div className={styles.meterTrack}>
         <div
-          className={[styles.meterFill, styles[`meter_${row.color}`]].join(' ')}
+          className={[styles.meterFill, styles[`meter_${row.color}`]].join(" ")}
           style={{ width: `${row.width}%` }}
         />
       </div>
     </div>
-  )
+  );
 }
 
 function LiveMrrPanel() {
-  const mrr = useCountUp(23150, { durationMs: 1400 })
+  const mrr = useCountUp(23150, { durationMs: 1400 });
 
   return (
     <aside className={styles.panel}>
@@ -125,11 +133,11 @@ function LiveMrrPanel() {
         <span className={styles.panelLiveDot} aria-hidden />
         Sustainer MRR · live
       </span>
-      <div className={styles.panelNum}>€{mrr.toLocaleString('en-US')}</div>
+      <div className={styles.panelNum}>€{mrr.toLocaleString("en-US")}</div>
       <p className={styles.panelLead}>
-        Every euro comes from members, not advertisers or data sales.{' '}
-        <em>We will never sell member data</em> &mdash; it&rsquo;s written into our constitution, not
-        just our promises.
+        Every euro comes from members, not advertisers or data sales.{" "}
+        <em>We will never sell member data</em> &mdash; it&rsquo;s written into
+        our constitution, not just our promises.
       </p>
       <div className={styles.panelBreakdown}>
         {PANEL_BREAKDOWN.map(({ label, value, icon: Icon }) => (
@@ -144,5 +152,5 @@ function LiveMrrPanel() {
         Read the constitution
       </Button>
     </aside>
-  )
+  );
 }

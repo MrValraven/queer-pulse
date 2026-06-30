@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath, routes } from '../../../app/routeMap'
-import { swaps } from '../data/swaps'
-import styles from './Barter.module.css'
+import { Link } from "react-router-dom";
+import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { linkToPath, routes } from "../../../app/routeMap";
+import { swaps } from "../data/swaps";
+import styles from "./Barter.module.css";
 
 export function Barter() {
   return (
@@ -29,12 +29,16 @@ export function Barter() {
             <Reveal key={swap.href} delay={index * 55}>
               <Link to={linkToPath(swap.href)} className={styles.card}>
                 <div>
-                  <span className={[styles.label, styles.offering].join(' ')}>Offering</span>
+                  <span className={[styles.label, styles.offering].join(" ")}>
+                    Offering
+                  </span>
                   <div className={styles.skill}>{swap.offering}</div>
                 </div>
                 <div className={styles.divider}>in exchange for</div>
                 <div>
-                  <span className={[styles.label, styles.wanting].join(' ')}>Wanting</span>
+                  <span className={[styles.label, styles.wanting].join(" ")}>
+                    Wanting
+                  </span>
                   <div className={styles.skill}>{swap.wanting}</div>
                 </div>
                 <div className={styles.poster}>
@@ -47,5 +51,5 @@ export function Barter() {
         </div>
       </div>
     </section>
-  )
+  );
 }

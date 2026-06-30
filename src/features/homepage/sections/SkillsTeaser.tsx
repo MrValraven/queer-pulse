@@ -1,7 +1,7 @@
-import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { routes } from '../../../app/routeMap'
-import { skills } from '../data/skills'
-import styles from './SkillsTeaser.module.css'
+import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { routes } from "../../../app/routeMap";
+import { skills } from "../data/skills";
+import styles from "./SkillsTeaser.module.css";
 
 export function SkillsTeaser() {
   return (
@@ -25,10 +25,10 @@ export function SkillsTeaser() {
               <span
                 className={[
                   styles.type,
-                  skill.type === 'teaching' ? styles.teaching : styles.learning,
-                ].join(' ')}
+                  skill.type === "teaching" ? styles.teaching : styles.learning,
+                ].join(" ")}
               >
-                {skill.type === 'teaching' ? 'Teaching' : 'Learning'}
+                {skill.type === "teaching" ? "Teaching" : "Learning"}
               </span>
               <h4 className={styles.title}>{skill.title}</h4>
               <div className={styles.by}>{skill.by}</div>
@@ -43,5 +43,5 @@ export function SkillsTeaser() {
         </Reveal>
       </div>
     </section>
-  )
+  );
 }

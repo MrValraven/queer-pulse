@@ -9,7 +9,9 @@
   cursor: pointer;
   color: rgba(45, 27, 61, 0.25);
   line-height: 0;
-  transition: color 0.18s var(--ease), transform 0.18s var(--ease);
+  transition:
+    color 0.18s var(--ease),
+    transform 0.18s var(--ease);
 }
 .star:hover {
   transform: translateY(-1px);

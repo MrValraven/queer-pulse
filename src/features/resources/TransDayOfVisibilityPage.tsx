@@ -1,6 +1,10 @@
-import { PageShell } from '../../shared/components/layout'
-import { TdovProfiles, TdovResources, TdovAllies } from './TransDayOfVisibilitySections'
-import styles from './TransDayOfVisibilityPage.module.css'
+import { PageShell } from "../../shared/components/layout";
+import {
+  TdovProfiles,
+  TdovResources,
+  TdovAllies,
+} from "./TransDayOfVisibilitySections";
+import styles from "./TransDayOfVisibilityPage.module.css";
 
 export function TransDayOfVisibilityPage() {
   return (
@@ -15,11 +19,13 @@ export function TransDayOfVisibilityPage() {
               Visible <em>and</em> safe. <em>Both.</em>
             </h1>
             <p className={styles.dek}>
-              Today we lift the work of seven trans members shaping Lisbon — clinicians,
-              organisers, writers, and the people who answer the helpline at 03:00.{' '}
-              <em>Visibility is not a strategy unless it comes with safety</em>. So we pair these
-              stories with the practical infrastructure that makes them livable: vetted clinicians,
-              the open clinic, the legal observers, the Trans Hub.
+              Today we lift the work of seven trans members shaping Lisbon —
+              clinicians, organisers, writers, and the people who answer the
+              helpline at 03:00.{" "}
+              <em>Visibility is not a strategy unless it comes with safety</em>.
+              So we pair these stories with the practical infrastructure that
+              makes them livable: vetted clinicians, the open clinic, the legal
+              observers, the Trans Hub.
             </p>
             <div className={styles.meta}>
               <span>
@@ -46,26 +52,31 @@ export function TransDayOfVisibilityPage() {
 
         <section className={styles.statement}>
           <div className={styles.statementInner}>
-            <div className={styles.kicker}>A note from Nuno Alves · Trans Hub coordinator</div>
+            <div className={styles.kicker}>
+              A note from Nuno Alves · Trans Hub coordinator
+            </div>
             <h2>
               Today is the easy day. <em>Tomorrow is the work.</em>
             </h2>
             <p>
-              Trans Day of Visibility falls on 31 March, four months before TDOR. The two are
-              calendared like that on purpose. We are seen in the spring; we are mourned in the
-              autumn. What happens between is, mostly, work — clinic appointments, prescription
-              renewals, legal-name updates, conversations at HR, and the long quiet evenings that
-              don't make the front pages.
+              Trans Day of Visibility falls on 31 March, four months before
+              TDOR. The two are calendared like that on purpose. We are seen in
+              the spring; we are mourned in the autumn. What happens between is,
+              mostly, work — clinic appointments, prescription renewals,
+              legal-name updates, conversations at HR, and the long quiet
+              evenings that don't make the front pages.
             </p>
             <p>
-              So this page is <strong>not</strong> a graphic to share. It is a list of the people
-              doing that work, a list of the rooms where you can find them, and three small things a
-              cis member of QueerPulse can do today that <em>actually help</em> — without making
-              the day about themselves.
+              So this page is <strong>not</strong> a graphic to share. It is a
+              list of the people doing that work, a list of the rooms where you
+              can find them, and three small things a cis member of QueerPulse
+              can do today that <em>actually help</em> — without making the day
+              about themselves.
             </p>
             <p>
-              If you are a trans member reading this: thank you for being here. The clinic on
-              Thursday has a slot for you if you need one. <em>Don't hesitate to use it.</em>
+              If you are a trans member reading this: thank you for being here.
+              The clinic on Thursday has a slot for you if you need one.{" "}
+              <em>Don't hesitate to use it.</em>
             </p>
             <div className={styles.statementSign}>
               <div className={styles.ssAv}>NA</div>
@@ -86,20 +97,23 @@ export function TransDayOfVisibilityPage() {
               What this page <em>is not.</em>
             </h3>
             <p>
-              It is not a marketing moment. It is not a list of brands flying a flag. It is not a
-              hashtag we want trending. <b>It is not an obligation</b> for any trans member to
-              perform visibility today, or any other day — we did not feature anyone who didn't opt
-              in, and we will take any profile down on request, no questions.
+              It is not a marketing moment. It is not a list of brands flying a
+              flag. It is not a hashtag we want trending.{" "}
+              <b>It is not an obligation</b> for any trans member to perform
+              visibility today, or any other day — we did not feature anyone who
+              didn't opt in, and we will take any profile down on request, no
+              questions.
             </p>
             <p>
-              If today is a hard day for you,{' '}
-              <em>that is not a failure of visibility.</em> Some days the most political thing a
-              trans person can do is rest. The Hub is still open. Crisis chat is still staffed. The
-              Thursday clinic is still happening.
+              If today is a hard day for you,{" "}
+              <em>that is not a failure of visibility.</em> Some days the most
+              political thing a trans person can do is rest. The Hub is still
+              open. Crisis chat is still staffed. The Thursday clinic is still
+              happening.
             </p>
           </div>
         </section>
       </div>
     </PageShell>
-  )
+  );
 }

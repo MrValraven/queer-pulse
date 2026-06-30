@@ -1,13 +1,20 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, FilterChips, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { routes } from '../../app/routeMap'
-import { ResourceHero } from './ResourceHero'
-import { CATEGORIES, GUIDES, POPULAR } from './library.data'
-import res from './resources.module.css'
-import s from './library.module.css'
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { PageShell } from "../../shared/components/layout";
+import {
+  Button,
+  FadeIn,
+  FilterChips,
+  Outro,
+  Reveal,
+  SkeletonLine,
+} from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
+import { ResourceHero } from "./ResourceHero";
+import { CATEGORIES, GUIDES, POPULAR } from "./library.data";
+import res from "./resources.module.css";
+import s from "./library.module.css";
 
 function GuideSkeleton() {
   // Mirrors the real guide card: meta line, title, description, footer row.
@@ -22,36 +29,43 @@ function GuideSkeleton() {
         <SkeletonLine width="35%" height={13} />
       </div>
     </div>
-  )
+  );
 }
 
 export function LibraryPage() {
-  const [cat, setCat] = useState<string>('all')
-  const [query, setQuery] = useState('')
-  const loading = useSimulatedLoad()
+  const [cat, setCat] = useState<string>("all");
+  const [query, setQuery] = useState("");
+  const loading = useSimulatedLoad();
 
   const results = useMemo(() => {
-    const q = query.trim().toLowerCase()
+    const q = query.trim().toLowerCase();
     return GUIDES.filter((guide) => {
-      const matchCat = cat === 'all' || guide.cat === cat
+      const matchCat = cat === "all" || guide.cat === cat;
       const matchQuery =
-        !q || `${guide.title} ${guide.desc} ${guide.catLabel}`.toLowerCase().includes(q)
-      return matchCat && matchQuery
-    })
-  }, [cat, query])
+        !q ||
+        `${guide.title} ${guide.desc} ${guide.catLabel}`
+          .toLowerCase()
+          .includes(q);
+      return matchCat && matchQuery;
+    });
+  }, [cat, query]);
 
   return (
     <PageShell>
       <ResourceHero
         eyebrow="Guide Library"
         eyebrowDotColor="var(--jade)"
-        title={<>Every guide, <em>in one place.</em></>}
+        title={
+          <>
+            Every guide, <em>in one place.</em>
+          </>
+        }
         lead="Housing, health, legal, finance, and trans-specific guides — written and vetted by the community, kept current, and free to share with anyone who needs them."
         anchors={[
-          { label: 'Browse all', href: '#browse' },
-          { label: 'Legal', href: '#browse' },
-          { label: 'Health', href: '#browse' },
-          { label: 'Housing', href: '#browse' },
+          { label: "Browse all", href: "#browse" },
+          { label: "Legal", href: "#browse" },
+          { label: "Health", href: "#browse" },
+          { label: "Housing", href: "#browse" },
         ]}
       />
 
@@ -59,7 +73,13 @@ export function LibraryPage() {
         <div className="wrap">
           <Reveal className={s.toolbar}>
             <label className={s.search}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+              >
                 <circle cx={11} cy={11} r={7} />
                 <path d="m21 21-4.35-4.35" />
               </svg>
@@ -75,7 +95,10 @@ export function LibraryPage() {
           <Reveal as="div" delay={60}>
             <FilterChips
               className={s.chips}
-              options={CATEGORIES.map((category) => ({ value: category.id, label: category.label }))}
+              options={CATEGORIES.map((category) => ({
+                value: category.id,
+                label: category.label,
+              }))}
               value={cat}
               onChange={setCat}
             />
@@ -88,11 +111,17 @@ export function LibraryPage() {
               ))}
             </div>
           ) : results.length === 0 ? (
-            <p className={s.empty}>No guides match that yet — try a different search.</p>
+            <p className={s.empty}>
+              No guides match that yet — try a different search.
+            </p>
           ) : (
             <div className={res.grid}>
               {results.map((guide, index) => (
-                <FadeIn key={guide.title} className={res.card} delay={Math.min(index, 8) * 60}>
+                <FadeIn
+                  key={guide.title}
+                  className={res.card}
+                  delay={Math.min(index, 8) * 60}
+                >
                   <span className={s.resMeta}>{guide.catLabel}</span>
                   <div className={res.cardName} style={{ fontSize: 19 }}>
                     {guide.title}
@@ -121,7 +150,11 @@ export function LibraryPage() {
       </section>
 
       <Outro
-        title={<>Can't find <em>what you need?</em></>}
+        title={
+          <>
+            Can't find <em>what you need?</em>
+          </>
+        }
         sub="Ask in the forum — someone has usually been through it. Or suggest a guide we should write next."
       >
         <Button to={routes.forum} variant="primary" size="lg">
@@ -132,5 +165,5 @@ export function LibraryPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

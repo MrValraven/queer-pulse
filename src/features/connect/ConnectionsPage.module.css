@@ -314,7 +314,7 @@
   color: var(--accent-ink);
 }
 
-:global([data-theme='dark']) .menu {
+:global([data-theme="dark"]) .menu {
   border-color: rgba(247, 243, 238, 0.14);
 }
 .pron {

@@ -1,41 +1,45 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { routes } from '../../app/routeMap'
-import styles from './QrScannerPage.module.css'
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { routes } from "../../app/routeMap";
+import styles from "./QrScannerPage.module.css";
 
-type Mode = 'safe' | 'event' | 'profile'
+type Mode = "safe" | "event" | "profile";
 
 const MODES: { id: Mode; label: string; hint: string }[] = [
-  { id: 'safe', label: 'Safe space', hint: 'Point at a sticker' },
-  { id: 'event', label: 'Event ticket', hint: 'Point at your ticket' },
-  { id: 'profile', label: 'Profile', hint: 'Point at a profile code' },
-]
+  { id: "safe", label: "Safe space", hint: "Point at a sticker" },
+  { id: "event", label: "Event ticket", hint: "Point at your ticket" },
+  { id: "profile", label: "Profile", hint: "Point at a profile code" },
+];
 
 export function QrScannerPage() {
-  const navigate = useNavigate()
-  const { showToast } = useToast()
-  const [mode, setMode] = useState<Mode>('safe')
-  const [flash, setFlash] = useState(false)
+  const navigate = useNavigate();
+  const { showToast } = useToast();
+  const [mode, setMode] = useState<Mode>("safe");
+  const [flash, setFlash] = useState(false);
 
   // Simulate a successful scan after a few seconds, then route on.
   useEffect(() => {
-    const timers: ReturnType<typeof setTimeout>[] = []
+    const timers: ReturnType<typeof setTimeout>[] = [];
     timers.push(
       setTimeout(() => {
-        showToast('Mercearia Rosa · verified safe space', 'success')
-        timers.push(setTimeout(() => navigate(routes.safeSpaces), 1500))
-      }, 6000)
-    )
-    return () => timers.forEach(clearTimeout)
-  }, [navigate, showToast])
+        showToast("Mercearia Rosa · verified safe space", "success");
+        timers.push(setTimeout(() => navigate(routes.safeSpaces), 1500));
+      }, 6000),
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [navigate, showToast]);
 
-  const hint = MODES.find((m) => m.id === mode)!.hint
+  const hint = MODES.find((m) => m.id === mode)!.hint;
 
   return (
     <div className={styles.root}>
       <div className={styles.top}>
-        <button className={styles.iconBtn} onClick={() => navigate(-1)} aria-label="Close">
+        <button
+          className={styles.iconBtn}
+          onClick={() => navigate(-1)}
+          aria-label="Close"
+        >
           <svg viewBox="0 0 24 24">
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
@@ -45,7 +49,7 @@ export function QrScannerPage() {
           Scan a <em>QueerPulse</em> code
         </div>
         <button
-          className={`${styles.iconBtn} ${flash ? styles.flashOn : ''}`}
+          className={`${styles.iconBtn} ${flash ? styles.flashOn : ""}`}
           onClick={() => setFlash((v) => !v)}
           aria-label="Flash"
           aria-pressed={flash}
@@ -79,7 +83,9 @@ export function QrScannerPage() {
 
       <div className={styles.alt}>
         <span>Can't scan?</span>
-        <button onClick={() => showToast('Open code · paste flow', 'info')}>Enter code manually</button>
+        <button onClick={() => showToast("Open code · paste flow", "info")}>
+          Enter code manually
+        </button>
         <span className={styles.dot}>·</span>
         <button onClick={() => navigate(routes.help)}>Help with codes</button>
       </div>
@@ -88,7 +94,7 @@ export function QrScannerPage() {
         {MODES.map((m) => (
           <button
             key={m.id}
-            className={`${styles.mode} ${mode === m.id ? styles.active : ''}`}
+            className={`${styles.mode} ${mode === m.id ? styles.active : ""}`}
             onClick={() => setMode(m.id)}
           >
             {m.label}
@@ -96,5 +102,5 @@ export function QrScannerPage() {
         ))}
       </div>
     </div>
-  )
+  );
 }

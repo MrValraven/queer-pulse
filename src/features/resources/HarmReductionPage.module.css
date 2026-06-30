@@ -22,7 +22,11 @@
   width: 380px;
   height: 380px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(232, 119, 90, 0.08), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(232, 119, 90, 0.08),
+    transparent 62%
+  );
 }
 .eye {
   font-size: 11px;

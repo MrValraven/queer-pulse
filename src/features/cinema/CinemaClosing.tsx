@@ -1,10 +1,14 @@
-import { Link } from 'react-router-dom'
-import { Button, Outro } from '../../shared/components/ui'
-import { liveEvents } from './data'
-import styles from './CinemaPage.module.css'
-import { routes } from '../../app/routeMap'
+import { Link } from "react-router-dom";
+import { Button, Outro } from "../../shared/components/ui";
+import { liveEvents } from "./data";
+import styles from "./CinemaPage.module.css";
+import { routes } from "../../app/routeMap";
 
-const badgeClass: Record<string, string | undefined> = { premiere: styles.bgPremiere, party: styles.bgParty, live: styles.bgLive }
+const badgeClass: Record<string, string | undefined> = {
+  premiere: styles.bgPremiere,
+  party: styles.bgParty,
+  live: styles.bgLive,
+};
 
 export function LiveSection() {
   return (
@@ -13,7 +17,10 @@ export function LiveSection() {
         <h2>
           Live <em>this week</em>
         </h2>
-        <div className="sub">Premieres, Q&amp;As, watch parties. Hosted by members, open by default.</div>
+        <div className="sub">
+          Premieres, Q&amp;As, watch parties. Hosted by members, open by
+          default.
+        </div>
         <Link to="/calendar" className="all">
           Full calendar →
         </Link>
@@ -33,9 +40,18 @@ export function LiveSection() {
               </h4>
               <div className={styles.lmSub}>{e.sub}</div>
               <div className={styles.lmTags}>
-                <span className={`${styles.bg} ${badgeClass[e.badgeClass]}`}>{e.badge}</span>
+                <span className={`${styles.bg} ${badgeClass[e.badgeClass]}`}>
+                  {e.badge}
+                </span>
                 {e.tags.map((t, i) => (
-                  <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+                  <span
+                    key={t}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                  >
                     {i >= 0 && <span className="dot" />}
                     {t}
                   </span>
@@ -49,7 +65,7 @@ export function LiveSection() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export function LedgerSection() {
@@ -61,12 +77,14 @@ export function LedgerSection() {
           The room <em>pays</em> the filmmaker.
         </h2>
         <p>
-          QueerPulse Cinema runs as a co-op. 80% of every rent or buy goes to the filmmaker. 100% of
-          every tip. The rest covers payments, hosting, and captioning. The ledger is public. The
-          split is non-negotiable.
+          QueerPulse Cinema runs as a co-op. 80% of every rent or buy goes to
+          the filmmaker. 100% of every tip. The rest covers payments, hosting,
+          and captioning. The ledger is public. The split is non-negotiable.
         </p>
         <div className={styles.ledgerActions}>
-          <Button to={routes.cinemaMembership}>Become a sustainer · €7/mo</Button>
+          <Button to={routes.cinemaMembership}>
+            Become a sustainer · €7/mo
+          </Button>
           <Button variant="ghost-dark" to={routes.governance}>
             Read the co-op deed
           </Button>
@@ -79,35 +97,49 @@ export function LedgerSection() {
         </div>
         <div className={styles.lcRow}>
           <span className="k">Paid to filmmakers</span>
-          <span className="v">€<em>8,420</em></span>
+          <span className="v">
+            €<em>8,420</em>
+          </span>
         </div>
         <div className={styles.lcRow}>
           <span className="k">Films streamed</span>
-          <span className="v">14,<em>207</em></span>
+          <span className="v">
+            14,<em>207</em>
+          </span>
         </div>
         <div className={styles.lcRow}>
           <span className="k">Average filmmaker share</span>
-          <span className="v"><em>82</em>%</span>
+          <span className="v">
+            <em>82</em>%
+          </span>
         </div>
         <div className={styles.lcRow}>
           <span className="k">Open commissions</span>
-          <span className="v"><em>4</em></span>
+          <span className="v">
+            <em>4</em>
+          </span>
         </div>
-        <div className={styles.lcFoot}>Updated every Monday at noon Lisbon. Audited quarterly.</div>
+        <div className={styles.lcFoot}>
+          Updated every Monday at noon Lisbon. Audited quarterly.
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function CinemaOutro() {
   return (
     <Outro
-      title={<>Watch <em>together</em>.</>}
+      title={
+        <>
+          Watch <em>together</em>.
+        </>
+      }
       sub="Cinema is a room with people in it. The room is open."
     >
       <Button size="lg" to={routes.cinemaMembership}>
         Sustain the cinema
       </Button>
     </Outro>
-  )
+  );
 }

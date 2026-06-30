@@ -5,14 +5,18 @@
   overflow: hidden;
 }
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -8%;
   right: -3%;
   width: 420px;
   height: 420px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.12), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.12),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .back {
@@ -288,7 +292,7 @@
   background: var(--plum);
 }
 .tierSelected .tierRadio::after {
-  content: '';
+  content: "";
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -463,6 +467,6 @@
   }
 }
 
-:global([data-theme='dark']) .ticketCard {
+:global([data-theme="dark"]) .ticketCard {
   border-color: rgba(247, 243, 238, 0.1);
 }

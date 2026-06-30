@@ -5,11 +5,20 @@
   overflow: hidden;
 }
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 75% 15%, rgba(var(--accent-rgb), 0.14), transparent 55%),
-    radial-gradient(ellipse at 10% 85%, rgba(var(--jade-rgb), 0.1), transparent 50%);
+  background:
+    radial-gradient(
+      ellipse at 75% 15%,
+      rgba(var(--accent-rgb), 0.14),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 10% 85%,
+      rgba(var(--jade-rgb), 0.1),
+      transparent 50%
+    );
   pointer-events: none;
 }
 .heroInner {

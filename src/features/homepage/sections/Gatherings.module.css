@@ -6,14 +6,18 @@
   overflow: hidden;
 }
 .gather::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -25%;
   left: -6%;
   width: 520px;
   height: 520px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.14),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .inner {

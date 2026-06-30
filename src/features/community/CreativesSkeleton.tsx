@@ -1,5 +1,5 @@
-import { SkeletonLine } from '../../shared/components/ui'
-import styles from './CreativesPage.module.css'
+import { SkeletonLine } from "../../shared/components/ui";
+import styles from "./CreativesPage.module.css";
 
 /** Mirrors ArtCard inside the masonry column flow (break-inside + margin kept). */
 export function ArtCardSkeleton({ imgH = 200 }: { imgH?: number }) {
@@ -20,7 +20,7 @@ export function ArtCardSkeleton({ imgH = 200 }: { imgH?: number }) {
         </div>
       </div>
     </article>
-  )
+  );
 }
 
 /** Mirrors MusicCard's two-column row. */
@@ -42,11 +42,11 @@ export function MusicCardSkeleton() {
         <SkeletonLine width="100%" height={64} style={{ borderRadius: 12 }} />
       </div>
     </article>
-  )
+  );
 }
 
 /** Varied heights so the masonry skeleton reads like real art cards. */
-const ART_HEIGHTS = [220, 180, 260, 200, 240, 190]
+const ART_HEIGHTS = [220, 180, 260, 200, 240, 190];
 
 export function ArtGridSkeleton() {
   return (
@@ -55,7 +55,7 @@ export function ArtGridSkeleton() {
         <ArtCardSkeleton key={i} imgH={h} />
       ))}
     </>
-  )
+  );
 }
 
 export function MusicGridSkeleton() {
@@ -65,5 +65,5 @@ export function MusicGridSkeleton() {
         <MusicCardSkeleton key={i} />
       ))}
     </>
-  )
+  );
 }

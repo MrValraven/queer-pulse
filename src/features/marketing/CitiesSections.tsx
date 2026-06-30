@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiCheck } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { routes } from '../../app/routeMap'
-import { BETA, WAITLIST, HOW } from './cities.data'
-import styles from './CitiesPage.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { routes } from "../../app/routeMap";
+import { BETA, WAITLIST, HOW } from "./cities.data";
+import styles from "./CitiesPage.module.css";
 
 export function GroundworkSection() {
-  const { showToast } = useToast()
+  const { showToast } = useToast();
   return (
     <section>
       <div className={styles.secH}>
@@ -37,7 +37,7 @@ export function GroundworkSection() {
             <Button
               type="button"
               variant="ghost"
-              onClick={() => showToast(b.toast, 'success')}
+              onClick={() => showToast(b.toast, "success")}
             >
               {b.btn}
             </Button>
@@ -45,19 +45,21 @@ export function GroundworkSection() {
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 export function WaitlistSection() {
-  const { showToast } = useToast()
+  const { showToast } = useToast();
   const [voted, setVoted] = useState<Record<string, boolean>>(
-    Object.fromEntries(WAITLIST.filter((w) => w.voted).map((w) => [w.name, true])),
-  )
+    Object.fromEntries(
+      WAITLIST.filter((w) => w.voted).map((w) => [w.name, true]),
+    ),
+  );
 
   const vote = (name: string) => {
-    setVoted((prev) => ({ ...prev, [name]: true }))
-    showToast('Vote recorded · we read these signals monthly', 'success')
-  }
+    setVoted((prev) => ({ ...prev, [name]: true }));
+    showToast("Vote recorded · we read these signals monthly", "success");
+  };
 
   return (
     <section>
@@ -70,11 +72,12 @@ export function WaitlistSection() {
         </span>
       </div>
       <p className={styles.wlIntro}>
-        Votes are <em>signals to us about where the community is</em>, not promises to build. We
-        open one city at a time. Adding your vote takes 1 click.
+        Votes are <em>signals to us about where the community is</em>, not
+        promises to build. We open one city at a time. Adding your vote takes 1
+        click.
       </p>
       {WAITLIST.map((w) => {
-        const hasVoted = voted[w.name]
+        const hasVoted = voted[w.name];
         return (
           <div className={styles.wlRow} key={w.name}>
             <div className={styles.wlCity}>
@@ -113,13 +116,14 @@ export function WaitlistSection() {
               </button>
             )}
           </div>
-        )
+        );
       })}
       <p className={styles.wlFoot}>
-        Don't see your city? <Link to={routes.contact}>Write to us</Link> with what you'd build there.
+        Don't see your city? <Link to={routes.contact}>Write to us</Link> with
+        what you'd build there.
       </p>
     </section>
-  )
+  );
 }
 
 export function HowSection() {
@@ -130,7 +134,9 @@ export function HowSection() {
         <h2>
           How we <em>actually open</em> a new city.
         </h2>
-        <p className={styles.howIntro}>Four conditions, all required. No shortcuts.</p>
+        <p className={styles.howIntro}>
+          Four conditions, all required. No shortcuts.
+        </p>
         <div className={styles.howList}>
           {HOW.map((h) => (
             <div className={styles.howRow} key={h.n}>
@@ -147,5 +153,5 @@ export function HowSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

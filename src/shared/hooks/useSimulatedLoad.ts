@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
 /**
  * Simulates a short data fetch for the mock prototype: returns `loading` as
@@ -11,12 +11,12 @@ import { useEffect, useState } from 'react'
  * @param delay milliseconds before content is "loaded" (default 600)
  */
 export function useSimulatedLoad(delay = 600) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), delay)
-    return () => clearTimeout(t)
-  }, [delay])
+    const t = setTimeout(() => setLoading(false), delay);
+    return () => clearTimeout(t);
+  }, [delay]);
 
-  return loading
+  return loading;
 }

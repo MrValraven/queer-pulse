@@ -1,34 +1,65 @@
-import { PageShell } from '../../shared/components/layout'
-import { Button, FormField } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import s from './ReportPage.module.css'
-import { routes } from '../../app/routeMap'
+import { PageShell } from "../../shared/components/layout";
+import { Button, FormField } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import s from "./ReportPage.module.css";
+import { routes } from "../../app/routeMap";
 
 const FLOW = [
-  { n: '01', title: 'You submit a report', desc: 'Via the button on any profile, message, or forum post — or directly through this page. You can report anonymously if needed.' },
-  { n: '02', title: 'Immediate acknowledgement', desc: 'You receive a confirmation within 1 hour. A real person is assigned to your report — not an automated queue.' },
-  { n: '03', title: 'Review within 24 hours', desc: "We review the evidence, context, and history. For serious cases, the reported member's access is temporarily suspended during review." },
-  { n: '04', title: 'Decision & action', desc: 'Possible outcomes: warning, temporary suspension, permanent removal. We communicate the outcome to you — with reasoning.' },
-]
+  {
+    n: "01",
+    title: "You submit a report",
+    desc: "Via the button on any profile, message, or forum post — or directly through this page. You can report anonymously if needed.",
+  },
+  {
+    n: "02",
+    title: "Immediate acknowledgement",
+    desc: "You receive a confirmation within 1 hour. A real person is assigned to your report — not an automated queue.",
+  },
+  {
+    n: "03",
+    title: "Review within 24 hours",
+    desc: "We review the evidence, context, and history. For serious cases, the reported member's access is temporarily suspended during review.",
+  },
+  {
+    n: "04",
+    title: "Decision & action",
+    desc: "Possible outcomes: warning, temporary suspension, permanent removal. We communicate the outcome to you — with reasoning.",
+  },
+];
 
 const PRINCIPLES = [
-  ['We believe the reporter first.', 'Our default is to take reports seriously and investigate, not to demand the reporter prove themselves.'],
-  ['No vague warnings.', 'If someone has caused harm, we tell them specifically what they did and what changes are required.'],
-  ['Transparency over comfort.', 'We publish aggregate moderation data every quarter so the community can see how we work.'],
-  ['No permanent private decisions.', 'Members can appeal decisions. Appeals are reviewed by a different moderator.'],
-  ['The community owns this space.', 'Ultimately we answer to the members, not to abstract policies.'],
-]
+  [
+    "We believe the reporter first.",
+    "Our default is to take reports seriously and investigate, not to demand the reporter prove themselves.",
+  ],
+  [
+    "No vague warnings.",
+    "If someone has caused harm, we tell them specifically what they did and what changes are required.",
+  ],
+  [
+    "Transparency over comfort.",
+    "We publish aggregate moderation data every quarter so the community can see how we work.",
+  ],
+  [
+    "No permanent private decisions.",
+    "Members can appeal decisions. Appeals are reviewed by a different moderator.",
+  ],
+  [
+    "The community owns this space.",
+    "Ultimately we answer to the members, not to abstract policies.",
+  ],
+];
 
 const LOG = [
-  { n: '14', l: 'reports received' },
-  { n: '12', l: 'resolved within 24h' },
-  { n: '3', l: 'members removed' },
-  { n: '2', l: 'appeals received' },
-  { n: '1', l: 'decision reversed on appeal' },
-]
+  { n: "14", l: "reports received" },
+  { n: "12", l: "resolved within 24h" },
+  { n: "3", l: "members removed" },
+  { n: "2", l: "appeals received" },
+  { n: "1", l: "decision reversed on appeal" },
+];
 
 export function ReportPage() {
-  const { showToast } = useToast()
+  const { showToast } = useToast();
 
   return (
     <PageShell>
@@ -40,7 +71,11 @@ export function ReportPage() {
           <h1>
             Safety is <em>structural.</em>
           </h1>
-          <p>Not decorative. Not a page in the footer. Our approach to handling reports, what happens when you make one, and the principles that guide every decision we make.</p>
+          <p>
+            Not decorative. Not a page in the footer. Our approach to handling
+            reports, what happens when you make one, and the principles that
+            guide every decision we make.
+          </p>
         </div>
       </header>
 
@@ -49,7 +84,10 @@ export function ReportPage() {
           <h2>
             How <em>reporting works</em>
           </h2>
-          <p className={s.lead}>You submit a report. We respond within 24 hours. Here's exactly what happens in between — no black box, no vague reassurances.</p>
+          <p className={s.lead}>
+            You submit a report. We respond within 24 hours. Here's exactly what
+            happens in between — no black box, no vague reassurances.
+          </p>
           <div className={s.flow}>
             {FLOW.map((f) => (
               <div key={f.n} className={s.flowStep}>
@@ -65,11 +103,19 @@ export function ReportPage() {
               <h3>
                 Make a <em>report.</em>
               </h3>
-              <p>Use this form for safety concerns, harassment, abuse, or any situation that made you feel unsafe. All reports are treated with full seriousness. There is no minimum threshold for what warrants a report.</p>
+              <p>
+                Use this form for safety concerns, harassment, abuse, or any
+                situation that made you feel unsafe. All reports are treated
+                with full seriousness. There is no minimum threshold for what
+                warrants a report.
+              </p>
               <form
                 onSubmit={(e) => {
-                  e.preventDefault()
-                  showToast("Report received — we'll follow up within 24 hours.", 'success')
+                  e.preventDefault();
+                  showToast(
+                    "Report received — we'll follow up within 24 hours.",
+                    "success",
+                  );
                 }}
               >
                 <FormField label="What are you reporting?">
@@ -97,7 +143,10 @@ export function ReportPage() {
                 <div style={{ marginTop: 16 }}>
                   <Button type="submit">Submit report</Button>
                 </div>
-                <div className={s.fineprint}>Anonymous reports are accepted. If you leave an email, we'll follow up with you directly.</div>
+                <div className={s.fineprint}>
+                  Anonymous reports are accepted. If you leave an email, we'll
+                  follow up with you directly.
+                </div>
               </form>
             </div>
             <div>
@@ -120,19 +169,44 @@ export function ReportPage() {
           <h2>
             Moderation <em>transparency</em>
           </h2>
-          <p className={s.lead}>We publish a quarterly moderation report so the community can see how decisions are being made. This is what accountability looks like.</p>
+          <p className={s.lead}>
+            We publish a quarterly moderation report so the community can see
+            how decisions are being made. This is what accountability looks
+            like.
+          </p>
           <div className={s.modLog}>
             <h3>
               Q1 2026 <em>moderation report</em>
             </h3>
-            <p>Published April 2026 · Covers January – March 2026 · All data is aggregate and anonymised.</p>
+            <p>
+              Published April 2026 · Covers January – March 2026 · All data is
+              aggregate and anonymised.
+            </p>
             <div className={s.logStats}>
               {LOG.map((stat) => (
                 <div key={stat.l} className={s.logStat}>
-                  <div className="n" style={{ fontFamily: 'var(--serif)', fontWeight: 300, fontSize: 38, color: 'var(--cream)', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                  <div
+                    className="n"
+                    style={{
+                      fontFamily: "var(--serif)",
+                      fontWeight: 300,
+                      fontSize: 38,
+                      color: "var(--cream)",
+                      letterSpacing: "-0.02em",
+                      lineHeight: 1,
+                    }}
+                  >
                     {stat.n}
                   </div>
-                  <div className="l" style={{ fontSize: 12, color: 'rgba(247,243,238,.55)', marginTop: 6, lineHeight: 1.4 }}>
+                  <div
+                    className="l"
+                    style={{
+                      fontSize: 12,
+                      color: "rgba(247,243,238,.55)",
+                      marginTop: 6,
+                      lineHeight: 1.4,
+                    }}
+                  >
                     {stat.l}
                   </div>
                 </div>
@@ -147,5 +221,5 @@ export function ReportPage() {
         </div>
       </section>
     </PageShell>
-  )
+  );
 }

@@ -46,7 +46,10 @@ function AppCard({
         .join(" ")}
     >
       <div
-        className={[styles.appLogo, LOGO_CLASS[a.logoTint] && styles[LOGO_CLASS[a.logoTint]]]
+        className={[
+          styles.appLogo,
+          LOGO_CLASS[a.logoTint] && styles[LOGO_CLASS[a.logoTint]],
+        ]
           .filter(Boolean)
           .join(" ")}
       >
@@ -61,7 +64,10 @@ function AppCard({
           ))}
           {a.deadline && (
             <span
-              className={[styles.appDeadline, a.deadline.urgent && styles.appDeadlineUrgent]
+              className={[
+                styles.appDeadline,
+                a.deadline.urgent && styles.appDeadlineUrgent,
+              ]
                 .filter(Boolean)
                 .join(" ")}
             >
@@ -72,7 +78,10 @@ function AppCard({
         {activeIdx >= 0 && (
           <div className={styles.stageStep}>
             Step {activeIdx + 1} of {a.stages.length}
-            <span className={styles.stageStepLabel}> · {activeStage?.label}</span>
+            <span className={styles.stageStepLabel}>
+              {" "}
+              · {activeStage?.label}
+            </span>
           </div>
         )}
         {a.stages.length > 0 && (
@@ -80,7 +89,10 @@ function AppCard({
             {a.stages.map((s, si) => (
               <div
                 key={si}
-                className={[styles.stage, STAGE_CLASS[s.state] && styles[STAGE_CLASS[s.state]]]
+                className={[
+                  styles.stage,
+                  STAGE_CLASS[s.state] && styles[STAGE_CLASS[s.state]],
+                ]
                   .filter(Boolean)
                   .join(" ")}
               >
@@ -99,7 +111,9 @@ function AppCard({
         <p className={styles.appStatus}>{a.status}</p>
       </div>
       <div className={styles.appRight}>
-        <span className={`${styles.appBadge} ${styles[BADGE_CLASS[a.badge.kind]]}`}>
+        <span
+          className={`${styles.appBadge} ${styles[BADGE_CLASS[a.badge.kind]]}`}
+        >
           {a.badge.pulse && <span className={styles.pulse} />}
           {a.badge.label}
         </span>
@@ -164,7 +178,12 @@ export function ApplicationStatusPage() {
   const groups: Group[] =
     tab === "all"
       ? [
-          { id: "offer", title: "Offers — your decision", compare: true, items: byCat("offer") },
+          {
+            id: "offer",
+            title: "Offers — your decision",
+            compare: true,
+            items: byCat("offer"),
+          },
           { id: "active", title: "In progress", items: byCat("active") },
           {
             id: "draft",
@@ -181,7 +200,13 @@ export function ApplicationStatusPage() {
             items: byCat("closed"),
           },
         ].filter((g) => g.items.length > 0)
-      : [{ id: tab, compare: tab === "offer", items: apps.filter((a) => a.cat === tab) }];
+      : [
+          {
+            id: tab,
+            compare: tab === "offer",
+            items: apps.filter((a) => a.cat === tab),
+          },
+        ];
 
   const patch = (id: string, p: Partial<Application>) =>
     setApps((prev) => prev.map((a) => (a.id === id ? { ...a, ...p } : a)));
@@ -198,13 +223,14 @@ export function ApplicationStatusPage() {
               Where everything <em>stands.</em>
             </h1>
             <p className={styles.sub}>
-              Track every application, see how long companies have sat on yours, and know when to
-              follow up.
+              Track every application, see how long companies have sat on yours,
+              and know when to follow up.
             </p>
           </div>
           <div>
             <div className={styles.counter}>
-              <em>{activeCount}</em> <span className={styles.counterSent}>/ {sentCount} sent</span>
+              <em>{activeCount}</em>{" "}
+              <span className={styles.counterSent}>/ {sentCount} sent</span>
             </div>
             <div className={styles.counterL}>Active applications</div>
           </div>
@@ -215,7 +241,9 @@ export function ApplicationStatusPage() {
             <button
               key={t.id}
               type="button"
-              className={[styles.tab, tab === t.id && styles.tabActive].filter(Boolean).join(" ")}
+              className={[styles.tab, tab === t.id && styles.tabActive]
+                .filter(Boolean)
+                .join(" ")}
               onClick={() => setTab(t.id)}
             >
               {t.label} <span className={styles.tabCount}>{t.count}</span>
@@ -226,16 +254,20 @@ export function ApplicationStatusPage() {
         <div className={styles.legend}>
           <span className={styles.legendLabel}>Tracker key</span>
           <span className={styles.legendItem}>
-            <span className={`${styles.legendDot} ${styles.legendDone}`} /> Done — this step is complete
+            <span className={`${styles.legendDot} ${styles.legendDone}`} /> Done
+            — this step is complete
           </span>
           <span className={styles.legendItem}>
-            <span className={`${styles.legendDot} ${styles.legendActive}`} /> You are here — current step
+            <span className={`${styles.legendDot} ${styles.legendActive}`} />{" "}
+            You are here — current step
           </span>
           <span className={styles.legendItem}>
-            <span className={`${styles.legendDot} ${styles.legendUpcoming}`} /> Upcoming — not started yet
+            <span className={`${styles.legendDot} ${styles.legendUpcoming}`} />{" "}
+            Upcoming — not started yet
           </span>
           <span className={styles.legendItem}>
-            <span className={`${styles.legendDot} ${styles.legendClosed}`} /> Closed — ended or withdrawn
+            <span className={`${styles.legendDot} ${styles.legendClosed}`} />{" "}
+            Closed — ended or withdrawn
           </span>
         </div>
 
@@ -251,13 +283,20 @@ export function ApplicationStatusPage() {
               <section key={g.id} className={styles.group}>
                 {(g.title || (g.compare && canCompare)) && (
                   <div
-                    className={[styles.groupHead, g.muted && styles.groupHeadMuted]
+                    className={[
+                      styles.groupHead,
+                      g.muted && styles.groupHeadMuted,
+                    ]
                       .filter(Boolean)
                       .join(" ")}
                   >
-                    {g.title && <span className={styles.groupTitle}>{g.title}</span>}
+                    {g.title && (
+                      <span className={styles.groupTitle}>{g.title}</span>
+                    )}
                     <span className={styles.groupCount}>{g.items.length}</span>
-                    {g.hint && <span className={styles.groupHint}>{g.hint}</span>}
+                    {g.hint && (
+                      <span className={styles.groupHint}>{g.hint}</span>
+                    )}
                     {g.compare && canCompare && (
                       <Button
                         size="md"
@@ -265,7 +304,12 @@ export function ApplicationStatusPage() {
                         className={styles.compareBtn}
                         onClick={() => setComparing(true)}
                       >
-                        <FiColumns size={15} aria-hidden style={{ marginRight: 6 }} /> Compare offers
+                        <FiColumns
+                          size={15}
+                          aria-hidden
+                          style={{ marginRight: 6 }}
+                        />{" "}
+                        Compare offers
                       </Button>
                     )}
                   </div>
@@ -276,7 +320,9 @@ export function ApplicationStatusPage() {
                       <AppCard
                         app={a}
                         muted={g.muted}
-                        onAction={(kind) => setOpen({ action: kind, appId: a.id })}
+                        onAction={(kind) =>
+                          setOpen({ action: kind, appId: a.id })
+                        }
                       />
                     </FadeIn>
                   ))}

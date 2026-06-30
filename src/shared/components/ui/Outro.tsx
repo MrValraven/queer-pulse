@@ -1,16 +1,16 @@
-import type { ReactNode } from 'react'
-import { Reveal } from './Reveal'
-import styles from './Outro.module.css'
+import type { ReactNode } from "react";
+import { Reveal } from "./Reveal";
+import styles from "./Outro.module.css";
 
 interface OutroProps {
   /** Closing headline. Use an `<em>` for the coral emphasis. */
-  title: ReactNode
+  title: ReactNode;
   /** Supporting line under the title. */
-  sub?: ReactNode
+  sub?: ReactNode;
   /** Call-to-action button(s). */
-  children?: ReactNode
+  children?: ReactNode;
   /** Extra class on the `<section>` for one-off overrides. */
-  className?: string
+  className?: string;
 }
 
 /**
@@ -20,7 +20,7 @@ interface OutroProps {
  */
 export function Outro({ title, sub, children, className }: OutroProps) {
   return (
-    <section className={[styles.outro, className].filter(Boolean).join(' ')}>
+    <section className={[styles.outro, className].filter(Boolean).join(" ")}>
       <div className="wrap">
         <Reveal as="h2" className={styles.title}>
           {title}
@@ -37,5 +37,5 @@ export function Outro({ title, sub, children, className }: OutroProps) {
         )}
       </div>
     </section>
-  )
+  );
 }

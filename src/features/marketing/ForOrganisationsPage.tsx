@@ -12,16 +12,21 @@ export function ForOrganisationsPage() {
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <Reveal as="div" className={styles.eyebrow}>For organisations · partnerships</Reveal>
+          <Reveal as="div" className={styles.eyebrow}>
+            For organisations · partnerships
+          </Reveal>
           <Reveal as="h1" className={styles.h1} delay={60}>
             Work <em>with us,</em> not <em>at us.</em>
           </Reveal>
           <Reveal as="p" className={styles.dek} delay={120}>
-            QueerPulse partnerships are <b>operational, not promotional</b>. We don't sell
-            access, run sponsored content, or do co-branding for its own sake. <em>We
-            build seams between organisations that already do the work.</em> Below: what
-            those seams look like, who we already work with, and how to start a
-            conversation.
+            QueerPulse partnerships are <b>operational, not promotional</b>. We
+            don't sell access, run sponsored content, or do co-branding for its
+            own sake.{" "}
+            <em>
+              We build seams between organisations that already do the work.
+            </em>{" "}
+            Below: what those seams look like, who we already work with, and how
+            to start a conversation.
           </Reveal>
           <Reveal className={styles.notRow} delay={180}>
             <h4>What we don't do</h4>
@@ -41,8 +46,8 @@ export function ForOrganisationsPage() {
           How partnerships <em>actually start</em>
         </Reveal>
         <Reveal as="p" className={styles.doSub} delay={60}>
-          Slow. Conversational. Often via a phone call before a written proposal. The whole
-          process usually takes 6–10 weeks.
+          Slow. Conversational. Often via a phone call before a written
+          proposal. The whole process usually takes 6–10 weeks.
         </Reveal>
         <div className={styles.processGrid}>
           {PROCESS.map((p, i) => (
@@ -64,13 +69,27 @@ export function ForOrganisationsPage() {
             Already working <em>with us</em>
           </Reveal>
           <Reveal as="p" className={styles.proofSub} delay={60}>
-            Four representative partners, each at a different tier. Full list lives on
-            Partners.
+            Four representative partners, each at a different tier. Full list
+            lives on Partners.
           </Reveal>
           <div className={styles.partnerRow}>
             {PARTNERS.map((p, i) => (
-              <Reveal key={i} as="button" type="button" className={styles.partnerCard} delay={i * 60} onClick={() => showToast("Opening partner page…", "info")}>
-                <div className={[styles.partnerLogo, p.logoCls && styles[p.logoCls]].filter(Boolean).join(" ")}>
+              <Reveal
+                key={i}
+                as="button"
+                type="button"
+                className={styles.partnerCard}
+                delay={i * 60}
+                onClick={() => showToast("Opening partner page…", "info")}
+              >
+                <div
+                  className={[
+                    styles.partnerLogo,
+                    p.logoCls && styles[p.logoCls],
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
                   {p.logo}
                 </div>
                 <div className={styles.partnerType}>{p.type}</div>
@@ -83,16 +102,19 @@ export function ForOrganisationsPage() {
           </div>
           <Reveal className={styles.quoteCard} delay={60}>
             <p>
-              "What QueerPulse asked us for at the start was strange: <em>not money</em>,
-              not co-branding — they wanted us to commit to specific operational changes in
-              how our helpline handed off to a community. It took a year. It's the
-              partnership we're proudest of."
+              "What QueerPulse asked us for at the start was strange:{" "}
+              <em>not money</em>, not co-branding — they wanted us to commit to
+              specific operational changes in how our helpline handed off to a
+              community. It took a year. It's the partnership we're proudest
+              of."
             </p>
             <div className={styles.quoteBy}>
               <div className={styles.quoteAv}>FM</div>
               <div>
                 <div className={styles.quoteName}>Filipa Mendes</div>
-                <div className={styles.quoteRole}>Executive Director · ILGA Portugal</div>
+                <div className={styles.quoteRole}>
+                  Executive Director · ILGA Portugal
+                </div>
               </div>
             </div>
           </Reveal>

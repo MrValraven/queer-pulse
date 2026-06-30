@@ -1,41 +1,57 @@
-import { PageShell } from '../../shared/components/layout'
-import { Avatar, Button, FadeIn } from '../../shared/components/ui'
-import { useCountUp } from '../../shared/hooks'
-import { routes } from '../../app/routeMap'
-import { PublicList, LockedSection, BottomCta } from './PublicProfileSections'
+import { PageShell } from "../../shared/components/layout";
+import { Avatar, Button, FadeIn } from "../../shared/components/ui";
+import { useCountUp } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
+import { PublicList, LockedSection, BottomCta } from "./PublicProfileSections";
 import {
   PUBLIC_MEMBER,
   PUBLIC_STATS,
   HERE_FOR,
   PUBLIC_WRITING,
   PUBLIC_HOSTING,
-} from './publicProfile.data'
-import styles from './PublicProfilePage.module.css'
+} from "./publicProfile.data";
+import styles from "./PublicProfilePage.module.css";
 
-const m = PUBLIC_MEMBER
+const m = PUBLIC_MEMBER;
 
 /** Splits e.g. "1.4k" → { num: 1.4, suffix: "k" } for animating the leading number. */
-function parseStat(value: string): { num: number; suffix: string; decimals: number } {
-  const match = value.match(/^([\d.]+)(.*)$/)
-  if (!match) return { num: NaN, suffix: value, decimals: 0 }
-  const decimals = match[1]!.includes('.') ? match[1]!.split('.')[1]!.length : 0
-  return { num: parseFloat(match[1]!), suffix: match[2]!, decimals }
+function parseStat(value: string): {
+  num: number;
+  suffix: string;
+  decimals: number;
+} {
+  const match = value.match(/^([\d.]+)(.*)$/);
+  if (!match) return { num: NaN, suffix: value, decimals: 0 };
+  const decimals = match[1]!.includes(".")
+    ? match[1]!.split(".")[1]!.length
+    : 0;
+  return { num: parseFloat(match[1]!), suffix: match[2]!, decimals };
 }
 
-function Stat({ value, em, label }: { value: string; em?: boolean; label: string }) {
-  const { num, suffix, decimals } = parseStat(value)
-  const animatable = Number.isFinite(num)
+function Stat({
+  value,
+  em,
+  label,
+}: {
+  value: string;
+  em?: boolean;
+  label: string;
+}) {
+  const { num, suffix, decimals } = parseStat(value);
+  const animatable = Number.isFinite(num);
   // useCountUp rounds to integers, so scale decimals up then back down.
-  const scale = Math.pow(10, decimals)
-  const counted = useCountUp(animatable ? Math.round(num * scale) : 0)
-  const display = animatable ? `${(counted / scale).toFixed(decimals)}${suffix}` : value
+  const scale = Math.pow(10, decimals);
+  const counted = useCountUp(animatable ? Math.round(num * scale) : 0);
+  const display = animatable
+    ? `${(counted / scale).toFixed(decimals)}${suffix}`
+    : value;
 
   return (
     <div className={styles.stat}>
       <b>{em ? <em>{display}</em> : display}</b>
       <span>{label}</span>
     </div>
-  )
+  );
 }
 
 export function PublicProfilePage() {
@@ -43,7 +59,8 @@ export function PublicProfilePage() {
     <PageShell>
       <div className={styles.guestBar}>
         <span className={styles.guestLbl}>
-          You're not signed in · viewing the <b>public version</b> of this profile
+          You're not signed in · viewing the <b>public version</b> of this
+          profile
         </span>
         <div className={styles.guestActions}>
           <Button variant="ghost-dark" to={routes.signIn}>
@@ -123,7 +140,10 @@ export function PublicProfilePage() {
           </div>
           <div className={styles.tagRow}>
             {HERE_FOR.map((t) => (
-              <span key={t.label} className={`${styles.tag} ${t.primary ? styles.primary : ''}`}>
+              <span
+                key={t.label}
+                className={`${styles.tag} ${t.primary ? styles.primary : ""}`}
+              >
                 {t.label}
               </span>
             ))}
@@ -132,7 +152,11 @@ export function PublicProfilePage() {
 
         <FadeIn delay={180}>
           <PublicList
-            heading={<>Public <em>writing</em></>}
+            heading={
+              <>
+                Public <em>writing</em>
+              </>
+            }
             meta="4 articles · QueerPulse Magazine"
             cards={PUBLIC_WRITING}
             to={routes.article}
@@ -141,7 +165,11 @@ export function PublicProfilePage() {
 
         <FadeIn delay={240}>
           <PublicList
-            heading={<>Public <em>hosting</em></>}
+            heading={
+              <>
+                Public <em>hosting</em>
+              </>
+            }
             meta="Open events anyone can RSVP to"
             cards={PUBLIC_HOSTING}
             to={routes.gathering}
@@ -149,49 +177,61 @@ export function PublicProfilePage() {
         </FadeIn>
 
         <FadeIn delay={300}>
-        <LockedSection
-          heading={<>Posts &amp; <em>messages</em></>}
-          meta="Members only"
-          icon={
-            <svg viewBox="0 0 24 24">
-              <rect x="4" y="11" width="16" height="10" rx="2" />
-              <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-            </svg>
-          }
-          title={<>Posts, replies, and DMs are <em>members-only.</em></>}
-          body="QueerPulse keeps day-to-day community life behind a sign-in to protect members. Become one and Tomás's feed unlocks immediately — including the ability to message him."
-          action={
-            <Button variant="primary" to={routes.requestInvite}>
-              Request an invite →
-            </Button>
-          }
-        />
+          <LockedSection
+            heading={
+              <>
+                Posts &amp; <em>messages</em>
+              </>
+            }
+            meta="Members only"
+            icon={
+              <svg viewBox="0 0 24 24">
+                <rect x="4" y="11" width="16" height="10" rx="2" />
+                <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+              </svg>
+            }
+            title={
+              <>
+                Posts, replies, and DMs are <em>members-only.</em>
+              </>
+            }
+            body="QueerPulse keeps day-to-day community life behind a sign-in to protect members. Become one and Tomás's feed unlocks immediately — including the ability to message him."
+            action={
+              <Button variant="primary" to={routes.requestInvite}>
+                Request an invite →
+              </Button>
+            }
+          />
         </FadeIn>
 
         <FadeIn delay={360}>
-        <LockedSection
-          heading="Connections"
-          meta="Members only"
-          icon={
-            <svg viewBox="0 0 24 24">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-          }
-          title={<>Who Tomás knows, <em>privately.</em></>}
-          body="To protect members' networks, we don't show connection lists publicly. Sign in to see your mutuals with Tomás."
-          action={
-            <Button variant="ghost" to={routes.signIn}>
-              Sign in
-            </Button>
-          }
-        />
+          <LockedSection
+            heading="Connections"
+            meta="Members only"
+            icon={
+              <svg viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            }
+            title={
+              <>
+                Who Tomás knows, <em>privately.</em>
+              </>
+            }
+            body="To protect members' networks, we don't show connection lists publicly. Sign in to see your mutuals with Tomás."
+            action={
+              <Button variant="ghost" to={routes.signIn}>
+                Sign in
+              </Button>
+            }
+          />
         </FadeIn>
 
         <BottomCta />
       </div>
     </PageShell>
-  )
+  );
 }

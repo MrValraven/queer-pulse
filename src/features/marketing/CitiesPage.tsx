@@ -1,9 +1,13 @@
-import { PageShell } from '../../shared/components/layout'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { FadeIn, SkeletonLine } from '../../shared/components/ui'
-import { useSimulatedLoad, useCountUp } from '../../shared/hooks'
-import { GroundworkSection, HowSection, WaitlistSection } from './CitiesSections'
-import styles from './CitiesPage.module.css'
+import { PageShell } from "../../shared/components/layout";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useSimulatedLoad, useCountUp } from "../../shared/hooks";
+import {
+  GroundworkSection,
+  HowSection,
+  WaitlistSection,
+} from "./CitiesSections";
+import styles from "./CitiesPage.module.css";
 
 // ---------------------------------------------------------------------------
 // CityCardSkeleton — mirrors the real cityCard layout exactly so there is
@@ -18,8 +22,16 @@ function CityCardSkeleton() {
         {/* city name + flag + status row */}
         <div className={styles.cityHRow}>
           <SkeletonLine width={120} height={32} style={{ borderRadius: 6 }} />
-          <SkeletonLine width={70} height={14} style={{ borderRadius: 4, marginLeft: 14 }} />
-          <SkeletonLine width={72} height={20} style={{ borderRadius: 5, marginLeft: 'auto' }} />
+          <SkeletonLine
+            width={70}
+            height={14}
+            style={{ borderRadius: 4, marginLeft: 14 }}
+          />
+          <SkeletonLine
+            width={72}
+            height={20}
+            style={{ borderRadius: 5, marginLeft: "auto" }}
+          />
         </div>
         {/* statsMini — 4 stats */}
         <div className={styles.statsMini}>
@@ -53,41 +65,44 @@ function CityCardSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ---------------------------------------------------------------------------
 // CitiesPage
 // ---------------------------------------------------------------------------
 export function CitiesPage() {
-  const { showToast } = useToast()
-  const loading = useSimulatedLoad()
+  const { showToast } = useToast();
+  const loading = useSimulatedLoad();
 
   // Count-up targets — Lisbon
-  const lBonusCount = useCountUp(612, { active: !loading, durationMs: 1200 })
-  const lGatherings = useCountUp(284, { active: !loading, durationMs: 1200 })
-  const lSafeSpaces = useCountUp(42, { active: !loading, durationMs: 1200 })
-  const lMagIssues = useCountUp(9, { active: !loading, durationMs: 1200 })
+  const lBonusCount = useCountUp(612, { active: !loading, durationMs: 1200 });
+  const lGatherings = useCountUp(284, { active: !loading, durationMs: 1200 });
+  const lSafeSpaces = useCountUp(42, { active: !loading, durationMs: 1200 });
+  const lMagIssues = useCountUp(9, { active: !loading, durationMs: 1200 });
 
   // Count-up targets — Porto
-  const pMembers = useCountUp(84, { active: !loading, durationMs: 1200 })
-  const pGatherings = useCountUp(12, { active: !loading, durationMs: 1200 })
-  const pSafeSpaces = useCountUp(7, { active: !loading, durationMs: 1200 })
-  const pPartners = useCountUp(2, { active: !loading, durationMs: 1200 })
+  const pMembers = useCountUp(84, { active: !loading, durationMs: 1200 });
+  const pGatherings = useCountUp(12, { active: !loading, durationMs: 1200 });
+  const pSafeSpaces = useCountUp(7, { active: !loading, durationMs: 1200 });
+  const pPartners = useCountUp(2, { active: !loading, durationMs: 1200 });
 
   return (
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <div className={styles.eyebrow}>Cities · network footprint · selector</div>
+          <div className={styles.eyebrow}>
+            Cities · network footprint · selector
+          </div>
           <h1 className={styles.h1}>
             One city at a <em>time.</em>
           </h1>
           <p className={styles.dek}>
-            QueerPulse is rooted in Lisbon. We will only open in a new city when there is{' '}
-            <b>at least one moderator in-country</b>, a partner organisation aligned, and a clear
-            local need. <em>That makes expansion slow on purpose.</em> Below: where we are now,
-            where we're building, and how you can pull us toward your city.
+            QueerPulse is rooted in Lisbon. We will only open in a new city when
+            there is <b>at least one moderator in-country</b>, a partner
+            organisation aligned, and a clear local need.{" "}
+            <em>That makes expansion slow on purpose.</em> Below: where we are
+            now, where we're building, and how you can pull us toward your city.
           </p>
           <div className={styles.current}>
             <div className={styles.currentIc}>
@@ -104,7 +119,10 @@ export function CitiesPage() {
               type="button"
               className={styles.currentBtn}
               onClick={() =>
-                showToast('Detected from IP. You can switch from any city card below.', 'info')
+                showToast(
+                  "Detected from IP. You can switch from any city card below.",
+                  "info",
+                )
               }
             >
               Change
@@ -119,7 +137,9 @@ export function CitiesPage() {
             <h2>
               Live · <em>fully operational</em>
             </h2>
-            <span className={styles.meta}>Active community, moderators, partner orgs</span>
+            <span className={styles.meta}>
+              Active community, moderators, partner orgs
+            </span>
           </div>
           <div className={styles.liveGrid}>
             {loading ? (
@@ -132,7 +152,9 @@ export function CitiesPage() {
                 {/* Lisbon — i=0 */}
                 <FadeIn delay={0}>
                   <div className={styles.cityCard}>
-                    <div className={styles.cityImg}>Lisbon · cityscape from Castelo</div>
+                    <div className={styles.cityImg}>
+                      Lisbon · cityscape from Castelo
+                    </div>
                     <div className={styles.cityBody}>
                       <div className={styles.cityHRow}>
                         <div className={styles.cityName}>
@@ -141,14 +163,16 @@ export function CitiesPage() {
                         <span className={styles.cityFlag}>
                           <span className={styles.dot}>🇵🇹</span>Portugal
                         </span>
-                        <span className={`${styles.cityStatus} ${styles.statusLive}`}>
+                        <span
+                          className={`${styles.cityStatus} ${styles.statusLive}`}
+                        >
                           Live · home
                         </span>
                       </div>
                       <div className={styles.statsMini}>
                         <span>
                           <b>
-                            1,<em>{lBonusCount.toLocaleString('en-US')}</em>
+                            1,<em>{lBonusCount.toLocaleString("en-US")}</em>
                           </b>
                           Members
                         </span>
@@ -169,16 +193,20 @@ export function CitiesPage() {
                         </span>
                       </div>
                       <p className={styles.cityDek}>
-                        Where this all began.{' '}
-                        <b>Anjos, Mouraria, Graça, Alfama, Bairro Alto, Marvila</b> — the network
-                        is woven into the existing fabric. Operational partnerships with ILGA
-                        Portugal, Clínica do Largo, and Trans Hub. Café Beirão is the de facto
+                        Where this all began.{" "}
+                        <b>
+                          Anjos, Mouraria, Graça, Alfama, Bairro Alto, Marvila
+                        </b>{" "}
+                        — the network is woven into the existing fabric.
+                        Operational partnerships with ILGA Portugal, Clínica do
+                        Largo, and Trans Hub. Café Beirão is the de facto
                         headquarters.
                       </p>
                       <div className={styles.cityCta}>
                         <span className={styles.link}>Browse Lisbon →</span>
                         <span className={styles.lead}>
-                          Coordinated by <b>Marta Reis</b> &amp; <b>Catarina Vaz</b>
+                          Coordinated by <b>Marta Reis</b> &amp;{" "}
+                          <b>Catarina Vaz</b>
                         </span>
                       </div>
                     </div>
@@ -190,7 +218,9 @@ export function CitiesPage() {
                   <button
                     type="button"
                     className={styles.cityCard}
-                    onClick={() => showToast('Porto opens publicly 12 Aug 2026', 'info')}
+                    onClick={() =>
+                      showToast("Porto opens publicly 12 Aug 2026", "info")
+                    }
                   >
                     <div className={`${styles.cityImg} ${styles.cityImgB}`}>
                       Porto · Ribeira at dawn
@@ -203,7 +233,9 @@ export function CitiesPage() {
                         <span className={styles.cityFlag}>
                           <span className={styles.dot}>🇵🇹</span>Portugal
                         </span>
-                        <span className={`${styles.cityStatus} ${styles.statusBeta}`}>
+                        <span
+                          className={`${styles.cityStatus} ${styles.statusBeta}`}
+                        >
                           Beta · 6 weeks
                         </span>
                       </div>
@@ -228,13 +260,16 @@ export function CitiesPage() {
                         </span>
                       </div>
                       <p className={styles.cityDek}>
-                        Opening publicly <b>12 August 2026</b> after 18 months of quiet groundwork.
-                        Two in-Porto moderators, partner relationship with Rede Ex Aequo, and a
-                        hosting circle of nine members. The first public gathering is at Café
+                        Opening publicly <b>12 August 2026</b> after 18 months
+                        of quiet groundwork. Two in-Porto moderators, partner
+                        relationship with Rede Ex Aequo, and a hosting circle of
+                        nine members. The first public gathering is at Café
                         Candelabro · 21 Aug.
                       </p>
                       <div className={styles.cityCta}>
-                        <span className={styles.link}>Join the Porto beta →</span>
+                        <span className={styles.link}>
+                          Join the Porto beta →
+                        </span>
                         <span className={styles.lead}>
                           Coordinated by <b>Filipa Lopes</b>
                         </span>
@@ -253,5 +288,5 @@ export function CitiesPage() {
 
       <HowSection />
     </PageShell>
-  )
+  );
 }

@@ -4,7 +4,7 @@
  */
 
 /** Today as `yyyy-mm-dd`, for seeding date inputs. */
-export const todayIso = (): string => new Date().toISOString().slice(0, 10)
+export const todayIso = (): string => new Date().toISOString().slice(0, 10);
 
 /**
  * Format an ISO date (`yyyy-mm-dd`) as a readable date. An empty string stays
@@ -12,11 +12,15 @@ export const todayIso = (): string => new Date().toISOString().slice(0, 10)
  */
 export function formatDate(
   iso: string,
-  locale = 'en-GB',
-  options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' },
+  locale = "en-GB",
+  options: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  },
 ): string {
-  if (!iso) return ''
-  const d = new Date(`${iso}T00:00:00`)
-  if (Number.isNaN(d.getTime())) return iso
-  return d.toLocaleDateString(locale, options)
+  if (!iso) return "";
+  const d = new Date(`${iso}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString(locale, options);
 }

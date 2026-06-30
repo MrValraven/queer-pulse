@@ -1,14 +1,14 @@
-import { FiDownload } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import styles from './SettingsModal.module.css'
+import { FiDownload } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import styles from "./SettingsModal.module.css";
 
 export interface InvoiceData {
-  period: string
-  amount: string
+  period: string;
+  amount: string;
 }
 
-const VAT_NOTE = 'VAT reverse-charged · €0.00'
+const VAT_NOTE = "VAT reverse-charged · €0.00";
 
 /**
  * Invoice preview with a working download. The download generates a real text
@@ -19,57 +19,64 @@ export function InvoicePreviewModal({
   onClose,
   onDownloaded,
 }: {
-  invoice: InvoiceData
-  onClose: () => void
-  onDownloaded?: () => void
+  invoice: InvoiceData;
+  onClose: () => void;
+  onDownloaded?: () => void;
 }) {
-  useScrollLock()
+  useScrollLock();
 
-  const number = `QP-${invoice.period.replace(/\s+/g, '-').toUpperCase()}`
+  const number = `QP-${invoice.period.replace(/\s+/g, "-").toUpperCase()}`;
 
   function buildInvoiceText() {
     return [
-      'QueerPulse — Membership invoice',
-      '================================',
+      "QueerPulse — Membership invoice",
+      "================================",
       ``,
       `Invoice number:  ${number}`,
       `Billing period:  ${invoice.period}`,
       `Issued to:       tomas@example.com`,
       ``,
-      'Line items',
-      '--------------------------------',
+      "Line items",
+      "--------------------------------",
       `Sustaining membership · ${invoice.period}        ${invoice.amount}`,
       `${VAT_NOTE}`,
-      '--------------------------------',
+      "--------------------------------",
       `Total                                  ${invoice.amount}`,
       ``,
-      'Paid in full. Thank you for sustaining the community.',
-      'QueerPulse · Lisbon · queerpulse.app',
-    ].join('\n')
+      "Paid in full. Thank you for sustaining the community.",
+      "QueerPulse · Lisbon · queerpulse.app",
+    ].join("\n");
   }
 
   function download() {
-    const blob = new Blob([buildInvoiceText()], { type: 'text/plain;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${number}.txt`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-    onDownloaded?.()
+    const blob = new Blob([buildInvoiceText()], {
+      type: "text/plain;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${number}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    onDownloaded?.();
   }
 
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className={styles.modal}>
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           ×
         </button>
         <div className={styles.eye}>Invoice · {invoice.period}</div>
@@ -112,5 +119,5 @@ export function InvoicePreviewModal({
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FiCheck } from 'react-icons/fi';
-import { Button } from '../../shared/components/ui';
-import { routes, linkToPath } from '../../app/routeMap';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { routes, linkToPath } from "../../app/routeMap";
 import {
   VOUCH,
   NEIGHBOURHOODS,
@@ -11,8 +11,8 @@ import {
   TOUR_COMMUNITIES,
   CONNECTIONS,
   EXPLORE_CARDS,
-} from './welcomeTour.data';
-import styles from './WelcomeTourPage.module.css';
+} from "./welcomeTour.data";
+import styles from "./WelcomeTourPage.module.css";
 
 interface StepProps {
   onNext: () => void;
@@ -27,8 +27,8 @@ export function TourWelcome({ onNext }: { onNext: () => void }) {
         Welcome to <em>QueerPulse.</em>
       </h1>
       <p className={styles.p}>
-        Somebody in the community thought you belonged here — and that's how everyone arrived.
-        We're glad you made it.
+        Somebody in the community thought you belonged here — and that's how
+        everyone arrived. We're glad you made it.
       </p>
       <div className={styles.vouchCard}>
         <div className={styles.vcAv}>{VOUCH.initials}</div>
@@ -40,10 +40,10 @@ export function TourWelcome({ onNext }: { onNext: () => void }) {
       </div>
       <div className={styles.q101}>
         <span className={styles.q101Label}>Still finding the language?</span>
-        If you're newly exploring your identity — not just new to Lisbon —{' '}
+        If you're newly exploring your identity — not just new to Lisbon —{" "}
         <Link to={routes.queer101} className={styles.q101Link}>
           Queer 101
-        </Link>{' '}
+        </Link>{" "}
         is a quiet place to start. No account needed to read it.
       </div>
       <div className={styles.nav}>
@@ -55,20 +55,31 @@ export function TourWelcome({ onNext }: { onNext: () => void }) {
 }
 
 export function TourProfile({ onNext, onBack }: StepProps) {
-  const [visibility, setVisibility] = useState('open');
+  const [visibility, setVisibility] = useState("open");
   return (
     <>
       <div className={styles.eye}>Your profile</div>
       <h2 className={styles.h}>
         Tell us a little about <em>yourself.</em>
       </h2>
-      <p className={styles.p}>This is how the community will know you. You can change everything later.</p>
+      <p className={styles.p}>
+        This is how the community will know you. You can change everything
+        later.
+      </p>
       <div className={styles.fields}>
         <div className={styles.row}>
           <input className={styles.input} type="text" placeholder="Your name" />
-          <input className={styles.input} type="text" placeholder="Pronouns (optional)" />
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Pronouns (optional)"
+          />
         </div>
-        <input className={styles.input} type="text" placeholder="What you do — your role or practice" />
+        <input
+          className={styles.input}
+          type="text"
+          placeholder="What you do — your role or practice"
+        />
         <select className={styles.select} defaultValue="">
           <option value="">Your neighbourhood in Lisbon</option>
           {NEIGHBOURHOODS.map((hood) => (
@@ -95,7 +106,9 @@ export function TourProfile({ onNext, onBack }: StepProps) {
         ))}
       </div>
       <div className={styles.nav}>
-        <button className={styles.back} onClick={onBack}>← Back</button>
+        <button className={styles.back} onClick={onBack}>
+          ← Back
+        </button>
         <Button onClick={onNext}>Continue →</Button>
       </div>
     </>
@@ -119,25 +132,33 @@ export function TourInterests({ onNext, onBack }: StepProps) {
         What matters <em>to you?</em>
       </h2>
       <p className={styles.p}>
-        We use this to suggest connections, gatherings, and communities. Select as many as you like.
+        We use this to suggest connections, gatherings, and communities. Select
+        as many as you like.
       </p>
       <div className={styles.intGrid}>
         {INTERESTS.map((interest) => (
           <button
             key={interest.label}
             type="button"
-            className={[styles.intItem, selected.has(interest.label) && styles.intSel]
+            className={[
+              styles.intItem,
+              selected.has(interest.label) && styles.intSel,
+            ]
               .filter(Boolean)
-              .join(' ')}
+              .join(" ")}
             onClick={() => toggle(interest.label)}
           >
-            <span className={styles.intIcon}><interest.icon /></span>
+            <span className={styles.intIcon}>
+              <interest.icon />
+            </span>
             <span className={styles.intLabel}>{interest.label}</span>
           </button>
         ))}
       </div>
       <div className={styles.nav}>
-        <button className={styles.back} onClick={onBack}>← Back</button>
+        <button className={styles.back} onClick={onBack}>
+          ← Back
+        </button>
         <Button onClick={onNext}>Continue →</Button>
       </div>
     </>
@@ -161,15 +182,19 @@ export function TourCommunities({ onNext, onBack }: StepProps) {
         Which communities <em>call to you?</em>
       </h2>
       <p className={styles.p}>
-        Join now or explore later — you can always change this. Your choices are private.
+        Join now or explore later — you can always change this. Your choices are
+        private.
       </p>
       <div className={styles.commList}>
         {TOUR_COMMUNITIES.map((community) => (
           <label
             key={community.name}
-            className={[styles.commPick, joined.has(community.name) && styles.commPicked]
+            className={[
+              styles.commPick,
+              joined.has(community.name) && styles.commPicked,
+            ]
               .filter(Boolean)
-              .join(' ')}
+              .join(" ")}
           >
             <input
               type="checkbox"
@@ -184,7 +209,9 @@ export function TourCommunities({ onNext, onBack }: StepProps) {
         ))}
       </div>
       <div className={styles.nav}>
-        <button className={styles.back} onClick={onBack}>← Back</button>
+        <button className={styles.back} onClick={onBack}>
+          ← Back
+        </button>
         <Button onClick={onNext}>Continue →</Button>
       </div>
     </>
@@ -200,14 +227,17 @@ export function TourConnections({ onNext, onBack }: StepProps) {
         Three people worth <em>saying hello to.</em>
       </h2>
       <p className={styles.p}>
-        These are members who often welcome new arrivals. A quick message goes a long way.
+        These are members who often welcome new arrivals. A quick message goes a
+        long way.
       </p>
       <div className={styles.sugGrid}>
         {CONNECTIONS.map((person) => {
           const isSent = sent.has(person.name);
           return (
             <div key={person.name} className={styles.sugCard}>
-              <div className={[styles.sugAv, styles[person.tint]].join(' ')}>{person.initials}</div>
+              <div className={[styles.sugAv, styles[person.tint]].join(" ")}>
+                {person.initials}
+              </div>
               <div className={styles.sugInfo}>
                 <div className={styles.sugName}>{person.name}</div>
                 <div className={styles.sugRole}>{person.role}</div>
@@ -215,17 +245,29 @@ export function TourConnections({ onNext, onBack }: StepProps) {
               </div>
               <button
                 type="button"
-                className={[styles.sugSay, isSent && styles.sugSent].filter(Boolean).join(' ')}
-                onClick={() => setSent((current) => new Set(current).add(person.name))}
+                className={[styles.sugSay, isSent && styles.sugSent]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() =>
+                  setSent((current) => new Set(current).add(person.name))
+                }
               >
-                {isSent ? <>Sent <FiCheck /></> : 'Say hello'}
+                {isSent ? (
+                  <>
+                    Sent <FiCheck />
+                  </>
+                ) : (
+                  "Say hello"
+                )}
               </button>
             </div>
           );
         })}
       </div>
       <div className={styles.nav}>
-        <button className={styles.back} onClick={onBack}>← Back</button>
+        <button className={styles.back} onClick={onBack}>
+          ← Back
+        </button>
         <Button onClick={onNext}>Continue →</Button>
       </div>
     </>
@@ -240,12 +282,19 @@ export function TourExplore() {
         Welcome to the <em>community.</em>
       </h2>
       <p className={styles.p}>
-        You're officially in. Here's where to go first — there's no right answer, just what calls to you.
+        You're officially in. Here's where to go first — there's no right
+        answer, just what calls to you.
       </p>
       <div className={styles.exploreGrid}>
         {EXPLORE_CARDS.map((card) => (
-          <Link key={card.name} to={linkToPath(card.href)} className={styles.exCard}>
-            <div className={styles.exIcon}><card.icon /></div>
+          <Link
+            key={card.name}
+            to={linkToPath(card.href)}
+            className={styles.exCard}
+          >
+            <div className={styles.exIcon}>
+              <card.icon />
+            </div>
             <div className={styles.exName}>{card.name}</div>
             <div className={styles.exDesc}>{card.desc}</div>
           </Link>

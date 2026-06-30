@@ -251,7 +251,7 @@
   }
 }
 
-:global([data-theme='dark']) .actionCard,
-:global([data-theme='dark']) .orgRow {
+:global([data-theme="dark"]) .actionCard,
+:global([data-theme="dark"]) .orgRow {
   border-color: rgba(247, 243, 238, 0.1);
 }

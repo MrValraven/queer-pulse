@@ -1,26 +1,33 @@
-import { useMemo, useState } from 'react'
-import { FiUsers } from 'react-icons/fi'
-import { PageShell } from '../../shared/components/layout'
-import { Button, EmptyState, FadeIn, Outro, Reveal, SkeletonLine } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { routes } from '../../app/routeMap'
-import { useCommunityMembership } from '../../app/providers/CommunityMembershipProvider'
-import { communities } from '../homepage/data/communities'
-import type { Community, CommunityType } from '../homepage/data/types'
-import { getLiving } from './livingCommunities.data'
-import { JoinModal } from './JoinModal'
-import { CommunityCard } from './CommunityCard'
-import styles from './CommunitiesPage.module.css'
+import { useMemo, useState } from "react";
+import { FiUsers } from "react-icons/fi";
+import { PageShell } from "../../shared/components/layout";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  Outro,
+  Reveal,
+  SkeletonLine,
+} from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
+import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
+import { communities } from "../homepage/data/communities";
+import type { Community, CommunityType } from "../homepage/data/types";
+import { getLiving } from "./livingCommunities.data";
+import { JoinModal } from "./JoinModal";
+import { CommunityCard } from "./CommunityCard";
+import styles from "./CommunitiesPage.module.css";
 
-const FILTERS: { value: 'all' | CommunityType; label: string }[] = [
-  { value: 'all', label: 'All communities' },
-  { value: 'social', label: 'Social' },
-  { value: 'arts', label: 'Arts' },
-  { value: 'activism', label: 'Activism' },
-  { value: 'support', label: 'Support' },
-  { value: 'sports', label: 'Sports' },
-  { value: 'professional', label: 'Professional' },
-]
+const FILTERS: { value: "all" | CommunityType; label: string }[] = [
+  { value: "all", label: "All communities" },
+  { value: "social", label: "Social" },
+  { value: "arts", label: "Arts" },
+  { value: "activism", label: "Activism" },
+  { value: "support", label: "Support" },
+  { value: "sports", label: "Sports" },
+  { value: "professional", label: "Professional" },
+];
 
 function CommunityCardSkeleton() {
   return (
@@ -34,23 +41,27 @@ function CommunityCardSkeleton() {
         <SkeletonLine width={64} height={13} />
       </div>
     </div>
-  )
+  );
 }
 
 export function CommunitiesPage() {
-  const loading = useSimulatedLoad()
-  const { isMember, join, requestToJoin } = useCommunityMembership()
-  const [filter, setFilter] = useState<'all' | CommunityType>('all')
-  const [joining, setJoining] = useState<Community | null>(null)
+  const loading = useSimulatedLoad();
+  const { isMember, join, requestToJoin } = useCommunityMembership();
+  const [filter, setFilter] = useState<"all" | CommunityType>("all");
+  const [joining, setJoining] = useState<Community | null>(null);
 
   const joiningTier = joining
-    ? getLiving(joining.slug)?.accessTier ?? (joining.privateBadge ? 'private' : 'public')
-    : 'public'
+    ? (getLiving(joining.slug)?.accessTier ??
+      (joining.privateBadge ? "private" : "public"))
+    : "public";
 
   const visible = useMemo(
-    () => (filter === 'all' ? communities : communities.filter((c) => c.type === filter)),
+    () =>
+      filter === "all"
+        ? communities
+        : communities.filter((c) => c.type === filter),
     [filter],
-  )
+  );
 
   return (
     <PageShell>
@@ -63,9 +74,9 @@ export function CommunitiesPage() {
             Find your <em>people.</em>
           </Reveal>
           <Reveal as="p" className={styles.lede} delay={120}>
-            A living directory of queer communities across Lisbon. Social clubs, arts
-            collectives, activist groups, sports teams, support circles, and professional
-            networks — something for where you are right now.
+            A living directory of queer communities across Lisbon. Social clubs,
+            arts collectives, activist groups, sports teams, support circles,
+            and professional networks — something for where you are right now.
           </Reveal>
           <Reveal delay={180} className={styles.heroCta}>
             <Button to={routes.communitiesHome} variant="primary">
@@ -81,9 +92,12 @@ export function CommunitiesPage() {
             {FILTERS.map((option) => (
               <button
                 key={option.value}
-                className={[styles.chip, filter === option.value && styles.chipActive]
+                className={[
+                  styles.chip,
+                  filter === option.value && styles.chipActive,
+                ]
                   .filter(Boolean)
-                  .join(' ')}
+                  .join(" ")}
                 onClick={() => setFilter(option.value)}
               >
                 {option.label}
@@ -96,28 +110,42 @@ export function CommunitiesPage() {
               icon={<FiUsers />}
               title="Nothing matches your filters"
               description="No communities in this category yet. Switch back to all communities to see everything across Lisbon."
-              action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
+              action={{
+                label: "Clear filters",
+                onClick: () => setFilter("all"),
+              }}
             />
           ) : (
-          <div className={styles.grid}>
-            {loading
-              ? Array.from({ length: 6 }).map((_, i) => <CommunityCardSkeleton key={i} />)
-              : visible.map((community, index) => (
-                  <FadeIn key={community.name} delay={Math.min(index, 8) * 60}>
-                    <CommunityCard
-                      community={community}
-                      joined={community.slug ? isMember(community.slug) : false}
-                      onJoin={setJoining}
-                    />
-                  </FadeIn>
-                ))}
-          </div>
+            <div className={styles.grid}>
+              {loading
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <CommunityCardSkeleton key={i} />
+                  ))
+                : visible.map((community, index) => (
+                    <FadeIn
+                      key={community.name}
+                      delay={Math.min(index, 8) * 60}
+                    >
+                      <CommunityCard
+                        community={community}
+                        joined={
+                          community.slug ? isMember(community.slug) : false
+                        }
+                        onJoin={setJoining}
+                      />
+                    </FadeIn>
+                  ))}
+            </div>
           )}
         </div>
       </div>
 
       <Outro
-        title={<>Not finding the right <em>space?</em></>}
+        title={
+          <>
+            Not finding the right <em>space?</em>
+          </>
+        }
         sub="Suggest a community to add to the directory, or post on the board to find people who share your interest — and maybe start something together."
       >
         <Button to="/#board" size="lg">
@@ -140,5 +168,5 @@ export function CommunitiesPage() {
         />
       )}
     </PageShell>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import { FiShield, FiUserPlus } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import styles from './JoinVouchCallout.module.css'
+import { FiShield, FiUserPlus } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import styles from "./JoinVouchCallout.module.css";
 
 /**
  * Small reusable callout for non-members who land on a gathering/event page.
@@ -19,8 +19,9 @@ export function JoinVouchCallout() {
           New here? <em>Get vouched in.</em>
         </div>
         <p className={styles.text}>
-          QueerPulse gatherings are members-only. To join, someone in the network vouches for you, or
-          you request an invite and a member follows up. It keeps every room safe.
+          QueerPulse gatherings are members-only. To join, someone in the
+          network vouches for you, or you request an invite and a member follows
+          up. It keeps every room safe.
         </p>
         <div className={styles.actions}>
           <Button variant="ghost-dark" to={routes.requestInvite}>
@@ -33,5 +34,5 @@ export function JoinVouchCallout() {
         </div>
       </div>
     </div>
-  )
+  );
 }

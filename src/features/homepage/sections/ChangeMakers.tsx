@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { Button, ImageSlot, Reveal } from '../../../shared/components/ui'
-import { routes } from '../../../app/routeMap'
-import { changemakers } from '../data/changemakers'
-import styles from './ChangeMakers.module.css'
+import { Link } from "react-router-dom";
+import { Button, ImageSlot, Reveal } from "../../../shared/components/ui";
+import { routes } from "../../../app/routeMap";
+import { changemakers } from "../data/changemakers";
+import styles from "./ChangeMakers.module.css";
 
 export function ChangeMakers() {
   return (
@@ -17,8 +17,8 @@ export function ChangeMakers() {
           </div>
           <div className={styles.aside}>
             <Reveal as="p" className={styles.sub}>
-              Advocates, organisers, and artists reshaping queer life in Lisbon. Real
-              people, real work, real change.
+              Advocates, organisers, and artists reshaping queer life in Lisbon.
+              Real people, real work, real change.
             </Reveal>
             <Reveal delay={60}>
               <Button variant="ghost-dark" to={routes.changemakers}>
@@ -60,5 +60,5 @@ export function ChangeMakers() {
         </div>
       </div>
     </section>
-  )
+  );
 }

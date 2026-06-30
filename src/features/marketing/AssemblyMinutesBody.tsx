@@ -1,16 +1,24 @@
-import { FiCheck, FiX, FiClock } from 'react-icons/fi'
-import { type AssemblyMinutes, type MinutesResolution } from './assemblyMinutes.data'
-import styles from './AssemblyMinutesPage.module.css'
+import { FiCheck, FiX, FiClock } from "react-icons/fi";
+import {
+  type AssemblyMinutes,
+  type MinutesResolution,
+} from "./assemblyMinutes.data";
+import styles from "./AssemblyMinutesPage.module.css";
 
-function OutcomeTag({ outcome }: { outcome: MinutesResolution['outcome'] }) {
+function OutcomeTag({ outcome }: { outcome: MinutesResolution["outcome"] }) {
   const cls =
-    outcome === 'Passed' ? styles.passed : outcome === 'Rejected' ? styles.rejected : styles.tabled
-  const Icon = outcome === 'Passed' ? FiCheck : outcome === 'Rejected' ? FiX : FiClock
+    outcome === "Passed"
+      ? styles.passed
+      : outcome === "Rejected"
+        ? styles.rejected
+        : styles.tabled;
+  const Icon =
+    outcome === "Passed" ? FiCheck : outcome === "Rejected" ? FiX : FiClock;
   return (
     <span className={`${styles.outcome} ${cls}`}>
       <Icon aria-hidden /> {outcome}
     </span>
-  )
+  );
 }
 
 export function AssemblyMinutesBody({ minutes }: { minutes: AssemblyMinutes }) {
@@ -41,8 +49,8 @@ export function AssemblyMinutesBody({ minutes }: { minutes: AssemblyMinutes }) {
           <div>
             <span className={styles.metaLabel}>Attendance</span>
             <b>
-              {minutes.attendeesInPerson} in person · {minutes.attendeesOnline} online ·{' '}
-              {minutes.votesCast} votes
+              {minutes.attendeesInPerson} in person · {minutes.attendeesOnline}{" "}
+              online · {minutes.votesCast} votes
             </b>
           </div>
         </div>
@@ -102,9 +110,9 @@ export function AssemblyMinutesBody({ minutes }: { minutes: AssemblyMinutes }) {
       </section>
 
       <div className={styles.signoff}>
-        Minutes recorded by {minutes.secretary} · ratified at the close of the {minutes.year} Annual
-        Assembly. This is the public record.
+        Minutes recorded by {minutes.secretary} · ratified at the close of the{" "}
+        {minutes.year} Annual Assembly. This is the public record.
       </div>
     </div>
-  )
+  );
 }

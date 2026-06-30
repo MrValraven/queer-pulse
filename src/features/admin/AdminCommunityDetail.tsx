@@ -1,36 +1,36 @@
-import { useState } from 'react'
-import { FiArrowLeft } from 'react-icons/fi'
-import { Button, FadeIn } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { AdminTabs, AdminAvatar, type AdminTab } from './ui'
-import { ScopedQueuePane, MembersPane } from './AdminCommunityDetailTabs'
-import { SettingsPane } from './AdminCommunitySettings'
-import { AdminHealthModal } from './AdminHealthModal'
-import { AdminSupportModal } from './AdminSupportModal'
-import { firstName, type Community } from './adminCommunities.data'
-import styles from './AdminCommunitiesPage.module.css'
+import { useState } from "react";
+import { FiArrowLeft } from "react-icons/fi";
+import { Button, FadeIn } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { AdminTabs, AdminAvatar, type AdminTab } from "./ui";
+import { ScopedQueuePane, MembersPane } from "./AdminCommunityDetailTabs";
+import { SettingsPane } from "./AdminCommunitySettings";
+import { AdminHealthModal } from "./AdminHealthModal";
+import { AdminSupportModal } from "./AdminSupportModal";
+import { firstName, type Community } from "./adminCommunities.data";
+import styles from "./AdminCommunitiesPage.module.css";
 
 export function AdminCommunityDetail({
   community,
   onBack,
 }: {
-  community: Community
-  onBack: () => void
+  community: Community;
+  onBack: () => void;
 }) {
-  const { showToast } = useToast()
-  const [active, setActive] = useState('queue')
-  const [health, setHealth] = useState(false)
-  const [support, setSupport] = useState(false)
+  const { showToast } = useToast();
+  const [active, setActive] = useState("queue");
+  const [health, setHealth] = useState(false);
+  const [support, setSupport] = useState(false);
 
   const tabs: AdminTab[] = [
-    { id: 'queue', label: 'Scoped queue', count: community.reports },
-    { id: 'members', label: 'Members' },
-    { id: 'settings', label: 'Settings' },
-  ]
+    { id: "queue", label: "Scoped queue", count: community.reports },
+    { id: "members", label: "Members" },
+    { id: "settings", label: "Settings" },
+  ];
 
-  const words = community.name.split(/\s+/)
-  const lead = words.slice(0, -1).join(' ')
-  const lastWord = words[words.length - 1]
+  const words = community.name.split(/\s+/);
+  const lead = words.slice(0, -1).join(" ");
+  const lastWord = words[words.length - 1];
 
   return (
     <FadeIn>
@@ -39,7 +39,11 @@ export function AdminCommunityDetail({
       </button>
 
       <div className={styles.hero}>
-        <AdminAvatar initials={community.initials} tone={community.tone} size="lg" />
+        <AdminAvatar
+          initials={community.initials}
+          tone={community.tone}
+          size="lg"
+        />
         <div className={styles.heroMain}>
           <h1 className={styles.heroName}>
             {lead && `${lead} `}
@@ -47,7 +51,8 @@ export function AdminCommunityDetail({
           </h1>
           <p className={styles.heroDesc}>
             {community.desc} Stewarded by {community.mods.length} moderator
-            {community.mods.length > 1 ? 's' : ''} · founded {community.founded}.
+            {community.mods.length > 1 ? "s" : ""} · founded {community.founded}
+            .
           </p>
           <div className={styles.heroChips}>
             <button
@@ -61,7 +66,9 @@ export function AdminCommunityDetail({
             <Button
               variant="ghost"
               size="md"
-              onClick={() => showToast('Community settings would open here', 'info')}
+              onClick={() =>
+                showToast("Community settings would open here", "info")
+              }
             >
               Settings
             </Button>
@@ -76,9 +83,10 @@ export function AdminCommunityDetail({
               This community could use <em>a hand</em>.
             </h3>
             <p className={styles.bannerText}>
-              A health score this low is a call for support, not a mark against the mods.{' '}
-              {firstName(community.mods[0]!.name)} is stewarding {community.members} members{' '}
-              {community.mods.length < 2 ? 'almost alone' : 'with a thin team'}.
+              A health score this low is a call for support, not a mark against
+              the mods. {firstName(community.mods[0]!.name)} is stewarding{" "}
+              {community.members} members{" "}
+              {community.mods.length < 2 ? "almost alone" : "with a thin team"}.
             </p>
           </div>
           <Button variant="primary" size="md" onClick={() => setSupport(true)}>
@@ -93,20 +101,25 @@ export function AdminCommunityDetail({
         <StatCell
           label="Open reports"
           value={String(community.reports)}
-          color={community.reports > 0 ? 'var(--accent-ink)' : 'var(--jade)'}
+          color={community.reports > 0 ? "var(--accent-ink)" : "var(--jade)"}
         />
         <StatCell
           label="Resolved on time"
           value={`${community.resolvedPct}%`}
-          color={community.resolvedPct >= 95 ? 'var(--jade)' : 'var(--amber)'}
+          color={community.resolvedPct >= 95 ? "var(--jade)" : "var(--amber)"}
         />
       </div>
 
-      <AdminTabs tabs={tabs} active={active} onChange={setActive} className={styles.detailTabs} />
+      <AdminTabs
+        tabs={tabs}
+        active={active}
+        onChange={setActive}
+        className={styles.detailTabs}
+      />
 
-      {active === 'queue' && <ScopedQueuePane community={community} />}
-      {active === 'members' && <MembersPane community={community} />}
-      {active === 'settings' && <SettingsPane community={community} />}
+      {active === "queue" && <ScopedQueuePane community={community} />}
+      {active === "members" && <MembersPane community={community} />}
+      {active === "settings" && <SettingsPane community={community} />}
 
       {health && (
         <AdminHealthModal
@@ -116,13 +129,24 @@ export function AdminCommunityDetail({
         />
       )}
       {support && (
-        <AdminSupportModal community={community} onClose={() => setSupport(false)} />
+        <AdminSupportModal
+          community={community}
+          onClose={() => setSupport(false)}
+        />
       )}
     </FadeIn>
-  )
+  );
 }
 
-function StatCell({ label, value, color }: { label: string; value: string; color?: string }) {
+function StatCell({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: string;
+  color?: string;
+}) {
   return (
     <div className={styles.statCell}>
       <div className={styles.statVal} style={color ? { color } : undefined}>
@@ -130,17 +154,17 @@ function StatCell({ label, value, color }: { label: string; value: string; color
       </div>
       <div className={styles.statLabel}>{label}</div>
     </div>
-  )
+  );
 }
 
-function healthTone(score: number): 'jade' | 'amber' | 'coral' {
-  if (score >= 90) return 'jade'
-  if (score >= 78) return 'amber'
-  return 'coral'
+function healthTone(score: number): "jade" | "amber" | "coral" {
+  if (score >= 90) return "jade";
+  if (score >= 78) return "amber";
+  return "coral";
 }
 
 function labelFor(score: number): string {
-  if (score >= 90) return 'thriving'
-  if (score >= 78) return 'steady'
-  return 'needs a hand'
+  if (score >= 90) return "thriving";
+  if (score >= 78) return "steady";
+  return "needs a hand";
 }

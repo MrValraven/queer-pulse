@@ -1,13 +1,13 @@
-import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { ImageSlot, Tag } from '../../shared/components/ui'
-import { films, filmRelationReason } from './data'
-import { FilmBody } from './FilmBody'
-import { FilmHero } from './FilmHero'
-import styles from './FilmPage.module.css'
-import { routes } from '../../app/routeMap'
+import { Link } from "react-router-dom";
+import { PageShell } from "../../shared/components/layout";
+import { ImageSlot, Tag } from "../../shared/components/ui";
+import { films, filmRelationReason } from "./data";
+import { FilmBody } from "./FilmBody";
+import { FilmHero } from "./FilmHero";
+import styles from "./FilmPage.module.css";
+import { routes } from "../../app/routeMap";
 
-const related = films.filter((f) => f.id !== 'cascais').slice(0, 4)
+const related = films.filter((f) => f.id !== "cascais").slice(0, 4);
 
 export function FilmPage() {
   return (
@@ -38,8 +38,9 @@ export function FilmPage() {
               Eighty percent of every rent goes to <em>the filmmaker.</em>
             </h2>
             <p>
-              No exceptions, no tiers, no negotiated rates. The same deal for the first-time maker as
-              for the festival winner. The ledger is public; the deed is binding.
+              No exceptions, no tiers, no negotiated rates. The same deal for
+              the first-time maker as for the festival winner. The ledger is
+              public; the deed is binding.
             </p>
           </div>
           <div className={styles.splitBar}>
@@ -48,13 +49,17 @@ export function FilmPage() {
               €<em>2.40</em> to Maria
             </div>
             <div className={styles.sbBar}>
-              <div className={`${styles.sbSeg} ${styles.fm}`}>Filmmaker 80%</div>
+              <div className={`${styles.sbSeg} ${styles.fm}`}>
+                Filmmaker 80%
+              </div>
               <div className={`${styles.sbSeg} ${styles.pay}`}>12%</div>
               <div className={`${styles.sbSeg} ${styles.host}`}>8%</div>
             </div>
             <div className={styles.sbLegend}>
               <div>
-                <span className="v">€<em>2.40</em></span>
+                <span className="v">
+                  €<em>2.40</em>
+                </span>
                 Filmmaker
               </div>
               <div>
@@ -75,12 +80,22 @@ export function FilmPage() {
           <h2>
             More from the <em>programme</em>
           </h2>
-          <div className={styles.sub}>Films sharing a curator, a country, or a question.</div>
+          <div className={styles.sub}>
+            Films sharing a curator, a country, or a question.
+          </div>
           <div className={styles.relGrid}>
             {related.map((film) => (
               <Link key={film.id} to={routes.film} className={styles.rf}>
                 <div className={styles.rfPoster}>
-                  <ImageSlot src={film.image} tint={film.tint} width="100%" height="100%" radius={12} placeholder="poster" style={{ position: 'absolute', inset: 0 }} />
+                  <ImageSlot
+                    src={film.image}
+                    tint={film.tint}
+                    width="100%"
+                    height="100%"
+                    radius={12}
+                    placeholder="poster"
+                    style={{ position: "absolute", inset: 0 }}
+                  />
                 </div>
                 <div className={styles.rfEb}>{film.format}</div>
                 <div className={styles.rfTitle}>
@@ -89,12 +104,14 @@ export function FilmPage() {
                   {film.titlePost}
                 </div>
                 <div className={styles.rfMeta}>{film.meta}</div>
-                <Tag className={styles.rfReason}>{filmRelationReason(film)}</Tag>
+                <Tag className={styles.rfReason}>
+                  {filmRelationReason(film)}
+                </Tag>
               </Link>
             ))}
           </div>
         </div>
       </section>
     </PageShell>
-  )
+  );
 }

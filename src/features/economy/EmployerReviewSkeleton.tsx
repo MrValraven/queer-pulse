@@ -1,5 +1,5 @@
-import { SkeletonLine } from '../../shared/components/ui'
-import styles from './EmployerReviewsPage.module.css'
+import { SkeletonLine } from "../../shared/components/ui";
+import styles from "./EmployerReviewsPage.module.css";
 
 // Mirrors EmployerReviewCard's shape so there's zero layout shift on swap.
 export function EmployerReviewSkeleton() {
@@ -12,16 +12,27 @@ export function EmployerReviewSkeleton() {
           <SkeletonLine width="45%" height={13} style={{ marginTop: 6 }} />
         </div>
         <div className={styles.coScore} style={{ minWidth: 88 }}>
-          <SkeletonLine width={48} height={32} style={{ marginLeft: 'auto' }} />
-          <SkeletonLine width={90} height={11} style={{ marginTop: 8, marginLeft: 'auto' }} />
+          <SkeletonLine width={48} height={32} style={{ marginLeft: "auto" }} />
+          <SkeletonLine
+            width={90}
+            height={11}
+            style={{ marginTop: 8, marginLeft: "auto" }}
+          />
         </div>
       </div>
       <div className={styles.coBars}>
         {Array.from({ length: 4 }).map((_, i) => (
           <div className={styles.barRow} key={i}>
             <SkeletonLine width={120} height={12} />
-            <div className={styles.barTrack} style={{ background: 'transparent' }}>
-              <SkeletonLine width="100%" height={5} style={{ borderRadius: 3 }} />
+            <div
+              className={styles.barTrack}
+              style={{ background: "transparent" }}
+            >
+              <SkeletonLine
+                width="100%"
+                height={5}
+                style={{ borderRadius: 3 }}
+              />
             </div>
             <SkeletonLine width={18} height={12} />
           </div>
@@ -34,5 +45,5 @@ export function EmployerReviewSkeleton() {
         <SkeletonLine width={110} height={34} style={{ borderRadius: 999 }} />
       </div>
     </div>
-  )
+  );
 }

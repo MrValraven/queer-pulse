@@ -1,10 +1,10 @@
-import { FiArrowRight } from 'react-icons/fi'
-import { Reveal } from '../../shared/components/ui'
-import type { IssueSection } from './newsletterArchiveIssue.data'
-import styles from './NewsletterArchiveIssuePage.module.css'
+import { FiArrowRight } from "react-icons/fi";
+import { Reveal } from "../../shared/components/ui";
+import type { IssueSection } from "./newsletterArchiveIssue.data";
+import styles from "./NewsletterArchiveIssuePage.module.css";
 
 interface Props {
-  sections: IssueSection[]
+  sections: IssueSection[];
 }
 
 export function NewsletterIssueBody({ sections }: Props) {
@@ -31,5 +31,5 @@ export function NewsletterIssueBody({ sections }: Props) {
         </Reveal>
       ))}
     </div>
-  )
+  );
 }

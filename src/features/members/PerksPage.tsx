@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom'
-import { AppShell } from '../../shared/components/layout'
-import { routes } from '../../app/routeMap'
-import { PerkGroups, PerksSidebar } from './PerksSections'
-import { levelInfo } from './badges.data'
-import { availableCount } from './perks.data'
-import styles from './PerksPage.module.css'
+import { Link } from "react-router-dom";
+import { AppShell } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
+import { PerkGroups, PerksSidebar } from "./PerksSections";
+import { levelInfo } from "./badges.data";
+import { availableCount } from "./perks.data";
+import styles from "./PerksPage.module.css";
 
 function StarIcon() {
   return (
@@ -16,7 +16,7 @@ function StarIcon() {
         strokeLinejoin="round"
       />
     </svg>
-  )
+  );
 }
 
 export function PerksPage() {
@@ -48,5 +48,5 @@ export function PerksPage() {
         </div>
       </div>
     </AppShell>
-  )
+  );
 }

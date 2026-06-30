@@ -129,10 +129,10 @@
   }
 }
 
-:global([data-theme='dark']) .toolbar {
+:global([data-theme="dark"]) .toolbar {
   border-color: rgba(247, 243, 238, 0.12);
 }
-:global([data-theme='dark']) .iconBtn,
-:global([data-theme='dark']) .action {
+:global([data-theme="dark"]) .iconBtn,
+:global([data-theme="dark"]) .action {
   border-color: rgba(247, 243, 238, 0.16);
 }

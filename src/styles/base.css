@@ -96,14 +96,14 @@ img {
   border: 3px solid transparent;
   background-clip: padding-box;
 }
-[data-theme='dark'] * {
+[data-theme="dark"] * {
   scrollbar-color: rgba(247, 243, 238, 0.28) transparent;
 }
-[data-theme='dark'] ::-webkit-scrollbar-thumb {
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
   background: rgba(247, 243, 238, 0.22);
   background-clip: padding-box;
 }
-[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
   background: rgba(247, 243, 238, 0.4);
   background-clip: padding-box;
 }

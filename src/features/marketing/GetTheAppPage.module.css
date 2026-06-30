@@ -328,7 +328,11 @@
   width: 340px;
   height: 340px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.18), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.18),
+    transparent 60%
+  );
   pointer-events: none;
 }
 @media (max-width: 640px) {

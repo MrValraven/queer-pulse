@@ -1,34 +1,37 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { routes } from '../../app/routeMap'
-import { COOKIE_CATEGORIES } from './cookies.data'
-import styles from './CookiesPage.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { PageShell } from "../../shared/components/layout";
+import { Button, Outro } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { routes } from "../../app/routeMap";
+import { COOKIE_CATEGORIES } from "./cookies.data";
+import styles from "./CookiesPage.module.css";
 
 export function CookiesPage() {
-  const { showToast } = useToast()
-  const [functional, setFunctional] = useState(true)
-  const [analytics, setAnalytics] = useState(false)
+  const { showToast } = useToast();
+  const [functional, setFunctional] = useState(true);
+  const [analytics, setAnalytics] = useState(false);
 
-  const toggleFor: Record<string, { value: boolean; set: (v: boolean) => void }> = {
+  const toggleFor: Record<
+    string,
+    { value: boolean; set: (v: boolean) => void }
+  > = {
     functional: { value: functional, set: setFunctional },
     analytics: { value: analytics, set: setAnalytics },
-  }
+  };
 
   function save() {
-    showToast('Cookie preferences saved.', 'success')
+    showToast("Cookie preferences saved.", "success");
   }
   function acceptAll() {
-    setFunctional(true)
-    setAnalytics(true)
-    showToast('Cookie preferences saved.', 'success')
+    setFunctional(true);
+    setAnalytics(true);
+    showToast("Cookie preferences saved.", "success");
   }
   function essentialOnly() {
-    setFunctional(false)
-    setAnalytics(false)
-    showToast('Cookie preferences saved.', 'success')
+    setFunctional(false);
+    setAnalytics(false);
+    showToast("Cookie preferences saved.", "success");
   }
 
   return (
@@ -39,8 +42,9 @@ export function CookiesPage() {
           You choose what we <em>remember.</em>
         </h1>
         <p className={styles.sub}>
-          We use a small number of cookies to make the platform work. Some are essential — the site
-          won't function without them. Others are optional, and we'll only use them if you say yes.
+          We use a small number of cookies to make the platform work. Some are
+          essential — the site won't function without them. Others are optional,
+          and we'll only use them if you say yes.
         </p>
       </header>
 
@@ -48,18 +52,20 @@ export function CookiesPage() {
         <div className={styles.layout}>
           <div className={styles.group}>
             {COOKIE_CATEGORIES.map((cat) => {
-              const t = toggleFor[cat.id]
+              const t = toggleFor[cat.id];
               return (
                 <div key={cat.id} className={styles.card}>
                   <div className={styles.cardHead}>
                     <div>
                       <div className={styles.cardTitle}>{cat.title}</div>
-                      {cat.required && <div className={styles.cardReq}>Always on</div>}
+                      {cat.required && (
+                        <div className={styles.cardReq}>Always on</div>
+                      )}
                     </div>
                     <label className={styles.toggle}>
                       <input
                         type="checkbox"
-                        checked={cat.required ? true : t?.value ?? false}
+                        checked={cat.required ? true : (t?.value ?? false)}
                         disabled={cat.required}
                         onChange={(e) => t?.set(e.target.checked)}
                       />
@@ -83,15 +89,18 @@ export function CookiesPage() {
                     ))}
                   </div>
                 </div>
-              )
+              );
             })}
 
             <div className={styles.noAds}>
-              <div className={styles.noAdsTitle}>No advertising cookies. Ever.</div>
+              <div className={styles.noAdsTitle}>
+                No advertising cookies. Ever.
+              </div>
               <p>
-                We do not use advertising networks, retargeting pixels, or social media tracking
-                cookies. We do not sell your data. We never have and never will. There is no version
-                of QueerPulse with ads.
+                We do not use advertising networks, retargeting pixels, or
+                social media tracking cookies. We do not sell your data. We
+                never have and never will. There is no version of QueerPulse
+                with ads.
               </p>
             </div>
           </div>
@@ -103,18 +112,24 @@ export function CookiesPage() {
               </h3>
               <div className={styles.sumRow}>
                 <span className={styles.sumName}>Essential</span>
-                <span className={`${styles.sumVal} ${styles.sumReq}`}>Always on</span>
+                <span className={`${styles.sumVal} ${styles.sumReq}`}>
+                  Always on
+                </span>
               </div>
               <div className={styles.sumRow}>
                 <span className={styles.sumName}>Functional</span>
-                <span className={`${styles.sumVal} ${functional ? styles.sumOn : styles.sumOff}`}>
-                  {functional ? 'On' : 'Off'}
+                <span
+                  className={`${styles.sumVal} ${functional ? styles.sumOn : styles.sumOff}`}
+                >
+                  {functional ? "On" : "Off"}
                 </span>
               </div>
               <div className={styles.sumRow}>
                 <span className={styles.sumName}>Analytics</span>
-                <span className={`${styles.sumVal} ${analytics ? styles.sumOn : styles.sumOff}`}>
-                  {analytics ? 'On' : 'Off'}
+                <span
+                  className={`${styles.sumVal} ${analytics ? styles.sumOn : styles.sumOff}`}
+                >
+                  {analytics ? "On" : "Off"}
                 </span>
               </div>
               <div className={styles.actions}>
@@ -130,17 +145,22 @@ export function CookiesPage() {
               </div>
             </div>
             <div className={styles.info}>
-              These settings are saved in your browser and on your account if you're signed in. You
-              can change them at any time from your <Link to={routes.settings}>account settings</Link>{' '}
-              or by returning to this page. See our <Link to={routes.privacy}>privacy policy</Link>{' '}
-              for more detail.
+              These settings are saved in your browser and on your account if
+              you're signed in. You can change them at any time from your{" "}
+              <Link to={routes.settings}>account settings</Link> or by returning
+              to this page. See our{" "}
+              <Link to={routes.privacy}>privacy policy</Link> for more detail.
             </div>
           </aside>
         </div>
       </main>
 
       <Outro
-        title={<>Your privacy. <em>Our commitment.</em></>}
+        title={
+          <>
+            Your privacy. <em>Our commitment.</em>
+          </>
+        }
         sub="We don't track you. We don't profile you. We don't sell anything about you."
       >
         <Button variant="ghost-dark" size="lg" to={routes.privacy}>
@@ -148,5 +168,5 @@ export function CookiesPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

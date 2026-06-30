@@ -168,7 +168,7 @@
   }
 }
 
-:global([data-theme='dark']) .contrastCol,
-:global([data-theme='dark']) .valCard {
+:global([data-theme="dark"]) .contrastCol,
+:global([data-theme="dark"]) .valCard {
   border-color: rgba(247, 243, 238, 0.1);
 }

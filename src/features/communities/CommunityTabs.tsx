@@ -1,15 +1,24 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, FadeIn, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { routes } from '../../app/routeMap'
-import type { CommunityDetail, Person, Thread as ThreadData } from './communityDetails'
-import { CommunityThread } from './CommunityThread'
-import { AV_CLASS } from './communityAvatar'
-import styles from './CommunityDetailPage.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  Button,
+  FadeIn,
+  SkeletonAvatar,
+  SkeletonLine,
+} from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { routes } from "../../app/routeMap";
+import type {
+  CommunityDetail,
+  Person,
+  Thread as ThreadData,
+} from "./communityDetails";
+import { CommunityThread } from "./CommunityThread";
+import { AV_CLASS } from "./communityAvatar";
+import styles from "./CommunityDetailPage.module.css";
 
-const GATHERING = routes.gathering
-const MEMBER = routes.members
+const GATHERING = routes.gathering;
+const MEMBER = routes.members;
 
 export function AboutTab({ detail }: { detail: CommunityDetail }) {
   return (
@@ -50,7 +59,7 @@ export function AboutTab({ detail }: { detail: CommunityDetail }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export function MembersTab({
@@ -59,10 +68,10 @@ export function MembersTab({
   memberNum,
   loading = false,
 }: {
-  members: Person[]
-  hasCount: boolean
-  memberNum: number
-  loading?: boolean
+  members: Person[];
+  hasCount: boolean;
+  memberNum: number;
+  loading?: boolean;
 }) {
   return (
     <div>
@@ -70,65 +79,105 @@ export function MembersTab({
         {loading
           ? Array.from({ length: members.length || 8 }).map((_, i) => (
               <div className={styles.mCard} key={i}>
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: 10,
+                  }}
+                >
                   <SkeletonAvatar size={48} />
                 </div>
-                <SkeletonLine height={12} width="70%" style={{ margin: '0 auto 6px' }} />
-                <SkeletonLine height={10} width="50%" style={{ margin: '0 auto' }} />
+                <SkeletonLine
+                  height={12}
+                  width="70%"
+                  style={{ margin: "0 auto 6px" }}
+                />
+                <SkeletonLine
+                  height={10}
+                  width="50%"
+                  style={{ margin: "0 auto" }}
+                />
               </div>
             ))
           : members.map((m, i) => (
-              <FadeIn as={Link} to={MEMBER} className={styles.mCard} key={i} delay={Math.min(i, 8) * 60}>
-                <div className={[styles.mAv, AV_CLASS[m.tint]].join(' ')}>{m.initials}</div>
+              <FadeIn
+                as={Link}
+                to={MEMBER}
+                className={styles.mCard}
+                key={i}
+                delay={Math.min(i, 8) * 60}
+              >
+                <div className={[styles.mAv, AV_CLASS[m.tint]].join(" ")}>
+                  {m.initials}
+                </div>
                 <div className={styles.mName}>{m.name}</div>
                 <div className={styles.mRole}>{m.role}</div>
               </FadeIn>
             ))}
       </div>
       {!loading && (
-        <p className={styles.showing}>{hasCount ? `Showing 8 of ${memberNum} members` : 'Showing the core members'}</p>
+        <p className={styles.showing}>
+          {hasCount
+            ? `Showing 8 of ${memberNum} members`
+            : "Showing the core members"}
+        </p>
       )}
     </div>
-  )
+  );
 }
 
-export function ForumTab({ threads, loading = false }: { threads: ThreadData[]; loading?: boolean }) {
-  const { showToast } = useToast()
-  const [newPost, setNewPost] = useState('')
-  const [extraThreads, setExtraThreads] = useState<ThreadData[]>([])
+export function ForumTab({
+  threads,
+  loading = false,
+}: {
+  threads: ThreadData[];
+  loading?: boolean;
+}) {
+  const { showToast } = useToast();
+  const [newPost, setNewPost] = useState("");
+  const [extraThreads, setExtraThreads] = useState<ThreadData[]>([]);
 
   const post = () => {
-    const text = newPost.trim()
-    if (!text) return
-    const title = text.length > 70 ? `${text.slice(0, 67)}…` : text
+    const text = newPost.trim();
+    if (!text) return;
+    const title = text.length > 70 ? `${text.slice(0, 67)}…` : text;
     setExtraThreads((prev) => [
       {
         votes: 1,
         title,
-        author: { initials: 'Me', name: 'You', tint: 'plum' },
-        time: 'just now',
+        author: { initials: "Me", name: "You", tint: "plum" },
+        time: "just now",
         replyCount: 0,
         post: text,
         replies: [],
       },
       ...prev,
-    ])
-    setNewPost('')
-    showToast('Post added to the community forum.', 'success')
-  }
+    ]);
+    setNewPost("");
+    showToast("Post added to the community forum.", "success");
+  };
 
   if (loading) {
     return (
       <div aria-busy="true">
         {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className={styles.mCard} style={{ textAlign: 'left', marginBottom: 14, padding: 18 }}>
-            <SkeletonLine height={16} width="55%" style={{ marginBottom: 12 }} />
+          <div
+            key={i}
+            className={styles.mCard}
+            style={{ textAlign: "left", marginBottom: 14, padding: 18 }}
+          >
+            <SkeletonLine
+              height={16}
+              width="55%"
+              style={{ marginBottom: 12 }}
+            />
             <SkeletonLine height={12} style={{ marginBottom: 6 }} />
             <SkeletonLine height={12} width="80%" />
           </div>
         ))}
       </div>
-    )
+    );
   }
 
   return (
@@ -142,7 +191,10 @@ export function ForumTab({ threads, loading = false }: { threads: ThreadData[]; 
         </FadeIn>
       ))}
       <div className={styles.newPost}>
-        <div className={[styles.rAv, styles.tPlum].join(' ')} style={{ width: 30, height: 30 }}>
+        <div
+          className={[styles.rAv, styles.tPlum].join(" ")}
+          style={{ width: 30, height: 30 }}
+        >
           Me
         </div>
         <textarea
@@ -155,11 +207,11 @@ export function ForumTab({ threads, loading = false }: { threads: ThreadData[]; 
         <Button
           variant="ghost"
           onClick={post}
-          style={{ whiteSpace: 'nowrap', fontSize: 13 }}
+          style={{ whiteSpace: "nowrap", fontSize: 13 }}
         >
           Post
         </Button>
       </div>
     </div>
-  )
+  );
 }

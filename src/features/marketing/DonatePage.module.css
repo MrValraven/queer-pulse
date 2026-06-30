@@ -14,7 +14,7 @@
   color: var(--accent);
 }
 .eyebrow::before {
-  content: '';
+  content: "";
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -91,7 +91,9 @@
   padding: 18px 8px;
   cursor: pointer;
   text-align: center;
-  transition: border-color var(--ease), background var(--ease);
+  transition:
+    border-color var(--ease),
+    background var(--ease);
 }
 .amountOn {
   border-color: var(--accent);

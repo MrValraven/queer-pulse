@@ -6,14 +6,18 @@
   overflow: hidden;
 }
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -12%;
   right: -6%;
   width: 460px;
   height: 460px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.14),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .heroTitle {
@@ -99,7 +103,7 @@
   line-height: 1.65;
 }
 .blockBody li::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 2px;
   top: 11px;
@@ -153,14 +157,18 @@
   overflow: hidden;
 }
 .disclaimer::before {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -30%;
   left: -8%;
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.16), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.16),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .disclaimerIcon {

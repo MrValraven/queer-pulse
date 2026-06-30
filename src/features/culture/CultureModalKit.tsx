@@ -1,15 +1,15 @@
-import { useState, type ReactNode } from 'react'
-import { FiCheck } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import styles from './CultureModals.module.css'
+import { useState, type ReactNode } from "react";
+import { FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import styles from "./CultureModals.module.css";
 
 // Consolidated into the shared UI/hooks layer — re-exported here so existing
 // `./CultureModalKit` consumers keep their imports unchanged. (All call sites
 // invoke `submit()` with no args, so the shared `submit(onComplete?, ms)`
 // signature is a drop-in.)
-export { Sending } from '../../shared/components/ui'
-export { useSubmitFlow } from '../../shared/hooks'
+export { Sending } from "../../shared/components/ui";
+export { useSubmitFlow } from "../../shared/hooks";
 
 /** Shared bottom-sheet frame: backdrop, close button, scroll lock. */
 export function ModalShell({
@@ -17,26 +17,35 @@ export function ModalShell({
   success,
   children,
 }: {
-  onClose: () => void
-  success?: boolean
-  children: ReactNode
+  onClose: () => void;
+  success?: boolean;
+  children: ReactNode;
 }) {
-  useScrollLock()
+  useScrollLock();
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={[styles.modal, success && styles.modalSuccess].filter(Boolean).join(' ')}>
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+      <div
+        className={[styles.modal, success && styles.modalSuccess]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           ×
         </button>
         {children}
       </div>
     </div>
-  )
+  );
 }
 
 /** Plum-panel confirmation with a jade tick, serif title and optional next steps. */
@@ -47,11 +56,11 @@ export function SuccessPanel({
   steps,
   onClose,
 }: {
-  title: string
-  em: string
-  children: ReactNode
-  steps?: ReactNode[]
-  onClose: () => void
+  title: string;
+  em: string;
+  children: ReactNode;
+  steps?: ReactNode[];
+  onClose: () => void;
 }) {
   return (
     <div className={styles.success}>
@@ -78,7 +87,7 @@ export function SuccessPanel({
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 /** Multi-select pill row used inside the modal forms. */
@@ -87,39 +96,41 @@ export function ChipSelect({
   selected,
   onToggle,
 }: {
-  options: readonly string[]
-  selected: Set<string>
-  onToggle: (value: string) => void
+  options: readonly string[];
+  selected: Set<string>;
+  onToggle: (value: string) => void;
 }) {
   return (
     <div className={styles.chips} role="group">
       {options.map((opt) => {
-        const on = selected.has(opt)
+        const on = selected.has(opt);
         return (
           <button
             key={opt}
             type="button"
             aria-pressed={on}
-            className={[styles.chip, on && styles.chipOn].filter(Boolean).join(' ')}
+            className={[styles.chip, on && styles.chipOn]
+              .filter(Boolean)
+              .join(" ")}
             onClick={() => onToggle(opt)}
           >
             {opt}
           </button>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
 /** Small hook for the chip-select Set state. */
 export function useChipSet() {
-  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [selected, setSelected] = useState<Set<string>>(new Set());
   const toggle = (value: string) =>
     setSelected((prev) => {
-      const next = new Set(prev)
-      if (next.has(value)) next.delete(value)
-      else next.add(value)
-      return next
-    })
-  return { selected, toggle }
+      const next = new Set(prev);
+      if (next.has(value)) next.delete(value);
+      else next.add(value);
+      return next;
+    });
+  return { selected, toggle };
 }

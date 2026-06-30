@@ -1,25 +1,37 @@
-import { FiLock } from 'react-icons/fi'
-import { Link } from 'react-router-dom'
-import { routes } from '../../app/routeMap'
-import { SEALED_IDENTITY, type ModerationEntry } from './adminMembers.data'
-import styles from './AdminMembersPage.module.css'
+import { FiLock } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { routes } from "../../app/routeMap";
+import { SEALED_IDENTITY, type ModerationEntry } from "./adminMembers.data";
+import styles from "./AdminMembersPage.module.css";
 
 /* ── Moderation history — for & against ──────────────────── */
 
-export function ModerationTimeline({ entries }: { entries: ModerationEntry[] }) {
+export function ModerationTimeline({
+  entries,
+}: {
+  entries: ModerationEntry[];
+}) {
   return (
     <section className={styles.dSection}>
-      <h3 className={styles.dHeading}>Moderation history — for &amp; against</h3>
+      <h3 className={styles.dHeading}>
+        Moderation history — for &amp; against
+      </h3>
       <ul className={styles.timeline}>
         {entries.map((e, i) => (
-          <li key={i} className={`${styles.timelineItem} ${styles[`tl_${e.tone}`]}`}>
+          <li
+            key={i}
+            className={`${styles.timelineItem} ${styles[`tl_${e.tone}`]}`}
+          >
             <span className={styles.timelineMarker} aria-hidden />
             <div className={styles.timelineTx}>
               <span className={styles.timelineTitle}>{e.title}</span>
               <span className={styles.timelineMeta}>
                 {e.meta}
                 {e.metaLink && (
-                  <Link className={styles.timelineLink} to={routes.adminGovernance}>
+                  <Link
+                    className={styles.timelineLink}
+                    to={routes.adminGovernance}
+                  >
                     {e.metaLink}
                   </Link>
                 )}
@@ -33,7 +45,7 @@ export function ModerationTimeline({ entries }: { entries: ModerationEntry[] }) 
         Every entry in the audit log →
       </Link>
     </section>
-  )
+  );
 }
 
 /* ── Identity & privacy (sealed-lock card) ───────────────── */
@@ -52,5 +64,5 @@ export function SealedIdentity() {
         </div>
       </div>
     </section>
-  )
+  );
 }

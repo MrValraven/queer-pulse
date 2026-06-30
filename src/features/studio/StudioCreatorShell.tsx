@@ -1,12 +1,12 @@
-import type { ReactNode } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import s from './creator.module.css'
+import type { ReactNode } from "react";
+import { Link, NavLink } from "react-router-dom";
+import s from "./creator.module.css";
 
 const NAV = [
-  { label: 'Dashboard', to: '/studio/dashboard' },
-  { label: 'New release', to: '/studio/upload' },
-  { label: 'Payouts', to: '/studio/payouts' },
-]
+  { label: "Dashboard", to: "/studio/dashboard" },
+  { label: "New release", to: "/studio/upload" },
+  { label: "Payouts", to: "/studio/payouts" },
+];
 
 /** Dark creator back-office frame: sticky topbar + sub-nav. */
 export function StudioCreatorShell({ children }: { children: ReactNode }) {
@@ -20,7 +20,15 @@ export function StudioCreatorShell({ children }: { children: ReactNode }) {
         <span className={s.product}>Creator</span>
         <nav className={s.subnav}>
           {NAV.map((item) => (
-            <NavLink key={item.to} to={item.to} className={({ isActive }) => [s.navItem, isActive && s.navItemActive].filter(Boolean).join(' ')}>
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                [s.navItem, isActive && s.navItemActive]
+                  .filter(Boolean)
+                  .join(" ")
+              }
+            >
               {item.label}
             </NavLink>
           ))}
@@ -34,5 +42,5 @@ export function StudioCreatorShell({ children }: { children: ReactNode }) {
       </div>
       {children}
     </div>
-  )
+  );
 }

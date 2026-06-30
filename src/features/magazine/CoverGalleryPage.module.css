@@ -88,19 +88,39 @@
   position: relative;
 }
 .tintA {
-  background: linear-gradient(165deg, rgba(var(--accent-rgb), 0.3), rgba(var(--accent-rgb), 0.1));
+  background: linear-gradient(
+    165deg,
+    rgba(var(--accent-rgb), 0.3),
+    rgba(var(--accent-rgb), 0.1)
+  );
 }
 .tintB {
-  background: linear-gradient(165deg, rgba(var(--jade-rgb), 0.25), rgba(var(--jade-rgb), 0.08));
+  background: linear-gradient(
+    165deg,
+    rgba(var(--jade-rgb), 0.25),
+    rgba(var(--jade-rgb), 0.08)
+  );
 }
 .tintC {
-  background: linear-gradient(165deg, rgba(45, 27, 61, 0.18), rgba(45, 27, 61, 0.05));
+  background: linear-gradient(
+    165deg,
+    rgba(45, 27, 61, 0.18),
+    rgba(45, 27, 61, 0.05)
+  );
 }
 .tintD {
-  background: linear-gradient(165deg, rgba(var(--accent-rgb), 0.4), rgba(var(--jade-rgb), 0.1));
+  background: linear-gradient(
+    165deg,
+    rgba(var(--accent-rgb), 0.4),
+    rgba(var(--jade-rgb), 0.1)
+  );
 }
 .tintE {
-  background: linear-gradient(165deg, rgba(45, 27, 61, 0.1), rgba(var(--accent-rgb), 0.15));
+  background: linear-gradient(
+    165deg,
+    rgba(45, 27, 61, 0.1),
+    rgba(var(--accent-rgb), 0.15)
+  );
 }
 .num {
   position: absolute;

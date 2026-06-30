@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { FiCheck } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { routes } from '../../app/routeMap'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { routes } from "../../app/routeMap";
 import {
   CONNECTION,
   GATHERING,
@@ -11,21 +11,31 @@ import {
   MENTION,
   MODERATION,
   type AvTint,
-} from './notificationDeepLink.data'
-import styles from './NotificationDeepLinkPage.module.css'
+} from "./notificationDeepLink.data";
+import styles from "./NotificationDeepLinkPage.module.css";
 
 interface SentReply {
-  id: string
-  body: string
+  id: string;
+  body: string;
 }
 
 const avClass: Record<AvTint, string | undefined> = {
   jade: styles.avJade,
   coral: styles.avCoral,
   plum: styles.avPlum,
-}
+};
 
-function MemberMini({ initials, tint, name, meta }: { initials: string; tint: AvTint; name: string; meta: string }) {
+function MemberMini({
+  initials,
+  tint,
+  name,
+  meta,
+}: {
+  initials: string;
+  tint: AvTint;
+  name: string;
+  meta: string;
+}) {
   return (
     <div className={styles.memberMini}>
       <div className={`${styles.mmAv} ${avClass[tint]}`}>{initials}</div>
@@ -34,7 +44,7 @@ function MemberMini({ initials, tint, name, meta }: { initials: string; tint: Av
         <div className={styles.mmMeta}>{meta}</div>
       </div>
     </div>
-  )
+  );
 }
 
 function Composer({
@@ -42,16 +52,16 @@ function Composer({
   placeholder,
   onSend,
 }: {
-  initials: string
-  placeholder: string
-  onSend: (body: string) => void
+  initials: string;
+  placeholder: string;
+  onSend: (body: string) => void;
 }) {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState("");
   function submit() {
-    const body = value.trim()
-    if (!body) return
-    onSend(body)
-    setValue('')
+    const body = value.trim();
+    if (!body) return;
+    onSend(body);
+    setValue("");
   }
   return (
     <div className={styles.composer}>
@@ -63,9 +73,9 @@ function Composer({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault()
-            submit()
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            submit();
           }
         }}
       />
@@ -73,16 +83,20 @@ function Composer({
         Send
       </button>
     </div>
-  )
+  );
 }
 
 /** Renders the replies the user has sent this session, in the same bubble style. */
 function SentReplies({ replies }: { replies: SentReply[] }) {
-  if (replies.length === 0) return null
+  if (replies.length === 0) return null;
   return (
     <>
       {replies.map((r) => (
-        <div key={r.id} className={styles.replyBubble} style={{ marginTop: 12 }}>
+        <div
+          key={r.id}
+          className={styles.replyBubble}
+          style={{ marginTop: 12 }}
+        >
           <div className={styles.rbHeader}>
             <div className={styles.rbAv}>YO</div>
             <div className={styles.rbName}>You</div>
@@ -92,33 +106,38 @@ function SentReplies({ replies }: { replies: SentReply[] }) {
         </div>
       ))}
     </>
-  )
+  );
 }
 
 export function ConnectionCard() {
-  const { showToast } = useToast()
-  const navigate = useNavigate()
-  const c = CONNECTION
-  const [status, setStatus] = useState<'pending' | 'accepted' | 'declined'>('pending')
+  const { showToast } = useToast();
+  const navigate = useNavigate();
+  const c = CONNECTION;
+  const [status, setStatus] = useState<"pending" | "accepted" | "declined">(
+    "pending",
+  );
 
   function accept() {
-    setStatus('accepted')
-    showToast('Connected with Sofia', 'success')
+    setStatus("accepted");
+    showToast("Connected with Sofia", "success");
   }
   function decline() {
-    setStatus('declined')
-    showToast('Request declined', 'info')
+    setStatus("declined");
+    showToast("Request declined", "info");
   }
 
   // Decline collapses the card away.
-  if (status === 'declined') {
-    return <div className={styles.cardCollapse} aria-hidden />
+  if (status === "declined") {
+    return <div className={styles.cardCollapse} aria-hidden />;
   }
 
   // Accept flips to the plum-panel success state.
-  if (status === 'accepted') {
+  if (status === "accepted") {
     return (
-      <div className={`${styles.card} ${styles.cardPad} ${styles.connDone}`} role="status">
+      <div
+        className={`${styles.card} ${styles.cardPad} ${styles.connDone}`}
+        role="status"
+      >
         <div className={styles.connDoneIcon}>
           <FiCheck aria-hidden />
         </div>
@@ -126,30 +145,44 @@ export function ConnectionCard() {
           You're <em>connected</em>
         </div>
         <p className={styles.connDoneBody}>
-          {c.name.split(' ')[0]} is now part of your network. Messaging and tagged updates are open
-          between you.
+          {c.name.split(" ")[0]} is now part of your network. Messaging and
+          tagged updates are open between you.
         </p>
         <div className={styles.connDoneActions}>
-          <Button variant="ghost-dark" onClick={() => navigate(routes.connections)}>
+          <Button
+            variant="ghost-dark"
+            onClick={() => navigate(routes.connections)}
+          >
             View your connections
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className={`${styles.card} ${styles.cardPad}`}>
-      <MemberMini initials={c.initials} tint={c.tint} name={c.name} meta={c.meta} />
+      <MemberMini
+        initials={c.initials}
+        tint={c.tint}
+        name={c.name}
+        meta={c.meta}
+      />
       <div className={styles.connHead}>
         Sofia wants to <em>connect</em>
       </div>
       <p className={styles.connIntro}>She sent you a note with her request:</p>
       <div className={styles.connNote}>{c.note}</div>
-      <button className={styles.mutualPill} onClick={() => navigate(routes.connections)}>
+      <button
+        className={styles.mutualPill}
+        onClick={() => navigate(routes.connections)}
+      >
         <div className={styles.mutualAvs}>
           {c.mutuals.map((m) => (
-            <div key={m.initials} className={`${styles.smAv} ${avClass[m.tint]}`}>
+            <div
+              key={m.initials}
+              className={`${styles.smAv} ${avClass[m.tint]}`}
+            >
               {m.initials}
             </div>
           ))}
@@ -164,16 +197,19 @@ export function ConnectionCard() {
           Decline
         </Button>
       </div>
-      <button className={styles.notNow} onClick={() => showToast('We\'ll remind you later', 'info')}>
+      <button
+        className={styles.notNow}
+        onClick={() => showToast("We'll remind you later", "info")}
+      >
         Not now — decide later
       </button>
     </div>
-  )
+  );
 }
 
 export function GatheringCard() {
-  const { showToast } = useToast()
-  const g = GATHERING
+  const { showToast } = useToast();
+  const g = GATHERING;
   return (
     <div className={styles.card}>
       <div className={styles.evCover}>
@@ -190,27 +226,40 @@ export function GatheringCard() {
           <strong>You're on the guest list.</strong> {g.confirm}
         </div>
         <div className={styles.evActions}>
-          <Button variant="primary" onClick={() => showToast('Added to your calendar', 'success')} style={{ flex: 1 }}>
+          <Button
+            variant="primary"
+            onClick={() => showToast("Added to your calendar", "success")}
+            style={{ flex: 1 }}
+          >
             Add to calendar
           </Button>
-          <Button variant="ghost" to={routes.gathering} style={{ flex: 1, justifyContent: 'center' }}>
+          <Button
+            variant="ghost"
+            to={routes.gathering}
+            style={{ flex: 1, justifyContent: "center" }}
+          >
             View event details
           </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function ReplyCard() {
-  const r = REPLY
-  const [replies, setReplies] = useState<SentReply[]>([])
+  const r = REPLY;
+  const [replies, setReplies] = useState<SentReply[]>([]);
   function addReply(body: string) {
-    setReplies((prev) => [...prev, { id: `r-${Date.now()}`, body }])
+    setReplies((prev) => [...prev, { id: `r-${Date.now()}`, body }]);
   }
   return (
     <div className={`${styles.card} ${styles.cardPad}`}>
-      <MemberMini initials={r.initials} tint={r.tint} name={r.name} meta={r.meta} />
+      <MemberMini
+        initials={r.initials}
+        tint={r.tint}
+        name={r.name}
+        meta={r.meta}
+      />
       <div className={styles.label}>Your post</div>
       <div className={styles.postExcerpt}>{r.postExcerpt}</div>
       <div className={`${styles.label} ${styles.labelGap}`}>Anika's reply</div>
@@ -225,29 +274,38 @@ export function ReplyCard() {
       <SentReplies replies={replies} />
       <Composer initials="YO" placeholder="Reply to Anika…" onSend={addReply} />
     </div>
-  )
+  );
 }
 
 export function MentionCard() {
-  const m = MENTION
-  const [replies, setReplies] = useState<SentReply[]>([])
+  const m = MENTION;
+  const [replies, setReplies] = useState<SentReply[]>([]);
   function addReply(body: string) {
-    setReplies((prev) => [...prev, { id: `r-${Date.now()}`, body }])
+    setReplies((prev) => [...prev, { id: `r-${Date.now()}`, body }]);
   }
   return (
     <div className={`${styles.card} ${styles.cardPad}`}>
-      <MemberMini initials={m.initials} tint={m.tint} name={m.name} meta={m.meta} />
+      <MemberMini
+        initials={m.initials}
+        tint={m.tint}
+        name={m.name}
+        meta={m.meta}
+      />
       <div className={styles.label}>Jordan's post</div>
       <div className={styles.mentionPost}>
-        Really loved the panel discussion at last week's meetup. Shoutout to{' '}
-        <span className={styles.mentionHighlight}>@you</span> for the point about accessible event
-        design — it sparked a whole conversation in our team and we're now rethinking how we do
-        Gathering descriptions.
+        Really loved the panel discussion at last week's meetup. Shoutout to{" "}
+        <span className={styles.mentionHighlight}>@you</span> for the point
+        about accessible event design — it sparked a whole conversation in our
+        team and we're now rethinking how we do Gathering descriptions.
       </div>
       <SentReplies replies={replies} />
-      <Composer initials="YO" placeholder="Reply to Jordan…" onSend={addReply} />
+      <Composer
+        initials="YO"
+        placeholder="Reply to Jordan…"
+        onSend={addReply}
+      />
     </div>
-  )
+  );
 }
 
 export function ModerationCard() {
@@ -255,23 +313,43 @@ export function ModerationCard() {
     <div className={`${styles.card} ${styles.cardPad}`}>
       <div className={styles.modIcon}>
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <circle cx="11" cy="11" r="8" stroke="var(--plum)" strokeWidth="1.8" />
-          <path d="M11 7v4.5M11 14.5v.5" stroke="var(--plum)" strokeWidth="1.8" strokeLinecap="round" />
+          <circle
+            cx="11"
+            cy="11"
+            r="8"
+            stroke="var(--plum)"
+            strokeWidth="1.8"
+          />
+          <path
+            d="M11 7v4.5M11 14.5v.5"
+            stroke="var(--plum)"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
         </svg>
       </div>
       <div className={styles.modHead}>An update on your account</div>
       <div className={styles.modRef}>
-        Reference <span className={styles.modRefN}>{MODERATION.ref}</span> · {MODERATION.updated}
+        Reference <span className={styles.modRefN}>{MODERATION.ref}</span> ·{" "}
+        {MODERATION.updated}
       </div>
       <div className={styles.modBody}>{MODERATION.body}</div>
       <div className={styles.modActions}>
-        <Button variant="primary" to={routes.appealOutcome} style={{ justifyContent: 'center' }}>
+        <Button
+          variant="primary"
+          to={routes.appealOutcome}
+          style={{ justifyContent: "center" }}
+        >
           View appeal outcome
         </Button>
-        <Button variant="ghost" to={routes.governance} style={{ justifyContent: 'center' }}>
+        <Button
+          variant="ghost"
+          to={routes.governance}
+          style={{ justifyContent: "center" }}
+        >
           How moderation works
         </Button>
       </div>
     </div>
-  )
+  );
 }

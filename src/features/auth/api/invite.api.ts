@@ -1,48 +1,49 @@
-import { apiGet, apiPost } from '../../../shared/api/client'
+import { apiGet, apiPost } from "../../../shared/api/client";
 
 /** The person who created the invite — resolved server-side from the code. */
 export interface InviteInviterDTO {
-  slug: string
-  firstName: string
-  lastName: string
-  avatarUrl?: string | null
+  slug: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string | null;
   /** Year/label the inviter joined, e.g. "2024". */
-  memberSince?: string
+  memberSince?: string;
 }
 
 export interface InviteDTO {
-  code: string
+  code: string;
   /** Only `valid` lets the recipient continue; the rest route to the expired page. */
-  status: 'valid' | 'expired' | 'used' | 'revoked'
+  status: "valid" | "expired" | "used" | "revoked";
   /** ISO timestamp the invite stops working. */
-  expiresAt: string
+  expiresAt: string;
   /** Days the link stays live from creation (for the "Valid for N days" badge). */
-  validForDays: number
+  validForDays: number;
   /** Current community size, for the "247 members" line. */
-  memberCount: number
-  inviter: InviteInviterDTO
+  memberCount: number;
+  inviter: InviteInviterDTO;
   /** The personal note the inviter wrote — shown in the link preview / landing. */
-  note?: string
+  note?: string;
   /** The inviter's vouch (why they're inviting this person) — shown at onboarding. */
-  vouch?: string
+  vouch?: string;
 }
 
 /** Resolve an invite code to its inviter + status. 404 → invalid code. */
-export const getInvite = (code: string) => apiGet<InviteDTO>(`/invites/${encodeURIComponent(code)}`)
+export const getInvite = (code: string) =>
+  apiGet<InviteDTO>(`/invites/${encodeURIComponent(code)}`);
 
 /** What the member types when generating a share link. */
 export interface CreateInvitePayload {
   /** Optional personal note shown in the link preview (max 200 chars). */
-  note?: string
+  note?: string;
   /** Optional vouch — why they're inviting this person — shown at onboarding (max 280). */
-  vouch?: string
+  vouch?: string;
 }
 
 /** The row the backend creates in the `invites` table, returned to the client. */
 export interface CreatedInviteDTO {
-  code: string
-  expiresAt: string
-  status: 'valid'
+  code: string;
+  expiresAt: string;
+  status: "valid";
 }
 
 /**
@@ -50,11 +51,11 @@ export interface CreatedInviteDTO {
  * unique code, sets the expiry, and inserts the row in the `invites` table.
  */
 export const createInvite = (payload: CreateInvitePayload) =>
-  apiPost<CreatedInviteDTO>('/invites', payload)
+  apiPost<CreatedInviteDTO>("/invites", payload);
 
 /** What the backend returns once a recipient redeems their invite. */
 export interface AcceptInviteResult {
-  ok: boolean
+  ok: boolean;
 }
 
 /**
@@ -63,4 +64,4 @@ export interface AcceptInviteResult {
  * returns a 4xx the caller surfaces. Requires the session + CSRF header.
  */
 export const acceptInvite = (code: string) =>
-  apiPost<AcceptInviteResult>(`/invites/${encodeURIComponent(code)}/accept`)
+  apiPost<AcceptInviteResult>(`/invites/${encodeURIComponent(code)}/accept`);

@@ -1,6 +1,6 @@
-import { FiX } from 'react-icons/fi'
-import type { BudgetRow } from './microGrants.data'
-import styles from './MicroGrantsPage.module.css'
+import { FiX } from "react-icons/fi";
+import type { BudgetRow } from "./microGrants.data";
+import styles from "./MicroGrantsPage.module.css";
 
 /* Step 3 — budget */
 export function BudgetStep({
@@ -10,11 +10,11 @@ export function BudgetStep({
   removeRow,
   updateRow,
 }: {
-  rows: BudgetRow[]
-  total: number
-  addRow: () => void
-  removeRow: (id: number) => void
-  updateRow: (id: number, field: 'item' | 'amount', val: string) => void
+  rows: BudgetRow[];
+  total: number;
+  addRow: () => void;
+  removeRow: (id: number) => void;
+  updateRow: (id: number, field: "item" | "amount", val: string) => void;
 }) {
   return (
     <>
@@ -22,8 +22,8 @@ export function BudgetStep({
         How will you <em>spend it?</em>
       </div>
       <p className={styles.stepSub}>
-        Break your budget into line items. Be realistic — the panel prefers honest estimates to
-        optimistic ones. Maximum €2,000 this round.
+        Break your budget into line items. Be realistic — the panel prefers
+        honest estimates to optimistic ones. Maximum €2,000 this round.
       </p>
       <div className={styles.budgetItems}>
         {rows.map((r) => (
@@ -32,7 +32,7 @@ export function BudgetStep({
               className={styles.input}
               placeholder="Line item (e.g. Print costs)"
               value={r.item}
-              onChange={(e) => updateRow(r.id, 'item', e.target.value)}
+              onChange={(e) => updateRow(r.id, "item", e.target.value)}
             />
             <input
               className={styles.input}
@@ -41,9 +41,13 @@ export function BudgetStep({
               min={0}
               max={2000}
               value={r.amount}
-              onChange={(e) => updateRow(r.id, 'amount', e.target.value)}
+              onChange={(e) => updateRow(r.id, "amount", e.target.value)}
             />
-            <button type="button" className={styles.remove} onClick={() => removeRow(r.id)}>
+            <button
+              type="button"
+              className={styles.remove}
+              onClick={() => removeRow(r.id)}
+            >
               <FiX />
             </button>
           </div>
@@ -54,13 +58,17 @@ export function BudgetStep({
       </button>
       <div className={styles.totalRow}>
         <span className={styles.totalLabel}>Total requested</span>
-        <span className={[styles.totalVal, total > 2000 && styles.totalValOver].filter(Boolean).join(' ')}>
+        <span
+          className={[styles.totalVal, total > 2000 && styles.totalValOver]
+            .filter(Boolean)
+            .join(" ")}
+        >
           €{total.toFixed(0)}
         </span>
       </div>
       <div className={styles.hint}>
-        If you're also contributing your own time or money, mention it below — it strengthens the
-        application.
+        If you're also contributing your own time or money, mention it below —
+        it strengthens the application.
       </div>
       <label className={styles.label}>Other contributions (optional)</label>
       <input
@@ -69,5 +77,5 @@ export function BudgetStep({
         placeholder="e.g. 20 hours of my own time, use of a friend's studio"
       />
     </>
-  )
+  );
 }

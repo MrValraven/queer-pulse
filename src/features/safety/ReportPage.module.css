@@ -210,7 +210,7 @@
   }
 }
 
-:global([data-theme='dark']) .flowStep,
-:global([data-theme='dark']) .formBox {
+:global([data-theme="dark"]) .flowStep,
+:global([data-theme="dark"]) .formBox {
   border-color: rgba(247, 243, 238, 0.1);
 }

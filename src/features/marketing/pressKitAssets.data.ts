@@ -5,21 +5,23 @@
  */
 
 export interface PressAsset {
-  filename: string
-  mime: string
-  content: string
+  filename: string;
+  mime: string;
+  content: string;
 }
 
 /** A simple, on-brand QueerPulse wordmark SVG (coral pulse dot + plum text). */
-export function logoSvg(variant: 'light' | 'plum' | 'coral' = 'light'): string {
-  const dot = variant === 'coral' ? '#2D1B3D' : '#E8775A'
-  const text = variant === 'plum' || variant === 'coral' ? '#F7F3EE' : '#2D1B3D'
-  const bg = variant === 'plum' ? '#2D1B3D' : variant === 'coral' ? '#E8775A' : 'none'
+export function logoSvg(variant: "light" | "plum" | "coral" = "light"): string {
+  const dot = variant === "coral" ? "#2D1B3D" : "#E8775A";
+  const text =
+    variant === "plum" || variant === "coral" ? "#F7F3EE" : "#2D1B3D";
+  const bg =
+    variant === "plum" ? "#2D1B3D" : variant === "coral" ? "#E8775A" : "none";
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 96" width="360" height="96" role="img" aria-label="QueerPulse">
   <rect width="360" height="96" fill="${bg}"/>
   <circle cx="34" cy="52" r="13" fill="${dot}"/>
   <text x="60" y="62" font-family="Georgia, 'Times New Roman', serif" font-size="46" font-weight="400" fill="${text}">Queer<tspan font-style="italic">Pulse</tspan></text>
-</svg>`
+</svg>`;
 }
 
 const KIT_README = `QUEERPULSE — PRESS KIT
@@ -48,22 +50,34 @@ Response time: < 8 working hours · Languages: EN · PT · ES
 
 (This is a prototype download generated in your browser — the real ZIP is
 assembled server-side in production.)
-`
+`;
 
 export const KIT_MANIFEST: PressAsset = {
-  filename: 'queerpulse-press-kit-README.txt',
-  mime: 'text/plain;charset=utf-8',
+  filename: "queerpulse-press-kit-README.txt",
+  mime: "text/plain;charset=utf-8",
   content: KIT_README,
-}
+};
 
 export const KIT_PREVIEW = [
-  { ic: 'TXT', title: 'README + licence', desc: 'CC BY 4.0 terms · contacts · contents list' },
-  { ic: 'SVG', title: 'Marks · 3 variations', desc: 'Light · plum · coral · vector' },
-  { ic: 'PNG', title: 'Marks @2x', desc: 'For docs, slides, web' },
-  { ic: 'JPG', title: 'Photography · 6 images', desc: '3000 × 2000 px · model-released' },
-  { ic: 'TXT', title: 'Boilerplate', desc: '25 / 60 / 130-word versions' },
-  { ic: 'PDF', title: 'Fact sheet · EN & PT', desc: 'One-page printable' },
-]
+  {
+    ic: "TXT",
+    title: "README + licence",
+    desc: "CC BY 4.0 terms · contacts · contents list",
+  },
+  {
+    ic: "SVG",
+    title: "Marks · 3 variations",
+    desc: "Light · plum · coral · vector",
+  },
+  { ic: "PNG", title: "Marks @2x", desc: "For docs, slides, web" },
+  {
+    ic: "JPG",
+    title: "Photography · 6 images",
+    desc: "3000 × 2000 px · model-released",
+  },
+  { ic: "TXT", title: "Boilerplate", desc: "25 / 60 / 130-word versions" },
+  { ic: "PDF", title: "Fact sheet · EN & PT", desc: "One-page printable" },
+];
 
 const BOILER_TXT = `QUEERPULSE — APPROVED BOILERPLATE
 =================================
@@ -82,7 +96,7 @@ magazine, a podcast, a safe-spaces network, and a micro-grants fund disbursed by
 the community itself.
 
 These versions are cleared for direct quotation without further sign-off.
-`
+`;
 
 /**
  * Build the file payload for a given Downloads-section row, keyed off its
@@ -90,19 +104,26 @@ These versions are cleared for direct quotation without further sign-off.
  * manifest describing the asset.
  */
 export function assetFor(ic: string, title: string, desc: string): PressAsset {
-  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
-  if (ic === 'SVG') {
-    return { filename: `${slug}.svg`, mime: 'image/svg+xml', content: logoSvg('light') }
+  const slug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  if (ic === "SVG") {
+    return {
+      filename: `${slug}.svg`,
+      mime: "image/svg+xml",
+      content: logoSvg("light"),
+    };
   }
-  if (ic === 'ZIP') {
-    return KIT_MANIFEST
+  if (ic === "ZIP") {
+    return KIT_MANIFEST;
   }
   return {
     filename: `${slug}.txt`,
-    mime: 'text/plain;charset=utf-8',
+    mime: "text/plain;charset=utf-8",
     content:
-      title === 'Boilerplate' || /boilerplate/i.test(title)
+      title === "Boilerplate" || /boilerplate/i.test(title)
         ? BOILER_TXT
         : `QUEERPULSE — ${title.toUpperCase()}\n\n${desc}\n\nThis file is a prototype placeholder generated in your browser.\nThe production press kit ships the real asset described above.\n\npress@queerpulse.app\n`,
-  }
+  };
 }

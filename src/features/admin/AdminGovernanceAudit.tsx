@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react'
-import { FiChevronLeft, FiChevronRight, FiInbox } from 'react-icons/fi'
-import { FadeIn, SkeletonLine } from '../../shared/components/ui'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { AdminChip, AdminAvatar } from './ui'
-import { portrait } from './adminPeople.data'
+import { useMemo, useState } from "react";
+import { FiChevronLeft, FiChevronRight, FiInbox } from "react-icons/fi";
+import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { AdminChip, AdminAvatar } from "./ui";
+import { portrait } from "./adminPeople.data";
 import {
   AUDIT_ENTRIES,
   AUDIT_TOTAL,
@@ -12,44 +12,50 @@ import {
   DEFAULT_AUDIT_FILTERS,
   type AuditEntry,
   type AuditFilterState,
-} from './adminGovernance.data'
-import { AdminGovernanceAuditFilters } from './AdminGovernanceAuditFilters'
-import { AdminGovernanceAuditModal } from './AdminGovernanceAuditModal'
-import styles from './AdminGovernancePage.module.css'
+} from "./adminGovernance.data";
+import { AdminGovernanceAuditFilters } from "./AdminGovernanceAuditFilters";
+import { AdminGovernanceAuditModal } from "./AdminGovernanceAuditModal";
+import styles from "./AdminGovernancePage.module.css";
 
 function matches(e: AuditEntry, f: AuditFilterState): boolean {
-  if (f.moderator !== 'All moderators' && e.modName !== f.moderator) return false
-  if (f.action !== 'All actions' && e.type !== f.action) return false
-  if (f.range !== 'All time' && e.range !== f.range) return false
+  if (f.moderator !== "All moderators" && e.modName !== f.moderator)
+    return false;
+  if (f.action !== "All actions" && e.type !== f.action) return false;
+  if (f.range !== "All time" && e.range !== f.range) return false;
   if (f.query.trim()) {
-    const q = f.query.trim().toLowerCase()
-    if (!`${e.reason} ${e.subject}`.toLowerCase().includes(q)) return false
+    const q = f.query.trim().toLowerCase();
+    if (!`${e.reason} ${e.subject}`.toLowerCase().includes(q)) return false;
   }
-  return true
+  return true;
 }
 
 export function AdminGovernanceAudit() {
-  const loading = useSimulatedLoad(1100)
-  const { showToast } = useToast()
-  const [filters, setFilters] = useState<AuditFilterState>(DEFAULT_AUDIT_FILTERS)
-  const [page, setPage] = useState(1)
-  const [open, setOpen] = useState<AuditEntry | null>(null)
+  const loading = useSimulatedLoad(1100);
+  const { showToast } = useToast();
+  const [filters, setFilters] = useState<AuditFilterState>(
+    DEFAULT_AUDIT_FILTERS,
+  );
+  const [page, setPage] = useState(1);
+  const [open, setOpen] = useState<AuditEntry | null>(null);
 
-  const filtered = useMemo(() => AUDIT_ENTRIES.filter((e) => matches(e, filters)), [filters])
-  const pageCount = Math.max(1, Math.ceil(filtered.length / AUDIT_PAGE_SIZE))
-  const safePage = Math.min(page, pageCount)
-  const start = (safePage - 1) * AUDIT_PAGE_SIZE
-  const rows = filtered.slice(start, start + AUDIT_PAGE_SIZE)
+  const filtered = useMemo(
+    () => AUDIT_ENTRIES.filter((e) => matches(e, filters)),
+    [filters],
+  );
+  const pageCount = Math.max(1, Math.ceil(filtered.length / AUDIT_PAGE_SIZE));
+  const safePage = Math.min(page, pageCount);
+  const start = (safePage - 1) * AUDIT_PAGE_SIZE;
+  const rows = filtered.slice(start, start + AUDIT_PAGE_SIZE);
 
   const changeFilters = (next: AuditFilterState) => {
-    setFilters(next)
-    setPage(1)
-  }
+    setFilters(next);
+    setPage(1);
+  };
 
   const metaLabel =
     filtered.length === 0
-      ? `0 of ${AUDIT_TOTAL.toLocaleString('en-US')} entries`
-      : `${filtered.length} match · ${AUDIT_TOTAL.toLocaleString('en-US')} total`
+      ? `0 of ${AUDIT_TOTAL.toLocaleString("en-US")} entries`
+      : `${filtered.length} match · ${AUDIT_TOTAL.toLocaleString("en-US")} total`;
 
   return (
     <FadeIn>
@@ -64,7 +70,10 @@ export function AdminGovernanceAudit() {
         filters={filters}
         onChange={changeFilters}
         onExport={() =>
-          showToast(`Exported ${AUDIT_TOTAL.toLocaleString('en-US')} entries as CSV`, 'success')
+          showToast(
+            `Exported ${AUDIT_TOTAL.toLocaleString("en-US")} entries as CSV`,
+            "success",
+          )
         }
       />
 
@@ -79,7 +88,9 @@ export function AdminGovernanceAudit() {
           </div>
 
           {loading ? (
-            Array.from({ length: AUDIT_PAGE_SIZE }).map((_, i) => <SkeletonRow key={i} />)
+            Array.from({ length: AUDIT_PAGE_SIZE }).map((_, i) => (
+              <SkeletonRow key={i} />
+            ))
           ) : filtered.length === 0 ? (
             <EmptyState />
           ) : (
@@ -103,12 +114,20 @@ export function AdminGovernanceAudit() {
         )}
       </div>
 
-      {open && <AdminGovernanceAuditModal entry={open} onClose={() => setOpen(null)} />}
+      {open && (
+        <AdminGovernanceAuditModal entry={open} onClose={() => setOpen(null)} />
+      )}
     </FadeIn>
-  )
+  );
 }
 
-function AuditRow({ entry, onOpen }: { entry: AuditEntry; onOpen: () => void }) {
+function AuditRow({
+  entry,
+  onOpen,
+}: {
+  entry: AuditEntry;
+  onOpen: () => void;
+}) {
   return (
     <div
       className={styles.auditRow}
@@ -116,9 +135,9 @@ function AuditRow({ entry, onOpen }: { entry: AuditEntry; onOpen: () => void }) 
       tabIndex={0}
       onClick={onOpen}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onOpen()
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen();
         }
       }}
     >
@@ -144,7 +163,7 @@ function AuditRow({ entry, onOpen }: { entry: AuditEntry; onOpen: () => void }) 
         {entry.when}
       </span>
     </div>
-  )
+  );
 }
 
 function Pager({
@@ -155,17 +174,17 @@ function Pager({
   total,
   onPage,
 }: {
-  page: number
-  pageCount: number
-  start: number
-  end: number
-  total: number
-  onPage: (p: number) => void
+  page: number;
+  pageCount: number;
+  start: number;
+  end: number;
+  total: number;
+  onPage: (p: number) => void;
 }) {
   return (
     <div className={styles.pager}>
       <span className={styles.pagerMeta}>
-        Showing {start}–{end} of {AUDIT_TOTAL.toLocaleString('en-US')} entries
+        Showing {start}–{end} of {AUDIT_TOTAL.toLocaleString("en-US")} entries
         {total !== AUDIT_TOTAL && ` (${total} match)`}
       </span>
       <div className={styles.pagerNav}>
@@ -184,8 +203,8 @@ function Pager({
             type="button"
             className={[styles.pagerNum, page === i + 1 && styles.pagerNumOn]
               .filter(Boolean)
-              .join(' ')}
-            aria-current={page === i + 1 ? 'page' : undefined}
+              .join(" ")}
+            aria-current={page === i + 1 ? "page" : undefined}
             onClick={() => onPage(i + 1)}
           >
             {i + 1}
@@ -202,7 +221,7 @@ function Pager({
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 function EmptyState() {
@@ -213,17 +232,22 @@ function EmptyState() {
       </span>
       <h3 className={styles.auditEmptyTitle}>No entries match</h3>
       <p className={styles.auditEmptyText}>
-        Try widening your filters — the full log holds 14,206 actions going back to 2023.
+        Try widening your filters — the full log holds 14,206 actions going back
+        to 2023.
       </p>
     </div>
-  )
+  );
 }
 
 function SkeletonRow() {
   return (
     <div className={styles.auditRow} aria-hidden>
       <span className={styles.auditMod}>
-        <SkeletonLine width={26} height={26} style={{ borderRadius: 999, flex: 'none' }} />
+        <SkeletonLine
+          width={26}
+          height={26}
+          style={{ borderRadius: 999, flex: "none" }}
+        />
         <SkeletonLine width="60%" />
       </span>
       <SkeletonLine width={92} height={22} style={{ borderRadius: 999 }} />
@@ -231,5 +255,5 @@ function SkeletonRow() {
       <SkeletonLine width="90%" />
       <SkeletonLine width="50%" />
     </div>
-  )
+  );
 }

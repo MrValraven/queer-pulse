@@ -1,28 +1,34 @@
-import { useState } from 'react'
-import { AdminShell } from '../../shared/components/layout/AdminShell'
-import { AdminCommunityGrid } from './AdminCommunityGrid'
-import { AdminCommunityDetail } from './AdminCommunityDetail'
-import { AdminHealthModal } from './AdminHealthModal'
-import { AdminSupportModal } from './AdminSupportModal'
-import type { Community } from './adminCommunities.data'
+import { useState } from "react";
+import { AdminShell } from "../../shared/components/layout/AdminShell";
+import { AdminCommunityGrid } from "./AdminCommunityGrid";
+import { AdminCommunityDetail } from "./AdminCommunityDetail";
+import { AdminHealthModal } from "./AdminHealthModal";
+import { AdminSupportModal } from "./AdminSupportModal";
+import type { Community } from "./adminCommunities.data";
 
 export function AdminCommunitiesPage() {
-  const [selected, setSelected] = useState<Community | null>(null)
-  const [healthFor, setHealthFor] = useState<Community | null>(null)
-  const [supportFor, setSupportFor] = useState<Community | null>(null)
+  const [selected, setSelected] = useState<Community | null>(null);
+  const [healthFor, setHealthFor] = useState<Community | null>(null);
+  const [supportFor, setSupportFor] = useState<Community | null>(null);
 
   function openDetail(c: Community) {
-    setSelected(c)
-    window.scrollTo(0, 0)
+    setSelected(c);
+    window.scrollTo(0, 0);
   }
 
   function backToGrid() {
-    setSelected(null)
-    window.scrollTo(0, 0)
+    setSelected(null);
+    window.scrollTo(0, 0);
   }
 
   return (
-    <AdminShell title={<>Communities · <em>all spaces</em></>}>
+    <AdminShell
+      title={
+        <>
+          Communities · <em>all spaces</em>
+        </>
+      }
+    >
       {selected ? (
         <AdminCommunityDetail community={selected} onBack={backToGrid} />
       ) : (
@@ -37,8 +43,11 @@ export function AdminCommunitiesPage() {
         />
       )}
       {supportFor && (
-        <AdminSupportModal community={supportFor} onClose={() => setSupportFor(null)} />
+        <AdminSupportModal
+          community={supportFor}
+          onClose={() => setSupportFor(null)}
+        />
       )}
     </AdminShell>
-  )
+  );
 }

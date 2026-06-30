@@ -6,34 +6,39 @@ import {
   useMemo,
   useState,
   type ReactNode,
-} from 'react'
-import { VouchMemberModal } from '../../features/members/VouchMemberModal'
-import { useDemoMode } from './DemoModeProvider'
-import { useAuth } from './authContext'
-import { vouchFor, getGivenVouches } from '../../features/members/api/members.api'
-import { queryClient } from '../../shared/api/queryClient'
+} from "react";
+import { VouchMemberModal } from "../../features/members/VouchMemberModal";
+import { useDemoMode } from "./DemoModeProvider";
+import { useAuth } from "./authContext";
+import {
+  vouchFor,
+  getGivenVouches,
+} from "../../features/members/api/members.api";
+import { queryClient } from "../../shared/api/queryClient";
 
 interface VouchContextValue {
   /** Member slugs the current user has vouched for, most-recent first. */
-  vouched: string[]
+  vouched: string[];
   /** Has the current user already vouched for this member slug? */
-  hasVouched: (slug: string) => boolean
+  hasVouched: (slug: string) => boolean;
   /** Open the vouch modal addressed to a member slug. */
-  openVouch: (slug: string) => void
+  openVouch: (slug: string) => void;
   /** Record a vouch for a member slug (called by the modal on success). */
-  addVouch: (slug: string) => void
+  addVouch: (slug: string) => void;
 }
 
-const VouchContext = createContext<VouchContextValue | null>(null)
-const STORAGE_KEY = 'qp.vouches.v1'
+const VouchContext = createContext<VouchContextValue | null>(null);
+const STORAGE_KEY = "qp.vouches.v1";
 
 function readInitial(): string[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    const parsed = raw ? JSON.parse(raw) : null
-    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === 'string') : []
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    return Array.isArray(parsed)
+      ? parsed.filter((x): x is string => typeof x === "string")
+      : [];
   } catch {
-    return []
+    return [];
   }
 }
 
@@ -45,57 +50,57 @@ function readInitial(): string[] {
  * mock slugs the user has co-signed.
  */
 export function VouchProvider({ children }: { children: ReactNode }) {
-  const [vouched, setVouched] = useState<string[]>(readInitial)
-  const [openSlug, setOpenSlug] = useState<string | null>(null)
+  const [vouched, setVouched] = useState<string[]>(readInitial);
+  const [openSlug, setOpenSlug] = useState<string | null>(null);
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(vouched))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(vouched));
     } catch {
       /* storage unavailable — keep in-memory only */
     }
-  }, [vouched])
+  }, [vouched]);
 
-  const { demoMode } = useDemoMode()
-  const { refresh } = useAuth()
+  const { demoMode } = useDemoMode();
+  const { refresh } = useAuth();
 
   useEffect(() => {
-    if (demoMode) return
-    let active = true
+    if (demoMode) return;
+    let active = true;
     getGivenVouches()
       .then((rows) => {
-        if (active) setVouched(rows.map((r) => r.slug))
+        if (active) setVouched(rows.map((r) => r.slug));
       })
       .catch(() => {
         /* not active / not authorized — leave as-is */
-      })
+      });
     return () => {
-      active = false
-    }
-  }, [demoMode])
+      active = false;
+    };
+  }, [demoMode]);
 
-  const openVouch = useCallback((slug: string) => setOpenSlug(slug), [])
-  const close = useCallback(() => setOpenSlug(null), [])
+  const openVouch = useCallback((slug: string) => setOpenSlug(slug), []);
+  const close = useCallback(() => setOpenSlug(null), []);
   const addVouch = useCallback(
     (slug: string) => {
-      setVouched((prev) => (prev.includes(slug) ? prev : [slug, ...prev]))
-      if (demoMode) return
+      setVouched((prev) => (prev.includes(slug) ? prev : [slug, ...prev]));
+      if (demoMode) return;
       vouchFor(slug)
         .then(() => {
           // Refresh the vouchee's profile + the directory so counts update.
-          queryClient.invalidateQueries({ queryKey: ['profile'] })
-          queryClient.invalidateQueries({ queryKey: ['members'] })
+          queryClient.invalidateQueries({ queryKey: ["profile"] });
+          queryClient.invalidateQueries({ queryKey: ["members"] });
           // If the current user just crossed the threshold and got promoted,
           // pick up the new status claim. (No-op in demo.)
-          void refresh()
+          void refresh();
         })
         .catch(() => {
           // Roll back the optimistic add on failure.
-          setVouched((prev) => prev.filter((s) => s !== slug))
-        })
+          setVouched((prev) => prev.filter((s) => s !== slug));
+        });
     },
     [demoMode, refresh],
-  )
+  );
 
   const value = useMemo<VouchContextValue>(
     () => ({
@@ -105,7 +110,7 @@ export function VouchProvider({ children }: { children: ReactNode }) {
       addVouch,
     }),
     [vouched, openVouch, addVouch],
-  )
+  );
 
   return (
     <VouchContext.Provider value={value}>
@@ -118,13 +123,13 @@ export function VouchProvider({ children }: { children: ReactNode }) {
         />
       )}
     </VouchContext.Provider>
-  )
+  );
 }
 
 export function useVouch() {
-  const ctx = useContext(VouchContext)
+  const ctx = useContext(VouchContext);
   if (!ctx) {
-    throw new Error('useVouch must be used within VouchProvider')
+    throw new Error("useVouch must be used within VouchProvider");
   }
-  return ctx
+  return ctx;
 }

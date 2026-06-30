@@ -1,15 +1,28 @@
-import { useState } from 'react'
-import { Avatar, Button, FilterChips, Reveal } from '../../shared/components/ui'
-import { THERAPISTS, EXPERIENCES, SNS, LANGS, type Therapist } from './mentalHealth.data'
-import { TherapistProfileModal } from './TherapistProfileModal'
-import styles from './MentalHealthPage.module.css'
+import { useState } from "react";
+import {
+  Avatar,
+  Button,
+  FilterChips,
+  Reveal,
+} from "../../shared/components/ui";
+import {
+  THERAPISTS,
+  EXPERIENCES,
+  SNS,
+  LANGS,
+  type Therapist,
+} from "./mentalHealth.data";
+import { TherapistProfileModal } from "./TherapistProfileModal";
+import styles from "./MentalHealthPage.module.css";
 
 export function TherapistSection() {
-  const [filter, setFilter] = useState('all')
-  const [active, setActive] = useState<Therapist | null>(null)
+  const [filter, setFilter] = useState("all");
+  const [active, setActive] = useState<Therapist | null>(null);
 
   const therapists =
-    filter === 'all' ? THERAPISTS : THERAPISTS.filter((t) => t.langs.includes(filter))
+    filter === "all"
+      ? THERAPISTS
+      : THERAPISTS.filter((t) => t.langs.includes(filter));
 
   return (
     <section className={styles.sec}>
@@ -19,9 +32,10 @@ export function TherapistSection() {
             Queer-affirming <em>therapists in Lisbon</em>
           </h2>
           <p>
-            Reviewed and recommended by community members. Every therapist here has been verified
-            as genuinely queer-affirming — not just "welcoming" but experienced with queer lives,
-            identities, and the specific pressures of being queer and an expat in Lisbon.
+            Reviewed and recommended by community members. Every therapist here
+            has been verified as genuinely queer-affirming — not just
+            "welcoming" but experienced with queer lives, identities, and the
+            specific pressures of being queer and an expat in Lisbon.
           </p>
         </Reveal>
         <div className={styles.thFilter}>
@@ -30,7 +44,10 @@ export function TherapistSection() {
             tone="jade"
             value={filter}
             onChange={setFilter}
-            options={LANGS.map((l) => ({ value: l, label: l === 'all' ? 'All languages' : l }))}
+            options={LANGS.map((l) => ({
+              value: l,
+              label: l === "all" ? "All languages" : l,
+            }))}
           />
         </div>
         <div className={styles.therapistGrid}>
@@ -60,15 +77,18 @@ export function TherapistSection() {
                   className={[
                     styles.tcStatus,
                     t.acceptingNew ? styles.tcStatusOpen : styles.tcStatusFull,
-                  ].join(' ')}
+                  ].join(" ")}
                 >
                   <span className={styles.tcStatusDot} />
-                  {t.acceptingNew ? 'Accepting' : 'Waitlist'}
+                  {t.acceptingNew ? "Accepting" : "Waitlist"}
                 </span>
               </div>
               <div className={styles.tcTags}>
                 {t.langs.map((l) => (
-                  <span key={l} className={`${styles.tcTag} ${styles.tcTagLang}`}>
+                  <span
+                    key={l}
+                    className={`${styles.tcTag} ${styles.tcTagLang}`}
+                  >
                     {l}
                   </span>
                 ))}
@@ -88,10 +108,13 @@ export function TherapistSection() {
         </div>
       </div>
       {active && (
-        <TherapistProfileModal therapist={active} onClose={() => setActive(null)} />
+        <TherapistProfileModal
+          therapist={active}
+          onClose={() => setActive(null)}
+        />
       )}
     </section>
-  )
+  );
 }
 
 export function ExperiencesSection() {
@@ -103,13 +126,17 @@ export function ExperiencesSection() {
             Things the community <em>has felt</em>
           </h2>
           <p>
-            Being a queer expat in Lisbon comes with specific pressures. Naming them isn't
-            complaining — it's the start of dealing with them.
+            Being a queer expat in Lisbon comes with specific pressures. Naming
+            them isn't complaining — it's the start of dealing with them.
           </p>
         </Reveal>
         <div className={styles.expGrid}>
           {EXPERIENCES.map((e, i) => (
-            <Reveal className={styles.expCard} key={e.title} delay={Math.min(i, 8) * 60}>
+            <Reveal
+              className={styles.expCard}
+              key={e.title}
+              delay={Math.min(i, 8) * 60}
+            >
               <div className={styles.expBar} />
               <div>
                 <div className={styles.expTitle}>{e.title}</div>
@@ -120,10 +147,16 @@ export function ExperiencesSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-export function SnsSection({ forum, mentorship }: { forum: string; mentorship: string }) {
+export function SnsSection({
+  forum,
+  mentorship,
+}: {
+  forum: string;
+  mentorship: string;
+}) {
   return (
     <section className={styles.sec}>
       <div className="wrap">
@@ -132,8 +165,9 @@ export function SnsSection({ forum, mentorship }: { forum: string; mentorship: s
             Accessing mental health <em>through the SNS</em>
           </h2>
           <p>
-            Portugal's public health system covers mental health, including therapy and psychiatry
-            — but access is uneven. Here's what to realistically expect.
+            Portugal's public health system covers mental health, including
+            therapy and psychiatry — but access is uneven. Here's what to
+            realistically expect.
           </p>
         </Reveal>
         <div className={styles.snsGrid}>
@@ -152,9 +186,9 @@ export function SnsSection({ forum, mentorship }: { forum: string; mentorship: s
               Peer support within <em>the community</em>
             </h3>
             <p>
-              The mental health peer support group meets monthly. Members share experiences,
-              recommend resources, and support each other — no professional facilitation, just
-              honest conversation.
+              The mental health peer support group meets monthly. Members share
+              experiences, recommend resources, and support each other — no
+              professional facilitation, just honest conversation.
             </p>
           </div>
           <div className={styles.peerBtns}>
@@ -168,5 +202,5 @@ export function SnsSection({ forum, mentorship }: { forum: string; mentorship: s
         </Reveal>
       </div>
     </section>
-  )
+  );
 }

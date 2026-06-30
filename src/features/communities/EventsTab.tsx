@@ -1,14 +1,18 @@
-import { Link } from 'react-router-dom'
-import { FiArrowRight } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import type { CommunityEvent } from './community.model'
-import detail from './CommunityDetailPage.module.css'
-import styles from './CommunityHubTabs.module.css'
+import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import type { CommunityEvent } from "./community.model";
+import detail from "./CommunityDetailPage.module.css";
+import styles from "./CommunityHubTabs.module.css";
 
 function EventRow({ ev }: { ev: CommunityEvent }) {
   return (
-    <div className={[styles.eventRow, ev.past && styles.eventPast].filter(Boolean).join(' ')}>
+    <div
+      className={[styles.eventRow, ev.past && styles.eventPast]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <div className={detail.gDate}>
         <div className={detail.gDd}>{ev.dd}</div>
         <div className={detail.gDm}>{ev.mm}</div>
@@ -17,7 +21,7 @@ function EventRow({ ev }: { ev: CommunityEvent }) {
         <div className={detail.gTitle}>{ev.title}</div>
         <div className={detail.gMeta}>
           {ev.meta}
-          {ev.spots ? ` · ${ev.spots}` : ''}
+          {ev.spots ? ` · ${ev.spots}` : ""}
         </div>
       </div>
       {ev.past ? (
@@ -32,12 +36,12 @@ function EventRow({ ev }: { ev: CommunityEvent }) {
         </Button>
       )}
     </div>
-  )
+  );
 }
 
 export function EventsTab({ events }: { events: CommunityEvent[] }) {
-  const upcoming = events.filter((e) => !e.past)
-  const past = events.filter((e) => e.past)
+  const upcoming = events.filter((e) => !e.past);
+  const past = events.filter((e) => e.past);
   return (
     <div>
       <div className={detail.secLbl}>Upcoming gatherings</div>
@@ -56,5 +60,5 @@ export function EventsTab({ events }: { events: CommunityEvent[] }) {
         </>
       )}
     </div>
-  )
+  );
 }

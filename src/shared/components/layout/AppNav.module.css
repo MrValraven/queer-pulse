@@ -47,7 +47,7 @@
   flex: none;
 }
 .pulseDot::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
@@ -135,15 +135,15 @@
   }
 }
 
-:global([data-theme='dark']) .nav {
+:global([data-theme="dark"]) .nav {
   background: rgba(14, 8, 32, 0.82);
   border-color: rgba(247, 243, 238, 0.1);
 }
-:global([data-theme='dark']) .brand,
-:global([data-theme='dark']) .bell,
-:global([data-theme='dark']) .themeToggle {
+:global([data-theme="dark"]) .brand,
+:global([data-theme="dark"]) .bell,
+:global([data-theme="dark"]) .themeToggle {
   color: var(--cream);
 }
-:global([data-theme='dark']) .bellBadge {
+:global([data-theme="dark"]) .bellBadge {
   border-color: var(--paper);
 }

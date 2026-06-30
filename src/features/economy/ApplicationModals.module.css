@@ -217,7 +217,9 @@
   place-items: center;
   color: #fff;
   margin-top: 1px;
-  transition: background var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+  transition:
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
 }
 .checkRowOn .checkBox {
   background: var(--jade);
@@ -781,10 +783,10 @@
   line-height: 1.45;
 }
 
-:global([data-theme='dark']) .modal {
+:global([data-theme="dark"]) .modal {
   border: 1px solid rgba(247, 243, 238, 0.1);
 }
-:global([data-theme='dark']) .modalSuccess,
-:global([data-theme='dark']) .readModal {
+:global([data-theme="dark"]) .modalSuccess,
+:global([data-theme="dark"]) .readModal {
   border-color: transparent;
 }

@@ -1,7 +1,7 @@
-import { StudioCreatorShell } from './StudioCreatorShell'
-import { UPLOAD_STEPS } from './studioUpload.data'
-import { UploadMainCol, UploadSidebar } from './StudioUploadSections'
-import s from './creator.module.css'
+import { StudioCreatorShell } from "./StudioCreatorShell";
+import { UPLOAD_STEPS } from "./studioUpload.data";
+import { UploadMainCol, UploadSidebar } from "./StudioUploadSections";
+import s from "./creator.module.css";
 
 export function StudioUploadPage() {
   return (
@@ -12,15 +12,28 @@ export function StudioUploadPage() {
           <h1>
             Bring it <em>home.</em>
           </h1>
-          <div className="sub" style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 17, color: 'rgba(247,243,238,.62)', marginTop: 14 }}>
-            Drop the masters. We transcode, you keep the originals. Three steps, about eight minutes.
+          <div
+            className="sub"
+            style={{
+              fontFamily: "var(--serif)",
+              fontStyle: "italic",
+              fontSize: 17,
+              color: "rgba(247,243,238,.62)",
+              marginTop: 14,
+            }}
+          >
+            Drop the masters. We transcode, you keep the originals. Three steps,
+            about eight minutes.
           </div>
         </div>
       </section>
 
       <div className={s.stepper}>
         {UPLOAD_STEPS.map((st) => (
-          <div key={st.num} className={[s.step, st.on && s.stepOn].filter(Boolean).join(' ')}>
+          <div
+            key={st.num}
+            className={[s.step, st.on && s.stepOn].filter(Boolean).join(" ")}
+          >
             <span className={s.stepNum}>{st.num}</span>
             <span className={s.stepNm}>
               {st.nm}
@@ -35,5 +48,5 @@ export function StudioUploadPage() {
         <UploadSidebar />
       </section>
     </StudioCreatorShell>
-  )
+  );
 }

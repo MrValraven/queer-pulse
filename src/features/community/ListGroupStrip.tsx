@@ -1,46 +1,52 @@
-import { useState } from 'react'
-import { FiCheck } from 'react-icons/fi'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { type Format, type Group } from './readingGroups.data'
-import styles from './ReadingGroupsPage.module.css'
+import { useState } from "react";
+import { FiCheck } from "react-icons/fi";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { type Format, type Group } from "./readingGroups.data";
+import styles from "./ReadingGroupsPage.module.css";
 
 /** The "Start your own group" panel: a real form that lists a group and shows a
  *  plum-panel success state. The new group is handed back via onListed. */
-export function ListGroupStrip({ onListed }: { onListed: (group: Group) => void }) {
-  const { showToast } = useToast()
-  const [bookField, setBookField] = useState('')
-  const [whyField, setWhyField] = useState('')
-  const [formatField, setFormatField] = useState('In-person')
-  const [maxField, setMaxField] = useState('6')
-  const [listedGroup, setListedGroup] = useState<Group | null>(null)
+export function ListGroupStrip({
+  onListed,
+}: {
+  onListed: (group: Group) => void;
+}) {
+  const { showToast } = useToast();
+  const [bookField, setBookField] = useState("");
+  const [whyField, setWhyField] = useState("");
+  const [formatField, setFormatField] = useState("In-person");
+  const [maxField, setMaxField] = useState("6");
+  const [listedGroup, setListedGroup] = useState<Group | null>(null);
 
   function listGroup(e: React.FormEvent) {
-    e.preventDefault()
-    const book = bookField.trim()
-    if (!book) return
+    e.preventDefault();
+    const book = bookField.trim();
+    if (!book) return;
     // "Title — Author" → split into book + author where possible.
-    const [titlePart, authorPart] = book.split(/\s+[—-]\s+/)
-    const groupFormat: Format = formatField === 'Online' ? 'online' : 'irl'
+    const [titlePart, authorPart] = book.split(/\s+[—-]\s+/);
+    const groupFormat: Format = formatField === "Online" ? "online" : "irl";
     const newGroup: Group = {
       id: `mine-${Date.now()}`,
-      genre: 'fiction',
+      genre: "fiction",
       format: groupFormat,
       book: titlePart?.trim() || book,
-      author: authorPart?.trim() || 'You',
+      author: authorPart?.trim() || "You",
       spine: (titlePart?.trim() || book).charAt(0).toUpperCase(),
-      spineColor: 'var(--violet)',
-      name: 'Your new group',
-      desc: whyField.trim() || 'A new reading group, just listed. Members will be matched soon.',
-      where: groupFormat === 'online' ? 'Online' : 'Lisbon (TBC)',
-      frequency: 'Monthly',
+      spineColor: "var(--violet)",
+      name: "Your new group",
+      desc:
+        whyField.trim() ||
+        "A new reading group, just listed. Members will be matched soon.",
+      where: groupFormat === "online" ? "Online" : "Lisbon (TBC)",
+      frequency: "Monthly",
       spots: Math.max(1, parseInt(maxField, 10) - 1),
-      lang: 'EN / PT',
-    }
-    onListed(newGroup)
-    setListedGroup(newGroup)
-    setBookField('')
-    setWhyField('')
-    showToast("Group listed — we'll find your readers", 'success')
+      lang: "EN / PT",
+    };
+    onListed(newGroup);
+    setListedGroup(newGroup);
+    setBookField("");
+    setWhyField("");
+    showToast("Group listed — we'll find your readers", "success");
   }
 
   return (
@@ -50,28 +56,38 @@ export function ListGroupStrip({ onListed }: { onListed: (group: Group) => void 
           Start your <em>own group.</em>
         </h3>
         <p>
-          Pick a book. Say how many people you want. Say where and when. We will list it here
-          and match you with members who want to read the same thing.
+          Pick a book. Say how many people you want. Say where and when. We will
+          list it here and match you with members who want to read the same
+          thing.
         </p>
       </div>
       {listedGroup ? (
         <div className={styles.ssSuccess}>
-          <span className={styles.ssSuccessIcon} aria-hidden><FiCheck /></span>
+          <span className={styles.ssSuccessIcon} aria-hidden>
+            <FiCheck />
+          </span>
           <div className={styles.ssSuccessTitle}>
             Your group is <em>listed.</em>
           </div>
           <p className={styles.ssSuccessBody}>
-            <strong>{listedGroup.book}</strong> is live at the top of the directory. We'll
-            start matching you with members who want to read the same thing.
+            <strong>{listedGroup.book}</strong> is live at the top of the
+            directory. We'll start matching you with members who want to read
+            the same thing.
           </p>
-          <button type="button" className={styles.ssSubmit} onClick={() => setListedGroup(null)}>
+          <button
+            type="button"
+            className={styles.ssSubmit}
+            onClick={() => setListedGroup(null)}
+          >
             List another group
           </button>
         </div>
       ) : (
         <form className={styles.ssForm} onSubmit={listGroup}>
           <div className={styles.ssRow}>
-            <label className={styles.ssLabel} htmlFor="ss-book">Book title &amp; author</label>
+            <label className={styles.ssLabel} htmlFor="ss-book">
+              Book title &amp; author
+            </label>
             <input
               id="ss-book"
               className={styles.ssInput}
@@ -83,7 +99,9 @@ export function ListGroupStrip({ onListed }: { onListed: (group: Group) => void 
             />
           </div>
           <div className={styles.ssRow}>
-            <label className={styles.ssLabel} htmlFor="ss-why">Why this book?</label>
+            <label className={styles.ssLabel} htmlFor="ss-why">
+              Why this book?
+            </label>
             <input
               id="ss-why"
               className={styles.ssInput}
@@ -95,7 +113,9 @@ export function ListGroupStrip({ onListed }: { onListed: (group: Group) => void 
           </div>
           <div className={styles.ssRow2}>
             <div className={styles.ssRow}>
-              <label className={styles.ssLabel} htmlFor="ss-format">Format</label>
+              <label className={styles.ssLabel} htmlFor="ss-format">
+                Format
+              </label>
               <select
                 id="ss-format"
                 className={styles.ssInput}
@@ -108,7 +128,9 @@ export function ListGroupStrip({ onListed }: { onListed: (group: Group) => void 
               </select>
             </div>
             <div className={styles.ssRow}>
-              <label className={styles.ssLabel} htmlFor="ss-max">Max people</label>
+              <label className={styles.ssLabel} htmlFor="ss-max">
+                Max people
+              </label>
               <select
                 id="ss-max"
                 className={styles.ssInput}
@@ -121,11 +143,15 @@ export function ListGroupStrip({ onListed }: { onListed: (group: Group) => void 
               </select>
             </div>
           </div>
-          <button type="submit" className={styles.ssSubmit} disabled={!bookField.trim()}>
+          <button
+            type="submit"
+            className={styles.ssSubmit}
+            disabled={!bookField.trim()}
+          >
             List my group
           </button>
         </form>
       )}
     </div>
-  )
+  );
 }

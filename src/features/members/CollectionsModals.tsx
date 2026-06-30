@@ -1,50 +1,61 @@
-import { useState, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { FiCheck, FiFolder, FiPlus, FiX } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import { linkToPath } from '../../app/routeMap'
-import type { SavedItem } from '../../app/providers/SavedProvider'
-import type { Collection, Privacy } from './collections.data'
-import styles from './CollectionsModals.module.css'
+import { useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { FiCheck, FiFolder, FiPlus, FiX } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import { linkToPath } from "../../app/routeMap";
+import type { SavedItem } from "../../app/providers/SavedProvider";
+import type { Collection, Privacy } from "./collections.data";
+import styles from "./CollectionsModals.module.css";
 
 /** Shared frame: backdrop click-to-close, close button, scroll lock. */
-function Modal({ onClose, children }: { onClose: () => void; children: ReactNode }) {
-  useScrollLock()
+function Modal({
+  onClose,
+  children,
+}: {
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  useScrollLock();
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className={styles.modal} role="dialog" aria-modal="true">
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           <FiX aria-hidden />
         </button>
         {children}
       </div>
     </div>
-  )
+  );
 }
 
 const PRIVACY_OPTIONS: { value: Privacy; label: string }[] = [
-  { value: 'private', label: 'Private' },
-  { value: 'shared', label: 'Shared with members' },
-  { value: 'public', label: 'Public' },
-]
+  { value: "private", label: "Private" },
+  { value: "shared", label: "Shared with members" },
+  { value: "public", label: "Public" },
+];
 
 /** Name a new collection and pick its privacy. */
 export function NewCollectionModal({
   onClose,
   onCreate,
 }: {
-  onClose: () => void
-  onCreate: (name: string, privacy: Privacy) => void
+  onClose: () => void;
+  onCreate: (name: string, privacy: Privacy) => void;
 }) {
-  const [name, setName] = useState('')
-  const [privacy, setPrivacy] = useState<Privacy>('private')
-  const canCreate = name.trim().length > 0
+  const [name, setName] = useState("");
+  const [privacy, setPrivacy] = useState<Privacy>("private");
+  const canCreate = name.trim().length > 0;
 
   return (
     <Modal onClose={onClose}>
@@ -54,9 +65,9 @@ export function NewCollectionModal({
       </h2>
       <form
         onSubmit={(e) => {
-          e.preventDefault()
-          if (!canCreate) return
-          onCreate(name.trim(), privacy)
+          e.preventDefault();
+          if (!canCreate) return;
+          onCreate(name.trim(), privacy);
         }}
       >
         <div className={styles.field}>
@@ -94,7 +105,7 @@ export function NewCollectionModal({
         </div>
       </form>
     </Modal>
-  )
+  );
 }
 
 /** Read a collection: list its saved items (live), each linking out. */
@@ -103,9 +114,9 @@ export function ViewCollectionModal({
   items,
   onClose,
 }: {
-  collection: Collection
-  items: SavedItem[]
-  onClose: () => void
+  collection: Collection;
+  items: SavedItem[];
+  onClose: () => void;
 }) {
   return (
     <Modal onClose={onClose}>
@@ -124,10 +135,16 @@ export function ViewCollectionModal({
         <div className={styles.list}>
           {items.map((it) => (
             <div key={it.id} className={styles.row}>
-              <span className={styles.rowBadge}>{it.kind.slice(0, 3).toUpperCase()}</span>
+              <span className={styles.rowBadge}>
+                {it.kind.slice(0, 3).toUpperCase()}
+              </span>
               <div className={styles.rowInfo}>
                 {it.href ? (
-                  <Link to={linkToPath(it.href)} className={styles.rowTitle} onClick={onClose}>
+                  <Link
+                    to={linkToPath(it.href)}
+                    className={styles.rowTitle}
+                    onClick={onClose}
+                  >
                     {it.title}
                   </Link>
                 ) : (
@@ -146,7 +163,7 @@ export function ViewCollectionModal({
         </Button>
       </div>
     </Modal>
-  )
+  );
 }
 
 /** Pick which collection to add a recent save into. */
@@ -156,15 +173,15 @@ export function AddToCollectionModal({
   onClose,
   onPick,
 }: {
-  itemTitle: string
-  collections: Collection[]
-  onClose: () => void
-  onPick: (collectionId: string) => void
+  itemTitle: string;
+  collections: Collection[];
+  onClose: () => void;
+  onPick: (collectionId: string) => void;
 }) {
-  const [added, setAdded] = useState<string | null>(null)
+  const [added, setAdded] = useState<string | null>(null);
 
   if (added) {
-    const c = collections.find((x) => x.id === added)
+    const c = collections.find((x) => x.id === added);
     return (
       <Modal onClose={onClose}>
         <div className={styles.success}>
@@ -175,14 +192,15 @@ export function AddToCollectionModal({
             Added to <em>your collection.</em>
           </h2>
           <p>
-            Saved into <b>{c?.name}</b>. You'll find it there whenever you come back.
+            Saved into <b>{c?.name}</b>. You'll find it there whenever you come
+            back.
           </p>
           <Button variant="ghost-dark" onClick={onClose}>
             Done
           </Button>
         </div>
       </Modal>
-    )
+    );
   }
 
   return (
@@ -197,8 +215,8 @@ export function AddToCollectionModal({
             type="button"
             className={styles.pick}
             onClick={() => {
-              onPick(c.id)
-              setAdded(c.id)
+              onPick(c.id);
+              setAdded(c.id);
             }}
           >
             <span className={styles.pickIc}>{c.count}</span>
@@ -216,5 +234,5 @@ export function AddToCollectionModal({
         </button>
       </div>
     </Modal>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { SkeletonLine } from '../../shared/components/ui'
-import styles from './ForumPage.module.css'
+import { SkeletonLine } from "../../shared/components/ui";
+import styles from "./ForumPage.module.css";
 
 /** Mirrors a forum thread row: vote column + badges/title/excerpt/meta. */
 function ThreadSkeleton() {
@@ -23,7 +23,7 @@ function ThreadSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function ForumThreadListSkeleton({ count = 5 }: { count?: number }) {
@@ -33,5 +33,5 @@ export function ForumThreadListSkeleton({ count = 5 }: { count?: number }) {
         <ThreadSkeleton key={i} />
       ))}
     </>
-  )
+  );
 }

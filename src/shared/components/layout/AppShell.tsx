@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
-import { Navbar } from './Navbar'
-import { Footer } from './Footer'
+import type { ReactNode } from "react";
+import { Navbar } from "./Navbar";
+import { Footer } from "./Footer";
 
 /**
  * Logged-in page frame: the single site-wide Navbar (which reflects auth state)
@@ -11,8 +11,8 @@ export function AppShell({
   children,
   unreadCount,
 }: {
-  children: ReactNode
-  unreadCount?: number
+  children: ReactNode;
+  unreadCount?: number;
 }) {
   return (
     <>
@@ -20,5 +20,5 @@ export function AppShell({
       <main>{children}</main>
       <Footer />
     </>
-  )
+  );
 }

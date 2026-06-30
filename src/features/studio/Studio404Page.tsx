@@ -1,15 +1,19 @@
-import { useNavigate, Link } from 'react-router-dom'
-import { routes } from '../../app/routeMap'
-import styles from './studioError.module.css'
+import { useNavigate, Link } from "react-router-dom";
+import { routes } from "../../app/routeMap";
+import styles from "./studioError.module.css";
 
-const FLAT_DOTS = 18
+const FLAT_DOTS = 18;
 
 export function Studio404Page() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className={styles.root}>
-      <Link to={routes.studioE} className={styles.brand} aria-label="QueerPulse Studio home">
+      <Link
+        to={routes.studioE}
+        className={styles.brand}
+        aria-label="QueerPulse Studio home"
+      >
         <span className={styles.pulseDot} aria-hidden />
         <span className={styles.wordmark}>
           Queer<em>Pulse</em>
@@ -18,7 +22,9 @@ export function Studio404Page() {
       </Link>
 
       <div className={`${styles.err} ${styles.errOrbRight}`}>
-        <div className={styles.errNum} aria-hidden>404</div>
+        <div className={styles.errNum} aria-hidden>
+          404
+        </div>
 
         <div className={styles.errContent}>
           <div className={styles.errEyebrow}>Track not found</div>
@@ -26,8 +32,9 @@ export function Studio404Page() {
             This song <em>doesn't exist.</em>
           </h1>
           <p className={styles.sub}>
-            The track, set, or page you were after was never recorded, got taken down by the artist,
-            or lives behind a sign-in. No drama — the catalogue is large and the room is warm.
+            The track, set, or page you were after was never recorded, got taken
+            down by the artist, or lives behind a sign-in. No drama — the
+            catalogue is large and the room is warm.
           </p>
 
           <div className={styles.deadairFlat} aria-hidden>
@@ -55,23 +62,29 @@ export function Studio404Page() {
               <span className={styles.errLinkLabel}>
                 This week's <em>set</em>
               </span>
-              <span className={styles.errLinkSub}>Live, programmed Mondays</span>
+              <span className={styles.errLinkSub}>
+                Live, programmed Mondays
+              </span>
             </Link>
             <Link to={routes.studioSearch} className={styles.errLink}>
               <span className={styles.errLinkLabel}>
                 <em>Search</em> the catalogue
               </span>
-              <span className={styles.errLinkSub}>Tracks, artists, sheet music</span>
+              <span className={styles.errLinkSub}>
+                Tracks, artists, sheet music
+              </span>
             </Link>
             <Link to={routes.studioLibrary} className={styles.errLink}>
               <span className={styles.errLinkLabel}>
                 Your <em>room</em>
               </span>
-              <span className={styles.errLinkSub}>Saved, sustaining, tipped</span>
+              <span className={styles.errLinkSub}>
+                Saved, sustaining, tipped
+              </span>
             </Link>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

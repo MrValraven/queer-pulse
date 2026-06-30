@@ -11,12 +11,20 @@
 }
 
 .root::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse at 70% 20%, rgba(var(--accent-rgb), 0.15), transparent 55%),
-    radial-gradient(ellipse at 10% 85%, rgba(var(--jade-rgb), 0.1), transparent 50%);
+    radial-gradient(
+      ellipse at 70% 20%,
+      rgba(var(--accent-rgb), 0.15),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 10% 85%,
+      rgba(var(--jade-rgb), 0.1),
+      transparent 50%
+    );
   pointer-events: none;
 }
 
@@ -42,10 +50,14 @@
 }
 
 .header::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 80% 10%, rgba(var(--accent-rgb), 0.18), transparent 55%);
+  background: radial-gradient(
+    ellipse at 80% 10%,
+    rgba(var(--accent-rgb), 0.18),
+    transparent 55%
+  );
   pointer-events: none;
 }
 
@@ -159,7 +171,7 @@
 }
 
 .message::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -8px;
   left: 32px;
@@ -251,7 +263,7 @@
 }
 
 .tokenCode {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 13px;
   color: var(--ink);
   letter-spacing: 0.04em;
@@ -306,7 +318,7 @@
 
 .orDivider::before,
 .orDivider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: rgba(45, 27, 61, 0.12);
@@ -328,7 +340,9 @@
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 
 .google:hover {
@@ -424,12 +438,14 @@
   font-size: 46px;
   animation: none;
   z-index: 1;
-  box-shadow: 0 0 0 1px rgba(247, 243, 238, 0.08), 0 14px 36px -12px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(247, 243, 238, 0.08),
+    0 14px 36px -12px rgba(0, 0, 0, 0.5);
 }
 
 /* Pulse that radiates from behind the photo without scaling it */
 .seal.sealStatic::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 16px;
   border-radius: 50%;

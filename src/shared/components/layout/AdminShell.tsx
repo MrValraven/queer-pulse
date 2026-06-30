@@ -1,31 +1,31 @@
-import { type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { FiSearch, FiMoon, FiSun, FiBell } from 'react-icons/fi'
-import { useTheme } from '../../../app/providers/themeContext'
-import { useToast } from '../feedback/useToast'
-import { AdminSidebar } from './AdminSidebar'
-import styles from './AdminShell.module.css'
+import { type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { FiSearch, FiMoon, FiSun, FiBell } from "react-icons/fi";
+import { useTheme } from "../../../app/providers/themeContext";
+import { useToast } from "../feedback/useToast";
+import { AdminSidebar } from "./AdminSidebar";
+import styles from "./AdminShell.module.css";
 
-export { ADMIN_NAV } from './adminNav.data'
+export { ADMIN_NAV } from "./adminNav.data";
 
 interface Crumb {
-  label: string
-  to?: string
+  label: string;
+  to?: string;
 }
 
 export function AdminShell({
   children,
   title,
   breadcrumb = [],
-  searchPlaceholder = 'Search reports, members, communities…',
+  searchPlaceholder = "Search reports, members, communities…",
 }: {
-  children: ReactNode
-  title: ReactNode
-  breadcrumb?: Crumb[]
-  searchPlaceholder?: string
+  children: ReactNode;
+  title: ReactNode;
+  breadcrumb?: Crumb[];
+  searchPlaceholder?: string;
 }) {
-  const { theme, toggleTheme } = useTheme()
-  const { showToast } = useToast()
+  const { theme, toggleTheme } = useTheme();
+  const { showToast } = useToast();
 
   return (
     <div className={styles.shell}>
@@ -55,7 +55,8 @@ export function AdminShell({
               type="text"
               placeholder={searchPlaceholder}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') showToast('Search is illustrative in this prototype', 'info')
+                if (e.key === "Enter")
+                  showToast("Search is illustrative in this prototype", "info");
               }}
             />
           </label>
@@ -68,12 +69,16 @@ export function AdminShell({
               title="Toggle theme"
               aria-label="Toggle theme"
             >
-              {theme === 'dark' ? <FiSun aria-hidden /> : <FiMoon aria-hidden />}
+              {theme === "dark" ? (
+                <FiSun aria-hidden />
+              ) : (
+                <FiMoon aria-hidden />
+              )}
             </button>
             <button
               type="button"
               className={styles.iconBtn}
-              onClick={() => showToast('No new alerts', 'info')}
+              onClick={() => showToast("No new alerts", "info")}
               title="Alerts"
               aria-label="Alerts"
             >
@@ -86,5 +91,5 @@ export function AdminShell({
         <main className={styles.content}>{children}</main>
       </div>
     </div>
-  )
+  );
 }

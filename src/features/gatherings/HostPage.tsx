@@ -1,10 +1,10 @@
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { HostSteps } from './HostSteps'
-import { HostSidebar } from './HostSidebar'
-import { HERO_TYPES } from './hostPage.data'
-import styles from './HostPage.module.css'
+import { PageShell } from "../../shared/components/layout";
+import { Button, Outro } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { HostSteps } from "./HostSteps";
+import { HostSidebar } from "./HostSidebar";
+import { HERO_TYPES } from "./hostPage.data";
+import styles from "./HostPage.module.css";
 
 export function HostPage() {
   return (
@@ -16,8 +16,9 @@ export function HostPage() {
             Host a gathering <em>for your people.</em>
           </h1>
           <p className={styles.lede}>
-            You don't need a venue budget, a committee, or a plan. You need a date, a few chairs,
-            and something worth gathering for. This guide walks you through the rest.
+            You don't need a venue budget, a committee, or a plan. You need a
+            date, a few chairs, and something worth gathering for. This guide
+            walks you through the rest.
           </p>
           <div className={styles.heroTypes}>
             {HERO_TYPES.map((type) => (
@@ -39,7 +40,11 @@ export function HostPage() {
       </div>
 
       <Outro
-        title={<>The best gatherings are the ones <em>that happen.</em></>}
+        title={
+          <>
+            The best gatherings are the ones <em>that happen.</em>
+          </>
+        }
         sub="Start small, start soon. The community is here."
       >
         <Button to={routes.createGathering} size="lg">
@@ -47,5 +52,5 @@ export function HostPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

@@ -44,7 +44,10 @@
   padding: 13px 15px;
   width: 100%;
   outline: none;
-  transition: border-color 0.22s var(--ease), box-shadow 0.22s var(--ease), background 0.22s var(--ease);
+  transition:
+    border-color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    background 0.22s var(--ease);
 }
 
 .field textarea {
@@ -69,9 +72,9 @@
   opacity: 0.7;
 }
 
-.field input[aria-invalid='true'],
-.field textarea[aria-invalid='true'],
-.field select[aria-invalid='true'] {
+.field input[aria-invalid="true"],
+.field textarea[aria-invalid="true"],
+.field select[aria-invalid="true"] {
   border-color: rgba(var(--accent-rgb), 0.6);
 }
 

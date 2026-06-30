@@ -3,12 +3,7 @@ import type { ReactNode } from "react";
 export type Cat = "active" | "offer" | "closed" | "draft";
 export type StageState = "" | "done" | "active" | "rejected";
 export type BadgeKind =
-  | "in-review"
-  | "interview"
-  | "offer"
-  | "rejected"
-  | "draft"
-  | "attention";
+  "in-review" | "interview" | "offer" | "rejected" | "draft" | "attention";
 export type LogoTint = "" | "jade" | "plum" | "draft";
 export type AvatarTint = "coral" | "jade" | "plum";
 

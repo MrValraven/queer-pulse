@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, ImageSlot } from '../../shared/components/ui'
-import { films } from './data'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button, ImageSlot } from "../../shared/components/ui";
+import { films } from "./data";
 import {
   CONTENT_NOTES,
   FACTS,
@@ -9,18 +9,24 @@ import {
   NEXT_UP_STILL_BY_ID,
   TABS,
   type WatchTab,
-} from './watchPage.data'
-import styles from './WatchPage.module.css'
-import { routes } from '../../app/routeMap'
+} from "./watchPage.data";
+import styles from "./WatchPage.module.css";
+import { routes } from "../../app/routeMap";
 
-const nextUp = films.filter((f) => f.id !== 'cascais').slice(0, 3)
+const nextUp = films.filter((f) => f.id !== "cascais").slice(0, 3);
 
 export function WatchOverlay({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.overlayCard}>
         <div className={styles.overlayIcon}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.2}
+            strokeLinecap="round"
+          >
             <circle cx={12} cy={12} r={10} />
             <path d="M12 8v4" />
             <path d="M12 16h.01" />
@@ -30,7 +36,8 @@ export function WatchOverlay({ onDismiss }: { onDismiss: () => void }) {
           Before you <em>watch</em>
         </div>
         <div className={styles.overlaySub}>
-          This film has 3 content notes. Take a moment — then decide when you're ready.
+          This film has 3 content notes. Take a moment — then decide when you're
+          ready.
         </div>
         <div className={styles.overlayNotes}>
           {CONTENT_NOTES.map((n) => (
@@ -51,7 +58,7 @@ export function WatchOverlay({ onDismiss }: { onDismiss: () => void }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function WatchPlayState() {
@@ -67,7 +74,7 @@ export function WatchPlayState() {
       </div>
       <div className={styles.psMeta}>Paused at 31:44 · 60 min remaining</div>
     </div>
-  )
+  );
 }
 
 export function WatchControls({
@@ -76,22 +83,34 @@ export function WatchControls({
   onCcToggle,
   onAdToggle,
 }: {
-  cc: boolean
-  ad: boolean
-  onCcToggle: () => void
-  onAdToggle: () => void
+  cc: boolean;
+  ad: boolean;
+  onCcToggle: () => void;
+  onAdToggle: () => void;
 }) {
   return (
     <div className={styles.controls}>
       <div className={styles.progress}>
         <div className={styles.progressFill} />
-        <div className={styles.cnMarker} style={{ left: '31.1%' }} />
-        <div className={styles.cnMarker} style={{ left: '46.5%', background: 'rgba(247,243,238,.3)' }} />
-        <div className={styles.cnMarker} style={{ left: '55.2%', background: 'rgba(247,243,238,.3)' }} />
+        <div className={styles.cnMarker} style={{ left: "31.1%" }} />
+        <div
+          className={styles.cnMarker}
+          style={{ left: "46.5%", background: "rgba(247,243,238,.3)" }}
+        />
+        <div
+          className={styles.cnMarker}
+          style={{ left: "55.2%", background: "rgba(247,243,238,.3)" }}
+        />
       </div>
       <div className={styles.controlsRow}>
         <span className={styles.ctrlBtn}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.2}
+            strokeLinecap="round"
+          >
             <polygon points="19 20 9 12 19 4 19 20" />
             <line x1={5} y1={19} x2={5} y2={5} />
           </svg>
@@ -102,7 +121,13 @@ export function WatchControls({
           </svg>
         </span>
         <span className={styles.ctrlBtn}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.2}
+            strokeLinecap="round"
+          >
             <polygon points="5 4 15 12 5 20 5 4" />
             <line x1={19} y1={5} x2={19} y2={19} />
           </svg>
@@ -112,13 +137,17 @@ export function WatchControls({
         </span>
         <div className={styles.ctrlSpace} />
         <span
-          className={[styles.ctrlPill, cc && styles.ctrlPillOn].filter(Boolean).join(' ')}
+          className={[styles.ctrlPill, cc && styles.ctrlPillOn]
+            .filter(Boolean)
+            .join(" ")}
           onClick={onCcToggle}
         >
           CC EN
         </span>
         <span
-          className={[styles.ctrlPill, ad && styles.ctrlPillOn].filter(Boolean).join(' ')}
+          className={[styles.ctrlPill, ad && styles.ctrlPillOn]
+            .filter(Boolean)
+            .join(" ")}
           onClick={onAdToggle}
         >
           AD
@@ -131,33 +160,40 @@ export function WatchControls({
         </select>
       </div>
     </div>
-  )
+  );
 }
 
 interface ChatLine {
-  id: string
-  name: string
-  badge: string
-  when: string
-  body: string
-  mine?: boolean
+  id: string;
+  name: string;
+  badge: string;
+  when: string;
+  body: string;
+  mine?: boolean;
 }
 
-const SEED_CHAT: ChatLine[] = LOBBY.map((m, i) => ({ id: `seed-${i}`, ...m }))
+const SEED_CHAT: ChatLine[] = LOBBY.map((m, i) => ({ id: `seed-${i}`, ...m }));
 
 export function WatchSidePanel() {
-  const [tab, setTab] = useState<WatchTab>('Film info')
-  const [messages, setMessages] = useState<ChatLine[]>(SEED_CHAT)
-  const [draft, setDraft] = useState('')
+  const [tab, setTab] = useState<WatchTab>("Film info");
+  const [messages, setMessages] = useState<ChatLine[]>(SEED_CHAT);
+  const [draft, setDraft] = useState("");
 
   function send() {
-    const body = draft.trim()
-    if (!body) return
+    const body = draft.trim();
+    if (!body) return;
     setMessages((prev) => [
       ...prev,
-      { id: `me-${Date.now()}`, name: 'You', badge: '', when: 'now', body, mine: true },
-    ])
-    setDraft('')
+      {
+        id: `me-${Date.now()}`,
+        name: "You",
+        badge: "",
+        when: "now",
+        body,
+        mine: true,
+      },
+    ]);
+    setDraft("");
   }
 
   return (
@@ -166,23 +202,27 @@ export function WatchSidePanel() {
         {TABS.map((t) => (
           <div
             key={t}
-            className={[styles.spTab, tab === t && styles.spTabActive].filter(Boolean).join(' ')}
+            className={[styles.spTab, tab === t && styles.spTabActive]
+              .filter(Boolean)
+              .join(" ")}
             onClick={() => setTab(t)}
           >
             {t}
-            {t === 'Live Q&A' && <span className={styles.spDot} />}
+            {t === "Live Q&A" && <span className={styles.spDot} />}
           </div>
         ))}
       </div>
 
-      {tab === 'Film info' && (
+      {tab === "Film info" && (
         <div className={styles.spBody}>
           <div className={styles.spTitle}>
             The light <em>between</em> rooms
           </div>
-          <div className={styles.spMeta}>Maria Vasconcelos · Portugal, 2025 · 92 min</div>
+          <div className={styles.spMeta}>
+            Maria Vasconcelos · Portugal, 2025 · 92 min
+          </div>
           <div className={styles.spNote}>
-            "A patient, generous film about Lisbon's working-class queer elders.{' '}
+            "A patient, generous film about Lisbon's working-class queer elders.{" "}
             <em>Stay for the second hour.</em>"
             <span className="who">— João Ribeiro, programmer</span>
           </div>
@@ -197,7 +237,7 @@ export function WatchSidePanel() {
         </div>
       )}
 
-      {(tab === 'Lobby' || tab === 'Live Q&A') && (
+      {(tab === "Lobby" || tab === "Live Q&A") && (
         <>
           <div className={styles.spBody}>
             {messages.map((m) => (
@@ -216,23 +256,29 @@ export function WatchSidePanel() {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  send()
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  send();
                 }
               }}
               placeholder={
-                tab === 'Live Q&A' ? 'Ask Maria a question…' : 'Say something to the lobby…'
+                tab === "Live Q&A"
+                  ? "Ask Maria a question…"
+                  : "Say something to the lobby…"
               }
             />
-            <Button style={{ padding: '8px 14px', fontSize: 12.5 }} onClick={send} disabled={!draft.trim()}>
+            <Button
+              style={{ padding: "8px 14px", fontSize: 12.5 }}
+              onClick={send}
+              disabled={!draft.trim()}
+            >
               Send
             </Button>
           </div>
         </>
       )}
     </aside>
-  )
+  );
 }
 
 export function WatchBelow() {
@@ -254,7 +300,7 @@ export function WatchBelow() {
                     height="100%"
                     radius={10}
                     placeholder="poster"
-                    style={{ position: 'absolute', inset: 0 }}
+                    style={{ position: "absolute", inset: 0 }}
                   />
                 </div>
                 <div className={styles.nfTitle}>
@@ -269,7 +315,9 @@ export function WatchBelow() {
         </div>
 
         <div className={styles.split}>
-          <div className={styles.splitHead}>Your watch · where the money goes</div>
+          <div className={styles.splitHead}>
+            Your watch · where the money goes
+          </div>
           <div className={styles.splitBar}>
             <div className={`${styles.splitSeg} ${styles.fm}`} />
             <div className={`${styles.splitSeg} ${styles.py}`} />
@@ -294,5 +342,5 @@ export function WatchBelow() {
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import { useEffect, type ReactNode } from 'react'
-import { FiX } from 'react-icons/fi'
-import { useScrollLock } from '../../../shared/hooks'
-import styles from './adminUi.module.css'
+import { useEffect, type ReactNode } from "react";
+import { FiX } from "react-icons/fi";
+import { useScrollLock } from "../../../shared/hooks";
+import styles from "./adminUi.module.css";
 
 /**
  * Right-hand slide-over drawer. Mount it only while open (the parent renders it
@@ -14,27 +14,37 @@ export function AdminDrawer({
   onClose,
   label,
 }: {
-  head: ReactNode
-  children: ReactNode
-  foot?: ReactNode
-  onClose: () => void
-  label?: string
+  head: ReactNode;
+  children: ReactNode;
+  foot?: ReactNode;
+  onClose: () => void;
+  label?: string;
 }) {
-  useScrollLock()
+  useScrollLock();
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [onClose])
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
   return (
     <>
       <div className={styles.scrim} onClick={onClose} />
-      <aside className={styles.drawer} role="dialog" aria-modal="true" aria-label={label}>
+      <aside
+        className={styles.drawer}
+        role="dialog"
+        aria-modal="true"
+        aria-label={label}
+      >
         <div className={styles.drawerHead}>
           <div className={styles.drawerHeadMain}>{head}</div>
-          <button type="button" className={styles.drawerX} onClick={onClose} aria-label="Close">
+          <button
+            type="button"
+            className={styles.drawerX}
+            onClick={onClose}
+            aria-label="Close"
+          >
             <FiX />
           </button>
         </div>
@@ -42,5 +52,5 @@ export function AdminDrawer({
         {foot && <div className={styles.drawerFoot}>{foot}</div>}
       </aside>
     </>
-  )
+  );
 }

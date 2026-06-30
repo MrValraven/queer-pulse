@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { FiSkipBack, FiSkipForward, FiPlay, FiPause } from 'react-icons/fi'
-import { RADIO } from './culture.data'
-import styles from './CulturePage.module.css'
+import { useState } from "react";
+import { FiSkipBack, FiSkipForward, FiPlay, FiPause } from "react-icons/fi";
+import { RADIO } from "./culture.data";
+import styles from "./CulturePage.module.css";
 
 /** Full-bleed plum radio player, shown only on the Radio tab. */
 export function CultureRadioPanel() {
-  const [playing, setPlaying] = useState(false)
+  const [playing, setPlaying] = useState(false);
 
   return (
     <div className={styles.radioFull}>
@@ -30,7 +30,10 @@ export function CultureRadioPanel() {
             <div className={styles.radioTrack}>{RADIO.now.track}</div>
             <div className={styles.radioArtist}>{RADIO.now.artist}</div>
             <div className={styles.radioBar}>
-              <div className={styles.radioProg} style={{ width: `${RADIO.now.progress}%` }} />
+              <div
+                className={styles.radioProg}
+                style={{ width: `${RADIO.now.progress}%` }}
+              />
             </div>
             <div className={styles.radioCtrls}>
               <button className={styles.rBtn} aria-label="Previous track">
@@ -39,9 +42,13 @@ export function CultureRadioPanel() {
               <button
                 className={styles.rPlay}
                 onClick={() => setPlaying((p) => !p)}
-                aria-label={playing ? 'Pause' : 'Play'}
+                aria-label={playing ? "Pause" : "Play"}
               >
-                {playing ? <FiPause size={22} aria-hidden /> : <FiPlay size={22} aria-hidden />}
+                {playing ? (
+                  <FiPause size={22} aria-hidden />
+                ) : (
+                  <FiPlay size={22} aria-hidden />
+                )}
               </button>
               <button className={styles.rBtn} aria-label="Next track">
                 <FiSkipForward size={18} aria-hidden />
@@ -66,5 +73,5 @@ export function CultureRadioPanel() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,8 +1,8 @@
-import { PageShell } from '../../shared/components/layout'
-import { Button, Outro } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { StorySafetyArticle } from './StorySafetyArticle'
-import styles from './StorySafetyPage.module.css'
+import { PageShell } from "../../shared/components/layout";
+import { Button, Outro } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { StorySafetyArticle } from "./StorySafetyArticle";
+import styles from "./StorySafetyPage.module.css";
 
 export function StorySafetyPage() {
   return (
@@ -26,7 +26,11 @@ export function StorySafetyPage() {
       <StorySafetyArticle />
 
       <Outro
-        title={<>Read it and think it sounds <em>right?</em></>}
+        title={
+          <>
+            Read it and think it sounds <em>right?</em>
+          </>
+        }
         sub="We're not for everyone. But if this resonates, you might be for us."
       >
         <Button to={routes.requestInvite} variant="primary" size="lg">
@@ -34,5 +38,5 @@ export function StorySafetyPage() {
         </Button>
       </Outro>
     </PageShell>
-  )
+  );
 }

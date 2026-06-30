@@ -35,7 +35,13 @@ export interface CommunityDetail {
   whoFor: string[];
   tags: string[];
   organiser: Person & { bio: string };
-  nextEvent: { dd: string; mm: string; title: string; meta: string; spots: string };
+  nextEvent: {
+    dd: string;
+    mm: string;
+    title: string;
+    meta: string;
+    spots: string;
+  };
   topicThread: Thread;
 }
 
@@ -47,6 +53,8 @@ export function membersFor(seed: number, n = 8): Person[] {
   return out;
 }
 
-export function getCommunityDetail(slug: string | undefined): CommunityDetail | undefined {
+export function getCommunityDetail(
+  slug: string | undefined,
+): CommunityDetail | undefined {
   return slug ? COMMUNITY_DETAILS[slug] : undefined;
 }

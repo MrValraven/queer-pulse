@@ -1,28 +1,32 @@
-import { useMemo } from 'react'
-import { Link } from 'react-router-dom'
-import { routes } from '../../app/routeMap'
-import styles from './studioError.module.css'
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import { routes } from "../../app/routeMap";
+import styles from "./studioError.module.css";
 
-const WAVE_COUNT = 28
-const GAP_START = 12
-const GAP_END = 15
+const WAVE_COUNT = 28;
+const GAP_START = 12;
+const GAP_END = 15;
 
 function buildWaveBars(): { height: number; opacity: number }[] {
   return Array.from({ length: WAVE_COUNT }, (_, i) => {
-    const inGap = i > GAP_START && i < GAP_END
+    const inGap = i > GAP_START && i < GAP_END;
     return {
       height: inGap ? 2 : Math.round(6 + Math.random() * 30),
       opacity: inGap ? 0.2 : 0.55,
-    }
-  })
+    };
+  });
 }
 
 export function Studio500Page() {
-  const bars = useMemo(() => buildWaveBars(), [])
+  const bars = useMemo(() => buildWaveBars(), []);
 
   return (
     <div className={styles.root}>
-      <Link to={routes.studioE} className={styles.brand} aria-label="QueerPulse Studio home">
+      <Link
+        to={routes.studioE}
+        className={styles.brand}
+        aria-label="QueerPulse Studio home"
+      >
         <span className={styles.pulseDot} aria-hidden />
         <span className={styles.wordmark}>
           Queer<em>Pulse</em>
@@ -31,7 +35,9 @@ export function Studio500Page() {
       </Link>
 
       <div className={`${styles.err} ${styles.errOrbLeft}`}>
-        <div className={styles.errNum} aria-hidden>500</div>
+        <div className={styles.errNum} aria-hidden>
+          500
+        </div>
 
         <div className={styles.errContent}>
           <div className={styles.errEyebrow}>Something dropped out</div>
@@ -39,13 +45,17 @@ export function Studio500Page() {
             We lost the <em>recording.</em>
           </h1>
           <p className={styles.sub}>
-            A server on our side stumbled mid-take. Your account, your saves, and every artist's
-            payout are safe — this is just the front of house. Give it a second and try again.
+            A server on our side stumbled mid-take. Your account, your saves,
+            and every artist's payout are safe — this is just the front of
+            house. Give it a second and try again.
           </p>
 
           <div className={styles.deadairWave} aria-hidden>
             {bars.map((bar, i) => (
-              <span key={i} style={{ height: bar.height, opacity: bar.opacity }} />
+              <span
+                key={i}
+                style={{ height: bar.height, opacity: bar.opacity }}
+              />
             ))}
           </div>
 
@@ -64,7 +74,7 @@ export function Studio500Page() {
 
           <div className={styles.statusPill}>
             <span className={styles.statusDot} aria-hidden />
-            All payouts and banking unaffected ·{' '}
+            All payouts and banking unaffected ·{" "}
             <a href="https://status.queerpulse.org">status.queerpulse.org</a>
           </div>
           <div className={styles.errRef}>
@@ -73,5 +83,5 @@ export function Studio500Page() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath, routes } from '../../../app/routeMap'
-import { partners } from '../data/partners'
-import styles from './Partners.module.css'
+import { Link } from "react-router-dom";
+import { Reveal, SectionHead } from "../../../shared/components/ui";
+import { linkToPath, routes } from "../../../app/routeMap";
+import { partners } from "../data/partners";
+import styles from "./Partners.module.css";
 
 export function Partners() {
   return (
@@ -22,12 +22,16 @@ export function Partners() {
 
         <Reveal className={styles.logos}>
           {partners.map((partner) => (
-            <Link key={partner.name} to={linkToPath(partner.href)} className={styles.badge}>
-              <span className={[styles.av, styles[partner.tone]].join(' ')}>
+            <Link
+              key={partner.name}
+              to={linkToPath(partner.href)}
+              className={styles.badge}
+            >
+              <span className={[styles.av, styles[partner.tone]].join(" ")}>
                 {partner.initials}
               </span>
               <span>
-                <span className={styles.name} style={{ display: 'block' }}>
+                <span className={styles.name} style={{ display: "block" }}>
                   {partner.name}
                 </span>
                 <span className={styles.loc}>{partner.location}</span>
@@ -36,11 +40,14 @@ export function Partners() {
           ))}
           <Link
             to={routes.partners}
-            className={[styles.badge, styles.dashed].join(' ')}
+            className={[styles.badge, styles.dashed].join(" ")}
           >
-            <span className={[styles.av, styles.plus].join(' ')}>+</span>
+            <span className={[styles.av, styles.plus].join(" ")}>+</span>
             <span>
-              <span className={[styles.name, styles.nameMuted].join(' ')} style={{ display: 'block' }}>
+              <span
+                className={[styles.name, styles.nameMuted].join(" ")}
+                style={{ display: "block" }}
+              >
                 See all partners
               </span>
               <span className={styles.loc}>8 communities</span>
@@ -49,5 +56,5 @@ export function Partners() {
         </Reveal>
       </div>
     </section>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { SkeletonLine } from '../../shared/components/ui'
-import s from './LandlordPage.module.css'
+import { SkeletonLine } from "../../shared/components/ui";
+import s from "./LandlordPage.module.css";
 
 /** Mirrors LandlordPage's hero + 2-col grid so there's no layout shift on swap. */
 export function LandlordSkeleton() {
@@ -31,24 +31,45 @@ export function LandlordSkeleton() {
           <section className={s.sec}>
             <SkeletonLine width="35%" height={24} />
             {Array.from({ length: 3 }).map((_, i) => (
-              <SkeletonLine key={i} width="55%" height={15} style={{ marginTop: 12 }} />
+              <SkeletonLine
+                key={i}
+                width="55%"
+                height={15}
+                style={{ marginTop: 12 }}
+              />
             ))}
           </section>
 
           <section className={s.sec}>
-            <SkeletonLine width="45%" height={24} style={{ marginBottom: 16 }} />
+            <SkeletonLine
+              width="45%"
+              height={24}
+              style={{ marginBottom: 16 }}
+            />
             <div className={s.recs}>
               {Array.from({ length: 3 }).map((_, i) => (
                 <div key={i} className={s.rec}>
                   <div className={s.recHead}>
-                    <SkeletonLine width={34} height={34} style={{ borderRadius: '50%' }} />
+                    <SkeletonLine
+                      width={34}
+                      height={34}
+                      style={{ borderRadius: "50%" }}
+                    />
                     <div style={{ flex: 1 }}>
                       <SkeletonLine width={120} height={13} />
-                      <SkeletonLine width={80} height={11} style={{ marginTop: 6 }} />
+                      <SkeletonLine
+                        width={80}
+                        height={11}
+                        style={{ marginTop: 6 }}
+                      />
                     </div>
                   </div>
                   <SkeletonLine height={14} style={{ marginTop: 4 }} />
-                  <SkeletonLine width="70%" height={14} style={{ marginTop: 8 }} />
+                  <SkeletonLine
+                    width="70%"
+                    height={14}
+                    style={{ marginTop: 8 }}
+                  />
                 </div>
               ))}
             </div>
@@ -58,14 +79,21 @@ export function LandlordSkeleton() {
         <aside className={s.side}>
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className={s.sideCard}>
-              <SkeletonLine width="50%" height={12} style={{ marginBottom: 16 }} />
+              <SkeletonLine
+                width="50%"
+                height={12}
+                style={{ marginBottom: 16 }}
+              />
               <SkeletonLine height={14} />
               <SkeletonLine width="80%" height={14} style={{ marginTop: 10 }} />
-              <SkeletonLine height={40} style={{ marginTop: 16, borderRadius: 999 }} />
+              <SkeletonLine
+                height={40}
+                style={{ marginTop: 16, borderRadius: 999 }}
+              />
             </div>
           ))}
         </aside>
       </div>
     </>
-  )
+  );
 }

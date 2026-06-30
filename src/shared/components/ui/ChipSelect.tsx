@@ -1,39 +1,41 @@
-import { useState, type ReactNode } from 'react'
-import { FiCheck } from 'react-icons/fi'
-import styles from './ChipSelect.module.css'
+import { useState, type ReactNode } from "react";
+import { FiCheck } from "react-icons/fi";
+import styles from "./ChipSelect.module.css";
 
 export interface ChipOption {
-  value: string
-  label?: ReactNode
+  value: string;
+  label?: ReactNode;
 }
 
 /** Active-chip colour: plum fill (default) or jade tint. */
-export type ChipTone = 'plum' | 'jade'
+export type ChipTone = "plum" | "jade";
 /** Surface the chips sit on: light cream pages (default) or dark/plum surfaces. */
-export type ChipTint = 'light' | 'dark'
+export type ChipTint = "light" | "dark";
 
 function normalize(options: readonly (string | ChipOption)[]): ChipOption[] {
-  return options.map((o) => (typeof o === 'string' ? { value: o, label: o } : { label: o.value, ...o }))
+  return options.map((o) =>
+    typeof o === "string" ? { value: o, label: o } : { label: o.value, ...o },
+  );
 }
 
 function chipClass(on: boolean, tone: ChipTone, tint: ChipTint) {
   return [
     styles.chip,
-    tint === 'dark' && styles.dark,
-    tone === 'jade' && styles.tone_jade,
+    tint === "dark" && styles.dark,
+    tone === "jade" && styles.tone_jade,
     on && styles.chipOn,
   ]
     .filter(Boolean)
-    .join(' ')
+    .join(" ");
 }
 
 interface FilterChipsProps {
-  options: readonly (string | ChipOption)[]
-  value: string
-  onChange: (value: string) => void
-  tone?: ChipTone
-  tint?: ChipTint
-  className?: string
+  options: readonly (string | ChipOption)[];
+  value: string;
+  onChange: (value: string) => void;
+  tone?: ChipTone;
+  tint?: ChipTint;
+  className?: string;
 }
 
 /**
@@ -41,9 +43,19 @@ interface FilterChipsProps {
  * filter/segment pattern reimplemented across cinema, communities, marketing,
  * resources… `aria-pressed` reflects the active chip. No tick (single-select).
  */
-export function FilterChips({ options, value, onChange, tone = 'plum', tint = 'light', className }: FilterChipsProps) {
+export function FilterChips({
+  options,
+  value,
+  onChange,
+  tone = "plum",
+  tint = "light",
+  className,
+}: FilterChipsProps) {
   return (
-    <div className={[styles.row, className].filter(Boolean).join(' ')} role="group">
+    <div
+      className={[styles.row, className].filter(Boolean).join(" ")}
+      role="group"
+    >
       {normalize(options).map((o) => (
         <button
           key={o.value}
@@ -56,18 +68,18 @@ export function FilterChips({ options, value, onChange, tone = 'plum', tint = 'l
         </button>
       ))}
     </div>
-  )
+  );
 }
 
 interface ChipSelectProps {
-  options: readonly (string | ChipOption)[]
-  selected: Set<string>
-  onToggle: (value: string) => void
+  options: readonly (string | ChipOption)[];
+  selected: Set<string>;
+  onToggle: (value: string) => void;
   /** Show a leading tick on selected chips (default true). Set false to match tick-less designs. */
-  tick?: boolean
-  tone?: ChipTone
-  tint?: ChipTint
-  className?: string
+  tick?: boolean;
+  tone?: ChipTone;
+  tint?: ChipTint;
+  className?: string;
 }
 
 /**
@@ -79,14 +91,17 @@ export function ChipSelect({
   selected,
   onToggle,
   tick = true,
-  tone = 'plum',
-  tint = 'light',
+  tone = "plum",
+  tint = "light",
   className,
 }: ChipSelectProps) {
   return (
-    <div className={[styles.row, className].filter(Boolean).join(' ')} role="group">
+    <div
+      className={[styles.row, className].filter(Boolean).join(" ")}
+      role="group"
+    >
       {normalize(options).map((o) => {
-        const on = selected.has(o.value)
+        const on = selected.has(o.value);
         return (
           <button
             key={o.value}
@@ -98,21 +113,21 @@ export function ChipSelect({
             {tick && on && <FiCheck aria-hidden />}
             {o.label}
           </button>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
 /** Set-backed selection state for `<ChipSelect>`. */
 export function useChipSet(initial: readonly string[] = []) {
-  const [selected, setSelected] = useState<Set<string>>(() => new Set(initial))
+  const [selected, setSelected] = useState<Set<string>>(() => new Set(initial));
   const toggle = (value: string) =>
     setSelected((prev) => {
-      const next = new Set(prev)
-      if (next.has(value)) next.delete(value)
-      else next.add(value)
-      return next
-    })
-  return { selected, toggle, setSelected }
+      const next = new Set(prev);
+      if (next.has(value)) next.delete(value);
+      else next.add(value);
+      return next;
+    });
+  return { selected, toggle, setSelected };
 }

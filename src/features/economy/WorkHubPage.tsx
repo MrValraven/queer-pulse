@@ -1,10 +1,15 @@
-import { PageShell } from '../../shared/components/layout'
-import { Reveal } from '../../shared/components/ui'
-import { NEXT_ACTIONS, STATUS_CARDS, workIdentity, workStatusLine } from './work.data'
-import { WorkNextActions } from './WorkNextActions'
-import { WorkHubCards } from './WorkHubCards'
-import { WorkProfileCard } from './WorkProfileCard'
-import styles from './WorkHubPage.module.css'
+import { PageShell } from "../../shared/components/layout";
+import { Reveal } from "../../shared/components/ui";
+import {
+  NEXT_ACTIONS,
+  STATUS_CARDS,
+  workIdentity,
+  workStatusLine,
+} from "./work.data";
+import { WorkNextActions } from "./WorkNextActions";
+import { WorkHubCards } from "./WorkHubCards";
+import { WorkProfileCard } from "./WorkProfileCard";
+import styles from "./WorkHubPage.module.css";
 
 /** The logged-in "Your Work" home — the spine that ties the Work silos together. */
 export function WorkHubPage() {
@@ -39,5 +44,5 @@ export function WorkHubPage() {
         </section>
       </div>
     </PageShell>
-  )
+  );
 }

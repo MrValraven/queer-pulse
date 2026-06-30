@@ -1,22 +1,22 @@
-import { useState, type CSSProperties, type HTMLAttributes } from 'react'
-import { resolveAvatarSrc } from '../../lib/avatarUrl'
-import styles from './Avatar.module.css'
+import { useState, type CSSProperties, type HTMLAttributes } from "react";
+import { resolveAvatarSrc } from "../../lib/avatarUrl";
+import styles from "./Avatar.module.css";
 
-export type AvatarTint = 'default' | 'coral' | 'jade' | 'plum' | 'auth'
+export type AvatarTint = "default" | "coral" | "jade" | "plum" | "auth";
 
 interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
-  initials: string
-  tint?: AvatarTint
-  size?: number
-  verified?: boolean
+  initials: string;
+  tint?: AvatarTint;
+  size?: number;
+  verified?: boolean;
   /** Optional photo; falls back to initials when absent. */
-  src?: string
-  alt?: string
+  src?: string;
+  alt?: string;
 }
 
 export function Avatar({
   initials,
-  tint = 'default',
+  tint = "default",
   size = 40,
   verified = false,
   src,
@@ -24,33 +24,39 @@ export function Avatar({
   className,
   ...rest
 }: AvatarProps) {
-  const [imgFailed, setImgFailed] = useState(false)
+  const [imgFailed, setImgFailed] = useState(false);
   const circleStyle: CSSProperties = {
     width: size,
     height: size,
     fontSize: size * 0.34,
-  }
+  };
 
-  const px = Math.round(size * 2)
+  const px = Math.round(size * 2);
   // For Unsplash images, request a face-aware crop at 2× the render size
   // so small avatars don't get an off-center or blurry crop. Google/OAuth
   // avatars get their size directive bumped the same way (see resolveAvatarSrc).
-  const resolvedSrc = src?.includes('unsplash.com')
+  const resolvedSrc = src?.includes("unsplash.com")
     ? (() => {
-        const url = new URL(src)
-        url.searchParams.set('w', String(px))
-        url.searchParams.set('h', String(px))
-        url.searchParams.set('fit', 'crop')
-        url.searchParams.set('crop', 'faces')
-        url.searchParams.set('auto', 'format')
-        url.searchParams.set('q', '80')
-        return url.toString()
+        const url = new URL(src);
+        url.searchParams.set("w", String(px));
+        url.searchParams.set("h", String(px));
+        url.searchParams.set("fit", "crop");
+        url.searchParams.set("crop", "faces");
+        url.searchParams.set("auto", "format");
+        url.searchParams.set("q", "80");
+        return url.toString();
       })()
-    : resolveAvatarSrc(src, px)
+    : resolveAvatarSrc(src, px);
 
   return (
-    <div className={[styles.wrap, className].filter(Boolean).join(' ')} {...rest}>
-      <div className={[styles.avatar, styles[tint]].join(' ')} style={circleStyle}>
+    <div
+      className={[styles.wrap, className].filter(Boolean).join(" ")}
+      {...rest}
+    >
+      <div
+        className={[styles.avatar, styles[tint]].join(" ")}
+        style={circleStyle}
+      >
         {resolvedSrc && !imgFailed ? (
           <img
             src={resolvedSrc}
@@ -76,12 +82,12 @@ export function Avatar({
         </span>
       )}
     </div>
-  )
+  );
 }
 
 interface AvatarStackProps extends HTMLAttributes<HTMLDivElement> {
-  avatars: Array<{ initials: string; tint?: AvatarTint; src?: string }>
-  size?: number
+  avatars: Array<{ initials: string; tint?: AvatarTint; src?: string }>;
+  size?: number;
 }
 
 export function AvatarStack({
@@ -91,7 +97,10 @@ export function AvatarStack({
   ...rest
 }: AvatarStackProps) {
   return (
-    <div className={[styles.stack, className].filter(Boolean).join(' ')} {...rest}>
+    <div
+      className={[styles.stack, className].filter(Boolean).join(" ")}
+      {...rest}
+    >
       {avatars.map((avatar, index) => (
         <Avatar
           key={index}
@@ -106,5 +115,5 @@ export function AvatarStack({
         />
       ))}
     </div>
-  )
+  );
 }

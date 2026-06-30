@@ -1,41 +1,41 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiArrowRight, FiCheck, FiRotateCcw, FiInfo } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { routes } from '../../app/routeMap'
-import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from './ui'
-import { portrait } from './adminPeople.data'
-import type { Appeal } from './adminModeration.data'
-import styles from './AdminModerationPage.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiArrowRight, FiCheck, FiRotateCcw, FiInfo } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { routes } from "../../app/routeMap";
+import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from "./ui";
+import { portrait } from "./adminPeople.data";
+import type { Appeal } from "./adminModeration.data";
+import styles from "./AdminModerationPage.module.css";
 
-type Decision = 'uphold' | 'overturn'
+type Decision = "uphold" | "overturn";
 
 export function AdminAppealDrawer({
   appeal,
   onClose,
   onResolve,
 }: {
-  appeal: Appeal
-  onClose: () => void
-  onResolve: (id: string, decision: Decision) => void
+  appeal: Appeal;
+  onClose: () => void;
+  onResolve: (id: string, decision: Decision) => void;
 }) {
-  const { showToast } = useToast()
-  const [decision, setDecision] = useState<Decision | null>(null)
-  const [reason, setReason] = useState('')
+  const { showToast } = useToast();
+  const [decision, setDecision] = useState<Decision | null>(null);
+  const [reason, setReason] = useState("");
 
   const handleRecord = () => {
     if (!decision) {
-      showToast('Choose uphold or overturn', 'error')
-      return
+      showToast("Choose uphold or overturn", "error");
+      return;
     }
     if (!reason.trim()) {
-      showToast('A reason is required — the member will read it', 'error')
-      return
+      showToast("A reason is required — the member will read it", "error");
+      return;
     }
-    onResolve(appeal.id, decision)
-    onClose()
-  }
+    onResolve(appeal.id, decision);
+    onClose();
+  };
 
   return (
     <AdminDrawer
@@ -62,7 +62,9 @@ export function AdminAppealDrawer({
               {appeal.appealBy}
               <span className={styles.dPersonPronoun}>{appeal.pronoun}</span>
               {appeal.community && (
-                <span className={styles.dPersonPronoun}>· {appeal.community}</span>
+                <span className={styles.dPersonPronoun}>
+                  · {appeal.community}
+                </span>
               )}
             </span>
           </div>
@@ -84,7 +86,9 @@ export function AdminAppealDrawer({
         <h3 className={styles.dSecLabel}>The original decision</h3>
         <div className={styles.appealOrig}>
           <div className={styles.appealOrigTop}>
-            <AdminCat tone={appeal.original.cat}>{appeal.original.action}</AdminCat>
+            <AdminCat tone={appeal.original.cat}>
+              {appeal.original.action}
+            </AdminCat>
             <span className={styles.appealOrigBy}>
               Decided by {appeal.original.by} · {appeal.original.when}
             </span>
@@ -121,8 +125,8 @@ export function AdminAppealDrawer({
           </div>
         ) : (
           <p className={styles.appealNoSupport}>
-            No other members have weighed in. That&rsquo;s neither for nor against — many appeals
-            stand alone.
+            No other members have weighed in. That&rsquo;s neither for nor
+            against — many appeals stand alone.
           </p>
         )}
       </section>
@@ -130,37 +134,51 @@ export function AdminAppealDrawer({
       {/* Decision */}
       <section className={styles.dSec}>
         <h3 className={styles.dSecLabel}>Your decision</h3>
-        <div className={styles.appealDecision} role="radiogroup" aria-label="Decision">
+        <div
+          className={styles.appealDecision}
+          role="radiogroup"
+          aria-label="Decision"
+        >
           <button
             type="button"
-            aria-pressed={decision === 'uphold'}
-            className={[styles.decOption, decision === 'uphold' && styles.decUpholdOn]
+            aria-pressed={decision === "uphold"}
+            className={[
+              styles.decOption,
+              decision === "uphold" && styles.decUpholdOn,
+            ]
               .filter(Boolean)
-              .join(' ')}
-            onClick={() => setDecision('uphold')}
+              .join(" ")}
+            onClick={() => setDecision("uphold")}
           >
             <span className={styles.decIco} aria-hidden>
               <FiCheck />
             </span>
             <span className={styles.decTx}>
               <span className={styles.decTitle}>Uphold</span>
-              <span className={styles.decSub}>The original decision stands</span>
+              <span className={styles.decSub}>
+                The original decision stands
+              </span>
             </span>
           </button>
           <button
             type="button"
-            aria-pressed={decision === 'overturn'}
-            className={[styles.decOption, decision === 'overturn' && styles.decOverturnOn]
+            aria-pressed={decision === "overturn"}
+            className={[
+              styles.decOption,
+              decision === "overturn" && styles.decOverturnOn,
+            ]
               .filter(Boolean)
-              .join(' ')}
-            onClick={() => setDecision('overturn')}
+              .join(" ")}
+            onClick={() => setDecision("overturn")}
           >
             <span className={styles.decIco} aria-hidden>
               <FiRotateCcw />
             </span>
             <span className={styles.decTx}>
               <span className={styles.decTitle}>Overturn</span>
-              <span className={styles.decSub}>Lift it &amp; restore the member</span>
+              <span className={styles.decSub}>
+                Lift it &amp; restore the member
+              </span>
             </span>
           </button>
         </div>
@@ -174,10 +192,11 @@ export function AdminAppealDrawer({
           onChange={(e) => setReason(e.target.value)}
         />
         <p className={styles.dTransparency}>
-          <FiInfo aria-hidden /> Appeals are logged like any decision. If you overturn,{' '}
-          {appeal.original.by} is told privately and kindly — not blamed.
+          <FiInfo aria-hidden /> Appeals are logged like any decision. If you
+          overturn, {appeal.original.by} is told privately and kindly — not
+          blamed.
         </p>
       </section>
     </AdminDrawer>
-  )
+  );
 }

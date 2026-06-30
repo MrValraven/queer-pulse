@@ -25,7 +25,9 @@ function AngleCard({
   return (
     <button
       type="button"
-      className={[styles.angle, selected && styles.angleOn].filter(Boolean).join(" ")}
+      className={[styles.angle, selected && styles.angleOn]
+        .filter(Boolean)
+        .join(" ")}
       onClick={onSelect}
       aria-pressed={selected}
     >
@@ -39,7 +41,13 @@ function AngleCard({
 }
 
 /** The negotiation planner — context, leverage, strategies, and a draft you can send. */
-export function NegotiationPlanner({ app, onClose }: { app: Application; onClose: () => void }) {
+export function NegotiationPlanner({
+  app,
+  onClose,
+}: {
+  app: Application;
+  onClose: () => void;
+}) {
   const { showToast } = useToast();
   const o = app.offer;
   const angles = negotiationAngles(app);
@@ -53,14 +61,16 @@ export function NegotiationPlanner({ app, onClose }: { app: Application; onClose
     setDraft(a.draft);
   };
   const toggleLever = (l: string) =>
-    setLevers((prev) => (prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]));
+    setLevers((prev) =>
+      prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l],
+    );
 
   if (done) {
     return (
       <ModalShell onClose={onClose} success wide>
         <SuccessPanel title="Counter" em="sent." onClose={onClose}>
-          Your reply is on its way to {app.companyName}. Asking is normal and expected — you've done
-          this exactly right.
+          Your reply is on its way to {app.companyName}. Asking is normal and
+          expected — you've done this exactly right.
         </SuccessPanel>
       </ModalShell>
     );
@@ -73,8 +83,8 @@ export function NegotiationPlanner({ app, onClose }: { app: Application; onClose
         Ask for what it's <em>worth.</em>
       </h2>
       <p className={styles.sub}>
-        Negotiating is expected — most offers have room. Here's your leverage, your levers, and five
-        ways to make the ask.
+        Negotiating is expected — most offers have room. Here's your leverage,
+        your levers, and five ways to make the ask.
       </p>
 
       {o && (
@@ -104,7 +114,9 @@ export function NegotiationPlanner({ app, onClose }: { app: Application; onClose
           <button
             key={l}
             type="button"
-            className={[styles.lever, levers.includes(l) && styles.leverOn].filter(Boolean).join(" ")}
+            className={[styles.lever, levers.includes(l) && styles.leverOn]
+              .filter(Boolean)
+              .join(" ")}
             onClick={() => toggleLever(l)}
             aria-pressed={levers.includes(l)}
           >
@@ -124,12 +136,19 @@ export function NegotiationPlanner({ app, onClose }: { app: Application; onClose
       <div className={styles.eyebrow}>Pick your angle</div>
       <div className={styles.angles}>
         {angles.map((a) => (
-          <AngleCard key={a.id} angle={a} selected={a.id === angleId} onSelect={() => pickAngle(a)} />
+          <AngleCard
+            key={a.id}
+            angle={a}
+            selected={a.id === angleId}
+            onSelect={() => pickAngle(a)}
+          />
         ))}
       </div>
 
       <div className={styles.field}>
-        <label htmlFor="neg-draft">Your draft reply — edit it to sound like you</label>
+        <label htmlFor="neg-draft">
+          Your draft reply — edit it to sound like you
+        </label>
         <textarea
           id="neg-draft"
           value={draft}
@@ -148,9 +167,18 @@ export function NegotiationPlanner({ app, onClose }: { app: Application; onClose
             showToast("Draft copied to clipboard", "success");
           }}
         >
-          <FiCopy size={13} style={{ marginRight: 5, verticalAlign: "-2px" }} aria-hidden /> Copy draft
+          <FiCopy
+            size={13}
+            style={{ marginRight: 5, verticalAlign: "-2px" }}
+            aria-hidden
+          />{" "}
+          Copy draft
         </button>
-        <Button size="lg" disabled={sending || !draft.trim()} onClick={() => submit()}>
+        <Button
+          size="lg"
+          disabled={sending || !draft.trim()}
+          onClick={() => submit()}
+        >
           {sending ? <Sending label="Sending…" /> : "Send reply →"}
         </Button>
       </div>

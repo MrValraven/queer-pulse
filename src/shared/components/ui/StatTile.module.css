@@ -42,7 +42,7 @@
   letter-spacing: -0.01em;
   color: var(--plum);
 }
-[data-theme='dark'] .num {
+[data-theme="dark"] .num {
   color: var(--ink);
 }
 .num small {

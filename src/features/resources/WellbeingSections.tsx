@@ -1,27 +1,35 @@
-import { Link } from 'react-router-dom'
-import { Button, Reveal } from '../../shared/components/ui'
-import { useConnect } from '../../app/providers/ConnectProvider'
-import { routes } from '../../app/routeMap'
-import { THERAPISTS, CRISIS, HARM } from './wellbeing.data'
-import styles from './resources.module.css'
+import { Link } from "react-router-dom";
+import { Button, Reveal } from "../../shared/components/ui";
+import { useConnect } from "../../app/providers/ConnectProvider";
+import { routes } from "../../app/routeMap";
+import { THERAPISTS, CRISIS, HARM } from "./wellbeing.data";
+import styles from "./resources.module.css";
 
 /** Community-vetted therapist directory. */
 export function TherapistsSection() {
-  const { openConnect } = useConnect()
+  const { openConnect } = useConnect();
   return (
-    <section className={`${styles.section} ${styles.sectionPaper}`} id="therapists">
+    <section
+      className={`${styles.section} ${styles.sectionPaper}`}
+      id="therapists"
+    >
       <div className="wrap">
         <Reveal as="h2">
           Queer-affirming <em>therapists in Lisbon</em>
         </Reveal>
         <Reveal as="p" className={styles.leadP}>
-          Vetted by community members. Each therapist listed has been recommended by at least two
-          QueerPulse members. We do not charge listing fees. Want to add someone?{' '}
+          Vetted by community members. Each therapist listed has been
+          recommended by at least two QueerPulse members. We do not charge
+          listing fees. Want to add someone?{" "}
           <Link to={routes.contact}>Get in touch.</Link>
         </Reveal>
         <div className={styles.grid}>
           {THERAPISTS.map((therapist, index) => (
-            <Reveal key={therapist.name} className={styles.card} delay={index * 55}>
+            <Reveal
+              key={therapist.name}
+              className={styles.card}
+              delay={index * 55}
+            >
               <div className={styles.cardName}>{therapist.name}</div>
               <div className={styles.cardSpec}>{therapist.spec}</div>
               <div className={styles.tags}>
@@ -39,9 +47,9 @@ export function TherapistsSection() {
                   className={styles.cardCta}
                   onClick={() => openConnect()}
                   onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault()
-                      openConnect()
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      openConnect();
                     }
                   }}
                 >
@@ -50,11 +58,17 @@ export function TherapistsSection() {
               </div>
             </Reveal>
           ))}
-          <Reveal className={`${styles.card} ${styles.cardDashed}`} delay={THERAPISTS.length * 55}>
+          <Reveal
+            className={`${styles.card} ${styles.cardDashed}`}
+            delay={THERAPISTS.length * 55}
+          >
             <div>
               Are you a queer-affirming therapist?
               <br />
-              <Link to={routes.contact} style={{ color: 'var(--plum)', fontWeight: 600 }}>
+              <Link
+                to={routes.contact}
+                style={{ color: "var(--plum)", fontWeight: 600 }}
+              >
                 Apply to be listed →
               </Link>
             </div>
@@ -62,13 +76,16 @@ export function TherapistsSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 /** Plum peer-support strip with headline stats. */
 export function PeerSupportSection() {
   return (
-    <section className={`${styles.section} ${styles.sectionCream}`} id="peer-support">
+    <section
+      className={`${styles.section} ${styles.sectionCream}`}
+      id="peer-support"
+    >
       <div className="wrap">
         <Reveal className={styles.plumStrip}>
           <div>
@@ -76,8 +93,9 @@ export function PeerSupportSection() {
               You don't have to <em>hold it alone.</em>
             </h3>
             <p>
-              A moderated peer support space inside the Forum — for members going through difficult
-              times. No advice unless asked. No fixing. Just people who understand, listening.
+              A moderated peer support space inside the Forum — for members
+              going through difficult times. No advice unless asked. No fixing.
+              Just people who understand, listening.
             </p>
             <div className={styles.plumActions}>
               <Button variant="ghost-dark" to={routes.forum}>
@@ -105,7 +123,7 @@ export function PeerSupportSection() {
         </Reveal>
       </div>
     </section>
-  )
+  );
 }
 
 /** Crisis & emergency contact cards. */
@@ -117,10 +135,10 @@ export function CrisisSection() {
           Crisis &amp; <em>emergency resources</em>
         </Reveal>
         <Reveal as="p" className={styles.leadP}>
-          If you are in immediate danger, call <strong>112</strong>. These resources are specific
-          to LGBTQ+ situations in Portugal.
+          If you are in immediate danger, call <strong>112</strong>. These
+          resources are specific to LGBTQ+ situations in Portugal.
         </Reveal>
-        <div className={styles.gridNarrow} style={{ display: 'grid' }}>
+        <div className={styles.gridNarrow} style={{ display: "grid" }}>
           {CRISIS.map((item, index) => (
             <Reveal key={item.name} className={styles.card} delay={index * 55}>
               <div className={styles.cardName} style={{ fontSize: 18 }}>
@@ -136,10 +154,14 @@ export function CrisisSection() {
               QueerPulse Emergency
             </div>
             <div className={styles.cardSpec}>
-              Safe housing contacts, community members who can help, and emergency escalation
-              paths — available always.
+              Safe housing contacts, community members who can help, and
+              emergency escalation paths — available always.
             </div>
-            <Link to={routes.emergency} className={styles.crisisNum} style={{ fontSize: 16 }}>
+            <Link
+              to={routes.emergency}
+              className={styles.crisisNum}
+              style={{ fontSize: 16 }}
+            >
               Open emergency page →
             </Link>
             <div className={styles.crisisHours}>Always available</div>
@@ -147,22 +169,26 @@ export function CrisisSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 /** Harm-reduction information cards. */
 export function HarmReductionSection() {
   return (
-    <section className={`${styles.section} ${styles.sectionCream}`} id="harm-reduction">
+    <section
+      className={`${styles.section} ${styles.sectionCream}`}
+      id="harm-reduction"
+    >
       <div className="wrap">
         <Reveal as="h2">
           Harm <em>reduction</em>
         </Reveal>
         <Reveal as="p" className={styles.leadP}>
-          Non-judgmental information for a community that lives in the real world. This is not
-          moral instruction — it's practical care. No one here will tell you how to live.
+          Non-judgmental information for a community that lives in the real
+          world. This is not moral instruction — it's practical care. No one
+          here will tell you how to live.
         </Reveal>
-        <div className={styles.gridNarrow} style={{ display: 'grid' }}>
+        <div className={styles.gridNarrow} style={{ display: "grid" }}>
           {HARM.map((item, index) => (
             <Reveal key={item.title} className={styles.card} delay={index * 55}>
               <div className={styles.cardName} style={{ fontSize: 18 }}>
@@ -174,5 +200,5 @@ export function HarmReductionSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

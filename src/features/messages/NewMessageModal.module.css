@@ -43,7 +43,9 @@
   display: flex;
   padding: 6px;
   border-radius: 8px;
-  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease);
 }
 .close:hover {
   color: var(--plum);
@@ -104,6 +106,6 @@
   text-align: center;
 }
 
-:global([data-theme='dark']) .dialog {
+:global([data-theme="dark"]) .dialog {
   border-color: rgba(247, 243, 238, 0.12);
 }

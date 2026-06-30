@@ -207,10 +207,10 @@
   }
 }
 
-:global([data-theme='dark']) .bar {
+:global([data-theme="dark"]) .bar {
   background: rgba(26, 16, 40, 0.86);
 }
-:global([data-theme='dark']) .card,
-:global([data-theme='dark']) .search {
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .search {
   border-color: rgba(247, 243, 238, 0.1);
 }

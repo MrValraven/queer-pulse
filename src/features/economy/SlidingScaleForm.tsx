@@ -1,10 +1,10 @@
-import type { SlidingScale, Tier } from './slidingScale.data'
-import styles from './SlidingScalePage.module.css'
+import type { SlidingScale, Tier } from "./slidingScale.data";
+import styles from "./SlidingScalePage.module.css";
 
 interface TierFieldsProps {
-  tier: Tier
-  index: number
-  onChange: (patch: Partial<Tier>) => void
+  tier: Tier;
+  index: number;
+  onChange: (patch: Partial<Tier>) => void;
 }
 
 /** The editable inputs for a single tier (name, price, who-it's-for). */
@@ -57,14 +57,14 @@ function TierFields({ tier, index, onChange }: TierFieldsProps) {
         />
       </div>
     </fieldset>
-  )
+  );
 }
 
 interface SlidingScaleFormProps {
-  scale: SlidingScale
-  onChange: (patch: Partial<SlidingScale>) => void
-  makerName: string
-  onMakerNameChange: (name: string) => void
+  scale: SlidingScale;
+  onChange: (patch: Partial<SlidingScale>) => void;
+  makerName: string;
+  onMakerNameChange: (name: string) => void;
 }
 
 /** The input column for the sliding-scale generator. */
@@ -75,7 +75,9 @@ export function SlidingScaleForm({
   onMakerNameChange,
 }: SlidingScaleFormProps) {
   const patchTier = (id: string, patch: Partial<Tier>) =>
-    onChange({ tiers: scale.tiers.map((t) => (t.id === id ? { ...t, ...patch } : t)) })
+    onChange({
+      tiers: scale.tiers.map((t) => (t.id === id ? { ...t, ...patch } : t)),
+    });
 
   return (
     <div className={styles.form}>
@@ -129,5 +131,5 @@ export function SlidingScaleForm({
         />
       ))}
     </div>
-  )
+  );
 }

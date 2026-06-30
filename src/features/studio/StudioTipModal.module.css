@@ -98,7 +98,9 @@
   font-size: 18px;
   color: var(--text);
   cursor: pointer;
-  transition: border-color 0.18s var(--ease), background 0.18s var(--ease);
+  transition:
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease);
 }
 .amount:hover {
   border-color: var(--accent);

@@ -1,11 +1,11 @@
-import { createContext } from 'react'
+import { createContext } from "react";
 
-export type ToastType = 'success' | 'error' | 'info'
+export type ToastType = "success" | "error" | "info";
 
 /** Optional action button shown inside a toast (e.g. "Undo"). */
 export interface ToastAction {
-  label: string
-  onClick: () => void
+  label: string;
+  onClick: () => void;
 }
 
 export interface ToastContextValue {
@@ -14,7 +14,7 @@ export interface ToastContextValue {
     type?: ToastType,
     durationMs?: number,
     action?: ToastAction,
-  ) => void
+  ) => void;
 }
 
-export const ToastContext = createContext<ToastContextValue | null>(null)
+export const ToastContext = createContext<ToastContextValue | null>(null);

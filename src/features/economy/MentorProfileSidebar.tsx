@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
-import { BOOK_ROWS, MENTOR, MORE_FROM } from './mentorProfile.data'
-import { MentorApplyModal } from './MentorApplyModal'
-import styles from './MentorProfilePage.module.css'
+import { useState } from "react";
+import { Button } from "../../shared/components/ui";
+import { BOOK_ROWS, MENTOR, MORE_FROM } from "./mentorProfile.data";
+import { MentorApplyModal } from "./MentorApplyModal";
+import styles from "./MentorProfilePage.module.css";
 
 export function MentorProfileSidebar() {
-  const [open, setOpen] = useState(false)
-  const mentorName = `${MENTOR.firstName} ${MENTOR.lastName}`
+  const [open, setOpen] = useState(false);
+  const mentorName = `${MENTOR.firstName} ${MENTOR.lastName}`;
 
   return (
     <aside className={styles.side}>
@@ -16,12 +16,18 @@ export function MentorProfileSidebar() {
           <div className={styles.bookPrice}>
             €<em>0</em> + €<em>20</em>/mo
           </div>
-          <div className={styles.bookPriceSub}>no upfront cost · solidarity rate available</div>
+          <div className={styles.bookPriceSub}>
+            no upfront cost · solidarity rate available
+          </div>
         </div>
         {BOOK_ROWS.map((row) => (
           <div key={row.label} className={styles.row}>
             <span>{row.label}</span>
-            <b className={row.jade ? styles.jade : row.accent ? styles.accent : undefined}>
+            <b
+              className={
+                row.jade ? styles.jade : row.accent ? styles.accent : undefined
+              }
+            >
               {row.value}
             </b>
           </div>
@@ -47,7 +53,12 @@ export function MentorProfileSidebar() {
         </div>
       </div>
 
-      {open && <MentorApplyModal mentorName={mentorName} onClose={() => setOpen(false)} />}
+      {open && (
+        <MentorApplyModal
+          mentorName={mentorName}
+          onClose={() => setOpen(false)}
+        />
+      )}
     </aside>
-  )
+  );
 }

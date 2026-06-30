@@ -133,14 +133,18 @@
   overflow: hidden;
 }
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -30%;
   right: -8%;
   width: 520px;
   height: 520px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jade-rgb), 0.14), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.14),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .heroInner {
@@ -205,7 +209,11 @@
   padding: 22px 24px;
 }
 .bigstatPayout {
-  background: linear-gradient(135deg, rgba(var(--jade-rgb), 0.14), rgba(var(--jade-rgb), 0.02));
+  background: linear-gradient(
+    135deg,
+    rgba(var(--jade-rgb), 0.14),
+    rgba(var(--jade-rgb), 0.02)
+  );
   border-color: rgba(var(--jade-rgb), 0.32);
 }
 .bsLbl {
@@ -332,7 +340,11 @@
 }
 .bar {
   flex: 1;
-  background: linear-gradient(180deg, var(--accent) 0%, rgba(var(--accent-rgb), 0.4) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--accent) 0%,
+    rgba(var(--accent-rgb), 0.4) 100%
+  );
   border-radius: 4px 4px 0 0;
   position: relative;
   min-height: 6px;
@@ -342,7 +354,11 @@
   transform: scaleY(1.05);
 }
 .barToday {
-  background: linear-gradient(180deg, var(--jade-light) 0%, rgba(var(--jade-rgb), 0.4) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--jade-light) 0%,
+    rgba(var(--jade-rgb), 0.4) 100%
+  );
 }
 .chartFoot {
   margin-top: 24px;
@@ -947,7 +963,7 @@
   font-size: 13px;
 }
 .bdRow .n {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   color: var(--text40);
   font-size: 12px;
 }

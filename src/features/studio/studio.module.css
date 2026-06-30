@@ -116,7 +116,11 @@
 .railItemOn {
   color: var(--text);
   border-left-color: var(--accent);
-  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.12), transparent 60%);
+  background: linear-gradient(
+    90deg,
+    rgba(var(--accent-rgb), 0.12),
+    transparent 60%
+  );
 }
 .railItem .nm {
   flex: 1;
@@ -478,7 +482,9 @@
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  transition:
+    transform 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
 }
 .card:hover .cardCov {
   transform: translateY(-3px);

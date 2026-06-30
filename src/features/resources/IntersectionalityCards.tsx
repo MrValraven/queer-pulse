@@ -1,7 +1,11 @@
-import { Link } from 'react-router-dom'
-import type { InfoCard, Voice } from './intersectionality.data'
-import { FadeIn, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
-import styles from './IntersectionalityPage.module.css'
+import { Link } from "react-router-dom";
+import type { InfoCard, Voice } from "./intersectionality.data";
+import {
+  FadeIn,
+  SkeletonAvatar,
+  SkeletonLine,
+} from "../../shared/components/ui";
+import styles from "./IntersectionalityPage.module.css";
 
 /** Skeleton placeholder that mirrors VoiceCard shape — same border-radius, padding, gap. */
 export function VoiceCardSkeleton() {
@@ -18,7 +22,7 @@ export function VoiceCardSkeleton() {
       <SkeletonLine width="95%" height={13} style={{ marginTop: 6 }} />
       <SkeletonLine width="80%" height={13} style={{ marginTop: 6 }} />
     </div>
-  )
+  );
 }
 
 /** Skeleton placeholder that mirrors InfoCard shape. */
@@ -31,14 +35,17 @@ export function InfoCardSkeleton() {
       <SkeletonLine width="90%" height={13} style={{ marginTop: 6 }} />
       <SkeletonLine width="75%" height={13} style={{ marginTop: 6 }} />
     </div>
-  )
+  );
 }
 
 export function VoiceCard({ v }: { v: Voice }) {
   return (
     <div className={styles.voiceCard}>
       <div className={styles.vcTop}>
-        <div className={styles.vcAv} style={{ background: v.bg, color: v.color }}>
+        <div
+          className={styles.vcAv}
+          style={{ background: v.bg, color: v.color }}
+        >
           {v.initials}
         </div>
         <div>
@@ -48,15 +55,15 @@ export function VoiceCard({ v }: { v: Voice }) {
       </div>
       <p className={styles.vcQuote}>{v.quote}</p>
     </div>
-  )
+  );
 }
 
 interface InfoCardsProps {
-  cards: InfoCard[]
+  cards: InfoCard[];
   /** While true, renders skeletons matching the card count. */
-  loading?: boolean
+  loading?: boolean;
   /** When true, wraps each card in FadeIn for entrance stagger. */
-  animate?: boolean
+  animate?: boolean;
 }
 
 export function InfoCards({ cards, loading, animate }: InfoCardsProps) {
@@ -89,8 +96,8 @@ export function InfoCards({ cards, loading, animate }: InfoCardsProps) {
                   </div>
                 )}
               </div>
-            )
+            ),
           )}
     </div>
-  )
+  );
 }

@@ -1,34 +1,34 @@
-import { useState } from 'react'
-import { FiX } from 'react-icons/fi'
-import { Button, FormField } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import { GatheringSuccessPanel } from './GatheringSuccessPanel'
-import styles from './GatheringModals.module.css'
+import { useState } from "react";
+import { FiX } from "react-icons/fi";
+import { Button, FormField } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
+import styles from "./GatheringModals.module.css";
 
 export function MessageAttendeesModal({
   attendeeCount,
   onClose,
 }: {
-  attendeeCount: number
-  onClose: () => void
+  attendeeCount: number;
+  onClose: () => void;
 }) {
-  useScrollLock()
-  const [subject, setSubject] = useState('')
-  const [body, setBody] = useState('')
-  const [done, setDone] = useState(false)
+  useScrollLock();
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const [done, setDone] = useState(false);
 
-  const canSend = subject.trim().length > 0 && body.trim().length >= 5
+  const canSend = subject.trim().length > 0 && body.trim().length >= 5;
 
   const send = () => {
-    if (!canSend) return
-    setDone(true)
-  }
+    if (!canSend) return;
+    setDone(true);
+  };
 
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       {done ? (
@@ -40,8 +40,9 @@ export function MessageAttendeesModal({
           }
           sub={
             <>
-              "{subject}" went out to all <b>{attendeeCount} confirmed attendees</b>. They'll get it
-              by email and in their QueerPulse notifications.
+              "{subject}" went out to all{" "}
+              <b>{attendeeCount} confirmed attendees</b>. They'll get it by
+              email and in their QueerPulse notifications.
             </>
           }
           meta={`Sent just now · ${attendeeCount} recipients`}
@@ -49,14 +50,19 @@ export function MessageAttendeesModal({
         />
       ) : (
         <div className={styles.modal}>
-          <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+          <button
+            type="button"
+            className={styles.close}
+            onClick={onClose}
+            aria-label="Close"
+          >
             <FiX />
           </button>
           <div className={styles.eye}>Message attendees</div>
           <div className={styles.title}>Write to your guests</div>
           <p className={styles.sub}>
-            This reaches everyone who's confirmed for this gathering. Keep it short — a venue note, a
-            schedule change, or a warm hello.
+            This reaches everyone who's confirmed for this gathering. Keep it
+            short — a venue note, a schedule change, or a warm hello.
           </p>
 
           <div className={styles.fields}>
@@ -88,5 +94,5 @@ export function MessageAttendeesModal({
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -185,7 +185,11 @@
   width: 360px;
   height: 360px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.18), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.18),
+    transparent 60%
+  );
   pointer-events: none;
 }
 .signoffFrom {

@@ -238,6 +238,6 @@
   }
 }
 
-:global([data-theme='dark']) .relCard {
+:global([data-theme="dark"]) .relCard {
   border-color: rgba(247, 243, 238, 0.1);
 }

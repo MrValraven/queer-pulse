@@ -21,7 +21,8 @@ export function WithdrawModal({
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel title="Application" em="withdrawn." onClose={onClose}>
-          We've let {app.companyName} know politely. This role has moved to your Closed tab.
+          We've let {app.companyName} know politely. This role has moved to your
+          Closed tab.
         </SuccessPanel>
       ) : (
         <form
@@ -35,8 +36,9 @@ export function WithdrawModal({
             Step back from <em>{app.companyName}?</em>
           </h2>
           <p className={styles.sub}>
-            This removes you from consideration for <b>{app.title}</b>. We'll send a brief, polite
-            note on your behalf — you don't have to write anything.
+            This removes you from consideration for <b>{app.title}</b>. We'll
+            send a brief, polite note on your behalf — you don't have to write
+            anything.
           </p>
           <div className={styles.field}>
             <label htmlFor="wd-reason">Reason (only you see this)</label>
@@ -48,15 +50,28 @@ export function WithdrawModal({
             </select>
           </div>
           <div className={styles.note}>
-            <FiAlertTriangle size={13} style={{ marginRight: 5, verticalAlign: "-2px" }} aria-hidden />
+            <FiAlertTriangle
+              size={13}
+              style={{ marginRight: 5, verticalAlign: "-2px" }}
+              aria-hidden
+            />
             This can't be undone — you'd need to re-apply.
           </div>
           <div className={styles.foot}>
-            <button type="button" className={styles.back} onClick={onClose} disabled={sending}>
+            <button
+              type="button"
+              className={styles.back}
+              onClick={onClose}
+              disabled={sending}
+            >
               ← Keep it
             </button>
             <Button size="lg" type="submit" disabled={sending}>
-              {sending ? <Sending label="Withdrawing…" /> : "Withdraw application"}
+              {sending ? (
+                <Sending label="Withdrawing…" />
+              ) : (
+                "Withdraw application"
+              )}
             </Button>
           </div>
         </form>

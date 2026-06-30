@@ -5,14 +5,18 @@
   overflow: hidden;
 }
 .hero::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -20%;
   right: -10%;
   width: 480px;
   height: 480px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.12), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.12),
+    transparent 60%
+  );
   pointer-events: none;
 }
 .heroInner {
@@ -101,7 +105,10 @@
   border: 1.5px solid rgba(45, 27, 61, 0.1);
   border-radius: 22px;
   cursor: pointer;
-  transition: border-color 0.22s, transform 0.22s var(--ease), background 0.22s;
+  transition:
+    border-color 0.22s,
+    transform 0.22s var(--ease),
+    background 0.22s;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -263,7 +270,9 @@
   border-radius: 11px;
   padding: 12px 14px;
   outline: none;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 .field input:focus,
 .field textarea:focus {
@@ -308,7 +317,9 @@
   border: 1.5px solid rgba(45, 27, 61, 0.1);
   border-radius: 12px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
   background: var(--paper);
   text-align: left;
   font-family: var(--sans);
@@ -355,14 +366,18 @@
   overflow: hidden;
 }
 .previewCard::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -40%;
   right: -10%;
   width: 340px;
   height: 340px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.16), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.16),
+    transparent 60%
+  );
   pointer-events: none;
 }
 .previewStamp {
@@ -382,7 +397,7 @@
   z-index: 1;
 }
 .previewStamp::before {
-  content: '';
+  content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;

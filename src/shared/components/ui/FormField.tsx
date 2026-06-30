@@ -1,22 +1,22 @@
-import { useId, type ReactNode } from 'react'
-import styles from './FormField.module.css'
+import { useId, type ReactNode } from "react";
+import styles from "./FormField.module.css";
 
 interface FormFieldProps {
   /** Visible field label. Omit for fields that supply their own labelling. */
-  label?: ReactNode
+  label?: ReactNode;
   /** Marks the field required (adds a coral `*` and sets `aria-required` hint). */
-  required?: boolean
+  required?: boolean;
   /** Helper text shown below the control when there's no error. */
-  helper?: ReactNode
+  helper?: ReactNode;
   /** Error message — shown in coral and sets `aria-invalid` on the control. */
-  error?: ReactNode
+  error?: ReactNode;
   /** Success message — shown in jade (e.g. "Username available"). */
-  ok?: ReactNode
+  ok?: ReactNode;
   /** Optional trailing label content, e.g. a live character count. */
-  labelAside?: ReactNode
-  className?: string
+  labelAside?: ReactNode;
+  className?: string;
   /** The control: an `<input>`, `<textarea>`, `<select>`, or custom node. */
-  children: ReactNode
+  children: ReactNode;
 }
 
 /**
@@ -37,16 +37,16 @@ export function FormField({
   className,
   children,
 }: FormFieldProps) {
-  const errorId = useId()
+  const errorId = useId();
   return (
-    <div className={[styles.field, className].filter(Boolean).join(' ')}>
+    <div className={[styles.field, className].filter(Boolean).join(" ")}>
       {label && (
         <label className={styles.label}>
           <span>
             {label}
             {required && (
               <>
-                {' '}
+                {" "}
                 <span className={styles.req} aria-hidden>
                   *
                 </span>
@@ -67,5 +67,5 @@ export function FormField({
         helper && <span className={styles.helper}>{helper}</span>
       )}
     </div>
-  )
+  );
 }

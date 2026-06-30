@@ -1,9 +1,9 @@
-import { Fragment } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Reveal, SectionHead } from '../../../shared/components/ui'
-import { linkToPath, routes } from '../../../app/routeMap'
-import { libraryItems, libraryMoreCount } from '../data/libraryItems'
-import styles from './Library.module.css'
+import { Fragment } from "react";
+import { Link } from "react-router-dom";
+import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { linkToPath, routes } from "../../../app/routeMap";
+import { libraryItems, libraryMoreCount } from "../data/libraryItems";
+import styles from "./Library.module.css";
 
 export function Library() {
   return (
@@ -29,7 +29,7 @@ export function Library() {
           {libraryItems.map((item, index) => (
             <Reveal key={item.href} delay={index * 50}>
               <Link to={linkToPath(item.href)} className={styles.card}>
-                <span className={[styles.type, styles[item.type]].join(' ')}>
+                <span className={[styles.type, styles[item.type]].join(" ")}>
                   {item.typeLabel}
                 </span>
                 <div className={styles.title}>{item.title}</div>
@@ -48,7 +48,7 @@ export function Library() {
           <Reveal delay={libraryItems.length * 50}>
             <Link
               to={routes.library}
-              className={[styles.card, styles.more].join(' ')}
+              className={[styles.card, styles.more].join(" ")}
             >
               <div className={styles.moreCount}>{libraryMoreCount}</div>
               <div className={styles.moreSub}>in the archive →</div>
@@ -57,5 +57,5 @@ export function Library() {
         </div>
       </div>
     </section>
-  )
+  );
 }

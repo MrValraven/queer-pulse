@@ -1,9 +1,20 @@
-import type { ReactNode } from 'react'
-import { FiAlertTriangle, FiFlag, FiCheck, FiClock, FiUsers } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { AdminChip, AdminCat } from './ui'
-import { SEVERITY, type ModReport, type Appeal, type ResolvedItem } from './adminModeration.data'
-import styles from './AdminModerationPage.module.css'
+import type { ReactNode } from "react";
+import {
+  FiAlertTriangle,
+  FiFlag,
+  FiCheck,
+  FiClock,
+  FiUsers,
+} from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { AdminChip, AdminCat } from "./ui";
+import {
+  SEVERITY,
+  type ModReport,
+  type Appeal,
+  type ResolvedItem,
+} from "./adminModeration.data";
+import styles from "./AdminModerationPage.module.css";
 
 /* ── Severity-striped report card ───────────────────────────────────────── */
 
@@ -14,19 +25,23 @@ export function ReportCard({
   onToggle,
   onOpen,
 }: {
-  report: ModReport
-  leaving?: boolean
-  selected?: boolean
-  onToggle?: (id: string) => void
-  onOpen: (r: ModReport) => void
+  report: ModReport;
+  leaving?: boolean;
+  selected?: boolean;
+  onToggle?: (id: string) => void;
+  onOpen: (r: ModReport) => void;
 }) {
-  const sev = SEVERITY[report.severity]
+  const sev = SEVERITY[report.severity];
   return (
     <article
-      className={[styles.report, selected && styles.reportSelected, leaving && styles.reportLeaving]
+      className={[
+        styles.report,
+        selected && styles.reportSelected,
+        leaving && styles.reportLeaving,
+      ]
         .filter(Boolean)
-        .join(' ')}
-      style={{ ['--stripe' as string]: sev.stripe }}
+        .join(" ")}
+      style={{ ["--stripe" as string]: sev.stripe }}
     >
       {onToggle && (
         <span
@@ -34,15 +49,17 @@ export function ReportCard({
           aria-checked={!!selected}
           aria-label={`Select report: ${report.title}`}
           tabIndex={0}
-          className={[styles.selectBox, selected && styles.selectBoxOn].filter(Boolean).join(' ')}
+          className={[styles.selectBox, selected && styles.selectBoxOn]
+            .filter(Boolean)
+            .join(" ")}
           onClick={(e) => {
-            e.stopPropagation()
-            onToggle(report.id)
+            e.stopPropagation();
+            onToggle(report.id);
           }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              onToggle(report.id)
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onToggle(report.id);
             }
           }}
         >
@@ -54,7 +71,7 @@ export function ReportCard({
         type="button"
         className={[styles.reportMain, onToggle && styles.reportMainNudge]
           .filter(Boolean)
-          .join(' ')}
+          .join(" ")}
         onClick={() => onOpen(report)}
       >
         <span className={styles.reportTop}>
@@ -67,7 +84,7 @@ export function ReportCard({
         </span>
 
         <span className={styles.reportTitle}>
-          {report.title} {report.titleEm && <em>{report.titleEm}</em>}{' '}
+          {report.title} {report.titleEm && <em>{report.titleEm}</em>}{" "}
           {report.titleAfter}
         </span>
         <span className={styles.reportPreview}>{report.preview}</span>
@@ -97,7 +114,7 @@ export function ReportCard({
         <AdminChip tone={report.risk.tone}>{report.risk.label}</AdminChip>
       </div>
     </article>
-  )
+  );
 }
 
 /* ── Bulk-action bar (sticky, shown when ≥1 selected) ───────────────────── */
@@ -109,11 +126,11 @@ export function BulkBar({
   onReassign,
   onCancel,
 }: {
-  count: number
-  onDismiss: () => void
-  onSpam: () => void
-  onReassign: () => void
-  onCancel: () => void
+  count: number;
+  onDismiss: () => void;
+  onSpam: () => void;
+  onReassign: () => void;
+  onCancel: () => void;
 }) {
   return (
     <div className={styles.bulkBar} role="region" aria-label="Bulk actions">
@@ -133,7 +150,7 @@ export function BulkBar({
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 /* ── Emergency band wrapper ─────────────────────────────────────────────── */
@@ -143,9 +160,9 @@ export function EmergencyBand({
   count,
   sub,
 }: {
-  children: ReactNode
-  count: number
-  sub: ReactNode
+  children: ReactNode;
+  count: number;
+  sub: ReactNode;
 }) {
   return (
     <section className={styles.emergBand} aria-label="Safety emergencies">
@@ -154,17 +171,17 @@ export function EmergencyBand({
           <FiAlertTriangle />
         </span>
         <h2 className={styles.emergTitle}>
-          {count} safety {count === 1 ? 'emergency' : 'emergencies'}
+          {count} safety {count === 1 ? "emergency" : "emergencies"}
           <span className={styles.emergTitleSub}> {sub}</span>
         </h2>
       </div>
       <div className={styles.emergList}>{children}</div>
     </section>
-  )
+  );
 }
 
 export function SectionLabel({ children }: { children: ReactNode }) {
-  return <p className={styles.sectionLabel}>{children}</p>
+  return <p className={styles.sectionLabel}>{children}</p>;
 }
 
 /* ── Caught-up plum success panel ───────────────────────────────────────── */
@@ -173,8 +190,8 @@ export function CaughtUpPanel({
   onBack,
   onReplay,
 }: {
-  onBack: () => void
-  onReplay: () => void
+  onBack: () => void;
+  onReplay: () => void;
 }) {
   return (
     <div className={styles.caughtUp}>
@@ -187,8 +204,9 @@ export function CaughtUpPanel({
         Nothing needs you right now.
       </h2>
       <p className={styles.caughtSub}>
-        Every open report has a human decision attached to it, and every affected member has been
-        told what happened and why. Go rest — the network is safe in your hands.
+        Every open report has a human decision attached to it, and every
+        affected member has been told what happened and why. Go rest — the
+        network is safe in your hands.
       </p>
       <div className={styles.caughtActions}>
         <Button variant="ghost-dark" onClick={onBack}>
@@ -199,7 +217,7 @@ export function CaughtUpPanel({
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 /* ── Appeals list (each card opens the appeal drawer) ───────────────────── */
@@ -209,22 +227,24 @@ export function AppealCard({
   leaving,
   onOpen,
 }: {
-  appeal: Appeal
-  leaving?: boolean
-  onOpen: (a: Appeal) => void
+  appeal: Appeal;
+  leaving?: boolean;
+  onOpen: (a: Appeal) => void;
 }) {
-  const sev = SEVERITY[appeal.severity]
+  const sev = SEVERITY[appeal.severity];
   return (
     <article
-      className={[styles.report, leaving && styles.reportLeaving].filter(Boolean).join(' ')}
-      style={{ ['--stripe' as string]: sev.stripe }}
+      className={[styles.report, leaving && styles.reportLeaving]
+        .filter(Boolean)
+        .join(" ")}
+      style={{ ["--stripe" as string]: sev.stripe }}
       onClick={() => onOpen(appeal)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onOpen(appeal)
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen(appeal);
         }
       }}
     >
@@ -273,17 +293,17 @@ export function AppealCard({
         <AdminChip tone={appeal.status.tone}>{appeal.status.label}</AdminChip>
       </div>
     </article>
-  )
+  );
 }
 
 /* ── Resolved list ──────────────────────────────────────────────────────── */
 
 export function ResolvedRow({ item }: { item: ResolvedItem }) {
-  const sev = SEVERITY[item.severity]
+  const sev = SEVERITY[item.severity];
   return (
     <article
-      className={[styles.report, styles.reportStatic].join(' ')}
-      style={{ ['--stripe' as string]: sev.stripe }}
+      className={[styles.report, styles.reportStatic].join(" ")}
+      style={{ ["--stripe" as string]: sev.stripe }}
     >
       <div className={styles.reportMain}>
         <div className={styles.reportTop}>
@@ -313,5 +333,5 @@ export function ResolvedRow({ item }: { item: ResolvedItem }) {
         <AdminChip tone={item.status.tone}>{item.status.label}</AdminChip>
       </div>
     </article>
-  )
+  );
 }

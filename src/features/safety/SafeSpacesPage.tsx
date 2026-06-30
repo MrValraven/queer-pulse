@@ -1,27 +1,40 @@
-import { useRef, useState } from 'react'
-import { PageShell } from '../../shared/components/layout'
-import { FiMapPin } from 'react-icons/fi'
-import { Button, EmptyState, FilterChips, Outro } from '../../shared/components/ui'
-import { useToast } from '../../shared/components/feedback/useToast'
-import { useSimulatedLoad } from '../../shared/hooks'
-import { routes } from '../../app/routeMap'
-import { VERIFIED_SPACES, type Category } from './safeSpaces'
-import { FILTERS } from './safeSpacesPage.data'
-import { FlagModal } from './FlagModal'
-import { SafeSpaceCard } from './SafeSpaceCard'
-import { SafeSpaceCardSkeleton } from './SafeSpaceCardSkeleton'
-import { BadgeExplainer, HowSection, NominateSection, RemovedSection } from './SafeSpacesSections'
-import styles from './SafeSpacesPage.module.css'
+import { useRef, useState } from "react";
+import { PageShell } from "../../shared/components/layout";
+import { FiMapPin } from "react-icons/fi";
+import {
+  Button,
+  EmptyState,
+  FilterChips,
+  Outro,
+} from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
+import { VERIFIED_SPACES, type Category } from "./safeSpaces";
+import { FILTERS } from "./safeSpacesPage.data";
+import { FlagModal } from "./FlagModal";
+import { SafeSpaceCard } from "./SafeSpaceCard";
+import { SafeSpaceCardSkeleton } from "./SafeSpaceCardSkeleton";
+import {
+  BadgeExplainer,
+  HowSection,
+  NominateSection,
+  RemovedSection,
+} from "./SafeSpacesSections";
+import styles from "./SafeSpacesPage.module.css";
 
 export function SafeSpacesPage() {
-  const { showToast } = useToast()
-  const loading = useSimulatedLoad()
-  const [filter, setFilter] = useState<Category | 'all'>('all')
-  const [flagging, setFlagging] = useState<string | null>(null)
-  const nomRef = useRef<HTMLDivElement>(null)
+  const { showToast } = useToast();
+  const loading = useSimulatedLoad();
+  const [filter, setFilter] = useState<Category | "all">("all");
+  const [flagging, setFlagging] = useState<string | null>(null);
+  const nomRef = useRef<HTMLDivElement>(null);
 
-  const items = VERIFIED_SPACES.filter((s) => filter === 'all' || s.cat === filter)
-  const scrollToNominate = () => nomRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+  const items = VERIFIED_SPACES.filter(
+    (s) => filter === "all" || s.cat === filter,
+  );
+  const scrollToNominate = () =>
+    nomRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
 
   return (
     <PageShell>
@@ -32,9 +45,9 @@ export function SafeSpacesPage() {
             Spaces that are actually <em>safe.</em>
           </h1>
           <p className={styles.lead}>
-            Not self-declared. Not a rainbow sticker in the window. Every venue on this list has been
-            visited and reviewed by multiple community members — and can lose its status if things
-            change.
+            Not self-declared. Not a rainbow sticker in the window. Every venue
+            on this list has been visited and reviewed by multiple community
+            members — and can lose its status if things change.
           </p>
           <div className={styles.heroStats}>
             <div className={styles.stat}>
@@ -47,7 +60,9 @@ export function SafeSpacesPage() {
             </div>
             <div className={styles.stat}>
               <div className={styles.n}>6</div>
-              <div className={styles.l}>spaces flagged &amp; removed this year</div>
+              <div className={styles.l}>
+                spaces flagged &amp; removed this year
+              </div>
             </div>
           </div>
         </div>
@@ -62,9 +77,15 @@ export function SafeSpacesPage() {
               <h2>
                 Verified <em>spaces.</em>
               </h2>
-              <div className={styles.dirUpdated}>Last updated June 2025 · Member-maintained</div>
+              <div className={styles.dirUpdated}>
+                Last updated June 2025 · Member-maintained
+              </div>
             </div>
-            <button type="button" className={styles.nominateBtn} onClick={scrollToNominate}>
+            <button
+              type="button"
+              className={styles.nominateBtn}
+              onClick={scrollToNominate}
+            >
               + Nominate a space
             </button>
           </div>
@@ -73,14 +94,21 @@ export function SafeSpacesPage() {
             className={styles.filters}
             options={FILTERS.map((f) => ({ value: f.id, label: f.label }))}
             value={filter}
-            onChange={(v) => setFilter(v as Category | 'all')}
+            onChange={(v) => setFilter(v as Category | "all")}
           />
 
           <div className={styles.grid} aria-busy={loading}>
             {loading
-              ? Array.from({ length: 6 }).map((_, i) => <SafeSpaceCardSkeleton key={i} />)
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <SafeSpaceCardSkeleton key={i} />
+                ))
               : items.map((s, i) => (
-                  <SafeSpaceCard key={s.name} s={s} onFlag={() => setFlagging(s.name)} delay={Math.min(i, 8) * 60} />
+                  <SafeSpaceCard
+                    key={s.name}
+                    s={s}
+                    onFlag={() => setFlagging(s.name)}
+                    delay={Math.min(i, 8) * 60}
+                  />
                 ))}
           </div>
 
@@ -89,8 +117,14 @@ export function SafeSpacesPage() {
               icon={<FiMapPin />}
               title="No verified spaces in this category yet"
               description="The list grows as members visit and review places. Try another category — or nominate somewhere you already trust, and we'll get it reviewed."
-              action={{ label: 'Clear filters', onClick: () => setFilter('all') }}
-              secondaryAction={{ label: 'Nominate a space', onClick: scrollToNominate }}
+              action={{
+                label: "Clear filters",
+                onClick: () => setFilter("all"),
+              }}
+              secondaryAction={{
+                label: "Nominate a space",
+                onClick: scrollToNominate,
+              }}
             />
           )}
         </div>
@@ -101,7 +135,11 @@ export function SafeSpacesPage() {
       <NominateSection sectionRef={nomRef} />
 
       <Outro
-        title={<>Safety is <em>collective.</em></>}
+        title={
+          <>
+            Safety is <em>collective.</em>
+          </>
+        }
         sub="Every review, every flag, every nomination makes this list more useful for everyone. It only works because the community maintains it."
       >
         <Button to={routes.safety} variant="primary" size="lg">
@@ -116,9 +154,11 @@ export function SafeSpacesPage() {
         <FlagModal
           spaceName={flagging}
           onClose={() => setFlagging(null)}
-          onSubmitted={(reason) => showToast(`Flag submitted — ${reason.toLowerCase()}`, 'success')}
+          onSubmitted={(reason) =>
+            showToast(`Flag submitted — ${reason.toLowerCase()}`, "success")
+          }
         />
       )}
     </PageShell>
-  )
+  );
 }

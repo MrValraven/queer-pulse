@@ -1,28 +1,28 @@
-import { FiSearch, FiX } from 'react-icons/fi'
-import styles from './SearchInput.module.css'
+import { FiSearch, FiX } from "react-icons/fi";
+import styles from "./SearchInput.module.css";
 
 interface SearchInputProps {
-  value: string
-  onChange: (value: string) => void
-  placeholder?: string
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
   /** Accessible label (the field has no visible label by default). */
-  ariaLabel?: string
+  ariaLabel?: string;
   /** Show a clear (×) button while there's text. */
-  clearable?: boolean
-  className?: string
+  clearable?: boolean;
+  className?: string;
 }
 
 /** Icon-prefixed search field with an optional clear button. */
 export function SearchInput({
   value,
   onChange,
-  placeholder = 'Search…',
-  ariaLabel = 'Search',
+  placeholder = "Search…",
+  ariaLabel = "Search",
   clearable = true,
   className,
 }: SearchInputProps) {
   return (
-    <div className={[styles.wrap, className].filter(Boolean).join(' ')}>
+    <div className={[styles.wrap, className].filter(Boolean).join(" ")}>
       <span className={styles.icon} aria-hidden>
         <FiSearch />
       </span>
@@ -35,10 +35,15 @@ export function SearchInput({
         onChange={(e) => onChange(e.target.value)}
       />
       {clearable && value && (
-        <button type="button" className={styles.clear} onClick={() => onChange('')} aria-label="Clear search">
+        <button
+          type="button"
+          className={styles.clear}
+          onClick={() => onChange("")}
+          aria-label="Clear search"
+        >
           <FiX />
         </button>
       )}
     </div>
-  )
+  );
 }

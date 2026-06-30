@@ -134,7 +134,10 @@
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.22s, transform 0.25s var(--ease), background 0.22s;
+  transition:
+    border-color 0.22s,
+    transform 0.25s var(--ease),
+    background 0.22s;
 }
 
 .wnRow:hover {

@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom'
-import { Avatar, ImageSlot, KindChip } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { memberProfiles, type MemberProfile } from './data/memberProfiles'
-import { SHAPING_META } from './profileSections.data'
-import { Section } from './ProfileSections'
-import styles from './ProfilePage.module.css'
+import { Link } from "react-router-dom";
+import { Avatar, ImageSlot, KindChip } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { memberProfiles, type MemberProfile } from "./data/memberProfiles";
+import { SHAPING_META } from "./profileSections.data";
+import { Section } from "./ProfileSections";
+import styles from "./ProfilePage.module.css";
 
 export function NowSection({ profile }: { profile: MemberProfile }) {
   return (
@@ -26,18 +26,21 @@ export function NowSection({ profile }: { profile: MemberProfile }) {
         </div>
       </div>
     </Section>
-  )
+  );
 }
 
 export function SelectedWorkSection({ profile }: { profile: MemberProfile }) {
-  if (profile.work.length === 0) return null
+  if (profile.work.length === 0) return null;
   return (
-    <Section title="Selected work" subtitle="A few things, not a portfolio dump">
+    <Section
+      title="Selected work"
+      subtitle="A few things, not a portfolio dump"
+    >
       <div className={styles.workGrid}>
         {profile.work.map((item, index) => (
           <article key={item.title} className={styles.workCard}>
             <ImageSlot
-              tint={(['coral', 'jade', 'plum'] as const)[index % 3]}
+              tint={(["coral", "jade", "plum"] as const)[index % 3]}
               src={item.image}
               height={200}
               radius={14}
@@ -51,11 +54,11 @@ export function SelectedWorkSection({ profile }: { profile: MemberProfile }) {
         ))}
       </div>
     </Section>
-  )
+  );
 }
 
 export function BoardSection({ profile }: { profile: MemberProfile }) {
-  if (profile.board.length === 0) return null
+  if (profile.board.length === 0) return null;
   return (
     <Section
       title="On the board"
@@ -63,20 +66,24 @@ export function BoardSection({ profile }: { profile: MemberProfile }) {
     >
       <div className={styles.miniBoard}>
         {profile.board.map((item) => (
-          <Link key={item.slug} to={`${routes.offer}#${item.slug}`} className={styles.ask}>
+          <Link
+            key={item.slug}
+            to={`${routes.offer}#${item.slug}`}
+            className={styles.ask}
+          >
             <KindChip kind={item.kind}>
-              {item.kind === 'looking' ? 'Looking' : 'Offering'}
+              {item.kind === "looking" ? "Looking" : "Offering"}
             </KindChip>
             <h3>{item.title}</h3>
           </Link>
         ))}
       </div>
     </Section>
-  )
+  );
 }
 
 export function SkillsSection({ profile }: { profile: MemberProfile }) {
-  if (profile.skills.length === 0) return null
+  if (profile.skills.length === 0) return null;
   return (
     <Section
       title="Skills & offerings"
@@ -94,11 +101,11 @@ export function SkillsSection({ profile }: { profile: MemberProfile }) {
         See the full barter board →
       </Link>
     </Section>
-  )
+  );
 }
 
 export function GroupsSection({ profile }: { profile: MemberProfile }) {
-  if (profile.groups.length === 0) return null
+  if (profile.groups.length === 0) return null;
   return (
     <Section
       title="Groups & circles"
@@ -113,18 +120,21 @@ export function GroupsSection({ profile }: { profile: MemberProfile }) {
         ))}
       </div>
     </Section>
-  )
+  );
 }
 
 export function ShapingsSection({ profile }: { profile: MemberProfile }) {
-  if (Object.keys(profile.shapings).length === 0) return null
+  if (Object.keys(profile.shapings).length === 0) return null;
   return (
-    <Section title="What shaped me" subtitle="Not interests. Formative texts, films, moments.">
+    <Section
+      title="What shaped me"
+      subtitle="Not interests. Formative texts, films, moments."
+    >
       <div className={styles.shapingsGrid}>
-        {(['film', 'book', 'song', 'moment'] as const).map((key) => {
-          const item = profile.shapings[key]
-          if (!item) return null
-          const Icon = SHAPING_META[key]!.icon
+        {(["film", "book", "song", "moment"] as const).map((key) => {
+          const item = profile.shapings[key];
+          if (!item) return null;
+          const Icon = SHAPING_META[key]!.icon;
           return (
             <div key={key} className={styles.shapingCard}>
               <div className={styles.shapingLabel}>
@@ -134,17 +144,20 @@ export function ShapingsSection({ profile }: { profile: MemberProfile }) {
               <div className={styles.shapingTitle}>{item.title}</div>
               <div className={styles.shapingNote}>{item.note}</div>
             </div>
-          )
+          );
         })}
       </div>
     </Section>
-  )
+  );
 }
 
 export function ActivitySection({ profile }: { profile: MemberProfile }) {
-  if (profile.activity.length === 0) return null
+  if (profile.activity.length === 0) return null;
   return (
-    <Section title="Recent activity" subtitle="Public moments from around the platform">
+    <Section
+      title="Recent activity"
+      subtitle="Public moments from around the platform"
+    >
       <div className={styles.activityList}>
         {profile.activity.map((item) => (
           <Link key={item.title} to={item.to} className={styles.actItem}>
@@ -159,32 +172,43 @@ export function ActivitySection({ profile }: { profile: MemberProfile }) {
         ))}
       </div>
     </Section>
-  )
+  );
 }
 
 export function RelatedSection({ profile }: { profile: MemberProfile }) {
-  if (profile.related.length === 0) return null
+  if (profile.related.length === 0) return null;
   return (
-    <Section title="Also in the room" subtitle="People nearby in craft or neighbourhood">
+    <Section
+      title="Also in the room"
+      subtitle="People nearby in craft or neighbourhood"
+    >
       <div className={styles.relGrid}>
         {profile.related.map((relSlug) => {
-          const related = memberProfiles[relSlug]
-          if (!related) return null
+          const related = memberProfiles[relSlug];
+          if (!related) return null;
           return (
-            <Link key={relSlug} to={`/members/${relSlug}`} className={styles.relCard}>
-              <Avatar initials={related.initials} tint={related.tint} size={46} />
+            <Link
+              key={relSlug}
+              to={`/members/${relSlug}`}
+              className={styles.relCard}
+            >
+              <Avatar
+                initials={related.initials}
+                tint={related.tint}
+                size={46}
+              />
               <div>
                 <div className={styles.relName}>
                   {related.first} {related.last}
                 </div>
                 <div className={styles.relRole}>
-                  {related.role.split('·')[0]!.trim()} · {related.hood}
+                  {related.role.split("·")[0]!.trim()} · {related.hood}
                 </div>
               </div>
             </Link>
-          )
+          );
         })}
       </div>
     </Section>
-  )
+  );
 }

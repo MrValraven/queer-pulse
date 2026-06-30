@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { usePrefersReducedMotion } from './usePrefersReducedMotion'
+import { useEffect, useRef, useState } from "react";
+import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 /**
  * Reveal-on-scroll: returns a ref to attach to an element and a boolean that
@@ -7,31 +7,31 @@ import { usePrefersReducedMotion } from './usePrefersReducedMotion'
  * motion it is immediately visible.
  */
 export function useScrollReveal<T extends HTMLElement = HTMLDivElement>() {
-  const ref = useRef<T>(null)
-  const prefersReduced = usePrefersReducedMotion()
-  const [isVisible, setIsVisible] = useState(prefersReduced)
+  const ref = useRef<T>(null);
+  const prefersReduced = usePrefersReducedMotion();
+  const [isVisible, setIsVisible] = useState(prefersReduced);
 
   useEffect(() => {
     // Reduced motion: already visible via the initial state — no observer needed.
-    if (prefersReduced) return
-    const node = ref.current
-    if (!node) return
+    if (prefersReduced) return;
+    const node = ref.current;
+    if (!node) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setIsVisible(true)
-            observer.unobserve(entry.target)
+            setIsVisible(true);
+            observer.unobserve(entry.target);
           }
-        })
+        });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
-    )
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
 
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [prefersReduced])
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [prefersReduced]);
 
-  return { ref, isVisible }
+  return { ref, isVisible };
 }

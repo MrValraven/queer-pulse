@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import { FiPlus, FiX } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import type { TaxYear } from './tax.calc'
-import { euro } from './economy.data'
+import { useState } from "react";
+import { FiPlus, FiX } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import type { TaxYear } from "./tax.calc";
+import { euro } from "./economy.data";
 import {
   ACTIVITY_OPTIONS,
   YEAR_OPTIONS,
   type Activity,
   type PotEntry,
-} from './setAside.data'
-import styles from './SetAsidePlannerPage.module.css'
+} from "./setAside.data";
+import styles from "./SetAsidePlannerPage.module.css";
 
 interface SetAsideFormProps {
-  gross: number
-  activity: Activity
-  year: TaxYear
-  pot: PotEntry[]
-  today: string
-  onGross: (n: number) => void
-  onActivity: (a: Activity) => void
-  onYear: (y: TaxYear) => void
-  onAdd: (amount: number, date: string) => void
-  onRemove: (id: string) => void
+  gross: number;
+  activity: Activity;
+  year: TaxYear;
+  pot: PotEntry[];
+  today: string;
+  onGross: (n: number) => void;
+  onActivity: (a: Activity) => void;
+  onYear: (y: TaxYear) => void;
+  onAdd: (amount: number, date: string) => void;
+  onRemove: (id: string) => void;
 }
 
 const fmtDate = (iso: string) =>
-  new Date(iso + 'T00:00:00').toLocaleDateString('pt-PT', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  })
+  new Date(iso + "T00:00:00").toLocaleDateString("pt-PT", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 
 export function SetAsideForm({
   gross,
@@ -43,17 +43,17 @@ export function SetAsideForm({
   onAdd,
   onRemove,
 }: SetAsideFormProps) {
-  const [amount, setAmount] = useState('')
-  const [date, setDate] = useState(today)
-  const parsedAmount = Number(amount)
-  const canAdd = parsedAmount > 0 && !!date
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState(today);
+  const parsedAmount = Number(amount);
+  const canAdd = parsedAmount > 0 && !!date;
 
   const handleAdd = () => {
-    if (!canAdd) return
-    onAdd(parsedAmount, date)
-    setAmount('')
-    setDate(today)
-  }
+    if (!canAdd) return;
+    onAdd(parsedAmount, date);
+    setAmount("");
+    setDate(today);
+  };
 
   return (
     <div className={styles.form}>
@@ -71,11 +71,13 @@ export function SetAsideForm({
             min={0}
             step={500}
             className={styles.input}
-            value={gross || ''}
+            value={gross || ""}
             onChange={(e) => onGross(Math.max(0, Number(e.target.value)))}
             placeholder="30000"
           />
-          <p className={styles.hint}>Everything you expect to invoice this year, before tax.</p>
+          <p className={styles.hint}>
+            Everything you expect to invoice this year, before tax.
+          </p>
         </div>
 
         <div className={styles.row}>
@@ -137,7 +139,7 @@ export function SetAsideForm({
               className={styles.input}
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+              onKeyDown={(e) => e.key === "Enter" && handleAdd()}
               placeholder="1200"
             />
           </div>
@@ -180,5 +182,5 @@ export function SetAsideForm({
         )}
       </section>
     </div>
-  )
+  );
 }

@@ -1,20 +1,20 @@
-import { useState } from 'react'
-import { FiBell, FiCheck } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { useScrollLock } from '../../shared/hooks'
-import styles from './SettingsModal.module.css'
+import { useState } from "react";
+import { FiBell, FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
+import styles from "./SettingsModal.module.css";
 
 export interface AlertDraft {
-  id: string
-  title: string
-  keywords: string
-  location: string
-  minSalary: string
-  frequency: string
+  id: string;
+  title: string;
+  keywords: string;
+  location: string;
+  minSalary: string;
+  frequency: string;
 }
 
-const FREQUENCIES = ['Instant alerts', 'Daily digest', 'Weekly digest']
-const LOCATIONS = ['Lisbon', 'Remote (PT)', 'Anywhere', 'Porto', 'Berlin']
+const FREQUENCIES = ["Instant alerts", "Daily digest", "Weekly digest"];
+const LOCATIONS = ["Lisbon", "Remote (PT)", "Anywhere", "Porto", "Berlin"];
 
 /**
  * Create / edit a saved-search job alert. Pre-filled when `initial` is given.
@@ -25,23 +25,25 @@ export function AlertBuilderModal({
   onClose,
   onSave,
 }: {
-  initial?: AlertDraft
-  onClose: () => void
-  onSave: (draft: AlertDraft) => void
+  initial?: AlertDraft;
+  onClose: () => void;
+  onSave: (draft: AlertDraft) => void;
 }) {
-  const editing = Boolean(initial)
-  const [title, setTitle] = useState(initial?.title ?? '')
-  const [keywords, setKeywords] = useState(initial?.keywords ?? '')
-  const [location, setLocation] = useState(initial?.location ?? LOCATIONS[0]!)
-  const [minSalary, setMinSalary] = useState(initial?.minSalary ?? '')
-  const [frequency, setFrequency] = useState(initial?.frequency ?? FREQUENCIES[2]!)
-  const [done, setDone] = useState(false)
-  useScrollLock()
+  const editing = Boolean(initial);
+  const [title, setTitle] = useState(initial?.title ?? "");
+  const [keywords, setKeywords] = useState(initial?.keywords ?? "");
+  const [location, setLocation] = useState(initial?.location ?? LOCATIONS[0]!);
+  const [minSalary, setMinSalary] = useState(initial?.minSalary ?? "");
+  const [frequency, setFrequency] = useState(
+    initial?.frequency ?? FREQUENCIES[2]!,
+  );
+  const [done, setDone] = useState(false);
+  useScrollLock();
 
-  const valid = title.trim().length > 0 && keywords.trim().length > 0
+  const valid = title.trim().length > 0 && keywords.trim().length > 0;
 
   function save() {
-    if (!valid) return
+    if (!valid) return;
     onSave({
       id: initial?.id ?? `alert-${Date.now()}`,
       title: title.trim(),
@@ -49,31 +51,39 @@ export function AlertBuilderModal({
       location,
       minSalary: minSalary.trim(),
       frequency,
-    })
-    setDone(true)
+    });
+    setDone(true);
   }
 
   return (
     <div
       className={styles.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className={styles.modal}>
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close"
+        >
           ×
         </button>
 
         {!done ? (
           <>
-            <div className={styles.eye}>{editing ? 'Edit alert' : 'New saved search'}</div>
+            <div className={styles.eye}>
+              {editing ? "Edit alert" : "New saved search"}
+            </div>
             <div className={styles.title}>
-              {editing ? 'Tune your ' : 'Build a '}
+              {editing ? "Tune your " : "Build a "}
               <em>job alert.</em>
             </div>
             <p className={styles.desc}>
-              We’ll match new listings against your criteria and send them on your chosen cadence.
+              We’ll match new listings against your criteria and send them on
+              your chosen cadence.
             </p>
             <div className={styles.fields}>
               <div className={styles.field}>
@@ -99,7 +109,9 @@ export function AlertBuilderModal({
                   value={keywords}
                   onChange={(e) => setKeywords(e.target.value)}
                 />
-                <span className={styles.hint}>Comma-separated. Matches any of these.</span>
+                <span className={styles.hint}>
+                  Comma-separated. Matches any of these.
+                </span>
               </div>
               <div className={styles.fieldRow}>
                 <div className={styles.field}>
@@ -140,7 +152,7 @@ export function AlertBuilderModal({
             </div>
             <div className={styles.actions}>
               <Button variant="primary" onClick={save} disabled={!valid}>
-                {editing ? 'Save changes' : 'Create alert'}
+                {editing ? "Save changes" : "Create alert"}
               </Button>
               <Button variant="ghost" onClick={onClose}>
                 Cancel
@@ -164,8 +176,8 @@ export function AlertBuilderModal({
               )}
             </div>
             <p className={styles.successSub}>
-              “{title.trim()}” is live on a {frequency.toLowerCase()}. We’ll let you know the moment a
-              matching role appears.
+              “{title.trim()}” is live on a {frequency.toLowerCase()}. We’ll let
+              you know the moment a matching role appears.
             </p>
             <div className={styles.successActions}>
               <Button variant="ghost-dark" onClick={onClose}>
@@ -176,5 +188,5 @@ export function AlertBuilderModal({
         )}
       </div>
     </div>
-  )
+  );
 }

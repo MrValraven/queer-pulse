@@ -1,23 +1,26 @@
-import { useState } from 'react'
-import { Button } from '../../shared/components/ui'
-import { safetyFor } from './employerSafety.data'
-import { SafetyBadges } from './SafetyBadges'
-import type { Company } from './employerReviews.data'
-import styles from './EmployerReviewsPage.module.css'
+import { useState } from "react";
+import { Button } from "../../shared/components/ui";
+import { safetyFor } from "./employerSafety.data";
+import { SafetyBadges } from "./SafetyBadges";
+import type { Company } from "./employerReviews.data";
+import styles from "./EmployerReviewsPage.module.css";
 
 export function EmployerReviewCard({
   company: c,
   onWriteReview,
 }: {
-  company: Company
-  onWriteReview?: () => void
+  company: Company;
+  onWriteReview?: () => void;
 }) {
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(false);
 
   return (
     <div className={styles.companyCard}>
       <div className={styles.coTop}>
-        <div className={styles.coAv} style={{ background: c.avBg, color: c.avColor }}>
+        <div
+          className={styles.coAv}
+          style={{ background: c.avBg, color: c.avColor }}
+        >
           {c.av}
         </div>
         <div style={{ flex: 1, paddingLeft: 14 }}>
@@ -25,17 +28,22 @@ export function EmployerReviewCard({
           <div className={styles.coIndustry}>{c.industry}</div>
         </div>
         <div className={styles.coScore}>
-          <div className={styles.coNum} style={c.scoreColor ? { color: c.scoreColor } : undefined}>
+          <div
+            className={styles.coNum}
+            style={c.scoreColor ? { color: c.scoreColor } : undefined}
+          >
             {c.score}
           </div>
           <div className={styles.coLabel}>/ 10</div>
-          <div className={styles.coConfidence}>based on {c.reviewCount} reviews</div>
+          <div className={styles.coConfidence}>
+            based on {c.reviewCount} reviews
+          </div>
         </div>
       </div>
       <div className={styles.coSafety}>
         <SafetyBadges
           signals={safetyFor(c.name)}
-          affiliation={c.queerRun ? 'run' : 'friendly'}
+          affiliation={c.queerRun ? "run" : "friendly"}
         />
       </div>
       <div className={styles.coBars}>
@@ -45,7 +53,10 @@ export function EmployerReviewCard({
             <div className={styles.barTrack}>
               <div
                 className={styles.barFill}
-                style={{ width: `${b.pct}%`, background: b.accent ? 'var(--accent)' : undefined }}
+                style={{
+                  width: `${b.pct}%`,
+                  background: b.accent ? "var(--accent)" : undefined,
+                }}
               />
             </div>
             <span>{b.score}</span>
@@ -83,7 +94,7 @@ export function EmployerReviewCard({
           onClick={() => setExpanded((v) => !v)}
           aria-expanded={expanded}
         >
-          {expanded ? 'Show less' : `Read all ${c.reviews.length} reviews`}
+          {expanded ? "Show less" : `Read all ${c.reviews.length} reviews`}
         </Button>
         <Button
           type="button"
@@ -95,5 +106,5 @@ export function EmployerReviewCard({
         </Button>
       </div>
     </div>
-  )
+  );
 }

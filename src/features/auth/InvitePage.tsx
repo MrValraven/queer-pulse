@@ -1,18 +1,18 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FiLink, FiMail } from 'react-icons/fi'
-import { AppShell } from '../../shared/components/layout'
-import { Button } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
-import { InviteEmailForm } from './InviteEmailForm'
-import { InviteLinkPanel } from './InviteLinkPanel'
-import styles from './InvitePage.module.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiLink, FiMail } from "react-icons/fi";
+import { AppShell } from "../../shared/components/layout";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
+import { InviteEmailForm } from "./InviteEmailForm";
+import { InviteLinkPanel } from "./InviteLinkPanel";
+import styles from "./InvitePage.module.css";
 
-type Mode = 'email' | 'link'
+type Mode = "email" | "link";
 
 export function InvitePage() {
-  const [mode, setMode] = useState<Mode>('email')
-  const [sentName, setSentName] = useState<string | null>(null)
+  const [mode, setMode] = useState<Mode>("email");
+  const [sentName, setSentName] = useState<string | null>(null);
 
   if (sentName) {
     return (
@@ -21,16 +21,25 @@ export function InvitePage() {
           <div className={styles.inner}>
             <div className={`${styles.card} ${styles.sent} ${styles.screenIn}`}>
               <div className={styles.sentIcon}>
-                <svg width={26} height={26} viewBox="0 0 26 26" fill="none" aria-hidden>
-                  <path d="M2 13l21-10-8 10 8 10-21-10Z" fill="rgba(74,140,111,.8)" />
+                <svg
+                  width={26}
+                  height={26}
+                  viewBox="0 0 26 26"
+                  fill="none"
+                  aria-hidden
+                >
+                  <path
+                    d="M2 13l21-10-8 10 8 10-21-10Z"
+                    fill="rgba(74,140,111,.8)"
+                  />
                 </svg>
               </div>
               <div className={styles.sentHead}>
                 Invitation sent to <em>{sentName}</em>
               </div>
               <div className={styles.sentSub}>
-                We've sent {sentName} an email. They have 7 days to accept. You'll be notified when
-                they join.
+                We've sent {sentName} an email. They have 7 days to accept.
+                You'll be notified when they join.
               </div>
               <div className={styles.summaryCard}>
                 <div className={styles.srRow}>
@@ -55,7 +64,7 @@ export function InvitePage() {
           </div>
         </div>
       </AppShell>
-    )
+    );
   }
 
   return (
@@ -70,21 +79,27 @@ export function InvitePage() {
             Bring someone <em>in</em>
           </div>
           <div className={styles.sub}>
-            QueerPulse grows through trust, not advertising. Use your invite for someone you'd
-            genuinely vouch for.
+            QueerPulse grows through trust, not advertising. Use your invite for
+            someone you'd genuinely vouch for.
           </div>
           <div className={styles.quotaRow}>
-            <div className={styles.quotaChip}>1 invite available this month</div>
+            <div className={styles.quotaChip}>
+              1 invite available this month
+            </div>
             <div className={styles.resetNote}>Resets 1 July 2026</div>
           </div>
 
-          <div className={styles.segmented} role="tablist" aria-label="Delivery method">
+          <div
+            className={styles.segmented}
+            role="tablist"
+            aria-label="Delivery method"
+          >
             <button
               type="button"
               role="tab"
-              aria-selected={mode === 'email'}
-              className={`${styles.segBtn} ${mode === 'email' ? styles.segBtnActive : ''}`}
-              onClick={() => setMode('email')}
+              aria-selected={mode === "email"}
+              className={`${styles.segBtn} ${mode === "email" ? styles.segBtnActive : ""}`}
+              onClick={() => setMode("email")}
             >
               <FiMail aria-hidden />
               Send via email
@@ -92,16 +107,16 @@ export function InvitePage() {
             <button
               type="button"
               role="tab"
-              aria-selected={mode === 'link'}
-              className={`${styles.segBtn} ${mode === 'link' ? styles.segBtnActive : ''}`}
-              onClick={() => setMode('link')}
+              aria-selected={mode === "link"}
+              className={`${styles.segBtn} ${mode === "link" ? styles.segBtnActive : ""}`}
+              onClick={() => setMode("link")}
             >
               <FiLink aria-hidden />
               Share a link
             </button>
           </div>
 
-          {mode === 'email' ? (
+          {mode === "email" ? (
             <InviteEmailForm onSent={(name) => setSentName(name)} />
           ) : (
             <InviteLinkPanel />
@@ -109,5 +124,5 @@ export function InvitePage() {
         </div>
       </div>
     </AppShell>
-  )
+  );
 }

@@ -543,10 +543,10 @@
   }
 }
 
-:global([data-theme='dark']) .statCard,
-:global([data-theme='dark']) .acItem,
-:global([data-theme='dark']) .prinItem,
-:global([data-theme='dark']) .eventsCard,
-:global([data-theme='dark']) .raiseCard {
+:global([data-theme="dark"]) .statCard,
+:global([data-theme="dark"]) .acItem,
+:global([data-theme="dark"]) .prinItem,
+:global([data-theme="dark"]) .eventsCard,
+:global([data-theme="dark"]) .raiseCard {
   border-color: rgba(247, 243, 238, 0.1);
 }

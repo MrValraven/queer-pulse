@@ -14,7 +14,11 @@
   width: 520px;
   height: 520px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.12) 0%, transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.12) 0%,
+    transparent 60%
+  );
   pointer-events: none;
 }
 .heroInner {
@@ -91,7 +95,11 @@
   width: 440px;
   height: 440px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.18), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.18),
+    transparent 60%
+  );
   pointer-events: none;
 }
 .curInner {

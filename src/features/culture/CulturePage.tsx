@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import { PageShell } from '../../shared/components/layout'
-import { Button, FadeIn, Outro } from '../../shared/components/ui'
-import { routes } from '../../app/routeMap'
+import { useState } from "react";
+import { PageShell } from "../../shared/components/layout";
+import { Button, FadeIn, Outro } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import {
   ClubSection,
   CommissionsSection,
   ShowcaseSection,
   RadioIntro,
-} from './CultureSections'
-import { CultureRadioPanel } from './CultureRadioPanel'
-import { SubmitWorkModal } from './CultureFormModals'
-import { TABS, type TabKey } from './culture.data'
-import styles from './CulturePage.module.css'
+} from "./CultureSections";
+import { CultureRadioPanel } from "./CultureRadioPanel";
+import { SubmitWorkModal } from "./CultureFormModals";
+import { TABS, type TabKey } from "./culture.data";
+import styles from "./CulturePage.module.css";
 
 export function CulturePage() {
-  const [tab, setTab] = useState<TabKey>('club')
-  const [submitOpen, setSubmitOpen] = useState(false)
+  const [tab, setTab] = useState<TabKey>("club");
+  const [submitOpen, setSubmitOpen] = useState(false);
 
   return (
     <PageShell>
@@ -26,8 +26,8 @@ export function CulturePage() {
             Lisbon's queer <em>scene</em>.
           </h1>
           <p className={styles.lead}>
-            The clubs, commissions, showcases, and radio that make up the city's queer
-            cultural life — community-curated, ever-changing.
+            The clubs, commissions, showcases, and radio that make up the city's
+            queer cultural life — community-curated, ever-changing.
           </p>
           <div className={styles.tabs} role="tablist">
             {TABS.map((t) => (
@@ -35,7 +35,7 @@ export function CulturePage() {
                 key={t.key}
                 role="tab"
                 aria-selected={tab === t.key}
-                className={`${styles.tab} ${tab === t.key ? styles.tabActive : ''}`}
+                className={`${styles.tab} ${tab === t.key ? styles.tabActive : ""}`}
                 onClick={() => setTab(t.key)}
               >
                 {t.label}
@@ -48,18 +48,22 @@ export function CulturePage() {
       <div className={styles.body}>
         <div className="wrap">
           <FadeIn key={tab}>
-            {tab === 'club' && <ClubSection />}
-            {tab === 'commission' && <CommissionsSection />}
-            {tab === 'showcase' && <ShowcaseSection />}
-            {tab === 'radio' && <RadioIntro />}
+            {tab === "club" && <ClubSection />}
+            {tab === "commission" && <CommissionsSection />}
+            {tab === "showcase" && <ShowcaseSection />}
+            {tab === "radio" && <RadioIntro />}
           </FadeIn>
         </div>
       </div>
 
-      {tab === 'radio' && <CultureRadioPanel />}
+      {tab === "radio" && <CultureRadioPanel />}
 
       <Outro
-        title={<>Make something <em>with us.</em></>}
+        title={
+          <>
+            Make something <em>with us.</em>
+          </>
+        }
         sub="Culture isn't what happens at events. It's what we build between them — quietly, consistently, together."
       >
         <Button size="lg" onClick={() => setSubmitOpen(true)}>
@@ -72,5 +76,5 @@ export function CulturePage() {
 
       {submitOpen && <SubmitWorkModal onClose={() => setSubmitOpen(false)} />}
     </PageShell>
-  )
+  );
 }

@@ -1,25 +1,25 @@
-import { useState } from 'react'
-import { ToolPage } from './tools/ToolPage'
-import { TakeHomeForm } from './TakeHomeForm'
-import { TakeHomeResult } from './TakeHomeResult'
-import type { TaxYear } from './tax.calc'
-import type { ActivityKey, StartupYear, WorkerStatus } from './takeHome.data'
+import { useState } from "react";
+import { ToolPage } from "./tools/ToolPage";
+import { TakeHomeForm } from "./TakeHomeForm";
+import { TakeHomeResult } from "./TakeHomeResult";
+import type { TaxYear } from "./tax.calc";
+import type { ActivityKey, StartupYear, WorkerStatus } from "./takeHome.data";
 
 interface TakeHomeState {
-  gross: string
-  activity: ActivityKey
-  year: TaxYear
-  startupYear: StartupYear
-  status: WorkerStatus
+  gross: string;
+  activity: ActivityKey;
+  year: TaxYear;
+  startupYear: StartupYear;
+  status: WorkerStatus;
 }
 
 const INITIAL: TakeHomeState = {
-  gross: '30000',
-  activity: 'services',
+  gross: "30000",
+  activity: "services",
   year: 2026,
   startupYear: 0,
-  status: 'freelancer',
-}
+  status: "freelancer",
+};
 
 /**
  * Live take-home calculator: turns a Portuguese freelancer's annual gross into
@@ -27,8 +27,9 @@ const INITIAL: TakeHomeState = {
  * `estimateTakeHome` and the constants in `tax.constants.ts`.
  */
 export function TakeHomeCalculatorPage() {
-  const [state, setState] = useState<TakeHomeState>(INITIAL)
-  const patch = (next: Partial<TakeHomeState>) => setState((s) => ({ ...s, ...next }))
+  const [state, setState] = useState<TakeHomeState>(INITIAL);
+  const patch = (next: Partial<TakeHomeState>) =>
+    setState((s) => ({ ...s, ...next }));
 
   return (
     <ToolPage
@@ -59,5 +60,5 @@ export function TakeHomeCalculatorPage() {
         />
       }
     />
-  )
+  );
 }

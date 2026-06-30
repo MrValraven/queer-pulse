@@ -1,16 +1,16 @@
-import { FiShield } from 'react-icons/fi'
-import { Button } from '../../shared/components/ui'
-import { AdminModal, AdminChip, AdminAvatar } from './ui'
-import { portrait } from './adminPeople.data'
-import type { AuditEntry } from './adminGovernance.data'
-import styles from './AdminGovernancePage.module.css'
+import { FiShield } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { AdminModal, AdminChip, AdminAvatar } from "./ui";
+import { portrait } from "./adminPeople.data";
+import type { AuditEntry } from "./adminGovernance.data";
+import styles from "./AdminGovernancePage.module.css";
 
 export function AdminGovernanceAuditModal({
   entry,
   onClose,
 }: {
-  entry: AuditEntry
-  onClose: () => void
+  entry: AuditEntry;
+  onClose: () => void;
 }) {
   return (
     <AdminModal
@@ -54,9 +54,9 @@ export function AdminGovernanceAuditModal({
 
       <p className={styles.entryNote}>
         <FiShield className={styles.entryNoteIco} aria-hidden />
-        The affected member was shown this reason and given the right to appeal. This entry can never
-        be edited or deleted.
+        The affected member was shown this reason and given the right to appeal.
+        This entry can never be edited or deleted.
       </p>
     </AdminModal>
-  )
+  );
 }

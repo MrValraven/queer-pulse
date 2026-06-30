@@ -1,10 +1,10 @@
-import { useState, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { PageShell } from '../../shared/components/layout'
-import { routes } from '../../app/routeMap'
-import { GiftMembershipForm } from './GiftMembershipForm'
-import { GIFT_MODES, type ModeIcon } from './giftMembership.data'
-import styles from './GiftMembershipPage.module.css'
+import { useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { PageShell } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
+import { GiftMembershipForm } from "./GiftMembershipForm";
+import { GIFT_MODES, type ModeIcon } from "./giftMembership.data";
+import styles from "./GiftMembershipPage.module.css";
 
 const modeIcons: Record<ModeIcon, ReactNode> = {
   gift: (
@@ -21,10 +21,10 @@ const modeIcons: Record<ModeIcon, ReactNode> = {
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
     </svg>
   ),
-}
+};
 
 export function GiftMembershipPage() {
-  const [mode, setMode] = useState<'gift' | 'sponsor'>('gift')
+  const [mode, setMode] = useState<"gift" | "sponsor">("gift");
 
   return (
     <PageShell>
@@ -35,10 +35,13 @@ export function GiftMembershipPage() {
             Give somebody else <em>a seat.</em>
           </h1>
           <p className={styles.dek}>
-            Two ways to do this. <b>Gift</b> someone you know directly — a friend, a partner, the
-            person who introduced you to all this. Or <b>sponsor anonymously</b> — your gift goes
-            into a pool a member applies to, no questions asked, when they need it.{' '}
-            <em>Both keep someone here who might otherwise have stepped back.</em>
+            Two ways to do this. <b>Gift</b> someone you know directly — a
+            friend, a partner, the person who introduced you to all this. Or{" "}
+            <b>sponsor anonymously</b> — your gift goes into a pool a member
+            applies to, no questions asked, when they need it.{" "}
+            <em>
+              Both keep someone here who might otherwise have stepped back.
+            </em>
           </p>
         </div>
       </section>
@@ -54,7 +57,7 @@ export function GiftMembershipPage() {
             <button
               key={m.id}
               type="button"
-              className={`${styles.modeCard} ${m.jade ? styles.jade : ''} ${mode === m.id ? styles.selected : ''}`}
+              className={`${styles.modeCard} ${m.jade ? styles.jade : ""} ${mode === m.id ? styles.selected : ""}`}
               onClick={() => setMode(m.id)}
             >
               <div className={styles.modeIc}>{modeIcons[m.icon]}</div>
@@ -75,8 +78,8 @@ export function GiftMembershipPage() {
             Gift details · <em>tell us who's it for</em>
           </h2>
           <p className={styles.formSub}>
-            All editable until they accept. You can also schedule the delivery — for a birthday, a
-            coming-out anniversary, the day they need it most.
+            All editable until they accept. You can also schedule the delivery —
+            for a birthday, a coming-out anniversary, the day they need it most.
           </p>
           <GiftMembershipForm />
         </div>
@@ -87,12 +90,14 @@ export function GiftMembershipPage() {
           Or skip the form · <em>sponsor anonymously</em>
         </h3>
         <p>
-          If you'd rather not name a recipient,{' '}
-          <Link to={routes.solidarity}>drop your gift into the solidarity-membership pool</Link>. We
-          match it with a member who applied — usually within 48 hours.{' '}
+          If you'd rather not name a recipient,{" "}
+          <Link to={routes.solidarity}>
+            drop your gift into the solidarity-membership pool
+          </Link>
+          . We match it with a member who applied — usually within 48 hours.{" "}
           <em>You get a thank-you and a count; not a name.</em>
         </p>
       </section>
     </PageShell>
-  )
+  );
 }

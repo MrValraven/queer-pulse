@@ -100,7 +100,9 @@
   flex-direction: column;
   gap: 10px;
   color: inherit;
-  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
 }
 .card:hover {
   transform: translateY(-2px);
@@ -196,10 +198,10 @@
   }
 }
 
-:global([data-theme='dark']) .bar {
+:global([data-theme="dark"]) .bar {
   background: rgba(26, 16, 40, 0.86);
 }
-:global([data-theme='dark']) .card,
-:global([data-theme='dark']) .search {
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .search {
   border-color: rgba(247, 243, 238, 0.1);
 }

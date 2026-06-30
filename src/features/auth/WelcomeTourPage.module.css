@@ -238,7 +238,9 @@
   border: 1.5px solid rgba(45, 27, 61, 0.12);
   border-radius: 12px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 .visOpt:has(input:checked) {
   border-color: var(--accent);
@@ -311,7 +313,9 @@
   border: 1.5px solid rgba(45, 27, 61, 0.12);
   border-radius: 14px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 .commPick input {
   margin-top: 4px;
@@ -432,7 +436,9 @@
   padding: 16px;
   display: block;
   color: inherit;
-  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  transition:
+    transform 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
 }
 .exCard:hover {
   transform: translateY(-2px);
@@ -488,11 +494,11 @@
   }
 }
 
-:global([data-theme='dark']) .vouchCard,
-:global([data-theme='dark']) .sugCard,
-:global([data-theme='dark']) .exCard {
+:global([data-theme="dark"]) .vouchCard,
+:global([data-theme="dark"]) .sugCard,
+:global([data-theme="dark"]) .exCard {
   border-color: rgba(247, 243, 238, 0.1);
 }
-:global([data-theme='dark']) .topNav {
+:global([data-theme="dark"]) .topNav {
   border-color: rgba(247, 243, 238, 0.1);
 }

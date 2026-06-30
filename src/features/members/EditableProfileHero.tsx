@@ -1,19 +1,19 @@
-import { Reveal } from '../../shared/components/ui'
-import type { ImageSlotTint } from '../../shared/components/ui'
-import { useProfile } from '../../app/providers/ProfileProvider'
-import { AvatarEditor } from './AvatarEditor'
+import { Reveal } from "../../shared/components/ui";
+import type { ImageSlotTint } from "../../shared/components/ui";
+import { useProfile } from "../../app/providers/ProfileProvider";
+import { AvatarEditor } from "./AvatarEditor";
 import {
   InlineText,
   InlineTextarea,
   PronounPicker,
   TagEditor,
   VisibilityPicker,
-} from './profileEditControls'
-import base from './ProfilePage.module.css'
-import styles from './ProfileEdit.module.css'
+} from "./profileEditControls";
+import base from "./ProfilePage.module.css";
+import styles from "./ProfileEdit.module.css";
 
 function resolveTint(tint: string): ImageSlotTint {
-  return tint === 'coral' || tint === 'jade' || tint === 'plum' ? tint : 'plum'
+  return tint === "coral" || tint === "jade" || tint === "plum" ? tint : "plum";
 }
 
 /**
@@ -22,7 +22,7 @@ function resolveTint(tint: string): ImageSlotTint {
  * and discarding live in the sticky `ProfileEditBar` rendered by the page.
  */
 export function EditableProfileHero() {
-  const { profile, draft, updateDraft } = useProfile()
+  const { profile, draft, updateDraft } = useProfile();
 
   return (
     <header className={base.phero}>
@@ -41,7 +41,9 @@ export function EditableProfileHero() {
 
           <Reveal delay={80}>
             <div className={styles.field}>
-              <label className={styles.fieldLabel}>Status &amp; visibility</label>
+              <label className={styles.fieldLabel}>
+                Status &amp; visibility
+              </label>
               <VisibilityPicker
                 value={draft.visibility}
                 onChange={(v) => updateDraft({ visibility: v })}
@@ -120,5 +122,5 @@ export function EditableProfileHero() {
         </div>
       </div>
     </header>
-  )
+  );
 }

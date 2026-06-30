@@ -1,54 +1,54 @@
-import type { ReactNode } from 'react'
-import { Button } from './Button'
-import styles from './EmptyState.module.css'
+import type { ReactNode } from "react";
+import { Button } from "./Button";
+import styles from "./EmptyState.module.css";
 
 interface EmptyStateAction {
-  label: ReactNode
-  to?: string
-  href?: string
-  onClick?: () => void
+  label: ReactNode;
+  to?: string;
+  href?: string;
+  onClick?: () => void;
 }
 
 interface EmptyStateProps {
   /** Icon element (react-icons), shown in a tinted circle. */
-  icon?: ReactNode
-  title: string
-  description?: ReactNode
+  icon?: ReactNode;
+  title: string;
+  description?: ReactNode;
   /** Primary call-to-action that helps the user recover or move on. */
-  action?: EmptyStateAction
+  action?: EmptyStateAction;
   /** Secondary, lower-emphasis action. */
-  secondaryAction?: EmptyStateAction
+  secondaryAction?: EmptyStateAction;
   /** Tighter padding for inline/in-grid usage. */
-  compact?: boolean
-  className?: string
+  compact?: boolean;
+  className?: string;
 }
 
 function ActionButton({
   action,
   variant,
 }: {
-  action: EmptyStateAction
-  variant: 'primary' | 'ghost'
+  action: EmptyStateAction;
+  variant: "primary" | "ghost";
 }) {
   if (action.to) {
     return (
       <Button variant={variant} to={action.to}>
         {action.label}
       </Button>
-    )
+    );
   }
   if (action.href) {
     return (
       <Button variant={variant} href={action.href}>
         {action.label}
       </Button>
-    )
+    );
   }
   return (
     <Button variant={variant} onClick={action.onClick}>
       {action.label}
     </Button>
-  )
+  );
 }
 
 /**
@@ -67,7 +67,7 @@ export function EmptyState({
 }: EmptyStateProps) {
   const cls = [styles.empty, compact && styles.compact, className]
     .filter(Boolean)
-    .join(' ')
+    .join(" ");
   return (
     <div className={cls} role="status">
       {icon && (
@@ -86,5 +86,5 @@ export function EmptyState({
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -1,43 +1,44 @@
-import type { LibraryItem } from './types'
-import { routes } from '../../../app/routeMap'
+import type { LibraryItem } from "./types";
+import { routes } from "../../../app/routeMap";
 
 export const libraryItems: LibraryItem[] = [
   {
     href: `${routes.library}#freelance-taxes`,
-    type: 'recording',
-    typeLabel: 'Recording',
-    title: 'Navigating freelance taxes in Portugal as a foreign national',
-    meta: ['Workshop · May 2026', '48 min'],
+    type: "recording",
+    typeLabel: "Recording",
+    title: "Navigating freelance taxes in Portugal as a foreign national",
+    meta: ["Workshop · May 2026", "48 min"],
   },
   {
     href: `${routes.library}#trans-healthcare`,
-    type: 'guide',
-    typeLabel: 'Guide',
+    type: "guide",
+    typeLabel: "Guide",
     title:
       "Trans healthcare in Portugal: what you're entitled to and how to access it",
-    meta: ['Jonas Ferreira', 'Updated Apr 2026'],
+    meta: ["Jonas Ferreira", "Updated Apr 2026"],
   },
   {
     href: `${routes.library}#portfolio-notes`,
-    type: 'notes',
-    typeLabel: 'Meeting Notes',
-    title: 'Portfolio Night №8: feedback, patterns, and what designers said',
-    meta: ['Gathering notes · Mar 2026', '10 min read'],
+    type: "notes",
+    typeLabel: "Meeting Notes",
+    title: "Portfolio Night №8: feedback, patterns, and what designers said",
+    meta: ["Gathering notes · Mar 2026", "10 min read"],
   },
   {
     href: `${routes.library}#housing-rights`,
-    type: 'guide',
-    typeLabel: 'Guide',
-    title: 'Tenant rights for LGBTQ+ renters in Lisbon: a practical guide',
-    meta: ['Catarina Vaz', 'Updated Feb 2026'],
+    type: "guide",
+    typeLabel: "Guide",
+    title: "Tenant rights for LGBTQ+ renters in Lisbon: a practical guide",
+    meta: ["Catarina Vaz", "Updated Feb 2026"],
   },
   {
     href: `${routes.library}#collective`,
-    type: 'recording',
-    typeLabel: 'Recording',
-    title: 'Starting a queer creative collective: legal structures, money, and trust',
-    meta: ['Workshop · Jan 2026', '62 min'],
+    type: "recording",
+    typeLabel: "Recording",
+    title:
+      "Starting a queer creative collective: legal structures, money, and trust",
+    meta: ["Workshop · Jan 2026", "62 min"],
   },
-]
+];
 
-export const libraryMoreCount = '47 more'
+export const libraryMoreCount = "47 more";

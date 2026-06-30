@@ -93,7 +93,7 @@
   z-index: 10;
 }
 .vtip::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   right: 50%;
@@ -164,6 +164,6 @@
   gap: 10px;
 }
 
-:global([data-theme='dark']) .card {
+:global([data-theme="dark"]) .card {
   border-color: rgba(247, 243, 238, 0.1);
 }

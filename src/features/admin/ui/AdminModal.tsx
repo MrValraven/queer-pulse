@@ -1,7 +1,7 @@
-import { useEffect, type ReactNode } from 'react'
-import { FiX } from 'react-icons/fi'
-import { useScrollLock } from '../../../shared/hooks'
-import styles from './adminUi.module.css'
+import { useEffect, type ReactNode } from "react";
+import { FiX } from "react-icons/fi";
+import { useScrollLock } from "../../../shared/hooks";
+import styles from "./adminUi.module.css";
 
 /**
  * Centered modal dialog. Mount it only while open (parent renders it
@@ -15,25 +15,27 @@ export function AdminModal({
   wide = false,
   children,
 }: {
-  eyebrow?: ReactNode
-  title: ReactNode
-  onClose: () => void
-  footer?: ReactNode
-  wide?: boolean
-  children: ReactNode
+  eyebrow?: ReactNode;
+  title: ReactNode;
+  onClose: () => void;
+  footer?: ReactNode;
+  wide?: boolean;
+  children: ReactNode;
 }) {
-  useScrollLock()
+  useScrollLock();
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [onClose])
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
   return (
     <div className={styles.modalScrim} onClick={onClose}>
       <div
-        className={[styles.modal, wide && styles.modalWide].filter(Boolean).join(' ')}
+        className={[styles.modal, wide && styles.modalWide]
+          .filter(Boolean)
+          .join(" ")}
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
@@ -43,7 +45,12 @@ export function AdminModal({
             {eyebrow && <div className={styles.modalEyebrow}>{eyebrow}</div>}
             <h3 className={styles.modalTitle}>{title}</h3>
           </div>
-          <button type="button" className={styles.modalX} onClick={onClose} aria-label="Close">
+          <button
+            type="button"
+            className={styles.modalX}
+            onClick={onClose}
+            aria-label="Close"
+          >
             <FiX />
           </button>
         </div>
@@ -51,5 +58,5 @@ export function AdminModal({
         {footer && <div className={styles.modalFoot}>{footer}</div>}
       </div>
     </div>
-  )
+  );
 }
