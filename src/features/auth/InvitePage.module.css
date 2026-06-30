@@ -612,13 +612,14 @@
   align-items: center;
   text-align: center;
   padding: 18px;
-  gap: 6px;
+  gap: 0;
 }
 .previewHeroBrand {
   font-family: var(--serif);
   font-size: 15px;
   letter-spacing: 0.01em;
-  opacity: 0.85;
+  opacity: 0.7;
+  margin-bottom: 16px;
 }
 .previewHeroBrand em {
   font-style: italic;
@@ -639,14 +640,14 @@
   max-width: 30ch;
   font-size: clamp(13px, 1.6vw, 15px);
   line-height: 1.5;
-  color: rgba(247, 243, 238, 0.82);
-  margin-top: 2px;
+  color: rgba(247, 243, 238, 0.78);
+  margin-top: 10px;
 }
 .previewHeroSub {
   font-size: 12px;
   letter-spacing: 0.04em;
-  opacity: 0.7;
-  margin-top: 4px;
+  opacity: 0.55;
+  margin-top: 18px;
 }
 .previewMeta {
   padding: 13px 16px 15px;

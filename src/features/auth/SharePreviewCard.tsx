@@ -23,10 +23,11 @@ export function SharePreviewCard({
           Queer<em>Pulse</em>
         </div>
         <div className={styles.previewHeroTitle}>
-          You belong <em>here</em>
+          Walk into a room <br />
+          <em>where you already belong</em>
         </div>
         <div className={styles.previewHeroExplainer}>
-          Where queer Lisbon gathers — no ads, no algorithm.
+          A queer network. Rooted in Lisbon.
         </div>
         <div className={styles.previewHeroSub}>Invite-only · 247 members</div>
       </div>
