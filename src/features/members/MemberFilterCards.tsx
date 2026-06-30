@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Avatar, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
 import { fullName, memberProfiles } from './data/memberProfiles'
+import { initialsOf, tintForSlug } from './api/members.adapters'
 import {
   ALL_PROFESSIONS,
   DISCIPLINES,
@@ -265,12 +266,26 @@ export function MemberResultSkeleton() {
 }
 
 export function MemberResultCard({ member }: { member: MemberCard }) {
-  const m = memberProfiles[member.slug]
-  const name = fullName(m)
+  // Identity resolves from the card itself (live/API cards carry it), falling
+  // back to the local registry (demo cards), then to slug-derived defaults so a
+  // member with no mock profile never crashes the card.
+  const profile = memberProfiles[member.slug]
+  const name = member.firstName
+    ? `${member.firstName} ${member.lastName ?? ''}`.trim()
+    : profile
+      ? fullName(profile)
+      : member.slug
+  const initials = profile?.initials
+    ? profile.initials
+    : member.firstName
+      ? initialsOf(member.firstName, member.lastName ?? '')
+      : member.slug.slice(0, 2).toUpperCase()
+  const tint = profile?.tint ?? tintForSlug(member.slug)
+  const photo = profile?.photo ?? member.avatarUrl ?? undefined
   return (
     <Link to={`/members/${member.slug}`} className={styles.mCard}>
       <div className={styles.mHead}>
-        <Avatar initials={m.initials} tint={m.tint} src={m.photo} size={48} alt={name} />
+        <Avatar initials={initials} tint={tint} src={photo} size={48} alt={name} />
         <div>
           <div className={styles.mName}>{name}</div>
           <div className={styles.mPron}>{member.meta}</div>

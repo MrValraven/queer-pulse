@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
-import { FiInfo, FiSearch } from 'react-icons/fi'
+import { FiInfo, FiSearch, FiUserPlus } from 'react-icons/fi'
 import { PageShell } from '../../shared/components/layout'
+import { routes } from '../../app/routeMap'
 import { Button, EmptyState, FadeIn } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { useToast } from '../../shared/components/feedback/useToast'
@@ -98,14 +99,22 @@ export function ConnectionsPage() {
     <PageShell>
       <div className={styles.page}>
         <header className={styles.head}>
-          <div className={styles.eyebrow}>Your network</div>
-          <h1 className={styles.h1}>
-            People you've <em>actually met.</em>
-          </h1>
-          <p className={styles.lead}>
-            QueerPulse doesn't do followers. You connect with people once you've met them — at a
-            gathering, through someone, or because they vouched for you. Quality over count.
-          </p>
+          <div className={styles.headText}>
+            <div className={styles.eyebrow}>Your network</div>
+            <h1 className={styles.h1}>
+              People you've <em>actually met.</em>
+            </h1>
+            <p className={styles.lead}>
+              QueerPulse doesn't do followers. You connect with people once you've met them — at a
+              gathering, through someone, or because they vouched for you. Quality over count.
+            </p>
+          </div>
+          <div className={styles.headActions}>
+            <Button variant="primary" to={routes.invite}>
+              <FiUserPlus />
+              Invite a friend
+            </Button>
+          </div>
         </header>
 
         <div className={styles.langNote}>

@@ -16,11 +16,13 @@ import {
   FiSettings,
   FiHelpCircle,
   FiLogOut,
+  FiDatabase,
 } from 'react-icons/fi'
 import { Avatar } from '../ui'
 import { useAuth } from '../../../app/providers/authContext'
 import { routes, modPanel } from '../../../app/routeMap'
 import { useAdminRole, DEMO_MOD_SLUG } from '../../../features/admin/adminRole'
+import { useDemoMode } from '../../../app/providers/DemoModeProvider'
 import { currentUser, fullName } from '../../../features/members/data/members'
 import styles from './AccountMenu.module.css'
 
@@ -69,6 +71,7 @@ export const ACCOUNT_ITEMS = ACCOUNT_GROUPS.flat()
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
 export function AccountMenu({ name = fullName(currentUser), initials = currentUser.initials }: { name?: string; initials?: string }) {
   const { signOut } = useAuth()
+  const { demoMode, available, toggle } = useDemoMode()
   const { role, setRole } = useAdminRole()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -137,6 +140,26 @@ export function AccountMenu({ name = fullName(currentUser), initials = currentUs
                 </Link>
               )}
             </div>
+            <div className={styles.divider} />
+            <button
+              type="button"
+              role="menuitemcheckbox"
+              aria-checked={demoMode}
+              className={styles.populate}
+              disabled={!available}
+              onClick={() => toggle()}
+            >
+              <FiDatabase aria-hidden className={styles.itemIcon} />
+              <span className={styles.itemLabel}>Populate platform</span>
+              <span
+                className={[styles.populateState, demoMode && styles.populateOn]
+                  .filter(Boolean)
+                  .join(' ')}
+                aria-hidden
+              >
+                {available ? (demoMode ? 'On' : 'Off') : 'No API'}
+              </span>
+            </button>
             <div className={styles.divider} />
             <div className={styles.roleLabel}>Acting as</div>
             <div className={styles.roleSwitch} role="group" aria-label="Simulated team role">

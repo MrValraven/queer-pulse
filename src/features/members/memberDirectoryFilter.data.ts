@@ -35,6 +35,13 @@ export interface MemberCard {
   slug: string
   meta: string
   role: string
+  // Identity for live (API) cards that have no entry in the local member
+  // registry. Demo cards leave these undefined and resolve name/avatar from the
+  // registry by slug; live cards carry their own so the card never depends on a
+  // mock profile existing.
+  firstName?: string
+  lastName?: string
+  avatarUrl?: string | null
   tags: { label: string; match?: boolean }[]
   vouch: string
   mutuals: string
@@ -373,6 +380,19 @@ export const DEFAULT_FILTERS: FilterState = {
   professions: [],
   identities: [],
   languages: ['PT', 'EN'],
+  yearsFrom: 0,
+  yearsTo: 9,
+}
+
+/** A truly empty filter set — what "Clear filters" resets to (the page opens on
+ *  the curated DEFAULT_FILTERS, so clearing must reach for this, not the default). */
+export const EMPTY_FILTERS: FilterState = {
+  openTo: [],
+  hoods: [],
+  disciplines: [],
+  professions: [],
+  identities: [],
+  languages: [],
   yearsFrom: 0,
   yearsTo: 9,
 }

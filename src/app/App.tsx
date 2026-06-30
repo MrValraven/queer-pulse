@@ -1,5 +1,8 @@
 import { BrowserRouter } from 'react-router-dom'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from '../shared/api/queryClient'
 import { ThemeProvider } from './providers/ThemeProvider'
+import { DemoModeProvider } from './providers/DemoModeProvider'
 import { AuthProvider } from './providers/AuthProvider'
 import { I18nProvider } from './providers/I18nProvider'
 import { ToastProvider } from '../shared/components/feedback/ToastProvider'
@@ -22,40 +25,44 @@ import { AppRoutes } from './routes'
 export default function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <I18nProvider>
-          <ToastProvider>
-            <AdminRoleProvider>
-            <BrowserRouter>
-              <ScrollManager />
-              <WorkProfileProvider>
-                <ProfileProvider>
-                  <ProfileThemeProvider>
-                    <ConnectionsProvider>
-                    <ConnectProvider>
-                      <VouchProvider>
-                        <SavedProvider>
-                          <DraftsProvider>
-                            <SocialProvider>
-                              <CommunityMembershipProvider>
-                                <AppRoutes />
-                                <CommandPalette />
-                              </CommunityMembershipProvider>
-                            </SocialProvider>
-                          </DraftsProvider>
-                        </SavedProvider>
-                      </VouchProvider>
-                    </ConnectProvider>
-                    </ConnectionsProvider>
-                  </ProfileThemeProvider>
-                </ProfileProvider>
-              </WorkProfileProvider>
-              <RoomLoader />
-            </BrowserRouter>
-            </AdminRoleProvider>
-          </ToastProvider>
-        </I18nProvider>
-      </AuthProvider>
+      <DemoModeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <I18nProvider>
+              <ToastProvider>
+                <AdminRoleProvider>
+                <BrowserRouter>
+                  <ScrollManager />
+                  <WorkProfileProvider>
+                    <ProfileProvider>
+                      <ProfileThemeProvider>
+                        <ConnectionsProvider>
+                        <ConnectProvider>
+                          <VouchProvider>
+                            <SavedProvider>
+                              <DraftsProvider>
+                                <SocialProvider>
+                                  <CommunityMembershipProvider>
+                                    <AppRoutes />
+                                    <CommandPalette />
+                                  </CommunityMembershipProvider>
+                                </SocialProvider>
+                              </DraftsProvider>
+                            </SavedProvider>
+                          </VouchProvider>
+                        </ConnectProvider>
+                        </ConnectionsProvider>
+                      </ProfileThemeProvider>
+                    </ProfileProvider>
+                  </WorkProfileProvider>
+                  <RoomLoader />
+                </BrowserRouter>
+                </AdminRoleProvider>
+              </ToastProvider>
+            </I18nProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </DemoModeProvider>
     </ThemeProvider>
   )
 }

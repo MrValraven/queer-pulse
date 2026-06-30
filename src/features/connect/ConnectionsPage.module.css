@@ -5,9 +5,26 @@
 }
 
 .head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
   padding-bottom: 30px;
   margin-bottom: 28px;
   border-bottom: 2px solid var(--plum);
+}
+.headText {
+  min-width: 0;
+}
+.headActions {
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+@media (max-width: 680px) {
+  .head {
+    flex-direction: column;
+    gap: 20px;
+  }
 }
 .eyebrow {
   font-size: 11px;

@@ -4,7 +4,9 @@ import { PageShell } from '../../shared/components/layout'
 import { Button } from '../../shared/components/ui'
 import { routes } from '../../app/routeMap'
 import { useProfile } from '../../app/providers/ProfileProvider'
-import { currentUserSlug, memberProfiles } from './data/memberProfiles'
+import { useAuth } from '../../app/providers/authContext'
+import { currentUserSlug } from './data/memberProfiles'
+import { useMemberProfile } from './api/useMemberProfile'
 import { ProfileHero, ProfileContent } from './ProfileSections'
 import { EditableProfileHero } from './EditableProfileHero'
 import { ProfileEditBar } from './ProfileEditBar'
@@ -14,15 +16,48 @@ import editStyles from './ProfileEdit.module.css'
 export function ProfilePage() {
   const { slug } = useParams()
   const { profile: liveProfile, isEditing, startEditing } = useProfile()
+  const { user } = useAuth()
   const [previewing, setPreviewing] = useState(false)
 
-  // Your own profile is /account/profile (no slug) or /members/<your-slug>.
-  const isSelf = !slug || slug === currentUserSlug
-  const profile = isSelf
-    ? liveProfile
-    : memberProfiles[slug] || memberProfiles[currentUserSlug]
+  const selfSlug = user?.profile.slug ?? currentUserSlug
+  const isSelf = !slug || slug === selfSlug
+
+  const { data, isLoading } = useMemberProfile(isSelf ? undefined : slug)
+  const otherMember = data?.member ?? null
+  const limited = data?.limited ?? false
+
+  const profile = isSelf ? liveProfile : otherMember
 
   const selfView = isSelf && !previewing
+
+  if (!isSelf && isLoading) {
+    return (
+      <PageShell>
+        <div className="wrap" style={{ padding: '4rem 0', textAlign: 'center', color: 'var(--ink)' }}>
+          Loading profile…
+        </div>
+      </PageShell>
+    )
+  }
+
+  if (!isSelf && !otherMember) {
+    return (
+      <PageShell>
+        <div className="wrap" style={{ padding: '4rem 0', textAlign: 'center' }}>
+          <p style={{ color: 'var(--ink)' }}>This profile isn&apos;t available.</p>
+          <Button to={routes.members} variant="ghost">Back to the room</Button>
+        </div>
+      </PageShell>
+    )
+  }
+
+  // At this point: isSelf → profile = liveProfile (always non-null from ProfileProvider);
+  // !isSelf → otherMember is non-null (guarded by the not-found early-return above).
+  // limited: adapter already zeros out bio/work/openTo; ProfileHero/ProfileContent don't
+  // accept a `limited` prop, so we rely on the sparse fields the adapter returns.
+  void limited
+  // profile is non-null here by the invariant above; assert to satisfy ProfileHero/ProfileContent.
+  const resolvedProfile = profile!
 
   return (
     <PageShell>
@@ -36,13 +71,13 @@ export function ProfilePage() {
         <EditableProfileHero />
       ) : (
         <ProfileHero
-          profile={profile}
+          profile={resolvedProfile}
           asVisitor={isSelf && previewing}
           onEdit={startEditing}
           onPreview={() => setPreviewing(true)}
         />
       )}
-      <ProfileContent profile={profile} isSelf={selfView} />
+      <ProfileContent profile={resolvedProfile} isSelf={selfView} />
 
       {selfView && <ProfileEditBar />}
 

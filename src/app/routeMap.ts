@@ -162,7 +162,7 @@ export const routes = {
   housing: '/housing',
   intersectionality: '/intersectionality',
   invite: '/invite',
-  inviteLanding: '/invite-landing',
+  inviteLanding: '/invite/QP-7F3K-2026',
   issue: '/issue',
   issues: '/issues',
   jobs: '/jobs',
@@ -295,6 +295,8 @@ export type RouteKey = keyof typeof routes
 export const adminCommunityMod = (slug: string) => `/admin/communities/${slug}/mod`
 /** Direct mod-panel access for a community moderator. */
 export const modPanel = (slug: string) => `/mod/${slug}`
+/** A recipient's personal invite landing — resolves the inviter from the code. */
+export const inviteLink = (code: string) => `/invite/${code}`
 
 /** Known top-level routes that should render real (or placeholder) pages. */
 export const KNOWN_ROUTE_SLUGS: string[] = [

@@ -689,7 +689,7 @@ export function AppRoutes() {
       <Route path="/account-locked" element={<AccountLockedPage />} />
       <Route path="/account-suspended" element={<AccountSuspendedPage />} />
       <Route path="/invite-expired" element={<InviteExpiredPage />} />
-      <Route path="/invite-landing" element={<InviteLandingPage />} />
+      <Route path="/invite/:code" element={<InviteLandingPage />} />
       <Route path="/pending-review" element={<PendingReviewPage />} />
       <Route path="/verification-needed" element={<VerificationNeededPage />} />
       <Route path="/status" element={<StatusPage />} />

@@ -11,10 +11,9 @@ import { useCountUp, useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import {
   DEFAULT_FILTERS,
-  MEMBERS,
+  EMPTY_FILTERS,
   PAGE_SIZE,
   SORTS,
-  TOTAL_MEMBERS,
   appliedChips,
   matchesFilters,
   reconcileProfessions,
@@ -23,6 +22,7 @@ import {
   type FilterState,
   type SortKey,
 } from "./memberDirectoryFilter.data";
+import { useMembers } from "./api/useMembers";
 import {
   FiltersSidebar,
   MemberResultCard,
@@ -64,21 +64,31 @@ function MemberHeaderSkeleton() {
 
 export function MemberDirectoryFilterPage() {
   const { showToast } = useToast();
-  const loading = useSimulatedLoad();
+  const simLoading = useSimulatedLoad();
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [sort, setSort] = useState<SortKey>("Recently active");
   const [visible, setVisible] = useState(PAGE_SIZE);
+
+  const serverTags = filters.identities;
+  const { data, isLoading } = useMembers({ tags: serverTags });
+  const sourceMembers = data?.items ?? [];
+  const totalMembers = data?.total ?? 0;
+
+  // Combine hook loading with simulated skeleton load for the initial render.
+  const loading = isLoading || simLoading;
 
   // Count the headline figure up from 1 once the skeleton clears — a quick
   // settle that says "this is a real, countable population". Gating on `!loading`
   // means the count animates in with the content instead of finishing unseen
   // behind the skeleton. Reduced motion jumps to the total.
-  const countedTotal = useCountUp(TOTAL_MEMBERS, { active: !loading, from: 1 });
+  const countedTotal = useCountUp(totalMembers, { active: !loading, from: 1 });
 
   const filtered = useMemo(() => {
-    const matched = MEMBERS.filter((m) => matchesFilters(m, filters));
+    const matched = sourceMembers.filter((m) =>
+      matchesFilters(m, filters)
+    );
     return sortMembers(matched, sort);
-  }, [filters, sort]);
+  }, [sourceMembers, filters, sort]);
 
   const chips = useMemo(() => appliedChips(filters), [filters]);
   const shown = filtered.slice(0, visible);
@@ -123,16 +133,7 @@ export function MemberDirectoryFilterPage() {
             appliedCount={chips.length}
             onChange={applyFilters}
             onClearAll={() => {
-              applyFilters({
-                openTo: [],
-                hoods: [],
-                disciplines: [],
-                professions: [],
-                identities: [],
-                languages: [],
-                yearsFrom: 0,
-                yearsTo: 9,
-              });
+              applyFilters(EMPTY_FILTERS);
               showToast("Filters cleared", "info");
             }}
           />
@@ -144,7 +145,7 @@ export function MemberDirectoryFilterPage() {
                 <b>
                   <em>{filtered.length.toLocaleString()}</em>
                 </b>{" "}
-                of {TOTAL_MEMBERS.toLocaleString()} members
+                of {totalMembers.toLocaleString()} members
               </div>
               <div className={styles.sort}>
                 <span className={styles.sortLabel}>Sort</span>
@@ -193,7 +194,7 @@ export function MemberDirectoryFilterPage() {
                 action={{
                   label: "Clear filters",
                   onClick: () => {
-                    applyFilters(DEFAULT_FILTERS);
+                    applyFilters(EMPTY_FILTERS);
                     setSort("Recently active");
                   },
                 }}

@@ -201,3 +201,37 @@
   color: var(--cream);
   border-color: var(--plum);
 }
+
+.populate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+}
+.populate:hover:not(:disabled) {
+  background: rgba(45, 27, 61, 0.06);
+}
+.populate:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.populateState {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  opacity: 0.55;
+}
+.populateOn {
+  color: var(--jade);
+  opacity: 1;
+}

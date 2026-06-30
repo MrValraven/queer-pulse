@@ -1,0 +1,198 @@
+import { Link } from 'react-router-dom'
+import { Button } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
+import type { InviteView } from '../../features/auth/api/useInvite'
+import { loaderSteps, WHAT_ITEMS } from './inviteLanding.data'
+import styles from './InviteLandingPage.module.css'
+
+function InviterAvatar({ view, className }: { view: InviteView; className: string }) {
+  return (
+    <div className={className} aria-hidden>
+      {view.inviter.photo ? (
+        <img className={styles.avatarPhoto} src={view.inviter.photo} alt="" />
+      ) : (
+        view.inviter.initials
+      )}
+    </div>
+  )
+}
+
+/** Network phase: while GET /invites/:code is in flight. */
+export function InviteLoadingView() {
+  return (
+    <div className={styles.root}>
+      <div className={styles.loader}>
+        <div className={styles.loaderBrand}>
+          Queer<em>Pulse</em>
+        </div>
+        <p className={styles.loaderStatus} role="status" aria-live="polite">
+          Verifying your invite code…
+        </p>
+        <div className={styles.loaderBar}>
+          <div className={styles.loaderBarFill} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** Sealed envelope: the inviter resolved, waiting for the recipient to open it. */
+export function InviteSealedView({ view, onOpen }: { view: InviteView; onOpen: () => void }) {
+  return (
+    <div className={styles.root}>
+      <div className={styles.sealed}>
+        <div className={`${styles.seal} ${styles.sealStatic}`} aria-hidden>
+          <svg className={styles.sealRingStatic} viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="44" />
+          </svg>
+          <InviterAvatar view={view} className={styles.sealAvatar} />
+        </div>
+        <div className={styles.loaderBrand}>
+          Queer<em>Pulse</em>
+        </div>
+        <div className={styles.sealedEyebrow}>You've been personally invited</div>
+        <h1 className={styles.loaderTitle}>
+          <em>{view.inviter.name}</em> invited you.
+        </h1>
+        <p className={styles.sealedSub}>
+          Invite-only · {view.memberCount} members. This link was created for you and can only be
+          opened once.
+        </p>
+        <Button size="lg" onClick={onOpen} className={styles.sealedBtn}>
+          Open invitation
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+/** Decorative unsealing animation between sealed and the opened card. */
+export function InviteOpeningView({ view, step }: { view: InviteView; step: number }) {
+  const steps = loaderSteps(view.inviter.firstName)
+  return (
+    <div className={styles.root}>
+      <div className={styles.loader}>
+        <div className={styles.seal} aria-hidden>
+          <svg className={styles.sealRing} viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="44" />
+          </svg>
+          <InviterAvatar view={view} className={styles.sealAvatar} />
+        </div>
+        <div className={styles.loaderBrand}>
+          Queer<em>Pulse</em>
+        </div>
+        <h1 className={styles.loaderTitle}>
+          An invitation from <em>{view.inviter.firstName}.</em>
+        </h1>
+        <p className={styles.loaderStatus} role="status" aria-live="polite">
+          {steps[step]}
+        </p>
+        <div className={styles.loaderBar}>
+          <div className={styles.loaderBarFill} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** The opened invitation: who invited you, their note, and how to join. */
+export function InviteCardView({ view, onGoogle }: { view: InviteView; onGoogle: () => void }) {
+  return (
+    <div className={styles.root}>
+      <div className={styles.card}>
+        <div className={styles.header}>
+          <Link to={routes.homepage} className={styles.brand}>
+            <span className={styles.brandDot} aria-hidden />
+            Queer<em>Pulse</em>
+          </Link>
+          <div className={styles.inviterRow}>
+            <InviterAvatar view={view} className={styles.inviterAvatar} />
+            <div>
+              <div className={styles.inviterName}>{view.inviter.name}</div>
+              <div className={styles.inviterNote}>
+                {view.inviter.since ? `Member since ${view.inviter.since} · ` : ''}invited you
+              </div>
+            </div>
+          </div>
+          <h1 className={styles.heading}>
+            You belong <em>here.</em>
+          </h1>
+          <p className={styles.headerNote}>
+            This invitation was created for you personally — it's yours, and yours alone.
+          </p>
+        </div>
+
+        {view.note && (
+          <div className={styles.message}>
+            <div className={styles.messageLabel}>A note from {view.inviter.firstName}</div>
+            <div className={styles.messageText}>{view.note}</div>
+          </div>
+        )}
+
+        <div className={styles.body}>
+          <div className={styles.whatList}>
+            {WHAT_ITEMS.map((item) => (
+              <div className={styles.whatItem} key={item.strong}>
+                <div className={styles.whatDot} aria-hidden />
+                <div className={styles.whatText}>
+                  <strong>{item.strong}</strong> {item.rest}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className={styles.tokenBadge}>
+            <div>
+              <div className={styles.tokenLabel}>Your invite code</div>
+              <div className={styles.tokenCode}>{view.code}</div>
+            </div>
+            <div className={styles.tokenExpiry}>Valid for {view.validForDays} days</div>
+          </div>
+
+          {view.expiryLabel && (
+            <div className={styles.expiryRow}>
+              <svg viewBox="0 0 14 14" aria-hidden>
+                <circle cx="7" cy="7" r="5.5" />
+                <polyline points="7,4 7,7 9,9" />
+              </svg>
+              <span>
+                Invite expires <span>{view.expiryLabel}</span>
+              </span>
+            </div>
+          )}
+
+          <Button to={routes.createAccount} size="lg" className={styles.submitBtn}>
+            Create an account →
+          </Button>
+
+          <div className={styles.orDivider}>or</div>
+
+          <button type="button" className={styles.google} onClick={onGoogle}>
+            <svg width={18} height={18} viewBox="0 0 18 18" aria-hidden>
+              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4" />
+              <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853" />
+              <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05" />
+              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335" />
+            </svg>
+            Continue with Google
+          </button>
+
+          <p className={styles.consentNote}>
+            By continuing you agree to our <Link to={routes.terms}>terms of use</Link> and{' '}
+            <Link to={routes.privacy}>privacy policy</Link>.
+          </p>
+
+          <p className={styles.alreadyMember}>
+            Already have an account? <Link to={routes.signIn}>Sign in</Link>
+          </p>
+        </div>
+      </div>
+
+      <div className={styles.pageFooter}>
+        <p>
+          Not expecting this? <Link to={routes.privacy}>Privacy policy</Link>
+        </p>
+      </div>
+    </div>
+  )
+}

@@ -1,236 +1,57 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button } from '../../shared/components/ui'
+import { useParams } from 'react-router-dom'
 import { usePrefersReducedMotion } from '../../shared/hooks'
-import { getMember } from '../members/data/members'
+import { useInvite } from '../auth/api/useInvite'
 import { OnboardingPage } from '../auth/OnboardingPage'
-import { routes } from '../../app/routeMap'
-import styles from './InviteLandingPage.module.css'
-
-const INVITER = getMember('ines')!
-const INVITER_NAME = `${INVITER.first} ${INVITER.last}`
-const INVITER_FIRST = INVITER.first
-const INVITE_CODE = 'QP-7F3K-2026'
-const EXPIRY_DATE = '12 June 2026'
-const INVITER_MESSAGE =
-  '"I\'ve been part of this community for two years now. It\'s the one platform I\'m genuinely glad exists. I think you\'d belong here."'
-
-const LOADER_STEPS = [
-  'Verifying your invite code…',
-  `Unsealing ${INVITER_FIRST}'s invitation…`,
-  'Preparing your welcome…',
-]
-
-function InviterAvatar({ className }: { className: string }) {
-  return (
-    <div className={className} aria-hidden>
-      {INVITER.photo ? (
-        <img className={styles.avatarPhoto} src={INVITER.photo} alt="" />
-      ) : (
-        INVITER.initials
-      )}
-    </div>
-  )
-}
+import { InviteExpiredPage } from './InviteExpiredPage'
+import { loaderSteps } from './inviteLanding.data'
+import {
+  InviteCardView,
+  InviteLoadingView,
+  InviteOpeningView,
+  InviteSealedView,
+} from './InviteLandingViews'
 
 type Phase = 'sealed' | 'opening' | 'invite'
 
 export function InviteLandingPage() {
+  const { code } = useParams<{ code: string }>()
   const prefersReduced = usePrefersReducedMotion()
-  const [phase, setPhase] = useState<Phase>(prefersReduced ? 'sealed' : 'opening')
+  const { data: invite, isLoading, isError } = useInvite(code)
+
+  const [phase, setPhase] = useState<Phase>('sealed')
   const [step, setStep] = useState(0)
   const [joined, setJoined] = useState(false)
 
-  function openInvitation() {
-    setPhase('invite')
-  }
-
+  // Decorative unsealing: advance the loader steps, then reveal the opened card.
   useEffect(() => {
-    if (phase !== 'opening') return
+    if (phase !== 'opening' || !invite) return
     const stepMs = 800
-    const stepTimers = LOADER_STEPS.map((_, i) =>
+    const total = loaderSteps(invite.inviter.firstName).length
+    const timers = Array.from({ length: total }, (_, i) =>
       window.setTimeout(() => setStep(i), i * stepMs),
     )
-    const done = window.setTimeout(() => setPhase('sealed'), LOADER_STEPS.length * stepMs + 350)
+    const done = window.setTimeout(() => setPhase('invite'), total * stepMs + 350)
     return () => {
-      stepTimers.forEach(clearTimeout)
+      timers.forEach(clearTimeout)
       clearTimeout(done)
     }
-  }, [phase])
+  }, [phase, invite])
 
-  function createAccount() {
-    setJoined(true)
+  // While GET /invites/:code resolves the inviter.
+  if (isLoading) return <InviteLoadingView />
+
+  // Bad, used, expired or revoked code → the expired/invalid screen.
+  if (isError || !invite || invite.status !== 'valid') return <InviteExpiredPage />
+
+  if (joined) return <OnboardingPage />
+
+  function openInvitation() {
+    setPhase(prefersReduced ? 'invite' : 'opening')
   }
 
-  if (phase === 'sealed') {
-    return (
-      <div className={styles.root}>
-        <div className={styles.sealed}>
-          <div className={`${styles.seal} ${styles.sealStatic}`} aria-hidden>
-            <svg className={styles.sealRingStatic} viewBox="0 0 96 96">
-              <circle cx="48" cy="48" r="44" />
-            </svg>
-            <InviterAvatar className={styles.sealAvatar} />
-          </div>
-          <div className={styles.loaderBrand}>
-            Queer<em>Pulse</em>
-          </div>
-          <div className={styles.sealedEyebrow}>You've been personally invited</div>
-          <h1 className={styles.loaderTitle}>
-            <em>{INVITER_NAME}</em> invited you.
-          </h1>
-          <p className={styles.sealedSub}>
-            Invite-only · 247 members. This link was created for you and can only be opened once.
-          </p>
-          <Button size="lg" onClick={openInvitation} className={styles.sealedBtn}>
-            Open invitation
-          </Button>
-        </div>
-      </div>
-    )
-  }
+  if (phase === 'sealed') return <InviteSealedView view={invite} onOpen={openInvitation} />
+  if (phase === 'opening') return <InviteOpeningView view={invite} step={step} />
 
-  if (phase === 'opening') {
-    return (
-      <div className={styles.root}>
-        <div className={styles.loader}>
-          <div className={styles.seal} aria-hidden>
-            <svg className={styles.sealRing} viewBox="0 0 96 96">
-              <circle cx="48" cy="48" r="44" />
-            </svg>
-            <InviterAvatar className={styles.sealAvatar} />
-          </div>
-          <div className={styles.loaderBrand}>
-            Queer<em>Pulse</em>
-          </div>
-          <h1 className={styles.loaderTitle}>
-            An invitation from <em>{INVITER_NAME.split(' ')[0]}.</em>
-          </h1>
-          <p className={styles.loaderStatus} role="status" aria-live="polite">
-            {LOADER_STEPS[step]}
-          </p>
-          <div className={styles.loaderBar}>
-            <div className={styles.loaderBarFill} />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Once the account is created, the new member flows straight into onboarding.
-  if (joined) {
-    return <OnboardingPage />
-  }
-
-  return (
-    <div className={styles.root}>
-      <div className={styles.card}>
-        {/* Header */}
-        <div className={styles.header}>
-          <Link to={routes.homepage} className={styles.brand}>
-            <span className={styles.brandDot} aria-hidden />
-            Queer<em>Pulse</em>
-          </Link>
-          <div className={styles.inviterRow}>
-            <InviterAvatar className={styles.inviterAvatar} />
-            <div>
-              <div className={styles.inviterName}>{INVITER_NAME}</div>
-              <div className={styles.inviterNote}>Member since {INVITER.since} · invited you</div>
-            </div>
-          </div>
-          <h1 className={styles.heading}>
-            You belong <em>here.</em>
-          </h1>
-          <p className={styles.headerNote}>
-            This invitation was created for you personally — it's yours, and yours alone.
-          </p>
-        </div>
-
-        {/* Personal message */}
-        <div className={styles.message}>
-          <div className={styles.messageLabel}>A note from {INVITER_FIRST}</div>
-          <div className={styles.messageText}>{INVITER_MESSAGE}</div>
-        </div>
-
-        {/* Body */}
-        <div className={styles.body}>
-          <div className={styles.whatList}>
-            <div className={styles.whatItem}>
-              <div className={styles.whatDot} aria-hidden />
-              <div className={styles.whatText}>
-                <strong>Private by design.</strong> Invite-only. 247 members. Not trying to grow
-                for growth's sake.
-              </div>
-            </div>
-            <div className={styles.whatItem}>
-              <div className={styles.whatDot} aria-hidden />
-              <div className={styles.whatText}>
-                <strong>No ads. No algorithm.</strong> A platform that works for you, not for
-                advertisers.
-              </div>
-            </div>
-            <div className={styles.whatItem}>
-              <div className={styles.whatDot} aria-hidden />
-              <div className={styles.whatText}>
-                <strong>Real community.</strong> Forum, events, a monthly magazine, and a mental
-                health fund.
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.tokenBadge}>
-            <div>
-              <div className={styles.tokenLabel}>Your invite code</div>
-              <div className={styles.tokenCode}>{INVITE_CODE}</div>
-            </div>
-            <div className={styles.tokenExpiry}>Valid for 7 days</div>
-          </div>
-
-          <div className={styles.expiryRow}>
-            <svg viewBox="0 0 14 14" aria-hidden>
-              <circle cx="7" cy="7" r="5.5" />
-              <polyline points="7,4 7,7 9,9" />
-            </svg>
-            <span>
-              Invite expires <span>{EXPIRY_DATE}</span>
-            </span>
-          </div>
-
-          <Button to={routes.createAccount} size="lg" className={styles.submitBtn}>
-            Create an account →
-          </Button>
-
-          <div className={styles.orDivider}>or</div>
-
-          <button type="button" className={styles.google} onClick={createAccount}>
-            <svg width={18} height={18} viewBox="0 0 18 18" aria-hidden>
-              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4" />
-              <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853" />
-              <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05" />
-              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335" />
-            </svg>
-            Continue with Google
-          </button>
-
-          <p className={styles.consentNote}>
-            By continuing you agree to our{' '}
-            <Link to={routes.terms}>terms of use</Link> and{' '}
-            <Link to={routes.privacy}>privacy policy</Link>.
-          </p>
-
-          <p className={styles.alreadyMember}>
-            Already have an account?{' '}
-            <Link to={routes.signIn}>Sign in</Link>
-          </p>
-        </div>
-      </div>
-
-      <div className={styles.pageFooter}>
-        <p>
-          Not expecting this?{' '}
-          <Link to={routes.privacy}>Privacy policy</Link>
-        </p>
-      </div>
-    </div>
-  )
+  return <InviteCardView view={invite} onGoogle={() => setJoined(true)} />
 }
