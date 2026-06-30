@@ -207,16 +207,6 @@ export function InviteCardView({
             </div>
           )}
 
-          <Button
-            to={routes.createAccount}
-            size="lg"
-            className={styles.submitBtn}
-          >
-            Create an account →
-          </Button>
-
-          <div className={styles.orDivider}>or</div>
-
           <button type="button" className={styles.google} onClick={onGoogle}>
             <svg width={18} height={18} viewBox="0 0 18 18" aria-hidden>
               <path
