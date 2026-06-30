@@ -13,10 +13,10 @@ export function MentorDetailPage() {
   const loading = useSimulatedLoad()
   if (idx === -1) return <Navigate to={routes.mentorship} replace />
 
-  const m = MENTORS[idx]
-  const prev = MENTORS[(idx - 1 + MENTORS.length) % MENTORS.length]
-  const next = MENTORS[(idx + 1) % MENTORS.length]
-  const first = m.name.split(' ')[0]
+  const m = MENTORS[idx]!
+  const prev = MENTORS[(idx - 1 + MENTORS.length) % MENTORS.length]!
+  const next = MENTORS[(idx + 1) % MENTORS.length]!
+  const first = m.name.split(' ')[0] ?? m.name
   const base = routes.mentorship
 
   return (

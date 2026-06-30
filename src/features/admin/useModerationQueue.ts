@@ -50,7 +50,7 @@ export function useModerationQueue() {
   const visible = open.filter(matchesFilter)
   const emergencies = visible.filter((r) => r.severity === 'emergency')
   const others = visible.filter((r) => r.severity !== 'emergency')
-  const oldest = visible.length > 0 ? visible[visible.length - 1].age : ''
+  const oldest = visible.length > 0 ? visible[visible.length - 1]!.age : ''
 
   const replayOpen = () => {
     setLeaving(new Set())

@@ -6,7 +6,7 @@ export const COMMITTED: Record<string, boolean> = { going: true, hosting: true, 
 
 /** Parse a YYYY-MM-DD string into a local Date. */
 export function parseDate(s: string): Date {
-  const [y, m, d] = s.split('-').map(Number)
+  const [y = 0, m = 0, d = 0] = s.split('-').map(Number)
   return new Date(y, m - 1, d)
 }
 
@@ -35,7 +35,7 @@ export function timeStr(ev: MyEvent): string {
 
 export function atTime(ev: MyEvent, which: 'start' | 'end'): Date {
   const dt = parseDate(ev.date)
-  const [h, m] = (ev[which] || ev.start).split(':').map(Number)
+  const [h = 0, m = 0] = (ev[which] || ev.start).split(':').map(Number)
   dt.setHours(h, m, 0, 0)
   return dt
 }

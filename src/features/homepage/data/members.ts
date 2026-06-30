@@ -13,7 +13,7 @@ function card(
   tags: string[],
   role: string,
 ): Member {
-  const m = MEMBERS[slug]
+  const m = MEMBERS[slug]!
   return {
     key: slug,
     name: memberName(slug),

@@ -30,7 +30,7 @@ export function RateBoardForm({ onAdd, compareRate, onCompareChange }: RateBoard
     compare: useId(),
   }
 
-  const [role, setRole] = useState<string>(ROLE_OPTIONS[0])
+  const [role, setRole] = useState<string>(ROLE_OPTIONS[0]!)
   const [experience, setExperience] = useState<Experience>('mid')
   const [type, setType] = useState<RateType>('freelance')
   const [dayRate, setDayRate] = useState('')

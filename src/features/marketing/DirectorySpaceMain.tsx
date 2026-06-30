@@ -3,7 +3,7 @@ import { type DirectoryPlace, hoursRows, type Tint } from './directoryPlaces'
 import { CAT_LABEL, STAR_SLOTS } from './directorySpace.data'
 import s from './DirectorySpacePage.module.css'
 
-const TINT: Record<Tint, string> = { coral: s.tCoral, jade: s.tJade, plum: s.tPlum }
+const TINT: Record<Tint, string> = { coral: s.tCoral!, jade: s.tJade!, plum: s.tPlum! }
 
 const Stars = ({ score, className }: { score: number; className?: string }) => (
   <span className={[s.starRow, className].filter(Boolean).join(' ')}>

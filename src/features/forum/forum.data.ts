@@ -89,14 +89,14 @@ const soft = (tint: AvatarTint) => SOFT[tint] ?? SOFT.plum!
 
 /** Thread-author block built from a member slug. */
 function author(slug: string): Thread['author'] {
-  const m = MEMBERS[slug]
+  const m = MEMBERS[slug]!
   const s = solid(m.tint)
   return { i: m.initials, n: fullName(m), t: s.t, tt: s.tt, slug, photo: m.photo }
 }
 
 /** Reply block built from a member slug, plus the per-reply content. */
 function reply(slug: string, rest: Omit<Reply, 'av' | 'bg' | 'color' | 'name' | 'slug' | 'photo' | 'official' | 'mod'>): Reply {
-  const m = MEMBERS[slug]
+  const m = MEMBERS[slug]!
   const s = soft(m.tint)
   return { av: m.initials, bg: s.bg, color: s.color, name: fullName(m), slug, photo: m.photo, ...rest }
 }
@@ -164,8 +164,8 @@ export const THREADS: Thread[] = [
       qpReply('mariana', {
         time: '6 weeks ago',
         isOP: true,
-        quote: { cite: fullName(MEMBERS.rita), text: 'the AMPLOS parents-and-families group runs a monthly drop-in…' },
-        body: [`Added AMPLOS to the community section — thank you ${MEMBERS.rita.first}. Keep them coming.`],
+        quote: { cite: fullName(MEMBERS.rita!), text: 'the AMPLOS parents-and-families group runs a monthly drop-in…' },
+        body: [`Added AMPLOS to the community section — thank you ${MEMBERS.rita!.first}. Keep them coming.`],
         reactions: 5,
       }),
       reply('tomas', {
@@ -286,8 +286,8 @@ export const THREADS: Thread[] = [
       reply('sofia', {
         time: '3 days ago',
         isOP: true,
-        quote: { cite: fullName(MEMBERS.ines), text: 'I can do the door and bring the bookshop in as a small sponsor.' },
-        body: [`Amazing — that covers door and a sponsor in one go. ${MEMBERS['rui-fernandes'].first}, the Portuguese-cinema slot is a great idea, locking it in. I will draft a first season and post it next week.`],
+        quote: { cite: fullName(MEMBERS.ines!), text: 'I can do the door and bring the bookshop in as a small sponsor.' },
+        body: [`Amazing — that covers door and a sponsor in one go. ${MEMBERS['rui-fernandes']!.first}, the Portuguese-cinema slot is a great idea, locking it in. I will draft a first season and post it next week.`],
         reactions: 9,
       }),
     ],
@@ -464,8 +464,8 @@ export const THREADS: Thread[] = [
       reply('catarina-vaz', {
         time: '6 days ago',
         isOP: true,
-        quote: { cite: fullName(MEMBERS.fatima), text: 'make the resources, housing board, and emergency contacts fully open…' },
-        body: [`This is the sharpest version of what I was reaching for. I am going to write it up as a governance proposal — open safety layer, curated social layer. Thank you ${MEMBERS.fatima.first}.`],
+        quote: { cite: fullName(MEMBERS.fatima!), text: 'make the resources, housing board, and emergency contacts fully open…' },
+        body: [`This is the sharpest version of what I was reaching for. I am going to write it up as a governance proposal — open safety layer, curated social layer. Thank you ${MEMBERS.fatima!.first}.`],
         reactions: 8,
       }),
     ],
@@ -532,7 +532,7 @@ export const THREADS: Thread[] = [
       reply('ines', {
         time: '15h ago',
         isOP: true,
-        body: [`${MEMBERS.anika.first}, that is exactly the energy — replied to your DM. ${MEMBERS['tomas-mendes'].first}, yes please, the shelves are genuinely on the critical path. Let us talk.`],
+        body: [`${MEMBERS.anika!.first}, that is exactly the energy — replied to your DM. ${MEMBERS['tomas-mendes']!.first}, yes please, the shelves are genuinely on the critical path. Let us talk.`],
         reactions: 6,
       }),
     ],
@@ -571,7 +571,7 @@ export const THREADS: Thread[] = [
       reply('catarina-vaz', {
         time: '5 days ago',
         isOP: true,
-        body: [`Both logged into the map — Registos Centrais green, the smaller office flagged with ${MEMBERS['sofia-castano'].first}'s tip about bringing the statute. This is exactly the ground-truth I hoped for.`],
+        body: [`Both logged into the map — Registos Centrais green, the smaller office flagged with ${MEMBERS['sofia-castano']!.first}'s tip about bringing the statute. This is exactly the ground-truth I hoped for.`],
         reactions: 7,
       }),
     ],

@@ -32,7 +32,7 @@ export function ThreadPage() {
   const loading = useSimulatedLoad()
   const { showToast } = useToast()
   const { id } = useParams()
-  const thread = useMemo(() => THREADS.find((t) => String(t.id) === id) ?? THREADS[0], [id])
+  const thread = useMemo(() => THREADS.find((t) => String(t.id) === id) ?? THREADS[0]!, [id])
 
   const [liked, setLiked] = useState(false)
   const [bookmarked, setBookmarked] = useState(false)

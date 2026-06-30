@@ -11,7 +11,7 @@ import { StudioLine } from './StudioSkeletons'
 import s from './live.module.css'
 import { WF, PLAYED, SET, CHAT, TABS, coverImage } from './studioLive.data'
 
-const stateClass: Record<string, string> = { played: s.setPlayed, now: s.setNow, upnext: s.setUpNext, queued: s.setQueued }
+const stateClass: Record<string, string> = { played: s.setPlayed!, now: s.setNow!, upnext: s.setUpNext!, queued: s.setQueued! }
 
 /** Mirrors live .setRow: number, cover, title, pay, time. */
 function LiveSetRowSkeleton() {

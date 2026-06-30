@@ -268,7 +268,7 @@ export const ISSUES: Record<string, NewsletterIssue> = {
   },
 }
 
-export const FALLBACK_ISSUE: NewsletterIssue = ISSUES['52']
+export const FALLBACK_ISSUE: NewsletterIssue = ISSUES['52']!
 
 export function getIssue(slug: string | undefined): NewsletterIssue {
   if (!slug) return FALLBACK_ISSUE

@@ -234,19 +234,7 @@ export function MagazineSections() {
               something worth saying.
             </p>
           </div>
-          <Button
-            href="mailto:magazine@queerpulse.pt"
-            variant="primary"
-            size="lg"
-            style={{
-              background: "var(--accent)",
-              color: "var(--cream)",
-              borderRadius: 999,
-              padding: "15px 30px",
-              fontWeight: 600,
-              fontFamily: "var(--sans)",
-            }}
-          >
+          <Button href="mailto:magazine@queerpulse.pt" variant="primary" size="lg">
             Pitch us
           </Button>
         </div>

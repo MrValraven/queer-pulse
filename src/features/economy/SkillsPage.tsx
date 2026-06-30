@@ -40,7 +40,7 @@ const FILTERS = [
 ]
 
 function SkillCard({ skill }: { skill: Skill }) {
-  const member = memberProfiles[skill.member]
+  const member = memberProfiles[skill.member]!
   const { openConnect } = useConnect()
   return (
     <div className={styles.card}>

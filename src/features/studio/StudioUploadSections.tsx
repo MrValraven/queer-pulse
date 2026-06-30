@@ -38,14 +38,14 @@ const Warn = () => (
 export function DropZone() {
   return (
     <div className={s.dropzone}>
-      <div className="icon" style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(var(--accent-rgb),.12)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+      <div className={s.uploadIcon}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{ width: 22, height: 22 }}>
           <path d="M12 19V5M5 12l7-7 7 7" />
         </svg>
       </div>
       <h3>Drop a folder of <em>WAVs</em>, or click to browse.</h3>
       <p>An EP, an album, a single — same flow. We'll figure out track order from filenames.</p>
-      <p className="types" style={{ fontSize: 12, color: 'var(--text40)', marginTop: 12 }}>
+      <p className={s.uploadTypes}>
         accepts · <em style={{ color: 'var(--jade-light)' }}>WAV · FLAC · AIFF</em> · max 96 kHz / 24 bit · up to 24 tracks
       </p>
     </div>
@@ -142,7 +142,7 @@ export function SplitsTable({
     <div className={s.card}>
       <div className={s.cardH}>
         <h3>Per-track <em>splits</em> · default 100% to you</h3>
-        <div className="sub" style={{ fontSize: 12.5, color: 'var(--text40)', width: '100%' }}>
+        <div className={s.cardSub}>
           Add collaborators and we route each cent directly to their bank.
         </div>
       </div>
@@ -159,10 +159,10 @@ export function SplitsTable({
             <tr key={sp.nm}>
               <td>
                 <div className={s.splitWho}>
-                  <span className="av" style={sp.tone === 'jade' ? { background: 'rgba(var(--jade-rgb),.18)', color: 'var(--jade-light)' } : undefined}>
+                  <span className={s.av} style={sp.tone === 'jade' ? { background: 'rgba(var(--jade-rgb),.18)', color: 'var(--jade-light)' } : undefined}>
                     {sp.av}
                   </span>
-                  <span className="nm">
+                  <span className={s.nm}>
                     {sp.nm}
                     <small>{sp.sub}</small>
                   </span>
@@ -178,7 +178,7 @@ export function SplitsTable({
         </tbody>
       </table>
       <div className={s.splitFoot}>
-        <span className="total" style={{ fontSize: 12.5, color: 'var(--text40)', fontStyle: 'italic', fontFamily: 'var(--serif)' }}>
+        <span className={s.splitTotal}>
           Default split sums to <em style={{ color: 'var(--jade-light)', fontWeight: 600 }}>100%</em> · per-track adjustments override
         </span>
         <Button variant="ghost" onClick={() => setAdding((v) => !v)}>
@@ -230,7 +230,7 @@ function MetadataStep({ onBack, onSubmit }: { onBack: () => void; onSubmit: () =
         <h3>
           Metadata &amp; <em>credits</em>
         </h3>
-        <div className="sub" style={{ fontSize: 12.5, color: 'var(--text40)', width: '100%' }}>
+        <div className={s.cardSub}>
           A few last details and your release goes to the council queue for review.
         </div>
       </div>

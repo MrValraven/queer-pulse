@@ -6,9 +6,9 @@ import { ON_FORMS, RIGHTS, VOICES } from './schoolFormsGuide.data'
 import styles from './resources.module.css'
 
 const badgeClass: Record<string, string> = {
-  protected: styles.badgeProtected,
-  know: styles.badgeKnow,
-  practical: styles.badgeKnow,
+  protected: styles.badgeProtected!,
+  know: styles.badgeKnow!,
+  practical: styles.badgeKnow!,
 }
 const badgeLabel: Record<string, string> = {
   protected: 'Protected right',

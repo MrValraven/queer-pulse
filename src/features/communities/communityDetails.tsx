@@ -43,7 +43,7 @@ export { COMMUNITY_DETAILS };
 
 export function membersFor(seed: number, n = 8): Person[] {
   const out: Person[] = [];
-  for (let i = 0; i < n; i++) out.push(POOL[(seed * 3 + i) % POOL.length]);
+  for (let i = 0; i < n; i++) out.push(POOL[(seed * 3 + i) % POOL.length]!);
   return out;
 }
 

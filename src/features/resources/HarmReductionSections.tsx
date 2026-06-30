@@ -126,8 +126,8 @@ export function HarmReductionGrid() {
     <main className={styles.body}>
       <div className="wrap">
         <div className={styles.grid}>
-          <SectionCard section={SECTIONS[0]} />
-          <SectionCard section={SECTIONS[1]} />
+          <SectionCard section={SECTIONS[0]!} />
+          <SectionCard section={SECTIONS[1]!} />
           <NaloxoneCard />
           <SectionCard section={AFTER} />
           <SectionCard section={SOBER} />

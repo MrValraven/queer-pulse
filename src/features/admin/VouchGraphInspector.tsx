@@ -47,7 +47,7 @@ function VouchList({ title, edges, selId, onGo }: { title: string; edges: VouchE
       ) : (
         edges.map((e) => {
           const otherId = e.from === selId ? e.to : e.from
-          const o = personById[otherId]
+          const o = personById[otherId]!
           return (
             <button
               key={e.id}
@@ -55,7 +55,7 @@ function VouchList({ title, edges, selId, onGo }: { title: string; edges: VouchE
               className={`${styles.insRow}${e.withdrawn ? ` ${styles.insRowWd}` : ''}`}
               onClick={() => onGo(otherId)}
             >
-              <VAvatar initials={o.initials} tone={o.tone} className={styles.mini} />
+              <VAvatar initials={o.initials} tone={o.tone} className={styles.mini!} />
               <span className={styles.insRowTx}>
                 <span className={styles.rn}>
                   {o.name}
@@ -85,18 +85,18 @@ export function VouchGraphInspector({ sel, expanded, onGo, onVerify, onExpand, o
     )
   }
 
-  const p = personById[sel]
+  const p = personById[sel]!
   const first = p.name.split(' ')[0]
   const vouchedBy = EDGES.filter((e) => e.to === sel && !e.withdrawn)
   const vouchedFor = EDGES.filter((e) => e.from === sel && !e.withdrawn)
   const withdrawn = EDGES.filter((e) => (e.to === sel || e.from === sel) && e.withdrawn)
   const iso = isIsolated(sel)
-  const pendingAffected = vouchedFor.some((e) => personById[e.to].standing === 'new')
+  const pendingAffected = vouchedFor.some((e) => personById[e.to]!.standing === 'new')
 
   return (
     <aside className={styles.inspector}>
       <div className={styles.insHead}>
-        <VAvatar initials={p.initials} tone={p.tone} className={styles.insAv} />
+        <VAvatar initials={p.initials} tone={p.tone} className={styles.insAv!} />
         <div>
           <div className={styles.insN}>{p.name}</div>
           <div className={styles.insP}><span className={styles.pron}>{p.pronoun}</span> · {p.role}</div>

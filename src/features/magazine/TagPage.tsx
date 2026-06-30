@@ -51,7 +51,7 @@ const ITEMS: Item[] = [
 /** The full back-catalogue: the curated pieces plus an archive generated
  *  deterministically from them, so "Load older" reveals real list rows. */
 const ARCHIVE: Item[] = Array.from({ length: 32 }, (_, i) => {
-  const base = ITEMS[i % ITEMS.length];
+  const base = ITEMS[i % ITEMS.length]!;
   const issue = 9 - ((i % 9) + 1);
   return {
     ...base,
@@ -79,7 +79,7 @@ export function TagPage() {
 
   const matched = useMemo(() => {
     if (activeChip === 0) return ALL_ITEMS;
-    const topic = CHIPS[activeChip];
+    const topic = CHIPS[activeChip]!;
     return ALL_ITEMS.filter((it) => it.topics.includes(topic));
   }, [activeChip]);
 

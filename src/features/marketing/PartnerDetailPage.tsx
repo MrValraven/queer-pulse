@@ -8,7 +8,7 @@ import s from './PartnerDetailPage.module.css'
 
 type Tab = 'about' | 'work' | 'timeline' | 'how'
 
-const TL_CLASS: Record<Tint, string> = { coral: '', jade: s.tlJade, plum: s.tlPlum }
+const TL_CLASS: Record<Tint, string> = { coral: '', jade: s.tlJade!, plum: s.tlPlum! }
 
 function emName(name: string) {
   const words = name.split(' ')

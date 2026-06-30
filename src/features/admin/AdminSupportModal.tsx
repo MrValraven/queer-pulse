@@ -79,7 +79,7 @@ export function AdminSupportModal({
         {options.map((o, i) => (
           <AdminCheckLine
             key={o.title}
-            checked={checks[i]}
+            checked={checks[i]!}
             onChange={() => toggle(i)}
             title={o.title}
             sub={o.sub}

@@ -37,9 +37,9 @@ const MAIN: Offer = {
 };
 
 const OTHERS: { slug: string; kind: Kind; title: string; by: string }[] = [
-  { slug: "free-portraits", kind: "offering", title: "Free portrait sessions for trans & nonbinary members", by: `${memberName('andre')} · ${MEMBERS.andre.hood}` },
-  { slug: "mentoring-engineers", kind: "offering", title: "Monthly mentoring for junior engineers", by: `${memberName('rui')} · ${MEMBERS.rui.hood}` },
-  { slug: "sublet-arroios", kind: "looking", title: "A sublet in Arroios, June through August", by: `${memberName('carla')} · ${MEMBERS.carla.hood}` },
+  { slug: "free-portraits", kind: "offering", title: "Free portrait sessions for trans & nonbinary members", by: `${memberName('andre')} · ${MEMBERS.andre!.hood}` },
+  { slug: "mentoring-engineers", kind: "offering", title: "Monthly mentoring for junior engineers", by: `${memberName('rui')} · ${MEMBERS.rui!.hood}` },
+  { slug: "sublet-arroios", kind: "looking", title: "A sublet in Arroios, June through August", by: `${memberName('carla')} · ${MEMBERS.carla!.hood}` },
 ];
 
 export function OfferPage() {
@@ -83,7 +83,7 @@ export function OfferPage() {
                     {owner.first} {owner.last}
                   </div>
                   <div className={styles.posterMeta}>
-                    {owner.role.split("·")[0].trim()}
+                    {owner.role.split("·")[0]!.trim()}
                     <br />
                     {owner.hood}
                   </div>

@@ -4,7 +4,7 @@ import { liveEvents } from './data'
 import styles from './CinemaPage.module.css'
 import { routes } from '../../app/routeMap'
 
-const badgeClass: Record<string, string> = { premiere: styles.bgPremiere, party: styles.bgParty, live: styles.bgLive }
+const badgeClass: Record<string, string | undefined> = { premiere: styles.bgPremiere, party: styles.bgParty, live: styles.bgLive }
 
 export function LiveSection() {
   return (

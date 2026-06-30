@@ -10,12 +10,12 @@ const SCROLL_OFFSET = 100
 
 export function EditProfileSidebar() {
   const reduced = usePrefersReducedMotion()
-  const [active, setActive] = useState(PROFILE_NAV[0].id)
+  const [active, setActive] = useState(PROFILE_NAV[0]!.id)
 
   // Scroll-spy: the section whose top is nearest the offset line wins.
   useEffect(() => {
     function onScroll() {
-      let current = PROFILE_NAV[0].id
+      let current = PROFILE_NAV[0]!.id
       for (const item of PROFILE_NAV) {
         const el = document.getElementById(item.id)
         if (el && el.getBoundingClientRect().top - SCROLL_OFFSET <= 1) current = item.id
@@ -39,7 +39,7 @@ export function EditProfileSidebar() {
     <aside className={styles.nav}>
       <div className={styles.navInner}>
         {PROFILE_NAV.map((item, i) => {
-          const firstInGroup = i === 0 || PROFILE_NAV[i - 1].group !== item.group
+          const firstInGroup = i === 0 || PROFILE_NAV[i - 1]!.group !== item.group
           return (
             <Fragment key={item.id}>
               {firstInGroup && <div className={styles.navSection}>{item.group}</div>}

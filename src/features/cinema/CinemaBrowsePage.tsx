@@ -52,7 +52,7 @@ function FilmCard({ film }: { film: CinemaFilm }) {
         {film.titlePost}
       </div>
       <div className={styles.fcMeta}>
-        {film.meta.split('·')[0].trim()} · {film.country} · {film.year}
+        {film.meta.split('·')[0]!.trim()} · {film.country} · {film.year}
       </div>
       <div className={styles.fcTags}>
         {film.subs.map((s) => (

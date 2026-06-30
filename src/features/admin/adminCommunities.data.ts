@@ -91,12 +91,12 @@ export function visLabel(v: Visibility): string {
 export function shortName(name: string): string {
   const parts = name.trim().split(/\s+/)
   if (parts.length < 2) return name
-  return `${parts[0]} ${parts[parts.length - 1][0]}.`
+  return `${parts[0]} ${parts[parts.length - 1]![0]}.`
 }
 
 /** First given name only. */
 export function firstName(name: string): string {
-  return name.trim().split(/\s+/)[0]
+  return name.trim().split(/\s+/)[0]!
 }
 
 export const COMMUNITIES: Community[] = [

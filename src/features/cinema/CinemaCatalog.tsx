@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { FiStar } from 'react-icons/fi'
-import { ImageSlot } from '../../shared/components/ui'
+import { Avatar, ImageSlot } from '../../shared/components/ui'
 import { collections, films, shorts } from './data'
 import styles from './CinemaPage.module.css'
 import { routes } from '../../app/routeMap'
@@ -83,9 +83,7 @@ export function CollectionsSection() {
             </h3>
             <p>{c.desc}</p>
             <div className={styles.collBy}>
-              <span className="av" style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(232,119,90,.22)', color: 'var(--accent-soft)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--serif)', fontSize: 10 }}>
-                {c.av}
-              </span>
+              <Avatar initials={c.av} tint="coral" size={22} />
               {c.by}
             </div>
             <div className={styles.collCount}>

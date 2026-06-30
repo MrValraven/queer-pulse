@@ -66,11 +66,11 @@ export function EventRsvpCard() {
             You're <em>going.</em>
           </h3>
           <p className={styles.successText}>
-            Reserved on the <strong>{TIERS[selectedTier].name}</strong> tier
-            {TIERS[selectedTier].price !== '€0' && (
+            Reserved on the <strong>{TIERS[selectedTier]!.name}</strong> tier
+            {TIERS[selectedTier]!.price !== '€0' && (
               <>
                 {' · '}
-                <strong>{TIERS[selectedTier].price}</strong>
+                <strong>{TIERS[selectedTier]!.price}</strong>
               </>
             )}
           </p>

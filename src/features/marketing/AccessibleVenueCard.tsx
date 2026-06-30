@@ -3,9 +3,9 @@ import type { Badge, Venue } from './accessibility.data'
 import styles from './AccessibilityPage.module.css'
 
 const BADGE_CLASS: Record<Badge, string> = {
-  yes: styles.badgeYes,
-  partial: styles.badgePartial,
-  no: styles.badgeNo,
+  yes: styles.badgeYes!,
+  partial: styles.badgePartial!,
+  no: styles.badgeNo!,
 }
 
 export function AccessibleVenueCard({ v, onFlag }: { v: Venue; onFlag: () => void }) {

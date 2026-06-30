@@ -24,7 +24,7 @@ export function ComposeThreadModal({ onClose, onPublish }: ComposeThreadModalPro
   useScrollLock()
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
-  const [cat, setCat] = useState(POST_CATS[0].id)
+  const [cat, setCat] = useState(POST_CATS[0]!.id)
   const [published, setPublished] = useState(false)
 
   useEffect(() => {

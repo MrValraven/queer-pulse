@@ -39,7 +39,7 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
   const { draft, updateDraft } = useProfileTheme()
   const { flag: selectedFlag, coverStyle, pattern, showBadges, showLevel, badge } = draft
 
-  const flag = FLAG_SWATCHES[selectedFlag] ?? FLAG_SWATCHES[0]
+  const flag = FLAG_SWATCHES[selectedFlag] ?? FLAG_SWATCHES[0]!
   const coverBg = buildCoverBg(flag.colors, coverStyle, pattern)
   /** Apply an edit and let the host surface the unsaved-changes bar. */
   const edit = (patch: Parameters<typeof updateDraft>[0]) => {

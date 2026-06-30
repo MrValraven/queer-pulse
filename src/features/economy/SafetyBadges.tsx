@@ -90,6 +90,7 @@ export function SafetyBadges({ signals, compact, affiliation, affiliationLabel }
       )}
       {badges.map((b) => {
         const def = SAFETY_BADGE_DEFS[b.key]
+        if (!def) return null
         return (
           <ExplainBadge
             key={b.key}

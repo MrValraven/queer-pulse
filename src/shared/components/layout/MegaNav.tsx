@@ -76,12 +76,12 @@ export function MegaNav() {
       event.preventDefault();
       const delta = event.key === "ArrowRight" ? 1 : -1;
       const next = (index + delta + NAV_MENUS.length) % NAV_MENUS.length;
-      const nextKey = NAV_MENUS[next].key;
+      const nextKey = NAV_MENUS[next]!.key;
       focusButton(nextKey);
       if (openKey) openMenu(nextKey);
     } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
-      openMenu(NAV_MENUS[index].key);
+      openMenu(NAV_MENUS[index]!.key);
     } else if (event.key === "Escape" && openKey) {
       event.preventDefault();
       closeAndRestore();

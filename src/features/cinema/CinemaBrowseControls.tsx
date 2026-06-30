@@ -128,7 +128,7 @@ export function CinemaBrowseSidebar({
 export function SortDropdown({ value, onChange }: { value: SortKey; onChange: (key: SortKey) => void }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-  const current = SORT_OPTIONS.find((o) => o.value === value) ?? SORT_OPTIONS[0]
+  const current = SORT_OPTIONS.find((o) => o.value === value) ?? SORT_OPTIONS[0]!
 
   useEffect(() => {
     if (!open) return

@@ -8,14 +8,14 @@ import styles from './SystemStateShell.module.css'
 type OrbTone = 'default' | 'jade' | 'plum'
 
 const ORB_A: Record<OrbTone, string> = {
-  default: styles.orbADefault,
-  jade: styles.orbAJade,
-  plum: styles.orbAPlum,
+  default: styles.orbADefault!,
+  jade: styles.orbAJade!,
+  plum: styles.orbAPlum!,
 }
 const ORB_B: Record<OrbTone, string> = {
-  default: styles.orbBDefault,
-  jade: styles.orbBJade,
-  plum: styles.orbBPlum,
+  default: styles.orbBDefault!,
+  jade: styles.orbBJade!,
+  plum: styles.orbBPlum!,
 }
 
 /**

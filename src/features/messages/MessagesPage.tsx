@@ -12,7 +12,7 @@ import styles from './MessagesPage.module.css'
 export function MessagesPage() {
   const loading = useSimulatedLoad()
   const [extraThreads, setExtraThreads] = useState<Conversation[]>([])
-  const [activeId, setActiveId] = useState(conversations[0].id)
+  const [activeId, setActiveId] = useState(conversations[0]!.id)
   const [readIds, setReadIds] = useState<Set<string>>(new Set())
   const [query, setQuery] = useState('')
   const [draft, setDraft] = useState('')
@@ -23,7 +23,7 @@ export function MessagesPage() {
   const allThreads = useMemo(() => [...extraThreads, ...conversations], [extraThreads])
 
   const active = useMemo(
-    () => allThreads.find((c) => c.id === activeId) ?? allThreads[0],
+    () => allThreads.find((c) => c.id === activeId) ?? allThreads[0]!,
     [allThreads, activeId],
   )
 

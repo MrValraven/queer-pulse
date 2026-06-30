@@ -31,7 +31,7 @@ export function CommunityPrivacyPage() {
           </Reveal>
           <div>
             {TIERS.map((t) => {
-              const Icon = ICONS[t.icon]
+              const Icon = ICONS[t.icon]!
               return (
                 <Reveal key={t.title} className={styles.featureRow}>
                   <span className={styles.featureIcon}><Icon aria-hidden /></span>

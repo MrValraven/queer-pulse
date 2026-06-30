@@ -32,7 +32,7 @@ export function ForumAvatar({
   style,
   person,
 }: {
-  className: string
+  className?: string
   style?: CSSProperties
   person: ForumPerson
 }) {

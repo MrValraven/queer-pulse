@@ -8,7 +8,7 @@ import { getSpace, type Tint, type VerifiedSpace, type RemovedSpace } from './sa
 import { VouchModal } from './VouchModal'
 import styles from './SafeSpaceDetailPage.module.css'
 
-const TINT: Record<Tint, string> = { coral: styles.tCoral, jade: styles.tJade, plum: styles.tPlum }
+const TINT: Record<Tint, string | undefined> = { coral: styles.tCoral, jade: styles.tJade, plum: styles.tPlum }
 const SAFETY = routes.safety
 const VERIFIED_COUNT = 47
 

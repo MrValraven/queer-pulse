@@ -33,17 +33,17 @@ const PRIVACY_LABEL: Record<Privacy, string> = {
 }
 
 const thumbClass: Record<Thumb, string> = {
-  a: styles.thumbA,
-  b: styles.thumbB,
-  c: styles.thumbC,
-  d: styles.thumbD,
-  e: styles.thumbE,
+  a: styles.thumbA!,
+  b: styles.thumbB!,
+  c: styles.thumbC!,
+  d: styles.thumbD!,
+  e: styles.thumbE!,
 }
 
 const kindClass: Record<RecentSave['kindVariant'], string> = {
-  therapist: styles.kindTherapist,
-  article: styles.kindArticle,
-  business: styles.kindBusiness,
+  therapist: styles.kindTherapist!,
+  article: styles.kindArticle!,
+  business: styles.kindBusiness!,
 }
 
 const privacyIcon: Record<Privacy, ReactNode> = {

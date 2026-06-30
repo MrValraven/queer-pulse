@@ -21,7 +21,7 @@ const AUTO_CLOSE_SECONDS = 6
 type Phase = 'idle' | 'sending' | 'sent'
 
 export function ConnectModal({ slug, onClose }: { slug?: string; onClose: () => void }) {
-  const member = (slug && memberProfiles[slug]) || memberProfiles[defaultProfileSlug]
+  const member = (slug && memberProfiles[slug]) || memberProfiles[defaultProfileSlug]!
   const { sendRequest } = useConnections()
   const [phase, setPhase] = useState<Phase>('idle')
   const [name, setName] = useState('')

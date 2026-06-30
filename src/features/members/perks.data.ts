@@ -90,7 +90,7 @@ export const perkGroups: PerkGroup[] = [
 ]
 
 /** Number of perks currently available to redeem. */
-export const availableCount = perkGroups[0].perks.length
+export const availableCount = perkGroups[0]!.perks.length
 
 export const sidebarCopy = {
   explain:

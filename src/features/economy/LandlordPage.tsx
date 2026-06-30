@@ -12,7 +12,7 @@ import { ContactRequestModal } from './ContactRequestModal'
 import { LandlordSkeleton } from './LandlordSkeleton'
 import s from './LandlordPage.module.css'
 
-const TINT: Record<Tint, string> = { coral: s.tCoral, jade: s.tJade, plum: s.tPlum }
+const TINT: Record<Tint, string | undefined> = { coral: s.tCoral, jade: s.tJade, plum: s.tPlum }
 const Stars = ({ n }: { n: number }) => (
   <>
     {Array.from({ length: 5 }, (_, i) => (

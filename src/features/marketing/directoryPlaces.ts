@@ -75,11 +75,11 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: 'Quick same-day jobs', yes: false },
     ],
     hoursType: 'appointment', hoursNote: 'Open by appointment — message to arrange a time.',
-    owner: { name: memberName('ines'), initials: MEMBERS.ines.initials, tint: C, role: 'Founder · designer', bio: 'Designer for cultural institutions and small presses. Believes good design is a form of care.', inQueerPulse: true, first: 'Inês' },
+    owner: { name: memberName('ines'), initials: MEMBERS.ines!.initials, tint: C, role: 'Founder · designer', bio: 'Designer for cultural institutions and small presses. Believes good design is a form of care.', inQueerPulse: true, first: 'Inês' },
     social: { instagram: '@atelierpulso', website: 'atelierpulso.pt', email: 'ola@atelierpulso.pt' },
     address: 'R. da Escola Politécnica 84 · Príncipe Real',
     reviews: [
-      { initials: MEMBERS.andre.initials, name: memberName('andre'), tint: J, byline: 'he/him · client', stars: 5, text: 'Inês rebuilt my studio identity and somehow made it feel more like me than my old one did. Patient, fast, honest about what wasn\'t working.', helpful: 12 },
+      { initials: MEMBERS.andre!.initials, name: memberName('andre'), tint: J, byline: 'he/him · client', stars: 5, text: 'Inês rebuilt my studio identity and somehow made it feel more like me than my old one did. Patient, fast, honest about what wasn\'t working.', helpful: 12 },
       { initials: 'LB', name: 'Livraria Bertha', tint: P, byline: 'partner', stars: 5, text: 'Designed our entire signage and event series. Every queer press in Lisbon should be working with her.', helpful: 7 },
     ],
   },
@@ -101,7 +101,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: 'Walk-ins — it\'s ticketed only', yes: false },
     ],
     hoursType: 'appointment', hoursNote: 'Monthly seatings — book a seat for the next dinner.',
-    owner: { name: memberName('tomas'), initials: MEMBERS.tomas.initials, tint: C, role: 'Chef · host', bio: 'Chef and supper-club host. Cooks the way his avó did, for people who need a table.', inQueerPulse: true, first: 'Tomás' },
+    owner: { name: memberName('tomas'), initials: MEMBERS.tomas!.initials, tint: C, role: 'Chef · host', bio: 'Chef and supper-club host. Cooks the way his avó did, for people who need a table.', inQueerPulse: true, first: 'Tomás' },
     social: { instagram: '@queersupperclub', email: 'table@queersupper.pt' },
     address: 'Address shared with ticket · Mouraria',
     upcoming: [
@@ -109,8 +109,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       { when: 'Sat 19 Jul · 20:00', title: 'July dinner — stone fruit & the grill' },
     ],
     reviews: [
-      { initials: MEMBERS.carla.initials, name: memberName('carla'), tint: C, byline: 'she/her · regular', stars: 5, text: 'I came alone to my first one terrified and left with three numbers and a full heart. Tomás seats you like he\'s been thinking about it all week.', helpful: 28 },
-      { initials: MEMBERS.kai.initials, name: memberName('kai'), tint: J, byline: 'they/them · 2 visits', stars: 5, text: 'The food is genuinely excellent and the room is the point. Best twelve euros-an-hour my social life has ever spent.', helpful: 15 },
+      { initials: MEMBERS.carla!.initials, name: memberName('carla'), tint: C, byline: 'she/her · regular', stars: 5, text: 'I came alone to my first one terrified and left with three numbers and a full heart. Tomás seats you like he\'s been thinking about it all week.', helpful: 28 },
+      { initials: MEMBERS.kai!.initials, name: memberName('kai'), tint: J, byline: 'they/them · 2 visits', stars: 5, text: 'The food is genuinely excellent and the room is the point. Best twelve euros-an-hour my social life has ever spent.', helpful: 15 },
     ],
   },
   {
@@ -131,11 +131,11 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: 'Drop-in without booking', yes: false },
     ],
     hoursType: 'studio', hoursNote: 'Studio hours Tue–Sat; workshops monthly — book ahead.',
-    owner: { name: memberName('beatriz'), initials: MEMBERS.beatriz.initials, tint: P, role: 'Ceramicist', bio: 'Ceramicist in Graça. Runs the Disabled Queers access list on the side and builds access into everything.', inQueerPulse: true, first: 'Beatriz' },
+    owner: { name: memberName('beatriz'), initials: MEMBERS.beatriz!.initials, tint: P, role: 'Ceramicist', bio: 'Ceramicist in Graça. Runs the Disabled Queers access list on the side and builds access into everything.', inQueerPulse: true, first: 'Beatriz' },
     social: { instagram: '@estudiobeatrizpinto', website: 'beatrizpinto.pt', email: 'estudio@beatrizpinto.pt' },
     address: 'R. da Senhora do Monte 12 · Graça',
     reviews: [
-      { initials: MEMBERS.rita.initials, name: memberName('rita'), tint: J, byline: 'she/her · workshop', stars: 5, text: 'Did her beginners\' day having never touched clay. Came home with two wonky bowls I use every day and a standing invitation to come back.', helpful: 9 },
+      { initials: MEMBERS.rita!.initials, name: memberName('rita'), tint: J, byline: 'she/her · workshop', stars: 5, text: 'Did her beginners\' day having never touched clay. Came home with two wonky bowls I use every day and a standing invitation to come back.', helpful: 9 },
       { initials: 'BA', name: 'Bairro Alto Studio', tint: J, byline: 'desk-mate', stars: 4, text: 'Rented a desk for three months. Calm, generous, good music. Only docked a star because I never wanted to leave.', helpful: 4 },
     ],
   },
@@ -162,8 +162,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: 'R. do Benformoso 140 · Intendente',
     upcoming: [{ when: 'Thu 12 Jun · 19:00', title: 'Peer-support drop-in (open)' }],
     reviews: [
-      { initials: MEMBERS.anika.initials, name: memberName('anika'), tint: C, byline: 'she/her · client', stars: 5, text: 'First therapist I haven\'t had to educate. We started at the actual problem in session one. Sliding scale made it possible at all.', helpful: 33 },
-      { initials: MEMBERS.jonas.initials, name: memberName('jonas'), tint: J, byline: 'he/him · group member', stars: 5, text: 'The Thursday group got me through a hard winter. Held, never rushed, real clinical backup in the room.', helpful: 21 },
+      { initials: MEMBERS.anika!.initials, name: memberName('anika'), tint: C, byline: 'she/her · client', stars: 5, text: 'First therapist I haven\'t had to educate. We started at the actual problem in session one. Sliding scale made it possible at all.', helpful: 33 },
+      { initials: MEMBERS.jonas!.initials, name: memberName('jonas'), tint: J, byline: 'he/him · group member', stars: 5, text: 'The Thursday group got me through a hard winter. Held, never rushed, real clinical backup in the room.', helpful: 21 },
     ],
   },
   {
@@ -192,8 +192,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       { when: 'Sun 22 Jun · 17:00', title: 'Book club · "Stone Butch Blues"' },
     ],
     reviews: [
-      { initials: MEMBERS['sofia-castano'].initials, name: memberName('sofia-castano'), tint: P, byline: 'she/her · regular', stars: 5, text: 'I have never left empty-handed and never left poorer in spirit. The recommendations card by the till is a hazard.', helpful: 17 },
-      { initials: MEMBERS.nuno.initials, name: memberName('nuno'), tint: J, byline: 'he/him · 4 visits', stars: 5, text: 'Came for one book, stayed for a launch I didn\'t know was happening, met half a reading group. That\'s Bertha.', helpful: 11 },
+      { initials: MEMBERS['sofia-castano']!.initials, name: memberName('sofia-castano'), tint: P, byline: 'she/her · regular', stars: 5, text: 'I have never left empty-handed and never left poorer in spirit. The recommendations card by the till is a hazard.', helpful: 17 },
+      { initials: MEMBERS.nuno!.initials, name: memberName('nuno'), tint: J, byline: 'he/him · 4 visits', stars: 5, text: 'Came for one book, stayed for a launch I didn\'t know was happening, met half a reading group. That\'s Bertha.', helpful: 11 },
     ],
   },
   {
@@ -218,8 +218,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     social: { phone: '+351 21 886 1234' },
     address: 'R. do Capelão 18 · Mouraria',
     reviews: [
-      { initials: MEMBERS.rita.initials, name: memberName('rita'), tint: J, byline: 'she/her · local', stars: 5, text: 'Dona Fátima calls me "menina" and means it the way I need it meant. The pastéis are the best in Mouraria, fight me.', helpful: 14 },
-      { initials: MEMBERS.tomas.initials, name: memberName('tomas'), tint: C, byline: 'he/him · neighbour', stars: 4, text: 'Not a queer spot, just a kind one. That\'s worth a lot. Half a star off only because they close before I\'m hungry.', helpful: 6 },
+      { initials: MEMBERS.rita!.initials, name: memberName('rita'), tint: J, byline: 'she/her · local', stars: 5, text: 'Dona Fátima calls me "menina" and means it the way I need it meant. The pastéis are the best in Mouraria, fight me.', helpful: 14 },
+      { initials: MEMBERS.tomas!.initials, name: memberName('tomas'), tint: C, byline: 'he/him · neighbour', stars: 4, text: 'Not a queer spot, just a kind one. That\'s worth a lot. Half a star off only because they close before I\'m hungry.', helpful: 6 },
     ],
   },
   {
@@ -240,12 +240,12 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: 'Loud live bands at 3am', yes: false },
     ],
     hoursType: 'appointment', hoursNote: 'Session hire by booking, day and night slots.',
-    owner: { name: memberName('diogo'), initials: MEMBERS.diogo.initials, tint: J, role: 'Producer · engineer', bio: 'Music producer and Queer Runners regular. Specialises in electronic and experimental work.', inQueerPulse: true, first: 'Diogo' },
+    owner: { name: memberName('diogo'), initials: MEMBERS.diogo!.initials, tint: J, role: 'Producer · engineer', bio: 'Music producer and Queer Runners regular. Specialises in electronic and experimental work.', inQueerPulse: true, first: 'Diogo' },
     social: { instagram: '@bairroaltostudio', website: 'bairroalto.studio', email: 'book@bairroalto.studio' },
     address: 'R. da Atalaia 90 · Bairro Alto',
     reviews: [
-      { initials: MEMBERS.kai.initials, name: memberName('kai'), tint: J, byline: 'they/them · artist', stars: 5, text: 'Diogo got a sound out of my demos I\'d been chasing for two years. The modular wall alone is worth the trip.', helpful: 10 },
-      { initials: MEMBERS.rita.initials, name: memberName('rita'), tint: C, byline: 'she/her · client', stars: 5, text: 'First-record sliding scale meant I could actually afford to make the thing properly. Patient with a total beginner.', helpful: 8 },
+      { initials: MEMBERS.kai!.initials, name: memberName('kai'), tint: J, byline: 'they/them · artist', stars: 5, text: 'Diogo got a sound out of my demos I\'d been chasing for two years. The modular wall alone is worth the trip.', helpful: 10 },
+      { initials: MEMBERS.rita!.initials, name: memberName('rita'), tint: C, byline: 'she/her · client', stars: 5, text: 'First-record sliding scale meant I could actually afford to make the thing properly. Patient with a total beginner.', helpful: 8 },
     ],
   },
   {
@@ -270,8 +270,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     social: { instagram: '@espacointendente', website: 'espacointendente.pt', email: 'ola@espacointendente.pt', phone: '+351 21 222 3344' },
     address: 'Largo do Intendente 8 · Intendente',
     reviews: [
-      { initials: MEMBERS.nuno.initials, name: memberName('nuno'), tint: J, byline: 'he/him · member', stars: 5, text: 'Wrote the inclusion policy on the wall and actually live by it. Bathrooms de-gendered, staff trained, prices human.', helpful: 13 },
-      { initials: MEMBERS.carla.initials, name: memberName('carla'), tint: C, byline: 'she/her · day-pass', stars: 4, text: 'Great for a focused day. Docked one star for the afternoon coffee situation, which is a crime against deadlines.', helpful: 5 },
+      { initials: MEMBERS.nuno!.initials, name: memberName('nuno'), tint: J, byline: 'he/him · member', stars: 5, text: 'Wrote the inclusion policy on the wall and actually live by it. Bathrooms de-gendered, staff trained, prices human.', helpful: 13 },
+      { initials: MEMBERS.carla!.initials, name: memberName('carla'), tint: C, byline: 'she/her · day-pass', stars: 4, text: 'Great for a focused day. Docked one star for the afternoon coffee situation, which is a crime against deadlines.', helpful: 5 },
     ],
   },
   {
@@ -296,8 +296,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     social: { instagram: '@afarinha.lisboa', website: 'afarinha.pt', email: 'reservas@afarinha.pt', phone: '+351 21 099 8877' },
     address: 'R. de Arroios 142 · Arroios',
     reviews: [
-      { initials: MEMBERS.anika.initials, name: memberName('anika'), tint: C, byline: 'she/her · regular', stars: 5, text: 'Told Renato "something orange and a bit weird" and he changed my whole opinion of wine. The plates kept coming and I let them.', helpful: 16 },
-      { initials: MEMBERS['sofia-castano'].initials, name: memberName('sofia-castano'), tint: P, byline: 'she/her · 3 visits', stars: 5, text: 'Brought a date, then brought my friends, then brought my mother. Passed every test. Hospitality you can feel.', helpful: 9 },
+      { initials: MEMBERS.anika!.initials, name: memberName('anika'), tint: C, byline: 'she/her · regular', stars: 5, text: 'Told Renato "something orange and a bit weird" and he changed my whole opinion of wine. The plates kept coming and I let them.', helpful: 16 },
+      { initials: MEMBERS['sofia-castano']!.initials, name: memberName('sofia-castano'), tint: P, byline: 'she/her · 3 visits', stars: 5, text: 'Brought a date, then brought my friends, then brought my mother. Passed every test. Hospitality you can feel.', helpful: 9 },
     ],
   },
   {
@@ -318,12 +318,12 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: 'Same-week digital turnaround', yes: false },
     ],
     hoursType: 'appointment', hoursNote: 'Portrait sessions by appointment.',
-    owner: { name: memberName('andre'), initials: MEMBERS.andre.initials, tint: J, role: 'Photographer', bio: 'Portrait photographer, all analog. Keeps a standing offer of free portraits for transition milestones.', inQueerPulse: true, first: 'André' },
+    owner: { name: memberName('andre'), initials: MEMBERS.andre!.initials, tint: J, role: 'Photographer', bio: 'Portrait photographer, all analog. Keeps a standing offer of free portraits for transition milestones.', inQueerPulse: true, first: 'André' },
     social: { instagram: '@andrequintela.photo', website: 'andrequintela.com', email: 'studio@andrequintela.com' },
     address: 'R. Nova do Carvalho 30 · Cais do Sodré',
     reviews: [
-      { initials: MEMBERS.kai.initials, name: memberName('kai'), tint: J, byline: 'they/them · sitter', stars: 5, text: 'I hate being photographed. André made an hour feel like a conversation and the prints made me cry, in the good way.', helpful: 19 },
-      { initials: MEMBERS.rita.initials, name: memberName('rita'), tint: C, byline: 'she/her · milestone shoot', stars: 5, text: 'Did my one-year portraits for free, no fuss, total grace. The darkroom prints are on my wall and staying there.', helpful: 14 },
+      { initials: MEMBERS.kai!.initials, name: memberName('kai'), tint: J, byline: 'they/them · sitter', stars: 5, text: 'I hate being photographed. André made an hour feel like a conversation and the prints made me cry, in the good way.', helpful: 19 },
+      { initials: MEMBERS.rita!.initials, name: memberName('rita'), tint: C, byline: 'she/her · milestone shoot', stars: 5, text: 'Did my one-year portraits for free, no fuss, total grace. The darkroom prints are on my wall and staying there.', helpful: 14 },
     ],
   },
   {
@@ -348,8 +348,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     social: { website: 'clinicadaestrela.pt', email: 'marcacoes@clinicadaestrela.pt', phone: '+351 21 396 5500' },
     address: 'Calçada da Estrela 40 · Estrela',
     reviews: [
-      { initials: MEMBERS.jonas.initials, name: memberName('jonas'), tint: J, byline: 'he/him · patient', stars: 5, text: 'Dr. Pereira treats me like an adult and the endocrinologist actually knows the protocols. Booked under the right name first try.', helpful: 24 },
-      { initials: MEMBERS.anika.initials, name: memberName('anika'), tint: C, byline: 'she/her · patient', stars: 4, text: 'Genuinely affirming care. The wait for the endo can be a few weeks, hence four stars, but worth it.', helpful: 10 },
+      { initials: MEMBERS.jonas!.initials, name: memberName('jonas'), tint: J, byline: 'he/him · patient', stars: 5, text: 'Dr. Pereira treats me like an adult and the endocrinologist actually knows the protocols. Booked under the right name first try.', helpful: 24 },
+      { initials: MEMBERS.anika!.initials, name: memberName('anika'), tint: C, byline: 'she/her · patient', stars: 4, text: 'Genuinely affirming care. The wait for the endo can be a few weeks, hence four stars, but worth it.', helpful: 10 },
     ],
   },
   {
@@ -375,8 +375,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: 'R. do Açúcar 76 · Marvila',
     upcoming: [{ when: 'Sat 28 Jun · 18:00', title: 'Opening — group show, eight emerging artists' }],
     reviews: [
-      { initials: MEMBERS.luisa.initials, name: memberName('luisa'), tint: J, byline: 'she/her · curator', stars: 5, text: 'Lume shows the work the big institutions will be claiming to have discovered in five years. Go now and be smug later.', helpful: 12 },
-      { initials: MEMBERS.beatriz.initials, name: memberName('beatriz'), tint: P, byline: 'she/her · artist', stars: 5, text: 'They gave me my first solo room and treated it like it mattered. Openings feel like a community, not a market.', helpful: 8 },
+      { initials: MEMBERS.luisa!.initials, name: memberName('luisa'), tint: J, byline: 'she/her · curator', stars: 5, text: 'Lume shows the work the big institutions will be claiming to have discovered in five years. Go now and be smug later.', helpful: 12 },
+      { initials: MEMBERS.beatriz!.initials, name: memberName('beatriz'), tint: P, byline: 'she/her · artist', stars: 5, text: 'They gave me my first solo room and treated it like it mattered. Openings feel like a community, not a market.', helpful: 8 },
     ],
   },
   {
@@ -401,8 +401,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     social: { instagram: '@navalha.barbearia', email: 'ola@navalha.pt', phone: '+351 21 347 2200' },
     address: 'R. do Século 120 · Príncipe Real',
     reviews: [
-      { initials: MEMBERS.kai.initials, name: memberName('kai'), tint: J, byline: 'they/them · regular', stars: 5, text: 'Asked for a cut I\'d been too scared to ask for anywhere. Vasco just nodded and did it perfectly. I cried a little in the chair.', helpful: 41 },
-      { initials: MEMBERS.nuno.initials, name: memberName('nuno'), tint: P, byline: 'he/him · monthly', stars: 5, text: 'Same price as my old place, none of the awkwardness, twice the skill. Never going anywhere else.', helpful: 13 },
+      { initials: MEMBERS.kai!.initials, name: memberName('kai'), tint: J, byline: 'they/them · regular', stars: 5, text: 'Asked for a cut I\'d been too scared to ask for anywhere. Vasco just nodded and did it perfectly. I cried a little in the chair.', helpful: 41 },
+      { initials: MEMBERS.nuno!.initials, name: memberName('nuno'), tint: P, byline: 'he/him · monthly', stars: 5, text: 'Same price as my old place, none of the awkwardness, twice the skill. Never going anywhere else.', helpful: 13 },
     ],
   },
   {
@@ -427,8 +427,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     social: { phone: '+351 21 885 6677' },
     address: 'R. dos Lagares 9 · Mouraria',
     reviews: [
-      { initials: MEMBERS.rita.initials, name: memberName('rita'), tint: J, byline: 'she/her · regular', stars: 5, text: 'Lúcia remembers exactly how I like it and never once made me feel like a question mark. Cheap, kind, close. Perfect.', helpful: 9 },
-      { initials: MEMBERS['sofia-castano'].initials, name: memberName('sofia-castano'), tint: C, byline: 'she/her · 2 visits', stars: 4, text: 'Lovely and affordable. Not the place for anything dramatic, but for a good honest cut from a kind person, ideal.', helpful: 4 },
+      { initials: MEMBERS.rita!.initials, name: memberName('rita'), tint: J, byline: 'she/her · regular', stars: 5, text: 'Lúcia remembers exactly how I like it and never once made me feel like a question mark. Cheap, kind, close. Perfect.', helpful: 9 },
+      { initials: MEMBERS['sofia-castano']!.initials, name: memberName('sofia-castano'), tint: C, byline: 'she/her · 2 visits', stars: 4, text: 'Lovely and affordable. Not the place for anything dramatic, but for a good honest cut from a kind person, ideal.', helpful: 4 },
     ],
   },
   {
@@ -453,8 +453,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     social: { instagram: '@studiocabelo', website: 'studiocabelo.pt', email: 'ola@studiocabelo.pt' },
     address: 'R. do Forno do Tijolo 22 · Intendente',
     reviews: [
-      { initials: MEMBERS.anika.initials, name: memberName('anika'), tint: C, byline: 'she/her · regular', stars: 5, text: 'Paid the same as my partner for the first time in my life and the cut was better than either of us usually get. Sold forever.', helpful: 18 },
-      { initials: MEMBERS.kai.initials, name: memberName('kai'), tint: J, byline: 'they/them · client', stars: 5, text: 'No "which side of the price list are you" energy. Just good hair and good music. The bar, frankly.', helpful: 11 },
+      { initials: MEMBERS.anika!.initials, name: memberName('anika'), tint: C, byline: 'she/her · regular', stars: 5, text: 'Paid the same as my partner for the first time in my life and the cut was better than either of us usually get. Sold forever.', helpful: 18 },
+      { initials: MEMBERS.kai!.initials, name: memberName('kai'), tint: J, byline: 'they/them · client', stars: 5, text: 'No "which side of the price list are you" energy. Just good hair and good music. The bar, frankly.', helpful: 11 },
     ],
   },
   {
@@ -479,8 +479,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     social: { instagram: '@academialivre', website: 'academialivre.pt', email: 'ola@academialivre.pt', phone: '+351 21 343 9090' },
     address: 'R. da Boavista 64 · Cais do Sodré',
     reviews: [
-      { initials: MEMBERS.jonas.initials, name: memberName('jonas'), tint: J, byline: 'he/him · member', stars: 5, text: 'First gym in years I haven\'t had a panic about the changing room. Private stalls everywhere, staff who get it. Life-changing, genuinely.', helpful: 27 },
-      { initials: MEMBERS.nuno.initials, name: memberName('nuno'), tint: P, byline: 'he/him · member', stars: 4, text: 'Solid kit, good policy, gets busy at 18:00 like every gym on earth. Four stars only for the queue at peak.', helpful: 7 },
+      { initials: MEMBERS.jonas!.initials, name: memberName('jonas'), tint: J, byline: 'he/him · member', stars: 5, text: 'First gym in years I haven\'t had a panic about the changing room. Private stalls everywhere, staff who get it. Life-changing, genuinely.', helpful: 27 },
+      { initials: MEMBERS.nuno!.initials, name: memberName('nuno'), tint: P, byline: 'he/him · member', stars: 4, text: 'Solid kit, good policy, gets busy at 18:00 like every gym on earth. Four stars only for the queue at peak.', helpful: 7 },
     ],
   },
   {
@@ -505,8 +505,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     social: { instagram: '@corpolivre.studio', website: 'corpolivre.pt', email: 'ola@corpolivre.pt' },
     address: 'R. da Rosa 200 · Bairro Alto',
     reviews: [
-      { initials: MEMBERS.rita.initials, name: memberName('rita'), tint: C, byline: 'she/her · regular', stars: 5, text: 'No mirrors changed my entire relationship to exercise. I show up for how it feels now. The after-class tea is non-negotiable.', helpful: 20 },
-      { initials: MEMBERS['sofia-castano'].initials, name: memberName('sofia-castano'), tint: J, byline: 'she/her · class pack', stars: 5, text: 'Small enough that Júlia corrects my form by name. Strong, calm, zero shame. Wish I\'d found it years ago.', helpful: 12 },
+      { initials: MEMBERS.rita!.initials, name: memberName('rita'), tint: C, byline: 'she/her · regular', stars: 5, text: 'No mirrors changed my entire relationship to exercise. I show up for how it feels now. The after-class tea is non-negotiable.', helpful: 20 },
+      { initials: MEMBERS['sofia-castano']!.initials, name: memberName('sofia-castano'), tint: J, byline: 'she/her · class pack', stars: 5, text: 'Small enough that Júlia corrects my form by name. Strong, calm, zero shame. Wish I\'d found it years ago.', helpful: 12 },
     ],
   },
   {
@@ -532,8 +532,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: 'Beco do Mexias 4 · Alfama',
     upcoming: [{ when: 'Sun 15 Jun · 10:00', title: 'Open capoeira roda — all levels, free' }],
     reviews: [
-      { initials: MEMBERS.kai.initials, name: memberName('kai'), tint: J, byline: 'they/them · member', stars: 5, text: 'Where else can you do sun salutations and then deadlift in the same hour for whatever you can pay? Alfama\'s best-kept secret.', helpful: 15 },
-      { initials: MEMBERS.tomas.initials, name: memberName('tomas'), tint: C, byline: 'he/him · capoeira', stars: 5, text: 'The roda on Sundays is pure joy and properly mixed — ages, bodies, levels. Sliding scale means everyone\'s actually there.', helpful: 8 },
+      { initials: MEMBERS.kai!.initials, name: memberName('kai'), tint: J, byline: 'they/them · member', stars: 5, text: 'Where else can you do sun salutations and then deadlift in the same hour for whatever you can pay? Alfama\'s best-kept secret.', helpful: 15 },
+      { initials: MEMBERS.tomas!.initials, name: memberName('tomas'), tint: C, byline: 'he/him · capoeira', stars: 5, text: 'The roda on Sundays is pure joy and properly mixed — ages, bodies, levels. Sliding scale means everyone\'s actually there.', helpful: 8 },
     ],
   },
 ]

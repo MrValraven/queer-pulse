@@ -174,7 +174,7 @@ export function edgeWeight(e: VouchEdge): number {
 /** months-since-epoch number for an 'YYYY-MM' string */
 export function ym(date: string): number {
   const [y, m] = date.split('-')
-  return parseInt(y, 10) * 12 + parseInt(m, 10)
+  return parseInt(y!, 10) * 12 + parseInt(m!, 10)
 }
 
 export const T_MIN = ym('2023-01')
@@ -200,7 +200,7 @@ export function shortestPath(a: string, b: string): string[] | null {
   const seen = new Set<string>([a])
   while (queue.length) {
     const path = queue.shift()!
-    const last = path[path.length - 1]
+    const last = path[path.length - 1]!
     if (last === b) return path
     for (const nb of neighbors(last, true)) {
       if (!seen.has(nb)) {
@@ -216,7 +216,7 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 
 export function fmtMonth(date: string): string {
   const [y, m] = date.split('-')
-  return `${MONTHS[parseInt(m, 10) - 1]} ${y}`
+  return `${MONTHS[parseInt(m!, 10) - 1]} ${y}`
 }
 
 export function monthStr(value: number): string {
@@ -232,7 +232,7 @@ export function monthLabel(value: number): string {
 /** node radius: focus is largest, ring accounts smallest */
 export function nodeRadius(id: string, focusId: string): number {
   if (id === focusId) return 30
-  return personById[id].scene === 'ring' ? 15 : 20
+  return personById[id]!.scene === 'ring' ? 15 : 20
 }
 
 /** map a member's initials to a person in the network (drawer → graph focus) */

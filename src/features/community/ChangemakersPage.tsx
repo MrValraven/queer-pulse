@@ -16,7 +16,7 @@ const STATS = [
   { n: '12', l: 'Active campaigns running right now' },
 ]
 
-const FEATURED = CHANGEMAKERS[0]
+const FEATURED = CHANGEMAKERS[0]!
 const MAKERS = CHANGEMAKERS.slice(1)
 
 function MakerCardSkeleton() {

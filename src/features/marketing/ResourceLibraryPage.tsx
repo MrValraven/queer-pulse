@@ -145,7 +145,7 @@ export function ResourceLibraryPage() {
             {loading && Array.from({ length: 9 }).map((_, i) => <ResourceCardSkeleton key={i} />)}
             {!loading && visible.length === 0 && <div className={s.empty}>No resources match — try a broader filter.</div>}
             {!loading && visible.map((r, i) => {
-              const meta = CAT_META[r.cat]
+              const meta = CAT_META[r.cat]!
               const inner = (
                 <>
                   <div className={s.cardTop}>

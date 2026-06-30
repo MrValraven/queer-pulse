@@ -16,7 +16,7 @@ export function defaultSettings(living: LivingCommunity): CommunitySettings {
   const titleCase = (slug: string): string =>
     slug
       .split('-')
-      .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
+      .map((w) => (w ? w[0]!.toUpperCase() + w.slice(1) : w))
       .join(' ')
   return {
     name: titleCase(living.slug),

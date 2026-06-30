@@ -47,7 +47,7 @@ export function PhotoViewer({
     }
   }, [playing, reduced, go])
 
-  const pic = pics[index]
+  const pic = pics[index]!
 
   return (
     <div

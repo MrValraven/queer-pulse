@@ -65,7 +65,7 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
               onSubmit({
                 id: `photo-${Date.now()}`,
                 caption: caption.trim() || 'A moment from the day',
-                tint: SAMPLE_FILES[picked].tint,
+                tint: SAMPLE_FILES[picked]!.tint,
               })
               setDone(true)
             }}
@@ -78,7 +78,7 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
             </p>
 
             <div className={styles.preview}>
-              <ImageSlot tint={SAMPLE_FILES[picked].tint} height={150} radius={12} placeholder="your photo" />
+              <ImageSlot tint={SAMPLE_FILES[picked]!.tint} height={150} radius={12} placeholder="your photo" />
             </div>
 
             <div className={styles.fieldLabel}>Choose a photo</div>

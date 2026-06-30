@@ -15,7 +15,7 @@ import {
 } from './mentorProfile.data'
 import styles from './MentorProfilePage.module.css'
 
-const avTintClass: Record<'jade' | 'coral' | 'plum', string> = {
+const avTintClass: Record<'jade' | 'coral' | 'plum', string | undefined> = {
   jade: styles.avJade,
   coral: styles.avCoral,
   plum: styles.avPlum,

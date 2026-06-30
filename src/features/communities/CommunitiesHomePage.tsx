@@ -20,7 +20,7 @@ import styles from './CommunitiesHomePage.module.css'
 function interleave(lists: HubPost[][]): HubPost[] {
   const out: HubPost[] = []
   const max = lists.reduce((m, l) => Math.max(m, l.length), 0)
-  for (let i = 0; i < max; i++) for (const l of lists) if (l[i]) out.push(l[i])
+  for (let i = 0; i < max; i++) for (const l of lists) if (l[i]) out.push(l[i]!)
   return out
 }
 
@@ -31,7 +31,7 @@ export function CommunitiesHomePage() {
 
   const mine = Object.keys(memberships).map((slug) => ({
     slug,
-    role: memberships[slug].role,
+    role: memberships[slug]!.role,
     living: getLiving(slug),
     community: communities.find((c) => c.slug === slug),
   }))

@@ -1,4 +1,7 @@
-import type { MyEvent, Recommendation, Notif, Prefs } from './myEvents.types'
+import type { MyEvent, Recommendation, Notif, Prefs, Pill } from './myEvents.types'
+
+/** Pill buckets, in display order. */
+export const PILLS: Pill[] = ['upcoming', 'going', 'hosting', 'waitlisted', 'past', 'saved']
 
 /** Mock "now" — the prototype is anchored to Mon 29 Jun 2026, 16:30. */
 export const TODAY = new Date(2026, 5, 29)

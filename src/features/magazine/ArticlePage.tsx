@@ -123,7 +123,7 @@ export function ArticlePage() {
             <div className={styles.relGrid}>
               {loading
                 ? related.map((rel) => (
-                    <RelatedCardSkeleton key={rel.id} className={styles.relCard} />
+                    <RelatedCardSkeleton key={rel.id} className={styles.relCard!} />
                   ))
                 : related.map((rel, i) => (
                     <FadeIn as={Link} key={rel.id} to={`${routes.article}?id=${rel.id}`} className={styles.relCard} delay={Math.min(i, 8) * 60}>

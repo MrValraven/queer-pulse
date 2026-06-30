@@ -114,7 +114,7 @@ export function VouchGraphCanvas({
           </g>
           <g>
             {visIds.map((id) => {
-              const p = personById[id]
+              const p = personById[id]!
               const isFocus = id === focus
               const radius = nodeRadius(id, focus)
               const ink = mode === 'clusters' ? TONE[SCENE_TONE[p.scene]] : TONE[p.tone]

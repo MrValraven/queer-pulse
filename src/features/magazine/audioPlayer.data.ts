@@ -14,7 +14,7 @@ export const DURATION_SEC = 52 * 60 + 14
 
 /** Parse an `mm:ss` timestamp into whole seconds. */
 export function timeToSec(t: string): number {
-  const [m, s] = t.split(':').map(Number)
+  const [m = 0, s = 0] = t.split(':').map(Number)
   return m * 60 + s
 }
 

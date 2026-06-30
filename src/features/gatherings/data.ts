@@ -431,12 +431,12 @@ export function gatheringPath(slug: string): string {
 export function resolveGathering(param: string | undefined): GatheringDetail {
   if (param) {
     for (const slug of Object.keys(gatheringDetails)) {
-      if (`${slug}-${gatheringShortId(slug)}` === param) return gatheringDetails[slug]
+      if (`${slug}-${gatheringShortId(slug)}` === param) return gatheringDetails[slug]!
     }
     const base = param.replace(/-[a-z0-9]+$/i, '')
-    if (gatheringDetails[base]) return gatheringDetails[base]
+    if (gatheringDetails[base]) return gatheringDetails[base]!
   }
-  return gatheringDetails[defaultGatheringSlug]
+  return gatheringDetails[defaultGatheringSlug]!
 }
 
 /** Official QueerPulse event vs member/community-created gathering. */

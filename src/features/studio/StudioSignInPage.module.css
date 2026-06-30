@@ -269,9 +269,10 @@
   cursor: pointer;
   transition: all 0.2s;
 }
-.segOn {
-  background: var(--accent) !important;
-  color: var(--cream) !important;
+/* Scoped above `.segTabs button` so it wins on specificity, not !important. */
+.segTabs .segOn {
+  background: var(--accent);
+  color: var(--cream);
 }
 
 .pane {

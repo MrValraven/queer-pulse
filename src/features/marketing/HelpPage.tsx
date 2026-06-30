@@ -92,8 +92,8 @@ const CATEGORIES: Category[] = [
 ]
 
 export function HelpPage() {
-  const [tab, setTab] = useState(CATEGORIES[0].id)
-  const [open, setOpen] = useState<string | null>(`${CATEGORIES[0].id}-0`)
+  const [tab, setTab] = useState(CATEGORIES[0]!.id)
+  const [open, setOpen] = useState<string | null>(`${CATEGORIES[0]!.id}-0`)
   const category = CATEGORIES.find((c) => c.id === tab)!
 
   return (

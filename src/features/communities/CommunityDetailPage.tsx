@@ -51,8 +51,8 @@ export function CommunityDetailPage() {
     replyCount: 18,
     post: `New to ${community.name}? Say hello here. Tell us your name, where you're from, and what brought you here. We read every one.`,
     replies: [
-      { initials: members[6].initials, name: members[6].name, tint: members[6].tint, text: "Hello! Just moved to Lisbon and this is the first thing I've joined. Already feels like the right call." },
-      { initials: members[4].initials, name: members[4].name, tint: members[4].tint, text: 'Welcome! Come to the next one — easiest way in is just to show up.' },
+      { initials: members[6]!.initials, name: members[6]!.name, tint: members[6]!.tint, text: "Hello! Just moved to Lisbon and this is the first thing I've joined. Already feels like the right call." },
+      { initials: members[4]!.initials, name: members[4]!.name, tint: members[4]!.tint, text: 'Welcome! Come to the next one — easiest way in is just to show up.' },
     ],
   }
   const threads = [detail.topicThread, welcome]

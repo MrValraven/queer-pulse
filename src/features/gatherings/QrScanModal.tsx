@@ -26,7 +26,7 @@ export function QrScanModal({
   const simulateScan = () => {
     if (pending.length === 0 || scanning) return
     setScanning(true)
-    const guest = pending[Math.floor(Math.random() * pending.length)]
+    const guest = pending[Math.floor(Math.random() * pending.length)]!
     window.setTimeout(() => {
       onCheckIn(guest.name)
       setScanned(guest)

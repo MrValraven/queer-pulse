@@ -57,8 +57,8 @@ export const CATS = [
 export const BADGE: Record<Mode, string> = { offering: 'Offering', seeking: 'Seeking', both: 'Offering & seeking' }
 
 export function getMemberInfo(b: Barter): { name: string; initials: string; tint: AvatarTint; hood: string } {
-  if (b.member && memberProfiles[b.member]) {
-    const m = memberProfiles[b.member]
+  const m = b.member ? memberProfiles[b.member] : undefined
+  if (m) {
     return { name: `${m.first} ${m.last}`, initials: m.initials, tint: m.tint, hood: m.hood }
   }
   return { name: b.name ?? '—', initials: b.initials ?? '?', tint: (b.tint ?? 'jade') as AvatarTint, hood: b.hood ?? '' }

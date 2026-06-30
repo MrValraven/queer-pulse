@@ -1964,7 +1964,7 @@ export const defaultProfileSlug = "ines";
  * their identity from here so the logged-in user is shown consistently. */
 export const currentUserSlug = "tiago";
 /** The currently logged-in user object. */
-export const currentUser: Member = MEMBERS[currentUserSlug];
+export const currentUser: Member = MEMBERS[currentUserSlug]!;
 /** Email for the logged-in user, derived from their slug. Self-surfaces that
  * echo "we sent this to <you>" (cancel flow, invoices, subscriptions) read it
  * from here so the address always matches the signed-in account. */

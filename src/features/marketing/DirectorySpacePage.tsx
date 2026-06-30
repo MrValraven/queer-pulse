@@ -6,7 +6,7 @@ import { DirectorySpaceMain } from './DirectorySpaceMain'
 import { DirectorySpaceAside } from './DirectorySpaceAside'
 import s from './DirectorySpacePage.module.css'
 
-const GCELL: Record<Tint, string> = { coral: '', jade: s.gCellJade, plum: s.gCellPlum }
+const GCELL: Record<Tint, string> = { coral: '', jade: s.gCellJade!, plum: s.gCellPlum! }
 
 export function DirectorySpacePage() {
   const { slug } = useParams()

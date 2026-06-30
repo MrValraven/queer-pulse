@@ -32,9 +32,9 @@ export function AlertBuilderModal({
   const editing = Boolean(initial)
   const [title, setTitle] = useState(initial?.title ?? '')
   const [keywords, setKeywords] = useState(initial?.keywords ?? '')
-  const [location, setLocation] = useState(initial?.location ?? LOCATIONS[0])
+  const [location, setLocation] = useState(initial?.location ?? LOCATIONS[0]!)
   const [minSalary, setMinSalary] = useState(initial?.minSalary ?? '')
-  const [frequency, setFrequency] = useState(initial?.frequency ?? FREQUENCIES[2])
+  const [frequency, setFrequency] = useState(initial?.frequency ?? FREQUENCIES[2]!)
   const [done, setDone] = useState(false)
   useScrollLock()
 

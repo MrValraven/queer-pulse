@@ -5,7 +5,7 @@ import { routes } from '../../app/routeMap'
 import { MEMBERS_HERE } from './directorySpace.data'
 import s from './DirectorySpacePage.module.css'
 
-const TINT: Record<Tint, string> = { coral: s.tCoral, jade: s.tJade, plum: s.tPlum }
+const TINT: Record<Tint, string> = { coral: s.tCoral!, jade: s.tJade!, plum: s.tPlum! }
 
 interface Props {
   place: DirectoryPlace

@@ -40,7 +40,7 @@ const SEEDS: ChangeMakerSeed[] = [
 ]
 
 export const changemakers: ChangeMaker[] = SEEDS.map((s) => {
-  const m = MEMBERS[s.member]
+  const m = MEMBERS[s.member]!
   return {
     key: s.key,
     cause: s.cause,

@@ -72,7 +72,7 @@ export function useVouchSimulation(reduced: boolean) {
           if (id === focusId) {
             pos.set(id, { x: 0, y: 0, vx: 0, vy: 0 })
           } else {
-            const anchor = SCENE_ANCHOR[personById[id].scene]
+            const anchor = SCENE_ANCHOR[personById[id]!.scene]
             pos.set(id, {
               x: anchor.x + (Math.random() * 70 - 35),
               y: anchor.y + (Math.random() * 70 - 35),
@@ -95,8 +95,8 @@ export function useVouchSimulation(reduced: boolean) {
         // repulsion between every visible pair
         for (let a = 0; a < n; a++) {
           for (let b = a + 1; b < n; b++) {
-            const pa = pos.get(visIds[a])!
-            const pb = pos.get(visIds[b])!
+            const pa = pos.get(visIds[a]!)!
+            const pb = pos.get(visIds[b]!)!
             const dx = pa.x - pb.x
             const dy = pa.y - pb.y
             const d2 = dx * dx + dy * dy + 0.01
@@ -144,7 +144,7 @@ export function useVouchSimulation(reduced: boolean) {
             continue
           }
           // pull toward the member's community sector instead of the centre
-          const anchor = SCENE_ANCHOR[personById[id].scene]
+          const anchor = SCENE_ANCHOR[personById[id]!.scene]
           p.vx += (anchor.x - p.x) * clusterStrength
           p.vy += (anchor.y - p.y) * clusterStrength
           p.vx *= 0.86
@@ -165,7 +165,7 @@ export function useVouchSimulation(reduced: boolean) {
             continue
           }
           if (pinned?.has(id)) continue // keep a dropped node where it is
-          const scene = personById[id].scene
+          const scene = personById[id]!.scene
           const anchor = SCENE_ANCHOR[scene]
           const k = sceneIndex[scene] ?? 0
           sceneIndex[scene] = k + 1

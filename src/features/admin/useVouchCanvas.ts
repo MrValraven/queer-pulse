@@ -13,7 +13,7 @@ import type { TipData } from './VouchGraphTooltip'
 import { EDGES, fmtMonth, nodeRadius, personById, type VouchEdge } from './adminVouchGraph.data'
 
 /** Endpoints trimmed to each circle's edge so a line never crosses the discs. */
-function trimEdge(ax: number, ay: number, bx: number, by: number, rA: number, rB: number) {
+function trimEdge(ax: number, ay: number, bx: number, by: number, rA: number, rB: number): [number, number, number, number] {
   const dx = bx - ax, dy = by - ay
   const len = Math.hypot(dx, dy) || 1
   if (len <= rA + rB + 1) return [ax, ay, bx, by]
@@ -22,14 +22,14 @@ function trimEdge(ax: number, ay: number, bx: number, by: number, rA: number, rB
 }
 
 function nodeTip(id: string): TipData {
-  const p = personById[id]
+  const p = personById[id]!
   const vin = EDGES.filter((e) => e.to === id && !e.withdrawn).length
   const vout = EDGES.filter((e) => e.from === id && !e.withdrawn).length
   return { kind: 'node', name: p.name, pronoun: p.pronoun, role: p.role, vouchesIn: vin, vouchesOut: vout, joined: fmtMonth(p.joined) }
 }
 
 function edgeTip(e: VouchEdge): TipData {
-  const label = `${personById[e.from].initials} → ${personById[e.to].initials}${e.mutual ? ' · mutual' : ''}`
+  const label = `${personById[e.from]!.initials} → ${personById[e.to]!.initials}${e.mutual ? ' · mutual' : ''}`
   return { kind: 'edge', label, tag: e.tag, reason: e.reason, date: fmtMonth(e.date), withdrawn: e.withdrawn }
 }
 

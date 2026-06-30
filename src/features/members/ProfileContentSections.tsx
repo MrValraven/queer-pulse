@@ -124,12 +124,12 @@ export function ShapingsSection({ profile }: { profile: MemberProfile }) {
         {(['film', 'book', 'song', 'moment'] as const).map((key) => {
           const item = profile.shapings[key]
           if (!item) return null
-          const Icon = SHAPING_META[key].icon
+          const Icon = SHAPING_META[key]!.icon
           return (
             <div key={key} className={styles.shapingCard}>
               <div className={styles.shapingLabel}>
                 <Icon />
-                &ensp;{SHAPING_META[key].label}
+                &ensp;{SHAPING_META[key]!.label}
               </div>
               <div className={styles.shapingTitle}>{item.title}</div>
               <div className={styles.shapingNote}>{item.note}</div>
@@ -178,7 +178,7 @@ export function RelatedSection({ profile }: { profile: MemberProfile }) {
                   {related.first} {related.last}
                 </div>
                 <div className={styles.relRole}>
-                  {related.role.split('·')[0].trim()} · {related.hood}
+                  {related.role.split('·')[0]!.trim()} · {related.hood}
                 </div>
               </div>
             </Link>

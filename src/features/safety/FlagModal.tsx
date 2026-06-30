@@ -21,7 +21,7 @@ export function FlagModal({
   onClose: () => void
   onSubmitted?: (reason: string, detail: string) => void
 }) {
-  const [reason, setReason] = useState(REASONS[0])
+  const [reason, setReason] = useState(REASONS[0]!)
   const [detail, setDetail] = useState('')
   const [done, setDone] = useState(false)
   useScrollLock()

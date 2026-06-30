@@ -136,7 +136,7 @@ function ConnectionTags({ tags }: { tags: string[] }) {
         return
       }
       // Chips on lines 1–2, minus one slot reserved for the "+N" pill.
-      const fit = children.filter((c) => c.offsetTop <= lineTops[1]).length
+      const fit = children.filter((c) => c.offsetTop <= lineTops[1]!).length
       setVisible(Math.max(1, fit - 1))
     })
     ro.observe(el)

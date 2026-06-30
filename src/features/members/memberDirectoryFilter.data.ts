@@ -260,7 +260,7 @@ function rng(seed: number) {
 }
 
 function pick<T>(arr: T[], r: () => number): T {
-  return arr[Math.floor(r() * arr.length)]
+  return arr[Math.floor(r() * arr.length)]!
 }
 
 function some<T>(arr: T[], r: () => number, min: number, max: number): T[] {
@@ -268,7 +268,7 @@ function some<T>(arr: T[], r: () => number, min: number, max: number): T[] {
   const copy = [...arr]
   const out: T[] = []
   for (let i = 0; i < n && copy.length; i++) {
-    out.push(copy.splice(Math.floor(r() * copy.length), 1)[0])
+    out.push(copy.splice(Math.floor(r() * copy.length), 1)[0]!)
   }
   return out
 }
@@ -280,7 +280,7 @@ function buildMembers(): MemberCard[] {
   const out: MemberCard[] = []
   for (let i = 0; i < count; i++) {
     const r = rng(i * 9973 + 7)
-    const slug = PROFILE_SLUGS[i]
+    const slug = PROFILE_SLUGS[i]!
     const member = memberProfiles[slug]
     // The card describes the *real* member: bio + filter buckets come from the
     // facet table, with a graceful fallback for any slug not yet curated.

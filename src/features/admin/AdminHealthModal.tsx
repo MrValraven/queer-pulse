@@ -89,7 +89,7 @@ export function AdminHealthModal({
       </p>
       <div className={styles.bdList}>
         {BREAKDOWN_META.map((meta, i) => {
-          const value = community.bd[i]
+          const value = community.bd[i]!
           return (
             <div key={meta.name} className={styles.bdRow}>
               <HealthRing value={value} />

@@ -138,8 +138,8 @@ function Sparkline({ points, color }: { points: number[]; color: string }) {
 
   const coords = points.map((v, i): [number, number] => [px(i), py(v)])
   const line = coords.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ')
-  const area = `${line} L${coords[n - 1][0].toFixed(1)} ${SH - SPAD} L${coords[0][0].toFixed(1)} ${SH - SPAD} Z`
-  const last = coords[n - 1]
+  const area = `${line} L${coords[n - 1]![0].toFixed(1)} ${SH - SPAD} L${coords[0]![0].toFixed(1)} ${SH - SPAD} Z`
+  const last = coords[n - 1]!
 
   return (
     <svg

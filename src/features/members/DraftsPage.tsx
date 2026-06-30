@@ -25,16 +25,16 @@ function DraftRowSkeleton() {
 }
 
 const kindClass: Record<Draft['kindVariant'], string> = {
-  job: styles.kindJob,
-  pitch: styles.kindPitch,
-  grant: styles.kindGrant,
-  post: styles.kindPost,
+  job: styles.kindJob!,
+  pitch: styles.kindPitch!,
+  grant: styles.kindGrant!,
+  post: styles.kindPost!,
 }
 
 const metaClass: Record<MetaVariant, string> = {
-  deadline: styles.metaDeadline,
-  pulse: styles.metaPulse,
-  stale: styles.metaStale,
+  deadline: styles.metaDeadline!,
+  pulse: styles.metaPulse!,
+  stale: styles.metaStale!,
 }
 
 export function DraftsPage() {

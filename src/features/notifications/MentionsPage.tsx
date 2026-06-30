@@ -10,7 +10,7 @@ import { MENTION_TABS, MENTION_DAYS, type Mention } from './mentions.data'
 import { MentionsListSkeleton } from './MentionsSkeleton'
 import styles from './MentionsPage.module.css'
 
-const avClass: Record<Mention['tint'], string> = {
+const avClass: Record<Mention['tint'], string | undefined> = {
   coral: styles.avCoral,
   jade: styles.avJade,
   plum: styles.avPlum,

@@ -5,7 +5,7 @@ import type { InviteView } from '../../features/auth/api/useInvite'
 import { loaderSteps, WHAT_ITEMS } from './inviteLanding.data'
 import styles from './InviteLandingPage.module.css'
 
-function InviterAvatar({ view, className }: { view: InviteView; className: string }) {
+function InviterAvatar({ view, className }: { view: InviteView; className?: string }) {
   return (
     <div className={className} aria-hidden>
       {view.inviter.photo ? (

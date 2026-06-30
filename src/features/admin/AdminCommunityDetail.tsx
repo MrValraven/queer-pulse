@@ -77,7 +77,7 @@ export function AdminCommunityDetail({
             </h3>
             <p className={styles.bannerText}>
               A health score this low is a call for support, not a mark against the mods.{' '}
-              {firstName(community.mods[0].name)} is stewarding {community.members} members{' '}
+              {firstName(community.mods[0]!.name)} is stewarding {community.members} members{' '}
               {community.mods.length < 2 ? 'almost alone' : 'with a thin team'}.
             </p>
           </div>

@@ -11,7 +11,7 @@ import styles from "./TransHealthcarePage.module.css";
 
 export function TransHealthcarePage() {
   const [active, setActive] = useState("hrt-sns");
-  const path = PATHS.find((p) => p.id === active) ?? PATHS[0];
+  const path = PATHS.find((p) => p.id === active) ?? PATHS[0]!;
 
   return (
     <PageShell>

@@ -25,7 +25,7 @@ function zoneFor(total: number): Zone {
   return 'safe'
 }
 
-const ZONE_CLASS: Record<Zone, string> = {
+const ZONE_CLASS: Record<Zone, string | undefined> = {
   safe: styles.zoneSafe,
   near: styles.zoneNear,
   over: styles.zoneOver,

@@ -41,12 +41,12 @@ export interface ArtWork {
   badges: string[]
 }
 export const ART_WORKS: ArtWork[] = [
-  { artist: memberName('ines'), initials: MEMBERS.ines.initials, tint: 'coral', hood: 'Príncipe Real', medium: 'Editorial & Type Design', title: 'Pulso Display — variable serif', statement: 'A typeface rooted in 1970s Portuguese protest printing, reworked for contemporary queer editorial.', imgH: 200, badges: ['commission'] },
-  { artist: memberName('andre'), initials: MEMBERS.andre.initials, tint: 'jade', hood: 'Cais do Sodré', medium: 'Analog Photography', title: 'Faces of the Bairro', statement: '40 medium-format portraits of Mouraria residents shot over six months. No retouching, no direction.', imgH: 300, badges: ['commission', 'open call'] },
-  { artist: memberName('beatriz'), initials: MEMBERS.beatriz.initials, tint: 'plum', hood: 'Graça', medium: 'Studio Ceramics', title: 'Slow Objects — functional series', statement: 'Bowls, cups, vessels designed for daily use. Each piece fired once and left to age.', imgH: 170, badges: ['exhibition'] },
+  { artist: memberName('ines'), initials: MEMBERS.ines!.initials, tint: 'coral', hood: 'Príncipe Real', medium: 'Editorial & Type Design', title: 'Pulso Display — variable serif', statement: 'A typeface rooted in 1970s Portuguese protest printing, reworked for contemporary queer editorial.', imgH: 200, badges: ['commission'] },
+  { artist: memberName('andre'), initials: MEMBERS.andre!.initials, tint: 'jade', hood: 'Cais do Sodré', medium: 'Analog Photography', title: 'Faces of the Bairro', statement: '40 medium-format portraits of Mouraria residents shot over six months. No retouching, no direction.', imgH: 300, badges: ['commission', 'open call'] },
+  { artist: memberName('beatriz'), initials: MEMBERS.beatriz!.initials, tint: 'plum', hood: 'Graça', medium: 'Studio Ceramics', title: 'Slow Objects — functional series', statement: 'Bowls, cups, vessels designed for daily use. Each piece fired once and left to age.', imgH: 170, badges: ['exhibition'] },
   { artist: 'Lena Ferraz', initials: 'LF', tint: 'coral', hood: 'Intendente', medium: 'Textile & Embroidery', title: 'Corpo Presente', statement: 'Large-scale embroidered figures exploring trans embodiment. Currently touring community spaces.', imgH: 260, badges: ['exhibition', 'commission'] },
   { artist: 'Mateus Oliveira', initials: 'MO', tint: 'jade', hood: 'Mouraria', medium: 'Illustration', title: 'Lisbon Queer Zine Series', statement: "Self-published zines documenting queer life in Lisbon's historic bairros since 2023.", imgH: 210, badges: ['open call'] },
-  { artist: memberName('sofia'), initials: MEMBERS.sofia.initials, tint: 'jade', hood: 'Alfama', medium: 'Documentary Film', title: 'O Café das Seis', statement: 'A 22-minute portrait of a Mouraria café and the chosen family that lives inside it.', imgH: 160, badges: ['exhibition'] },
+  { artist: memberName('sofia'), initials: MEMBERS.sofia!.initials, tint: 'jade', hood: 'Alfama', medium: 'Documentary Film', title: 'O Café das Seis', statement: 'A 22-minute portrait of a Mouraria café and the chosen family that lives inside it.', imgH: 160, badges: ['exhibition'] },
   { artist: 'Clara Melo', initials: 'CM', tint: 'plum', hood: 'LX Factory', medium: 'Mural & Public Art', title: 'Arco — Príncipe Real mural', statement: 'A 14-metre mural commissioned by the neighbourhood association. Pigment on exposed brick.', imgH: 230, badges: ['commission'] },
 ]
 
@@ -71,7 +71,7 @@ export const ART_FILTERS = ['All', 'Photography', 'Ceramics', 'Typography', 'Fil
 export const MUSIC_FILTERS = ['All', 'Electronic', 'Folk', 'Jazz', 'R&B', 'Live sets', 'Commission open']
 
 export function parseDur(s: string) {
-  const [m, sec] = s.split(':').map(Number)
+  const [m = 0, sec = 0] = s.split(':').map(Number)
   return m * 60 + sec
 }
 

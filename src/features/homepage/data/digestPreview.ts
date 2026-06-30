@@ -5,7 +5,7 @@ export const digestPreview: DigestPreviewItem[] = [
   {
     tag: 'Members',
     title: '3 new members in design & tech this week',
-    meta: `${MEMBERS.ines.first}, ${MEMBERS.rui.first}, and one more to discover →`,
+    meta: `${MEMBERS.ines!.first}, ${MEMBERS.rui!.first}, and one more to discover →`,
   },
   {
     tag: 'Upcoming',
@@ -15,7 +15,7 @@ export const digestPreview: DigestPreviewItem[] = [
   {
     tag: 'Open swap',
     title: 'Tax filing ↔ website redesign',
-    meta: `${MEMBERS.mariana.first} ${MEMBERS.mariana.last[0]}. · posted 2 days ago`,
+    meta: `${MEMBERS.mariana!.first} ${MEMBERS.mariana!.last[0]}. · posted 2 days ago`,
   },
   {
     tag: 'Essay',

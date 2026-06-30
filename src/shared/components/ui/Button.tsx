@@ -9,7 +9,7 @@ import styles from './Button.module.css'
 export type ButtonVariant = 'primary' | 'ghost' | 'ghost-dark' | 'jade' | 'danger'
 export type ButtonSize = 'md' | 'lg'
 
-const variantClass: Record<ButtonVariant, string> = {
+const variantClass: Record<ButtonVariant, string | undefined> = {
   primary: styles.primary,
   ghost: styles.ghost,
   'ghost-dark': styles.ghostDark,

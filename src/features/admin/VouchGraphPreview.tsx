@@ -18,7 +18,7 @@ const MAX = 10
  * verified ticks, curved connectors). Signals what "Explore network" opens.
  */
 export function VouchGraphPreview({ focusId }: { focusId: string }) {
-  const focus = personById[focusId]
+  const focus = personById[focusId]!
   const nbrs = neighbors(focusId, true).slice(0, MAX)
   const n = nbrs.length
   const placed = nbrs.map((id, i) => {
@@ -64,7 +64,7 @@ export function VouchGraphPreview({ focusId }: { focusId: string }) {
 }
 
 function PreviewNode({ id, x, y, r, clip, focus = false }: { id: string; x: number; y: number; r: number; clip: string; focus?: boolean }) {
-  const p = personById[id]
+  const p = personById[id]!
   const ink = TONE[p.tone]
   const photo = !p.private && !p.anon ? portrait(p.name) : undefined
   const verified = p.standing === 'trusted' && !p.anon

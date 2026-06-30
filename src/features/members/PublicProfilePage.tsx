@@ -18,8 +18,8 @@ const m = PUBLIC_MEMBER
 function parseStat(value: string): { num: number; suffix: string; decimals: number } {
   const match = value.match(/^([\d.]+)(.*)$/)
   if (!match) return { num: NaN, suffix: value, decimals: 0 }
-  const decimals = match[1].includes('.') ? match[1].split('.')[1].length : 0
-  return { num: parseFloat(match[1]), suffix: match[2], decimals }
+  const decimals = match[1]!.includes('.') ? match[1]!.split('.')[1]!.length : 0
+  return { num: parseFloat(match[1]!), suffix: match[2]!, decimals }
 }
 
 function Stat({ value, em, label }: { value: string; em?: boolean; label: string }) {

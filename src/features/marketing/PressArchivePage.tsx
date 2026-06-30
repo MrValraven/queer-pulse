@@ -53,7 +53,7 @@ const OLDER: YearGroup[] = [
     year: "2023",
     count: "18 pieces",
     pieces: Array.from({ length: 5 }, (_, i) => {
-      const base = DATA[1].pieces[i % DATA[1].pieces.length];
+      const base = DATA[1]!.pieces[i % DATA[1]!.pieces.length]!;
       return { ...base, pin: false, sourceKind: `${base.sourceKind} · archive` };
     }),
   },
@@ -61,7 +61,7 @@ const OLDER: YearGroup[] = [
     year: "2022",
     count: "18 pieces",
     pieces: Array.from({ length: 5 }, (_, i) => {
-      const base = DATA[2].pieces[i % DATA[2].pieces.length];
+      const base = DATA[2]!.pieces[i % DATA[2]!.pieces.length]!;
       return { ...base, pin: false, sourceKind: `${base.sourceKind} · archive` };
     }),
   },
@@ -96,7 +96,7 @@ export function PressArchivePage() {
     if (loadingMore || extra.length >= OLDER.length) return;
     setLoadingMore(true);
     setTimeout(() => {
-      setExtra((prev) => [...prev, OLDER[prev.length]]);
+      setExtra((prev) => [...prev, OLDER[prev.length]!]);
       setLoadingMore(false);
     }, 700);
   };

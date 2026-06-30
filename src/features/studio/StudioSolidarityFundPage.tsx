@@ -8,7 +8,7 @@ import { routes } from '../../app/routeMap'
 import { IN, OUT, DISB, DISB_MORE } from './studioSolidarityFund.data'
 import s from './funding.module.css'
 
-const tagClass: Record<string, string> = { trans: s.tagTrans, emerg: s.tagEmerg, grant: s.tagGrant, access: s.tagAccess }
+const tagClass: Record<string, string> = { trans: s.tagTrans!, emerg: s.tagEmerg!, grant: s.tagGrant!, access: s.tagAccess! }
 
 function DisbursementRowSkeleton() {
   return (

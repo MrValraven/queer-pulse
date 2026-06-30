@@ -2,16 +2,17 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useToast } from '../../shared/components/feedback/useToast'
 import type { ToastAction } from '../../shared/components/feedback/toastContext'
 import type {
-  MyEvent, Notif, Pill, CalView, SortBy, Density, MobileView, Prefs, FilterKey,
+  MyEvent, Notif, Pill, Prefs,
 } from './myEvents.types'
 import type { MyEventsValue, MoreMenuState } from './MyEventsContext'
 import {
-  INITIAL_EVENTS, INITIAL_NOTIFS, DEFAULT_PREFS, TODAY, MONFULL, DOWFULL,
+  INITIAL_EVENTS, INITIAL_NOTIFS, DEFAULT_PREFS, PILLS, MONFULL, DOWFULL,
 } from './myEvents.data'
-import { inPill, parseDate, timeStr, mondayOf } from './myEvents.helpers'
-import { downloadICS } from './myEvents.ics'
-
-const PILLS: Pill[] = ['upcoming', 'going', 'hosting', 'waitlisted', 'past', 'saved']
+import { inPill, parseDate, timeStr } from './myEvents.helpers'
+import { useMyEventsCalendar } from './useMyEventsCalendar'
+import { useMyEventsToolbar } from './useMyEventsToolbar'
+import { useMyEventsSelection } from './useMyEventsSelection'
+import { useMyEventsSafety } from './useMyEventsSafety'
 
 /** Central state + actions for the My Events dashboard. */
 export function useMyEventsState(): MyEventsValue {
@@ -50,24 +51,14 @@ export function useMyEventsState(): MyEventsValue {
   // Clear the pending soft-remove timer on unmount so it can't fire late.
   useEffect(() => () => { clearTimeout(removeTimer.current); clearTimeout(focusTimer.current) }, [])
 
-  // calendar
-  const [viewY, setViewY] = useState(TODAY.getFullYear())
-  const [viewM, setViewM] = useState(TODAY.getMonth())
-  const [weekStart, setWeekStart] = useState(() => mondayOf(TODAY))
-  const [calView, setCalViewState] = useState<CalView>('month')
+  // calendar + toolbar (state + actions live in focused sub-hooks)
+  const cal = useMyEventsCalendar()
+  const { setViewY, setViewM, setCalViewRaw } = cal
+  const tb = useMyEventsToolbar()
+  const { clearSecondary, setMobileView } = tb
 
-  // toolbar
-  const [searchTerm, setSearchTerm] = useState('')
-  const [activeFilters, setActiveFilters] = useState<Record<FilterKey, boolean>>({
-    inperson: false, online: false, free: false, paid: false, month: false,
-  })
-  const [sortBy, setSortBy] = useState<SortBy>('date')
-  const [density, setDensity] = useState<Density>('comfortable')
-  const [mobileView, setMobileView] = useState<MobileView>('list')
-
-  // select + bulk
-  const [selectMode, setSelectMode] = useState(false)
-  const [selected, setSelected] = useState<Record<string, boolean>>({})
+  // select + bulk (state + actions live in a focused sub-hook)
+  const selection = useMyEventsSelection({ events, setEvents, toast, toastAction })
 
   // notifications + modals + menu
   const [notifOpen, setNotifOpen] = useState(false)
@@ -80,9 +71,7 @@ export function useMyEventsState(): MyEventsValue {
   const [removingId, setRemovingId] = useState<string | null>(null)
   const [offline, setOffline] = useState(false)
 
-  // safety flows + deep-link focus
-  const [report, setReport] = useState<{ open: boolean; evId: string | null }>({ open: false, evId: null })
-  const [block, setBlock] = useState<{ open: boolean; evId: string | null; host: string }>({ open: false, evId: null, host: '' })
+  // deep-link focus
   const [focusId, setFocusId] = useState<string | null>(null)
 
   // derived
@@ -92,8 +81,6 @@ export function useMyEventsState(): MyEventsValue {
     return c
   }, [events])
   const unreadCount = useMemo(() => notifs.filter((n) => n.unread).length, [notifs])
-  const selectedCount = useMemo(() => Object.values(selected).filter(Boolean).length, [selected])
-  const hasSecondary = !!searchTerm || Object.values(activeFilters).some(Boolean)
 
   // offline awareness
   useEffect(() => {
@@ -118,63 +105,9 @@ export function useMyEventsState(): MyEventsValue {
   const selectDay = useCallback((ds: string) => {
     setSelectedDate((cur) => (cur === ds ? null : ds))
     if (typeof window !== 'undefined' && window.innerWidth <= 700) setMobileView('list')
-  }, [])
+  }, [setMobileView])
   const clearDay = useCallback(() => setSelectedDate(null), [])
   const loadMorePast = useCallback(() => setPastShown((n) => n + 5), [])
-
-  // ── calendar ──────────────────────────────────────
-  const shiftMonth = useCallback((dir: number) => {
-    if (calView === 'week') {
-      setWeekStart((ws) => {
-        const next = new Date(ws); next.setDate(next.getDate() + dir * 7)
-        setViewY(next.getFullYear()); setViewM(next.getMonth())
-        return next
-      })
-    } else if (calView === 'year') {
-      setViewY((y) => y + dir)
-    } else {
-      setViewM((m) => {
-        let nm = m + dir
-        if (nm < 0) { nm = 11; setViewY((y) => y - 1) }
-        if (nm > 11) { nm = 0; setViewY((y) => y + 1) }
-        return nm
-      })
-    }
-  }, [calView])
-  const goToday = useCallback(() => {
-    setViewY(TODAY.getFullYear()); setViewM(TODAY.getMonth()); setWeekStart(mondayOf(TODAY))
-  }, [])
-  const setCalView = useCallback((v: CalView) => setCalViewState(v), [])
-  const jumpMonth = useCallback((m: number) => { setViewM(m); setCalViewState('month') }, [])
-
-  // ── toolbar ───────────────────────────────────────
-  const setSearch = useCallback((v: string) => setSearchTerm(v), [])
-  const toggleFilter = useCallback((k: FilterKey) => setActiveFilters((f) => ({ ...f, [k]: !f[k] })), [])
-  const clearSecondary = useCallback(() => {
-    setSearchTerm('')
-    setActiveFilters({ inperson: false, online: false, free: false, paid: false, month: false })
-  }, [])
-  const setSort = useCallback((v: SortBy) => setSortBy(v), [])
-  const toggleDensity = useCallback(() => setDensity((d) => (d === 'comfortable' ? 'compact' : 'comfortable')), [])
-
-  // ── select + bulk ─────────────────────────────────
-  const toggleSelectMode = useCallback(() => {
-    setSelectMode((m) => !m)
-    setSelected({})
-  }, [])
-  const toggleSelect = useCallback((id: string) => {
-    setSelected((s) => { const next = { ...s }; if (next[id]) delete next[id]; else next[id] = true; return next })
-  }, [])
-  const closeBulk = useCallback(() => { setSelectMode(false); setSelected({}) }, [])
-  const bulkAddCal = useCallback(() => {
-    const n = selectedCount; toast(`${n} event${n > 1 ? 's' : ''} added to your calendar`, 'success')
-  }, [selectedCount, toast])
-  const bulkExport = useCallback(() => {
-    const chosen = events.filter((e) => selected[e.id])
-    const n = chosen.length
-    downloadICS('queerpulse-events.ics', chosen)
-    toast(`${n} event${n > 1 ? 's' : ''} exported as .ics`, 'success')
-  }, [events, selected, toast])
 
   // ── soft remove with undo ─────────────────────────
   const softRemove = useCallback((id: string, msg: string) => {
@@ -197,21 +130,6 @@ export function useMyEventsState(): MyEventsValue {
       })
     }, 200)
   }, [events, toast, toastAction])
-
-  const bulkCancel = useCallback(() => {
-    const ids = Object.keys(selected).filter((id) => {
-      const e = events.find((x) => x.id === id)
-      return e && (e.cat === 'going' || e.cat === 'waitlisted')
-    })
-    if (!ids.length) { toast('Select events you’re going to or waitlisted for first', 'info'); return }
-    const removed = ids.map((id) => events.find((x) => x.id === id)).filter(Boolean) as MyEvent[]
-    setEvents((prev) => prev.filter((e) => !ids.includes(e.id)))
-    setSelected({})
-    toastAction(`Dropped ${removed.length} event${removed.length > 1 ? 's' : ''}`, {
-      label: 'Undo',
-      onClick: () => setEvents((prev) => [...prev, ...removed]),
-    })
-  }, [events, selected, toast, toastAction])
 
   // ── rsvp lifecycle ────────────────────────────────
   const patch = useCallback((id: string, fn: (e: MyEvent) => MyEvent) => {
@@ -272,7 +190,7 @@ export function useMyEventsState(): MyEventsValue {
   const goToEvent = useCallback((evId: string) => {
     const ev = byId(evId); if (!ev) return
     const dt = parseDate(ev.date)
-    setViewY(dt.getFullYear()); setViewM(dt.getMonth()); setCalViewState('month')
+    setViewY(dt.getFullYear()); setViewM(dt.getMonth()); setCalViewRaw('month')
     setPillState(ev.cat === 'past' ? 'past'
       : ev.cat === 'saved' || ev.cat === 'invite' || ev.cat === 'sent' ? 'saved'
         : ev.cat === 'waitlisted' ? 'waitlisted' : 'upcoming')
@@ -283,7 +201,7 @@ export function useMyEventsState(): MyEventsValue {
     setFocusId(evId)
     clearTimeout(focusTimer.current)
     focusTimer.current = setTimeout(() => setFocusId(null), 1800)
-  }, [byId, clearSecondary])
+  }, [byId, clearSecondary, setViewY, setViewM, setCalViewRaw, setMobileView])
   const notifGo = useCallback((i: number) => {
     const n = notifs[i]; if (!n) return
     setNotifs((ns) => ns.map((x, j) => (j === i ? { ...x, unread: false } : x)))
@@ -308,41 +226,22 @@ export function useMyEventsState(): MyEventsValue {
   const openMore = useCallback((evId: string, x: number, y: number) => setMoreMenu({ open: true, evId, x, y }), [])
   const closeMore = useCallback(() => setMoreMenu((m) => ({ ...m, open: false })), [])
 
-  // ── safety flows ──────────────────────────────────
-  const openReport = useCallback((evId: string) => {
-    setMoreMenu((m) => ({ ...m, open: false })); setReport({ open: true, evId })
-  }, [])
-  const closeReport = useCallback(() => setReport((r) => ({ ...r, open: false })), [])
-  const submitReport = useCallback(() => {
-    setReport((r) => ({ ...r, open: false }))
-    toast('Report sent — our safety team takes it from here', 'success')
-  }, [toast])
-  const openBlock = useCallback((evId: string) => {
-    const ev = byId(evId)
-    setMoreMenu((m) => ({ ...m, open: false }))
-    setBlock({ open: true, evId, host: ev?.community ?? '' })
-  }, [byId])
-  const closeBlock = useCallback(() => setBlock((b) => ({ ...b, open: false })), [])
-  const confirmBlock = useCallback(() => {
-    setBlock((b) => ({ ...b, open: false }))
-    toast('Blocked — you won’t see their events again', 'success')
-  }, [toast])
+  // ── safety flows (report + block live in a focused sub-hook) ──
+  const safety = useMyEventsSafety({ byId, toast, closeMore })
 
   return {
     events, notifs, unreadCount, counts, byId,
     pill, selectedDate, loading, setPill, selectDay, clearDay, loadMorePast, pastShown,
-    viewY, viewM, weekStart, calView, shiftMonth, goToday, setCalView, jumpMonth,
-    searchTerm, activeFilters, sortBy, density, mobileView,
-    setSearch, toggleFilter, clearSecondary, setSort, toggleDensity, setMobileView, hasSecondary,
-    selectMode, selected, selectedCount, toggleSelectMode, toggleSelect, closeBulk, bulkAddCal, bulkExport, bulkCancel,
+    ...cal,
+    ...tb,
+    ...selection,
     toggleReminder, setMaybe, setGoing, rsvpSaved, acceptInvite, declineInvite, cantGo, leaveWaitlist, softRemove, removingId,
     markAllRead, notifGo, notifOpen, setNotifOpen,
     confirm, closeConfirm, details, openDetails, closeDetails, settingsOpen, openSettings, closeSettings,
     scope, closeScope, scopeChoice,
     prefs, setPref, saveSettings,
     moreMenu, openMore, closeMore,
-    report, openReport, closeReport, submitReport,
-    block, openBlock, closeBlock, confirmBlock,
+    ...safety,
     focusId,
     offline, toast,
   }

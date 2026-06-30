@@ -10,7 +10,7 @@ import { useSimulatedLoad } from '../../shared/hooks'
 import styles from './GrantsPage.module.css'
 import { GRANTS, FILTERS, SECTIONS, STATUS_LABEL, STEPS, type Status } from './grants.data'
 
-const STATUS_CLASS: Record<Status, string> = { open: styles.gsOpen, rolling: styles.gsRolling, closed: styles.gsClosed }
+const STATUS_CLASS: Record<Status, string | undefined> = { open: styles.gsOpen, rolling: styles.gsRolling, closed: styles.gsClosed }
 
 function GrantSkeleton() {
   return (

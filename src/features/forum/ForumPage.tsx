@@ -177,7 +177,7 @@ export function ForumPage() {
                     <div>
                       <div className={styles.badges}>
                         {t.pinned && <span className={styles.pinBadge}><TbPin /> Pinned</span>}
-                        <span className={styles.catBadge} style={{ background: cs.bg, color: cs.color }}>
+                        <span className={styles.catBadge} style={{ background: cs?.bg, color: cs?.color }}>
                           {catMeta && <catMeta.icon />} {catMeta?.name}
                         </span>
                         {t.tags.map((tg) => (

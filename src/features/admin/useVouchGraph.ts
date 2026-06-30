@@ -72,7 +72,7 @@ export function useVouchGraph(initialFocus: string) {
         path.forEach((id, i) => {
           nodes.add(id)
           if (i > 0) {
-            const e = findEdge(path[i - 1], path[i])
+            const e = findEdge(path[i - 1]!, path[i]!)
             if (e) edges.add(e.id)
           }
         })

@@ -5,13 +5,16 @@ export type FeedTab = (typeof FEED_TABS)[number]
 
 const NEW_SLUGS = ['kai', 'bilal-kaya', 'ines-fonseca', 'daniel-oliveira'] as const
 
-export const NEW_THIS_WEEK = NEW_SLUGS.map((slug) => ({
-  slug,
-  name: memberName(slug),
-  initials: MEMBERS[slug].initials,
-  tint: MEMBERS[slug].tint,
-  photo: MEMBERS[slug].photo,
-}))
+export const NEW_THIS_WEEK = NEW_SLUGS.map((slug) => {
+  const member = MEMBERS[slug]!
+  return {
+    slug,
+    name: memberName(slug),
+    initials: member.initials,
+    tint: member.tint,
+    photo: member.photo,
+  }
+})
 
 /** Reasons offered when reporting a post for moderation. */
 export const REPORT_REASONS = [

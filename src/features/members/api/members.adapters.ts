@@ -9,7 +9,7 @@ const TINTS: AvatarTint[] = ['coral', 'plum', 'jade']
 export function tintForSlug(slug: string): AvatarTint {
   let h = 0
   for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0
-  return TINTS[h % TINTS.length]
+  return TINTS[h % TINTS.length]!
 }
 
 export function initialsOf(first: string, last: string): string {

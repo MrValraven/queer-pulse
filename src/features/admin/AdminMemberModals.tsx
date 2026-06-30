@@ -96,7 +96,7 @@ export function MessageModal({
   onSend: () => void
 }) {
   const first = firstName(name)
-  const [sendAs, setSendAs] = useState(SEND_AS[0])
+  const [sendAs, setSendAs] = useState(SEND_AS[0]!)
   const [body, setBody] = useState('')
 
   return (
@@ -162,7 +162,7 @@ export function RestrictModal({
 }) {
   const first = firstName(name)
   const [dur, setDur] = useState('7 days')
-  const [scope, setScope] = useState(SCOPES[0])
+  const [scope, setScope] = useState(SCOPES[0]!)
   const [reason, setReason] = useState<string | null>(null)
   const [note, setNote] = useState('')
 

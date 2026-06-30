@@ -16,7 +16,7 @@ export function IngredientsMapPage() {
         eyebrowDotColor="var(--accent)"
         title={<>Ingredients from <em>home.</em></>}
         lead="A living map of where to find the tastes of home in Lisbon — crowd-sourced by the group, organised by neighbourhood. Home is partly a flavour, and this is where to find it."
-        anchors={AREAS.map((a) => ({ label: a.hood, href: `#${a.hood.split(' ')[0].toLowerCase()}` }))}
+        anchors={AREAS.map((a) => ({ label: a.hood, href: `#${a.hood.split(' ')[0]!.toLowerCase()}` }))}
       />
 
       <section className={`${styles.section} ${styles.sectionPaper}`}>
@@ -26,7 +26,7 @@ export function IngredientsMapPage() {
           ))}
 
           {AREAS.map((area) => (
-            <div key={area.hood} className={styles.mapGroup} id={area.hood.split(' ')[0].toLowerCase()}>
+            <div key={area.hood} className={styles.mapGroup} id={area.hood.split(' ')[0]!.toLowerCase()}>
               <Reveal as="div" className={styles.mapGroupLabel}>{area.hood}</Reveal>
               <div className={styles.grid}>
                 {area.spots.map((s, i) => (

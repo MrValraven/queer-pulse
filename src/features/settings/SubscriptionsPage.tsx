@@ -46,7 +46,7 @@ function draftFromAlert(a: JobAlert): AlertDraft {
   }
 }
 
-const iconVariantClass: Record<'coral' | 'jade' | 'plum', string> = {
+const iconVariantClass: Record<'coral' | 'jade' | 'plum', string | undefined> = {
   coral: '',
   jade: styles.nlIcJade,
   plum: styles.nlIcPlum,

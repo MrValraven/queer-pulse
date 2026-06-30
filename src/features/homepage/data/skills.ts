@@ -2,7 +2,7 @@ import type { SkillItem } from './types'
 import { MEMBERS, memberName } from '../../members/data/members'
 
 /** "Name · Neighbourhood" credit, derived from the canonical registry. */
-const by = (slug: string) => `${memberName(slug)} · ${MEMBERS[slug].hood}`
+const by = (slug: string) => `${memberName(slug)} · ${MEMBERS[slug]!.hood}`
 
 export const skills: SkillItem[] = [
   { type: 'teaching', title: 'Visual identity & branding', by: by('ines') },

@@ -25,7 +25,7 @@ export interface LiveSetRow {
 }
 
 export const SET: LiveSetRow[] = [
-  { n: '1', pre: 'A summer in ', em: 'Cascais', who: `${memberName('ines')} · played 21:00 → 21:04`, pay: `€0.05 to ${MEMBERS.ines.first}`, tm: '4:12', state: 'played', tint: 'coral', image: 'https://images.unsplash.com/photo-1416273567255-8abe875affcd?q=80&w=800&auto=format&fit=crop' },
+  { n: '1', pre: 'A summer in ', em: 'Cascais', who: `${memberName('ines')} · played 21:00 → 21:04`, pay: `€0.05 to ${MEMBERS.ines!.first}`, tm: '4:12', state: 'played', tint: 'coral', image: 'https://images.unsplash.com/photo-1416273567255-8abe875affcd?q=80&w=800&auto=format&fit=crop' },
   { n: '2', pre: 'Paris is ', em: 'still', post: ' burning', who: 'Akin Diallo · played 21:04 → 21:09', pay: '€0.05 to Akin', tm: '5:08', state: 'played', tint: 'plum', image: 'https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?q=80&w=800&auto=format&fit=crop' },
   { n: '3', pre: 'If you have to ', em: 'ask', who: 'Yara Reis · played 21:09 → 21:10', pay: '€0.05 to Yara', tm: '1:22', state: 'played', tint: 'jade', image: 'https://images.unsplash.com/photo-1474692295473-66ba4d54e0d3?q=80&w=800&auto=format&fit=crop' },
   { n: '4', pre: 'Salt water, ', em: 'slowly', who: 'Akin Diallo · played 21:10 → 21:16', pay: '€0.05 to Akin', tm: '5:31', state: 'played', tint: 'coral', image: 'https://images.unsplash.com/photo-1484876065684-b683cf17d276?q=80&w=800&auto=format&fit=crop' },

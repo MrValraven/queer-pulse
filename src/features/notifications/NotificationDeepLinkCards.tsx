@@ -19,7 +19,7 @@ interface SentReply {
   body: string
 }
 
-const avClass: Record<AvTint, string> = {
+const avClass: Record<AvTint, string | undefined> = {
   jade: styles.avJade,
   coral: styles.avCoral,
   plum: styles.avPlum,

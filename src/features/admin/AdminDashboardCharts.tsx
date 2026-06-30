@@ -66,7 +66,7 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
                     y={y}
                     width={bw}
                     height={bh}
-                    fill={REPORT_SERIES[si].color}
+                    fill={REPORT_SERIES[si]!.color}
                     style={{ animationDelay: `${i * 55 + si * 20}ms` }}
                   />
                 )
@@ -91,10 +91,10 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
 // ── 2 · Member growth (line) ────────────────────────────────────────────────
 
 function smoothPath(pts: [number, number][]) {
-  let d = `M${pts[0][0]} ${pts[0][1]}`
+  let d = `M${pts[0]![0]} ${pts[0]![1]}`
   for (let i = 1; i < pts.length; i++) {
-    const [x0, y0] = pts[i - 1]
-    const [x1, y1] = pts[i]
+    const [x0, y0] = pts[i - 1]!
+    const [x1, y1] = pts[i]!
     const mx = (x0 + x1) / 2
     d += ` C${mx} ${y0} ${mx} ${y1} ${x1} ${y1}`
   }
@@ -110,7 +110,7 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
   const py = (v: number) => padT + gh - (v / max) * gh
   const joined = MEMBER_GROWTH.map((p, i): [number, number] => [px(i), py(p.joined)])
   const churned = MEMBER_GROWTH.map((p, i): [number, number] => [px(i), py(p.churned)])
-  const area = `${smoothPath(joined)} L${joined[n - 1][0]} ${padT + gh} L${joined[0][0]} ${padT + gh} Z`
+  const area = `${smoothPath(joined)} L${joined[n - 1]![0]} ${padT + gh} L${joined[0]![0]} ${padT + gh} Z`
   const spikeIdx = MEMBER_GROWTH.findIndex((p) => p.spike)
   const spike = joined[spikeIdx]
 

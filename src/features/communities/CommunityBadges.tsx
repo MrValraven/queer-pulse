@@ -24,10 +24,10 @@ export function RoleBadge({ role }: { role: CommunityRole | undefined }) {
 }
 
 const TIER_META: Record<AccessTier, { label: string; icon: IconType; cls: string }> = {
-  public: { label: 'Open to all', icon: FiGlobe, cls: styles.tierOpen },
-  request: { label: 'Request to join', icon: FiUserCheck, cls: styles.tierRequest },
-  invite: { label: 'Invite-only', icon: FiMail, cls: styles.tierInvite },
-  private: { label: 'Private', icon: FiLock, cls: styles.tierPrivate },
+  public: { label: 'Open to all', icon: FiGlobe, cls: styles.tierOpen! },
+  request: { label: 'Request to join', icon: FiUserCheck, cls: styles.tierRequest! },
+  invite: { label: 'Invite-only', icon: FiMail, cls: styles.tierInvite! },
+  private: { label: 'Private', icon: FiLock, cls: styles.tierPrivate! },
 }
 
 /** Access-tier pill for community cards/headers. */

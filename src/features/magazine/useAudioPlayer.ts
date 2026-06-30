@@ -94,7 +94,7 @@ export function useAudioPlayer(): AudioPlayer {
   const chapterIndex = (() => {
     let idx = 0
     for (let i = 0; i < CHAPTERS.length; i++) {
-      if (currentTime >= CHAPTERS[i].sec) idx = i
+      if (currentTime >= CHAPTERS[i]!.sec) idx = i
     }
     return idx
   })()
@@ -103,9 +103,9 @@ export function useAudioPlayer(): AudioPlayer {
     setCurrentTime((t) => {
       // If we're more than 3s into a chapter, restart it; otherwise step back.
       let current = 0
-      for (let i = 0; i < CHAPTERS.length; i++) if (t >= CHAPTERS[i].sec) current = i
-      const target = t - CHAPTERS[current].sec > 3 ? current : Math.max(0, current - 1)
-      return CHAPTERS[target].sec
+      for (let i = 0; i < CHAPTERS.length; i++) if (t >= CHAPTERS[i]!.sec) current = i
+      const target = t - CHAPTERS[current]!.sec > 3 ? current : Math.max(0, current - 1)
+      return CHAPTERS[target]!.sec
     })
   }, [])
 

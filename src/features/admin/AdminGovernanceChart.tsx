@@ -43,9 +43,9 @@ export function AdminGovernanceChart() {
       </div>
 
       <div className={styles.chartLegend}>
-        <Legend swatch={styles.legIncome} label="Income" />
-        <Legend swatch={styles.legSpend} label="Spending" />
-        <Legend swatch={styles.legReserve} label="Surplus to reserve" dashed />
+        <Legend swatch={styles.legIncome!} label="Income" />
+        <Legend swatch={styles.legSpend!} label="Spending" />
+        <Legend swatch={styles.legReserve!} label="Surplus to reserve" dashed />
       </div>
 
       <svg

@@ -15,7 +15,7 @@ export function MusicPlayer({
   const [trackIdx, setTrackIdx] = useState(0)
   const [progress, setProgress] = useState(0)
   const heights = useMemo(() => seededHeights(artist.id, 40), [artist.id])
-  const duration = parseDur(artist.tracks[trackIdx].dur)
+  const duration = parseDur(artist.tracks[trackIdx]!.dur)
 
   // Stop playing if another player takes over (adjust state during render).
   if (!active && playing) setPlaying(false)
@@ -55,7 +55,7 @@ export function MusicPlayer({
   return (
     <div className={styles.player}>
       <div className={styles.playerTrack}>
-        <span>{artist.tracks[trackIdx].title}</span>
+        <span>{artist.tracks[trackIdx]!.title}</span>
         <span className={styles.trackNum}>
           {trackIdx + 1} / {artist.tracks.length}
         </span>

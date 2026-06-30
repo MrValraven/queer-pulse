@@ -30,7 +30,7 @@ export function linkToPath(href: string): string {
   // Pure in-page anchor → home anchor
   if (href.startsWith('#')) return `/${href}`
 
-  const [file, anchor] = href.split('#')
+  const [file = '', anchor] = href.split('#')
   const hash = anchor ? `#${anchor}` : ''
 
   if (!file.endsWith(HTML_SUFFIX)) {

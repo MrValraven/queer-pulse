@@ -140,7 +140,7 @@ export function SoberRecoverySection({ linkMap }: SoberRecoverySectionProps) {
               <div className={styles.recOpt} key={o.title}>
                 <div className={styles.recTitle}>{o.title}</div>
                 <div className={styles.recDesc}>{o.desc}</div>
-                <Link to={linkMap[o.linkKey]} className={styles.recLink}>
+                <Link to={linkMap[o.linkKey]!} className={styles.recLink}>
                   {o.linkLabel}
                 </Link>
               </div>

@@ -69,7 +69,7 @@ export function TranscriptTab({ player }: { player: AudioPlayer }) {
   const currentIndex = useMemo(() => {
     let idx = 0
     for (let i = 0; i < TRANSCRIPT.length; i++) {
-      if (player.currentTime >= TRANSCRIPT[i].sec) idx = i
+      if (player.currentTime >= TRANSCRIPT[i]!.sec) idx = i
     }
     return idx
   }, [player.currentTime])

@@ -95,7 +95,7 @@ export function StudioCouncilPage() {
             <FadeIn key={mem.em + mem.seat} delay={Math.min(idx, 8) * 60} className={s.cur}>
               <div className={s.curHead}>
                 <div className={s.curAv}>
-                  <ImageSlot src={mem.image} tint={mem.tint} width={54} height={54} radius={9999} shape="circle" placeholder="" initials={mem.pre[0] + mem.em[0]} />
+                  <ImageSlot src={mem.image} tint={mem.tint} width={54} height={54} radius={9999} shape="circle" placeholder="" initials={mem.pre[0]! + mem.em[0]!} />
                 </div>
                 <div>
                   <div className={s.seat}>{mem.seat}</div>

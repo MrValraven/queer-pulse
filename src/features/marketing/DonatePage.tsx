@@ -61,7 +61,7 @@ export function DonatePage() {
               onClick={() => setGiving(true)}
               style={{ width: '100%' }}
             >
-              Give {AMOUNTS[selected].value}
+              Give {AMOUNTS[selected]!.value}
               {monthly ? ' / month' : ''} →
             </Button>
           </Reveal>
@@ -124,7 +124,7 @@ export function DonatePage() {
 
       {giving && (
         <DonateModal
-          amount={AMOUNTS[selected].value}
+          amount={AMOUNTS[selected]!.value}
           monthly={monthly}
           onClose={() => setGiving(false)}
         />

@@ -28,7 +28,7 @@ export function CreativesPage() {
     return () => window.clearInterval(t)
   }, [])
 
-  const f = FEATURED[featuredIdx]
+  const f = FEATURED[featuredIdx]!
   const availableFilters = mode === 'art' ? ART_FILTERS : MUSIC_FILTERS
 
   const toggleFilter = (name: string) => {

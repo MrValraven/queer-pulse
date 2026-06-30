@@ -9,7 +9,7 @@ export function CalendarSubscribe() {
   const { toast, viewM, events } = useMyEvents()
   const exportMonth = () => {
     const monthEvents = events.filter((e) => parseDate(e.date).getMonth() === viewM)
-    downloadICS(`queerpulse-${MONFULL[viewM].toLowerCase()}.ics`, monthEvents)
+    downloadICS(`queerpulse-${MONFULL[viewM]!.toLowerCase()}.ics`, monthEvents)
     toast(`${MONFULL[viewM]} events downloaded as .ics`, 'success')
   }
   return (

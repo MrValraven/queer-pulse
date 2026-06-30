@@ -20,12 +20,12 @@ function PathBar({ pathA, pathB, onClear }: { pathA: string | null; pathB: strin
   if (pathA && pathB) {
     const path = shortestPath(pathA, pathB)
     content = path ? (
-      <span><b>{path.length}-step trust path:</b> {path.map((id) => personById[id].initials).join(' → ')}</span>
+      <span><b>{path.length}-step trust path:</b> {path.map((id) => personById[id]!.initials).join(' → ')}</span>
     ) : (
-      <span><b>No trust path</b> between {personById[pathA].initials} and {personById[pathB].initials}</span>
+      <span><b>No trust path</b> between {personById[pathA]!.initials} and {personById[pathB]!.initials}</span>
     )
   } else {
-    content = <span>Path from <b>{personById[pathA].initials}</b> — shift-click a second person</span>
+    content = <span>Path from <b>{personById[pathA]!.initials}</b> — shift-click a second person</span>
   }
   return (
     <div className={styles.pathbar}>
@@ -70,7 +70,7 @@ export function AdminVouchGraphModal({ focusId, onClose }: { focusId: string; on
   useScrollLock()
   const { showToast } = useToast()
   const g = useVouchGraph(focusId)
-  const focusPerson = personById[g.focus]
+  const focusPerson = personById[g.focus]!
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -90,7 +90,7 @@ export function AdminVouchGraphModal({ focusId, onClose }: { focusId: string; on
           <div className={styles.crumbs}>
             {g.crumbs.map((id, i) => (
               <Fragment key={`${id}-${i}`}>
-                <button type="button" className={styles.crumb} onClick={() => g.gotoCrumb(i)}>{personById[id].initials}</button>
+                <button type="button" className={styles.crumb} onClick={() => g.gotoCrumb(i)}>{personById[id]!.initials}</button>
                 <span className={styles.crumbSep}>›</span>
               </Fragment>
             ))}

@@ -12,7 +12,7 @@ import {
 import { ServiceCardSkeleton, IncidentSkeleton } from './StatusSkeletons'
 import styles from './StatusComponents.module.css'
 
-const PILL_CLASS: Record<ServiceStatus, string> = {
+const PILL_CLASS: Record<ServiceStatus, string | undefined> = {
   op: styles.pillOp,
   deg: styles.pillDeg,
   out: styles.pillOut,

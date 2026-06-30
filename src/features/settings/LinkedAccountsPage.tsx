@@ -53,7 +53,7 @@ export function LinkedAccountsPage() {
     showToast('Calendar URL copied', 'success')
   }
 
-  const iconClass: Record<string, string> = {
+  const iconClass: Record<string, string | undefined> = {
     google: styles.iconGoogle,
     apple: styles.iconApple,
     magic: styles.iconMagic,

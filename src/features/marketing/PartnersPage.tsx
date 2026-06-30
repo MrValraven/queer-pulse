@@ -7,7 +7,7 @@ import { PARTNERS, type Region } from './partnerDetails'
 import { routes } from '../../app/routeMap'
 import s from './PartnersPage.module.css'
 
-const regionClass: Record<Region, string> = { pt: s.pt, eu: s.eu, int: s.int }
+const regionClass: Record<Region, string> = { pt: s.pt!, eu: s.eu!, int: s.int! }
 
 function PartnerCardSkeleton() {
   // Mirrors the real .card: top row (46px avatar + region badge), name, city, desc, tags, foot.

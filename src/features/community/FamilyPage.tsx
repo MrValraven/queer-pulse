@@ -37,7 +37,7 @@ export function FamilyPage() {
     scrollToTabs()
   }
 
-  const tab = TABS.find((t) => t.id === active) ?? TABS[0]
+  const tab = TABS.find((t) => t.id === active) ?? TABS[0]!
 
   return (
     <PageShell>

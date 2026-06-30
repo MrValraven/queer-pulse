@@ -90,11 +90,11 @@ export function buildAgenda(events: MyEvent[], st: AgendaState): AgendaResult {
   if (st.sortBy === 'community') {
     const byc: Record<string, MyEvent[]> = {}
     list.forEach((e) => { const c = e.community || 'Other'; (byc[c] = byc[c] || []).push(e) })
-    groups = Object.keys(byc).sort().map((c) => ({ label: c, events: byc[c].sort(byDateAsc) }))
+    groups = Object.keys(byc).sort().map((c) => ({ label: c, events: byc[c]!.sort(byDateAsc) }))
   } else if (st.sortBy === 'status') {
     const labels: Record<string, string> = { hosting: 'Hosting', going: 'Going', waitlisted: 'Waitlisted' }
     groups = (['hosting', 'going', 'waitlisted'] as const).map((cat) => ({
-      label: labels[cat],
+      label: labels[cat]!,
       events: list.filter((e) => e.cat === cat).sort(byDateAsc),
     }))
   } else {

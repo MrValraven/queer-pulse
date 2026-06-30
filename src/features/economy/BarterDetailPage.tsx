@@ -28,7 +28,7 @@ export function BarterDetailPage() {
   if (!b) return <Navigate to={routes.barter} replace />
 
   const info = getMemberInfo(b)
-  const firstName = info.name.split(' ')[0]
+  const firstName = info.name.split(' ')[0] ?? info.name
   const headline = b.mode === 'seeking' ? b.want : b.offer
   const catLabel = CATS.find((c) => c.value === b.cat)?.label ?? 'Skill swap'
   const posted = b.days === 1 ? 'Today' : `${b.days} days ago`

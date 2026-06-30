@@ -43,8 +43,8 @@ export function NegotiationPlanner({ app, onClose }: { app: Application; onClose
   const { showToast } = useToast();
   const o = app.offer;
   const angles = negotiationAngles(app);
-  const [angleId, setAngleId] = useState(angles[0].id);
-  const [draft, setDraft] = useState(angles[0].draft);
+  const [angleId, setAngleId] = useState(angles[0]!.id);
+  const [draft, setDraft] = useState(angles[0]!.draft);
   const [levers, setLevers] = useState<string[]>(["Base salary"]);
   const { submit, sending, done } = useSubmitFlow();
 

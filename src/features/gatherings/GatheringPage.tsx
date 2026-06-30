@@ -107,7 +107,7 @@ export function GatheringPage() {
                         {host.first} {host.last}
                       </Link>
                     </div>
-                    <div className={styles.hostRole}>{host.role.split('·')[0].trim()}</div>
+                    <div className={styles.hostRole}>{host.role.split('·')[0]!.trim()}</div>
                   </div>
                 </div>
               ) : (

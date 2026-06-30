@@ -50,9 +50,9 @@ export function ArticleToolbar({
   const saved = isSaved(id)
 
   const sizeIndex = SIZES.indexOf(textSize)
-  const decSize = () => sizeIndex > 0 && onTextSize(SIZES[sizeIndex - 1])
+  const decSize = () => sizeIndex > 0 && onTextSize(SIZES[sizeIndex - 1]!)
   const incSize = () =>
-    sizeIndex < SIZES.length - 1 && onTextSize(SIZES[sizeIndex + 1])
+    sizeIndex < SIZES.length - 1 && onTextSize(SIZES[sizeIndex + 1]!)
 
   function toggleSave() {
     const title =

@@ -29,10 +29,10 @@ export function ReviewStep({
           {cat !== null ? (
             <>
               {(() => {
-                const Icon = CATEGORIES[cat].icon
+                const Icon = CATEGORIES[cat]!.icon
                 return <Icon />
               })()}{' '}
-              <strong>{CATEGORIES[cat].name}</strong>
+              <strong>{CATEGORIES[cat]!.name}</strong>
             </>
           ) : (
             '—'

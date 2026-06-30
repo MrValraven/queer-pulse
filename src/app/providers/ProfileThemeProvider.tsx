@@ -30,7 +30,7 @@ export const DEFAULT_PROFILE_THEME: ProfileThemeSettings = {
   pattern: 'none',
   showBadges: true,
   showLevel: true,
-  badge: BADGE_OPTIONS[0],
+  badge: BADGE_OPTIONS[0]!,
 }
 
 interface ProfileThemeContextValue {

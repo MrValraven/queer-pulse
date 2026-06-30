@@ -8,7 +8,7 @@ import styles from './AssemblyMinutesPage.module.css'
 
 export function AssemblyMinutesPage() {
   const { year } = useParams<{ year: string }>()
-  const minutes = (year && MINUTES[year]) || MINUTES[MINUTES_FALLBACK_YEAR]
+  const minutes = (year && MINUTES[year]) || MINUTES[MINUTES_FALLBACK_YEAR]!
   const exact = Boolean(year && MINUTES[year])
 
   return (

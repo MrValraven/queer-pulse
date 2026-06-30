@@ -18,8 +18,8 @@ const HERO_TRACK = {
 };
 
 const tagClass: Record<TrackCard["tag"], string> = {
-  free: styles.tagFree,
-  mem: styles.tagMem,
+  free: styles.tagFree!,
+  mem: styles.tagMem!,
 };
 
 export function StudioHero() {

@@ -233,12 +233,14 @@ interface SettingsTabProps {
 }
 
 function SettingsTab({ onCancel }: SettingsTabProps) {
-  const [toggles, setToggles] = useState<boolean[]>(GATHERING_SETTINGS.map((s) => s.on));
+  const [toggles, setToggles] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(GATHERING_SETTINGS.map((s) => [s.title, s.on])),
+  );
   return (
     <div>
       <div className={styles.sectionLabel}>Gathering options</div>
       <div className={styles.toggleList}>
-        {GATHERING_SETTINGS.map((s, i) => (
+        {GATHERING_SETTINGS.map((s) => (
           <div className={styles.tglRow} key={s.title}>
             <div>
               <div className={styles.tglTitle}>{s.title}</div>
@@ -247,8 +249,8 @@ function SettingsTab({ onCancel }: SettingsTabProps) {
             <label className={styles.tglSw}>
               <input
                 type="checkbox"
-                checked={toggles[i]}
-                onChange={() => setToggles((prev) => prev.map((v, j) => (j === i ? !v : v)))}
+                checked={toggles[s.title] ?? false}
+                onChange={() => setToggles((prev) => ({ ...prev, [s.title]: !prev[s.title] }))}
               />
               <div className={styles.tglTrack} />
               <div className={styles.tglThumb} />

@@ -30,10 +30,10 @@ export const STEPS = [
 ]
 
 export const COUNCIL = [
-  { i: MEMBERS.mariana.initials, name: memberName('mariana'), role: 'Psychologist · Chair', bg: 'rgba(74,140,111,.15)', color: 'var(--jade)' },
-  { i: MEMBERS['raquel-baptista'].initials, name: memberName('raquel-baptista'), role: 'Lawyer · Legal advisor', bg: 'rgba(122,82,184,.12)', color: 'var(--violet)' },
-  { i: MEMBERS['catarina-vaz'].initials, name: memberName('catarina-vaz'), role: 'Housing activist', bg: 'rgba(45,27,61,.1)', color: 'var(--plum)' },
-  { i: MEMBERS.jonas.initials, name: memberName('jonas'), role: 'Healthcare advocate', bg: 'rgba(74,140,111,.12)', color: 'var(--jade)' },
+  { i: MEMBERS.mariana!.initials, name: memberName('mariana'), role: 'Psychologist · Chair', bg: 'rgba(74,140,111,.15)', color: 'var(--jade)' },
+  { i: MEMBERS['raquel-baptista']!.initials, name: memberName('raquel-baptista'), role: 'Lawyer · Legal advisor', bg: 'rgba(122,82,184,.12)', color: 'var(--violet)' },
+  { i: MEMBERS['catarina-vaz']!.initials, name: memberName('catarina-vaz'), role: 'Housing activist', bg: 'rgba(45,27,61,.1)', color: 'var(--plum)' },
+  { i: MEMBERS.jonas!.initials, name: memberName('jonas'), role: 'Healthcare advocate', bg: 'rgba(74,140,111,.12)', color: 'var(--jade)' },
 ]
 
 export const PRINCIPLES: { icon: IconType; title: string; text: string }[] = [
