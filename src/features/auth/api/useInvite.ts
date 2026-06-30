@@ -16,6 +16,8 @@ export interface InviteView {
     since?: string
   }
   note?: string
+  /** The inviter's vouch — why they're inviting you — surfaced at onboarding. */
+  vouch?: string
   /** Pre-formatted expiry, e.g. "12 June 2026". */
   expiryLabel: string
   validForDays: number
@@ -24,6 +26,8 @@ export interface InviteView {
 
 const DEMO_NOTE =
   '"I\'ve been part of this community for two years now. It\'s the one platform I\'m genuinely glad exists. I think you\'d belong here."'
+const DEMO_VOUCH =
+  'They’re exactly the kind of person this community was built for — thoughtful, creative, and genuinely invested in making queer spaces better.'
 
 function initialsOf(first: string, last: string): string {
   return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase()
@@ -49,6 +53,7 @@ function dtoToView(dto: InviteDTO): InviteView {
       since: inviter.memberSince,
     },
     note: dto.note,
+    vouch: dto.vouch,
     expiryLabel: formatExpiry(dto.expiresAt),
     validForDays: dto.validForDays,
     memberCount: dto.memberCount,
@@ -70,6 +75,7 @@ function demoInvite(code: string): InviteView {
       since: ines.since,
     },
     note: DEMO_NOTE,
+    vouch: DEMO_VOUCH,
     expiryLabel: '12 June 2026',
     validForDays: 7,
     memberCount: 247,

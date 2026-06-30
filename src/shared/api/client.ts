@@ -2,9 +2,12 @@ import { API_BASE_URL } from './config'
 
 /** Normalized API failure carrying the HTTP status. */
 export class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  status: number
+
+  constructor(status: number, message: string) {
     super(message)
     this.name = 'ApiError'
+    this.status = status
   }
 }
 
@@ -77,6 +80,15 @@ async function request<T>(method: string, path: string, body?: unknown, retry = 
     } catch {
       /* non-JSON error body */
     }
+
+    // A 403 from a stale/missing CSRF token: drop the cached token, fetch a fresh
+    // one, and retry the mutation once. Other 403s (e.g. quota) fall through.
+    if (res.status === 403 && retry && !SAFE.has(method) && /csrf/i.test(message)) {
+      csrfToken = null
+      await ensureCsrf()
+      return request<T>(method, path, body, false)
+    }
+
     throw new ApiError(res.status, message)
   }
 

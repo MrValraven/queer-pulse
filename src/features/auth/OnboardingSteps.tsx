@@ -3,7 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiArrowRight, FiCheck } from 'react-icons/fi';
 import { Button, ImageSlot } from '../../shared/components/ui';
 import { routes } from '../../app/routeMap';
+import { useAuth } from '../../app/providers/authContext';
 import { currentUser, getMember } from '../members/data/members';
+import { clearInviteWelcome, readInviteWelcome } from './api/pendingInvite';
 import { NORMS, INTENTS, COMMUNITIES_LIST, QUICK_STARTS, ONBOARDING_PREVIEW } from './onboardingPage.data';
 import styles from './OnboardingPage.module.css';
 
@@ -56,6 +58,28 @@ export function StepIntro({ stepLabel, onNext }: { stepLabel: string; onNext: ()
 }
 
 export function StepWelcome({ stepLabel, onNext }: { stepLabel: string; onNext: () => void }) {
+  const { user } = useAuth();
+  // Who vouched + their words, stashed by the invite landing; falls back to the
+  // mock inviter when onboarding is reached without an invite in flight.
+  const [welcome] = useState(readInviteWelcome);
+  const firstName = user?.profile.firstName ?? currentUser.first;
+
+  const inviter = welcome?.inviter ?? {
+    name: INVITER_NAME,
+    firstName: INVITER.first,
+    initials: INVITER.initials,
+    since: INVITER.since,
+    photo: INVITER.photo,
+  };
+  const inviterMeta = welcome
+    ? inviter.since
+      ? `Member since ${inviter.since}`
+      : 'Invited you'
+    : `Member since ${INVITER.since} · ${INVITER_ROLE}`;
+  const vouchText =
+    welcome?.vouch ??
+    `${firstName} is exactly the kind of person this community was built for — thoughtful, creative, and genuinely invested in making queer spaces better.`;
+
   return (
     <>
       <div className={styles.checkWrap}>
@@ -66,27 +90,24 @@ export function StepWelcome({ stepLabel, onNext }: { stepLabel: string; onNext: 
       </div>
       <div className={styles.eye}>{stepLabel} · You're in</div>
       <div className={styles.h}>
-        Welcome, <em>{currentUser.first}</em>
+        Welcome, <em>{firstName}</em>
       </div>
       <div className={styles.vouchCard}>
         <div className={styles.vcAv} aria-hidden>
-          {INVITER.photo ? (
+          {inviter.photo ? (
             <img
-              src={INVITER.photo}
+              src={inviter.photo}
               alt=""
               style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
             />
           ) : (
-            INVITER.initials
+            inviter.initials
           )}
         </div>
         <div>
-          <div className={styles.vcName}>{INVITER_NAME}</div>
-          <div className={styles.vcRole}>Member since {INVITER.since} · {INVITER_ROLE}</div>
-          <div className={styles.vcNote}>
-            "{currentUser.first} is exactly the kind of person this community was built for — thoughtful,
-            creative, and genuinely invested in making queer spaces better."
-          </div>
+          <div className={styles.vcName}>{inviter.name}</div>
+          <div className={styles.vcRole}>{inviterMeta}</div>
+          <div className={styles.vcNote}>“{vouchText}”</div>
         </div>
       </div>
       <div className={styles.p}>
@@ -101,6 +122,12 @@ export function StepWelcome({ stepLabel, onNext }: { stepLabel: string; onNext: 
 }
 
 export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
+  const { user } = useAuth();
+  // Prefill from the Google account they signed in with; fall back to initials.
+  const photo = user?.profile.avatarUrl ?? undefined;
+  const initials = user
+    ? `${user.profile.firstName.charAt(0)}${user.profile.lastName.charAt(0)}`.toUpperCase()
+    : 'S';
   return (
     <>
       <div className={styles.eye}>{stepLabel}</div>
@@ -111,9 +138,18 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
         A photo helps members feel comfortable connecting with you. You can always add this later.
       </div>
       <div className={styles.photoWrap}>
-        <ImageSlot shape="circle" tint="coral" width={130} height={130} placeholder="your photo" initials="S" />
+        <ImageSlot
+          shape="circle"
+          tint="coral"
+          width={130}
+          height={130}
+          placeholder="your photo"
+          src={photo}
+          initials={initials}
+          alt="Your profile photo"
+        />
         <div style={{ fontSize: 13, color: 'var(--ink-40)', marginTop: 10 }}>
-          Drag a photo here, or click to upload
+          {photo ? 'From your Google account — you can change it anytime' : 'Drag a photo here, or click to upload'}
         </div>
       </div>
       <div className={styles.nav}>
@@ -268,7 +304,14 @@ export function StepDone({ stepLabel }: { stepLabel: string }) {
         ))}
       </div>
       <div className={styles.nav}>
-        <Button onClick={() => navigate('/feed')}>Go to my home</Button>
+        <Button
+          onClick={() => {
+            clearInviteWelcome();
+            navigate('/feed');
+          }}
+        >
+          Go to my home
+        </Button>
       </div>
     </>
   );

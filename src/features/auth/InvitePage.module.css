@@ -203,6 +203,214 @@
   margin-top: 10px;
 }
 
+/* Sticky notice when the monthly invite quota is used up (POST /invites 403). */
+.quotaError {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+  padding: 11px 14px;
+  border-radius: 11px;
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  color: var(--accent-ink);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+.quotaError svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+/* Inline button spinner while the invite is being generated. */
+.spinner {
+  width: 15px;
+  height: 15px;
+  margin-inline-end: 9px;
+  border-radius: 50%;
+  border: 2px solid rgba(247, 243, 238, 0.35);
+  border-top-color: var(--cream);
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
+/* ── Ready state: plum success panel revealed after generating the link ── */
+.ready {
+  background: var(--plum);
+  border-radius: 22px;
+  padding: 38px 36px 30px;
+  text-align: center;
+  color: var(--cream);
+}
+.readyIcon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--jade);
+  color: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  animation: tickPop 0.5s var(--ease) 0.12s both;
+}
+.readyIcon svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.5;
+}
+@keyframes tickPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .readyIcon {
+    animation: none;
+  }
+}
+.readyHead {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 30px;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 10px;
+}
+.readyHead em {
+  font-style: italic;
+  color: var(--accent);
+}
+.readySub {
+  font-size: 14.5px;
+  color: rgba(247, 243, 238, 0.8);
+  line-height: 1.7;
+  max-width: 40ch;
+  margin: 0 auto 24px;
+}
+.readyLinkRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.readyLinkField {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--cream);
+  background: rgba(247, 243, 238, 0.08);
+  border: 1.5px solid rgba(247, 243, 238, 0.18);
+  border-radius: 12px;
+  padding: 12px 15px;
+  outline: none;
+}
+.readyLinkField:focus {
+  border-color: rgba(247, 243, 238, 0.4);
+}
+.readyCopyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 0 16px;
+  border-radius: 12px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--cream);
+  background: transparent;
+  border: 1.5px solid rgba(247, 243, 238, 0.3);
+  cursor: pointer;
+  transition: background 0.22s var(--ease), border-color 0.22s var(--ease), color 0.22s var(--ease);
+}
+.readyCopyBtn svg {
+  width: 15px;
+  height: 15px;
+}
+@media (hover: hover) {
+  .readyCopyBtn:hover {
+    background: rgba(247, 243, 238, 0.1);
+    border-color: rgba(247, 243, 238, 0.5);
+  }
+}
+.readyCopyBtnDone {
+  color: var(--jade);
+  border-color: rgba(74, 140, 111, 0.6);
+  background: rgba(74, 140, 111, 0.18);
+}
+.readyShare {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+}
+.readyShareLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(247, 243, 238, 0.55);
+}
+.readyShareTargets {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.readyShareChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 15px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cream);
+  background: transparent;
+  border: 1.5px solid rgba(247, 243, 238, 0.28);
+  transition: border-color 0.22s var(--ease), background 0.22s var(--ease), transform 0.22s var(--ease);
+}
+.readyShareChip svg {
+  width: 16px;
+  height: 16px;
+}
+@media (hover: hover) {
+  .readyShareChip:hover {
+    border-color: rgba(247, 243, 238, 0.55);
+    background: rgba(247, 243, 238, 0.08);
+    transform: translateY(-1px);
+  }
+}
+.readyMeta {
+  margin-top: 22px;
+  font-size: 12.5px;
+  color: rgba(247, 243, 238, 0.55);
+}
+.readyDone {
+  margin-top: 18px;
+}
+
 /* Sent state */
 .sent {
   text-align: center;

@@ -3,11 +3,20 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
 import { getMember } from '../members/data/members'
 import { routes } from '../../app/routeMap'
+import { useToast } from '../../shared/components/feedback/useToast'
+import { useAcceptInvite } from './api/useAcceptInvite'
+import { consumePendingInvite, readInviteWelcome } from './api/pendingInvite'
 import { AuthLayout } from './AuthLayout'
 import styles from './auth.module.css'
 
 const INVITER = getMember('ines')!
 const INVITER_NAME = `${INVITER.first} ${INVITER.last}`
+/** The mock inviter, shown when the page is reached without an invite in flight. */
+const FALLBACK_INVITER = {
+  name: INVITER_NAME,
+  initials: INVITER.initials,
+  photo: INVITER.photo,
+}
 
 type Visibility = 'open' | 'network' | 'private'
 const PRONOUNS = ['he/him', 'she/her', 'they/them', 'she/they', 'he/they']
@@ -112,6 +121,11 @@ function AboutAndVisibility({ pronouns, setPronouns, bio, setBio, visibility, se
 
 export function CreateAccountPage() {
   const navigate = useNavigate()
+  const { showToast } = useToast()
+  const acceptInvite = useAcceptInvite()
+  // Who invited them, stashed by the invite landing — falls back to the mock.
+  const [welcome] = useState(readInviteWelcome)
+  const inviter = welcome?.inviter ?? FALLBACK_INVITER
   const [first, setFirst] = useState('')
   const [last, setLast] = useState('')
   const [password, setPassword] = useState('')
@@ -137,11 +151,21 @@ export function CreateAccountPage() {
   const isValid = Object.keys(errors).length === 0
   const touch = (key: keyof Touched) => setTouched((t) => ({ ...t, [key]: true }))
 
-  function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     if (!isValid) {
       setTouched({ first: true, last: true, password: true, confirm: true })
       return
+    }
+    // Account created — redeem the invite that brought them here (if any) before
+    // onboarding, promoting them to an active member. Best-effort in this prototype.
+    const code = consumePendingInvite()
+    if (code) {
+      try {
+        await acceptInvite.mutateAsync(code)
+      } catch (err) {
+        showToast(err instanceof Error ? err.message : 'Could not redeem this invite', 'error')
+      }
     }
     navigate('/onboarding')
   }
@@ -150,18 +174,18 @@ export function CreateAccountPage() {
     <AuthLayout wide>
       <div className={styles.vouchRow}>
         <div className={styles.vouchAv} aria-hidden>
-          {INVITER.photo ? (
+          {inviter.photo ? (
             <img
-              src={INVITER.photo}
+              src={inviter.photo}
               alt=""
               style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
             />
           ) : (
-            INVITER.initials
+            inviter.initials
           )}
         </div>
         <div className={styles.vouchText}>
-          <strong>{INVITER_NAME}</strong> invited you to QueerPulse
+          <strong>{inviter.name}</strong> invited you to QueerPulse
         </div>
       </div>
 

@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { usePrefersReducedMotion } from '../../shared/hooks'
+import { useToast } from '../../shared/components/feedback/useToast'
+import { useAuth } from '../../app/providers/authContext'
+import { useDemoMode } from '../../app/providers/DemoModeProvider'
 import { useInvite } from '../auth/api/useInvite'
+import { useAcceptInvite } from '../auth/api/useAcceptInvite'
+import { rememberInviteWelcome, rememberPendingInvite } from '../auth/api/pendingInvite'
 import { OnboardingPage } from '../auth/OnboardingPage'
 import { InviteExpiredPage } from './InviteExpiredPage'
 import { loaderSteps } from './inviteLanding.data'
@@ -17,11 +22,34 @@ type Phase = 'sealed' | 'opening' | 'invite'
 export function InviteLandingPage() {
   const { code } = useParams<{ code: string }>()
   const prefersReduced = usePrefersReducedMotion()
+  const { showToast } = useToast()
+  const { signIn } = useAuth()
+  const { demoMode } = useDemoMode()
   const { data: invite, isLoading, isError } = useInvite(code)
+  const acceptInvite = useAcceptInvite()
 
   const [phase, setPhase] = useState<Phase>('sealed')
   const [step, setStep] = useState(0)
   const [joined, setJoined] = useState(false)
+
+  // Once a valid invite resolves, stash what the join flow needs to survive the
+  // hop into onboarding: the code (to redeem) and the welcome payload (inviter +
+  // vouch), since the in-memory invite is gone after a full-page auth redirect.
+  const validInvite = invite?.status === 'valid' ? invite : undefined
+  useEffect(() => {
+    if (!validInvite) return
+    rememberPendingInvite(validInvite.code)
+    rememberInviteWelcome({
+      vouch: validInvite.vouch,
+      inviter: {
+        name: validInvite.inviter.name,
+        firstName: validInvite.inviter.firstName,
+        initials: validInvite.inviter.initials,
+        since: validInvite.inviter.since,
+        photo: validInvite.inviter.photo,
+      },
+    })
+  }, [validInvite])
 
   // Decorative unsealing: advance the loader steps, then reveal the opened card.
   useEffect(() => {
@@ -50,8 +78,25 @@ export function InviteLandingPage() {
     setPhase(prefersReduced ? 'invite' : 'opening')
   }
 
+  // "Continue with Google" authenticates through the exact same call the sign-in
+  // page uses. Live mode → a real /auth/google redirect; the stashed code + welcome
+  // (above) carry the recipient into onboarding on return. Demo mode has no real
+  // Google, so redeem now and reveal onboarding inline, as the prototype does.
+  async function joinWithGoogle() {
+    if (!demoMode) {
+      signIn()
+      return
+    }
+    try {
+      await acceptInvite.mutateAsync(invite!.code)
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not redeem this invite', 'error')
+    }
+    setJoined(true)
+  }
+
   if (phase === 'sealed') return <InviteSealedView view={invite} onOpen={openInvitation} />
   if (phase === 'opening') return <InviteOpeningView view={invite} step={step} />
 
-  return <InviteCardView view={invite} onGoogle={() => setJoined(true)} />
+  return <InviteCardView view={invite} onGoogle={joinWithGoogle} />
 }

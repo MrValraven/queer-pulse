@@ -1,13 +1,14 @@
-import { useRef, useState, type MouseEvent } from 'react'
-import { FiCheck, FiCopy, FiShare2 } from 'react-icons/fi'
+import { useState } from 'react'
+import { FiAlertCircle, FiCheck, FiCopy, FiLink } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
 import { useToast } from '../../shared/components/feedback/useToast'
+import { ApiError } from '../../shared/api/client'
+import { routes } from '../../app/routeMap'
 import { currentUser } from '../members/data/members'
 import { useCreateInvite, type CreatedInvite } from './api/useCreateInvite'
 import { SharePreviewCard } from './SharePreviewCard'
 import {
   DEFAULT_VOUCH,
-  INVITE_FULL_URL,
   INVITE_URL,
   SENDER_NAME,
   SHARE_TARGETS,
@@ -15,109 +16,151 @@ import {
 } from './invite.data'
 import styles from './InvitePage.module.css'
 
+const sleep = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms))
+
+/** Format the live `expiresAt`; demo mode sends '' so we fall back to the 7-day line. */
+function expiryLabel(iso: string): string {
+  if (!iso) return 'Expires in 7 days'
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return 'Expires in 7 days'
+  return `Expires ${d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`
+}
+
 export function InviteLinkPanel() {
   const { showToast } = useToast()
   const createInvite = useCreateInvite()
+  const [vouch, setVouch] = useState('')
   const [note, setNote] = useState('')
   const [copied, setCopied] = useState(false)
+  // Covers the whole generate() run — including the delay floor — so the button
+  // stays disabled even in demo mode where the mutation resolves instantly.
+  const [generating, setGenerating] = useState(false)
+  // The invite is created only when the member generates it — null until then.
   const [invite, setInvite] = useState<CreatedInvite | null>(null)
-  const inflight = useRef<Promise<CreatedInvite> | null>(null)
+  // Set when the backend rejects with the monthly quota 403 — blocks generating
+  // and shows the message inline instead of a transient toast.
+  const [quotaError, setQuotaError] = useState<string | null>(null)
 
-  // The link/message reflect the persisted invite once created; until then they
-  // show the sample so the preview card has something to render.
-  const displayUrl = invite?.url ?? INVITE_URL
-  const fullUrl = invite?.fullUrl ?? INVITE_FULL_URL
   const description = note.trim() || DEFAULT_VOUCH
-  const message = buildShareMessage(currentUser.first, fullUrl)
 
-  /** Persist the invite once (POST /invites), then reuse it for every share action. */
-  function ensureInvite(): Promise<CreatedInvite> {
-    if (invite) return Promise.resolve(invite)
-    if (!inflight.current) {
-      inflight.current = createInvite
-        .mutateAsync({ note: note.trim() || undefined })
-        .then((created) => {
-          setInvite(created)
-          return created
-        })
-        .finally(() => {
-          inflight.current = null
-        })
+  /** Surface a failed POST /invites: a quota 403 sticks, everything else toasts. */
+  function handleInviteError(err: unknown) {
+    if (err instanceof ApiError && err.status === 403 && /limit|month/i.test(err.message)) {
+      setQuotaError(err.message)
+      showToast(err.message, 'error')
+    } else {
+      showToast('Could not create your invite link — try again', 'error')
     }
-    return inflight.current
+  }
+
+  /** Persist the invite (POST /invites), then reveal the animated ready panel. */
+  async function generate() {
+    if (generating || quotaError) return
+    setGenerating(true)
+    try {
+      // A short floor so the success lands as a deliberate beat, not an instant pop.
+      const [created] = await Promise.all([
+        createInvite.mutateAsync({
+          note: note.trim() || undefined,
+          vouch: vouch.trim() || undefined,
+        }),
+        sleep(650),
+      ])
+      setInvite(created)
+    } catch (err) {
+      handleInviteError(err)
+      setGenerating(false)
+    }
   }
 
   async function copyLink() {
+    if (!invite) return
     try {
-      const created = await ensureInvite()
-      await navigator.clipboard.writeText(created.fullUrl)
+      await navigator.clipboard.writeText(invite.fullUrl)
       setCopied(true)
       showToast('Link copied', 'success')
       window.setTimeout(() => setCopied(false), 2000)
     } catch {
-      showToast('Could not create your invite link — try again', 'error')
+      showToast('Couldn’t copy — select and copy the link', 'error')
     }
   }
 
-  async function nativeShare() {
-    let created: CreatedInvite
-    try {
-      created = await ensureInvite()
-    } catch {
-      showToast('Could not create your invite link — try again', 'error')
-      return
-    }
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Someone from QueerPulse wants you here',
-          text: buildShareMessage(currentUser.first, created.fullUrl),
-          url: created.fullUrl,
-        })
-        return
-      } catch {
-        // user dismissed the share sheet — fall through to copy
-      }
-    }
-    await navigator.clipboard.writeText(created.fullUrl).catch(() => {})
-    showToast('Link copied', 'success')
+  // ── Ready: the invite exists. Quiet plum success panel with the live link. ──
+  if (invite) {
+    const message = buildShareMessage(currentUser.first, invite.fullUrl)
+    return (
+      <div className={`${styles.ready} ${styles.screenIn}`}>
+        <div className={styles.readyIcon} aria-hidden>
+          <FiCheck />
+        </div>
+        <h2 className={styles.readyHead}>
+          Your link is <em>ready</em>
+        </h2>
+        <p className={styles.readySub}>
+          It’s one-time and personal to whoever you send it, and it expires in 7 days. Share it only
+          with someone you’d vouch for.
+        </p>
+
+        <div className={styles.readyLinkRow}>
+          <input className={styles.readyLinkField} type="text" readOnly value={invite.url} />
+          <button
+            type="button"
+            className={`${styles.readyCopyBtn} ${copied ? styles.readyCopyBtnDone : ''}`}
+            onClick={copyLink}
+            aria-label={copied ? 'Link copied' : 'Copy invite link'}
+          >
+            {copied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+        </div>
+
+        <div className={styles.readyShare}>
+          <span className={styles.readyShareLabel}>Or send it through</span>
+          <div className={styles.readyShareTargets}>
+            {SHARE_TARGETS.map(({ key, label, Icon, build }) => (
+              <a
+                key={key}
+                className={styles.readyShareChip}
+                href={build(message)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon aria-hidden />
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.readyMeta}>One-time link · {expiryLabel(invite.expiresAt)}</div>
+
+        <Button variant="ghost-dark" to={routes.accountProfile} className={styles.readyDone}>
+          Back to my profile
+        </Button>
+      </div>
+    )
   }
 
-  async function shareToTarget(
-    e: MouseEvent<HTMLAnchorElement>,
-    build: (message: string) => string,
-  ) {
-    if (invite) return // anchor href already carries the persisted link
-    e.preventDefault()
-    try {
-      const created = await ensureInvite()
-      const href = build(buildShareMessage(currentUser.first, created.fullUrl))
-      window.open(href, '_blank', 'noopener,noreferrer')
-    } catch {
-      showToast('Could not create your invite link — try again', 'error')
-    }
-  }
-
+  // ── Compose: write the optional note, preview the unfurl, then generate. ──
   return (
     <div>
       <div className={styles.card}>
         <div className={styles.field}>
-          <label>Your invite link</label>
-          <div className={styles.urlRow}>
-            <input className={styles.urlField} type="text" readOnly value={displayUrl} />
-            <button
-              type="button"
-              className={`${styles.copyBtn} ${copied ? styles.copyBtnDone : ''}`}
-              onClick={copyLink}
-              aria-label={copied ? 'Link copied' : 'Copy invite link'}
+          <label>
+            Why you’re inviting them{' '}
+            <span
+              style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: 11 }}
             >
-              {copied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}
-              {copied ? 'Copied' : 'Copy'}
-            </button>
-          </div>
-          <div className={styles.helper}>
-            One-time link, personal to whoever you send it to. Expires in 7 days.
-          </div>
+              (optional)
+            </span>
+          </label>
+          <textarea
+            maxLength={280}
+            placeholder="A few words on why they belong here. They’ll read this as they join."
+            value={vouch}
+            onChange={(e) => setVouch(e.target.value)}
+          />
+          <div className={styles.charCount}>{vouch.length}/280</div>
         </div>
 
         <div className={styles.field}>
@@ -137,38 +180,41 @@ export function InviteLinkPanel() {
           />
           <div className={styles.charCount}>{note.length}/200</div>
         </div>
-
-        <div className={styles.field}>
-          <label>Share via</label>
-          <div className={styles.shareTargets}>
-            {SHARE_TARGETS.map(({ key, label, Icon, build }) => (
-              <a
-                key={key}
-                className={styles.shareChip}
-                href={build(message)}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => shareToTarget(e, build)}
-              >
-                <Icon aria-hidden />
-                {label}
-              </a>
-            ))}
-          </div>
-        </div>
       </div>
 
       <div className={styles.epLabel}>How your link will look</div>
-      <SharePreviewCard senderName={SENDER_NAME} description={description} url={displayUrl} />
+      <SharePreviewCard senderName={SENDER_NAME} description={description} url={INVITE_URL} />
+
+      {quotaError && (
+        <div className={styles.quotaError} role="alert">
+          <FiAlertCircle aria-hidden />
+          {quotaError}
+        </div>
+      )}
 
       <div className={styles.actions}>
-        <Button type="button" onClick={nativeShare} disabled={createInvite.isPending}>
-          <FiShare2 aria-hidden style={{ marginRight: 8 }} />
-          {createInvite.isPending ? 'Creating link…' : 'Share link'}
+        <Button
+          type="button"
+          onClick={generate}
+          disabled={generating || Boolean(quotaError)}
+          aria-busy={generating}
+        >
+          {generating ? (
+            <>
+              <span className={styles.spinner} aria-hidden />
+              Generating link…
+            </>
+          ) : (
+            <>
+              <FiLink aria-hidden style={{ marginRight: 8 }} />
+              Generate link
+            </>
+          )}
         </Button>
       </div>
       <div className={styles.formNote}>
-        Anyone with this link can request to join. Share it only with people you'd vouch for.
+        One link, one person — we’ll create it when you generate. Share it only with people you’d
+        vouch for.
       </div>
     </div>
   )
