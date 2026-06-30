@@ -68,7 +68,7 @@
   grid-template-columns: 1fr 360px;
   gap: 0;
   padding-top: 56px;
-  height: calc(100vh - 0px);
+  height: 100dvh;
   min-height: 560px;
 }
 .zone {

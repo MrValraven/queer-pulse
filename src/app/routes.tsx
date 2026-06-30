@@ -1,256 +1,257 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
-import { HomePage } from '../features/homepage/HomePage'
-import { ProfilePage } from '../features/members/ProfilePage'
-import { MemberDirectoryFilterPage } from '../features/members/MemberDirectoryFilterPage'
-import { SearchPage } from '../features/members/SearchPage'
-import { ConnectionsPage } from '../features/connect/ConnectionsPage'
-import { DatingPage } from '../features/community/DatingPage'
-import { ReadingGroupsPage } from '../features/community/ReadingGroupsPage'
-import { FamilyPage } from '../features/community/FamilyPage'
-import { FeedPage } from '../features/feed/FeedPage'
-import { NotificationsPage } from '../features/notifications/NotificationsPage'
-import { MessagesPage } from '../features/messages/MessagesPage'
-import { CommunitiesPage } from '../features/communities/CommunitiesPage'
-import { CommunitiesHomePage } from '../features/communities/CommunitiesHomePage'
-import { CommunityDetailPage } from '../features/communities/CommunityDetailPage'
-import { CalendarPage } from '../features/gatherings/CalendarPage'
-import { GatheringPage } from '../features/gatherings/GatheringPage'
-import { EventPage } from '../features/gatherings/EventPage'
-import { EventsPage } from '../features/gatherings/EventsPage'
-import { MyEventsPage } from '../features/myevents/MyEventsPage'
-import { RsvpPage } from '../features/gatherings/RsvpPage'
-import { GatheringRecapPage } from '../features/gatherings/GatheringRecapPage'
-import { HostPage } from '../features/gatherings/HostPage'
-import { CreateGatheringPage } from '../features/gatherings/CreateGatheringPage'
-import { GatheringDashboardPage } from '../features/gatherings/GatheringDashboardPage'
-import { ManageGatheringPage } from '../features/gatherings/ManageGatheringPage'
-import { CoHostInvitePage } from '../features/gatherings/CoHostInvitePage'
-import { GatheringCancelledPage } from '../features/gatherings/GatheringCancelledPage'
-import { GatheringPhotosPage } from '../features/gatherings/GatheringPhotosPage'
-import { MagazinePage } from '../features/magazine/MagazinePage'
-import { ArticlePage } from '../features/magazine/ArticlePage'
-import { AuthorPage } from '../features/magazine/AuthorPage'
-import { IssuePage } from '../features/magazine/IssuePage'
-import { IssuesPage } from '../features/magazine/IssuesPage'
-import { CoverGalleryPage } from '../features/magazine/CoverGalleryPage'
-import { TagPage } from '../features/magazine/TagPage'
-import { PodcastShowPage } from '../features/magazine/PodcastShowPage'
-import { AudioPlayerPage } from '../features/magazine/AudioPlayerPage'
-import { NewsletterArchivePage } from '../features/magazine/NewsletterArchivePage'
-import { NewsletterArchiveIssuePage } from '../features/magazine/NewsletterArchiveIssuePage'
-import { StoryPage } from '../features/magazine/StoryPage'
-import { StoryTomasPage } from '../features/magazine/StoryTomasPage'
-import { StorySafetyPage } from '../features/magazine/StorySafetyPage'
-import { CreativesPage } from '../features/community/CreativesPage'
-import { CulturePage } from '../features/culture/CulturePage'
-import { ManifestoPage } from '../features/marketing/ManifestoPage'
-import { PrivacyPage } from '../features/marketing/PrivacyPage'
-import { TermsPage } from '../features/marketing/TermsPage'
-import { DsarPage } from '../features/marketing/DsarPage'
-import { ConstitutionPage } from '../features/marketing/ConstitutionPage'
-import { CodeOfConductPage } from '../features/marketing/CodeOfConductPage'
-import { ChangelogPage } from '../features/marketing/ChangelogPage'
-import { PressArchivePage } from '../features/marketing/PressArchivePage'
-import { NewsletterPage } from '../features/marketing/NewsletterPage'
-import { AnnualAssemblyPage } from '../features/marketing/AnnualAssemblyPage'
-import { AssemblyMinutesPage } from '../features/marketing/AssemblyMinutesPage'
-import { GetTheAppPage } from '../features/marketing/GetTheAppPage'
-import { ComponentLibraryPage } from '../features/marketing/ComponentLibraryPage'
-import { CitiesPage } from '../features/marketing/CitiesPage'
-import { ForOrganisationsPage } from '../features/marketing/ForOrganisationsPage'
-import { PressKitPage } from '../features/marketing/PressKitPage'
-import { TransparencyReportPage } from '../features/marketing/TransparencyReportPage'
-import { AccessibilityPage } from '../features/marketing/AccessibilityPage'
-import { WellbeingPage } from '../features/resources/WellbeingPage'
-import { MentalHealthPage } from '../features/resources/MentalHealthPage'
-import { TransHealthcarePage } from '../features/resources/TransHealthcarePage'
-import { HarmReductionPage } from '../features/resources/HarmReductionPage'
-import { SexualHealthPage } from '../features/resources/SexualHealthPage'
-import { SoberPage } from '../features/resources/SoberPage'
-import { Queer101Page } from '../features/resources/Queer101Page'
-import { GlossaryPage } from '../features/resources/GlossaryPage'
-import { TransDayOfVisibilityPage } from '../features/resources/TransDayOfVisibilityPage'
-import { WorldAidsDayPage } from '../features/resources/WorldAidsDayPage'
-import { PrideMonthPage } from '../features/resources/PrideMonthPage'
-import { MicroGrantsPage } from '../features/resources/MicroGrantsPage'
-import { IntersectionalityPage } from '../features/resources/IntersectionalityPage'
-import { TransHubPage } from '../features/resources/TransHubPage'
-import { LegalPage } from '../features/resources/LegalPage'
-import { SafetyPage } from '../features/resources/SafetyPage'
-import { SignInPage } from '../features/auth/SignInPage'
-import { CreateAccountPage } from '../features/auth/CreateAccountPage'
-import { InvitePage } from '../features/auth/InvitePage'
-import { RequestInvitePage } from '../features/auth/RequestInvitePage'
-import { OnboardingPage } from '../features/auth/OnboardingPage'
-import { WelcomeTourPage } from '../features/auth/WelcomeTourPage'
-import { JobsPage } from '../features/economy/JobsPage'
-import { JobDetailPage } from '../features/economy/JobDetailPage'
-import { HousingPage } from '../features/economy/HousingPage'
-import { HousingListingPage } from '../features/economy/HousingListingPage'
-import { LandlordPage } from '../features/economy/LandlordPage'
-import { SkillsPage } from '../features/economy/SkillsPage'
-import { GrantsPage } from '../features/economy/GrantsPage'
-import { BarterPage } from '../features/economy/BarterPage'
-import { BarterDetailPage } from '../features/economy/BarterDetailPage'
-import { OfferPage } from '../features/economy/OfferPage'
-import { EmployerReviewsPage } from '../features/economy/EmployerReviewsPage'
-import { ApplicationStatusPage } from '../features/economy/ApplicationStatusPage'
-import { MentorshipPage } from '../features/economy/MentorshipPage'
-import { MentorDetailPage } from '../features/economy/MentorDetailPage'
-import { EconomyPage } from '../features/economy/EconomyPage'
-import { InvoiceGeneratorPage } from '../features/economy/InvoiceGeneratorPage'
-import { ContractGeneratorPage } from '../features/economy/ContractGeneratorPage'
-import { ScopeGeneratorPage } from '../features/economy/ScopeGeneratorPage'
-import { ReciboVerdeGuidePage } from '../features/economy/ReciboVerdeGuidePage'
-import { TakeHomeCalculatorPage } from '../features/economy/TakeHomeCalculatorPage'
-import { IvaTrackerPage } from '../features/economy/IvaTrackerPage'
-import { SetAsidePlannerPage } from '../features/economy/SetAsidePlannerPage'
-import { DayRateCalculatorPage } from '../features/economy/DayRateCalculatorPage'
-import { RateBoardPage } from '../features/economy/RateBoardPage'
-import { SlidingScalePage } from '../features/economy/SlidingScalePage'
-import { ComparatorPage } from '../features/economy/ComparatorPage'
-import { RunningGuidePage } from '../features/resources/RunningGuidePage'
-import { AccessibleLisbonPage } from '../features/resources/AccessibleLisbonPage'
-import { PeerSupportPage } from '../features/resources/PeerSupportPage'
-import { ArtCritGuidePage } from '../features/resources/ArtCritGuidePage'
-import { SharedEquipmentPage } from '../features/resources/SharedEquipmentPage'
-import { GroupShowArchivePage } from '../features/resources/GroupShowArchivePage'
-import { FirstMeetupGuidePage } from '../features/resources/FirstMeetupGuidePage'
-import { QueerPaediatriciansPage } from '../features/resources/QueerPaediatriciansPage'
-import { SchoolFormsGuidePage } from '../features/resources/SchoolFormsGuidePage'
-import { CommunityPrivacyPage } from '../features/resources/CommunityPrivacyPage'
-import { ComingOutAtWorkPage } from '../features/resources/ComingOutAtWorkPage'
-import { LgbtqAgingGuidePage } from '../features/resources/LgbtqAgingGuidePage'
-import { OralHistoryProjectPage } from '../features/resources/OralHistoryProjectPage'
-import { IngredientsMapPage } from '../features/resources/IngredientsMapPage'
-import { QtipocOrganisationsPage } from '../features/resources/QtipocOrganisationsPage'
-import { QtipocArchivePage } from '../features/resources/QtipocArchivePage'
-import { DisabilityHealthcarePage } from '../features/resources/DisabilityHealthcarePage'
-import { SpoonTheoryPage } from '../features/resources/SpoonTheoryPage'
-import { CinemaPage } from '../features/cinema/CinemaPage'
-import { CinemaBrowsePage } from '../features/cinema/CinemaBrowsePage'
-import { CinemaMembershipPage } from '../features/cinema/CinemaMembershipPage'
-import { FilmPage } from '../features/cinema/FilmPage'
-import { WatchPage } from '../features/cinema/WatchPage'
-import { StudioPage } from '../features/studio/StudioPage'
-import { StudioAlbumPage } from '../features/studio/StudioAlbumPage'
-import { StudioArtistPage } from '../features/studio/StudioArtistPage'
-import { StudioDashboardPage } from '../features/studio/StudioDashboardPage'
-import { StudioUploadPage } from '../features/studio/StudioUploadPage'
-import { StudioPayoutsPage } from '../features/studio/StudioPayoutsPage'
-import { StudioTrackPage } from '../features/studio/StudioTrackPage'
-import { StudioLivePage } from '../features/studio/StudioLivePage'
-import { StudioSheetStorePage } from '../features/studio/StudioSheetStorePage'
-import { StudioSolidarityFundPage } from '../features/studio/StudioSolidarityFundPage'
-import { StudioOpenCallsPage } from '../features/studio/StudioOpenCallsPage'
-import { StudioSetSubmissionPage } from '../features/studio/StudioSetSubmissionPage'
-import { StudioCouncilPage } from '../features/studio/StudioCouncilPage'
-import { StudioTriagePage } from '../features/studio/StudioTriagePage'
-import { StudioFlagReviewPage } from '../features/studio/StudioFlagReviewPage'
-import { ChangemakersPage } from '../features/community/ChangemakersPage'
-import { ChangemakerStoryPage } from '../features/community/ChangemakerStoryPage'
-import { ForumPage } from '../features/forum/ForumPage'
-import { ThreadPage } from '../features/forum/ThreadPage'
-import { SettingsPage } from '../features/settings/SettingsPage'
-import { GovernancePage } from '../features/governance/GovernancePage'
-import { AboutPage } from '../features/marketing/AboutPage'
-import { ContactPage } from '../features/marketing/ContactPage'
-import { HelpPage } from '../features/marketing/HelpPage'
-import { VolunteerPage } from '../features/marketing/VolunteerPage'
-import { VolunteerOpportunityPage } from '../features/marketing/VolunteerOpportunityPage'
-import { GuidelinesPage } from '../features/marketing/GuidelinesPage'
-import { DirectoryPage } from '../features/marketing/DirectoryPage'
-import { DirectorySpacePage } from '../features/marketing/DirectorySpacePage'
-import { ResourceLibraryPage } from '../features/marketing/ResourceLibraryPage'
-import { PartnersPage } from '../features/marketing/PartnersPage'
-import { PartnerDetailPage } from '../features/marketing/PartnerDetailPage'
-import { ActivismPage } from '../features/marketing/ActivismPage'
-import { ArchivePage } from '../features/marketing/ArchivePage'
-import { PlatformsPage } from '../features/marketing/PlatformsPage'
-import { MapPage } from '../features/marketing/MapPage'
-import { SafeSpacesPage } from '../features/safety/SafeSpacesPage'
-import { SafeSpaceDetailPage } from '../features/safety/SafeSpaceDetailPage'
-import { FlatmatesPage } from '../features/economy/FlatmatesPage'
-import { SolidarityPage } from '../features/economy/SolidarityPage'
-import { VisasPage } from '../features/marketing/VisasPage'
-import { ArrivingPage } from '../features/marketing/ArrivingPage'
-import { HateCrimePage } from '../features/safety/HateCrimePage'
-import { EmergencyPage } from '../features/safety/EmergencyPage'
-import { ReportPage } from '../features/safety/ReportPage'
-import { LeavePage } from '../features/safety/LeavePage'
-import { BlockMutePage } from '../features/safety/BlockMutePage'
-import { AppealOutcomePage } from '../features/safety/AppealOutcomePage'
-import { PlaceholderPage } from '../pages/PlaceholderPage'
-import { NotFoundPage } from '../pages/NotFoundPage'
-import { ServerErrorPage } from '../features/system/ServerErrorPage'
-import { MaintenancePage } from '../features/system/MaintenancePage'
-import { OfflinePage } from '../features/system/OfflinePage'
-import { GeoRestrictedPage } from '../features/system/GeoRestrictedPage'
-import { PwaPromptPage } from '../features/system/PwaPromptPage'
-import { AccountBannedPage } from '../features/system/AccountBannedPage'
-import { AccountLockedPage } from '../features/system/AccountLockedPage'
-import { AccountSuspendedPage } from '../features/system/AccountSuspendedPage'
-import { InviteExpiredPage } from '../features/system/InviteExpiredPage'
-import { InviteLandingPage } from '../features/system/InviteLandingPage'
-import { PendingReviewPage } from '../features/system/PendingReviewPage'
-import { VerificationNeededPage } from '../features/system/VerificationNeededPage'
-import { StatusPage } from '../features/system/StatusPage'
-import { Studio404Page } from '../features/studio/Studio404Page'
-import { Studio500Page } from '../features/studio/Studio500Page'
-import { StudioOffAirPage } from '../features/studio/StudioOffAirPage'
-import { TwoFactorSetupPage } from '../features/auth/TwoFactorSetupPage'
-import { MagicLinkPage } from '../features/auth/MagicLinkPage'
-import { PasswordResetPage } from '../features/auth/PasswordResetPage'
-import { SetNewPasswordPage } from '../features/auth/SetNewPasswordPage'
-import { ConfirmEmailPage } from '../features/auth/ConfirmEmailPage'
-import { RecoveryCodesPage } from '../features/auth/RecoveryCodesPage'
-import { StudioSignInPage } from '../features/studio/StudioSignInPage'
-import { StudioSettingsPage } from '../features/studio/StudioSettingsPage'
-import { AccessibilityPreferencesPage } from '../features/settings/AccessibilityPreferencesPage'
-import { NotificationPreferencesPage } from '../features/settings/NotificationPreferencesPage'
-import { DataExportPage } from '../features/settings/DataExportPage'
-import { DeleteAccountPage } from '../features/settings/DeleteAccountPage'
-import { EditProfilePage } from '../features/settings/EditProfilePage'
-import { LinkedAccountsPage } from '../features/settings/LinkedAccountsPage'
-import { SecurityPage } from '../features/settings/SecurityPage'
-import { SessionsPage } from '../features/settings/SessionsPage'
-import { ProfileThemePage } from '../features/settings/ProfileThemePage'
-import { SubscriptionsPage } from '../features/settings/SubscriptionsPage'
-import { CancelMembershipPage } from '../features/settings/CancelMembershipPage'
-import { MembershipPage } from '../features/settings/MembershipPage'
-import { GiftMembershipPage } from '../features/settings/GiftMembershipPage'
-import { PublicProfilePage } from '../features/members/PublicProfilePage'
-import { MentorProfilePage } from '../features/economy/MentorProfilePage'
-import { WorkHubPage } from '../features/economy/WorkHubPage'
-import { WorkProfilePage } from '../features/economy/WorkProfilePage'
-import { NotificationDeepLinkPage } from '../features/notifications/NotificationDeepLinkPage'
-import { MentionsPage } from '../features/notifications/MentionsPage'
-import { CollectionsPage } from '../features/members/CollectionsPage'
-import { BadgesPage } from '../features/members/BadgesPage'
-import { PerksPage } from '../features/members/PerksPage'
-import { DraftsPage } from '../features/members/DraftsPage'
-import { QrScannerPage } from '../features/members/QrScannerPage'
-import { CookiesPage } from '../features/marketing/CookiesPage'
-import { PronounsGuidePage } from '../features/resources/PronounsGuidePage'
-import { LibraryPage } from '../features/resources/LibraryPage'
-import { ComingOutPage } from '../features/community/ComingOutPage'
-import { GatheringsPage } from '../features/gatherings/GatheringsPage'
-import { CrisisChatPage } from '../features/safety/CrisisChatPage'
-import { VouchPage } from '../features/members/VouchPage'
-import { DonatePage } from '../features/marketing/DonatePage'
-import { SubmitStoryPage } from '../features/magazine/SubmitStoryPage'
-import { StudioCollectionPage } from '../features/studio/StudioCollectionPage'
-import { StudioSetPage } from '../features/studio/StudioSetPage'
-import { StudioSearchPage } from '../features/studio/StudioSearchPage'
-import { StudioLibraryPage } from '../features/studio/StudioLibraryPage'
-import { StudioCheckoutPage } from '../features/studio/StudioCheckoutPage'
-import { AdminDashboardPage } from '../features/admin/AdminDashboardPage'
-import { AdminModerationPage } from '../features/admin/AdminModerationPage'
-import { AdminMembersPage } from '../features/admin/AdminMembersPage'
-import { AdminCommunitiesPage } from '../features/admin/AdminCommunitiesPage'
-import { AdminCommunityModPage } from '../features/admin/AdminCommunityModPage'
-import { AdminGovernancePage } from '../features/admin/AdminGovernancePage'
-import { ModPanelPage } from '../features/admin/ModPanelPage'
+const HomePage = lazy(() => import('../features/homepage/HomePage').then((m) => ({ default: m.HomePage })))
+const ProfilePage = lazy(() => import('../features/members/ProfilePage').then((m) => ({ default: m.ProfilePage })))
+const MemberDirectoryFilterPage = lazy(() => import('../features/members/MemberDirectoryFilterPage').then((m) => ({ default: m.MemberDirectoryFilterPage })))
+const SearchPage = lazy(() => import('../features/members/SearchPage').then((m) => ({ default: m.SearchPage })))
+const ConnectionsPage = lazy(() => import('../features/connect/ConnectionsPage').then((m) => ({ default: m.ConnectionsPage })))
+const DatingPage = lazy(() => import('../features/community/DatingPage').then((m) => ({ default: m.DatingPage })))
+const ReadingGroupsPage = lazy(() => import('../features/community/ReadingGroupsPage').then((m) => ({ default: m.ReadingGroupsPage })))
+const FamilyPage = lazy(() => import('../features/community/FamilyPage').then((m) => ({ default: m.FamilyPage })))
+const FeedPage = lazy(() => import('../features/feed/FeedPage').then((m) => ({ default: m.FeedPage })))
+const NotificationsPage = lazy(() => import('../features/notifications/NotificationsPage').then((m) => ({ default: m.NotificationsPage })))
+const MessagesPage = lazy(() => import('../features/messages/MessagesPage').then((m) => ({ default: m.MessagesPage })))
+const CommunitiesPage = lazy(() => import('../features/communities/CommunitiesPage').then((m) => ({ default: m.CommunitiesPage })))
+const CommunitiesHomePage = lazy(() => import('../features/communities/CommunitiesHomePage').then((m) => ({ default: m.CommunitiesHomePage })))
+const CommunityDetailPage = lazy(() => import('../features/communities/CommunityDetailPage').then((m) => ({ default: m.CommunityDetailPage })))
+const CalendarPage = lazy(() => import('../features/gatherings/CalendarPage').then((m) => ({ default: m.CalendarPage })))
+const GatheringPage = lazy(() => import('../features/gatherings/GatheringPage').then((m) => ({ default: m.GatheringPage })))
+const EventPage = lazy(() => import('../features/gatherings/EventPage').then((m) => ({ default: m.EventPage })))
+const EventsPage = lazy(() => import('../features/gatherings/EventsPage').then((m) => ({ default: m.EventsPage })))
+const MyEventsPage = lazy(() => import('../features/myevents/MyEventsPage').then((m) => ({ default: m.MyEventsPage })))
+const RsvpPage = lazy(() => import('../features/gatherings/RsvpPage').then((m) => ({ default: m.RsvpPage })))
+const GatheringRecapPage = lazy(() => import('../features/gatherings/GatheringRecapPage').then((m) => ({ default: m.GatheringRecapPage })))
+const HostPage = lazy(() => import('../features/gatherings/HostPage').then((m) => ({ default: m.HostPage })))
+const CreateGatheringPage = lazy(() => import('../features/gatherings/CreateGatheringPage').then((m) => ({ default: m.CreateGatheringPage })))
+const GatheringDashboardPage = lazy(() => import('../features/gatherings/GatheringDashboardPage').then((m) => ({ default: m.GatheringDashboardPage })))
+const ManageGatheringPage = lazy(() => import('../features/gatherings/ManageGatheringPage').then((m) => ({ default: m.ManageGatheringPage })))
+const CoHostInvitePage = lazy(() => import('../features/gatherings/CoHostInvitePage').then((m) => ({ default: m.CoHostInvitePage })))
+const GatheringCancelledPage = lazy(() => import('../features/gatherings/GatheringCancelledPage').then((m) => ({ default: m.GatheringCancelledPage })))
+const GatheringPhotosPage = lazy(() => import('../features/gatherings/GatheringPhotosPage').then((m) => ({ default: m.GatheringPhotosPage })))
+const MagazinePage = lazy(() => import('../features/magazine/MagazinePage').then((m) => ({ default: m.MagazinePage })))
+const ArticlePage = lazy(() => import('../features/magazine/ArticlePage').then((m) => ({ default: m.ArticlePage })))
+const AuthorPage = lazy(() => import('../features/magazine/AuthorPage').then((m) => ({ default: m.AuthorPage })))
+const IssuePage = lazy(() => import('../features/magazine/IssuePage').then((m) => ({ default: m.IssuePage })))
+const IssuesPage = lazy(() => import('../features/magazine/IssuesPage').then((m) => ({ default: m.IssuesPage })))
+const CoverGalleryPage = lazy(() => import('../features/magazine/CoverGalleryPage').then((m) => ({ default: m.CoverGalleryPage })))
+const TagPage = lazy(() => import('../features/magazine/TagPage').then((m) => ({ default: m.TagPage })))
+const PodcastShowPage = lazy(() => import('../features/magazine/PodcastShowPage').then((m) => ({ default: m.PodcastShowPage })))
+const AudioPlayerPage = lazy(() => import('../features/magazine/AudioPlayerPage').then((m) => ({ default: m.AudioPlayerPage })))
+const NewsletterArchivePage = lazy(() => import('../features/magazine/NewsletterArchivePage').then((m) => ({ default: m.NewsletterArchivePage })))
+const NewsletterArchiveIssuePage = lazy(() => import('../features/magazine/NewsletterArchiveIssuePage').then((m) => ({ default: m.NewsletterArchiveIssuePage })))
+const StoryPage = lazy(() => import('../features/magazine/StoryPage').then((m) => ({ default: m.StoryPage })))
+const StoryTomasPage = lazy(() => import('../features/magazine/StoryTomasPage').then((m) => ({ default: m.StoryTomasPage })))
+const StorySafetyPage = lazy(() => import('../features/magazine/StorySafetyPage').then((m) => ({ default: m.StorySafetyPage })))
+const CreativesPage = lazy(() => import('../features/community/CreativesPage').then((m) => ({ default: m.CreativesPage })))
+const CulturePage = lazy(() => import('../features/culture/CulturePage').then((m) => ({ default: m.CulturePage })))
+const ManifestoPage = lazy(() => import('../features/marketing/ManifestoPage').then((m) => ({ default: m.ManifestoPage })))
+const PrivacyPage = lazy(() => import('../features/marketing/PrivacyPage').then((m) => ({ default: m.PrivacyPage })))
+const TermsPage = lazy(() => import('../features/marketing/TermsPage').then((m) => ({ default: m.TermsPage })))
+const DsarPage = lazy(() => import('../features/marketing/DsarPage').then((m) => ({ default: m.DsarPage })))
+const ConstitutionPage = lazy(() => import('../features/marketing/ConstitutionPage').then((m) => ({ default: m.ConstitutionPage })))
+const CodeOfConductPage = lazy(() => import('../features/marketing/CodeOfConductPage').then((m) => ({ default: m.CodeOfConductPage })))
+const ChangelogPage = lazy(() => import('../features/marketing/ChangelogPage').then((m) => ({ default: m.ChangelogPage })))
+const PressArchivePage = lazy(() => import('../features/marketing/PressArchivePage').then((m) => ({ default: m.PressArchivePage })))
+const NewsletterPage = lazy(() => import('../features/marketing/NewsletterPage').then((m) => ({ default: m.NewsletterPage })))
+const AnnualAssemblyPage = lazy(() => import('../features/marketing/AnnualAssemblyPage').then((m) => ({ default: m.AnnualAssemblyPage })))
+const AssemblyMinutesPage = lazy(() => import('../features/marketing/AssemblyMinutesPage').then((m) => ({ default: m.AssemblyMinutesPage })))
+const GetTheAppPage = lazy(() => import('../features/marketing/GetTheAppPage').then((m) => ({ default: m.GetTheAppPage })))
+const ComponentLibraryPage = lazy(() => import('../features/marketing/ComponentLibraryPage').then((m) => ({ default: m.ComponentLibraryPage })))
+const CitiesPage = lazy(() => import('../features/marketing/CitiesPage').then((m) => ({ default: m.CitiesPage })))
+const ForOrganisationsPage = lazy(() => import('../features/marketing/ForOrganisationsPage').then((m) => ({ default: m.ForOrganisationsPage })))
+const PressKitPage = lazy(() => import('../features/marketing/PressKitPage').then((m) => ({ default: m.PressKitPage })))
+const TransparencyReportPage = lazy(() => import('../features/marketing/TransparencyReportPage').then((m) => ({ default: m.TransparencyReportPage })))
+const AccessibilityPage = lazy(() => import('../features/marketing/AccessibilityPage').then((m) => ({ default: m.AccessibilityPage })))
+const WellbeingPage = lazy(() => import('../features/resources/WellbeingPage').then((m) => ({ default: m.WellbeingPage })))
+const MentalHealthPage = lazy(() => import('../features/resources/MentalHealthPage').then((m) => ({ default: m.MentalHealthPage })))
+const TransHealthcarePage = lazy(() => import('../features/resources/TransHealthcarePage').then((m) => ({ default: m.TransHealthcarePage })))
+const HarmReductionPage = lazy(() => import('../features/resources/HarmReductionPage').then((m) => ({ default: m.HarmReductionPage })))
+const SexualHealthPage = lazy(() => import('../features/resources/SexualHealthPage').then((m) => ({ default: m.SexualHealthPage })))
+const SoberPage = lazy(() => import('../features/resources/SoberPage').then((m) => ({ default: m.SoberPage })))
+const Queer101Page = lazy(() => import('../features/resources/Queer101Page').then((m) => ({ default: m.Queer101Page })))
+const GlossaryPage = lazy(() => import('../features/resources/GlossaryPage').then((m) => ({ default: m.GlossaryPage })))
+const TransDayOfVisibilityPage = lazy(() => import('../features/resources/TransDayOfVisibilityPage').then((m) => ({ default: m.TransDayOfVisibilityPage })))
+const WorldAidsDayPage = lazy(() => import('../features/resources/WorldAidsDayPage').then((m) => ({ default: m.WorldAidsDayPage })))
+const PrideMonthPage = lazy(() => import('../features/resources/PrideMonthPage').then((m) => ({ default: m.PrideMonthPage })))
+const MicroGrantsPage = lazy(() => import('../features/resources/MicroGrantsPage').then((m) => ({ default: m.MicroGrantsPage })))
+const IntersectionalityPage = lazy(() => import('../features/resources/IntersectionalityPage').then((m) => ({ default: m.IntersectionalityPage })))
+const TransHubPage = lazy(() => import('../features/resources/TransHubPage').then((m) => ({ default: m.TransHubPage })))
+const LegalPage = lazy(() => import('../features/resources/LegalPage').then((m) => ({ default: m.LegalPage })))
+const SafetyPage = lazy(() => import('../features/resources/SafetyPage').then((m) => ({ default: m.SafetyPage })))
+const SignInPage = lazy(() => import('../features/auth/SignInPage').then((m) => ({ default: m.SignInPage })))
+const CreateAccountPage = lazy(() => import('../features/auth/CreateAccountPage').then((m) => ({ default: m.CreateAccountPage })))
+const InvitePage = lazy(() => import('../features/auth/InvitePage').then((m) => ({ default: m.InvitePage })))
+const RequestInvitePage = lazy(() => import('../features/auth/RequestInvitePage').then((m) => ({ default: m.RequestInvitePage })))
+const OnboardingPage = lazy(() => import('../features/auth/OnboardingPage').then((m) => ({ default: m.OnboardingPage })))
+const WelcomeTourPage = lazy(() => import('../features/auth/WelcomeTourPage').then((m) => ({ default: m.WelcomeTourPage })))
+const JobsPage = lazy(() => import('../features/economy/JobsPage').then((m) => ({ default: m.JobsPage })))
+const JobDetailPage = lazy(() => import('../features/economy/JobDetailPage').then((m) => ({ default: m.JobDetailPage })))
+const HousingPage = lazy(() => import('../features/economy/HousingPage').then((m) => ({ default: m.HousingPage })))
+const HousingListingPage = lazy(() => import('../features/economy/HousingListingPage').then((m) => ({ default: m.HousingListingPage })))
+const LandlordPage = lazy(() => import('../features/economy/LandlordPage').then((m) => ({ default: m.LandlordPage })))
+const SkillsPage = lazy(() => import('../features/economy/SkillsPage').then((m) => ({ default: m.SkillsPage })))
+const GrantsPage = lazy(() => import('../features/economy/GrantsPage').then((m) => ({ default: m.GrantsPage })))
+const BarterPage = lazy(() => import('../features/economy/BarterPage').then((m) => ({ default: m.BarterPage })))
+const BarterDetailPage = lazy(() => import('../features/economy/BarterDetailPage').then((m) => ({ default: m.BarterDetailPage })))
+const OfferPage = lazy(() => import('../features/economy/OfferPage').then((m) => ({ default: m.OfferPage })))
+const EmployerReviewsPage = lazy(() => import('../features/economy/EmployerReviewsPage').then((m) => ({ default: m.EmployerReviewsPage })))
+const ApplicationStatusPage = lazy(() => import('../features/economy/ApplicationStatusPage').then((m) => ({ default: m.ApplicationStatusPage })))
+const MentorshipPage = lazy(() => import('../features/economy/MentorshipPage').then((m) => ({ default: m.MentorshipPage })))
+const MentorDetailPage = lazy(() => import('../features/economy/MentorDetailPage').then((m) => ({ default: m.MentorDetailPage })))
+const EconomyPage = lazy(() => import('../features/economy/EconomyPage').then((m) => ({ default: m.EconomyPage })))
+const InvoiceGeneratorPage = lazy(() => import('../features/economy/InvoiceGeneratorPage').then((m) => ({ default: m.InvoiceGeneratorPage })))
+const ContractGeneratorPage = lazy(() => import('../features/economy/ContractGeneratorPage').then((m) => ({ default: m.ContractGeneratorPage })))
+const ScopeGeneratorPage = lazy(() => import('../features/economy/ScopeGeneratorPage').then((m) => ({ default: m.ScopeGeneratorPage })))
+const ReciboVerdeGuidePage = lazy(() => import('../features/economy/ReciboVerdeGuidePage').then((m) => ({ default: m.ReciboVerdeGuidePage })))
+const TakeHomeCalculatorPage = lazy(() => import('../features/economy/TakeHomeCalculatorPage').then((m) => ({ default: m.TakeHomeCalculatorPage })))
+const IvaTrackerPage = lazy(() => import('../features/economy/IvaTrackerPage').then((m) => ({ default: m.IvaTrackerPage })))
+const SetAsidePlannerPage = lazy(() => import('../features/economy/SetAsidePlannerPage').then((m) => ({ default: m.SetAsidePlannerPage })))
+const DayRateCalculatorPage = lazy(() => import('../features/economy/DayRateCalculatorPage').then((m) => ({ default: m.DayRateCalculatorPage })))
+const RateBoardPage = lazy(() => import('../features/economy/RateBoardPage').then((m) => ({ default: m.RateBoardPage })))
+const SlidingScalePage = lazy(() => import('../features/economy/SlidingScalePage').then((m) => ({ default: m.SlidingScalePage })))
+const ComparatorPage = lazy(() => import('../features/economy/ComparatorPage').then((m) => ({ default: m.ComparatorPage })))
+const RunningGuidePage = lazy(() => import('../features/resources/RunningGuidePage').then((m) => ({ default: m.RunningGuidePage })))
+const AccessibleLisbonPage = lazy(() => import('../features/resources/AccessibleLisbonPage').then((m) => ({ default: m.AccessibleLisbonPage })))
+const PeerSupportPage = lazy(() => import('../features/resources/PeerSupportPage').then((m) => ({ default: m.PeerSupportPage })))
+const ArtCritGuidePage = lazy(() => import('../features/resources/ArtCritGuidePage').then((m) => ({ default: m.ArtCritGuidePage })))
+const SharedEquipmentPage = lazy(() => import('../features/resources/SharedEquipmentPage').then((m) => ({ default: m.SharedEquipmentPage })))
+const GroupShowArchivePage = lazy(() => import('../features/resources/GroupShowArchivePage').then((m) => ({ default: m.GroupShowArchivePage })))
+const FirstMeetupGuidePage = lazy(() => import('../features/resources/FirstMeetupGuidePage').then((m) => ({ default: m.FirstMeetupGuidePage })))
+const QueerPaediatriciansPage = lazy(() => import('../features/resources/QueerPaediatriciansPage').then((m) => ({ default: m.QueerPaediatriciansPage })))
+const SchoolFormsGuidePage = lazy(() => import('../features/resources/SchoolFormsGuidePage').then((m) => ({ default: m.SchoolFormsGuidePage })))
+const CommunityPrivacyPage = lazy(() => import('../features/resources/CommunityPrivacyPage').then((m) => ({ default: m.CommunityPrivacyPage })))
+const ComingOutAtWorkPage = lazy(() => import('../features/resources/ComingOutAtWorkPage').then((m) => ({ default: m.ComingOutAtWorkPage })))
+const LgbtqAgingGuidePage = lazy(() => import('../features/resources/LgbtqAgingGuidePage').then((m) => ({ default: m.LgbtqAgingGuidePage })))
+const OralHistoryProjectPage = lazy(() => import('../features/resources/OralHistoryProjectPage').then((m) => ({ default: m.OralHistoryProjectPage })))
+const IngredientsMapPage = lazy(() => import('../features/resources/IngredientsMapPage').then((m) => ({ default: m.IngredientsMapPage })))
+const QtipocOrganisationsPage = lazy(() => import('../features/resources/QtipocOrganisationsPage').then((m) => ({ default: m.QtipocOrganisationsPage })))
+const QtipocArchivePage = lazy(() => import('../features/resources/QtipocArchivePage').then((m) => ({ default: m.QtipocArchivePage })))
+const DisabilityHealthcarePage = lazy(() => import('../features/resources/DisabilityHealthcarePage').then((m) => ({ default: m.DisabilityHealthcarePage })))
+const SpoonTheoryPage = lazy(() => import('../features/resources/SpoonTheoryPage').then((m) => ({ default: m.SpoonTheoryPage })))
+const CinemaPage = lazy(() => import('../features/cinema/CinemaPage').then((m) => ({ default: m.CinemaPage })))
+const CinemaBrowsePage = lazy(() => import('../features/cinema/CinemaBrowsePage').then((m) => ({ default: m.CinemaBrowsePage })))
+const CinemaMembershipPage = lazy(() => import('../features/cinema/CinemaMembershipPage').then((m) => ({ default: m.CinemaMembershipPage })))
+const FilmPage = lazy(() => import('../features/cinema/FilmPage').then((m) => ({ default: m.FilmPage })))
+const WatchPage = lazy(() => import('../features/cinema/WatchPage').then((m) => ({ default: m.WatchPage })))
+const StudioPage = lazy(() => import('../features/studio/StudioPage').then((m) => ({ default: m.StudioPage })))
+const StudioAlbumPage = lazy(() => import('../features/studio/StudioAlbumPage').then((m) => ({ default: m.StudioAlbumPage })))
+const StudioArtistPage = lazy(() => import('../features/studio/StudioArtistPage').then((m) => ({ default: m.StudioArtistPage })))
+const StudioDashboardPage = lazy(() => import('../features/studio/StudioDashboardPage').then((m) => ({ default: m.StudioDashboardPage })))
+const StudioUploadPage = lazy(() => import('../features/studio/StudioUploadPage').then((m) => ({ default: m.StudioUploadPage })))
+const StudioPayoutsPage = lazy(() => import('../features/studio/StudioPayoutsPage').then((m) => ({ default: m.StudioPayoutsPage })))
+const StudioTrackPage = lazy(() => import('../features/studio/StudioTrackPage').then((m) => ({ default: m.StudioTrackPage })))
+const StudioLivePage = lazy(() => import('../features/studio/StudioLivePage').then((m) => ({ default: m.StudioLivePage })))
+const StudioSheetStorePage = lazy(() => import('../features/studio/StudioSheetStorePage').then((m) => ({ default: m.StudioSheetStorePage })))
+const StudioSolidarityFundPage = lazy(() => import('../features/studio/StudioSolidarityFundPage').then((m) => ({ default: m.StudioSolidarityFundPage })))
+const StudioOpenCallsPage = lazy(() => import('../features/studio/StudioOpenCallsPage').then((m) => ({ default: m.StudioOpenCallsPage })))
+const StudioSetSubmissionPage = lazy(() => import('../features/studio/StudioSetSubmissionPage').then((m) => ({ default: m.StudioSetSubmissionPage })))
+const StudioCouncilPage = lazy(() => import('../features/studio/StudioCouncilPage').then((m) => ({ default: m.StudioCouncilPage })))
+const StudioTriagePage = lazy(() => import('../features/studio/StudioTriagePage').then((m) => ({ default: m.StudioTriagePage })))
+const StudioFlagReviewPage = lazy(() => import('../features/studio/StudioFlagReviewPage').then((m) => ({ default: m.StudioFlagReviewPage })))
+const ChangemakersPage = lazy(() => import('../features/community/ChangemakersPage').then((m) => ({ default: m.ChangemakersPage })))
+const ChangemakerStoryPage = lazy(() => import('../features/community/ChangemakerStoryPage').then((m) => ({ default: m.ChangemakerStoryPage })))
+const ForumPage = lazy(() => import('../features/forum/ForumPage').then((m) => ({ default: m.ForumPage })))
+const ThreadPage = lazy(() => import('../features/forum/ThreadPage').then((m) => ({ default: m.ThreadPage })))
+const SettingsPage = lazy(() => import('../features/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })))
+const GovernancePage = lazy(() => import('../features/governance/GovernancePage').then((m) => ({ default: m.GovernancePage })))
+const AboutPage = lazy(() => import('../features/marketing/AboutPage').then((m) => ({ default: m.AboutPage })))
+const ContactPage = lazy(() => import('../features/marketing/ContactPage').then((m) => ({ default: m.ContactPage })))
+const HelpPage = lazy(() => import('../features/marketing/HelpPage').then((m) => ({ default: m.HelpPage })))
+const VolunteerPage = lazy(() => import('../features/marketing/VolunteerPage').then((m) => ({ default: m.VolunteerPage })))
+const VolunteerOpportunityPage = lazy(() => import('../features/marketing/VolunteerOpportunityPage').then((m) => ({ default: m.VolunteerOpportunityPage })))
+const GuidelinesPage = lazy(() => import('../features/marketing/GuidelinesPage').then((m) => ({ default: m.GuidelinesPage })))
+const DirectoryPage = lazy(() => import('../features/marketing/DirectoryPage').then((m) => ({ default: m.DirectoryPage })))
+const DirectorySpacePage = lazy(() => import('../features/marketing/DirectorySpacePage').then((m) => ({ default: m.DirectorySpacePage })))
+const ResourceLibraryPage = lazy(() => import('../features/marketing/ResourceLibraryPage').then((m) => ({ default: m.ResourceLibraryPage })))
+const PartnersPage = lazy(() => import('../features/marketing/PartnersPage').then((m) => ({ default: m.PartnersPage })))
+const PartnerDetailPage = lazy(() => import('../features/marketing/PartnerDetailPage').then((m) => ({ default: m.PartnerDetailPage })))
+const ActivismPage = lazy(() => import('../features/marketing/ActivismPage').then((m) => ({ default: m.ActivismPage })))
+const ArchivePage = lazy(() => import('../features/marketing/ArchivePage').then((m) => ({ default: m.ArchivePage })))
+const PlatformsPage = lazy(() => import('../features/marketing/PlatformsPage').then((m) => ({ default: m.PlatformsPage })))
+const MapPage = lazy(() => import('../features/marketing/MapPage').then((m) => ({ default: m.MapPage })))
+const SafeSpacesPage = lazy(() => import('../features/safety/SafeSpacesPage').then((m) => ({ default: m.SafeSpacesPage })))
+const SafeSpaceDetailPage = lazy(() => import('../features/safety/SafeSpaceDetailPage').then((m) => ({ default: m.SafeSpaceDetailPage })))
+const FlatmatesPage = lazy(() => import('../features/economy/FlatmatesPage').then((m) => ({ default: m.FlatmatesPage })))
+const SolidarityPage = lazy(() => import('../features/economy/SolidarityPage').then((m) => ({ default: m.SolidarityPage })))
+const VisasPage = lazy(() => import('../features/marketing/VisasPage').then((m) => ({ default: m.VisasPage })))
+const ArrivingPage = lazy(() => import('../features/marketing/ArrivingPage').then((m) => ({ default: m.ArrivingPage })))
+const HateCrimePage = lazy(() => import('../features/safety/HateCrimePage').then((m) => ({ default: m.HateCrimePage })))
+const EmergencyPage = lazy(() => import('../features/safety/EmergencyPage').then((m) => ({ default: m.EmergencyPage })))
+const ReportPage = lazy(() => import('../features/safety/ReportPage').then((m) => ({ default: m.ReportPage })))
+const LeavePage = lazy(() => import('../features/safety/LeavePage').then((m) => ({ default: m.LeavePage })))
+const BlockMutePage = lazy(() => import('../features/safety/BlockMutePage').then((m) => ({ default: m.BlockMutePage })))
+const AppealOutcomePage = lazy(() => import('../features/safety/AppealOutcomePage').then((m) => ({ default: m.AppealOutcomePage })))
+const PlaceholderPage = lazy(() => import('../pages/PlaceholderPage').then((m) => ({ default: m.PlaceholderPage })))
+const NotFoundPage = lazy(() => import('../pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })))
+const ServerErrorPage = lazy(() => import('../features/system/ServerErrorPage').then((m) => ({ default: m.ServerErrorPage })))
+const MaintenancePage = lazy(() => import('../features/system/MaintenancePage').then((m) => ({ default: m.MaintenancePage })))
+const OfflinePage = lazy(() => import('../features/system/OfflinePage').then((m) => ({ default: m.OfflinePage })))
+const GeoRestrictedPage = lazy(() => import('../features/system/GeoRestrictedPage').then((m) => ({ default: m.GeoRestrictedPage })))
+const PwaPromptPage = lazy(() => import('../features/system/PwaPromptPage').then((m) => ({ default: m.PwaPromptPage })))
+const AccountBannedPage = lazy(() => import('../features/system/AccountBannedPage').then((m) => ({ default: m.AccountBannedPage })))
+const AccountLockedPage = lazy(() => import('../features/system/AccountLockedPage').then((m) => ({ default: m.AccountLockedPage })))
+const AccountSuspendedPage = lazy(() => import('../features/system/AccountSuspendedPage').then((m) => ({ default: m.AccountSuspendedPage })))
+const InviteExpiredPage = lazy(() => import('../features/system/InviteExpiredPage').then((m) => ({ default: m.InviteExpiredPage })))
+const InviteLandingPage = lazy(() => import('../features/system/InviteLandingPage').then((m) => ({ default: m.InviteLandingPage })))
+const PendingReviewPage = lazy(() => import('../features/system/PendingReviewPage').then((m) => ({ default: m.PendingReviewPage })))
+const VerificationNeededPage = lazy(() => import('../features/system/VerificationNeededPage').then((m) => ({ default: m.VerificationNeededPage })))
+const StatusPage = lazy(() => import('../features/system/StatusPage').then((m) => ({ default: m.StatusPage })))
+const Studio404Page = lazy(() => import('../features/studio/Studio404Page').then((m) => ({ default: m.Studio404Page })))
+const Studio500Page = lazy(() => import('../features/studio/Studio500Page').then((m) => ({ default: m.Studio500Page })))
+const StudioOffAirPage = lazy(() => import('../features/studio/StudioOffAirPage').then((m) => ({ default: m.StudioOffAirPage })))
+const TwoFactorSetupPage = lazy(() => import('../features/auth/TwoFactorSetupPage').then((m) => ({ default: m.TwoFactorSetupPage })))
+const MagicLinkPage = lazy(() => import('../features/auth/MagicLinkPage').then((m) => ({ default: m.MagicLinkPage })))
+const PasswordResetPage = lazy(() => import('../features/auth/PasswordResetPage').then((m) => ({ default: m.PasswordResetPage })))
+const SetNewPasswordPage = lazy(() => import('../features/auth/SetNewPasswordPage').then((m) => ({ default: m.SetNewPasswordPage })))
+const ConfirmEmailPage = lazy(() => import('../features/auth/ConfirmEmailPage').then((m) => ({ default: m.ConfirmEmailPage })))
+const RecoveryCodesPage = lazy(() => import('../features/auth/RecoveryCodesPage').then((m) => ({ default: m.RecoveryCodesPage })))
+const StudioSignInPage = lazy(() => import('../features/studio/StudioSignInPage').then((m) => ({ default: m.StudioSignInPage })))
+const StudioSettingsPage = lazy(() => import('../features/studio/StudioSettingsPage').then((m) => ({ default: m.StudioSettingsPage })))
+const AccessibilityPreferencesPage = lazy(() => import('../features/settings/AccessibilityPreferencesPage').then((m) => ({ default: m.AccessibilityPreferencesPage })))
+const NotificationPreferencesPage = lazy(() => import('../features/settings/NotificationPreferencesPage').then((m) => ({ default: m.NotificationPreferencesPage })))
+const DataExportPage = lazy(() => import('../features/settings/DataExportPage').then((m) => ({ default: m.DataExportPage })))
+const DeleteAccountPage = lazy(() => import('../features/settings/DeleteAccountPage').then((m) => ({ default: m.DeleteAccountPage })))
+const EditProfilePage = lazy(() => import('../features/settings/EditProfilePage').then((m) => ({ default: m.EditProfilePage })))
+const LinkedAccountsPage = lazy(() => import('../features/settings/LinkedAccountsPage').then((m) => ({ default: m.LinkedAccountsPage })))
+const SecurityPage = lazy(() => import('../features/settings/SecurityPage').then((m) => ({ default: m.SecurityPage })))
+const SessionsPage = lazy(() => import('../features/settings/SessionsPage').then((m) => ({ default: m.SessionsPage })))
+const ProfileThemePage = lazy(() => import('../features/settings/ProfileThemePage').then((m) => ({ default: m.ProfileThemePage })))
+const SubscriptionsPage = lazy(() => import('../features/settings/SubscriptionsPage').then((m) => ({ default: m.SubscriptionsPage })))
+const CancelMembershipPage = lazy(() => import('../features/settings/CancelMembershipPage').then((m) => ({ default: m.CancelMembershipPage })))
+const MembershipPage = lazy(() => import('../features/settings/MembershipPage').then((m) => ({ default: m.MembershipPage })))
+const GiftMembershipPage = lazy(() => import('../features/settings/GiftMembershipPage').then((m) => ({ default: m.GiftMembershipPage })))
+const PublicProfilePage = lazy(() => import('../features/members/PublicProfilePage').then((m) => ({ default: m.PublicProfilePage })))
+const MentorProfilePage = lazy(() => import('../features/economy/MentorProfilePage').then((m) => ({ default: m.MentorProfilePage })))
+const WorkHubPage = lazy(() => import('../features/economy/WorkHubPage').then((m) => ({ default: m.WorkHubPage })))
+const WorkProfilePage = lazy(() => import('../features/economy/WorkProfilePage').then((m) => ({ default: m.WorkProfilePage })))
+const NotificationDeepLinkPage = lazy(() => import('../features/notifications/NotificationDeepLinkPage').then((m) => ({ default: m.NotificationDeepLinkPage })))
+const MentionsPage = lazy(() => import('../features/notifications/MentionsPage').then((m) => ({ default: m.MentionsPage })))
+const CollectionsPage = lazy(() => import('../features/members/CollectionsPage').then((m) => ({ default: m.CollectionsPage })))
+const BadgesPage = lazy(() => import('../features/members/BadgesPage').then((m) => ({ default: m.BadgesPage })))
+const PerksPage = lazy(() => import('../features/members/PerksPage').then((m) => ({ default: m.PerksPage })))
+const DraftsPage = lazy(() => import('../features/members/DraftsPage').then((m) => ({ default: m.DraftsPage })))
+const QrScannerPage = lazy(() => import('../features/members/QrScannerPage').then((m) => ({ default: m.QrScannerPage })))
+const CookiesPage = lazy(() => import('../features/marketing/CookiesPage').then((m) => ({ default: m.CookiesPage })))
+const PronounsGuidePage = lazy(() => import('../features/resources/PronounsGuidePage').then((m) => ({ default: m.PronounsGuidePage })))
+const LibraryPage = lazy(() => import('../features/resources/LibraryPage').then((m) => ({ default: m.LibraryPage })))
+const ComingOutPage = lazy(() => import('../features/community/ComingOutPage').then((m) => ({ default: m.ComingOutPage })))
+const GatheringsPage = lazy(() => import('../features/gatherings/GatheringsPage').then((m) => ({ default: m.GatheringsPage })))
+const CrisisChatPage = lazy(() => import('../features/safety/CrisisChatPage').then((m) => ({ default: m.CrisisChatPage })))
+const VouchPage = lazy(() => import('../features/members/VouchPage').then((m) => ({ default: m.VouchPage })))
+const DonatePage = lazy(() => import('../features/marketing/DonatePage').then((m) => ({ default: m.DonatePage })))
+const SubmitStoryPage = lazy(() => import('../features/magazine/SubmitStoryPage').then((m) => ({ default: m.SubmitStoryPage })))
+const StudioCollectionPage = lazy(() => import('../features/studio/StudioCollectionPage').then((m) => ({ default: m.StudioCollectionPage })))
+const StudioSetPage = lazy(() => import('../features/studio/StudioSetPage').then((m) => ({ default: m.StudioSetPage })))
+const StudioSearchPage = lazy(() => import('../features/studio/StudioSearchPage').then((m) => ({ default: m.StudioSearchPage })))
+const StudioLibraryPage = lazy(() => import('../features/studio/StudioLibraryPage').then((m) => ({ default: m.StudioLibraryPage })))
+const StudioCheckoutPage = lazy(() => import('../features/studio/StudioCheckoutPage').then((m) => ({ default: m.StudioCheckoutPage })))
+const AdminDashboardPage = lazy(() => import('../features/admin/AdminDashboardPage').then((m) => ({ default: m.AdminDashboardPage })))
+const AdminModerationPage = lazy(() => import('../features/admin/AdminModerationPage').then((m) => ({ default: m.AdminModerationPage })))
+const AdminMembersPage = lazy(() => import('../features/admin/AdminMembersPage').then((m) => ({ default: m.AdminMembersPage })))
+const AdminCommunitiesPage = lazy(() => import('../features/admin/AdminCommunitiesPage').then((m) => ({ default: m.AdminCommunitiesPage })))
+const AdminCommunityModPage = lazy(() => import('../features/admin/AdminCommunityModPage').then((m) => ({ default: m.AdminCommunityModPage })))
+const AdminGovernancePage = lazy(() => import('../features/admin/AdminGovernancePage').then((m) => ({ default: m.AdminGovernancePage })))
+const ModPanelPage = lazy(() => import('../features/admin/ModPanelPage').then((m) => ({ default: m.ModPanelPage })))
 import { KNOWN_ROUTE_SLUGS } from './routeMap'
 
 /** Top-level slugs that now have real pages — excluded from the placeholder fallback. */
@@ -276,110 +277,29 @@ const BUILT_SLUGS = new Set([
   'gathering-recap',
   'host',
   'magazine',
-  'article',
-  'author',
-  'issue',
-  'wellbeing',
-  'trans-hub',
-  'legal',
   'safety',
-  'invite',
-  'sign-in',
-  'create-account',
-  'welcome',
-  'welcome-tour',
-  'onboarding',
-  'jobs',
-  'housing',
-  'skills',
-  'grants',
-  'barter',
   'film',
   'changemakers',
   'forum',
   'thread',
   'settings',
-  'governance',
   'about',
   'archive',
-  'contact',
-  'help',
-  'volunteer',
-  'guidelines',
-  'directory',
   'resources',
-  'partners',
   'activism',
-  'platforms',
-  'map',
-  'report',
-  'leave',
-  'block-mute',
-  'appeal-outcome',
-  'safe-spaces',
-  'flatmates',
-  'solidarity',
-  'visas',
-  'arriving',
-  'mental-health',
-  'trans-healthcare',
-  'harm-reduction',
-  'sexual-health',
-  'sober',
-  'hate-crime',
-  'emergency',
-  '101',
-  'glossary',
-  'trans-day-of-visibility',
-  'world-aids-day',
-  'pride-month',
-  'micro-grants',
-  'intersectionality',
-  'issues',
-  'cover-gallery',
-  'tag',
-  'podcast-show',
-  'audio-player',
-  'newsletter-archive',
-  'story',
-  'story-tomas',
-  'story-safety',
-  'creatives',
-  'manifesto',
-  'offer',
-  'employer-reviews',
-  'application-status',
-  'mentorship',
   'economy',
-  'privacy',
-  'terms',
-  'dsar',
-  'constitution',
-  'code-of-conduct',
-  'changelog',
-  'press-archive',
-  'newsletter',
-  'annual-assembly',
-  'get-the-app',
-  'component-library',
-  'cities',
-  'for-organisations',
-  'press-kit',
-  'transparency-report',
-  'accessibility',
-  'library',
   'coming-out',
   'parents',
   'gatherings',
-  'business-directory',
 ])
 
 /**
- * Legacy top-level account paths → their new `/account/*` home. Keeps old
- * bookmarks, hardcoded links, and design-prototype hrefs working after the
- * account routes were unified under `/account`.
+ * Legacy paths → their new home. Keeps old bookmarks, hardcoded links, and
+ * design-prototype hrefs working after the route-grouping restructure.
+ * Static paths only — param paths use <ParamRedirect> route entries.
  */
-const ACCOUNT_REDIRECTS: [string, string][] = [
+const LEGACY_REDIRECTS: [string, string][] = [
+  // Account (pre-existing)
   ['/profile', '/account/profile'],
   ['/badges', '/account/badges'],
   ['/perks', '/account/perks'],
@@ -401,7 +321,130 @@ const ACCOUNT_REDIRECTS: [string, string][] = [
   ['/membership', '/account/membership'],
   ['/gift-membership', '/account/gift-membership'],
   ['/my-events', '/account/events'],
+  // Section moves appended by Tasks 2–10 below.
+  // Magazine
+  ['/article', '/magazine/article'],
+  ['/author', '/magazine/author'],
+  ['/issue', '/magazine/issue'],
+  ['/issues', '/magazine/issues'],
+  ['/cover-gallery', '/magazine/cover-gallery'],
+  ['/tag', '/magazine/tag'],
+  ['/podcast-show', '/magazine/podcast-show'],
+  ['/audio-player', '/magazine/audio-player'],
+  ['/newsletter-archive', '/magazine/newsletter-archive'],
+  ['/story', '/magazine/story'],
+  ['/story-tomas', '/magazine/story-tomas'],
+  ['/story-safety', '/magazine/story-safety'],
+  ['/submit-story', '/magazine/submit-story'],
+  ['/creatives', '/magazine/creatives'],
+  ['/culture', '/magazine/culture'],
+  // Resources
+  ['/wellbeing', '/resources/wellbeing'],
+  ['/mental-health', '/resources/mental-health'],
+  ['/trans-healthcare', '/resources/trans-healthcare'],
+  ['/harm-reduction', '/resources/harm-reduction'],
+  ['/sexual-health', '/resources/sexual-health'],
+  ['/sober', '/resources/sober'],
+  ['/101', '/resources/101'],
+  ['/glossary', '/resources/glossary'],
+  ['/pronouns-guide', '/resources/pronouns-guide'],
+  ['/trans-day-of-visibility', '/resources/trans-day-of-visibility'],
+  ['/world-aids-day', '/resources/world-aids-day'],
+  ['/pride-month', '/resources/pride-month'],
+  ['/micro-grants', '/resources/micro-grants'],
+  ['/intersectionality', '/resources/intersectionality'],
+  ['/trans-hub', '/resources/trans-hub'],
+  ['/library', '/resources/library'],
+  ['/legal', '/resources/legal'],
+  // Safety
+  ['/hate-crime', '/safety/hate-crime'],
+  ['/emergency', '/safety/emergency'],
+  ['/report', '/safety/report'],
+  ['/leave', '/safety/leave'],
+  ['/block-mute', '/safety/block-mute'],
+  ['/appeal-outcome', '/safety/appeal-outcome'],
+  ['/crisis-chat', '/safety/crisis-chat'],
+  // Work
+  ['/jobs', '/work/jobs'],
+  ['/housing', '/work/housing'],
+  ['/skills', '/work/skills'],
+  ['/grants', '/work/grants'],
+  ['/barter', '/work/barter'],
+  ['/offer', '/work/offer'],
+  ['/employer-reviews', '/work/employer-reviews'],
+  ['/application-status', '/work/application-status'],
+  ['/mentorship', '/work/mentorship'],
+  ['/mentor-profile', '/work/mentor-profile'],
+  ['/flatmates', '/work/flatmates'],
+  ['/solidarity', '/work/solidarity'],
+  // Auth
+  ['/sign-in', '/auth/sign-in'],
+  ['/create-account', '/auth/create-account'],
+  ['/invite', '/auth/invite'],
+  ['/request-invite', '/auth/request-invite'],
+  ['/onboarding', '/auth/onboarding'],
+  ['/welcome', '/auth/welcome'],
+  ['/welcome-tour', '/auth/welcome-tour'],
+  ['/2fa-setup', '/auth/2fa-setup'],
+  ['/magic-link', '/auth/magic-link'],
+  ['/password-reset', '/auth/password-reset'],
+  ['/set-new-password', '/auth/set-new-password'],
+  ['/confirm-email', '/auth/confirm-email'],
+  ['/recovery-codes', '/auth/recovery-codes'],
+  // About
+  ['/contact', '/about/contact'],
+  ['/help', '/about/help'],
+  ['/manifesto', '/about/manifesto'],
+  ['/changelog', '/about/changelog'],
+  ['/press-archive', '/about/press-archive'],
+  ['/press-kit', '/about/press-kit'],
+  ['/newsletter', '/about/newsletter'],
+  ['/annual-assembly', '/about/annual-assembly'],
+  ['/get-the-app', '/about/get-the-app'],
+  ['/cities', '/about/cities'],
+  ['/for-organisations', '/about/for-organisations'],
+  ['/platforms', '/about/platforms'],
+  ['/donate', '/about/donate'],
+  ['/volunteer', '/about/volunteer'],
+  ['/governance', '/about/governance'],
+  ['/component-library', '/about/component-library'],
+  ['/partners', '/about/partners'],
+  // Policies
+  ['/privacy', '/policies/privacy'],
+  ['/terms', '/policies/terms'],
+  ['/dsar', '/policies/dsar'],
+  ['/cookies', '/policies/cookies'],
+  ['/constitution', '/policies/constitution'],
+  ['/code-of-conduct', '/policies/code-of-conduct'],
+  ['/transparency-report', '/policies/transparency-report'],
+  ['/accessibility', '/policies/accessibility'],
+  ['/guidelines', '/policies/guidelines'],
+  // System
+  ['/500', '/system/500'],
+  ['/maintenance', '/system/maintenance'],
+  ['/offline', '/system/offline'],
+  ['/geo-restricted', '/system/geo-restricted'],
+  ['/pwa-prompt', '/system/pwa-prompt'],
+  ['/account-banned', '/system/account-banned'],
+  ['/account-locked', '/system/account-locked'],
+  ['/account-suspended', '/system/account-suspended'],
+  ['/invite-expired', '/system/invite-expired'],
+  ['/pending-review', '/system/pending-review'],
+  ['/verification-needed', '/system/verification-needed'],
+  ['/status', '/system/status'],
+  // Local / Lisbon
+  ['/safe-spaces', '/local/safe-spaces'],
+  ['/visas', '/local/visas'],
+  ['/arriving', '/local/arriving'],
+  ['/map', '/local/map'],
+  ['/directory', '/local/directory'],
 ]
+
+/** Generic redirect that forwards route params into a new target path. */
+function ParamRedirect({ build }: { build: (p: Record<string, string | undefined>) => string }) {
+  const params = useParams()
+  return <Navigate to={build(params)} replace />
+}
 
 /** Legacy public-profile path `/profile/:slug` → its new home `/members/:slug`. */
 function MemberProfileRedirect() {
@@ -415,7 +458,8 @@ function MemberProfileRedirect() {
  */
 export function AppRoutes() {
   return (
-    <Routes>
+    <Suspense fallback={<div />}>
+      <Routes>
       <Route path="/" element={<HomePage />} />
 
       {/* Member Platform */}
@@ -464,60 +508,65 @@ export function AppRoutes() {
 
       {/* Magazine */}
       <Route path="/magazine" element={<MagazinePage />} />
-      <Route path="/article" element={<ArticlePage />} />
-      <Route path="/author" element={<AuthorPage />} />
-      <Route path="/issue" element={<IssuePage />} />
-      <Route path="/issues" element={<IssuesPage />} />
-      <Route path="/cover-gallery" element={<CoverGalleryPage />} />
-      <Route path="/tag" element={<TagPage />} />
-      <Route path="/podcast-show" element={<PodcastShowPage />} />
-      <Route path="/audio-player" element={<AudioPlayerPage />} />
-      <Route path="/newsletter-archive" element={<NewsletterArchivePage />} />
-      <Route path="/newsletter-archive/:slug" element={<NewsletterArchiveIssuePage />} />
-      <Route path="/story" element={<StoryPage />} />
-      <Route path="/story-tomas" element={<StoryTomasPage />} />
-      <Route path="/story-safety" element={<StorySafetyPage />} />
-      <Route path="/creatives" element={<CreativesPage />} />
-      <Route path="/culture" element={<CulturePage />} />
-      <Route path="/manifesto" element={<ManifestoPage />} />
-      <Route path="/privacy" element={<PrivacyPage />} />
-      <Route path="/terms" element={<TermsPage />} />
-      <Route path="/dsar" element={<DsarPage />} />
-      <Route path="/cookies" element={<CookiesPage />} />
-      <Route path="/constitution" element={<ConstitutionPage />} />
-      <Route path="/code-of-conduct" element={<CodeOfConductPage />} />
-      <Route path="/changelog" element={<ChangelogPage />} />
-      <Route path="/press-archive" element={<PressArchivePage />} />
-      <Route path="/newsletter" element={<NewsletterPage />} />
-      <Route path="/annual-assembly" element={<AnnualAssemblyPage />} />
-      <Route path="/annual-assembly/minutes/:year" element={<AssemblyMinutesPage />} />
-      <Route path="/get-the-app" element={<GetTheAppPage />} />
-      <Route path="/component-library" element={<ComponentLibraryPage />} />
-      <Route path="/cities" element={<CitiesPage />} />
-      <Route path="/for-organisations" element={<ForOrganisationsPage />} />
-      <Route path="/press-kit" element={<PressKitPage />} />
-      <Route path="/transparency-report" element={<TransparencyReportPage />} />
-      <Route path="/accessibility" element={<AccessibilityPage />} />
+      <Route path="/magazine/article" element={<ArticlePage />} />
+      <Route path="/magazine/author" element={<AuthorPage />} />
+      <Route path="/magazine/issue" element={<IssuePage />} />
+      <Route path="/magazine/issues" element={<IssuesPage />} />
+      <Route path="/magazine/cover-gallery" element={<CoverGalleryPage />} />
+      <Route path="/magazine/tag" element={<TagPage />} />
+      <Route path="/magazine/podcast-show" element={<PodcastShowPage />} />
+      <Route path="/magazine/audio-player" element={<AudioPlayerPage />} />
+      <Route path="/magazine/newsletter-archive" element={<NewsletterArchivePage />} />
+      <Route path="/magazine/newsletter-archive/:slug" element={<NewsletterArchiveIssuePage />} />
+      <Route path="/newsletter-archive/:slug" element={<ParamRedirect build={(p) => `/magazine/newsletter-archive/${p.slug ?? ''}`} />} />
+      <Route path="/magazine/story" element={<StoryPage />} />
+      <Route path="/magazine/story-tomas" element={<StoryTomasPage />} />
+      <Route path="/magazine/story-safety" element={<StorySafetyPage />} />
+      <Route path="/magazine/submit-story" element={<SubmitStoryPage />} />
+      <Route path="/magazine/creatives" element={<CreativesPage />} />
+      <Route path="/magazine/culture" element={<CulturePage />} />
+      <Route path="/about/manifesto" element={<ManifestoPage />} />
+      <Route path="/about/changelog" element={<ChangelogPage />} />
+      <Route path="/about/press-archive" element={<PressArchivePage />} />
+      <Route path="/about/newsletter" element={<NewsletterPage />} />
+      <Route path="/about/annual-assembly" element={<AnnualAssemblyPage />} />
+      <Route path="/about/annual-assembly/minutes/:year" element={<AssemblyMinutesPage />} />
+      <Route path="/about/get-the-app" element={<GetTheAppPage />} />
+      <Route path="/about/component-library" element={<ComponentLibraryPage />} />
+      <Route path="/about/cities" element={<CitiesPage />} />
+      <Route path="/about/for-organisations" element={<ForOrganisationsPage />} />
+      <Route path="/about/press-kit" element={<PressKitPage />} />
+      <Route path="/about/governance" element={<GovernancePage />} />
+      <Route path="/policies/privacy" element={<PrivacyPage />} />
+      <Route path="/policies/terms" element={<TermsPage />} />
+      <Route path="/policies/dsar" element={<DsarPage />} />
+      <Route path="/policies/cookies" element={<CookiesPage />} />
+      <Route path="/policies/constitution" element={<ConstitutionPage />} />
+      <Route path="/policies/code-of-conduct" element={<CodeOfConductPage />} />
+      <Route path="/policies/transparency-report" element={<TransparencyReportPage />} />
+      <Route path="/policies/accessibility" element={<AccessibilityPage />} />
+      <Route path="/policies/guidelines" element={<GuidelinesPage />} />
 
       {/* Resources & Wellbeing */}
-      <Route path="/wellbeing" element={<WellbeingPage />} />
-      <Route path="/mental-health" element={<MentalHealthPage />} />
-      <Route path="/trans-healthcare" element={<TransHealthcarePage />} />
-      <Route path="/harm-reduction" element={<HarmReductionPage />} />
-      <Route path="/sexual-health" element={<SexualHealthPage />} />
-      <Route path="/sober" element={<SoberPage />} />
-      <Route path="/hate-crime" element={<HateCrimePage />} />
-      <Route path="/emergency" element={<EmergencyPage />} />
-      <Route path="/101" element={<Queer101Page />} />
-      <Route path="/glossary" element={<GlossaryPage />} />
-      <Route path="/pronouns-guide" element={<PronounsGuidePage />} />
-      <Route path="/trans-day-of-visibility" element={<TransDayOfVisibilityPage />} />
-      <Route path="/world-aids-day" element={<WorldAidsDayPage />} />
-      <Route path="/pride-month" element={<PrideMonthPage />} />
-      <Route path="/micro-grants" element={<MicroGrantsPage />} />
-      <Route path="/intersectionality" element={<IntersectionalityPage />} />
-      <Route path="/trans-hub" element={<TransHubPage />} />
-      <Route path="/legal" element={<LegalPage />} />
+      <Route path="/resources/wellbeing" element={<WellbeingPage />} />
+      <Route path="/resources/mental-health" element={<MentalHealthPage />} />
+      <Route path="/resources/trans-healthcare" element={<TransHealthcarePage />} />
+      <Route path="/resources/harm-reduction" element={<HarmReductionPage />} />
+      <Route path="/resources/sexual-health" element={<SexualHealthPage />} />
+      <Route path="/resources/sober" element={<SoberPage />} />
+      <Route path="/safety/hate-crime" element={<HateCrimePage />} />
+      <Route path="/safety/emergency" element={<EmergencyPage />} />
+      <Route path="/resources/101" element={<Queer101Page />} />
+      <Route path="/resources/glossary" element={<GlossaryPage />} />
+      <Route path="/resources/pronouns-guide" element={<PronounsGuidePage />} />
+      <Route path="/resources/trans-day-of-visibility" element={<TransDayOfVisibilityPage />} />
+      <Route path="/resources/world-aids-day" element={<WorldAidsDayPage />} />
+      <Route path="/resources/pride-month" element={<PrideMonthPage />} />
+      <Route path="/resources/micro-grants" element={<MicroGrantsPage />} />
+      <Route path="/resources/intersectionality" element={<IntersectionalityPage />} />
+      <Route path="/resources/trans-hub" element={<TransHubPage />} />
+      <Route path="/resources/legal" element={<LegalPage />} />
+      <Route path="/resources/library" element={<LibraryPage />} />
       <Route path="/resources/running-guide" element={<RunningGuidePage />} />
       <Route path="/resources/accessible-lisbon" element={<AccessibleLisbonPage />} />
       <Route path="/resources/peer-support" element={<PeerSupportPage />} />
@@ -537,38 +586,50 @@ export function AppRoutes() {
       <Route path="/resources/disability-healthcare" element={<DisabilityHealthcarePage />} />
       <Route path="/resources/spoon-theory" element={<SpoonTheoryPage />} />
       <Route path="/safety" element={<SafetyPage />} />
+      <Route path="/safety/report" element={<ReportPage />} />
+      <Route path="/safety/leave" element={<LeavePage />} />
+      <Route path="/safety/block-mute" element={<BlockMutePage />} />
+      <Route path="/safety/appeal-outcome" element={<AppealOutcomePage />} />
+      <Route path="/safety/crisis-chat" element={<CrisisChatPage />} />
 
       {/* Auth & onboarding */}
-      <Route path="/sign-in" element={<SignInPage />} />
-      <Route path="/create-account" element={<CreateAccountPage />} />
-      <Route path="/invite" element={<InvitePage />} />
-      <Route path="/request-invite" element={<RequestInvitePage />} />
-      <Route path="/onboarding" element={<OnboardingPage />} />
-      <Route path="/welcome" element={<OnboardingPage />} />
-      <Route path="/welcome-tour" element={<WelcomeTourPage />} />
-      <Route path="/2fa-setup" element={<TwoFactorSetupPage />} />
-      <Route path="/magic-link" element={<MagicLinkPage />} />
-      <Route path="/password-reset" element={<PasswordResetPage />} />
-      <Route path="/set-new-password" element={<SetNewPasswordPage />} />
-      <Route path="/confirm-email" element={<ConfirmEmailPage />} />
-      <Route path="/recovery-codes" element={<RecoveryCodesPage />} />
+      <Route path="/auth/sign-in" element={<SignInPage />} />
+      <Route path="/auth/create-account" element={<CreateAccountPage />} />
+      <Route path="/auth/invite" element={<InvitePage />} />
+      <Route path="/auth/invite/:code" element={<InviteLandingPage />} />
+      <Route path="/auth/request-invite" element={<RequestInvitePage />} />
+      <Route path="/auth/onboarding" element={<OnboardingPage />} />
+      <Route path="/auth/welcome" element={<OnboardingPage />} />
+      <Route path="/auth/welcome-tour" element={<WelcomeTourPage />} />
+      <Route path="/auth/2fa-setup" element={<TwoFactorSetupPage />} />
+      <Route path="/auth/magic-link" element={<MagicLinkPage />} />
+      <Route path="/auth/password-reset" element={<PasswordResetPage />} />
+      <Route path="/auth/set-new-password" element={<SetNewPasswordPage />} />
+      <Route path="/auth/confirm-email" element={<ConfirmEmailPage />} />
+      <Route path="/auth/recovery-codes" element={<RecoveryCodesPage />} />
+      <Route path="/invite/:code" element={<ParamRedirect build={(p) => `/auth/invite/${p.code ?? ''}`} />} />
 
       {/* Jobs & economy */}
-      <Route path="/jobs" element={<JobsPage />} />
-      <Route path="/jobs/:slug" element={<JobDetailPage />} />
-      <Route path="/housing" element={<HousingPage />} />
-      <Route path="/housing/:slug" element={<HousingListingPage />} />
-      <Route path="/landlord/:slug" element={<LandlordPage />} />
-      <Route path="/skills" element={<SkillsPage />} />
-      <Route path="/grants" element={<GrantsPage />} />
-      <Route path="/barter" element={<BarterPage />} />
-      <Route path="/barter/:id" element={<BarterDetailPage />} />
-      <Route path="/offer" element={<OfferPage />} />
-      <Route path="/employer-reviews" element={<EmployerReviewsPage />} />
-      <Route path="/application-status" element={<ApplicationStatusPage />} />
-      <Route path="/mentorship" element={<MentorshipPage />} />
-      <Route path="/mentorship/:slug" element={<MentorDetailPage />} />
-      <Route path="/mentor-profile" element={<MentorProfilePage />} />
+      <Route path="/work/jobs" element={<JobsPage />} />
+      <Route path="/work/jobs/:slug" element={<JobDetailPage />} />
+      <Route path="/work/housing" element={<HousingPage />} />
+      <Route path="/work/housing/:slug" element={<HousingListingPage />} />
+      <Route path="/work/landlord/:slug" element={<LandlordPage />} />
+      <Route path="/work/skills" element={<SkillsPage />} />
+      <Route path="/work/grants" element={<GrantsPage />} />
+      <Route path="/work/barter" element={<BarterPage />} />
+      <Route path="/work/barter/:id" element={<BarterDetailPage />} />
+      <Route path="/work/offer" element={<OfferPage />} />
+      <Route path="/work/employer-reviews" element={<EmployerReviewsPage />} />
+      <Route path="/work/application-status" element={<ApplicationStatusPage />} />
+      <Route path="/work/mentorship" element={<MentorshipPage />} />
+      <Route path="/work/mentorship/:slug" element={<MentorDetailPage />} />
+      <Route path="/work/mentor-profile" element={<MentorProfilePage />} />
+      <Route path="/jobs/:slug" element={<ParamRedirect build={(p) => `/work/jobs/${p.slug ?? ''}`} />} />
+      <Route path="/housing/:slug" element={<ParamRedirect build={(p) => `/work/housing/${p.slug ?? ''}`} />} />
+      <Route path="/landlord/:slug" element={<ParamRedirect build={(p) => `/work/landlord/${p.slug ?? ''}`} />} />
+      <Route path="/barter/:id" element={<ParamRedirect build={(p) => `/work/barter/${p.id ?? ''}`} />} />
+      <Route path="/mentorship/:slug" element={<ParamRedirect build={(p) => `/work/mentorship/${p.slug ?? ''}`} />} />
       <Route path="/economy" element={<EconomyPage />} />
       <Route path="/economy/invoice" element={<InvoiceGeneratorPage />} />
       <Route path="/economy/contract" element={<ContractGeneratorPage />} />
@@ -623,38 +684,37 @@ export function AppRoutes() {
       <Route path="/thread" element={<ThreadPage />} />
       <Route path="/thread/:id" element={<ThreadPage />} />
       <Route path="/account/settings" element={<SettingsPage />} />
-      <Route path="/governance" element={<GovernancePage />} />
 
       {/* Marketing / content */}
       <Route path="/about" element={<AboutPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/help" element={<HelpPage />} />
-      <Route path="/volunteer" element={<VolunteerPage />} />
-      <Route path="/volunteer-opportunity/:slug" element={<VolunteerOpportunityPage />} />
-      <Route path="/guidelines" element={<GuidelinesPage />} />
-      <Route path="/directory" element={<DirectoryPage />} />
-      <Route path="/space/:slug" element={<DirectorySpacePage />} />
+      <Route path="/about/contact" element={<ContactPage />} />
+      <Route path="/about/help" element={<HelpPage />} />
+      <Route path="/about/volunteer" element={<VolunteerPage />} />
+      <Route path="/about/volunteer/opportunity/:slug" element={<VolunteerOpportunityPage />} />
+      <Route path="/about/platforms" element={<PlatformsPage />} />
+      <Route path="/about/donate" element={<DonatePage />} />
+      <Route path="/about/partners" element={<PartnersPage />} />
+      <Route path="/about/partners/:slug" element={<PartnerDetailPage />} />
       <Route path="/resources" element={<ResourceLibraryPage />} />
-      <Route path="/partners" element={<PartnersPage />} />
-      <Route path="/partner/:slug" element={<PartnerDetailPage />} />
       <Route path="/activism" element={<ActivismPage />} />
       <Route path="/archive" element={<ArchivePage />} />
-      <Route path="/platforms" element={<PlatformsPage />} />
-      <Route path="/map" element={<MapPage />} />
+      <Route path="/annual-assembly/minutes/:year" element={<ParamRedirect build={(p) => `/about/annual-assembly/minutes/${p.year ?? ''}`} />} />
+      <Route path="/volunteer-opportunity/:slug" element={<ParamRedirect build={(p) => `/about/volunteer/opportunity/${p.slug ?? ''}`} />} />
+      <Route path="/partner/:slug" element={<ParamRedirect build={(p) => `/about/partners/${p.slug ?? ''}`} />} />
 
-      {/* Lisbon */}
-      <Route path="/safe-spaces" element={<SafeSpacesPage />} />
-      <Route path="/safe-space/:slug" element={<SafeSpaceDetailPage />} />
-      <Route path="/flatmates" element={<FlatmatesPage />} />
-      <Route path="/solidarity" element={<SolidarityPage />} />
-      <Route path="/visas" element={<VisasPage />} />
-      <Route path="/arriving" element={<ArrivingPage />} />
+      <Route path="/work/flatmates" element={<FlatmatesPage />} />
+      <Route path="/work/solidarity" element={<SolidarityPage />} />
 
-      {/* Safety & lifecycle flows */}
-      <Route path="/report" element={<ReportPage />} />
-      <Route path="/leave" element={<LeavePage />} />
-      <Route path="/block-mute" element={<BlockMutePage />} />
-      <Route path="/appeal-outcome" element={<AppealOutcomePage />} />
+      {/* Local */}
+      <Route path="/local/safe-spaces" element={<SafeSpacesPage />} />
+      <Route path="/local/safe-spaces/:slug" element={<SafeSpaceDetailPage />} />
+      <Route path="/local/visas" element={<VisasPage />} />
+      <Route path="/local/arriving" element={<ArrivingPage />} />
+      <Route path="/local/map" element={<MapPage />} />
+      <Route path="/local/directory" element={<DirectoryPage />} />
+      <Route path="/local/directory/:slug" element={<DirectorySpacePage />} />
+      <Route path="/safe-space/:slug" element={<ParamRedirect build={(p) => `/local/safe-spaces/${p.slug ?? ''}`} />} />
+      <Route path="/space/:slug" element={<ParamRedirect build={(p) => `/local/directory/${p.slug ?? ''}`} />} />
 
       {/* Account hub & settings sub-flows (all under /account) */}
       <Route path="/account" element={<Navigate to="/account/profile" replace />} />
@@ -674,35 +734,30 @@ export function AppRoutes() {
       <Route path="/account/membership" element={<MembershipPage />} />
       <Route path="/account/gift-membership" element={<GiftMembershipPage />} />
 
-      {/* Legacy account paths → /account/* (keeps old links & design hrefs working) */}
-      {ACCOUNT_REDIRECTS.map(([from, to]) => (
+      {/* Legacy paths → new homes (keeps old links & design hrefs working) */}
+      {LEGACY_REDIRECTS.map(([from, to]) => (
         <Route key={from} path={from} element={<Navigate to={to} replace />} />
       ))}
 
       {/* System, error & account-state screens */}
-      <Route path="/500" element={<ServerErrorPage />} />
-      <Route path="/maintenance" element={<MaintenancePage />} />
-      <Route path="/offline" element={<OfflinePage />} />
-      <Route path="/geo-restricted" element={<GeoRestrictedPage />} />
-      <Route path="/pwa-prompt" element={<PwaPromptPage />} />
-      <Route path="/account-banned" element={<AccountBannedPage />} />
-      <Route path="/account-locked" element={<AccountLockedPage />} />
-      <Route path="/account-suspended" element={<AccountSuspendedPage />} />
-      <Route path="/invite-expired" element={<InviteExpiredPage />} />
-      <Route path="/invite/:code" element={<InviteLandingPage />} />
-      <Route path="/pending-review" element={<PendingReviewPage />} />
-      <Route path="/verification-needed" element={<VerificationNeededPage />} />
-      <Route path="/status" element={<StatusPage />} />
+      <Route path="/system/500" element={<ServerErrorPage />} />
+      <Route path="/system/maintenance" element={<MaintenancePage />} />
+      <Route path="/system/offline" element={<OfflinePage />} />
+      <Route path="/system/geo-restricted" element={<GeoRestrictedPage />} />
+      <Route path="/system/pwa-prompt" element={<PwaPromptPage />} />
+      <Route path="/system/account-banned" element={<AccountBannedPage />} />
+      <Route path="/system/account-locked" element={<AccountLockedPage />} />
+      <Route path="/system/account-suspended" element={<AccountSuspendedPage />} />
+      <Route path="/system/invite-expired" element={<InviteExpiredPage />} />
+      <Route path="/system/pending-review" element={<PendingReviewPage />} />
+      <Route path="/system/verification-needed" element={<VerificationNeededPage />} />
+      <Route path="/system/status" element={<StatusPage />} />
 
       {/* Newly built community / resource / support pages */}
-      <Route path="/library" element={<LibraryPage />} />
       <Route path="/coming-out" element={<ComingOutPage />} />
       <Route path="/parents" element={<Navigate to="/family" replace />} />
       <Route path="/gatherings" element={<GatheringsPage />} />
-      <Route path="/crisis-chat" element={<CrisisChatPage />} />
       <Route path="/vouch" element={<VouchPage />} />
-      <Route path="/donate" element={<DonatePage />} />
-      <Route path="/submit-story" element={<SubmitStoryPage />} />
 
       {/* Admin & moderation panel */}
       <Route path="/admin" element={<AdminDashboardPage />} />
@@ -714,8 +769,8 @@ export function AppRoutes() {
       <Route path="/mod/:slug" element={<ModPanelPage />} />
 
       {/* Legacy aliases → canonical pages */}
-      <Route path="/business-directory" element={<Navigate to="/directory" replace />} />
-      <Route path="/spaces-map" element={<Navigate to="/map" replace />} />
+      <Route path="/business-directory" element={<Navigate to="/local/directory" replace />} />
+      <Route path="/spaces-map" element={<Navigate to="/local/map" replace />} />
 
       {/* Known-but-unbuilt features → styled "coming soon" placeholder */}
       {KNOWN_ROUTE_SLUGS.filter((slug) => !BUILT_SLUGS.has(slug)).map((slug) => (
@@ -723,6 +778,7 @@ export function AppRoutes() {
       ))}
       {/* Genuinely unknown paths → 404 */}
       <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+      </Routes>
+    </Suspense>
   )
 }

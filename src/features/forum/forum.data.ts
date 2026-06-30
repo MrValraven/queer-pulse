@@ -571,7 +571,7 @@ export const THREADS: Thread[] = [
       reply('catarina-vaz', {
         time: '5 days ago',
         isOP: true,
-        body: [`Both logged into the map — Registos Centrais green, the smaller office flagged with ${MEMBERS['sofia-castano'].first}\'s tip about bringing the statute. This is exactly the ground-truth I hoped for.`],
+        body: [`Both logged into the map — Registos Centrais green, the smaller office flagged with ${MEMBERS['sofia-castano'].first}'s tip about bringing the statute. This is exactly the ground-truth I hoped for.`],
         reactions: 7,
       }),
     ],

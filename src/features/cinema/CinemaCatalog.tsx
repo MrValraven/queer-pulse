@@ -109,7 +109,7 @@ export function MadeHereSection() {
           Made <em>here</em>
         </h2>
         <div className="sub">Shorts &amp; mid-lengths from QueerPulse members. Free to watch, paid to make.</div>
-        <Link to="/submit-story" className="all">
+        <Link to={routes.submitStory} className="all">
           Submit your film →
         </Link>
       </div>

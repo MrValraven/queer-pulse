@@ -2,6 +2,7 @@ import { useState, type RefObject } from 'react'
 import { Link } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
 import { Button } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { REMOVED_SPACES } from './safeSpaces'
 import { CRITERIA, HOW } from './safeSpacesPage.data'
 import styles from './SafeSpacesPage.module.css'
@@ -101,7 +102,7 @@ export function RemovedSection() {
         </div>
         <div className={styles.removedList}>
           {REMOVED_SPACES.map((r) => (
-            <Link key={r.slug} to={`/safe-space/${r.slug}`} className={styles.removedCard}>
+            <Link key={r.slug} to={`${routes.safeSpaces}/${r.slug}`} className={styles.removedCard}>
               <div className={styles.rcTop}>
                 <span className={styles.rcType}>
                   {r.typeLabel} · {r.hood}

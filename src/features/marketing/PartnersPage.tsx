@@ -69,7 +69,7 @@ export function PartnersPage() {
               ? Array.from({ length: 6 }).map((_, i) => <PartnerCardSkeleton key={i} />)
               : PARTNERS.map((p, i) => (
               <FadeIn key={p.name} delay={Math.min(i, 8) * 60} style={{ height: '100%' }}>
-              <Link to={`/partner/${p.slug}`} className={s.card} style={{ height: '100%' }}>
+              <Link to={`${routes.partner}/${p.slug}`} className={s.card} style={{ height: '100%' }}>
                 <div className={s.top}>
                   <span className={s.av} style={{ background: p.bg, color: p.color }}>
                     {p.av}

@@ -152,9 +152,8 @@ export function TestingTab() {
               placeholder="Clinic name, location, and why you'd recommend it…"
             />
             <div style={{ marginTop: 12 }}>
-              <button
-                type="button"
-                className={styles.primaryBtn}
+              <Button
+                variant="primary"
                 disabled={nomination.trim().length < 5}
                 onClick={() => {
                   setNomination('')
@@ -162,7 +161,7 @@ export function TestingTab() {
                 }}
               >
                 Submit nomination
-              </button>
+              </Button>
             </div>
           </>
         )}
@@ -342,9 +341,8 @@ export function GuidesTab() {
             />
             <div className={styles.anonFoot}>
               <span className={styles.anonNote}>Completely anonymous. No account required.</span>
-              <button
-                type="button"
-                className={styles.primaryBtn}
+              <Button
+                variant="primary"
                 disabled={question.trim().length < 5}
                 onClick={() => {
                   setQuestion('')
@@ -352,7 +350,7 @@ export function GuidesTab() {
                 }}
               >
                 Submit question
-              </button>
+              </Button>
             </div>
           </>
         )}

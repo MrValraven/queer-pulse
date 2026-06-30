@@ -102,7 +102,7 @@ export function DirectoryPage() {
             {loading && Array.from({ length: 6 }).map((_, i) => <DirectoryCardSkeleton key={i} />)}
             {!loading && visible.length === 0 && <div className={s.empty}>No places match — try a broader filter.</div>}
             {!loading && visible.map((b, i) => (
-              <FadeIn key={b.name} as={Link} delay={Math.min(i, 8) * 60} to={`/space/${b.slug}`} className={s.card}>
+              <FadeIn key={b.name} as={Link} delay={Math.min(i, 8) * 60} to={`${routes.directory}/${b.slug}`} className={s.card}>
                 <div className={s.top}>
                   <span className={s.av} style={{ background: tintBg[b.tint], color: tintFg[b.tint] }}>
                     {b.av}

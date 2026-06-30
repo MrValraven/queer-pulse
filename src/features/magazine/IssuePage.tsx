@@ -137,7 +137,7 @@ export function IssuePage() {
                   <div className={styles.sectionH}>{section.heading}</div>
                   <div className={styles.entries}>
                     {section.entries.map((entry, i) => (
-                      <FadeIn as={Link} key={entry.page} to={`/article?id=${entry.articleId}`} className={styles.entry} delay={Math.min(i, 8) * 60}>
+                      <FadeIn as={Link} key={entry.page} to={`${routes.article}?id=${entry.articleId}`} className={styles.entry} delay={Math.min(i, 8) * 60}>
                         <div>
                           <div className={styles.entryKicker}>{entry.kicker}</div>
                           <div className={styles.entryTitle}>{entry.title}</div>

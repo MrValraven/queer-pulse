@@ -174,23 +174,6 @@
   gap: 16px;
   flex-wrap: wrap;
 }
-.saveBtn {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 700;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 13px 28px;
-  cursor: pointer;
-  transition: all 0.2s var(--ease);
-  box-shadow: 0 6px 18px -8px rgba(var(--accent-rgb), 0.7);
-}
-.saveBtn:hover {
-  background: var(--accent-ink);
-  transform: translateY(-1px);
-}
 .saveNote {
   font-size: 13.5px;
   color: var(--ink-40);
@@ -213,20 +196,4 @@
   line-height: 1.6;
   margin-bottom: 14px;
   max-width: 50ch;
-}
-.unsubBtn {
-  font-family: var(--sans);
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--ink-60);
-  background: transparent;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
-  border-radius: 10px;
-  padding: 9px 18px;
-  cursor: pointer;
-  transition: all 0.2s var(--ease);
-}
-.unsubBtn:hover {
-  border-color: rgba(232, 119, 90, 0.5);
-  color: var(--accent-ink);
 }

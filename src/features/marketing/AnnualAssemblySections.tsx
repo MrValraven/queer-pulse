@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { AGENDA, RESOLUTIONS, MORE_RESOLUTIONS, HISTORY, type AssemblyVote, type Resolution } from './annualAssembly.data'
 import { LiveStreamModal } from './LiveStreamModal'
@@ -114,7 +115,7 @@ export function PastAssembliesSection() {
         <div className={styles.historyRow} key={h.y}>
           <div className={styles.histY}>202<em>{h.y}</em></div>
           <div className={styles.histInfo}><b>{h.title}</b><span>{h.sub}</span></div>
-          <Link className={styles.histLink} to={`/annual-assembly/minutes/202${h.y}`}>Minutes →</Link>
+          <Link className={styles.histLink} to={`${routes.annualAssembly}/minutes/202${h.y}`}>Minutes →</Link>
         </div>
       ))}
     </section>

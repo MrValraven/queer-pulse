@@ -50,7 +50,7 @@ export function AssemblyMinutesPage() {
             .map((y) => (
               <Link
                 key={y}
-                to={`/annual-assembly/minutes/${y}`}
+                to={`${routes.annualAssembly}/minutes/${y}`}
                 className={y === minutes.year ? styles.yearActive : styles.year}
               >
                 {y}

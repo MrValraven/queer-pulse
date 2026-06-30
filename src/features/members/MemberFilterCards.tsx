@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Avatar, SkeletonAvatar, SkeletonLine } from '../../shared/components/ui'
 import { fullName, memberProfiles } from './data/memberProfiles'
@@ -71,31 +71,42 @@ export function FiltersSidebar({
   const [query, setQuery] = useState('')
   const q = query.trim().toLowerCase()
 
-  const disciplineOptions = q
-    ? DISCIPLINES.filter(
-        (d) =>
-          d.label.toLowerCase().includes(q) ||
-          (PROFESSIONS_BY_FIELD[d.label] ?? []).some((p) => p.toLowerCase().includes(q)),
-      )
-    : DISCIPLINES
-  const professionPool = q
-    ? ALL_PROFESSIONS.filter((p) => p.toLowerCase().includes(q))
-    : professionsForFields(filters.disciplines)
+  const disciplineOptions = useMemo(
+    () =>
+      q
+        ? DISCIPLINES.filter(
+            (d) =>
+              d.label.toLowerCase().includes(q) ||
+              (PROFESSIONS_BY_FIELD[d.label] ?? []).some((p) => p.toLowerCase().includes(q)),
+          )
+        : DISCIPLINES,
+    [q],
+  )
+  const professionPool = useMemo(
+    () =>
+      q
+        ? ALL_PROFESSIONS.filter((p) => p.toLowerCase().includes(q))
+        : professionsForFields(filters.disciplines),
+    [q, filters.disciplines],
+  )
 
   // Toggling a profession on also selects its parent field, so the choice
   // survives `reconcileProfessions` and the field chip lights up to match.
-  const toggleProfession = (value: string) => {
-    const has = filters.professions.includes(value)
-    const professions = has
-      ? filters.professions.filter((p) => p !== value)
-      : [...filters.professions, value]
-    const field = FIELD_BY_PROFESSION[value]
-    const disciplines =
-      !has && field && !filters.disciplines.includes(field)
-        ? [...filters.disciplines, field]
-        : filters.disciplines
-    onChange({ ...filters, professions, disciplines })
-  }
+  const toggleProfession = useCallback(
+    (value: string) => {
+      const has = filters.professions.includes(value)
+      const professions = has
+        ? filters.professions.filter((p) => p !== value)
+        : [...filters.professions, value]
+      const field = FIELD_BY_PROFESSION[value]
+      const disciplines =
+        !has && field && !filters.disciplines.includes(field)
+          ? [...filters.disciplines, field]
+          : filters.disciplines
+      onChange({ ...filters, professions, disciplines })
+    },
+    [filters, onChange],
+  )
 
   return (
     <aside className={styles.filters}>

@@ -61,14 +61,14 @@ export function CinemaShell({ children }: { children: ReactNode }) {
               </div>
               <div className={styles.footCol}>
                 <h4>Filmmakers</h4>
-                <Link to="/submit-story">Submit</Link>
+                <Link to={routes.submitStory}>Submit</Link>
                 <Link to={routes.cinemaMembership}>Revenue split</Link>
-                <Link to="/governance">Rights</Link>
+                <Link to={routes.governance}>Rights</Link>
               </div>
               <div className={styles.footCol}>
                 <h4>About</h4>
-                <Link to="/governance">Public ledger</Link>
-                <Link to="/accessibility">Access</Link>
+                <Link to={routes.governance}>Public ledger</Link>
+                <Link to={routes.accessibility}>Access</Link>
                 <Link to="/">QueerPulse</Link>
               </div>
             </div>

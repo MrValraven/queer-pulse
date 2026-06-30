@@ -13,21 +13,21 @@ export const GATHERING_DESCRIPTION =
 export const ATTENDEE_COUNT = 14;
 
 export const GOING_ATTENDEES = [
-  { initials: "SR", bg: "rgba(74,140,111,.12)", color: "var(--jade)", name: "Sofia Rodrigues", meta: "she/her · RSVP'd 2 June" },
-  { initials: "AK", bg: "rgba(232,119,90,.12)", color: "var(--accent-ink)", name: "Anika Kovač", meta: "she/they · RSVP'd 1 June" },
-  { initials: "JP", bg: "rgba(45,27,61,.1)", color: "var(--plum)", name: "Jordan Park", meta: "they/them · RSVP'd 31 May" },
-  { initials: "TM", bg: "rgba(74,140,111,.08)", color: "var(--jade)", name: "Tomás Mendes", meta: "he/him · RSVP'd 30 May" },
+  { id: "going-sr", initials: "SR", bg: "rgba(74,140,111,.12)", color: "var(--jade)", name: "Sofia Rodrigues", meta: "she/her · RSVP'd 2 June" },
+  { id: "going-ak", initials: "AK", bg: "rgba(232,119,90,.12)", color: "var(--accent-ink)", name: "Anika Kovač", meta: "she/they · RSVP'd 1 June" },
+  { id: "going-jp", initials: "JP", bg: "rgba(45,27,61,.1)", color: "var(--plum)", name: "Jordan Park", meta: "they/them · RSVP'd 31 May" },
+  { id: "going-tm", initials: "TM", bg: "rgba(74,140,111,.08)", color: "var(--jade)", name: "Tomás Mendes", meta: "he/him · RSVP'd 30 May" },
 ];
 
 export const WAITLIST_ATTENDEES = [
-  { initials: "NC", bg: "rgba(45,27,61,.07)", color: "var(--plum)", name: "Nadia Castillo", meta: "she/her · On waitlist since 3 June · #1" },
-  { initials: "KL", bg: "rgba(74,140,111,.08)", color: "var(--jade)", name: "Kai Larsson", meta: "they/them · On waitlist since 4 June · #2" },
-  { initials: "MF", bg: "rgba(232,119,90,.08)", color: "var(--accent-ink)", name: "Maria Ferreira", meta: "she/her · On waitlist since 5 June · #3" },
+  { id: "wait-nc", initials: "NC", bg: "rgba(45,27,61,.07)", color: "var(--plum)", name: "Nadia Castillo", meta: "she/her · On waitlist since 3 June · #1" },
+  { id: "wait-kl", initials: "KL", bg: "rgba(74,140,111,.08)", color: "var(--jade)", name: "Kai Larsson", meta: "they/them · On waitlist since 4 June · #2" },
+  { id: "wait-mf", initials: "MF", bg: "rgba(232,119,90,.08)", color: "var(--accent-ink)", name: "Maria Ferreira", meta: "she/her · On waitlist since 5 June · #3" },
 ];
 
 export const PREVIOUS_MESSAGES = [
-  { subject: "Venue details confirmed", time: "3 days ago", preview: "We've confirmed the terrace at A Cevicheria. Entrance is on Rua Dom Pedro V. Look for the QueerPulse sign at the door…", opened: "11 / 14 opened" },
-  { subject: "What to bring", time: "1 day ago", preview: "Just yourselves — food and drinks are covered. We'll have a small quiet corner for anyone who needs a break from the crowd…", opened: "9 / 14 opened" },
+  { id: "msg-venue", subject: "Venue details confirmed", time: "3 days ago", preview: "We've confirmed the terrace at A Cevicheria. Entrance is on Rua Dom Pedro V. Look for the QueerPulse sign at the door…", opened: "11 / 14 opened" },
+  { id: "msg-bring", subject: "What to bring", time: "1 day ago", preview: "Just yourselves — food and drinks are covered. We'll have a small quiet corner for anyone who needs a break from the crowd…", opened: "9 / 14 opened" },
 ];
 
 export const GATHERING_SETTINGS = [

@@ -160,7 +160,7 @@ function StudioSideCol() {
           <span className={styles.k}>Per play</span>
           <span className={styles.v}>€<em>0.05</em></span>
         </div>
-        <Link to="/governance" className={styles.cta}>
+        <Link to={routes.governance} className={styles.cta}>
           Read the plan →
         </Link>
       </div>

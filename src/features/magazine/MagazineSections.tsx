@@ -106,7 +106,7 @@ export function MagazineSections() {
               quietly became yourself and one day looked around and noticed
               everyone already knew?
             </p>
-            <Link className={styles.feRead} to="/article?id=i-arrived">
+            <Link className={styles.feRead} to={`${routes.article}?id=i-arrived`}>
               Read the essay <span>→</span>
             </Link>
           </div>

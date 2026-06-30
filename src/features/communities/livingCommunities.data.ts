@@ -246,10 +246,10 @@ const HUB_EVENTS: CommunityEvent[] = [
 ]
 
 const HUB_RESOURCES: CommunityResource[] = [
-  { title: 'Vetted clinician list (June)', href: '/trans-healthcare', kind: 'doc', note: '47 names, re-checked every 90 days' },
-  { title: 'Hormone supply + alternatives guide', href: '/trans-healthcare', kind: 'guide', note: 'What to do during a shortage' },
-  { title: 'Legal name change — step by step', href: '/legal', kind: 'guide', note: 'Forms, costs, timelines' },
-  { title: 'Healthcare rights one-pager', href: '/trans-healthcare', kind: 'doc' },
+  { title: 'Vetted clinician list (June)', href: '/resources/trans-healthcare', kind: 'doc', note: '47 names, re-checked every 90 days' },
+  { title: 'Hormone supply + alternatives guide', href: '/resources/trans-healthcare', kind: 'guide', note: 'What to do during a shortage' },
+  { title: 'Legal name change — step by step', href: '/resources/legal', kind: 'guide', note: 'Forms, costs, timelines' },
+  { title: 'Healthcare rights one-pager', href: '/resources/trans-healthcare', kind: 'doc' },
   { title: 'ILGA Portugal legal helpline', href: 'https://ilga-portugal.pt', kind: 'link' },
   { title: 'Peer support — how it works', href: '/resources/peer-support', kind: 'link' },
 ]
@@ -373,7 +373,7 @@ const ARTS_EVENTS: CommunityEvent[] = [
 const ARTS_RESOURCES: CommunityResource[] = [
   { title: 'How our crits work', href: '/resources/art-crit-guide', kind: 'guide', note: 'Honest, kind, specific — in that order' },
   { title: 'Shared equipment + booking', href: '/resources/shared-equipment', kind: 'doc', note: 'Riso, kiln, projector' },
-  { title: 'Open-call & grant board', href: '/micro-grants', kind: 'link' },
+  { title: 'Open-call & grant board', href: '/resources/micro-grants', kind: 'link' },
   { title: 'Group show photo archive', href: '/resources/group-show-archive', kind: 'link' },
 ]
 
@@ -572,10 +572,10 @@ const AID_EVENTS: CommunityEvent[] = [
 ]
 
 const AID_RESOURCES: CommunityResource[] = [
-  { title: 'Vetted clinician list (June)', href: '/trans-healthcare', kind: 'doc', note: '49 names, peer-maintained, re-checked every 90 days' },
-  { title: 'Hormone supply + pharmacy map', href: '/trans-healthcare', kind: 'guide', note: 'What to do when stock is short' },
-  { title: 'Legal name change — step by step', href: '/legal', kind: 'guide', note: 'Forms, costs, and timelines in Portugal' },
-  { title: 'Spare-room board', href: '/flatmates', kind: 'link', note: 'Safe housing, queer-friendly' },
+  { title: 'Vetted clinician list (June)', href: '/resources/trans-healthcare', kind: 'doc', note: '49 names, peer-maintained, re-checked every 90 days' },
+  { title: 'Hormone supply + pharmacy map', href: '/resources/trans-healthcare', kind: 'guide', note: 'What to do when stock is short' },
+  { title: 'Legal name change — step by step', href: '/resources/legal', kind: 'guide', note: 'Forms, costs, and timelines in Portugal' },
+  { title: 'Spare-room board', href: '/work/flatmates', kind: 'link', note: 'Safe housing, queer-friendly' },
   { title: 'ILGA Portugal helpline', href: 'https://ilga-portugal.pt', kind: 'link' },
 ]
 
@@ -671,7 +671,7 @@ const PARENTS_EVENTS: CommunityEvent[] = [
 const PARENTS_RESOURCES: CommunityResource[] = [
   { title: 'Queer-friendly paediatricians in Lisbon', href: '/resources/queer-paediatricians', kind: 'doc', note: 'Peer-verified, updated regularly' },
   { title: 'School intake forms — navigating the fields', href: '/resources/school-forms-guide', kind: 'guide', note: 'What to ask, what to expect' },
-  { title: 'Adoption and co-parenting legal guide', href: '/legal', kind: 'link' },
+  { title: 'Adoption and co-parenting legal guide', href: '/resources/legal', kind: 'link' },
   { title: 'Family-friendly venues — step-free and good for kids', href: '/resources/accessible-lisbon', kind: 'link' },
 ]
 
@@ -749,7 +749,7 @@ const COMINGOUT_EVENTS: CommunityEvent[] = [
 const COMINGOUT_RESOURCES: CommunityResource[] = [
   { title: 'How this space works — privacy and visibility', href: '/resources/community-privacy', kind: 'guide', note: 'What is and isn\'t visible from your profile' },
   { title: 'Coming out at work — a guide', href: '/resources/coming-out-at-work', kind: 'guide' },
-  { title: 'Mental health support in Portugal', href: '/mental-health', kind: 'link' },
+  { title: 'Mental health support in Portugal', href: '/resources/mental-health', kind: 'link' },
   { title: 'ILGA Portugal helpline', href: 'https://ilga-portugal.pt', kind: 'link' },
 ]
 
@@ -949,10 +949,10 @@ const YOUTH_EVENTS: CommunityEvent[] = [
 ]
 
 const YOUTH_RESOURCES: CommunityResource[] = [
-  { title: 'Queer-friendly employers in Lisbon', href: '/employer-reviews', kind: 'doc', note: 'Peer-reviewed, updated monthly' },
+  { title: 'Queer-friendly employers in Lisbon', href: '/work/employer-reviews', kind: 'doc', note: 'Peer-reviewed, updated monthly' },
   { title: 'Freelancing as a creative — the basics', href: '/economy', kind: 'guide', note: 'Invoicing, rates, contracts' },
-  { title: 'Flatmate board', href: '/flatmates', kind: 'link', note: 'Queer-friendly shares, updated weekly' },
-  { title: 'First-gen professional toolkit', href: '/mentorship', kind: 'guide' },
+  { title: 'Flatmate board', href: '/work/flatmates', kind: 'link', note: 'Queer-friendly shares, updated weekly' },
+  { title: 'First-gen professional toolkit', href: '/work/mentorship', kind: 'guide' },
 ]
 
 const YOUTH_RULES = [
@@ -1045,7 +1045,7 @@ const POC_EVENTS: CommunityEvent[] = [
 const POC_RESOURCES: CommunityResource[] = [
   { title: 'Ingredients from home — Lisbon map', href: '/resources/ingredients-map', kind: 'doc', note: '34 spots from 14 countries, crowd-sourced' },
   { title: 'Queer POC organisations in Portugal', href: '/resources/qtipoc-organisations', kind: 'link' },
-  { title: 'Anti-discrimination rights in Portugal', href: '/legal', kind: 'guide' },
+  { title: 'Anti-discrimination rights in Portugal', href: '/resources/legal', kind: 'guide' },
   { title: 'QTIPOC archive project', href: '/resources/qtipoc-archive', kind: 'link' },
 ]
 
@@ -1139,7 +1139,7 @@ const DISABLED_EVENTS: CommunityEvent[] = [
 const DISABLED_RESOURCES: CommunityResource[] = [
   { title: 'Step-free venues in Lisbon', href: '/resources/accessible-lisbon', kind: 'doc', note: 'Peer-verified only — please check before adding' },
   { title: 'Navigating Portuguese healthcare with a disability', href: '/resources/disability-healthcare', kind: 'guide' },
-  { title: 'Disability rights in Portugal — plain language', href: '/legal', kind: 'guide' },
+  { title: 'Disability rights in Portugal — plain language', href: '/resources/legal', kind: 'guide' },
   { title: 'Spoon theory — what it is and how we use it here', href: '/resources/spoon-theory', kind: 'link' },
 ]
 

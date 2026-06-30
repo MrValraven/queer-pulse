@@ -1,6 +1,7 @@
 import { useState, type CSSProperties } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
+import { routes } from '../../app/routeMap'
 import { Avatar, Button, FadeIn, ImageSlot, SkeletonLine, Tag } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { MagazineMasthead } from './MagazineMasthead'
@@ -13,7 +14,6 @@ import {
 import { ArticleToolbar, type TextSize } from './ArticleToolbar'
 
 import styles from './ArticlePage.module.css'
-import { routes } from '../../app/routeMap'
 
 const SIZE_PX: Record<TextSize, number> = { sm: 17, md: 19, lg: 22 }
 
@@ -126,7 +126,7 @@ export function ArticlePage() {
                     <RelatedCardSkeleton key={rel.id} className={styles.relCard} />
                   ))
                 : related.map((rel, i) => (
-                    <FadeIn as={Link} key={rel.id} to={`/article?id=${rel.id}`} className={styles.relCard} delay={Math.min(i, 8) * 60}>
+                    <FadeIn as={Link} key={rel.id} to={`${routes.article}?id=${rel.id}`} className={styles.relCard} delay={Math.min(i, 8) * 60}>
                       <div className={styles.relKicker}>{rel.section}</div>
                       <div className={styles.relTitle}>{rel.title}</div>
                       <div className={styles.relMeta}>

@@ -1,10 +1,13 @@
 import type { MapSpace, MapSpaceType } from './types'
 
+// Mirror of the design tokens, kept as hex literals because these values feed SVG
+// `fill` attributes (where CSS `var(--…)` does not resolve) as well as inline-style
+// backgrounds. Keep in sync with src/styles/tokens/colors.css.
 export const MAP_COLORS: Record<MapSpaceType, string> = {
-  venue: '#E8775A',
-  studio: '#F0EBE3',
-  community: '#4A8C6F',
-  org: '#9B6FD4',
+  venue: '#E8775A', // --accent
+  studio: '#F0EBE3', // cream-tinted pin (decorative; no exact token)
+  community: '#4A8C6F', // --jade
+  org: '#7A52B8', // --violet (was #9B6FD4, an off-token purple)
 }
 
 export const mapFilters: { value: 'all' | MapSpaceType; label: string }[] = [

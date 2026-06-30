@@ -123,7 +123,7 @@ export function VolunteerPage() {
                 </div>
                 <div className={s.cardFoot}>
                   <span className={s.time}>{o.time}</span>
-                  <Link className={s.express} to={`/volunteer-opportunity/${o.slug}`}>
+                  <Link className={s.express} to={`${routes.volunteer}/opportunity/${o.slug}`}>
                     Express interest →
                   </Link>
                 </div>

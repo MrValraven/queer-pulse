@@ -130,7 +130,7 @@ export function AuthorPage() {
           <div>
             <div className={styles.featKicker}>Cover story · Issue 09 · Health</div>
             <h3 className={styles.featTitle}>
-              <Link to="/article?id=city-changed">
+              <Link to={`${routes.article}?id=city-changed`}>
                 Five things I learned <em>navigating Lisbon's trans health system.</em>
               </Link>
             </h3>
@@ -153,7 +153,7 @@ export function AuthorPage() {
                 <ArtCardSkeleton key={i} />
               ))
             : ARTICLES.map((article, index) => (
-                <FadeIn as={Link} key={index} to={`/article?id=${article.id}`} className={styles.art} delay={Math.min(index, 8) * 60}>
+                <FadeIn as={Link} key={index} to={`${routes.article}?id=${article.id}`} className={styles.art} delay={Math.min(index, 8) * 60}>
                   <div className={styles.artKicker}>{article.kicker}</div>
                   <div className={styles.artTitle}>{article.title}</div>
                   <div className={styles.artDek}>{article.dek}</div>

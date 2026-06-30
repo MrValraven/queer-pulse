@@ -159,7 +159,7 @@ export function SplitsTable({
             <tr key={sp.nm}>
               <td>
                 <div className={s.splitWho}>
-                  <span className="av" style={sp.tone === 'jade' ? { background: 'rgba(74,140,111,.18)', color: 'var(--jade-light)' } : undefined}>
+                  <span className="av" style={sp.tone === 'jade' ? { background: 'rgba(var(--jade-rgb),.18)', color: 'var(--jade-light)' } : undefined}>
                     {sp.av}
                   </span>
                   <span className="nm">
@@ -181,9 +181,9 @@ export function SplitsTable({
         <span className="total" style={{ fontSize: 12.5, color: 'var(--text40)', fontStyle: 'italic', fontFamily: 'var(--serif)' }}>
           Default split sums to <em style={{ color: 'var(--jade-light)', fontWeight: 600 }}>100%</em> · per-track adjustments override
         </span>
-        <button className={s.addBtn} onClick={() => setAdding((v) => !v)}>
+        <Button variant="ghost" onClick={() => setAdding((v) => !v)}>
           <FiPlus /> Add collaborator
-        </button>
+        </Button>
       </div>
       {adding && (
         <div className={s.collabForm}>

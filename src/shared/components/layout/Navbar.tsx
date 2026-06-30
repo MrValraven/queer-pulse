@@ -22,7 +22,7 @@ function Brand({ to }: { to: string }) {
 
 function NotificationsBell({ unreadCount }: { unreadCount: number }) {
   return (
-    <Link to="/notifications" className={styles.bell} aria-label="Notifications">
+    <Link to={routes.notifications} className={styles.bell} aria-label="Notifications">
       <svg width={20} height={20} viewBox="0 0 20 20" fill="none" aria-hidden>
         <path
           d="M10 2a6 6 0 0 1 6 6v3l1.5 2.5H2.5L4 11V8a6 6 0 0 1 6-6ZM8 16.5a2 2 0 0 0 4 0"
@@ -147,7 +147,7 @@ export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
               </>
             ) : (
               <>
-                <Link to="/sign-in" className={styles.signIn}>
+                <Link to={routes.signIn} className={styles.signIn}>
                   Sign in
                 </Link>
                 <Button to={routes.requestInvite}>Request an invite</Button>
@@ -205,7 +205,7 @@ export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
                   </Link>
                 ))}
                 <Link
-                  to="/"
+                  to={routes.homepage}
                   className={styles.drawerSignIn}
                   onClick={() => {
                     signOut();
@@ -218,7 +218,7 @@ export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
             ) : (
               <>
                 <Link
-                  to="/sign-in"
+                  to={routes.signIn}
                   className={styles.drawerSignIn}
                   onClick={closeDrawer}
                 >

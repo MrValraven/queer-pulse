@@ -168,7 +168,7 @@ export function FilmHero() {
               <div>
                 When you rent at €3, <strong>€2.40 goes to Maria.</strong> €0.36 covers payment
                 processing. €0.24 covers hosting &amp; captions. The split is the same for every
-                filmmaker. <Link to="/governance">Read the deed →</Link>
+                filmmaker. <Link to={routes.governance}>Read the deed →</Link>
               </div>
             </div>
           </div>

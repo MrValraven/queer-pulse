@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { FiAward, FiHome, FiStar } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { PageShell } from '../../shared/components/layout'
+import { routes } from '../../app/routeMap'
 import { Avatar, EmptyState, FadeIn, ImageSlot, Reveal, SectionHead, SkeletonLine } from '../../shared/components/ui'
 import { useSimulatedLoad } from '../../shared/hooks'
 import { HOUSING_LISTINGS as LISTINGS } from './housingListings'
@@ -102,7 +103,7 @@ export function HousingPage() {
             ) : (
               visible.map((listing, i) => (
                   <FadeIn key={listing.title} delay={Math.min(i, 8) * 60}>
-                    <Link to={`/housing/${listing.slug}`} className={styles.card}>
+                    <Link to={`${routes.housing}/${listing.slug}`} className={styles.card}>
                       <ImageSlot tint={listing.tint} src={listing.image} height={150} radius={0} placeholder={`Photo · ${listing.hood}`} />
                       <div className={styles.cardBody}>
                         <span className={styles.type} style={{ background: listing.typeColor, color: listing.typeText }}>
@@ -143,7 +144,7 @@ export function HousingPage() {
           </Reveal>
           <div className={styles.llGrid}>
             {LANDLORDS.map((ll, i) => (
-              <Reveal as={Link} key={ll.name} to={`/landlord/${ll.slug}`} className={styles.llCard} delay={i * 55}>
+              <Reveal as={Link} key={ll.name} to={`/work/landlord/${ll.slug}`} className={styles.llCard} delay={i * 55}>
                 <span className={styles.llAvatar}>
                   <Avatar initials={ll.initials} tint={ll.tint} src={ll.photo} size={52} />
                   <span className={styles.llBadge} title="Community-endorsed"><FiAward /></span>

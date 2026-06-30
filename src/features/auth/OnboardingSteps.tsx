@@ -155,7 +155,7 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
       <div className={styles.nav}>
         <Button onClick={onNext}>Continue</Button>
         <SkipLink onSkip={onNext} />
-        <button className={styles.back} onClick={onBack}>← Back</button>
+        <button type="button" className={styles.back} onClick={onBack}>← Back</button>
       </div>
     </>
   );
@@ -188,7 +188,7 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
       </label>
       <div className={styles.nav}>
         <Button onClick={onNext} disabled={!agreed}>I agree, continue</Button>
-        <button className={styles.back} onClick={onBack}>← Back</button>
+        <button type="button" className={styles.back} onClick={onBack}>← Back</button>
       </div>
     </>
   );
@@ -219,6 +219,7 @@ export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
         {INTENTS.map((intent) => (
           <button
             key={intent}
+            type="button"
             className={[styles.chip, selectedIntents.has(intent) && styles.chipSelected].filter(Boolean).join(' ')}
             onClick={() => toggleIntent(intent)}
           >
@@ -228,7 +229,7 @@ export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <Button onClick={onNext} disabled={!hasSelection}>Continue</Button>
-        <button className={styles.back} onClick={onBack}>← Back</button>
+        <button type="button" className={styles.back} onClick={onBack}>← Back</button>
       </div>
     </>
   );
@@ -265,6 +266,7 @@ export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
               <div className={styles.ccCount}>{community.count}</div>
               <div className={styles.ccDesc}>{community.desc}</div>
               <button
+                type="button"
                 className={[styles.ccJoin, isJoined && styles.ccJoinActive].filter(Boolean).join(' ')}
                 onClick={() => toggleJoin(community.id)}
               >
@@ -277,7 +279,7 @@ export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
       <div className={styles.nav}>
         <Button onClick={onNext}>Continue</Button>
         <SkipLink onSkip={onNext} label="Skip for now — explore and join later" />
-        <button className={styles.back} onClick={onBack}>← Back</button>
+        <button type="button" className={styles.back} onClick={onBack}>← Back</button>
       </div>
     </>
   );

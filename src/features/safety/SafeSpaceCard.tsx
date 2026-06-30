@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { FiStar, FiFlag } from 'react-icons/fi'
 import { FadeIn } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import type { VerifiedSpace } from './safeSpaces'
 import { TYPE_CLASS } from './safeSpacesPage.data'
 import styles from './SafeSpacesPage.module.css'
@@ -12,7 +13,7 @@ export function SafeSpaceCard({ s, onFlag, delay = 0 }: { s: VerifiedSpace; onFl
     onFlag()
   }
   return (
-    <FadeIn as={Link} to={`/safe-space/${s.slug}`} className={styles.card} delay={delay}>
+    <FadeIn as={Link} to={`${routes.safeSpaces}/${s.slug}`} className={styles.card} delay={delay}>
       <div className={styles.cardHead}>
         <div className={`${styles.venueType} ${styles[TYPE_CLASS[s.cat]]}`}>{s.typeLabel}</div>
         <div className={styles.verifiedBadge}>

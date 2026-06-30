@@ -67,7 +67,7 @@ export function LedgerSection() {
         </p>
         <div className={styles.ledgerActions}>
           <Button to={routes.cinemaMembership}>Become a sustainer · €7/mo</Button>
-          <Button variant="ghost-dark" to="/governance">
+          <Button variant="ghost-dark" to={routes.governance}>
             Read the co-op deed
           </Button>
         </div>

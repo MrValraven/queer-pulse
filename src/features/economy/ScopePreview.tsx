@@ -2,6 +2,7 @@ import { FiCheck, FiX } from 'react-icons/fi'
 import { DocPreview } from './tools/DocPreview'
 import type { Issuer } from './tools/useIssuer'
 import { euro } from './economy.data'
+import { formatDate } from '../../shared/lib/date'
 import { TAX_DISCLAIMER } from './tax.constants'
 import type { ScopeState } from './scope.data'
 import styles from './ScopeGeneratorPage.module.css'
@@ -11,14 +12,6 @@ const SCOPE_DISCLAIMER =
   'This document is a working scope, not a binding contract. Anything not listed under ' +
   "“What's included” is out of scope and quoted separately. " +
   TAX_DISCLAIMER
-
-/** Format an ISO date (yyyy-mm-dd) as a readable date; empty stays empty. */
-function formatDate(iso: string): string {
-  if (!iso) return ''
-  const d = new Date(`${iso}T00:00:00`)
-  if (Number.isNaN(d.getTime())) return iso
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-}
 
 interface ScopePreviewProps {
   scope: ScopeState

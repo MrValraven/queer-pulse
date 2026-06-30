@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fi'
 import { useToast } from '../../shared/components/feedback/useToast'
 import { useSaved } from '../../app/providers/SavedProvider'
+import { routes } from '../../app/routeMap'
 import styles from './ArticleToolbar.module.css'
 
 export type TextSize = 'sm' | 'md' | 'lg'
@@ -27,8 +28,8 @@ interface Props {
 
 /** Derive a stable slug + href from the current URL when props aren't passed. */
 function deriveIdentity(articleId?: string) {
-  if (articleId) return { slug: articleId, href: `/article?id=${articleId}` }
-  if (typeof window === 'undefined') return { slug: 'current', href: '/article' }
+  if (articleId) return { slug: articleId, href: `${routes.article}?id=${articleId}` }
+  if (typeof window === 'undefined') return { slug: 'current', href: routes.article }
   const params = new URLSearchParams(window.location.search)
   const slug = params.get('id') ?? 'current'
   return { slug, href: `${window.location.pathname}${window.location.search}` }

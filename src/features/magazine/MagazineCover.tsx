@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ImageSlot } from "../../shared/components/ui";
 import { memberName } from "../members/data/members";
+import { routes } from "../../app/routeMap";
 import styles from "./MagazinePage.module.css";
 
 const COVER_IMG =
@@ -38,7 +39,7 @@ export function MagazineCover() {
             has tripled. The bars have closed and reopened and closed again.
             What survived the decade, and what did we lose in the process?
           </p>
-          <Link className={styles.csRead} to="/article?id=city-changed">
+          <Link className={styles.csRead} to={`${routes.article}?id=city-changed`}>
             Read the full feature <span>→</span>
           </Link>
         </div>

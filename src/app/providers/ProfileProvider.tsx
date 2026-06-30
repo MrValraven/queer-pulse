@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -100,22 +101,21 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     savedTimer.current = setTimeout(() => setJustSaved(false), 5000)
   }, [draft])
 
-  return (
-    <ProfileContext.Provider
-      value={{
-        profile,
-        isEditing,
-        draft,
-        justSaved,
-        startEditing,
-        cancelEditing,
-        save,
-        updateDraft,
-      }}
-    >
-      {children}
-    </ProfileContext.Provider>
+  const value = useMemo<ProfileContextValue>(
+    () => ({
+      profile,
+      isEditing,
+      draft,
+      justSaved,
+      startEditing,
+      cancelEditing,
+      save,
+      updateDraft,
+    }),
+    [profile, isEditing, draft, justSaved, startEditing, cancelEditing, save, updateDraft],
   )
+
+  return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>
 }
 
 export function useProfile(): ProfileContextValue {

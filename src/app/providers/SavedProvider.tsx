@@ -2,11 +2,10 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
   type ReactNode,
 } from 'react'
+import { useLocalStorage } from '../../shared/hooks'
 
 export type SavedKind = 'article' | 'film' | 'job' | 'post' | 'event' | 'group'
 
@@ -34,16 +33,7 @@ interface SavedContextValue {
 const SavedContext = createContext<SavedContextValue | null>(null)
 const STORAGE_KEY = 'qp.saved.v1'
 
-function readInitial(): SavedItem[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw)
-    return Array.isArray(parsed) ? (parsed as SavedItem[]) : []
-  } catch {
-    return []
-  }
-}
+const isSavedItemArray = (v: unknown): v is SavedItem[] => Array.isArray(v)
 
 /**
  * App-wide store of "saved" things (articles, films, jobs, posts…). Persists to
@@ -51,15 +41,7 @@ function readInitial(): SavedItem[] {
  * data itself is still mock — this only tracks which mock items the user kept.
  */
 export function SavedProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<SavedItem[]>(readInitial)
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
-    } catch {
-      /* storage unavailable — keep in-memory only */
-    }
-  }, [items])
+  const [items, setItems] = useLocalStorage<SavedItem[]>(STORAGE_KEY, [], isSavedItemArray)
 
   const isSaved = useCallback(
     (id: string) => items.some((it) => it.id === id),
@@ -70,24 +52,26 @@ export function SavedProvider({ children }: { children: ReactNode }) {
     setItems((prev) =>
       prev.some((it) => it.id === item.id) ? prev : [item, ...prev],
     )
-  }, [])
+  }, [setItems])
 
   const unsave = useCallback((id: string) => {
     setItems((prev) => prev.filter((it) => it.id !== id))
-  }, [])
+  }, [setItems])
 
-  const toggleSave = useCallback((item: SavedItem) => {
-    let nowSaved = false
-    setItems((prev) => {
-      if (prev.some((it) => it.id === item.id)) {
-        nowSaved = false
-        return prev.filter((it) => it.id !== item.id)
-      }
-      nowSaved = true
-      return [item, ...prev]
-    })
-    return nowSaved
-  }, [])
+  const toggleSave = useCallback(
+    (item: SavedItem) => {
+      // Decide from the current snapshot so the returned boolean is correct
+      // synchronously — callers use it to pick "Saved"/"Removed" toast copy.
+      // (A state updater function isn't run synchronously, so a flag mutated
+      // inside one can't be returned reliably.)
+      const wasSaved = items.some((it) => it.id === item.id)
+      setItems((prev) =>
+        wasSaved ? prev.filter((it) => it.id !== item.id) : [item, ...prev],
+      )
+      return !wasSaved
+    },
+    [items, setItems],
+  )
 
   const byKind = useCallback(
     (kind: SavedKind) => items.filter((it) => it.kind === kind),

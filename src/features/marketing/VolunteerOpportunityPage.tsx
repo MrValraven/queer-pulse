@@ -200,7 +200,7 @@ export function VolunteerOpportunityPage() {
               <p className={styles.altText}>Other ways to help right now:</p>
               <div className={styles.altList}>
                 {alternatives.map((a) => (
-                  <Link key={a.slug} to={`/volunteer-opportunity/${a.slug}`}>
+                  <Link key={a.slug} to={`${routes.volunteer}/opportunity/${a.slug}`}>
                     → {a.role} · {a.org}
                   </Link>
                 ))}

@@ -33,7 +33,7 @@ export function WatchPage() {
           <span>
             Watching as <strong>Anon</strong>
           </span>
-          <Button variant="ghost-dark" to="/sign-in" style={{ padding: '8px 16px' }}>
+          <Button variant="ghost-dark" to={routes.signIn} style={{ padding: '8px 16px' }}>
             Sign in to save progress
           </Button>
         </div>

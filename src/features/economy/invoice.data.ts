@@ -47,7 +47,7 @@ export interface InvoiceClient {
 export const defaultInvoiceNumber = 'FR 2026/001'
 
 /** Today's date as an ISO yyyy-mm-dd string, for <input type="date"> defaults. */
-export const isoToday = (): string => new Date().toISOString().slice(0, 10)
+export { todayIso as isoToday } from '../../shared/lib/date'
 
 /** A date `days` ahead of today, ISO yyyy-mm-dd (default 30-day terms). */
 export const isoInDays = (days: number): string => {

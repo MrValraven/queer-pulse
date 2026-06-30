@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
+import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./NewsletterPage.module.css";
@@ -118,9 +119,9 @@ export function NewsletterPage() {
           ))}
 
           <div className={styles.save}>
-            <button type="button" className={styles.saveBtn} onClick={() => showToast("Preferences saved", "success")}>
+            <Button variant="primary" onClick={() => showToast("Preferences saved", "success")}>
               Save preferences
-            </button>
+            </Button>
             <div className={styles.saveNote}>
               Changes take effect immediately. You may still receive emails already
               queued.
@@ -133,9 +134,9 @@ export function NewsletterPage() {
               This turns off all optional emails at once, except safety alerts. You can
               re-enable individual categories above at any time.
             </div>
-            <button type="button" className={styles.unsubBtn} onClick={unsubAll}>
+            <Button variant="ghost" onClick={unsubAll}>
               Unsubscribe from all emails
-            </button>
+            </Button>
           </div>
         </div>
       </div>

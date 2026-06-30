@@ -50,7 +50,7 @@ export const perkGroups: PerkGroup[] = [
         footer: {
           type: 'link-auto',
           label: 'Send an invite',
-          to: '/invite',
+          to: '/auth/invite',
           autoLabel: 'Requires action',
         },
       },

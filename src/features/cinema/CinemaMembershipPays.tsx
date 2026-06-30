@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../shared/components/ui'
+import { routes } from '../../app/routeMap'
 import { TIERS, LEDGER } from './cinemaMembership.data'
 import styles from './CinemaMembershipPage.module.css'
 
@@ -134,7 +135,7 @@ export function CinemaMembershipLedger() {
           ))}
         </div>
         <div className={styles.ledgerFoot}>
-          <Link to="/governance">Full public accounts →</Link>
+          <Link to={routes.governance}>Full public accounts →</Link>
         </div>
       </div>
     </section>

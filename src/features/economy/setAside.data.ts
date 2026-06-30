@@ -39,4 +39,4 @@ export const YEAR_OPTIONS: { value: TaxYear; label: string }[] = [
 ]
 
 /** Today as yyyy-mm-dd, for seeding the "log an invoice" date input. */
-export const todayIso = (): string => new Date().toISOString().slice(0, 10)
+export { todayIso } from '../../shared/lib/date'

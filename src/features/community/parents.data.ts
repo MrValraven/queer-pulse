@@ -21,7 +21,7 @@ export const MEETUPS = [
 ]
 
 export const RESOURCES = [
-  { title: 'Legal rights as a queer family', to: '/legal' },
+  { title: 'Legal rights as a queer family', to: '/resources/legal' },
   { title: 'Chosen-family & legal recognition', to: '/family' },
-  { title: 'Healthcare & document guides', to: '/library' },
+  { title: 'Healthcare & document guides', to: '/resources/library' },
 ]

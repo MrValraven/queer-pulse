@@ -126,14 +126,14 @@ function AttendeesTab() {
       <div className={styles.attSectionLabel}>Going (14)</div>
       <div className={styles.attList}>
         {GOING_ATTENDEES.map((a) => (
-          <div className={styles.attRow} key={a.name}>
+          <div className={styles.attRow} key={a.id}>
             <div className={styles.attAv} style={{ background: a.bg, color: a.color }}>{a.initials}</div>
             <div className={styles.attInfo}>
               <div className={styles.attName}>{a.name}</div>
               <div className={styles.attMeta}>{a.meta}</div>
             </div>
             <div className={styles.attActions}>
-              <button type="button" className={`${styles.attActionBtn} ${styles.remove}`} onClick={() => showToast("Removed from guest list", "info")}>
+              <button type="button" aria-label={`Remove ${a.name} from guest list`} className={`${styles.attActionBtn} ${styles.remove}`} onClick={() => showToast("Removed from guest list", "info")}>
                 Remove
               </button>
             </div>
@@ -144,14 +144,14 @@ function AttendeesTab() {
       <div className={styles.attSectionLabel} style={{ marginTop: 20 }}>Waitlist (3)</div>
       <div className={styles.attList}>
         {WAITLIST_ATTENDEES.map((a) => (
-          <div className={styles.attRow} key={a.name}>
+          <div className={styles.attRow} key={a.id}>
             <div className={styles.attAv} style={{ background: a.bg, color: a.color }}>{a.initials}</div>
             <div className={styles.attInfo}>
               <div className={styles.attName}>{a.name}</div>
               <div className={styles.attMeta}>{a.meta}</div>
             </div>
             <div className={styles.attActions}>
-              <button type="button" className={`${styles.attActionBtn} ${styles.promote}`} onClick={() => showToast(`${a.name.split(" ")[0]} promoted to guest list`, "success")}>
+              <button type="button" aria-label={`Promote ${a.name} to guest list`} className={`${styles.attActionBtn} ${styles.promote}`} onClick={() => showToast(`${a.name.split(" ")[0]} promoted to guest list`, "success")}>
                 Promote
               </button>
             </div>
@@ -162,7 +162,7 @@ function AttendeesTab() {
   );
 }
 
-type SentMessage = { subject: string; time: string; preview: string; opened: string };
+type SentMessage = { id: string; subject: string; time: string; preview: string; opened: string };
 
 function MessagesTab() {
   const { showToast } = useToast();
@@ -176,7 +176,7 @@ function MessagesTab() {
     if (!text) return;
     const subject = text.length > 48 ? `${text.slice(0, 45)}…` : text;
     setSent((prev) => [
-      { subject, time: "just now", preview: text, opened: "0 / 14 opened" },
+      { id: `sent-${prev.length}-${text.length}-${text.slice(0, 8)}`, subject, time: "just now", preview: text, opened: "0 / 14 opened" },
       ...prev,
     ]);
     setMessage("");
@@ -211,7 +211,7 @@ function MessagesTab() {
           />
         )}
         {messages.map((m) => (
-          <div className={styles.msgCard} key={m.subject}>
+          <div className={styles.msgCard} key={m.id}>
             <div className={styles.msgHeader}>
               <div className={styles.msgSubject}>{m.subject}</div>
               <div className={styles.msgTime}>{m.time}</div>

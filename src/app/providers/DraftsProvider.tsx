@@ -2,12 +2,11 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
   type ReactNode,
 } from 'react'
 import { type Draft } from '../../features/members/drafts.data'
+import { useLocalStorage } from '../../shared/hooks'
 
 interface DraftsContextValue {
   /** User-created drafts, newest first. Merged ahead of the static mock list. */
@@ -20,17 +19,6 @@ interface DraftsContextValue {
 const DraftsContext = createContext<DraftsContextValue | null>(null)
 const STORAGE_KEY = 'qp.drafts.v1'
 
-function readInitial(): Draft[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw)
-    return Array.isArray(parsed) ? (parsed as Draft[]) : []
-  } catch {
-    return []
-  }
-}
-
 /**
  * App-wide store of drafts the user actually started elsewhere (e.g. saving an
  * invite as a draft) so they show up on the Drafts page. Persists to
@@ -38,25 +26,21 @@ function readInitial(): Draft[] {
  * drafts use JSX, but anything persisted here has to be serialisable.
  */
 export function DraftsProvider({ children }: { children: ReactNode }) {
-  const [drafts, setDrafts] = useState<Draft[]>(readInitial)
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(drafts))
-    } catch {
-      /* storage unavailable — keep in-memory only */
-    }
-  }, [drafts])
+  const [drafts, setDrafts] = useLocalStorage<Draft[]>(
+    STORAGE_KEY,
+    [],
+    (v): v is Draft[] => Array.isArray(v),
+  )
 
   const addDraft = useCallback((draft: Draft) => {
     setDrafts((prev) =>
       prev.some((d) => d.id === draft.id) ? prev : [draft, ...prev],
     )
-  }, [])
+  }, [setDrafts])
 
   const removeDraft = useCallback((id: string) => {
     setDrafts((prev) => prev.filter((d) => d.id !== id))
-  }, [])
+  }, [setDrafts])
 
   const value = useMemo(
     () => ({ drafts, addDraft, removeDraft }),

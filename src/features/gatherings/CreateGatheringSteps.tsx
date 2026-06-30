@@ -289,7 +289,7 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
       </p>
       {CONFIRM_CHECKS.map((text, i) => (
         <div
-          key={i}
+          key={text}
           className={styles.checkRow}
           onClick={() => form.toggleCheck(i)}
           role="checkbox"
@@ -309,7 +309,6 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
         </div>
       ))}
       <div
-        key={form.checkedCount}
         className={[styles.publishStatus, form.allChecked && styles.publishStatusReady].filter(Boolean).join(' ')}
       >
         {form.allChecked ? (
