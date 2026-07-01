@@ -9,6 +9,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
+import { MyPlacesSection } from "./MyPlacesSection";
 import { EditableProfileHero } from "./EditableProfileHero";
 import { ProfileEditBar } from "./ProfileEditBar";
 import styles from "./ProfilePage.module.css";
@@ -91,6 +92,8 @@ export function ProfilePage() {
         />
       )}
       <ProfileContent profile={resolvedProfile} isSelf={selfView} />
+
+      {isSelf && <MyPlacesSection memberSlug={selfSlug} />}
 
       {selfView && <ProfileEditBar />}
 

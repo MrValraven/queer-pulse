@@ -169,6 +169,7 @@ export const routes = {
   legal: "/resources/legal",
   library: "/resources/library",
   linkedAccounts: "/account/linked-accounts",
+  listBusiness: "/local/directory/list",
   magazine: "/magazine",
   magicLink: "/auth/magic-link",
   manageGathering: "/manage-gathering",

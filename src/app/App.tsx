@@ -18,6 +18,7 @@ import { SavedProvider } from "./providers/SavedProvider";
 import { DraftsProvider } from "./providers/DraftsProvider";
 import { SocialProvider } from "./providers/SocialProvider";
 import { CommunityMembershipProvider } from "./providers/CommunityMembershipProvider";
+import { DirectoryListingsProvider } from "./providers/DirectoryListingsProvider";
 import { CommandPalette } from "../features/members/CommandPalette";
 import { RoomLoader } from "../shared/components/feedback/RoomLoader";
 import { ScrollManager } from "./ScrollManager";
@@ -71,6 +72,7 @@ const DataProviders = composeProviders([
   DraftsProvider,
   SocialProvider,
   CommunityMembershipProvider,
+  DirectoryListingsProvider,
 ]);
 
 export default function App() {

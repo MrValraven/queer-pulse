@@ -800,6 +800,11 @@ const DirectorySpacePage = lazy(() =>
     default: m.DirectorySpacePage,
   })),
 );
+const ListBusinessPage = lazy(() =>
+  import("../features/marketing/listBusiness/ListBusinessPage").then((m) => ({
+    default: m.ListBusinessPage,
+  })),
+);
 const ResourceLibraryPage = lazy(() =>
   import("../features/marketing/ResourceLibraryPage").then((m) => ({
     default: m.ResourceLibraryPage,
@@ -1895,6 +1900,7 @@ export function AppRoutes() {
         <Route path={routes.arriving} element={<ArrivingPage />} />
         <Route path={routes.map} element={<MapPage />} />
         <Route path={routes.directory} element={<DirectoryPage />} />
+        <Route path={routes.listBusiness} element={<ListBusinessPage />} />
         <Route
           path={`${routes.directory}/:slug`}
           element={<DirectorySpacePage />}

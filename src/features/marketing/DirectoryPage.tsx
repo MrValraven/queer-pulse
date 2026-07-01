@@ -208,11 +208,8 @@ export function DirectoryPage() {
                 suggestion before it goes live.
               </p>
             </div>
-            <Button
-              size="lg"
-              href="mailto:hello@queerpulse.pt?subject=Directory suggestion"
-            >
-              Suggest a place
+            <Button size="lg" to={routes.listBusiness}>
+              List your business
             </Button>
           </Reveal>
         </div>
