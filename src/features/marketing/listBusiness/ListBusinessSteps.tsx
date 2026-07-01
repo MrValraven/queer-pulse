@@ -295,7 +295,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
 
       <FormField label="Roughly the price?" required>
         <div
-          className={styles.chipRow}
+          className={styles.priceRow}
           role="radiogroup"
           aria-label="Price band"
         >
@@ -313,7 +313,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
                 onClick={() => set({ price: p.id })}
               >
                 <span className={styles.priceSym}>{p.sym}</span>
-                {p.label}
+                <span className={styles.priceLbl}>{p.label}</span>
               </button>
             );
           })}

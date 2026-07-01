@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiAlertCircle, FiCheck } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { PILL_LABELS, TOTAL_STEPS } from "./listBusiness.data";
 import styles from "./ListBusinessPage.module.css";
@@ -112,16 +112,24 @@ export function PaneActions({
 }) {
   const blocked = missing.length > 0;
   return (
-    <div className={styles.paneActions}>
-      <Button variant="ghost" onClick={onBack}>
-        {backLabel}
-      </Button>
-      <div className={styles.rightSide}>
-        {blocked && (
-          <span className={styles.neededHint}>
-            Still needed: <b>{missing.join(", ")}</b>
+    <div className={styles.paneFooter}>
+      {blocked && (
+        <div className={styles.neededBar}>
+          <FiAlertCircle size={15} className={styles.neededIcon} aria-hidden />
+          <span className={styles.neededLabel}>A few things left</span>
+          <span className={styles.neededChips}>
+            {missing.map((m) => (
+              <span key={m} className={styles.neededChip}>
+                {m}
+              </span>
+            ))}
           </span>
-        )}
+        </div>
+      )}
+      <div className={styles.paneActions}>
+        <Button variant="ghost" onClick={onBack}>
+          {backLabel}
+        </Button>
         <Button
           variant="primary"
           onClick={onNext}

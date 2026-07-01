@@ -1,4 +1,7 @@
+import { useState } from "react";
+import { Button } from "../../../shared/components/ui";
 import { DAYS, initials, PRICES, type ListingDraft } from "./listBusiness.data";
+import { ListBusinessFullPreview } from "./ListBusinessFullPreview";
 import styles from "./ListBusinessPage.module.css";
 
 function hoursLine(draft: ListingDraft): string | null {
@@ -17,6 +20,7 @@ export function ListBusinessPreview({
   draft: ListingDraft;
   userName: string;
 }) {
+  const [showFull, setShowFull] = useState(false);
   const hasCard = draft.name.trim().length > 0;
   const price = PRICES.find((p) => p.id === draft.price);
   const wit = draft.whatItIs.filter((w) => w.text.trim());
@@ -171,10 +175,31 @@ export function ListBusinessPreview({
         )}
       </div>
 
+      <div className={styles.previewFullBtn}>
+        <Button
+          variant="ghost"
+          onClick={() => setShowFull(true)}
+          disabled={!hasCard}
+          title={
+            !hasCard ? "Add a name first to preview the full page" : undefined
+          }
+        >
+          Preview the full page →
+        </Button>
+      </div>
+
       <div className={styles.pvFoot}>
         This is a preview. Your listing goes live only after the community team
         reviews it.
       </div>
+
+      {showFull && (
+        <ListBusinessFullPreview
+          draft={draft}
+          userName={userName}
+          onClose={() => setShowFull(false)}
+        />
+      )}
     </aside>
   );
 }
