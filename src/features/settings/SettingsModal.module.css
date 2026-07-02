@@ -61,7 +61,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
   display: flex;
@@ -70,8 +70,10 @@
   color: var(--ink-60);
   transition: background 0.2s var(--ease);
 }
-.close:hover {
-  background: rgba(45, 27, 61, 0.14);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.14);
+  }
 }
 
 .eye {
@@ -141,7 +143,7 @@
   margin: 0 0 24px;
   padding: 18px 20px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -180,7 +182,7 @@
   }
 }
 .intCard {
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   background: var(--paper);
   border-radius: 16px;
   padding: 16px;
@@ -247,14 +249,13 @@
 }
 .input,
 .select {
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   border-radius: 12px;
   padding: 12px 15px;
   font-family: var(--sans);
   font-size: 15px;
   color: var(--ink);
   background: var(--paper);
-  outline: none;
   transition: border-color 0.25s var(--ease);
   box-sizing: border-box;
   width: 100%;
@@ -262,6 +263,10 @@
 .input:focus,
 .select:focus {
   border-color: var(--accent);
+}
+.input:focus:not(:focus-visible),
+.select:focus:not(:focus-visible) {
+  outline: none;
 }
 .fieldRow {
   display: grid;
@@ -280,7 +285,7 @@
 
 /* Invoice preview */
 .invSheet {
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 22px 24px;
   background: var(--cream);
@@ -292,7 +297,7 @@
   align-items: flex-start;
   margin-bottom: 18px;
   padding-bottom: 16px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .invBrand {
   font-family: var(--serif);
@@ -324,14 +329,14 @@
   color: var(--plum);
   margin-top: 12px;
   padding-top: 14px;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 
 /* Plum-panel success */
 .success {
   background: var(--plum);
   color: var(--cream);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 34px 32px;
   text-align: center;
 }
@@ -382,7 +387,7 @@
 }
 .successSub {
   font-size: 14.5px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.6;
   margin-bottom: 24px;
 }

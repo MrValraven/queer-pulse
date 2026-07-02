@@ -14,8 +14,10 @@
   gap: 6px;
   margin-bottom: 22px;
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 .eyebrow {
   font-size: 11px;
@@ -59,7 +61,7 @@
   color: var(--ink-40);
   margin: 36px 0 14px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .sectionH:first-of-type {
   margin-top: 0;
@@ -68,7 +70,7 @@
 /* Newsletter cards */
 .nlCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 22px;
   display: grid;
@@ -106,7 +108,7 @@
   stroke: var(--jade);
 }
 .nlIcPlum {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
 }
 .nlIcPlum svg {
   stroke: var(--plum);
@@ -157,7 +159,7 @@
   position: absolute;
   inset: 0;
   border-radius: 999px;
-  background: rgba(45, 27, 61, 0.2);
+  background: rgba(var(--plum-rgb), 0.2);
   cursor: pointer;
   transition: background 0.25s;
 }
@@ -183,7 +185,7 @@
 /* Alert cards */
 .alertCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 22px;
   margin-bottom: 10px;
@@ -198,7 +200,7 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -233,7 +235,7 @@
 }
 .alertAction {
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   color: var(--ink-60);
   font-family: var(--sans);
   font-size: 12px;
@@ -241,15 +243,21 @@
   padding: 6px 12px;
   border-radius: 7px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
-.alertAction:hover {
-  color: var(--plum);
-  border-color: var(--plum);
+@media (hover: hover) {
+  .alertAction:hover {
+    color: var(--plum);
+    border-color: var(--plum);
+  }
 }
-.alertActionDanger:hover {
-  color: var(--accent-ink);
-  border-color: var(--accent-ink);
+@media (hover: hover) {
+  .alertActionDanger:hover {
+    color: var(--accent-ink);
+    border-color: var(--accent-ink);
+  }
 }
 
 .alertCriteria {
@@ -266,7 +274,7 @@
   font-weight: 600;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 999px;
   padding: 4px 10px;
 }
@@ -280,7 +288,7 @@
   font-size: 13px;
   color: var(--ink-60);
   padding: 7px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.06);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .alertRow b {
   color: var(--plum);
@@ -304,7 +312,7 @@
 .addCard {
   padding: 18px 22px;
   background: transparent;
-  border: 1.5px dashed rgba(45, 27, 61, 0.18);
+  border: 1.5px dashed rgba(var(--plum-rgb), 0.18);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -321,16 +329,18 @@
   width: 100%;
   background: none;
 }
-.addCard:hover {
-  border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.03);
+@media (hover: hover) {
+  .addCard:hover {
+    border-color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.03);
+  }
 }
 
 /* Pronouns */
 .pronCard {
   padding: 24px 28px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   margin-bottom: 18px;
 }
@@ -368,7 +378,7 @@
 .pronChip {
   padding: 10px 14px;
   background: var(--paper);
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 11px;
   cursor: pointer;
   font-family: var(--serif);
@@ -404,21 +414,23 @@
   font-size: 17px;
   color: var(--plum);
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 11px;
   padding: 10px 14px;
-  outline: none;
 }
 .pronInput:focus {
   border-color: var(--plum);
   background: var(--paper);
+}
+.pronInput:focus:not(:focus-visible) {
+  outline: none;
 }
 .pronVisRow {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 14px;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   align-items: center;
 }
 .pronVisRow:last-child {
@@ -444,7 +456,7 @@
   align-items: center;
   padding: 20px 22px;
   margin-top: 24px;
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   border-radius: 14px;
   gap: 14px;
   flex-wrap: wrap;

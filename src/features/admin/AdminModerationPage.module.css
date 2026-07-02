@@ -27,9 +27,11 @@
     color 0.16s var(--ease),
     background 0.16s var(--ease);
 }
-.filter:hover {
-  border-color: rgba(var(--plum-rgb), 0.3);
-  color: var(--plum);
+@media (hover: hover) {
+  .filter:hover {
+    border-color: rgba(var(--plum-rgb), 0.3);
+    color: var(--plum);
+  }
 }
 .filterOn {
   border-color: var(--plum);
@@ -151,10 +153,12 @@
   width: 4px;
   background: var(--stripe, var(--plum));
 }
-.report:hover {
-  border-color: rgba(var(--plum-rgb), 0.2);
-  box-shadow: 0 16px 34px -24px rgba(var(--plum-rgb), 0.4);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .report:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    box-shadow: 0 16px 34px -24px rgba(var(--plum-rgb), 0.4);
+    transform: translateY(-1px);
+  }
 }
 .report:focus-visible {
   outline: 2px solid var(--plum);
@@ -163,10 +167,12 @@
 .reportStatic {
   cursor: default;
 }
-.reportStatic:hover {
-  border-color: rgba(var(--plum-rgb), 0.09);
-  box-shadow: none;
-  transform: none;
+@media (hover: hover) {
+  .reportStatic:hover {
+    border-color: rgba(var(--plum-rgb), 0.09);
+    box-shadow: none;
+    transform: none;
+  }
 }
 .reportLeaving {
   animation: reportOut 0.34s var(--ease, ease) forwards;
@@ -183,9 +189,13 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .report,
-  .report:hover {
+  .report {
     transform: none;
+  }
+  @media (hover: hover) {
+    .report:hover {
+      transform: none;
+    }
   }
   .reportLeaving {
     animation: none;
@@ -331,8 +341,10 @@ button.reportMain:focus-visible {
     background 0.16s var(--ease),
     border-color 0.16s var(--ease);
 }
-.selectBox:hover {
-  border-color: var(--plum);
+@media (hover: hover) {
+  .selectBox:hover {
+    border-color: var(--plum);
+  }
 }
 .selectBox svg {
   width: 13px;
@@ -402,7 +414,7 @@ button.reportMain:focus-visible {
   border-radius: var(--radius-card, 22px);
   padding: 48px 40px 44px;
   text-align: center;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
 }
 .caughtIco {
   display: inline-grid;
@@ -670,8 +682,10 @@ button.reportMain:focus-visible {
     background 0.16s var(--ease),
     box-shadow 0.16s var(--ease);
 }
-.dAction:hover {
-  border-color: rgba(var(--plum-rgb), 0.3);
+@media (hover: hover) {
+  .dAction:hover {
+    border-color: rgba(var(--plum-rgb), 0.3);
+  }
 }
 .dActionLabel {
   font-weight: 700;
@@ -691,8 +705,10 @@ button.reportMain:focus-visible {
   background: rgba(var(--plum-rgb), 0.06);
   box-shadow: inset 0 0 0 1px var(--plum);
 }
-.dAction_protect:hover {
-  border-color: rgba(var(--jade-rgb), 0.5);
+@media (hover: hover) {
+  .dAction_protect:hover {
+    border-color: rgba(var(--jade-rgb), 0.5);
+  }
 }
 .dAction_protect.dActionOn {
   border-color: var(--jade);
@@ -702,8 +718,10 @@ button.reportMain:focus-visible {
 .dAction_protect.dActionOn .dActionLabel {
   color: var(--jade);
 }
-.dAction_destruct:hover {
-  border-color: rgba(var(--danger-rgb), 0.5);
+@media (hover: hover) {
+  .dAction_destruct:hover {
+    border-color: rgba(var(--danger-rgb), 0.5);
+  }
 }
 .dAction_destruct.dActionOn {
   border-color: var(--danger);
@@ -734,8 +752,10 @@ button.reportMain:focus-visible {
   cursor: pointer;
   transition: border-color 0.16s var(--ease);
 }
-.dReason:hover {
-  border-color: rgba(var(--plum-rgb), 0.26);
+@media (hover: hover) {
+  .dReason:hover {
+    border-color: rgba(var(--plum-rgb), 0.26);
+  }
 }
 .dReason:has(input:checked) {
   border-color: var(--plum);
@@ -854,8 +874,10 @@ button.reportMain:focus-visible {
   color: var(--accent-ink);
   text-decoration: none;
 }
-.appealOrigLink:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .appealOrigLink:hover {
+    text-decoration: underline;
+  }
 }
 .appealOrigLink svg {
   width: 14px;
@@ -932,8 +954,10 @@ button.reportMain:focus-visible {
     background 0.16s var(--ease),
     box-shadow 0.16s var(--ease);
 }
-.decOption:hover {
-  border-color: rgba(var(--plum-rgb), 0.3);
+@media (hover: hover) {
+  .decOption:hover {
+    border-color: rgba(var(--plum-rgb), 0.3);
+  }
 }
 .decIco {
   flex: none;

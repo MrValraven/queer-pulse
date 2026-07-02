@@ -36,10 +36,15 @@ export function CultureRadioPanel() {
               />
             </div>
             <div className={styles.radioCtrls}>
-              <button className={styles.rBtn} aria-label="Previous track">
+              <button
+                type="button"
+                className={styles.rBtn}
+                aria-label="Previous track"
+              >
                 <FiSkipBack size={18} aria-hidden />
               </button>
               <button
+                type="button"
                 className={styles.rPlay}
                 onClick={() => setPlaying((p) => !p)}
                 aria-label={playing ? "Pause" : "Play"}
@@ -50,7 +55,11 @@ export function CultureRadioPanel() {
                   <FiPlay size={22} aria-hidden />
                 )}
               </button>
-              <button className={styles.rBtn} aria-label="Next track">
+              <button
+                type="button"
+                className={styles.rBtn}
+                aria-label="Next track"
+              >
                 <FiSkipForward size={18} aria-hidden />
               </button>
               <div style={{ flex: 1 }} />

@@ -44,7 +44,7 @@
   color: var(--ink-40);
   padding: 14px 16px 14px 0;
   white-space: nowrap;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .colHead {
   text-align: left;
@@ -74,7 +74,7 @@
   font-size: 14px;
   color: var(--ink);
   line-height: 1.5;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .terms {
   list-style: none;
@@ -111,6 +111,8 @@
   cursor: pointer;
   font-family: var(--sans);
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }

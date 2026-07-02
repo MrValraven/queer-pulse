@@ -20,9 +20,11 @@ const Check = () => (
 function ModalShell({
   children,
   onClose,
+  label,
 }: {
   children: React.ReactNode;
   onClose: () => void;
+  label: string;
 }) {
   useScrollLock();
   return (
@@ -32,7 +34,12 @@ function ModalShell({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.modal}>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-label={label}
+      >
         <button type="button" className={styles.modalX} onClick={onClose}>
           ×
         </button>
@@ -51,7 +58,7 @@ export function FlagVenueModal({
 }) {
   const [done, setDone] = useState(false);
   return (
-    <ModalShell onClose={onClose}>
+    <ModalShell onClose={onClose} label="Flag an accessibility issue">
       {done ? (
         <div className={styles.success}>
           <div className={styles.sucIcon}>
@@ -132,7 +139,7 @@ export function FlagVenueModal({
 export function AccommodationsModal({ onClose }: { onClose: () => void }) {
   const [done, setDone] = useState(false);
   return (
-    <ModalShell onClose={onClose}>
+    <ModalShell onClose={onClose} label="Request accommodations">
       {done ? (
         <div className={styles.success}>
           <div className={styles.sucIcon}>

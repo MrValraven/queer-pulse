@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { routes } from "../../app/routeMap";
 import s from "./creator.module.css";
 
 const NAV = [
   { label: "Dashboard", to: "/studio/dashboard" },
-  { label: "New release", to: "/studio/upload" },
-  { label: "Payouts", to: "/studio/payouts" },
+  { label: "New release", to: routes.studioUpload },
+  { label: "Payouts", to: routes.studioPayouts },
 ];
 
 /** Dark creator back-office frame: sticky topbar + sub-nav. */
@@ -13,7 +14,7 @@ export function StudioCreatorShell({ children }: { children: ReactNode }) {
   return (
     <div className={s.root}>
       <div className={s.topbar}>
-        <Link to="/studio" className={s.brand}>
+        <Link to={routes.studio} className={s.brand}>
           <span className={s.pulseDot} aria-hidden />
           Queer<em>Pulse</em>
         </Link>
@@ -34,7 +35,7 @@ export function StudioCreatorShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
         <div className={s.topRight}>
-          <Link to="/studio/artist" className={s.back}>
+          <Link to={routes.studioArtist} className={s.back}>
             View public page →
           </Link>
           <div className={s.avatar}>MS</div>

@@ -19,6 +19,22 @@ export function setOnAuthLost(cb: () => void): void {
   onAuthLost = cb;
 }
 
+/**
+ * Cheap reachability probe: resolves true if the backend answers at all (any
+ * HTTP status), false on a network-level failure (offline / connection
+ * refused). Use before a full-page auth redirect so we can fail gracefully
+ * in-app instead of stranding the browser on its own connection-refused page.
+ */
+export async function pingBackend(): Promise<boolean> {
+  if (!API_BASE_URL) return false;
+  try {
+    await fetch(`${API_BASE_URL}/csrf-token`, { credentials: "include" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Fetch + cache the CSRF token once. Call on app load before any mutation. */
 export async function ensureCsrf(): Promise<void> {
   if (csrfToken) return;

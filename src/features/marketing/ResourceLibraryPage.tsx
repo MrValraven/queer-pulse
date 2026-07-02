@@ -363,6 +363,7 @@ export function ResourceLibraryPage() {
             </div>
             {CATS.map((c) => (
               <button
+                type="button"
                 key={c.c}
                 className={[s.chip, cat === c.c && s.chipOn]
                   .filter(Boolean)

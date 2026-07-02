@@ -61,8 +61,8 @@ export function SpacesMap() {
           >
             <defs>
               <radialGradient id="qp-map-bg" cx="45%" cy="42%" r="65%">
-                <stop offset="0%" stopColor="#1e0e38" />
-                <stop offset="100%" stopColor="#0d0619" />
+                <stop offset="0%" style={{ stopColor: "var(--plum-deep)" }} />
+                <stop offset="100%" style={{ stopColor: "var(--plum)" }} />
               </radialGradient>
             </defs>
             <rect width={900} height={400} fill="url(#qp-map-bg)" />

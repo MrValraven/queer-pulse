@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useScrollLock } from "../../shared/hooks";
 import { memberProfiles } from "./data/memberProfiles";
 import { RELATIONSHIPS } from "./vouchMember.data";
@@ -27,6 +27,13 @@ export function VouchMemberModal({
   const [note, setNote] = useState("");
   const [status, setStatus] = useState<"form" | "loading" | "done">("form");
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && status !== "loading") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose, status]);
 
   const profile = memberProfiles[slug];
   if (!profile) return null;
@@ -56,6 +63,9 @@ export function VouchMemberModal({
       }}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Vouch for ${first}`}
         className={`${styles.modal} ${status === "done" ? styles.modalDone : ""}`}
       >
         {status !== "loading" && (

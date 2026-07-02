@@ -1,13 +1,13 @@
 /* Studio error pages — dark fullscreen, no rail */
 .root {
-  --bg: #1a1028;
-  --line: rgba(247, 243, 238, 0.08);
-  --text: rgba(247, 243, 238, 0.92);
-  --text60: rgba(247, 243, 238, 0.62);
-  --text40: rgba(247, 243, 238, 0.4);
+  --bg: var(--studio-bg);
+  --line: rgba(var(--cream-rgb), 0.08);
+  --text: rgba(var(--cream-rgb), 0.92);
+  --text60: rgba(var(--cream-rgb), 0.62);
+  --text40: rgba(var(--cream-rgb), 0.4);
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
+  min-height: 100svh;
   padding-bottom: 0;
 }
 
@@ -52,6 +52,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .pulseDot::after {
+    animation: none;
+  }
+}
+
 .wordmark {
   font-family: var(--serif);
   font-weight: 600;
@@ -73,7 +79,7 @@
 
 /* ── Error layout ── */
 .err {
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -247,18 +253,23 @@
   flex-direction: column;
   gap: 3px;
   padding: 15px 18px;
-  background: rgba(247, 243, 238, 0.05);
+  background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid var(--line);
   border-radius: 14px;
   text-decoration: none;
   text-align: left;
-  transition: all 0.2s;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    transform 0.2s var(--ease);
 }
 
-.errLink:hover {
-  border-color: rgba(var(--accent-rgb), 0.4);
-  background: rgba(247, 243, 238, 0.08);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .errLink:hover {
+    border-color: rgba(var(--accent-rgb), 0.4);
+    background: rgba(var(--cream-rgb), 0.08);
+    transform: translateY(-2px);
+  }
 }
 
 .errLinkLabel {
@@ -287,7 +298,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 18px;
-  background: rgba(247, 243, 238, 0.05);
+  background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid var(--line);
   border-radius: 999px;
   font-size: 13px;
@@ -318,8 +329,9 @@
   margin-top: 22px;
   font-size: 11.5px;
   color: var(--text40);
-  font-family: "JetBrains Mono", monospace;
-  letter-spacing: 0.02em;
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
 }
 
 /* Studio btn overrides — in dark studio context use accent-based btns */
@@ -343,9 +355,11 @@
     transform 0.18s;
 }
 
-.btPrimary:hover {
-  opacity: 0.88;
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .btPrimary:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
 }
 
 .btGhost {
@@ -368,7 +382,9 @@
     background 0.18s;
 }
 
-.btGhost:hover {
-  border-color: rgba(247, 243, 238, 0.22);
-  background: rgba(247, 243, 238, 0.05);
+@media (hover: hover) {
+  .btGhost:hover {
+    border-color: rgba(var(--cream-rgb), 0.22);
+    background: rgba(var(--cream-rgb), 0.05);
+  }
 }

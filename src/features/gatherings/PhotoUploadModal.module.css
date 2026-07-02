@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(45, 27, 61, 0.45);
+  background: rgba(var(--plum-rgb), 0.45);
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
@@ -18,7 +18,7 @@
 
 .dialog {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: var(--radius-card);
   padding: 28px 30px;
   width: 100%;
@@ -83,15 +83,19 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 999px;
   padding: 7px 13px;
   cursor: pointer;
-  transition: all 0.18s var(--ease);
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
 }
-.fileBtn:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+@media (hover: hover) {
+  .fileBtn:hover {
+    border-color: var(--plum);
+    color: var(--plum);
+  }
 }
 .fileBtnOn {
   background: rgba(var(--accent-rgb), 0.12);
@@ -101,7 +105,7 @@
 
 .input {
   width: 100%;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   padding: 11px 14px;
   font-family: var(--sans);
@@ -133,7 +137,7 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.18);
+  background: rgba(var(--jade-rgb), 0.18);
   color: var(--jade);
   font-size: 24px;
   margin-bottom: 16px;
@@ -151,7 +155,7 @@
 }
 .confirmBody {
   font-size: 14.5px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.6;
   max-width: 38ch;
   margin: 12px auto 0;
@@ -163,5 +167,5 @@
 }
 
 :global([data-theme="dark"]) .dialog {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

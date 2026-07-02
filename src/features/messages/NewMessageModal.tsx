@@ -44,7 +44,12 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
           <h2 id="new-message-title" className={styles.title}>
             New message
           </h2>
-          <button className={styles.close} onClick={onClose} aria-label="Close">
+          <button
+            type="button"
+            className={styles.close}
+            onClick={onClose}
+            aria-label="Close"
+          >
             <FiX />
           </button>
         </div>
@@ -59,7 +64,11 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
         <ul className={styles.list}>
           {people.map((person) => (
             <li key={person.id}>
-              <button className={styles.row} onClick={() => onPick(person)}>
+              <button
+                type="button"
+                className={styles.row}
+                onClick={() => onPick(person)}
+              >
                 <Avatar
                   initials={person.initials}
                   tint={person.tint}

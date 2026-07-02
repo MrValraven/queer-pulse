@@ -93,6 +93,7 @@ export function VolunteerPage() {
           <div className={s.filters}>
             {FILTERS.map((f) => (
               <button
+                type="button"
                 key={f.f}
                 className={[s.chip, filter === f.f && s.chipOn]
                   .filter(Boolean)

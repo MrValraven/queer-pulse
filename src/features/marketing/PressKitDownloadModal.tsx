@@ -46,7 +46,12 @@ export function PressKitDownloadModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={`${styles.modal} ${done ? styles.modalSuccess : ""}`}>
+      <div
+        className={`${styles.modal} ${done ? styles.modalSuccess : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Download press asset"
+      >
         <button
           type="button"
           className={styles.close}

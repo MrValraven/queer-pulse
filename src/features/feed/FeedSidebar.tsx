@@ -128,6 +128,7 @@ export function FeedSidebar({
                 <span className={styles.sbMemberName}>{person.name}</span>
               </Link>
               <button
+                type="button"
                 className={styles.linkBtn}
                 onClick={() => openConnect(person.slug)}
               >

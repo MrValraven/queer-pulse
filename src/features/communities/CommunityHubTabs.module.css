@@ -26,8 +26,10 @@
   color: inherit;
   text-decoration: none;
 }
-.rosterLink:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .rosterLink:hover {
+    text-decoration: underline;
+  }
 }
 .rosterBadgeRow {
   display: flex;
@@ -76,7 +78,7 @@
   align-items: center;
   gap: 13px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 13px 16px;
   text-decoration: none;
@@ -84,9 +86,11 @@
     border-color 0.2s var(--ease),
     transform 0.2s var(--ease);
 }
-.sister:hover {
-  border-color: rgba(45, 27, 61, 0.2);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .sister:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    transform: translateY(-1px);
+  }
 }
 .sisterIc {
   flex: none;
@@ -128,22 +132,26 @@
   margin-top: 12px;
   padding: 5px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(45, 27, 61, 0.12);
-  transition: all 0.18s var(--ease);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
 }
 .msgBtn svg {
   width: 12px;
   height: 12px;
 }
-.msgBtn:hover {
-  border-color: var(--accent);
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .msgBtn:hover {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
 }
 
 /* ---- events ---- */
 .eventRow {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   display: flex;
@@ -174,11 +182,15 @@
   height: 13px;
   transition: transform 0.18s var(--ease);
 }
-.recapLink:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .recapLink:hover {
+    color: var(--plum);
+  }
 }
-.recapLink:hover svg {
-  transform: translateX(3px);
+@media (hover: hover) {
+  .recapLink:hover svg {
+    transform: translateX(3px);
+  }
 }
 
 /* ---- rules ---- */
@@ -202,7 +214,7 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   color: var(--plum);
   font-size: 11px;
   font-weight: 700;
@@ -223,7 +235,7 @@
   align-items: center;
   gap: 14px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 14px 16px;
   text-decoration: none;
@@ -231,9 +243,11 @@
     border-color 0.2s var(--ease),
     transform 0.2s var(--ease);
 }
-.resource:hover {
-  border-color: rgba(45, 27, 61, 0.2);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .resource:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    transform: translateY(-1px);
+  }
 }
 .resourceIc {
   flex: none;
@@ -279,7 +293,7 @@
   align-items: center;
   gap: 13px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 14px 16px;
   margin-bottom: 10px;
@@ -326,20 +340,26 @@
   cursor: pointer;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(45, 27, 61, 0.14);
-  transition: all 0.18s var(--ease);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
 }
 .declineBtn svg {
   width: 13px;
   height: 13px;
 }
-.declineBtn:hover {
-  border-color: rgba(45, 27, 61, 0.3);
-  color: var(--ink);
+@media (hover: hover) {
+  .declineBtn:hover {
+    border-color: rgba(var(--plum-rgb), 0.3);
+    color: var(--ink);
+  }
 }
-.removeBtn:hover {
-  border-color: var(--accent);
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .removeBtn:hover {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
 }
 .ownerTag {
   display: inline-flex;

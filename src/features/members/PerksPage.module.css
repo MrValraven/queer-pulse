@@ -14,8 +14,10 @@
   text-decoration: none;
   transition: color 0.2s var(--ease);
 }
-.backLink:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .backLink:hover {
+    color: var(--plum);
+  }
 }
 .phEyebrow {
   font-size: 12px;
@@ -107,8 +109,10 @@
   display: flex;
   transition: box-shadow 0.2s var(--ease);
 }
-.perkCard:hover {
-  box-shadow: 0 6px 20px rgba(var(--plum-rgb), 0.07);
+@media (hover: hover) {
+  .perkCard:hover {
+    box-shadow: 0 6px 20px rgba(var(--plum-rgb), 0.07);
+  }
 }
 .perkCardDim {
   opacity: 0.7;

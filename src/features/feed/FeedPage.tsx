@@ -140,6 +140,7 @@ export function FeedPage() {
               <div className={styles.tabs}>
                 {FEED_TABS.map((tab) => (
                   <button
+                    type="button"
                     key={tab}
                     className={[
                       styles.tab,

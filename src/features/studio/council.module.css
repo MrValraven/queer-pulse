@@ -32,7 +32,7 @@
 }
 .dek {
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.6;
   max-width: 64ch;
   margin-top: 16px;
@@ -44,8 +44,8 @@
 
 /* Council intro */
 .intro {
-  background: rgba(247, 243, 238, 0.04);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 18px;
   padding: 28px 30px;
   margin-bottom: 24px;
@@ -53,7 +53,7 @@
 .lede {
   font-family: var(--serif);
   font-size: 18px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.5;
   max-width: 64ch;
 }
@@ -67,7 +67,7 @@
   gap: 16px;
   margin-top: 24px;
   padding-top: 22px;
-  border-top: 1px solid rgba(247, 243, 238, 0.1);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.1);
 }
 .fact .v {
   font-family: var(--serif);
@@ -82,7 +82,7 @@
 }
 .fact .l {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   margin-top: 4px;
 }
 
@@ -92,8 +92,8 @@
   gap: 18px;
 }
 .cur {
-  background: rgba(247, 243, 238, 0.04);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 18px;
   padding: 24px 26px;
 }
@@ -129,7 +129,7 @@
 }
 .where {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -140,16 +140,16 @@
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.3);
+  background: rgba(var(--cream-rgb), 0.3);
 }
 .curBio {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.6;
 }
 .curBio em {
   font-style: italic;
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
 }
 .curNote {
   background: rgba(var(--accent-rgb), 0.06);
@@ -163,13 +163,13 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   margin-bottom: 8px;
 }
 .curNote p {
   font-family: var(--serif);
   font-size: 14.5px;
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
   line-height: 1.55;
   font-style: italic;
 }
@@ -181,7 +181,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   margin-bottom: 8px;
 }
 .slRow {
@@ -189,7 +189,7 @@
   grid-template-columns: 1fr auto auto;
   gap: 12px;
   padding: 7px 0;
-  border-bottom: 1px solid rgba(247, 243, 238, 0.07);
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.07);
   font-size: 12.5px;
 }
 .slRow:last-child {
@@ -203,11 +203,11 @@
   font-style: italic;
 }
 .sd {
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   white-space: nowrap;
 }
 .sp {
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   white-space: nowrap;
 }
 .sp em {
@@ -221,11 +221,11 @@
   gap: 12px;
   margin-top: 16px;
   padding-top: 14px;
-  border-top: 1px solid rgba(247, 243, 238, 0.1);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.1);
 }
 .curStat {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 .curStat em {
   font-style: normal;
@@ -239,8 +239,8 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--cream);
-  background: rgba(247, 243, 238, 0.08);
-  border: 1px solid rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.08);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: 999px;
   padding: 8px 16px;
   cursor: pointer;
@@ -252,7 +252,7 @@
   border-color: var(--accent);
 }
 .btDismiss {
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .btUphold {
   color: var(--accent-soft);
@@ -270,7 +270,7 @@
 }
 .trH .sub {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   line-height: 1.6;
   max-width: 56ch;
   margin-top: 10px;
@@ -284,8 +284,8 @@
   gap: 12px;
 }
 .kpiMini {
-  background: rgba(247, 243, 238, 0.04);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 12px;
   padding: 12px 18px;
   text-align: center;
@@ -305,14 +305,14 @@
 }
 .kpiMini .l {
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   margin-top: 4px;
   white-space: nowrap;
 }
 .trTabs {
   display: flex;
   gap: 6px;
-  border-bottom: 1px solid rgba(247, 243, 238, 0.1);
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.1);
   margin-bottom: 22px;
   flex-wrap: wrap;
 }
@@ -320,7 +320,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   background: none;
   border: none;
   padding: 10px 14px;
@@ -337,7 +337,7 @@
 }
 .ctNum {
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.35);
+  color: rgba(var(--cream-rgb), 0.35);
 }
 .trBody {
   display: grid;
@@ -351,8 +351,8 @@
   gap: 12px;
 }
 .subRow {
-  background: rgba(247, 243, 238, 0.04);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 16px;
   padding: 18px 20px;
   cursor: pointer;
@@ -385,7 +385,7 @@
 }
 .subWho {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-top: 2px;
 }
 .subWho em {
@@ -400,13 +400,13 @@
 }
 .badges span {
   font-size: 10.5px;
-  color: rgba(247, 243, 238, 0.55);
-  background: rgba(247, 243, 238, 0.07);
+  color: rgba(var(--cream-rgb), 0.55);
+  background: rgba(var(--cream-rgb), 0.07);
   border-radius: 5px;
   padding: 3px 8px;
 }
 .badges .first {
-  background: rgba(74, 140, 111, 0.16);
+  background: rgba(var(--jade-rgb), 0.16);
   color: var(--jade-light, #9be0bd);
 }
 .badges .claimed {
@@ -416,7 +416,7 @@
 .deadline {
   text-align: right;
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   white-space: nowrap;
 }
 .deadline b {
@@ -428,7 +428,7 @@
 }
 .subNote {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.65);
+  color: rgba(var(--cream-rgb), 0.65);
   line-height: 1.6;
   margin: 12px 0;
   font-family: var(--serif);
@@ -439,12 +439,12 @@
   flex-wrap: wrap;
   gap: 14px;
   font-size: 11.5px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   padding-top: 10px;
-  border-top: 1px solid rgba(247, 243, 238, 0.07);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.07);
 }
 .metaStrip em {
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   font-style: italic;
 }
 
@@ -452,8 +452,8 @@
 .aside {
   position: sticky;
   top: 88px;
-  background: rgba(247, 243, 238, 0.04);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 16px;
   padding: 22px 24px;
 }
@@ -469,11 +469,11 @@
 }
 .asideWho {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   margin: 4px 0 16px;
 }
 .playerMini {
-  background: rgba(247, 243, 238, 0.04);
+  background: rgba(var(--cream-rgb), 0.04);
   border-radius: 12px;
   padding: 14px 16px;
   margin-bottom: 16px;
@@ -487,7 +487,7 @@
 }
 .pmWf span {
   flex: 1;
-  background: rgba(247, 243, 238, 0.16);
+  background: rgba(var(--cream-rgb), 0.16);
   border-radius: 2px;
   min-height: 3px;
 }
@@ -513,14 +513,14 @@
 .pmPlay svg {
   width: 12px;
   height: 12px;
-  color: #1a1028;
+  color: var(--studio-bg);
   margin-left: 1px;
 }
 .pmTimes {
   display: flex;
   gap: 8px;
   font-size: 11.5px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 .pmTimes .e {
   color: var(--accent);
@@ -529,8 +529,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(74, 140, 111, 0.06);
-  border: 1px solid rgba(74, 140, 111, 0.22);
+  background: rgba(var(--jade-rgb), 0.06);
+  border: 1px solid rgba(var(--jade-rgb), 0.22);
   border-radius: 10px;
   padding: 12px 14px;
   margin-bottom: 16px;
@@ -539,7 +539,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.22);
+  background: rgba(var(--jade-rgb), 0.22);
   color: var(--jade-light, #9be0bd);
   font-family: var(--serif);
   display: flex;
@@ -550,7 +550,7 @@
 }
 .claimRow .text {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   font-family: var(--serif);
   font-style: italic;
   line-height: 1.45;
@@ -574,12 +574,12 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   margin-bottom: 8px;
 }
 .detailBlock p {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.6;
 }
 .detailBlock p em {
@@ -593,7 +593,7 @@
   font-size: 12.5px;
 }
 .dGrid .k {
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 .dGrid .v {
   color: var(--cream);
@@ -621,20 +621,19 @@
 }
 .decision textarea {
   width: 100%;
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: 10px;
   padding: 11px 13px;
   font-family: var(--sans);
   font-size: 13px;
   color: var(--cream);
-  outline: none;
   resize: vertical;
   min-height: 70px;
 }
 .decision .hint {
   font-size: 11.5px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   font-family: var(--serif);
   font-style: italic;
   margin-top: 8px;
@@ -656,8 +655,8 @@
   gap: 16px;
 }
 .flag {
-  background: rgba(247, 243, 238, 0.04);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 16px;
   padding: 22px 24px;
 }
@@ -691,13 +690,13 @@
 }
 .flagTi .who {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 .flagPlay {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.08);
   border: none;
   color: var(--cream);
   display: flex;
@@ -725,7 +724,7 @@
 }
 .flagReason p {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.6;
   margin-top: 10px;
   font-family: var(--serif);
@@ -736,7 +735,7 @@
 }
 .rmeta {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   margin-top: 8px;
 }
 .flagClaim {
@@ -744,7 +743,7 @@
   align-items: center;
   gap: 10px;
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   padding: 12px 0;
 }
 .flagClaim em {
@@ -755,7 +754,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.2);
+  background: rgba(var(--jade-rgb), 0.2);
   color: var(--jade-light, #9be0bd);
   display: flex;
   align-items: center;
@@ -767,7 +766,7 @@
 .flagClaim .dl {
   margin-left: auto;
   font-size: 11.5px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 .flagActions {
   display: flex;
@@ -775,7 +774,7 @@
   gap: 8px;
   margin-top: 12px;
   padding-top: 14px;
-  border-top: 1px solid rgba(247, 243, 238, 0.08);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.08);
 }
 .grow {
   flex: 1;
@@ -786,7 +785,7 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--jade-light, #9be0bd);
-  background: rgba(74, 140, 111, 0.16);
+  background: rgba(var(--jade-rgb), 0.16);
   border-radius: 6px;
   padding: 4px 10px;
 }
@@ -810,9 +809,9 @@
   border-radius: 8px;
   background: linear-gradient(
     90deg,
-    rgba(247, 243, 238, 0.05) 25%,
-    rgba(247, 243, 238, 0.11) 50%,
-    rgba(247, 243, 238, 0.05) 75%
+    rgba(var(--cream-rgb), 0.05) 25%,
+    rgba(var(--cream-rgb), 0.11) 50%,
+    rgba(var(--cream-rgb), 0.05) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;

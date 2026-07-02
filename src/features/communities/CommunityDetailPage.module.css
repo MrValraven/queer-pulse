@@ -41,7 +41,7 @@
 .breadcrumb {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.42);
+  color: rgba(var(--cream-rgb), 0.42);
   margin-bottom: 22px;
   display: inline-flex;
   align-items: center;
@@ -49,8 +49,10 @@
   text-decoration: none;
   transition: color 0.2s var(--ease);
 }
-.breadcrumb:hover {
-  color: rgba(247, 243, 238, 0.72);
+@media (hover: hover) {
+  .breadcrumb:hover {
+    color: rgba(var(--cream-rgb), 0.72);
+  }
 }
 .typeBadge {
   display: inline-flex;
@@ -84,7 +86,7 @@
 }
 .heroSub {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.58);
+  color: rgba(var(--cream-rgb), 0.58);
   margin-bottom: 20px;
   max-width: 52ch;
   line-height: 1.65;
@@ -95,7 +97,7 @@
   flex-wrap: wrap;
   align-items: center;
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.45);
+  color: rgba(var(--cream-rgb), 0.45);
   font-weight: 500;
   margin-bottom: 28px;
 }
@@ -103,7 +105,7 @@
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.25);
+  background: rgba(var(--cream-rgb), 0.25);
 }
 .actRow {
   display: flex;
@@ -116,6 +118,7 @@
 }
 .heroAv {
   position: relative;
+  z-index: 1;
   display: block;
   line-height: 0;
   margin-left: -8px;
@@ -125,10 +128,15 @@
 .heroAv:first-child {
   margin-left: 0;
 }
-.heroAv:hover,
 .heroAv:focus-visible {
   transform: translateY(-3px);
-  z-index: 20 !important;
+  z-index: 20;
+}
+@media (hover: hover) {
+  .heroAv:hover {
+    transform: translateY(-3px);
+    z-index: 20;
+  }
 }
 .heroAvTip {
   position: absolute;
@@ -160,10 +168,15 @@
   border: 5px solid transparent;
   border-top-color: var(--cream);
 }
-.heroAv:hover .heroAvTip,
 .heroAv:focus-visible .heroAvTip {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+@media (hover: hover) {
+  .heroAv:hover .heroAvTip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 .sav {
   width: 30px;
@@ -186,7 +199,7 @@
 }
 .stripNote {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.45);
+  color: rgba(var(--cream-rgb), 0.45);
   margin-left: 10px;
 }
 
@@ -252,7 +265,7 @@
 
 .gCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   display: flex;
@@ -263,9 +276,11 @@
     border-color 0.2s var(--ease),
     transform 0.2s var(--ease);
 }
-.gCard:hover {
-  border-color: rgba(45, 27, 61, 0.2);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .gCard:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    transform: translateY(-1px);
+  }
 }
 .gDate {
   text-align: center;
@@ -305,7 +320,7 @@
   display: inline-block;
   font-size: 13px;
   font-weight: 500;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 8px;
   padding: 6px 12px;
   color: var(--ink-60);
@@ -324,7 +339,7 @@
 }
 .mCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 14px;
   text-align: center;
@@ -334,9 +349,11 @@
     transform 0.25s var(--ease),
     box-shadow 0.25s var(--ease);
 }
-.mCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px -14px rgba(45, 27, 61, 0.3);
+@media (hover: hover) {
+  .mCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -14px rgba(var(--plum-rgb), 0.3);
+  }
 }
 .mAv {
   width: 48px;
@@ -370,7 +387,7 @@
 
 .thread {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   margin-bottom: 14px;
   overflow: hidden;
@@ -393,18 +410,22 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   background: transparent;
   cursor: pointer;
   font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
-.vbtn:hover {
-  border-color: var(--accent);
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .vbtn:hover {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
 }
 .vbtnVoted {
   background: var(--accent);
@@ -458,7 +479,7 @@
   white-space: nowrap;
 }
 .thBody {
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   padding: 0 22px;
 }
 .postText {
@@ -471,7 +492,7 @@
   display: flex;
   gap: 10px;
   padding: 11px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.06);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .rAv {
   width: 28px;
@@ -501,14 +522,14 @@
   gap: 10px;
   align-items: flex-end;
   padding: 12px 0 18px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .replyTa {
   flex: 1;
   font-family: var(--sans);
   font-size: 14px;
   padding: 9px 13px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 10px;
   resize: none;
   min-height: 38px;
@@ -519,12 +540,17 @@
   transition: border-color 0.2s var(--ease);
   box-sizing: border-box;
 }
+.npTa:focus-visible {
+  outline: none;
+  border-color: var(--plum);
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.1);
+}
 .replyTa:focus {
-  border-color: rgba(45, 27, 61, 0.3);
+  border-color: rgba(var(--plum-rgb), 0.3);
 }
 .newPost {
-  background: rgba(45, 27, 61, 0.04);
-  border: 1.5px dashed rgba(45, 27, 61, 0.14);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1.5px dashed rgba(var(--plum-rgb), 0.14);
   border-radius: 14px;
   padding: 16px 20px;
   display: flex;
@@ -551,7 +577,7 @@
 }
 .sbC {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 22px;
 }
@@ -676,7 +702,7 @@
   align-items: center;
   gap: 11px;
   padding: 9px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
   text-decoration: none;
 }
 .sbRelItem:last-child {
@@ -714,6 +740,6 @@
   color: var(--jade);
 }
 .tPlum {
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--plum);
 }

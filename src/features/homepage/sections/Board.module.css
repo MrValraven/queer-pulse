@@ -23,15 +23,20 @@
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   background: transparent;
   border-radius: var(--radius-pill);
   padding: 9px 17px;
-  transition: all var(--dur-base) var(--ease);
+  transition:
+    color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
 }
-.chip:hover {
-  color: var(--ink);
-  border-color: rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--ink);
+    border-color: rgba(var(--plum-rgb), 0.4);
+  }
 }
 .chipActive {
   background: var(--plum);
@@ -45,7 +50,7 @@
 }
 .ask {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -56,9 +61,11 @@
     transform var(--dur-slow) var(--ease),
     box-shadow var(--dur-slow) var(--ease);
 }
-.ask:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-card-hover);
+@media (hover: hover) {
+  .ask:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+  }
 }
 .kind {
   align-self: flex-start;
@@ -92,7 +99,7 @@
   gap: 10px;
   margin-top: auto;
   padding-top: 15px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
   font-size: 13.5px;
 }
 .avMini {
@@ -105,7 +112,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 12px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
   flex: none;
 }
@@ -125,5 +132,5 @@
 }
 
 :global([data-theme="dark"]) .ask {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

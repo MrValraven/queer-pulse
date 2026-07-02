@@ -25,6 +25,31 @@ export interface MegaMenu {
   columns: MegaColumn[];
 }
 
+/**
+ * Filter a menu list down to the links a visitor may see. `isVisible(href)`
+ * comes from `useIsLinkVisible()`. Gated links are dropped, columns that end up
+ * empty are removed, a gated feature promo is stripped, and a menu with no
+ * remaining columns is omitted entirely so its top-level trigger disappears too.
+ */
+export function filterMenus(
+  menus: MegaMenu[],
+  isVisible: (href: string) => boolean,
+): MegaMenu[] {
+  return menus
+    .map((menu) => {
+      const columns = menu.columns
+        .map((column) => ({
+          ...column,
+          links: column.links.filter((link) => isVisible(link.href)),
+        }))
+        .filter((column) => column.links.length > 0);
+      const feature =
+        menu.feature && isVisible(menu.feature.href) ? menu.feature : undefined;
+      return { ...menu, columns, feature };
+    })
+    .filter((menu) => menu.columns.length > 0);
+}
+
 export const NAV_MENUS: MegaMenu[] = [
   {
     key: "Community",

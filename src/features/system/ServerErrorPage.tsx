@@ -42,6 +42,7 @@ export function ServerErrorPage() {
       <div className={styles.modeTabs} aria-label="Demo mode">
         {(["error", "maintenance"] as Mode[]).map((m) => (
           <button
+            type="button"
             key={m}
             className={[styles.modeTab, mode === m && styles.modeTabActive]
               .filter(Boolean)

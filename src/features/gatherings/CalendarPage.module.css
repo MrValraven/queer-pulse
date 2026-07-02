@@ -43,7 +43,7 @@
 }
 .sub {
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   max-width: 52ch;
   line-height: 1.65;
   margin-bottom: 28px;
@@ -58,7 +58,7 @@
   align-items: center;
   gap: 7px;
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   font-weight: 500;
 }
 .legDot {
@@ -87,7 +87,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   background: transparent;
   cursor: pointer;
   font-size: 16px;
@@ -95,11 +95,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
 }
-.navBtn:hover {
-  border-color: rgba(45, 27, 61, 0.4);
-  color: var(--ink);
+@media (hover: hover) {
+  .navBtn:hover {
+    border-color: rgba(var(--plum-rgb), 0.4);
+    color: var(--ink);
+  }
 }
 .monthLabel {
   font-family: var(--serif);
@@ -111,15 +115,15 @@
 
 .grid {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card);
   overflow: hidden;
 }
 .weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background: rgba(45, 27, 61, 0.04);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.04);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .wd {
   padding: 10px 0;
@@ -137,7 +141,7 @@
 .day {
   min-height: 74px;
   padding: 8px 10px;
-  border: 0 solid rgba(45, 27, 61, 0.06);
+  border: 0 solid rgba(var(--plum-rgb), 0.06);
   border-right-width: 1px;
   border-bottom-width: 1px;
   position: relative;
@@ -153,7 +157,7 @@
   border-right: none;
 }
 .empty {
-  background: rgba(45, 27, 61, 0.02);
+  background: rgba(var(--plum-rgb), 0.02);
 }
 .today {
   background: rgba(var(--accent-rgb), 0.06);
@@ -161,8 +165,10 @@
 .hasEvent {
   cursor: pointer;
 }
-.hasEvent:hover {
-  background: rgba(45, 27, 61, 0.02);
+@media (hover: hover) {
+  .hasEvent:hover {
+    background: rgba(var(--plum-rgb), 0.02);
+  }
 }
 .selected {
   background: rgba(var(--accent-rgb), 0.08);
@@ -215,7 +221,7 @@
 }
 .eventCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 16px;
   display: flex;
@@ -225,9 +231,11 @@
     transform 0.3s var(--ease),
     box-shadow 0.3s var(--ease);
 }
-.eventCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px -14px rgba(45, 27, 61, 0.28);
+@media (hover: hover) {
+  .eventCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -14px rgba(var(--plum-rgb), 0.28);
+  }
 }
 .ecDate {
   text-align: center;
@@ -279,7 +287,7 @@
 }
 .subStrip {
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px 26px;
   margin-top: 32px;
@@ -304,7 +312,7 @@
 }
 .subInput {
   flex: 1;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 10px;
   padding: 11px 14px;
   font-family: var(--sans);
@@ -334,5 +342,5 @@
 
 :global([data-theme="dark"]) .grid,
 :global([data-theme="dark"]) .eventCard {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

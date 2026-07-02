@@ -17,7 +17,7 @@ export function FilmPage() {
           <div className={styles.crumbRow}>
             <Link to={routes.cinema}>Cinema</Link>
             <span className={styles.sep}>›</span>
-            <Link to="/cinema/browse">This week</Link>
+            <Link to={routes.cinemaBrowse}>This week</Link>
             <span className={styles.sep}>›</span>
             <span className={styles.cur}>The light between rooms</span>
             <Link to={routes.cinema} className={styles.crumbBack}>

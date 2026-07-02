@@ -37,7 +37,7 @@
 }
 .text {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   line-height: 1.6;
   margin-top: 8px;
 }

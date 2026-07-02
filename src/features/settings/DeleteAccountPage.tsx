@@ -28,7 +28,7 @@ export function DeleteAccountPage() {
               </svg>
               Notifications
             </Link>
-            <button className={styles.navItem}>
+            <button type="button" className={styles.navItem}>
               <svg className={styles.navIcon} viewBox="0 0 16 16">
                 <rect x="2" y="11" width="12" height="3" rx="1" />
                 <path d="M5 8h6M5 5h4" />
@@ -36,7 +36,10 @@ export function DeleteAccountPage() {
               Privacy
             </button>
             <div className={styles.sidebarHead}>Danger zone</div>
-            <button className={`${styles.navItem} ${styles.navItemActive}`}>
+            <button
+              type="button"
+              className={`${styles.navItem} ${styles.navItemActive}`}
+            >
               <svg className={styles.navIcon} viewBox="0 0 16 16">
                 <polyline points="3,4 13,4" />
                 <path d="M6 4V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1M5 4l.5 9h5l.5-9" />

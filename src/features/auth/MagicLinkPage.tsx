@@ -95,6 +95,7 @@ export function MagicLinkPage() {
           >
             Didn't get it? Look in spam, or{" "}
             <button
+              type="button"
               onClick={handleResend}
               disabled={cooldown > 0}
               style={{

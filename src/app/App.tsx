@@ -18,6 +18,7 @@ import { SavedProvider } from "./providers/SavedProvider";
 import { DraftsProvider } from "./providers/DraftsProvider";
 import { SocialProvider } from "./providers/SocialProvider";
 import { CommunityMembershipProvider } from "./providers/CommunityMembershipProvider";
+import { CreatedCommunitiesProvider } from "./providers/CreatedCommunitiesProvider";
 import { DirectoryListingsProvider } from "./providers/DirectoryListingsProvider";
 import { CommandPalette } from "../features/members/CommandPalette";
 import { RoomLoader } from "../shared/components/feedback/RoomLoader";
@@ -72,10 +73,11 @@ const DataProviders = composeProviders([
   DraftsProvider,
   SocialProvider,
   CommunityMembershipProvider,
+  CreatedCommunitiesProvider,
   DirectoryListingsProvider,
 ]);
 
-export default function App() {
+export function App() {
   return (
     <RootProviders>
       <BrowserRouter>

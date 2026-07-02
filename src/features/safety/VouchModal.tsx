@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiShield } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -28,6 +28,14 @@ export function VouchModal({
   const [status, setStatus] = useState<"form" | "loading" | "done">("form");
   useScrollLock();
 
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   const canSubmit = note.trim().length >= 12;
 
   const submit = () => {
@@ -43,7 +51,12 @@ export function VouchModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.modal}>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Vouch for this space"
+      >
         <button
           type="button"
           className={styles.close}

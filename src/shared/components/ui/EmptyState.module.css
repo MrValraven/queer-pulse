@@ -8,9 +8,9 @@
   background: linear-gradient(
     180deg,
     rgba(var(--accent-rgb), 0.05),
-    rgba(45, 27, 61, 0.02)
+    rgba(var(--plum-rgb), 0.02)
   );
-  border: 1px dashed rgba(45, 27, 61, 0.16);
+  border: 1px dashed rgba(var(--plum-rgb), 0.16);
   border-radius: var(--radius-card);
 }
 

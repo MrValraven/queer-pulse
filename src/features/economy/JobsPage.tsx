@@ -205,6 +205,7 @@ export function JobsPage() {
             <div className={styles.filters}>
               {JOB_FILTERS.map((f) => (
                 <button
+                  type="button"
                   key={f.value}
                   className={[
                     styles.chip,
@@ -218,7 +219,11 @@ export function JobsPage() {
                 </button>
               ))}
             </div>
-            <button className={styles.postBtn} onClick={() => setPosting(true)}>
+            <button
+              type="button"
+              className={styles.postBtn}
+              onClick={() => setPosting(true)}
+            >
               + Post a job
             </button>
           </div>

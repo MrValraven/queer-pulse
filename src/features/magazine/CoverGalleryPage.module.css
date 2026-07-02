@@ -72,11 +72,15 @@
   color: inherit;
   transition: transform 0.3s var(--ease);
 }
-.tile:hover {
-  transform: translateY(-6px);
+@media (hover: hover) {
+  .tile:hover {
+    transform: translateY(-6px);
+  }
 }
-.tile:hover .img {
-  box-shadow: 0 32px 60px -28px rgba(45, 27, 61, 0.6);
+@media (hover: hover) {
+  .tile:hover .img {
+    box-shadow: 0 32px 60px -28px rgba(var(--plum-rgb), 0.6);
+  }
 }
 .img {
   aspect-ratio: 3 / 4;
@@ -84,7 +88,7 @@
   overflow: hidden;
   margin-bottom: 18px;
   transition: box-shadow 0.3s var(--ease);
-  border: 1px solid rgba(45, 27, 61, 0.08);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
   position: relative;
 }
 .tintA {
@@ -104,8 +108,8 @@
 .tintC {
   background: linear-gradient(
     165deg,
-    rgba(45, 27, 61, 0.18),
-    rgba(45, 27, 61, 0.05)
+    rgba(var(--plum-rgb), 0.18),
+    rgba(var(--plum-rgb), 0.05)
   );
 }
 .tintD {
@@ -118,7 +122,7 @@
 .tintE {
   background: linear-gradient(
     165deg,
-    rgba(45, 27, 61, 0.1),
+    rgba(var(--plum-rgb), 0.1),
     rgba(var(--accent-rgb), 0.15)
   );
 }
@@ -129,7 +133,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 48px;
-  color: rgba(45, 27, 61, 0.5);
+  color: rgba(var(--plum-rgb), 0.5);
   letter-spacing: -0.025em;
   line-height: 0.9;
 }
@@ -182,7 +186,7 @@
   margin-top: 32px;
 }
 .statsInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
   display: grid;
@@ -220,7 +224,7 @@
 }
 
 .illus {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 64px 28px 80px;
 }
@@ -254,7 +258,7 @@
 .illusCard {
   padding: 18px 20px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
@@ -262,9 +266,11 @@
     border-color 0.2s var(--ease),
     transform 0.25s var(--ease);
 }
-.illusCard:hover {
-  border-color: rgba(45, 27, 61, 0.18);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .illusCard:hover {
+    border-color: rgba(var(--plum-rgb), 0.18);
+    transform: translateY(-2px);
+  }
 }
 .illusAv {
   width: 42px;

@@ -94,6 +94,7 @@ export function MapVenueCard({
               <b>{beenCount}</b> people been here
             </div>
             <button
+              type="button"
               className={[s.beenBtn, marked && s.beenDone]
                 .filter(Boolean)
                 .join(" ")}

@@ -1,16 +1,9 @@
 import { useMemo, useState } from "react";
-import { FiMessageCircle, FiSearch } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import {
-  Avatar,
-  EmptyState,
-  FadeIn,
-  SearchInput,
-} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { MessageThreadListSkeleton } from "./MessagesSkeleton";
 import { conversations, type ChatMessage, type Conversation } from "./data";
 import { ConversationPanel } from "./ConversationPanel";
+import { MessagesThreadList } from "./MessagesThreadList";
 import { NewMessageModal } from "./NewMessageModal";
 import styles from "./MessagesPage.module.css";
 
@@ -88,122 +81,16 @@ export function MessagesPage() {
   return (
     <AppShell unreadCount={3}>
       <div className={styles.app}>
-        {/* Thread list */}
-        <div className={styles.threadPanel}>
-          <div className={styles.tpTop}>
-            <div className={styles.tpHeadRow}>
-              <div className={styles.tpTitle}>Messages</div>
-              <button
-                className={styles.composeBtn}
-                title="New message"
-                onClick={() => setComposing(true)}
-              >
-                <svg
-                  width={15}
-                  height={15}
-                  viewBox="0 0 15 15"
-                  fill="none"
-                  aria-hidden
-                >
-                  <path
-                    d="M10.5 2L13 4.5l-7 7H3.5V9l7-7Z"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M2 13h11"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
-            </div>
-            <SearchInput
-              value={query}
-              onChange={setQuery}
-              placeholder="Search conversations…"
-              ariaLabel="Search conversations"
-            />
-          </div>
-
-          <div className={styles.threadList}>
-            {loading && <MessageThreadListSkeleton count={6} />}
-            {!loading &&
-              visibleThreads.length === 0 &&
-              (query.trim() ? (
-                <EmptyState
-                  compact
-                  icon={<FiSearch />}
-                  title="No conversations found"
-                  description={
-                    <>No one matches “{query.trim()}”. Try a different name.</>
-                  }
-                  action={{
-                    label: "Clear search",
-                    onClick: () => setQuery(""),
-                  }}
-                />
-              ) : (
-                <EmptyState
-                  compact
-                  icon={<FiMessageCircle />}
-                  title="No conversations yet"
-                  description="When you start a chat, it’ll live here — a quiet, private space just for you and the people you reach out to."
-                  action={{
-                    label: "New message",
-                    onClick: () => setComposing(true),
-                  }}
-                />
-              ))}
-            {!loading &&
-              visibleThreads.map((thread, i) => {
-                const isUnread =
-                  thread.unread &&
-                  !readIds.has(thread.id) &&
-                  thread.id !== activeId;
-                return (
-                  <FadeIn key={thread.id} delay={Math.min(i, 8) * 60}>
-                    <button
-                      className={[
-                        styles.threadRow,
-                        thread.id === activeId && styles.threadActive,
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      onClick={() => openThread(thread.id)}
-                    >
-                      <div className={styles.trAv}>
-                        <Avatar
-                          initials={thread.initials}
-                          tint={thread.tint}
-                          size={42}
-                        />
-                        {isUnread && <span className={styles.unreadDot} />}
-                      </div>
-                      <div className={styles.trBody}>
-                        <div className={styles.trHeader}>
-                          <span className={styles.trName}>{thread.name}</span>
-                          <span className={styles.trTime}>{thread.time}</span>
-                        </div>
-                        <div
-                          className={[
-                            styles.trPreview,
-                            isUnread && styles.trPreviewUnread,
-                          ]
-                            .filter(Boolean)
-                            .join(" ")}
-                        >
-                          {thread.preview}
-                        </div>
-                      </div>
-                    </button>
-                  </FadeIn>
-                );
-              })}
-          </div>
-        </div>
+        <MessagesThreadList
+          loading={loading}
+          threads={visibleThreads}
+          activeId={activeId}
+          readIds={readIds}
+          query={query}
+          onQueryChange={setQuery}
+          onOpen={openThread}
+          onCompose={() => setComposing(true)}
+        />
 
         <ConversationPanel
           active={active}

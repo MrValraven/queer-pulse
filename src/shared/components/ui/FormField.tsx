@@ -15,6 +15,8 @@ interface FormFieldProps {
   /** Optional trailing label content, e.g. a live character count. */
   labelAside?: ReactNode;
   className?: string;
+  /** Optional id on the field wrapper — e.g. a scroll/anchor target. */
+  id?: string;
   /** The control: an `<input>`, `<textarea>`, `<select>`, or custom node. */
   children: ReactNode;
 }
@@ -35,11 +37,15 @@ export function FormField({
   ok,
   labelAside,
   className,
+  id,
   children,
 }: FormFieldProps) {
   const errorId = useId();
   return (
-    <div className={[styles.field, className].filter(Boolean).join(" ")}>
+    <div
+      id={id}
+      className={[styles.field, className].filter(Boolean).join(" ")}
+    >
       {label && (
         <label className={styles.label}>
           <span>

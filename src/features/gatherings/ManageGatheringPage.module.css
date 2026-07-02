@@ -3,7 +3,7 @@
 }
 .header {
   padding-bottom: 32px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
   margin-bottom: 36px;
 }
 .eyebrow {
@@ -48,8 +48,8 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: rgba(74, 140, 111, 0.1);
-  border: 1px solid rgba(74, 140, 111, 0.22);
+  background: rgba(var(--jade-rgb), 0.1);
+  border: 1px solid rgba(var(--jade-rgb), 0.22);
   border-radius: 999px;
   padding: 6px 14px;
   font-size: 13px;
@@ -87,7 +87,7 @@
 .tabBar {
   display: flex;
   gap: 2px;
-  border-bottom: 2px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 2px solid rgba(var(--plum-rgb), 0.08);
   margin-bottom: 28px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -111,8 +111,10 @@
     color 0.2s var(--ease),
     border-color 0.2s var(--ease);
 }
-.tabBtn:hover {
-  color: var(--ink);
+@media (hover: hover) {
+  .tabBtn:hover {
+    color: var(--ink);
+  }
 }
 .tabBtnActive {
   color: var(--plum);
@@ -126,7 +128,7 @@
 }
 .statChip {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 12px;
   padding: 12px 18px;
   flex: 1;
@@ -148,7 +150,7 @@
 
 .detailBlock {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 4px 20px;
   margin-bottom: 20px;
@@ -159,7 +161,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 15px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .detailRow:last-child {
   border-bottom: none;
@@ -192,12 +194,14 @@
   font-family: var(--sans);
   transition: opacity 0.2s var(--ease);
 }
-.drEdit:hover {
-  opacity: 0.7;
+@media (hover: hover) {
+  .drEdit:hover {
+    opacity: 0.7;
+  }
 }
 .descCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
@@ -234,7 +238,7 @@
 .attSearch {
   flex: 1;
   min-width: 180px;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 11px;
   padding: 9px 14px;
   font-family: var(--sans);
@@ -264,7 +268,7 @@
 }
 .capBar {
   height: 8px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -294,8 +298,10 @@
   border-radius: 12px;
   transition: background 0.18s var(--ease);
 }
-.attRow:hover {
-  background: rgba(45, 27, 61, 0.03);
+@media (hover: hover) {
+  .attRow:hover {
+    background: rgba(var(--plum-rgb), 0.03);
+  }
 }
 .attAv {
   width: 36px;
@@ -336,21 +342,27 @@
   border-radius: 8px;
   cursor: pointer;
   border: none;
-  transition: all 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease);
 }
 .promote {
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
 }
-.promote:hover {
-  background: rgba(74, 140, 111, 0.2);
+@media (hover: hover) {
+  .promote:hover {
+    background: rgba(var(--jade-rgb), 0.2);
+  }
 }
 .remove {
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   color: var(--ink-60);
 }
-.remove:hover {
-  background: rgba(45, 27, 61, 0.12);
+@media (hover: hover) {
+  .remove:hover {
+    background: rgba(var(--plum-rgb), 0.12);
+  }
 }
 .moreRow {
   opacity: 0.5;
@@ -361,7 +373,7 @@
 
 .composerCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 22px;
@@ -374,7 +386,7 @@
 }
 .compTa {
   width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 11px;
   padding: 12px 15px;
   font-family: var(--sans);
@@ -418,7 +430,7 @@
 }
 .msgCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
 }
@@ -449,7 +461,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: rgba(74, 140, 111, 0.08);
+  background: rgba(var(--jade-rgb), 0.08);
   border-radius: 999px;
   padding: 4px 10px;
   font-size: 12px;
@@ -466,7 +478,7 @@
   margin-bottom: 12px;
 }
 .toggleList {
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 20px;
@@ -477,7 +489,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
   background: var(--paper);
 }
 .tglRow:last-child {
@@ -510,7 +522,7 @@
   position: absolute;
   inset: 0;
   border-radius: 999px;
-  background: rgba(45, 27, 61, 0.15);
+  background: rgba(var(--plum-rgb), 0.15);
   cursor: pointer;
   transition: background 0.25s var(--ease);
 }
@@ -541,10 +553,10 @@
   margin: 28px 0 12px;
 }
 .dangerZone {
-  border: 1px solid rgba(232, 119, 90, 0.22);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
   border-radius: 16px;
   padding: 20px;
-  background: rgba(232, 119, 90, 0.03);
+  background: rgba(var(--accent-rgb), 0.03);
 }
 .dzLabel {
   font-size: 12px;
@@ -561,7 +573,7 @@
   margin-bottom: 16px;
 }
 .cancelBtn {
-  border-color: rgba(232, 119, 90, 0.4) !important;
+  border-color: rgba(var(--accent-rgb), 0.4) !important;
   color: var(--accent-ink) !important;
 }
 
@@ -574,7 +586,7 @@
 }
 .sbCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -599,9 +611,11 @@
   );
 }
 .sbImgLabel {
-  font-family: monospace;
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
   font-size: 10px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   text-align: center;
   line-height: 1.6;
   position: relative;
@@ -625,7 +639,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   border-radius: 10px;
   padding: 9px 12px;
   margin-bottom: 12px;
@@ -651,8 +665,10 @@
   flex: none;
   transition: background 0.2s var(--ease);
 }
-.copyBtn:hover {
-  background: var(--plum-deep, #1a0f25);
+@media (hover: hover) {
+  .copyBtn:hover {
+    background: var(--plum-deep, #1a0f25);
+  }
 }
 .sbViewLink {
   font-size: 13px;
@@ -663,7 +679,7 @@
   text-decoration: none;
 }
 .supportCard {
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   border-radius: 14px;
   padding: 14px 16px;
 }

@@ -24,17 +24,21 @@
     color 0.16s var(--ease),
     border-color 0.16s var(--ease);
 }
-.tab:hover {
-  color: var(--plum);
-  background: rgba(var(--plum-rgb), 0.05);
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 .tabOn {
   background: var(--plum);
   color: var(--cream);
 }
-.tabOn:hover {
-  background: var(--plum);
-  color: var(--cream);
+@media (hover: hover) {
+  .tabOn:hover {
+    background: var(--plum);
+    color: var(--cream);
+  }
 }
 .tabCount {
   min-width: 20px;
@@ -47,7 +51,7 @@
   color: var(--plum);
 }
 .tabOn .tabCount {
-  background: rgba(247, 243, 238, 0.2);
+  background: rgba(var(--cream-rgb), 0.2);
   color: var(--cream);
 }
 
@@ -64,9 +68,11 @@
   font-size: 14.5px;
   padding: 10px 24px;
 }
-.underline .tab:hover {
-  background: transparent;
-  color: var(--ink);
+@media (hover: hover) {
+  .underline .tab:hover {
+    background: transparent;
+    color: var(--ink);
+  }
 }
 .underline .tabOn {
   background: transparent;
@@ -83,13 +89,15 @@
 
 /* ── tint: dark (underline tabs on a dark/plum hero) ─────────────────────── */
 .underline.dark {
-  border-bottom-color: rgba(247, 243, 238, 0.16);
+  border-bottom-color: rgba(var(--cream-rgb), 0.16);
 }
 .underline.dark .tab {
-  color: rgba(247, 243, 238, 0.45);
+  color: rgba(var(--cream-rgb), 0.45);
 }
-.underline.dark .tab:hover {
-  color: rgba(247, 243, 238, 0.75);
+@media (hover: hover) {
+  .underline.dark .tab:hover {
+    color: rgba(var(--cream-rgb), 0.75);
+  }
 }
 .underline.dark .tabOn {
   color: var(--cream);

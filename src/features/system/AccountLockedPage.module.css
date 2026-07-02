@@ -1,12 +1,12 @@
 /* Card */
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 24px;
   padding: 48px 44px 38px;
   width: 100%;
   max-width: 520px;
-  box-shadow: 0 6px 52px -10px rgba(45, 27, 61, 0.16);
+  box-shadow: 0 6px 52px -10px rgba(var(--plum-rgb), 0.16);
   position: relative;
   z-index: 1;
 }
@@ -14,7 +14,7 @@
 .icon {
   width: 80px;
   height: 80px;
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   background: rgba(var(--accent-rgb), 0.1);
   display: flex;
   align-items: center;
@@ -70,8 +70,8 @@
 
 .reasonList {
   margin-top: 28px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   padding: 6px 0;
 }
 
@@ -79,7 +79,7 @@
   display: flex;
   gap: 14px;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 
 .reasonRow:last-child {
@@ -90,7 +90,7 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,7 +130,7 @@
   align-items: center;
   gap: 14px;
   padding: 14px 16px;
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
@@ -140,10 +140,12 @@
     background 0.22s;
 }
 
-.wnRow:hover {
-  border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.03);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .wnRow:hover {
+    border-color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.03);
+    transform: translateY(-1px);
+  }
 }
 
 .wnNum {
@@ -189,7 +191,7 @@
   justify-content: space-between;
   padding-top: 22px;
   margin-top: 24px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
   font-size: 12.5px;
   color: var(--ink-40);
   gap: 14px;
@@ -203,8 +205,10 @@
   transition: color 0.2s;
 }
 
-.foot a:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .foot a:hover {
+    color: var(--plum);
+  }
 }
 
 .incidentId {

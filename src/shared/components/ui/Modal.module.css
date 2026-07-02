@@ -25,7 +25,7 @@
   flex-direction: column;
   background: var(--cream);
   border: 1px solid rgba(var(--plum-rgb), 0.1);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   animation: modalIn 0.26s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
@@ -87,9 +87,11 @@
     background 0.16s var(--ease),
     color 0.16s var(--ease);
 }
-.modalX:hover {
-  background: var(--cream);
-  color: var(--plum);
+@media (hover: hover) {
+  .modalX:hover {
+    background: var(--cream);
+    color: var(--plum);
+  }
 }
 .modalBody {
   flex: 1;
@@ -168,9 +170,11 @@
     background 0.16s var(--ease),
     color 0.16s var(--ease);
 }
-.close:hover {
-  background: rgba(var(--plum-rgb), 0.16);
-  color: var(--plum);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.16);
+    color: var(--plum);
+  }
 }
 .close svg {
   width: 18px;

@@ -1,16 +1,16 @@
 /* Studio dark design tokens scoped locally */
 .root {
-  --bg: #1a1028;
-  --rail: #120920;
-  --line: rgba(247, 243, 238, 0.08);
-  --text: rgba(247, 243, 238, 0.92);
-  --text-60: rgba(247, 243, 238, 0.62);
-  --text-40: rgba(247, 243, 238, 0.4);
+  --bg: var(--studio-bg);
+  --rail: var(--studio-rail);
+  --line: rgba(var(--cream-rgb), 0.08);
+  --text: rgba(var(--cream-rgb), 0.92);
+  --text-60: rgba(var(--cream-rgb), 0.62);
+  --text-40: rgba(var(--cream-rgb), 0.4);
   --jade-light: #9be0bd;
 
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
-  min-height: 100vh;
+  min-height: 100svh;
   background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
@@ -162,7 +162,7 @@
   gap: 14px;
   margin-top: 30px;
   padding: 16px 18px;
-  background: rgba(247, 243, 238, 0.05);
+  background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid var(--line);
   border-radius: 14px;
   max-width: 420px;
@@ -171,7 +171,7 @@
   width: 52px;
   height: 52px;
   border-radius: 8px;
-  background: rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.08);
   flex: none;
 }
 .nowInfo {
@@ -232,6 +232,10 @@
     animation: none;
     height: 14px;
   }
+  .pulseDot::after,
+  .live {
+    animation: none;
+  }
 }
 
 .asideFoot {
@@ -275,7 +279,7 @@
 
 .segTabs {
   display: flex;
-  background: rgba(247, 243, 238, 0.05);
+  background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 4px;
@@ -292,7 +296,9 @@
   background: transparent;
   border-radius: 999px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 /* Scoped above `.segTabs button` so it wins on specificity, not !important. */
 .segTabs .segOn {
@@ -357,12 +363,11 @@
   font-family: var(--sans);
   font-size: 15px;
   color: var(--text);
-  background: rgba(247, 243, 238, 0.05);
+  background: rgba(var(--cream-rgb), 0.05);
   border: 1.5px solid var(--line);
   border-radius: 12px;
   padding: 13px 15px;
   width: 100%;
-  outline: none;
   transition:
     border-color 0.22s,
     box-shadow 0.22s;
@@ -406,7 +411,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: rgba(247, 243, 238, 0.05);
+  background: rgba(var(--cream-rgb), 0.05);
   border: 1.5px solid var(--line);
   border-radius: 12px;
   padding: 13px;
@@ -415,11 +420,15 @@
   font-weight: 600;
   color: var(--text);
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
-.btnGoogle:hover {
-  background: rgba(247, 243, 238, 0.09);
-  border-color: rgba(247, 243, 238, 0.22);
+@media (hover: hover) {
+  .btnGoogle:hover {
+    background: rgba(var(--cream-rgb), 0.09);
+    border-color: rgba(var(--cream-rgb), 0.22);
+  }
 }
 .btnGoogle:disabled {
   cursor: default;
@@ -429,7 +438,7 @@
 .gSpinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(247, 243, 238, 0.3);
+  border: 2px solid rgba(var(--cream-rgb), 0.3);
   border-top-color: var(--text);
   border-radius: 50%;
   animation: gspin 0.7s linear infinite;
@@ -486,19 +495,24 @@
   gap: 14px;
   align-items: flex-start;
   padding: 18px;
-  background: rgba(247, 243, 238, 0.04);
+  background: rgba(var(--cream-rgb), 0.04);
   border: 1.5px solid var(--line);
   border-radius: 14px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
   margin-bottom: 12px;
 }
-.tier:hover {
-  background: rgba(247, 243, 238, 0.06);
+@media (hover: hover) {
+  .tier:hover {
+    background: rgba(var(--cream-rgb), 0.06);
+  }
 }
-.tierOn {
+/* .tier.tierOn (0,0,2,0) outranks .tier:hover, so no !important needed. */
+.tier.tierOn {
   border-color: var(--accent);
-  background: rgba(var(--accent-rgb), 0.08) !important;
+  background: rgba(var(--accent-rgb), 0.08);
 }
 .tierDot {
   width: 18px;

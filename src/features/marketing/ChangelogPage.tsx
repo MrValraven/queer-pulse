@@ -241,10 +241,10 @@ export function ChangelogPage() {
                     <div className={styles.year}>
                       <em>{yb.year}</em>
                     </div>
-                    {entries.map((e, i) => (
+                    {entries.map((e) => (
                       <FadeIn
                         className={styles.entry}
-                        key={i}
+                        key={`${e.date}-${e.title}`}
                         delay={Math.min(row++, 8) * 60}
                       >
                         <div className={styles.date}>{e.date}</div>

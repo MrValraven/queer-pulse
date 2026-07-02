@@ -8,8 +8,8 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  background: rgba(74, 140, 111, 0.1);
-  border: 1.5px solid rgba(74, 140, 111, 0.28);
+  background: rgba(var(--jade-rgb), 0.1);
+  border: 1.5px solid rgba(var(--jade-rgb), 0.28);
   border-radius: 999px;
   padding: 11px 24px;
   margin-bottom: 36px;
@@ -27,10 +27,10 @@
 @keyframes opPulse {
   0%,
   100% {
-    box-shadow: 0 0 0 3px rgba(74, 140, 111, 0.2);
+    box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.2);
   }
   50% {
-    box-shadow: 0 0 0 7px rgba(74, 140, 111, 0);
+    box-shadow: 0 0 0 7px rgba(var(--jade-rgb), 0);
   }
 }
 
@@ -72,7 +72,7 @@
 
 .svcCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 18px 20px;
   display: flex;
@@ -84,9 +84,11 @@
     box-shadow 0.25s var(--ease);
 }
 
-.svcCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px -14px rgba(45, 27, 61, 0.16);
+@media (hover: hover) {
+  .svcCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px -14px rgba(var(--plum-rgb), 0.16);
+  }
 }
 
 .svcName {
@@ -122,7 +124,7 @@
 }
 
 .pillOp {
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
 }
 
@@ -166,13 +168,15 @@
 .ubar {
   flex: 1;
   border-radius: 3px;
-  background: rgba(74, 140, 111, 0.65);
+  background: rgba(var(--jade-rgb), 0.65);
   position: relative;
   transition: opacity 0.15s;
 }
 
-.ubar:hover {
-  opacity: 0.8;
+@media (hover: hover) {
+  .ubar:hover {
+    opacity: 0.8;
+  }
 }
 
 .ubarPartial {
@@ -184,24 +188,26 @@
 }
 
 .ubarEmpty {
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
 }
 
-.ubar:hover::after {
-  content: attr(data-tip);
-  position: absolute;
-  bottom: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--plum);
-  color: var(--cream);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 9px;
-  border-radius: 7px;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 10;
+@media (hover: hover) {
+  .ubar:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--plum);
+    color: var(--cream);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 7px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+  }
 }
 
 .uptimeAxis {
@@ -229,7 +235,7 @@
   top: 10px;
   bottom: 10px;
   width: 1.5px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
 }
 
 .incItem {
@@ -248,7 +254,7 @@
   height: 37px;
   border-radius: 50%;
   background: var(--cream);
-  border: 2px solid rgba(45, 27, 61, 0.15);
+  border: 2px solid rgba(var(--plum-rgb), 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -259,7 +265,7 @@
 
 .incItemResolved .incDot {
   border-color: var(--jade);
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
 }
 
 .incDate {
@@ -301,7 +307,7 @@
 }
 
 .incTagResolved {
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
 }
 
@@ -313,7 +319,7 @@
 /* ── Subscribe strip ── */
 .subStrip {
   background: var(--plum);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 34px 40px;
   display: flex;
   align-items: center;
@@ -334,7 +340,7 @@
 
 .subStrip p {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.52);
+  color: rgba(var(--cream-rgb), 0.52);
 }
 
 .subForm {
@@ -344,24 +350,25 @@
 }
 
 .subInput {
-  border: 1.5px solid rgba(247, 243, 238, 0.2);
-  background: rgba(247, 243, 238, 0.08);
+  border: 1.5px solid rgba(var(--cream-rgb), 0.2);
+  background: rgba(var(--cream-rgb), 0.08);
   border-radius: 999px;
   padding: 11px 18px;
   font-family: var(--sans);
   font-size: 14px;
   color: var(--cream);
-  outline: none;
   min-width: 210px;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s var(--ease);
 }
 
 .subInput::placeholder {
-  color: rgba(247, 243, 238, 0.36);
+  color: rgba(var(--cream-rgb), 0.36);
 }
 
-.subInput:focus {
-  border-color: rgba(247, 243, 238, 0.48);
+.subInput:focus-visible {
+  outline: none;
+  border-color: rgba(var(--cream-rgb), 0.48);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.35);
 }
 
 /* ── Outro CTA ── */
@@ -373,4 +380,28 @@
   text-transform: uppercase;
   color: var(--ink-40);
   margin-bottom: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overallDot {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 110px 0 44px;
+  }
+  .incItem {
+    gap: 14px;
+    padding-bottom: 28px;
+  }
+  .subStrip {
+    padding: 26px 22px;
+    margin-bottom: 72px;
+  }
+  .subForm,
+  .subInput {
+    width: 100%;
+  }
 }

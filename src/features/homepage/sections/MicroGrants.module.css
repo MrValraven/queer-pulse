@@ -27,7 +27,7 @@
 }
 .statLabel {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.58);
+  color: rgba(var(--cream-rgb), 0.58);
 }
 .list {
   display: flex;
@@ -37,7 +37,7 @@
 }
 .row {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 20px 22px;
   display: flex;
@@ -92,6 +92,6 @@
 }
 
 :global([data-theme="dark"]) .row {
-  background: rgba(247, 243, 238, 0.06);
-  border-color: rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.06);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

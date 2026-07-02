@@ -48,7 +48,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
   font-size: 18px;
@@ -58,8 +58,10 @@
   justify-content: center;
   transition: background 0.2s var(--ease);
 }
-.close:hover {
-  background: rgba(45, 27, 61, 0.14);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.14);
+  }
 }
 
 .progress {
@@ -67,16 +69,23 @@
 }
 .bar {
   height: 3px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   border-radius: 2px;
   overflow: hidden;
   margin-bottom: 8px;
 }
 .fill {
   height: 100%;
+  width: 100%;
+  transform-origin: left;
   background: var(--accent);
   border-radius: 2px;
-  transition: width 0.4s var(--ease);
+  transition: transform 0.4s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
 }
 .progressLabel {
   font-size: 12px;
@@ -127,7 +136,7 @@
 .tag {
   font-size: 12px;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 7px;
   padding: 5px 11px;
 }
@@ -145,7 +154,7 @@
 }
 .input,
 .textarea {
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   border-radius: 12px;
   padding: 13px 16px;
   font-family: var(--sans);
@@ -181,7 +190,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 12px;
   cursor: pointer;
   transition:
@@ -213,7 +222,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
   display: flex;
   align-items: center;
   justify-content: center;

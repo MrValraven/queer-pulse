@@ -81,6 +81,7 @@ export function NewMemberCard() {
           </div>
           <div className={styles.nmActions}>
             <button
+              type="button"
               className={styles.btnOutline}
               onClick={() => openConnect("kai")}
             >
@@ -163,6 +164,7 @@ function PostActions({
   return (
     <div className={styles.postFooter}>
       <button
+        type="button"
         className={`${styles.postAction} ${liked ? styles.postActionOn : ""}`}
         onClick={onLike}
         aria-pressed={liked}
@@ -171,6 +173,7 @@ function PostActions({
         <FiHeart fill={liked ? "currentColor" : "none"} /> {likeCount}
       </button>
       <button
+        type="button"
         className={styles.postAction}
         onClick={onToggleReply}
         aria-label="Reply to post"
@@ -178,6 +181,7 @@ function PostActions({
         <FiCornerUpLeft /> Reply · {replyCount}
       </button>
       <button
+        type="button"
         className={`${styles.postAction} ${saved ? styles.postActionOn : ""}`}
         onClick={onSave}
         aria-pressed={saved}
@@ -227,6 +231,7 @@ export function PostCard() {
         </div>
         <div className={styles.postHeaderEnd}>
           <button
+            type="button"
             className={styles.btnOutline}
             onClick={() => openConnect(post.slug)}
           >

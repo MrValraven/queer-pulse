@@ -21,7 +21,7 @@
   pointer-events: none;
 }
 .heroInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
   position: relative;
@@ -52,7 +52,7 @@
 }
 .dek {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.7;
   max-width: 54ch;
 }
@@ -66,9 +66,9 @@
   flex-wrap: wrap;
   margin-top: 36px;
   padding-top: 28px;
-  border-top: 1px solid rgba(247, 243, 238, 0.18);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.18);
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .metaRow b {
   color: var(--cream);
@@ -87,13 +87,13 @@
 
 .tabs {
   background: var(--paper);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   position: sticky;
   top: 0;
   z-index: 20;
 }
 .tabsInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
   display: flex;
@@ -118,8 +118,10 @@
   white-space: nowrap;
   text-decoration: none;
 }
-.tab:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--plum);
+  }
 }
 .tabActive {
   color: var(--plum);
@@ -135,7 +137,7 @@
 }
 
 .page {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 64px 28px 0;
 }
@@ -151,15 +153,20 @@
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   border-radius: 999px;
   cursor: pointer;
-  transition: all 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
   text-decoration: none;
 }
-.yearBtn:hover {
-  color: var(--plum);
-  border-color: rgba(45, 27, 61, 0.35);
+@media (hover: hover) {
+  .yearBtn:hover {
+    color: var(--plum);
+    border-color: rgba(var(--plum-rgb), 0.35);
+  }
 }
 .yearCurrent {
   background: var(--plum);
@@ -175,7 +182,7 @@
 
 .sec {
   padding: 48px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   scroll-margin-top: 60px;
 }
 .sec:last-of-type {
@@ -205,7 +212,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 42px;
-  color: rgba(45, 27, 61, 0.12);
+  color: rgba(var(--plum-rgb), 0.12);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -247,7 +254,7 @@
 .bignum {
   padding: 24px 22px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
 }
 .bignum b {
@@ -306,7 +313,7 @@
 .source {
   padding: 22px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
 }
 .sourceAmt {
@@ -336,8 +343,8 @@
 
 .alloc {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 32px 36px;
   margin-bottom: 18px;
 }
@@ -385,7 +392,7 @@
   font-size: 14px;
   color: var(--ink);
   padding: 8px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.05);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.05);
 }
 .allocKeyRow:last-child {
   border-bottom: none;
@@ -423,7 +430,7 @@
 
 .modTable {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -432,13 +439,13 @@
   grid-template-columns: 1fr auto auto auto;
   gap: 18px;
   padding: 14px 22px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   align-items: center;
   font-size: 14px;
   color: var(--ink);
 }
 .modHead {
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -505,7 +512,7 @@
 .reqCard {
   padding: 24px 28px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   margin-bottom: 14px;
   display: grid;
@@ -614,7 +621,7 @@
 .signoff {
   background: var(--plum);
   color: var(--cream);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 48px;
   margin-top: 48px;
 }
@@ -633,7 +640,7 @@
 }
 .signoff p {
   font-size: 15.5px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.7;
   max-width: 56ch;
   margin-bottom: 1em;
@@ -650,7 +657,7 @@
 .signRow {
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid rgba(247, 243, 238, 0.18);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.18);
   display: flex;
   gap: 14px;
   align-items: center;
@@ -678,7 +685,7 @@
 }
 .signRole {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
 }
 .trActions {
   display: flex;

@@ -52,7 +52,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 12px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
   flex: none;
 }

@@ -24,6 +24,8 @@ import styles from "./ModPanel.module.css";
 export function RequestsTab({ living }: { living: LivingCommunity }) {
   const { showToast } = useToast();
   const { approveRequest } = useCommunityMembership();
+  // Intentional: snapshot the prop into local state once, then mutate locally as
+  // the moderator approves/dismisses. Not a live sync with the source list.
   const [requests, setRequests] = useState(living.joinRequests ?? []);
   const [search, setSearch] = useState("");
 
@@ -131,6 +133,8 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
 
 export function ReportsTab({ living }: { living: LivingCommunity }) {
   const { showToast } = useToast();
+  // Intentional: snapshot the prop into local state once, then mutate locally as
+  // the moderator resolves/dismisses. Not a live sync with the source list.
   const [reports, setReports] = useState(living.reports ?? []);
 
   const removeReport = (id: string) => {

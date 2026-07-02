@@ -1,5 +1,5 @@
 .root {
-  min-height: 100vh;
+  min-height: 100svh;
   background: var(--cream);
   position: relative;
 }
@@ -9,7 +9,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   z-index: 20;
 }
 .progressFill {
@@ -58,12 +58,12 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 24px;
   padding: 44px 40px;
   width: 100%;
   max-width: 540px;
-  box-shadow: 0 6px 52px -10px rgba(45, 27, 61, 0.16);
+  box-shadow: 0 6px 52px -10px rgba(var(--plum-rgb), 0.16);
 }
 
 /* Directional step transitions — forward slides in from the right, back from
@@ -169,7 +169,7 @@
 .checkCircle {
   stroke: var(--jade);
   stroke-width: 2;
-  fill: rgba(74, 140, 111, 0.12);
+  fill: rgba(var(--jade-rgb), 0.12);
   stroke-dasharray: 220;
   stroke-dashoffset: 220;
   animation: circleDraw 0.65s var(--ease) 0.1s forwards;
@@ -209,7 +209,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--plum);
   display: flex;
   align-items: center;
@@ -283,7 +283,7 @@
   background: var(--accent);
   color: var(--cream);
   border: 3px solid var(--paper);
-  box-shadow: 0 2px 8px -2px rgba(45, 27, 61, 0.3);
+  box-shadow: 0 2px 8px -2px rgba(var(--plum-rgb), 0.3);
   transition: transform 0.2s var(--ease);
 }
 .photoEdit svg {
@@ -382,7 +382,7 @@
   margin-bottom: 24px;
 }
 .commCard {
-  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 14px;
   padding: 16px;
   transition:
@@ -390,8 +390,8 @@
     background 0.2s;
 }
 .commJoined {
-  border-color: rgba(74, 140, 111, 0.3);
-  background: rgba(74, 140, 111, 0.05);
+  border-color: rgba(var(--jade-rgb), 0.3);
+  background: rgba(var(--jade-rgb), 0.05);
 }
 .ccName {
   font-size: 14.5px;
@@ -414,17 +414,20 @@
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 700;
-  border: 1.5px solid rgba(45, 27, 61, 0.15);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.15);
   background: transparent;
   color: var(--plum);
   border-radius: 8px;
   padding: 6px 14px;
   cursor: pointer;
-  transition: all 0.18s;
+  transition:
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease),
+    color 0.18s var(--ease);
 }
 .ccJoinActive {
-  border-color: rgba(74, 140, 111, 0.3);
-  background: rgba(74, 140, 111, 0.1);
+  border-color: rgba(var(--jade-rgb), 0.3);
+  background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
 }
 
@@ -439,16 +442,18 @@
   align-items: center;
   gap: 14px;
   padding: 16px 18px;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   color: inherit;
   transition:
     transform 0.25s var(--ease),
     border-color 0.2s;
 }
-.qsCard:hover {
-  transform: translateY(-2px);
-  border-color: rgba(45, 27, 61, 0.18);
+@media (hover: hover) {
+  .qsCard:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--plum-rgb), 0.18);
+  }
 }
 .qsIcon {
   width: 40px;
@@ -498,8 +503,10 @@
   border: none;
   font-family: var(--sans);
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 
 /* A deliberate, clearly-styled skip affordance for non-critical steps —
@@ -514,7 +521,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 999px;
   padding: 11px 18px;
   cursor: pointer;
@@ -528,25 +535,31 @@
   height: 15px;
   transition: transform 0.2s var(--ease);
 }
-.skip:hover {
-  color: var(--plum);
-  border-color: rgba(45, 27, 61, 0.24);
+@media (hover: hover) {
+  .skip:hover {
+    color: var(--plum);
+    border-color: rgba(var(--plum-rgb), 0.24);
+  }
 }
-.skip:hover svg {
-  transform: translateX(3px);
+@media (hover: hover) {
+  .skip:hover svg {
+    transform: translateX(3px);
+  }
 }
 
 :global([data-theme="dark"]) .skip {
-  background: rgba(247, 243, 238, 0.05);
-  border-color: rgba(247, 243, 238, 0.14);
+  background: rgba(var(--cream-rgb), 0.05);
+  border-color: rgba(var(--cream-rgb), 0.14);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .skip svg {
     transition: none;
   }
-  .skip:hover svg {
-    transform: none;
+  @media (hover: hover) {
+    .skip:hover svg {
+      transform: none;
+    }
   }
 }
 
@@ -558,10 +571,10 @@
 
 :global([data-theme="dark"]) .card,
 :global([data-theme="dark"]) .qsCard {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .normCard {
-  background: rgba(247, 243, 238, 0.05);
+  background: rgba(var(--cream-rgb), 0.05);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -50,7 +50,7 @@
 }
 
 .distinction {
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   border-radius: 14px;
   padding: 22px 26px;
   margin: 28px auto 0;
@@ -90,8 +90,8 @@
 
 .toc {
   background: var(--paper);
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -122,9 +122,11 @@
   text-decoration: none;
   white-space: nowrap;
 }
-.tocInner a:hover {
-  color: var(--plum);
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .tocInner a:hover {
+    color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 
 .body {
@@ -134,7 +136,7 @@
 }
 .sec {
   padding: 48px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   scroll-margin-top: 70px;
 }
 .sec:last-of-type {
@@ -233,7 +235,7 @@
   grid-template-columns: 36px 1fr;
   gap: 14px;
   padding: 18px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   align-items: flex-start;
 }
 .pactRow:first-child {
@@ -272,7 +274,7 @@
 
 .ladder {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 8px 0;
   margin: 18px 0 12px;
@@ -282,7 +284,7 @@
   grid-template-columns: 42px 1fr;
   gap: 18px;
   padding: 18px 24px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   align-items: flex-start;
 }
 .ladderStep:last-child {
@@ -304,7 +306,7 @@
   margin-top: 1px;
 }
 .ladderNPlum {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
 .ladderStep b {
@@ -328,7 +330,7 @@
 .reportCta {
   background: var(--plum);
   color: var(--cream);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 36px 40px;
   margin: 48px 0;
 }
@@ -347,7 +349,7 @@
 }
 .reportCta p {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   margin-bottom: 16px;
   max-width: 50ch;

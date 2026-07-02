@@ -68,7 +68,12 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.sheet}>
+      <div
+        className={styles.sheet}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Apply — Q2 2026 round"
+      >
         <div className={styles.sheetHead}>
           <div className={styles.sheetTitle}>Apply — Q2 2026 round</div>
           <button type="button" className={styles.close} onClick={onClose}>

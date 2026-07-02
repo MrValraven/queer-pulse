@@ -6,7 +6,7 @@
   justify-content: center;
   align-items: flex-start;
   padding: 12vh 20px 20px;
-  background: rgba(45, 27, 61, 0.42);
+  background: rgba(var(--plum-rgb), 0.42);
   backdrop-filter: blur(3px);
   animation: cmdFade 0.16s var(--ease);
 }
@@ -15,9 +15,9 @@
   width: 100%;
   max-width: 560px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   border-radius: var(--radius-card);
-  box-shadow: 0 24px 60px -18px rgba(45, 27, 61, 0.5);
+  box-shadow: 0 24px 60px -18px rgba(var(--plum-rgb), 0.5);
   overflow: hidden;
   animation: cmdRise 0.18s var(--ease);
 }
@@ -27,7 +27,7 @@
   align-items: center;
   gap: 10px;
   padding: 16px 18px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 
 .inputIcon {
@@ -54,8 +54,8 @@
   font-family: var(--sans);
   font-size: 0.7rem;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.06);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  background: rgba(var(--plum-rgb), 0.06);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 6px;
   padding: 2px 7px;
 }
@@ -68,7 +68,7 @@
 }
 
 .recentChip {
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   background: var(--paper);
   color: var(--ink-60);
   border-radius: 999px;
@@ -80,9 +80,11 @@
     color 0.18s var(--ease);
 }
 
-.recentChip:hover {
-  border-color: var(--accent);
-  color: var(--ink);
+@media (hover: hover) {
+  .recentChip:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
 }
 
 .results {
@@ -122,7 +124,7 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   color: var(--plum);
   flex-shrink: 0;
 }
@@ -165,15 +167,17 @@
   gap: 8px;
   padding: 12px 18px;
   border: none;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
   background: var(--paper);
   color: var(--ink-60);
   font-size: 0.85rem;
   cursor: pointer;
 }
 
-.footer:hover {
-  color: var(--ink);
+@media (hover: hover) {
+  .footer:hover {
+    color: var(--ink);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

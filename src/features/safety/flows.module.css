@@ -1,6 +1,6 @@
 /* Shared styles for the centered safety/lifecycle card flows */
 .page {
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,7 +10,7 @@
 .stateBar {
   display: inline-flex;
   gap: 2px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 999px;
   padding: 4px;
   margin-bottom: 28px;
@@ -25,7 +25,9 @@
   border-radius: 999px;
   padding: 7px 15px;
   cursor: pointer;
-  transition: all 0.18s;
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease);
 }
 .stateBtnActive {
   background: var(--plum);
@@ -36,10 +38,10 @@
   width: 100%;
   max-width: 480px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 24px;
   padding: 36px 40px;
-  box-shadow: 0 6px 40px -8px rgba(45, 27, 61, 0.12);
+  box-shadow: 0 6px 40px -8px rgba(var(--plum-rgb), 0.12);
 }
 
 /* Entrance for a screen swapped in by a state change. Applied to each
@@ -79,8 +81,10 @@
   font-family: var(--sans);
   padding: 0;
 }
-.backLink:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .backLink:hover {
+    color: var(--plum);
+  }
 }
 
 .title {
@@ -127,7 +131,7 @@
   gap: 14px;
   padding-bottom: 20px;
   margin-bottom: 20px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .memAv {
   width: 48px;
@@ -170,7 +174,7 @@
 
 /* Option cards (block/mute) */
 .optionCard {
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 16px;
   padding: 18px 20px;
   margin-bottom: 12px;
@@ -181,7 +185,7 @@
 }
 .optionSelected {
   border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.02);
+  background: rgba(var(--plum-rgb), 0.02);
 }
 .ocHeader {
   display: flex;
@@ -192,7 +196,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 2px solid rgba(45, 27, 61, 0.25);
+  border: 2px solid rgba(var(--plum-rgb), 0.25);
   flex: none;
   display: flex;
   align-items: center;
@@ -225,7 +229,7 @@
 .subOpts {
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px dashed rgba(45, 27, 61, 0.12);
+  border-top: 1px dashed rgba(var(--plum-rgb), 0.12);
 }
 .subLabel {
   font-size: 11.5px;
@@ -254,7 +258,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 999px;
   padding: 6px 12px;
   cursor: pointer;
@@ -267,7 +271,7 @@
 .warnBox {
   font-size: 12.5px;
   color: var(--ink-60);
-  background: rgba(232, 119, 90, 0.07);
+  background: rgba(var(--accent-rgb), 0.07);
   border-radius: 10px;
   padding: 12px 14px;
   line-height: 1.55;
@@ -296,13 +300,15 @@
   border: none;
   font-family: var(--sans);
 }
-.cancelLink:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .cancelLink:hover {
+    color: var(--plum);
+  }
 }
 
 /* Summary rows */
 .summary {
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
   border-radius: 13px;
   padding: 16px 18px;
   margin: 6px 0 20px;
@@ -331,13 +337,20 @@
 }
 .undoLink {
   display: block;
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
   text-align: center;
   font-size: 13px;
   color: var(--ink-40);
   cursor: pointer;
 }
-.undoLink:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .undoLink:hover {
+    color: var(--accent-ink);
+  }
 }
 .reportNote {
   text-align: center;
@@ -345,7 +358,7 @@
   color: var(--ink-40);
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .reportNote a {
   color: var(--accent-ink);
@@ -354,7 +367,7 @@
 
 /* Loss / preserve list (leave) */
 .lossCard {
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
   border-radius: 16px;
   padding: 22px 24px;
   margin-bottom: 24px;
@@ -388,7 +401,7 @@
   line-height: 1.6;
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .privacyNote a {
   color: var(--accent-ink);
@@ -404,7 +417,7 @@
 .altCard {
   display: flex;
   gap: 14px;
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 16px;
   padding: 18px 20px;
   margin-bottom: 12px;
@@ -432,7 +445,7 @@
 }
 .divider {
   height: 1px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   margin: 24px 0;
 }
 .stillWant {
@@ -443,7 +456,7 @@
 }
 .reasonTa {
   width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 14px;
   font-family: var(--sans);
@@ -454,6 +467,11 @@
   resize: vertical;
   min-height: 70px;
   margin-bottom: 14px;
+  transition: border-color 0.2s var(--ease);
+}
+.reasonTa:focus {
+  border-color: var(--plum);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
 }
 .deleteBtn {
   width: 100%;
@@ -479,7 +497,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 14px;
   padding: 14px 18px;
   cursor: pointer;
@@ -533,7 +551,7 @@
   color: var(--cream);
 }
 .tlPending {
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--ink-40);
 }
 .tlLabel {
@@ -546,7 +564,7 @@
 .tlLine {
   height: 2px;
   width: 48px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   margin-top: 12px;
 }
 .tlLineDone {
@@ -555,7 +573,7 @@
 
 /* Reference / info boxes (appeal) */
 .refBox {
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
   border-radius: 14px;
   padding: 16px 18px;
   margin: 6px 0 4px;
@@ -571,14 +589,14 @@
   display: inline;
 }
 .infoJade {
-  background: rgba(74, 140, 111, 0.08);
+  background: rgba(var(--jade-rgb), 0.08);
   color: var(--ink-60);
 }
 .infoJade strong {
   color: var(--jade);
 }
 .infoPlum {
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   color: var(--ink-60);
 }
 .infoPlum strong {
@@ -602,7 +620,7 @@
   background: var(--plum);
 }
 :global([data-theme="dark"]) .card {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }
 
 /* Paused-account confirmation — plum panel pattern */
@@ -619,7 +637,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.18);
+  background: rgba(var(--jade-rgb), 0.18);
   color: var(--jade);
   display: flex;
   align-items: center;
@@ -629,7 +647,7 @@
 }
 .pausedSub {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.7;
   max-width: 42ch;
   margin: 0 auto 24px;
@@ -638,8 +656,8 @@
   display: inline-flex;
   flex-direction: column;
   gap: 4px;
-  background: rgba(247, 243, 238, 0.08);
-  border: 1px solid rgba(247, 243, 238, 0.14);
+  background: rgba(var(--cream-rgb), 0.08);
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
   border-radius: 14px;
   padding: 16px 28px;
   margin-bottom: 26px;
@@ -649,7 +667,7 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
 }
 .pausedReturnVal {
   font-family: var(--serif);

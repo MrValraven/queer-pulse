@@ -1,18 +1,18 @@
 /* QueerPulse Studio — creator back-office (dark) */
 .root {
-  --bg: #1a1028;
-  --surface: rgba(247, 243, 238, 0.05);
-  --line: rgba(247, 243, 238, 0.08);
-  --text: rgba(247, 243, 238, 0.92);
-  --text60: rgba(247, 243, 238, 0.62);
-  --text40: rgba(247, 243, 238, 0.4);
+  --bg: var(--studio-bg);
+  --surface: rgba(var(--cream-rgb), 0.05);
+  --line: rgba(var(--cream-rgb), 0.08);
+  --text: rgba(var(--cream-rgb), 0.92);
+  --text60: rgba(var(--cream-rgb), 0.62);
+  --text40: rgba(var(--cream-rgb), 0.4);
   --jade-light: #9be0bd;
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
+  min-height: 100svh;
   /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: rgba(247, 243, 238, 0.18) transparent;
+  scrollbar-color: rgba(var(--cream-rgb), 0.18) transparent;
 }
 /* Themed scrollbars for inner scroll areas inside the creator shell (WebKit/Blink) */
 .root ::-webkit-scrollbar {
@@ -23,14 +23,16 @@
   background: transparent;
 }
 .root ::-webkit-scrollbar-thumb {
-  background: rgba(247, 243, 238, 0.18);
+  background: rgba(var(--cream-rgb), 0.18);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
-.root ::-webkit-scrollbar-thumb:hover {
-  background: rgba(247, 243, 238, 0.32);
-  background-clip: padding-box;
+@media (hover: hover) {
+  .root ::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--cream-rgb), 0.32);
+    background-clip: padding-box;
+  }
 }
 .root ::-webkit-scrollbar-corner {
   background: transparent;
@@ -88,11 +90,15 @@
   color: var(--text60);
   padding: 8px 14px;
   border-radius: 999px;
-  transition: all 0.18s;
+  transition:
+    color 0.18s var(--ease),
+    background 0.18s var(--ease);
 }
-.navItem:hover {
-  color: var(--text);
-  background: rgba(247, 243, 238, 0.05);
+@media (hover: hover) {
+  .navItem:hover {
+    color: var(--text);
+    background: rgba(var(--cream-rgb), 0.05);
+  }
 }
 .navItemActive {
   color: var(--bg);
@@ -108,8 +114,10 @@
   font-size: 13px;
   color: var(--text60);
 }
-.back:hover {
-  color: var(--text);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--text);
+  }
 }
 .avatar {
   width: 34px;
@@ -350,8 +358,10 @@
   min-height: 6px;
   transition: transform 0.2s;
 }
-.bar:hover {
-  transform: scaleY(1.05);
+@media (hover: hover) {
+  .bar:hover {
+    transform: scaleY(1.05);
+  }
 }
 .barToday {
   background: linear-gradient(
@@ -457,7 +467,7 @@
   flex: 1;
   height: 7px;
   border-radius: 999px;
-  background: rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.08);
   overflow: hidden;
 }
 .barFl {
@@ -607,7 +617,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.1);
   color: var(--text60);
   display: flex;
   align-items: center;
@@ -635,7 +645,7 @@
 
 /* Dropzone + file rows */
 .dropzone {
-  border: 2px dashed rgba(247, 243, 238, 0.18);
+  border: 2px dashed rgba(var(--cream-rgb), 0.18);
   border-radius: 18px;
   padding: 40px 30px;
   text-align: center;
@@ -711,7 +721,7 @@
   width: 34px;
   height: 34px;
   border-radius: 9px;
-  background: rgba(247, 243, 238, 0.06);
+  background: rgba(var(--cream-rgb), 0.06);
   color: var(--text60);
   display: flex;
   align-items: center;
@@ -963,7 +973,9 @@
   font-size: 13px;
 }
 .bdRow .n {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
   color: var(--text40);
   font-size: 12px;
 }
@@ -997,7 +1009,7 @@
   justify-content: space-between;
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 2px solid rgba(247, 243, 238, 0.16);
+  border-top: 2px solid rgba(var(--cream-rgb), 0.16);
   font-size: 13px;
   color: var(--text60);
 }
@@ -1056,7 +1068,7 @@
   flex: none;
 }
 .methodIcAlt {
-  background: rgba(247, 243, 238, 0.06);
+  background: rgba(var(--cream-rgb), 0.06);
   color: var(--text60);
 }
 .methodNm {
@@ -1104,14 +1116,13 @@
 .field input,
 .field select {
   width: 100%;
-  background: rgba(247, 243, 238, 0.06);
+  background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 11px 14px;
   font-family: var(--sans);
   font-size: 14px;
   color: var(--text);
-  outline: none;
 }
 .field .fhint {
   font-size: 12px;
@@ -1160,14 +1171,13 @@
 }
 .collabForm input {
   flex: 1;
-  background: rgba(247, 243, 238, 0.06);
+  background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 10px 13px;
   font-family: var(--sans);
   font-size: 13.5px;
   color: var(--text);
-  outline: none;
 }
 .collabForm input:focus {
   border-color: var(--accent);
@@ -1205,7 +1215,7 @@
   height: 56px;
   margin: 0 auto 18px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.2);
+  background: rgba(var(--jade-rgb), 0.2);
   color: var(--jade-light);
   display: flex;
   align-items: center;
@@ -1225,7 +1235,7 @@
 }
 .submitted p {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.7;
   max-width: 46ch;
   margin: 0 auto 24px;
@@ -1236,9 +1246,9 @@
   border-radius: 8px;
   background: linear-gradient(
     90deg,
-    rgba(247, 243, 238, 0.05) 25%,
-    rgba(247, 243, 238, 0.11) 50%,
-    rgba(247, 243, 238, 0.05) 75%
+    rgba(var(--cream-rgb), 0.05) 25%,
+    rgba(var(--cream-rgb), 0.11) 50%,
+    rgba(var(--cream-rgb), 0.05) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;

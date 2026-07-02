@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { routes } from "../../app/routeMap";
 import { Avatar } from "../../shared/components/ui";
 import { me, type ChatMessage, type Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
@@ -42,8 +43,9 @@ export function ConversationPanel({
         </div>
         {!active.official && (
           <button
+            type="button"
             className={styles.ctbLink}
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate(routes.accountProfile)}
           >
             View profile →
           </button>
@@ -58,7 +60,7 @@ export function ConversationPanel({
               const isSent = message.from === "me";
               return (
                 <div
-                  key={index}
+                  key={`${group.day}-${index}-${message.text}`}
                   className={[styles.bubbleRow, isSent && styles.bubbleRowSent]
                     .filter(Boolean)
                     .join(" ")}
@@ -109,6 +111,7 @@ export function ConversationPanel({
             }}
           />
           <button
+            type="button"
             className={[styles.sendBtn, draft.trim() && styles.sendBtnActive]
               .filter(Boolean)
               .join(" ")}

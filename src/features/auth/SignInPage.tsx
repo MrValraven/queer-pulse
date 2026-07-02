@@ -1,29 +1,57 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { FiCloudOff } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { pingBackend } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
 import { AuthLayout } from "./AuthLayout";
 import styles from "./auth.module.css";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** Only honour same-origin internal paths from `?next=` (avoids open redirects). */
+function safeNext(next: string | null): string {
+  if (next && next.startsWith("/") && !next.startsWith("//")) return next;
+  return "/feed";
+}
+
 export function SignInPage() {
   const navigate = useNavigate();
   const { signIn } = useAuth();
+  const { demoMode } = useDemoMode();
+  const [searchParams] = useSearchParams();
+  const dest = safeNext(searchParams.get("next"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [touched, setTouched] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
 
-  function continueWithGoogle() {
-    if (googleLoading) return;
-    setGoogleLoading(true);
-    setTimeout(() => {
-      signIn("/feed");
-      navigate("/feed");
-    }, 1100);
+  /**
+   * Kick off sign-in. In demo mode this just flips local state. In live mode
+   * `signIn()` does a full-page redirect to the backend, so we first probe that
+   * the backend is reachable — if it's offline we show an in-app notice instead
+   * of stranding the browser on its own connection-refused error page.
+   */
+  async function attemptSignIn() {
+    if (busy) return;
+    setUnavailable(false);
+    if (demoMode) {
+      signIn(dest);
+      navigate(dest);
+      return;
+    }
+    setBusy(true);
+    const reachable = await pingBackend();
+    if (!reachable) {
+      setBusy(false);
+      setUnavailable(true);
+      return;
+    }
+    signIn(dest); // redirects the page away
   }
 
   const emailValid = EMAIL_RE.test(email.trim());
@@ -37,13 +65,23 @@ export function SignInPage() {
       </h1>
       <p className={styles.sub}>Sign in to your QueerPulse account.</p>
 
+      {unavailable && (
+        <div className={styles.notice} role="alert">
+          <FiCloudOff size={20} className={styles.noticeIcon} aria-hidden />
+          <div className={styles.noticeText}>
+            <strong>Sign-in is taking a breather</strong>
+            <span>
+              We can&rsquo;t reach QueerPulse right now — nothing&rsquo;s wrong
+              on your end. Give it a moment and try again.
+            </span>
+          </div>
+        </div>
+      )}
+
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          if (canSubmit) {
-            signIn("/feed");
-            navigate("/feed");
-          }
+          if (canSubmit) attemptSignIn();
         }}
       >
         <FormField
@@ -94,8 +132,12 @@ export function SignInPage() {
           </button>
         </FormField>
 
-        <Button type="submit" className={styles.authBtn} disabled={!canSubmit}>
-          Sign in →
+        <Button
+          type="submit"
+          className={styles.authBtn}
+          disabled={!canSubmit || busy}
+        >
+          {busy ? "Connecting…" : "Sign in →"}
         </Button>
       </form>
 
@@ -109,9 +151,10 @@ export function SignInPage() {
       <div className={styles.divider}>or</div>
 
       <button
+        type="button"
         className={styles.google}
-        onClick={continueWithGoogle}
-        disabled={googleLoading}
+        onClick={attemptSignIn}
+        disabled={busy}
       >
         <svg width={18} height={18} viewBox="0 0 18 18" aria-hidden>
           <path
@@ -131,7 +174,7 @@ export function SignInPage() {
             fill="#EA4335"
           />
         </svg>
-        {googleLoading ? "Connecting…" : "Continue with Google"}
+        {busy ? "Connecting…" : "Continue with Google"}
       </button>
     </AuthLayout>
   );

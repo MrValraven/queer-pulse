@@ -215,6 +215,7 @@ export function SkillsPage() {
             <span className={styles.filterLabel}>Browse by:</span>
             {FILTERS.map((f) => (
               <button
+                type="button"
                 key={f.value}
                 className={[styles.pill, active === f.value && styles.pillOn]
                   .filter(Boolean)

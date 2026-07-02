@@ -2,7 +2,7 @@
   padding: 120px 0 100px;
   background: var(--paper);
   border-top: 2px solid var(--plum);
-  min-height: 100vh;
+  min-height: 100svh;
 }
 .head {
   margin-bottom: 44px;
@@ -49,10 +49,12 @@
   font-weight: 600;
   padding: 5px 12px;
   border-radius: 999px;
-  transition: all 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 .pillDone {
-  background: rgba(74, 140, 111, 0.18);
+  background: rgba(var(--jade-rgb), 0.18);
   color: var(--jade);
 }
 .pillActive {
@@ -60,20 +62,39 @@
   color: var(--cream);
 }
 .pillPending {
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   color: var(--ink-40);
 }
 .progressBar {
   height: 3px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   border-radius: 2px;
   overflow: hidden;
 }
 .progressFill {
   height: 100%;
+  width: 100%;
+  transform-origin: left;
   background: var(--plum);
   border-radius: 2px;
-  transition: width 0.4s cubic-bezier(0.22, 0.68, 0.16, 1);
+  transition: transform 0.4s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .progressFill {
+    transition: none;
+  }
+  .checkOn svg,
+  .publishStatus,
+  .checkCount,
+  .publishStatusReady::before,
+  .success,
+  .successIcon,
+  .successTitle,
+  .successSub,
+  .successAccess,
+  .successActions {
+    animation: none;
+  }
 }
 
 .layout {
@@ -121,7 +142,7 @@
   font-size: 15px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 11px;
   padding: 11px 14px;
   outline: none;
@@ -173,21 +194,23 @@
   }
 }
 .typeCard {
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 14px;
   padding: 14px;
   cursor: pointer;
-  transition: all 0.18s var(--ease);
+  transition: border-color 0.18s var(--ease);
   text-align: left;
   background: var(--cream);
   font-family: var(--sans);
 }
-.typeCard:hover {
-  border-color: rgba(45, 27, 61, 0.28);
+@media (hover: hover) {
+  .typeCard:hover {
+    border-color: rgba(var(--plum-rgb), 0.28);
+  }
 }
 .typeCardSelected {
   border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
 }
 .typeIcon {
   font-size: 24px;
@@ -227,7 +250,7 @@
   font-size: 14px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 9px;
   padding: 8px 11px;
   outline: none;
@@ -307,8 +330,8 @@
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  background: rgba(74, 140, 111, 0.06);
-  border: 1px solid rgba(74, 140, 111, 0.2);
+  background: rgba(var(--jade-rgb), 0.06);
+  border: 1px solid rgba(var(--jade-rgb), 0.2);
   border-radius: 11px;
   cursor: pointer;
   margin-bottom: 16px;
@@ -317,12 +340,14 @@
   width: 20px;
   height: 20px;
   border-radius: 6px;
-  border: 1.5px solid rgba(45, 27, 61, 0.2);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.2);
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
   background: var(--cream);
 }
 .freeCheckOn {
@@ -349,25 +374,29 @@
   align-items: center;
   padding: 11px 14px;
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 11px;
   cursor: pointer;
   transition: border-color 0.2s var(--ease);
 }
-.accessItem:hover {
-  border-color: rgba(45, 27, 61, 0.22);
+@media (hover: hover) {
+  .accessItem:hover {
+    border-color: rgba(var(--plum-rgb), 0.22);
+  }
 }
 .accessItemSelected {
   border-color: var(--jade);
-  background: rgba(74, 140, 111, 0.04);
+  background: rgba(var(--jade-rgb), 0.04);
 }
 .accessCheck {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 1.5px solid rgba(45, 27, 61, 0.2);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.2);
   flex: none;
-  transition: all 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -391,7 +420,7 @@
   margin-bottom: 20px;
 }
 .reviewRow {
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
   border-radius: 12px;
   padding: 14px 16px;
 }
@@ -455,13 +484,15 @@
   width: 18px;
   height: 18px;
   border-radius: 5px;
-  border: 1.5px solid rgba(45, 27, 61, 0.2);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.2);
   flex: none;
   margin-top: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
   background: var(--cream);
 }
 .checkOn {
@@ -496,8 +527,10 @@
   transition: color 0.18s var(--ease);
   padding: 0;
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 .next {
   font-family: var(--sans);
@@ -509,21 +542,27 @@
   border-radius: 12px;
   padding: 13px 28px;
   cursor: pointer;
-  transition: all 0.2s var(--ease);
-  box-shadow: 0 6px 18px -10px rgba(45, 27, 61, 0.4);
+  transition:
+    background 0.2s var(--ease),
+    transform 0.2s var(--ease);
+  box-shadow: 0 6px 18px -10px rgba(var(--plum-rgb), 0.4);
 }
-.next:hover {
-  background: var(--plum-deep, #1a0f25);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .next:hover {
+    background: var(--plum-deep, #1a0f25);
+    transform: translateY(-1px);
+  }
 }
 .next:disabled {
   opacity: 0.45;
   cursor: not-allowed;
   box-shadow: none;
 }
-.next:disabled:hover {
-  background: var(--plum);
-  transform: none;
+@media (hover: hover) {
+  .next:disabled:hover {
+    background: var(--plum);
+    transform: none;
+  }
 }
 
 .checkIntro {
@@ -567,7 +606,7 @@
 }
 .publishStatusReady {
   color: var(--jade);
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
 }
 .publishStatusReady::before {
   content: "✓";
@@ -576,7 +615,7 @@
 
 .success {
   background: var(--plum);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 48px 44px;
   text-align: center;
   animation: qpToastIn var(--dur-slow) var(--ease-out) both;
@@ -591,7 +630,7 @@
   border-radius: 50%;
   font-size: 34px;
   color: var(--jade);
-  background: rgba(74, 140, 111, 0.16);
+  background: rgba(var(--jade-rgb), 0.16);
   animation: qpCheckPop var(--dur-slow) var(--ease) 160ms both;
 }
 .successTitle {
@@ -609,7 +648,7 @@
 }
 .successSub {
   font-size: 15.5px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.7;
   max-width: 48ch;
   margin: 0 auto 28px;
@@ -626,7 +665,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-bottom: 10px;
 }
 .successAccessTags {
@@ -642,8 +681,8 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--cream);
-  background: rgba(74, 140, 111, 0.28);
-  border: 1px solid rgba(74, 140, 111, 0.4);
+  background: rgba(var(--jade-rgb), 0.28);
+  border: 1px solid rgba(var(--jade-rgb), 0.4);
   border-radius: 7px;
   padding: 4px 10px;
 }
@@ -668,7 +707,7 @@
 }
 .tipCard {
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 20px;
 }

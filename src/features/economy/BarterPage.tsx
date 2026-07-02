@@ -129,6 +129,7 @@ export function BarterPage() {
             <div className={styles.modeTabs}>
               {MODES.map((m) => (
                 <button
+                  type="button"
                   key={m.value}
                   className={[
                     styles.modeTab,
@@ -149,6 +150,7 @@ export function BarterPage() {
           <div className={styles.cats}>
             {CATS.map((c) => (
               <button
+                type="button"
                 key={c.value}
                 className={[styles.chip, cat === c.value && styles.chipActive]
                   .filter(Boolean)

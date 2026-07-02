@@ -30,9 +30,9 @@
 .qp-skeleton {
   background: linear-gradient(
     90deg,
-    rgba(45, 27, 61, 0.05) 25%,
-    rgba(45, 27, 61, 0.1) 37%,
-    rgba(45, 27, 61, 0.05) 63%
+    rgba(var(--plum-rgb), 0.05) 25%,
+    rgba(var(--plum-rgb), 0.1) 37%,
+    rgba(var(--plum-rgb), 0.05) 63%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.4s ease-in-out infinite;
@@ -41,7 +41,7 @@
 /* ---------- Page header ---------- */
 .ev-head {
   padding-bottom: 30px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
   margin-bottom: 34px;
 }
 .ev-eyebrow {
@@ -97,8 +97,8 @@
 /* ---------- Calendar hero ---------- */
 .cal-card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 24px 26px 26px;
   position: sticky;
   top: 100px;
@@ -145,25 +145,32 @@
   transition: background 0.2s;
   margin-right: 4px;
 }
-.cal-today-btn:hover {
-  background: rgba(var(--accent-rgb), 0.16);
+@media (hover: hover) {
+  .cal-today-btn:hover {
+    background: rgba(var(--accent-rgb), 0.16);
+  }
 }
 .cal-arrow {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   background: transparent;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--ink-60);
-  transition: all 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
 }
-.cal-arrow:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+@media (hover: hover) {
+  .cal-arrow:hover {
+    border-color: var(--plum);
+    color: var(--plum);
+  }
 }
 .cal-arrow svg {
   width: 15px;
@@ -174,7 +181,7 @@
 .cal-views {
   display: flex;
   gap: 2px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 999px;
   padding: 3px;
   margin-bottom: 16px;
@@ -190,12 +197,15 @@
   border-radius: 999px;
   padding: 6px 0;
   cursor: pointer;
-  transition: all 0.18s;
+  transition:
+    background 0.18s,
+    box-shadow 0.18s,
+    color 0.18s;
 }
 .cal-view-btn.on {
   background: var(--paper);
   color: var(--plum);
-  box-shadow: 0 1px 5px -2px rgba(45, 27, 61, 0.3);
+  box-shadow: 0 1px 5px -2px rgba(var(--plum-rgb), 0.3);
 }
 
 .cal-grid {
@@ -233,8 +243,10 @@
     color 0.16s;
   font-family: var(--sans);
 }
-.cal-cell:hover:not(.empty) {
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .cal-cell:hover:not(.empty) {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 .cal-cell.empty {
   cursor: default;
@@ -277,7 +289,7 @@
   background: var(--jade);
 }
 .cal-dot.past {
-  background: rgba(45, 27, 61, 0.28);
+  background: rgba(var(--plum-rgb), 0.28);
 }
 .cal-dot.pending {
   background: transparent;
@@ -312,8 +324,8 @@ button.cal-cell.has {
   align-items: flex-start;
   padding: 10px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(45, 27, 61, 0.08);
-  background: rgba(45, 27, 61, 0.015);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  background: rgba(var(--plum-rgb), 0.015);
   cursor: pointer;
   text-align: left;
   width: 100%;
@@ -322,8 +334,10 @@ button.cal-cell.has {
     background 0.15s,
     border-color 0.15s;
 }
-.cw-day:hover {
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .cw-day:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 .cw-day.today {
   border-color: rgba(var(--accent-rgb), 0.4);
@@ -385,20 +399,22 @@ button.cal-cell.has {
   gap: 10px;
 }
 .cy-m {
-  border: 1px solid rgba(45, 27, 61, 0.08);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
   border-radius: 12px;
   padding: 10px 8px;
   cursor: pointer;
-  background: rgba(45, 27, 61, 0.015);
+  background: rgba(var(--plum-rgb), 0.015);
   transition:
     background 0.15s,
     border-color 0.15s;
   text-align: center;
   font-family: var(--sans);
 }
-.cy-m:hover {
-  background: rgba(45, 27, 61, 0.05);
-  border-color: rgba(45, 27, 61, 0.2);
+@media (hover: hover) {
+  .cy-m:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    border-color: rgba(var(--plum-rgb), 0.2);
+  }
 }
 .cy-m.now {
   border-color: rgba(var(--accent-rgb), 0.4);
@@ -431,7 +447,7 @@ button.cal-cell.has {
   gap: 16px;
   margin-top: 20px;
   padding-top: 18px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .cal-leg {
   display: flex;
@@ -463,7 +479,7 @@ button.cal-cell.has {
   gap: 8px;
   margin-top: 18px;
   padding-top: 18px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .cal-sub-btn {
   display: flex;
@@ -474,17 +490,21 @@ button.cal-cell.has {
   font-size: 13px;
   font-weight: 600;
   color: var(--ink);
-  background: rgba(45, 27, 61, 0.035);
-  border: 1px solid rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.035);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
   border-radius: 12px;
   padding: 10px 13px;
   cursor: pointer;
-  transition: all 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
   text-align: left;
 }
-.cal-sub-btn:hover {
-  border-color: rgba(45, 27, 61, 0.2);
-  background: rgba(45, 27, 61, 0.06);
+@media (hover: hover) {
+  .cal-sub-btn:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    background: rgba(var(--plum-rgb), 0.06);
+  }
 }
 .cal-sub-btn svg {
   width: 16px;
@@ -534,7 +554,7 @@ button.cal-cell.has {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   margin-bottom: 12px;
   position: relative;
 }
@@ -553,7 +573,7 @@ button.cal-cell.has {
 }
 .ins-sub {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.5;
   margin-top: 6px;
   position: relative;
@@ -563,7 +583,7 @@ button.cal-cell.has {
   gap: 18px;
   margin-top: 16px;
   padding-top: 14px;
-  border-top: 1px solid rgba(247, 243, 238, 0.14);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.14);
   position: relative;
 }
 .ins-item .ins-n {
@@ -573,7 +593,7 @@ button.cal-cell.has {
 }
 .ins-item .ins-l {
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   margin-top: 2px;
 }
 
@@ -588,20 +608,26 @@ button.cal-cell.has {
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 600;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   background: transparent;
   border-radius: 999px;
   padding: 8px 17px;
   cursor: pointer;
   color: var(--ink-60);
-  transition: all 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    opacity 0.2s var(--ease);
   display: inline-flex;
   align-items: center;
   gap: 7px;
 }
-.pill:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+@media (hover: hover) {
+  .pill:hover {
+    border-color: var(--plum);
+    color: var(--plum);
+  }
 }
 .pill.active {
   background: var(--plum);
@@ -639,7 +665,7 @@ button.cal-cell.has {
 }
 .ev-search {
   width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   padding: 11px 14px 11px 40px;
   font-family: var(--sans);
@@ -662,17 +688,22 @@ button.cal-cell.has {
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 600;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   background: transparent;
   border-radius: 999px;
   padding: 6px 13px;
   cursor: pointer;
   color: var(--ink-60);
-  transition: all 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    color 0.18s var(--ease);
 }
-.fchip:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+@media (hover: hover) {
+  .fchip:hover {
+    border-color: var(--plum);
+    color: var(--plum);
+  }
 }
 .fchip.on {
   background: rgba(var(--jade-rgb), 0.12);
@@ -693,7 +724,7 @@ button.cal-cell.has {
   font-weight: 600;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 999px;
   padding: 7px 12px;
   cursor: pointer;
@@ -708,23 +739,28 @@ button.cal-cell.has {
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 999px;
   padding: 7px 13px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.18s;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    color 0.18s;
 }
-.ctrl-btn:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+@media (hover: hover) {
+  .ctrl-btn:hover {
+    border-color: var(--plum);
+    color: var(--plum);
+  }
 }
 .ctrl-btn.on {
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   color: var(--plum);
-  border-color: rgba(45, 27, 61, 0.25);
+  border-color: rgba(var(--plum-rgb), 0.25);
 }
 .ctrl-btn svg {
   width: 13px;
@@ -772,8 +808,10 @@ button.cal-cell.has {
   gap: 5px;
   transition: background 0.2s;
 }
-.dayfilter-clear:hover {
-  background: rgba(var(--accent-rgb), 0.16);
+@media (hover: hover) {
+  .dayfilter-clear:hover {
+    background: rgba(var(--accent-rgb), 0.16);
+  }
 }
 
 /* ---------- Agenda ---------- */
@@ -809,7 +847,7 @@ button.cal-cell.has {
 .ev-card {
   position: relative;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 18px 20px;
   display: flex;
@@ -820,9 +858,11 @@ button.cal-cell.has {
     transform 0.22s var(--ease);
   animation: evCardIn 0.28s var(--ease) both;
 }
-.ev-card:hover {
-  box-shadow: 0 8px 26px -14px rgba(45, 27, 61, 0.28);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .ev-card:hover {
+    box-shadow: 0 8px 26px -14px rgba(var(--plum-rgb), 0.28);
+    transform: translateY(-1px);
+  }
 }
 .ev-card.hosting {
   background: linear-gradient(
@@ -836,15 +876,17 @@ button.cal-cell.has {
 .ev-card.past {
   opacity: 0.74;
 }
-.ev-card.past:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .ev-card.past:hover {
+    opacity: 1;
+  }
 }
 .ev-card.cancelled {
   opacity: 0.7;
 }
 .ev-card.cancelled .ev-name {
   text-decoration: line-through;
-  text-decoration-color: rgba(45, 27, 61, 0.3);
+  text-decoration-color: rgba(var(--plum-rgb), 0.3);
 }
 
 /* density: compact */
@@ -871,9 +913,9 @@ button.cal-cell.has {
   width: 62px;
   text-align: center;
   border-radius: 13px;
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   padding: 10px 0 11px;
-  border: 1px solid rgba(45, 27, 61, 0.06);
+  border: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .ev-card.hosting .ev-tile {
   background: rgba(var(--accent-rgb), 0.1);
@@ -913,14 +955,17 @@ button.cal-cell.has {
   width: 22px;
   height: 22px;
   border-radius: 7px;
-  border: 1.5px solid rgba(45, 27, 61, 0.25);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.25);
   background: var(--paper);
   cursor: pointer;
   display: none;
   align-items: center;
   justify-content: center;
   align-self: center;
-  transition: all 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    opacity 0.15s;
 }
 .ev-layout.selecting .ev-check {
   display: flex;
@@ -977,7 +1022,7 @@ button.cal-cell.has {
   background: var(--jade);
 }
 .status-pill.maybe {
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   color: var(--plum);
 }
 .status-pill.maybe .sd {
@@ -992,14 +1037,14 @@ button.cal-cell.has {
   background: var(--paper);
 }
 .status-pill.attended {
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   color: var(--ink-60);
 }
 .status-pill.attended .sd {
   background: var(--ink-40);
 }
 .status-pill.missed {
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   color: var(--ink-40);
 }
 .status-pill.missed .sd {
@@ -1012,7 +1057,7 @@ button.cal-cell.has {
 .status-pill.pending {
   background: transparent;
   color: var(--ink-60);
-  border: 1px solid rgba(45, 27, 61, 0.18);
+  border: 1px solid rgba(var(--plum-rgb), 0.18);
 }
 .status-pill.pending .sd {
   background: var(--ink-40);
@@ -1098,9 +1143,11 @@ button.cal-cell.has {
   height: 13px;
   flex: none;
 }
-.ev-friends:hover {
-  text-decoration: underline;
-  text-underline-offset: 2px;
+@media (hover: hover) {
+  .ev-friends:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
 }
 
 .ev-foot {
@@ -1172,8 +1219,10 @@ button.cal-cell.has {
   font-family: var(--sans);
   padding: 0;
 }
-.ev-link:hover {
-  opacity: 0.65;
+@media (hover: hover) {
+  .ev-link:hover {
+    opacity: 0.65;
+  }
 }
 .ev-link.quiet {
   color: var(--ink-60);
@@ -1233,8 +1282,10 @@ button.cal-cell.has {
 .acc-chip.clickable {
   cursor: pointer;
 }
-.acc-chip.clickable:hover {
-  filter: brightness(0.95);
+@media (hover: hover) {
+  .acc-chip.clickable:hover {
+    filter: brightness(0.95);
+  }
 }
 .acc-chip.note {
   color: var(--accent-ink);
@@ -1245,7 +1296,7 @@ button.cal-cell.has {
 }
 .acc-chip.policy {
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
 }
 .acc-chip.policy .ad {
   background: var(--plum);
@@ -1303,7 +1354,7 @@ button.cal-cell.has {
   font-weight: 700;
 }
 .ev-edge.cancel {
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   color: var(--ink-60);
 }
 .ev-edge.cancel strong {
@@ -1314,7 +1365,7 @@ button.cal-cell.has {
   color: var(--accent-ink);
 }
 .ev-edge.block {
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   color: var(--ink-60);
 }
 .ev-edge a {
@@ -1334,7 +1385,7 @@ button.cal-cell.has {
   font-weight: 600;
   color: var(--ink-60);
   margin-top: 11px;
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   border-radius: 999px;
   padding: 5px 12px;
   transition: background 0.18s;
@@ -1342,9 +1393,11 @@ button.cal-cell.has {
   border: none;
   font-family: var(--sans);
 }
-.ev-series:hover {
-  background: rgba(45, 27, 61, 0.08);
-  color: var(--plum);
+@media (hover: hover) {
+  .ev-series:hover {
+    background: rgba(var(--plum-rgb), 0.08);
+    color: var(--plum);
+  }
 }
 .ev-series svg {
   width: 13px;
@@ -1401,7 +1454,7 @@ button.cal-cell.has {
   font-size: 12px;
   color: var(--ink-60);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 999px;
   padding: 3px 10px;
 }
@@ -1420,7 +1473,7 @@ button.cal-cell.has {
   font-size: 11.5px;
   font-weight: 700;
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 999px;
   padding: 3px 10px;
 }
@@ -1432,7 +1485,7 @@ button.cal-cell.has {
   gap: 7px;
   margin-top: 14px;
   padding-top: 13px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .ev-card.hosting .card-tools {
   border-top-color: rgba(var(--accent-rgb), 0.16);
@@ -1446,16 +1499,21 @@ button.cal-cell.has {
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.13);
+  border: 1px solid rgba(var(--plum-rgb), 0.13);
   border-radius: 999px;
   padding: 6px 13px;
   cursor: pointer;
-  transition: all 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    color 0.18s var(--ease);
 }
-.tool-btn:hover {
-  border-color: var(--plum);
-  color: var(--plum);
-  background: rgba(45, 27, 61, 0.03);
+@media (hover: hover) {
+  .tool-btn:hover {
+    border-color: var(--plum);
+    color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.03);
+  }
 }
 .tool-btn svg {
   width: 13px;
@@ -1467,10 +1525,12 @@ button.cal-cell.has {
   border-color: rgba(var(--jade-rgb), 0.4);
   background: rgba(var(--jade-rgb), 0.08);
 }
-.tool-btn.danger:hover {
-  border-color: rgba(var(--accent-rgb), 0.5);
-  color: var(--accent-ink);
-  background: rgba(var(--accent-rgb), 0.05);
+@media (hover: hover) {
+  .tool-btn.danger:hover {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    color: var(--accent-ink);
+    background: rgba(var(--accent-rgb), 0.05);
+  }
 }
 
 /* ---------- Overflow "More" menu ---------- */
@@ -1479,9 +1539,9 @@ button.cal-cell.has {
   z-index: 180;
   min-width: 208px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 14px;
-  box-shadow: 0 22px 54px -18px rgba(45, 27, 61, 0.42);
+  box-shadow: 0 22px 54px -18px rgba(var(--plum-rgb), 0.42);
   padding: 6px;
   opacity: 0;
   transform: translateY(-6px);
@@ -1512,8 +1572,10 @@ button.cal-cell.has {
   text-align: left;
   transition: background 0.14s;
 }
-.mm-item:hover {
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .mm-item:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 .mm-item svg {
   width: 15px;
@@ -1529,7 +1591,7 @@ button.cal-cell.has {
 }
 .mm-sep {
   height: 1px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   margin: 5px 8px;
 }
 
@@ -1537,7 +1599,7 @@ button.cal-cell.has {
 .disco {
   margin-top: 34px;
   padding-top: 26px;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .disco-head {
   display: flex;
@@ -1563,7 +1625,7 @@ button.cal-cell.has {
 }
 .disco-card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 16px 17px;
   display: flex;
@@ -1612,9 +1674,9 @@ button.cal-cell.has {
 .empty {
   text-align: center;
   padding: 58px 24px;
-  border: 1.5px dashed rgba(45, 27, 61, 0.16);
+  border: 1.5px dashed rgba(var(--plum-rgb), 0.16);
   border-radius: 20px;
-  background: rgba(45, 27, 61, 0.015);
+  background: rgba(var(--plum-rgb), 0.015);
   animation: qpTabIn 0.3s var(--ease) both;
 }
 .empty-icon {
@@ -1643,7 +1705,7 @@ button.cal-cell.has {
   stroke: var(--jade);
 }
 .empty-icon.plum {
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
 }
 .empty-icon.plum svg {
   stroke: var(--plum);
@@ -1685,7 +1747,7 @@ button.cal-cell.has {
 .mview {
   display: none;
   gap: 3px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 999px;
   padding: 4px;
   margin-bottom: 20px;
@@ -1701,7 +1763,10 @@ button.cal-cell.has {
   border-radius: 999px;
   padding: 8px 20px;
   cursor: pointer;
-  transition: all 0.18s;
+  transition:
+    background 0.18s,
+    box-shadow 0.18s,
+    color 0.18s;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -1709,7 +1774,7 @@ button.cal-cell.has {
 .mview-btn.on {
   background: var(--paper);
   color: var(--plum);
-  box-shadow: 0 2px 8px -3px rgba(45, 27, 61, 0.2);
+  box-shadow: 0 2px 8px -3px rgba(var(--plum-rgb), 0.2);
 }
 .mview-btn svg {
   width: 14px;
@@ -1758,10 +1823,10 @@ button.cal-cell.has {
   background: var(--accent);
 }
 .cal-peek .cpk-dot.past {
-  background: rgba(247, 243, 238, 0.4);
+  background: rgba(var(--cream-rgb), 0.4);
 }
 .cal-peek .cpk-dot.pending {
-  background: rgba(247, 243, 238, 0.7);
+  background: rgba(var(--cream-rgb), 0.7);
 }
 
 /* ---------- Today / starts-soon ---------- */
@@ -1835,8 +1900,10 @@ button.cal-cell.has {
   font-size: 13.5px;
   padding: 0;
 }
-.meta-link:hover {
-  border-bottom-color: currentColor;
+@media (hover: hover) {
+  .meta-link:hover {
+    border-bottom-color: currentColor;
+  }
 }
 
 /* ---------- Conflict note ---------- */
@@ -1844,7 +1911,7 @@ button.cal-cell.has {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 11px;
   padding: 8px 13px;
   margin-top: 12px;
@@ -1904,27 +1971,31 @@ button.cal-cell.has {
   font-size: 13px;
   font-weight: 700;
   color: var(--cream);
-  background: rgba(247, 243, 238, 0.16);
+  background: rgba(var(--cream-rgb), 0.16);
   border: none;
   border-radius: 999px;
   padding: 7px 15px;
   cursor: pointer;
   transition: background 0.2s;
 }
-.bulk-act:hover {
-  background: rgba(247, 243, 238, 0.3);
+@media (hover: hover) {
+  .bulk-act:hover {
+    background: rgba(var(--cream-rgb), 0.3);
+  }
 }
 .bulk-close {
   background: none;
   border: none;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   cursor: pointer;
   font-size: 18px;
   line-height: 1;
   padding: 0 6px;
 }
-.bulk-close:hover {
-  color: var(--cream);
+@media (hover: hover) {
+  .bulk-close:hover {
+    color: var(--cream);
+  }
 }
 
 /* ---------- Offline banner ---------- */
@@ -1955,7 +2026,7 @@ button.cal-cell.has {
 }
 .sk-card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.08);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
   border-radius: 18px;
   padding: 18px 20px;
   display: flex;
@@ -2000,20 +2071,24 @@ button.cal-cell.has {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   background: var(--paper);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--plum);
-  transition: all 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
   flex: none;
 }
-.notif-btn:hover,
-.gear-btn:hover {
-  border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.03);
+@media (hover: hover) {
+  .notif-btn:hover,
+  .gear-btn:hover {
+    border-color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.03);
+  }
 }
 .notif-btn svg,
 .gear-btn svg {
@@ -2044,9 +2119,9 @@ button.cal-cell.has {
   width: 344px;
   max-width: calc(100vw - 40px);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 18px;
-  box-shadow: 0 24px 60px -20px rgba(45, 27, 61, 0.42);
+  box-shadow: 0 24px 60px -20px rgba(var(--plum-rgb), 0.42);
   z-index: 140;
   animation: qpTabIn 0.2s var(--ease) both;
   overflow: hidden;
@@ -2056,7 +2131,7 @@ button.cal-cell.has {
   align-items: center;
   justify-content: space-between;
   padding: 15px 18px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .notif-h-title {
   font-family: var(--serif);
@@ -2074,8 +2149,10 @@ button.cal-cell.has {
   cursor: pointer;
   border-radius: 6px;
 }
-.notif-clear:hover {
-  opacity: 0.7;
+@media (hover: hover) {
+  .notif-clear:hover {
+    opacity: 0.7;
+  }
 }
 .notif-list {
   max-height: 360px;
@@ -2085,7 +2162,7 @@ button.cal-cell.has {
   display: flex;
   gap: 11px;
   padding: 13px 18px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   border-left: none;
   border-right: none;
   border-top: none;
@@ -2099,8 +2176,10 @@ button.cal-cell.has {
 .notif-item:last-child {
   border-bottom: none;
 }
-.notif-item:hover {
-  background: rgba(45, 27, 61, 0.03);
+@media (hover: hover) {
+  .notif-item:hover {
+    background: rgba(var(--plum-rgb), 0.03);
+  }
 }
 .notif-item.unread {
   background: rgba(var(--accent-rgb), 0.045);
@@ -2115,7 +2194,7 @@ button.cal-cell.has {
 }
 .notif-item:not(.unread) .ni-dot {
   background: transparent;
-  border: 1.5px solid rgba(45, 27, 61, 0.18);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.18);
 }
 .ni-body {
   flex: 1;
@@ -2234,7 +2313,7 @@ button.cal-cell.has {
 .field input,
 .field select {
   width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 11px;
   padding: 11px 13px;
   font-family: var(--sans);
@@ -2259,7 +2338,7 @@ button.cal-cell.has {
   align-items: center;
   gap: 12px;
   background: var(--paper);
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 13px;
   padding: 13px 15px;
   cursor: pointer;
@@ -2271,12 +2350,15 @@ button.cal-cell.has {
   width: 21px;
   height: 21px;
   border-radius: 7px;
-  border: 1.5px solid rgba(45, 27, 61, 0.25);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.25);
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.18s;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    opacity 0.18s;
 }
 .guest-cb.on {
   background: var(--jade);
@@ -2338,7 +2420,7 @@ button.cal-cell.has {
   justify-content: space-between;
   gap: 14px;
   padding: 13px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .set-row:last-child {
   border-bottom: none;
@@ -2364,7 +2446,7 @@ button.cal-cell.has {
   justify-content: space-between;
   gap: 12px;
   padding: 13px 15px;
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 12px;
   background: var(--paper);
   cursor: pointer;
@@ -2374,8 +2456,10 @@ button.cal-cell.has {
   font-family: var(--sans);
   text-align: left;
 }
-.set-link-row:hover {
-  border-color: rgba(45, 27, 61, 0.25);
+@media (hover: hover) {
+  .set-link-row:hover {
+    border-color: rgba(var(--plum-rgb), 0.25);
+  }
 }
 .slr-t {
   font-size: 13.5px;
@@ -2496,14 +2580,14 @@ button.cal-cell.has {
 }
 .confirm-name {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   margin-bottom: 6px;
   position: relative;
   z-index: 1;
 }
 .confirm-meta {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-bottom: 28px;
   position: relative;
   z-index: 1;
@@ -2531,7 +2615,7 @@ button.cal-cell.has {
   color: var(--cream);
   padding: 11px 13px 11px 20px;
   border-radius: 999px;
-  box-shadow: 0 14px 36px -12px rgba(45, 27, 61, 0.55);
+  box-shadow: 0 14px 36px -12px rgba(var(--plum-rgb), 0.55);
   font-size: 14px;
   font-weight: 500;
   opacity: 0;
@@ -2550,15 +2634,17 @@ button.cal-cell.has {
   font-size: 13px;
   font-weight: 700;
   color: var(--cream);
-  background: rgba(247, 243, 238, 0.16);
+  background: rgba(var(--cream-rgb), 0.16);
   border: none;
   border-radius: 999px;
   padding: 7px 16px;
   cursor: pointer;
   transition: background 0.2s;
 }
-.undo-btn:hover {
-  background: rgba(247, 243, 238, 0.3);
+@media (hover: hover) {
+  .undo-btn:hover {
+    background: rgba(var(--cream-rgb), 0.3);
+  }
 }
 
 /* ---------- Removing card animation ---------- */
@@ -2607,8 +2693,10 @@ button.cal-cell.has {
     border-color 0.15s,
     background 0.15s;
 }
-.report-reason:hover {
-  border-color: rgba(var(--accent-rgb), 0.4);
+@media (hover: hover) {
+  .report-reason:hover {
+    border-color: rgba(var(--accent-rgb), 0.4);
+  }
 }
 .report-reason.on {
   border-color: var(--accent);

@@ -15,7 +15,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 34px;
   display: flex;
@@ -55,10 +55,12 @@
     transparent 62%
   );
 }
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 22px 44px -26px rgba(45, 27, 61, 0.4);
-  border-color: rgba(45, 27, 61, 0.18);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 44px -26px rgba(var(--plum-rgb), 0.4);
+    border-color: rgba(var(--plum-rgb), 0.18);
+  }
 }
 .icon {
   width: 54px;
@@ -125,7 +127,7 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 999px;
   padding: 5px 12px;
 }
@@ -142,7 +144,9 @@
     gap 0.25s var(--ease),
     color 0.25s var(--ease);
 }
-.card:hover .cta {
-  gap: 11px;
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .card:hover .cta {
+    gap: 11px;
+    color: var(--accent-ink);
+  }
 }

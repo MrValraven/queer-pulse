@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiCheck, FiFolder, FiPlus, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
@@ -11,12 +11,22 @@ import styles from "./CollectionsModals.module.css";
 /** Shared frame: backdrop click-to-close, close button, scroll lock. */
 function Modal({
   onClose,
+  label,
   children,
 }: {
   onClose: () => void;
+  /** Accessible dialog name announced to screen readers. */
+  label?: string;
   children: ReactNode;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
     <div
       className={styles.overlay}
@@ -24,7 +34,12 @@ function Modal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.modal} role="dialog" aria-modal="true">
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-label={label ?? "Dialog"}
+      >
         <button
           type="button"
           className={styles.close}
@@ -58,7 +73,7 @@ export function NewCollectionModal({
   const canCreate = name.trim().length > 0;
 
   return (
-    <Modal onClose={onClose}>
+    <Modal onClose={onClose} label="New collection">
       <div className={styles.eyebrow}>New collection</div>
       <h2 className={styles.title}>
         What are you <em>gathering?</em>
@@ -119,7 +134,7 @@ export function ViewCollectionModal({
   onClose: () => void;
 }) {
   return (
-    <Modal onClose={onClose}>
+    <Modal onClose={onClose} label="View collection">
       <div className={styles.eyebrow}>
         {collection.privacyLabel} · {collection.updated}
       </div>
@@ -183,7 +198,7 @@ export function AddToCollectionModal({
   if (added) {
     const c = collections.find((x) => x.id === added);
     return (
-      <Modal onClose={onClose}>
+      <Modal onClose={onClose} label="Added to collection">
         <div className={styles.success}>
           <div className={styles.successIcon}>
             <FiCheck size={26} aria-hidden />
@@ -204,7 +219,7 @@ export function AddToCollectionModal({
   }
 
   return (
-    <Modal onClose={onClose}>
+    <Modal onClose={onClose} label="Add to collection">
       <div className={styles.eyebrow}>Add to collection</div>
       <h2 className={styles.title}>Where should this live?</h2>
       <p className={styles.sub}>{itemTitle}</p>

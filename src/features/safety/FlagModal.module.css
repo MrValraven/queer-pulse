@@ -49,7 +49,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
   font-size: 18px;
@@ -59,8 +59,10 @@
   justify-content: center;
   transition: background 0.2s var(--ease);
 }
-.close:hover {
-  background: rgba(45, 27, 61, 0.14);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.14);
+  }
 }
 
 .eye {
@@ -112,7 +114,7 @@
   align-items: center;
   gap: 11px;
   padding: 12px 14px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 12px;
   cursor: pointer;
   font-size: 14px;
@@ -133,7 +135,7 @@
 .textarea {
   width: 100%;
   box-sizing: border-box;
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   border-radius: 12px;
   padding: 13px 16px;
   font-family: var(--sans);
@@ -149,6 +151,7 @@
 }
 .textarea:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
 }
 .counter {
   font-size: 12px;
@@ -161,7 +164,7 @@
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   border-radius: 12px;
   padding: 14px 16px;
   font-size: 12.5px;

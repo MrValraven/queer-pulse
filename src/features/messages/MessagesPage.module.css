@@ -1,15 +1,15 @@
 .app {
   display: flex;
-  height: calc(100vh - 104px);
+  height: calc(100svh - 104px);
   margin-top: 92px;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 
 /* Thread list */
 .threadPanel {
   width: 320px;
   flex: none;
-  border-right: 1px solid rgba(45, 27, 61, 0.09);
+  border-right: 1px solid rgba(var(--plum-rgb), 0.09);
   background: var(--paper);
   display: flex;
   flex-direction: column;
@@ -17,7 +17,7 @@
 }
 .tpTop {
   padding: 16px 16px 12px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .tpHeadRow {
   display: flex;
@@ -35,7 +35,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
   display: flex;
@@ -44,8 +44,10 @@
   color: var(--plum);
   transition: background 0.2s;
 }
-.composeBtn:hover {
-  background: rgba(45, 27, 61, 0.13);
+@media (hover: hover) {
+  .composeBtn:hover {
+    background: rgba(var(--plum-rgb), 0.13);
+  }
 }
 .threadList {
   flex: 1;
@@ -58,7 +60,7 @@
   padding: 13px 16px;
   cursor: pointer;
   transition: background 0.15s;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.05);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.05);
   width: 100%;
   text-align: left;
   background: none;
@@ -66,11 +68,13 @@
   border-right: none;
   border-top: none;
 }
-.threadRow:hover {
-  background: rgba(45, 27, 61, 0.03);
+@media (hover: hover) {
+  .threadRow:hover {
+    background: rgba(var(--plum-rgb), 0.03);
+  }
 }
 .threadActive {
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
 }
 .trAv {
   position: relative;
@@ -130,7 +134,7 @@
 }
 .topbar {
   padding: 14px 20px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -193,7 +197,7 @@
 }
 .received {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px 18px 18px 4px;
   color: var(--ink);
 }
@@ -211,7 +215,7 @@
 
 .composer {
   padding: 14px 16px;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
   display: flex;
   align-items: flex-end;
   gap: 10px;
@@ -220,14 +224,13 @@
 }
 .composerTa {
   flex: 1;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 12px;
   padding: 10px 14px;
   font-family: var(--sans);
   font-size: 15px;
   color: var(--ink);
   background: var(--cream);
-  outline: none;
   resize: none;
   min-height: 44px;
   max-height: 120px;
@@ -237,6 +240,9 @@
 .composerTa:focus {
   border-color: var(--plum);
   background: var(--paper);
+}
+.composerTa:focus:not(:focus-visible) {
+  outline: none;
 }
 .sendBtn {
   width: 38px;
@@ -249,7 +255,7 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  transition: all 0.2s;
+  transition: opacity 0.2s var(--ease);
   opacity: 0.4;
 }
 .sendBtnActive {
@@ -257,7 +263,7 @@
 }
 .officialBar {
   padding: 14px 16px;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
   background: var(--paper);
   text-align: center;
   font-size: 13px;
@@ -280,8 +286,8 @@
 :global([data-theme="dark"]) .topbar,
 :global([data-theme="dark"]) .composer,
 :global([data-theme="dark"]) .officialBar {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .received {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

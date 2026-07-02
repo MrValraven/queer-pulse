@@ -1,11 +1,11 @@
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 24px;
   padding: 42px 42px 32px;
   width: 100%;
   max-width: 520px;
-  box-shadow: 0 6px 52px -10px rgba(45, 27, 61, 0.16);
+  box-shadow: 0 6px 52px -10px rgba(var(--plum-rgb), 0.16);
   position: relative;
   z-index: 1;
 }
@@ -13,7 +13,7 @@
 .ic {
   width: 78px;
   height: 78px;
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   background: var(--plum);
   display: flex;
   align-items: center;
@@ -150,19 +150,22 @@
   color: var(--ink-60);
   cursor: pointer;
   border-radius: 8px;
-  transition: all 0.2s;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
 }
 
 .tabActive {
   background: var(--paper);
   color: var(--plum);
-  box-shadow: 0 1px 4px rgba(45, 27, 61, 0.08);
+  box-shadow: 0 1px 4px rgba(var(--plum-rgb), 0.08);
 }
 
 .howto {
   padding: 16px 18px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 12px;
   margin-bottom: 20px;
 }
@@ -209,7 +212,7 @@
   display: flex;
   gap: 8px;
   padding-top: 16px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
   flex-wrap: wrap;
   align-items: center;
 }
@@ -232,8 +235,10 @@
   transition: color 0.2s;
 }
 
-.laterBtn:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .laterBtn:hover {
+    color: var(--plum);
+  }
 }
 
 .actionsFoot {
@@ -250,8 +255,10 @@
   text-decoration: none;
 }
 
-.appLink:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .appLink:hover {
+    text-decoration: underline;
+  }
 }
 
 @media (max-width: 500px) {

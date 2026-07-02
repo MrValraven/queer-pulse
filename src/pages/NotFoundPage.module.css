@@ -1,5 +1,5 @@
 .page {
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -130,7 +130,7 @@
   gap: 4px;
   padding: 14px 16px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
@@ -139,9 +139,11 @@
     transform 0.2s var(--ease);
 }
 
-.link:hover {
-  border-color: rgba(45, 27, 61, 0.2);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .link:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    transform: translateY(-2px);
+  }
 }
 
 .linkIcon {
@@ -173,7 +175,7 @@
   font-size: 14.5px;
   padding: 12px 16px;
   background: var(--paper);
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-right: none;
   border-radius: 11px 0 0 11px;
   color: var(--ink);
@@ -182,7 +184,7 @@
 }
 
 .searchInput:focus {
-  border-color: rgba(45, 27, 61, 0.3);
+  border-color: rgba(var(--plum-rgb), 0.3);
 }
 
 .searchInput::placeholder {
@@ -202,8 +204,10 @@
   transition: opacity 0.2s;
 }
 
-.searchBtn:hover {
-  opacity: 0.88;
+@media (hover: hover) {
+  .searchBtn:hover {
+    opacity: 0.88;
+  }
 }
 
 @media (max-width: 480px) {

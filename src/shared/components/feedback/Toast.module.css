@@ -52,8 +52,10 @@
   opacity: 0.85;
   transition: opacity 0.15s var(--ease, ease);
 }
-.action:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .action:hover {
+    opacity: 1;
+  }
 }
 .action svg {
   width: 13px;
@@ -71,7 +73,7 @@
 .info {
   background: var(--paper);
   color: var(--ink);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
 }
 
 @media (prefers-reduced-motion: reduce) {

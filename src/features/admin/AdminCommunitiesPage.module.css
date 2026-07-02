@@ -34,10 +34,12 @@
     transform 0.18s var(--ease),
     box-shadow 0.18s var(--ease);
 }
-.card:hover {
-  border-color: rgba(var(--plum-rgb), 0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 18px 40px -28px rgba(var(--plum-rgb), 0.5);
+@media (hover: hover) {
+  .card:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px -28px rgba(var(--plum-rgb), 0.5);
+  }
 }
 .card:focus-visible {
   outline: 2px solid var(--accent-ink);
@@ -86,8 +88,10 @@
   padding: 2px 4px;
   transition: background 0.16s var(--ease);
 }
-.scoreBtn:hover {
-  background: rgba(var(--plum-rgb), 0.06);
+@media (hover: hover) {
+  .scoreBtn:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
 }
 .scoreBtn:focus-visible {
   outline: 2px solid currentColor;
@@ -157,8 +161,10 @@
   cursor: pointer;
   transition: color 0.16s var(--ease);
 }
-.backLink:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .backLink:hover {
+    color: var(--plum);
+  }
 }
 .backLink svg {
   width: 15px;
@@ -221,8 +227,10 @@
   cursor: pointer;
   transition: filter 0.16s var(--ease);
 }
-.healthChip:hover {
-  filter: brightness(0.97);
+@media (hover: hover) {
+  .healthChip:hover {
+    filter: brightness(0.97);
+  }
 }
 .healthChipDot {
   width: 6px;
@@ -417,7 +425,7 @@
   max-width: 440px;
   font-size: 14.5px;
   line-height: 1.6;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
 }
 
 /* Member set-row */
@@ -465,8 +473,10 @@
   cursor: pointer;
   transition: opacity 0.16s var(--ease);
 }
-.linkBtn:hover {
-  opacity: 0.7;
+@media (hover: hover) {
+  .linkBtn:hover {
+    opacity: 0.7;
+  }
 }
 
 /* Settings set-row */
@@ -543,8 +553,10 @@
   cursor: pointer;
   transition: background 0.16s var(--ease);
 }
-.modChipX:hover {
-  background: rgba(var(--jade-rgb), 0.32);
+@media (hover: hover) {
+  .modChipX:hover {
+    background: rgba(var(--jade-rgb), 0.32);
+  }
 }
 .modChipX svg {
   width: 11px;
@@ -564,9 +576,11 @@
     border-color 0.16s var(--ease),
     color 0.16s var(--ease);
 }
-.addBtn:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+@media (hover: hover) {
+  .addBtn:hover {
+    border-color: var(--plum);
+    color: var(--plum);
+  }
 }
 
 /* Toggle setting rows */
@@ -694,8 +708,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card:hover {
-    transform: none;
+  @media (hover: hover) {
+    .card:hover {
+      transform: none;
+    }
   }
   .sparkLine,
   .ringArc {

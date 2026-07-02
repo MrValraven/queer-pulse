@@ -79,7 +79,7 @@ function Composer({
           }
         }}
       />
-      <button className={styles.rcSend} onClick={submit}>
+      <button type="button" className={styles.rcSend} onClick={submit}>
         Send
       </button>
     </div>
@@ -174,6 +174,7 @@ export function ConnectionCard() {
       <p className={styles.connIntro}>She sent you a note with her request:</p>
       <div className={styles.connNote}>{c.note}</div>
       <button
+        type="button"
         className={styles.mutualPill}
         onClick={() => navigate(routes.connections)}
       >
@@ -198,6 +199,7 @@ export function ConnectionCard() {
         </Button>
       </div>
       <button
+        type="button"
         className={styles.notNow}
         onClick={() => showToast("We'll remind you later", "info")}
       >

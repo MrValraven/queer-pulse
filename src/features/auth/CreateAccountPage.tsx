@@ -1,168 +1,21 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, FormField } from "../../shared/components/ui";
-import { getMember } from "../members/data/members";
+import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAcceptInvite } from "./api/useAcceptInvite";
 import { consumePendingInvite, readInviteWelcome } from "./api/pendingInvite";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { AuthLayout } from "./AuthLayout";
+import {
+  FALLBACK_INVITER,
+  PW_MIN,
+  passwordScore,
+  type Visibility,
+} from "./createAccount.data";
+import { AccountFields, type Touched } from "./CreateAccountFields";
+import { AboutAndVisibility } from "./CreateAccountAbout";
 import styles from "./auth.module.css";
-
-const INVITER = getMember("ines")!;
-const INVITER_NAME = `${INVITER.first} ${INVITER.last}`;
-/** The mock inviter, shown when the page is reached without an invite in flight. */
-const FALLBACK_INVITER = {
-  name: INVITER_NAME,
-  initials: INVITER.initials,
-  photo: INVITER.photo,
-};
-
-type Visibility = "open" | "network" | "private";
-const PRONOUNS = ["he/him", "she/her", "they/them", "she/they", "he/they"];
-
-const STRENGTH_LABELS = [
-  "At least 10 characters",
-  "Weak",
-  "Fair",
-  "Good",
-  "Strong",
-];
-const STRENGTH_COLORS = [
-  "var(--ink-40)",
-  "var(--accent-ink)",
-  "var(--amber)",
-  "var(--jade)",
-  "var(--jade)",
-];
-const PW_MIN = 10;
-
-function passwordScore(value: string): number {
-  let score = 0;
-  if (value.length >= 10) score++;
-  if (value.length >= 14) score++;
-  if (/[0-9]/.test(value) || /[^a-zA-Z0-9]/.test(value)) score++;
-  if (value.length >= 18) score++;
-  return Math.min(score, 4);
-}
-
-type Touched = {
-  first: boolean;
-  last: boolean;
-  password: boolean;
-  confirm: boolean;
-};
-
-interface AboutProps {
-  pronouns: string;
-  setPronouns: (v: string) => void;
-  bio: string;
-  setBio: (v: string) => void;
-  visibility: Visibility;
-  setVisibility: (v: Visibility) => void;
-}
-
-const VIS_OPTS = [
-  {
-    value: "open",
-    label: "Visible to all members",
-    sub: "Your profile appears in the member directory",
-  },
-  {
-    value: "network",
-    label: "Visible to connections only",
-    sub: "Only people you've connected with can see your full profile",
-  },
-  {
-    value: "private",
-    label: "Private",
-    sub: "Your profile is hidden; you can still browse and join gatherings",
-  },
-] as const;
-
-function AboutAndVisibility({
-  pronouns,
-  setPronouns,
-  bio,
-  setBio,
-  visibility,
-  setVisibility,
-}: AboutProps) {
-  return (
-    <>
-      <div className={styles.section}>
-        <div className={styles.sectionLabel}>About you</div>
-        <FormField
-          label="Display name"
-          helper="What members see. Can differ from your legal name."
-        >
-          <input type="text" placeholder="Tiago C." />
-        </FormField>
-        <div className={styles.field}>
-          <label>Pronouns</label>
-          <input
-            type="text"
-            placeholder="e.g. she/her"
-            value={pronouns}
-            onChange={(e) => setPronouns(e.target.value)}
-          />
-          <div className={styles.pronounChips}>
-            {PRONOUNS.map((p) => (
-              <button
-                key={p}
-                type="button"
-                className={styles.pChip}
-                onClick={() => setPronouns(p)}
-              >
-                {p}
-              </button>
-            ))}
-          </div>
-        </div>
-        <FormField label="Location">
-          <input type="text" placeholder="Lisbon, Portugal" />
-        </FormField>
-        <FormField label="Short bio" labelAside={`${bio.length}/280`}>
-          <textarea
-            maxLength={280}
-            placeholder="A sentence or two about you…"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-          />
-        </FormField>
-      </div>
-
-      <div className={styles.section}>
-        <div className={styles.sectionLabel}>Visibility</div>
-        <div className={styles.visOpts}>
-          {VIS_OPTS.map((opt) => (
-            <label
-              key={opt.value}
-              className={[
-                styles.visOpt,
-                visibility === opt.value && styles.visOptSelected,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <input
-                type="radio"
-                name="vis"
-                checked={visibility === opt.value}
-                onChange={() => setVisibility(opt.value)}
-              />
-              <div className={styles.visOptText}>
-                <span>{opt.label}</span>
-                <small>{opt.sub}</small>
-              </div>
-            </label>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-}
 
 export function CreateAccountPage() {
   const navigate = useNavigate();
@@ -222,7 +75,7 @@ export function CreateAccountPage() {
         );
       }
     }
-    navigate("/onboarding");
+    navigate(routes.onboarding);
   }
 
   return (
@@ -259,103 +112,20 @@ export function CreateAccountPage() {
       </p>
 
       <form onSubmit={handleSubmit} noValidate style={{ marginTop: 20 }}>
-        <div className={styles.section}>
-          <div className={styles.sectionLabel}>Your account</div>
-          <div className={styles.twoCol}>
-            <FormField
-              label="First name"
-              required
-              error={touched.first ? errors.first : undefined}
-            >
-              <input
-                type="text"
-                placeholder="Tiago"
-                value={first}
-                onChange={(e) => setFirst(e.target.value)}
-                onBlur={() => touch("first")}
-                aria-invalid={touched.first && !!errors.first}
-              />
-            </FormField>
-            <FormField
-              label="Last name"
-              required
-              error={touched.last ? errors.last : undefined}
-            >
-              <input
-                type="text"
-                placeholder="Costa"
-                value={last}
-                onChange={(e) => setLast(e.target.value)}
-                onBlur={() => touch("last")}
-                aria-invalid={touched.last && !!errors.last}
-              />
-            </FormField>
-          </div>
-          <FormField
-            label="Email address"
-            helper="Taken from your invite — not editable"
-          >
-            <input type="email" value="tiago@gmail.com" disabled />
-          </FormField>
-          <div className={styles.field}>
-            <label>
-              Password <span className={styles.req}>*</span>
-            </label>
-            <input
-              type="password"
-              placeholder="Choose a password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onBlur={() => touch("password")}
-              aria-invalid={touched.password && !!errors.password}
-            />
-            <div className={styles.strengthBar}>
-              {[1, 2, 3, 4].map((seg) => (
-                <div
-                  key={seg}
-                  className={styles.strengthSeg}
-                  style={{
-                    background:
-                      seg <= score ? STRENGTH_COLORS[score] : undefined,
-                  }}
-                />
-              ))}
-            </div>
-            {touched.password && errors.password ? (
-              <div className={styles.fieldError}>{errors.password}</div>
-            ) : (
-              <div
-                className={styles.strengthLabel}
-                style={{ color: STRENGTH_COLORS[score] }}
-              >
-                {STRENGTH_LABELS[score]}
-              </div>
-            )}
-            <div className={styles.helper}>
-              At least {PW_MIN} characters. Add numbers or symbols for a
-              stronger password.
-            </div>
-          </div>
-          <FormField
-            label="Confirm password"
-            required
-            error={touched.confirm ? errors.confirm : undefined}
-            ok={
-              touched.confirm && !errors.confirm && confirm
-                ? "Passwords match."
-                : undefined
-            }
-          >
-            <input
-              type="password"
-              placeholder="Confirm your password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              onBlur={() => touch("confirm")}
-              aria-invalid={touched.confirm && !!errors.confirm}
-            />
-          </FormField>
-        </div>
+        <AccountFields
+          first={first}
+          setFirst={setFirst}
+          last={last}
+          setLast={setLast}
+          password={password}
+          setPassword={setPassword}
+          confirm={confirm}
+          setConfirm={setConfirm}
+          score={score}
+          touched={touched}
+          touch={touch}
+          errors={errors}
+        />
 
         <AboutAndVisibility
           pronouns={pronouns}

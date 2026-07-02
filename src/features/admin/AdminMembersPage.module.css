@@ -30,9 +30,11 @@
     border-color 0.18s var(--ease);
 }
 
-.filterPill:hover {
-  color: var(--ink);
-  border-color: rgba(var(--plum-rgb), 0.24);
+@media (hover: hover) {
+  .filterPill:hover {
+    color: var(--ink);
+    border-color: rgba(var(--plum-rgb), 0.24);
+  }
 }
 
 .filterPillOn {
@@ -41,8 +43,10 @@
   border-color: var(--plum);
 }
 
-.filterPillOn:hover {
-  color: var(--cream);
+@media (hover: hover) {
+  .filterPillOn:hover {
+    color: var(--cream);
+  }
 }
 
 .filterPill:focus-visible {
@@ -78,9 +82,11 @@
     transform 0.18s var(--ease);
 }
 
-.row:hover {
-  border-color: rgba(var(--plum-rgb), 0.2);
-  box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.08);
+@media (hover: hover) {
+  .row:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.08);
+  }
 }
 
 .row:focus-visible {
@@ -94,9 +100,11 @@
   border-color: rgba(var(--danger-rgb), 0.16);
 }
 
-.rowFlagged:hover {
-  border-color: rgba(var(--danger-rgb), 0.16);
-  box-shadow: none;
+@media (hover: hover) {
+  .rowFlagged:hover {
+    border-color: rgba(var(--danger-rgb), 0.16);
+    box-shadow: none;
+  }
 }
 
 .rowMain {
@@ -431,11 +439,17 @@
     box-shadow 0.22s var(--ease);
 }
 
-.graphWrap:hover,
 .graphWrap:focus-visible {
   border-color: rgba(var(--plum-rgb), 0.2);
   box-shadow: 0 14px 30px -24px rgba(var(--plum-rgb), 0.5);
   outline: none;
+}
+@media (hover: hover) {
+  .graphWrap:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    box-shadow: 0 14px 30px -24px rgba(var(--plum-rgb), 0.5);
+    outline: none;
+  }
 }
 
 .graphNoteRow {
@@ -790,9 +804,11 @@
   text-decoration: none;
 }
 
-.auditLink:hover {
-  text-decoration: underline;
-  text-underline-offset: 2px;
+@media (hover: hover) {
+  .auditLink:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
 }
 
 /* ── Drawer: sealed identity card ────────────────────────── */

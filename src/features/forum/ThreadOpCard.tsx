@@ -1,0 +1,118 @@
+import { CATS, CAT_STYLE, type Thread } from "./forum.data";
+import {
+  ForumAvatar,
+  ProfileLink,
+  OfficialBadge,
+  authorHref,
+} from "./ForumAuthor";
+import { ModeratorByline } from "./ThreadReplies";
+import styles from "./ThreadPage.module.css";
+
+export function ThreadOpCard({
+  thread,
+  liked,
+  setLiked,
+  bookmarked,
+  setBookmarked,
+  onReport,
+}: {
+  thread: Thread;
+  liked: boolean;
+  setLiked: (fn: (v: boolean) => boolean) => void;
+  bookmarked: boolean;
+  setBookmarked: (fn: (v: boolean) => boolean) => void;
+  onReport: () => void;
+}) {
+  const catMeta = CATS.find((c) => c.id === thread.cat);
+  const catColor = CAT_STYLE[thread.cat]?.color ?? "var(--plum)";
+
+  return (
+    <div className={styles.opCard}>
+      <div className={styles.opHead}>
+        <ProfileLink
+          to={authorHref(thread.author)}
+          name={thread.author.n}
+          official={thread.author.official}
+          className={styles.avLink}
+        >
+          <ForumAvatar
+            className={styles.opAv}
+            style={{ background: thread.author.t, color: thread.author.tt }}
+            person={{
+              slug: thread.author.slug,
+              photo: thread.author.photo,
+              initials: thread.author.i,
+              name: thread.author.n,
+            }}
+          />
+        </ProfileLink>
+        <div>
+          <div className={styles.opName}>
+            <ProfileLink
+              to={authorHref(thread.author)}
+              name={thread.author.n}
+              official={thread.author.official}
+              className={styles.authorLink}
+            >
+              {thread.author.n}
+            </ProfileLink>
+            {thread.author.official && <OfficialBadge />}
+          </div>
+          <ModeratorByline mod={thread.author.mod} />
+          <div className={styles.opSub}>
+            <span className={styles.opCat} style={{ color: catColor }}>
+              {catMeta?.name}
+            </span>
+            <span>·</span>
+            <span>Posted {thread.posted}</span>
+            <span>·</span>
+            <span>{thread.views.toLocaleString()} views</span>
+          </div>
+        </div>
+      </div>
+      <h1 className={styles.opTitle}>{thread.title}</h1>
+      <div className={styles.opBody}>
+        {thread.body.map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
+      </div>
+      <div className={styles.opTags}>
+        {thread.tags.map((t) => (
+          <span key={t} className={styles.opTag}>
+            {t}
+          </span>
+        ))}
+      </div>
+      <div className={styles.opFooter}>
+        <button
+          type="button"
+          className={[styles.reaction, liked && styles.reactionOn]
+            .filter(Boolean)
+            .join(" ")}
+          onClick={() => setLiked((v) => !v)}
+        >
+          <svg viewBox="0 0 14 14">
+            <path
+              d="M7 12s-7-4.5-7-8a4 4 0 0 1 7-2.7A4 4 0 0 1 14 4c0 3.5-7 8-7 8z"
+              fill="currentColor"
+              stroke="none"
+            />
+          </svg>
+          {thread.upvotes + (liked ? 1 : 0)}
+        </button>
+        <button
+          type="button"
+          className={[styles.reaction, bookmarked && styles.reactionOn]
+            .filter(Boolean)
+            .join(" ")}
+          onClick={() => setBookmarked((v) => !v)}
+        >
+          {bookmarked ? "Saved" : "Bookmark"}
+        </button>
+        <button type="button" className={styles.report} onClick={onReport}>
+          Report
+        </button>
+      </div>
+    </div>
+  );
+}

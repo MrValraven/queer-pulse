@@ -114,6 +114,7 @@ export function RsvpPage() {
               <div className={styles.calLabel}>Add to calendar</div>
               <div className={styles.calRow}>
                 <button
+                  type="button"
                   className={styles.calBtn}
                   onClick={() =>
                     window.open(
@@ -126,6 +127,7 @@ export function RsvpPage() {
                   Google Calendar
                 </button>
                 <button
+                  type="button"
                   className={styles.calBtn}
                   onClick={() => {
                     downloadIcs();

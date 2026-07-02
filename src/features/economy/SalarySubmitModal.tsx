@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useScrollLock } from "../../shared/hooks";
 import styles from "./EconomyPage.module.css";
 
@@ -9,6 +10,11 @@ export function SalarySubmitModal({
   onSubmit: () => void;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
     <div
       className={styles.overlay}
@@ -16,10 +22,22 @@ export function SalarySubmitModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.modal}>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="salary-submit-title"
+      >
         <div className={styles.modalHead}>
-          <div className={styles.modalTitle}>Submit your salary</div>
-          <button type="button" className={styles.modalClose} onClick={onClose}>
+          <div id="salary-submit-title" className={styles.modalTitle}>
+            Submit your salary
+          </div>
+          <button
+            type="button"
+            className={styles.modalClose}
+            onClick={onClose}
+            aria-label="Close"
+          >
             ×
           </button>
         </div>

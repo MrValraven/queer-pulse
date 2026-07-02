@@ -1,5 +1,5 @@
 .root {
-  min-height: 100vh;
+  min-height: 100svh;
   background: var(--plum);
   display: flex;
   flex-direction: column;
@@ -11,7 +11,7 @@
 .modeTabs {
   display: flex;
   gap: 6px;
-  background: rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.1);
   border-radius: 999px;
   padding: 4px;
   position: absolute;
@@ -27,12 +27,15 @@
   cursor: pointer;
   border-radius: 999px;
   padding: 7px 18px;
-  color: rgba(247, 243, 238, 0.55);
-  transition: all 0.2s;
+  color: rgba(var(--cream-rgb), 0.55);
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
 }
 
 .modeTabActive {
-  background: rgba(247, 243, 238, 0.15);
+  background: rgba(var(--cream-rgb), 0.15);
   color: var(--cream);
   box-shadow: 0 2px 8px -3px rgba(0, 0, 0, 0.25);
 }
@@ -69,7 +72,7 @@
   padding: 40px 40px 36px;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(247, 243, 238, 0.08);
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
 }
 
 .cardTop::before {
@@ -118,7 +121,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(80px, 18vw, 130px);
-  color: rgba(247, 243, 238, 0.08);
+  color: rgba(var(--cream-rgb), 0.08);
   line-height: 1;
   letter-spacing: -0.04em;
   position: absolute;
@@ -146,7 +149,7 @@
 
 .headingSub {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   margin-top: 12px;
   line-height: 1.65;
   max-width: 38ch;
@@ -181,8 +184,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(45, 27, 61, 0.05);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 12px;
   padding: 14px 16px;
   margin-bottom: 24px;
@@ -265,11 +268,11 @@
 
 .footer p {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.35);
+  color: rgba(var(--cream-rgb), 0.35);
 }
 
 .footer a {
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   text-decoration: underline;
   text-underline-offset: 3px;
 }

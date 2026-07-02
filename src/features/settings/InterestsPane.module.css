@@ -81,12 +81,14 @@
   border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 11px;
   padding: 11px 14px;
-  outline: none;
   transition: border-color 0.22s var(--ease);
 }
 .field input:focus {
   border-color: var(--plum);
   background: var(--paper);
+}
+.field input:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* Age slider */

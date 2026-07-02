@@ -1,5 +1,5 @@
 .root {
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,7 +24,7 @@
   right: -12%;
   background: radial-gradient(
     circle,
-    rgba(232, 119, 90, 0.2) 0%,
+    rgba(var(--accent-rgb), 0.2) 0%,
     transparent 60%
   );
 }
@@ -36,7 +36,7 @@
   left: -14%;
   background: radial-gradient(
     circle,
-    rgba(74, 140, 111, 0.16) 0%,
+    rgba(var(--jade-rgb), 0.16) 0%,
     transparent 60%
   );
 }
@@ -149,7 +149,7 @@
 
 .lead {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.7;
   max-width: 48ch;
   margin: 0 auto 32px;
@@ -175,8 +175,8 @@
 
 .infoCard {
   padding: 18px 20px;
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 14px;
   text-align: left;
 }
@@ -186,7 +186,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   margin-bottom: 6px;
 }
 
@@ -205,8 +205,8 @@
 }
 
 .affected {
-  background: rgba(247, 243, 238, 0.04);
-  border: 1px solid rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.08);
   border-radius: 14px;
   padding: 18px 22px;
   text-align: left;
@@ -221,7 +221,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   margin-bottom: 10px;
 }
 
@@ -233,7 +233,7 @@
   flex-direction: column;
   gap: 8px;
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
 }
 
 .itemDown,
@@ -278,19 +278,21 @@
 
 .meta {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-top: 0;
   line-height: 1.65;
 }
 
 .meta a {
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   font-weight: 600;
   text-decoration: none;
 }
 
-.meta a:hover {
-  color: var(--cream);
+@media (hover: hover) {
+  .meta a:hover {
+    color: var(--cream);
+  }
 }
 
 @media (max-width: 420px) {

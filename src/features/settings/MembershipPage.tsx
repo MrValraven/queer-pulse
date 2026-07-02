@@ -35,6 +35,7 @@ export function MembershipPage() {
             <div className={styles.tabs}>
               {TABS.map((t) => (
                 <button
+                  type="button"
                   key={t.key}
                   className={`${styles.tab} ${tab === t.key ? styles.active : ""}`}
                   onClick={() => setTab(t.key)}

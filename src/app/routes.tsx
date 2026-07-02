@@ -63,6 +63,13 @@ const CommunitiesHomePage = lazy(() =>
     default: m.CommunitiesHomePage,
   })),
 );
+const StartCommunityPage = lazy(() =>
+  import("../features/communities/startCommunity/StartCommunityPage").then(
+    (m) => ({
+      default: m.StartCommunityPage,
+    }),
+  ),
+);
 const CommunityDetailPage = lazy(() =>
   import("../features/communities/CommunityDetailPage").then((m) => ({
     default: m.CommunityDetailPage,
@@ -314,6 +321,11 @@ const WellbeingPage = lazy(() =>
 const MentalHealthPage = lazy(() =>
   import("../features/resources/MentalHealthPage").then((m) => ({
     default: m.MentalHealthPage,
+  })),
+);
+const TherapistProfilePage = lazy(() =>
+  import("../features/resources/therapist/TherapistProfilePage").then((m) => ({
+    default: m.TherapistProfilePage,
   })),
 );
 const TransHealthcarePage = lazy(() =>
@@ -1252,6 +1264,7 @@ const ModPanelPage = lazy(() =>
   })),
 );
 import { KNOWN_ROUTE_SLUGS, routes } from "./routeMap";
+import { useAuthGateRedirect } from "./authGate";
 
 /** Top-level slugs that now have real pages — excluded from the placeholder fallback. */
 const BUILT_SLUGS = new Set([
@@ -1460,6 +1473,11 @@ function MemberProfileRedirect() {
  * styled placeholder, and unknown paths fall through to it too, so no link 404s.
  */
 export function AppRoutes() {
+  // Walled-garden gate: bounce logged-out visitors off member-only routes to
+  // sign-in (with a ?next= back-link). Public/marketing pages fall through.
+  const gateRedirect = useAuthGateRedirect();
+  if (gateRedirect) return <Navigate to={gateRedirect} replace />;
+
   return (
     <Suspense fallback={<div />}>
       <Routes>
@@ -1499,6 +1517,7 @@ export function AppRoutes() {
           path={routes.communitiesHome}
           element={<CommunitiesHomePage />}
         />
+        <Route path={routes.startCommunity} element={<StartCommunityPage />} />
         <Route path="/community/:slug" element={<CommunityDetailPage />} />
 
         {/* Gatherings */}
@@ -1599,6 +1618,16 @@ export function AppRoutes() {
         {/* Resources & Wellbeing */}
         <Route path={routes.wellbeing} element={<WellbeingPage />} />
         <Route path={routes.mentalHealth} element={<MentalHealthPage />} />
+        <Route
+          path={`${routes.therapists}/:id`}
+          element={<TherapistProfilePage />}
+        />
+        <Route
+          path="/therapist"
+          element={
+            <Navigate to={`${routes.therapists}/ines-pereira`} replace />
+          }
+        />
         <Route
           path={routes.transHealthcare}
           element={<TransHealthcarePage />}

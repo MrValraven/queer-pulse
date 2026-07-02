@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -18,6 +18,13 @@ export function InlineEditModal({
   onSave: (value: string) => void;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   const [value, setValue] = useState(initialValue);
   const canSave = value.trim().length > 0 && value !== initialValue;
 
@@ -34,7 +41,12 @@ export function InlineEditModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.modal}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Edit ${label}`}
+        className={styles.modal}
+      >
         <button
           type="button"
           className={styles.close}

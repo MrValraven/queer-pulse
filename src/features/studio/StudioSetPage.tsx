@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiPlus, FiCheck } from "react-icons/fi";
+import { routes } from "../../app/routeMap";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useSaved } from "../../app/providers/SavedProvider";
@@ -71,12 +72,13 @@ export function StudioSetPage() {
           </div>
           <div className={s.dek}>{SET.blurb}</div>
           <div className={s.collActions}>
-            <button className={ss.playBig} aria-label="Play set">
+            <button type="button" className={ss.playBig} aria-label="Play set">
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
               </svg>
             </button>
             <button
+              type="button"
               onClick={() => {
                 const now = toggleSave(SET_ITEM);
                 showToast(
@@ -97,7 +99,7 @@ export function StudioSetPage() {
                 </>
               )}
             </button>
-            <Link to="/studio/live" className={ss.bt}>
+            <Link to={routes.studioLive} className={ss.bt}>
               Join the live room →
             </Link>
           </div>

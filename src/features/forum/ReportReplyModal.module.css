@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(45, 27, 61, 0.42);
+  background: rgba(var(--plum-rgb), 0.42);
   backdrop-filter: blur(3px);
   animation: qpToastIn var(--dur-base) var(--ease-out);
 }
@@ -14,10 +14,10 @@
 .dialog {
   width: min(440px, 100%);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: var(--radius-card, 22px);
   padding: 28px;
-  box-shadow: 0 24px 60px rgba(45, 27, 61, 0.22);
+  box-shadow: 0 24px 60px rgba(var(--plum-rgb), 0.22);
   animation: qpRevealIn var(--dur-slow) var(--ease-out);
 }
 
@@ -53,7 +53,7 @@
   align-items: center;
   gap: 11px;
   padding: 12px 14px;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   font-size: 14px;
   font-weight: 500;
@@ -64,13 +64,15 @@
     background var(--dur-fast) var(--ease-std);
 }
 
-.reason:hover {
-  border-color: var(--plum);
+@media (hover: hover) {
+  .reason:hover {
+    border-color: var(--plum);
+  }
 }
 
 .reasonOn {
   border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
 }
 
 .radio {
@@ -78,7 +80,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid rgba(45, 27, 61, 0.3);
+  border: 2px solid rgba(var(--plum-rgb), 0.3);
   transition: border-color var(--dur-fast) var(--ease-std);
 }
 
@@ -103,7 +105,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid rgba(247, 243, 238, 0.45);
+  border: 2px solid rgba(var(--cream-rgb), 0.45);
   border-top-color: var(--cream);
   margin-right: 8px;
   vertical-align: -2px;
@@ -116,6 +118,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
 .confirmIcon {
   display: inline-flex;
   align-items: center;
@@ -123,7 +131,7 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.18);
+  background: rgba(var(--jade-rgb), 0.18);
   color: var(--jade);
   font-size: 24px;
   margin-bottom: 16px;
@@ -144,7 +152,7 @@
 
 .confirmBody {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.6;
   max-width: 38ch;
   margin: 12px auto 0;

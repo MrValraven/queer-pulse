@@ -39,7 +39,12 @@ export function LinkProviderModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.modal}>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Authorize ${provider.name}`}
+      >
         <button
           type="button"
           className={styles.close}

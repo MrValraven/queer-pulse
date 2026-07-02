@@ -37,13 +37,13 @@
 .lead {
   font-size: 18px;
   line-height: 1.65;
-  color: rgba(247, 243, 238, 0.72);
+  color: rgba(var(--cream-rgb), 0.72);
   max-width: 52ch;
   margin: 22px 0 36px;
 }
 .card {
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.16);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.16);
   border-radius: 18px;
   padding: 28px;
   max-width: 560px;
@@ -59,7 +59,7 @@
   appearance: none;
   border: none;
   background: none;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   font: inherit;
   font-weight: 700;
   font-size: 14px;
@@ -85,8 +85,8 @@
 .amount {
   position: relative;
   appearance: none;
-  background: rgba(247, 243, 238, 0.04);
-  border: 1.5px solid rgba(247, 243, 238, 0.18);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1.5px solid rgba(var(--cream-rgb), 0.18);
   border-radius: 12px;
   padding: 18px 8px;
   cursor: pointer;
@@ -97,7 +97,7 @@
 }
 .amountOn {
   border-color: var(--accent);
-  background: rgba(232, 119, 90, 0.14);
+  background: rgba(var(--accent-rgb), 0.14);
 }
 .amountVal {
   font-family: var(--serif);
@@ -107,7 +107,7 @@
 }
 .amountNote {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   margin-top: 6px;
 }
 .ribbon {
@@ -131,7 +131,7 @@
 }
 .sectionPaper {
   background: var(--paper);
-  border-block: 1px solid rgba(45, 27, 61, 0.09);
+  border-block: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .h2 {
   font-family: var(--serif);
@@ -162,7 +162,7 @@
   gap: 20px;
   align-items: flex-start;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 12px;
   padding: 20px 22px;
 }
@@ -193,7 +193,7 @@
 }
 .trustCard {
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 24px;
 }

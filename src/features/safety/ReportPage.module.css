@@ -40,7 +40,7 @@
 
 .section {
   padding: 56px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .section h2 {
   font-family: var(--serif);
@@ -69,7 +69,7 @@
 }
 .flowStep {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 22px 24px;
 }
@@ -97,8 +97,8 @@
   grid-template-columns: 1.3fr 1fr;
   gap: 44px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-radius: var(--radius-card);
   padding: 36px 40px;
 }
 .formBox h3 {
@@ -156,7 +156,7 @@
 .modLog {
   background: var(--plum);
   color: var(--cream);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 40px 44px;
 }
 .modLog h3 {
@@ -171,7 +171,7 @@
 }
 .modLog > p {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   margin: 6px 0 24px;
 }
 .logStats {
@@ -189,7 +189,7 @@
 }
 .logStat .l {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   margin-top: 6px;
   line-height: 1.4;
 }
@@ -212,5 +212,5 @@
 
 :global([data-theme="dark"]) .flowStep,
 :global([data-theme="dark"]) .formBox {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

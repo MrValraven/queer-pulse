@@ -5,9 +5,9 @@
 .shimmer {
   background: linear-gradient(
     90deg,
-    rgba(247, 243, 238, 0.05) 25%,
-    rgba(247, 243, 238, 0.1) 50%,
-    rgba(247, 243, 238, 0.05) 75%
+    rgba(var(--cream-rgb), 0.05) 25%,
+    rgba(var(--cream-rgb), 0.1) 50%,
+    rgba(var(--cream-rgb), 0.05) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;

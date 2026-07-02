@@ -11,10 +11,10 @@
   justify-content: space-between;
   gap: 24px;
   padding: 10px 12px 10px 22px;
-  background: rgba(247, 243, 238, 0.66);
+  background: rgba(var(--cream-rgb), 0.66);
   backdrop-filter: var(--blur-nav);
   -webkit-backdrop-filter: var(--blur-nav);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-nav);
   transition:
@@ -22,9 +22,9 @@
     background var(--dur-slow) var(--ease);
 }
 .scrolled {
-  background: rgba(247, 243, 238, 0.82);
+  background: rgba(var(--cream-rgb), 0.82);
   box-shadow:
-    0 14px 40px -16px rgba(45, 27, 61, 0.5),
+    0 14px 40px -16px rgba(var(--plum-rgb), 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
@@ -39,8 +39,10 @@
   color: var(--plum);
   transition: background var(--dur-base) var(--ease);
 }
-.bell:hover {
-  background: rgba(45, 27, 61, 0.06);
+@media (hover: hover) {
+  .bell:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
 }
 .bellBadge {
   position: absolute;
@@ -113,11 +115,15 @@
   background: var(--accent);
   transition: width 0.3s var(--ease);
 }
-.link:hover {
-  color: var(--ink);
+@media (hover: hover) {
+  .link:hover {
+    color: var(--ink);
+  }
 }
-.link:hover::after {
-  width: 100%;
+@media (hover: hover) {
+  .link:hover::after {
+    width: 100%;
+  }
 }
 
 .right {
@@ -135,15 +141,17 @@
   white-space: nowrap;
   transition: color var(--dur-base) var(--ease);
 }
-.signIn:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .signIn:hover {
+    color: var(--accent-ink);
+  }
 }
 
 .themeToggle {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   background: transparent;
   color: var(--plum);
   display: inline-flex;
@@ -154,9 +162,11 @@
     background var(--dur-base) var(--ease),
     border-color var(--dur-base) var(--ease);
 }
-.themeToggle:hover {
-  background: rgba(45, 27, 61, 0.05);
-  border-color: rgba(45, 27, 61, 0.32);
+@media (hover: hover) {
+  .themeToggle:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    border-color: rgba(var(--plum-rgb), 0.32);
+  }
 }
 
 .menuButton {
@@ -164,7 +174,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   background: transparent;
   color: var(--plum);
   align-items: center;
@@ -177,7 +187,7 @@
   position: fixed;
   inset: 0;
   z-index: 99;
-  background: rgba(45, 27, 61, 0.4);
+  background: rgba(var(--plum-rgb), 0.4);
   backdrop-filter: var(--blur-overlay);
   display: flex;
   justify-content: flex-end;
@@ -197,7 +207,7 @@
   font-family: var(--serif);
   color: var(--plum);
   padding: 14px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .drawerSignIn {
   margin-top: 20px;
@@ -225,7 +235,7 @@
 
 :global([data-theme="dark"]) .nav {
   background: rgba(14, 8, 32, 0.82);
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .scrolled {
   background: rgba(14, 8, 32, 0.94);

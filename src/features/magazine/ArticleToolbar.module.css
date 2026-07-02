@@ -9,9 +9,9 @@
   margin: 0 auto;
   padding: 10px 14px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-pill);
-  box-shadow: 0 10px 30px -22px rgba(45, 27, 61, 0.4);
+  box-shadow: 0 10px 30px -22px rgba(var(--plum-rgb), 0.4);
 }
 
 .spacer {
@@ -42,7 +42,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   background: var(--cream);
   color: var(--ink-60);
   display: inline-flex;
@@ -58,9 +58,11 @@
   width: 15px;
   height: 15px;
 }
-.iconBtn:hover:not(:disabled) {
-  border-color: var(--plum);
-  color: var(--plum);
+@media (hover: hover) {
+  .iconBtn:hover:not(:disabled) {
+    border-color: var(--plum);
+    color: var(--plum);
+  }
 }
 .iconBtn:disabled {
   opacity: 0.4;
@@ -73,7 +75,7 @@
   gap: 7px;
   padding: 7px 14px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   background: var(--cream);
   color: var(--ink-60);
   font-family: var(--sans);
@@ -89,9 +91,11 @@
   width: 15px;
   height: 15px;
 }
-.action:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+@media (hover: hover) {
+  .action:hover {
+    border-color: var(--plum);
+    color: var(--plum);
+  }
 }
 .actionOn {
   border-color: var(--accent);
@@ -130,9 +134,9 @@
 }
 
 :global([data-theme="dark"]) .toolbar {
-  border-color: rgba(247, 243, 238, 0.12);
+  border-color: rgba(var(--cream-rgb), 0.12);
 }
 :global([data-theme="dark"]) .iconBtn,
 :global([data-theme="dark"]) .action {
-  border-color: rgba(247, 243, 238, 0.16);
+  border-color: rgba(var(--cream-rgb), 0.16);
 }

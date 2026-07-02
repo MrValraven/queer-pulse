@@ -41,6 +41,7 @@ export function NotificationDeepLinkPage() {
         <div className={styles.typeBar}>
           {NOTIF_TYPES.map((t) => (
             <button
+              type="button"
               key={t.id}
               className={`${styles.typeBtn} ${type === t.id ? styles.active : ""}`}
               onClick={() => setType(t.id)}

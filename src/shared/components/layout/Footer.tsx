@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { MdAccessible } from "react-icons/md";
 import { linkToPath } from "../../../app/routeMap";
+import { useIsLinkVisible } from "../../../app/authGate";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useTranslation } from "../../i18n/useTranslation";
 import {
@@ -86,6 +87,13 @@ function FooterControls() {
 }
 
 export function Footer() {
+  const isLinkVisible = useIsLinkVisible();
+  const columns = COLUMNS.map((column) => ({
+    ...column,
+    links: column.links.filter((link) => isLinkVisible(link.href)),
+  })).filter((column) => column.links.length > 0);
+  const baseLinks = BASE_LINKS.filter((link) => isLinkVisible(link.href));
+
   return (
     <footer className={styles.footer}>
       <div className="wrap">
@@ -113,7 +121,7 @@ export function Footer() {
           </div>
 
           <nav className={styles.cols} aria-label="Footer">
-            {COLUMNS.map((column) => (
+            {columns.map((column) => (
               <div key={column.heading} className={styles.col}>
                 <h4>{column.heading}</h4>
                 {column.links.map((link) => (
@@ -131,7 +139,7 @@ export function Footer() {
             © 2026 QueerPulse · Made in Lisbon with care
           </span>
           <nav className={styles.baseLinks} aria-label="Legal">
-            {BASE_LINKS.map((link) => (
+            {baseLinks.map((link) => (
               <BaseLink key={link.href} link={link} />
             ))}
           </nav>

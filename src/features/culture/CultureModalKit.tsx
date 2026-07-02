@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -15,13 +15,23 @@ export { useSubmitFlow } from "../../shared/hooks";
 export function ModalShell({
   onClose,
   success,
+  label,
   children,
 }: {
   onClose: () => void;
   success?: boolean;
+  /** Accessible dialog name announced to screen readers. */
+  label?: string;
   children: ReactNode;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
     <div
       className={styles.overlay}
@@ -30,6 +40,9 @@ export function ModalShell({
       }}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={label ?? "Dialog"}
         className={[styles.modal, success && styles.modalSuccess]
           .filter(Boolean)
           .join(" ")}
@@ -48,7 +61,11 @@ export function ModalShell({
   );
 }
 
-/** Plum-panel confirmation with a jade tick, serif title and optional next steps. */
+/** Plum-panel confirmation with a jade tick, serif title and optional next steps.
+ * Intentionally NOT swapped for the shared <SuccessPanel>: this one renders flat
+ * inside the already-plum ModalShell success surface (the shared panel brings its
+ * own plum background + padding, which would double up here) and keeps the richer
+ * staggered entrance animation, reduced-motion-guarded in CultureModals.module.css. */
 export function SuccessPanel({
   title,
   em,

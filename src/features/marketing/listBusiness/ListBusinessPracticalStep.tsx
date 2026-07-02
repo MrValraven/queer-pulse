@@ -1,6 +1,6 @@
 import { FiCheck, FiMapPin } from "react-icons/fi";
 import { Button, FormField } from "../../../shared/components/ui";
-import { DAYS, validateSocials } from "./listBusiness.data";
+import { ANCHOR, DAYS, validateSocials } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import styles from "./ListBusinessPage.module.css";
@@ -51,6 +51,7 @@ export function StepPractical({ form }: { form: ListingForm }) {
       />
 
       <FormField
+        id={ANCHOR.address}
         label="Address"
         required
         helper="Street and number is enough — we'll place the pin from there."
@@ -128,7 +129,7 @@ export function StepPractical({ form }: { form: ListingForm }) {
           Mark all closed
         </button>
       </div>
-      <div className={styles.hoursGrid}>
+      <div id={ANCHOR.hours} className={styles.hoursGrid}>
         {DAYS.map((d) => {
           const h = draft.hours[d.id]!;
           return (
@@ -184,7 +185,7 @@ export function StepPractical({ form }: { form: ListingForm }) {
         You choose what's public. Leave anything blank you'd rather keep off the
         listing.
       </p>
-      <div className={styles.twoCol}>
+      <div id={ANCHOR.social} className={styles.twoCol}>
         {SOCIALS.map((s) => {
           const value = draft.social[s.key];
           const valid = socialOk[s.key];

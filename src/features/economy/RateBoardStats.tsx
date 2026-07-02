@@ -122,7 +122,7 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
               <div className={styles.barTrack}>
                 <div
                   className={styles.barFill}
-                  style={{ width: `${width}%` }}
+                  style={{ transform: `scaleX(${width / 100})` }}
                 />
               </div>
               <div className={styles.barMeta}>

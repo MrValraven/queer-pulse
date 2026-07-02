@@ -1,5 +1,5 @@
 .page {
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   background: var(--cream);
@@ -11,7 +11,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px 28px;
-  border-bottom: 1px solid rgba(247, 243, 238, 0.08);
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
 }
 .brand {
   display: flex;
@@ -33,7 +33,7 @@
   font-style: italic;
 }
 .backLink {
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   font-size: 13.5px;
   font-weight: 600;
   text-decoration: none;
@@ -41,7 +41,7 @@
 .clock {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   font-variant-numeric: tabular-nums;
 }
 
@@ -89,8 +89,8 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: rgba(74, 140, 111, 0.2);
-  border: 1px solid rgba(74, 140, 111, 0.35);
+  background: rgba(var(--jade-rgb), 0.2);
+  border: 1px solid rgba(var(--jade-rgb), 0.35);
   border-radius: 999px;
   padding: 5px 13px;
   font-size: 12px;
@@ -103,17 +103,22 @@
   height: 7px;
   border-radius: 50%;
   background: var(--jade);
-  animation: dashPulse 2.4s ease infinite;
+  animation: dashPulse 2.4s var(--ease) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .liveDot {
+    animation: none;
+  }
 }
 @keyframes dashPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(74, 140, 111, 0.6);
+    box-shadow: 0 0 0 0 rgba(var(--jade-rgb), 0.6);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(74, 140, 111, 0);
+    box-shadow: 0 0 0 8px rgba(var(--jade-rgb), 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(74, 140, 111, 0);
+    box-shadow: 0 0 0 0 rgba(var(--jade-rgb), 0);
   }
 }
 .heroTitle {
@@ -149,7 +154,7 @@
 }
 .hsL {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-top: 4px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -184,7 +189,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -205,12 +210,12 @@
   aspect-ratio: 1;
   background: repeating-linear-gradient(
     45deg,
-    rgba(45, 27, 61, 0.03) 0,
-    rgba(45, 27, 61, 0.03) 3px,
+    rgba(var(--plum-rgb), 0.03) 0,
+    rgba(var(--plum-rgb), 0.03) 3px,
     transparent 3px,
     transparent 12px
   );
-  border: 1.5px dashed rgba(45, 27, 61, 0.15);
+  border: 1.5px dashed rgba(var(--plum-rgb), 0.15);
   border-radius: 14px;
   display: flex;
   flex-direction: column;
@@ -221,15 +226,19 @@
   cursor: pointer;
   transition: background 0.2s var(--ease);
 }
-.qrArea:hover {
-  background: rgba(45, 27, 61, 0.04);
+@media (hover: hover) {
+  .qrArea:hover {
+    background: rgba(var(--plum-rgb), 0.04);
+  }
 }
 .qrIcon {
   font-size: 32px;
   opacity: 0.3;
 }
 .qrLabel {
-  font-family: monospace;
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
   font-size: 11px;
   color: var(--ink-40);
   text-align: center;
@@ -248,7 +257,7 @@
 .orLine {
   flex: 1;
   height: 1px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
 }
 .orText {
   font-size: 12px;
@@ -256,7 +265,7 @@
 }
 .nameSearch {
   width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 11px;
   padding: 10px 14px;
   font-family: var(--sans);
@@ -293,7 +302,7 @@
   gap: 10px;
   padding: 8px 10px;
   border-radius: 10px;
-  background: rgba(74, 140, 111, 0.05);
+  background: rgba(var(--jade-rgb), 0.05);
   margin-bottom: 4px;
 }
 .rrAv {
@@ -332,11 +341,14 @@
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 999px;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   background: transparent;
   color: var(--ink-60);
   cursor: pointer;
-  transition: all 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    color 0.18s var(--ease);
 }
 .afBtnActive {
   background: var(--plum);
@@ -345,7 +357,7 @@
 }
 .attSearch {
   width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 10px;
   padding: 9px 13px;
   font-family: var(--sans);
@@ -368,8 +380,10 @@
   border-radius: 12px;
   transition: background 0.18s var(--ease);
 }
-.attRow:hover {
-  background: rgba(45, 27, 61, 0.03);
+@media (hover: hover) {
+  .attRow:hover {
+    background: rgba(var(--plum-rgb), 0.03);
+  }
 }
 .attAv {
   width: 38px;
@@ -405,13 +419,13 @@
   flex: none;
 }
 .chipIn {
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
 }
 .chipPending {
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   color: var(--ink-60);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
 }
 .manualBtn {
   font-family: var(--sans);
@@ -424,10 +438,12 @@
   border: none;
   cursor: pointer;
   margin-top: 4px;
-  transition: all 0.18s var(--ease);
+  transition: background 0.18s var(--ease);
 }
-.manualBtn:hover {
-  background: var(--plum-deep, #1a0f25);
+@media (hover: hover) {
+  .manualBtn:hover {
+    background: var(--plum-deep, #1a0f25);
+  }
 }
 .waitlistToggle {
   font-size: 13.5px;
@@ -438,7 +454,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   margin-top: 4px;
 }
 .promoteBtn {
@@ -449,9 +465,11 @@
   border-radius: 8px;
   cursor: pointer;
   border: none;
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
-  transition: all 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease);
 }
 
 .sparkline {
@@ -487,7 +505,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   margin-top: 14px;
 }
 .peakLabel {
@@ -511,8 +529,8 @@
   padding: 10px;
 }
 .endCard {
-  background: rgba(45, 27, 61, 0.04);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 14px 16px;
 }
@@ -583,7 +601,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.22);
+  background: rgba(var(--jade-rgb), 0.22);
   color: var(--jade);
   font-size: 20px;
   margin-bottom: 10px;
@@ -601,7 +619,7 @@
 }
 .endedText {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.72);
+  color: rgba(var(--cream-rgb), 0.72);
   line-height: 1.55;
   margin-top: 7px;
 }
@@ -626,10 +644,10 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.3);
+  background: rgba(var(--cream-rgb), 0.3);
 }
 .dfText {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   text-align: center;
 }

@@ -26,7 +26,7 @@
   font-size: 30px;
   color: var(--plum);
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   border-radius: 14px;
   outline: none;
   transition:
@@ -37,12 +37,12 @@
 }
 .codeRow input:focus {
   border-color: var(--plum);
-  box-shadow: 0 0 0 4px rgba(45, 27, 61, 0.08);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
   background: var(--paper);
 }
 .codeRowError input {
   border-color: var(--accent-ink);
-  box-shadow: 0 0 0 4px rgba(232, 119, 90, 0.1);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.1);
   animation: ceShake 0.42s var(--ease);
 }
 @keyframes ceShake {
@@ -81,7 +81,7 @@
   justify-content: space-between;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
   font-size: 13.5px;
   color: var(--ink-60);
   gap: 8px;
@@ -97,8 +97,10 @@
   padding: 4px 0;
   transition: color 0.2s;
 }
-.resend:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .resend:hover {
+    color: var(--accent-ink);
+  }
 }
 .resend:disabled {
   color: var(--ink-40);
@@ -123,8 +125,10 @@
   text-decoration: none;
   transition: color 0.2s;
 }
-.footLink a:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .footLink a:hover {
+    color: var(--accent-ink);
+  }
 }
 
 @media (max-width: 500px) {

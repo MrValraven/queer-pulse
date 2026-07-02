@@ -139,7 +139,7 @@ export function OfflinePage() {
 
         <div className={styles.foot}>
           <span className={styles.status}>Listening for signal</span>
-          <button className={styles.retryBtn} onClick={retry}>
+          <button type="button" className={styles.retryBtn} onClick={retry}>
             <svg
               viewBox="0 0 24 24"
               fill="none"

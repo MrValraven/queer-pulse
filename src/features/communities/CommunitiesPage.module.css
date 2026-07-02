@@ -60,7 +60,7 @@
 }
 .lede {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   max-width: 52ch;
   margin-top: 22px;
   line-height: 1.65;
@@ -86,15 +86,19 @@
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   background: transparent;
   border-radius: 999px;
   padding: 9px 17px;
-  transition: all var(--dur-base) var(--ease);
+  transition:
+    color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
 }
-.chip:hover {
-  color: var(--ink);
-  border-color: rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--ink);
+    border-color: rgba(var(--plum-rgb), 0.4);
+  }
 }
 .chipActive {
   background: var(--plum);
@@ -104,12 +108,18 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
+}
+/* Single-column so cards never overflow on narrow phones. */
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -124,12 +134,16 @@
     box-shadow var(--dur-slow) var(--ease),
     border-color var(--dur-base) var(--ease);
 }
-.card:hover .name {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .card:hover .name {
+    color: var(--accent-ink);
+  }
 }
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 40px -22px rgba(45, 27, 61, 0.38);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px -22px rgba(var(--plum-rgb), 0.38);
+  }
 }
 .type {
   font-size: 11px;
@@ -142,7 +156,7 @@
 }
 .social {
   color: var(--jade);
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
 }
 .arts {
   color: var(--accent-ink);
@@ -150,15 +164,15 @@
 }
 .activism {
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.09);
+  background: rgba(var(--plum-rgb), 0.09);
 }
 .support {
   color: var(--violet);
-  background: rgba(122, 82, 184, 0.1);
+  background: rgba(var(--violet-rgb), 0.1);
 }
 .sports {
   color: var(--jade);
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
 }
 .professional {
   color: var(--accent-ink);
@@ -225,7 +239,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 14px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   margin-top: auto;
 }
 .meta {
@@ -250,19 +264,23 @@
     background var(--dur-base) var(--ease),
     transform var(--dur-base) var(--ease);
 }
-.joinBtn:hover {
-  background: var(--accent-ink);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .joinBtn:hover {
+    background: var(--accent-ink);
+    transform: translateY(-1px);
+  }
 }
 .joined {
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
 }
-.joined:hover {
-  background: rgba(74, 140, 111, 0.12);
-  transform: none;
+@media (hover: hover) {
+  .joined:hover {
+    background: rgba(var(--jade-rgb), 0.12);
+    transform: none;
+  }
 }
 
 :global([data-theme="dark"]) .card {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

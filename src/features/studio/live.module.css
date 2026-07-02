@@ -25,7 +25,7 @@
   font-style: italic;
   text-transform: none;
   letter-spacing: 0;
-  color: var(--text, rgba(247, 243, 238, 0.92));
+  color: var(--text, rgba(var(--cream-rgb), 0.92));
   font-weight: 400;
 }
 .ribbon .clock {
@@ -33,7 +33,7 @@
   text-transform: none;
   letter-spacing: 0;
   font-weight: 400;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   font-size: 12px;
 }
 .ribbon .clock em {
@@ -50,8 +50,8 @@
 }
 
 .nowCard {
-  background: rgba(247, 243, 238, 0.04);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 18px;
   overflow: hidden;
   margin-bottom: 24px;
@@ -80,7 +80,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--cream);
-  background: rgba(45, 27, 61, 0.7);
+  background: rgba(var(--plum-rgb), 0.7);
   backdrop-filter: blur(6px);
   border-radius: 6px;
   padding: 4px 8px;
@@ -113,7 +113,7 @@
 }
 .nowInfo .by {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   margin-top: 10px;
 }
 .nowInfo .by em {
@@ -128,12 +128,12 @@
 }
 .wf span {
   flex: 1;
-  background: rgba(247, 243, 238, 0.16);
+  background: rgba(var(--cream-rgb), 0.16);
   border-radius: 2px;
   min-height: 3px;
 }
 .wf .played {
-  background: rgba(247, 243, 238, 0.5);
+  background: rgba(var(--cream-rgb), 0.5);
 }
 .wf .nowPulse {
   background: var(--accent);
@@ -142,7 +142,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   font-variant-numeric: tabular-nums;
 }
 .times .e {
@@ -159,8 +159,8 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--text, var(--cream));
-  background: rgba(247, 243, 238, 0.08);
-  border: 1px solid rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.08);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: 999px;
   padding: 9px 16px;
   cursor: pointer;
@@ -175,8 +175,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   padding: 20px 26px;
-  border-top: 1px solid rgba(247, 243, 238, 0.1);
-  background: rgba(247, 243, 238, 0.02);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--cream-rgb), 0.02);
 }
 .lsV {
   font-family: var(--serif);
@@ -194,7 +194,7 @@
 }
 .lsL {
   font-size: 11.5px;
-  color: rgba(247, 243, 238, 0.45);
+  color: rgba(var(--cream-rgb), 0.45);
   margin-top: 6px;
   line-height: 1.4;
 }
@@ -219,15 +219,15 @@
 }
 .tlH .meta {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 .tlH .meta em {
   color: var(--accent);
   font-style: italic;
 }
 .setCard {
-  background: rgba(247, 243, 238, 0.04);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 16px;
   padding: 14px 18px;
 }
@@ -237,7 +237,7 @@
   gap: 12px;
   align-items: center;
   padding: 9px 0;
-  border-bottom: 1px solid rgba(247, 243, 238, 0.07);
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.07);
   font-size: 13px;
 }
 .setRow:last-child {
@@ -251,7 +251,7 @@
   border-radius: 8px;
 }
 .setUpNext {
-  background: rgba(247, 243, 238, 0.03);
+  background: rgba(var(--cream-rgb), 0.03);
   border-radius: 8px;
 }
 .setQueued {
@@ -259,7 +259,7 @@
 }
 .srN {
   font-family: var(--serif);
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   text-align: center;
 }
 .srCov {
@@ -279,11 +279,11 @@
 }
 .srWho {
   font-size: 11.5px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 .srPay {
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   text-align: right;
   white-space: nowrap;
 }
@@ -295,23 +295,23 @@
 }
 .srTm {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 
 /* Chat rail */
 .chat {
-  background: rgba(247, 243, 238, 0.04);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
   position: sticky;
   top: 88px;
-  max-height: calc(100vh - 110px);
+  max-height: calc(100svh - 110px);
 }
 .chatTabs {
   display: flex;
-  border-bottom: 1px solid rgba(247, 243, 238, 0.1);
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.1);
   flex: none;
 }
 .chatTab {
@@ -319,7 +319,7 @@
   padding: 13px 8px;
   font-size: 13px;
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   background: none;
   border: none;
   cursor: pointer;
@@ -331,7 +331,7 @@
 }
 .ct {
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.35);
+  color: rgba(var(--cream-rgb), 0.35);
 }
 .chatBody {
   flex: 1;
@@ -350,7 +350,7 @@
 }
 .msgSystem .text {
   font-size: 11.5px;
-  color: rgba(247, 243, 238, 0.35);
+  color: rgba(var(--cream-rgb), 0.35);
   font-style: italic;
   font-family: var(--serif);
   text-align: center;
@@ -372,12 +372,12 @@
   flex: none;
 }
 .mAv.jade {
-  background: rgba(74, 140, 111, 0.2);
+  background: rgba(var(--jade-rgb), 0.2);
   color: var(--jade-light, #9be0bd);
 }
 .mAv.plum {
-  background: rgba(247, 243, 238, 0.1);
-  color: rgba(247, 243, 238, 0.6);
+  background: rgba(var(--cream-rgb), 0.1);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .mName {
   font-size: 12.5px;
@@ -392,7 +392,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   margin-left: 6px;
 }
 .mRole.cu {
@@ -403,7 +403,7 @@
 }
 .mText {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.5;
   margin-top: 3px;
 }
@@ -416,7 +416,7 @@
 }
 .mTime {
   font-size: 10.5px;
-  color: rgba(247, 243, 238, 0.3);
+  color: rgba(var(--cream-rgb), 0.3);
   margin-top: 3px;
   font-family: var(--serif);
   font-style: italic;
@@ -429,7 +429,7 @@
 }
 .chatFoot {
   flex: none;
-  border-top: 1px solid rgba(247, 243, 238, 0.1);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.1);
   padding: 12px 16px;
 }
 .chatInput {
@@ -439,19 +439,18 @@
 }
 .chatInput input {
   flex: 1;
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: 999px;
   padding: 9px 14px;
   font-size: 13px;
   color: var(--text, var(--cream));
   font-family: var(--sans);
-  outline: none;
 }
 .chatInput button {
   background: none;
   border: none;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   cursor: pointer;
   display: flex;
 }
@@ -469,17 +468,19 @@
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.6);
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.12);
+  color: rgba(var(--cream-rgb), 0.6);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: 8px;
   padding: 7px;
   cursor: pointer;
 }
-.chatActions button:hover {
-  background: var(--accent);
-  color: var(--cream);
-  border-color: var(--accent);
+@media (hover: hover) {
+  .chatActions button:hover {
+    background: var(--accent);
+    color: var(--cream);
+    border-color: var(--accent);
+  }
 }
 
 @media (max-width: 960px) {

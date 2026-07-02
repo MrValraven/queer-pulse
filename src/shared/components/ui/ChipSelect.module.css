@@ -28,18 +28,22 @@
     color 0.16s var(--ease),
     background 0.16s var(--ease);
 }
-.chip:hover {
-  border-color: rgba(var(--plum-rgb), 0.3);
-  color: var(--plum);
+@media (hover: hover) {
+  .chip:hover {
+    border-color: rgba(var(--plum-rgb), 0.3);
+    color: var(--plum);
+  }
 }
 .chipOn {
   background: var(--plum);
   border-color: var(--plum);
   color: var(--cream);
 }
-.chipOn:hover {
-  background: var(--plum);
-  color: var(--cream);
+@media (hover: hover) {
+  .chipOn:hover {
+    background: var(--plum);
+    color: var(--cream);
+  }
 }
 .chip svg {
   width: 14px;
@@ -52,24 +56,28 @@
   color: var(--jade);
   border-color: rgba(var(--jade-rgb), 0.32);
 }
-.tone_jade.chipOn:hover {
-  background: rgba(var(--jade-rgb), 0.1);
-  color: var(--jade);
+@media (hover: hover) {
+  .tone_jade.chipOn:hover {
+    background: rgba(var(--jade-rgb), 0.1);
+    color: var(--jade);
+  }
 }
 
 /* ── tint: dark (for plum/dark surfaces, e.g. cinema) ────────────────────── */
 .dark.chip {
   background: transparent;
-  border-color: rgba(247, 243, 238, 0.16);
-  color: rgba(247, 243, 238, 0.66);
+  border-color: rgba(var(--cream-rgb), 0.16);
+  color: rgba(var(--cream-rgb), 0.66);
 }
-.dark.chip:hover {
-  border-color: rgba(247, 243, 238, 0.4);
-  color: var(--cream);
+@media (hover: hover) {
+  .dark.chip:hover {
+    border-color: rgba(var(--cream-rgb), 0.4);
+    color: var(--cream);
+  }
 }
 .dark.chipOn {
-  background: rgba(247, 243, 238, 0.14);
-  border-color: rgba(247, 243, 238, 0.4);
+  background: rgba(var(--cream-rgb), 0.14);
+  border-color: rgba(var(--cream-rgb), 0.4);
   color: var(--cream);
 }
 .dark.tone_jade.chipOn {

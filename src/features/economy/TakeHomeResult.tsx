@@ -69,7 +69,10 @@ export function TakeHomeResult({
           role="img"
           aria-label={`You keep ${Math.round(keptPct)}% of your gross income`}
         >
-          <div className={styles.barKept} style={{ width: `${keptPct}%` }} />
+          <div
+            className={styles.barKept}
+            style={{ transform: `scaleX(${keptPct / 100})` }}
+          />
         </div>
         <p className={styles.barCaption}>
           You keep <em>{Math.round(keptPct)}%</em> of every euro you bill.

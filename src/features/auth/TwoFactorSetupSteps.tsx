@@ -43,6 +43,7 @@ export function Step1({
       </p>
       <div className={styles.methodGrid}>
         <button
+          type="button"
           className={[
             styles.method,
             method === "app" ? styles.methodSelected : "",
@@ -138,8 +139,9 @@ export function Step2({
             aria-label="QR code"
             style={{ width: "100%", height: "100%", display: "block" }}
           >
+            {/* QR code requires true white for scanner contrast */}
             <rect width={21} height={21} fill="#fff" />
-            <g fill="#2D1B3D">
+            <g fill="var(--plum)">
               <rect x={0} y={0} width={7} height={1} />
               <rect x={0} y={6} width={7} height={1} />
               <rect x={0} y={0} width={1} height={7} />
@@ -183,6 +185,7 @@ export function Step2({
               Can't scan? Enter manually: <code>{SECRET}</code>
             </span>
             <button
+              type="button"
               className={styles.copyBtn}
               onClick={onCopy}
               style={

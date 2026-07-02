@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { NAV_MENUS } from "./navMenus";
+import { NAV_MENUS, filterMenus } from "./navMenus";
 import { linkToPath } from "../../../app/routeMap";
+import { useIsLinkVisible } from "../../../app/authGate";
 import styles from "./MegaNavDrawer.module.css";
 
 interface MegaNavDrawerProps {
@@ -9,11 +10,13 @@ interface MegaNavDrawerProps {
 }
 
 export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
+  const isLinkVisible = useIsLinkVisible();
+  const menus = filterMenus(NAV_MENUS, isLinkVisible);
   const [openKey, setOpenKey] = useState<string | null>(null);
 
   return (
     <>
-      {NAV_MENUS.map((menu) => {
+      {menus.map((menu) => {
         const isOpen = openKey === menu.key;
         return (
           <div

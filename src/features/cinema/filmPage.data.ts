@@ -4,6 +4,18 @@ export const FILM_POSTER =
 
 export const TIPS = ["€3", "€7", "€15", "€30", "···"];
 
+/** Watchlist entry for the cover film, saved via SavedProvider. */
+export const FILM_SAVED = {
+  id: "film:the-light-between-rooms",
+  kind: "film" as const,
+  title: "The light between rooms",
+  href: "/film",
+  meta: "Maria Vasconcelos · 2025",
+  description:
+    "A chamber drama about two strangers sharing a house in Lisbon — and the light that passes between their rooms.",
+  readTime: "1h 48m",
+};
+
 export const WATCH_TABS = [
   { label: "Watch", sub: "included · sustainer" },
   { label: "Rent · €3", sub: "48 hrs" },

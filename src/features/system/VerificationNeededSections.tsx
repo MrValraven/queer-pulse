@@ -260,6 +260,10 @@ export function MagicLinkMethod({
 }
 
 /* ── Success ──────────────────────────────────────────────── */
+// Kept local (not the shared ui SuccessPanel): the continue CTA carries a
+// trailing <FiArrowRight> glyph, but the shared panel's closeLabel is typed as
+// a plain string, so props don't map cleanly. Already follows the success
+// pattern (jade tick, coral <em>).
 export function SuccessPanel({ onContinue }: { onContinue: () => void }) {
   return (
     <div className={styles.success}>

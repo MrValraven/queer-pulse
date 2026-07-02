@@ -20,7 +20,7 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     showToast("Signed in — welcome back", "success");
-    setTimeout(() => navigate("/studio"), 900);
+    setTimeout(() => navigate(routes.studio), 900);
   }
 
   function handleGoogle() {
@@ -28,7 +28,7 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
     setGoogleLoading(true);
     setTimeout(() => {
       showToast("Signed in with Google — welcome back", "success");
-      navigate("/studio");
+      navigate(routes.studio);
     }, 1100);
   }
 
@@ -80,6 +80,7 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
 
       <div className={styles.divider}>or</div>
       <button
+        type="button"
         className={styles.btnGoogle}
         onClick={handleGoogle}
         disabled={googleLoading}
@@ -357,12 +358,14 @@ export function StudioSignInPage() {
 
           <div className={styles.segTabs}>
             <button
+              type="button"
               className={tab === "in" ? styles.segOn : ""}
               onClick={() => setTab("in")}
             >
               Sign in
             </button>
             <button
+              type="button"
               className={tab === "join" ? styles.segOn : ""}
               onClick={() => setTab("join")}
             >

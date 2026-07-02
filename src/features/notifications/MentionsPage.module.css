@@ -40,7 +40,7 @@
   display: flex;
   gap: 4px;
   margin-bottom: 22px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   flex-wrap: wrap;
 }
 .tab {
@@ -55,8 +55,10 @@
   position: relative;
   transition: color 0.2s;
 }
-.tab:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--plum);
+  }
 }
 .tab.active {
   color: var(--plum);
@@ -74,7 +76,7 @@
   font-size: 11px;
   font-weight: 700;
   color: var(--ink-40);
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 5px;
   padding: 1px 7px;
   margin-left: 5px;
@@ -89,7 +91,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 18px;
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   border-radius: 11px;
   margin-bottom: 18px;
 }
@@ -112,16 +114,20 @@
   padding: 4px 8px;
   border-radius: 6px;
 }
-.markBtn:hover {
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .markBtn:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 .markBtn:disabled {
   color: var(--ink-40);
   cursor: default;
   opacity: 0.6;
 }
-.markBtn:disabled:hover {
-  background: transparent;
+@media (hover: hover) {
+  .markBtn:disabled:hover {
+    background: transparent;
+  }
 }
 
 .day {
@@ -132,7 +138,7 @@
   color: var(--ink-40);
   margin: 24px 0 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .list {
   display: flex;
@@ -142,7 +148,7 @@
 .row {
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   transition:
     background 0.4s var(--ease),
@@ -184,7 +190,7 @@
   color: var(--jade);
 }
 .avPlum {
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--plum);
 }
 .who {
@@ -253,15 +259,19 @@
   color: var(--ink-60);
   transition: all 0.2s;
 }
-.action:hover {
-  color: var(--plum);
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .action:hover {
+    color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 .action.primary {
   color: var(--accent-ink);
 }
-.action.primary:hover {
-  background: rgba(var(--accent-rgb), 0.08);
+@media (hover: hover) {
+  .action.primary:hover {
+    background: rgba(var(--accent-rgb), 0.08);
+  }
 }
 .action.going {
   color: var(--jade);
@@ -278,7 +288,7 @@
 .rcInput {
   flex: 1;
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 10px;
   padding: 9px 13px;
   font-family: var(--sans);

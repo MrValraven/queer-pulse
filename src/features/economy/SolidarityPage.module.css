@@ -60,7 +60,7 @@
 }
 .sub {
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   max-width: 54ch;
   line-height: 1.65;
   position: relative;
@@ -71,9 +71,9 @@
   align-items: center;
   gap: 9px;
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.42);
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  color: rgba(var(--cream-rgb), 0.42);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 10px;
   padding: 9px 15px;
   position: relative;
@@ -81,7 +81,7 @@
 
 .howStrip {
   background: var(--paper);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   padding: 40px 0;
 }
 .howGrid {
@@ -104,7 +104,7 @@
   font-family: var(--serif);
   font-size: 36px;
   font-weight: 300;
-  color: rgba(45, 27, 61, 0.12);
+  color: rgba(var(--plum-rgb), 0.12);
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -121,7 +121,7 @@
 
 .filterBar {
   background: var(--cream);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
   position: sticky;
   top: 62px;
   z-index: 50;
@@ -151,7 +151,7 @@
 .fbSep {
   width: 1px;
   height: 18px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   flex: none;
   margin: 0 4px;
 }
@@ -159,18 +159,23 @@
   font-size: 12.5px;
   font-weight: 500;
   color: var(--ink-60);
-  border: 1px solid rgba(45, 27, 61, 0.15);
+  border: 1px solid rgba(var(--plum-rgb), 0.15);
   background: transparent;
   border-radius: 999px;
   padding: 6px 13px;
   cursor: pointer;
-  transition: all 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
   white-space: nowrap;
   font-family: var(--sans);
 }
-.chip:hover {
-  color: var(--ink);
-  border-color: rgba(45, 27, 61, 0.3);
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--ink);
+    border-color: rgba(var(--plum-rgb), 0.3);
+  }
 }
 .chipActive {
   background: var(--plum);
@@ -188,10 +193,9 @@
   font-size: 14px;
   color: var(--ink);
   background: var(--paper);
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 999px;
   padding: 8px 15px;
-  outline: none;
   transition: border-color 0.2s var(--ease);
   box-sizing: border-box;
 }
@@ -219,7 +223,7 @@
 }
 .pc {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 24px;
   display: flex;
@@ -230,10 +234,12 @@
     box-shadow 0.3s var(--ease),
     transform 0.3s var(--ease);
 }
-.pc:hover {
-  border-color: rgba(45, 27, 61, 0.18);
-  box-shadow: 0 14px 36px -20px rgba(45, 27, 61, 0.34);
-  transform: translateY(-3px);
+@media (hover: hover) {
+  .pc:hover {
+    border-color: rgba(var(--plum-rgb), 0.18);
+    box-shadow: 0 14px 36px -20px rgba(var(--plum-rgb), 0.34);
+    transform: translateY(-3px);
+  }
 }
 .pcTop {
   display: flex;
@@ -282,7 +288,7 @@
   color: var(--jade);
 }
 .badgeVerified {
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   color: var(--ink-60);
 }
 .pcPricing {
@@ -327,7 +333,7 @@
   font-weight: 500;
   padding: 3px 8px;
   border-radius: 6px;
-  background: rgba(45, 27, 61, 0.055);
+  background: rgba(var(--plum-rgb), 0.055);
   color: var(--ink-60);
 }
 .pcFoot {
@@ -336,7 +342,7 @@
   justify-content: space-between;
   gap: 8px;
   padding-top: 13px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .pcLang {
   font-size: 12px;
@@ -346,7 +352,7 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border: none;
   border-radius: 9px;
   padding: 7px 14px;
@@ -357,14 +363,16 @@
   font-family: var(--sans);
   text-decoration: none;
 }
-.pcContact:hover {
-  background: var(--plum);
-  color: var(--cream);
+@media (hover: hover) {
+  .pcContact:hover {
+    background: var(--plum);
+    color: var(--cream);
+  }
 }
 
 .regStrip {
   background: var(--plum);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 40px 44px;
   display: flex;
   align-items: flex-start;
@@ -388,7 +396,7 @@
 }
 .rsText p {
   font-size: 14.5px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   max-width: 44ch;
   line-height: 1.62;
 }
@@ -400,6 +408,6 @@
 }
 .rsCtaLink {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   text-align: center;
 }

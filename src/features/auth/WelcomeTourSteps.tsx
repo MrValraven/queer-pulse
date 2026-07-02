@@ -106,7 +106,7 @@ export function TourProfile({ onNext, onBack }: StepProps) {
         ))}
       </div>
       <div className={styles.nav}>
-        <button className={styles.back} onClick={onBack}>
+        <button type="button" className={styles.back} onClick={onBack}>
           ← Back
         </button>
         <Button onClick={onNext}>Continue →</Button>
@@ -156,7 +156,7 @@ export function TourInterests({ onNext, onBack }: StepProps) {
         ))}
       </div>
       <div className={styles.nav}>
-        <button className={styles.back} onClick={onBack}>
+        <button type="button" className={styles.back} onClick={onBack}>
           ← Back
         </button>
         <Button onClick={onNext}>Continue →</Button>
@@ -209,7 +209,7 @@ export function TourCommunities({ onNext, onBack }: StepProps) {
         ))}
       </div>
       <div className={styles.nav}>
-        <button className={styles.back} onClick={onBack}>
+        <button type="button" className={styles.back} onClick={onBack}>
           ← Back
         </button>
         <Button onClick={onNext}>Continue →</Button>
@@ -265,7 +265,7 @@ export function TourConnections({ onNext, onBack }: StepProps) {
         })}
       </div>
       <div className={styles.nav}>
-        <button className={styles.back} onClick={onBack}>
+        <button type="button" className={styles.back} onClick={onBack}>
           ← Back
         </button>
         <Button onClick={onNext}>Continue →</Button>

@@ -5,7 +5,7 @@
   padding: 120px 0 56px;
 }
 .heroInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
 }
@@ -48,7 +48,7 @@
   max-width: 560px;
   padding: 14px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 14px;
 }
 .sub input {
@@ -59,7 +59,6 @@
   color: var(--ink);
   background: transparent;
   border: none;
-  outline: none;
   padding: 10px 12px;
 }
 .sub input::placeholder {
@@ -111,7 +110,7 @@
 }
 .subDoneBody {
   font-size: 14.5px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.6;
   margin-top: 10px;
 }
@@ -124,7 +123,7 @@
   align-items: flex-start;
   gap: 8px;
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.66);
+  color: rgba(var(--cream-rgb), 0.66);
   line-height: 1.55;
   margin-top: 12px;
 }
@@ -144,7 +143,7 @@
   flex-wrap: wrap;
   margin-top: 42px;
   padding-top: 24px;
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .stats b {
   color: var(--plum);
@@ -162,12 +161,12 @@
 }
 
 .tabs {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 48px auto 0;
   padding: 0 28px;
   display: flex;
   gap: 6px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   flex-wrap: wrap;
 }
 .tab {
@@ -182,8 +181,10 @@
   position: relative;
   transition: color 0.2s var(--ease);
 }
-.tab:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--plum);
+  }
 }
 .tabActive {
   color: var(--plum);
@@ -201,7 +202,7 @@
   font-size: 11.5px;
   font-weight: 700;
   color: var(--ink-40);
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 5px;
   padding: 1px 7px;
   margin-left: 5px;
@@ -212,14 +213,14 @@
 }
 
 .latest {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 32px auto;
   padding: 0 28px;
 }
 .latestCard {
   background: var(--plum);
   color: var(--cream);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 36px 40px;
   position: relative;
   overflow: hidden;
@@ -277,7 +278,7 @@
 }
 .latest p {
   font-size: 15.5px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   max-width: 54ch;
   margin-bottom: 16px;
@@ -286,7 +287,7 @@
   display: flex;
   gap: 18px;
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   flex-wrap: wrap;
   margin-bottom: 18px;
 }
@@ -296,13 +297,13 @@
 }
 
 .list {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 24px auto;
   padding: 0 28px 80px;
 }
 .year {
   padding: 32px 0 14px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   margin-bottom: 12px;
 }
 .year h3 {
@@ -326,7 +327,7 @@
   grid-template-columns: 90px 1fr 240px 120px;
   gap: 24px;
   padding: 20px 8px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   align-items: center;
   text-decoration: none;
   color: inherit;
@@ -335,12 +336,16 @@
     background 0.25s var(--ease);
   border-radius: 8px;
 }
-.row:hover {
-  background: rgba(45, 27, 61, 0.03);
-  padding-left: 18px;
+@media (hover: hover) {
+  .row:hover {
+    background: rgba(var(--plum-rgb), 0.03);
+    padding-left: 18px;
+  }
 }
-.row:hover .rowH {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .row:hover .rowH {
+    color: var(--accent-ink);
+  }
 }
 @media (max-width: 760px) {
   .row {

@@ -2,6 +2,7 @@
 :root {
   /* ── Max widths ── */
   --maxw: 1240px;
+  --maxw-page: 1080px; /* de-facto standard page container */
   --maxw-text: 680px;
   --wrap-px: 28px; /* horizontal gutter */
 

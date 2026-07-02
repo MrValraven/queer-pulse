@@ -142,6 +142,7 @@ export function PwaPromptPage() {
         <div className={styles.tabs}>
           {(["ios", "android", "desktop"] as Platform[]).map((p) => (
             <button
+              type="button"
               key={p}
               className={[styles.tab, platform === p && styles.tabActive]
                 .filter(Boolean)
@@ -167,7 +168,7 @@ export function PwaPromptPage() {
           <Button onClick={install} className={styles.installBtn}>
             Install now
           </Button>
-          <button className={styles.laterBtn} onClick={snooze}>
+          <button type="button" className={styles.laterBtn} onClick={snooze}>
             Maybe later
           </button>
         </div>

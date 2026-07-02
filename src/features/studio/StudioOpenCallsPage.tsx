@@ -31,6 +31,7 @@ export function StudioOpenCallsPage() {
         <div className={s.filter}>
           {FILTERS.map((f) => (
             <button
+              type="button"
               key={f}
               className={[s.chip, filter === f && s.chipOn]
                 .filter(Boolean)
@@ -125,6 +126,7 @@ export function StudioOpenCallsPage() {
                     </div>
                     <div className={s.callActions}>
                       <button
+                        type="button"
                         className={s.bt}
                         onClick={() =>
                           showToast("Application withdrawn", "info")

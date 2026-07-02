@@ -12,8 +12,10 @@
   align-items: center;
   gap: 6px;
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 .kicker {
   font-size: 11px;
@@ -62,7 +64,7 @@
   font-size: 12px;
   font-weight: 500;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 999px;
   padding: 5px 12px;
 }
@@ -123,7 +125,7 @@
 }
 
 .bio {
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
   margin-top: 56px;
   padding-top: 32px;
   padding-bottom: 56px;
@@ -155,7 +157,7 @@
   color: var(--plum);
   margin-bottom: 28px;
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .relatedHead em {
   font-style: italic;
@@ -171,17 +173,19 @@
   flex-direction: column;
   gap: 8px;
   padding: 20px 22px;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   transition:
     border-color 0.2s,
     box-shadow 0.25s,
     transform 0.25s var(--ease);
 }
-.relCard:hover {
-  border-color: rgba(45, 27, 61, 0.2);
-  box-shadow: 0 8px 24px -14px rgba(45, 27, 61, 0.25);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .relCard:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    box-shadow: 0 8px 24px -14px rgba(var(--plum-rgb), 0.25);
+    transform: translateY(-2px);
+  }
 }
 .relKicker {
   font-size: 10.5px;
@@ -239,5 +243,5 @@
 }
 
 :global([data-theme="dark"]) .relCard {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

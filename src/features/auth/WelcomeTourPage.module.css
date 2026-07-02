@@ -1,5 +1,5 @@
 .root {
-  min-height: 100vh;
+  min-height: 100svh;
   background: var(--cream);
   display: flex;
   flex-direction: column;
@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 28px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .brand {
   display: flex;
@@ -35,8 +35,10 @@
   font-size: 13px;
   color: var(--ink-40);
 }
-.skip:hover {
-  color: var(--ink-60);
+@media (hover: hover) {
+  .skip:hover {
+    color: var(--ink-60);
+  }
 }
 
 .page {
@@ -57,7 +59,7 @@
 }
 .bar {
   height: 3px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   border-radius: 2px;
   overflow: hidden;
   margin-bottom: 10px;
@@ -117,7 +119,7 @@
 /* Vouch card */
 .vouchCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
   display: flex;
@@ -199,7 +201,7 @@
 }
 .input,
 .select {
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   padding: 13px 16px;
   font-family: var(--sans);
@@ -217,6 +219,7 @@
 .input:focus,
 .select:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
 }
 .fieldLabel {
   font-size: 13px;
@@ -235,7 +238,7 @@
   gap: 12px;
   align-items: flex-start;
   padding: 13px 16px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 12px;
   cursor: pointer;
   transition:
@@ -269,11 +272,13 @@
   margin-bottom: 28px;
 }
 .intItem {
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 12px;
   padding: 13px 14px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
   display: flex;
   align-items: center;
   gap: 9px;
@@ -281,8 +286,10 @@
   text-align: left;
   font-family: var(--sans);
 }
-.intItem:hover {
-  border-color: rgba(45, 27, 61, 0.28);
+@media (hover: hover) {
+  .intItem:hover {
+    border-color: rgba(var(--plum-rgb), 0.28);
+  }
 }
 .intSel {
   border-color: var(--accent);
@@ -310,7 +317,7 @@
   align-items: flex-start;
   gap: 14px;
   padding: 14px 16px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 14px;
   cursor: pointer;
   transition:
@@ -350,7 +357,7 @@
 }
 .sugCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 16px 18px;
   display: flex;
@@ -402,18 +409,23 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--plum);
-  border: 1.5px solid rgba(45, 27, 61, 0.18);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.18);
   border-radius: 999px;
   padding: 8px 16px;
   background: transparent;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
-.sugSay:hover {
-  background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+@media (hover: hover) {
+  .sugSay:hover {
+    background: var(--plum);
+    color: var(--cream);
+    border-color: var(--plum);
+  }
 }
 .sugSent {
   background: rgba(var(--jade-rgb), 0.1);
@@ -431,7 +443,7 @@
 }
 .exCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 16px;
   display: block;
@@ -440,9 +452,11 @@
     transform 0.3s var(--ease),
     box-shadow 0.3s var(--ease);
 }
-.exCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px -14px rgba(45, 27, 61, 0.3);
+@media (hover: hover) {
+  .exCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -14px rgba(var(--plum-rgb), 0.3);
+  }
 }
 .exIcon {
   font-size: 22px;
@@ -483,8 +497,10 @@
   padding: 12px 4px;
   transition: color 0.2s;
 }
-.back:hover {
-  color: var(--ink);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--ink);
+  }
 }
 
 @media (max-width: 480px) {
@@ -497,8 +513,8 @@
 :global([data-theme="dark"]) .vouchCard,
 :global([data-theme="dark"]) .sugCard,
 :global([data-theme="dark"]) .exCard {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .topNav {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

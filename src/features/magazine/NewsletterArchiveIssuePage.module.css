@@ -1,6 +1,6 @@
 .page {
   background: var(--cream);
-  min-height: 100vh;
+  min-height: 100svh;
 }
 .inner {
   max-width: 760px;
@@ -17,7 +17,7 @@
 }
 
 .head {
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   padding-bottom: 36px;
   margin-bottom: 12px;
 }
@@ -89,7 +89,7 @@
 }
 .section {
   padding: 36px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .kicker {
   font-size: 11px;
@@ -136,12 +136,14 @@
   gap: 18px;
   padding: 14px 18px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   transition: border-color 0.2s var(--ease);
 }
-.linkRow:hover {
-  border-color: rgba(var(--accent-rgb), 0.4);
+@media (hover: hover) {
+  .linkRow:hover {
+    border-color: rgba(var(--accent-rgb), 0.4);
+  }
 }
 .linkLabel {
   display: inline-flex;
@@ -157,8 +159,10 @@
   color: var(--accent);
   transition: transform 0.2s var(--ease);
 }
-.linkRow:hover .linkIcon {
-  transform: translateX(3px);
+@media (hover: hover) {
+  .linkRow:hover .linkIcon {
+    transform: translateX(3px);
+  }
 }
 .linkMeta {
   font-size: 12.5px;
@@ -172,7 +176,7 @@
 .signoffInner {
   background: var(--plum);
   color: var(--cream);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 40px 44px;
   position: relative;
   overflow: hidden;
@@ -216,7 +220,7 @@
   position: relative;
   z-index: 1;
   font-size: 15.5px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   max-width: 54ch;
   margin-bottom: 24px;

@@ -1,5 +1,5 @@
 .hero {
-  background: #1a1228;
+  background: var(--plum-deep);
   padding: 128px 0 56px;
   position: relative;
   overflow: hidden;
@@ -12,7 +12,11 @@
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(74, 140, 111, 0.1), transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.1),
+    transparent 62%
+  );
 }
 .hero::after {
   content: "";
@@ -24,7 +28,7 @@
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(232, 119, 90, 0.08),
+    rgba(var(--accent-rgb), 0.08),
     transparent 62%
   );
 }
@@ -41,7 +45,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(36px, 5.5vw, 68px);
-  color: #f7f3ee;
+  color: var(--cream);
   letter-spacing: -0.025em;
   line-height: 0.97;
   margin-bottom: 14px;
@@ -54,7 +58,7 @@
 }
 .sub {
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   max-width: 54ch;
   line-height: 1.65;
   position: relative;
@@ -64,21 +68,21 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  background: rgba(232, 119, 90, 0.12);
-  border: 1px solid rgba(232, 119, 90, 0.3);
+  background: rgba(var(--accent-rgb), 0.12);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
   border-radius: 12px;
   padding: 12px 18px;
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   position: relative;
 }
 .sos strong {
-  color: #f7f3ee;
+  color: var(--cream);
   font-weight: 700;
 }
 
 .emergencyStrip {
-  background: rgba(232, 119, 90, 0.9);
+  background: rgba(var(--accent-rgb), 0.9);
   padding: 14px 0;
 }
 .esInner {
@@ -91,7 +95,7 @@
 .esItem {
   font-size: 14px;
   font-weight: 600;
-  color: #fff;
+  color: var(--cream);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -118,13 +122,13 @@
 
 .section {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 20px;
   overflow: hidden;
 }
 .sectionHead {
   padding: 22px 24px 18px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .hrsLabel {
   font-size: 10.5px;
@@ -147,7 +151,7 @@
 
 .item {
   padding: 12px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .item:last-child {
   border-bottom: none;
@@ -165,8 +169,8 @@
 }
 
 .alert {
-  background: rgba(232, 119, 90, 0.07);
-  border: 1px solid rgba(232, 119, 90, 0.22);
+  background: rgba(var(--accent-rgb), 0.07);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
   border-radius: 13px;
   padding: 16px 18px;
   margin-bottom: 16px;
@@ -218,7 +222,7 @@
 }
 .ncBody {
   font-size: 14.5px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.68;
 }
 .ncBody + .ncBody {
@@ -234,7 +238,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.35);
+  color: rgba(var(--cream-rgb), 0.35);
   margin-bottom: 6px;
 }
 .ncStep {
@@ -257,7 +261,7 @@
 }
 .ncStepBody {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.75);
+  color: rgba(var(--cream-rgb), 0.75);
   line-height: 1.6;
 }
 .ncStepBody strong {

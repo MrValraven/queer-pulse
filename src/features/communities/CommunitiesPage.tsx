@@ -91,6 +91,7 @@ export function CommunitiesPage() {
           <Reveal className={styles.filters}>
             {FILTERS.map((option) => (
               <button
+                type="button"
                 key={option.value}
                 className={[
                   styles.chip,

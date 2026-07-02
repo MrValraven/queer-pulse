@@ -3,6 +3,7 @@ import type { IconType } from "react-icons";
 import { FiMail, FiShield, FiFileText, FiUsers } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FormField, Outro, Reveal } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import s from "./ContactPage.module.css";
 
 const ROUTES: {
@@ -104,7 +105,7 @@ export function ContactPage() {
                   We'll read it and write back, usually within a day or two. If
                   it's a safety concern, we'll be in touch within 24 hours.
                 </p>
-                <Button variant="ghost" to="/">
+                <Button variant="ghost" to={routes.homepage}>
                   Back to QueerPulse
                 </Button>
               </div>
@@ -184,7 +185,7 @@ export function ContactPage() {
         }
         sub="QueerPulse is a small, member-supported network. Your feedback helps keep it good."
       >
-        <Button to="/" size="lg">
+        <Button to={routes.homepage} size="lg">
           Back to the room
         </Button>
       </Outro>

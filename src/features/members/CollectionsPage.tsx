@@ -71,6 +71,7 @@ const privacyIcon: Record<Privacy, ReactNode> = {
 function CollectionCard({ c, onOpen }: { c: Collection; onOpen: () => void }) {
   return (
     <button
+      type="button"
       className={`${styles.card} ${c.featured ? styles.featured : ""}`}
       onClick={onOpen}
     >
@@ -138,7 +139,7 @@ function RecentRowSkeleton() {
 /** A recent, unfiled save — clicking opens the "add to collection" picker. */
 function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
   return (
-    <button className={styles.recentRow} onClick={onAdd}>
+    <button type="button" className={styles.recentRow} onClick={onAdd}>
       <div className={`${styles.recentKind} ${kindClass[r.kindVariant]}`}>
         {r.kind}
       </div>
@@ -262,6 +263,7 @@ export function CollectionsPage() {
               ))}
 
               <button
+                type="button"
                 className={styles.newCard}
                 onClick={() => setModal({ type: "new" })}
               >

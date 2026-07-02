@@ -25,9 +25,11 @@
     transform 0.18s var(--ease),
     box-shadow 0.18s var(--ease);
 }
-.statCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.08);
+@media (hover: hover) {
+  .statCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.08);
+  }
 }
 .statLabel {
   font-size: 12.5px;
@@ -452,8 +454,10 @@
   cursor: pointer;
   transition: background 0.16s var(--ease);
 }
-.auditRow:hover {
-  background: rgba(var(--plum-rgb), 0.04);
+@media (hover: hover) {
+  .auditRow:hover {
+    background: rgba(var(--plum-rgb), 0.04);
+  }
 }
 .auditRow:focus-visible {
   outline: 2px solid var(--accent-ink);
@@ -677,10 +681,12 @@
     background 0.14s var(--ease),
     color 0.14s var(--ease);
 }
-.pagerBtn:hover:not(:disabled),
-.pagerNum:hover {
-  background: rgba(var(--plum-rgb), 0.05);
-  color: var(--plum);
+@media (hover: hover) {
+  .pagerBtn:hover:not(:disabled),
+  .pagerNum:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    color: var(--plum);
+  }
 }
 .pagerBtn:disabled {
   opacity: 0.4;
@@ -691,9 +697,11 @@
   border-color: var(--plum);
   color: var(--cream);
 }
-.pagerNumOn:hover {
-  background: var(--plum);
-  color: var(--cream);
+@media (hover: hover) {
+  .pagerNumOn:hover {
+    background: var(--plum);
+    color: var(--cream);
+  }
 }
 
 /* ── Audit empty state ───────────────────────────────────────────────────── */
@@ -828,8 +836,10 @@
   color: var(--accent-ink);
   cursor: pointer;
 }
-.tlDiffLink:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .tlDiffLink:hover {
+    text-decoration: underline;
+  }
 }
 .diffIntro {
   margin: 0 0 16px;
@@ -953,8 +963,10 @@
   .statCard {
     transition: none;
   }
-  .statCard:hover {
-    transform: none;
+  @media (hover: hover) {
+    .statCard:hover {
+      transform: none;
+    }
   }
   .meterFill {
     animation: none;

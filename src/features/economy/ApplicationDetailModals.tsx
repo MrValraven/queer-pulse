@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
@@ -155,6 +156,11 @@ export function NoteModal({
   onClose: () => void;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
   const n = app.note;
   return (
     <div
@@ -163,7 +169,12 @@ export function NoteModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={`${styles.modal} ${styles.readModal}`}>
+      <div
+        className={`${styles.modal} ${styles.readModal}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="note-modal-title"
+      >
         <button
           type="button"
           className={styles.close}
@@ -172,7 +183,9 @@ export function NoteModal({
         >
           ×
         </button>
-        <div className={styles.readEyebrow}>A note from {app.companyName}</div>
+        <div id="note-modal-title" className={styles.readEyebrow}>
+          A note from {app.companyName}
+        </div>
         <p className={styles.readBody}>“{n?.body}”</p>
         <div className={styles.readFrom}>— {n?.from}</div>
         <div className={styles.readFoot}>

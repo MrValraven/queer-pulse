@@ -62,6 +62,7 @@ export function AccessibilityPreferencesPage() {
             <div className={styles.sbNav}>
               {SECTIONS.map((id) => (
                 <button
+                  type="button"
                   key={id}
                   className={[
                     styles.sbLink,

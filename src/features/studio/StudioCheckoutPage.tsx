@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
+import { routes } from "../../app/routeMap";
 import { StudioShell } from "./StudioShell";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { PLAN, REASSURE } from "./studioCheckout.data";
@@ -33,10 +34,10 @@ export function StudioCheckoutPage() {
             listening.
           </p>
           <div className={s.doneActions}>
-            <Link to="/studio" className={ss.btP}>
+            <Link to={routes.studio} className={ss.btP}>
               Start listening →
             </Link>
-            <Link to="/studio/library" className={ss.bt}>
+            <Link to={routes.studioLibrary} className={ss.bt}>
               Go to your library
             </Link>
           </div>

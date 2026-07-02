@@ -24,6 +24,14 @@ export interface MoreTrack {
 export const coverImage =
   "https://plus.unsplash.com/premium_photo-1725353759981-53a3c8c60f31?q=80&w=600&auto=format&fit=crop";
 
+export const TRACK = {
+  id: "post:studio-track-carta-para-a-santa",
+  kind: "post" as const,
+  title: "Carta para a santa",
+  href: "/studio/track",
+  meta: "Mariana Sol · Track 6",
+};
+
 export const SPLIT: SplitRow[] = [
   {
     c: "var(--accent)",

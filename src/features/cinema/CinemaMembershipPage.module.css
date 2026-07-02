@@ -53,8 +53,8 @@
 }
 .tier {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-radius: var(--radius-card);
   padding: 32px 30px;
   display: flex;
   flex-direction: column;
@@ -63,7 +63,7 @@
 }
 .featured {
   border-color: var(--plum);
-  box-shadow: 0 28px 60px -34px rgba(45, 27, 61, 0.4);
+  box-shadow: 0 28px 60px -34px rgba(var(--plum-rgb), 0.4);
 }
 .tierBadge {
   position: absolute;
@@ -208,7 +208,7 @@
 }
 .payCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 28px 26px;
 }
@@ -230,11 +230,11 @@
   color: var(--accent-ink);
 }
 .pcIcon.jade {
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
 }
 .pcIcon.plum {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
 .pcTitle {
@@ -291,7 +291,7 @@
 }
 .ls {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 22px 24px;
   text-align: center;
@@ -343,5 +343,5 @@
 :global([data-theme="dark"]) .tier,
 :global([data-theme="dark"]) .payCard,
 :global([data-theme="dark"]) .ls {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

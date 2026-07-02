@@ -1,7 +1,7 @@
 /* ── Form column ────────────────────────────────────────────────────────── */
 .form {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
   padding: 26px 26px 28px;
 }
@@ -49,14 +49,13 @@
 }
 .input,
 .select {
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 14px;
   font-family: var(--sans);
   font-size: 15px;
   color: var(--ink);
   background: var(--paper);
-  outline: none;
   transition: border-color 0.25s var(--ease);
   width: 100%;
   box-sizing: border-box;
@@ -72,7 +71,7 @@
 .compare {
   margin-top: 26px;
   padding-top: 22px;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .compare .label {
   font-size: 14px;
@@ -116,7 +115,7 @@
 .overallLabel {
   font-family: var(--sans);
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .overallVal {
   font-family: var(--serif);
@@ -129,7 +128,7 @@
 .overallMeta {
   font-family: var(--sans);
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
 }
 
 .percentile {
@@ -194,14 +193,16 @@
 .barTrack {
   height: 10px;
   border-radius: 999px;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
 }
 .barFill {
   height: 100%;
+  width: 100%;
   border-radius: 999px;
   background: var(--accent);
-  transition: width 0.6s var(--ease);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease);
 }
 .barMeta {
   display: flex;
@@ -242,7 +243,7 @@
   font-family: var(--sans);
   font-size: 15px;
   line-height: 1.6;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   margin: 0;
   max-width: 44ch;
 }

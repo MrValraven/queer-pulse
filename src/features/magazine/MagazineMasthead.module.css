@@ -9,7 +9,7 @@
   justify-content: space-between;
   gap: 20px;
   padding-bottom: 20px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.12);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.12);
   flex-wrap: wrap;
 }
 .mmBrand {
@@ -71,9 +71,11 @@
     color 0.2s,
     border-color 0.2s;
 }
-.mnLink:hover {
-  color: var(--plum);
-  border-bottom-color: var(--plum);
+@media (hover: hover) {
+  .mnLink:hover {
+    color: var(--plum);
+    border-bottom-color: var(--plum);
+  }
 }
 .mnLinkActive {
   color: var(--plum);

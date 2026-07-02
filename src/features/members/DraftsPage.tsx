@@ -89,6 +89,7 @@ export function DraftsPage() {
         <div className={styles.tabs}>
           {DRAFT_TABS.map((t, i) => (
             <button
+              type="button"
               key={t.label}
               className={`${styles.tab} ${tab === i ? styles.active : ""}`}
               onClick={() => setTab(i)}
@@ -148,6 +149,7 @@ export function DraftsPage() {
                 <div className={styles.actions}>
                   {d.actions.map((a) => (
                     <button
+                      type="button"
                       key={a.label}
                       className={`${styles.action} ${a.variant === "primary" ? styles.primary : ""} ${a.variant === "danger" ? styles.danger : ""}`}
                       onClick={() => runAction(d, a)}

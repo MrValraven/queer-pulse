@@ -21,7 +21,7 @@ export function LiveSection() {
           Premieres, Q&amp;As, watch parties. Hosted by members, open by
           default.
         </div>
-        <Link to="/calendar" className="all">
+        <Link to={routes.calendar} className="all">
           Full calendar →
         </Link>
       </div>
@@ -58,7 +58,7 @@ export function LiveSection() {
                 ))}
               </div>
             </div>
-            <Button variant="ghost-dark" to="/rsvp">
+            <Button variant="ghost-dark" to={routes.rsvp}>
               RSVP
             </Button>
           </div>

@@ -233,6 +233,40 @@ export const THERAPISTS: Therapist[] = [
     firstSession:
       "A 50-minute session, on your own or as a couple. We map out what you want to work on and how I can help — no pressure to keep going if it is not the right fit.",
   },
+  {
+    id: "ines-pereira",
+    name: "Dr. Inês Pereira",
+    initials: "IP",
+    pronouns: "she/her",
+    creds: "Psychologist · OPP registered",
+    registration: "Ordem dos Psicólogos Portugueses · OPP 14826",
+    langs: ["Portuguese", "English", "Spanish"],
+    specs: ["Trans-affirming", "Minority stress", "Relationships"],
+    format: "In-person & online · Anjos",
+    note: "\"I don't treat being queer as the problem. I treat what the world does to you for being queer — and what you'd like to do about it.\"",
+    photo:
+      "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?q=80&w=600&auto=format&fit=crop",
+    avBg: "rgba(232,119,90,.16)",
+    avCol: "var(--accent-ink)",
+    acceptingNew: true,
+    years: 12,
+    rate: "€25–60 / session",
+    slidingScale: true,
+    location: "Largo do Intendente, Anjos",
+    availability: "Free 20-min intro call, usually within a week",
+    bio: [
+      "I don't treat being queer as the problem. I treat what the world does to you for being queer — the hypervigilance, the family weather, the low-grade fear that never quite switches off — and what you'd like to do about it.",
+      "I trained in psychodynamic work and CBT, I'm certified in EMDR for trauma, and I work with a politically literate lens: some of what you're feeling isn't a disorder, it's a reasonable response to conditions. Treating it that way is part of the work.",
+    ],
+    approach: ["Person-centred", "Psychodynamic", "CBT", "EMDR"],
+    training: [
+      "MSc Clinical Psychology — Universidade de Lisboa",
+      "WPATH-certified gender-affirming care",
+      "EMDR-trained for trauma work",
+    ],
+    firstSession:
+      "A free 20-minute video call — no charge, no pressure. You decide if it feels like a fit, and I'll tell you honestly if I'm not the right person.",
+  },
 ];
 
 export const CRISIS: { name: string; num: string; note: string }[] = [

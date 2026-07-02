@@ -29,7 +29,7 @@
   opacity: 0.18;
 }
 .heroInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
   position: relative;
@@ -74,7 +74,7 @@
   gap: 32px;
   margin-top: 32px;
   padding-top: 28px;
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
   flex-wrap: wrap;
   font-size: 13.5px;
   color: var(--ink-60);
@@ -145,7 +145,7 @@
 .statementSign {
   margin-top: 32px;
   padding-top: 24px;
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
   display: flex;
   gap: 14px;
   align-items: center;
@@ -175,7 +175,7 @@
   padding: 80px 0;
 }
 .profilesInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
 }
@@ -185,7 +185,7 @@
   justify-content: space-between;
   padding-bottom: 18px;
   margin-bottom: 32px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   flex-wrap: wrap;
   gap: 14px;
 }
@@ -221,8 +221,8 @@
 }
 .profileCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   overflow: hidden;
   transition:
     transform 0.25s var(--ease),
@@ -232,10 +232,12 @@
   color: inherit;
   display: block;
 }
-.profileCard:hover {
-  transform: translateY(-3px);
-  border-color: rgba(45, 27, 61, 0.18);
-  box-shadow: 0 16px 32px -22px rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .profileCard:hover {
+    transform: translateY(-3px);
+    border-color: rgba(var(--plum-rgb), 0.18);
+    box-shadow: 0 16px 32px -22px rgba(var(--plum-rgb), 0.4);
+  }
 }
 .profileImg {
   aspect-ratio: 4 / 5;
@@ -250,7 +252,7 @@
   background: rgba(var(--jade-rgb), 0.12);
 }
 .tintC {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
 }
 .profileBody {
   padding: 22px 24px;
@@ -304,7 +306,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 14px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .profileRead span {
   color: var(--ink-40);
@@ -313,10 +315,10 @@
 
 .resources {
   padding: 80px 0;
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
 }
 .resourcesInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
 }
@@ -353,7 +355,7 @@
 .rCard {
   padding: 24px 28px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   text-decoration: none;
   color: inherit;
@@ -362,9 +364,11 @@
     border-color 0.2s var(--ease);
   display: block;
 }
-.rCard:hover {
-  transform: translateY(-2px);
-  border-color: rgba(45, 27, 61, 0.18);
+@media (hover: hover) {
+  .rCard:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--plum-rgb), 0.18);
+  }
 }
 .rIc {
   width: 36px;
@@ -381,7 +385,7 @@
   background: rgba(var(--accent-rgb), 0.1);
 }
 .rCardPlum .rIc {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
 }
 .rCard h3 {
   font-family: var(--serif);
@@ -456,7 +460,7 @@
   grid-template-columns: 32px 1fr;
   gap: 14px;
   padding: 18px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   align-items: flex-start;
 }
 .actionRow:last-child {

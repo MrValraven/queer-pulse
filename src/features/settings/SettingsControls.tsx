@@ -129,7 +129,7 @@ export function DataCard({
           {btn}
         </Link>
       ) : (
-        <button className={styles.dcBtn} onClick={onClick}>
+        <button type="button" className={styles.dcBtn} onClick={onClick}>
           {btn}
         </button>
       )}
@@ -154,18 +154,25 @@ export function DeleteAccountModal({
 
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <h3>Delete your account?</h3>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-account-modal-title"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 id="delete-account-modal-title">Delete your account?</h3>
         <p>
           This will permanently delete your profile, messages, community posts,
           and all associated data within 30 days. It cannot be undone. We
           recommend downloading your data first.
         </p>
         <div className={styles.modalBtns}>
-          <button className={styles.dcBtn} onClick={onClose}>
+          <button type="button" className={styles.dcBtn} onClick={onClose}>
             Cancel
           </button>
           <button
+            type="button"
             className={`${styles.dcBtn} ${styles.danger}`}
             onClick={onConfirm}
           >

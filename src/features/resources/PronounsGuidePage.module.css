@@ -51,7 +51,7 @@
 }
 .heroSub {
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   max-width: 52ch;
   margin-top: 22px;
   line-height: 1.72;
@@ -117,7 +117,7 @@
 
 /* Name table */
 .table {
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 18px;
   overflow: hidden;
   margin: 20px 0;
@@ -125,8 +125,8 @@
 .tHead {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  background: rgba(45, 27, 61, 0.04);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.04);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .tHeadCell {
   padding: 13px 18px;
@@ -139,7 +139,7 @@
 .tRow {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   background: var(--paper);
 }
 .tRow:first-of-type {
@@ -178,7 +178,7 @@
 }
 .whereCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 18px 20px;
 }
@@ -190,10 +190,10 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 12px;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
 }
 .whereIcon.jade {
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
 }
 .whereIcon svg {
   width: 18px;
@@ -229,11 +229,11 @@
 
 /* FAQ */
 .faqItem {
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
   cursor: pointer;
 }
 .faqItem:last-child {
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .faqQ {
   display: flex;
@@ -284,7 +284,7 @@
 }
 .sidebarCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 18px;
   padding: 24px 22px;
 }
@@ -307,8 +307,8 @@
   margin-bottom: 14px;
 }
 .commitment {
-  background: rgba(74, 140, 111, 0.07);
-  border: 1.5px solid rgba(74, 140, 111, 0.22);
+  background: rgba(var(--jade-rgb), 0.07);
+  border: 1.5px solid rgba(var(--jade-rgb), 0.22);
   border-radius: 18px;
   padding: 24px 26px;
 }

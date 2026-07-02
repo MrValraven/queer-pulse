@@ -50,7 +50,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
   font-size: 18px;
@@ -60,8 +60,10 @@
   justify-content: center;
   transition: background 0.2s var(--ease);
 }
-.close:hover {
-  background: rgba(45, 27, 61, 0.14);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.14);
+  }
 }
 
 .eye {
@@ -103,7 +105,7 @@
   gap: 14px;
   padding: 14px 16px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   margin-bottom: 22px;
 }
@@ -122,7 +124,7 @@
   width: 32px;
   height: 32px;
   border-radius: 9px;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   background: var(--paper);
   color: var(--plum);
   font-size: 18px;
@@ -135,8 +137,10 @@
     border-color 0.2s var(--ease),
     transform 0.15s var(--ease);
 }
-.stepper button:hover:not(:disabled) {
-  border-color: var(--accent);
+@media (hover: hover) {
+  .stepper button:hover:not(:disabled) {
+    border-color: var(--accent);
+  }
 }
 .stepper button:active:not(:disabled) {
   transform: scale(0.94);
@@ -179,8 +183,10 @@
   cursor: pointer;
   font-family: var(--sans);
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 .back:disabled {
   opacity: 0.4;
@@ -192,11 +198,13 @@
   background: var(--plum);
 }
 .modalSuccess .close {
-  background: rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.12);
   color: var(--cream);
 }
-.modalSuccess .close:hover {
-  background: rgba(247, 243, 238, 0.22);
+@media (hover: hover) {
+  .modalSuccess .close:hover {
+    background: rgba(var(--cream-rgb), 0.22);
+  }
 }
 .success {
   text-align: center;
@@ -251,7 +259,7 @@
 }
 .success p {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   margin: 16px 0 28px;
   line-height: 1.65;
 }
@@ -261,7 +269,7 @@
 }
 
 :global([data-theme="dark"]) .modal {
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .modalSuccess {
   border-color: transparent;

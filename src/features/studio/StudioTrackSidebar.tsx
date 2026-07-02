@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { routes } from "../../app/routeMap";
 import { SPLIT, CREDITS } from "./studioTrack.data";
 import t from "./track.module.css";
 
@@ -77,7 +78,7 @@ export function StudioTrackSidebar() {
           </b>
           <small>6 pages · piano + voice · CC-BY-NC · Mariana Sol</small>
         </div>
-        <Link to="/studio/sheet-store">Download →</Link>
+        <Link to={routes.studioSheetStore}>Download →</Link>
       </div>
     </div>
   );

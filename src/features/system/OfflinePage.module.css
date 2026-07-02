@@ -1,11 +1,11 @@
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 24px;
   padding: 46px 44px 38px;
   width: 100%;
   max-width: 520px;
-  box-shadow: 0 6px 52px -10px rgba(45, 27, 61, 0.16);
+  box-shadow: 0 6px 52px -10px rgba(var(--plum-rgb), 0.16);
   position: relative;
   z-index: 1;
 }
@@ -13,8 +13,8 @@
 .ic {
   width: 80px;
   height: 80px;
-  border-radius: 22px;
-  background: rgba(45, 27, 61, 0.06);
+  border-radius: var(--radius-card);
+  background: rgba(var(--plum-rgb), 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,7 +80,7 @@
 .cached {
   margin-top: 28px;
   padding-top: 24px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 
 .cachedTitle {
@@ -104,7 +104,7 @@
   gap: 12px;
   padding: 11px 14px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.08);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
   border-radius: 11px;
   text-decoration: none;
   color: inherit;
@@ -113,9 +113,11 @@
     transform 0.2s var(--ease);
 }
 
-.cachedRow:hover {
-  border-color: var(--plum);
-  transform: translateX(2px);
+@media (hover: hover) {
+  .cachedRow:hover {
+    border-color: var(--plum);
+    transform: translateX(2px);
+  }
 }
 
 .cachedIc {
@@ -162,7 +164,7 @@
   justify-content: space-between;
   padding-top: 22px;
   margin-top: 24px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
   font-size: 13px;
   color: var(--ink-60);
   gap: 14px;
@@ -212,8 +214,10 @@
   transition: opacity 0.2s;
 }
 
-.retryBtn:hover {
-  opacity: 0.88;
+@media (hover: hover) {
+  .retryBtn:hover {
+    opacity: 0.88;
+  }
 }
 
 .retryBtn svg {

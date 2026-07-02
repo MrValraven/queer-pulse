@@ -253,6 +253,7 @@ export function PlatformsPage() {
           <div className={s.filters}>
             {FILTERS.map((f) => (
               <button
+                type="button"
                 key={f}
                 className={[s.chip, filter === f && s.chipOn]
                   .filter(Boolean)

@@ -24,7 +24,12 @@ export function IntegrationsModal({ onClose }: { onClose: () => void }) {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={`${styles.modal} ${styles.modalWide}`}>
+      <div
+        className={`${styles.modal} ${styles.modalWide}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Available integrations"
+      >
         <button
           type="button"
           className={styles.close}

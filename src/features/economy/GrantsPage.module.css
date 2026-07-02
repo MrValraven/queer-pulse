@@ -42,7 +42,7 @@
 }
 .heroSub {
   font-size: 16.5px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   max-width: 56ch;
   margin-top: 20px;
   line-height: 1.65;
@@ -64,12 +64,12 @@
 }
 .stat span {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   margin-top: 4px;
 }
 
 .bar {
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   padding: 16px 0;
 }
 .barInner {
@@ -83,11 +83,14 @@
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   background: transparent;
   border-radius: 999px;
   padding: 8px 15px;
-  transition: all var(--dur-base) var(--ease);
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
 }
 .chipActive {
   background: var(--plum);
@@ -126,7 +129,7 @@
 }
 .gc {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 24px;
 }
@@ -178,7 +181,7 @@
 .gtag {
   font-size: 11.5px;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 6px;
   padding: 3px 9px;
 }
@@ -196,7 +199,7 @@
   border-radius: 5px;
 }
 .gsOpen {
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
 }
 .gsRolling {
@@ -204,7 +207,7 @@
   color: var(--accent-ink);
 }
 .gsClosed {
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   color: var(--ink-40);
 }
 .gcLink {
@@ -213,8 +216,10 @@
   color: var(--plum);
   white-space: nowrap;
 }
-.gcLink:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .gcLink:hover {
+    color: var(--accent-ink);
+  }
 }
 
 .sidebar {
@@ -224,7 +229,7 @@
 }
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 24px;
 }
@@ -251,8 +256,10 @@
   font-weight: 600;
   color: var(--plum);
 }
-.sideCard a:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .sideCard a:hover {
+    color: var(--accent-ink);
+  }
 }
 
 .guide {
@@ -274,7 +281,7 @@
 }
 .guideSub {
   font-size: 15.5px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   max-width: 52ch;
   line-height: 1.65;
   margin-bottom: 44px;
@@ -287,7 +294,7 @@
   overflow: hidden;
 }
 .stepItem {
-  background: rgba(247, 243, 238, 0.06);
+  background: rgba(var(--cream-rgb), 0.06);
   padding: 28px 26px;
   display: flex;
   flex-direction: column;
@@ -297,7 +304,7 @@
   font-family: var(--serif);
   font-size: 38px;
   font-weight: 300;
-  color: rgba(247, 243, 238, 0.15);
+  color: rgba(var(--cream-rgb), 0.15);
   line-height: 1;
 }
 .stepTitle {
@@ -307,7 +314,7 @@
 }
 .stepBody {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.65);
+  color: rgba(var(--cream-rgb), 0.65);
   line-height: 1.6;
 }
 
@@ -319,5 +326,5 @@
 
 :global([data-theme="dark"]) .gc,
 :global([data-theme="dark"]) .sideCard {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

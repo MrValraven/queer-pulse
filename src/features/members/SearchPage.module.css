@@ -49,7 +49,7 @@
   background: var(--paper);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 12px 32px -16px rgba(45, 27, 61, 0.55);
+  box-shadow: 0 12px 32px -16px rgba(var(--plum-rgb), 0.55);
   position: relative;
 }
 .barWrap svg {
@@ -70,7 +70,7 @@
 .shortcut {
   font-size: 12px;
   color: var(--ink-40);
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border-radius: 7px;
   padding: 4px 8px;
   margin-right: 14px;
@@ -93,15 +93,19 @@
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   background: transparent;
   border-radius: 999px;
   padding: 9px 17px;
-  transition: all 0.25s var(--ease);
+  transition:
+    color 0.25s var(--ease),
+    border-color 0.25s var(--ease);
 }
-.tab:hover {
-  color: var(--ink);
-  border-color: rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--ink);
+    border-color: rgba(var(--plum-rgb), 0.4);
+  }
 }
 .tabActive {
   background: var(--plum);
@@ -130,16 +134,22 @@
   color: var(--ink-40);
   margin-bottom: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 14px;
+}
+/* Single-column so result cards never overflow on narrow phones. */
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 18px;
   display: flex;
@@ -151,10 +161,12 @@
     box-shadow 0.3s var(--ease),
     border-color 0.3s var(--ease);
 }
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px -18px rgba(45, 27, 61, 0.32);
-  border-color: rgba(45, 27, 61, 0.16);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -18px rgba(var(--plum-rgb), 0.32);
+    border-color: rgba(var(--plum-rgb), 0.16);
+  }
 }
 .cardIcon {
   width: 42px;
@@ -235,16 +247,20 @@
   font-size: 13.5px;
   color: var(--ink-60);
   cursor: pointer;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 999px;
   padding: 8px 16px;
   background: transparent;
-  transition: all 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
   display: inline-flex;
   align-items: center;
   gap: 7px;
 }
-.chip:hover {
-  border-color: rgba(45, 27, 61, 0.34);
-  color: var(--ink);
+@media (hover: hover) {
+  .chip:hover {
+    border-color: rgba(var(--plum-rgb), 0.34);
+    color: var(--ink);
+  }
 }

@@ -3,7 +3,7 @@
   padding: 148px 0 88px;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .hero::before {
   content: "";
@@ -81,7 +81,7 @@
   gap: 9px;
   font-size: 13.5px;
   color: var(--ink-40);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 999px;
   padding: 10px 18px;
   position: relative;
@@ -98,7 +98,7 @@
   padding: 80px 0;
 }
 .secAlt {
-  background: rgba(45, 27, 61, 0.025);
+  background: rgba(var(--plum-rgb), 0.025);
 }
 .secHead {
   margin-bottom: 48px;
@@ -130,7 +130,7 @@
   flex-wrap: wrap;
   margin-bottom: 34px;
   padding-bottom: 22px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .vfLabel {
   font-size: 11.5px;
@@ -145,18 +145,23 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 500;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 999px;
   padding: 7px 14px;
   cursor: pointer;
-  transition: all 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
   color: var(--ink-60);
   background: transparent;
   white-space: nowrap;
 }
-.vfChip:hover {
-  border-color: rgba(45, 27, 61, 0.3);
-  color: var(--ink);
+@media (hover: hover) {
+  .vfChip:hover {
+    border-color: rgba(var(--plum-rgb), 0.3);
+    color: var(--ink);
+  }
 }
 .vfChipOn {
   background: rgba(var(--jade-rgb), 0.1);
@@ -176,8 +181,8 @@
 }
 .venueCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 24px 24px 18px;
   display: flex;
   flex-direction: column;
@@ -185,9 +190,11 @@
     transform 0.4s var(--ease),
     box-shadow 0.4s var(--ease);
 }
-.venueCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 36px -20px rgba(45, 27, 61, 0.3);
+@media (hover: hover) {
+  .venueCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px -20px rgba(var(--plum-rgb), 0.3);
+  }
 }
 .vcName {
   font-family: var(--serif);
@@ -251,16 +258,16 @@
 }
 .badgeNo {
   color: var(--ink-40);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   text-decoration: line-through;
-  text-decoration-color: rgba(45, 27, 61, 0.25);
+  text-decoration-color: rgba(var(--plum-rgb), 0.25);
 }
 .vcFoot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   margin-top: auto;
 }
 .vcReviewer {
@@ -277,8 +284,10 @@
   padding: 0;
   transition: color 0.2s var(--ease);
 }
-.flagBtn:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .flagBtn:hover {
+    color: var(--accent-ink);
+  }
 }
 .venueEmpty {
   grid-column: 1 / -1;
@@ -306,8 +315,8 @@
 }
 .commitCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -385,8 +394,8 @@
 }
 .resourceCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -418,19 +427,21 @@
   color: var(--plum);
   font-weight: 600;
   padding-top: 10px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   margin-top: auto;
 }
 .rcLink a {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(45, 27, 61, 0.25);
+  text-decoration-color: rgba(var(--plum-rgb), 0.25);
   transition: color 0.2s var(--ease);
   cursor: pointer;
 }
-.rcLink a:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .rcLink a:hover {
+    color: var(--accent-ink);
+  }
 }
 
 .peerStrip {
@@ -457,7 +468,7 @@
 }
 .peerStrip p {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   margin-top: 6px;
   max-width: 44ch;
   line-height: 1.6;
@@ -510,7 +521,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
   font-size: 17px;
@@ -521,8 +532,10 @@
   justify-content: center;
   font-family: var(--sans);
 }
-.modalX:hover {
-  background: rgba(45, 27, 61, 0.14);
+@media (hover: hover) {
+  .modalX:hover {
+    background: rgba(var(--plum-rgb), 0.14);
+  }
 }
 .modalTitle {
   font-family: var(--serif);
@@ -554,14 +567,13 @@
 .input,
 .select,
 .textarea {
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 15px;
   font-family: var(--sans);
   font-size: 15px;
   color: var(--ink);
   background: var(--paper);
-  outline: none;
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.25s var(--ease);

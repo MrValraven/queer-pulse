@@ -16,8 +16,10 @@
   padding: 18px 0;
   transition: color 0.2s;
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 .spread {
   display: grid;
@@ -138,7 +140,7 @@
 }
 .letter p {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
   line-height: 1.75;
   margin-bottom: 1em;
   max-width: 60ch;
@@ -153,7 +155,7 @@
   align-items: center;
   margin-top: 28px;
   padding-top: 24px;
-  border-top: 1px solid rgba(247, 243, 238, 0.16);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.16);
 }
 .signName {
   font-family: var(--serif);
@@ -163,11 +165,11 @@
 }
 .signRole {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 
 .page {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 80px 28px;
 }
@@ -179,7 +181,7 @@
   flex-wrap: wrap;
   padding-bottom: 26px;
   margin-bottom: 36px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .tocHead h2 {
   font-family: var(--serif);
@@ -202,7 +204,7 @@
   grid-template-columns: 120px 1fr;
   gap: 36px;
   padding: 32px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   align-items: flex-start;
 }
 .section:last-of-type {
@@ -228,7 +230,7 @@
   align-items: baseline;
   color: inherit;
   padding-bottom: 18px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.05);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.05);
   transition:
     transform 0.25s var(--ease),
     padding-left 0.22s var(--ease);
@@ -237,11 +239,15 @@
   border-bottom: none;
   padding-bottom: 0;
 }
-.entry:hover {
-  transform: translateX(2px);
+@media (hover: hover) {
+  .entry:hover {
+    transform: translateX(2px);
+  }
 }
-.entry:hover .entryTitle {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .entry:hover .entryTitle {
+    color: var(--accent-ink);
+  }
 }
 .entryKicker {
   font-size: 10.5px;
@@ -303,7 +309,7 @@
   padding: 64px 0;
 }
 .contribInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
 }
@@ -337,7 +343,7 @@
   gap: 12px;
   align-items: center;
   padding: 14px 16px;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   color: inherit;
   transition:
@@ -345,9 +351,11 @@
     transform 0.22s var(--ease);
   background: var(--cream);
 }
-.contribCard:hover {
-  border-color: rgba(45, 27, 61, 0.2);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .contribCard:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    transform: translateY(-1px);
+  }
 }
 .contribName {
   font-size: 14px;
@@ -363,10 +371,10 @@
 .print {
   background: var(--cream);
   padding: 64px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .printInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
   display: grid;
@@ -435,5 +443,5 @@
 }
 
 :global([data-theme="dark"]) .contribCard {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

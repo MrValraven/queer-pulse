@@ -274,8 +274,11 @@ export function SalaryTab() {
             action={{ label: "Clear filters", onClick: () => setSector("all") }}
           />
         ) : (
-          salaries.map((s, i) => (
-            <div className={styles.salRow} key={i}>
+          salaries.map((s) => (
+            <div
+              className={styles.salRow}
+              key={`${s.role}-${s.sector}-${s.money}`}
+            >
               <div>
                 <div className={styles.salRole}>{s.role}</div>
                 <div className={styles.salSector}>{s.sectorLabel}</div>

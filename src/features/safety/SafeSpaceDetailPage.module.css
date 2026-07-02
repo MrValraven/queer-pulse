@@ -1,5 +1,5 @@
 .page {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 40px 28px 80px;
 }
@@ -14,8 +14,10 @@
   margin-bottom: 22px;
   transition: color 0.2s var(--ease);
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 
 /* Trust banner */
@@ -75,7 +77,7 @@
   align-items: center;
   margin-bottom: 48px;
   padding-bottom: 36px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 @media (max-width: 760px) {
   .hero {
@@ -119,7 +121,7 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 8px;
   padding: 5px 11px;
 }
@@ -129,7 +131,7 @@
 }
 .heroImg {
   aspect-ratio: 4 / 3;
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   overflow: hidden;
   background: rgba(var(--jade-rgb), 0.1);
   display: flex;
@@ -188,9 +190,11 @@
   font-size: 14px;
   vertical-align: baseline;
 }
-.vouchTrigger:hover {
-  background: none;
-  text-decoration: underline;
+@media (hover: hover) {
+  .vouchTrigger:hover {
+    background: none;
+    text-decoration: underline;
+  }
 }
 
 /* Promises */
@@ -198,7 +202,7 @@
   display: flex;
   flex-direction: column;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -206,7 +210,7 @@
   display: flex;
   gap: 14px;
   padding: 18px 20px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   align-items: flex-start;
 }
 .promise:last-child {
@@ -254,7 +258,7 @@
 .vouch {
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   flex: 1 1 280px;
 }
@@ -311,7 +315,7 @@
 .incidentPlum {
   margin-top: 14px;
   border-left-color: var(--plum);
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
 }
 .incident h3 {
   font-family: var(--serif);
@@ -335,8 +339,10 @@
   font-weight: 700;
   text-decoration: none;
 }
-.incident a:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .incident a:hover {
+    color: var(--accent-ink);
+  }
 }
 
 /* Sidebar */
@@ -349,7 +355,7 @@
 }
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -382,7 +388,7 @@
   padding: 9px 0;
   font-size: 13.5px;
   color: var(--ink-60);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .sideRow:last-child {
   border-bottom: none;
@@ -405,11 +411,11 @@
   border-color: var(--plum);
 }
 .sharePlum h4 {
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .sharePlum p {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
   line-height: 1.6;
   margin-bottom: 14px;
 }
@@ -424,14 +430,14 @@
   color: var(--jade);
 }
 .tPlum {
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--plum);
 }
 
 /* ============ REMOVED state ============ */
 .removedBanner {
   background: var(--plum);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 40px 36px;
   margin-bottom: 32px;
   position: relative;
@@ -496,7 +502,7 @@
 }
 .removedReason {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
   line-height: 1.6;
   max-width: 56ch;
   position: relative;
@@ -507,12 +513,12 @@
   gap: 22px;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid rgba(247, 243, 238, 0.15);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.15);
   position: relative;
 }
 .removedMeta {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
 }
 .removedMeta b {
   display: block;
@@ -544,7 +550,7 @@
 .tlItem {
   position: relative;
   padding: 0 0 22px 26px;
-  border-left: 2px solid rgba(45, 27, 61, 0.12);
+  border-left: 2px solid rgba(var(--plum-rgb), 0.12);
 }
 .tlItem:last-child {
   border-left-color: transparent;
@@ -576,7 +582,7 @@
 
 .whatNowCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 22px 24px;
 }

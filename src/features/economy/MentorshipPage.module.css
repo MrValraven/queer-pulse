@@ -60,7 +60,7 @@
 }
 .hero p {
   font-size: 16.5px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   max-width: 52ch;
   margin-top: 20px;
   line-height: 1.65;
@@ -71,7 +71,7 @@
   gap: 40px;
   margin-top: 48px;
   padding-top: 40px;
-  border-top: 1px solid rgba(247, 243, 238, 0.14);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.14);
   flex-wrap: wrap;
   position: relative;
 }
@@ -85,7 +85,7 @@
 }
 .msL {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.56);
+  color: rgba(var(--cream-rgb), 0.56);
   margin-top: 4px;
 }
 
@@ -123,8 +123,8 @@
 }
 .chooseCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 34px;
   cursor: pointer;
   text-align: left;
@@ -134,10 +134,12 @@
     box-shadow 0.4s var(--ease),
     border-color 0.4s var(--ease);
 }
-.chooseCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 22px 44px -26px rgba(45, 27, 61, 0.4);
-  border-color: rgba(45, 27, 61, 0.18);
+@media (hover: hover) {
+  .chooseCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 44px -26px rgba(var(--plum-rgb), 0.4);
+    border-color: rgba(var(--plum-rgb), 0.18);
+  }
 }
 .ccIcon {
   font-size: 36px;
@@ -175,8 +177,8 @@
 }
 .mentorCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -189,13 +191,17 @@
     border-color 0.2s,
     box-shadow 0.25s var(--ease);
 }
-.mentorCard:hover {
-  transform: translateY(-3px);
-  border-color: rgba(45, 27, 61, 0.18);
-  box-shadow: 0 16px 36px -22px rgba(45, 27, 61, 0.45);
+@media (hover: hover) {
+  .mentorCard:hover {
+    transform: translateY(-3px);
+    border-color: rgba(var(--plum-rgb), 0.18);
+    box-shadow: 0 16px 36px -22px rgba(var(--plum-rgb), 0.45);
+  }
 }
-.mentorCard:hover .mcConnect {
-  border-color: rgba(45, 27, 61, 0.32);
+@media (hover: hover) {
+  .mentorCard:hover .mcConnect {
+    border-color: rgba(var(--plum-rgb), 0.32);
+  }
 }
 .mcTop {
   display: flex;
@@ -231,7 +237,7 @@
 .mcArea {
   font-size: 12px;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 7px;
   padding: 4px 10px;
   font-weight: 500;
@@ -242,7 +248,7 @@
 .mcCap {
   margin-top: auto;
   padding-top: 14px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   font-size: 12.5px;
   color: var(--jade);
   font-weight: 600;
@@ -270,17 +276,22 @@
   font-size: 13.5px;
   font-weight: 600;
   color: var(--plum);
-  border: 1.5px solid rgba(45, 27, 61, 0.18);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.18);
   background: transparent;
   border-radius: 999px;
   padding: 11px 18px;
   cursor: pointer;
-  transition: all 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
-.mcConnect:hover {
-  background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+@media (hover: hover) {
+  .mcConnect:hover {
+    background: var(--plum);
+    color: var(--cream);
+    border-color: var(--plum);
+  }
 }
 
 .overlay {
@@ -314,16 +325,18 @@
 }
 .mmBar {
   height: 3px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   border-radius: 2px;
   overflow: hidden;
   margin-bottom: 8px;
 }
 .mmFill {
   height: 100%;
+  width: 100%;
   border-radius: 2px;
   background: var(--jade);
-  transition: width 0.4s var(--ease);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease);
 }
 .mmLabel {
   font-size: 12px;
@@ -364,14 +377,13 @@
 .mmInput,
 .mmSelect,
 .mmTextarea {
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 15px;
   font-family: var(--sans);
   font-size: 15px;
   color: var(--ink);
   background: var(--paper);
-  outline: none;
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.25s var(--ease);
@@ -397,16 +409,19 @@
   align-items: center;
   gap: 9px;
   padding: 11px 13px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 11px;
   cursor: pointer;
   font-size: 14px;
   color: var(--ink-60);
-  transition: all 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
 .mmCheckActive {
   border-color: var(--jade);
-  background: rgba(74, 140, 111, 0.05);
+  background: rgba(var(--jade-rgb), 0.05);
   color: var(--ink);
 }
 .mmCheck input {
@@ -428,8 +443,10 @@
   padding: 12px 0;
   transition: color 0.2s var(--ease);
 }
-.mmBack:hover {
-  color: var(--ink);
+@media (hover: hover) {
+  .mmBack:hover {
+    color: var(--ink);
+  }
 }
 .mmContinue {
   background: var(--jade) !important;
@@ -443,7 +460,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
   display: flex;
   align-items: center;
   justify-content: center;

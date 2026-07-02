@@ -14,7 +14,12 @@ export function LiveStreamModal({ onClose }: { onClose: () => void }) {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.modal}>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="liveStreamModalTitle"
+      >
         <button
           type="button"
           className={styles.close}
@@ -25,7 +30,7 @@ export function LiveStreamModal({ onClose }: { onClose: () => void }) {
         </button>
 
         <div className={styles.eye}>Live stream · Atelier Pulso</div>
-        <h2 className={styles.title}>
+        <h2 className={styles.title} id="liveStreamModalTitle">
           Annual Assembly · <em>live.</em>
         </h2>
         <p className={styles.lead}>

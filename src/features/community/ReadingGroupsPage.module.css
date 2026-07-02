@@ -58,7 +58,7 @@
 }
 .sub {
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.58);
+  color: rgba(var(--cream-rgb), 0.58);
   max-width: 52ch;
   line-height: 1.65;
   position: relative;
@@ -83,7 +83,7 @@
 }
 .w span {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.48);
+  color: rgba(var(--cream-rgb), 0.48);
   line-height: 1.55;
 }
 @media (max-width: 640px) {
@@ -95,7 +95,7 @@
 
 .filterBar {
   background: var(--cream);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
   position: sticky;
   top: 62px;
   z-index: 50;
@@ -125,7 +125,7 @@
 .fbSep {
   width: 1px;
   height: 18px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   flex: none;
   margin: 0 3px;
 }
@@ -156,7 +156,7 @@
 
 .gc {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 20px;
   overflow: hidden;
   display: flex;
@@ -166,10 +166,12 @@
     box-shadow 0.3s var(--ease),
     transform 0.3s var(--ease);
 }
-.gc:hover {
-  border-color: rgba(45, 27, 61, 0.18);
-  box-shadow: 0 14px 36px -20px rgba(45, 27, 61, 0.32);
-  transform: translateY(-3px);
+@media (hover: hover) {
+  .gc:hover {
+    border-color: rgba(var(--plum-rgb), 0.18);
+    box-shadow: 0 14px 36px -20px rgba(var(--plum-rgb), 0.32);
+    transform: translateY(-3px);
+  }
 }
 .gcBook {
   padding: 24px 24px 0;
@@ -256,7 +258,7 @@
   font-weight: 500;
   padding: 4px 10px;
   border-radius: 7px;
-  background: rgba(45, 27, 61, 0.055);
+  background: rgba(var(--plum-rgb), 0.055);
   color: var(--ink-60);
   display: flex;
   align-items: center;
@@ -267,13 +269,13 @@
   color: var(--jade);
 }
 .gmOnline {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
 
 .gcFoot {
   padding: 14px 24px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -296,7 +298,7 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   border-radius: 9px;
   padding: 7px 15px;
@@ -307,22 +309,26 @@
   font-family: var(--sans);
   text-decoration: none;
 }
-.gcJoin:hover {
-  background: var(--plum);
-  color: var(--cream);
+@media (hover: hover) {
+  .gcJoin:hover {
+    background: var(--plum);
+    color: var(--cream);
+  }
 }
 .gcJoinDisabled {
   opacity: 0.4;
   cursor: default;
 }
-.gcJoinDisabled:hover {
-  background: rgba(45, 27, 61, 0.07);
-  color: var(--plum);
+@media (hover: hover) {
+  .gcJoinDisabled:hover {
+    background: rgba(var(--plum-rgb), 0.07);
+    color: var(--plum);
+  }
 }
 
 .startStrip {
   background: var(--plum);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 40px 44px;
   display: grid;
   grid-template-columns: 1fr 380px;
@@ -349,7 +355,7 @@
 }
 .ssText p {
   font-size: 14.5px;
-  color: rgba(247, 243, 238, 0.52);
+  color: rgba(var(--cream-rgb), 0.52);
   max-width: 44ch;
   line-height: 1.65;
 }
@@ -368,14 +374,14 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.38);
+  color: rgba(var(--cream-rgb), 0.38);
 }
 .ssInput {
   font-family: var(--sans);
   font-size: 14px;
   color: var(--cream);
-  background: rgba(247, 243, 238, 0.08);
-  border: 1px solid rgba(247, 243, 238, 0.14);
+  background: rgba(var(--cream-rgb), 0.08);
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
   border-radius: 9px;
   padding: 9px 13px;
   outline: none;
@@ -387,7 +393,7 @@
   border-color: rgba(var(--accent-rgb), 0.6);
 }
 .ssInput::placeholder {
-  color: rgba(247, 243, 238, 0.28);
+  color: rgba(var(--cream-rgb), 0.28);
 }
 .ssRow2 {
   display: grid;
@@ -407,8 +413,10 @@
   transition: opacity 0.2s var(--ease);
   margin-top: 4px;
 }
-.ssSubmit:hover {
-  opacity: 0.88;
+@media (hover: hover) {
+  .ssSubmit:hover {
+    opacity: 0.88;
+  }
 }
 
 .ssSuccess {
@@ -448,7 +456,7 @@
 }
 .ssSuccessBody {
   font-size: 14.5px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.6;
   max-width: 40ch;
 }
@@ -505,7 +513,7 @@
   margin-top: 8px;
   font-size: 14.5px;
   line-height: 1.55;
-  color: rgba(247, 243, 238, 0.72);
+  color: rgba(var(--cream-rgb), 0.72);
   max-width: 60ch;
 }
 .wpList {
@@ -521,8 +529,8 @@
   align-items: center;
   gap: 14px;
   padding: 12px 16px;
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: 12px;
 }
 .wpName {

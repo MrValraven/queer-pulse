@@ -77,7 +77,7 @@ export function CreateGatheringPage() {
               <div className={styles.progressBar}>
                 <div
                   className={styles.progressFill}
-                  style={{ width: `${fill}%` }}
+                  style={{ transform: `scaleX(${fill / 100})` }}
                 />
               </div>
             </div>

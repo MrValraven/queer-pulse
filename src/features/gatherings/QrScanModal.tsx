@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiX, FiCheck } from "react-icons/fi";
 import { MdQrCodeScanner } from "react-icons/md";
 import { Button } from "../../shared/components/ui";
@@ -18,6 +18,13 @@ export function QrScanModal({
   onClose: () => void;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState<Guest | null>(null);
 
@@ -42,7 +49,12 @@ export function QrScanModal({
           if (e.target === e.currentTarget) onClose();
         }}
       >
-        <div className={styles.success}>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Checked in"
+          className={styles.success}
+        >
           <button
             type="button"
             className={styles.successClose}
@@ -95,7 +107,12 @@ export function QrScanModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.modal}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Scan member QR"
+        className={styles.modal}
+      >
         <button
           type="button"
           className={styles.close}

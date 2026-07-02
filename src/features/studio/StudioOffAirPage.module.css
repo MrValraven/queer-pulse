@@ -33,7 +33,7 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   margin-bottom: 22px;
   display: flex;
   align-items: center;
@@ -43,21 +43,21 @@
 .moon {
   width: 14px;
   height: 14px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 
 .sep {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.4);
+  background: rgba(var(--cream-rgb), 0.4);
 }
 
 .offairHero h1 {
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6vw, 86px);
-  color: rgba(247, 243, 238, 0.92);
+  color: rgba(var(--cream-rgb), 0.92);
   letter-spacing: -0.03em;
   line-height: 0.98;
   max-width: 16ch;
@@ -74,7 +74,7 @@
   font-style: italic;
   font-weight: 300;
   font-size: 21px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.5;
   margin-top: 26px;
   max-width: 46ch;
@@ -88,7 +88,7 @@
 .signoffWho {
   display: block;
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   margin-top: 10px;
   font-style: normal;
   letter-spacing: 0.02em;
@@ -101,8 +101,8 @@
   gap: 26px;
   margin-top: 38px;
   padding: 22px 26px;
-  background: rgba(247, 243, 238, 0.05);
-  border: 1px solid rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.05);
+  border: 1px solid rgba(var(--cream-rgb), 0.08);
   border-radius: 16px;
   flex-wrap: wrap;
   max-width: 640px;
@@ -117,7 +117,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 46px;
-  color: rgba(247, 243, 238, 0.92);
+  color: rgba(var(--cream-rgb), 0.92);
   letter-spacing: -0.02em;
   line-height: 0.9;
 }
@@ -132,14 +132,14 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   margin-top: 8px;
 }
 
 .vr {
   width: 1px;
   align-self: stretch;
-  background: rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.08);
 }
 
 .nsInfo {
@@ -160,7 +160,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 21px;
-  color: rgba(247, 243, 238, 0.92);
+  color: rgba(var(--cream-rgb), 0.92);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -172,7 +172,7 @@
 
 .nsInfo p {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   margin-top: 5px;
   font-family: var(--serif);
   font-style: italic;
@@ -196,7 +196,7 @@
   height: 78px;
   border-radius: 10px;
   overflow: hidden;
-  background: rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.08);
   flex: none;
 }
 
@@ -218,7 +218,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 19px;
-  color: rgba(247, 243, 238, 0.92);
+  color: rgba(var(--cream-rgb), 0.92);
   letter-spacing: -0.008em;
 }
 
@@ -229,7 +229,7 @@
 
 .ncInfo p {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   margin-top: 4px;
   font-family: var(--serif);
   font-style: italic;
@@ -251,8 +251,10 @@
   flex: none;
 }
 
-.playBig:hover {
-  transform: scale(1.06);
+@media (hover: hover) {
+  .playBig:hover {
+    transform: scale(1.06);
+  }
 }
 
 .playBig svg {
@@ -266,7 +268,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 
 .browseNote em {

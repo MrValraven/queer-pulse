@@ -1,27 +1,21 @@
-import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Avatar,
   ChipSelect,
-  SearchInput,
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { fullName, memberProfiles } from "./data/memberProfiles";
 import { initialsOf, tintForSlug } from "./api/members.adapters";
 import {
-  ALL_PROFESSIONS,
-  DISCIPLINES,
-  FIELD_BY_PROFESSION,
   IDENTITY,
   LANGUAGES,
   NEIGHBOURHOODS,
   OPEN_TO,
-  PROFESSIONS_BY_FIELD,
-  professionsForFields,
   type FilterState,
   type MemberCard,
 } from "./memberDirectoryFilter.data";
+import { FilterProfessions } from "./FilterProfessions";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Toggle a value within a string[] immutably. */
@@ -40,51 +34,6 @@ export function FiltersSidebar({
   onChange: (next: FilterState) => void;
   onClearAll: () => void;
 }) {
-  // Free-text search across fields and professions. When non-empty it widens the
-  // profession list to every matching profession (regardless of selected field)
-  // so any role is reachable by typing it.
-  const [query, setQuery] = useState("");
-  const q = query.trim().toLowerCase();
-
-  const disciplineOptions = useMemo(
-    () =>
-      q
-        ? DISCIPLINES.filter(
-            (d) =>
-              d.label.toLowerCase().includes(q) ||
-              (PROFESSIONS_BY_FIELD[d.label] ?? []).some((p) =>
-                p.toLowerCase().includes(q),
-              ),
-          )
-        : DISCIPLINES,
-    [q],
-  );
-  const professionPool = useMemo(
-    () =>
-      q
-        ? ALL_PROFESSIONS.filter((p) => p.toLowerCase().includes(q))
-        : professionsForFields(filters.disciplines),
-    [q, filters.disciplines],
-  );
-
-  // Toggling a profession on also selects its parent field, so the choice
-  // survives `reconcileProfessions` and the field chip lights up to match.
-  const toggleProfession = useCallback(
-    (value: string) => {
-      const has = filters.professions.includes(value);
-      const professions = has
-        ? filters.professions.filter((p) => p !== value)
-        : [...filters.professions, value];
-      const field = FIELD_BY_PROFESSION[value];
-      const disciplines =
-        !has && field && !filters.disciplines.includes(field)
-          ? [...filters.disciplines, field]
-          : filters.disciplines;
-      onChange({ ...filters, professions, disciplines });
-    },
-    [filters, onChange],
-  );
-
   return (
     <aside className={styles.filters}>
       <div className={styles.filterCard}>
@@ -118,59 +67,7 @@ export function FiltersSidebar({
         />
       </div>
 
-      <div className={styles.filterCard}>
-        <h4>What they do</h4>
-        <SearchInput
-          className={styles.searchField}
-          placeholder="Search a field or profession…"
-          value={query}
-          onChange={setQuery}
-          ariaLabel="Search fields and professions"
-        />
-        {disciplineOptions.length > 0 ? (
-          <ChipSelect
-            options={disciplineOptions.map((o) => o.label)}
-            selected={new Set(filters.disciplines)}
-            onToggle={(value) =>
-              onChange({
-                ...filters,
-                disciplines: toggle(filters.disciplines, value),
-              })
-            }
-          />
-        ) : (
-          <p className={styles.rangeNote}>
-            <em>No field matches "{query}".</em>
-          </p>
-        )}
-      </div>
-
-      <div className={styles.filterCard}>
-        <h4>Profession</h4>
-        {professionPool.length > 0 ? (
-          <ChipSelect
-            options={professionPool}
-            selected={new Set(filters.professions)}
-            onToggle={toggleProfession}
-          />
-        ) : (
-          <p className={styles.rangeNote}>
-            <em>No profession matches "{query}".</em>
-          </p>
-        )}
-        <p className={styles.rangeNote}>
-          {q ? (
-            <em>Matching your search across every field.</em>
-          ) : filters.disciplines.length ? (
-            <em>
-              Showing professions within your selected field
-              {filters.disciplines.length > 1 ? "s" : ""}.
-            </em>
-          ) : (
-            <em>Pick a field above, or search to find any profession.</em>
-          )}
-        </p>
-      </div>
+      <FilterProfessions filters={filters} onChange={onChange} />
 
       <div className={styles.filterCard}>
         <h4>Identity · self-declared</h4>

@@ -23,7 +23,7 @@
 }
 .sub {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.65;
   margin-top: 16px;
   max-width: 44ch;
@@ -39,26 +39,25 @@
   min-width: 220px;
   padding: 13px 18px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(247, 243, 238, 0.22);
-  background: rgba(247, 243, 238, 0.08);
+  border: 1px solid rgba(var(--cream-rgb), 0.22);
+  background: rgba(var(--cream-rgb), 0.08);
   color: var(--cream);
   font-family: var(--sans);
   font-size: 14.5px;
-  outline: none;
   transition:
     border-color 0.2s,
     background 0.2s;
 }
 .input::placeholder {
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 .input:focus {
-  border-color: rgba(247, 243, 238, 0.45);
-  background: rgba(247, 243, 238, 0.12);
+  border-color: rgba(var(--cream-rgb), 0.45);
+  background: rgba(var(--cream-rgb), 0.12);
 }
 .note {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.38);
+  color: rgba(var(--cream-rgb), 0.38);
   margin-top: 12px;
 }
 
@@ -86,7 +85,7 @@
 }
 .successBody {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   margin-top: 14px;
 }
@@ -99,7 +98,7 @@
   align-items: center;
   gap: 8px;
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.55;
   margin-top: 14px;
 }
@@ -116,8 +115,8 @@
   gap: 12px;
 }
 .item {
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 14px;
   padding: 16px 18px;
   display: flex;
@@ -143,7 +142,7 @@
 }
 .itemMeta {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.45);
+  color: rgba(var(--cream-rgb), 0.45);
   margin-top: 3px;
 }
 

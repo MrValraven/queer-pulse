@@ -32,6 +32,7 @@ export function CulturePage() {
           <div className={styles.tabs} role="tablist">
             {TABS.map((t) => (
               <button
+                type="button"
                 key={t.key}
                 role="tab"
                 aria-selected={tab === t.key}

@@ -9,7 +9,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   background: transparent;
   color: var(--ink-60);
   border-radius: 999px;
@@ -20,9 +20,11 @@
     color 0.18s var(--ease),
     border-color 0.18s var(--ease);
 }
-.tab:hover {
-  border-color: rgba(45, 27, 61, 0.28);
-  color: var(--ink);
+@media (hover: hover) {
+  .tab:hover {
+    border-color: rgba(var(--plum-rgb), 0.28);
+    color: var(--ink);
+  }
 }
 .tabActive {
   background: var(--plum);
@@ -47,7 +49,7 @@
   margin-top: 0;
 }
 .tabCount {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--ink-60);
   border-radius: 999px;
   font-size: 11px;
@@ -75,7 +77,7 @@
   font-family: var(--sans);
   font-size: 14px;
   padding: 11px 14px 11px 38px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 12px;
   background: var(--paper);
   color: var(--ink);
@@ -84,7 +86,7 @@
   transition: border-color 0.2s var(--ease);
 }
 .search:focus {
-  border-color: rgba(45, 27, 61, 0.3);
+  border-color: rgba(var(--plum-rgb), 0.3);
 }
 
 /* ---- filter chips ---- */
@@ -98,7 +100,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   background: transparent;
   color: var(--ink-60);
   border-radius: 999px;
@@ -109,9 +111,11 @@
     color 0.18s var(--ease),
     border-color 0.18s var(--ease);
 }
-.chip:hover {
-  border-color: rgba(45, 27, 61, 0.28);
-  color: var(--ink);
+@media (hover: hover) {
+  .chip:hover {
+    border-color: rgba(var(--plum-rgb), 0.28);
+    color: var(--ink);
+  }
 }
 .chipOn {
   background: var(--plum);
@@ -133,7 +137,7 @@
   align-items: center;
   gap: 13px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 14px 16px;
   margin-bottom: 10px;
@@ -180,7 +184,7 @@
   cursor: pointer;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   transition:
     background 0.18s var(--ease),
     color 0.18s var(--ease),
@@ -190,17 +194,21 @@
   width: 13px;
   height: 13px;
 }
-.declineBtn:hover {
-  border-color: rgba(45, 27, 61, 0.3);
-  color: var(--ink);
+@media (hover: hover) {
+  .declineBtn:hover {
+    border-color: rgba(var(--plum-rgb), 0.3);
+    color: var(--ink);
+  }
 }
 .declineBtn:focus-visible {
   outline: 2px solid var(--plum);
   outline-offset: 2px;
 }
-.removeBtn:hover {
-  border-color: var(--accent);
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .removeBtn:hover {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
 }
 .ownerTag {
   display: inline-flex;
@@ -264,7 +272,7 @@
   font-family: var(--sans);
   font-size: 14px;
   padding: 11px 14px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 12px;
   background: var(--paper);
   color: var(--ink);
@@ -273,7 +281,7 @@
   transition: border-color 0.2s var(--ease);
 }
 .settingsInput:focus {
-  border-color: rgba(45, 27, 61, 0.3);
+  border-color: rgba(var(--plum-rgb), 0.3);
 }
 .modeRow {
   display: flex;
@@ -284,7 +292,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   background: transparent;
   color: var(--ink-60);
   border-radius: 999px;
@@ -295,9 +303,11 @@
     color 0.18s var(--ease),
     border-color 0.18s var(--ease);
 }
-.modeChip:hover {
-  border-color: rgba(45, 27, 61, 0.28);
-  color: var(--ink);
+@media (hover: hover) {
+  .modeChip:hover {
+    border-color: rgba(var(--plum-rgb), 0.28);
+    color: var(--ink);
+  }
 }
 .modeChipActive {
   background: var(--plum);
@@ -309,7 +319,7 @@
   font-family: var(--sans);
   font-size: 14px;
   padding: 12px 14px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 12px;
   background: var(--paper);
   color: var(--ink);
@@ -321,7 +331,7 @@
   line-height: 1.6;
 }
 .rulesArea:focus {
-  border-color: rgba(45, 27, 61, 0.3);
+  border-color: rgba(var(--plum-rgb), 0.3);
 }
 .saveRow {
   display: flex;
@@ -331,8 +341,8 @@
 
 /* ---- danger zone (plum-tinted, not white) ---- */
 .dangerZone {
-  background: rgba(45, 27, 61, 0.06);
-  border: 1px solid rgba(45, 27, 61, 0.18);
+  background: rgba(var(--plum-rgb), 0.06);
+  border: 1px solid rgba(var(--plum-rgb), 0.18);
   border-radius: 16px;
   padding: 22px 24px;
   margin-top: 8px;
@@ -352,7 +362,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .dangerRow:last-child {
   border-bottom: none;

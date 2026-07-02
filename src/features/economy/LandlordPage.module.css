@@ -1,5 +1,5 @@
 .page {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 104px 28px 80px;
 }
@@ -14,8 +14,10 @@
   margin-bottom: 22px;
   transition: color 0.2s var(--ease);
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 
 .hero {
@@ -154,7 +156,7 @@
 }
 .rec {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 20px;
 }
@@ -212,7 +214,7 @@
 }
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -229,7 +231,7 @@
   justify-content: space-between;
   align-items: baseline;
   padding: 9px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   font-size: 13.5px;
   color: var(--ink-60);
 }
@@ -254,11 +256,11 @@
   padding: 22px 24px;
 }
 .recCard h4 {
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .recCard p {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
   line-height: 1.6;
   margin-bottom: 14px;
 }
@@ -286,6 +288,6 @@
   color: var(--jade);
 }
 .tPlum {
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--plum);
 }

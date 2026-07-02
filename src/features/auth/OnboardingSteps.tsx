@@ -394,7 +394,7 @@ export function StepDone({ stepLabel }: { stepLabel: string }) {
         <Button
           onClick={() => {
             clearInviteWelcome();
-            navigate("/feed");
+            navigate(routes.feed);
           }}
         >
           Go to my home

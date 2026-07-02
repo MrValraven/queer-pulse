@@ -25,7 +25,12 @@ export function AppNotifyModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={`${styles.modal} ${sent ? styles.modalSuccess : ""}`}>
+      <div
+        className={`${styles.modal} ${sent ? styles.modalSuccess : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Get notified at launch"
+      >
         <button
           type="button"
           className={styles.close}

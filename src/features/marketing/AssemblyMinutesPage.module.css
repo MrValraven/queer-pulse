@@ -21,7 +21,7 @@
   pointer-events: none;
 }
 .heroInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
   position: relative;
@@ -51,7 +51,7 @@
 }
 .dek {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.82);
+  color: rgba(var(--cream-rgb), 0.82);
   line-height: 1.7;
   max-width: 56ch;
   margin-bottom: 30px;
@@ -78,7 +78,7 @@
 
 .metaCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
   padding: 28px 30px;
   margin-bottom: 44px;
@@ -142,10 +142,10 @@
   grid-template-columns: 120px 1fr;
   gap: 18px;
   padding: 16px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .agRow:last-child {
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .agTime {
   font-size: 13px;
@@ -172,7 +172,7 @@
 .resTable {
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -184,7 +184,7 @@
   background: var(--paper);
 }
 .resRow + .resRow {
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .resRef {
   flex: none;
@@ -233,7 +233,7 @@
   color: var(--accent-ink, var(--accent));
 }
 .tabled {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--ink-60);
 }
 
@@ -255,7 +255,7 @@ ul.actions li::marker {
 .signoff {
   margin-top: 8px;
   padding-top: 28px;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
   font-size: 13.5px;
   color: var(--ink-40);
   font-style: italic;
@@ -283,7 +283,7 @@ ul.actions li::marker {
   text-decoration: none;
   padding: 7px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   transition:
     border-color 0.2s var(--ease),
     background 0.2s var(--ease);
@@ -291,9 +291,11 @@ ul.actions li::marker {
 .year {
   color: var(--plum);
 }
-.year:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+@media (hover: hover) {
+  .year:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
 }
 .yearActive {
   background: var(--plum);

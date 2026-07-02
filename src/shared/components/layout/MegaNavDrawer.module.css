@@ -1,5 +1,5 @@
 .section {
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 
 .sectionButton {

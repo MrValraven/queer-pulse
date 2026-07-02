@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -13,6 +13,13 @@ export function MessageAttendeesModal({
   onClose: () => void;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [done, setDone] = useState(false);
@@ -49,7 +56,12 @@ export function MessageAttendeesModal({
           onClose={onClose}
         />
       ) : (
-        <div className={styles.modal}>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Write to your guests"
+          className={styles.modal}
+        >
           <button
             type="button"
             className={styles.close}

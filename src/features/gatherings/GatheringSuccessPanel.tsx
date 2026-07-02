@@ -17,7 +17,12 @@ export function GatheringSuccessPanel({
   closeLabel?: string;
 }) {
   return (
-    <div className={styles.successPanel}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Confirmation"
+      className={styles.successPanel}
+    >
       <button
         type="button"
         className={styles.successClose}

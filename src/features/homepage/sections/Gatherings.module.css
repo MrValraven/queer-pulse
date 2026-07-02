@@ -25,7 +25,7 @@
 }
 .list {
   margin-top: 42px;
-  border-top: 1px solid rgba(247, 243, 238, 0.16);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.16);
 }
 .row {
   display: grid;
@@ -33,15 +33,17 @@
   gap: 30px;
   align-items: center;
   padding: 26px 12px;
-  border-bottom: 1px solid rgba(247, 243, 238, 0.16);
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.16);
   transition:
     background 0.35s var(--ease),
     padding-left 0.35s var(--ease);
   color: inherit;
 }
-.row:hover {
-  background: rgba(247, 243, 238, 0.05);
-  padding-left: 22px;
+@media (hover: hover) {
+  .row:hover {
+    background: rgba(var(--cream-rgb), 0.05);
+    padding-left: 22px;
+  }
 }
 .date {
   text-align: center;
@@ -78,7 +80,7 @@
 }
 .meta {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
@@ -91,7 +93,7 @@
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.4);
+  background: rgba(var(--cream-rgb), 0.4);
 }
 .right {
   display: flex;
@@ -101,7 +103,7 @@
 }
 .spots {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   white-space: nowrap;
 }
 .spots b {
@@ -119,14 +121,16 @@
   white-space: nowrap;
   background: transparent;
   color: var(--cream);
-  border: 1.5px solid rgba(247, 243, 238, 0.32);
+  border: 1.5px solid rgba(var(--cream-rgb), 0.32);
   transition:
     background var(--dur-base) var(--ease),
     border-color var(--dur-base) var(--ease);
 }
-.row:hover .cta {
-  border-color: var(--cream);
-  background: rgba(247, 243, 238, 0.08);
+@media (hover: hover) {
+  .row:hover .cta {
+    border-color: var(--cream);
+    background: rgba(var(--cream-rgb), 0.08);
+  }
 }
 
 @media (max-width: 760px) {

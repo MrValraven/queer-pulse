@@ -36,6 +36,7 @@ export function QrScannerPage() {
     <div className={styles.root}>
       <div className={styles.top}>
         <button
+          type="button"
           className={styles.iconBtn}
           onClick={() => navigate(-1)}
           aria-label="Close"
@@ -49,6 +50,7 @@ export function QrScannerPage() {
           Scan a <em>QueerPulse</em> code
         </div>
         <button
+          type="button"
           className={`${styles.iconBtn} ${flash ? styles.flashOn : ""}`}
           onClick={() => setFlash((v) => !v)}
           aria-label="Flash"
@@ -83,16 +85,22 @@ export function QrScannerPage() {
 
       <div className={styles.alt}>
         <span>Can't scan?</span>
-        <button onClick={() => showToast("Open code · paste flow", "info")}>
+        <button
+          type="button"
+          onClick={() => showToast("Open code · paste flow", "info")}
+        >
           Enter code manually
         </button>
         <span className={styles.dot}>·</span>
-        <button onClick={() => navigate(routes.help)}>Help with codes</button>
+        <button type="button" onClick={() => navigate(routes.help)}>
+          Help with codes
+        </button>
       </div>
 
       <div className={styles.modes}>
         {MODES.map((m) => (
           <button
+            type="button"
             key={m.id}
             className={`${styles.mode} ${mode === m.id ? styles.active : ""}`}
             onClick={() => setMode(m.id)}

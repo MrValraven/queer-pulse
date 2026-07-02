@@ -45,7 +45,7 @@
 }
 .lead {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   max-width: 54ch;
   margin-top: 22px;
   line-height: 1.65;
@@ -83,8 +83,8 @@
 }
 .infoCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -116,8 +116,10 @@
   gap: 5px;
   transition: gap 0.2s var(--ease);
 }
-.infoLink:hover {
-  gap: 9px;
+@media (hover: hover) {
+  .infoLink:hover {
+    gap: 9px;
+  }
 }
 
 .clinicFilters {
@@ -133,7 +135,7 @@
 }
 .clinicCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 24px;
   display: grid;
@@ -142,8 +144,10 @@
   align-items: start;
   transition: box-shadow 0.3s var(--ease);
 }
-.clinicCard:hover {
-  box-shadow: 0 10px 24px -14px rgba(45, 27, 61, 0.28);
+@media (hover: hover) {
+  .clinicCard:hover {
+    box-shadow: 0 10px 24px -14px rgba(var(--plum-rgb), 0.28);
+  }
 }
 .ccType {
   font-size: 11px;
@@ -156,7 +160,7 @@
   margin-bottom: 8px;
 }
 .typePublic {
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
 }
 .typeNgo {
@@ -164,11 +168,11 @@
   color: var(--accent-ink);
 }
 .typePrivate {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
 .typePharmacy {
-  background: rgba(122, 82, 184, 0.1);
+  background: rgba(var(--violet-rgb), 0.1);
   color: var(--violet);
 }
 .ccName {
@@ -197,7 +201,7 @@
   font-weight: 700;
   padding: 4px 10px;
   border-radius: 7px;
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
   white-space: nowrap;
 }
@@ -214,15 +218,19 @@
   cursor: pointer;
   background: transparent;
   color: var(--plum);
-  border: 1.5px solid rgba(45, 27, 61, 0.2);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.2);
   border-radius: 999px;
   padding: 8px 16px;
-  transition: all 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
   white-space: nowrap;
 }
-.ccBtn:hover {
-  background: var(--plum);
-  color: var(--cream);
+@media (hover: hover) {
+  .ccBtn:hover {
+    background: var(--plum);
+    color: var(--cream);
+  }
 }
 .ccBtnOpen {
   background: var(--plum);
@@ -244,7 +252,7 @@
 }
 .ccDetails {
   grid-column: 1 / -1;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
   margin-top: 4px;
   padding-top: 16px;
   display: grid;
@@ -293,8 +301,8 @@
 }
 
 .tip {
-  background: rgba(74, 140, 111, 0.07);
-  border: 1px solid rgba(74, 140, 111, 0.2);
+  background: rgba(var(--jade-rgb), 0.07);
+  border: 1px solid rgba(var(--jade-rgb), 0.2);
   border-radius: 16px;
   padding: 20px 24px;
   display: flex;
@@ -316,7 +324,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 40px;
@@ -325,7 +333,7 @@
   display: grid;
   grid-template-columns: 56px 1fr;
   gap: 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
   background: var(--paper);
 }
 .prepStep:last-child {
@@ -340,7 +348,7 @@
   font-weight: 400;
   color: var(--accent);
   padding: 24px 0;
-  border-right: 1px solid rgba(45, 27, 61, 0.07);
+  border-right: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .psBody {
   padding: 22px 24px;
@@ -377,10 +385,10 @@
 }
 
 .faq {
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .faqItem {
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .faqQ {
   display: flex;
@@ -405,7 +413,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -451,7 +459,7 @@
 }
 .hivBanner p {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.65);
+  color: rgba(var(--cream-rgb), 0.65);
   line-height: 1.7;
   max-width: 58ch;
   margin-bottom: 22px;
@@ -468,7 +476,7 @@
   }
 }
 .hivStat {
-  background: rgba(247, 243, 238, 0.07);
+  background: rgba(var(--cream-rgb), 0.07);
   border-radius: 14px;
   padding: 18px 20px;
 }
@@ -481,7 +489,7 @@
 }
 .hivStat .l {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.52);
+  color: rgba(var(--cream-rgb), 0.52);
   margin-top: 4px;
   line-height: 1.4;
 }
@@ -493,7 +501,7 @@
 
 .anonBox {
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 20px;
   padding: 32px 36px;
   margin-top: 44px;
@@ -514,14 +522,13 @@
 }
 .anonInput {
   width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   padding: 13px 16px;
   font-family: var(--sans);
   font-size: 15px;
   color: var(--ink);
   background: var(--paper);
-  outline: none;
   resize: vertical;
   min-height: 80px;
   transition: border-color 0.25s var(--ease);
@@ -550,16 +557,18 @@
   padding: 11px 22px;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
   border: none;
   cursor: pointer;
   transition:
     background 0.25s var(--ease),
     transform 0.25s var(--ease);
 }
-.primaryBtn:hover {
-  background: var(--accent-ink);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .primaryBtn:hover {
+    background: var(--accent-ink);
+    transform: translateY(-1px);
+  }
 }
 .primaryBtn:disabled {
   opacity: 0.5;
@@ -582,7 +591,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.2);
+  background: rgba(var(--jade-rgb), 0.2);
   color: var(--jade);
   font-size: 22px;
   margin-bottom: 14px;
@@ -600,7 +609,7 @@
 }
 .anonDoneBody {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.6;
   max-width: 46ch;
   margin: 10px auto 18px;

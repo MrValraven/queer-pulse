@@ -47,7 +47,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
   font-size: 18px;
@@ -57,15 +57,19 @@
   justify-content: center;
   transition: background 0.2s var(--ease);
 }
-.close:hover {
-  background: rgba(45, 27, 61, 0.14);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.14);
+  }
 }
 .modalSuccess .close {
-  background: rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.12);
   color: var(--cream);
 }
-.modalSuccess .close:hover {
-  background: rgba(247, 243, 238, 0.22);
+@media (hover: hover) {
+  .modalSuccess .close:hover {
+    background: rgba(var(--cream-rgb), 0.22);
+  }
 }
 
 /* ── Header ──────────────────────────────────────────────────────────── */
@@ -75,7 +79,7 @@
   gap: 16px;
   margin-bottom: 28px;
   padding-bottom: 24px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .toName {
   font-family: var(--serif);
@@ -137,13 +141,12 @@
   font-size: 15.5px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   border-radius: 12px;
   padding: 13px 15px;
   transition:
     border-color var(--dur-base) var(--ease),
     box-shadow var(--dur-base) var(--ease);
-  outline: none;
   width: 100%;
 }
 .field textarea {
@@ -155,7 +158,7 @@
 .field textarea:focus,
 .field select:focus {
   border-color: var(--plum);
-  box-shadow: 0 0 0 4px rgba(45, 27, 61, 0.08);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
   background: var(--paper);
 }
 .fieldRow {
@@ -189,7 +192,7 @@
   width: 100%;
   text-align: left;
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   border-radius: 12px;
   padding: 14px 15px;
   margin-bottom: 18px;
@@ -199,23 +202,25 @@
     border-color var(--dur-base) var(--ease),
     background var(--dur-base) var(--ease);
 }
-.checkRow:hover {
-  border-color: rgba(45, 27, 61, 0.32);
+@media (hover: hover) {
+  .checkRow:hover {
+    border-color: rgba(var(--plum-rgb), 0.32);
+  }
 }
 .checkRowOn {
   border-color: var(--jade);
-  background: rgba(74, 140, 111, 0.07);
+  background: rgba(var(--jade-rgb), 0.07);
 }
 .checkBox {
   flex: none;
   width: 22px;
   height: 22px;
   border-radius: 7px;
-  border: 1.5px solid rgba(45, 27, 61, 0.24);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.24);
   background: var(--paper);
   display: grid;
   place-items: center;
-  color: #fff;
+  color: var(--cream);
   margin-top: 1px;
   transition:
     background var(--dur-base) var(--ease),
@@ -277,14 +282,16 @@
   cursor: pointer;
   font-family: var(--sans);
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 
 /* ── Info panels (calendar, company, offer, submission, draft) ───────── */
 .panel {
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 20px;
   margin-bottom: 22px;
@@ -299,7 +306,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 11px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
   font-size: 14px;
 }
 .row:last-child {
@@ -356,15 +363,17 @@
   color: var(--plum);
   font-weight: 500;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 10px;
   padding: 10px 13px;
   margin-bottom: 8px;
   text-decoration: none;
   transition: border-color 0.2s var(--ease);
 }
-.attach:hover {
-  border-color: rgba(45, 27, 61, 0.25);
+@media (hover: hover) {
+  .attach:hover {
+    border-color: rgba(var(--plum-rgb), 0.25);
+  }
 }
 .attachIcon {
   color: var(--accent-ink);
@@ -389,7 +398,7 @@
 }
 .stat {
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 12px;
   padding: 14px;
   text-align: center;
@@ -411,15 +420,17 @@
 .progress {
   height: 8px;
   border-radius: 5px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   overflow: hidden;
   margin-bottom: 8px;
 }
 .progressFill {
   height: 100%;
+  width: 100%;
   border-radius: 5px;
   background: var(--accent);
-  transition: width 0.5s var(--ease);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease);
 }
 .progressL {
   font-size: 12.5px;
@@ -432,7 +443,7 @@
   background: var(--plum);
 }
 .readModal .close {
-  background: rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.12);
   color: var(--cream);
 }
 .readEyebrow {
@@ -452,7 +463,7 @@
 }
 .readFrom {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   margin-top: 22px;
   font-weight: 600;
 }
@@ -472,7 +483,7 @@
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.2);
+  background: rgba(var(--jade-rgb), 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -484,7 +495,7 @@
   position: absolute;
   inset: -7px;
   border-radius: 50%;
-  border: 2px solid rgba(74, 140, 111, 0.45);
+  border: 2px solid rgba(var(--jade-rgb), 0.45);
   animation: ring 0.85s var(--ease) 0.1s both;
 }
 .successIcon svg {
@@ -505,7 +516,7 @@
 }
 .success p {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   margin: 16px auto 28px;
   line-height: 1.65;
   max-width: 40ch;
@@ -525,7 +536,7 @@
 }
 .undoText {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
 }
 .undoBtn {
   font-family: var(--sans);
@@ -539,8 +550,10 @@
   text-underline-offset: 3px;
   padding: 0;
 }
-.undoBtn:hover {
-  color: var(--cream);
+@media (hover: hover) {
+  .undoBtn:hover {
+    color: var(--cream);
+  }
 }
 @keyframes popIn {
   0% {
@@ -594,7 +607,8 @@
   .success h2,
   .success p,
   .successBtn,
-  .undoBar {
+  .undoBar,
+  .msgNew {
     animation: none;
   }
 }
@@ -602,7 +616,7 @@
 /* ── Conversation thread ─────────────────────────────────────────────── */
 .thread {
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.08);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
   border-radius: 16px;
   padding: 16px;
   max-height: 300px;
@@ -640,7 +654,7 @@
 }
 .msgThem .bubble {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   color: var(--ink);
   border-bottom-left-radius: 5px;
 }
@@ -655,7 +669,7 @@
   font-size: 11.5px;
   font-weight: 600;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 20px;
   padding: 4px 13px;
 }
@@ -692,7 +706,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 20px;
   padding: 7px 14px;
   cursor: pointer;
@@ -702,8 +716,10 @@
     border-color 0.18s var(--ease);
   font-family: var(--sans);
 }
-.lever:hover {
-  border-color: rgba(45, 27, 61, 0.3);
+@media (hover: hover) {
+  .lever:hover {
+    border-color: rgba(var(--plum-rgb), 0.3);
+  }
 }
 .leverOn {
   color: var(--accent-ink);
@@ -720,7 +736,7 @@
   text-align: left;
   width: 100%;
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 14px;
   padding: 14px 16px;
   cursor: pointer;
@@ -733,19 +749,21 @@
   gap: 13px;
   align-items: flex-start;
 }
-.angle:hover {
-  border-color: rgba(45, 27, 61, 0.28);
+@media (hover: hover) {
+  .angle:hover {
+    border-color: rgba(var(--plum-rgb), 0.28);
+  }
 }
 .angleOn {
   border-color: var(--plum);
   background: var(--paper);
-  box-shadow: 0 0 0 3px rgba(45, 27, 61, 0.07);
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.07);
 }
 .angleRadio {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 2px solid rgba(45, 27, 61, 0.25);
+  border: 2px solid rgba(var(--plum-rgb), 0.25);
   flex: none;
   margin-top: 2px;
   display: flex;
@@ -784,7 +802,7 @@
 }
 
 :global([data-theme="dark"]) .modal {
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .modalSuccess,
 :global([data-theme="dark"]) .readModal {

@@ -14,8 +14,10 @@
   margin-bottom: 22px;
   transition: color 0.2s;
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 
 /* Cycle nav */
@@ -25,8 +27,8 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   margin-bottom: 32px;
 }
 .cycleBtn {
@@ -39,8 +41,10 @@
   max-width: 42%;
   transition: color 0.2s;
 }
-.cycleBtn:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .cycleBtn:hover {
+    color: var(--accent-ink);
+  }
 }
 .cycleBtn.next {
   text-align: right;
@@ -127,7 +131,7 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 8px;
   padding: 5px 11px;
 }
@@ -277,7 +281,7 @@
 }
 .reachText {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.75);
+  color: rgba(var(--cream-rgb), 0.75);
   line-height: 1.7;
   max-width: 58ch;
   margin-bottom: 20px;

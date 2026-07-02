@@ -165,6 +165,7 @@ export function ConfirmEmailPage() {
       <div className={pageStyles.auxRow}>
         <span>Didn't get the code?</span>
         <button
+          type="button"
           onClick={handleResend}
           disabled={cooling}
           className={pageStyles.resend}

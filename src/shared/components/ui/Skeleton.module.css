@@ -1,9 +1,9 @@
 .shimmer {
   background: linear-gradient(
     90deg,
-    rgba(45, 27, 61, 0.06) 25%,
-    rgba(45, 27, 61, 0.11) 50%,
-    rgba(45, 27, 61, 0.06) 75%
+    rgba(var(--plum-rgb), 0.06) 25%,
+    rgba(var(--plum-rgb), 0.11) 50%,
+    rgba(var(--plum-rgb), 0.06) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;
@@ -20,7 +20,7 @@
 
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.08);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
   border-radius: var(--radius-card);
   padding: var(--card-pad);
   display: flex;

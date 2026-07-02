@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 import { FiShield } from "react-icons/fi";
 import { CheckLine } from "../../../shared/components/ui";
 import {
+  ANCHOR,
   DAYS,
   PRICES,
   slugify,
@@ -179,7 +180,7 @@ export function StepReview({
       )}
 
       <h3 className={styles.groupH}>Before you send</h3>
-      <div className={styles.consentChecks}>
+      <div id={ANCHOR.consent} className={styles.consentChecks}>
         <div className={styles.flagOuting}>
           <CheckLine
             checked={draft.consentOuting}

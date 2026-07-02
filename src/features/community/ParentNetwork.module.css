@@ -37,7 +37,7 @@
 .lead {
   font-size: 18px;
   line-height: 1.65;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   max-width: 54ch;
   margin: 22px 0 36px;
 }
@@ -55,7 +55,7 @@
 }
 .statL {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   margin-top: 6px;
 }
 .section {
@@ -64,7 +64,7 @@
 }
 .sectionPaper {
   background: var(--paper);
-  border-block: 1px solid rgba(45, 27, 61, 0.09);
+  border-block: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .h2 {
   font-family: var(--serif);
@@ -93,7 +93,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 26px 24px;
 }
@@ -123,7 +123,7 @@
   align-items: center;
   gap: 20px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 12px;
   padding: 16px 20px;
 }
@@ -182,7 +182,7 @@
   align-items: center;
   gap: 8px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 999px;
   padding: 11px 20px;
   font-weight: 600;
@@ -191,8 +191,10 @@
   text-decoration: none;
   transition: border-color var(--ease);
 }
-.resLink:hover {
-  border-color: var(--plum);
+@media (hover: hover) {
+  .resLink:hover {
+    border-color: var(--plum);
+  }
 }
 .resLink::after {
   content: "→";

@@ -26,15 +26,20 @@
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   background: transparent;
   border-radius: var(--radius-pill);
   padding: 9px 17px;
-  transition: all var(--dur-base) var(--ease);
+  transition:
+    color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
 }
-.chip:hover {
-  color: var(--ink);
-  border-color: rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--ink);
+    border-color: rgba(var(--plum-rgb), 0.4);
+  }
 }
 .chipActive {
   background: var(--plum);
@@ -49,7 +54,7 @@
 
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -61,10 +66,12 @@
     box-shadow var(--dur-slow) var(--ease),
     border-color var(--dur-slow) var(--ease);
 }
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-card-hover);
-  border-color: rgba(45, 27, 61, 0.16);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: rgba(var(--plum-rgb), 0.16);
+  }
 }
 .cardTop {
   display: flex;
@@ -101,8 +108,10 @@
   border: 5px solid transparent;
   border-top-color: var(--plum);
 }
-.vbadge:hover .vtip {
-  opacity: 1;
+@media (hover: hover) {
+  .vbadge:hover .vtip {
+    opacity: 1;
+  }
 }
 .name {
   display: flex;
@@ -141,7 +150,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 16px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
   margin-top: auto;
 }
 .say {
@@ -159,11 +168,13 @@
     gap var(--dur-base) var(--ease),
     color var(--dur-base) var(--ease);
 }
-.connect:hover {
-  color: var(--accent-ink);
-  gap: 10px;
+@media (hover: hover) {
+  .connect:hover {
+    color: var(--accent-ink);
+    gap: 10px;
+  }
 }
 
 :global([data-theme="dark"]) .card {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

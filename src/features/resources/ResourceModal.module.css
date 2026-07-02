@@ -52,7 +52,7 @@
   top: 0;
   background: var(--cream);
   z-index: 1;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .title {
   font-family: var(--serif);
@@ -65,7 +65,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   border: none;
   cursor: pointer;
   font-size: 16px;
@@ -75,8 +75,10 @@
   transition: background 0.18s var(--ease);
   color: var(--plum);
 }
-.close:hover {
-  background: rgba(45, 27, 61, 0.15);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.15);
+  }
 }
 .closeFloat {
   position: absolute;
@@ -85,7 +87,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.14);
+  background: rgba(var(--cream-rgb), 0.14);
   border: none;
   cursor: pointer;
   font-size: 16px;
@@ -96,8 +98,10 @@
   color: var(--cream);
   z-index: 2;
 }
-.closeFloat:hover {
-  background: rgba(247, 243, 238, 0.28);
+@media (hover: hover) {
+  .closeFloat:hover {
+    background: rgba(var(--cream-rgb), 0.28);
+  }
 }
 .body {
   padding: 22px 28px 0;
@@ -124,10 +128,9 @@
   font-size: 15px;
   color: var(--ink);
   background: var(--paper);
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 11px;
   padding: 11px 14px;
-  outline: none;
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.2s var(--ease);
@@ -152,21 +155,25 @@
   margin-bottom: 18px;
 }
 .option {
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 14px;
   padding: 15px 16px;
   cursor: pointer;
-  transition: all 0.18s var(--ease);
+  transition:
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease);
   text-align: left;
   background: var(--paper);
   font-family: var(--sans);
 }
-.option:hover {
-  border-color: rgba(45, 27, 61, 0.25);
+@media (hover: hover) {
+  .option:hover {
+    border-color: rgba(var(--plum-rgb), 0.25);
+  }
 }
 .optionSelected {
   border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
 }
 .optIcon {
   font-size: 20px;
@@ -274,7 +281,7 @@
 }
 .successSub {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.7;
   max-width: 44ch;
   margin: 0 auto 28px;

@@ -149,6 +149,7 @@ export function MapPage() {
             <span className={s.fbLabel}>Vibe</span>
             {VIBES.map((v) => (
               <button
+                type="button"
                 key={v}
                 className={[s.chip, s.vibe, vibes.includes(v) && s.chipOn]
                   .filter(Boolean)
@@ -179,7 +180,11 @@ export function MapPage() {
                 </div>
               </div>
               {bairro && (
-                <button className={s.clear} onClick={() => selectBairro(null)}>
+                <button
+                  type="button"
+                  className={s.clear}
+                  onClick={() => selectBairro(null)}
+                >
                   <FiX /> Clear
                 </button>
               )}

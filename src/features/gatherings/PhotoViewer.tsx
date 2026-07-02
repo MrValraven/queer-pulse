@@ -57,6 +57,9 @@ export function PhotoViewer({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Photo viewer"
       className={styles.overlay}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();

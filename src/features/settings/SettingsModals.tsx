@@ -4,15 +4,24 @@ import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import styles from "./SettingsModal.module.css";
 
-/** Shared modal shell with overlay click-to-close and a close button. */
+/** Shared modal shell with overlay click-to-close, ESC and a close button. */
 function ModalShell({
+  label,
   onClose,
   children,
 }: {
+  label: string;
   onClose: () => void;
   children: ReactNode;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
     <div
       className={styles.overlay}
@@ -20,7 +29,12 @@ function ModalShell({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.modal}>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-label={label}
+      >
         <button
           type="button"
           className={styles.close}
@@ -87,15 +101,20 @@ export function EmailChangeModal({
     email === confirm &&
     email !== currentEmail;
 
+  useEffect(() => {
+    if (phase !== "saving") return;
+    const t = setTimeout(() => setPhase("done"), 1200);
+    return () => clearTimeout(t);
+  }, [phase]);
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!valid) return;
     setPhase("saving");
-    setTimeout(() => setPhase("done"), 1200);
   }
 
   return (
-    <ModalShell onClose={onClose}>
+    <ModalShell label="Change your email" onClose={onClose}>
       {phase === "done" ? (
         <SuccessPanel
           title={
@@ -194,15 +213,20 @@ export function PasswordChangeModal({ onClose }: { onClose: () => void }) {
   const mismatch = confirm.length > 0 && confirm !== next;
   const valid = current.length > 0 && next.length >= 8 && next === confirm;
 
+  useEffect(() => {
+    if (phase !== "saving") return;
+    const t = setTimeout(() => setPhase("done"), 1200);
+    return () => clearTimeout(t);
+  }, [phase]);
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!valid) return;
     setPhase("saving");
-    setTimeout(() => setPhase("done"), 1200);
   }
 
   return (
-    <ModalShell onClose={onClose}>
+    <ModalShell label="Change your password" onClose={onClose}>
       {phase === "done" ? (
         <SuccessPanel
           title={
@@ -315,15 +339,20 @@ export function SuggestEditModal({
   const [why, setWhy] = useState("");
   const valid = suggestion.trim().length > 2;
 
+  useEffect(() => {
+    if (phase !== "saving") return;
+    const t = setTimeout(() => setPhase("done"), 1100);
+    return () => clearTimeout(t);
+  }, [phase]);
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!valid) return;
     setPhase("saving");
-    setTimeout(() => setPhase("done"), 1100);
   }
 
   return (
-    <ModalShell onClose={onClose}>
+    <ModalShell label={`Suggest an edit to ${term}`} onClose={onClose}>
       {phase === "done" ? (
         <SuccessPanel
           title={
@@ -441,7 +470,7 @@ export function DataExportModal({
   }
 
   return (
-    <ModalShell onClose={onClose}>
+    <ModalShell label={title} onClose={onClose}>
       {phase === "preparing" ? (
         <div style={{ textAlign: "center", padding: "20px 8px" }}>
           <div className={styles.eye}>Data &amp; privacy</div>

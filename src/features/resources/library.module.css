@@ -12,7 +12,7 @@
   align-items: center;
   gap: 10px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 999px;
   padding: 13px 20px;
 }
@@ -30,7 +30,6 @@
   font-size: 15px;
   color: var(--ink);
   width: 100%;
-  outline: none;
 }
 .chips {
   display: flex;
@@ -64,8 +63,10 @@
   cursor: pointer;
   padding: 0;
 }
-.popular button:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .popular button:hover {
+    text-decoration: underline;
+  }
 }
 .empty {
   text-align: center;

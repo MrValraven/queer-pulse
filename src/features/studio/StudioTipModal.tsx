@@ -52,6 +52,7 @@ export function StudioTipModal({
           .join(" ")}
         role="dialog"
         aria-modal="true"
+        aria-label={`Send a tip to ${recipient}`}
       >
         <button
           type="button"

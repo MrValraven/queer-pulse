@@ -10,15 +10,20 @@
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 999px;
   padding: 9px 18px;
   cursor: pointer;
-  transition: all 0.18s;
+  transition:
+    color 0.18s var(--ease),
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
 }
-.tab:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+@media (hover: hover) {
+  .tab:hover {
+    border-color: var(--plum);
+    color: var(--plum);
+  }
 }
 .tabOn {
   background: var(--plum);
@@ -47,7 +52,7 @@
   flex-direction: column;
 }
 .accItem {
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .accQ {
   display: flex;
@@ -92,8 +97,8 @@
 
 .helpContact {
   margin-top: 40px;
-  background: rgba(45, 27, 61, 0.04);
-  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 18px;
   padding: 28px 30px;
   display: flex;
@@ -115,5 +120,5 @@
 }
 
 :global([data-theme="dark"]) .helpContact {
-  border-color: rgba(247, 243, 238, 0.12);
+  border-color: rgba(var(--cream-rgb), 0.12);
 }

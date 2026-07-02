@@ -48,7 +48,7 @@
 
 .sub {
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   max-width: 52ch;
   margin-top: 22px;
   line-height: 1.7;
@@ -73,7 +73,7 @@
   left: 20px;
   right: 20px;
   height: 1.5px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   z-index: 0;
 }
 
@@ -96,7 +96,7 @@
   height: 40px;
   border-radius: 50%;
   background: var(--cream);
-  border: 2px solid rgba(45, 27, 61, 0.14);
+  border: 2px solid rgba(var(--plum-rgb), 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -155,8 +155,8 @@
 /* Card */
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-radius: var(--radius-card);
   padding: 40px 44px;
   max-width: 680px;
 }
@@ -235,8 +235,8 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  background: rgba(45, 27, 61, 0.03);
-  border: 1.5px solid rgba(45, 27, 61, 0.09);
+  background: rgba(var(--plum-rgb), 0.03);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 12px;
   padding: 14px 16px;
   cursor: pointer;
@@ -246,21 +246,23 @@
   user-select: none;
 }
 
-.dtItem:hover {
-  border-color: rgba(45, 27, 61, 0.2);
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .dtItem:hover {
+    border-color: rgba(var(--plum-rgb), 0.2);
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 
 .dtItemChecked {
   border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
 }
 
 .dtCheck {
   width: 18px;
   height: 18px;
   border-radius: 5px;
-  border: 1.5px solid rgba(45, 27, 61, 0.28);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.28);
   flex: none;
   margin-top: 1px;
   display: flex;
@@ -316,13 +318,16 @@
   font-family: var(--sans);
   font-size: 14px;
   font-weight: 600;
-  border: 1.5px solid rgba(45, 27, 61, 0.18);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.18);
   background: transparent;
   color: var(--ink-60);
   border-radius: 999px;
   padding: 9px 20px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -334,15 +339,17 @@
   border-color: var(--plum);
 }
 
-.fmtBtn:hover:not(.fmtBtnSelected) {
-  border-color: var(--plum);
-  color: var(--plum);
+@media (hover: hover) {
+  .fmtBtn:hover:not(.fmtBtnSelected) {
+    border-color: var(--plum);
+    color: var(--plum);
+  }
 }
 
 /* Legal note */
 .legalNote {
-  background: rgba(74, 140, 111, 0.07);
-  border: 1px solid rgba(74, 140, 111, 0.22);
+  background: rgba(var(--jade-rgb), 0.07);
+  border: 1px solid rgba(var(--jade-rgb), 0.22);
   border-radius: 14px;
   padding: 18px 20px;
   margin-bottom: 28px;
@@ -380,7 +387,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -448,11 +455,11 @@
 }
 
 .accItem {
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 
 .accItem:last-child {
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 
 .accHeader {
@@ -497,7 +504,7 @@
 .accTag {
   font-size: 12px;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 7px;
   padding: 4px 10px;
   font-weight: 500;

@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(45, 27, 61, 0.45);
+  background: rgba(var(--plum-rgb), 0.45);
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
@@ -18,7 +18,7 @@
 
 .dialog {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: var(--radius-card);
   padding: 28px 30px;
   width: 100%;
@@ -69,7 +69,7 @@
 .input,
 .textarea {
   width: 100%;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   padding: 11px 14px;
   font-family: var(--sans);
@@ -87,6 +87,7 @@
 .input:focus,
 .textarea:focus {
   border-color: var(--plum);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.28);
 }
 
 .dialogActions {
@@ -107,7 +108,7 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.18);
+  background: rgba(var(--jade-rgb), 0.18);
   color: var(--jade);
   font-size: 24px;
   margin-bottom: 16px;
@@ -125,7 +126,7 @@
 }
 .confirmBody {
   font-size: 14.5px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.6;
   max-width: 40ch;
   margin: 12px auto 0;
@@ -137,5 +138,5 @@
 }
 
 :global([data-theme="dark"]) .dialog {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

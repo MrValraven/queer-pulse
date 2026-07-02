@@ -10,7 +10,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -21,9 +21,11 @@
     transform var(--dur-slow) var(--ease),
     box-shadow var(--dur-slow) var(--ease);
 }
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 40px -24px rgba(45, 27, 61, 0.38);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px -24px rgba(var(--plum-rgb), 0.38);
+  }
 }
 .dashed {
   border-style: dashed;
@@ -42,7 +44,7 @@
 }
 .social {
   color: var(--jade);
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
 }
 .arts {
   color: var(--accent-ink);
@@ -50,15 +52,15 @@
 }
 .activism {
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
 }
 .support {
   color: var(--violet);
-  background: rgba(122, 82, 184, 0.1);
+  background: rgba(var(--violet-rgb), 0.1);
 }
 .sports {
   color: var(--jade);
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
 }
 .professional {
   color: var(--accent-ink);
@@ -83,7 +85,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   margin-top: auto;
 }
 .count {
@@ -102,11 +104,13 @@
     gap 0.2s,
     color 0.2s;
 }
-.card:hover .join {
-  color: var(--accent-ink);
-  gap: 8px;
+@media (hover: hover) {
+  .card:hover .join {
+    color: var(--accent-ink);
+    gap: 8px;
+  }
 }
 
 :global([data-theme="dark"]) .card {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

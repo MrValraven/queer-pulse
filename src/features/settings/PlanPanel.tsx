@@ -63,6 +63,7 @@ export function PlanPanel() {
       <div className={styles.tierGrid}>
         {TIERS.map((t) => (
           <button
+            type="button"
             key={t.key}
             className={`${styles.tierBtn} ${tierKey === t.key ? styles.sel : ""}`}
             onClick={() => pickTier(t.key)}
@@ -79,6 +80,7 @@ export function PlanPanel() {
           <div className={styles.amtGrid}>
             {tier.amounts.map((a) => (
               <button
+                type="button"
                 key={a}
                 className={`${styles.amtBtn} ${amount === a ? styles.sel : ""}`}
                 onClick={() => setAmount(a)}
@@ -109,12 +111,14 @@ export function PlanPanel() {
 
       <div className={styles.danger}>
         <button
+          type="button"
           className={styles.dngBtn}
           onClick={() => setPauseOpen((v) => !v)}
         >
           Pause for 1 month
         </button>
         <button
+          type="button"
           className={styles.dngBtn}
           onClick={() => setCancelOpen((v) => !v)}
         >

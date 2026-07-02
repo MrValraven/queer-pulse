@@ -76,6 +76,7 @@ export function StudioHero() {
               </svg>
             </Link>
             <button
+              type="button"
               onClick={() => {
                 const now = toggleSave(HERO_TRACK);
                 showToast(
@@ -94,7 +95,11 @@ export function StudioHero() {
                 </>
               )}
             </button>
-            <button className={styles.tip} onClick={() => setTipOpen(true)}>
+            <button
+              type="button"
+              className={styles.tip}
+              onClick={() => setTipOpen(true)}
+            >
               <FiHeart /> Tip €2
             </button>
           </div>
@@ -275,11 +280,26 @@ export function StudioTracksSection() {
               <span className={`${styles.tag} ${tagClass[t.tag]}`}>
                 {t.tagLabel}
               </span>
-              <button className={styles.playFab} aria-label="Play">
+              <span
+                role="button"
+                tabIndex={0}
+                aria-label="Play"
+                className={styles.playFab}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                }}
+              >
                 <svg viewBox="0 0 12 14" fill="currentColor">
                   <path d="M1 1l10 6-10 6z" />
                 </svg>
-              </button>
+              </span>
             </div>
             <div className={styles.byCur}>{t.curator}</div>
             <h4>

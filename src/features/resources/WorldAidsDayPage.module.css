@@ -24,7 +24,7 @@
   pointer-events: none;
 }
 .heroInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
   position: relative;
@@ -55,7 +55,7 @@
 }
 .dek {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.82);
+  color: rgba(var(--cream-rgb), 0.82);
   line-height: 1.7;
   max-width: 54ch;
   text-wrap: pretty;
@@ -74,7 +74,7 @@
   padding: 80px 0 64px;
 }
 .ledeInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
   display: grid;
@@ -107,7 +107,7 @@
   color: var(--ink-40);
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
   max-width: 280px;
 }
 .ledeExplain {
@@ -130,7 +130,7 @@
 }
 
 .statsSection {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 64px 28px 80px;
 }
@@ -167,7 +167,7 @@
 .stat {
   padding: 24px 26px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
 }
 .stat b {
@@ -247,7 +247,7 @@
   grid-template-columns: 48px 1fr;
   gap: 18px;
   padding: 22px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   align-items: flex-start;
 }
 .undoRow:last-child {
@@ -304,7 +304,7 @@
   padding: 80px 0;
 }
 .testedInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
 }
@@ -341,7 +341,7 @@
 .testedCard {
   padding: 26px 28px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   text-decoration: none;
   color: inherit;
@@ -353,10 +353,12 @@
   flex-direction: column;
   gap: 14px;
 }
-.testedCard:hover {
-  transform: translateY(-2px);
-  border-color: rgba(45, 27, 61, 0.18);
-  box-shadow: 0 14px 30px -22px rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .testedCard:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--plum-rgb), 0.18);
+    box-shadow: 0 14px 30px -22px rgba(var(--plum-rgb), 0.4);
+  }
 }
 .testedTag {
   font-size: 10.5px;
@@ -396,7 +398,7 @@
   font-size: 12.5px;
   color: var(--ink-40);
   padding-top: 12px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .testedMeta b {
   color: var(--plum);
@@ -456,7 +458,7 @@
 }
 .memory p {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
   line-height: 1.78;
   margin-bottom: 1em;
   max-width: 54ch;
@@ -469,7 +471,7 @@
 .memoryCta {
   margin-top: 32px;
   padding-top: 24px;
-  border-top: 1px solid rgba(247, 243, 238, 0.18);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.18);
 }
 .memoryActions {
   display: flex;

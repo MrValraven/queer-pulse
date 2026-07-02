@@ -7,7 +7,7 @@
   letter-spacing: 0.02em;
   padding: 6px 11px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   white-space: nowrap;
   font-family: var(--sans);
 }
@@ -40,7 +40,7 @@
 .private {
   color: var(--ink-40);
   background: transparent;
-  border-color: rgba(45, 27, 61, 0.08);
+  border-color: rgba(var(--plum-rgb), 0.08);
 }
 .private .dot {
   background: transparent;

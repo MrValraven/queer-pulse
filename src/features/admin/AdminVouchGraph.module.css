@@ -116,6 +116,11 @@
   background: var(--cream);
   border: 1px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 999px;
+  transition: border-color 0.2s var(--ease);
+}
+/* Visible keyboard focus for the borderless inner input. */
+.search:focus-within {
+  border-color: var(--accent);
 }
 .search svg {
   width: 14px;
@@ -171,9 +176,11 @@
   align-items: center;
   justify-content: center;
 }
-.close:hover {
-  background: rgba(var(--plum-rgb), 0.05);
-  color: var(--plum);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    color: var(--plum);
+  }
 }
 
 /* ── Main: stage + inspector ────────────────────────────── */
@@ -263,9 +270,13 @@
   transition: opacity var(--dur-base);
   outline: none;
 }
-.node:focus,
-.node:focus-visible {
+/* Mouse focus: no ring. Keyboard focus: a visible accent halo on the node
+   circle (SVG outline is unreliable, so we draw it with a drop-shadow glow). */
+.node:focus:not(:focus-visible) {
   outline: none;
+}
+.node:focus-visible .nodeInner {
+  filter: drop-shadow(0 0 4px var(--accent)) drop-shadow(0 0 2px var(--accent));
 }
 /* focusing on a member: others' circles recede and their labels drop away */
 .dim .nodeInner {
@@ -416,13 +427,13 @@
 .tipName span {
   font-family: var(--sans);
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .tipRole {
   margin-top: 3px;
   font-family: var(--serif);
   font-style: italic;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.4;
 }
 .tipTag {
@@ -437,7 +448,7 @@
 .tipMeta {
   margin-top: 6px;
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
 }
 .tipMetaWd {
   margin-top: 6px;
@@ -447,9 +458,9 @@
 .tipHint {
   margin-top: 7px;
   padding-top: 6px;
-  border-top: 1px solid rgba(247, 243, 238, 0.14);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.14);
   font-size: 10.5px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 
 /* path bar */
@@ -477,7 +488,7 @@
   cursor: pointer;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(247, 243, 238, 0.16);
+  background: rgba(var(--cream-rgb), 0.16);
   color: var(--cream);
   font-size: 11px;
 }
@@ -513,8 +524,10 @@
   align-items: center;
   justify-content: center;
 }
-.zoom button:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .zoom button:hover {
+    color: var(--plum);
+  }
 }
 /* reset button highlights when the user has hand-placed nodes */
 .zoomActive {
@@ -682,8 +695,10 @@
   text-align: left;
   transition: background var(--dur-fast);
 }
-.insRow:hover {
-  background: rgba(var(--plum-rgb), 0.04);
+@media (hover: hover) {
+  .insRow:hover {
+    background: rgba(var(--plum-rgb), 0.04);
+  }
 }
 .insRowWd {
   opacity: 0.55;
@@ -880,8 +895,10 @@
   font-weight: 600;
   cursor: pointer;
 }
-.replay:hover {
-  background: rgba(var(--accent-rgb), 0.18);
+@media (hover: hover) {
+  .replay:hover {
+    background: rgba(var(--accent-rgb), 0.18);
+  }
 }
 .replay:disabled {
   opacity: 0.5;

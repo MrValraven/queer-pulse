@@ -38,7 +38,7 @@
 .body {
   font-size: 15px;
   line-height: 1.6;
-  color: rgba(247, 243, 238, 0.82);
+  color: rgba(var(--cream-rgb), 0.82);
   margin: 0 auto 24px;
   max-width: 40ch;
 }
@@ -59,7 +59,7 @@
   gap: 10px;
   font-size: 14px;
   line-height: 1.5;
-  color: rgba(247, 243, 238, 0.9);
+  color: rgba(var(--cream-rgb), 0.9);
 }
 .step svg {
   flex: none;
@@ -75,7 +75,7 @@
 .footer {
   margin-top: 16px;
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
 }
 
 @keyframes panelIn {

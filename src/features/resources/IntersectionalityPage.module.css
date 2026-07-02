@@ -60,7 +60,7 @@
 }
 .heroSub {
   font-size: 16.5px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   max-width: 54ch;
   margin-top: 20px;
   line-height: 1.65;
@@ -69,8 +69,8 @@
 .opening {
   margin-top: 36px;
   max-width: 640px;
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.14);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
   border-radius: 18px;
   padding: 22px 26px;
   display: flex;
@@ -85,7 +85,7 @@
 }
 .openingText {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.86);
+  color: rgba(var(--cream-rgb), 0.86);
   line-height: 1.68;
 }
 .openingText strong {
@@ -97,7 +97,7 @@
 
 .ixNav {
   background: var(--cream);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   position: sticky;
   top: 64px;
   z-index: 50;
@@ -129,16 +129,18 @@
     color 0.2s var(--ease),
     border-color 0.2s var(--ease);
 }
-.ixNavBtn:hover {
-  color: var(--ink);
+@media (hover: hover) {
+  .ixNavBtn:hover {
+    color: var(--ink);
+  }
 }
 
 .sec {
   padding: 80px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .alt {
-  background: rgba(45, 27, 61, 0.025);
+  background: rgba(var(--plum-rgb), 0.025);
 }
 .secHead {
   margin-bottom: 44px;
@@ -174,8 +176,8 @@
 }
 .voiceCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -227,8 +229,8 @@
 }
 .infoCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -260,18 +262,20 @@
   color: var(--plum);
   font-weight: 600;
   padding-top: 10px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   margin-top: auto;
 }
 .icLink a {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(45, 27, 61, 0.22);
+  text-decoration-color: rgba(var(--plum-rgb), 0.22);
   transition: color 0.2s var(--ease);
 }
-.icLink a:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .icLink a:hover {
+    color: var(--accent-ink);
+  }
 }
 
 .note {
@@ -330,7 +334,7 @@
 }
 .commitLeft p {
   font-size: 15.5px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   line-height: 1.65;
   max-width: 44ch;
 }
@@ -346,8 +350,8 @@
   gap: 12px;
 }
 .commitCardD {
-  background: rgba(247, 243, 238, 0.07);
-  border: 1px solid rgba(247, 243, 238, 0.11);
+  background: rgba(var(--cream-rgb), 0.07);
+  border: 1px solid rgba(var(--cream-rgb), 0.11);
   border-radius: 14px;
   padding: 18px 20px;
 }
@@ -359,7 +363,7 @@
 }
 .ccdText {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.65);
+  color: rgba(var(--cream-rgb), 0.65);
   line-height: 1.6;
 }
 
@@ -370,7 +374,7 @@
 }
 .orgCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -401,5 +405,5 @@
   display: block;
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(45, 27, 61, 0.2);
+  text-decoration-color: rgba(var(--plum-rgb), 0.2);
 }

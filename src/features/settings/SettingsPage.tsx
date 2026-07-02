@@ -51,6 +51,7 @@ export function SettingsPage() {
               <h3>{g.group}</h3>
               {g.items.map((item) => (
                 <button
+                  type="button"
                   key={item.id}
                   className={[
                     styles.navItem,
@@ -104,6 +105,7 @@ export function SettingsPage() {
           <p>You have unsaved changes.</p>
           <div style={{ display: "flex", gap: 10 }}>
             <button
+              type="button"
               className={styles.discard}
               onClick={() => {
                 discardTheme();
@@ -113,6 +115,7 @@ export function SettingsPage() {
               Discard
             </button>
             <button
+              type="button"
               className={styles.saveBtn}
               onClick={() => {
                 commitTheme();

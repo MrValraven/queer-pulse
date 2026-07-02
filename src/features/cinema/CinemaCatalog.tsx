@@ -22,7 +22,7 @@ export function ProgrammeSection() {
           Six films, hand-picked. Available all week. Rotates Monday at noon
           Lisbon.
         </div>
-        <Link to="/cinema/browse" className="all">
+        <Link to={routes.cinemaBrowse} className="all">
           All programmes →
         </Link>
       </div>
@@ -71,7 +71,7 @@ export function ProgrammeSection() {
           </p>
           <div className={styles.sig}>
             — Sara Marques, programming lead.{" "}
-            <Link to="/cinema/browse">Read the full note →</Link>
+            <Link to={routes.cinemaBrowse}>Read the full note →</Link>
           </div>
         </div>
       </div>
@@ -90,7 +90,7 @@ export function CollectionsSection() {
           Curators build these slowly, over months. They're not playlists —
           they're arguments.
         </div>
-        <Link to="/cinema/browse" className="all">
+        <Link to={routes.cinemaBrowse} className="all">
           All collections →
         </Link>
       </div>
@@ -98,7 +98,7 @@ export function CollectionsSection() {
         {collections.map((c) => (
           <Link
             key={c.titleEm ?? c.titlePre}
-            to="/cinema/browse"
+            to={routes.cinemaBrowse}
             className={styles.coll}
           >
             <div className={styles.collTag}>{c.tag}</div>

@@ -12,7 +12,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 28px 26px;
   display: flex;
@@ -56,11 +56,13 @@
     color 0.2s,
     gap 0.2s;
 }
-.cta:hover {
-  color: var(--accent-ink);
-  gap: 8px;
+@media (hover: hover) {
+  .cta:hover {
+    color: var(--accent-ink);
+    gap: 8px;
+  }
 }
 
 :global([data-theme="dark"]) .card {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

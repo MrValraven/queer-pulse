@@ -1,6 +1,6 @@
 .page {
   background: var(--cream);
-  min-height: 100vh;
+  min-height: 100svh;
   padding: 100px 0 80px;
 }
 
@@ -16,8 +16,10 @@
   margin-bottom: 28px;
   transition: color 0.2s var(--ease);
 }
-.back:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--accent-ink);
+  }
 }
 
 .head {

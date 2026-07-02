@@ -42,7 +42,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
   color: var(--ink-60);
@@ -52,8 +52,10 @@
   font-size: 18px;
   transition: background 0.2s var(--ease);
 }
-.close:hover {
-  background: rgba(45, 27, 61, 0.14);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.14);
+  }
 }
 
 .eye {
@@ -100,7 +102,7 @@
   position: absolute;
   width: 34px;
   height: 34px;
-  border: 3px solid rgba(247, 243, 238, 0.85);
+  border: 3px solid rgba(var(--cream-rgb), 0.85);
 }
 .tl {
   top: 26px;
@@ -155,7 +157,7 @@
   }
 }
 .vfHint {
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   font-size: 13px;
   font-weight: 600;
   text-align: center;
@@ -163,7 +165,7 @@
 }
 .vfIcon {
   font-size: 30px;
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
   margin-bottom: 8px;
 }
 .vfStack {
@@ -202,7 +204,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.12);
   border: none;
   cursor: pointer;
   color: var(--cream);
@@ -211,14 +213,16 @@
   justify-content: center;
   font-size: 18px;
 }
-.successClose:hover {
-  background: rgba(247, 243, 238, 0.22);
+@media (hover: hover) {
+  .successClose:hover {
+    background: rgba(var(--cream-rgb), 0.22);
+  }
 }
 .successIcon {
   width: 54px;
   height: 54px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.2);
+  background: rgba(var(--jade-rgb), 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -242,7 +246,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.08);
   border-radius: 14px;
   padding: 12px 14px;
   margin-bottom: 20px;
@@ -265,7 +269,7 @@
 }
 .guestMeta {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .actions {
   display: flex;

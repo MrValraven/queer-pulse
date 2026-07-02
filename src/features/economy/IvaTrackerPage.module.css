@@ -1,7 +1,7 @@
 /* ── Form column ───────────────────────────────────────────────────────── */
 .formCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 28px;
 }
@@ -35,14 +35,13 @@
 .input {
   width: 100%;
   box-sizing: border-box;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 16px;
   font-family: var(--sans);
   font-size: 15px;
   color: var(--ink);
   background: var(--paper);
-  outline: none;
   transition: border-color 0.25s var(--ease);
 }
 .input:focus {
@@ -103,13 +102,15 @@
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 12px;
   background: var(--cream);
   transition: border-color 0.2s var(--ease);
 }
-.item:hover {
-  border-color: rgba(45, 27, 61, 0.18);
+@media (hover: hover) {
+  .item:hover {
+    border-color: rgba(var(--plum-rgb), 0.18);
+  }
 }
 .itemMain {
   display: flex;
@@ -156,9 +157,11 @@
     background 0.2s var(--ease),
     color 0.2s var(--ease);
 }
-.remove:hover {
-  background: rgba(var(--danger-rgb), 0.1);
-  color: var(--danger);
+@media (hover: hover) {
+  .remove:hover {
+    background: rgba(var(--danger-rgb), 0.1);
+    color: var(--danger);
+  }
 }
 
 /* ── Status / preview column ───────────────────────────────────────────── */
@@ -183,7 +186,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   margin: 0 0 6px;
 }
 .statusTotal {
@@ -200,15 +203,17 @@
   position: relative;
   height: 14px;
   border-radius: 999px;
-  background: rgba(247, 243, 238, 0.14);
+  background: rgba(var(--cream-rgb), 0.14);
   overflow: hidden;
 }
 .barFill {
   height: 100%;
+  width: 100%;
   border-radius: 999px;
   background: var(--bar);
+  transform-origin: left;
   transition:
-    width 0.55s var(--ease),
+    transform 0.55s var(--ease),
     background-color 0.35s var(--ease);
 }
 .barCap {
@@ -219,7 +224,7 @@
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   pointer-events: none;
 }
 
@@ -232,7 +237,7 @@
 .metric dt {
   font-family: var(--sans);
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   margin-bottom: 4px;
 }
 .metric dd {
@@ -252,7 +257,7 @@
   font-family: var(--sans);
   font-size: 14px;
   line-height: 1.55;
-  color: rgba(247, 243, 238, 0.82);
+  color: rgba(var(--cream-rgb), 0.82);
 }
 .note svg {
   flex-shrink: 0;
@@ -300,13 +305,13 @@
   font-family: var(--sans);
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
 }
 .hardWarnNote {
   margin: 12px 0 0;
   font-family: var(--sans);
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .hardWarnNote em {
   font-style: normal;
@@ -318,7 +323,7 @@
   font-family: var(--sans);
   font-size: 12px;
   line-height: 1.55;
-  color: rgba(247, 243, 238, 0.45);
+  color: rgba(var(--cream-rgb), 0.45);
 }
 
 @media (prefers-reduced-motion: reduce) {

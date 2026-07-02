@@ -18,7 +18,12 @@ const nextUp = films.filter((f) => f.id !== "cascais").slice(0, 3);
 export function WatchOverlay({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className={styles.overlay}>
-      <div className={styles.overlayCard}>
+      <div
+        className={styles.overlayCard}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Content notes before watching"
+      >
         <div className={styles.overlayIcon}>
           <svg
             viewBox="0 0 24 24"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -22,6 +22,13 @@ export function EditDetailsModal({
   onSave: (draft: GatheringDetailsDraft) => void;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   const [draft, setDraft] = useState<GatheringDetailsDraft>(initial);
   const [done, setDone] = useState(false);
 
@@ -63,7 +70,12 @@ export function EditDetailsModal({
           onClose={onClose}
         />
       ) : (
-        <div className={styles.modal}>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Update your gathering"
+          className={styles.modal}
+        >
           <button
             type="button"
             className={styles.close}

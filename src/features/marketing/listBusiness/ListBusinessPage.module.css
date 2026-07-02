@@ -53,8 +53,10 @@
   margin-bottom: 18px;
   transition: color 0.2s var(--ease);
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 .eyebrow {
   font-size: 11px;
@@ -96,7 +98,7 @@
   gap: 16px;
   flex-wrap: wrap;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   border-left: 3px solid var(--accent);
   border-radius: 14px;
   padding: 14px 18px;
@@ -154,7 +156,7 @@
   width: 27px;
   height: 27px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.09);
+  background: rgba(var(--plum-rgb), 0.09);
   color: var(--ink-40);
   font-weight: 700;
   font-size: 12.5px;
@@ -188,7 +190,7 @@
 .wpBar {
   width: 18px;
   height: 2px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   border-radius: 2px;
 }
 @media (max-width: 680px) {
@@ -210,18 +212,20 @@
 .progress {
   flex: 1;
   height: 4px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   border-radius: 999px;
   overflow: hidden;
 }
 .progressFill {
   height: 100%;
+  width: 100%;
   background: var(--accent);
   border-radius: 999px;
+  transform-origin: left;
 }
 @media (prefers-reduced-motion: no-preference) {
   .progressFill {
-    transition: width 0.45s var(--ease);
+    transition: transform 0.45s var(--ease);
   }
 }
 .draftStatus {
@@ -240,10 +244,10 @@
 /* ===== Pane card ===== */
 .pane {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 32px 34px;
-  box-shadow: 0 1px 2px rgba(45, 27, 61, 0.04);
+  box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.04);
 }
 @media (max-width: 520px) {
   .pane {
@@ -277,7 +281,7 @@
   color: var(--plum);
   margin: 28px 0 14px;
   padding-top: 22px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 
 /* ===== Generic field bits the steps reuse ===== */
@@ -315,7 +319,7 @@
 }
 .chip {
   background: transparent;
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   color: var(--ink-60);
   font-family: var(--sans);
   font-size: 13px;
@@ -328,14 +332,22 @@
     color 0.2s var(--ease),
     background 0.2s var(--ease);
 }
-.chip:hover {
-  border-color: rgba(45, 27, 61, 0.38);
-  color: var(--plum);
+@media (hover: hover) {
+  .chip:not(.chipOn):hover {
+    border-color: rgba(var(--plum-rgb), 0.38);
+    color: var(--plum);
+  }
 }
 .chipOn {
   background: var(--plum);
   color: var(--cream);
   border-color: var(--plum);
+}
+@media (hover: hover) {
+  .chipOn:hover {
+    background: var(--plum-deep);
+    border-color: var(--plum-deep);
+  }
 }
 .chip:disabled {
   opacity: 0.4;
@@ -376,7 +388,7 @@
   letter-spacing: 0;
 }
 .chipOn .priceLbl {
-  color: rgba(247, 243, 238, 0.82);
+  color: rgba(var(--cream-rgb), 0.82);
 }
 
 /* ===== Path-choice cards (step 0) ===== */
@@ -393,7 +405,7 @@
 .pathCard {
   text-align: left;
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 16px;
   padding: 22px;
   cursor: pointer;
@@ -402,14 +414,20 @@
     background 0.22s var(--ease),
     transform 0.22s var(--ease);
 }
-.pathCard:hover {
-  border-color: rgba(45, 27, 61, 0.32);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .pathCard:not(.pathCardOn):hover {
+    border-color: rgba(var(--plum-rgb), 0.32);
+  }
+}
+@media (hover: hover) {
+  .pathCard:hover {
+    transform: translateY(-2px);
+  }
 }
 .pathCardOn {
   border-color: var(--plum);
   background: var(--paper);
-  box-shadow: 0 0 0 3px rgba(45, 27, 61, 0.06);
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.06);
 }
 .pcIc {
   width: 42px;
@@ -503,7 +521,7 @@
   justify-content: center;
   font-family: var(--serif);
   font-size: 13px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
 .dmInfo b {
@@ -526,8 +544,10 @@
   cursor: pointer;
   text-decoration: underline;
 }
-.dmAct:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .dmAct:hover {
+    color: var(--accent-ink);
+  }
 }
 
 /* ===== Reveal block (evidence) ===== */
@@ -570,7 +590,7 @@
 .verifyOpt {
   text-align: left;
   padding: 15px 17px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 13px;
   cursor: pointer;
   background: transparent;
@@ -579,15 +599,17 @@
     background 0.2s var(--ease);
   width: 100%;
 }
-.optCard:hover,
-.radioOpt:hover,
-.verifyOpt:hover {
-  border-color: rgba(45, 27, 61, 0.3);
+@media (hover: hover) {
+  .optCard:not(.optOn):hover,
+  .radioOpt:not(.optOn):hover,
+  .verifyOpt:not(.optOn):hover {
+    border-color: rgba(var(--plum-rgb), 0.3);
+  }
 }
 .optOn {
   border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.04);
-  box-shadow: 0 0 0 3px rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.04);
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.06);
 }
 .ownTag {
   display: inline-flex;
@@ -652,7 +674,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 1.5px solid rgba(45, 27, 61, 0.28);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.28);
   flex: none;
   margin-top: 1px;
   display: flex;
@@ -685,7 +707,7 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -720,7 +742,7 @@
   width: 38px;
   height: 42px;
   flex: none;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   background: var(--cream);
   border-radius: 10px;
   color: var(--ink-40);
@@ -732,9 +754,11 @@
   align-items: center;
   justify-content: center;
 }
-.witDel:hover {
-  color: var(--accent-ink);
-  border-color: rgba(var(--accent-rgb), 0.4);
+@media (hover: hover) {
+  .witDel:hover {
+    color: var(--accent-ink);
+    border-color: rgba(var(--accent-rgb), 0.4);
+  }
 }
 .witAdd {
   font-size: 13px;
@@ -748,8 +772,10 @@
   align-items: center;
   gap: 7px;
 }
-.witAdd:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .witAdd:hover {
+    color: var(--accent-ink);
+  }
 }
 
 /* ===== Good-for grid (uses shared CheckLine) ===== */
@@ -781,7 +807,7 @@
 .tagPill {
   font-size: 11.5px;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border: none;
   border-radius: 7px;
   padding: 5px 10px;
@@ -791,8 +817,10 @@
   align-items: center;
   gap: 5px;
 }
-.tagPill:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .tagPill:hover {
+    color: var(--accent-ink);
+  }
 }
 
 /* ===== Hours ===== */
@@ -828,7 +856,7 @@
   background: var(--jade);
 }
 .openNowClosed {
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   color: var(--ink-40);
 }
 .openNowClosed::before {
@@ -843,8 +871,10 @@
   cursor: pointer;
   text-decoration: underline;
 }
-.hoursToolBtn:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .hoursToolBtn:hover {
+    color: var(--accent-ink);
+  }
 }
 .hoursGrid {
   display: flex;
@@ -875,11 +905,14 @@
   text-transform: uppercase;
   padding: 6px 8px;
   border-radius: 8px;
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   background: var(--cream);
   color: var(--ink-40);
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
 .htgOpen {
   border-color: var(--jade);
@@ -896,11 +929,10 @@
   font-size: 13px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   border-radius: 9px;
   padding: 7px 9px;
-  outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s var(--ease);
 }
 .htimes input:focus {
   border-color: var(--plum);
@@ -929,7 +961,7 @@
   border-radius: 14px;
   overflow: hidden;
   /* decorative map illustration backdrop (flat, non-themed) */
-  background: #e8ecdf;
+  background: var(--map-tint);
   position: relative;
 }
 .mapBox svg {
@@ -1031,7 +1063,7 @@
 .paneFooter {
   padding-top: 24px;
   margin-top: 8px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .paneActions {
   display: flex;
@@ -1067,13 +1099,67 @@
   gap: 6px;
 }
 .neededChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 12px;
   font-weight: 600;
   color: var(--accent-ink);
   background: var(--paper);
   border: 1px solid rgba(var(--accent-rgb), 0.28);
   border-radius: 999px;
-  padding: 3px 10px;
+  padding: 3px 9px 3px 10px;
+  cursor: pointer;
+  transition:
+    background var(--dur, 0.16s) var(--ease),
+    border-color var(--dur, 0.16s) var(--ease),
+    transform var(--dur, 0.16s) var(--ease);
+}
+.neededChip svg {
+  opacity: 0.55;
+  transition:
+    transform var(--dur, 0.16s) var(--ease),
+    opacity var(--dur, 0.16s) var(--ease);
+}
+@media (hover: hover) {
+  .neededChip:hover {
+    background: rgba(var(--accent-rgb), 0.12);
+    border-color: rgba(var(--accent-rgb), 0.5);
+  }
+}
+@media (hover: hover) {
+  .neededChip:hover svg {
+    opacity: 1;
+    transform: translateX(2px);
+  }
+}
+.neededChip:active {
+  transform: translateY(1px);
+}
+.neededChip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Flash a field when its "still needed" chip is clicked. */
+.fieldFlash {
+  animation: fieldFlash 1.4s var(--ease);
+  border-radius: 12px;
+}
+@keyframes fieldFlash {
+  0%,
+  40% {
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.35);
+  }
+  100% {
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fieldFlash {
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.35);
+  }
 }
 
 /* ===== Review recap ===== */
@@ -1102,15 +1188,17 @@
   background: none;
   border: none;
 }
-.recapEdit:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .recapEdit:hover {
+    color: var(--accent-ink);
+  }
 }
 .recapRow {
   display: grid;
   grid-template-columns: 130px 1fr;
   gap: 14px;
   padding: 9px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   align-items: flex-start;
 }
 .recapRow:last-child {
@@ -1142,7 +1230,7 @@
 
 .slugBox {
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 12px;
   padding: 14px 16px;
   margin-bottom: 22px;
@@ -1263,7 +1351,7 @@
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  border: 3px solid rgba(247, 243, 238, 0.2);
+  border: 3px solid rgba(var(--cream-rgb), 0.2);
   border-top-color: var(--accent);
   animation: lbSpin 0.8s linear infinite;
 }
@@ -1322,14 +1410,14 @@
 }
 .dirCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 20px;
 }
 .dirCardEmpty {
   border-style: dashed;
-  border-color: rgba(45, 27, 61, 0.18);
-  background: rgba(45, 27, 61, 0.015);
+  border-color: rgba(var(--plum-rgb), 0.18);
+  background: rgba(var(--plum-rgb), 0.015);
 }
 .dirTop {
   display: flex;
@@ -1352,7 +1440,7 @@
   color: var(--accent-ink);
 }
 .dirAvEmpty {
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   color: var(--ink-40);
 }
 .dirName {
@@ -1399,7 +1487,7 @@
   color: var(--accent-ink);
 }
 .dirBadgePrice {
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   color: var(--ink-60);
   font-family: var(--serif);
 }
@@ -1421,14 +1509,14 @@
 .dirTags span {
   font-size: 11.5px;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 7px;
   padding: 4px 9px;
   font-weight: 500;
 }
 .pvDetail {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 22px;
   margin-top: 13px;
@@ -1446,7 +1534,7 @@
 }
 .pdTaglinePh {
   color: var(--ink-40);
-  border-left-color: rgba(45, 27, 61, 0.18);
+  border-left-color: rgba(var(--plum-rgb), 0.18);
 }
 .pdSec {
   margin-bottom: 16px;
@@ -1491,7 +1579,7 @@
 .pdChips span {
   font-size: 11.5px;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 7px;
   padding: 4px 9px;
   font-weight: 500;
@@ -1501,7 +1589,7 @@
   align-items: center;
   gap: 11px;
   padding-top: 15px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .pdOwnerAv {
   width: 36px;
@@ -1595,7 +1683,7 @@
 .fpSec {
   padding-top: 18px;
   margin-top: 18px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .fpSec h4 {
   font-size: 11px;
@@ -1715,7 +1803,7 @@
 .statusCheck {
   width: 74px;
   height: 74px;
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   background: rgba(var(--jade-rgb), 0.22);
   display: flex;
   align-items: center;
@@ -1761,7 +1849,7 @@
 }
 .statusLead {
   font-size: 15.5px;
-  color: rgba(247, 243, 238, 0.74);
+  color: rgba(var(--cream-rgb), 0.74);
   line-height: 1.7;
 }
 .statusLead b {
@@ -1789,19 +1877,23 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.12);
-  border: 2px solid rgba(247, 243, 238, 0.25);
+  background: rgba(var(--cream-rgb), 0.12);
+  border: 2px solid rgba(var(--cream-rgb), 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1;
-  color: rgba(247, 243, 238, 0.5);
-  transition: all 0.3s var(--ease);
+  color: rgba(var(--cream-rgb), 0.5);
+  transition:
+    color 0.3s var(--ease),
+    background 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
 }
 .tkL {
   font-size: 12px;
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   text-align: center;
   line-height: 1.3;
   max-width: 13ch;
@@ -1813,7 +1905,7 @@
   left: -50%;
   width: 100%;
   height: 2px;
-  background: rgba(247, 243, 238, 0.18);
+  background: rgba(var(--cream-rgb), 0.18);
 }
 .tk:first-child::before {
   display: none;
@@ -1842,8 +1934,8 @@
 }
 
 .statusNote {
-  background: rgba(247, 243, 238, 0.08);
-  border: 1px solid rgba(247, 243, 238, 0.14);
+  background: rgba(var(--cream-rgb), 0.08);
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
   border-radius: 14px;
   padding: 16px 20px;
   text-align: left;
@@ -1852,7 +1944,7 @@
 }
 .statusNote p {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.74);
+  color: rgba(var(--cream-rgb), 0.74);
   line-height: 1.6;
 }
 .statusNote b {
@@ -1871,7 +1963,7 @@
 }
 .withdrawConfirm p {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.82);
+  color: rgba(var(--cream-rgb), 0.82);
   line-height: 1.6;
   margin-bottom: 16px;
 }
@@ -1881,12 +1973,12 @@
 }
 .statusMeta {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-top: 24px;
   letter-spacing: 0.02em;
 }
 .statusMeta b {
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   font-weight: 700;
 }
 .demoFlip {
@@ -1899,31 +1991,35 @@
 }
 .demoFlip span {
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-weight: 700;
 }
 .demoFlip button {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   background: transparent;
-  border: 1px solid rgba(247, 243, 238, 0.2);
+  border: 1px solid rgba(var(--cream-rgb), 0.2);
   border-radius: 999px;
   padding: 5px 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
-.demoFlip button:hover {
-  border-color: var(--cream);
-  color: var(--cream);
+@media (hover: hover) {
+  .demoFlip button:hover {
+    border-color: var(--cream);
+    color: var(--cream);
+  }
 }
 .demoFlip button:focus-visible {
   outline: 2px solid var(--cream);
   outline-offset: 2px;
 }
 .demoFlip .demoFlipOn {
-  background: rgba(247, 243, 238, 0.14);
+  background: rgba(var(--cream-rgb), 0.14);
   color: var(--cream);
-  border-color: rgba(247, 243, 238, 0.4);
+  border-color: rgba(var(--cream-rgb), 0.4);
 }

@@ -60,7 +60,7 @@
   grid-template-columns: 120px 1fr;
   gap: 28px;
   padding: 24px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .entry:last-child {
   border-bottom: none;
@@ -96,11 +96,11 @@
   flex: none;
 }
 .feature {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
 .community {
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
 }
 .fix {
@@ -113,7 +113,8 @@
 }
 .magazine {
   background: rgba(180, 136, 60, 0.12);
-  color: #9a6a20;
+  /* amber darkened toward ink for legibility on cream */
+  color: color-mix(in srgb, var(--amber) 60%, var(--ink));
 }
 .entryTitle {
   font-size: 16px;
@@ -138,6 +139,8 @@
   transition: color 0.2s var(--ease);
   text-decoration: none;
 }
-.tag:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .tag:hover {
+    color: var(--plum);
+  }
 }

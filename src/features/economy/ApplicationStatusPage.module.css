@@ -1,5 +1,5 @@
 .page {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 108px 28px 80px;
 }
@@ -71,7 +71,7 @@
   display: flex;
   gap: 6px;
   margin-bottom: 28px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   flex-wrap: wrap;
 }
 .tab {
@@ -86,8 +86,10 @@
   position: relative;
   transition: color 0.2s var(--ease);
 }
-.tab:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--plum);
+  }
 }
 .tabActive {
   color: var(--plum);
@@ -107,7 +109,7 @@
   font-size: 11.5px;
   font-weight: 700;
   color: var(--ink-40);
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 6px;
   padding: 1px 7px;
 }
@@ -122,7 +124,7 @@
   align-items: center;
   gap: 8px 18px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 13px 18px;
   margin-bottom: 28px;
@@ -155,10 +157,10 @@
   background: var(--accent);
 }
 .legendUpcoming {
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
 }
 .legendClosed {
-  background: rgba(45, 27, 61, 0.2);
+  background: rgba(var(--plum-rgb), 0.2);
 }
 
 .list {
@@ -177,7 +179,7 @@
   flex-wrap: wrap;
   margin-bottom: 14px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .groupTitle {
   font-family: var(--serif);
@@ -208,7 +210,7 @@
 }
 .groupHeadMuted .groupCount {
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
 }
 .groupItems {
   display: flex;
@@ -227,14 +229,16 @@
     border-color 0.2s var(--ease),
     box-shadow 0.25s var(--ease);
 }
-.appMuted:hover {
-  opacity: 1;
-  filter: none;
+@media (hover: hover) {
+  .appMuted:hover {
+    opacity: 1;
+    filter: none;
+  }
 }
 .app {
   position: relative;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 24px 24px 24px 27px;
   display: grid;
@@ -246,10 +250,12 @@
     border-color 0.2s var(--ease),
     box-shadow 0.25s var(--ease);
 }
-.app:hover {
-  transform: translateY(-1px);
-  border-color: rgba(45, 27, 61, 0.18);
-  box-shadow: 0 12px 30px -22px rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .app:hover {
+    transform: translateY(-1px);
+    border-color: rgba(var(--plum-rgb), 0.18);
+    box-shadow: 0 12px 30px -22px rgba(var(--plum-rgb), 0.4);
+  }
 }
 
 /* Card-level emphasis — a left accent bar for the things that need attention. */
@@ -287,7 +293,7 @@
   .appRight {
     grid-column: 1 / -1;
     padding-top: 8px;
-    border-top: 1px solid rgba(45, 27, 61, 0.08);
+    border-top: 1px solid rgba(var(--plum-rgb), 0.08);
   }
 }
 .appLogo {
@@ -303,18 +309,18 @@
   font-size: 20px;
   color: var(--accent-ink);
   flex: none;
-  box-shadow: inset 0 0 0 1px rgba(45, 27, 61, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(var(--plum-rgb), 0.08);
 }
 .logoJade {
   background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
 }
 .logoPlum {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
 .logoDraft {
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   color: var(--ink-40);
 }
 .appMid h3 {
@@ -339,7 +345,7 @@
 .appMeta span {
   font-size: 12px;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 6px;
   padding: 3px 9px;
 }
@@ -350,7 +356,7 @@
   font-size: 12px;
   font-weight: 600;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 6px;
   padding: 3px 9px;
 }
@@ -404,7 +410,7 @@
   position: relative;
   height: 5px;
   border-radius: 3px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
 }
 .stageDone .stageBar {
   background: var(--jade);
@@ -426,7 +432,7 @@
   box-shadow: 0 0 0 2px var(--paper);
 }
 .stageRejected .stageBar {
-  background: rgba(45, 27, 61, 0.2);
+  background: rgba(var(--plum-rgb), 0.2);
 }
 .stageL {
   font-size: 11.5px;
@@ -480,7 +486,7 @@
 }
 .badgeInterview {
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
 }
 .badgeOffer {
   color: var(--jade);
@@ -488,12 +494,12 @@
 }
 .badgeRejected {
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
 }
 .badgeDraft {
   color: var(--ink-40);
-  background: rgba(45, 27, 61, 0.05);
-  border: 1px dashed rgba(45, 27, 61, 0.15);
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px dashed rgba(var(--plum-rgb), 0.15);
 }
 .badgeAttention {
   color: var(--accent-ink);
@@ -533,11 +539,19 @@
   font-family: var(--sans);
   padding: 0;
 }
-.appAction:hover {
-  color: var(--accent-ink);
-  gap: 9px;
+@media (hover: hover) {
+  .appAction:hover {
+    color: var(--accent-ink);
+    gap: 9px;
+  }
 }
 .appActionMuted {
   color: var(--ink-60);
   font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
 }

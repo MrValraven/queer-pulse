@@ -49,7 +49,7 @@
 .tierInvite,
 .tierPrivate {
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
 }
 
 .reactions {
@@ -64,7 +64,7 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border: 1px solid transparent;
   border-radius: 999px;
   padding: 4px 11px;
@@ -80,9 +80,11 @@
   width: 13px;
   height: 13px;
 }
-.pill:hover {
-  background: rgba(45, 27, 61, 0.09);
-  color: var(--ink);
+@media (hover: hover) {
+  .pill:hover {
+    background: rgba(var(--plum-rgb), 0.09);
+    color: var(--ink);
+  }
 }
 .pill:active {
   transform: scale(0.94);
@@ -92,9 +94,11 @@
   background: rgba(var(--accent-rgb), 0.16);
   border-color: rgba(var(--accent-rgb), 0.3);
 }
-.pillOn:hover {
-  background: rgba(var(--accent-rgb), 0.22);
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .pillOn:hover {
+    background: rgba(var(--accent-rgb), 0.22);
+    color: var(--accent-ink);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .pill {

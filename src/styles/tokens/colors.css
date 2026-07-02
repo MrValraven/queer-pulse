@@ -14,7 +14,10 @@
 
   /* ── Surfaces ── */
   --cream: #f7f3ee; /* page background */
+  --cream-rgb:
+    247, 243, 238; /* light-cream channels — NOT theme-switched: cream-on-plum stays light in dark mode */
   --paper: #ffffff; /* card surface */
+  --map-tint: #e8ecdf; /* map illustration placeholder */
 
   /* ── Jade (success / live / verified) ── */
   --jade: #4a8c6f;
@@ -28,6 +31,7 @@
   /* ── Danger (destructive actions: delete, block, report, emergency) ── */
   --danger: #b91c1c;
   --danger-rgb: 185, 28, 28;
+  --danger-ink: #a01818; /* pressed/hover on danger */
 
   /* ── Soft accent (light coral — text/icons on accent-tinted surfaces) ── */
   --accent-soft: #ffc4af;
@@ -39,7 +43,16 @@
   /* ── Ink (text) ── */
   --ink: #1a1a1f;
   --ink-60: rgba(26, 26, 31, 0.62); /* body copy */
-  --ink-40: rgba(26, 26, 31, 0.42); /* metadata, placeholders */
+  --ink-40: rgba(
+    26,
+    26,
+    31,
+    0.55
+  ); /* metadata, placeholders — 0.55 keeps small text at WCAG AA on cream */
+
+  /* ── Studio (dark workspace palette) ── */
+  --studio-bg: #1a1028;
+  --studio-rail: #120920;
 }
 
 /* ── Dark mode overrides ── */
@@ -48,5 +61,5 @@
   --paper: #1a1030;
   --ink: rgba(247, 243, 238, 0.92);
   --ink-60: rgba(247, 243, 238, 0.62);
-  --ink-40: rgba(247, 243, 238, 0.42);
+  --ink-40: rgba(247, 243, 238, 0.55);
 }

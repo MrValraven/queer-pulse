@@ -7,11 +7,14 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import { NAV_MENUS } from "./navMenus";
+import { NAV_MENUS, filterMenus } from "./navMenus";
 import { linkToPath } from "../../../app/routeMap";
+import { useIsLinkVisible } from "../../../app/authGate";
 import styles from "./MegaNav.module.css";
 
 export function MegaNav() {
+  const isLinkVisible = useIsLinkVisible();
+  const menus = filterMenus(NAV_MENUS, isLinkVisible);
   const [openKey, setOpenKey] = useState<string | null>(null);
   const [nudgeX, setNudgeX] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -40,8 +43,8 @@ export function MegaNav() {
         }
         setDirection(0);
       } else {
-        const currentIdx = NAV_MENUS.findIndex((m) => m.key === current);
-        const nextIdx = NAV_MENUS.findIndex((m) => m.key === key);
+        const currentIdx = menus.findIndex((m) => m.key === current);
+        const nextIdx = menus.findIndex((m) => m.key === key);
         setDirection(nextIdx > currentIdx ? 1 : -1);
       }
       return key;
@@ -75,13 +78,13 @@ export function MegaNav() {
     if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
       event.preventDefault();
       const delta = event.key === "ArrowRight" ? 1 : -1;
-      const next = (index + delta + NAV_MENUS.length) % NAV_MENUS.length;
-      const nextKey = NAV_MENUS[next]!.key;
+      const next = (index + delta + menus.length) % menus.length;
+      const nextKey = menus[next]!.key;
       focusButton(nextKey);
       if (openKey) openMenu(nextKey);
     } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
-      openMenu(NAV_MENUS[index]!.key);
+      openMenu(menus[index]!.key);
     } else if (event.key === "Escape" && openKey) {
       event.preventDefault();
       closeAndRestore();
@@ -98,13 +101,13 @@ export function MegaNav() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openKey]);
 
-  const activeMenu = NAV_MENUS.find((menu) => menu.key === openKey) ?? null;
+  const activeMenu = menus.find((menu) => menu.key === openKey) ?? null;
   const enterX = direction > 0 ? "26px" : direction < 0 ? "-26px" : "0px";
 
   return (
     <>
       <div className={styles.items} ref={itemsRef}>
-        {NAV_MENUS.map((menu, index) => (
+        {menus.map((menu, index) => (
           <button
             key={menu.key}
             type="button"

@@ -35,7 +35,7 @@ export function LevelCard() {
         <div className={styles.xpBar}>
           <div
             className={styles.xpFill}
-            style={{ width: `${levelInfo.percent}%` }}
+            style={{ transform: `scaleX(${levelInfo.percent / 100})` }}
           />
         </div>
         <div className={styles.xpLabel}>
@@ -105,6 +105,7 @@ export function LockedBadges() {
           <em>Locked</em> badges
         </h2>
         <button
+          type="button"
           className={styles.expandLink}
           onClick={() => setOpen((v) => !v)}
         >

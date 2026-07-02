@@ -23,7 +23,7 @@
   grid-template-columns: 56px 1fr;
   gap: 24px;
   padding: 28px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .clauseNum {
   font-family: var(--serif);
@@ -85,7 +85,7 @@
 }
 .divider {
   border: none;
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
   margin: 8px 0;
 }
 
@@ -97,5 +97,5 @@
 }
 
 :global([data-theme="dark"]) .clause {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

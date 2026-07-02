@@ -87,6 +87,7 @@ export const routes = {
   comingOut: "/coming-out",
   communities: "/communities",
   communitiesHome: "/communities/home",
+  startCommunity: "/communities/start",
   componentLibrary: "/about/component-library",
   connections: "/account/connections",
   constitution: "/policies/constitution",
@@ -181,6 +182,7 @@ export const routes = {
   mentions: "/mentions",
   mentorProfile: "/work/mentor-profile",
   mentalHealth: "/resources/mental-health",
+  therapists: "/resources/therapists",
   mentorship: "/work/mentorship",
   messages: "/messages",
   myEvents: "/account/events",
@@ -229,14 +231,17 @@ export const routes = {
   storyTomas: "/magazine/story-tomas",
   studio: "/studio",
   studioAlbum: "/studio/album",
+  studioArtist: "/studio/artist",
   studioCheckout: "/studio/checkout",
   studioCollection: "/studio/collection",
+  studioDashboard: "/studio/dashboard",
   studioE: "/studio",
   studioLanding: "/studio",
   studioLibrary: "/studio/library",
   studioLive: "/studio/live",
   studioSearch: "/studio/search",
   studioSet: "/studio/set",
+  studioSheetStore: "/studio/sheet-store",
   studioTrack: "/studio/track",
   submitStory: "/magazine/submit-story",
   subscriptions: "/account/subscriptions",
@@ -288,6 +293,9 @@ export const routes = {
   geoRestricted: "/system/geo-restricted",
   serverError: "/system/500",
   pwaPrompt: "/system/pwa-prompt",
+  feed: "/feed",
+  onboarding: "/auth/onboarding",
+  cinemaBrowse: "/cinema/browse",
 } as const;
 
 export type RouteKey = keyof typeof routes;
@@ -299,6 +307,8 @@ export const adminCommunityMod = (slug: string) =>
 export const modPanel = (slug: string) => `/mod/${slug}`;
 /** A recipient's personal invite landing — resolves the inviter from the code. */
 export const inviteLink = (code: string) => `/auth/invite/${code}`;
+/** A forum thread's detail page. */
+export const thread = (id: number | string) => `/thread/${id}`;
 
 /** Known top-level routes that should render real (or placeholder) pages. */
 export const KNOWN_ROUTE_SLUGS: string[] = [

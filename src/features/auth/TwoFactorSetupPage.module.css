@@ -3,7 +3,7 @@
   margin: 0 auto;
   padding: 120px 24px 80px;
   background: var(--cream);
-  min-height: 100vh;
+  min-height: 100svh;
 }
 
 /* Entrance for each step as the wizard advances — rise-and-fade, not a snap. */
@@ -37,8 +37,10 @@
   margin-bottom: 24px;
   transition: color 0.2s;
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 
 .eyebrow {
@@ -92,7 +94,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--ink-40);
   font-weight: 700;
   font-size: 13px;
@@ -126,7 +128,7 @@
   flex: 1;
   min-width: 10px;
   height: 2px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   border-radius: 2px;
 }
 .stepBarActive {
@@ -147,10 +149,10 @@
 /* Pane */
 .pane {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 36px;
-  box-shadow: 0 1px 2px rgba(45, 27, 61, 0.04);
+  box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.04);
 }
 .pane h2 {
   font-family: var(--serif);
@@ -189,7 +191,7 @@
   gap: 14px;
   align-items: flex-start;
   padding: 20px;
-  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 16px;
   cursor: pointer;
   transition:
@@ -199,14 +201,16 @@
   background: var(--paper);
   text-align: left;
 }
-.method:hover {
-  border-color: var(--plum);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .method:hover {
+    border-color: var(--plum);
+    transform: translateY(-2px);
+  }
 }
 .methodSelected {
   border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.03);
-  box-shadow: 0 0 0 4px rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.03);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.06);
 }
 .methodIc {
   width: 42px;
@@ -262,9 +266,11 @@
   opacity: 0.55;
   cursor: not-allowed;
 }
-.methodDisabled:hover {
-  border-color: rgba(45, 27, 61, 0.1);
-  transform: none;
+@media (hover: hover) {
+  .methodDisabled:hover {
+    border-color: rgba(var(--plum-rgb), 0.1);
+    transform: none;
+  }
 }
 .unavailable {
   display: inline-block;
@@ -273,7 +279,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-40);
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border-radius: 5px;
   padding: 2px 7px;
   margin-left: 6px;
@@ -297,8 +303,9 @@
   width: 200px;
   height: 200px;
   padding: 14px;
+  /* QR code requires true white for scanner contrast */
   background: #fff;
-  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 16px;
 }
 .qrInfo {
@@ -317,7 +324,7 @@
   margin-top: 18px;
   padding: 14px 16px;
   background: var(--cream);
-  border: 1px dashed rgba(45, 27, 61, 0.18);
+  border: 1px dashed rgba(var(--plum-rgb), 0.18);
   border-radius: 10px;
   font-family: var(--sans);
   font-size: 13.5px;
@@ -345,8 +352,10 @@
   flex: none;
   font-family: var(--sans);
 }
-.copyBtn:hover {
-  background: rgba(45, 27, 61, 0.08);
+@media (hover: hover) {
+  .copyBtn:hover {
+    background: rgba(var(--plum-rgb), 0.08);
+  }
 }
 
 /* Verify step */
@@ -366,7 +375,7 @@
   font-size: 26px;
   color: var(--plum);
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
   border-radius: 12px;
   outline: none;
   transition:
@@ -375,12 +384,12 @@
 }
 .codeRow input:focus {
   border-color: var(--plum);
-  box-shadow: 0 0 0 4px rgba(45, 27, 61, 0.08);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
   background: var(--paper);
 }
 .codeRowError input {
   border-color: var(--accent-ink);
-  box-shadow: 0 0 0 4px rgba(232, 119, 90, 0.1);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.1);
 }
 .codeMsg {
   font-size: 13px;
@@ -401,7 +410,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 8px 18px;
   background: var(--cream);
-  border: 1px dashed rgba(45, 27, 61, 0.18);
+  border: 1px dashed rgba(var(--plum-rgb), 0.18);
   border-radius: 14px;
   padding: 18px 22px;
   margin-bottom: 22px;
@@ -435,7 +444,7 @@
 /* Done — plum-panel success surface */
 .donePanel {
   background: var(--plum);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 56px 40px;
   text-align: center;
 }
@@ -464,7 +473,7 @@
 }
 .doneSub {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   max-width: 38ch;
   margin: 0 auto 28px;
@@ -482,7 +491,7 @@
   gap: 10px;
   justify-content: flex-end;
   padding-top: 18px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
   margin-top: 6px;
   flex-wrap: wrap;
 }

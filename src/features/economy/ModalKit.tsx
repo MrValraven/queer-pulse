@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { FiCheck, FiFile } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -19,14 +19,22 @@ export function ModalShell({
   onClose,
   success,
   wide,
+  ariaLabel,
   children,
 }: {
   onClose: () => void;
   success?: boolean;
   wide?: boolean;
+  /** Accessible name for the dialog (the visible title lives in children). */
+  ariaLabel?: string;
   children: ReactNode;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
     <div
       className={styles.overlay}
@@ -42,6 +50,9 @@ export function ModalShell({
         ]
           .filter(Boolean)
           .join(" ")}
+        role="dialog"
+        aria-modal="true"
+        aria-label={ariaLabel}
       >
         <button
           type="button"

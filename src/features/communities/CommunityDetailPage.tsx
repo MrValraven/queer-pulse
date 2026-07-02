@@ -4,7 +4,7 @@ import { FiCheck, FiClock } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { communities } from "../homepage/data/communities";
+import { useAllCommunities, useCreatedDetail } from "./useAllCommunities";
 import { memberProfiles } from "../members/data/memberProfiles";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
@@ -36,8 +36,10 @@ export function CommunityDetailPage() {
     useCommunityMembership();
   const [joining, setJoining] = useState(false);
 
+  const communities = useAllCommunities();
+  const createdDetail = useCreatedDetail(slug);
   const community = communities.find((c) => c.slug === slug);
-  const detail = getCommunityDetail(slug);
+  const detail = getCommunityDetail(slug) ?? createdDetail;
   if (!community || !detail)
     return <Navigate to={routes.communities} replace />;
 
@@ -162,7 +164,7 @@ export function CommunityDetailPage() {
                   );
                 })}
               </div>
-              {hasCount && (
+              {hasCount && memberNum > 5 && (
                 <span className={styles.stripNote}>
                   and {memberNum - 5} more
                 </span>

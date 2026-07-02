@@ -25,6 +25,8 @@ interface CommunityMembershipContextValue {
   join: (slug: string) => void;
   /** Submit a join request (request tier). */
   requestToJoin: (slug: string) => void;
+  /** Found a community — the current user joins as its owner. */
+  createOwned: (slug: string) => void;
   leave: (slug: string) => void;
   /** Approve a pending request → becomes a member (mod-tools sim). */
   approveRequest: (slug: string) => void;
@@ -82,6 +84,14 @@ export function CommunityMembershipProvider({
     );
   }, []);
 
+  const createOwned = useCallback((slug: string) => {
+    setMemberships((prev) =>
+      prev[slug]
+        ? prev
+        : { ...prev, [slug]: { role: "owner", joinedAt: "just now" } },
+    );
+  }, []);
+
   const leave = useCallback((slug: string) => {
     setMemberships((prev) => {
       const next = { ...prev };
@@ -117,6 +127,7 @@ export function CommunityMembershipProvider({
       roleIn,
       join,
       requestToJoin,
+      createOwned,
       leave,
       approveRequest,
       promoteToMod,
@@ -130,6 +141,7 @@ export function CommunityMembershipProvider({
       roleIn,
       join,
       requestToJoin,
+      createOwned,
       leave,
       approveRequest,
       promoteToMod,

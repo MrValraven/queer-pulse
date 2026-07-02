@@ -28,7 +28,7 @@ export function CinemaMast() {
           {SECTION_NAV.map((label, i) => (
             <Link
               key={label}
-              to="/cinema/browse"
+              to={routes.cinemaBrowse}
               className={[styles.cnLink, i === 0 && styles.cnLinkActive]
                 .filter(Boolean)
                 .join(" ")}
@@ -64,7 +64,7 @@ export function AskStrip() {
             Not sure what to watch? Tell us your mood and we'll pick one film —
             no algorithm, just curators.
           </div>
-          <Button to="/cinema/browse">Ask the room →</Button>
+          <Button to={routes.cinemaBrowse}>Ask the room →</Button>
         </div>
       </div>
     </div>
@@ -113,7 +113,7 @@ export function CinemaCover() {
           <Button variant="ghost-dark" to={routes.film}>
             Rent · €3
           </Button>
-          <Button variant="ghost-dark" to="/rsvp">
+          <Button variant="ghost-dark" to={routes.rsvp}>
             RSVP live Q&amp;A
           </Button>
         </div>

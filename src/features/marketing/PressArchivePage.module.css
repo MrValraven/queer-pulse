@@ -84,10 +84,9 @@
   font-size: 14px;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 11px;
   padding: 10px 14px 10px 36px;
-  outline: none;
   box-sizing: border-box;
 }
 .search input:focus {
@@ -106,7 +105,7 @@
 }
 .chip {
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--plum-rgb), 0.14);
   color: var(--ink-60);
   font-family: var(--sans);
   font-size: 12.5px;
@@ -114,10 +113,15 @@
   border-radius: 999px;
   padding: 6px 12px;
   cursor: pointer;
-  transition: all 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
-.chip:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--plum);
+  }
 }
 .chipActive {
   background: var(--plum);
@@ -134,7 +138,7 @@
   line-height: 1;
   margin: 32px 0 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .year em {
   font-style: italic;
@@ -157,17 +161,21 @@
   grid-template-columns: auto 1fr auto;
   gap: 18px;
   padding: 16px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   align-items: center;
   text-decoration: none;
   color: inherit;
   transition: padding-left 0.25s var(--ease);
 }
-.row:hover {
-  padding-left: 6px;
+@media (hover: hover) {
+  .row:hover {
+    padding-left: 6px;
+  }
 }
-.row:hover .title {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .row:hover .title {
+    color: var(--accent-ink);
+  }
 }
 .date {
   font-family: var(--serif);

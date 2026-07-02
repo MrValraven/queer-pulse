@@ -2,7 +2,7 @@
   padding: 140px 0 56px;
 }
 .heroInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
 }
@@ -49,12 +49,12 @@
 
 .contactStrip {
   background: var(--paper);
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   margin-top: 32px;
 }
 .contactInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 18px 28px;
   display: flex;
@@ -79,13 +79,13 @@
 }
 
 .page {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 64px 28px 0;
 }
 .sec {
   padding: 48px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .sec:last-of-type {
   border-bottom: none;
@@ -142,7 +142,7 @@
 .boiler {
   padding: 24px 28px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   margin-bottom: 14px;
   position: relative;
@@ -184,7 +184,7 @@
   top: 18px;
   right: 22px;
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   color: var(--ink-60);
   font-family: var(--sans);
   font-size: 11.5px;
@@ -192,11 +192,15 @@
   padding: 5px 11px;
   border-radius: 7px;
   cursor: pointer;
-  transition: all 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
-.boilerCopy:hover {
-  color: var(--plum);
-  border-color: var(--plum);
+@media (hover: hover) {
+  .boilerCopy:hover {
+    color: var(--plum);
+    border-color: var(--plum);
+  }
 }
 .copied {
   color: var(--jade);
@@ -220,7 +224,7 @@
 }
 .logoCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -268,7 +272,7 @@
 }
 .logoMeta {
   padding: 14px 18px;
-  border-top: 1px solid rgba(45, 27, 61, 0.06);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -300,7 +304,7 @@
 .swatch {
   padding: 18px 20px;
   border-radius: 14px;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
 }
 .swatchChip {
   width: 100%;
@@ -359,7 +363,7 @@
   background: rgba(var(--jade-rgb), 0.12);
 }
 .tintC {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
 }
 
 .teamGrid {
@@ -374,7 +378,7 @@
 }
 .teamCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 24px;
 }
@@ -397,7 +401,7 @@
   color: var(--jade);
 }
 .phPlum {
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--plum);
 }
 .teamCard h4 {
@@ -438,7 +442,7 @@
   gap: 6px;
   font-size: 12.5px;
   color: var(--ink-60);
-  border-top: 1px solid rgba(45, 27, 61, 0.06);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
   padding-top: 12px;
 }
 .teamContact a {
@@ -460,7 +464,7 @@
 .fact {
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
 }
 .fact b {
@@ -493,17 +497,21 @@
   grid-template-columns: 1fr auto;
   gap: 18px;
   padding: 18px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   align-items: center;
   text-decoration: none;
   color: inherit;
   transition: padding-left 0.25s var(--ease);
 }
-.covRow:hover {
-  padding-left: 8px;
+@media (hover: hover) {
+  .covRow:hover {
+    padding-left: 8px;
+  }
 }
-.covRow:hover .covTitle {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .covRow:hover .covTitle {
+    color: var(--accent-ink);
+  }
 }
 .covSource {
   font-size: 11.5px;
@@ -558,7 +566,7 @@
   gap: 16px;
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
@@ -570,16 +578,18 @@
     border-color 0.2s var(--ease),
     box-shadow 0.25s var(--ease);
 }
-.dlCard:hover {
-  transform: translateY(-2px);
-  border-color: rgba(45, 27, 61, 0.18);
-  box-shadow: 0 12px 26px -22px rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .dlCard:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--plum-rgb), 0.18);
+    box-shadow: 0 12px 26px -22px rgba(var(--plum-rgb), 0.4);
+  }
 }
 .dlIc {
   width: 44px;
   height: 44px;
   border-radius: 11px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   display: flex;
   align-items: center;
   justify-content: center;

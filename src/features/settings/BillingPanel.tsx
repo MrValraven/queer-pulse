@@ -60,6 +60,7 @@ export function BillingPanel() {
           <div className={styles.pmExp}>{PAYMENT_METHOD.expiry}</div>
         </div>
         <button
+          type="button"
           className={styles.updBtn}
           onClick={() => setFormOpen((v) => !v)}
         >
@@ -126,6 +127,7 @@ export function BillingPanel() {
             <span className={styles.invPeriod}>{inv.period}</span>
             <span className={styles.invAmt}>{inv.amount}</span>
             <button
+              type="button"
               className={styles.invDl}
               onClick={() => setPreviewInvoice(inv)}
             >

@@ -6,7 +6,7 @@
 .panel {
   background: var(--plum);
   color: var(--cream);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 32px 36px;
   position: relative;
   overflow: hidden;
@@ -58,7 +58,7 @@
 }
 .sub {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.6;
   margin-top: 8px;
   max-width: 56ch;
@@ -78,15 +78,15 @@
   position: relative;
 }
 .line {
-  background: rgba(247, 243, 238, 0.07);
-  border: 1px solid rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.07);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: 14px;
   padding: 16px 18px;
 }
 .lineName {
   font-size: 12.5px;
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   margin-bottom: 8px;
 }
 .num {
@@ -103,12 +103,14 @@
 .num svg {
   font-size: 18px;
 }
-.num:hover {
-  color: var(--cream);
+@media (hover: hover) {
+  .num:hover {
+    color: var(--cream);
+  }
 }
 .hours {
   font-size: 12px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-top: 6px;
 }
 
@@ -123,11 +125,13 @@
 .jump {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   transition: color 0.2s var(--ease);
 }
-.jump:hover {
-  color: var(--cream);
+@media (hover: hover) {
+  .jump:hover {
+    color: var(--cream);
+  }
 }
 
 @media (max-width: 560px) {

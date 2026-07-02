@@ -4,9 +4,11 @@ import {
   emailValid,
   emptyHours,
   witLine,
+  ANCHOR,
   DAYS,
   type DayHours,
   type ListingDraft,
+  type MissingField,
   type OwnerBadge,
   type ListingPath,
   type PhotoKey,
@@ -175,38 +177,47 @@ export function useListingForm(initial?: ListingDraft) {
 
   /* ---- per-step "what's still needed" gating ---- */
   const missing = useMemo(() => {
-    const s0: string[] = [];
-    if (!draft.path) s0.push("how you know the place");
-    if (draft.path === "claim" && !draft.verify) s0.push("a way to verify");
+    /** A still-missing item + the DOM anchor its chip jumps to. */
+    const add = (list: MissingField[], label: string, anchor: string) =>
+      list.push({ label, anchor });
 
-    const s1: string[] = [];
-    if (!draft.name.trim()) s1.push("a name");
-    if (!draft.cats.length) s1.push("a category");
-    if (!draft.hood) s1.push("a neighbourhood");
-    if (!draft.badge) s1.push("who runs it");
-    if (!draft.price) s1.push("a price band");
-    if (!draft.blurb.trim()) s1.push("the one-liner");
+    const s0: MissingField[] = [];
+    if (!draft.path) add(s0, "how you know the place", ANCHOR.path);
+    if (draft.path === "claim" && !draft.verify)
+      add(s0, "a way to verify", ANCHOR.verify);
 
-    const s2: string[] = [];
-    if (!draft.tagline.trim()) s2.push("a tagline");
-    if (!draft.whatItIs.some((w) => w.text.trim())) s2.push("what it is");
+    const s1: MissingField[] = [];
+    if (!draft.name.trim()) add(s1, "a name", ANCHOR.name);
+    if (!draft.cats.length) add(s1, "a category", ANCHOR.cats);
+    if (!draft.hood) add(s1, "a neighbourhood", ANCHOR.hood);
+    if (!draft.badge) add(s1, "who runs it", ANCHOR.badge);
+    if (!draft.price) add(s1, "a price band", ANCHOR.price);
+    if (!draft.blurb.trim()) add(s1, "the one-liner", ANCHOR.blurb);
 
-    const s3: string[] = [];
-    if (!draft.address.trim()) s3.push("an address");
-    if (!DAYS.some((d) => draft.hours[d.id]?.open)) s3.push("opening hours");
-    if (!allSocialsValid(draft.social)) s3.push("valid contact links");
+    const s2: MissingField[] = [];
+    if (!draft.tagline.trim()) add(s2, "a tagline", ANCHOR.tagline);
+    if (!draft.whatItIs.some((w) => w.text.trim()))
+      add(s2, "what it is", ANCHOR.whatItIs);
 
-    const s4: string[] = [];
-    if (!draft.rel) s4.push("your connection");
-    if (!draft.ownerName.trim()) s4.push("your name");
-    if (!draft.ownerRole.trim()) s4.push("your role");
-    if (!emailValid(draft.contactEmail)) s4.push("a contact email");
+    const s3: MissingField[] = [];
+    if (!draft.address.trim()) add(s3, "an address", ANCHOR.address);
+    if (!DAYS.some((d) => draft.hours[d.id]?.open))
+      add(s3, "opening hours", ANCHOR.hours);
+    if (!allSocialsValid(draft.social))
+      add(s3, "valid contact links", ANCHOR.social);
 
-    const s5: string[] = [];
+    const s4: MissingField[] = [];
+    if (!draft.rel) add(s4, "your connection", ANCHOR.rel);
+    if (!draft.ownerName.trim()) add(s4, "your name", ANCHOR.ownerName);
+    if (!draft.ownerRole.trim()) add(s4, "your role", ANCHOR.ownerRole);
+    if (!emailValid(draft.contactEmail))
+      add(s4, "a contact email", ANCHOR.contactEmail);
+
+    const s5: MissingField[] = [];
     if (!draft.consentOuting || !draft.consentGuide)
-      s5.push("both confirmations");
+      add(s5, "both confirmations", ANCHOR.consent);
 
-    const m: Record<number, string[]> = {
+    const m: Record<number, MissingField[]> = {
       0: s0,
       1: s1,
       2: s2,

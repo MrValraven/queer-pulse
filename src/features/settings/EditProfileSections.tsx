@@ -152,6 +152,7 @@ export function PronounsSection({
         <div className={styles.pronounChips}>
           {PRONOUN_CHIPS.map((p) => (
             <button
+              type="button"
               key={p}
               className={[
                 styles.pronounChip,
@@ -339,6 +340,7 @@ export function SkillsSection({
             <span key={s} className={styles.skillTag}>
               {s}
               <button
+                type="button"
                 className={styles.skillTagRemove}
                 onClick={() => onRemove("skills", s)}
               >
@@ -372,6 +374,7 @@ export function SkillsSection({
             <span key={s} className={styles.skillTag}>
               {s}
               <button
+                type="button"
                 className={styles.skillTagRemove}
                 onClick={() => onRemove("interests", s)}
               >

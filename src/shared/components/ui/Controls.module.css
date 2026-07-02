@@ -23,16 +23,20 @@
     background 0.16s var(--ease),
     color 0.16s var(--ease);
 }
-.segBtn:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .segBtn:hover {
+    color: var(--plum);
+  }
 }
 .segOn {
   background: var(--paper);
   color: var(--plum);
   box-shadow: 0 2px 8px -3px rgba(var(--plum-rgb), 0.25);
 }
-.segOn:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .segOn:hover {
+    color: var(--plum);
+  }
 }
 /* full-width variant — segments stretch and square slightly (rounded-rect). */
 .segFull {
@@ -95,8 +99,10 @@
     border-color 0.16s var(--ease),
     background 0.16s var(--ease);
 }
-.checkLine:hover {
-  border-color: rgba(var(--plum-rgb), 0.28);
+@media (hover: hover) {
+  .checkLine:hover {
+    border-color: rgba(var(--plum-rgb), 0.28);
+  }
 }
 .checkLineOn {
   border-color: var(--jade);

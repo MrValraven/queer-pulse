@@ -14,6 +14,37 @@ export const PILL_LABELS = [
   "Review",
 ];
 
+/* ---------- Field anchors ----------
+   Stable DOM ids for each required field, so a "what's still needed" chip
+   can scroll + focus the exact field it names. Shared by the form (which
+   builds the missing list) and the steps (which render the anchors). */
+export const ANCHOR = {
+  path: "lb-path",
+  verify: "lb-verify",
+  name: "lb-name",
+  cats: "lb-cats",
+  hood: "lb-hood",
+  badge: "lb-badge",
+  price: "lb-price",
+  blurb: "lb-blurb",
+  tagline: "lb-tagline",
+  whatItIs: "lb-what-it-is",
+  address: "lb-address",
+  hours: "lb-hours",
+  social: "lb-social",
+  rel: "lb-rel",
+  ownerName: "lb-owner-name",
+  ownerRole: "lb-owner-role",
+  contactEmail: "lb-contact-email",
+  consent: "lb-consent",
+} as const;
+
+/** A still-unfilled required field: its human label + the anchor to jump to. */
+export interface MissingField {
+  label: string;
+  anchor: string;
+}
+
 /* ---------- Option data ---------- */
 
 export const CATS = [

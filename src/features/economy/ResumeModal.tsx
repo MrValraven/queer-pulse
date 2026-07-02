@@ -40,7 +40,7 @@ export function ResumeModal({
           <div className={styles.progress}>
             <div
               className={styles.progressFill}
-              style={{ width: `${d?.percent ?? 0}%` }}
+              style={{ transform: `scaleX(${(d?.percent ?? 0) / 100})` }}
             />
           </div>
           <p className={styles.progressL}>

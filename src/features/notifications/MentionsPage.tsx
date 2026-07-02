@@ -125,6 +125,7 @@ function MentionRow({
             const isGoing = a.label === "RSVP" && going;
             return (
               <button
+                type="button"
                 key={a.label}
                 className={[
                   styles.action,
@@ -219,6 +220,7 @@ export function MentionsPage() {
         <div className={styles.tabs}>
           {MENTION_TABS.map((t, i) => (
             <button
+              type="button"
               key={t.label}
               className={`${styles.tab} ${tab === i ? styles.active : ""}`}
               onClick={() => setTab(i)}
@@ -239,6 +241,7 @@ export function MentionsPage() {
             )}
           </p>
           <button
+            type="button"
             className={styles.markBtn}
             onClick={markAllRead}
             disabled={unreadCount === 0}

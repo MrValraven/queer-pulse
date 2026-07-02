@@ -56,8 +56,10 @@
   cursor: pointer;
   transition: background 0.16s var(--ease);
 }
-.clear:hover {
-  background: rgba(var(--plum-rgb), 0.16);
+@media (hover: hover) {
+  .clear:hover {
+    background: rgba(var(--plum-rgb), 0.16);
+  }
 }
 .clear svg {
   width: 13px;

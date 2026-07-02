@@ -20,9 +20,13 @@
   line-height: 1;
   transition: color var(--dur-base) var(--ease);
 }
-.button:hover,
 .buttonOpen {
   color: var(--ink);
+}
+@media (hover: hover) {
+  .button:hover {
+    color: var(--ink);
+  }
 }
 
 .chevron {
@@ -51,10 +55,10 @@
   width: calc(100% - 40px);
   max-width: 1180px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 20px;
   box-shadow:
-    0 24px 60px -20px rgba(45, 27, 61, 0.38),
+    0 24px 60px -20px rgba(var(--plum-rgb), 0.38),
     0 0 0 1px rgba(255, 255, 255, 0.6) inset;
   z-index: 98;
   overflow: visible;
@@ -102,8 +106,10 @@
   border-radius: 14px;
   transition: transform 0.18s var(--ease);
 }
-.feature:hover {
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .feature:hover {
+    transform: translateY(-2px);
+  }
 }
 .featureEyebrow {
   font-size: 10.5px;
@@ -123,7 +129,7 @@
 .featureBody {
   font-size: 13.5px;
   line-height: 1.55;
-  color: rgba(247, 243, 238, 0.72);
+  color: rgba(var(--cream-rgb), 0.72);
 }
 .featureCta {
   margin-top: auto;
@@ -138,14 +144,16 @@
   color: var(--accent);
   transition: transform 0.18s var(--ease);
 }
-.feature:hover .featureCta span {
-  transform: translateX(3px);
+@media (hover: hover) {
+  .feature:hover .featureCta span {
+    transform: translateX(3px);
+  }
 }
 
 .col {
   flex: 1;
   padding: 0 26px;
-  border-right: 1px solid rgba(45, 27, 61, 0.07);
+  border-right: 1px solid rgba(var(--plum-rgb), 0.07);
   min-width: 140px;
 }
 .col:first-child {
@@ -167,7 +175,7 @@
   color: var(--ink-40);
   margin-bottom: 14px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 
 .link {
@@ -180,9 +188,11 @@
     color 0.15s var(--ease),
     padding-left 0.15s var(--ease);
 }
-.link:hover {
-  color: var(--plum);
-  padding-left: 4px;
+@media (hover: hover) {
+  .link:hover {
+    color: var(--plum);
+    padding-left: 4px;
+  }
 }
 .linkFeatured {
   color: var(--plum);
@@ -191,7 +201,7 @@
 
 :global([data-theme="dark"]) .panel {
   background: var(--paper);
-  border-color: rgba(247, 243, 238, 0.12);
+  border-color: rgba(var(--cream-rgb), 0.12);
 }
 
 @media (max-width: 860px) {

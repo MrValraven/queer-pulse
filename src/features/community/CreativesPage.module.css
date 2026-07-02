@@ -12,7 +12,7 @@
   background: linear-gradient(
     135deg,
     rgba(var(--accent-rgb), 0.35),
-    rgba(45, 27, 61, 0.3)
+    rgba(var(--plum-rgb), 0.3)
   );
 }
 .heroOverlay {
@@ -20,9 +20,9 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(45, 27, 61, 0.96) 0%,
-    rgba(45, 27, 61, 0.55) 50%,
-    rgba(45, 27, 61, 0.18) 100%
+    rgba(var(--plum-rgb), 0.96) 0%,
+    rgba(var(--plum-rgb), 0.55) 50%,
+    rgba(var(--plum-rgb), 0.18) 100%
   );
 }
 .heroContent {
@@ -64,13 +64,13 @@
 }
 .heroDiscipline {
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   margin-top: 14px;
   font-weight: 400;
 }
 .heroQuote {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   max-width: 52ch;
   line-height: 1.65;
   margin-top: 18px;
@@ -98,8 +98,8 @@
   color: var(--jade);
 }
 .cbCollab {
-  background: rgba(247, 243, 238, 0.1);
-  color: rgba(247, 243, 238, 0.75);
+  background: rgba(var(--cream-rgb), 0.1);
+  color: rgba(var(--cream-rgb), 0.75);
 }
 .heroNav {
   display: flex;
@@ -110,7 +110,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.3);
+  background: rgba(var(--cream-rgb), 0.3);
   cursor: pointer;
   transition:
     background 0.25s var(--ease),
@@ -125,7 +125,7 @@
 
 .topbar {
   background: var(--cream);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
   position: sticky;
   top: 64px;
   z-index: 50;
@@ -142,7 +142,7 @@
 }
 .modeToggle {
   display: flex;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 12px;
   padding: 4px;
   gap: 2px;
@@ -174,7 +174,7 @@
   font-size: 13px;
   font-weight: 500;
   color: var(--ink-60);
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   background: transparent;
   border-radius: 999px;
   padding: 7px 15px;
@@ -182,9 +182,11 @@
   transition: all 0.2s var(--ease);
   white-space: nowrap;
 }
-.chip:hover {
-  color: var(--ink);
-  border-color: rgba(45, 27, 61, 0.32);
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--ink);
+    border-color: rgba(var(--plum-rgb), 0.32);
+  }
 }
 .chipActive {
   background: var(--plum);
@@ -221,7 +223,7 @@
 .artCard {
   break-inside: avoid;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.08);
+  border: 1px solid rgba(var(--plum-rgb), 0.08);
   border-radius: 20px;
   margin-bottom: 20px;
   overflow: hidden;
@@ -230,10 +232,12 @@
     box-shadow 0.4s var(--ease),
     border-color 0.35s var(--ease);
 }
-.artCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 24px 50px -28px rgba(45, 27, 61, 0.4);
-  border-color: rgba(45, 27, 61, 0.15);
+@media (hover: hover) {
+  .artCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 50px -28px rgba(var(--plum-rgb), 0.4);
+    border-color: rgba(var(--plum-rgb), 0.15);
+  }
 }
 .artImg {
   display: flex;
@@ -286,7 +290,7 @@
   align-items: center;
   gap: 10px;
   padding-top: 13px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .artAv {
   width: 30px;
@@ -321,11 +325,11 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .musicCard {
   background: var(--paper);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
   padding: 28px 0;
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -333,8 +337,10 @@
   align-items: start;
   transition: background 0.25s var(--ease);
 }
-.musicCard:hover {
-  background: rgba(45, 27, 61, 0.015);
+@media (hover: hover) {
+  .musicCard:hover {
+    background: rgba(var(--plum-rgb), 0.015);
+  }
 }
 @media (max-width: 760px) {
   .musicCard {
@@ -404,8 +410,8 @@
 }
 
 .player {
-  background: rgba(45, 27, 61, 0.04);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
 }
@@ -443,9 +449,11 @@
     background 0.2s var(--ease),
     transform 0.2s var(--ease);
 }
-.playBtn:hover {
-  background: var(--accent);
-  transform: scale(1.06);
+@media (hover: hover) {
+  .playBtn:hover {
+    background: var(--accent);
+    transform: scale(1.06);
+  }
 }
 .playBtn svg {
   width: 14px;
@@ -463,11 +471,11 @@
 .wfBar {
   flex: 1;
   border-radius: 2px;
-  background: rgba(45, 27, 61, 0.16);
+  background: rgba(var(--plum-rgb), 0.16);
   transition: background 0.1s var(--ease);
 }
 .wfBarPlayed {
-  background: rgba(232, 119, 90, 0.9);
+  background: rgba(var(--accent-rgb), 0.9);
 }
 .playerTime {
   font-size: 11px;
@@ -495,8 +503,10 @@
   text-align: left;
   font-family: inherit;
 }
-.trackItem:hover {
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .trackItem:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 .trackItemActive {
   background: rgba(var(--accent-rgb), 0.08);

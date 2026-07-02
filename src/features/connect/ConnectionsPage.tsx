@@ -1,30 +1,23 @@
 import { useMemo, useState } from "react";
-import { FiInfo, FiSearch, FiUserPlus } from "react-icons/fi";
+import { FiInfo, FiUserPlus } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
-import {
-  Button,
-  EmptyState,
-  FadeIn,
-  SearchInput,
-} from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { useConnections } from "../../app/providers/ConnectionsProvider";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { useVouch } from "../../app/providers/VouchProvider";
-import { ConnectionsGridSkeleton } from "./ConnectionsSkeleton";
 import {
   CONNECTION_META,
-  MORE_POOL,
-  MORE_PER_PAGE,
   connectionViews,
   vouchNote,
   type ConnectionView,
   type TabId,
 } from "./connections.data";
-import { AllConnectionCard } from "./ConnectionCards";
+import { ConnectionsAllTab } from "./ConnectionsAllTab";
+import { ConnectionsTabs, type ConnectionsTab } from "./ConnectionsTabs";
 import {
   BlockedPanel,
   IncomingPanel,
@@ -32,16 +25,6 @@ import {
   VouchedPanel,
 } from "./ConnectionsPanels";
 import styles from "./ConnectionsPage.module.css";
-
-const SORTS = ["Recently connected", "A to Z", "Closest mutuals"] as const;
-type Sort = (typeof SORTS)[number];
-
-function matchesView(v: ConnectionView, q: string): boolean {
-  return [v.name, v.pron ?? "", v.role, ...v.tags]
-    .join(" ")
-    .toLowerCase()
-    .includes(q);
-}
 
 export function ConnectionsPage() {
   const loading = useSimulatedLoad();
@@ -53,12 +36,6 @@ export function ConnectionsPage() {
   const { vouched, hasVouched } = useVouch();
 
   const [tab, setTab] = useState<TabId>("all");
-  const [query, setQuery] = useState("");
-  const [sort, setSort] = useState<Sort>("Recently connected");
-  const [morePages, setMorePages] = useState(0);
-
-  const revealed = MORE_POOL.slice(0, morePages * MORE_PER_PAGE);
-  const hasMore = revealed.length < MORE_POOL.length;
 
   const blockedViews = useMemo(() => connectionViews(blocked), [blocked]);
 
@@ -70,37 +47,18 @@ export function ConnectionsPage() {
     return [...set];
   }, [vouched]);
 
-  const visibleAll = useMemo(() => {
-    const seen = new Set<string>();
-    const slugs = [...connected, ...revealed].filter(
-      (s) => !seen.has(s) && seen.add(s),
-    );
-    const q = query.trim().toLowerCase();
-    let views = connectionViews(slugs);
-    if (q) views = views.filter((v) => matchesView(v, q));
-    if (sort === "A to Z") {
-      views = [...views].sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sort === "Closest mutuals") {
-      views = [...views].sort(
-        (a, b) => (b.meta.mutuals ?? 0) - (a.meta.mutuals ?? 0),
-      );
-    }
-    return views;
-  }, [connected, revealed, query, sort]);
-
-  const tabs: { id: TabId; label: string; count: number; accent?: boolean }[] =
-    [
-      { id: "all", label: "All connections", count: connected.length },
-      {
-        id: "incoming",
-        label: "Incoming requests",
-        count: incoming.length,
-        accent: incoming.length > 0,
-      },
-      { id: "sent", label: "Sent", count: sent.length },
-      { id: "blocked", label: "Blocked", count: blockedViews.length },
-      { id: "vouched", label: "Vouched-for", count: vouchedSlugs.length },
-    ];
+  const tabs: ConnectionsTab[] = [
+    { id: "all", label: "All connections", count: connected.length },
+    {
+      id: "incoming",
+      label: "Incoming requests",
+      count: incoming.length,
+      accent: incoming.length > 0,
+    },
+    { id: "sent", label: "Sent", count: sent.length },
+    { id: "blocked", label: "Blocked", count: blockedViews.length },
+    { id: "vouched", label: "Vouched-for", count: vouchedSlugs.length },
+  ];
 
   function acceptRequest(v: ConnectionView) {
     accept(v.slug);
@@ -154,94 +112,17 @@ export function ConnectionsPage() {
           </span>
         </div>
 
-        <div className={styles.tabs}>
-          {tabs.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              className={[styles.tab, tab === t.id && styles.tabActive]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setTab(t.id)}
-            >
-              {t.label}
-              <span
-                className={[styles.badge, t.accent && styles.badgeAccent]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {t.count}
-              </span>
-            </button>
-          ))}
-        </div>
+        <ConnectionsTabs tabs={tabs} active={tab} onSelect={setTab} />
 
         {tab === "all" && (
-          <div className={styles.filters}>
-            <SearchInput
-              className={styles.searchInput}
-              value={query}
-              onChange={setQuery}
-              placeholder="Search by name, role, or community"
-              ariaLabel="Search connections"
-            />
-            <select
-              className={styles.sortSel}
-              value={sort}
-              onChange={(e) => setSort(e.target.value as Sort)}
-            >
-              {SORTS.map((s) => (
-                <option key={s}>{s}</option>
-              ))}
-            </select>
-          </div>
+          <ConnectionsAllTab
+            loading={loading}
+            connected={connected}
+            isBlocked={isBlocked}
+            onUnblock={unblock}
+            onMessage={openConnect}
+          />
         )}
-
-        {tab === "all" &&
-          (loading ? (
-            <ConnectionsGridSkeleton count={6} />
-          ) : (
-            <>
-              <div className={styles.grid}>
-                {visibleAll.map((v, i) => (
-                  <FadeIn key={v.slug} delay={Math.min(i, 8) * 60}>
-                    <AllConnectionCard
-                      view={v}
-                      blocked={isBlocked(v.slug)}
-                      onUnblock={() => unblock(v)}
-                      onMessage={() => openConnect(v.slug)}
-                    />
-                  </FadeIn>
-                ))}
-              </div>
-              {visibleAll.length === 0 && (
-                <EmptyState
-                  compact
-                  icon={<FiSearch />}
-                  title="Nothing matches your filters"
-                  description="No one in your network fits that search just yet. Clear it to see everyone again."
-                  action={{
-                    label: "Clear filters",
-                    onClick: () => {
-                      setQuery("");
-                      setSort("Recently connected");
-                    },
-                  }}
-                />
-              )}
-              {hasMore && query.trim() === "" && (
-                <div className={styles.loadMore}>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => setMorePages((p) => p + 1)}
-                  >
-                    Load more connections
-                  </Button>
-                </div>
-              )}
-            </>
-          ))}
 
         {tab === "incoming" && (
           <IncomingPanel

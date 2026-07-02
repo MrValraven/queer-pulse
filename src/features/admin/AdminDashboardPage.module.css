@@ -95,9 +95,11 @@
     transform 0.18s var(--ease),
     box-shadow 0.18s var(--ease);
 }
-.statCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.08);
+@media (hover: hover) {
+  .statCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.08);
+  }
 }
 .statLabel {
   display: inline-flex;
@@ -192,8 +194,10 @@
   color: var(--ink-60);
   cursor: pointer;
 }
-.secLink:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .secLink:hover {
+    color: var(--plum);
+  }
 }
 .queue {
   display: flex;
@@ -209,8 +213,10 @@
   color: var(--ink);
   transition: background 0.16s var(--ease);
 }
-.qRow:hover {
-  background: rgba(var(--plum-rgb), 0.045);
+@media (hover: hover) {
+  .qRow:hover {
+    background: rgba(var(--plum-rgb), 0.045);
+  }
 }
 .qIco {
   width: 38px;
@@ -275,9 +281,11 @@
   flex: none;
   transition: transform 0.16s var(--ease);
 }
-.qRow:hover .qArrow {
-  transform: translateX(3px);
-  color: var(--plum);
+@media (hover: hover) {
+  .qRow:hover .qArrow {
+    transform: translateX(3px);
+    color: var(--plum);
+  }
 }
 
 /* ── Charts ──────────────────────────────────────────────────────────────── */
@@ -445,8 +453,10 @@
   color: var(--ink);
   transition: background 0.16s var(--ease);
 }
-.fItem:hover {
-  background: rgba(var(--plum-rgb), 0.045);
+@media (hover: hover) {
+  .fItem:hover {
+    background: rgba(var(--plum-rgb), 0.045);
+  }
 }
 .fIco {
   width: 30px;
@@ -522,8 +532,10 @@
   font-weight: 600;
   text-decoration: none;
 }
-.transpLink:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .transpLink:hover {
+    text-decoration: underline;
+  }
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
@@ -562,8 +574,10 @@
   .statCard {
     transition: none;
   }
-  .statCard:hover {
-    transform: none;
+  @media (hover: hover) {
+    .statCard:hover {
+      transform: none;
+    }
   }
   .eyebrowDot,
   .liveDot {
@@ -573,9 +587,14 @@
   .lineDraw {
     animation: none;
   }
-  .qArrow,
-  .qRow:hover .qArrow {
+  .qArrow {
     transition: none;
     transform: none;
+  }
+  @media (hover: hover) {
+    .qRow:hover .qArrow {
+      transition: none;
+      transform: none;
+    }
   }
 }

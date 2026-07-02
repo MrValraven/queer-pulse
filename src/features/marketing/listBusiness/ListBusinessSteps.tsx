@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { FormField } from "../../../shared/components/ui";
 import {
+  ANCHOR,
   CATS,
   findDuplicates,
   GOODFOR,
@@ -51,6 +52,7 @@ export function StepPath({
         sub="Both paths are welcome, and both go through the same community review. It just changes a couple of questions later."
       />
       <div
+        id={ANCHOR.path}
         className={styles.pathGrid}
         role="radiogroup"
         aria-label="Your relationship to the place"
@@ -100,7 +102,7 @@ export function StepPath({
       </div>
 
       {draft.path === "claim" && (
-        <div className={styles.revealBlock}>
+        <div id={ANCHOR.verify} className={styles.revealBlock}>
           <label>How should we verify you run this place?</label>
           <p>
             It's what keeps the directory trustworthy. Pick whatever's easiest
@@ -161,6 +163,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
       />
 
       <FormField
+        id={ANCHOR.name}
         label="What's it called?"
         required
         helper="The name as people would search for it."
@@ -192,7 +195,11 @@ export function StepBasics({ form }: { form: ListingForm }) {
         </div>
       )}
 
-      <FormField label="What kind of place is it? — pick up to 2" required>
+      <FormField
+        id={ANCHOR.cats}
+        label="What kind of place is it? — pick up to 2"
+        required
+      >
         <div className={styles.chipRow} role="group" aria-label="Category">
           {CATS.map((c) => {
             const on = draft.cats.includes(c);
@@ -215,7 +222,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
         </div>
       </FormField>
 
-      <FormField label="Which neighbourhood?" required>
+      <FormField id={ANCHOR.hood} label="Which neighbourhood?" required>
         <select
           value={draft.hood}
           onChange={(e) => set({ hood: e.target.value })}
@@ -230,6 +237,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
       </FormField>
 
       <FormField
+        id={ANCHOR.badge}
         label="Who runs it?"
         required
         helper="Queer-owned, or a place that genuinely welcomes us? Both belong here — this is a welcome, not a gate."
@@ -293,7 +301,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
         </div>
       )}
 
-      <FormField label="Roughly the price?" required>
+      <FormField id={ANCHOR.price} label="Roughly the price?" required>
         <div
           className={styles.priceRow}
           role="radiogroup"
@@ -321,6 +329,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
       </FormField>
 
       <FormField
+        id={ANCHOR.blurb}
         label="The one-liner"
         required
         helper="This is the blurb on your directory card. One sentence, plain and warm."
@@ -355,6 +364,7 @@ export function StepStory({ form }: { form: ListingForm }) {
       />
 
       <FormField
+        id={ANCHOR.tagline}
         label="Tagline"
         required
         helper={
@@ -374,6 +384,7 @@ export function StepStory({ form }: { form: ListingForm }) {
       </FormField>
 
       <FormField
+        id={ANCHOR.whatItIs}
         label="What it actually is"
         required
         helper="Two to four short lines. The things you'd want a stranger to know walking in."

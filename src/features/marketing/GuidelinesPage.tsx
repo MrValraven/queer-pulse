@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import s from "./GuidelinesPage.module.css";
 
 interface Clause {
@@ -233,7 +234,7 @@ export function GuidelinesPage() {
         }
         sub="The code of care only works if everyone holds it. We're grateful you're here."
       >
-        <Button size="lg" to="/">
+        <Button size="lg" to={routes.homepage}>
           Back to QueerPulse
         </Button>
       </Outro>

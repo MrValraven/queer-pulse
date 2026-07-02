@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -13,11 +13,18 @@ const Check = () => (
 function Shell({
   children,
   onClose,
+  ariaLabel,
 }: {
   children: ReactNode;
   onClose: () => void;
+  ariaLabel?: string;
 }) {
   useScrollLock();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
     <div
       className={styles.overlay}
@@ -25,7 +32,12 @@ function Shell({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.modal}>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-label={ariaLabel}
+      >
         <button
           type="button"
           className={styles.close}
@@ -59,7 +71,7 @@ export function MessageModal({
   const canSend = text.trim().length >= 20;
 
   return (
-    <Shell onClose={onClose}>
+    <Shell onClose={onClose} ariaLabel="Message the lister">
       {done ? (
         <div className={styles.success}>
           <div className={styles.successIcon}>
@@ -146,7 +158,7 @@ export function RecommendModal({
   };
 
   return (
-    <Shell onClose={onClose}>
+    <Shell onClose={onClose} ariaLabel="Recommend a landlord">
       {done ? (
         <div className={styles.success}>
           <div className={styles.successIcon}>

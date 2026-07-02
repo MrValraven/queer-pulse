@@ -96,7 +96,7 @@ export function CrisisChatPage() {
               <div className={styles.chatBody}>
                 {messages.map((message, index) => (
                   <div
-                    key={index}
+                    key={`${index}-${message.from}-${message.text.slice(0, 24)}`}
                     className={`${styles.bubble} ${message.from === "me" ? styles.me : styles.them}`}
                   >
                     {message.name && (

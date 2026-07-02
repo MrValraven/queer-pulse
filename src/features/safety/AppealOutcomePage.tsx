@@ -53,6 +53,7 @@ export function AppealOutcomePage() {
         <div className={s.stateBar}>
           {STATES.map((st) => (
             <button
+              type="button"
               key={st.id}
               className={[s.stateBtn, state === st.id && s.stateBtnActive]
                 .filter(Boolean)

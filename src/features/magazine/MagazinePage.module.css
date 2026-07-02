@@ -3,7 +3,7 @@
   align-items: baseline;
   gap: 8px 18px;
   padding: 14px 0 16px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
   flex-wrap: wrap;
 }
 .inIssueLabel {
@@ -26,8 +26,10 @@
   white-space: nowrap;
   transition: color 0.2s;
 }
-.inIssueLink:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .inIssueLink:hover {
+    color: var(--plum);
+  }
 }
 
 .csImage {
@@ -45,7 +47,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 .csText {
   padding: 44px 48px;
@@ -98,9 +100,11 @@
     gap 0.2s,
     color 0.2s;
 }
-.csRead:hover {
-  color: var(--accent-ink);
-  gap: 10px;
+@media (hover: hover) {
+  .csRead:hover {
+    color: var(--accent-ink);
+    gap: 10px;
+  }
 }
 .csTextInner {
   max-width: 42ch;
@@ -144,8 +148,10 @@
   font-weight: 600;
   color: var(--ink-40);
 }
-.asSeeAll:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .asSeeAll:hover {
+    color: var(--plum);
+  }
 }
 
 .grid {
@@ -159,9 +165,11 @@
   gap: 12px;
   color: inherit;
 }
-.ac:hover .acTitle {
-  text-decoration: underline;
-  text-decoration-color: rgba(45, 27, 61, 0.25);
+@media (hover: hover) {
+  .ac:hover .acTitle {
+    text-decoration: underline;
+    text-decoration-color: rgba(var(--plum-rgb), 0.25);
+  }
 }
 .acImg {
   border-radius: 14px;
@@ -208,11 +216,11 @@
   border-radius: 6px;
 }
 .essential {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
 .recommended {
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
 }
 
@@ -226,7 +234,7 @@
   flex-direction: column;
   gap: 10px;
   color: inherit;
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 18px;
   padding: 24px 26px;
   background: var(--paper);
@@ -235,10 +243,12 @@
     box-shadow 0.3s,
     transform 0.3s var(--ease);
 }
-.ec:hover {
-  border-color: rgba(45, 27, 61, 0.22);
-  box-shadow: 0 10px 30px -18px rgba(45, 27, 61, 0.28);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .ec:hover {
+    border-color: rgba(var(--plum-rgb), 0.22);
+    box-shadow: 0 10px 30px -18px rgba(var(--plum-rgb), 0.28);
+    transform: translateY(-2px);
+  }
 }
 .ecKicker {
   font-size: 10.5px;
@@ -261,7 +271,7 @@
 
 .featured {
   background: var(--plum);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 52px 56px;
   margin: 0 0 64px;
   display: grid;
@@ -292,12 +302,12 @@
 }
 .feByline {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.45);
+  color: rgba(var(--cream-rgb), 0.45);
   margin-bottom: 20px;
 }
 .feExcerpt {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.72;
 }
 .feRead {
@@ -323,7 +333,7 @@
 
 .letters {
   border: 2px solid var(--plum);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 36px 40px;
   margin-bottom: 64px;
 }
@@ -334,7 +344,7 @@
   color: var(--plum);
   margin-bottom: 24px;
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .lsHead em {
   font-style: italic;
@@ -342,7 +352,7 @@
 }
 .letter {
   padding: 16px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .letter:last-child {
   border-bottom: none;
@@ -383,7 +393,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.3;
 }
 .aiMonth {
@@ -391,8 +401,10 @@
   font-weight: 600;
   color: var(--plum);
 }
-.archiveIssue:hover .aiMonth {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .archiveIssue:hover .aiMonth {
+    color: var(--accent-ink);
+  }
 }
 .aiCount {
   font-size: 11.5px;
@@ -400,7 +412,7 @@
 }
 
 .submit {
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   border: 2px solid var(--plum);
   border-radius: 20px;
   padding: 36px 40px;
@@ -462,5 +474,5 @@
 }
 
 :global([data-theme="dark"]) .ec {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }

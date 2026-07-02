@@ -42,20 +42,24 @@
   padding: 9px 13px;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.18s;
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease);
   border: none;
   background: transparent;
   text-align: left;
   font-family: var(--sans);
 }
 
-.sbLink:hover {
-  background: rgba(45, 27, 61, 0.05);
-  color: var(--ink);
+@media (hover: hover) {
+  .sbLink:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    color: var(--ink);
+  }
 }
 
 .sbLinkActive {
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   color: var(--plum);
 }
 
@@ -88,7 +92,7 @@
 
 /* Toggle list */
 .toggleList {
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   overflow: hidden;
   background: var(--paper);
@@ -101,7 +105,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 
 .tglRow:last-child {
@@ -140,7 +144,7 @@
   position: absolute;
   inset: 0;
   border-radius: 999px;
-  background: rgba(45, 27, 61, 0.15);
+  background: rgba(var(--plum-rgb), 0.15);
   cursor: pointer;
   transition: background 0.25s;
 }
@@ -169,7 +173,7 @@
 /* Slider card */
 .sliderCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 22px;
   margin-bottom: 16px;
@@ -206,17 +210,17 @@
   font-size: 16px;
   color: var(--ink-60);
   line-height: 1.7;
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
   border-radius: 10px;
   padding: 12px 14px;
-  border: 1px solid rgba(45, 27, 61, 0.07);
+  border: 1px solid rgba(var(--plum-rgb), 0.07);
   transition: font-size 0.2s;
 }
 
 /* Motion preview */
 .motionPreview {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   margin-top: 12px;
@@ -271,7 +275,9 @@
   border-radius: 50%;
   cursor: pointer;
   border: 3px solid transparent;
-  transition: all 0.18s;
+  transition:
+    border-color 0.18s var(--ease),
+    box-shadow 0.18s var(--ease);
 }
 
 .colorSwatchSelected {
@@ -288,7 +294,7 @@
 }
 
 .swatchBlack {
-  background: #000;
+  background: var(--ink);
 }
 
 .colorThemeLabel {
@@ -300,7 +306,7 @@
 /* Reset card */
 .resetCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 22px 24px;
   text-align: center;
@@ -327,5 +333,11 @@
   50% {
     opacity: 1;
     transform: scale(1.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mpPulse {
+    animation: none;
   }
 }

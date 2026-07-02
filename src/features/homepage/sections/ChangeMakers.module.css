@@ -57,7 +57,7 @@
 }
 .sub {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.65;
   max-width: 36ch;
 }
@@ -68,8 +68,8 @@
   position: relative;
 }
 .card {
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: var(--radius-card);
   overflow: hidden;
   display: flex;
@@ -79,9 +79,11 @@
     transform var(--dur-slow) var(--ease),
     background 0.35s var(--ease);
 }
-.card:hover {
-  transform: translateY(-4px);
-  background: rgba(247, 243, 238, 0.09);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    background: rgba(var(--cream-rgb), 0.09);
+  }
 }
 .body {
   padding: 22px 24px;
@@ -107,7 +109,7 @@
 }
 .blurb {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.62;
   flex: 1;
 }
@@ -119,8 +121,8 @@
 }
 .tag {
   font-size: 11.5px;
-  color: rgba(247, 243, 238, 0.5);
-  background: rgba(247, 243, 238, 0.08);
+  color: rgba(var(--cream-rgb), 0.5);
+  background: rgba(var(--cream-rgb), 0.08);
   border-radius: 6px;
   padding: 4px 9px;
   font-weight: 500;

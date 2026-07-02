@@ -3,6 +3,24 @@ export interface RecapDayPhoto {
   image?: string;
 }
 
+export interface RecapAttendee {
+  initials: string;
+  tint: "coral" | "jade" | "plum";
+  name: string;
+  pronouns: string;
+}
+
+export const RECAP_ATTENDEES: RecapAttendee[] = [
+  { initials: "SR", tint: "jade", name: "Sofia R.", pronouns: "she/her" },
+  { initials: "AK", tint: "coral", name: "Anika K.", pronouns: "she/they" },
+  { initials: "JP", tint: "plum", name: "Jordan P.", pronouns: "they/them" },
+  { initials: "TM", tint: "jade", name: "Tomás M.", pronouns: "he/him" },
+  { initials: "MF", tint: "coral", name: "Maria F.", pronouns: "she/her" },
+  { initials: "KL", tint: "plum", name: "Kai L.", pronouns: "they/them" },
+  { initials: "BK", tint: "jade", name: "Bilal K.", pronouns: "he/him" },
+  { initials: "NC", tint: "coral", name: "Nadia C.", pronouns: "she/her" },
+];
+
 export const RECAP_PHOTOS: RecapDayPhoto[] = [
   {
     tint: "coral",

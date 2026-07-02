@@ -6,6 +6,7 @@ import {
   Toggle,
 } from "../../../shared/components/ui";
 import {
+  ANCHOR,
   NOTIFY,
   REL,
   VIS,
@@ -120,7 +121,7 @@ export function StepPhotosYou({
 
       <h3 className={styles.groupH}>A little about you</h3>
 
-      <FormField label="Your connection to the place" required>
+      <FormField id={ANCHOR.rel} label="Your connection to the place" required>
         <RadioStack
           options={REL}
           value={draft.rel}
@@ -130,7 +131,7 @@ export function StepPhotosYou({
       </FormField>
 
       <div className={styles.twoCol}>
-        <FormField label="Your name" required>
+        <FormField id={ANCHOR.ownerName} label="Your name" required>
           <input
             type="text"
             maxLength={50}
@@ -139,7 +140,7 @@ export function StepPhotosYou({
             onChange={(e) => set({ ownerName: e.target.value })}
           />
         </FormField>
-        <FormField label="Your role" required>
+        <FormField id={ANCHOR.ownerRole} label="Your role" required>
           <input
             type="text"
             maxLength={40}
@@ -190,6 +191,7 @@ export function StepPhotosYou({
 
       <h3 className={styles.groupH}>Staying in the loop</h3>
       <FormField
+        id={ANCHOR.contactEmail}
         label="Your contact email"
         required
         helper="For you, the submitter — kept private, never shown on the listing."

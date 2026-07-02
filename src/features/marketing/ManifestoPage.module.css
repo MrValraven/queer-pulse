@@ -70,9 +70,9 @@
 .attrib {
   margin-top: 42px;
   padding-top: 30px;
-  border-top: 1px solid rgba(247, 243, 238, 0.18);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.18);
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.7;
   max-width: 50ch;
 }
@@ -172,7 +172,7 @@
   content: "";
   flex: 1;
   height: 1px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
 }
 .sepDot {
   width: 7px;
@@ -222,7 +222,7 @@
   gap: 9px;
   padding: 10px 16px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 999px;
 }
 .sigAv {
@@ -258,7 +258,7 @@
   color: var(--ink-40);
   margin-top: 18px;
   padding-top: 18px;
-  border-top: 1px solid rgba(45, 27, 61, 0.06);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .sigCount b {
   color: var(--plum);
@@ -274,4 +274,33 @@
   gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+/* Tighten the generous fixed vertical rhythm once the viewport
+   can no longer carry it comfortably. */
+@media (max-width: 720px) {
+  .open {
+    padding: 116px 0 96px;
+  }
+  .body {
+    padding: 64px 22px 0;
+  }
+  .stanzaNum {
+    font-size: 60px;
+  }
+  .pull {
+    padding-left: 20px;
+    margin: 36px 0 42px;
+  }
+  .sigs {
+    padding: 60px 0 52px;
+  }
+}
+@media (max-width: 480px) {
+  .open {
+    padding: 96px 0 72px;
+  }
+  .stanza .p:first-of-type::first-letter {
+    font-size: 3.6em;
+  }
 }

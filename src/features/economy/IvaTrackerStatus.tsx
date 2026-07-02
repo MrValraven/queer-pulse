@@ -60,7 +60,10 @@ export function IvaTrackerStatus({ entries }: IvaTrackerStatusProps) {
         aria-valuenow={Math.round(total)}
         aria-label="Invoiced income toward the IVA exemption threshold"
       >
-        <div className={styles.barFill} style={{ width: `${barPct}%` }} />
+        <div
+          className={styles.barFill}
+          style={{ transform: `scaleX(${barPct / 100})` }}
+        />
         <span className={styles.barCap}>{euro(IVA_EXEMPTION_THRESHOLD)}</span>
       </div>
 

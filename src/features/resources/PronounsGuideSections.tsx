@@ -89,6 +89,7 @@ export function FaqList() {
           className={`${styles.faqItem} ${open === i ? styles.open : ""}`}
         >
           <button
+            type="button"
             className={styles.faqQ}
             onClick={() => setOpen(open === i ? null : i)}
           >

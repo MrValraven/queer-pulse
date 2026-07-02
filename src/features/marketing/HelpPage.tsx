@@ -276,6 +276,7 @@ export function HelpPage() {
         <div className={s.tabs}>
           {CATEGORIES.map((c) => (
             <button
+              type="button"
               key={c.id}
               className={[s.tab, tab === c.id && s.tabOn]
                 .filter(Boolean)
@@ -304,6 +305,7 @@ export function HelpPage() {
               return (
                 <div key={key} className={s.accItem}>
                   <button
+                    type="button"
                     className={s.accQ}
                     onClick={() => setOpen(isOpen ? null : key)}
                   >

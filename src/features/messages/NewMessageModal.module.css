@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(45, 27, 61, 0.42);
+  background: rgba(var(--plum-rgb), 0.42);
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
@@ -15,12 +15,12 @@
   max-width: 440px;
   max-height: 80vh;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 22px 16px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 30px 60px -30px rgba(45, 27, 61, 0.6);
+  box-shadow: 0 30px 60px -30px rgba(var(--plum-rgb), 0.6);
 }
 
 .head {
@@ -47,9 +47,11 @@
     color 0.2s var(--ease),
     background 0.2s var(--ease);
 }
-.close:hover {
-  color: var(--plum);
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .close:hover {
+    color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 .sub {
   font-size: 13.5px;
@@ -81,8 +83,10 @@
   cursor: pointer;
   transition: background 0.15s var(--ease);
 }
-.row:hover {
-  background: rgba(45, 27, 61, 0.04);
+@media (hover: hover) {
+  .row:hover {
+    background: rgba(var(--plum-rgb), 0.04);
+  }
 }
 .rowBody {
   display: flex;
@@ -107,5 +111,5 @@
 }
 
 :global([data-theme="dark"]) .dialog {
-  border-color: rgba(247, 243, 238, 0.12);
+  border-color: rgba(var(--cream-rgb), 0.12);
 }

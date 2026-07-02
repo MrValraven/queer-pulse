@@ -1,5 +1,5 @@
 .page {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 40px 28px 80px;
 }
@@ -14,8 +14,10 @@
   margin-bottom: 20px;
   transition: color 0.2s var(--ease);
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 
 .gallery {
@@ -24,7 +26,7 @@
   grid-template-rows: 1fr 1fr;
   gap: 8px;
   height: 380px;
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   overflow: hidden;
   margin-bottom: 28px;
 }
@@ -60,7 +62,7 @@
 
 .head {
   padding-bottom: 26px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   margin-bottom: 32px;
 }
 .type {
@@ -92,7 +94,7 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 8px;
   padding: 6px 12px;
 }
@@ -139,7 +141,7 @@
   font-weight: 500;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 999px;
   padding: 8px 14px;
   display: inline-flex;
@@ -156,7 +158,7 @@
 
 .facts {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   overflow: hidden;
   max-width: 460px;
@@ -166,7 +168,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 18px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
   font-size: 14px;
   color: var(--ink-60);
 }
@@ -222,13 +224,13 @@
 }
 .priceBig span {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   font-family: var(--sans);
   font-weight: 500;
 }
 .priceMeta {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   margin-top: 8px;
 }
 .priceBtn {
@@ -239,7 +241,7 @@
 
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -279,7 +281,7 @@
   font-size: 12px;
   font-weight: 700;
   color: var(--jade);
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
   border-radius: 6px;
   padding: 5px 10px;
   margin-bottom: 14px;
@@ -306,7 +308,7 @@
 }
 
 .safety {
-  background: rgba(74, 140, 111, 0.08);
+  background: rgba(var(--jade-rgb), 0.08);
   border-left: 3px solid var(--jade);
   border-radius: 10px;
   padding: 16px 18px;
@@ -328,7 +330,7 @@
   align-items: center;
   gap: 12px;
   padding: 11px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
   text-decoration: none;
   color: inherit;
 }

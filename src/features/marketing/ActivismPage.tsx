@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
+import { linkToPath } from "../../app/routeMap";
 import { ACTIVISM_NAV, CONVICTION_ITEMS } from "./activism.data";
 import {
   StartSection,
@@ -115,7 +116,7 @@ export function ActivismPage() {
         }
         sub="Post it on the board. Find collaborators in the network. Start small. Start now."
       >
-        <Button size="lg" to="/#board">
+        <Button size="lg" to={linkToPath("#board")}>
           See the board
         </Button>
       </Outro>

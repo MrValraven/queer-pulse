@@ -6,9 +6,9 @@ import styles from "./CinemaShell.module.css";
 import { routes } from "../../app/routeMap";
 
 const LINKS = [
-  { label: "This week", to: "/cinema" },
-  { label: "Browse", to: "/cinema/browse" },
-  { label: "Membership", to: "/cinema/membership" },
+  { label: "This week", to: routes.cinema },
+  { label: "Browse", to: routes.cinemaBrowse },
+  { label: "Membership", to: routes.cinemaMembership },
 ];
 
 /** Dark co-op cinema frame: floating dark nav + cinema footer. */
@@ -30,7 +30,7 @@ export function CinemaShell({ children }: { children: ReactNode }) {
           {LINKS.map((item) => (
             <NavLink
               key={item.to}
-              end={item.to === "/cinema"}
+              end={item.to === routes.cinema}
               to={item.to}
               className={({ isActive }) =>
                 [styles.link, isActive && styles.linkActive]
@@ -53,7 +53,7 @@ export function CinemaShell({ children }: { children: ReactNode }) {
         <div className="wrap">
           <div className={styles.footGrid}>
             <div className={styles.footBrand}>
-              <Link to="/" className={styles.brand}>
+              <Link to={routes.homepage} className={styles.brand}>
                 <span className={styles.pulseDot} aria-hidden />
                 Queer<em>Pulse</em>
               </Link>
@@ -66,8 +66,8 @@ export function CinemaShell({ children }: { children: ReactNode }) {
               <div className={styles.footCol}>
                 <h4>Cinema</h4>
                 <Link to={routes.cinema}>This week</Link>
-                <Link to="/cinema/browse">Browse all</Link>
-                <Link to="/cinema/browse">Collections</Link>
+                <Link to={routes.cinemaBrowse}>Browse all</Link>
+                <Link to={routes.cinemaBrowse}>Collections</Link>
                 <Link to={routes.cinemaMembership}>Membership</Link>
               </div>
               <div className={styles.footCol}>
@@ -80,7 +80,7 @@ export function CinemaShell({ children }: { children: ReactNode }) {
                 <h4>About</h4>
                 <Link to={routes.governance}>Public ledger</Link>
                 <Link to={routes.accessibility}>Access</Link>
-                <Link to="/">QueerPulse</Link>
+                <Link to={routes.homepage}>QueerPulse</Link>
               </div>
             </div>
           </div>

@@ -84,12 +84,14 @@ export function StudioOpenCallCard({ call: c }: Props) {
         </div>
         <div className={s.callActions}>
           <button
+            type="button"
             className={s.bt}
             onClick={() => showToast("Brief saved to your dashboard", "info")}
           >
             Save
           </button>
           <button
+            type="button"
             className={`${s.bt} ${s.btP}`}
             onClick={() => setOpen((v) => !v)}
           >
@@ -140,6 +142,7 @@ export function StudioOpenCallCard({ call: c }: Props) {
           <textarea className={s.attachTa} placeholder={c.placeholder} />
           <div className={s.attachFoot}>
             <button
+              type="button"
               className={`${s.bt} ${s.btP}`}
               onClick={() => {
                 setOpen(false);
@@ -151,7 +154,11 @@ export function StudioOpenCallCard({ call: c }: Props) {
             >
               Submit application
             </button>
-            <button className={s.bt} onClick={() => setOpen(false)}>
+            <button
+              type="button"
+              className={s.bt}
+              onClick={() => setOpen(false)}
+            >
               Cancel
             </button>
             <span className={s.singleNote}>

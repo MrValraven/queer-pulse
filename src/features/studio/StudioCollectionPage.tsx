@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiPlus, FiCheck } from "react-icons/fi";
+import { routes } from "../../app/routeMap";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useSaved } from "../../app/providers/SavedProvider";
@@ -58,12 +59,17 @@ export function StudioCollectionPage() {
           </div>
           <div className={s.dek}>{COLLECTION.blurb}</div>
           <div className={s.collActions}>
-            <button className={ss.playBig} aria-label="Play collection">
+            <button
+              type="button"
+              className={ss.playBig}
+              aria-label="Play collection"
+            >
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
               </svg>
             </button>
             <button
+              type="button"
               onClick={() => {
                 const now = toggleSave(COLLECTION_ITEM);
                 showToast(
@@ -85,6 +91,7 @@ export function StudioCollectionPage() {
               )}
             </button>
             <button
+              type="button"
               onClick={() => showToast("Shuffling the collection", "info")}
             >
               Shuffle
@@ -98,7 +105,7 @@ export function StudioCollectionPage() {
           <h2>
             In this <em>collection</em>
           </h2>
-          <Link to="/studio/search" className={ss.all}>
+          <Link to={routes.studioSearch} className={ss.all}>
             Find more →
           </Link>
         </div>
@@ -111,7 +118,7 @@ export function StudioCollectionPage() {
                 key={track.pre + track.meta}
                 delay={Math.min(i, 8) * 60}
                 as={Link}
-                to="/studio/track"
+                to={routes.studioTrack}
                 className={ss.card}
               >
                 <div className={ss.cardCov}>
@@ -152,7 +159,7 @@ export function StudioCollectionPage() {
                 key={item.pre + item.meta}
                 delay={Math.min(i, 8) * 60}
                 as={Link}
-                to="/studio/collection"
+                to={routes.studioCollection}
                 className={ss.card}
               >
                 <div className={ss.cardCov}>

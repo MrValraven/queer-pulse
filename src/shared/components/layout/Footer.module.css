@@ -2,7 +2,7 @@
   background: var(--plum);
   color: var(--cream);
   padding: 64px 0 40px;
-  border-top: 1px solid rgba(247, 243, 238, 0.12);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.12);
 }
 
 /* ---- Top region: brand + columns ---- */
@@ -38,7 +38,7 @@
 }
 .blurb {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-top: 16px;
   line-height: 1.6;
 }
@@ -55,17 +55,19 @@
   display: grid;
   place-items: center;
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.7);
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  color: rgba(var(--cream-rgb), 0.7);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   transition:
     color var(--dur-base) var(--ease),
     background var(--dur-base) var(--ease),
     transform var(--dur-base) var(--ease);
 }
-.social a:hover {
-  color: var(--cream);
-  background: rgba(247, 243, 238, 0.12);
+@media (hover: hover) {
+  .social a:hover {
+    color: var(--cream);
+    background: rgba(var(--cream-rgb), 0.12);
+  }
 }
 
 .cols {
@@ -84,19 +86,21 @@
 .col a {
   display: block;
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.66);
+  color: rgba(var(--cream-rgb), 0.66);
   margin-bottom: 11px;
   transition: color var(--dur-base) var(--ease);
 }
-.col a:hover {
-  color: var(--cream);
+@media (hover: hover) {
+  .col a:hover {
+    color: var(--cream);
+  }
 }
 
 /* ---- Bottom bar: copyright + legal links + controls ---- */
 .base {
   margin-top: 56px;
   padding-top: 26px;
-  border-top: 1px solid rgba(247, 243, 238, 0.1);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -105,7 +109,7 @@
 }
 .copyright {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.42);
+  color: rgba(var(--cream-rgb), 0.42);
 }
 
 .baseLinks {
@@ -119,18 +123,22 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   transition: color var(--dur-base) var(--ease);
 }
-.baseLinks a:hover {
-  color: var(--cream);
+@media (hover: hover) {
+  .baseLinks a:hover {
+    color: var(--cream);
+  }
 }
 .baseLinks a.emergency {
   color: var(--accent);
 }
-.baseLinks a.emergency:hover {
-  color: var(--accent);
-  opacity: 0.82;
+@media (hover: hover) {
+  .baseLinks a.emergency:hover {
+    color: var(--accent);
+    opacity: 0.82;
+  }
 }
 
 /* ---- Theme + language controls ---- */
@@ -146,21 +154,23 @@
   height: 34px;
   border-radius: 50%;
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.8);
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.14);
+  color: rgba(var(--cream-rgb), 0.8);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
   cursor: pointer;
   transition:
     color var(--dur-base) var(--ease),
     background var(--dur-base) var(--ease);
 }
-.themeToggle:hover {
-  color: var(--cream);
-  background: rgba(247, 243, 238, 0.12);
+@media (hover: hover) {
+  .themeToggle:hover {
+    color: var(--cream);
+    background: rgba(var(--cream-rgb), 0.12);
+  }
 }
 .langSwitch {
   display: inline-flex;
-  border: 1px solid rgba(247, 243, 238, 0.16);
+  border: 1px solid rgba(var(--cream-rgb), 0.16);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -169,7 +179,7 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -177,11 +187,13 @@
     color var(--dur-base) var(--ease),
     background var(--dur-base) var(--ease);
 }
-.langSwitch button:hover {
-  color: var(--cream);
+@media (hover: hover) {
+  .langSwitch button:hover {
+    color: var(--cream);
+  }
 }
 .langSwitch button.langActive {
-  background: rgba(247, 243, 238, 0.14);
+  background: rgba(var(--cream-rgb), 0.14);
   color: var(--cream);
 }
 
@@ -202,8 +214,10 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .social a:hover,
-  .themeToggle:hover {
-    transform: translateY(-2px);
+  @media (hover: hover) {
+    .social a:hover,
+    .themeToggle:hover {
+      transform: translateY(-2px);
+    }
   }
 }

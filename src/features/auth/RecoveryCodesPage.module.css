@@ -3,7 +3,7 @@
   margin: 0 auto;
   padding: 108px 28px 80px;
   background: var(--cream);
-  min-height: 100vh;
+  min-height: 100svh;
 }
 
 .back {
@@ -17,8 +17,10 @@
   margin-bottom: 22px;
   transition: color 0.2s;
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 
 .eyebrow {
@@ -92,8 +94,8 @@
 /* Codes card */
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 32px 36px;
   margin-bottom: 22px;
   position: relative;
@@ -127,7 +129,7 @@
   gap: 8px 22px;
   padding: 20px 22px;
   background: var(--cream);
-  border: 1px dashed rgba(45, 27, 61, 0.18);
+  border: 1px dashed rgba(var(--plum-rgb), 0.18);
   border-radius: 14px;
   font-family: var(--sans);
   font-size: 15px;
@@ -163,7 +165,7 @@
 .reveal {
   position: absolute;
   inset: 0;
-  background: rgba(247, 243, 238, 0.6);
+  background: rgba(var(--cream-rgb), 0.6);
   backdrop-filter: blur(2px);
   border-radius: 14px;
   display: flex;
@@ -187,7 +189,7 @@
 .usage {
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   margin-bottom: 24px;
   display: grid;
@@ -207,7 +209,7 @@
 .usageBar {
   width: 140px;
   height: 8px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -224,7 +226,7 @@
 /* Regenerate */
 .regen {
   padding: 24px 26px;
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   border-radius: 16px;
 }
 .regen h3 {

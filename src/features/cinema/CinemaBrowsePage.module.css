@@ -1,6 +1,6 @@
 .hero {
   padding: 128px 0 36px;
-  border-bottom: 2px solid rgba(247, 243, 238, 0.16);
+  border-bottom: 2px solid rgba(var(--cream-rgb), 0.16);
 }
 .eyebrow {
   font-size: 11px;
@@ -24,7 +24,7 @@
 }
 .hero p {
   font-size: 16px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   max-width: 52ch;
   margin-top: 18px;
   line-height: 1.6;
@@ -62,11 +62,13 @@
 .clear {
   font-size: 12.5px;
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
   cursor: pointer;
 }
-.clear:hover {
-  color: var(--cream);
+@media (hover: hover) {
+  .clear:hover {
+    color: var(--cream);
+  }
 }
 .group {
   margin-bottom: 22px;
@@ -76,7 +78,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.45);
+  color: rgba(var(--cream-rgb), 0.45);
   margin-bottom: 10px;
 }
 .activeFilters {
@@ -88,7 +90,7 @@
 }
 .afLabel {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.45);
+  color: rgba(var(--cream-rgb), 0.45);
   font-weight: 600;
 }
 .afChip {
@@ -98,13 +100,13 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--cream);
-  background: rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.1);
   border-radius: 999px;
   padding: 5px 12px;
 }
 .afChip .x {
   cursor: pointer;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 
 .sortBar {
@@ -112,13 +114,13 @@
   align-items: center;
   gap: 16px;
   padding-bottom: 24px;
-  border-bottom: 1px solid rgba(247, 243, 238, 0.12);
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.12);
   margin-bottom: 28px;
   flex-wrap: wrap;
 }
 .results {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .results strong {
   color: var(--cream);
@@ -134,9 +136,9 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.66);
+  color: rgba(var(--cream-rgb), 0.66);
   background: transparent;
-  border: 1px solid rgba(247, 243, 238, 0.16);
+  border: 1px solid rgba(var(--cream-rgb), 0.16);
   border-radius: 999px;
   padding: 7px 14px;
   cursor: pointer;
@@ -144,9 +146,11 @@
     border-color 0.18s,
     color 0.18s;
 }
-.sortSel:hover {
-  border-color: rgba(247, 243, 238, 0.4);
-  color: var(--cream);
+@media (hover: hover) {
+  .sortSel:hover {
+    border-color: rgba(var(--cream-rgb), 0.4);
+    color: var(--cream);
+  }
 }
 .sortMenu {
   position: absolute;
@@ -158,7 +162,7 @@
   margin: 0;
   padding: 6px;
   background: var(--plum);
-  border: 1px solid rgba(247, 243, 238, 0.16);
+  border: 1px solid rgba(var(--cream-rgb), 0.16);
   border-radius: 14px;
   box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.7);
   animation: sortIn 0.18s var(--ease);
@@ -180,7 +184,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 500;
-  color: rgba(247, 243, 238, 0.72);
+  color: rgba(var(--cream-rgb), 0.72);
   background: transparent;
   border: none;
   border-radius: 9px;
@@ -190,9 +194,11 @@
     background 0.15s,
     color 0.15s;
 }
-.sortOpt:hover {
-  background: rgba(247, 243, 238, 0.1);
-  color: var(--cream);
+@media (hover: hover) {
+  .sortOpt:hover {
+    background: rgba(var(--cream-rgb), 0.1);
+    color: var(--cream);
+  }
 }
 .sortOptOn {
   color: var(--accent);
@@ -219,17 +225,19 @@
   aspect-ratio: 3/4;
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid rgba(247, 243, 238, 0.08);
+  border: 1px solid rgba(var(--cream-rgb), 0.08);
   position: relative;
   transition:
     transform 0.35s var(--ease),
     box-shadow 0.35s var(--ease),
     border-color 0.25s;
 }
-.fc:hover .fcPoster {
-  transform: translateY(-4px);
-  box-shadow: 0 28px 60px -32px rgba(0, 0, 0, 0.65);
-  border-color: rgba(247, 243, 238, 0.18);
+@media (hover: hover) {
+  .fc:hover .fcPoster {
+    transform: translateY(-4px);
+    box-shadow: 0 28px 60px -32px rgba(0, 0, 0, 0.65);
+    border-color: rgba(var(--cream-rgb), 0.18);
+  }
 }
 .fcBadge {
   position: absolute;
@@ -253,7 +261,7 @@
   color: var(--accent-soft);
 }
 .rent {
-  background: rgba(247, 243, 238, 0.18);
+  background: rgba(var(--cream-rgb), 0.18);
   color: var(--cream);
 }
 .fcSaves {
@@ -263,7 +271,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.6);
+  background: rgba(var(--plum-rgb), 0.6);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -297,7 +305,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 .fcTags {
   display: flex;
@@ -306,14 +314,14 @@
 }
 .fcTag {
   font-size: 11px;
-  color: rgba(247, 243, 238, 0.55);
-  background: rgba(247, 243, 238, 0.07);
+  color: rgba(var(--cream-rgb), 0.55);
+  background: rgba(var(--cream-rgb), 0.07);
   border-radius: 6px;
   padding: 3px 8px;
 }
 .fcCurator {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
   font-style: italic;
   font-family: var(--serif);
 }

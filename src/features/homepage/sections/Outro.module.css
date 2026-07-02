@@ -40,7 +40,7 @@
 }
 .sub {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.62);
+  color: rgba(var(--cream-rgb), 0.62);
   max-width: 46ch;
   margin: 30px auto 38px;
   line-height: 1.65;

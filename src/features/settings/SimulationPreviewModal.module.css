@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(45, 27, 61, 0.42);
+  background: rgba(var(--plum-rgb), 0.42);
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
@@ -13,9 +13,9 @@
 
 .modal {
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 20px;
-  box-shadow: 0 24px 80px -24px rgba(45, 27, 61, 0.45);
+  box-shadow: 0 24px 80px -24px rgba(var(--plum-rgb), 0.45);
   width: min(1100px, 100%);
   height: min(820px, 100%);
   display: flex;
@@ -30,7 +30,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 14px 18px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
   background: var(--paper);
   flex-wrap: wrap;
 }
@@ -62,7 +62,7 @@
 .deviceToggle {
   display: inline-flex;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 999px;
   padding: 3px;
 }
@@ -110,8 +110,10 @@
   transition: opacity 0.2s var(--ease);
 }
 
-.openFull:hover {
-  opacity: 0.88;
+@media (hover: hover) {
+  .openFull:hover {
+    opacity: 0.88;
+  }
 }
 
 .openFull svg {
@@ -126,7 +128,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   background: var(--cream);
   color: var(--plum);
   cursor: pointer;
@@ -135,9 +137,11 @@
     color 0.2s var(--ease);
 }
 
-.close:hover {
-  color: var(--accent-ink);
-  border-color: rgba(45, 27, 61, 0.22);
+@media (hover: hover) {
+  .close:hover {
+    color: var(--accent-ink);
+    border-color: rgba(var(--plum-rgb), 0.22);
+  }
 }
 
 .close svg {
@@ -155,7 +159,7 @@
   background:
     radial-gradient(
       circle at 30% 20%,
-      rgba(232, 119, 90, 0.06),
+      rgba(var(--accent-rgb), 0.06),
       transparent 60%
     ),
     var(--cream);
@@ -164,9 +168,9 @@
 
 .frame {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 16px;
-  box-shadow: 0 12px 48px -16px rgba(45, 27, 61, 0.3);
+  box-shadow: 0 12px 48px -16px rgba(var(--plum-rgb), 0.3);
   overflow: hidden;
   transition:
     width 0.28s var(--ease),

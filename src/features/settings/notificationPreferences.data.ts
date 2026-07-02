@@ -64,3 +64,18 @@ export const MATRIX_ROWS: MatrixRow[] = [
     push: false,
   },
 ];
+
+export const ALWAYS_ON: { title: string; desc: string }[] = [
+  {
+    title: "Security alerts",
+    desc: "New sign-in from an unrecognised device or location.",
+  },
+  {
+    title: "Data export ready",
+    desc: "When your data archive is available to download.",
+  },
+  {
+    title: "Moderation decisions",
+    desc: "If a moderator acts on content you posted.",
+  },
+];

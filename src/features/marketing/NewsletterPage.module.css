@@ -12,8 +12,10 @@
   text-decoration: none;
   margin-bottom: 24px;
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 .header {
   margin-bottom: 44px;
@@ -45,8 +47,8 @@
   line-height: 1.68;
 }
 .account {
-  background: rgba(45, 27, 61, 0.04);
-  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 14px;
   padding: 16px 20px;
   display: flex;
@@ -75,8 +77,10 @@
   color: var(--plum);
   text-decoration: none;
 }
-.edit:hover {
-  opacity: 0.7;
+@media (hover: hover) {
+  .edit:hover {
+    opacity: 0.7;
+  }
 }
 .section {
   margin-bottom: 40px;
@@ -89,7 +93,7 @@
   color: var(--ink-40);
   margin-bottom: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .toggleRow {
   display: flex;
@@ -97,7 +101,7 @@
   justify-content: space-between;
   gap: 20px;
   padding: 16px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .toggleRow:last-child {
   border-bottom: none;
@@ -139,7 +143,7 @@
   position: absolute;
   inset: 0;
   border-radius: 13px;
-  background: rgba(45, 27, 61, 0.15);
+  background: rgba(var(--plum-rgb), 0.15);
   cursor: pointer;
   transition: background 0.22s var(--ease);
 }
@@ -150,7 +154,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--paper);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   transition:
     transform 0.22s var(--ease),
@@ -182,7 +186,7 @@
 .unsubStrip {
   margin-top: 48px;
   padding-top: 32px;
-  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 .unsubTitle {
   font-size: 14px;

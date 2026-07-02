@@ -186,6 +186,7 @@ export function A11yReadingSection({
         <div className={styles.colorSwatches}>
           {SWATCH_OPTIONS.map(({ theme, cls, title }) => (
             <button
+              type="button"
               key={theme}
               title={title}
               aria-pressed={prefs.colorTheme === theme}

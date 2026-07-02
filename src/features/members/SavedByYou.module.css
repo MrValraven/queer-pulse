@@ -10,7 +10,7 @@
   color: var(--ink-40);
   margin: 36px 0 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -35,7 +35,7 @@
 .card {
   height: 100%;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 20px;
   display: flex;
@@ -46,7 +46,7 @@
 }
 @media (hover: hover) {
   .card:hover {
-    box-shadow: 0 6px 20px rgba(45, 27, 61, 0.08);
+    box-shadow: 0 6px 20px rgba(var(--plum-rgb), 0.08);
     transform: translateY(-1px);
   }
 }
@@ -57,11 +57,11 @@
   --cat-fg: var(--accent-ink);
 }
 .vFilm {
-  --cat-bg: rgba(45, 27, 61, 0.08);
+  --cat-bg: rgba(var(--plum-rgb), 0.08);
   --cat-fg: var(--plum);
 }
 .vJob {
-  --cat-bg: rgba(74, 140, 111, 0.12);
+  --cat-bg: rgba(var(--jade-rgb), 0.12);
   --cat-fg: var(--jade);
 }
 .vEvent {
@@ -69,11 +69,11 @@
   --cat-fg: var(--accent-ink);
 }
 .vThread {
-  --cat-bg: rgba(45, 27, 61, 0.06);
+  --cat-bg: rgba(var(--plum-rgb), 0.06);
   --cat-fg: var(--ink-60);
 }
 .vGroup {
-  --cat-bg: rgba(74, 140, 111, 0.1);
+  --cat-bg: rgba(var(--jade-rgb), 0.1);
   --cat-fg: var(--jade);
 }
 
@@ -109,8 +109,10 @@
   width: 17px;
   height: 17px;
 }
-.bookmark:hover {
-  opacity: 0.6;
+@media (hover: hover) {
+  .bookmark:hover {
+    opacity: 0.6;
+  }
 }
 .bookmark:focus-visible {
   outline: 2px solid var(--cat-fg);
@@ -131,8 +133,10 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-a.title:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  a.title:hover {
+    color: var(--accent-ink);
+  }
 }
 
 .meta {
@@ -160,7 +164,7 @@ a.title:hover {
   justify-content: space-between;
   padding-top: 12px;
   margin-top: auto;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .readLink {
   font-size: 13.5px;
@@ -168,22 +172,24 @@ a.title:hover {
   color: var(--accent-ink);
   text-decoration: none;
 }
-.readLink:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .readLink:hover {
+    text-decoration: underline;
+  }
 }
 .readPill {
   font-size: 11px;
   font-weight: 700;
   padding: 3px 9px;
   border-radius: var(--radius-pill);
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
   flex: none;
 }
 
 :global([data-theme="dark"]) .card {
-  border-color: rgba(247, 243, 238, 0.12);
+  border-color: rgba(var(--cream-rgb), 0.12);
 }
 :global([data-theme="dark"]) .footer {
-  border-top-color: rgba(247, 243, 238, 0.1);
+  border-top-color: rgba(var(--cream-rgb), 0.1);
 }

@@ -57,7 +57,10 @@
   border-radius: 9px;
   cursor: pointer;
   border: 2.5px solid transparent;
-  transition: all 0.2s;
+  transition:
+    border-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease),
+    transform 0.2s var(--ease);
   position: relative;
   overflow: hidden;
 }
@@ -79,24 +82,28 @@
   gap: 10px;
   padding: 9px 12px;
   border-radius: 10px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
   cursor: pointer;
-  transition: all 0.18s;
+  transition:
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease);
 }
 .csOptSelected {
   border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
 }
 .csRadio {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  border: 2px solid rgba(45, 27, 61, 0.2);
+  border: 2px solid rgba(var(--plum-rgb), 0.2);
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
 }
 .csOptSelected .csRadio {
   border-color: var(--plum);
@@ -130,7 +137,9 @@
   border-radius: 8px;
   cursor: pointer;
   border: 2.5px solid transparent;
-  transition: all 0.18s;
+  transition:
+    border-color 0.18s var(--ease),
+    box-shadow 0.18s var(--ease);
 }
 .patSwatchSelected {
   border-color: var(--plum);
@@ -139,7 +148,7 @@
 
 /* Toggles */
 .tglRows {
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 13px;
   overflow: hidden;
   background: var(--paper);
@@ -150,7 +159,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
 }
 .tglRow:last-child {
   border-bottom: none;
@@ -176,7 +185,7 @@
   position: absolute;
   inset: 0;
   border-radius: 999px;
-  background: rgba(45, 27, 61, 0.15);
+  background: rgba(var(--plum-rgb), 0.15);
   cursor: pointer;
   transition: background 0.25s;
 }
@@ -202,15 +211,17 @@
 /* Badge select */
 .badgeSelect {
   width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
   border-radius: 10px;
   padding: 9px 12px;
   font-family: var(--sans);
   font-size: 13.5px;
   color: var(--ink);
   background: var(--cream);
-  outline: none;
   cursor: pointer;
+}
+.badgeSelect:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* Preview */
@@ -237,8 +248,8 @@
 /* Profile card large */
 .profileCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   overflow: hidden;
   max-width: 380px;
 }
@@ -268,14 +279,14 @@
   font-family: var(--serif);
   font-size: 18px;
   font-weight: 500;
-  background: rgba(74, 140, 111, 0.15);
+  background: rgba(var(--jade-rgb), 0.15);
   color: var(--jade);
 }
 .pclBadgeIcon {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   border: 2px solid var(--paper);
   display: flex;
   align-items: center;
@@ -327,7 +338,7 @@
 /* Directory card */
 .dirCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
   max-width: 280px;
@@ -354,7 +365,7 @@
   font-family: var(--serif);
   font-size: 14px;
   font-weight: 500;
-  background: rgba(74, 140, 111, 0.15);
+  background: rgba(var(--jade-rgb), 0.15);
   color: var(--jade);
 }
 .dcBody {

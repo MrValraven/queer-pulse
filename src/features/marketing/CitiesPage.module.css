@@ -2,7 +2,7 @@
   padding: 140px 0 56px;
 }
 .heroInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
 }
@@ -45,7 +45,7 @@
 }
 .current {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 18px 24px;
   margin-top: 36px;
@@ -67,7 +67,7 @@
 .currentIc svg {
   width: 18px;
   height: 18px;
-  stroke: #fff;
+  stroke: var(--cream);
   stroke-width: 2.2;
   fill: none;
   stroke-linecap: round;
@@ -94,7 +94,7 @@
 }
 .currentBtn {
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   color: var(--plum);
   font-family: var(--sans);
   font-size: 13px;
@@ -102,15 +102,19 @@
   padding: 8px 14px;
   border-radius: 999px;
   cursor: pointer;
-  transition: all 0.2s var(--ease);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
 }
-.currentBtn:hover {
-  border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.04);
+@media (hover: hover) {
+  .currentBtn:hover {
+    border-color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.04);
+  }
 }
 
 .grid {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 48px 28px 80px;
   display: grid;
@@ -123,7 +127,7 @@
   justify-content: space-between;
   padding-bottom: 14px;
   margin-bottom: 24px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   flex-wrap: wrap;
   gap: 14px;
 }
@@ -155,8 +159,8 @@
 }
 .cityCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   overflow: hidden;
   text-decoration: none;
   color: inherit;
@@ -171,10 +175,12 @@
   font-family: var(--sans);
   padding: 0;
 }
-.cityCard:hover {
-  transform: translateY(-3px);
-  border-color: rgba(45, 27, 61, 0.18);
-  box-shadow: 0 16px 32px -22px rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .cityCard:hover {
+    transform: translateY(-3px);
+    border-color: rgba(var(--plum-rgb), 0.18);
+    box-shadow: 0 16px 32px -22px rgba(var(--plum-rgb), 0.4);
+  }
 }
 .cityImg {
   aspect-ratio: 16 / 9;
@@ -266,8 +272,8 @@
   color: var(--ink-60);
   flex-wrap: wrap;
   padding: 14px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.06);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .statsMini b {
   color: var(--plum);
@@ -321,7 +327,7 @@
 }
 .skeletonImg {
   aspect-ratio: 16 / 9;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
 }
 
 .betaGrid {
@@ -342,7 +348,7 @@
 .betaCard {
   padding: 22px 24px;
   background: var(--paper);
-  border: 1px dashed rgba(45, 27, 61, 0.18);
+  border: 1px dashed rgba(var(--plum-rgb), 0.18);
   border-radius: 18px;
 }
 .betaCard .cityHRow {
@@ -387,7 +393,7 @@
   gap: 18px;
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 14px;
   align-items: center;
   font-size: 14px;
@@ -443,7 +449,7 @@
 .wlBar {
   width: 120px;
   height: 6px;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -460,7 +466,7 @@
 }
 .wlVoteBtn {
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   color: var(--plum);
   font-family: var(--sans);
   font-size: 13px;
@@ -468,16 +474,21 @@
   padding: 7px 14px;
   border-radius: 999px;
   cursor: pointer;
-  transition: all 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
   white-space: nowrap;
 }
-.wlVoteBtn:hover {
-  border-color: var(--plum);
-  background: rgba(45, 27, 61, 0.04);
+@media (hover: hover) {
+  .wlVoteBtn:hover {
+    border-color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.04);
+  }
 }
 .wlVoteBtnVoted {
   background: var(--jade);
-  color: #fff;
+  color: var(--cream);
   border-color: var(--jade);
 }
 .wlFoot {
@@ -542,7 +553,7 @@
   grid-template-columns: 48px 1fr;
   gap: 18px;
   padding: 24px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
   align-items: flex-start;
 }
 .howRow:last-child {

@@ -60,7 +60,7 @@
 }
 .lede {
   font-size: 17px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   max-width: 52ch;
   margin-top: 22px;
   line-height: 1.65;
@@ -75,8 +75,8 @@
 }
 .htype {
   font-size: 13px;
-  color: rgba(247, 243, 238, 0.7);
-  border: 1px solid rgba(247, 243, 238, 0.22);
+  color: rgba(var(--cream-rgb), 0.7);
+  border: 1px solid rgba(var(--cream-rgb), 0.22);
   border-radius: 999px;
   padding: 7px 15px;
 }
@@ -109,13 +109,13 @@
   top: 56px;
   width: 2px;
   bottom: 0;
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
 }
 .stepNum {
   width: 54px;
   height: 54px;
   border-radius: 50%;
-  border: 2px solid rgba(45, 27, 61, 0.14);
+  border: 2px solid rgba(var(--plum-rgb), 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -214,7 +214,7 @@
 }
 .typeCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 20px;
 }
@@ -245,7 +245,7 @@
 }
 .sidebarCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 20px;
   padding: 26px;
 }
@@ -275,7 +275,7 @@
 }
 .spaceRow {
   padding: 10px 12px;
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
   border-radius: 10px;
 }
 .spaceHood {
@@ -310,7 +310,7 @@
 
 :global([data-theme="dark"]) .typeCard,
 :global([data-theme="dark"]) .sidebarCard {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .stepNum {
   background: var(--paper);

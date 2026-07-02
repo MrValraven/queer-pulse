@@ -82,6 +82,7 @@ export function NotificationsPage() {
             <div className={styles.itemActions}>
               {notification.actions.map((action) => (
                 <button
+                  type="button"
                   key={action.label}
                   className={[
                     styles.btn,
@@ -121,7 +122,11 @@ export function NotificationsPage() {
               )}
             </div>
             <div className={styles.actions}>
-              <button className={styles.markRead} onClick={markAllRead}>
+              <button
+                type="button"
+                className={styles.markRead}
+                onClick={markAllRead}
+              >
                 Mark all as read
               </button>
               <Button

@@ -1,7 +1,7 @@
 .settingsPage {
   display: grid;
   grid-template-columns: 240px 1fr;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100svh - 70px);
   margin-top: 70px;
 }
 
@@ -13,11 +13,11 @@
 
 /* Sidebar */
 .sidebar {
-  border-right: 1px solid rgba(45, 27, 61, 0.08);
+  border-right: 1px solid rgba(var(--plum-rgb), 0.08);
   padding: 40px 0;
   position: sticky;
   top: 70px;
-  height: calc(100vh - 70px);
+  height: calc(100svh - 70px);
   overflow-y: auto;
   background: var(--paper);
 }
@@ -27,7 +27,7 @@
     position: static;
     height: auto;
     border-right: none;
-    border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+    border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
     padding: 16px 0;
   }
 }
@@ -70,9 +70,11 @@
   font-family: var(--sans);
 }
 
-.navItem:hover {
-  background: rgba(45, 27, 61, 0.05);
-  color: var(--ink);
+@media (hover: hover) {
+  .navItem:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    color: var(--ink);
+  }
 }
 
 .navItemActive {
@@ -155,7 +157,7 @@
 }
 
 .optCard {
-  border: 2px solid rgba(45, 27, 61, 0.1);
+  border: 2px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 20px;
   padding: 26px 24px;
   cursor: pointer;
@@ -165,13 +167,15 @@
   position: relative;
 }
 
-.optCard:hover {
-  border-color: rgba(45, 27, 61, 0.22);
+@media (hover: hover) {
+  .optCard:hover {
+    border-color: rgba(var(--plum-rgb), 0.22);
+  }
 }
 
 .optCardSelected {
   border-color: var(--plum);
-  box-shadow: 0 0 0 3px rgba(45, 27, 61, 0.08);
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.08);
 }
 
 .optCardDanger.optCardSelected {
@@ -186,8 +190,10 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 2px solid rgba(45, 27, 61, 0.2);
-  transition: all 0.15s;
+  border: 2px solid rgba(var(--plum-rgb), 0.2);
+  transition:
+    border-color 0.15s var(--ease),
+    background 0.15s var(--ease);
 }
 
 .optCardSelected .optRadio {
@@ -228,7 +234,7 @@
 }
 
 .optIconDefault {
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
 }
 
 .optIconDanger {
@@ -272,7 +278,7 @@
 }
 
 .optTagRev {
-  background: rgba(74, 140, 111, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
 }
 
@@ -283,8 +289,8 @@
 
 /* Pause strip */
 .pauseStrip {
-  background: rgba(74, 140, 111, 0.07);
-  border: 1px solid rgba(74, 140, 111, 0.2);
+  background: rgba(var(--jade-rgb), 0.07);
+  border: 1px solid rgba(var(--jade-rgb), 0.2);
   border-radius: 16px;
   padding: 20px 22px;
   margin-bottom: 32px;
@@ -329,7 +335,7 @@
 /* What happens */
 .whatHappens {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 18px;
   padding: 26px 28px;
   margin-bottom: 32px;
@@ -391,19 +397,21 @@
 
 .cfInput {
   width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.15);
+  border: 1.5px solid rgba(var(--plum-rgb), 0.15);
   border-radius: 12px;
   padding: 12px 16px;
   font-family: var(--sans);
   font-size: 15px;
   color: var(--ink);
   background: var(--cream);
-  outline: none;
   transition: border-color 0.2s;
 }
 
 .cfInput:focus {
   border-color: var(--plum);
+}
+.cfInput:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .cfInputDanger:focus {
@@ -418,8 +426,9 @@
 }
 
 .confirmPhrase {
-  font-family: monospace;
-  letter-spacing: 0.03em;
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
 }
 
 /* Danger button */
@@ -434,12 +443,17 @@
   padding: 13px 24px;
   cursor: pointer;
   box-shadow: 0 8px 22px -10px rgba(200, 90, 64, 0.6);
-  transition: all 0.2s;
+  transition:
+    background 0.2s var(--ease),
+    transform 0.2s var(--ease),
+    opacity 0.2s var(--ease);
 }
 
-.btnDanger:hover {
-  background: var(--accent-deep);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .btnDanger:hover {
+    background: var(--accent-deep);
+    transform: translateY(-1px);
+  }
 }
 
 .btnDanger:disabled {

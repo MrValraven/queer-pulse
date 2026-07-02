@@ -19,7 +19,7 @@
   pointer-events: none;
 }
 .heroInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
   position: relative;
@@ -65,7 +65,7 @@
 }
 .notRow {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 24px 28px;
   margin-top: 32px;
@@ -125,7 +125,7 @@
   padding: 80px 0 64px;
 }
 .doInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
 }
@@ -162,8 +162,8 @@
 .tier {
   padding: 30px 28px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.1);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-radius: var(--radius-card);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -225,7 +225,7 @@
   font-family: var(--sans);
 }
 .tierFeatured .tierPricePeriod {
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 .tierDek {
   font-size: 14px;
@@ -233,7 +233,7 @@
   color: var(--ink-60);
 }
 .tierFeatured .tierDek {
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
 }
 .tierList {
   list-style: none;
@@ -246,11 +246,11 @@
   color: var(--ink);
   line-height: 1.55;
   padding-top: 16px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .tierFeatured .tierList {
-  border-top-color: rgba(247, 243, 238, 0.16);
-  color: rgba(247, 243, 238, 0.85);
+  border-top-color: rgba(var(--cream-rgb), 0.16);
+  color: rgba(var(--cream-rgb), 0.85);
 }
 .tierList li {
   padding-left: 22px;
@@ -285,11 +285,11 @@
   line-height: 1.5;
 }
 .tierFeatured .tierFootNote {
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 
 .process {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 80px 28px;
 }
@@ -312,7 +312,7 @@
 .proc {
   padding: 22px 24px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
 }
 .procN {
@@ -351,11 +351,11 @@
 }
 
 .proof {
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   padding: 80px 0;
 }
 .proofInner {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 0 28px;
 }
@@ -393,7 +393,7 @@
 .partnerCard {
   padding: 22px 24px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   text-decoration: none;
   color: inherit;
@@ -407,9 +407,11 @@
     transform 0.25s var(--ease),
     border-color 0.2s var(--ease);
 }
-.partnerCard:hover {
-  transform: translateY(-2px);
-  border-color: rgba(45, 27, 61, 0.18);
+@media (hover: hover) {
+  .partnerCard:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--plum-rgb), 0.18);
+  }
 }
 .partnerLogo {
   width: 48px;
@@ -469,8 +471,8 @@
 
 .quoteCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 22px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: var(--radius-card);
   padding: 36px 40px;
 }
 .quoteCard p {
@@ -493,7 +495,7 @@
   gap: 12px;
   align-items: center;
   padding-top: 18px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .quoteAv {
   width: 42px;
@@ -573,13 +575,13 @@
 }
 .ctaSection p {
   font-size: 15.5px;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.7;
   margin-bottom: 18px;
 }
 .ctaList {
   font-size: 14px;
-  color: rgba(247, 243, 238, 0.7);
+  color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.7;
   padding-left: 0;
   list-style: none;
@@ -604,8 +606,8 @@
   text-decoration: none;
 }
 .partnerForm {
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: 18px;
   padding: 24px;
 }
@@ -620,7 +622,7 @@
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.55);
+  color: rgba(var(--cream-rgb), 0.55);
 }
 .field input,
 .field select,
@@ -628,11 +630,10 @@
   font-family: var(--sans);
   font-size: 14px;
   color: var(--cream);
-  background: rgba(247, 243, 238, 0.06);
-  border: 1px solid rgba(247, 243, 238, 0.14);
+  background: rgba(var(--cream-rgb), 0.06);
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
   border-radius: 10px;
   padding: 10px 13px;
-  outline: none;
   transition:
     border-color 0.2s var(--ease),
     background 0.2s var(--ease);
@@ -641,11 +642,11 @@
 .field select:focus,
 .field textarea:focus {
   border-color: var(--accent);
-  background: rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.1);
 }
 .field input::placeholder,
 .field textarea::placeholder {
-  color: rgba(247, 243, 238, 0.4);
+  color: rgba(var(--cream-rgb), 0.4);
 }
 .field textarea {
   resize: vertical;
@@ -661,7 +662,7 @@
 }
 .formSmall {
   font-size: 11.5px;
-  color: rgba(247, 243, 238, 0.45);
+  color: rgba(var(--cream-rgb), 0.45);
   margin-top: 10px;
   line-height: 1.5;
 }

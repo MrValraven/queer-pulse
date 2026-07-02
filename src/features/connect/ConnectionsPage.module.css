@@ -1,5 +1,5 @@
 .page {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 108px 28px 80px;
 }
@@ -58,7 +58,7 @@
   display: flex;
   gap: 14px;
   padding: 16px 20px;
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   border-left: 3px solid var(--plum);
   border-radius: 10px;
   margin-bottom: 32px;
@@ -75,7 +75,7 @@
   display: flex;
   gap: 4px;
   margin-bottom: 24px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
   flex-wrap: wrap;
 }
 .tab {
@@ -90,8 +90,10 @@
   position: relative;
   transition: color 0.2s var(--ease);
 }
-.tab:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--plum);
+  }
 }
 .tabActive {
   color: var(--plum);
@@ -109,7 +111,7 @@
   font-size: 11.5px;
   font-weight: 700;
   color: var(--ink-40);
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 5px;
   padding: 1px 7px;
   margin-left: 5px;
@@ -140,7 +142,7 @@
   font-size: 13.5px;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 11px;
   padding: 10px 14px;
   outline: none;
@@ -155,7 +157,7 @@
 .card {
   padding: 20px 22px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   display: flex;
   flex-direction: column;
@@ -168,10 +170,12 @@
     border-color 0.2s var(--ease),
     box-shadow 0.25s var(--ease);
 }
-.card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(45, 27, 61, 0.18);
-  box-shadow: 0 14px 30px -22px rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--plum-rgb), 0.18);
+    box-shadow: 0 14px 30px -22px rgba(var(--plum-rgb), 0.4);
+  }
 }
 
 .cardHead {
@@ -186,8 +190,10 @@
   text-decoration: none;
   transition: opacity 0.2s var(--ease);
 }
-.avLink:hover {
-  opacity: 0.88;
+@media (hover: hover) {
+  .avLink:hover {
+    opacity: 0.88;
+  }
 }
 
 /* A blocked connection: present but visibly dimmed, with an Unblock affordance. */
@@ -195,8 +201,10 @@
   opacity: 0.7;
   filter: grayscale(0.45);
 }
-.blocked:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .blocked:hover {
+    opacity: 1;
+  }
 }
 .blockedBadge {
   align-self: flex-start;
@@ -229,7 +237,7 @@
   color: var(--jade);
 }
 .avPlum {
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--plum);
 }
 .name {
@@ -244,8 +252,10 @@
   color: inherit;
   text-decoration: none;
 }
-.name a:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .name a:hover {
+    color: var(--accent-ink);
+  }
 }
 .moreWrap {
   position: relative;
@@ -264,9 +274,11 @@
   border-radius: 6px;
   display: flex;
 }
-.more:hover {
-  color: var(--plum);
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .more:hover {
+    color: var(--plum);
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 .menu {
   position: absolute;
@@ -275,10 +287,10 @@
   z-index: 20;
   min-width: 168px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--plum-rgb), 0.12);
   border-radius: 12px;
   padding: 6px;
-  box-shadow: 0 18px 40px -22px rgba(45, 27, 61, 0.5);
+  box-shadow: 0 18px 40px -22px rgba(var(--plum-rgb), 0.5);
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -300,8 +312,10 @@
   border-radius: 8px;
   transition: background 0.15s var(--ease);
 }
-.menuItem:hover {
-  background: rgba(45, 27, 61, 0.05);
+@media (hover: hover) {
+  .menuItem:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
 }
 .menuItem svg {
   color: var(--ink-40);
@@ -315,7 +329,7 @@
 }
 
 :global([data-theme="dark"]) .menu {
-  border-color: rgba(247, 243, 238, 0.14);
+  border-color: rgba(var(--cream-rgb), 0.14);
 }
 .pron {
   font-size: 12.5px;
@@ -335,7 +349,7 @@
   font-size: 12.5px;
   color: var(--ink-60);
   padding-top: 12px;
-  border-top: 1px solid rgba(45, 27, 61, 0.06);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
   flex-wrap: wrap;
 }
 .meta span {
@@ -387,13 +401,13 @@
   font-size: 11px;
   font-weight: 600;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 999px;
   padding: 3px 9px;
 }
 .tagMore {
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.09);
+  background: rgba(var(--plum-rgb), 0.09);
 }
 
 .actions {
@@ -414,7 +428,7 @@
   line-height: 1.6;
   font-style: italic;
   padding: 10px 14px;
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
   border-radius: 8px;
 }
 .pending {

@@ -43,7 +43,7 @@
 }
 .hero p {
   font-size: 16.5px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   max-width: 52ch;
   margin-top: 20px;
   line-height: 1.65;
@@ -53,7 +53,7 @@
   align-items: center;
   gap: 8px;
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   margin-top: 24px;
 }
 .noteDot {
@@ -86,15 +86,20 @@
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
-  border: 1px solid rgba(45, 27, 61, 0.16);
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
   background: transparent;
   border-radius: 999px;
   padding: 9px 17px;
-  transition: all var(--dur-base) var(--ease);
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
 }
-.chip:hover {
-  color: var(--ink);
-  border-color: rgba(45, 27, 61, 0.4);
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--ink);
+    border-color: rgba(var(--plum-rgb), 0.4);
+  }
 }
 .chipActive {
   background: var(--plum);
@@ -108,14 +113,16 @@
   padding: 11px 22px;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
   border: none;
   cursor: pointer;
   transition: background 0.25s;
   white-space: nowrap;
 }
-.listBtn:hover {
-  background: var(--accent-ink);
+@media (hover: hover) {
+  .listBtn:hover {
+    background: var(--accent-ink);
+  }
 }
 
 .grid {
@@ -125,7 +132,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: var(--radius-card);
   overflow: hidden;
   display: flex;
@@ -137,12 +144,16 @@
     transform 0.3s var(--ease),
     box-shadow 0.3s var(--ease);
 }
-.card:hover .cardTitle {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .card:hover .cardTitle {
+    color: var(--accent-ink);
+  }
 }
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 40px -22px rgba(45, 27, 61, 0.38);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px -22px rgba(var(--plum-rgb), 0.38);
+  }
 }
 .cardBody {
   padding: 18px 20px;
@@ -176,7 +187,7 @@
 .detail {
   font-size: 12px;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 6px;
   padding: 3px 9px;
 }
@@ -191,7 +202,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
   margin-top: auto;
 }
 .price {
@@ -225,7 +236,7 @@
 }
 .llCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 22px;
   display: flex;
@@ -238,13 +249,17 @@
     box-shadow 0.25s var(--ease),
     border-color 0.2s var(--ease);
 }
-.llCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 34px -22px rgba(45, 27, 61, 0.34);
-  border-color: rgba(45, 27, 61, 0.18);
+@media (hover: hover) {
+  .llCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 34px -22px rgba(var(--plum-rgb), 0.34);
+    border-color: rgba(var(--plum-rgb), 0.18);
+  }
 }
-.llCard:hover .llName {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .llCard:hover .llName {
+    color: var(--accent-ink);
+  }
 }
 .llAvatar {
   position: relative;
@@ -301,7 +316,7 @@
 }
 .tipCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 16px;
   padding: 22px 24px;
 }
@@ -309,7 +324,7 @@
   font-family: var(--serif);
   font-size: 28px;
   font-weight: 300;
-  color: rgba(45, 27, 61, 0.18);
+  color: rgba(var(--plum-rgb), 0.18);
   line-height: 1;
   margin-bottom: 10px;
 }
@@ -328,5 +343,14 @@
 :global([data-theme="dark"]) .card,
 :global([data-theme="dark"]) .llCard,
 :global([data-theme="dark"]) .tipCard {
-  border-color: rgba(247, 243, 238, 0.1);
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+@media (max-width: 700px) {
+  .hero {
+    padding: 116px 0 64px;
+  }
+  .body {
+    padding: 48px 0 72px;
+  }
 }

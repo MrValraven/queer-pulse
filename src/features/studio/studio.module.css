@@ -1,19 +1,19 @@
 /* QueerPulse Studio — dark music-app shared styles */
 .root {
-  --bg: #1a1028;
-  --rail: #120920;
-  --line: rgba(247, 243, 238, 0.08);
-  --text: rgba(247, 243, 238, 0.92);
-  --text60: rgba(247, 243, 238, 0.62);
-  --text40: rgba(247, 243, 238, 0.4);
+  --bg: var(--studio-bg);
+  --rail: var(--studio-rail);
+  --line: rgba(var(--cream-rgb), 0.08);
+  --text: rgba(var(--cream-rgb), 0.92);
+  --text60: rgba(var(--cream-rgb), 0.62);
+  --text40: rgba(var(--cream-rgb), 0.4);
   --jade-light: #9be0bd;
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
+  min-height: 100svh;
   padding-bottom: 92px;
   /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: rgba(247, 243, 238, 0.18) transparent;
+  scrollbar-color: rgba(var(--cream-rgb), 0.18) transparent;
 }
 /* Themed scrollbars for every inner scroll area inside the studio shell (WebKit/Blink) */
 .root ::-webkit-scrollbar {
@@ -24,14 +24,16 @@
   background: transparent;
 }
 .root ::-webkit-scrollbar-thumb {
-  background: rgba(247, 243, 238, 0.18);
+  background: rgba(var(--cream-rgb), 0.18);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
-.root ::-webkit-scrollbar-thumb:hover {
-  background: rgba(247, 243, 238, 0.32);
-  background-clip: padding-box;
+@media (hover: hover) {
+  .root ::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--cream-rgb), 0.32);
+    background-clip: padding-box;
+  }
 }
 .root ::-webkit-scrollbar-corner {
   background: transparent;
@@ -39,7 +41,7 @@
 .app {
   display: grid;
   grid-template-columns: 248px 1fr;
-  min-height: 100vh;
+  min-height: 100svh;
 }
 
 /* Rail */
@@ -107,11 +109,16 @@
   color: var(--text60);
   cursor: pointer;
   border-left: 2px solid transparent;
-  transition: all 0.2s;
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    border-left-color 0.2s var(--ease);
 }
-.railItem:hover {
-  color: var(--text);
-  background: rgba(247, 243, 238, 0.03);
+@media (hover: hover) {
+  .railItem:hover {
+    color: var(--text);
+    background: rgba(var(--cream-rgb), 0.03);
+  }
 }
 .railItemOn {
   color: var(--text);
@@ -139,8 +146,10 @@
   cursor: pointer;
   transition: background 0.2s;
 }
-.plItem:hover {
-  background: rgba(247, 243, 238, 0.03);
+@media (hover: hover) {
+  .plItem:hover {
+    background: rgba(var(--cream-rgb), 0.03);
+  }
 }
 .plCov {
   width: 36px;
@@ -206,7 +215,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.06);
+  background: rgba(var(--cream-rgb), 0.06);
   border: none;
   color: var(--text60);
   cursor: pointer;
@@ -224,7 +233,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(247, 243, 238, 0.06);
+  background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 9px 16px;
@@ -238,7 +247,6 @@
   flex: 1;
   background: none;
   border: none;
-  outline: none;
   font-family: var(--sans);
   font-size: 14px;
   color: var(--text);
@@ -265,16 +273,18 @@
   font-weight: 600;
   color: var(--text);
   opacity: 0.75;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s var(--ease);
 }
-.creatorLink:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .creatorLink:hover {
+    opacity: 1;
+  }
 }
 .avatar {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.1);
   color: var(--text);
   display: flex;
   align-items: center;
@@ -374,23 +384,25 @@
   font-size: 13.5px;
   font-weight: 600;
   color: var(--text);
-  background: rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 10px 18px;
   cursor: pointer;
   transition: background 0.2s;
 }
-.heroActions button:hover {
-  background: rgba(247, 243, 238, 0.14);
+@media (hover: hover) {
+  .heroActions button:hover {
+    background: rgba(var(--cream-rgb), 0.14);
+  }
 }
 .playBig {
-  width: 52px !important;
+  width: 52px;
   height: 52px;
-  border-radius: 50% !important;
-  background: var(--accent) !important;
-  border: none !important;
-  padding: 0 !important;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -402,8 +414,8 @@
   margin-left: 2px;
 }
 .heroActions .tip {
-  color: var(--accent) !important;
-  border-color: rgba(var(--accent-rgb), 0.3) !important;
+  color: var(--accent);
+  border-color: rgba(var(--accent-rgb), 0.3);
 }
 .payPill {
   display: flex;
@@ -486,9 +498,11 @@
     transform 0.3s var(--ease),
     box-shadow 0.3s var(--ease);
 }
-.card:hover .cardCov {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.6);
+@media (hover: hover) {
+  .card:hover .cardCov {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.6);
+  }
 }
 .tag {
   position: absolute;
@@ -512,7 +526,7 @@
   color: var(--accent-soft);
 }
 .tagLive {
-  background: rgba(247, 243, 238, 0.18);
+  background: rgba(var(--cream-rgb), 0.18);
   color: var(--text);
 }
 .playFab {
@@ -529,13 +543,17 @@
   justify-content: center;
   opacity: 0;
   transform: translateY(6px);
-  transition: all 0.25s var(--ease);
+  transition:
+    opacity 0.25s var(--ease),
+    transform 0.25s var(--ease);
   cursor: pointer;
   z-index: 2;
 }
-.card:hover .playFab {
-  opacity: 1;
-  transform: none;
+@media (hover: hover) {
+  .card:hover .playFab {
+    opacity: 1;
+    transform: none;
+  }
 }
 .playFab svg {
   width: 13px;
@@ -585,7 +603,7 @@
   align-items: start;
 }
 .setCard {
-  background: rgba(247, 243, 238, 0.04);
+  background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid var(--line);
   border-radius: 18px;
   padding: 24px 26px;
@@ -670,7 +688,7 @@
   gap: 16px;
 }
 .sideCard {
-  background: rgba(247, 243, 238, 0.04);
+  background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 20px 22px;
@@ -717,7 +735,7 @@
   color: var(--jade-light);
 }
 .ledgerCard {
-  background: rgba(247, 243, 238, 0.04);
+  background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 20px 22px;
@@ -786,7 +804,9 @@
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    color 0.2s var(--ease),
+    border-bottom-color 0.2s var(--ease);
 }
 .tabOn {
   color: var(--text);
@@ -869,7 +889,7 @@
   font-size: 12px;
 }
 .buyCard {
-  background: rgba(247, 243, 238, 0.04);
+  background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid var(--line);
   border-radius: 18px;
   padding: 24px 26px;
@@ -902,7 +922,7 @@
   font-size: 13.5px;
   font-weight: 600;
   color: var(--text);
-  background: rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 12px 16px;
@@ -910,8 +930,10 @@
   text-align: center;
   transition: background 0.2s;
 }
-.bt:hover {
-  background: rgba(247, 243, 238, 0.14);
+@media (hover: hover) {
+  .bt:hover {
+    background: rgba(var(--cream-rgb), 0.14);
+  }
 }
 .btP {
   background: var(--accent);
@@ -1019,7 +1041,7 @@
   height: 36px;
   border-radius: 50%;
   background: var(--text);
-  color: var(--bg) !important;
+  color: var(--bg);
   justify-content: center;
 }
 .fpTrans .play svg {
@@ -1043,7 +1065,7 @@
   flex: 1;
   height: 4px;
   border-radius: 999px;
-  background: rgba(247, 243, 238, 0.16);
+  background: rgba(var(--cream-rgb), 0.16);
   overflow: hidden;
 }
 .fpBar .fill {
@@ -1108,9 +1130,9 @@
   border-radius: 8px;
   background: linear-gradient(
     90deg,
-    rgba(247, 243, 238, 0.05) 25%,
-    rgba(247, 243, 238, 0.11) 50%,
-    rgba(247, 243, 238, 0.05) 75%
+    rgba(var(--cream-rgb), 0.05) 25%,
+    rgba(var(--cream-rgb), 0.11) 50%,
+    rgba(var(--cream-rgb), 0.05) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;

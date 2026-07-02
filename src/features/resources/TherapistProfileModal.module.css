@@ -41,7 +41,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
   font-size: 18px;
@@ -51,8 +51,10 @@
   justify-content: center;
   transition: background 0.2s var(--ease);
 }
-.close:hover {
-  background: rgba(45, 27, 61, 0.14);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.14);
+  }
 }
 
 /* Header --------------------------------------------------------------- */
@@ -126,7 +128,7 @@
 }
 .statusFull {
   color: var(--accent-ink);
-  background: rgba(232, 119, 90, 0.12);
+  background: rgba(var(--accent-rgb), 0.12);
 }
 
 /* Spec tags ------------------------------------------------------------ */
@@ -139,7 +141,7 @@
 .tag {
   font-size: 12px;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 6px;
   padding: 4px 9px;
   font-weight: 500;
@@ -153,7 +155,7 @@
   margin-top: 22px;
   padding: 20px 22px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.07);
+  border: 1px solid rgba(var(--plum-rgb), 0.07);
   border-radius: 16px;
 }
 .metaItem {
@@ -210,8 +212,8 @@
   font-size: 12.5px;
   font-weight: 500;
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.05);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 999px;
   padding: 6px 13px;
 }
@@ -237,6 +239,16 @@
   height: 5px;
   border-radius: 50%;
   background: var(--jade);
+}
+
+/* See-full-profile link ------------------------------------------------ */
+.profileLink {
+  display: flex;
+  margin-top: 14px;
+}
+.profileLink > * {
+  flex: 1;
+  justify-content: center;
 }
 
 /* First-session callout ------------------------------------------------ */
@@ -282,7 +294,7 @@
   gap: 20px;
   margin-top: 30px;
   padding-top: 26px;
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .footNote {
   font-size: 12.5px;
@@ -299,7 +311,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid rgba(247, 243, 238, 0.4);
+  border: 2px solid rgba(var(--cream-rgb), 0.4);
   border-top-color: var(--cream);
   animation: spin 0.7s linear infinite;
 }
@@ -340,7 +352,7 @@
 }
 .sentText {
   font-size: 13.5px;
-  color: rgba(247, 243, 238, 0.68);
+  color: rgba(var(--cream-rgb), 0.68);
   line-height: 1.6;
 }
 

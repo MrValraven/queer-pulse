@@ -35,7 +35,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
   font-size: 18px;
@@ -45,8 +45,10 @@
   justify-content: center;
   transition: background 0.2s var(--ease);
 }
-.close:hover {
-  background: rgba(45, 27, 61, 0.14);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.14);
+  }
 }
 
 .toRow {
@@ -55,7 +57,7 @@
   gap: 16px;
   margin-bottom: 32px;
   padding-bottom: 28px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
 }
 .toName {
   font-family: var(--serif);
@@ -110,8 +112,10 @@
   cursor: pointer;
   font-family: var(--sans);
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 .back:disabled {
   opacity: 0.5;
@@ -124,11 +128,13 @@
   transition: background 0.45s var(--ease);
 }
 .modalSent .close {
-  background: rgba(247, 243, 238, 0.12);
+  background: rgba(var(--cream-rgb), 0.12);
   color: var(--cream);
 }
-.modalSent .close:hover {
-  background: rgba(247, 243, 238, 0.22);
+@media (hover: hover) {
+  .modalSent .close:hover {
+    background: rgba(var(--cream-rgb), 0.22);
+  }
 }
 .sent {
   text-align: center;
@@ -138,7 +144,7 @@
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: rgba(74, 140, 111, 0.2);
+  background: rgba(var(--jade-rgb), 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,7 +216,7 @@
 }
 .sent p {
   font-size: 15px;
-  color: rgba(247, 243, 238, 0.78);
+  color: rgba(var(--cream-rgb), 0.78);
   margin: 16px 0 28px;
   line-height: 1.65;
 }
@@ -228,7 +234,7 @@
   width: 168px;
   height: 3px;
   border-radius: 999px;
-  background: rgba(247, 243, 238, 0.16);
+  background: rgba(var(--cream-rgb), 0.16);
   overflow: hidden;
 }
 .autoCloseBar {
@@ -251,7 +257,7 @@
 .autoCloseText {
   font-size: 12.5px;
   letter-spacing: 0.01em;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -271,7 +277,7 @@
 }
 
 :global([data-theme="dark"]) .modal {
-  border: 1px solid rgba(247, 243, 238, 0.1);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .modalSent {
   border-color: transparent;

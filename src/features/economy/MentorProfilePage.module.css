@@ -1,5 +1,5 @@
 .page {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 44px 28px 80px;
 }
@@ -13,8 +13,10 @@
   gap: 6px;
   margin-bottom: 22px;
 }
-.back:hover {
-  color: var(--plum);
+@media (hover: hover) {
+  .back:hover {
+    color: var(--plum);
+  }
 }
 
 .head {
@@ -24,7 +26,7 @@
   align-items: flex-start;
   padding-bottom: 32px;
   margin-bottom: 36px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
 }
 @media (max-width: 640px) {
   .head {
@@ -100,7 +102,7 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
   border-radius: 8px;
   padding: 5px 11px;
 }
@@ -172,7 +174,7 @@
 .what {
   padding: 16px 18px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 12px;
 }
 .what b {
@@ -193,7 +195,7 @@
   grid-template-columns: 36px 1fr;
   gap: 14px;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .procRow:last-child {
   border-bottom: none;
@@ -235,7 +237,7 @@
   gap: 7px;
   padding: 5px 11px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: 999px;
   font-size: 13px;
   color: var(--ink);
@@ -261,7 +263,7 @@
   color: var(--accent-ink);
 }
 .avPlum {
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--plum);
 }
 .menteesFoot {
@@ -286,7 +288,7 @@
 }
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 24px;
 }
@@ -302,7 +304,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
   margin-bottom: 8px;
 }
 .bookPrice {
@@ -319,7 +321,7 @@
 }
 .bookPriceSub {
   font-size: 12.5px;
-  color: rgba(247, 243, 238, 0.65);
+  color: rgba(var(--cream-rgb), 0.65);
   margin-top: 3px;
 }
 .row {
@@ -329,7 +331,7 @@
   padding: 9px 0;
   font-size: 13.5px;
   color: var(--ink-60);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.06);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
 }
 .row:last-of-type {
   border-bottom: none;
@@ -374,6 +376,8 @@
   font-weight: 600;
   text-decoration: none;
 }
-.moreLinks a:hover {
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .moreLinks a:hover {
+    color: var(--accent-ink);
+  }
 }
