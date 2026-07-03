@@ -8,7 +8,7 @@ import {
 import { AuthContext } from "./authContext";
 import { AUTH_STORAGE_KEY as STORAGE_KEY } from "../../features/marketing/cookies.data";
 import { useDemoMode } from "./DemoModeProvider";
-import { setOnAuthLost } from "../../shared/api/client";
+import { ApiError, setOnAuthLost } from "../../shared/api/client";
 import {
   bootstrapCsrf,
   fetchMe,
@@ -47,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loggedIn, setLoggedIn] = useState<boolean>(getInitialLoggedIn);
   const [preparing, setPreparing] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   // Demo mode: mirror the prototype's localStorage-driven mock session.
   useEffect(() => {
@@ -67,6 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       setLoggedIn(false);
     });
+    setAuthError(null);
     bootstrapCsrf()
       .then(fetchMe)
       .then((u) => {
@@ -74,10 +76,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(u);
         setLoggedIn(true);
       })
-      .catch(() => {
+      .catch((err: unknown) => {
         if (!active) return;
         setUser(null);
         setLoggedIn(false);
+        // A 401 just means "not signed in" — normal, no error to show. Anything
+        // else (5xx, network failure) is a real fault the member should hear about.
+        const isSignedOut = err instanceof ApiError && err.status === 401;
+        if (!isSignedOut) {
+          const status = err instanceof ApiError ? err.status : null;
+          setAuthError(
+            status
+              ? `We couldn't load your account — QueerPulse's server hit an error (${status}). It's on us, not you. Try again in a moment.`
+              : "We couldn't reach QueerPulse to load your account. Check your connection and try again in a moment.",
+          );
+        }
       });
     return () => {
       active = false;
@@ -130,12 +143,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       status: user?.status ?? null,
       role: user?.role ?? null,
+      authError,
       signIn,
       signOut,
       endPreparing,
       refresh,
     }),
-    [loggedIn, preparing, user, signIn, signOut, endPreparing, refresh],
+    [
+      loggedIn,
+      preparing,
+      user,
+      authError,
+      signIn,
+      signOut,
+      endPreparing,
+      refresh,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -14,6 +14,12 @@ export interface AuthContextValue {
   status: MemberStatus | null;
   role: MemberRole | null;
   /**
+   * Set when loading the session (`GET /auth/me`) failed for a *server* reason
+   * (5xx / network) rather than the member simply being signed out (401). The
+   * UI surfaces this so a backend fault isn't silently mistaken for logged-out.
+   */
+  authError: string | null;
+  /**
    * Begin sign-in. In live mode this hands off to Google OAuth; pass
    * `redirectTo` to land there after login (the in-app `navigate` that follows
    * a `signIn()` call only takes effect in demo mode, since live mode leaves the

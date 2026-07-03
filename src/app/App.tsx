@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../shared/api/queryClient";
 import { ThemeProvider } from "./providers/ThemeProvider";
+import { NavModeProvider } from "./providers/NavModeProvider";
 import { DemoModeProvider } from "./providers/DemoModeProvider";
 import { AuthProvider } from "./providers/AuthProvider";
 import { I18nProvider } from "./providers/I18nProvider";
@@ -22,6 +23,7 @@ import { CreatedCommunitiesProvider } from "./providers/CreatedCommunitiesProvid
 import { DirectoryListingsProvider } from "./providers/DirectoryListingsProvider";
 import { CommandPalette } from "../features/members/CommandPalette";
 import { RoomLoader } from "../shared/components/feedback/RoomLoader";
+import { AuthErrorToast } from "../shared/components/feedback/AuthErrorToast";
 import { ScrollManager } from "./ScrollManager";
 import { AppRoutes } from "./routes";
 
@@ -56,6 +58,9 @@ const RootProviders = composeProviders([
   DemoModeProvider,
   QueryProvider,
   AuthProvider,
+  // Inside AuthProvider: the sidebar is a signed-in-only affordance, so nav mode
+  // is derived from the auth state (signed-out visitors always get the MegaNav).
+  NavModeProvider,
   I18nProvider,
   ToastProvider,
   AdminRoleProvider,
@@ -87,6 +92,7 @@ export function App() {
           <CommandPalette />
         </DataProviders>
         <RoomLoader />
+        <AuthErrorToast />
       </BrowserRouter>
     </RootProviders>
   );

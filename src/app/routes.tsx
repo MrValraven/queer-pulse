@@ -110,6 +110,11 @@ const GatheringRecapPage = lazy(() =>
     default: m.GatheringRecapPage,
   })),
 );
+const CheckoutPage = lazy(() =>
+  import("../features/gatherings/checkout/CheckoutPage").then((m) => ({
+    default: m.CheckoutPage,
+  })),
+);
 const HostPage = lazy(() =>
   import("../features/gatherings/HostPage").then((m) => ({
     default: m.HostPage,
@@ -1103,6 +1108,11 @@ const GiftMembershipPage = lazy(() =>
     default: m.GiftMembershipPage,
   })),
 );
+const SustainerPage = lazy(() =>
+  import("../features/support/SustainerPage").then((m) => ({
+    default: m.SustainerPage,
+  })),
+);
 const PublicProfilePage = lazy(() =>
   import("../features/members/PublicProfilePage").then((m) => ({
     default: m.PublicProfilePage,
@@ -1528,6 +1538,7 @@ export function AppRoutes() {
         <Route path={routes.event} element={<EventPage />} />
         <Route path={routes.rsvp} element={<RsvpPage />} />
         <Route path={routes.rsvpTicket} element={<RsvpPage />} />
+        <Route path={routes.checkout} element={<CheckoutPage />} />
         <Route path={routes.gatheringRecap} element={<GatheringRecapPage />} />
         <Route path={routes.host} element={<HostPage />} />
         <Route
@@ -1978,6 +1989,7 @@ export function AppRoutes() {
         />
         <Route path={routes.membership} element={<MembershipPage />} />
         <Route path={routes.giftMembership} element={<GiftMembershipPage />} />
+        <Route path={routes.sustainer} element={<SustainerPage />} />
 
         {/* Legacy paths → new homes (keeps old links & design hrefs working) */}
         {LEGACY_REDIRECTS.map(([from, to]) => (

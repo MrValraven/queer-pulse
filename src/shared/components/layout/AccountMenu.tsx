@@ -15,11 +15,13 @@ import {
   FiUsers,
   FiSettings,
   FiHelpCircle,
+  FiHeart,
   FiLogOut,
   FiDatabase,
 } from "react-icons/fi";
 import { Avatar } from "../ui";
 import { useAuth } from "../../../app/providers/authContext";
+import { useNavMode } from "../../../app/providers/navModeContext";
 import { routes, modPanel } from "../../../app/routeMap";
 import { useAdminRole, DEMO_MOD_SLUG } from "../../../features/admin/adminRole";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
@@ -60,6 +62,7 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
   // Your stuff / system
   [
     { label: "Saved", to: routes.collections, icon: FiBookmark },
+    { label: "Membership", to: routes.sustainer, icon: FiHeart },
     { label: "Settings", to: routes.settings, icon: FiSettings },
     { label: "Help", to: routes.help, icon: FiHelpCircle },
   ],
@@ -82,10 +85,17 @@ export function AccountMenu({
   name: nameProp,
   initials: initialsProp,
   photo: photoProp,
+  placement = "default",
 }: {
   name?: string;
   initials?: string;
   photo?: string;
+  /**
+   * "default" opens the menu down-left from a top-right navbar chip. "rail"
+   * flips it to open upward and left-aligned, for the bottom of the left
+   * sidebar where a downward/right-anchored menu would run off-screen.
+   */
+  placement?: "default" | "rail";
 }) {
   const { signOut, user } = useAuth();
   // Prefer the live/demo signed-in user; fall back to props, then the mock.
@@ -100,6 +110,7 @@ export function AccountMenu({
     initialsProp ?? (profile ? nameInitials(name) : currentUser.initials);
   const { demoMode, available, toggle } = useDemoMode();
   const { role, setRole } = useAdminRole();
+  const { navMode, setNavMode } = useNavMode();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -124,7 +135,9 @@ export function AccountMenu({
     <div className={styles.wrap} ref={ref}>
       <button
         type="button"
-        className={styles.trigger}
+        className={[styles.trigger, placement === "rail" && styles.triggerRail]
+          .filter(Boolean)
+          .join(" ")}
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
@@ -141,7 +154,12 @@ export function AccountMenu({
       </button>
 
       {open && (
-        <div className={styles.menu} role="menu">
+        <div
+          className={[styles.menu, placement === "rail" && styles.menuRail]
+            .filter(Boolean)
+            .join(" ")}
+          role="menu"
+        >
           <div className={styles.header}>
             <Avatar
               initials={initials}
@@ -236,6 +254,29 @@ export function AccountMenu({
                   onClick={() => setRole(r)}
                 >
                   {r === "staff" ? "Staff" : r === "mod" ? "Mod" : "Member"}
+                </button>
+              ))}
+            </div>
+            <div className={styles.divider} />
+            <div className={styles.roleLabel}>Navigation</div>
+            <div
+              className={styles.roleSwitch}
+              role="group"
+              aria-label="Navigation layout"
+            >
+              {(["mega", "sidebar"] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  className={[
+                    styles.roleBtn,
+                    navMode === m && styles.roleBtnActive,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  onClick={() => setNavMode(m)}
+                >
+                  {m === "mega" ? "Top bar" : "Sidebar"}
                 </button>
               ))}
             </div>

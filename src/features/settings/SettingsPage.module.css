@@ -475,3 +475,17 @@
 :global([data-theme="dark"]) .input {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
+
+/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+   Global keyframes can't be referenced from a CSS module (the animation-name
+   gets scoped to a dangling hash), so each module needs its own copy. */
+@keyframes qpToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

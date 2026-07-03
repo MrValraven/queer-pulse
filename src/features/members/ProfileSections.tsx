@@ -18,8 +18,7 @@ import {
   currentUserSlug,
   type MemberProfile,
 } from "./data/memberProfiles";
-import { discoverCount, earnedBadges, levelInfo } from "./badges.data";
-import { availableCount } from "./perks.data";
+import { useRecognition } from "./api/useRecognition";
 import { VISIBILITY_LABEL } from "./profileSections.data";
 import {
   ActivitySection,
@@ -142,7 +141,11 @@ export function ProfileHero({
                 <span className={styles.pin} aria-hidden />
                 {profile.hood}, Lisbon
               </span>
-              <span className={styles.muted}>Member since {profile.since}</span>
+              {profile.since && (
+                <span className={styles.muted}>
+                  Member since {profile.since}
+                </span>
+              )}
             </div>
             <p className={styles.bio}>{profile.bio}</p>
             <TagRow style={{ marginTop: 20 }}>
@@ -189,38 +192,56 @@ export function ProfileHero({
               )}
             </div>
             <div className={styles.vouchRow}>
-              <div className={styles.vouchFaces}>
-                {voucherSlugs.map((slug, index) => {
-                  const voucher = memberProfiles[slug];
-                  if (!voucher) return null;
-                  const name = `${voucher.first} ${voucher.last}`;
-                  return (
-                    <Link
-                      key={slug}
-                      to={`/members/${slug}`}
-                      className={styles.vouchFace}
-                      style={{
-                        marginLeft: index === 0 ? 0 : -12,
-                        zIndex: voucherSlugs.length - index,
-                      }}
-                    >
-                      <span className={styles.vouchTip}>{name}</span>
-                      <Avatar
-                        initials={voucher.initials}
-                        tint={voucher.tint}
-                        size={52}
-                        src={voucher.photo}
-                        alt={name}
-                      />
-                    </Link>
-                  );
-                })}
-              </div>
-              <div className={styles.vouchText}>
-                Vouched for by <b>{namesText}</b>.
-                <br />
-                That's the only number that matters here.
-              </div>
+              {voucherSlugs.length > 0 ? (
+                <>
+                  <div className={styles.vouchFaces}>
+                    {voucherSlugs.map((slug, index) => {
+                      const voucher = memberProfiles[slug];
+                      if (!voucher) return null;
+                      const name = `${voucher.first} ${voucher.last}`;
+                      return (
+                        <Link
+                          key={slug}
+                          to={`/members/${slug}`}
+                          className={styles.vouchFace}
+                          style={{
+                            marginLeft: index === 0 ? 0 : -12,
+                            zIndex: voucherSlugs.length - index,
+                          }}
+                        >
+                          <span className={styles.vouchTip}>{name}</span>
+                          <Avatar
+                            initials={voucher.initials}
+                            tint={voucher.tint}
+                            size={52}
+                            src={voucher.photo}
+                            alt={name}
+                          />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                  <div className={styles.vouchText}>
+                    Vouched for by <b>{namesText}</b>.
+                    <br />
+                    That's the only number that matters here.
+                  </div>
+                </>
+              ) : (
+                <div className={styles.vouchText}>
+                  {isSelf ? (
+                    <>
+                      No vouches yet. They'll appear here as people who know you
+                      add their name — the only number that matters.
+                    </>
+                  ) : (
+                    <>
+                      No vouches for {profile.first} yet. If you know them,
+                      yours could be the first.
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           </Reveal>
         </div>
@@ -230,23 +251,24 @@ export function ProfileHero({
 }
 
 export function RecognitionSection() {
+  const { level, badges, perks } = useRecognition();
   return (
     <Section title="Recognition" subtitle="Your level, badges and member perks">
       <div className={styles.recogGrid}>
         <Link to={routes.badges} className={styles.recogCard}>
           <div className={styles.recogTop}>
             <span className={styles.recogChip}>
-              Level {levelInfo.level} · {levelInfo.name}
+              Level {level.level} · {level.name}
             </span>
           </div>
           <div className={styles.recogTitle}>Badges &amp; level</div>
           <div className={styles.recogDesc}>
-            {earnedBadges.length} earned · {discoverCount} to discover
+            {badges.earnedCount} earned · {badges.discoverCount} to discover
           </div>
           <div className={styles.recogXpBar}>
             <div
               className={styles.recogXpFill}
-              style={{ width: `${levelInfo.percent}%` }}
+              style={{ width: `${level.percent}%` }}
             />
           </div>
           <div className={styles.recogArrow}>See badges &amp; level →</div>
@@ -255,7 +277,7 @@ export function RecognitionSection() {
         <Link to={routes.perks} className={styles.recogCard}>
           <div className={styles.recogTop}>
             <span className={`${styles.recogChip} ${styles.jade}`}>
-              {availableCount} available
+              {perks.availableCount} available
             </span>
           </div>
           <div className={styles.recogTitle}>Member perks</div>

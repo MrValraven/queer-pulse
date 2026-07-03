@@ -1,3 +1,12 @@
+import type { IconType } from "react-icons";
+import {
+  FiUsers,
+  FiMapPin,
+  FiLifeBuoy,
+  FiBookOpen,
+  FiBriefcase,
+  FiInfo,
+} from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 export interface MegaLink {
   label: string;
@@ -21,6 +30,8 @@ export interface MegaFeature {
 
 export interface MegaMenu {
   key: string;
+  /** Rail icon for the sidebar nav; the top MegaNav ignores it. */
+  icon?: IconType;
   feature?: MegaFeature;
   columns: MegaColumn[];
 }
@@ -53,6 +64,7 @@ export function filterMenus(
 export const NAV_MENUS: MegaMenu[] = [
   {
     key: "Community",
+    icon: FiUsers,
     feature: {
       eyebrow: "Community",
       title: "Find your people.",
@@ -89,6 +101,7 @@ export const NAV_MENUS: MegaMenu[] = [
   },
   {
     key: "Lisbon",
+    icon: FiMapPin,
     feature: {
       eyebrow: "Lisbon",
       title: "Queer Lisbon, mapped.",
@@ -120,6 +133,7 @@ export const NAV_MENUS: MegaMenu[] = [
   },
   {
     key: "Resources",
+    icon: FiLifeBuoy,
     feature: {
       eyebrow: "Support",
       title: "Help when you need it.",
@@ -172,6 +186,7 @@ export const NAV_MENUS: MegaMenu[] = [
   },
   {
     key: "Culture",
+    icon: FiBookOpen,
     feature: {
       eyebrow: "The Magazine",
       title: "Read the new issue.",
@@ -229,6 +244,7 @@ export const NAV_MENUS: MegaMenu[] = [
   },
   {
     key: "Work",
+    icon: FiBriefcase,
     feature: {
       eyebrow: "Your workspace",
       title: "Your Work, in one place.",
@@ -267,6 +283,7 @@ export const NAV_MENUS: MegaMenu[] = [
   },
   {
     key: "About",
+    icon: FiInfo,
     feature: {
       eyebrow: "About",
       title: "What QueerPulse is.",

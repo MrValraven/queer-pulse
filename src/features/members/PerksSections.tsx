@@ -4,8 +4,8 @@ import { FiCheck } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
-import { levelInfo } from "./badges.data";
-import { type Perk, perkGroups, sidebarCopy } from "./perks.data";
+import { type Perk, sidebarCopy } from "./perks.data";
+import { useRecognition } from "./api/useRecognition";
 import styles from "./PerksPage.module.css";
 
 const barClass = {
@@ -166,10 +166,11 @@ function PerkCard({ perk }: { perk: Perk }) {
 }
 
 export function PerkGroups() {
+  const { perks } = useRecognition();
   let cardIndex = 0;
   return (
     <div>
-      {perkGroups.map((group) => (
+      {perks.groups.map((group) => (
         <div key={group.label}>
           <div className={styles.groupLabel}>{group.label}</div>
           {group.perks.map((perk) => (
@@ -184,6 +185,7 @@ export function PerkGroups() {
 }
 
 export function PerksSidebar() {
+  const { level } = useRecognition();
   const { showToast } = useToast();
   const [idea, setIdea] = useState("");
 
@@ -197,22 +199,22 @@ export function PerksSidebar() {
       <div className={styles.sbCard}>
         <div className={styles.sbTitle}>Your level</div>
         <div className={styles.miniLevel}>
-          Level {levelInfo.level} · <em>{levelInfo.name}</em>
+          Level {level.level} · <em>{level.name}</em>
         </div>
         <div className={styles.miniXpBar}>
           <div
             className={styles.miniXpFill}
-            style={{ width: `${levelInfo.percent}%` }}
+            style={{ width: `${level.percent}%` }}
           />
         </div>
         <div className={styles.miniXpLabel}>
-          {levelInfo.xp} / {levelInfo.xpMax} XP · {levelInfo.xpToNext} to Level{" "}
-          {levelInfo.level + 1}
+          {level.xp} / {level.xpMax} XP · {level.xpToNext} to Level{" "}
+          {level.level + 1}
         </div>
         <div className={styles.nextPerkNote}>
           Next perks unlock at{" "}
           <strong>
-            Level {levelInfo.level + 1} · {levelInfo.nextName}
+            Level {level.level + 1} · {level.nextName}
           </strong>{" "}
           — host without approval &amp; an increased invite quota.
         </div>

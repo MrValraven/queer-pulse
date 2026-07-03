@@ -61,6 +61,7 @@
   border-bottom: 2px solid rgba(var(--plum-rgb), 0.08);
   margin-bottom: 20px;
   overflow-x: auto;
+  overflow-y: hidden;
 }
 .tab {
   font-family: var(--sans);

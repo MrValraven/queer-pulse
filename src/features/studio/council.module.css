@@ -821,3 +821,15 @@
     animation: none;
   }
 }
+
+/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+   Global keyframes can't be referenced from a CSS module (the animation-name
+   gets scoped to a dangling hash), so each module needs its own copy. */
+@keyframes qpShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

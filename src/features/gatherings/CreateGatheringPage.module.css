@@ -724,3 +724,68 @@
   color: var(--ink-60);
   line-height: 1.6;
 }
+
+/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+   Global keyframes can't be referenced from a CSS module (the animation-name
+   gets scoped to a dangling hash), so each module needs its own copy. */
+@keyframes qpGridIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes qpToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes qpBump {
+  0% {
+    transform: scale(0.85) translateY(4px);
+    opacity: 0.4;
+  }
+  55% {
+    transform: scale(1.06) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes qpDigitRoll {
+  0% {
+    transform: translateY(0.7em);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-0.12em);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes qpCheckPop {
+  0% {
+    transform: scale(0) rotate(-14deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.25) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}

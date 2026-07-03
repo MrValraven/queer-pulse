@@ -24,7 +24,7 @@ export const storyCards: StoryCard[] = [
     href: routes.storyTomas,
     tint: "jade",
     image:
-      "https://images.unsplash.com/photo-1600188769045-bc6026bfc8cd?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519671282429-b44660ead0a7?q=80&w=600&auto=format&fit=crop",
   },
   {
     category: "On Building",

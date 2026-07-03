@@ -1,15 +1,49 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { FiCloudOff } from "react-icons/fi";
+import type { IconType } from "react-icons";
+import { FiAlertTriangle, FiCloudOff, FiWifiOff } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { pingBackend } from "../../shared/api/client";
+import { probeBackend, type BackendProbe } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
 import { AuthLayout } from "./AuthLayout";
 import styles from "./auth.module.css";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+type FailedProbe = Extract<BackendProbe, { ok: false }>;
+
+/** Map each probe failure to a specific, no-blame notice for the member. */
+function noticeFor(err: FailedProbe): {
+  Icon: IconType;
+  title: string;
+  body: string;
+} {
+  switch (err.reason) {
+    case "offline":
+      return {
+        Icon: FiWifiOff,
+        title: "You're offline",
+        body: "We can't reach QueerPulse — your device isn't connected right now. Reconnect and try again.",
+      };
+    case "server":
+      return {
+        Icon: FiAlertTriangle,
+        title: "Something went wrong on our side",
+        body: `QueerPulse ran into an error signing you in${
+          err.status ? ` (${err.status})` : ""
+        } — it's on us, not you. Give it a moment and try again.`,
+      };
+    case "unreachable":
+    default:
+      return {
+        Icon: FiCloudOff,
+        title: "Sign-in is taking a breather",
+        body: "We can't reach QueerPulse right now — nothing's wrong on your end. Give it a moment and try again.",
+      };
+  }
+}
 
 /** Only honour same-origin internal paths from `?next=` (avoids open redirects). */
 function safeNext(next: string | null): string {
@@ -28,27 +62,28 @@ export function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [touched, setTouched] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [unavailable, setUnavailable] = useState(false);
+  const [error, setError] = useState<FailedProbe | null>(null);
 
   /**
    * Kick off sign-in. In demo mode this just flips local state. In live mode
    * `signIn()` does a full-page redirect to the backend, so we first probe that
-   * the backend is reachable — if it's offline we show an in-app notice instead
-   * of stranding the browser on its own connection-refused error page.
+   * the backend is healthy — if it isn't we show a specific in-app notice
+   * (offline / unreachable / server error) instead of stranding the browser on
+   * its own error page.
    */
   async function attemptSignIn() {
     if (busy) return;
-    setUnavailable(false);
+    setError(null);
     if (demoMode) {
       signIn(dest);
       navigate(dest);
       return;
     }
     setBusy(true);
-    const reachable = await pingBackend();
-    if (!reachable) {
+    const probe = await probeBackend();
+    if (!probe.ok) {
       setBusy(false);
-      setUnavailable(true);
+      setError(probe);
       return;
     }
     signIn(dest); // redirects the page away
@@ -57,6 +92,7 @@ export function SignInPage() {
   const emailValid = EMAIL_RE.test(email.trim());
   const emailError = touched && email.trim().length > 0 && !emailValid;
   const canSubmit = emailValid && password.length > 0;
+  const notice = error ? noticeFor(error) : null;
 
   return (
     <AuthLayout>
@@ -65,15 +101,12 @@ export function SignInPage() {
       </h1>
       <p className={styles.sub}>Sign in to your QueerPulse account.</p>
 
-      {unavailable && (
+      {notice && (
         <div className={styles.notice} role="alert">
-          <FiCloudOff size={20} className={styles.noticeIcon} aria-hidden />
+          <notice.Icon size={20} className={styles.noticeIcon} aria-hidden />
           <div className={styles.noticeText}>
-            <strong>Sign-in is taking a breather</strong>
-            <span>
-              We can&rsquo;t reach QueerPulse right now — nothing&rsquo;s wrong
-              on your end. Give it a moment and try again.
-            </span>
+            <strong>{notice.title}</strong>
+            <span>{notice.body}</span>
           </div>
         </div>
       )}

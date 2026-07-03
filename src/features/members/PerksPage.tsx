@@ -2,8 +2,7 @@ import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { PerkGroups, PerksSidebar } from "./PerksSections";
-import { levelInfo } from "./badges.data";
-import { availableCount } from "./perks.data";
+import { useRecognition } from "./api/useRecognition";
 import styles from "./PerksPage.module.css";
 
 function StarIcon() {
@@ -20,6 +19,7 @@ function StarIcon() {
 }
 
 export function PerksPage() {
+  const { level, perks } = useRecognition();
   return (
     <AppShell>
       <div className={styles.page}>
@@ -34,10 +34,10 @@ export function PerksPage() {
           <div className={styles.phStatusRow}>
             <span className={styles.levelChip}>
               <StarIcon />
-              Level {levelInfo.level} · {levelInfo.name}
+              Level {level.level} · {level.name}
             </span>
             <span className={styles.perksAvail}>
-              {availableCount} perks available to redeem
+              {perks.availableCount} perks available to redeem
             </span>
           </div>
 

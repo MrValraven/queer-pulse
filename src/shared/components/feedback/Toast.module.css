@@ -82,3 +82,23 @@
     animation: none;
   }
 }
+
+/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+   Global keyframes can't be referenced from a CSS module (the animation-name
+   gets scoped to a dangling hash), so each module needs its own copy. */
+@keyframes qpToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes qpToastOut {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}

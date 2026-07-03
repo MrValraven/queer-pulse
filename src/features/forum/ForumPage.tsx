@@ -1,14 +1,17 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { THREADS, SELF_AUTHOR, type Thread } from "./forum.data";
 import { ComposeThreadModal, type NewThreadInput } from "./ComposeThreadModal";
+import { FirstPostPrompt } from "./FirstPostPrompt";
 import { ForumSidebar } from "./ForumSidebar";
 import { ForumThreadList } from "./ForumThreadList";
 import styles from "./ForumPage.module.css";
+
+const PROMPT_DISMISSED_KEY = "qp_forum_prompt_dismissed";
 
 export function ForumPage() {
   const loading = useSimulatedLoad();
@@ -16,7 +19,31 @@ export function ForumPage() {
   const [sort, setSort] = useState<"top" | "new">("top");
   const [voted, setVoted] = useState<Set<number>>(new Set());
   const [composing, setComposing] = useState(false);
+  const [composeSeed, setComposeSeed] = useState("");
   const [extraThreads, setExtraThreads] = useState<Thread[]>([]);
+  const [promptDismissed, setPromptDismissed] = useState(
+    () =>
+      typeof localStorage !== "undefined" &&
+      localStorage.getItem(PROMPT_DISMISSED_KEY) === "1",
+  );
+
+  // Show the first-post invitation only to members who haven't posted this
+  // session and haven't waved it away before (dismissal persists across reloads).
+  const showFirstPostPrompt = !promptDismissed && extraThreads.length === 0;
+
+  function dismissPrompt() {
+    setPromptDismissed(true);
+    try {
+      localStorage.setItem(PROMPT_DISMISSED_KEY, "1");
+    } catch {
+      // Private mode / storage disabled — session-only dismissal is fine.
+    }
+  }
+
+  function openCompose(seed = "") {
+    setComposeSeed(seed);
+    setComposing(true);
+  }
 
   const allThreads = useMemo(
     () => [...extraThreads, ...THREADS],
@@ -66,6 +93,8 @@ export function ForumPage() {
     // Surface the new post regardless of current filter/sort.
     setCat("all");
     setSort("new");
+    // Once they've posted, the first-post invitation has done its job — for good.
+    dismissPrompt();
   }
 
   function toggleVote(id: number) {
@@ -98,10 +127,7 @@ export function ForumPage() {
                 </Link>
               </p>
             </div>
-            <Button
-              className={styles.newBtn}
-              onClick={() => setComposing(true)}
-            >
+            <Button className={styles.newBtn} onClick={() => openCompose()}>
               + New post
             </Button>
           </div>
@@ -117,21 +143,33 @@ export function ForumPage() {
               counts={counts}
               totalCount={allThreads.length}
             />
-            <ForumThreadList
-              loading={loading}
-              threads={threads}
-              sort={sort}
-              setSort={setSort}
-              voted={voted}
-              toggleVote={toggleVote}
-              onShowAll={() => setCat("all")}
-            />
+            <div>
+              {showFirstPostPrompt && (
+                <FadeIn>
+                  <FirstPostPrompt
+                    onWrite={() => openCompose()}
+                    onPickStarter={(text) => openCompose(text)}
+                    onDismiss={dismissPrompt}
+                  />
+                </FadeIn>
+              )}
+              <ForumThreadList
+                loading={loading}
+                threads={threads}
+                sort={sort}
+                setSort={setSort}
+                voted={voted}
+                toggleVote={toggleVote}
+                onShowAll={() => setCat("all")}
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {composing && (
         <ComposeThreadModal
+          initialTitle={composeSeed}
           onClose={() => setComposing(false)}
           onPublish={publishThread}
         />

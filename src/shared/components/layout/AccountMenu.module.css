@@ -26,6 +26,20 @@
   }
 }
 
+/* Rail placement sits on the plum sidebar, so the chip text/chevron flip to
+   cream (plum-on-plum would be invisible) and the hover/open tint lightens. */
+.triggerRail {
+  color: var(--cream);
+}
+.triggerRail[aria-expanded="true"] {
+  background: rgba(var(--cream-rgb), 0.08);
+}
+@media (hover: hover) {
+  .triggerRail:hover {
+    background: rgba(var(--cream-rgb), 0.08);
+  }
+}
+
 .name {
   white-space: nowrap;
 }
@@ -57,6 +71,16 @@
   z-index: 200;
   transform-origin: top right;
   animation: qpMenuIn var(--dur-fast) var(--ease-out);
+}
+
+/* Rail placement: anchored to the bottom-left of the left sidebar, the menu
+   opens upward and left-aligned so it never runs off the top or left edge. */
+.menuRail {
+  top: auto;
+  bottom: calc(100% + 10px);
+  left: 0;
+  right: auto;
+  transform-origin: bottom left;
 }
 
 /* Pinned identity header — stays visible while the list scrolls. */
@@ -246,4 +270,18 @@
 .populateOn {
   color: var(--jade);
   opacity: 1;
+}
+
+/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+   Global keyframes can't be referenced from a CSS module (the animation-name
+   gets scoped to a dangling hash), so each module needs its own copy. */
+@keyframes qpMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }

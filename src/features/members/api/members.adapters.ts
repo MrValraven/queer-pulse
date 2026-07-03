@@ -1,9 +1,36 @@
+import type { IconType } from "react-icons";
+import {
+  FiBookOpen,
+  FiCalendar,
+  FiCamera,
+  FiEdit3,
+  FiFileText,
+  FiMessageCircle,
+  FiMusic,
+} from "react-icons/fi";
 import type { Member } from "../data/members";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
-import type { MemberCardDTO, ProfileDTO } from "./members.api";
+import type { ActivityKind, MemberCardDTO, ProfileDTO } from "./members.api";
 import type { MemberCard } from "../memberDirectoryFilter.data";
 
 const TINTS: AvatarTint[] = ["coral", "plum", "jade"];
+
+/** Backend activity kinds → the icon each renders with in "Recent activity". */
+const ACTIVITY_ICONS: Record<ActivityKind, IconType> = {
+  post: FiFileText,
+  event: FiCalendar,
+  message: FiMessageCircle,
+  reading: FiBookOpen,
+  edit: FiEdit3,
+  photo: FiCamera,
+  music: FiMusic,
+};
+
+/** Format an ISO join date to the year the hero shows ("2024"); "" if absent. */
+function joinYear(iso?: string): string {
+  const year = iso?.slice(0, 4) ?? "";
+  return /^\d{4}$/.test(year) ? year : "";
+}
 
 /** Deterministic avatar tint from a slug (stable across renders/sessions). */
 export function tintForSlug(slug: string): AvatarTint {
@@ -84,6 +111,9 @@ export function profileToMember(dto: ProfileDTO): Member {
     role: dto.tagline ?? "",
     hood: dto.location ?? "",
     bio: dto.bio ?? "",
+    verified: dto.verified ?? false,
+    since: joinYear(dto.joinedAt),
+    now: dto.now ?? "",
     openTo: dto.openTo ?? [],
     work: (dto.work ?? []).map((w) => ({
       category: w.category,
@@ -91,5 +121,28 @@ export function profileToMember(dto: ProfileDTO): Member {
       year: w.year,
       image: w.imageUrl,
     })),
+    board: (dto.board ?? []).map((b) => ({
+      kind: b.kind,
+      title: b.title,
+      slug: b.slug,
+    })),
+    skills: (dto.skills ?? []).map((s) => ({ name: s.name, meta: s.meta })),
+    groups: (dto.groups ?? []).map((g) => ({ name: g.name, role: g.role })),
+    shapings: Object.fromEntries(
+      (dto.shapings ?? []).map((s) => [
+        s.kind,
+        { title: s.title, note: s.note },
+      ]),
+    ) as Member["shapings"],
+    activity: (dto.activity ?? []).map((a) => ({
+      icon: ACTIVITY_ICONS[a.kind] ?? FiFileText,
+      title: a.title,
+      sub: a.sub,
+      to: a.to,
+    })),
+    // Registry-resolved faces ("Also in the room") still hydrate from the mock
+    // member registry, so live-mode related cards only carry slugs today — the
+    // full-card hydration is a documented follow-up (same gap as vouch faces).
+    related: (dto.related ?? []).map((r) => r.slug),
   };
 }

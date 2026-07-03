@@ -5,9 +5,11 @@ import { useScrolled } from "../../hooks/useScrolled";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useAuth } from "../../../app/providers/authContext";
+import { useNavMode } from "../../../app/providers/navModeContext";
 import { routes } from "../../../app/routeMap";
 import { MegaNav } from "./MegaNav";
 import { MegaNavDrawer } from "./MegaNavDrawer";
+import { Sidebar } from "./Sidebar";
 import { AccountMenu, ACCOUNT_ITEMS } from "./AccountMenu";
 import styles from "./Navbar.module.css";
 
@@ -53,6 +55,7 @@ export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
   const isMobile = useMediaQuery("(max-width: 860px)");
   const { theme, toggleTheme } = useTheme();
   const { loggedIn, signOut } = useAuth();
+  const { navMode } = useNavMode();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const drawerPanelRef = useRef<HTMLDivElement>(null);
@@ -107,6 +110,12 @@ export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
       trigger?.focus();
     };
   }, [drawerOpen]);
+
+  // Desktop sidebar mode: swap the whole top bar for the left rail. Mobile always
+  // keeps the top bar + drawer below, regardless of nav mode.
+  if (navMode === "sidebar" && !isMobile) {
+    return <Sidebar unreadCount={unreadCount} />;
+  }
 
   return (
     <>

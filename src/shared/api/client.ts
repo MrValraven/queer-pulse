@@ -20,18 +20,40 @@ export function setOnAuthLost(cb: () => void): void {
 }
 
 /**
- * Cheap reachability probe: resolves true if the backend answers at all (any
- * HTTP status), false on a network-level failure (offline / connection
- * refused). Use before a full-page auth redirect so we can fail gracefully
- * in-app instead of stranding the browser on its own connection-refused page.
+ * Result of a pre-sign-in reachability probe. `ok` means we can safely hand off
+ * to the auth redirect; otherwise `reason` says what went wrong so the UI can
+ * tell the member specifically rather than showing one catch-all notice.
  */
-export async function pingBackend(): Promise<boolean> {
-  if (!API_BASE_URL) return false;
+export type BackendProbe =
+  | { ok: true }
+  | {
+      ok: false;
+      reason: "offline" | "unreachable" | "server";
+      status?: number;
+    };
+
+/**
+ * Probe the backend before a full-page auth redirect so we can fail gracefully
+ * in-app instead of stranding the browser on its own error page. Distinguishes:
+ * - `offline`     — the device has no network connection at all
+ * - `server`      — the backend answered but with a 5xx (the fault is on us)
+ * - `unreachable` — the backend didn't answer (down / DNS / CORS / misconfigured)
+ */
+export async function probeBackend(): Promise<BackendProbe> {
+  if (!API_BASE_URL) return { ok: false, reason: "unreachable" };
+  if (typeof navigator !== "undefined" && navigator.onLine === false) {
+    return { ok: false, reason: "offline" };
+  }
   try {
-    await fetch(`${API_BASE_URL}/csrf-token`, { credentials: "include" });
-    return true;
+    const res = await fetch(`${API_BASE_URL}/csrf-token`, {
+      credentials: "include",
+    });
+    if (res.status >= 500) {
+      return { ok: false, reason: "server", status: res.status };
+    }
+    return { ok: true };
   } catch {
-    return false;
+    return { ok: false, reason: "unreachable" };
   }
 }
 

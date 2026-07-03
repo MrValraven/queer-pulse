@@ -37,12 +37,72 @@ export interface WorkItemDTO {
   imageUrl?: string;
 }
 
+/** A barter-board post by the member ("On the board"). */
+export interface BoardItemDTO {
+  kind: "looking" | "offering";
+  title: string;
+  /** Slug of the linked board post — anchors to #<slug> on the barter board. */
+  slug: string;
+}
+
+/** A skill or service the member offers ("Skills & offerings"). */
+export interface SkillItemDTO {
+  name: string;
+  /** Short meta line, e.g. "Available · React, TypeScript, Node" or "Trade · backend". */
+  meta: string;
+}
+
+/** A group / circle / collective the member belongs to ("Groups & circles"). */
+export interface GroupItemDTO {
+  name: string;
+  /** The member's role in the group, e.g. "Member", "Host", "Co-founder". */
+  role: string;
+}
+
+export type ShapingKind = "film" | "book" | "song" | "moment";
+/** A formative film/book/song/moment ("What shaped me"). */
+export interface ShapingItemDTO {
+  kind: ShapingKind;
+  title: string;
+  note: string;
+}
+
+/** Semantic activity type; the frontend maps each to an icon. */
+export type ActivityKind =
+  "post" | "event" | "message" | "reading" | "edit" | "photo" | "music";
+/** A recent public action, linking to where it happened ("Recent activity"). */
+export interface ActivityItemDTO {
+  kind: ActivityKind;
+  title: string;
+  sub: string;
+  /** Path (or URL) the activity links to. */
+  to: string;
+}
+
 export interface ProfileDTO extends MemberCardDTO {
   bio?: string;
   location?: string;
   openTo?: string[];
   socials?: SocialLinkDTO[];
   work?: WorkItemDTO[];
+  /** Whether the member is identity-verified (drives the "Verified member" badge). */
+  verified?: boolean;
+  /** ISO 8601 timestamp the member joined; the frontend formats it to a year. */
+  joinedAt?: string;
+  /** Free-text "what I'm in the middle of" status ("Now"). */
+  now?: string;
+  /** Barter-board posts by this member ("On the board"). */
+  board?: BoardItemDTO[];
+  /** Skills/services offered on the barter board ("Skills & offerings"). */
+  skills?: SkillItemDTO[];
+  /** Groups, circles and collectives the member belongs to ("Groups & circles"). */
+  groups?: GroupItemDTO[];
+  /** Formative films/books/songs/moments ("What shaped me"). */
+  shapings?: ShapingItemDTO[];
+  /** Recent public activity across the platform ("Recent activity"). */
+  activity?: ActivityItemDTO[];
+  /** Related members ("Also in the room") — nearby in craft or neighbourhood. */
+  related?: MemberCardDTO[];
   /** True when the viewer only gets the limited card (network/private). */
   limited: boolean;
 }

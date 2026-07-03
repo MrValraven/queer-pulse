@@ -456,6 +456,10 @@ export interface CalendarEvent {
   to: string;
   /** Official QueerPulse event vs member/community-created gathering. */
   kind: "event" | "gathering";
+  /** Paid events show a "Buy ticket" action straight to checkout. */
+  ticketed?: boolean;
+  /** Sliding-scale / fixed price label shown on the ticket button. */
+  price?: string;
 }
 
 const ACCENT = "var(--accent)";
@@ -481,6 +485,8 @@ export const calendarEvents: CalendarEvent[] = [
     time: "7:30pm",
     to: gatheringPath("supper-club-12"),
     kind: "gathering",
+    ticketed: true,
+    price: "€6–18",
   },
   {
     date: new Date(2026, 5, 10),
@@ -511,6 +517,8 @@ export const calendarEvents: CalendarEvent[] = [
     time: "7pm",
     to: gatheringPath("portfolio-night"),
     kind: "event",
+    ticketed: true,
+    price: "€10",
   },
   {
     date: new Date(2026, 5, 17),
@@ -571,6 +579,8 @@ export const calendarEvents: CalendarEvent[] = [
     time: "8pm",
     to: "/event",
     kind: "gathering",
+    ticketed: true,
+    price: "€8",
   },
   {
     date: new Date(2026, 5, 26),
@@ -601,6 +611,8 @@ export const calendarEvents: CalendarEvent[] = [
     time: "8:30am",
     to: gatheringPath("founders-breakfast"),
     kind: "event",
+    ticketed: true,
+    price: "€15",
   },
   {
     date: new Date(2026, 6, 5),

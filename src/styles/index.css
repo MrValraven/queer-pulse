@@ -5,4 +5,5 @@
 @import "./tokens/effects.css";
 @import "./fonts.css";
 @import "./base.css";
+@import "./nav-mode.css";
 @import "../features/economy/tools/tools.print.css";

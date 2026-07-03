@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { FiCalendar } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import { FiCalendar, FiTag } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -18,6 +18,14 @@ import { EVENT_CATEGORIES, eventsHeader } from "./eventsPage.data";
 import styles from "./EventsPage.module.css";
 
 function EventCard({ event }: { event: CalendarEvent }) {
+  const navigate = useNavigate();
+
+  function buyTicket(e: React.SyntheticEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(routes.checkout);
+  }
+
   return (
     <Link to={event.to} className={styles.card}>
       <div className={styles.date}>
@@ -38,6 +46,7 @@ function EventCard({ event }: { event: CalendarEvent }) {
           >
             {event.kind === "event" ? "Event" : "Gathering"}
           </Tag>
+          {event.ticketed && <span className={styles.ticketTag}>Ticketed</span>}
         </div>
         <h3 className={styles.cardTitle}>{event.title}</h3>
         <div className={styles.meta}>
@@ -45,6 +54,22 @@ function EventCard({ event }: { event: CalendarEvent }) {
           <span className={styles.dot} aria-hidden />
           <span>{event.time}</span>
         </div>
+        {event.ticketed && (
+          <span
+            role="button"
+            tabIndex={0}
+            className={styles.buyBtn}
+            onClick={buyTicket}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") buyTicket(e);
+            }}
+          >
+            <FiTag aria-hidden /> Buy ticket
+            {event.price && (
+              <span className={styles.buyPrice}>{event.price}</span>
+            )}
+          </span>
+        )}
       </div>
       <span className={styles.cta} aria-hidden>
         →

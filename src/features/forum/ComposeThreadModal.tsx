@@ -14,6 +14,8 @@ export interface NewThreadInput {
 interface ComposeThreadModalProps {
   onClose: () => void;
   onPublish: (thread: NewThreadInput) => void;
+  /** Seeds the title field — used by the first-post prompt's starter chips. */
+  initialTitle?: string;
 }
 
 // Selectable categories — exclude the synthetic "all" bucket.
@@ -23,9 +25,10 @@ const POST_CATS = CATS.filter((c) => c.id !== "all");
 export function ComposeThreadModal({
   onClose,
   onPublish,
+  initialTitle = "",
 }: ComposeThreadModalProps) {
   useScrollLock();
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState("");
   const [cat, setCat] = useState(POST_CATS[0]!.id);
   const [published, setPublished] = useState(false);

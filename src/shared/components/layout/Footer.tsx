@@ -95,7 +95,7 @@ export function Footer() {
   const baseLinks = BASE_LINKS.filter((link) => isLinkVisible(link.href));
 
   return (
-    <footer className={styles.footer}>
+    <footer className={`site-footer ${styles.footer}`}>
       <div className="wrap">
         <div className={styles.grid}>
           <div className={styles.brandCol}>

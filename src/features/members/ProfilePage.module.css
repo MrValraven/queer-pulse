@@ -1,5 +1,5 @@
-/* Transient states (loading / not-found) — must clear the fixed Navbar,
-   so they mirror the top padding real content uses (.phero = 148px). */
+/* Transient states (loading / not-found) — these render without the in-flow
+   back bar, so they clear the fixed Navbar on their own (148px top). */
 .stateWrap {
   min-height: 72vh;
   display: flex;
@@ -16,14 +16,21 @@
   max-width: 520px;
 }
 
-.backBar {
-  position: fixed;
-  top: 88px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
-  max-width: 1180px;
-  z-index: 90;
+/* Flows in the page above the hero (shares the `.wrap` alignment on the
+   element) so it stays lined up with page content in both nav modes — centred
+   under the MegaNav, left-aligned beside the Sidebar. The element+class
+   selector keeps this top padding ahead of the shared `.wrap` padding
+   shorthand regardless of stylesheet order; it also clears the fixed Navbar. */
+div.backBar {
+  padding-top: 104px;
+}
+/* Beside the Sidebar (desktop) there's no fixed top Navbar to clear, so drop
+   the tall clearance for a tighter top. Mobile sidebar mode still shows the
+   Navbar drawer, so it keeps the full clearance above. */
+@media (min-width: 861px) {
+  :global(html[data-nav-mode="sidebar"]) div.backBar {
+    padding-top: 40px;
+  }
 }
 .backLink {
   display: inline-flex;
@@ -44,7 +51,7 @@
 }
 
 .phero {
-  padding: 148px 0 64px;
+  padding: 24px 0 64px;
   position: relative;
   overflow: hidden;
 }

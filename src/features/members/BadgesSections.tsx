@@ -1,16 +1,8 @@
 import { useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import {
-  type Badge,
-  type PerkLadderRow,
-  discoverCount,
-  earnedBadges,
-  levelInfo,
-  levelLadder,
-  lockedBadges,
-  perksLadder,
-} from "./badges.data";
+import { type Badge, type PerkLadderRow } from "./badges.data";
+import { useRecognition } from "./api/useRecognition";
 import styles from "./BadgesPage.module.css";
 
 const tintClass = {
@@ -26,21 +18,22 @@ const rarityClass = {
 } as const;
 
 export function LevelCard() {
+  const { level, levelLadder } = useRecognition();
   return (
     <div className={styles.levelCard}>
       <div className={styles.lcLevel}>
-        Level {levelInfo.level} · <em>{levelInfo.name}</em>
+        Level {level.level} · <em>{level.name}</em>
       </div>
       <div className={styles.xpBarWrap}>
         <div className={styles.xpBar}>
           <div
             className={styles.xpFill}
-            style={{ transform: `scaleX(${levelInfo.percent / 100})` }}
+            style={{ transform: `scaleX(${level.percent / 100})` }}
           />
         </div>
         <div className={styles.xpLabel}>
-          {levelInfo.xp} / {levelInfo.xpMax} XP to Level {levelInfo.level + 1} ·{" "}
-          {levelInfo.nextName}
+          {level.xp} / {level.xpMax} XP to Level {level.level + 1} ·{" "}
+          {level.nextName}
         </div>
       </div>
       <div className={styles.levelLadder}>
@@ -75,6 +68,7 @@ function BadgeCard({ badge, locked }: { badge: Badge; locked?: boolean }) {
 }
 
 export function EarnedBadges() {
+  const { badges } = useRecognition();
   return (
     <section className={styles.section}>
       <div className={styles.sectionRow}>
@@ -83,10 +77,10 @@ export function EarnedBadges() {
         </h2>
       </div>
       <div className={styles.sectionSub}>
-        {earnedBadges.length} earned · {discoverCount} to discover
+        {badges.earnedCount} earned · {badges.discoverCount} to discover
       </div>
       <div className={styles.badgeGrid}>
-        {earnedBadges.map((badge, i) => (
+        {badges.earned.map((badge, i) => (
           <FadeIn key={badge.name} delay={Math.min(i, 8) * 60}>
             <BadgeCard badge={badge} />
           </FadeIn>
@@ -97,6 +91,7 @@ export function EarnedBadges() {
 }
 
 export function LockedBadges() {
+  const { badges } = useRecognition();
   const [open, setOpen] = useState(false);
   return (
     <section className={styles.section}>
@@ -109,7 +104,7 @@ export function LockedBadges() {
           className={styles.expandLink}
           onClick={() => setOpen((v) => !v)}
         >
-          {open ? "Hide ▴" : `Show ${discoverCount} more ▾`}
+          {open ? "Hide ▴" : `Show ${badges.discoverCount} more ▾`}
         </button>
       </div>
       <div className={styles.sectionSub}>
@@ -117,7 +112,7 @@ export function LockedBadges() {
       </div>
       {open && (
         <div className={styles.badgeGrid}>
-          {lockedBadges.map((badge, i) => (
+          {badges.locked.map((badge, i) => (
             <FadeIn key={badge.name} delay={Math.min(i, 8) * 60}>
               <BadgeCard badge={badge} locked />
             </FadeIn>
@@ -212,6 +207,7 @@ function PerkRow({ row }: { row: PerkLadderRow }) {
 }
 
 export function PerksLadder() {
+  const { perks } = useRecognition();
   return (
     <section className={styles.section} id="how-xp">
       <h2 className={styles.sectionHead} style={{ marginBottom: 6 }}>
@@ -221,7 +217,7 @@ export function PerksLadder() {
         Each level grants new access and member benefits.
       </div>
       <div className={styles.perksLadder}>
-        {perksLadder.map((row) => (
+        {perks.ladder.map((row) => (
           <PerkRow key={row.num} row={row} />
         ))}
       </div>

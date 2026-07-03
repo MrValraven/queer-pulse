@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../app/routeMap";
 import { TIERS } from "./eventPage.data";
 import { EVENT_CAPACITY, EVENT_IS_FULL } from "./eventRsvp.data";
 import { WaitlistSuccess, ReservedSuccess } from "./EventRsvpSuccess";
 import styles from "./EventPage.module.css";
 
 export function EventRsvpCard() {
+  const navigate = useNavigate();
   const [selectedTier, setSelectedTier] = useState(1);
   const [reserved, setReserved] = useState(false);
   const [waitlistPos, setWaitlistPos] = useState<number | null>(null);
@@ -145,7 +148,9 @@ export function EventRsvpCard() {
             <button
               type="button"
               className={styles.rsvpBtn}
-              onClick={() => (isFull ? joinWaitlist() : setReserved(true))}
+              onClick={() =>
+                isFull ? joinWaitlist() : navigate(routes.checkout)
+              }
               disabled={!canSubmit}
               title={
                 !canSubmit

@@ -1,4 +1,5 @@
 export { Navbar } from "./Navbar";
+export { Sidebar } from "./Sidebar";
 export { Footer } from "./Footer";
 export { PageShell } from "./PageShell";
 export { PageHero } from "./PageHero";

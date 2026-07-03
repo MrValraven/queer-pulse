@@ -199,3 +199,49 @@
     display: none;
   }
 }
+
+/* Ticketed events — "Buy ticket" CTA straight to checkout. */
+.ticketTag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+.buyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 8px 15px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.18s var(--ease),
+    transform 0.18s var(--ease);
+}
+.buyBtn:hover {
+  background: var(--accent-deep);
+  transform: translateY(-1px);
+}
+.buyBtn:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+.buyPrice {
+  padding-left: 8px;
+  border-left: 1px solid rgba(247, 243, 238, 0.42);
+  font-weight: 600;
+}
+@media (prefers-reduced-motion: reduce) {
+  .buyBtn:hover {
+    transform: none;
+  }
+}
