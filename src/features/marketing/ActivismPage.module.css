@@ -199,6 +199,49 @@
   line-height: 1.6;
   margin: 0;
 }
+.banner p b {
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+/* Linked "live" banner — clickable call-out to the open letter */
+.bannerLink {
+  background: rgba(var(--accent-rgb), 0.07);
+  border-color: rgba(var(--accent-rgb), 0.2);
+  text-decoration: none;
+  transition:
+    transform 0.18s var(--ease),
+    box-shadow 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+.bannerLink .ibDot {
+  background: var(--accent);
+  animation: bannerPulse 2s ease-in-out infinite;
+}
+.bannerLink .ibHead {
+  color: var(--accent-ink);
+}
+@media (hover: hover) {
+  .bannerLink:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -14px rgba(var(--accent-rgb), 0.7);
+    border-color: rgba(var(--accent-rgb), 0.35);
+  }
+}
+@keyframes bannerPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bannerLink .ibDot {
+    animation: none;
+  }
+}
 
 .orgList {
   display: flex;

@@ -19,6 +19,7 @@ import {
   relationReason,
 } from "./data/articles";
 import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
+import { AuthorLink } from "./AuthorLink";
 
 import styles from "./ArticlePage.module.css";
 
@@ -80,7 +81,9 @@ export function ArticlePage() {
           <div className={styles.bylineRow}>
             <Avatar initials={article.initials} tint={article.tint} size={36} />
             <div>
-              <div className={styles.author}>{article.byline}</div>
+              <div className={styles.author}>
+                <AuthorLink name={article.byline} />
+              </div>
               {article.role && (
                 <div className={styles.role}>{article.role}</div>
               )}
@@ -140,7 +143,9 @@ export function ArticlePage() {
           <div className={styles.bio}>
             <Avatar initials={article.initials} tint={article.tint} size={48} />
             <div>
-              <div className={styles.bioName}>{article.byline}</div>
+              <div className={styles.bioName}>
+                <AuthorLink name={article.byline} />
+              </div>
               <p className={styles.bioText}>{article.authorBio}</p>
             </div>
           </div>

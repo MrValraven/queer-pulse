@@ -7,6 +7,8 @@ import {
   FiUser,
   FiUserPlus,
   FiFileText,
+  FiEdit3,
+  FiSend,
   FiBriefcase,
   FiBookmark,
   FiRss,
@@ -18,12 +20,20 @@ import {
   FiHeart,
   FiLogOut,
   FiDatabase,
+  FiLayout,
 } from "react-icons/fi";
 import { Avatar } from "../ui";
 import { useAuth } from "../../../app/providers/authContext";
-import { useNavMode } from "../../../app/providers/navModeContext";
+import {
+  useNavMode,
+  type NavMode,
+} from "../../../app/providers/navModeContext";
 import { routes, modPanel } from "../../../app/routeMap";
-import { useAdminRole, DEMO_MOD_SLUG } from "../../../features/admin/adminRole";
+import {
+  useAdminRole,
+  DEMO_MOD_SLUG,
+  type AdminRole,
+} from "../../../features/admin/adminRole";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { currentUser, fullName } from "../../../features/members/data/members";
 import styles from "./AccountMenu.module.css";
@@ -61,6 +71,8 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
   ],
   // Your stuff / system
   [
+    { label: "Drafts", to: routes.drafts, icon: FiEdit3 },
+    { label: "Pitches", to: routes.pitchTracker, icon: FiSend },
     { label: "Saved", to: routes.collections, icon: FiBookmark },
     { label: "Membership", to: routes.sustainer, icon: FiHeart },
     { label: "Settings", to: routes.settings, icon: FiSettings },
@@ -192,15 +204,26 @@ export function AccountMenu({
                 );
               })}
               {role === "staff" && (
-                <Link
-                  to={routes.admin}
-                  role="menuitem"
-                  className={styles.item}
-                  onClick={() => setOpen(false)}
-                >
-                  <FiShield aria-hidden className={styles.itemIcon} />
-                  <span className={styles.itemLabel}>Admin</span>
-                </Link>
+                <>
+                  <Link
+                    to={routes.magazineEditor}
+                    role="menuitem"
+                    className={styles.item}
+                    onClick={() => setOpen(false)}
+                  >
+                    <FiLayout aria-hidden className={styles.itemIcon} />
+                    <span className={styles.itemLabel}>Magazine editor</span>
+                  </Link>
+                  <Link
+                    to={routes.admin}
+                    role="menuitem"
+                    className={styles.item}
+                    onClick={() => setOpen(false)}
+                  >
+                    <FiShield aria-hidden className={styles.itemIcon} />
+                    <span className={styles.itemLabel}>Admin</span>
+                  </Link>
+                </>
               )}
               {role === "mod" && (
                 <Link
@@ -214,72 +237,15 @@ export function AccountMenu({
                 </Link>
               )}
             </div>
-            <div className={styles.divider} />
-            <button
-              type="button"
-              role="menuitemcheckbox"
-              aria-checked={demoMode}
-              className={styles.populate}
-              disabled={!available}
-              onClick={() => toggle()}
-            >
-              <FiDatabase aria-hidden className={styles.itemIcon} />
-              <span className={styles.itemLabel}>Populate platform</span>
-              <span
-                className={[styles.populateState, demoMode && styles.populateOn]
-                  .filter(Boolean)
-                  .join(" ")}
-                aria-hidden
-              >
-                {available ? (demoMode ? "On" : "Off") : "No API"}
-              </span>
-            </button>
-            <div className={styles.divider} />
-            <div className={styles.roleLabel}>Acting as</div>
-            <div
-              className={styles.roleSwitch}
-              role="group"
-              aria-label="Simulated team role"
-            >
-              {(["staff", "mod", "member"] as const).map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  className={[
-                    styles.roleBtn,
-                    role === r && styles.roleBtnActive,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => setRole(r)}
-                >
-                  {r === "staff" ? "Staff" : r === "mod" ? "Mod" : "Member"}
-                </button>
-              ))}
-            </div>
-            <div className={styles.divider} />
-            <div className={styles.roleLabel}>Navigation</div>
-            <div
-              className={styles.roleSwitch}
-              role="group"
-              aria-label="Navigation layout"
-            >
-              {(["mega", "sidebar"] as const).map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  className={[
-                    styles.roleBtn,
-                    navMode === m && styles.roleBtnActive,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => setNavMode(m)}
-                >
-                  {m === "mega" ? "Top bar" : "Sidebar"}
-                </button>
-              ))}
-            </div>
+            <AccountMenuControls
+              demoMode={demoMode}
+              available={available}
+              toggle={toggle}
+              role={role}
+              setRole={setRole}
+              navMode={navMode}
+              setNavMode={setNavMode}
+            />
           </div>
 
           <div className={styles.footer}>
@@ -299,6 +265,91 @@ export function AccountMenu({
         </div>
       )}
     </div>
+  );
+}
+
+/** Prototype-only controls at the foot of the menu: demo data toggle, the
+ * simulated team role switch, and the navigation-layout switch. */
+function AccountMenuControls({
+  demoMode,
+  available,
+  toggle,
+  role,
+  setRole,
+  navMode,
+  setNavMode,
+}: {
+  demoMode: boolean;
+  available: boolean;
+  toggle: () => void;
+  role: AdminRole;
+  setRole: (role: AdminRole) => void;
+  navMode: NavMode;
+  setNavMode: (mode: NavMode) => void;
+}) {
+  return (
+    <>
+      <div className={styles.divider} />
+      <button
+        type="button"
+        role="menuitemcheckbox"
+        aria-checked={demoMode}
+        className={styles.populate}
+        disabled={!available}
+        onClick={() => toggle()}
+      >
+        <FiDatabase aria-hidden className={styles.itemIcon} />
+        <span className={styles.itemLabel}>Populate platform</span>
+        <span
+          className={[styles.populateState, demoMode && styles.populateOn]
+            .filter(Boolean)
+            .join(" ")}
+          aria-hidden
+        >
+          {available ? (demoMode ? "On" : "Off") : "No API"}
+        </span>
+      </button>
+      <div className={styles.divider} />
+      <div className={styles.roleLabel}>Acting as</div>
+      <div
+        className={styles.roleSwitch}
+        role="group"
+        aria-label="Simulated team role"
+      >
+        {(["staff", "mod", "member"] as const).map((r) => (
+          <button
+            key={r}
+            type="button"
+            className={[styles.roleBtn, role === r && styles.roleBtnActive]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => setRole(r)}
+          >
+            {r === "staff" ? "Staff" : r === "mod" ? "Mod" : "Member"}
+          </button>
+        ))}
+      </div>
+      <div className={styles.divider} />
+      <div className={styles.roleLabel}>Navigation</div>
+      <div
+        className={styles.roleSwitch}
+        role="group"
+        aria-label="Navigation layout"
+      >
+        {(["mega", "sidebar"] as const).map((m) => (
+          <button
+            key={m}
+            type="button"
+            className={[styles.roleBtn, navMode === m && styles.roleBtnActive]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => setNavMode(m)}
+          >
+            {m === "mega" ? "Top bar" : "Sidebar"}
+          </button>
+        ))}
+      </div>
+    </>
   );
 }
 

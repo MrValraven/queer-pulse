@@ -633,4 +633,362 @@ export const PARTNERS_A: Partner[] = [
       address: "Lisboa",
     },
   },
+
+  {
+    slug: "clinica-do-largo",
+    av: "CL",
+    logo: "CL",
+    bg: "rgba(232,119,90,.14)",
+    color: "var(--accent-ink)",
+    region: "pt",
+    regionLabel: "Portugal",
+    name: "Clínica do Largo",
+    city: "Lisbon",
+    desc: "A community health clinic running open trans-affirming care nights and vouching for QP-verified therapists. The partnership that turned a directory listing into an actual care pathway.",
+    tags: ["Health", "Trans care", "Therapy"],
+    eyebrow: "Partner · Community health clinic",
+    tagline:
+      "A small neighbourhood clinic that decided trans-affirming care shouldn't mean a six-month waitlist — and opened its evenings to prove it.",
+    tier: "Operational partner",
+    since: "Partnered since 2024 · 2 years",
+    about: [
+      <>
+        <strong>Clínica do Largo</strong> is a community-funded health clinic in
+        Arroios, staffed by GPs, nurses, and two endocrinologists who kept
+        seeing the same thing: queer patients arriving late, sicker, and braced
+        for a bad reception. So they built a different front door — open clinic
+        nights, no gatekeeping letters, and a care pathway written with trans
+        patients rather than about them.
+      </>,
+      <>
+        Our partnership is operational. The clinic vouches for therapists before
+        they earn a QP-verified badge; members can book open clinic nights
+        straight from the Resources directory; and when a member reports being
+        turned away for affirming care elsewhere, the clinic holds a standing
+        slot to catch them.
+      </>,
+    ],
+    stats: [
+      { value: <em>2019</em>, label: "Opened" },
+      { value: "740", label: "Open-night visits / year" },
+      { value: "100%", label: "Of QP therapist vouches reviewed here" },
+      { value: <em>2</em>, label: "Years partnered" },
+    ],
+    aboutMore: [
+      {
+        heading: "What this partnership means in practice",
+        body: (
+          <>
+            If a therapist wants a QP-verified badge, a clinician here reviews
+            their affirming-care practice before it's granted. If you book an
+            open clinic night through the directory, you skip the general
+            waitlist. If you're turned away for hormones or a referral somewhere
+            else, there's a standing Thursday slot that exists specifically to
+            catch that.
+          </>
+        ),
+      },
+      {
+        heading: "Where the boundaries are",
+        body: (
+          <>
+            The clinic runs its own medicine. We don't sit in on consultations,
+            we never see notes, and a QP badge is never a clinical
+            recommendation — it's a signal that someone vouched, not a promise.
+            The clinic can and does decline to vouch, and we don't ask why.
+          </>
+        ),
+      },
+    ],
+    jointWork: [
+      {
+        kicker: "Live · since 2024",
+        title: "Open trans-affirming clinic nights",
+        dek: "Twice-monthly evening clinics, bookable from the Resources directory. No referral letter, no gatekeeping.",
+        footLeft: "Open · 2 nights / month",
+        footRight: "740 visits",
+      },
+      {
+        kicker: "Live · since 2024",
+        title: "Therapist vouching pathway",
+        dek: "Clinicians here review a therapist's affirming-care practice before the QP-verified badge is granted.",
+        footLeft: "Operational",
+        footRight: "38 reviewed",
+      },
+      {
+        kicker: "Live · since 2025",
+        title: "Turned-away catch slot",
+        dek: "A standing weekly slot held for members refused affirming care elsewhere. Referral within the week.",
+        footLeft: "Open · 1 slot / week",
+        footRight: "52 caught",
+      },
+      {
+        kicker: "Annual · each autumn",
+        title: "Affirming-care clinician training",
+        dek: "The clinic trains GPs from allied practices on trans-affirming basics. QP recruits the cohort.",
+        footLeft: "This year",
+        footRight: "24 trained",
+      },
+    ],
+    timeline: [
+      {
+        date: "9 Jun 2026",
+        title: (
+          <>
+            500th <em>open-night booking</em> through the directory
+          </>
+        ),
+        body: "Bookings made straight from Resources passed 500. Median wait from booking to seen: 11 days.",
+        tint: "jade",
+      },
+      {
+        date: "3 Mar 2026",
+        title: "Catch slot expanded to weekly",
+        body: "Demand outran the monthly slot; the clinic committed a weekly standing appointment for turned-away members.",
+        tint: "plum",
+      },
+      {
+        date: "17 Sep 2025",
+        title: "Therapist vouching pathway formalised",
+        body: "The badge review moved from an informal favour to a written pathway. 38 therapists reviewed since.",
+      },
+      {
+        date: "22 Aug 2024",
+        title: "Operational partnership signed",
+        body: "First MOU — open clinic nights bookable from QueerPulse, live within a month.",
+        tint: "plum",
+      },
+    ],
+    how: [
+      {
+        heading: "The open clinic nights",
+        body: (
+          <>
+            Twice a month the clinic runs an evening session with no referral
+            requirement. You book a slot from the Resources directory like any
+            other listing; the clinic confirms by SMS.{" "}
+            <em>No letters, no gatekeeping questionnaire.</em>
+          </>
+        ),
+      },
+      {
+        heading: "The vouching pathway",
+        body: (
+          <>
+            Before a therapist earns the <strong>QP-verified</strong> badge, a
+            clinician here reviews their affirming-care practice — intake
+            language, referral habits, how they handle detransition without
+            shame. A vouch expires after two years and has to be renewed.
+          </>
+        ),
+      },
+      {
+        heading: "What we don't do",
+        body: (
+          <>
+            We never see clinical notes, we don't book on a member's behalf, and
+            we don't treat a badge as medical advice. The clinic decides who it
+            vouches for; we just carry the signal.
+          </>
+        ),
+      },
+    ],
+    funding: (
+      <>
+        <b>Funding transparency:</b> The clinic's partnership is unpaid. The
+        Sustainer fund covers the catch-slot appointments (€38 / visit) so no
+        turned-away member is billed. Everything else is reciprocal.
+      </>
+    ),
+    atGlance: [
+      { label: "Type", value: "Community clinic" },
+      { label: "Opened", value: "2019" },
+      { label: "HQ", value: "Arroios, Lisbon" },
+      { label: "Reach", value: "Greater Lisbon" },
+      { label: "Partner tier", value: "Operational", accent: "coral" },
+      { label: "Status", value: "● Active", accent: "jade" },
+    ],
+    contact: {
+      phone: "213 456 210",
+      phoneNote: "reception",
+      email: "ola@clinicadolargo.pt",
+      website: "clinicadolargo.pt",
+      address: "Largo do Intendente 12, Lisboa",
+    },
+  },
+
+  {
+    slug: "fundacao-gulbenkian",
+    av: "FG",
+    logo: "FG",
+    bg: "rgba(74,140,111,.14)",
+    color: "var(--jade)",
+    region: "pt",
+    regionLabel: "Portugal",
+    name: "Fundação Gulbenkian",
+    city: "Lisbon",
+    desc: "A three-year grant funding the QueerPulse micro-grants pool. €60k a year, quarterly reports, an annual audit — and, unusually, no strings on who the money reaches.",
+    tags: ["Funder", "Micro-grants", "Institutional"],
+    eyebrow: "Partner · Programme funder",
+    tagline:
+      "One of Europe's oldest philanthropic foundations, backing the micro-grants fund that puts small money in queer hands quickly — no logo on the door, no vote on who gets it.",
+    tier: "Programme funder",
+    since: "Funder since 2025 · 1 year",
+    about: [
+      <>
+        The <strong>Fundação Calouste Gulbenkian</strong> has funded arts,
+        science, and social programmes in Portugal since 1956. In 2025 it
+        committed a three-year grant to the QueerPulse micro-grants pool — the
+        small, fast fund members draw on for rent gaps, top surgery travel,
+        binders, legal fees, and the hundred small emergencies that don't wait
+        for a grant cycle.
+      </>,
+      <>
+        What makes this partnership unusual is the restraint. Gulbenkian funds
+        the pool but doesn't sit on the panel that awards it. The money is
+        reported quarterly and audited annually, but who receives it is decided
+        by a member committee. Institutional weight, community control.
+      </>,
+    ],
+    stats: [
+      { value: <em>1956</em>, label: "Founded" },
+      { value: "€60k", label: "Granted per year" },
+      { value: "310", label: "Micro-grants funded in year one" },
+      { value: <em>3</em>, label: "Year commitment" },
+    ],
+    aboutMore: [
+      {
+        heading: "What this partnership means in practice",
+        body: (
+          <>
+            The micro-grants fund can say yes faster because the money is
+            already there. A member facing a rent gap or a surgery-travel cost
+            applies through a two-page form; the member committee reviews
+            weekly; funds land within days, not months. Gulbenkian's grant is
+            what makes that speed possible.
+          </>
+        ),
+      },
+      {
+        heading: "Where the boundaries are",
+        body: (
+          <>
+            Gulbenkian funds; it does not govern. It has no seat on the awards
+            committee, no veto on individual grants, and no branding on the
+            programme beyond this page. We report where the money went in
+            aggregate — never who received it.
+          </>
+        ),
+      },
+    ],
+    jointWork: [
+      {
+        kicker: "Live · since 2025",
+        title: "Micro-grants pool",
+        dek: "The core of the partnership: €60k/year underwriting fast, small grants decided by a member committee.",
+        footLeft: "Funded",
+        footRight: "310 grants",
+      },
+      {
+        kicker: "Quarterly",
+        title: "Aggregate impact report",
+        dek: "Where the money went, by category, with no identifying detail. Published to members and to the funder.",
+        footLeft: "Report",
+        footRight: "4 / year",
+      },
+      {
+        kicker: "Annual · each February",
+        title: "Independent audit",
+        dek: "An external auditor signs off the pool's accounts. Keeps the fund clean and the partnership renewable.",
+        footLeft: "Audit",
+        footRight: "Clean · 2025",
+      },
+      {
+        kicker: "Planned · 2027",
+        title: "Emergency top-up window",
+        dek: "In discussion: a mid-year top-up the committee can trigger when demand spikes around policy shocks.",
+        footLeft: "Scoping",
+        footRight: "TBD",
+      },
+    ],
+    timeline: [
+      {
+        date: "12 Feb 2026",
+        title: (
+          <>
+            Year-one <em>audit signed off clean</em>
+          </>
+        ),
+        body: "External auditors confirmed the pool's accounts. €58.9k of €60k disbursed across 310 grants; balance rolled forward.",
+        tint: "jade",
+      },
+      {
+        date: "30 Sep 2025",
+        title: "200th micro-grant funded",
+        body: "The pool passed 200 grants in under six months. Median time from application to funds: 4 days.",
+        tint: "plum",
+      },
+      {
+        date: "14 Mar 2025",
+        title: "Three-year grant signed",
+        body: "€60k/year for three years, structured so the awards committee stays wholly member-run.",
+        tint: "plum",
+      },
+    ],
+    how: [
+      {
+        heading: "How the money moves",
+        body: (
+          <>
+            Gulbenkian disburses the grant to a ring-fenced pool account. A
+            member committee reviews applications weekly and approves against a
+            published rubric.{" "}
+            <em>The funder never sees an individual application.</em>
+          </>
+        ),
+      },
+      {
+        heading: "How it stays accountable",
+        body: (
+          <>
+            Every quarter we publish an aggregate report — categories, totals,
+            turnaround times — and once a year an{" "}
+            <strong>independent auditor</strong> signs off the accounts. That's
+            what keeps the grant renewable without giving the funder a vote.
+          </>
+        ),
+      },
+      {
+        heading: "What we don't do",
+        body: (
+          <>
+            We don't share recipient identities, we don't let funding steer who
+            gets a grant, and we don't co-brand the programme. The name on this
+            page is the extent of the visibility the money buys.
+          </>
+        ),
+      },
+    ],
+    funding: (
+      <>
+        <b>Funding transparency:</b> Gulbenkian grants €60k/year to the
+        micro-grants pool for three years. QueerPulse takes no administration
+        fee from the grant — the committee's work is volunteer, the audit is
+        Sustainer-funded.
+      </>
+    ),
+    atGlance: [
+      { label: "Type", value: "Philanthropic foundation" },
+      { label: "Founded", value: "1956" },
+      { label: "HQ", value: "Lisbon" },
+      { label: "Reach", value: "Portugal-wide" },
+      { label: "Partner tier", value: "Funder", accent: "coral" },
+      { label: "Status", value: "● Active", accent: "jade" },
+    ],
+    contact: {
+      email: "programas@gulbenkian.pt",
+      website: "gulbenkian.pt",
+      address: "Av. de Berna 45A, Lisboa",
+    },
+  },
 ];

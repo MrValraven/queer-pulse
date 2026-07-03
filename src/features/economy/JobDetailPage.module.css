@@ -263,6 +263,16 @@
   color: var(--plum);
   margin-bottom: 6px;
 }
+.coName a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+.coName a:hover {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 .coQr {
   display: inline-flex;
   align-items: center;

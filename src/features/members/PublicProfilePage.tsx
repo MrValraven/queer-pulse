@@ -1,130 +1,43 @@
 import { PageShell } from "../../shared/components/layout";
-import { Avatar, Button, FadeIn } from "../../shared/components/ui";
-import { useCountUp } from "../../shared/hooks";
+import { Button, FadeIn } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { PublicList, LockedSection, BottomCta } from "./PublicProfileSections";
+import { useProfile } from "../../app/providers/ProfileProvider";
+import { useAuth } from "../../app/providers/authContext";
+import { usePublicProfile } from "../../app/providers/PublicProfileProvider";
 import {
-  PUBLIC_MEMBER,
-  PUBLIC_STATS,
-  HERE_FOR,
-  PUBLIC_WRITING,
-  PUBLIC_HOSTING,
-} from "./publicProfile.data";
+  PublicList,
+  LockedSection,
+  BottomCta,
+  Stat,
+  PublicPreviewBar,
+  PublicProfileHead,
+} from "./PublicProfileSections";
+import { CURRENT_USER_PUBLIC } from "./currentUserPublic.data";
 import styles from "./PublicProfilePage.module.css";
 
-const m = PUBLIC_MEMBER;
-
-/** Splits e.g. "1.4k" → { num: 1.4, suffix: "k" } for animating the leading number. */
-function parseStat(value: string): {
-  num: number;
-  suffix: string;
-  decimals: number;
-} {
-  const match = value.match(/^([\d.]+)(.*)$/);
-  if (!match) return { num: NaN, suffix: value, decimals: 0 };
-  const decimals = match[1]!.includes(".")
-    ? match[1]!.split(".")[1]!.length
-    : 0;
-  return { num: parseFloat(match[1]!), suffix: match[2]!, decimals };
-}
-
-function Stat({
-  value,
-  em,
-  label,
-}: {
-  value: string;
-  em?: boolean;
-  label: string;
-}) {
-  const { num, suffix, decimals } = parseStat(value);
-  const animatable = Number.isFinite(num);
-  // useCountUp rounds to integers, so scale decimals up then back down.
-  const scale = Math.pow(10, decimals);
-  const counted = useCountUp(animatable ? Math.round(num * scale) : 0);
-  const display = animatable
-    ? `${(counted / scale).toFixed(decimals)}${suffix}`
-    : value;
-
-  return (
-    <div className={styles.stat}>
-      <b>{em ? <em>{display}</em> : display}</b>
-      <span>{label}</span>
-    </div>
-  );
-}
-
+/**
+ * The logged-in member's own public profile, as non-members see it. Composes the
+ * live self profile (name, bio, avatar, vouches) with their public contribution
+ * record (`CURRENT_USER_PUBLIC`). The owner gets a preview banner with a live/off
+ * pill; signed-out visitors get the guest sign-in bar.
+ */
 export function PublicProfilePage() {
+  const { profile } = useProfile();
+  const { user } = useAuth();
+  const { enabled } = usePublicProfile();
+  const pub = CURRENT_USER_PUBLIC;
+  const owner = !!user;
+  const { first } = profile;
+
   return (
     <PageShell>
-      <div className={styles.guestBar}>
-        <span className={styles.guestLbl}>
-          You're not signed in · viewing the <b>public version</b> of this
-          profile
-        </span>
-        <div className={styles.guestActions}>
-          <Button variant="ghost-dark" to={routes.signIn}>
-            Sign in
-          </Button>
-          <Button variant="primary" to={routes.requestInvite}>
-            Request an invite
-          </Button>
-        </div>
-      </div>
+      <PublicPreviewBar owner={owner} enabled={enabled} />
 
       <div className={styles.page}>
-        <header className={styles.head}>
-          <Avatar initials={m.initials} tint="coral" size={160} />
-          <div>
-            <div className={styles.eyebrow}>Public profile · {m.handle}</div>
-            <h1 className={styles.name}>
-              {m.firstName} <em>{m.lastName}</em>
-              <span className={styles.verified} title="Verified member">
-                <svg viewBox="0 0 24 24">
-                  <polyline points="4,12.5 10,18 20,6" />
-                </svg>
-              </span>
-            </h1>
-            <p className={styles.pronouns}>
-              <span className={styles.pron}>{m.pronouns}</span>
-              {m.tagline}
-            </p>
-            <p className={styles.bio}>{m.bio}</p>
-
-            <div className={styles.meta}>
-              <span>
-                <svg viewBox="0 0 24 24">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                  <circle cx="12" cy="10" r="3" />
-                </svg>
-                <b>{m.location}</b>, Lisbon
-              </span>
-              <span>
-                <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="9" />
-                  <polyline points="12 7 12 12 15 14" />
-                </svg>
-                Member since <b>{m.memberSince}</b>
-              </span>
-              <span>
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 22s-8-4-8-12V4l8-2 8 2v6c0 8-8 12-8 12z" />
-                </svg>
-                <b>Vouched-for</b> by {m.vouchedBy}
-              </span>
-            </div>
-
-            <div className={styles.ctaRow}>
-              <Button variant="primary" to={routes.requestInvite}>
-                Request an invite to connect
-              </Button>
-              <div className={styles.ctaNote}>{m.ctaNote}</div>
-            </div>
-          </div>
-        </header>
+        <PublicProfileHead profile={profile} contributions={pub} />
 
         <div className={styles.stats}>
-          {PUBLIC_STATS.map((s, i) => (
+          {pub.stats.map((s, i) => (
             <FadeIn key={s.label} delay={Math.min(i, 8) * 60}>
               <Stat value={s.value} em={s.em} label={s.label} />
             </FadeIn>
@@ -139,7 +52,7 @@ export function PublicProfilePage() {
             <span className={styles.secMeta}>Visible publicly</span>
           </div>
           <div className={styles.tagRow}>
-            {HERE_FOR.map((t) => (
+            {pub.hereFor.map((t) => (
               <span
                 key={t.label}
                 className={`${styles.tag} ${t.primary ? styles.primary : ""}`}
@@ -157,8 +70,8 @@ export function PublicProfilePage() {
                 Public <em>writing</em>
               </>
             }
-            meta="4 articles · QueerPulse Magazine"
-            cards={PUBLIC_WRITING}
+            meta={`${pub.writing.length} pieces · QueerPulse Magazine`}
+            cards={pub.writing}
             to={routes.article}
           />
         </FadeIn>
@@ -171,7 +84,7 @@ export function PublicProfilePage() {
               </>
             }
             meta="Open events anyone can RSVP to"
-            cards={PUBLIC_HOSTING}
+            cards={pub.hosting}
             to={routes.gathering}
           />
         </FadeIn>
@@ -195,7 +108,7 @@ export function PublicProfilePage() {
                 Posts, replies, and DMs are <em>members-only.</em>
               </>
             }
-            body="QueerPulse keeps day-to-day community life behind a sign-in to protect members. Become one and Tomás's feed unlocks immediately — including the ability to message him."
+            body={`QueerPulse keeps day-to-day community life behind a sign-in to protect members. Become one and ${first}'s feed unlocks immediately — including the ability to message ${first}.`}
             action={
               <Button variant="primary" to={routes.requestInvite}>
                 Request an invite →
@@ -218,10 +131,10 @@ export function PublicProfilePage() {
             }
             title={
               <>
-                Who Tomás knows, <em>privately.</em>
+                Who {first} knows, <em>privately.</em>
               </>
             }
-            body="To protect members' networks, we don't show connection lists publicly. Sign in to see your mutuals with Tomás."
+            body={`To protect members' networks, we don't show connection lists publicly. Sign in to see your mutuals with ${first}.`}
             action={
               <Button variant="ghost" to={routes.signIn}>
                 Sign in
@@ -230,7 +143,7 @@ export function PublicProfilePage() {
           />
         </FadeIn>
 
-        <BottomCta />
+        <BottomCta firstName={first} />
       </div>
     </PageShell>
   );

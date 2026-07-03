@@ -1,13 +1,12 @@
+import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { Reveal } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import styles from "./ForOrganisationsPage.module.css";
 import { NOT_DO, PROCESS, PARTNERS } from "./forOrganisationsPage.data";
 import { TiersSection, PartnerContactForm } from "./ForOrganisationsSections";
 
 export function ForOrganisationsPage() {
-  const { showToast } = useToast();
-
   return (
     <PageShell>
       <section className={styles.hero}>
@@ -76,11 +75,10 @@ export function ForOrganisationsPage() {
             {PARTNERS.map((p, i) => (
               <Reveal
                 key={i}
-                as="button"
-                type="button"
+                as={Link}
+                to={`${routes.partner}/${p.slug}`}
                 className={styles.partnerCard}
                 delay={i * 60}
-                onClick={() => showToast("Opening partner page…", "info")}
               >
                 <div
                   className={[

@@ -65,6 +65,7 @@ export const routes = {
   accountProfile: "/account/profile",
   accountLocked: "/system/account-locked",
   activism: "/activism",
+  openLetter: "/activism/open-letter",
   appealOutcome: "/safety/appeal-outcome",
   annualAssembly: "/about/annual-assembly",
   applicationStatus: "/work/application-status",
@@ -79,6 +80,7 @@ export const routes = {
   calendar: "/calendar",
   cancelMembership: "/account/cancel-membership",
   changelog: "/about/changelog",
+  roadmap: "/about/roadmap",
   changemakers: "/changemakers",
   cinema: "/cinema",
   cities: "/about/cities",
@@ -88,6 +90,7 @@ export const routes = {
   communities: "/communities",
   communitiesHome: "/communities/home",
   startCommunity: "/communities/start",
+  company: "/work/companies",
   componentLibrary: "/about/component-library",
   connections: "/account/connections",
   constitution: "/policies/constitution",
@@ -138,6 +141,7 @@ export const routes = {
   editProfile: "/account/edit-profile",
   emergency: "/safety/emergency",
   employerReviews: "/work/employer-reviews",
+  caregivers: "/caregivers",
   event: "/event",
   events: "/events",
   family: "/family",
@@ -161,17 +165,20 @@ export const routes = {
   homepage: "/",
   host: "/host",
   housing: "/work/housing",
+  housingCoop: "/work/housing-coop",
   intersectionality: "/resources/intersectionality",
   invite: "/auth/invite",
   inviteLanding: "/auth/invite/QP-7F3K-2026",
   issue: "/magazine/issue",
   issues: "/magazine/issues",
   jobs: "/work/jobs",
+  postJob: "/work/jobs/post",
   legal: "/resources/legal",
   library: "/resources/library",
   linkedAccounts: "/account/linked-accounts",
   listBusiness: "/local/directory/list",
   magazine: "/magazine",
+  magazineEditor: "/magazine/editor",
   magicLink: "/auth/magic-link",
   manageGathering: "/manage-gathering",
   manifesto: "/about/manifesto",
@@ -198,6 +205,7 @@ export const routes = {
   partners: "/about/partners",
   passwordReset: "/auth/password-reset",
   perks: "/account/perks",
+  pitchTracker: "/magazine/pitches",
   platforms: "/about/platforms",
   podcastShow: "/magazine/podcast-show",
   pressArchive: "/about/press-archive",
@@ -247,6 +255,7 @@ export const routes = {
   submitStory: "/magazine/submit-story",
   subscriptions: "/account/subscriptions",
   tag: "/magazine/tag",
+  topic: "/topic",
   terms: "/policies/terms",
   transDayOfVisibility: "/resources/trans-day-of-visibility",
   transHealthcare: "/resources/trans-healthcare",
@@ -298,6 +307,13 @@ export const routes = {
   feed: "/feed",
   onboarding: "/auth/onboarding",
   cinemaBrowse: "/cinema/browse",
+  cinemaCollections: "/cinema/collections",
+  cinemaFilmmaker: "/cinema/filmmakers",
+  cinemaCurator: "/cinema/curators",
+  cinemaAbout: "/cinema/about",
+  cinemaSubmit: "/cinema/submit",
+  cinemaShorts: "/cinema/made-here",
+  cinemaOpenCalls: "/cinema/open-calls",
 } as const;
 
 export type RouteKey = keyof typeof routes;
@@ -311,6 +327,9 @@ export const modPanel = (slug: string) => `/mod/${slug}`;
 export const inviteLink = (code: string) => `/auth/invite/${code}`;
 /** A forum thread's detail page. */
 export const thread = (id: number | string) => `/thread/${id}`;
+/** A community topic (hashtag) feed page. Accepts a bare tag or a "#tag". */
+export const topicPath = (tag: string) =>
+  `/topic/${tag.replace(/^#/, "").toLowerCase()}`;
 
 /** Known top-level routes that should render real (or placeholder) pages. */
 export const KNOWN_ROUTE_SLUGS: string[] = [

@@ -249,10 +249,11 @@ export function CocChangesSection({
             <b>
               When it reveals identity-level violations that would breach §02.
             </b>{" "}
-            A member running, say, a public TERF account is welcome to disagree
-            about gender publicly — but if that account has been targeting
-            individual trans members, that is a §02 violation regardless of
-            where it lives.
+            Running a public TERF or SWERF account — one that denies trans
+            people their identity, or campaigns against the safety and dignity
+            of sex workers — is not a disagreement we host around. It is a §02
+            violation wherever it lives, named member or not, because trans
+            people and sex workers <em>are</em> this community.
           </li>
         </ul>
         <p>
@@ -260,7 +261,9 @@ export function CocChangesSection({
           your other identities, things you said before joining, things adjacent
           to people you know. The bar is{" "}
           <em>material harm to QueerPulse members</em>, not "we read your other
-          account and disagree".
+          account and disagree". Denying trans people their identity, or
+          campaigning against sex workers, is not the kind of "politics" this
+          protects — that is a §02 violation, here or anywhere.
         </p>
       </section>
 

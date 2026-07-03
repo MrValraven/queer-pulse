@@ -8,6 +8,10 @@ import { routes } from "../../app/routeMap";
 const LINKS = [
   { label: "This week", to: routes.cinema },
   { label: "Browse", to: routes.cinemaBrowse },
+  { label: "Collections", to: routes.cinemaCollections },
+  { label: "Made here", to: routes.cinemaShorts },
+  { label: "Open calls", to: routes.cinemaOpenCalls },
+  { label: "About", to: routes.cinemaAbout },
   { label: "Membership", to: routes.cinemaMembership },
 ];
 
@@ -43,6 +47,9 @@ export function CinemaShell({ children }: { children: ReactNode }) {
           ))}
         </div>
         <div className={styles.right}>
+          <Button variant="ghost-dark" to={routes.cinemaSubmit}>
+            Submit a film
+          </Button>
           <Button to={routes.cinemaMembership}>Sustain · €7/mo</Button>
         </div>
       </nav>
@@ -72,7 +79,7 @@ export function CinemaShell({ children }: { children: ReactNode }) {
               </div>
               <div className={styles.footCol}>
                 <h4>Filmmakers</h4>
-                <Link to={routes.submitStory}>Submit</Link>
+                <Link to={routes.cinemaSubmit}>Submit</Link>
                 <Link to={routes.cinemaMembership}>Revenue split</Link>
                 <Link to={routes.governance}>Rights</Link>
               </div>

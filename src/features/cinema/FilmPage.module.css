@@ -234,6 +234,14 @@
   color: var(--ink-60);
   margin-top: 16px;
 }
+.meta a {
+  color: var(--plum);
+  font-weight: 500;
+  transition: color 0.2s var(--ease);
+}
+.meta a:hover {
+  color: var(--accent);
+}
 .curatorPull {
   display: flex;
   gap: 14px;
@@ -623,6 +631,11 @@
   font-family: var(--serif);
   font-size: 18px;
   color: var(--plum);
+  display: inline-block;
+  transition: color 0.2s var(--ease);
+}
+a.fmName:hover {
+  color: var(--accent);
 }
 .fmName em {
   font-style: italic;

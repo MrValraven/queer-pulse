@@ -32,6 +32,52 @@
   gap: 8px;
 }
 
+/* Owner preview banner (signed-in member viewing their own public profile) */
+.ownerBar {
+  background: var(--plum);
+  color: var(--cream);
+  padding: 11px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.ownerLbl {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(var(--cream-rgb), 0.85);
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(var(--cream-rgb), 0.12);
+  color: rgba(var(--cream-rgb), 0.75);
+}
+.pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(var(--cream-rgb), 0.5);
+}
+.pillOn {
+  background: rgba(var(--jade-rgb), 0.22);
+  color: var(--jade);
+}
+.pillOn::before {
+  background: var(--jade);
+}
+
 .page {
   max-width: 900px;
   margin: 0 auto;
@@ -344,6 +390,17 @@
   line-height: 1.65;
   max-width: 42ch;
   margin: 0 auto 16px;
+}
+
+.curatorLink {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.curatorLink:hover {
+  color: var(--accent-ink);
 }
 
 /* Bottom CTA */

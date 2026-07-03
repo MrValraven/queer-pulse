@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type SyntheticEvent } from "react";
 import { FiBriefcase, FiBookmark, FiCheck, FiShield } from "react-icons/fi";
 import { FaRainbow } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import {
   EmptyState,
@@ -13,26 +13,25 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useSaved } from "../../app/providers/SavedProvider";
 import { routes } from "../../app/routeMap";
 import { useWorkProfile } from "../../app/providers/WorkProfileProvider";
+import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
 import { JOBS, JOB_FILTERS, EMPLOYERS, type Job } from "./jobs.data";
+import { COMPANY_SLUG_BY_NAME } from "./companies.data";
 import { safetyFor } from "./employerSafety.data";
 import { SafetyBadges } from "./SafetyBadges";
 import { affiliationFromLabel } from "./safetyBadges.data";
-import { PostJobModal } from "./PostJobModal";
 import styles from "./JobsPage.module.css";
 
 function JobCard({ job }: { job: Job }) {
   const { showToast } = useToast();
   const { isSaved, toggleSave } = useSaved();
-  const [applied, setApplied] = useState(false);
+  const navigate = useNavigate();
   const savedId = `job:${job.slug}`;
   const saved = isSaved(savedId);
 
   function apply(e: SyntheticEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (applied) return;
-    setApplied(true);
-    showToast(`Application started for ${job.title}`, "success");
+    navigate(`${routes.jobs}/${job.slug}/apply`);
   }
 
   function save(e: SyntheticEvent) {
@@ -110,22 +109,14 @@ function JobCard({ job }: { job: Job }) {
         <span
           role="button"
           tabIndex={0}
-          aria-disabled={applied}
-          className={[styles.apply, applied && styles.applyDone]
-            .filter(Boolean)
-            .join(" ")}
+          aria-label={`Apply for ${job.title}`}
+          className={styles.apply}
           onClick={apply}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") apply(e);
           }}
         >
-          {applied ? (
-            <>
-              Applied <FiCheck />
-            </>
-          ) : (
-            "Apply"
-          )}
+          Apply →
         </span>
       </div>
     </Link>
@@ -148,9 +139,10 @@ function JobSkeleton() {
 
 export function JobsPage() {
   const { safeOnly } = useWorkProfile();
+  const { postedJobs } = usePostedJobs();
+  const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
   const [showAll, setShowAll] = useState(false);
-  const [posting, setPosting] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -158,9 +150,11 @@ export function JobsPage() {
     return () => clearTimeout(t);
   }, []);
 
+  const allJobs = useMemo(() => [...postedJobs, ...JOBS], [postedJobs]);
   const byCat = useMemo(
-    () => (filter === "all" ? JOBS : JOBS.filter((j) => j.cat === filter)),
-    [filter],
+    () =>
+      filter === "all" ? allJobs : allJobs.filter((j) => j.cat === filter),
+    [filter, allJobs],
   );
   const verifiedOnly = safeOnly && !showAll;
   const visible = useMemo(
@@ -222,7 +216,7 @@ export function JobsPage() {
             <button
               type="button"
               className={styles.postBtn}
-              onClick={() => setPosting(true)}
+              onClick={() => navigate(routes.postJob)}
             >
               + Post a job
             </button>
@@ -300,36 +294,41 @@ export function JobsPage() {
             subtitle="These organisations are run by or for the queer community. Working here means your money stays in the network."
           />
           <div className={styles.empGrid}>
-            {EMPLOYERS.map((emp) => (
-              <div key={emp.name} className={styles.empCard}>
-                <div
-                  className={styles.empLogo}
-                  style={{ background: emp.bg, color: emp.text }}
+            {EMPLOYERS.map((emp) => {
+              const slug = COMPANY_SLUG_BY_NAME[emp.name];
+              return (
+                <Link
+                  key={emp.name}
+                  to={slug ? `${routes.company}/${slug}` : routes.jobs}
+                  className={styles.empCard}
                 >
-                  {emp.logo}
-                </div>
-                <div className={styles.empName}>{emp.name}</div>
-                <div className={styles.empType}>{emp.type}</div>
-                <span
-                  className={styles.empBadge}
-                  style={{ background: emp.badgeBg, color: emp.badgeText }}
-                >
-                  {emp.qr ? (
-                    <>
-                      <FaRainbow />{" "}
-                    </>
-                  ) : (
-                    ""
-                  )}
-                  {emp.badge}
-                </span>
-              </div>
-            ))}
+                  <div
+                    className={styles.empLogo}
+                    style={{ background: emp.bg, color: emp.text }}
+                  >
+                    {emp.logo}
+                  </div>
+                  <div className={styles.empName}>{emp.name}</div>
+                  <div className={styles.empType}>{emp.type}</div>
+                  <span
+                    className={styles.empBadge}
+                    style={{ background: emp.badgeBg, color: emp.badgeText }}
+                  >
+                    {emp.qr ? (
+                      <>
+                        <FaRainbow />{" "}
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    {emp.badge}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
-
-      {posting && <PostJobModal onClose={() => setPosting(false)} />}
     </PageShell>
   );
 }

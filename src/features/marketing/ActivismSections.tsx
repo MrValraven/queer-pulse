@@ -68,6 +68,24 @@ export function LocalSection() {
           </p>
         </div>
       </Reveal>
+      <Reveal
+        as={Link}
+        to={routes.openLetter}
+        className={`${s.banner} ${s.bannerLink}`}
+        delay={180}
+      >
+        <span className={s.ibDot} />
+        <div>
+          <div className={s.ibHead}>
+            Live open letter — trans-affirming care
+          </div>
+          <p>
+            2,847 members have signed our letter to the Ministério da Saúde
+            asking that HRT care be made portable across the SNS. We
+            hand-deliver at 5,000. <b>Read it and add your name →</b>
+          </p>
+        </div>
+      </Reveal>
     </section>
   );
 }

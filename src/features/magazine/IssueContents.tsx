@@ -11,8 +11,9 @@ import {
 import { PrintOrderModal } from "./PrintOrderModal";
 import { useSimulatedLoad } from "../../shared/hooks";
 import styles from "./IssuePage.module.css";
-import { routes } from "../../app/routeMap";
+import { resolveWriter } from "./authorContent.data";
 import { TOC, CONTRIBUTORS, PRINT_EDITION_IMG } from "./issue.data";
+import { routes } from "../../app/routeMap";
 
 /** Entry counts per TOC section — drives a zero-shift skeleton. */
 const TOC_ROW_COUNTS = TOC.map((section) => section.entries.length);
@@ -129,21 +130,41 @@ export function IssueContents() {
               ? Array.from({ length: CONTRIBUTORS.length }).map((_, i) => (
                   <ContribCardSkeleton key={i} />
                 ))
-              : CONTRIBUTORS.map((person, i) => (
-                  <FadeIn
-                    as={Link}
-                    key={person.name}
-                    to={routes.author}
-                    className={styles.contribCard}
-                    delay={Math.min(i, 8) * 60}
-                  >
-                    <Avatar initials={person.initials} tint="coral" size={38} />
-                    <div>
-                      <div className={styles.contribName}>{person.name}</div>
-                      <div className={styles.contribRole}>{person.role}</div>
-                    </div>
-                  </FadeIn>
-                ))}
+              : CONTRIBUTORS.map((person, i) => {
+                  const dest = resolveWriter(person.name);
+                  const body = (
+                    <>
+                      <Avatar
+                        initials={person.initials}
+                        tint="coral"
+                        size={38}
+                      />
+                      <div>
+                        <div className={styles.contribName}>{person.name}</div>
+                        <div className={styles.contribRole}>{person.role}</div>
+                      </div>
+                    </>
+                  );
+                  return dest ? (
+                    <FadeIn
+                      as={Link}
+                      key={person.name}
+                      to={dest}
+                      className={styles.contribCard}
+                      delay={Math.min(i, 8) * 60}
+                    >
+                      {body}
+                    </FadeIn>
+                  ) : (
+                    <FadeIn
+                      key={person.name}
+                      className={styles.contribCard}
+                      delay={Math.min(i, 8) * 60}
+                    >
+                      {body}
+                    </FadeIn>
+                  );
+                })}
           </div>
         </div>
       </section>

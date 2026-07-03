@@ -7,8 +7,7 @@ import {
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
-import { AUTHOR_FEATURE_IMG } from "./authorPage.data";
-import { ARTICLES, READING } from "./authorContent.data";
+import type { Author } from "./authorContent.data";
 import styles from "./AuthorPage.module.css";
 
 function ArtCardSkeleton() {
@@ -24,7 +23,7 @@ function ArtCardSkeleton() {
   );
 }
 
-export function AuthorWork() {
+export function AuthorWork({ author }: { author: Author }) {
   const loading = useSimulatedLoad();
 
   return (
@@ -36,45 +35,38 @@ export function AuthorWork() {
       </div>
       <div className={styles.featured}>
         <div>
-          <div className={styles.featKicker}>
-            Cover story · Issue 09 · Health
-          </div>
+          <div className={styles.featKicker}>{author.featured.kicker}</div>
           <h3 className={styles.featTitle}>
-            <Link to={`${routes.article}?id=city-changed`}>
-              Five things I learned{" "}
-              <em>navigating Lisbon's trans health system.</em>
+            <Link to={`${routes.article}?id=${author.featured.articleId}`}>
+              {author.featured.title}
             </Link>
           </h3>
-          <p className={styles.featDek}>
-            From the SNS to private clinics, what nobody tells you about waiting
-            lists, referrals, and how to actually get a hormone prescription
-            without losing a year of your life.
-          </p>
-          <p className={styles.featMeta}>
-            Published 6 Jun 2026 · 8 min read · 284 reads this week
-          </p>
+          <p className={styles.featDek}>{author.featured.dek}</p>
+          <p className={styles.featMeta}>{author.featured.meta}</p>
         </div>
         <ImageSlot
           tint="jade"
           className={styles.featImg}
           radius={18}
-          src={AUTHOR_FEATURE_IMG}
-          alt="Hero image: cover story 09"
-          placeholder="Hero image: cover story 09"
+          src={author.featured.image}
+          alt={`Hero image for ${author.firstName}'s featured story`}
+          placeholder="Featured story"
           style={{ height: "auto" }}
         />
       </div>
 
       <div className={styles.sec}>
         <h2>Selected work</h2>
-        <Link to={routes.magazine}>All 14 articles →</Link>
+        <Link to={routes.magazine}>
+          All {author.stats[0]?.value} articles →
+        </Link>
       </div>
       <div className={styles.articles}>
         {loading
-          ? Array.from({ length: ARTICLES.length }).map((_, i) => (
+          ? Array.from({ length: author.articles.length }).map((_, i) => (
               <ArtCardSkeleton key={i} />
             ))
-          : ARTICLES.map((article, index) => (
+          : author.articles.map((article, index) => (
               <FadeIn
                 as={Link}
                 key={index}
@@ -92,21 +84,16 @@ export function AuthorWork() {
 
       <div className={styles.readlist}>
         <div>
-          <h3>
-            What Sara is <em>reading.</em>
-          </h3>
-          <p>
-            Curated by the writer herself — books, longforms, and resources she
-            returns to when reporting.
-          </p>
+          <h3>{author.readingTitle}</h3>
+          <p>{author.readingBlurb}</p>
           <Button to={routes.library} style={{ marginTop: 8 }}>
-            See all 22 picks →
+            See all picks →
           </Button>
         </div>
         <ol>
-          {READING.map((item, index) => (
+          {author.reading.map((item, index) => (
             <li key={index}>
-              <span>{item.title}</span> <span>{item.tag}</span>
+              {item.title} <span>{item.tag}</span>
             </li>
           ))}
         </ol>
@@ -114,30 +101,27 @@ export function AuthorWork() {
 
       <div className={styles.sec}>
         <h2>
-          Find Sara <em>elsewhere</em>
+          Find {author.firstName} <em>elsewhere</em>
         </h2>
       </div>
       <div className={styles.elsewhere}>
-        <a href="mailto:sara@queerpulse.app">
-          sara@queerpulse.app <span>· pitch direct</span>
-        </a>
-        <a
-          href="https://www.are.na/sara-pinheiro"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Are.na <span>· /sara-pinheiro</span>
-        </a>
-        <a
-          href="https://bsky.app/profile/sarapinheiro.bsky.social"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Bluesky <span>· @sarapinheiro</span>
-        </a>
-        <Link to={routes.members}>
-          Member profile <span>· in Lisbon</span>
-        </Link>
+        {author.elsewhere.map((link) =>
+          link.to ? (
+            <Link key={link.label} to={link.to}>
+              {link.label} <span>{link.note}</span>
+            </Link>
+          ) : (
+            <a
+              key={link.label}
+              href={link.href}
+              {...(link.href?.startsWith("mailto:")
+                ? {}
+                : { target: "_blank", rel: "noreferrer" })}
+            >
+              {link.label} <span>{link.note}</span>
+            </a>
+          ),
+        )}
       </div>
     </>
   );

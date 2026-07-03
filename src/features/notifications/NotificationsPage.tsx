@@ -10,7 +10,14 @@ import { useNotifications } from "./api/useNotifications";
 import { useMarkNotificationRead } from "./api/useMarkNotificationRead";
 import { useMarkAllRead } from "./api/useMarkAllRead";
 import { notificationTabs, type NotifType, type Notification } from "./data";
+import { MENTION_DAYS } from "./mentions.data";
 import styles from "./NotificationsPage.module.css";
+
+/** Unread @-mentions, from the same mock source the Mentions thread renders. */
+const unreadMentions = MENTION_DAYS.reduce(
+  (total, group) => total + group.items.filter((m) => m.unread).length,
+  0,
+);
 
 export function NotificationsPage() {
   const { data: notifications = [], isLoading } = useNotifications();
@@ -146,12 +153,31 @@ export function NotificationsPage() {
           <Tabs
             className={styles.tabs}
             variant="underline"
-            tabs={notificationTabs.map((tab) => ({
-              id: tab.value,
-              label: tab.label,
-            }))}
+            tabs={[
+              {
+                id: notificationTabs[0].value,
+                label: notificationTabs[0].label,
+              },
+              {
+                id: "mentions",
+                label: "Mentions",
+                count: unreadMentions || undefined,
+              },
+              ...notificationTabs.slice(1).map((tab) => ({
+                id: tab.value,
+                label: tab.label,
+              })),
+            ]}
             active={filter}
-            onChange={(id) => setFilter(id as "all" | NotifType)}
+            onChange={(id) => {
+              // "Mentions" is a link-style tab — it opens the dedicated thread
+              // rather than filtering the notifications list in place.
+              if (id === "mentions") {
+                navigate(routes.mentions);
+                return;
+              }
+              setFilter(id as "all" | NotifType);
+            }}
           />
 
           {isLoading ? (

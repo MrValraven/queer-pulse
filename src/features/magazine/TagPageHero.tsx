@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { AuthorLink } from "./AuthorLink";
 import { CHIPS } from "./tag.data";
 import styles from "./TagPage.module.css";
 
@@ -86,8 +87,8 @@ export function TagPageHero({
             <div className={styles.featByline}>
               <div className="av">SP</div>
               <span>
-                By <b>Sara Pinheiro</b> · published 6 Jun 2026 · <b>284</b>{" "}
-                reads this week
+                By <AuthorLink name="Sara Pinheiro" /> · published 6 Jun 2026 ·{" "}
+                <b>284</b> reads this week
               </span>
             </div>
           </div>
@@ -105,7 +106,7 @@ export function TagPageHero({
               piece this month, make it the cover.
             </p>
             <p className={styles.curatorBy}>
-              — <b>Marta Reis</b>, editor in chief
+              — <AuthorLink name="Marta Reis" />, editor in chief
             </p>
           </div>
           <Button to={NEWSLETTER} variant="ghost-dark">

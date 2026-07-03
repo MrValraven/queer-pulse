@@ -38,6 +38,22 @@ const FEED_ITEMS: {
   { key: "recap", tab: "Gatherings", Card: RecapCard },
 ];
 
+/** Greeting + formatted date from the user's local machine clock. */
+function useNowGreeting() {
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting =
+    hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const weekday = now.toLocaleDateString("en-GB", { weekday: "long" });
+  const day = now.getDate();
+  const month = now.toLocaleDateString("en-GB", { month: "long" });
+  const year = now.getFullYear();
+  return {
+    greeting,
+    dateLine: `${weekday} · Lisbon · ${day} ${month} ${year}`,
+  };
+}
+
 function FeedSkeleton() {
   return (
     <div className={styles.card} aria-hidden>
@@ -59,6 +75,7 @@ export function FeedPage() {
   const [loading, setLoading] = useState(demoMode);
   const [prevDemo, setPrevDemo] = useState(demoMode);
   const { memberships } = useCommunityMembership();
+  const { greeting, dateLine } = useNowGreeting();
 
   // When the platform is (re)populated, snap straight into the skeleton during
   // this render — adjusting state mid-render avoids a one-frame flash of data
@@ -109,11 +126,9 @@ export function FeedPage() {
           <div className={styles.greetingRow}>
             <div>
               <div className={styles.greeting}>
-                Good morning, <em>{currentUser.first}</em>
+                {greeting}, <em>{currentUser.first}</em>
               </div>
-              <div className={styles.greetingDate}>
-                Saturday · Lisbon · 21 June 2026
-              </div>
+              <div className={styles.greetingDate}>{dateLine}</div>
             </div>
             <Link to={routes.messages} className={styles.msgChip}>
               <svg

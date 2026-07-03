@@ -7,6 +7,7 @@ export interface ProcessStep {
 }
 
 export interface Partner {
+  slug: string;
   logo: string;
   logoCls: string;
   type: string;
@@ -82,6 +83,7 @@ export const PROCESS: ProcessStep[] = [
 
 export const PARTNERS: Partner[] = [
   {
+    slug: "ilga-portugal",
     logo: "ILGA",
     logoCls: "",
     type: "Operational · founding",
@@ -94,6 +96,7 @@ export const PARTNERS: Partner[] = [
     desc: "Operational case-bridge, free legal consults, joint advocacy. The 4-year-old seam that proves this model.",
   },
   {
+    slug: "clinica-do-largo",
     logo: "CL",
     logoCls: "logoCoral",
     type: "Operational · 2024",
@@ -106,6 +109,7 @@ export const PARTNERS: Partner[] = [
     desc: "Open clinic nights, trans-affirming care pathway, vouching for QP-verified therapists.",
   },
   {
+    slug: "fundacao-gulbenkian",
     logo: "FG",
     logoCls: "logoJade",
     type: "Programme funder",

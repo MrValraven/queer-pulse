@@ -16,6 +16,7 @@ import { currentUserSlug, type MemberProfile } from "./data/memberProfiles";
 import { useRecognition } from "./api/useRecognition";
 import { HeroVouchRow } from "./HeroVouchRow";
 import { VISIBILITY_LABEL } from "./profileSections.data";
+import { curatorSlugForName } from "../cinema/cinemaCurator.data";
 import {
   ActivitySection,
   BoardSection,
@@ -90,6 +91,7 @@ export function ProfileHero({
   const realSelf = self ?? profile.slug === currentUserSlug;
   const isSelf = realSelf && !asVisitor;
   const vouched = hasVouched(profile.slug);
+  const curatorSlug = curatorSlugForName(`${profile.first} ${profile.last}`);
   return (
     <header className={styles.phero}>
       <div className="wrap">
@@ -124,6 +126,14 @@ export function ProfileHero({
                 <span className={styles.pronoun}> · {profile.pronouns}</span>
               )}
             </div>
+            {curatorSlug && (
+              <Link
+                className={styles.curatorLink}
+                to={`${routes.cinemaCurator}/${curatorSlug}`}
+              >
+                ● Cinema curator — view programming profile →
+              </Link>
+            )}
             <div className={styles.where}>
               <span className={styles.loc}>
                 <span className={styles.pin} aria-hidden />

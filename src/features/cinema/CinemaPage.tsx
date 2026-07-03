@@ -1,5 +1,6 @@
 import { CinemaShell } from "./CinemaShell";
 import {
+  AboutStrip,
   AskStrip,
   CinemaCover,
   CinemaMast,
@@ -8,6 +9,7 @@ import {
   LedgerSection,
   LiveSection,
   MadeHereSection,
+  OpenCallsStrip,
   ProgrammeSection,
 } from "./CinemaSections";
 import styles from "./CinemaPage.module.css";
@@ -26,6 +28,8 @@ export function CinemaPage() {
           <MadeHereSection />
           <LiveSection />
           <LedgerSection />
+          <OpenCallsStrip />
+          <AboutStrip />
         </div>
       </section>
 

@@ -121,6 +121,18 @@ div.backBar {
   color: var(--ink-40);
   font-weight: 400;
 }
+.curatorLink {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+}
+@media (hover: hover) {
+  .curatorLink:hover {
+    color: var(--accent-ink);
+  }
+}
 .where {
   display: flex;
   align-items: center;

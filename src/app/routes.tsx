@@ -40,6 +40,11 @@ const FamilyPage = lazy(() =>
     default: m.FamilyPage,
   })),
 );
+const CaregiversPage = lazy(() =>
+  import("../features/community/CaregiversPage").then((m) => ({
+    default: m.CaregiversPage,
+  })),
+);
 const FeedPage = lazy(() =>
   import("../features/feed/FeedPage").then((m) => ({ default: m.FeedPage })),
 );
@@ -183,6 +188,11 @@ const CoverGalleryPage = lazy(() =>
 const TagPage = lazy(() =>
   import("../features/magazine/TagPage").then((m) => ({ default: m.TagPage })),
 );
+const TopicPage = lazy(() =>
+  import("../features/topics/TopicPage").then((m) => ({
+    default: m.TopicPage,
+  })),
+);
 const PodcastShowPage = lazy(() =>
   import("../features/magazine/PodcastShowPage").then((m) => ({
     default: m.PodcastShowPage,
@@ -261,6 +271,11 @@ const CodeOfConductPage = lazy(() =>
 const ChangelogPage = lazy(() =>
   import("../features/marketing/ChangelogPage").then((m) => ({
     default: m.ChangelogPage,
+  })),
+);
+const RoadmapPage = lazy(() =>
+  import("../features/marketing/RoadmapPage").then((m) => ({
+    default: m.RoadmapPage,
   })),
 );
 const PressArchivePage = lazy(() =>
@@ -441,9 +456,29 @@ const JobDetailPage = lazy(() =>
     default: m.JobDetailPage,
   })),
 );
+const CompanyPage = lazy(() =>
+  import("../features/economy/CompanyPage").then((m) => ({
+    default: m.CompanyPage,
+  })),
+);
+const PostJobPage = lazy(() =>
+  import("../features/economy/PostJobPage").then((m) => ({
+    default: m.PostJobPage,
+  })),
+);
+const JobApplyPage = lazy(() =>
+  import("../features/economy/JobApplyPage").then((m) => ({
+    default: m.JobApplyPage,
+  })),
+);
 const HousingPage = lazy(() =>
   import("../features/economy/HousingPage").then((m) => ({
     default: m.HousingPage,
+  })),
+);
+const HousingCoopPage = lazy(() =>
+  import("../features/economy/HousingCoopPage").then((m) => ({
+    default: m.HousingCoopPage,
   })),
 );
 const HousingListingPage = lazy(() =>
@@ -459,6 +494,11 @@ const LandlordPage = lazy(() =>
 const SkillsPage = lazy(() =>
   import("../features/economy/SkillsPage").then((m) => ({
     default: m.SkillsPage,
+  })),
+);
+const WorkshopPage = lazy(() =>
+  import("../features/economy/WorkshopPage").then((m) => ({
+    default: m.WorkshopPage,
   })),
 );
 const GrantsPage = lazy(() =>
@@ -669,9 +709,49 @@ const CinemaMembershipPage = lazy(() =>
 const FilmPage = lazy(() =>
   import("../features/cinema/FilmPage").then((m) => ({ default: m.FilmPage })),
 );
+const CinemaFilmmakerPage = lazy(() =>
+  import("../features/cinema/CinemaFilmmakerPage").then((m) => ({
+    default: m.CinemaFilmmakerPage,
+  })),
+);
+const CinemaCuratorPage = lazy(() =>
+  import("../features/cinema/CinemaCuratorPage").then((m) => ({
+    default: m.CinemaCuratorPage,
+  })),
+);
+const CinemaCollectionsPage = lazy(() =>
+  import("../features/cinema/CinemaCollectionsPage").then((m) => ({
+    default: m.CinemaCollectionsPage,
+  })),
+);
+const CinemaCollectionPage = lazy(() =>
+  import("../features/cinema/CinemaCollectionPage").then((m) => ({
+    default: m.CinemaCollectionPage,
+  })),
+);
+const CinemaAboutPage = lazy(() =>
+  import("../features/cinema/CinemaAboutPage").then((m) => ({
+    default: m.CinemaAboutPage,
+  })),
+);
 const WatchPage = lazy(() =>
   import("../features/cinema/WatchPage").then((m) => ({
     default: m.WatchPage,
+  })),
+);
+const CinemaSubmitPage = lazy(() =>
+  import("../features/cinema/CinemaSubmitPage").then((m) => ({
+    default: m.CinemaSubmitPage,
+  })),
+);
+const CinemaShortsPage = lazy(() =>
+  import("../features/cinema/CinemaShortsPage").then((m) => ({
+    default: m.CinemaShortsPage,
+  })),
+);
+const CinemaOpenCallsPage = lazy(() =>
+  import("../features/cinema/CinemaOpenCallsPage").then((m) => ({
+    default: m.CinemaOpenCallsPage,
   })),
 );
 const StudioPage = lazy(() =>
@@ -840,6 +920,11 @@ const PartnerDetailPage = lazy(() =>
 const ActivismPage = lazy(() =>
   import("../features/marketing/ActivismPage").then((m) => ({
     default: m.ActivismPage,
+  })),
+);
+const OpenLetterPage = lazy(() =>
+  import("../features/marketing/OpenLetterPage").then((m) => ({
+    default: m.OpenLetterPage,
   })),
 );
 const ArchivePage = lazy(() =>
@@ -1213,6 +1298,16 @@ const SubmitStoryPage = lazy(() =>
     default: m.SubmitStoryPage,
   })),
 );
+const PitchTrackerPage = lazy(() =>
+  import("../features/magazine/PitchTrackerPage").then((m) => ({
+    default: m.PitchTrackerPage,
+  })),
+);
+const EditorDashboardPage = lazy(() =>
+  import("../features/magazine/EditorDashboardPage").then((m) => ({
+    default: m.EditorDashboardPage,
+  })),
+);
 const StudioCollectionPage = lazy(() =>
   import("../features/studio/StudioCollectionPage").then((m) => ({
     default: m.StudioCollectionPage,
@@ -1312,6 +1407,7 @@ const BUILT_SLUGS = new Set([
   "economy",
   "coming-out",
   "parents",
+  "caregivers",
   "gatherings",
 ]);
 
@@ -1358,6 +1454,7 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/story-tomas", routes.storyTomas],
   ["/story-safety", routes.storySafety],
   ["/submit-story", routes.submitStory],
+  ["/pitches", routes.pitchTracker],
   ["/creatives", routes.creatives],
   ["/culture", routes.culture],
   // Resources
@@ -1389,7 +1486,9 @@ const LEGACY_REDIRECTS: [string, string][] = [
   // Work
   ["/jobs", routes.jobs],
   ["/housing", routes.housing],
+  ["/housing-coop", routes.housingCoop],
   ["/skills", routes.skills],
+  ["/workshop", `${routes.skills}/risograph-zine`],
   ["/grants", routes.grants],
   ["/barter", routes.barter],
   ["/offer", routes.offer],
@@ -1418,6 +1517,7 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/help", routes.help],
   ["/manifesto", routes.manifesto],
   ["/changelog", routes.changelog],
+  ["/roadmap", routes.roadmap],
   ["/press-archive", routes.pressArchive],
   ["/press-kit", routes.pressKit],
   ["/newsletter", routes.newsletter],
@@ -1512,6 +1612,7 @@ export function AppRoutes() {
         <Route path={routes.dating} element={<DatingPage />} />
         <Route path={routes.readingGroups} element={<ReadingGroupsPage />} />
         <Route path={routes.family} element={<FamilyPage />} />
+        <Route path={routes.caregivers} element={<CaregiversPage />} />
         <Route path={routes.messages} element={<MessagesPage />} />
         <Route path={routes.notifications} element={<NotificationsPage />} />
         <Route
@@ -1564,10 +1665,12 @@ export function AppRoutes() {
         <Route path={routes.magazine} element={<MagazinePage />} />
         <Route path={routes.article} element={<ArticlePage />} />
         <Route path={routes.author} element={<AuthorPage />} />
+        <Route path={`${routes.author}/:slug`} element={<AuthorPage />} />
         <Route path={routes.issue} element={<IssuePage />} />
         <Route path={routes.issues} element={<IssuesPage />} />
         <Route path={routes.coverGallery} element={<CoverGalleryPage />} />
         <Route path={routes.tag} element={<TagPage />} />
+        <Route path={`${routes.topic}/:tag`} element={<TopicPage />} />
         <Route path={routes.podcastShow} element={<PodcastShowPage />} />
         <Route path={routes.audioPlayer} element={<AudioPlayerPage />} />
         <Route
@@ -1590,10 +1693,13 @@ export function AppRoutes() {
         <Route path={routes.storyTomas} element={<StoryTomasPage />} />
         <Route path={routes.storySafety} element={<StorySafetyPage />} />
         <Route path={routes.submitStory} element={<SubmitStoryPage />} />
+        <Route path={routes.pitchTracker} element={<PitchTrackerPage />} />
+        <Route path={routes.magazineEditor} element={<EditorDashboardPage />} />
         <Route path={routes.creatives} element={<CreativesPage />} />
         <Route path={routes.culture} element={<CulturePage />} />
         <Route path={routes.manifesto} element={<ManifestoPage />} />
         <Route path={routes.changelog} element={<ChangelogPage />} />
+        <Route path={routes.roadmap} element={<RoadmapPage />} />
         <Route path={routes.pressArchive} element={<PressArchivePage />} />
         <Route path={routes.newsletter} element={<NewsletterPage />} />
         <Route path={routes.annualAssembly} element={<AnnualAssemblyPage />} />
@@ -1753,14 +1859,19 @@ export function AppRoutes() {
 
         {/* Jobs & economy */}
         <Route path={routes.jobs} element={<JobsPage />} />
+        <Route path={routes.postJob} element={<PostJobPage />} />
         <Route path={`${routes.jobs}/:slug`} element={<JobDetailPage />} />
+        <Route path={`${routes.jobs}/:slug/apply`} element={<JobApplyPage />} />
+        <Route path={`${routes.company}/:slug`} element={<CompanyPage />} />
         <Route path={routes.housing} element={<HousingPage />} />
         <Route
           path={`${routes.housing}/:slug`}
           element={<HousingListingPage />}
         />
         <Route path="/work/landlord/:slug" element={<LandlordPage />} />
+        <Route path={routes.housingCoop} element={<HousingCoopPage />} />
         <Route path={routes.skills} element={<SkillsPage />} />
+        <Route path={`${routes.skills}/:id`} element={<WorkshopPage />} />
         <Route path={routes.grants} element={<GrantsPage />} />
         <Route path={routes.barter} element={<BarterPage />} />
         <Route path={`${routes.barter}/:id`} element={<BarterDetailPage />} />
@@ -1832,10 +1943,33 @@ export function AppRoutes() {
         <Route path={routes.cinema} element={<CinemaPage />} />
         <Route path="/cinema/browse" element={<CinemaBrowsePage />} />
         <Route
+          path={routes.cinemaCollections}
+          element={<CinemaCollectionsPage />}
+        />
+        <Route
+          path={`${routes.cinemaCollections}/:slug`}
+          element={<CinemaCollectionPage />}
+        />
+        <Route
           path={routes.cinemaMembership}
           element={<CinemaMembershipPage />}
         />
         <Route path={routes.cinemaWatch} element={<WatchPage />} />
+        <Route
+          path={`${routes.cinemaFilmmaker}/:slug`}
+          element={<CinemaFilmmakerPage />}
+        />
+        <Route
+          path={`${routes.cinemaCurator}/:slug`}
+          element={<CinemaCuratorPage />}
+        />
+        <Route path={routes.cinemaAbout} element={<CinemaAboutPage />} />
+        <Route path={routes.cinemaSubmit} element={<CinemaSubmitPage />} />
+        <Route path={routes.cinemaShorts} element={<CinemaShortsPage />} />
+        <Route
+          path={routes.cinemaOpenCalls}
+          element={<CinemaOpenCallsPage />}
+        />
         <Route path={routes.film} element={<FilmPage />} />
 
         {/* Studio */}
@@ -1903,6 +2037,7 @@ export function AppRoutes() {
         />
         <Route path={routes.resources} element={<ResourceLibraryPage />} />
         <Route path={routes.activism} element={<ActivismPage />} />
+        <Route path={routes.openLetter} element={<OpenLetterPage />} />
         <Route path={routes.archive} element={<ArchivePage />} />
         <Route
           path="/annual-assembly/minutes/:year"

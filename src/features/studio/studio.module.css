@@ -822,6 +822,7 @@
   padding: 44px 0 32px;
 }
 .detailArt {
+  position: relative;
   aspect-ratio: 1;
   border-radius: 16px;
   overflow: hidden;

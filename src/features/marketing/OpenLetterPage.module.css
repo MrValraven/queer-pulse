@@ -1,0 +1,442 @@
+/* ── Hero ─────────────────────────────────────────────── */
+.hero {
+  padding: 140px 0 56px;
+}
+.heroInner {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+.sep {
+  opacity: 0.4;
+}
+.live {
+  color: var(--jade);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.live::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live::before {
+    animation: none;
+  }
+}
+.h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(48px, 7vw, 84px);
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-bottom: 24px;
+  max-width: 20ch;
+}
+.h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.addressed {
+  font-size: 14px;
+  color: var(--ink-40);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+.addressed b {
+  color: var(--plum);
+}
+
+/* Counter strip */
+.counter {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+  padding: 24px 0;
+  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  border-bottom: 1px solid rgba(45, 27, 61, 0.1);
+  margin-top: 32px;
+}
+@media (max-width: 560px) {
+  .counter {
+    grid-template-columns: 1fr;
+  }
+}
+.countNum {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(54px, 8vw, 92px);
+  color: var(--plum);
+  letter-spacing: -0.025em;
+  line-height: 0.9;
+}
+.countNum em {
+  font-style: italic;
+  color: var(--accent);
+}
+.countGoal {
+  font-size: 24px;
+  color: var(--ink-40);
+}
+.countLabel {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-top: 8px;
+}
+.countLabel b {
+  color: var(--plum);
+  font-weight: 700;
+}
+.progress {
+  min-width: 260px;
+}
+.pbar {
+  height: 8px;
+  background: rgba(45, 27, 61, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.pbar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--jade));
+  border-radius: 4px;
+  transition: width 0.6s var(--ease);
+}
+.pct {
+  font-size: 13px;
+  color: var(--ink-60);
+}
+.pct b {
+  color: var(--plum);
+  font-weight: 700;
+}
+
+/* ── Layout ───────────────────────────────────────────── */
+.page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 48px 28px 80px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 48px;
+  align-items: flex-start;
+}
+@media (max-width: 860px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Letter ───────────────────────────────────────────── */
+.letter {
+  font-size: 17.5px;
+  color: var(--ink);
+  line-height: 1.85;
+  max-width: 60ch;
+}
+.letter p {
+  margin-bottom: 1.15em;
+  text-wrap: pretty;
+}
+.letter p em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.letter p strong {
+  color: var(--plum);
+  font-weight: 600;
+}
+.letter .lead::first-letter {
+  font-family: var(--serif);
+  font-size: 4.5em;
+  font-weight: 400;
+  float: left;
+  line-height: 0.78;
+  padding-right: 0.06em;
+  padding-top: 0.06em;
+  color: var(--plum);
+}
+.letter h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--plum);
+  letter-spacing: -0.015em;
+  margin: 32px 0 14px;
+}
+.letter h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.letter ol {
+  padding-left: 22px;
+  margin-bottom: 1em;
+}
+.letter ol li {
+  margin-bottom: 10px;
+  text-wrap: pretty;
+}
+.letter ol li b {
+  color: var(--plum);
+  font-weight: 700;
+}
+.kicker {
+  margin-top: 32px;
+}
+
+.signBlock {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(45, 27, 61, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+.signAv {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-ink);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.signAvJade {
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade);
+}
+.signText b {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  color: var(--plum);
+  letter-spacing: -0.005em;
+}
+.signText span {
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+/* ── Sidebar ──────────────────────────────────────────── */
+.side {
+  position: sticky;
+  top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+@media (max-width: 860px) {
+  .side {
+    position: static;
+  }
+}
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.signHead {
+  background: var(--accent);
+  color: #fff;
+  padding: 18px 22px;
+}
+.signHead h4 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 6px;
+}
+.signHead .as {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  color: #fff;
+}
+.signBody {
+  padding: 22px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.field label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.field input,
+.field textarea,
+.field select {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(45, 27, 61, 0.16);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: var(--plum);
+  background: var(--paper);
+}
+.field textarea {
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.55;
+}
+.fieldAside {
+  align-self: flex-end;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-40);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.signActions {
+  margin-top: 14px;
+}
+.signActions button {
+  width: 100%;
+  justify-content: center;
+}
+.signFoot {
+  font-size: 11.5px;
+  color: var(--ink-40);
+  margin-top: 10px;
+  line-height: 1.55;
+}
+
+/* Recent signatures */
+.listCard {
+  padding: 18px 22px;
+}
+.listCard h4 {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 14px;
+}
+.sigRow {
+  display: flex;
+  gap: 11px;
+  padding: 8px 0;
+  align-items: flex-start;
+  border-bottom: 1px dashed rgba(45, 27, 61, 0.06);
+}
+.sigRow:last-child {
+  border-bottom: none;
+}
+.sigAv {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.tintAccent {
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--accent-ink);
+}
+.tintJade {
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade);
+}
+.tintPlum {
+  background: rgba(45, 27, 61, 0.1);
+  color: var(--plum);
+}
+.sigText {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.sigText b {
+  color: var(--plum);
+  font-weight: 700;
+}
+.sigText em {
+  color: var(--ink-60);
+  font-style: italic;
+  font-size: 12px;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Status block */
+.status {
+  padding: 18px 22px;
+  background: rgba(var(--jade-rgb), 0.06);
+  border-left: 3px solid var(--jade);
+  border-radius: 10px;
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.status b {
+  color: var(--plum);
+  font-weight: 700;
+}
+.status em {
+  font-style: italic;
+  color: var(--accent-ink);
+}

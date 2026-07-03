@@ -97,8 +97,8 @@ export function CollectionsSection() {
       <div className={styles.collGrid}>
         {collections.map((c) => (
           <Link
-            key={c.titleEm ?? c.titlePre}
-            to={routes.cinemaBrowse}
+            key={c.slug}
+            to={`${routes.cinemaCollections}/${c.slug}`}
             className={styles.coll}
           >
             <div className={styles.collTag}>{c.tag}</div>
@@ -136,8 +136,8 @@ export function MadeHereSection() {
           Shorts &amp; mid-lengths from QueerPulse members. Free to watch, paid
           to make.
         </div>
-        <Link to={routes.submitStory} className="all">
-          Submit your film →
+        <Link to={routes.cinemaShorts} className="all">
+          Explore Made Here →
         </Link>
       </div>
       <div className={styles.shortGrid}>

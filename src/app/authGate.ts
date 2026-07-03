@@ -75,6 +75,7 @@ const GATED_PATTERNS: string[] = [
   "/changemaker/*",
   "/coming-out",
   "/parents",
+  "/caregivers",
   // Member-only actions
   "/vouch",
   "/qr-scanner",

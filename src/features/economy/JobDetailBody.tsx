@@ -3,10 +3,12 @@ import { routes } from "../../app/routeMap";
 import type { Job } from "./jobs.data";
 import { safetyFor } from "./employerSafety.data";
 import { SafetyBadges } from "./SafetyBadges";
+import { COMPANY_SLUG_BY_NAME } from "./companies.data";
 import styles from "./JobDetailPage.module.css";
 
 export function JobDetailBody({ job }: { job: Job }) {
   const d = job.detail;
+  const companySlug = COMPANY_SLUG_BY_NAME[job.org];
   return (
     <div>
       <div className={styles.section}>
@@ -57,6 +59,15 @@ export function JobDetailBody({ job }: { job: Job }) {
       <div className={styles.section}>
         <h2 className={styles.secTitle}>About {job.org}</h2>
         <p className={styles.text}>{d.aboutCompany}</p>
+        {companySlug && (
+          <Button
+            variant="ghost"
+            to={`${routes.company}/${companySlug}`}
+            style={{ marginTop: 16 }}
+          >
+            View company profile →
+          </Button>
+        )}
       </div>
 
       {safetyFor(job.org) && (

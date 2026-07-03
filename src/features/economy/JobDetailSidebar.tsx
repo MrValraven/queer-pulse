@@ -1,6 +1,9 @@
 import { FaRainbow } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import type { Job } from "./jobs.data";
-import { JobApplyForm } from "./JobApplyForm";
+import { COMPANY_SLUG_BY_NAME } from "./companies.data";
 import styles from "./JobDetailPage.module.css";
 
 export function JobDetailSidebar({
@@ -11,6 +14,7 @@ export function JobDetailSidebar({
   deadlineFull: string;
 }) {
   const d = job.detail;
+  const companySlug = COMPANY_SLUG_BY_NAME[job.org];
   return (
     <aside className={styles.sidebar}>
       <div className={styles.card}>
@@ -20,7 +24,13 @@ export function JobDetailSidebar({
         >
           {job.logo}
         </div>
-        <div className={styles.coName}>{job.org}</div>
+        <div className={styles.coName}>
+          {companySlug ? (
+            <Link to={`${routes.company}/${companySlug}`}>{job.org}</Link>
+          ) : (
+            job.org
+          )}
+        </div>
         {job.qr && (
           <div className={styles.coQr}>
             <FaRainbow /> {job.qrLabel}
@@ -49,7 +59,15 @@ export function JobDetailSidebar({
         </div>
         <div className={styles.posted}>{d.posted}</div>
 
-        <JobApplyForm job={job} />
+        <div className={styles.applyWrap}>
+          <Button
+            variant="primary"
+            to={`${routes.jobs}/${job.slug}/apply`}
+            style={{ width: "100%", justifyContent: "center" }}
+          >
+            Apply now →
+          </Button>
+        </div>
       </div>
 
       <div className={styles.noteCard}>

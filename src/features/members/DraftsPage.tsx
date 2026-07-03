@@ -1,164 +1,222 @@
-import { useState } from "react";
-import { FiEdit3 } from "react-icons/fi";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
-import { routes } from "../../app/routeMap";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDrafts } from "../../app/providers/DraftsProvider";
+import { DraftsHeader } from "./DraftsHeader";
+import { DraftsControls } from "./DraftsControls";
+import { DraftRow } from "./DraftRow";
+import { DraftsBulkBar } from "./DraftsBulkBar";
 import {
-  DRAFT_TABS,
   DRAFTS,
+  DRAFT_TABS,
+  KEPT_META,
+  countByCategory,
+  selectDrafts,
   type Draft,
-  type MetaVariant,
+  type DraftAction,
+  type DraftCategory,
+  type DraftSortKey,
 } from "./drafts.data";
+import { routes } from "../../app/routeMap";
 import styles from "./DraftsPage.module.css";
 
-/** Loading placeholder mirroring a draft .row's 3-column grid. */
+/** Loading placeholder mirroring a draft row. */
 function DraftRowSkeleton() {
   return (
     <div className={styles.row} aria-hidden>
       <SkeletonLine
-        width={36}
-        height={36}
+        width={18}
+        height={18}
+        style={{ borderRadius: 5, flex: "none", marginTop: 5 }}
+      />
+      <SkeletonLine
+        width={38}
+        height={38}
         style={{ borderRadius: 10, flex: "none" }}
       />
       <div className={styles.info}>
-        <SkeletonLine width="45%" height={15} />
-        <SkeletonLine width="80%" height={12} style={{ marginTop: 8 }} />
-        <SkeletonLine width="55%" height={11} style={{ marginTop: 10 }} />
+        <SkeletonLine width="45%" height={16} />
+        <SkeletonLine width="80%" height={13} style={{ marginTop: 8 }} />
+        <SkeletonLine
+          width={140}
+          height={6}
+          style={{ marginTop: 14, borderRadius: 3 }}
+        />
       </div>
-      <SkeletonLine width={80} height={28} style={{ borderRadius: 8 }} />
+      <SkeletonLine width={70} height={30} style={{ borderRadius: 7 }} />
     </div>
   );
 }
 
-const kindClass: Record<Draft["kindVariant"], string> = {
-  job: styles.kindJob!,
-  pitch: styles.kindPitch!,
-  grant: styles.kindGrant!,
-  post: styles.kindPost!,
-};
-
-const metaClass: Record<MetaVariant, string> = {
-  deadline: styles.metaDeadline!,
-  pulse: styles.metaPulse!,
-  stale: styles.metaStale!,
-};
-
 export function DraftsPage() {
   const { showToast } = useToast();
+  const navigate = useNavigate();
   const loading = useSimulatedLoad();
-  const { drafts: userDrafts, removeDraft } = useDrafts();
-  const [tab, setTab] = useState(0);
-  const [deleted, setDeleted] = useState<Set<string>>(new Set());
+  const { drafts: userDrafts, addDraft, removeDraft } = useDrafts();
 
-  // Drafts the user actually started elsewhere (e.g. a saved invite) sit ahead
-  // of the static mock list.
-  const allDrafts = [...userDrafts, ...DRAFTS];
-  const userDraftIds = new Set(userDrafts.map((d) => d.id));
+  const [category, setCategory] = useState<"all" | DraftCategory>("all");
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<DraftSortKey>("edited");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [hidden, setHidden] = useState<Set<string>>(new Set());
+  const [kept, setKept] = useState<Set<string>>(new Set());
 
-  function runAction(d: Draft, action: Draft["actions"][number]) {
-    if (action.deletes) {
-      if (userDraftIds.has(d.id)) {
-        removeDraft(d.id);
-      } else {
-        setDeleted((prev) => new Set(prev).add(d.id));
-      }
-      showToast("Draft deleted", "info");
-    } else {
-      showToast(action.label, "info");
-    }
+  const userIds = useMemo(
+    () => new Set(userDrafts.map((d) => d.id)),
+    [userDrafts],
+  );
+
+  // Live list: user drafts ahead of the mock set, minus locally-deleted ones,
+  // with any "kept" draft's 90-day timer visibly reset.
+  const base = useMemo(() => {
+    return [...userDrafts, ...DRAFTS]
+      .filter((d) => !hidden.has(d.id))
+      .map((d): Draft =>
+        kept.has(d.id)
+          ? { ...d, status: "draft", deadlineDays: null, meta: KEPT_META }
+          : d,
+      );
+  }, [userDrafts, hidden, kept]);
+
+  const counts = useMemo(() => countByCategory(base), [base]);
+  const visible = useMemo(
+    () => selectDrafts(base, category, query, sort),
+    [base, category, query, sort],
+  );
+
+  const visibleIds = visible.map((d) => d.id);
+  const selectedInList = visibleIds.filter((id) => selected.has(id));
+  const allSelected =
+    visible.length > 0 && selectedInList.length === visible.length;
+  const someSelected = selectedInList.length > 0 && !allSelected;
+  // Selection persists across tabs/search — the bulk bar acts on every selected
+  // draft that still exists, not just the ones currently visible.
+  const selectedIds = base.filter((d) => selected.has(d.id)).map((d) => d.id);
+
+  const selectAllRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (selectAllRef.current) selectAllRef.current.indeterminate = someSelected;
+  }, [someSelected]);
+
+  function toggleSelect(id: string, checked: boolean) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll(checked: boolean) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      visibleIds.forEach((id) => (checked ? next.add(id) : next.delete(id)));
+      return next;
+    });
+  }
+
+  function deleteDrafts(ids: string[]) {
+    if (!ids.length) return;
+    const userDel = ids.filter((id) => userIds.has(id));
+    const staticDel = ids.filter((id) => !userIds.has(id));
+    const snapshotUser = userDrafts.filter((d) => userDel.includes(d.id));
+
+    userDel.forEach(removeDraft);
+    if (staticDel.length) setHidden((p) => new Set([...p, ...staticDel]));
+    setSelected((p) => {
+      const next = new Set(p);
+      ids.forEach((id) => next.delete(id));
+      return next;
+    });
+
+    showToast(
+      ids.length === 1 ? "Draft deleted" : `${ids.length} drafts deleted`,
+      "info",
+      undefined,
+      {
+        label: "Undo",
+        onClick: () => {
+          if (staticDel.length)
+            setHidden((p) => {
+              const next = new Set(p);
+              staticDel.forEach((id) => next.delete(id));
+              return next;
+            });
+          snapshotUser.forEach(addDraft);
+        },
+      },
+    );
+  }
+
+  function runAction(draft: Draft, action: DraftAction) {
+    if (action.deletes) deleteDrafts([draft.id]);
+    else if (action.keeps) {
+      setKept((prev) => new Set(prev).add(draft.id));
+      showToast("Draft kept — 30 more days", "success");
+    } else if (draft.href) navigate(draft.href);
+    else showToast(action.label, "info");
   }
 
   return (
     <AppShell>
       <div className={styles.page}>
-        <header className={styles.head}>
-          <div className={styles.eyebrow}>Drafts · only visible to you</div>
-          <h1 className={styles.h1}>
-            Things you <em>started.</em>
-          </h1>
-          <p className={styles.lead}>
-            Posts, articles, applications, and pitches you haven't sent yet.{" "}
-            <em>Auto-saved every 8 seconds.</em> Drafts older than 90 days get a
-            polite reminder, then a polite second one, then quietly delete.
-          </p>
-        </header>
+        <DraftsHeader />
+        <DraftsControls
+          query={query}
+          onQuery={setQuery}
+          sort={sort}
+          onSort={setSort}
+        />
 
-        <div className={styles.tabs}>
-          {DRAFT_TABS.map((t, i) => (
+        <div className={styles.tabs} role="tablist" aria-label="Draft types">
+          {DRAFT_TABS.map((t) => (
             <button
               type="button"
-              key={t.label}
-              className={`${styles.tab} ${tab === i ? styles.active : ""}`}
-              onClick={() => setTab(i)}
+              key={t.key}
+              role="tab"
+              aria-selected={category === t.key}
+              className={`${styles.tab} ${category === t.key ? styles.active : ""}`}
+              onClick={() => setCategory(t.key)}
             >
-              {t.label}{" "}
-              <span className={styles.tabCount}>
-                {i === 0 ? t.count + userDrafts.length : t.count}
-              </span>
+              {t.label} <span className={styles.tabCount}>{counts[t.key]}</span>
             </button>
           ))}
         </div>
 
+        <div className={styles.selectAll}>
+          <input
+            ref={selectAllRef}
+            type="checkbox"
+            className={styles.cbx}
+            checked={allSelected}
+            onChange={(e) => toggleSelectAll(e.target.checked)}
+            aria-label="Select all visible drafts"
+          />
+          <span>Select all</span>
+          <span className={styles.visCount}>
+            {visible.length} of {base.length} draft
+            {base.length === 1 ? "" : "s"}
+          </span>
+        </div>
+
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => <DraftRowSkeleton key={i} />)
-        ) : allDrafts.length === 0 ? (
-          <EmptyState
-            icon={<FiEdit3 />}
-            title="No drafts here yet"
-            description="Anything you start — a post, a pitch, an application — saves here automatically until you're ready to send it. Nothing's lost while you find the words."
-            action={{ label: "Start writing", to: routes.magazine }}
-          />
+        ) : visible.length === 0 ? (
+          <EmptyState query={query} baseEmpty={base.length === 0} />
         ) : (
-          allDrafts.map((d, i) => (
-            <FadeIn key={d.id} delay={Math.min(i, 8) * 60}>
-              <div
-                className={`${styles.row} ${deleted.has(d.id) ? styles.deleted : ""}`}
-              >
-                <div className={`${styles.kind} ${kindClass[d.kindVariant]}`}>
-                  {d.kind}
-                </div>
-                <div className={styles.info}>
-                  <b>{d.title}</b>
-                  <span>{d.desc}</span>
-                  <div className={styles.meta}>
-                    {d.meta.map((m, j) => (
-                      <span
-                        key={j}
-                        className={m.variant ? metaClass[m.variant] : undefined}
-                      >
-                        {m.label}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.progress}>
-                  <div
-                    className={`${styles.bar} ${d.ready ? styles.full : ""}`}
-                  >
-                    <span style={{ width: `${d.progress}%` }} />
-                  </div>
-                  {d.ready ? (
-                    <span className={styles.readyLabel}>Ready</span>
-                  ) : (
-                    <span>{d.progress}%</span>
-                  )}
-                </div>
-                <div className={styles.actions}>
-                  {d.actions.map((a) => (
-                    <button
-                      type="button"
-                      key={a.label}
-                      className={`${styles.action} ${a.variant === "primary" ? styles.primary : ""} ${a.variant === "danger" ? styles.danger : ""}`}
-                      onClick={() => runAction(d, a)}
-                    >
-                      {a.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+          visible.map((d, i) => (
+            <FadeIn key={d.id} delay={Math.min(i, 8) * 55}>
+              <DraftRow
+                draft={d}
+                selected={selected.has(d.id)}
+                removing={false}
+                onToggle={toggleSelect}
+                onAction={runAction}
+              />
             </FadeIn>
           ))
         )}
@@ -170,6 +228,44 @@ export function DraftsPage() {
           <em>This is to keep your drafts list honest — not to lose work.</em>
         </div>
       </div>
+
+      <DraftsBulkBar
+        count={selectedIds.length}
+        onDelete={() => deleteDrafts(selectedIds)}
+        onCancel={() => setSelected(new Set())}
+      />
     </AppShell>
+  );
+}
+
+/** Contextual empty state: no matches, nothing in this tab, or nothing at all. */
+function EmptyState({
+  query,
+  baseEmpty,
+}: {
+  query: string;
+  baseEmpty: boolean;
+}) {
+  let title = "Nothing here yet.";
+  let text = "No drafts in this category. Switch tabs, or start something new.";
+  if (query.trim()) {
+    title = "No matches.";
+    text = `Nothing in your drafts matches "${query.trim()}". Try a different word, or clear the search.`;
+  } else if (baseEmpty) {
+    title = "All caught up.";
+    text =
+      "No drafts left — nothing half-written waiting on you. When you start something and step away, it'll be saved here.";
+  }
+  return (
+    <div className={styles.empty}>
+      <div className={styles.emptyIcon}>
+        <FiCheck aria-hidden />
+      </div>
+      <h3>{title}</h3>
+      <p>{text}</p>
+      <Button variant="primary" to={routes.communitiesHome}>
+        Start something new
+      </Button>
+    </div>
   );
 }

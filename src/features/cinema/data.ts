@@ -165,6 +165,7 @@ export function filmRelationReason(film: CinemaFilm): string {
 
 export const collections = [
   {
+    slug: "iberian-queer-cinema",
     tag: "Collection",
     titlePre: "Iberian queer cinema, ",
     titleEm: "1974–now",
@@ -175,6 +176,7 @@ export const collections = [
     total: "37h",
   },
   {
+    slug: "trans-documentaries-2020s",
     tag: "Collection",
     titlePre: "Trans documentaries: ",
     titleEm: "the 2020s",
@@ -185,6 +187,7 @@ export const collections = [
     total: "18h",
   },
   {
+    slug: "films-our-parents-could-watch",
     tag: "Collection",
     titlePre: "Films our parents ",
     titleEm: "could",
@@ -196,6 +199,7 @@ export const collections = [
     total: "14h",
   },
   {
+    slug: "lesbian-sci-fi",
     tag: "Collection",
     titlePre: "Lesbian sci-fi, ’78 to ",
     titleEm: "tomorrow",

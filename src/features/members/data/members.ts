@@ -97,6 +97,130 @@ export interface Member {
  * member's details inline, so a change here propagates everywhere.
  */
 const ENTRIES: Record<string, Omit<Member, "id">> = {
+  "joao-ribeiro": {
+    slug: "joao-ribeiro",
+    first: "João",
+    last: "Ribeiro",
+    role: "Film critic & archivist · Cinema programming lead",
+    pronouns: "he/him",
+    hood: "Marvila",
+    tags: [
+      "Film criticism",
+      "Programming",
+      "Archive",
+      "Documentary",
+      "Portuguese cinema",
+    ],
+    visibility: "open",
+    initials: "JR",
+    tint: "coral",
+    photo:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1044&auto=format&fit=crop",
+    verified: true,
+    since: "2024",
+    bio: "Film critic and archivist in Marvila. I write on Portuguese and Iberian cinema for Expresso, Público and DocLisboa, and I programme the cover film each week for QueerPulse Cinema. My thesis, roughly: the room where queer people lived always precedes the film about it.",
+    now: "Programming the autumn season for QueerPulse Cinema and finishing an essay on the queer silences in 1960s Portuguese cinema.",
+    openTo: ["Screening proposals", "Collection ideas", "Archive tips"],
+    socials: [
+      { platform: "website", urlOrHandle: "joaoribeiro.pt" },
+      { platform: "instagram", urlOrHandle: "@joao.programmes" },
+    ],
+    work: [
+      {
+        category: "Programming",
+        title: "Iberian queer cinema, 1974–now — collection",
+        year: "2025",
+        image:
+          "https://images.unsplash.com/photo-1753944847480-92f369a5f00e?q=80&w=600&auto=format&fit=crop",
+      },
+      {
+        category: "Essay",
+        title: "Coded silence: reading the Portuguese archive",
+        year: "2025",
+        image:
+          "https://images.unsplash.com/photo-1618410321132-9f4cebb2f7f5?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        category: "Programming",
+        title: "Queer elders: portrait films — collection",
+        year: "2024",
+        image:
+          "https://images.unsplash.com/photo-1711479898431-9031deb4ff0e?q=80&w=800&auto=format&fit=crop",
+      },
+    ],
+    board: [
+      {
+        kind: "looking",
+        title: "Rare prints of pre-1974 Portuguese queer cinema",
+        slug: "archive-prints",
+      },
+      {
+        kind: "offering",
+        title: "Programming mentorship for first-time curators",
+        slug: "programming-mentorship",
+      },
+    ],
+    vouchers: ["ines", "rui"],
+    voucherNames: "Inês & Rui",
+    related: ["sofia", "ines", "tomas"],
+    skills: [
+      { name: "Film programming", meta: "Available · seasons & collections" },
+      {
+        name: "Archive research",
+        meta: "Trade · Portuguese & Iberian cinema",
+      },
+      {
+        name: "Programming mentorship",
+        meta: "Available · first-time curators",
+      },
+    ],
+    groups: [
+      {
+        name: "QueerPulse Cinema",
+        role: "Curators' council · Programming lead",
+      },
+      { name: "Lisbon Documentary Co-op", role: "Member" },
+      { name: "Editorial Reading Circle", role: "Reading group · Member" },
+    ],
+    activity: [
+      {
+        icon: FiFileText,
+        title: "Programmed this week's cover film",
+        sub: "The light between rooms · QueerPulse Cinema · June 2026",
+        to: routes.cinema,
+      },
+      {
+        icon: FiMessageCircle,
+        title: "Wrote in the curator's notebook",
+        sub: "On refusing the coming-out arc · 4 days ago",
+        to: routes.cinema,
+      },
+      {
+        icon: FiCalendar,
+        title: "Hosting an archive screening",
+        sub: "O Crime do Padre Amaro · Casa do Comum · 28 June",
+        to: routes.event,
+      },
+    ],
+    shapings: {
+      film: {
+        title: "O Crime do Padre Amaro (1967)",
+        note: "The most Portuguese film in the archive. Coded silence that accumulates until the very last scene.",
+      },
+      book: {
+        title: "The Celluloid Closet — Vito Russo",
+        note: "Taught me that programming is a way of arguing with history.",
+      },
+      song: {
+        title: "'Canção de Engate' — António Variações",
+        note: "The sound of a Lisbon that was learning to say our name out loud.",
+      },
+      moment: {
+        title: "The first season I programmed, 2024",
+        note: "Six films that refused the easy arc. Watching strangers stay for the second hour.",
+      },
+    },
+  },
   ines: {
     slug: "ines",
     first: "Inês",

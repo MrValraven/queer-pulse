@@ -1,8 +1,16 @@
 import type { IconType } from "react-icons";
-import { FiUser, FiCalendar, FiUsers, FiClipboard } from "react-icons/fi";
-import { routes } from "../../app/routeMap";
+import {
+  FiUser,
+  FiCalendar,
+  FiUsers,
+  FiClipboard,
+  FiHash,
+} from "react-icons/fi";
+import { routes, topicPath } from "../../app/routeMap";
 import { memberName } from "./data/members";
-export type ResultType = "member" | "gathering" | "community" | "board";
+import { TOPICS } from "../topics/topics.data";
+export type ResultType =
+  "member" | "gathering" | "community" | "board" | "topic";
 
 export interface SearchItem {
   t: ResultType;
@@ -14,7 +22,22 @@ export interface SearchItem {
   slug?: string;
 }
 
+/** Topic (hashtag) rows, derived from the topics feature's source of truth. */
+const TOPIC_SEARCH_ITEMS: SearchItem[] = Object.values(TOPICS).map((topic) => ({
+  t: "topic",
+  name: `#${topic.tag}`,
+  sub: `${topic.totalPosts} posts · curated`,
+  href: topicPath(topic.tag),
+  kw: [
+    topic.tag,
+    ...topic.relatedTopics.map((r) => r.tag),
+    "hashtag",
+    "topic",
+  ].join(" "),
+}));
+
 export const SEARCH_DATA: SearchItem[] = [
+  ...TOPIC_SEARCH_ITEMS,
   {
     t: "member",
     name: memberName("ines"),
@@ -213,18 +236,21 @@ export const TYPE_BG: Record<ResultType, string> = {
   gathering: "rgba(74,140,111,.1)",
   community: "rgba(232,119,90,.1)",
   board: "rgba(122,82,184,.1)",
+  topic: "rgba(232,119,90,.1)",
 };
 export const TYPE_ICON: Record<ResultType, IconType> = {
   member: FiUser,
   gathering: FiCalendar,
   community: FiUsers,
   board: FiClipboard,
+  topic: FiHash,
 };
 export const TYPE_LABEL: Record<ResultType, string> = {
   member: "Members",
   gathering: "Gatherings",
   community: "Communities",
   board: "Board",
+  topic: "Topics",
 };
 export const RECENTS = [
   "portrait sessions",
@@ -236,6 +262,7 @@ export const RECENTS = [
 ];
 export const TABS: { id: ResultType | "all"; label: string }[] = [
   { id: "all", label: "All" },
+  { id: "topic", label: "Topics" },
   { id: "member", label: "Members" },
   { id: "gathering", label: "Gatherings" },
   { id: "community", label: "Communities" },

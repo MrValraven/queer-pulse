@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ImageSlot } from "../../shared/components/ui";
 import { memberName } from "../members/data/members";
 import { routes } from "../../app/routeMap";
+import { AuthorLink } from "./AuthorLink";
 import styles from "./MagazinePage.module.css";
 
 const COVER_IMG =
@@ -32,7 +33,8 @@ export function MagazineCover() {
             <em>Did we?</em>
           </h1>
           <div className={styles.csByline}>
-            By {memberName("sofia")} · Photography by {memberName("andre")}
+            By <AuthorLink name={memberName("sofia")} /> · Photography by{" "}
+            {memberName("andre")}
           </div>
           <p className={styles.csExcerpt}>
             Lisbon's queer community has spent a decade finding itself. The rent

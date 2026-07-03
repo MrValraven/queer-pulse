@@ -278,6 +278,21 @@
   margin-top: auto;
   justify-content: center;
 }
+.tierExample {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+.tierExample:hover {
+  color: var(--plum);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 .tierFootNote {
   font-size: 11.5px;
   color: var(--ink-40);

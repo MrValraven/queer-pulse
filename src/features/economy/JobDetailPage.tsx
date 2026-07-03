@@ -5,6 +5,7 @@ import { FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
+import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
 import { JOBS } from "./jobs.data";
 import { JobDetailSkeleton } from "./JobDetailSkeleton";
 import { JobDetailHeader } from "./JobDetailHeader";
@@ -15,10 +16,13 @@ import styles from "./JobDetailPage.module.css";
 export function JobDetailPage() {
   const { slug } = useParams();
   const { showToast } = useToast();
+  const { postedJobs } = usePostedJobs();
   const [saved, setSaved] = useState(false);
   const loading = useSimulatedLoad();
 
-  const job = JOBS.find((j) => j.slug === slug);
+  const job =
+    postedJobs.find((j) => j.slug === slug) ??
+    JOBS.find((j) => j.slug === slug);
   if (!job) return <Navigate to={routes.jobs} replace />;
 
   const d = job.detail;

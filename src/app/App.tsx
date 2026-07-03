@@ -12,15 +12,19 @@ import { AdminRoleProvider } from "./providers/AdminRoleProvider";
 import { ConnectProvider } from "./providers/ConnectProvider";
 import { ConnectionsProvider } from "./providers/ConnectionsProvider";
 import { ProfileProvider } from "./providers/ProfileProvider";
+import { PublicProfileProvider } from "./providers/PublicProfileProvider";
 import { ProfileThemeProvider } from "./providers/ProfileThemeProvider";
 import { VouchProvider } from "./providers/VouchProvider";
 import { WorkProfileProvider } from "./providers/WorkProfileProvider";
+import { EmployerAffiliationProvider } from "./providers/EmployerAffiliationProvider";
+import { PostedJobsProvider } from "./providers/PostedJobsProvider";
 import { SavedProvider } from "./providers/SavedProvider";
 import { DraftsProvider } from "./providers/DraftsProvider";
 import { SocialProvider } from "./providers/SocialProvider";
 import { CommunityMembershipProvider } from "./providers/CommunityMembershipProvider";
 import { CreatedCommunitiesProvider } from "./providers/CreatedCommunitiesProvider";
 import { DirectoryListingsProvider } from "./providers/DirectoryListingsProvider";
+import { WorkshopsProvider } from "./providers/WorkshopsProvider";
 import { CommandPalette } from "../features/members/CommandPalette";
 import { RoomLoader } from "../shared/components/feedback/RoomLoader";
 import { AuthErrorToast } from "../shared/components/feedback/AuthErrorToast";
@@ -69,7 +73,11 @@ const RootProviders = composeProviders([
 // Member/session state that only needs to wrap the routed UI (inside the router).
 const DataProviders = composeProviders([
   WorkProfileProvider,
+  EmployerAffiliationProvider,
+  PostedJobsProvider,
   ProfileProvider,
+  // Inside ProfileProvider: eligibility is derived from the live self profile.
+  PublicProfileProvider,
   ProfileThemeProvider,
   ConnectionsProvider,
   ConnectProvider,
@@ -80,6 +88,7 @@ const DataProviders = composeProviders([
   CommunityMembershipProvider,
   CreatedCommunitiesProvider,
   DirectoryListingsProvider,
+  WorkshopsProvider,
 ]);
 
 export function App() {

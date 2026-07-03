@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, Button, ImageSlot, Reveal } from "../../shared/components/ui";
 import { memberName } from "../members/data/members";
+import { AuthorLink } from "./AuthorLink";
 import styles from "./MagazinePage.module.css";
 import { routes } from "../../app/routeMap";
 import type { Card } from "./magazinePage.data";
@@ -99,7 +100,9 @@ export function MagazineSections() {
               <br />
               <em>I arrived.</em>
             </h2>
-            <div className={styles.feByline}>By {memberName("tomas")}</div>
+            <div className={styles.feByline}>
+              By <AuthorLink name={memberName("tomas")} />
+            </div>
             <p className={styles.feExcerpt}>
               Coming out implies a before and an after. A door, a room, a
               revelation. What if it was never that clean? What if you just
@@ -233,11 +236,7 @@ export function MagazineSections() {
               something worth saying.
             </p>
           </div>
-          <Button
-            href="mailto:magazine@queerpulse.pt"
-            variant="primary"
-            size="lg"
-          >
+          <Button to={routes.submitStory} variant="primary" size="lg">
             Pitch us
           </Button>
         </div>

@@ -113,6 +113,43 @@
   border-color: var(--plum);
 }
 
+.jump {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--plum);
+  color: var(--cream);
+  border-radius: 14px;
+  padding: 16px 22px;
+  margin-bottom: 22px;
+  text-decoration: none;
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+@media (hover: hover) {
+  .jump:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -18px rgba(var(--plum-rgb), 0.55);
+  }
+}
+.jumpText {
+  font-size: 15px;
+  font-weight: 500;
+}
+.jumpText b {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--accent);
+}
+.jumpArrow {
+  margin-left: auto;
+  font-size: 20px;
+  color: var(--accent);
+}
+
 .count {
   font-size: 14px;
   color: var(--ink-40);

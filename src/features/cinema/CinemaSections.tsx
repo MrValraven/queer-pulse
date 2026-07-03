@@ -4,4 +4,10 @@ export {
   CollectionsSection,
   MadeHereSection,
 } from "./CinemaCatalog";
-export { LiveSection, LedgerSection, CinemaOutro } from "./CinemaClosing";
+export {
+  LiveSection,
+  LedgerSection,
+  OpenCallsStrip,
+  AboutStrip,
+  CinemaOutro,
+} from "./CinemaClosing";

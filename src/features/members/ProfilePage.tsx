@@ -10,6 +10,7 @@ import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
 import { MyPlacesSection } from "./MyPlacesSection";
+import { PublicProfileControl } from "./PublicProfileControl";
 import { EditableProfileHero } from "./EditableProfileHero";
 import { ProfileEditBar } from "./ProfileEditBar";
 import styles from "./ProfilePage.module.css";
@@ -109,6 +110,8 @@ export function ProfilePage() {
             : undefined
         }
       />
+
+      {selfView && !isEditing && <PublicProfileControl />}
 
       {isSelf && <MyPlacesSection memberSlug={selfSlug} />}
 

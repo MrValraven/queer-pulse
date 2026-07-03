@@ -128,6 +128,10 @@ export function SearchPage() {
           </div>
         </div>
         <Group
+          items={SEARCH_DATA.filter((d) => d.t === "topic")}
+          label="Browse topics"
+        />
+        <Group
           items={SEARCH_DATA.filter((d) => d.t === "member").slice(0, 6)}
           label="Members"
         />
@@ -142,6 +146,21 @@ export function SearchPage() {
       const matches = `${d.name} ${d.sub} ${d.kw}`.toLowerCase().includes(q);
       return matches && (tab === "all" || d.t === tab);
     });
+    // When the query is a bare "#tag" matching a known topic, offer a direct
+    // jump to its feed page above the ordinary results.
+    const topicJump = q.startsWith("#")
+      ? SEARCH_DATA.find((d) => d.t === "topic" && d.name.toLowerCase() === q)
+      : undefined;
+    const banner = topicJump ? (
+      <Link to={linkToPath(topicJump.href)} className={styles.jump}>
+        <span className={styles.jumpText}>
+          Jump to <b>{topicJump.name}</b>
+        </span>
+        <span className={styles.jumpArrow} aria-hidden>
+          →
+        </span>
+      </Link>
+    ) : null;
     const countEl = (
       <div className={styles.count}>
         <b>{hits.length}</b> result{hits.length === 1 ? "" : "s"} for "
@@ -151,6 +170,7 @@ export function SearchPage() {
     if (!hits.length) {
       content = (
         <>
+          {banner}
           {countEl}
           <div className={styles.empty}>
             <svg
@@ -173,9 +193,16 @@ export function SearchPage() {
         </>
       );
     } else if (tab === "all") {
-      const types: ResultType[] = ["member", "gathering", "community", "board"];
+      const types: ResultType[] = [
+        "topic",
+        "member",
+        "gathering",
+        "community",
+        "board",
+      ];
       content = (
         <>
+          {banner}
           {countEl}
           {types.map((typ) => (
             <Group
@@ -189,6 +216,7 @@ export function SearchPage() {
     } else {
       content = (
         <>
+          {banner}
           {countEl}
           <Group items={hits} label={TYPE_LABEL[tab]} />
         </>

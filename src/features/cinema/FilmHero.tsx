@@ -15,13 +15,21 @@ export function FilmHero() {
           <div className={styles.kicker}>
             <span>Cover film · week 23</span>
             <span className={styles.dot} />
-            <span className={styles.by}>Programmed by João Ribeiro</span>
+            <span className={styles.by}>
+              Programmed by{" "}
+              <Link to={`${routes.cinemaCurator}/joao-ribeiro`}>
+                João Ribeiro
+              </Link>
+            </span>
           </div>
           <h1 className={styles.title}>
             The light <em>between</em> rooms
           </h1>
           <div className={styles.meta}>
-            Maria Vasconcelos · Portugal, 2025 · 92 min · documentary
+            <Link to={`${routes.cinemaFilmmaker}/maria-vasconcelos`}>
+              Maria Vasconcelos
+            </Link>{" "}
+            · Portugal, 2025 · 92 min · documentary
           </div>
 
           <div className={styles.curatorPull}>
@@ -31,7 +39,13 @@ export function FilmHero() {
               elders, made over three years in the kitchens that raised them.{" "}
               <em>Stay for the second hour</em> — it's where the film stops
               being about loss and starts being about teaching.”
-              <span className="who">— João Ribeiro · programming lead</span>
+              <span className="who">
+                —{" "}
+                <Link to={`${routes.cinemaCurator}/joao-ribeiro`}>
+                  João Ribeiro
+                </Link>{" "}
+                · programming lead
+              </span>
             </div>
           </div>
 

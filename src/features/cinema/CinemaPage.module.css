@@ -757,6 +757,115 @@
   margin-top: 16px;
 }
 
+.aboutStrip {
+  margin-top: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: 24px;
+  padding: 44px 48px;
+}
+.aboutStripText {
+  max-width: 58ch;
+}
+.aboutStripEb {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.aboutStripText h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(28px, 3.6vw, 42px);
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+}
+.aboutStripText h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.aboutStripText p {
+  font-size: 15px;
+  color: rgba(var(--cream-rgb), 0.68);
+  line-height: 1.65;
+  margin-top: 14px;
+}
+@media (max-width: 640px) {
+  .aboutStrip {
+    padding: 34px 28px;
+  }
+}
+
+.openCallsStrip {
+  margin-top: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  background: rgba(var(--jade-rgb), 0.1);
+  border: 1px solid rgba(var(--jade-rgb), 0.28);
+  border-radius: 24px;
+  padding: 44px 48px;
+}
+.openCallsText {
+  max-width: 60ch;
+}
+.openCallsEb {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--jade);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.openCallsEb .live {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.22);
+  flex: none;
+}
+.openCallsText h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(28px, 3.6vw, 42px);
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+}
+.openCallsText h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.openCallsText p {
+  font-size: 15px;
+  color: rgba(var(--cream-rgb), 0.68);
+  line-height: 1.65;
+  margin-top: 14px;
+}
+.openCallsText p em {
+  font-style: italic;
+  color: var(--accent);
+}
+@media (max-width: 640px) {
+  .openCallsStrip {
+    padding: 34px 28px;
+  }
+}
+
 @media (max-width: 960px) {
   .cover {
     grid-template-columns: 1fr;

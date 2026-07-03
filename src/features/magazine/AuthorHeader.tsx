@@ -3,40 +3,30 @@ import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { routes } from "../../app/routeMap";
-import { AUTHOR_PORTRAIT_IMG } from "./authorPage.data";
-import { AUTHOR_SLUG, BEATS } from "./authorContent.data";
+import type { Author } from "./authorContent.data";
 import styles from "./AuthorPage.module.css";
 
-export function AuthorHeader() {
+export function AuthorHeader({ author }: { author: Author }) {
   const { showToast } = useToast();
   const { isFollowing, toggleFollow } = useSocial();
-  const following = isFollowing(AUTHOR_SLUG);
+  const following = isFollowing(author.slug);
+  const label = author.firstName;
 
   return (
     <>
       <header className={styles.hero}>
         <div>
-          <div className={styles.eyebrow}>Magazine · Writer</div>
-          <h1 className={styles.name}>
-            Sara <em>Pinheiro.</em>
-          </h1>
-          <div className={styles.role}>
-            Contributing editor, health &amp; access
-          </div>
-          <p className={styles.bio}>
-            Sara writes about queer life and the systems that surround it —
-            clinics, classrooms, courtrooms, neighbourhoods. She joined
-            QueerPulse Magazine in 2023 after a decade in public-health
-            reporting at <em>Público</em> and <em>Mensagem de Lisboa</em>. Born
-            in Setúbal, lives in Anjos.
-          </p>
+          <div className={styles.eyebrow}>{author.eyebrow}</div>
+          <h1 className={styles.name}>{author.name}</h1>
+          <div className={styles.role}>{author.role}</div>
+          <p className={styles.bio}>{author.bio}</p>
           <div className={styles.metaRow}>
             <Button
               variant={following ? "ghost" : "primary"}
               onClick={() => {
-                const now = toggleFollow(AUTHOR_SLUG);
+                const now = toggleFollow(author.slug);
                 showToast(
-                  now ? "Following Sara" : "Unfollowed Sara",
+                  now ? `Following ${label}` : `Unfollowed ${label}`,
                   now ? "success" : "info",
                 );
               }}
@@ -44,45 +34,33 @@ export function AuthorHeader() {
               {following ? "Following" : "Follow writer"}
             </Button>
             <Button variant="ghost" to={routes.newsletter}>
-              Subscribe to her column
+              {author.columnLabel}
             </Button>
-            <span className={styles.pronouns}>she/her</span>
+            <span className={styles.pronouns}>{author.pronouns}</span>
           </div>
         </div>
         <ImageSlot
           tint="coral"
           radius={24}
           className={styles.portrait}
-          src={AUTHOR_PORTRAIT_IMG}
-          alt="Portrait of Sara Pinheiro"
-          placeholder="Portrait of Sara Pinheiro"
+          src={author.portrait}
+          alt={`Portrait of ${author.slug}`}
+          placeholder="Portrait"
           style={{ aspectRatio: "4/5", height: "auto" }}
         />
       </header>
 
       <div className={styles.stats}>
-        <div className={styles.stat}>
-          <b>
-            <em>14</em>
-          </b>
-          Articles published
-        </div>
-        <div className={styles.stat}>
-          <b>3</b>Years contributing
-        </div>
-        <div className={styles.stat}>
-          <b>1.8k</b>Subscribers to her column
-        </div>
-        <div className={styles.stat}>
-          <b>
-            <em>2</em>
-          </b>
-          Issue covers · 2025
-        </div>
+        {author.stats.map((stat) => (
+          <div key={stat.label} className={styles.stat}>
+            <b>{stat.value}</b>
+            {stat.label}
+          </div>
+        ))}
       </div>
 
       <div className={styles.beats}>
-        {BEATS.map((beat, index) => (
+        {author.beats.map((beat, index) => (
           <Link
             key={beat}
             to={routes.tag}

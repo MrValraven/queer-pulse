@@ -104,17 +104,21 @@ export const NAV_MENUS: MegaMenu[] = [
     icon: FiMapPin,
     feature: {
       eyebrow: "Lisbon",
-      title: "Queer Lisbon, mapped.",
-      body: "Spaces, businesses, and the practical know-how for arriving and living here.",
-      href: routes.map,
-      cta: "Open the Queer Map",
+      title: "Queer-owned Lisbon.",
+      body: "Bars, clinics, salons, and shops that welcome you — found and vouched for by the community.",
+      href: routes.directory,
+      cta: "Browse the directory",
     },
     columns: [
       {
         head: "Discover",
         links: [
-          { label: "Spaces Map", href: routes.map, featured: true },
-          { label: "Business Directory", href: routes.directory },
+          {
+            label: "Business Directory",
+            href: routes.directory,
+            featured: true,
+          },
+          { label: "Spaces Map", href: routes.map },
           { label: "Calendar", href: routes.calendar },
           { label: "Safe Spaces", href: routes.safeSpaces },
           { label: "Partners", href: routes.partners },
@@ -125,6 +129,7 @@ export const NAV_MENUS: MegaMenu[] = [
         links: [
           { label: "New to Lisbon?", href: routes.arriving },
           { label: "Housing Board", href: routes.housing },
+          { label: "Housing Co-op", href: routes.housingCoop },
           { label: "Flatmates", href: routes.flatmates },
           { label: "Visas & Residency", href: routes.visas },
         ],
@@ -180,6 +185,7 @@ export const NAV_MENUS: MegaMenu[] = [
           },
           { label: "Coming Out", href: routes.comingOut },
           { label: "Family & parenting", href: routes.family },
+          { label: "For caregivers", href: routes.caregivers },
         ],
       },
     ],
@@ -318,6 +324,7 @@ export const NAV_MENUS: MegaMenu[] = [
           { label: "Help & FAQ", href: routes.help },
           { label: "Get the app", href: routes.getTheApp },
           { label: "Accessibility", href: routes.accessibility },
+          { label: "Roadmap", href: routes.roadmap },
           { label: "Changelog", href: routes.changelog },
           {
             label: "For organisations",

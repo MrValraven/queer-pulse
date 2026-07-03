@@ -54,6 +54,12 @@ export function TiersSection() {
             >
               Start the review
             </Button>
+            <Link
+              to={`${routes.company}/atelier-pulso`}
+              className={styles.tierExample}
+            >
+              See an example company profile →
+            </Link>
           </Reveal>
 
           <Reveal

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSocial } from "../../app/providers/SocialProvider";
@@ -19,7 +20,11 @@ export function FilmBody() {
             <div className={styles.nfHead}>
               <div className={styles.nfAv}>JR</div>
               <div>
-                <div className={styles.nfName}>João Ribeiro</div>
+                <div className={styles.nfName}>
+                  <Link to={`${routes.cinemaCurator}/joao-ribeiro`}>
+                    João Ribeiro
+                  </Link>
+                </div>
                 <div className={styles.nfRole}>
                   Programming lead · curated for week 23
                 </div>
@@ -113,9 +118,12 @@ export function FilmBody() {
             <div className={styles.fmHead}>
               <div className={styles.fmAv}>MV</div>
               <div>
-                <div className={styles.fmName}>
+                <Link
+                  to={`${routes.cinemaFilmmaker}/${FILMMAKER_SLUG}`}
+                  className={styles.fmName}
+                >
                   Maria <em>Vasconcelos</em>
-                </div>
+                </Link>
                 <div className={styles.fmRole}>Director · Lisbon</div>
               </div>
             </div>
@@ -139,7 +147,9 @@ export function FilmBody() {
               </div>
             </div>
             <div className={styles.fmActions}>
-              <Button to={routes.members}>View profile</Button>
+              <Button to={`${routes.cinemaFilmmaker}/${FILMMAKER_SLUG}`}>
+                View profile
+              </Button>
               <Button
                 variant={following ? "jade" : "ghost"}
                 onClick={() => {

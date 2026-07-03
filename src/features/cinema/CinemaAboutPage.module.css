@@ -1,0 +1,502 @@
+/* ── Hero ── */
+.hero {
+  padding: 150px 0 88px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid rgba(var(--cream-rgb), 0.16);
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  right: -8%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50%,
+    rgba(var(--accent-rgb), 0.22),
+    transparent 62%
+  );
+  pointer-events: none;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: -20%;
+  left: -8%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50%,
+    rgba(var(--jade-rgb), 0.16),
+    transparent 64%
+  );
+  pointer-events: none;
+}
+.heroInner {
+  max-width: 860px;
+  position: relative;
+  z-index: 2;
+}
+.heroEb {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.55);
+  margin-bottom: 20px;
+}
+.heroTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(54px, 8.5vw, 116px);
+  color: var(--cream);
+  letter-spacing: -0.026em;
+  line-height: 0.94;
+}
+.heroTitle em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+.heroSub {
+  font-size: 19px;
+  color: rgba(var(--cream-rgb), 0.75);
+  line-height: 1.68;
+  max-width: 60ch;
+  margin-top: 28px;
+}
+.heroSub em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* ── Deed ── */
+.deed {
+  padding: 80px 0;
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.12);
+}
+.deedInner {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 48px;
+}
+.deedLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.5);
+  padding-top: 8px;
+  line-height: 1.4;
+}
+.deedLabel em {
+  font-style: italic;
+  color: var(--accent);
+}
+.deedText p {
+  font-family: var(--serif);
+  font-size: 21px;
+  color: rgba(var(--cream-rgb), 0.9);
+  line-height: 1.55;
+  letter-spacing: -0.006em;
+  margin-bottom: 22px;
+  max-width: 64ch;
+}
+.deedText p:last-child {
+  margin-bottom: 0;
+}
+.deedText p em {
+  font-style: italic;
+  color: var(--accent);
+}
+.deedText p strong {
+  font-weight: 500;
+  color: var(--cream);
+}
+
+/* ── Principles ── */
+.principles {
+  padding: 84px 0;
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.12);
+}
+.prHead {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.prHead h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(36px, 5vw, 64px);
+  color: var(--cream);
+  letter-spacing: -0.022em;
+}
+.prHead h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.prGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.prCard {
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-radius: 20px;
+  padding: 30px 32px;
+  transition:
+    transform 0.35s var(--ease),
+    border-color 0.35s var(--ease),
+    background 0.35s var(--ease);
+}
+@media (hover: hover) {
+  .prCard:hover {
+    transform: translateY(-3px);
+    border-color: rgba(var(--cream-rgb), 0.24);
+    background: rgba(var(--cream-rgb), 0.06);
+  }
+}
+.prNum {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 54px;
+  color: rgba(var(--cream-rgb), 0.16);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+.prTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--cream);
+  letter-spacing: -0.012em;
+  margin-bottom: 12px;
+}
+.prTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.prBody {
+  font-size: 14px;
+  color: rgba(var(--cream-rgb), 0.62);
+  line-height: 1.7;
+}
+.prBody em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* ── Split visual ── */
+.split {
+  padding: 84px 0;
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.12);
+}
+.splitInner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.svText h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(32px, 4.4vw, 54px);
+  color: var(--cream);
+  letter-spacing: -0.022em;
+  margin-bottom: 16px;
+}
+.svText h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.svText p {
+  font-size: 15px;
+  color: rgba(var(--cream-rgb), 0.66);
+  line-height: 1.7;
+  max-width: 50ch;
+  margin-bottom: 14px;
+}
+.svText p em {
+  font-style: italic;
+  color: var(--accent);
+}
+.svLink {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.svVisual {
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
+  border-radius: 20px;
+  padding: 28px 30px;
+}
+.svvHead {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.5);
+  margin-bottom: 16px;
+}
+.svvLabel {
+  font-size: 13px;
+  color: rgba(var(--cream-rgb), 0.6);
+  margin-bottom: 8px;
+}
+.svvBar {
+  height: 12px;
+  background: rgba(var(--cream-rgb), 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+}
+.svvSeg {
+  height: 100%;
+}
+.segFm {
+  background: var(--accent);
+}
+.segPay {
+  background: rgba(var(--cream-rgb), 0.28);
+}
+.segHost {
+  background: rgba(var(--cream-rgb), 0.14);
+}
+.svvLegend {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+.svvV {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--cream);
+  letter-spacing: -0.012em;
+}
+.svvV em {
+  font-style: normal;
+  color: var(--accent);
+}
+.svvK {
+  font-size: 11px;
+  color: rgba(var(--cream-rgb), 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-top: 3px;
+}
+.svvNote {
+  font-size: 12.5px;
+  color: rgba(var(--cream-rgb), 0.45);
+  margin-top: 16px;
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+/* ── Curators' council ── */
+.council {
+  padding: 84px 0;
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.12);
+}
+.council h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(32px, 4.4vw, 52px);
+  color: var(--cream);
+  letter-spacing: -0.022em;
+  margin-bottom: 8px;
+}
+.council h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.councilSub {
+  font-size: 15px;
+  color: rgba(var(--cream-rgb), 0.6);
+  max-width: 58ch;
+  line-height: 1.65;
+  margin-bottom: 40px;
+}
+.councilGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.curatorCard {
+  text-decoration: none;
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-radius: 20px;
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition:
+    transform 0.35s var(--ease),
+    box-shadow 0.35s var(--ease),
+    border-color 0.35s var(--ease),
+    background 0.35s var(--ease);
+}
+@media (hover: hover) {
+  .curatorCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -22px rgba(45, 27, 61, 0.28);
+    border-color: rgba(var(--cream-rgb), 0.24);
+    background: rgba(var(--cream-rgb), 0.06);
+  }
+}
+.ccHead {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.ccAv {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.avCoral {
+  background: rgba(var(--accent-rgb), 0.18);
+  color: var(--accent);
+}
+.avJade {
+  background: rgba(var(--jade-rgb), 0.2);
+  color: var(--jade);
+}
+.avPlum {
+  background: rgba(var(--cream-rgb), 0.1);
+  color: var(--cream);
+}
+.ccName {
+  font-family: var(--serif);
+  font-size: 19px;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+}
+.ccName em {
+  font-style: italic;
+}
+.ccRole {
+  font-size: 12.5px;
+  color: rgba(var(--cream-rgb), 0.45);
+  font-family: var(--serif);
+  font-style: italic;
+  margin-top: 2px;
+}
+.ccPron {
+  font-size: 11px;
+  color: var(--accent);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+.ccBio {
+  font-size: 13.5px;
+  color: rgba(var(--cream-rgb), 0.62);
+  line-height: 1.6;
+}
+.ccFocus {
+  font-size: 12px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.focusTag {
+  padding: 3px 9px;
+  border-radius: 5px;
+  background: rgba(var(--cream-rgb), 0.08);
+  color: rgba(var(--cream-rgb), 0.7);
+}
+
+/* ── Governance ── */
+.gov {
+  padding: 84px 0;
+}
+.govInner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+.govBlock h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  color: var(--cream);
+  letter-spacing: -0.012em;
+  margin-bottom: 16px;
+}
+.govBlock h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.govRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px dashed rgba(var(--cream-rgb), 0.14);
+}
+.govRow:last-of-type {
+  border-bottom: none;
+}
+.govRow .k {
+  font-size: 13.5px;
+  color: rgba(var(--cream-rgb), 0.62);
+}
+.govRow .v {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+  text-align: right;
+  white-space: nowrap;
+}
+.govRow .v em {
+  font-style: italic;
+  color: var(--accent);
+}
+.govAction {
+  margin-top: 18px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 880px) {
+  .prGrid,
+  .councilGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .splitInner,
+  .govInner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+@media (max-width: 760px) {
+  .deedInner {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .prGrid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .councilGrid {
+    grid-template-columns: 1fr;
+  }
+}

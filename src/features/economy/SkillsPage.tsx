@@ -16,6 +16,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { memberProfiles } from "../members/data/memberProfiles";
+import { WorkshopsSection } from "./WorkshopsSection";
 import styles from "./SkillsPage.module.css";
 
 interface Skill {
@@ -236,6 +237,10 @@ export function SkillsPage() {
             learn something, post an Ask on the board. If you want to teach
             something, post an Offer.
           </p>
+
+          <div className={styles.section}>
+            <WorkshopsSection active={active} />
+          </div>
 
           {loading ? (
             <div className={styles.section}>

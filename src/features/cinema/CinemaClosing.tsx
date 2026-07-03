@@ -82,7 +82,8 @@ export function LedgerSection() {
           and captioning. The ledger is public. The split is non-negotiable.
         </p>
         <div className={styles.ledgerActions}>
-          <Button to={routes.cinemaMembership}>
+          <Button to={routes.cinemaSubmit}>Submit your film →</Button>
+          <Button variant="ghost-dark" to={routes.cinemaMembership}>
             Become a sustainer · €7/mo
           </Button>
           <Button variant="ghost-dark" to={routes.governance}>
@@ -123,6 +124,49 @@ export function LedgerSection() {
           Updated every Monday at noon Lisbon. Audited quarterly.
         </div>
       </div>
+    </div>
+  );
+}
+
+export function OpenCallsStrip() {
+  return (
+    <div className={styles.openCallsStrip}>
+      <div className={styles.openCallsText}>
+        <div className={styles.openCallsEb}>
+          <span className="live" />4 calls open now
+        </div>
+        <h2>
+          Make the <em>next</em> one.
+        </h2>
+        <p>
+          Commissions, residencies, and mentorships — funded by sustainers, paid
+          by the co-op. <em>4 calls open · €13.2k available this season.</em>
+        </p>
+      </div>
+      <Button variant="ghost-dark" to={routes.cinemaOpenCalls}>
+        See all open calls →
+      </Button>
+    </div>
+  );
+}
+
+export function AboutStrip() {
+  return (
+    <div className={styles.aboutStrip}>
+      <div className={styles.aboutStripText}>
+        <div className={styles.aboutStripEb}>The co-op</div>
+        <h2>
+          A theatre, an archive, <em>a room</em>.
+        </h2>
+        <p>
+          Programmed by queer people, paid to queer people, governed by the
+          filmmakers and sustainers who make it possible. Read what QueerPulse
+          Cinema actually is — the deed, the split, the curators' council.
+        </p>
+      </div>
+      <Button variant="ghost-dark" to={routes.cinemaAbout}>
+        Read the co-op story →
+      </Button>
     </div>
   );
 }
