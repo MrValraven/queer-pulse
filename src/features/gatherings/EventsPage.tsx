@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiCalendar, FiTag } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
@@ -12,7 +12,8 @@ import {
   Tag,
 } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { calendarEvents, type CalendarEvent } from "./data";
+import { type CalendarEvent } from "./data";
+import { useEvents } from "./api/useEvents";
 import { MONTHS, MSHORT } from "./calendar.data";
 import { EVENT_CATEGORIES, eventsHeader } from "./eventsPage.data";
 import styles from "./EventsPage.module.css";
@@ -95,18 +96,15 @@ function EventSkeleton() {
 
 export function EventsPage() {
   const [active, setActive] = useState("all");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(t);
-  }, []);
+  const { data, isLoading } = useEvents({ filter: "upcoming" });
+  const events = data?.items ?? [];
+  const loading = isLoading;
 
   const filtered = useMemo(() => {
     const cat = EVENT_CATEGORIES.find((c) => c.key === active);
-    if (!cat?.colors) return calendarEvents;
-    return calendarEvents.filter((e) => cat.colors!.includes(e.orgColor));
-  }, [active]);
+    if (!cat?.colors) return events;
+    return events.filter((e) => cat.colors!.includes(e.orgColor));
+  }, [active, events]);
 
   const months = useMemo(() => {
     const map = new Map<string, CalendarEvent[]>();

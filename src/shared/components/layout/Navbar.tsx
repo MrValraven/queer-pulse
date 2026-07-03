@@ -7,6 +7,7 @@ import { useTheme } from "../../../app/providers/themeContext";
 import { useAuth } from "../../../app/providers/authContext";
 import { useNavMode } from "../../../app/providers/navModeContext";
 import { routes } from "../../../app/routeMap";
+import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
 import { MegaNav } from "./MegaNav";
 import { MegaNavDrawer } from "./MegaNavDrawer";
 import { Sidebar } from "./Sidebar";
@@ -22,7 +23,13 @@ function Brand({ to }: { to: string }) {
   );
 }
 
-function NotificationsBell({ unreadCount }: { unreadCount: number }) {
+function NotificationsBell({ unreadCount }: { unreadCount?: number }) {
+  // The bell lives site-wide, so it sources the badge itself from the shared
+  // notifications query cache (demo → mock count, live → fetched feed) rather
+  // than depending on each page to thread a count down. An explicit prop still
+  // wins when a page passes one (e.g. the Notifications page's own live count).
+  const liveCount = useUnreadCount();
+  const count = unreadCount ?? liveCount;
   return (
     <Link
       to={routes.notifications}
@@ -38,9 +45,7 @@ function NotificationsBell({ unreadCount }: { unreadCount: number }) {
           strokeLinejoin="round"
         />
       </svg>
-      {unreadCount > 0 && (
-        <span className={styles.bellBadge}>{unreadCount}</span>
-      )}
+      {count > 0 && <span className={styles.bellBadge}>{count}</span>}
     </Link>
   );
 }
@@ -50,7 +55,7 @@ function NotificationsBell({ unreadCount }: { unreadCount: number }) {
  * see the notifications bell + profile menu; signed-out visitors see the
  * marketing sign-in / request-an-invite calls to action.
  */
-export function Navbar({ unreadCount = 0 }: { unreadCount?: number } = {}) {
+export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
   const scrolled = useScrolled(8);
   const isMobile = useMediaQuery("(max-width: 860px)");
   const { theme, toggleTheme } = useTheme();

@@ -12,6 +12,7 @@ import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import {
   vouchFor,
+  unvouch,
   getGivenVouches,
 } from "../../features/members/api/members.api";
 import { queryClient } from "../../shared/api/queryClient";
@@ -25,6 +26,8 @@ interface VouchContextValue {
   openVouch: (slug: string) => void;
   /** Record a vouch for a member slug (called by the modal on success). */
   addVouch: (slug: string) => void;
+  /** Withdraw an existing vouch for a member slug. */
+  removeVouch: (slug: string) => void;
 }
 
 const VouchContext = createContext<VouchContextValue | null>(null);
@@ -102,14 +105,39 @@ export function VouchProvider({ children }: { children: ReactNode }) {
     [demoMode, refresh],
   );
 
+  const removeVouch = useCallback(
+    (slug: string) => {
+      let existed = false;
+      setVouched((prev) => {
+        existed = prev.includes(slug);
+        return prev.filter((s) => s !== slug);
+      });
+      if (demoMode || !existed) return;
+      unvouch(slug)
+        .then(() => {
+          // Refresh the vouchee's profile + the directory so counts update.
+          queryClient.invalidateQueries({ queryKey: ["profile"] });
+          queryClient.invalidateQueries({ queryKey: ["members"] });
+          // A withdrawal can drop the user back below a status threshold.
+          void refresh();
+        })
+        .catch(() => {
+          // Roll back the optimistic removal on failure (restore most-recent-first).
+          setVouched((prev) => (prev.includes(slug) ? prev : [slug, ...prev]));
+        });
+    },
+    [demoMode, refresh],
+  );
+
   const value = useMemo<VouchContextValue>(
     () => ({
       vouched,
       hasVouched: (slug) => vouched.includes(slug),
       openVouch,
       addVouch,
+      removeVouch,
     }),
-    [vouched, openVouch, addVouch],
+    [vouched, openVouch, addVouch, removeVouch],
   );
 
   return (

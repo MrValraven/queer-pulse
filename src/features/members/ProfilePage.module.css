@@ -158,6 +158,27 @@ div.backBar {
   flex-wrap: wrap;
   margin-top: 28px;
 }
+.vouchedActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.vouchedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade);
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+.vouchedTag svg {
+  flex-shrink: 0;
+}
 .vouchRow {
   display: flex;
   align-items: center;
@@ -332,6 +353,47 @@ div.backBar {
 .workYear {
   font-size: 13px;
   color: var(--ink-40);
+}
+
+/* ---- Social links (read mode) --------------------------------------------- */
+.socialRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+.socialChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: 999px;
+  padding: 8px 14px;
+  text-decoration: none;
+  transition:
+    border-color 0.18s var(--ease),
+    color 0.18s var(--ease),
+    transform 0.18s var(--ease);
+}
+.socialChip svg {
+  color: var(--accent);
+  flex: none;
+}
+@media (hover: hover) {
+  a.socialChip:hover {
+    border-color: var(--plum);
+    color: var(--plum);
+    transform: translateY(-1px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .socialChip {
+    transition: none;
+  }
 }
 
 .miniBoard {

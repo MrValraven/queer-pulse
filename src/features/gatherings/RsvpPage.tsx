@@ -10,10 +10,15 @@ import {
   downloadIcs,
   googleCalendarUrl,
 } from "./rsvpPage.data";
+import { useUnrsvp } from "./api/useEventMutations";
 import styles from "./RsvpPage.module.css";
+
+/** Slug of the reading-group gathering this confirmation page is fixed to. */
+const RSVP_SLUG = "reading-group-8";
 
 export function RsvpPage() {
   const { showToast } = useToast();
+  const unrsvp = useUnrsvp(RSVP_SLUG);
 
   return (
     <>
@@ -180,8 +185,16 @@ export function RsvpPage() {
         <div className={styles.footer}>
           <p>
             You RSVPed as a QueerPulse member.{" "}
-            <Link to={routes.gathering}>Cancel RSVP</Link> ·{" "}
-            <Link to={routes.privacy}>Privacy policy</Link>
+            <Link
+              to={routes.gathering}
+              onClick={() => {
+                unrsvp.mutate();
+                showToast("Your RSVP has been cancelled.", "info");
+              }}
+            >
+              Cancel RSVP
+            </Link>{" "}
+            · <Link to={routes.privacy}>Privacy policy</Link>
           </p>
         </div>
       </div>

@@ -22,6 +22,13 @@ export interface WorkItem {
   year: string;
   image?: string;
 }
+/** A social / web link the member surfaces on their profile. */
+export interface SocialLink {
+  /** Platform key (matches an option in `socialLinks.data`), e.g. "instagram", "website". */
+  platform: string;
+  /** The URL or @handle the member entered. */
+  urlOrHandle: string;
+}
 export interface BoardItem {
   kind: "looking" | "offering";
   title: string;
@@ -66,6 +73,9 @@ export interface Member {
   now: string;
   openTo: string[];
   work: WorkItem[];
+  /** Social / web links the member surfaces on their profile. Optional — most
+   *  members have none; default to `[]` wherever read. */
+  socials?: SocialLink[];
   board: BoardItem[];
   /** Member slugs of people who have vouched (cross-referenced into the registry). */
   vouchers: string[];
@@ -110,6 +120,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I design identities and editorial systems for cultural institutions, small presses and the occasional brave restaurant. Most of my work starts with a long conversation and a worse-for-wear notebook. I run a studio off the garden in Príncipe Real — the door's usually open.",
     now: "Wrapping a visual identity for a queer-run bookshop opening in Anjos this autumn, and slowly setting type for a riso zine about Lisbon's disappearing tascas.",
     openTo: ["Collaborations", "Mentoring juniors", "Coffee in the garden"],
+    socials: [
+      { platform: "instagram", urlOrHandle: "@atelierpulso" },
+      { platform: "website", urlOrHandle: "atelierpulso.pt" },
+      { platform: "bluesky", urlOrHandle: "@ines.bsky.social" },
+    ],
     work: [
       {
         category: "Identity",
@@ -221,6 +236,10 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       "Mentoring junior engineers",
       "Infrastructure consulting",
       "After-work drinks",
+    ],
+    socials: [
+      { platform: "github", urlOrHandle: "github.com/ruimarcal" },
+      { platform: "linkedin", urlOrHandle: "linkedin.com/in/ruimarcal" },
     ],
     work: [
       {

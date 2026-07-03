@@ -5,6 +5,7 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useConnectionActions } from "./api/useConnectionActions";
 import {
   profilePath,
   vouchBadgeLabel,
@@ -21,9 +22,19 @@ const MoreIcon = () => (
 );
 
 /** Keyboard-accessible per-connection menu: Message / Mute / Block / Report. */
-function ConnectionMoreMenu({ slug, name }: { slug: string; name: string }) {
+function ConnectionMoreMenu({
+  slug,
+  id,
+  name,
+}: {
+  slug: string;
+  /** Backend connection id (live mode); absent in demo. */
+  id?: string;
+  name: string;
+}) {
   const { openConnect } = useConnect();
-  const { isBlocked, isMuted, toggleMute, toggleBlock } = useSocial();
+  const { isBlocked, isMuted, toggleMute } = useSocial();
+  const { block, unblock } = useConnectionActions();
   const { showToast } = useToast();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -70,11 +81,14 @@ function ConnectionMoreMenu({ slug, name }: { slug: string; name: string }) {
       label: `${isBlocked(slug) ? "Unblock" : "Block"} ${first}`,
       icon: <FiSlash />,
       danger: true,
-      run: () =>
+      run: () => {
+        const wasBlocked = isBlocked(slug);
+        void (wasBlocked ? unblock({ slug, id }) : block({ slug, id }));
         showToast(
-          toggleBlock(slug) ? `Blocked ${first}` : `Unblocked ${first}`,
+          wasBlocked ? `Unblocked ${first}` : `Blocked ${first}`,
           "success",
-        ),
+        );
+      },
     },
     {
       label: "Report",
@@ -151,7 +165,13 @@ export function CardHead({
         {view.pron && <div className={styles.pron}>{view.pron}</div>}
         <div className={styles.role}>{view.role}</div>
       </div>
-      {more && <ConnectionMoreMenu slug={view.slug} name={view.name} />}
+      {more && (
+        <ConnectionMoreMenu
+          slug={view.slug}
+          id={view.meta.id}
+          name={view.name}
+        />
+      )}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { SidebarFooter } from "./SidebarFooter";
 import { useIsLinkVisible } from "../../../app/authGate";
 import { useNavMode } from "../../../app/providers/navModeContext";
 import { useAuth } from "../../../app/providers/authContext";
+import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
 import styles from "./Sidebar.module.css";
 
 /**
@@ -13,11 +14,15 @@ import styles from "./Sidebar.module.css";
  * full-height, collapsible to an icon rail. Desktop only — Navbar keeps its
  * drawer on mobile. Switch modes from the account menu ("Navigation").
  */
-export function Sidebar({ unreadCount = 0 }: { unreadCount?: number }) {
+export function Sidebar({ unreadCount }: { unreadCount?: number }) {
   const isVisible = useIsLinkVisible();
   const menus = filterMenus(NAV_MENUS, isVisible);
   const { railCollapsed, toggleRail } = useNavMode();
   const { loggedIn } = useAuth();
+  // Same self-sourcing badge as the top-bar bell: an explicit prop wins, else
+  // derive from the shared notifications query cache (demo mock / live feed).
+  const liveCount = useUnreadCount();
+  const count = unreadCount ?? liveCount;
 
   return (
     <aside
@@ -43,7 +48,7 @@ export function Sidebar({ unreadCount = 0 }: { unreadCount?: number }) {
 
       <SidebarFooter
         collapsed={railCollapsed}
-        unreadCount={unreadCount}
+        unreadCount={count}
         onToggleRail={toggleRail}
       />
     </aside>

@@ -2,6 +2,7 @@ import {
   apiGet,
   apiPost,
   apiPatch,
+  apiPut,
   apiDelete,
 } from "../../../shared/api/client";
 
@@ -151,6 +152,37 @@ export interface UpdateProfileDTO {
 /** Persist edits to the logged-in member's profile. Returns the saved profile. */
 export const updateProfile = (dto: UpdateProfileDTO) =>
   apiPatch<ProfileDTO>("/profiles/me", dto);
+
+// ── Profile sub-resources ────────────────────────────────────────────────────
+// Each of these fully REPLACES the corresponding list on the logged-in member's
+// profile (PUT semantics). The backend caps each list; we forward the caller's
+// items and let the server enforce the limits documented in the comments.
+
+/** Replace the member's social links (≤50). PUT /profiles/me/socials. */
+export const replaceSocials = (items: SocialLinkDTO[]) =>
+  apiPut<ProfileDTO>("/profiles/me/socials", { items });
+
+/** Replace the member's selected work (≤100). PUT /profiles/me/work. */
+export const replaceWork = (items: WorkItemDTO[]) =>
+  apiPut<ProfileDTO>("/profiles/me/work", { items });
+
+/** Replace the member's skills & offerings (≤100). PUT /profiles/me/skills. */
+export const replaceSkills = (items: SkillItemDTO[]) =>
+  apiPut<ProfileDTO>("/profiles/me/skills", { items });
+
+/** Replace the member's formative films/books/songs/moments (≤4). PUT /profiles/me/shapings. */
+export const replaceShapings = (items: ShapingItemDTO[]) =>
+  apiPut<ProfileDTO>("/profiles/me/shapings", { items });
+
+/** A group membership as the groups-PUT expects it (referenced by slug, not name). */
+export interface GroupMembershipDTO {
+  groupSlug: string;
+  role: string;
+}
+
+/** Replace the member's group / circle memberships (≤50). PUT /profiles/me/groups. */
+export const replaceGroups = (items: GroupMembershipDTO[]) =>
+  apiPut<ProfileDTO>("/profiles/me/groups", { items });
 
 export const vouchFor = (slug: string, note?: string) =>
   apiPost<{ vouchCount: number }>(

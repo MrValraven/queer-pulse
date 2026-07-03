@@ -18,7 +18,13 @@ import editStyles from "./ProfileEdit.module.css";
 export function ProfilePage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { profile: liveProfile, isEditing, startEditing } = useProfile();
+  const {
+    profile: liveProfile,
+    isEditing,
+    startEditing,
+    draft,
+    updateDraft,
+  } = useProfile();
   const { user } = useAuth();
   const [previewing, setPreviewing] = useState(false);
 
@@ -91,7 +97,18 @@ export function ProfilePage() {
           onPreview={() => setPreviewing(true)}
         />
       )}
-      <ProfileContent profile={resolvedProfile} isSelf={selfView} />
+      <ProfileContent
+        profile={resolvedProfile}
+        isSelf={selfView}
+        workEdit={
+          selfView && isEditing
+            ? {
+                work: draft.work,
+                onChange: (work) => updateDraft({ work }),
+              }
+            : undefined
+        }
+      />
 
       {isSelf && <MyPlacesSection memberSlug={selfSlug} />}
 

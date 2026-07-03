@@ -1,8 +1,7 @@
 import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck, FiEdit3, FiEye } from "react-icons/fi";
+import { FiCheck, FiEdit3, FiEye, FiX } from "react-icons/fi";
 import {
-  Avatar,
   Button,
   Eyebrow,
   ImageSlot,
@@ -13,12 +12,9 @@ import {
 import { routes } from "../../app/routeMap";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { useVouch } from "../../app/providers/VouchProvider";
-import {
-  memberProfiles,
-  currentUserSlug,
-  type MemberProfile,
-} from "./data/memberProfiles";
+import { currentUserSlug, type MemberProfile } from "./data/memberProfiles";
 import { useRecognition } from "./api/useRecognition";
+import { HeroVouchRow } from "./HeroVouchRow";
 import { VISIBILITY_LABEL } from "./profileSections.data";
 import {
   ActivitySection,
@@ -30,6 +26,8 @@ import {
   ShapingsSection,
   SkillsSection,
 } from "./ProfileContentSections";
+import { SocialLinksRow } from "./SocialLinksRow";
+import { WorkEditor } from "./WorkEditor";
 import styles from "./ProfilePage.module.css";
 
 function CheckIcon() {
@@ -88,20 +86,10 @@ export function ProfileHero({
   onPreview?: () => void;
 }) {
   const { openConnect } = useConnect();
-  const { openVouch, hasVouched } = useVouch();
+  const { openVouch, hasVouched, removeVouch } = useVouch();
   const realSelf = self ?? profile.slug === currentUserSlug;
   const isSelf = realSelf && !asVisitor;
   const vouched = hasVouched(profile.slug);
-  const youAdded =
-    vouched && !realSelf && !profile.vouchers.includes(currentUserSlug);
-  const voucherSlugs = youAdded
-    ? [...profile.vouchers, currentUserSlug]
-    : profile.vouchers;
-  const namesText = !youAdded
-    ? profile.voucherNames
-    : profile.vouchers.length > 0
-      ? `${profile.voucherNames}, plus you`
-      : "you";
   return (
     <header className={styles.phero}>
       <div className="wrap">
@@ -153,6 +141,7 @@ export function ProfileHero({
                 <Tag key={tag}>{tag}</Tag>
               ))}
             </TagRow>
+            <SocialLinksRow links={profile.socials} />
             <div className={styles.cta}>
               {isSelf ? (
                 <>
@@ -176,9 +165,18 @@ export function ProfileHero({
                   )}
                   {!realSelf &&
                     (vouched ? (
-                      <Button size="lg" variant="jade" disabled>
-                        <FiCheck aria-hidden /> Vouched for {profile.first}
-                      </Button>
+                      <span className={styles.vouchedActions}>
+                        <span className={styles.vouchedTag}>
+                          <FiCheck aria-hidden /> Vouched for {profile.first}
+                        </span>
+                        <Button
+                          size="lg"
+                          variant="ghost"
+                          onClick={() => removeVouch(profile.slug)}
+                        >
+                          <FiX aria-hidden /> Withdraw vouch
+                        </Button>
+                      </span>
                     ) : (
                       <Button
                         size="lg"
@@ -191,58 +189,11 @@ export function ProfileHero({
                 </>
               )}
             </div>
-            <div className={styles.vouchRow}>
-              {voucherSlugs.length > 0 ? (
-                <>
-                  <div className={styles.vouchFaces}>
-                    {voucherSlugs.map((slug, index) => {
-                      const voucher = memberProfiles[slug];
-                      if (!voucher) return null;
-                      const name = `${voucher.first} ${voucher.last}`;
-                      return (
-                        <Link
-                          key={slug}
-                          to={`/members/${slug}`}
-                          className={styles.vouchFace}
-                          style={{
-                            marginLeft: index === 0 ? 0 : -12,
-                            zIndex: voucherSlugs.length - index,
-                          }}
-                        >
-                          <span className={styles.vouchTip}>{name}</span>
-                          <Avatar
-                            initials={voucher.initials}
-                            tint={voucher.tint}
-                            size={52}
-                            src={voucher.photo}
-                            alt={name}
-                          />
-                        </Link>
-                      );
-                    })}
-                  </div>
-                  <div className={styles.vouchText}>
-                    Vouched for by <b>{namesText}</b>.
-                    <br />
-                    That's the only number that matters here.
-                  </div>
-                </>
-              ) : (
-                <div className={styles.vouchText}>
-                  {isSelf ? (
-                    <>
-                      No vouches yet. They'll appear here as people who know you
-                      add their name — the only number that matters.
-                    </>
-                  ) : (
-                    <>
-                      No vouches for {profile.first} yet. If you know them,
-                      yours could be the first.
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
+            <HeroVouchRow
+              profile={profile}
+              realSelf={realSelf}
+              isSelf={isSelf}
+            />
           </Reveal>
         </div>
       </div>
@@ -295,15 +246,25 @@ export function RecognitionSection() {
 export function ProfileContent({
   profile,
   isSelf,
+  workEdit,
 }: {
   profile: MemberProfile;
   isSelf?: boolean;
+  /** When set (edit mode), the work section becomes an editor bound to the draft. */
+  workEdit?: {
+    work: MemberProfile["work"];
+    onChange: (next: MemberProfile["work"]) => void;
+  };
 }) {
   return (
     <div className="wrap">
       {isSelf && <RecognitionSection />}
       <NowSection profile={profile} />
-      <SelectedWorkSection profile={profile} />
+      {workEdit ? (
+        <WorkEditor work={workEdit.work} onChange={workEdit.onChange} />
+      ) : (
+        <SelectedWorkSection profile={profile} />
+      )}
       <BoardSection profile={profile} />
       <SkillsSection profile={profile} />
       <GroupsSection profile={profile} />

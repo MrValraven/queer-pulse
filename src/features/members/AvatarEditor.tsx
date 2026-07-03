@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ImageSlot, type ImageSlotTint } from "../../shared/components/ui";
+import { useUploadImage } from "./api/useUploadImage";
 import styles from "./ProfileEdit.module.css";
 
 /**
@@ -25,6 +26,9 @@ export function AvatarEditor({
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const createdUrl = useRef<string | null>(null);
+  const uploadAvatar = useUploadImage("avatar");
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(
     () => () => {
@@ -33,11 +37,26 @@ export function AvatarEditor({
     [],
   );
 
-  function pick(file: File) {
-    if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
-    const url = URL.createObjectURL(file);
-    createdUrl.current = url;
-    onChange(url);
+  // Demo mode: `uploadAvatar` returns a local object URL (kept for revoking).
+  // Live mode: it uploads to storage and returns the stable public URL, so no
+  // object URL is created and there's nothing to revoke.
+  async function pick(file: File) {
+    setError(null);
+    setUploading(true);
+    try {
+      const url = await uploadAvatar(file);
+      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
+      createdUrl.current = url.startsWith("blob:") ? url : null;
+      onChange(url);
+    } catch (err) {
+      setError(
+        err instanceof Error && err.message
+          ? err.message
+          : "We couldn't add that photo. Please try again.",
+      );
+    } finally {
+      setUploading(false);
+    }
   }
 
   return (
@@ -55,11 +74,12 @@ export function AvatarEditor({
           type="button"
           className={styles.avatarBtn}
           onClick={() => fileRef.current?.click()}
+          disabled={uploading}
         >
           <FiCamera size={15} />
-          {photo ? "Change photo" : "Add photo"}
+          {uploading ? "Uploading…" : photo ? "Change photo" : "Add photo"}
         </button>
-        {photo && (
+        {photo && !uploading && (
           <button
             type="button"
             className={`${styles.avatarBtn} ${styles.avatarBtnGhost}`}
@@ -76,6 +96,11 @@ export function AvatarEditor({
           </button>
         )}
       </div>
+      {error && (
+        <p className={styles.avatarError} role="alert">
+          {error}
+        </p>
+      )}
       <input
         ref={fileRef}
         type="file"

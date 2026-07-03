@@ -6,16 +6,18 @@ import { Button } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useConnect } from "../../app/providers/ConnectProvider";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useConnections } from "../../app/providers/ConnectionsProvider";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { useVouch } from "../../app/providers/VouchProvider";
 import {
   CONNECTION_META,
-  connectionViews,
   vouchNote,
   type ConnectionView,
   type TabId,
 } from "./connections.data";
+import { useConnectionsList } from "./api/useConnectionsList";
+import { useConnectionActions } from "./api/useConnectionActions";
 import { ConnectionsAllTab } from "./ConnectionsAllTab";
 import { ConnectionsTabs, type ConnectionsTab } from "./ConnectionsTabs";
 import {
@@ -27,24 +29,37 @@ import {
 import styles from "./ConnectionsPage.module.css";
 
 export function ConnectionsPage() {
-  const loading = useSimulatedLoad();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const { openConnect } = useConnect();
-  const { connected, incoming, sent, accept, decline, withdraw } =
-    useConnections();
-  const { blocked, isBlocked, toggleBlock } = useSocial();
+  // Provider arrays still drive the tab COUNT badges. In demo they're exact; in
+  // live mode they're a best-effort hint (a full per-tab count fetch would be
+  // wasteful just to badge inactive tabs) — a documented, non-breaking gap.
+  const { connected, incoming, sent } = useConnections();
+  const { blocked, isBlocked } = useSocial();
   const { vouched, hasVouched } = useVouch();
 
   const [tab, setTab] = useState<TabId>("all");
 
-  const blockedViews = useMemo(() => connectionViews(blocked), [blocked]);
+  // Keep the entrance skeleton (demo resolves instantly, so this preserves the
+  // simulated load-in); live mode also shows it while the first fetch is pending.
+  const simulating = useSimulatedLoad();
+  const { views, loading: fetching } = useConnectionsList(tab);
+  const loading = simulating || fetching;
 
-  const vouchedSlugs = useMemo(() => {
+  const {
+    acceptRequest,
+    declineRequest,
+    withdrawRequest,
+    unblock: unblockAction,
+  } = useConnectionActions();
+
+  const vouchedCount = useMemo(() => {
     const set = new Set<string>(vouched);
     for (const [slug, meta] of Object.entries(CONNECTION_META)) {
       if (meta.vouchBadge) set.add(slug);
     }
-    return [...set];
+    return set.size;
   }, [vouched]);
 
   const tabs: ConnectionsTab[] = [
@@ -56,24 +71,24 @@ export function ConnectionsPage() {
       accent: incoming.length > 0,
     },
     { id: "sent", label: "Sent", count: sent.length },
-    { id: "blocked", label: "Blocked", count: blockedViews.length },
-    { id: "vouched", label: "Vouched-for", count: vouchedSlugs.length },
+    { id: "blocked", label: "Blocked", count: blocked.length },
+    { id: "vouched", label: "Vouched-for", count: vouchedCount },
   ];
 
-  function acceptRequest(v: ConnectionView) {
-    accept(v.slug);
+  function onAccept(v: ConnectionView) {
+    void acceptRequest({ slug: v.slug, id: v.meta.id });
     showToast(`Connected with ${v.name.split(" ")[0]}`, "success");
   }
-  function declineRequest(v: ConnectionView) {
-    decline(v.slug);
+  function onDecline(v: ConnectionView) {
+    void declineRequest({ slug: v.slug, id: v.meta.id });
     showToast("Politely declined", "info");
   }
-  function withdrawRequest(v: ConnectionView) {
-    withdraw(v.slug);
+  function onWithdraw(v: ConnectionView) {
+    void withdrawRequest({ slug: v.slug, id: v.meta.id });
     showToast("Request withdrawn", "info");
   }
-  function unblock(v: ConnectionView) {
-    toggleBlock(v.slug);
+  function onUnblock(v: ConnectionView) {
+    void unblockAction({ slug: v.slug, id: v.meta.id });
     showToast(`Unblocked ${v.name.split(" ")[0]}`, "success");
   }
 
@@ -117,9 +132,10 @@ export function ConnectionsPage() {
         {tab === "all" && (
           <ConnectionsAllTab
             loading={loading}
-            connected={connected}
+            connected={views}
+            allowMorePool={demoMode}
             isBlocked={isBlocked}
-            onUnblock={unblock}
+            onUnblock={onUnblock}
             onMessage={openConnect}
           />
         )}
@@ -127,32 +143,24 @@ export function ConnectionsPage() {
         {tab === "incoming" && (
           <IncomingPanel
             loading={loading}
-            views={connectionViews(incoming)}
-            onAccept={acceptRequest}
-            onDecline={declineRequest}
+            views={views}
+            onAccept={onAccept}
+            onDecline={onDecline}
           />
         )}
 
         {tab === "sent" && (
-          <SentPanel
-            loading={loading}
-            views={connectionViews(sent)}
-            onWithdraw={withdrawRequest}
-          />
+          <SentPanel loading={loading} views={views} onWithdraw={onWithdraw} />
         )}
 
         {tab === "blocked" && (
-          <BlockedPanel
-            loading={loading}
-            views={blockedViews}
-            onUnblock={unblock}
-          />
+          <BlockedPanel loading={loading} views={views} onUnblock={onUnblock} />
         )}
 
         {tab === "vouched" && (
           <VouchedPanel
             loading={loading}
-            views={connectionViews(vouchedSlugs)}
+            views={views}
             noteFor={(v) => vouchNote(v.slug, hasVouched(v.slug))}
           />
         )}

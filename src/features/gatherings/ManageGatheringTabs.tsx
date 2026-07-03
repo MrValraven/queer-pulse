@@ -5,12 +5,10 @@ import { Button, EmptyState } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { InlineEditModal } from "./InlineEditModal";
-import {
-  GOING_ATTENDEES,
-  WAITLIST_ATTENDEES,
-  PREVIOUS_MESSAGES,
-  GATHERING_SETTINGS,
-} from "./manageGathering.data";
+import { InviteMembersModal } from "./InviteMembersModal";
+import { CohostManager } from "./CohostManager";
+import { PREVIOUS_MESSAGES, GATHERING_SETTINGS } from "./manageGathering.data";
+import { useAttendees } from "./api/useAttendees";
 import styles from "./ManageGatheringPage.module.css";
 
 interface GatheringDetail {
@@ -130,8 +128,17 @@ function OverviewTab({
   );
 }
 
-function AttendeesTab() {
+function AttendeesTab({ slug }: { slug: string }) {
   const { showToast } = useToast();
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const { data } = useAttendees(slug);
+  const going = data?.going ?? [];
+  const waitlist = data?.waitlist ?? [];
+  const goingCount = data?.goingCount ?? going.length;
+  const waitlistCount = data?.waitlistCount ?? waitlist.length;
+  const capacity = data?.capacity ?? 20;
+  const pct = capacity ? Math.round((goingCount / capacity) * 100) : 0;
+  const overflow = goingCount - going.length;
   return (
     <div>
       <div className={styles.attToolbar}>
@@ -147,19 +154,28 @@ function AttendeesTab() {
         >
           Export list
         </Button>
+        <Button
+          variant="primary"
+          className={styles.actionBtn}
+          onClick={() => setInviteOpen(true)}
+        >
+          Invite members
+        </Button>
       </div>
       <div className={styles.capWrap}>
         <div className={styles.capLabel}>
-          <span>14 of 20 spots filled</span>
-          <span className={styles.capPct}>70%</span>
+          <span>
+            {goingCount} of {capacity} spots filled
+          </span>
+          <span className={styles.capPct}>{pct}%</span>
         </div>
         <div className={styles.capBar}>
-          <div className={styles.capFill} style={{ width: "70%" }} />
+          <div className={styles.capFill} style={{ width: `${pct}%` }} />
         </div>
       </div>
-      <div className={styles.attSectionLabel}>Going (14)</div>
+      <div className={styles.attSectionLabel}>Going ({goingCount})</div>
       <div className={styles.attList}>
-        {GOING_ATTENDEES.map((a) => (
+        {going.map((a) => (
           <div className={styles.attRow} key={a.id}>
             <div
               className={styles.attAv}
@@ -183,13 +199,15 @@ function AttendeesTab() {
             </div>
           </div>
         ))}
-        <div className={styles.moreRow}>+ 10 more attendees</div>
+        {overflow > 0 && (
+          <div className={styles.moreRow}>+ {overflow} more attendees</div>
+        )}
       </div>
       <div className={styles.attSectionLabel} style={{ marginTop: 20 }}>
-        Waitlist (3)
+        Waitlist ({waitlistCount})
       </div>
       <div className={styles.attList}>
-        {WAITLIST_ATTENDEES.map((a) => (
+        {waitlist.map((a) => (
           <div className={styles.attRow} key={a.id}>
             <div
               className={styles.attAv}
@@ -219,6 +237,9 @@ function AttendeesTab() {
           </div>
         ))}
       </div>
+      {inviteOpen && (
+        <InviteMembersModal slug={slug} onClose={() => setInviteOpen(false)} />
+      )}
     </div>
   );
 }
@@ -304,15 +325,17 @@ function MessagesTab() {
 }
 
 interface SettingsTabProps {
+  slug: string;
   onCancel: () => void;
 }
 
-function SettingsTab({ onCancel }: SettingsTabProps) {
+function SettingsTab({ slug, onCancel }: SettingsTabProps) {
   const [toggles, setToggles] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(GATHERING_SETTINGS.map((s) => [s.title, s.on])),
   );
   return (
     <div>
+      <CohostManager slug={slug} />
       <div className={styles.sectionLabel}>Gathering options</div>
       <div className={styles.toggleList}>
         {GATHERING_SETTINGS.map((s) => (
@@ -401,6 +424,8 @@ export function ManageGatheringSidebar({
 
 interface ManageGatheringTabsProps {
   initialTab?: Tab;
+  /** Event slug the attendee list is fetched for. */
+  slug: string;
   onCancel: () => void;
   details: GatheringDetail[];
   description: string;
@@ -410,6 +435,7 @@ interface ManageGatheringTabsProps {
 
 export function ManageGatheringTabs({
   initialTab = "overview",
+  slug,
   onCancel,
   details,
   description,
@@ -443,9 +469,9 @@ export function ManageGatheringTabs({
           onUpdateDescription={onUpdateDescription}
         />
       )}
-      {tab === "attendees" && <AttendeesTab />}
+      {tab === "attendees" && <AttendeesTab slug={slug} />}
       {tab === "messages" && <MessagesTab />}
-      {tab === "settings" && <SettingsTab onCancel={onCancel} />}
+      {tab === "settings" && <SettingsTab slug={slug} onCancel={onCancel} />}
     </div>
   );
 }

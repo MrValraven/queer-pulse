@@ -12,12 +12,14 @@ import {
   gatheringPath,
   resolveGathering,
 } from "./data";
+import { useEvent } from "./api/useEvent";
 
 import styles from "./GatheringPage.module.css";
 
 export function GatheringPage() {
   const { slug: param } = useParams();
-  const gathering = resolveGathering(param);
+  const { data } = useEvent(param);
+  const gathering = data?.gathering ?? resolveGathering(param);
   const kind = gatheringKind(gathering);
   const host = gathering.hostSlug ? memberProfiles[gathering.hostSlug] : null;
   const spotsNum = parseInt(gathering.spots, 10);

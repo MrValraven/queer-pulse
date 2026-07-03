@@ -10,7 +10,17 @@ import {
 } from "react-icons/fi";
 import type { Member } from "../data/members";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
-import type { ActivityKind, MemberCardDTO, ProfileDTO } from "./members.api";
+import type {
+  ActivityKind,
+  GroupMembershipDTO,
+  MemberCardDTO,
+  ProfileDTO,
+  ShapingItemDTO,
+  ShapingKind,
+  SkillItemDTO,
+  SocialLinkDTO,
+  WorkItemDTO,
+} from "./members.api";
 import type { MemberCard } from "../memberDirectoryFilter.data";
 
 const TINTS: AvatarTint[] = ["coral", "plum", "jade"];
@@ -115,6 +125,10 @@ export function profileToMember(dto: ProfileDTO): Member {
     since: joinYear(dto.joinedAt),
     now: dto.now ?? "",
     openTo: dto.openTo ?? [],
+    socials: (dto.socials ?? []).map((s) => ({
+      platform: s.platform,
+      urlOrHandle: s.urlOrHandle,
+    })),
     work: (dto.work ?? []).map((w) => ({
       category: w.category,
       title: w.title,
@@ -145,4 +159,52 @@ export function profileToMember(dto: ProfileDTO): Member {
     // full-card hydration is a documented follow-up (same gap as vouch faces).
     related: (dto.related ?? []).map((r) => r.slug),
   };
+}
+
+// ── View-model → sub-resource PUT payloads ───────────────────────────────────
+// These map the `Member` shape the profile editor holds onto the `items` DTOs
+// the PUT /profiles/me/* endpoints expect. Each fully replaces its list.
+
+export function workToDto(work: Member["work"]): WorkItemDTO[] {
+  return work.map((w) => ({
+    category: w.category,
+    title: w.title,
+    year: w.year,
+    ...(w.image ? { imageUrl: w.image } : {}),
+  }));
+}
+
+export function skillsToDto(skills: Member["skills"]): SkillItemDTO[] {
+  return skills.map((s) => ({ name: s.name, meta: s.meta }));
+}
+
+/** `Member.groups` carries a group `name` (not a slug); the endpoint keys on a
+ *  `groupSlug`. Until the editor tracks slugs, we derive a stable slug from the
+ *  name so the PUT round-trips — documented in the summary as a known gap. */
+export function groupsToDto(groups: Member["groups"]): GroupMembershipDTO[] {
+  return groups.map((g) => ({
+    groupSlug: g.name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, ""),
+    role: g.role,
+  }));
+}
+
+const SHAPING_ORDER: ShapingKind[] = ["film", "book", "song", "moment"];
+
+export function shapingsToDto(shapings: Member["shapings"]): ShapingItemDTO[] {
+  return SHAPING_ORDER.flatMap((kind) => {
+    const item = shapings[kind];
+    return item ? [{ kind, title: item.title, note: item.note }] : [];
+  });
+}
+
+/** Map the member's social links to the PUT /profiles/me/socials `items` DTOs. */
+export function socialsToDto(socials: Member["socials"]): SocialLinkDTO[] {
+  return (socials ?? []).map((s) => ({
+    platform: s.platform,
+    urlOrHandle: s.urlOrHandle,
+  }));
 }

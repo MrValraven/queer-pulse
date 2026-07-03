@@ -3,20 +3,19 @@ import { FiBell } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { Avatar, Button, FadeIn, Tabs } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { linkToPath, routes } from "../../app/routeMap";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
-import {
-  notificationTabs,
-  notifications,
-  type NotifType,
-  type Notification,
-} from "./data";
+import { useNotifications } from "./api/useNotifications";
+import { useMarkNotificationRead } from "./api/useMarkNotificationRead";
+import { useMarkAllRead } from "./api/useMarkAllRead";
+import { notificationTabs, type NotifType, type Notification } from "./data";
 import styles from "./NotificationsPage.module.css";
 
 export function NotificationsPage() {
-  const loading = useSimulatedLoad();
+  const { data: notifications = [], isLoading } = useNotifications();
+  const markReadMutation = useMarkNotificationRead();
+  const markAllReadMutation = useMarkAllRead();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [filter, setFilter] = useState<"all" | NotifType>("all");
@@ -29,7 +28,7 @@ export function NotificationsPage() {
         (n) =>
           (filter === "all" || n.type === filter) && !resolvedIds.has(n.id),
       ),
-    [filter, resolvedIds],
+    [notifications, filter, resolvedIds],
   );
   const unreadCount = visible.filter(
     (n) => n.unread && !readIds.has(n.id),
@@ -39,10 +38,15 @@ export function NotificationsPage() {
   const earlier = visible.slice(7);
 
   function markRead(id: number) {
+    // Skip no-op clicks on rows that are already read (avoids a stray live POST).
+    const item = notifications.find((n) => n.id === id);
+    if (!item?.unread || readIds.has(id)) return;
     setReadIds((current) => new Set(current).add(id));
+    markReadMutation.mutate(id);
   }
   function markAllRead() {
     setReadIds(new Set(notifications.map((n) => n.id)));
+    markAllReadMutation.mutate();
   }
   function resolve(id: number, toast: string) {
     setResolvedIds((current) => new Set(current).add(id));
@@ -150,7 +154,7 @@ export function NotificationsPage() {
             onChange={(id) => setFilter(id as "all" | NotifType)}
           />
 
-          {loading ? (
+          {isLoading ? (
             <NotificationsListSkeleton count={7} />
           ) : visible.length === 0 ? (
             <div className={styles.empty}>

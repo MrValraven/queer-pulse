@@ -28,18 +28,6 @@ export interface AdminMember {
   vouchedBy: VouchAvatar[];
 }
 
-export interface VerifyQueueItem {
-  id: string;
-  name: string;
-  initials: string;
-  tone: AvatarTone;
-  pronoun: string;
-  vouchedByLine: string;
-  appliedLine: string;
-  /** when set, shows the amber "wait for 2?" nudge */
-  oneVouchNudge: boolean;
-}
-
 export interface FlaggedMember {
   id: string;
   handle: string;
@@ -89,22 +77,6 @@ export interface MemberDetail {
     center: { initials: string; tone: AvatarTone };
     nodes: VouchAvatar[];
   };
-}
-
-/* ── Verify modal (voucher review) ───────────────────────── */
-
-export interface Voucher {
-  name: string;
-  initials: string;
-  tone: AvatarTone;
-  meta: string;
-  standing: "Trusted" | "Review";
-}
-
-export interface VerifyReview {
-  vouchers: Voucher[];
-  flags: string[];
-  rec: { tone: "jade" | "amber"; text: string };
 }
 
 /* ── Verification pending badge ──────────────────────────── */
@@ -197,41 +169,6 @@ export const MEMBERS: AdminMember[] = [
     meta: "Joined Nov 2025 · DJ · night-life · Queer Creatives",
     vouchCount: 4,
     vouchedBy: [{ initials: "SA", tone: "amber" }],
-  },
-];
-
-/* ── Verification pending ────────────────────────────────── */
-
-export const VERIFY_QUEUE: VerifyQueueItem[] = [
-  {
-    id: "marco",
-    name: "Marco Vieira",
-    initials: "MV",
-    tone: "coral",
-    pronoun: "he/him",
-    vouchedByLine: "Vouched by Inês M. & Sofia A.",
-    appliedLine: "Applied 2 days ago",
-    oneVouchNudge: false,
-  },
-  {
-    id: "rui",
-    name: "Rui Antunes",
-    initials: "RA",
-    tone: "jade",
-    pronoun: "he/they",
-    vouchedByLine: "Vouched by Devon O.",
-    appliedLine: "Applied 3 days ago",
-    oneVouchNudge: true,
-  },
-  {
-    id: "nadia",
-    name: "Nadia Lopes",
-    initials: "NL",
-    tone: "violet",
-    pronoun: "she/her",
-    vouchedByLine: "Vouched by Kai S., Théo M. & 1 more",
-    appliedLine: "Applied 5 days ago",
-    oneVouchNudge: false,
   },
 ];
 
@@ -391,82 +328,4 @@ export function detailFor(member: AdminMember): MemberDetail {
 export const SEALED_IDENTITY = {
   title: "Legacy identity is sealed",
   body: "Any prior name is encrypted and shown to no one — not in reports, not here, not to admins. Only the member controls their chosen name.",
-};
-
-/* ── Verify modal review data (keyed by queue id) ────────── */
-
-export const VERIFY_REVIEW: Record<string, VerifyReview> = {
-  marco: {
-    vouchers: [
-      {
-        name: "Inês Martins",
-        initials: "IM",
-        tone: "jade",
-        meta: "Moderator · 21 vouches · clean record",
-        standing: "Trusted",
-      },
-      {
-        name: "Sofia Almeida",
-        initials: "SA",
-        tone: "amber",
-        meta: "Moderator · 14 vouches · clean record",
-        standing: "Trusted",
-      },
-    ],
-    flags: [],
-    rec: {
-      tone: "jade",
-      text: "Both vouchers are trusted moderators with clean records. Safe to welcome in.",
-    },
-  },
-  rui: {
-    vouchers: [
-      {
-        name: "Devon Okoro",
-        initials: "DO",
-        tone: "coral",
-        meta: "8 vouches · clean record",
-        standing: "Trusted",
-      },
-    ],
-    flags: [
-      "Only one vouch so far — your community policy suggests two before welcoming.",
-    ],
-    rec: {
-      tone: "amber",
-      text: "One solid vouch, but below the usual threshold. You can welcome them or wait for a second.",
-    },
-  },
-  nadia: {
-    vouchers: [
-      {
-        name: "Kai Sousa",
-        initials: "KS",
-        tone: "plum",
-        meta: "trusted member · clean record",
-        standing: "Trusted",
-      },
-      {
-        name: "Théo Mendes",
-        initials: "TM",
-        tone: "violet",
-        meta: "has 1 open report against them",
-        standing: "Review",
-      },
-      {
-        name: "1 more member",
-        initials: "+1",
-        tone: "jade",
-        meta: "standing confirmed · clean",
-        standing: "Trusted",
-      },
-    ],
-    flags: [
-      "One voucher (Théo M.) currently has an open report — weigh how much their vouch should count.",
-    ],
-    rec: {
-      tone: "amber",
-      text: "Two clean vouchers and one under review. Probably fine, but worth a glance at Théo's open report first.",
-    },
-  },
 };

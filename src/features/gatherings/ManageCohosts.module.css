@@ -1,0 +1,184 @@
+/* Cohost-management panel + member-picker rows (used by invite + add-cohost) */
+
+/* ---- cohost panel (Settings tab) ---- */
+.panel {
+  margin-bottom: 28px;
+}
+.panelHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+.panelTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--plum);
+  letter-spacing: -0.01em;
+}
+.panelDesc {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin-bottom: 16px;
+  max-width: 46ch;
+}
+
+.cohostList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.cohostRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+}
+.cohostInfo {
+  flex: 1;
+  min-width: 0;
+}
+.cohostName {
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+.cohostRole {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* inline destructive confirm */
+.confirmRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.confirmText {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  margin-right: 2px;
+}
+
+.empty {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  padding: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  margin-bottom: 4px;
+}
+
+/* ---- member picker (shared by both modals) ---- */
+.pickerList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 340px;
+  overflow-y: auto;
+  margin: 6px 0 4px;
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 14px;
+  padding: 6px;
+}
+.pickerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  background: none;
+  border-radius: 11px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s var(--ease);
+}
+@media (hover: hover) {
+  .pickerRow:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+}
+.pickerRow:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.pickerRowActive {
+  background: rgba(var(--jade-rgb), 0.09);
+}
+@media (hover: hover) {
+  .pickerRowActive:hover {
+    background: rgba(var(--jade-rgb), 0.13);
+  }
+}
+.pickerInfo {
+  flex: 1;
+  min-width: 0;
+}
+.pickerName {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+}
+.pickerRole {
+  font-size: 12px;
+  color: var(--ink-60);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.checkBox {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 1.5px solid rgba(45, 27, 61, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cream);
+  font-size: 13px;
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+.checkBoxOn {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+.noResults {
+  font-size: 13px;
+  color: var(--ink-60);
+  padding: 18px 12px;
+  text-align: center;
+}
+
+.pickerFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 14px 0 20px;
+}
+.selCount {
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+.selCount b {
+  color: var(--plum);
+  font-weight: 600;
+}
+.capWarn {
+  color: var(--accent-ink);
+}

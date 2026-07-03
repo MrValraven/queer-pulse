@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import { Button } from "../ui";
 import { useScrolled } from "../../hooks/useScrolled";
 import { useTheme } from "../../../app/providers/themeContext";
+import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
 import { AccountMenu } from "./AccountMenu";
 import styles from "./AppNav.module.css";
 
@@ -13,9 +14,13 @@ const APP_LINKS = [
 ];
 
 /** Logged-in navigation: brand, app links, notifications bell, profile + messages. */
-export function AppNav({ unreadCount = 3 }: { unreadCount?: number }) {
+export function AppNav({ unreadCount }: { unreadCount?: number }) {
   const scrolled = useScrolled(8);
   const { theme, toggleTheme } = useTheme();
+  // Self-sourcing badge: explicit prop wins, else derive from the shared
+  // notifications query cache (demo mock count / live fetched feed).
+  const liveCount = useUnreadCount();
+  const count = unreadCount ?? liveCount;
 
   return (
     <nav
@@ -74,9 +79,7 @@ export function AppNav({ unreadCount = 3 }: { unreadCount?: number }) {
               strokeLinejoin="round"
             />
           </svg>
-          {unreadCount > 0 && (
-            <span className={styles.bellBadge}>{unreadCount}</span>
-          )}
+          {count > 0 && <span className={styles.bellBadge}>{count}</span>}
         </Link>
 
         <AccountMenu />

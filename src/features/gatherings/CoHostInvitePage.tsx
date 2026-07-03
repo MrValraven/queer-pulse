@@ -4,7 +4,11 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { FiStar } from "react-icons/fi";
+import { useRespondInvite } from "./api/useEventMutations";
 import styles from "./CoHostInvitePage.module.css";
+
+/** Placeholder invite id for this static co-host invitation. */
+const INVITE_ID = "cohost-anika-clinic";
 
 const NOTIFICATIONS = routes.notifications;
 const MESSAGES = routes.messages;
@@ -73,8 +77,10 @@ const COMMITMENTS = [
 export function CoHostInvitePage() {
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const respondInvite = useRespondInvite();
 
   const accept = () => {
+    respondInvite.mutate({ id: INVITE_ID, action: "accept" });
     showToast(
       "You're co-hosting with Anika — host tools unlocked",
       "success",
@@ -83,6 +89,7 @@ export function CoHostInvitePage() {
     setTimeout(() => navigate(routes.manageGathering), 1300);
   };
   const decline = () => {
+    respondInvite.mutate({ id: INVITE_ID, action: "decline" });
     showToast(
       "Polite no sent to Anika. She'll find another second pair of hands.",
       "info",

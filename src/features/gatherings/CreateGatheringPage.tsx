@@ -7,6 +7,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { PILL_LABELS, TIPS, TOTAL_STEPS } from "./createGathering.data";
 import { useGatheringForm } from "./useGatheringForm";
+import { useCreateEvent } from "./api/useEventMutations";
+import { formToCreateEventDto } from "./api/events.adapters";
 import {
   CapacityStep,
   DatePlaceStep,
@@ -21,6 +23,7 @@ export function CreateGatheringPage() {
   const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const form = useGatheringForm();
+  const createEvent = useCreateEvent();
 
   const isSuccess = step === 6;
   const fill = ((step - 1) / TOTAL_STEPS) * 100;
@@ -29,6 +32,10 @@ export function CreateGatheringPage() {
   const next = () => {
     if (step === TOTAL_STEPS) {
       if (!form.allChecked) return;
+      createEvent.mutate(formToCreateEventDto(form), {
+        onError: () =>
+          showToast("Couldn't publish your gathering — try again.", "error"),
+      });
       setStep(6);
       showToast("Your gathering is live", "success");
     } else {

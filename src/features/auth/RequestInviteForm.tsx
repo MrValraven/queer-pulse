@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, FormField } from "../../shared/components/ui";
+import { Button, FormField, Sending } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
+import { useCreateJoinRequest } from "./api/useCreateJoinRequest";
 import styles from "./auth.module.css";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,6 +24,8 @@ export function RequestInviteForm({
   setFirst: (v: string) => void;
   onSent: () => void;
 }) {
+  const { showToast } = useToast();
+  const createJoinRequest = useCreateJoinRequest();
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);
   const [why, setWhy] = useState("");
@@ -29,12 +33,19 @@ export function RequestInviteForm({
 
   const emailValid = EMAIL_RE.test(email.trim());
   const emailError = touched && email.trim().length > 0 && !emailValid;
-  const canSubmit = emailValid && why.trim().length > 0 && agreed;
+  const submitting = createJoinRequest.isPending;
+  const canSubmit =
+    emailValid && why.trim().length > 0 && agreed && !submitting;
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
-    onSent();
+    try {
+      await createJoinRequest.mutateAsync(why.trim());
+      onSent();
+    } catch {
+      showToast("Could not send your request — please try again", "error");
+    }
   }
 
   return (
@@ -126,8 +137,17 @@ export function RequestInviteForm({
         </label>
       </div>
 
-      <Button type="submit" className={styles.authBtn} disabled={!canSubmit}>
-        Send my request
+      <Button
+        type="submit"
+        className={styles.authBtn}
+        disabled={!canSubmit}
+        aria-busy={submitting}
+      >
+        {submitting ? (
+          <Sending label="Sending your request…" />
+        ) : (
+          "Send my request"
+        )}
       </Button>
     </form>
   );

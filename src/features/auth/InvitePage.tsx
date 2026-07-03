@@ -6,6 +6,7 @@ import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { InviteEmailForm } from "./InviteEmailForm";
 import { InviteLinkPanel } from "./InviteLinkPanel";
+import { SentInvitesList } from "./SentInvitesList";
 import styles from "./InvitePage.module.css";
 
 type Mode = "email" | "link";
@@ -121,6 +122,8 @@ export function InvitePage() {
           ) : (
             <InviteLinkPanel />
           )}
+
+          <SentInvitesList />
         </div>
       </div>
     </AppShell>

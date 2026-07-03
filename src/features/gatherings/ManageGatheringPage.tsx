@@ -16,7 +16,11 @@ import {
   GATHERING_DETAILS,
   ATTENDEE_COUNT,
 } from "./manageGathering.data";
+import { useUpdateEvent, useCancelEvent } from "./api/useEventMutations";
 import styles from "./ManageGatheringPage.module.css";
+
+/** Slug this static manage page is fixed to (Pride Brunch — June). */
+const MANAGE_SLUG = "pride-brunch-jun";
 
 interface GatheringState {
   title: string;
@@ -39,6 +43,8 @@ function renderTitle(title: string) {
 export function ManageGatheringPage() {
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const updateEvent = useUpdateEvent(MANAGE_SLUG);
+  const cancelEvent = useCancelEvent(MANAGE_SLUG);
   const [editOpen, setEditOpen] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
 
@@ -59,17 +65,21 @@ export function ManageGatheringPage() {
     if (
       window.confirm("Cancel Pride Brunch? All 14 attendees will be notified.")
     ) {
+      cancelEvent.mutate();
       navigate(routes.gatheringCancelled);
     }
   };
 
-  const updateDetail = (label: string, value: string) =>
+  const updateDetail = (label: string, value: string) => {
     setGathering((g) => ({
       ...g,
       details: g.details.map((d) => (d.label === label ? { ...d, value } : d)),
       ...(label === "Date" ? { date: value } : {}),
       ...(label === "Venue" ? { location: value } : {}),
     }));
+    // Map the edited detail onto the closest UpdateEventDto field.
+    if (label === "Venue") updateEvent.mutate({ venue: value });
+  };
 
   return (
     <PageShell>
@@ -112,6 +122,7 @@ export function ManageGatheringPage() {
 
           <div className={styles.layout}>
             <ManageGatheringTabs
+              slug={MANAGE_SLUG}
               onCancel={cancelGathering}
               details={gathering.details}
               description={gathering.description}
@@ -136,7 +147,7 @@ export function ManageGatheringPage() {
             description: gathering.description,
           }}
           onClose={() => setEditOpen(false)}
-          onSave={(draft) =>
+          onSave={(draft) => {
             setGathering((g) => ({
               ...g,
               title: draft.title,
@@ -150,8 +161,13 @@ export function ManageGatheringPage() {
                     ? { ...d, value: draft.location }
                     : d,
               ),
-            }))
-          }
+            }));
+            updateEvent.mutate({
+              title: draft.title,
+              description: draft.description,
+              venue: draft.location,
+            });
+          }}
         />
       )}
 

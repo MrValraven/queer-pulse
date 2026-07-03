@@ -29,12 +29,17 @@ function matchesView(v: ConnectionView, q: string): boolean {
 export function ConnectionsAllTab({
   loading,
   connected,
+  allowMorePool = true,
   isBlocked,
   onUnblock,
   onMessage,
 }: {
   loading: boolean;
-  connected: string[];
+  /** The already-resolved connection cards for this tab. */
+  connected: ConnectionView[];
+  /** Whether the mock "Load more" pool is offered (demo only — the live API
+   *  paginates its own list, so it would splice in fake members otherwise). */
+  allowMorePool?: boolean;
   isBlocked: (slug: string) => boolean;
   onUnblock: (v: ConnectionView) => void;
   onMessage: (slug: string) => void;
@@ -43,16 +48,19 @@ export function ConnectionsAllTab({
   const [sort, setSort] = useState<Sort>("Recently connected");
   const [morePages, setMorePages] = useState(0);
 
-  const revealed = MORE_POOL.slice(0, morePages * MORE_PER_PAGE);
-  const hasMore = revealed.length < MORE_POOL.length;
+  const revealedSlugs = useMemo(
+    () => (allowMorePool ? MORE_POOL.slice(0, morePages * MORE_PER_PAGE) : []),
+    [allowMorePool, morePages],
+  );
+  const hasMore = allowMorePool && revealedSlugs.length < MORE_POOL.length;
 
   const visibleAll = useMemo(() => {
-    const seen = new Set<string>();
-    const slugs = [...connected, ...revealed].filter(
-      (s) => !seen.has(s) && seen.add(s),
+    const seen = new Set(connected.map((v) => v.slug));
+    const extra = connectionViews(revealedSlugs).filter(
+      (v) => !seen.has(v.slug),
     );
+    let views = [...connected, ...extra];
     const q = query.trim().toLowerCase();
-    let views = connectionViews(slugs);
     if (q) views = views.filter((v) => matchesView(v, q));
     if (sort === "A to Z") {
       views = [...views].sort((a, b) => a.name.localeCompare(b.name));
@@ -62,7 +70,7 @@ export function ConnectionsAllTab({
       );
     }
     return views;
-  }, [connected, revealed, query, sort]);
+  }, [connected, revealedSlugs, query, sort]);
 
   return (
     <>

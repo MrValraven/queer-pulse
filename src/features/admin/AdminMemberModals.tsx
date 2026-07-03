@@ -1,101 +1,10 @@
 import { useState } from "react";
-import { FiAlertTriangle, FiCheckCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import {
-  AdminModal,
-  AdminAvatar,
-  AdminChip,
-  AdminSeg,
-  AdminCheckLine,
-} from "./ui";
-import { portrait } from "./adminPeople.data";
-import { VERIFY_REVIEW, type VerifyQueueItem } from "./adminMembers.data";
+import { AdminModal, AdminSeg, AdminCheckLine } from "./ui";
 import { ADMIN_PROFILE } from "../../shared/components/layout/adminNav.data";
 import styles from "./AdminMembersPage.module.css";
 
 const firstName = (full: string) => full.split(" ")[0];
-
-/* ── Verify modal (voucher review) ───────────────────────── */
-
-export function VerifyModal({
-  item,
-  onClose,
-  onAskMore,
-  onWelcome,
-}: {
-  item: VerifyQueueItem;
-  onClose: () => void;
-  onAskMore: () => void;
-  onWelcome: () => void;
-}) {
-  const review = VERIFY_REVIEW[item.id];
-  const first = firstName(item.name);
-  if (!review) return null;
-
-  return (
-    <AdminModal
-      onClose={onClose}
-      eyebrow="Reviewing a welcome"
-      title={
-        <>
-          Welcome <em>{first}</em> in?
-        </>
-      }
-      footer={
-        <>
-          <Button variant="ghost" size="md" onClick={onClose}>
-            Not yet
-          </Button>
-          <Button variant="ghost" size="md" onClick={onAskMore}>
-            Ask for another vouch
-          </Button>
-          <Button variant="jade" size="md" onClick={onWelcome}>
-            Welcome {first} in
-          </Button>
-        </>
-      }
-    >
-      <p className={styles.modalIntro}>
-        Verification is built on the people who vouched for {first}. Their
-        standing is what your trust rests on — take a moment with it.
-      </p>
-
-      <div className={styles.voucherList}>
-        {review.vouchers.map((v) => (
-          <div key={v.name} className={styles.voucherRow}>
-            <AdminAvatar
-              initials={v.initials}
-              tone={v.tone}
-              size="md"
-              src={portrait(v.name)}
-            />
-            <div className={styles.voucherTx}>
-              <span className={styles.voucherName}>{v.name}</span>
-              <span className={styles.voucherMeta}>{v.meta}</span>
-            </div>
-            <AdminChip tone={v.standing === "Trusted" ? "jade" : "amber"} dot>
-              {v.standing}
-            </AdminChip>
-          </div>
-        ))}
-      </div>
-
-      {review.flags.map((f) => (
-        <div key={f} className={styles.flagNote}>
-          <FiAlertTriangle aria-hidden />
-          <span>{f}</span>
-        </div>
-      ))}
-
-      <div
-        className={`${styles.recNote} ${review.rec.tone === "jade" ? styles.recJade : styles.recAmber}`}
-      >
-        <FiCheckCircle aria-hidden />
-        <span>{review.rec.text}</span>
-      </div>
-    </AdminModal>
-  );
-}
 
 /* ── Message modal ───────────────────────────────────────── */
 

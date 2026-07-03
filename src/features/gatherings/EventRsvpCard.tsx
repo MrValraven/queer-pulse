@@ -4,10 +4,15 @@ import { routes } from "../../app/routeMap";
 import { TIERS } from "./eventPage.data";
 import { EVENT_CAPACITY, EVENT_IS_FULL } from "./eventRsvp.data";
 import { WaitlistSuccess, ReservedSuccess } from "./EventRsvpSuccess";
+import { useRsvp, useUnrsvp } from "./api/useEventMutations";
 import styles from "./EventPage.module.css";
 
-export function EventRsvpCard() {
+/** The static EventPage has no live id, so a stable placeholder slug keeps the
+ *  demo no-op path working and gives live mode a slug to target. */
+export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
   const navigate = useNavigate();
+  const rsvp = useRsvp(slug);
+  const unrsvp = useUnrsvp(slug);
   const [selectedTier, setSelectedTier] = useState(1);
   const [reserved, setReserved] = useState(false);
   const [waitlistPos, setWaitlistPos] = useState<number | null>(null);
@@ -19,6 +24,7 @@ export function EventRsvpCard() {
   const isFull = EVENT_IS_FULL;
 
   function joinWaitlist() {
+    rsvp.mutate("maybe");
     // Plausible position derived from the name length for this prototype.
     setWaitlistPos(2 + (fullName.trim().length % 5));
   }
@@ -28,7 +34,10 @@ export function EventRsvpCard() {
       <WaitlistSuccess
         waitlistPos={waitlistPos}
         email={email}
-        onLeave={() => setWaitlistPos(null)}
+        onLeave={() => {
+          unrsvp.mutate();
+          setWaitlistPos(null);
+        }}
       />
     );
   }
@@ -39,7 +48,10 @@ export function EventRsvpCard() {
         <ReservedSuccess
           selectedTier={selectedTier}
           email={email}
-          onCancel={() => setReserved(false)}
+          onCancel={() => {
+            unrsvp.mutate();
+            setReserved(false);
+          }}
         />
       ) : (
         <>
@@ -148,9 +160,14 @@ export function EventRsvpCard() {
             <button
               type="button"
               className={styles.rsvpBtn}
-              onClick={() =>
-                isFull ? joinWaitlist() : navigate(routes.checkout)
-              }
+              onClick={() => {
+                if (isFull) {
+                  joinWaitlist();
+                } else {
+                  rsvp.mutate("going");
+                  navigate(routes.checkout);
+                }
+              }}
               disabled={!canSubmit}
               title={
                 !canSubmit

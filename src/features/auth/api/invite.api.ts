@@ -65,3 +65,37 @@ export interface AcceptInviteResult {
  */
 export const acceptInvite = (code: string) =>
   apiPost<AcceptInviteResult>(`/invites/${encodeURIComponent(code)}/accept`);
+
+/**
+ * One invite the current member has already sent, as returned by GET /invites.
+ *
+ * ASSUMED SHAPE (the backend contract for this list isn't pinned yet): the row is
+ * `{ code, status, expiresAt, note?, acceptedBy?, createdAt }`. `status` reuses the
+ * same lifecycle union as {@link InviteDTO} (`valid` | `expired` | `used` | `revoked`).
+ * `acceptedBy` is only present once a recipient has redeemed the code (`used`), and
+ * carries just enough to render who joined. Adjust the adapter in `useSentInvites`
+ * if the real endpoint names these fields differently.
+ */
+export interface SentInviteDTO {
+  code: string;
+  status: InviteDTO["status"];
+  /** ISO timestamp the invite stops working. */
+  expiresAt: string;
+  /** ISO timestamp the invite was created (for "Sent 2 days ago"). */
+  createdAt: string;
+  /** The personal note the member wrote when sending it, if any. */
+  note?: string;
+  /** Present once redeemed: the recipient who accepted the invite. */
+  acceptedBy?: {
+    slug: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl?: string | null;
+  } | null;
+}
+
+/**
+ * List the invites the authenticated member has sent (their status + expiry).
+ * The backend scopes this to the current session — no member id needed.
+ */
+export const getSentInvites = () => apiGet<SentInviteDTO[]>("/invites");

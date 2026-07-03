@@ -9,6 +9,7 @@ import {
   TagEditor,
   VisibilityPicker,
 } from "./profileEditControls";
+import { SocialLinksEditor } from "./SocialLinksEditor";
 import base from "./ProfilePage.module.css";
 import styles from "./ProfileEdit.module.css";
 
@@ -116,6 +117,14 @@ export function EditableProfileHero() {
                 tags={draft.tags}
                 placeholder="Add a skill…"
                 onChange={(tags) => updateDraft({ tags })}
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.fieldLabel}>Links</label>
+              <SocialLinksEditor
+                links={draft.socials}
+                onChange={(socials) => updateDraft({ socials })}
               />
             </div>
           </Reveal>

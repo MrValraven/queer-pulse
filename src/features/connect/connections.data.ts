@@ -20,6 +20,10 @@ export function profilePath(slug: string): string {
  * the registry can't express for the current user.
  */
 export interface ConnectionMeta {
+  /** Backend connection id, present only on live-mode cards; drives PATCH/DELETE
+   *  /connections/:id. Absent for mock cards, which act by slug through the
+   *  local providers. */
+  id?: string;
   pron?: string;
   mutuals?: number;
   since?: string;

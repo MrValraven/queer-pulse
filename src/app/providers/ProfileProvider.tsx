@@ -9,11 +9,17 @@ import {
   type ReactNode,
 } from "react";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
-import { currentUser, type Member } from "../../features/members/data/members";
+import {
+  currentUser,
+  type Member,
+  type SocialLink,
+  type WorkItem,
+} from "../../features/members/data/members";
 import { useAuth } from "./authContext";
 import { useDemoMode } from "./DemoModeProvider";
 import type { AuthUser } from "../../features/auth/api/auth.api";
 import { useUpdateProfile } from "../../features/members/api/useUpdateProfile";
+import { useUpdateProfileLists } from "../../features/members/api/useUpdateProfileLists";
 import { useMemberProfile } from "../../features/members/api/useMemberProfile";
 import type { UpdateProfileDTO } from "../../features/members/api/members.api";
 
@@ -57,6 +63,10 @@ export interface ProfileDraft {
   bio: string;
   tags: string[];
   visibility: VisibilityMode;
+  /** Social / web links — persisted on save via PUT /profiles/me/socials. */
+  socials: SocialLink[];
+  /** Selected work — persisted on save via PUT /profiles/me/work. */
+  work: WorkItem[];
 }
 
 function toDraft(m: Member): ProfileDraft {
@@ -70,6 +80,8 @@ function toDraft(m: Member): ProfileDraft {
     bio: m.bio,
     tags: [...m.tags],
     visibility: m.visibility,
+    socials: (m.socials ?? []).map((s) => ({ ...s })),
+    work: m.work.map((w) => ({ ...w })),
   };
 }
 
@@ -131,6 +143,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const lastSeed = useRef(seed);
   const { mutateAsync: persistProfile, isPending: isSaving } =
     useUpdateProfile();
+  const { mutateAsync: persistLists } = useUpdateProfileLists();
 
   // The auth user resolves after mount (async /auth/me, or a later sign-in) and
   // the own-profile fetch lands later still. Re-seed whenever that merged seed
@@ -170,8 +183,20 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     setSaveError(null);
     try {
       // Persist to the backend first (no-op in demo mode); only commit the live
-      // profile and show the confirmation once it actually succeeds.
+      // profile and show the confirmation once it actually succeeds. The core
+      // fields go through PATCH /profiles/me; the sub-lists (work, skills,
+      // groups, shapings, socials) each persist via their own PUT /profiles/me/*.
+      // The editor now mutates work + socials on the draft; the untouched lists
+      // (skills, groups, shapings) re-send from the committed profile
+      // (idempotent full-replace) to keep them in sync.
       await persistProfile(draftToUpdateDto(draft));
+      await persistLists({
+        work: draft.work,
+        skills: profile.skills,
+        groups: profile.groups,
+        shapings: profile.shapings,
+        socials: draft.socials,
+      });
     } catch (err) {
       setSaveError(
         err instanceof Error && err.message
@@ -191,12 +216,21 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       bio: draft.bio.trim() || prev.bio,
       tags: draft.tags,
       visibility: draft.visibility,
+      socials: draft.socials.filter((s) => s.urlOrHandle.trim()),
+      work: draft.work,
     }));
     setIsEditing(false);
     setJustSaved(true);
     if (savedTimer.current) clearTimeout(savedTimer.current);
     savedTimer.current = setTimeout(() => setJustSaved(false), 5000);
-  }, [draft, persistProfile]);
+  }, [
+    draft,
+    persistProfile,
+    persistLists,
+    profile.skills,
+    profile.groups,
+    profile.shapings,
+  ]);
 
   const value = useMemo<ProfileContextValue>(
     () => ({

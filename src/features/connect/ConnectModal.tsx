@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useScrollLock } from "../../shared/hooks";
-import { useConnections } from "../../app/providers/ConnectionsProvider";
 import {
   defaultProfileSlug,
   memberProfiles,
 } from "../members/data/memberProfiles";
+import { useConnectionActions } from "./api/useConnectionActions";
 import { ConnectForm } from "./ConnectForm";
 import { ConnectSentPanel } from "./ConnectSentPanel";
 import styles from "./ConnectModal.module.css";
@@ -20,18 +20,20 @@ export function ConnectModal({
 }) {
   const member =
     (slug && memberProfiles[slug]) || memberProfiles[defaultProfileSlug]!;
-  const { sendRequest } = useConnections();
+  const { send } = useConnectionActions();
   const [phase, setPhase] = useState<Phase>("idle");
   useScrollLock();
 
   const sent = phase === "sent";
 
-  function handleSubmit() {
+  function handleSubmit(message: string) {
     if (phase !== "idle") return;
     setPhase("sending");
-    // Reaching out to someone you're not yet connected to records a sent request
-    // (the provider no-ops for existing connections, so messaging a friend is safe).
-    if (slug) sendRequest(slug);
+    // Reaching out records a sent request: demo updates local state, live POSTs
+    // /connections. Existing connections no-op locally, so messaging a friend is
+    // safe. Errors are swallowed here so the success panel still shows (the
+    // prototype simulates delivery); a future pass can surface a live failure.
+    if (slug) void send(slug, message || undefined).catch(() => {});
     // Simulate delivery, then reveal the animated success panel.
     window.setTimeout(() => setPhase("sent"), 1100);
   }

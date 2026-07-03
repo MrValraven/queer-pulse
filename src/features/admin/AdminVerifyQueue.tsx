@@ -1,43 +1,67 @@
 import { useState } from "react";
-import { Button, FadeIn } from "../../shared/components/ui";
-import { AdminAvatar, AdminChip } from "./ui";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { VerifyModal } from "./AdminMemberModals";
-import { VERIFY_QUEUE, type VerifyQueueItem } from "./adminMembers.data";
+import { useJoinRequests, type JoinRequestView } from "./api/useJoinRequests";
+import { useReviewJoinRequest } from "./api/useReviewJoinRequest";
 import styles from "./AdminMembersPage.module.css";
 
+/**
+ * Moderator review of incoming platform join requests. Sourced from
+ * useJoinRequests (GET /join-requests?status=pending), with approve/decline wired
+ * to useReviewJoinRequest (PATCH /join-requests/:id). The mutation invalidates the
+ * ["join-requests"] query so the list refetches; we also drop the row locally with
+ * a short leave animation so the action reads instantly in either mode.
+ */
 export function AdminVerifyQueue() {
   const { showToast } = useToast();
-  const [queue, setQueue] = useState(VERIFY_QUEUE);
+  const { data, isLoading } = useJoinRequests("pending");
+  const reviewJoinRequest = useReviewJoinRequest();
   const [leaving, setLeaving] = useState<Set<string>>(new Set());
-  const [reviewing, setReviewing] = useState<VerifyQueueItem | null>(null);
+  const [resolved, setResolved] = useState<Set<string>>(new Set());
 
-  function welcomeIn(item: VerifyQueueItem) {
-    setReviewing(null);
+  function resolve(item: JoinRequestView, status: "approved" | "declined") {
     setLeaving((s) => new Set(s).add(item.id));
     window.setTimeout(() => {
-      setQueue((q) => q.filter((v) => v.id !== item.id));
+      setResolved((s) => new Set(s).add(item.id));
     }, 320);
-    showToast(`${item.name} was welcomed in`, "success", undefined, {
-      label: "Undo",
-      onClick: () => {
-        setLeaving((s) => {
-          const next = new Set(s);
-          next.delete(item.id);
-          return next;
-        });
-        setQueue((q) => (q.some((v) => v.id === item.id) ? q : [item, ...q]));
+    reviewJoinRequest.mutate(
+      { id: item.id, status },
+      {
+        onError: () => {
+          setLeaving((s) => {
+            const next = new Set(s);
+            next.delete(item.id);
+            return next;
+          });
+          showToast("Could not save that decision — please try again", "error");
+        },
       },
-    });
-  }
-
-  function needMore(item: VerifyQueueItem) {
+    );
     showToast(
-      `We will ask ${item.name} for one more vouch before they join.`,
-      "info",
+      status === "approved"
+        ? `${item.name} was welcomed in`
+        : `${item.name}'s request wasn't approved this time`,
+      status === "approved" ? "success" : "info",
     );
   }
+
+  if (isLoading) {
+    return (
+      <div className={styles.queueGrid}>
+        {[0, 1, 2].map((i) => (
+          <div className={styles.queueCard} key={i}>
+            <SkeletonLine width="55%" height={18} />
+            <SkeletonLine width="80%" />
+            <SkeletonLine width="90%" height={40} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const queue = (data ?? []).filter((r) => !resolved.has(r.id));
 
   if (queue.length === 0) {
     return (
@@ -52,15 +76,11 @@ export function AdminVerifyQueue() {
   return (
     <div>
       <p className={styles.queueIntro}>
-        Verification is a welcome, not a gate. These members were vouched for
-        and are ready to join fully — review their vouches and let them in.
+        These people asked to join QueerPulse. Read what they wrote, then
+        welcome them in or set the request aside.
       </p>
       <p className={styles.queueIntroEm}>
         <em>Take your time; there&rsquo;s no rush on a kindness.</em>
-      </p>
-      <p className={styles.queueShowing}>
-        Showing <strong>3</strong> of <strong>11</strong> pending · the other 8
-        are waiting on a second vouch before they reach you.
       </p>
 
       <div className={styles.queueGrid}>
@@ -77,33 +97,26 @@ export function AdminVerifyQueue() {
                   src={portrait(item.name)}
                 />
                 <div>
-                  <div className={styles.queueName}>
-                    {item.name}{" "}
-                    <span className={styles.pronoun}>{item.pronoun}</span>
-                  </div>
-                  <div className={styles.queueVouch}>{item.vouchedByLine}</div>
+                  <div className={styles.queueName}>{item.name}</div>
+                  <div className={styles.queueVouch}>{item.mutualLine}</div>
                   <div className={styles.queueApplied}>{item.appliedLine}</div>
                 </div>
               </div>
 
-              {item.oneVouchNudge && (
-                <AdminChip tone="amber" dot>
-                  1 vouch — wait for 2?
-                </AdminChip>
-              )}
+              <p className={styles.queueMsg}>"{item.message}"</p>
 
               <div className={styles.queueActions}>
                 <Button
                   variant="ghost"
                   size="md"
-                  onClick={() => needMore(item)}
+                  onClick={() => resolve(item, "declined")}
                 >
-                  Need more
+                  Not this time
                 </Button>
                 <Button
                   variant="jade"
                   size="md"
-                  onClick={() => setReviewing(item)}
+                  onClick={() => resolve(item, "approved")}
                 >
                   Welcome in
                 </Button>
@@ -112,18 +125,6 @@ export function AdminVerifyQueue() {
           </FadeIn>
         ))}
       </div>
-
-      {reviewing && (
-        <VerifyModal
-          item={reviewing}
-          onClose={() => setReviewing(null)}
-          onAskMore={() => {
-            needMore(reviewing);
-            setReviewing(null);
-          }}
-          onWelcome={() => welcomeIn(reviewing)}
-        />
-      )}
     </div>
   );
 }

@@ -28,7 +28,7 @@ export function ConnectForm({
 }: {
   member: FormMember;
   sending: boolean;
-  onSubmit: () => void;
+  onSubmit: (message: string) => void;
   onClose: () => void;
 }) {
   const [name, setName] = useState("");
@@ -44,7 +44,7 @@ export function ConnectForm({
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (!canSend || sending) return;
-    onSubmit();
+    onSubmit(message.trim());
   }
 
   return (
