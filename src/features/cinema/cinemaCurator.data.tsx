@@ -244,7 +244,12 @@ export const CURATORS: Record<string, CuratorProfile> = {
     leadCollectionTo: collection("iberian-queer-cinema"),
     outroSub:
       "Every film João chooses has a reason. Read his notebook. Watch in order.",
-    links: [{ label: "View QueerPulse profile", to: routes.members }],
+    links: [
+      {
+        label: "View QueerPulse profile",
+        to: `${routes.members}/joao-ribeiro`,
+      },
+    ],
   },
 
   "d-okoye": {

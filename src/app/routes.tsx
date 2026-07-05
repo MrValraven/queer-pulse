@@ -754,6 +754,11 @@ const CinemaOpenCallsPage = lazy(() =>
     default: m.CinemaOpenCallsPage,
   })),
 );
+const CinemaRightsPage = lazy(() =>
+  import("../features/cinema/CinemaRightsPage").then((m) => ({
+    default: m.CinemaRightsPage,
+  })),
+);
 const StudioPage = lazy(() =>
   import("../features/studio/StudioPage").then((m) => ({
     default: m.StudioPage,
@@ -1970,6 +1975,7 @@ export function AppRoutes() {
           path={routes.cinemaOpenCalls}
           element={<CinemaOpenCallsPage />}
         />
+        <Route path={routes.cinemaRights} element={<CinemaRightsPage />} />
         <Route path={routes.film} element={<FilmPage />} />
 
         {/* Studio */}

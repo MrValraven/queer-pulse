@@ -89,6 +89,9 @@ export function LedgerSection() {
           <Button variant="ghost-dark" to={routes.governance}>
             Read the co-op deed
           </Button>
+          <Button variant="ghost-dark" to={routes.cinemaRights}>
+            Filmmaker rights →
+          </Button>
         </div>
       </div>
       <div className={styles.ledgerCard}>

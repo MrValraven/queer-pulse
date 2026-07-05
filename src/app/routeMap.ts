@@ -314,6 +314,7 @@ export const routes = {
   cinemaSubmit: "/cinema/submit",
   cinemaShorts: "/cinema/made-here",
   cinemaOpenCalls: "/cinema/open-calls",
+  cinemaRights: "/cinema/rights",
 } as const;
 
 export type RouteKey = keyof typeof routes;

@@ -81,7 +81,7 @@ export function CinemaShell({ children }: { children: ReactNode }) {
                 <h4>Filmmakers</h4>
                 <Link to={routes.cinemaSubmit}>Submit</Link>
                 <Link to={routes.cinemaMembership}>Revenue split</Link>
-                <Link to={routes.governance}>Rights</Link>
+                <Link to={routes.cinemaRights}>Rights</Link>
               </div>
               <div className={styles.footCol}>
                 <h4>About</h4>
