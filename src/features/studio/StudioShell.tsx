@@ -5,7 +5,13 @@ import { StudioRail } from "./StudioRail";
 import { StudioPlayer } from "./StudioPlayer";
 import styles from "./studio.module.css";
 
-export function StudioShell({ children }: { children: ReactNode }) {
+export function StudioShell({
+  children,
+  hidePlayer = false,
+}: {
+  children: ReactNode;
+  hidePlayer?: boolean;
+}) {
   const navigate = useNavigate();
   return (
     <div className={styles.root}>
@@ -77,7 +83,7 @@ export function StudioShell({ children }: { children: ReactNode }) {
         </main>
       </div>
 
-      <StudioPlayer />
+      {!hidePlayer && <StudioPlayer />}
     </div>
   );
 }

@@ -12,18 +12,29 @@ export const RAIL_MAIN: RailLink[] = [
   { label: "Browse", to: routes.studio, end: true },
   { label: "Sheet music", to: "/studio/sheet-store" },
   { label: "Live broadcasts", to: routes.studioLive },
+  { label: "Notifications", to: routes.studioNotifications },
 ];
 
 export const CONTRIBUTE: RailLink[] = [
   { label: "Submit a set", to: routes.studioSetSubmission },
+  { label: "Go live", to: routes.studioBroadcast },
   { label: "Open calls", to: routes.studioCalls },
+  { label: "Rights & takedown", to: routes.studioRights },
   { label: "Solidarity fund", to: "/studio/solidarity-fund" },
 ];
 
 export const GOVERNANCE: RailLink[] = [
+  { label: "Programme the week", to: routes.studioProgram },
   { label: "Curation council", to: routes.studioCouncil },
   { label: "Submission inbox", to: routes.studioTriage },
   { label: "Flagged tracks", to: routes.studioFlagReview },
+];
+
+export const UTILITY: RailLink[] = [
+  { label: "About the co-op", to: routes.studioAbout },
+  { label: "Help & FAQ", to: routes.studioHelp },
+  { label: "Accessibility", to: routes.studioAccessibility },
+  { label: "Trust & terms", to: routes.studioTerms },
 ];
 
 export const PLAYER_ART =

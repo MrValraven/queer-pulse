@@ -1,16 +1,12 @@
-import { StudioShell } from "./StudioShell";
-import {
-  StudioHero,
-  StudioSetSection,
-  StudioTracksSection,
-} from "./StudioPageSections";
+import { useAuth } from "../../app/providers/authContext";
+import { StudioRoom } from "./StudioRoom";
+import { StudioLandingPage } from "./StudioLandingPage";
 
+/**
+ * /studio is auth-aware: logged-out visitors see the marketing landing, while
+ * signed-in members land straight in the "This week" room.
+ */
 export function StudioPage() {
-  return (
-    <StudioShell>
-      <StudioHero />
-      <StudioSetSection />
-      <StudioTracksSection />
-    </StudioShell>
-  );
+  const { loggedIn } = useAuth();
+  return loggedIn ? <StudioRoom /> : <StudioLandingPage />;
 }

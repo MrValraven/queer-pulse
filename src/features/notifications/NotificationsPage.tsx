@@ -154,10 +154,10 @@ export function NotificationsPage() {
             className={styles.tabs}
             variant="underline"
             tabs={[
-              {
-                id: notificationTabs[0].value,
-                label: notificationTabs[0].label,
-              },
+              ...notificationTabs.slice(0, 1).map((tab) => ({
+                id: tab.value,
+                label: tab.label,
+              })),
               {
                 id: "mentions",
                 label: "Mentions",

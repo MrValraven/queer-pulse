@@ -1,0 +1,425 @@
+/* ── Studio Welcome — standalone full-screen onboarding wizard ── */
+.page {
+  --text: rgba(var(--cream-rgb), 0.92);
+  --text-60: rgba(var(--cream-rgb), 0.62);
+  --text-40: rgba(var(--cream-rgb), 0.4);
+  --line: rgba(var(--cream-rgb), 0.1);
+  --surface: rgba(var(--cream-rgb), 0.05);
+  --jade-light: #9be0bd;
+  background: var(--studio-bg);
+  color: var(--text);
+  min-height: 100svh;
+  font-family: var(--sans);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Soft radial glow behind the header. */
+.page::before {
+  content: "";
+  position: absolute;
+  top: -22%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(760px, 120vw);
+  height: 520px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(var(--accent-rgb), 0.22),
+    transparent 68%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Brand row ── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 30px 24px 0;
+  position: relative;
+  z-index: 1;
+}
+.pulseDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.55);
+  animation: welPulse 2s var(--ease) infinite;
+}
+.wordmark {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+.wordmark .q {
+  color: var(--accent);
+}
+.product {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-40);
+  padding-left: 6px;
+  border-left: 1px solid var(--line);
+}
+
+/* ── Inner column ── */
+.inner {
+  width: 100%;
+  max-width: 620px;
+  padding: 44px 24px 72px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.eyebrow {
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.inner h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(30px, 6vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+}
+.inner h1 em,
+.inner h2 em,
+.sub em,
+.scDek em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--text-60);
+  max-width: 460px;
+  margin: 0 auto 30px;
+}
+
+/* ── Step dots ── */
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 34px;
+}
+.stepDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+  background: var(--line);
+  transition:
+    width 0.35s var(--ease),
+    background 0.35s var(--ease);
+}
+.stepDot.on {
+  width: 26px;
+  background: var(--accent);
+}
+
+/* ── Step card ── */
+.stepCard {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 30px 28px;
+  text-align: left;
+  animation: welFadeUp 0.42s var(--ease) both;
+}
+.stepCard h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(21px, 4.4vw, 26px);
+  letter-spacing: -0.015em;
+  margin: 0 0 8px;
+}
+.scDek {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-60);
+  margin-bottom: 22px;
+}
+
+/* ── Step 1 · artist grid ── */
+.artGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px 10px;
+}
+@media (max-width: 520px) {
+  .artGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.artPick {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 8px 12px;
+  border: 1.5px solid transparent;
+  border-radius: 15px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition:
+    border-color 0.22s var(--ease),
+    background 0.22s var(--ease),
+    transform 0.22s var(--ease);
+  font-family: inherit;
+}
+.artPick:hover {
+  background: rgba(var(--cream-rgb), 0.04);
+}
+.artPick.on {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+.artAvatar {
+  border-radius: 50%;
+  overflow: hidden;
+  transition: transform 0.22s var(--ease);
+}
+.artPick.on .artAvatar {
+  transform: scale(1.02);
+}
+.artName {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.2;
+}
+.artPlace {
+  font-size: 11.5px;
+  color: var(--text-40);
+  line-height: 1.2;
+}
+.artCheck {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--studio-bg);
+  display: grid;
+  place-items: center;
+  animation: welPop 0.24s var(--ease);
+}
+.artCheck svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ── Step 2 · tip chips ── */
+.tipChips {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+@media (max-width: 520px) {
+  .tipChips {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.tipChip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 20px 8px;
+  border: 1.5px solid var(--line);
+  border-radius: 15px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 22px;
+  transition:
+    border-color 0.22s var(--ease),
+    background 0.22s var(--ease),
+    transform 0.16s var(--ease);
+}
+.tipChip:hover {
+  border-color: rgba(var(--cream-rgb), 0.2);
+}
+.tipChip:active {
+  transform: scale(0.97);
+}
+.tipChip.on {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent);
+}
+.tipChip small {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 11.5px;
+  color: var(--text-40);
+}
+.tipChip.on small {
+  color: rgba(var(--accent-rgb), 0.85);
+}
+
+/* ── Step 3 · privacy toggle rows ── */
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+.opt:first-child {
+  border-top: 0;
+  padding-top: 4px;
+}
+.optText {
+  flex: 1;
+}
+.optText h4 {
+  font-size: 14.5px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+.optText p {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-60);
+  margin: 0;
+}
+.tgSw {
+  flex-shrink: 0;
+  width: 44px;
+  height: 26px;
+  border-radius: 99px;
+  background: var(--line);
+  border: 0;
+  padding: 0;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.24s var(--ease);
+}
+.tgSw::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--text);
+  transition: transform 0.24s var(--ease);
+}
+.tgSw.on {
+  background: var(--accent);
+}
+.tgSw.on::after {
+  transform: translateX(18px);
+  background: var(--cream);
+}
+
+/* ── Nav row ── */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 26px;
+}
+.count {
+  font-size: 13.5px;
+  color: var(--text-60);
+}
+.count em {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--accent);
+}
+.skip {
+  font-size: 13.5px;
+  color: var(--text-40);
+  background: none;
+  border: 0;
+  padding: 6px 4px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s var(--ease);
+}
+.skip:hover {
+  color: var(--text-60);
+}
+
+/* ── Focus visibility ── */
+.artPick:focus-visible,
+.tipChip:focus-visible,
+.tgSw:focus-visible,
+.skip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Keyframes ── */
+@keyframes welPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0);
+  }
+}
+@keyframes welFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes welPop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulseDot {
+    animation: none;
+  }
+  .stepCard {
+    animation: none;
+  }
+  .artCheck {
+    animation: none;
+  }
+  .stepDot,
+  .artAvatar,
+  .tipChip,
+  .tgSw,
+  .tgSw::after {
+    transition: none;
+  }
+}

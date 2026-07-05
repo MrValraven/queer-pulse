@@ -5,6 +5,7 @@ import {
   RAIL_MAIN,
   CONTRIBUTE,
   GOVERNANCE,
+  UTILITY,
   LIBRARY,
   type RailLink,
 } from "./studioShell.data";
@@ -58,6 +59,11 @@ export function StudioRail() {
       <div className={styles.railGrp}>
         <h5>Governance</h5>
         <RailGroup items={GOVERNANCE} />
+      </div>
+
+      <div className={styles.railGrp}>
+        <h5>The co-op</h5>
+        <RailGroup items={UTILITY} />
       </div>
 
       <div className={styles.railDivider} />

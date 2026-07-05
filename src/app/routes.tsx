@@ -834,6 +834,71 @@ const StudioFlagReviewPage = lazy(() =>
     default: m.StudioFlagReviewPage,
   })),
 );
+const StudioAboutPage = lazy(() =>
+  import("../features/studio/StudioAboutPage").then((m) => ({
+    default: m.StudioAboutPage,
+  })),
+);
+const StudioAccessibilityPage = lazy(() =>
+  import("../features/studio/StudioAccessibilityPage").then((m) => ({
+    default: m.StudioAccessibilityPage,
+  })),
+);
+const StudioTermsPage = lazy(() =>
+  import("../features/studio/StudioTermsPage").then((m) => ({
+    default: m.StudioTermsPage,
+  })),
+);
+const StudioHelpPage = lazy(() =>
+  import("../features/studio/StudioHelpPage").then((m) => ({
+    default: m.StudioHelpPage,
+  })),
+);
+const StudioPressPage = lazy(() =>
+  import("../features/studio/StudioPressPage").then((m) => ({
+    default: m.StudioPressPage,
+  })),
+);
+const StudioEndCardPage = lazy(() =>
+  import("../features/studio/StudioEndCardPage").then((m) => ({
+    default: m.StudioEndCardPage,
+  })),
+);
+const StudioNotificationsPage = lazy(() =>
+  import("../features/studio/StudioNotificationsPage").then((m) => ({
+    default: m.StudioNotificationsPage,
+  })),
+);
+const StudioReceiptPage = lazy(() =>
+  import("../features/studio/StudioReceiptPage").then((m) => ({
+    default: m.StudioReceiptPage,
+  })),
+);
+const StudioRightsPage = lazy(() =>
+  import("../features/studio/StudioRightsPage").then((m) => ({
+    default: m.StudioRightsPage,
+  })),
+);
+const StudioProgramPage = lazy(() =>
+  import("../features/studio/StudioProgramPage").then((m) => ({
+    default: m.StudioProgramPage,
+  })),
+);
+const StudioBroadcastPage = lazy(() =>
+  import("../features/studio/StudioBroadcastPage").then((m) => ({
+    default: m.StudioBroadcastPage,
+  })),
+);
+const StudioWelcomePage = lazy(() =>
+  import("../features/studio/StudioWelcomePage").then((m) => ({
+    default: m.StudioWelcomePage,
+  })),
+);
+const StudioWithdrawnPage = lazy(() =>
+  import("../features/studio/StudioWithdrawnPage").then((m) => ({
+    default: m.StudioWithdrawnPage,
+  })),
+);
 const ChangemakersPage = lazy(() =>
   import("../features/community/ChangemakersPage").then((m) => ({
     default: m.ChangemakersPage,
@@ -2016,6 +2081,31 @@ export function AppRoutes() {
         <Route path="/studio/500" element={<Studio500Page />} />
         <Route path="/studio/sign-in" element={<StudioSignInPage />} />
         <Route path="/studio/settings" element={<StudioSettingsPage />} />
+        <Route path={routes.studioAbout} element={<StudioAboutPage />} />
+        <Route
+          path={routes.studioAccessibility}
+          element={<StudioAccessibilityPage />}
+        />
+        <Route path={routes.studioTerms} element={<StudioTermsPage />} />
+        <Route path={routes.studioHelp} element={<StudioHelpPage />} />
+        <Route path={routes.studioPress} element={<StudioPressPage />} />
+        <Route path={routes.studioEndCard} element={<StudioEndCardPage />} />
+        <Route
+          path={routes.studioNotifications}
+          element={<StudioNotificationsPage />}
+        />
+        <Route path={routes.studioReceipt} element={<StudioReceiptPage />} />
+        <Route path={routes.studioRights} element={<StudioRightsPage />} />
+        <Route path={routes.studioProgram} element={<StudioProgramPage />} />
+        <Route
+          path={routes.studioBroadcast}
+          element={<StudioBroadcastPage />}
+        />
+        <Route path={routes.studioWelcome} element={<StudioWelcomePage />} />
+        <Route
+          path={routes.studioWithdrawn}
+          element={<StudioWithdrawnPage />}
+        />
 
         {/* Community */}
         <Route path={routes.changemakers} element={<ChangemakersPage />} />

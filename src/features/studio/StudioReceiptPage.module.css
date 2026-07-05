@@ -1,0 +1,460 @@
+/* Studio Receipt — a €2 tip receipt (dark surface) */
+.wrap {
+  --text: rgba(var(--cream-rgb), 0.92);
+  --text-60: rgba(var(--cream-rgb), 0.62);
+  --text-40: rgba(var(--cream-rgb), 0.4);
+  --line: rgba(var(--cream-rgb), 0.1);
+  --surface: rgba(var(--cream-rgb), 0.05);
+  --rail: var(--studio-rail);
+  --jade-light: #9be0bd;
+
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 8px 0 72px;
+}
+
+/* Thank-you header */
+.thank {
+  text-align: center;
+  padding: 28px 0 32px;
+}
+.icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade-light);
+  animation: rcPulse 2.4s var(--ease) infinite;
+}
+.icon svg {
+  width: 30px;
+  height: 30px;
+}
+.thank h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(30px, 5vw, 44px);
+  color: var(--cream);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+.thank h1 em {
+  font-style: italic;
+  color: var(--jade-light);
+}
+.thank .sub {
+  font-size: 15px;
+  color: var(--text-60);
+  line-height: 1.6;
+  margin-top: 14px;
+}
+.thank .sub em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* The receipt card — near-black with coral/jade top stripe */
+.card {
+  position: relative;
+  background: #0c0518;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 30px 32px 26px;
+  overflow: hidden;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--jade) 100%);
+}
+
+/* Card head — cover + info + amount */
+.head {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding-bottom: 24px;
+  border-bottom: 1px dashed var(--line);
+}
+.cv {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex: none;
+}
+.info .eb {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.info h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.info h2 em {
+  font-style: italic;
+}
+.by {
+  font-size: 13px;
+  color: var(--text-60);
+  margin-top: 5px;
+}
+.by a {
+  color: var(--cream);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+.by a:hover {
+  border-bottom-color: var(--accent);
+}
+.by em {
+  font-style: italic;
+}
+.amount {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 40px;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.amount em {
+  font-style: normal;
+  color: var(--jade-light);
+}
+
+/* Money-split section */
+.split {
+  padding: 24px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.splitH {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.splitH h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 19px;
+  color: var(--cream);
+}
+.splitH h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.splitH .small {
+  font-size: 12px;
+  color: var(--text-40);
+}
+.bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  overflow: hidden;
+  margin: 16px 0 18px;
+  display: flex;
+}
+.bar span {
+  display: block;
+  height: 100%;
+}
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rcr {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 12px;
+  align-items: baseline;
+  font-size: 14px;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex: none;
+  align-self: center;
+}
+.dot.jade {
+  background: var(--jade);
+}
+.dot.muted {
+  background: rgba(var(--cream-rgb), 0.18);
+}
+.k {
+  color: var(--text);
+  line-height: 1.35;
+}
+.k small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--text-40);
+  margin-top: 3px;
+}
+.k.muted {
+  color: var(--text-40);
+}
+.v {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 18px;
+  color: var(--cream);
+  white-space: nowrap;
+}
+.v em {
+  font-style: normal;
+}
+.v.tip em {
+  color: var(--jade-light);
+}
+.v.muted {
+  color: var(--text-40);
+}
+.pct {
+  font-size: 12px;
+  color: var(--text-40);
+  white-space: nowrap;
+  min-width: 34px;
+  text-align: right;
+}
+
+/* Detail grid */
+.detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  padding: 24px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.rcd .eb {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-40);
+  margin-bottom: 6px;
+}
+.rcd .v {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 13.5px;
+  color: var(--text);
+  white-space: normal;
+  line-height: 1.45;
+}
+.rcd .v em {
+  font-style: italic;
+  color: var(--text-40);
+}
+.rcd .v code {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--jade-light);
+  letter-spacing: 0.01em;
+}
+
+/* Note + artist reply */
+.note {
+  padding: 24px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.note .label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-40);
+  margin-bottom: 10px;
+}
+.quote {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--cream);
+  line-height: 1.5;
+}
+.reply {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  background: rgba(var(--accent-rgb), 0.07);
+  border: 1px solid rgba(var(--accent-rgb), 0.18);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+.av {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex: none;
+  background: rgba(var(--accent-rgb), 0.2);
+  color: var(--accent-soft);
+  font-family: var(--serif);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.replyBody {
+  min-width: 0;
+}
+.who {
+  font-size: 12px;
+  color: var(--accent-soft);
+  font-weight: 600;
+}
+.who em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-40);
+}
+.replyText {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.5;
+  margin-top: 5px;
+}
+.when {
+  font-size: 11.5px;
+  color: var(--text-40);
+  margin-top: 8px;
+}
+
+/* Card footer */
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 22px;
+  font-size: 12px;
+  color: var(--text-40);
+  flex-wrap: wrap;
+}
+.foot a {
+  color: var(--text-60);
+  text-decoration: none;
+}
+.foot span a {
+  border-bottom: 1px solid var(--line);
+}
+.foot span a:hover {
+  color: var(--jade-light);
+  border-bottom-color: var(--jade-light);
+}
+.foot code {
+  font-family: var(--sans);
+  color: var(--text-60);
+}
+.exportBtn {
+  font-weight: 600;
+  color: var(--cream);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 12px;
+}
+.exportBtn:hover {
+  color: var(--accent);
+}
+
+/* Actions row */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0 18px;
+}
+.actions > * {
+  flex: 1 1 auto;
+}
+
+/* Privacy note */
+.privNote {
+  font-size: 12.5px;
+  color: var(--text-40);
+  line-height: 1.7;
+  text-align: center;
+  max-width: 56ch;
+  margin: 0 auto;
+}
+.privNote em {
+  font-style: italic;
+  color: var(--text-60);
+}
+.privNote a {
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.privNote a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 560px) {
+  .head {
+    grid-template-columns: 56px 1fr;
+    row-gap: 14px;
+  }
+  .amount {
+    grid-column: 1 / -1;
+    text-align: right;
+  }
+  .detail {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Local jade thank-you pulse (global keyframes can't be referenced from a
+   CSS module — the animation-name gets scoped to a dangling hash). */
+@keyframes rcPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(var(--jade-rgb), 0.32);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 12px rgba(var(--jade-rgb), 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    animation: none;
+  }
+}
+
+@media print {
+  .actions,
+  .privNote,
+  .thank .sub {
+    display: none;
+  }
+  .card {
+    border-color: rgba(var(--cream-rgb), 0.25);
+  }
+}

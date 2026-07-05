@@ -100,6 +100,16 @@ const PUBLIC_EXCEPTIONS: string[] = [
   "/studio/404",
   "/studio/500",
   "/studio/off-air",
+  // The studio's public shopfront: the logged-out landing renders at /studio
+  // itself, and the outward-facing info/press pages stay readable without a
+  // session so prospective members and press can reach them.
+  "/studio",
+  "/studio/about",
+  "/studio/accessibility",
+  "/studio/terms",
+  "/studio/help",
+  "/studio/press",
+  "/studio/end-card",
 ];
 
 function matchesAny(pathname: string, patterns: string[]): boolean {

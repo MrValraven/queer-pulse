@@ -1,0 +1,315 @@
+/* Studio Teaser End Card — standalone 1920×1080 media asset.
+   Self-contained: literal hex mirrors the design's own :root. */
+
+.stage {
+  --coral: #e8775a;
+  --coral-rgb: 232, 119, 90;
+  --jade: #4a8c6f;
+  --jade-light: #9be0bd;
+  --jade-rgb: 74, 140, 111;
+  --cream: #f7f3ee;
+  --cream-60: rgba(247, 243, 238, 0.62);
+  --cream-40: rgba(247, 243, 238, 0.4);
+  --serif: "Fraunces", Georgia, serif;
+  --sans: "DM Sans", system-ui, sans-serif;
+  --mono: "JetBrains Mono", monospace;
+  --ease: cubic-bezier(0.22, 0.68, 0.16, 1);
+
+  position: fixed;
+  inset: 0;
+  background: #0a0512;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* The 1920×1080 frame, scaled to viewport via JS transform */
+.frame {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  flex: none;
+  transform-origin: center center;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      820px 820px at 64% 18%,
+      rgba(232, 119, 90, 0.18),
+      transparent 60%
+    ),
+    radial-gradient(
+      680px 680px at 14% 92%,
+      rgba(74, 140, 111, 0.12),
+      transparent 62%
+    ),
+    linear-gradient(160deg, #1c1230 0%, #1a1028 48%, #120920 100%);
+  font-family: var(--sans);
+  color: var(--cream);
+}
+
+/* Vignette */
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 120% at 50% 50%,
+    transparent 55%,
+    rgba(10, 5, 18, 0.55) 100%
+  );
+}
+
+/* Hairlines */
+.chair {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.chair line {
+  stroke: rgba(247, 243, 238, 0.07);
+  stroke-width: 1;
+}
+
+/* Constellation dots */
+.constellation {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cdot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--coral);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 12px rgba(232, 119, 90, 0.55);
+}
+
+.cdot.j {
+  background: var(--jade-light);
+  box-shadow: 0 0 12px rgba(155, 224, 189, 0.5);
+}
+
+.cdot.sm {
+  width: 4px;
+  height: 4px;
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+/* Spine — thin bars, lower third */
+.spine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 33.333%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 120px 130px;
+  pointer-events: none;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 12%,
+    #000 88%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 12%,
+    #000 88%,
+    transparent 100%
+  );
+}
+
+.bar {
+  width: 5px;
+  flex: none;
+  border-radius: 3px;
+  background: var(--coral);
+  opacity: 0.85;
+}
+
+.bar.jadeBar {
+  background: var(--jade-light);
+  opacity: 1;
+}
+
+/* Lockup */
+.lockup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -56%);
+  text-align: center;
+  z-index: 2;
+  width: min(1400px, 90%);
+}
+
+.eyebrow {
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--cream-40);
+  margin-bottom: 40px;
+}
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  margin-bottom: 34px;
+}
+
+/* Pulse dot */
+.pulse {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--coral);
+  flex: none;
+}
+
+.pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--coral);
+  transform-origin: center;
+  animation: ecPulse 2.6s var(--ease) infinite;
+}
+
+.wm {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 128px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+}
+
+.q {
+  font-style: italic;
+  color: var(--coral);
+}
+
+.tag {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--coral);
+  align-self: center;
+  padding-top: 10px;
+}
+
+.tagline {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 52px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+  margin-bottom: 52px;
+}
+
+.tagline em {
+  font-style: italic;
+  color: var(--coral);
+}
+
+/* Ledger pill */
+.ledger {
+  display: inline-flex;
+  align-items: center;
+  gap: 26px;
+  padding: 18px 34px;
+  border-radius: 999px;
+  border: 1px solid var(--jade);
+  background: rgba(74, 140, 111, 0.12);
+}
+
+.pay {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--jade-light);
+}
+
+.coin {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  color: var(--jade-light);
+}
+
+.div {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(74, 140, 111, 0.4);
+}
+
+.per {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 24px;
+  color: var(--cream-60);
+}
+
+.per b {
+  font-family: var(--mono);
+  font-style: normal;
+  font-weight: 600;
+  color: var(--jade);
+}
+
+/* CTA */
+.cta {
+  margin-top: 54px;
+  font-family: var(--sans);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--cream-60);
+}
+
+.cta b {
+  font-weight: 700;
+  color: var(--cream);
+}
+
+@keyframes ecPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse::after {
+    animation: none;
+  }
+}
