@@ -1,4 +1,5 @@
-import { Button, Reveal } from "../../shared/components/ui";
+import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import {
   COOP_STATS,
   COOP_PHASES,
@@ -20,6 +21,7 @@ export function CoopHero() {
   return (
     <section className={styles.hero}>
       <div className="wrap">
+        <HubBackLink to={routes.housing} label="Housing" tone="light" />
         <div className={styles.heroInner}>
           <div>
             <Reveal as="div" className={styles.eyebrow}>

@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { FiHome } from "react-icons/fi";
-import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  HubBackLink,
+  Outro,
+} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { PROFILES, matchesBudget, type ListingType } from "./flatmates.data";
@@ -40,6 +46,7 @@ export function FlatmatesPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
+          <HubBackLink to={routes.housing} label="Housing" tone="dark" />
           <div className={styles.cat}>Flatmates · Lisbon</div>
           <h1>
             Find your people to <em>come home to.</em>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { Button, HubBackLink } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { AuthorLink } from "./AuthorLink";
 import { CHIPS } from "./tag.data";
@@ -19,6 +19,7 @@ export function TagPageHero({
     <>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
+          <HubBackLink to={routes.magazine} label="the Magazine" tone="light" />
           <div className={styles.eyebrow}>Magazine · category</div>
           <h1 className={styles.h1}>
             Long <em>reads.</em>

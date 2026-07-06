@@ -14,6 +14,7 @@ import {
   Newsletter,
   Outro,
   PainPoints,
+  Pillars,
   Partners,
   Platforms,
   SkillsTeaser,
@@ -50,6 +51,7 @@ export function HomePage() {
       <SpacesMap />
       <Platforms />
       <Newsletter />
+      <Pillars />
       <Outro />
     </PageShell>
   );

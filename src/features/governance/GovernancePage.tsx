@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { Reveal } from "../../shared/components/ui";
-import { NAV } from "./governance.data";
+import { Reveal, SubpageIndex } from "../../shared/components/ui";
+import { NAV, GOVERNING_DOCS } from "./governance.data";
 import {
   CouncilSection,
   DecisionsSection,
@@ -82,6 +82,12 @@ export function GovernancePage() {
           </div>
         </div>
       </section>
+
+      <SubpageIndex
+        eyebrow="Governing documents"
+        title="Read the fine print."
+        items={GOVERNING_DOCS}
+      />
     </PageShell>
   );
 }

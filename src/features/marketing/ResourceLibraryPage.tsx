@@ -6,6 +6,7 @@ import {
   FadeIn,
   Outro,
   SkeletonLine,
+  SubpageIndex,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { linkToPath, routes } from "../../app/routeMap";
@@ -267,6 +268,26 @@ const RESOURCES: Resource[] = [
   },
 ];
 
+const LIBRARY_SUBPAGES = [
+  {
+    label: "Queer 101",
+    to: routes.queer101,
+    blurb:
+      "New here? Start with the basics — identities, language, and community.",
+  },
+  {
+    label: "Glossary",
+    to: routes.glossary,
+    blurb: "Plain-language definitions for the words the community uses.",
+  },
+  {
+    label: "Intersectionality",
+    to: routes.intersectionality,
+    blurb:
+      "How overlapping identities shape our experiences — and our organising.",
+  },
+];
+
 function ResourceCardSkeleton() {
   // Mirrors the real .card: top row (category tag + cost pill), name, two desc lines, tags, foot.
   return (
@@ -474,6 +495,12 @@ export function ResourceLibraryPage() {
           Suggest a resource
         </Button>
       </Outro>
+
+      <SubpageIndex
+        eyebrow="Learn & belong"
+        title="Start with the basics"
+        items={LIBRARY_SUBPAGES}
+      />
     </PageShell>
   );
 }

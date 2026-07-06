@@ -1,5 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
 import { CrisisStrip } from "./CrisisStrip";
@@ -9,6 +9,7 @@ import {
   CrisisSection,
   HarmReductionSection,
 } from "./WellbeingSections";
+import { WELLBEING_SUBPAGES } from "./wellbeing.data";
 
 export function WellbeingPage() {
   return (
@@ -49,6 +50,8 @@ export function WellbeingPage() {
           Request an invite
         </Button>
       </Outro>
+
+      <SubpageIndex title="More wellbeing support" items={WELLBEING_SUBPAGES} />
     </PageShell>
   );
 }

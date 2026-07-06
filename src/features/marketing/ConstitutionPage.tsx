@@ -1,4 +1,6 @@
 import { PageShell } from "../../shared/components/layout";
+import { HubBackLink } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { ARTICLES } from "./constitution.data";
 import styles from "./ConstitutionPage.module.css";
 
@@ -9,6 +11,7 @@ export function ConstitutionPage() {
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
+          <HubBackLink to={routes.governance} label="Governance" />
           <div className={styles.eyebrow}>
             Constitution · v1.4 · ratified 14 Nov 2025
           </div>

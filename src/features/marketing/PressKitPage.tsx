@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { PressKitDownloadModal } from "./PressKitDownloadModal";
 import { KIT_MANIFEST, KIT_PREVIEW } from "./pressKitAssets.data";
 import {
@@ -130,6 +131,17 @@ export function PressKitPage() {
           onClose={() => setShowDownload(false)}
         />
       )}
+
+      <SubpageIndex
+        title="Looking for older coverage?"
+        items={[
+          {
+            label: "Press archive",
+            to: routes.pressArchive,
+            blurb: "Past press mentions, releases, and media coverage.",
+          },
+        ]}
+      />
     </PageShell>
   );
 }

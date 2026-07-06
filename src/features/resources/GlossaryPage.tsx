@@ -2,7 +2,12 @@ import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./GlossaryPage.module.css";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  FadeIn,
+  HubBackLink,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import {
   ALPHABET,
@@ -77,6 +82,11 @@ export function GlossaryPage() {
       <div className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.heroInner}>
+            <HubBackLink
+              to={routes.resources}
+              label="Resource Library"
+              tone="light"
+            />
             <div className={styles.eyebrow}>{t.eyebrow}</div>
             <h1 className={styles.h1}>
               A working <em>glossary.</em>

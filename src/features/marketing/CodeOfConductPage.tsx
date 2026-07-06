@@ -1,5 +1,6 @@
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { HubBackLink } from "../../shared/components/ui";
 import { downloadBlob } from "./downloadBlob";
 import { routes } from "../../app/routeMap";
 import styles from "./CodeOfConductPage.module.css";
@@ -40,6 +41,7 @@ export function CodeOfConductPage() {
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
+          <HubBackLink to={routes.governance} label="Governance" />
           <div className={styles.eyebrow}>
             Code of Conduct · binding · v2.1 · Jan 2026
           </div>

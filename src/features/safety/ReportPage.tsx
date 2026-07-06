@@ -1,5 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
-import { Button, FormField } from "../../shared/components/ui";
+import { Button, FormField, HubBackLink } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import s from "./ReportPage.module.css";
 import { routes } from "../../app/routeMap";
@@ -65,6 +65,7 @@ export function ReportPage() {
     <PageShell>
       <header className={s.hero}>
         <div className="wrap">
+          <HubBackLink to={routes.safety} label="Safety Guide" tone="light" />
           <div className={s.eyebrow}>
             <span className={s.live} /> Safety &amp; Reporting
           </div>

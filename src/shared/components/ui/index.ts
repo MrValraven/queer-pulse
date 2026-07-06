@@ -28,3 +28,5 @@ export { Tabs, type Tab } from "./Tabs";
 export { SegmentedControl, Toggle, CheckLine } from "./Controls";
 export { Badge, CategoryLabel, type BadgeTone } from "./Badge";
 export { StatTile, StatGrid } from "./StatTile";
+export { HubBackLink } from "./HubBackLink";
+export { SubpageIndex, type SubpageItem } from "./SubpageIndex";

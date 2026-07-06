@@ -1,4 +1,4 @@
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, HubBackLink, Outro } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import {
   SECTIONS,
@@ -69,6 +69,7 @@ export function HarmReductionHero() {
   return (
     <header className={styles.hero}>
       <div className="wrap">
+        <HubBackLink to={routes.wellbeing} label="Wellbeing Hub" tone="dark" />
         <div className={styles.eye}>Harm Reduction · Community guide</div>
         <h1 className={styles.title}>
           No judgment.

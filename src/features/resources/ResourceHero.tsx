@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Reveal } from "../../shared/components/ui";
+import { HubBackLink, Reveal } from "../../shared/components/ui";
 import styles from "./resources.module.css";
 
 interface ResourceHeroProps {
@@ -8,6 +8,7 @@ interface ResourceHeroProps {
   title: ReactNode;
   lead: string;
   anchors: { label: string; href: string }[];
+  backLink?: { to: string; label: string; tone?: "light" | "dark" };
 }
 
 /** Shared plum hero used by the resource pages (Wellbeing, Trans Hub, Legal). */
@@ -17,10 +18,18 @@ export function ResourceHero({
   title,
   lead,
   anchors,
+  backLink,
 }: ResourceHeroProps) {
   return (
     <header className={styles.hero}>
       <div className="wrap">
+        {backLink && (
+          <HubBackLink
+            to={backLink.to}
+            label={backLink.label}
+            tone={backLink.tone}
+          />
+        )}
         <Reveal className={styles.eyebrow}>
           <span
             className={styles.eyebrowDot}

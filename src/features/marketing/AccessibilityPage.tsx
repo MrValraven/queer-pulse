@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, HubBackLink, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
@@ -30,6 +30,7 @@ export function AccessibilityPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
+          <HubBackLink to={routes.help} label="Help & FAQ" />
           <div className={styles.cat}>Disability &amp; Accessibility</div>
           <h1>
             Accessible. <em>Genuinely.</em>

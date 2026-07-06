@@ -409,7 +409,7 @@ const HUB_RESOURCES: CommunityResource[] = [
   },
   {
     title: "Legal name change — step by step",
-    href: "/resources/legal",
+    href: "/safety/legal",
     kind: "guide",
     note: "Forms, costs, timelines",
   },
@@ -634,7 +634,7 @@ const ARTS_RESOURCES: CommunityResource[] = [
   },
   {
     title: "Open-call & grant board",
-    href: "/resources/micro-grants",
+    href: "/work/grants/micro",
     kind: "link",
   },
   {
@@ -991,13 +991,13 @@ const AID_RESOURCES: CommunityResource[] = [
   },
   {
     title: "Legal name change — step by step",
-    href: "/resources/legal",
+    href: "/safety/legal",
     kind: "guide",
     note: "Forms, costs, and timelines in Portugal",
   },
   {
     title: "Spare-room board",
-    href: "/work/flatmates",
+    href: "/local/housing/flatmates",
     kind: "link",
     note: "Safe housing, queer-friendly",
   },
@@ -1172,7 +1172,7 @@ const PARENTS_RESOURCES: CommunityResource[] = [
   },
   {
     title: "Adoption and co-parenting legal guide",
-    href: "/resources/legal",
+    href: "/safety/legal",
     kind: "link",
   },
   {
@@ -1696,7 +1696,7 @@ const YOUTH_RESOURCES: CommunityResource[] = [
   },
   {
     title: "Flatmate board",
-    href: "/work/flatmates",
+    href: "/local/housing/flatmates",
     kind: "link",
     note: "Queer-friendly shares, updated weekly",
   },
@@ -1868,7 +1868,7 @@ const POC_RESOURCES: CommunityResource[] = [
   },
   {
     title: "Anti-discrimination rights in Portugal",
-    href: "/resources/legal",
+    href: "/safety/legal",
     kind: "guide",
   },
   {
@@ -2044,7 +2044,7 @@ const DISABLED_RESOURCES: CommunityResource[] = [
   },
   {
     title: "Disability rights in Portugal — plain language",
-    href: "/resources/legal",
+    href: "/safety/legal",
     kind: "guide",
   },
   {

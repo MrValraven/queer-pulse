@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, HubBackLink, Outro } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { FAQ, GLOSSARY, RESOURCES, TALK, type ResType } from "./queer101.data";
 import { SuggestEditModal } from "./SuggestEditModal";
@@ -17,6 +17,11 @@ export function Queer101Hero() {
   return (
     <div className={styles.hero}>
       <div className="wrap">
+        <HubBackLink
+          to={routes.resources}
+          label="Resource Library"
+          tone="light"
+        />
         <div className={styles.label}>Queer 101</div>
         <h1>
           Start here, wherever <em>here</em> is.

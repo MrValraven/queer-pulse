@@ -1,3 +1,5 @@
+import { routes } from "../../app/routeMap";
+
 export const THERAPISTS = [
   {
     name: "Dra. Marta Seabra",
@@ -68,5 +70,19 @@ export const HARM = [
   {
     title: "Chemsex support",
     desc: "Confidential, non-judgmental resources for members navigating chemsex — connected to real services and real people who've been there.",
+  },
+];
+
+export const WELLBEING_SUBPAGES = [
+  {
+    label: "Harm Reduction",
+    to: routes.harmReduction,
+    blurb: "Using more safely — practical, non-judgemental guidance.",
+  },
+  {
+    label: "Sober",
+    to: routes.sober,
+    blurb:
+      "Sober and social — meetups and support that don't revolve around drinking.",
   },
 ];

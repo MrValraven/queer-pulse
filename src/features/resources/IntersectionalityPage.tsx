@@ -1,4 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
 import {
   CLASS_INFO,
   CLASS_VOICE,
@@ -9,7 +10,7 @@ import {
   RACE_INFO,
   RACE_VOICES,
 } from "./intersectionality.data";
-import { FadeIn, Reveal } from "../../shared/components/ui";
+import { FadeIn, HubBackLink, Reveal } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import {
   InfoCards,
@@ -35,6 +36,11 @@ export function IntersectionalityPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
+          <HubBackLink
+            to={routes.resources}
+            label="Resource Library"
+            tone="dark"
+          />
           <div className={styles.cat}>Intersectionality</div>
           <h1>
             More than one thing <em>at once.</em>

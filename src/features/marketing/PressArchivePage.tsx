@@ -2,8 +2,14 @@ import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
 import styles from "./PressArchivePage.module.css";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  FadeIn,
+  HubBackLink,
+  SkeletonLine,
+} from "../../shared/components/ui";
 
 interface Piece {
   day: string;
@@ -305,6 +311,7 @@ export function PressArchivePage() {
   return (
     <PageShell>
       <div className={styles.page}>
+        <HubBackLink to={routes.pressKit} label="Press Kit" />
         <header className={styles.head}>
           <div>
             <div className={styles.eye}>Coverage archive · since 2024</div>

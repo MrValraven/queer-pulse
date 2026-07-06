@@ -8,6 +8,7 @@ import {
 } from "react-icons/fi";
 import { MdAccessible } from "react-icons/md";
 import { MEMBERS, memberName } from "../members/data/members";
+import { routes } from "../../app/routeMap";
 
 export const NAV = [
   { id: "health", label: "Community health" },
@@ -17,6 +18,29 @@ export const NAV = [
   { id: "finances", label: "Finances" },
   { id: "decisions", label: "Decision log" },
   { id: "raise", label: "Raise a concern" },
+];
+
+export const GOVERNING_DOCS = [
+  {
+    label: "Constitution",
+    to: routes.constitution,
+    blurb: "The formal organising document — twelve plain-language articles.",
+  },
+  {
+    label: "Code of Conduct",
+    to: routes.codeOfConduct,
+    blurb: "What we expect of each other, and what happens when it's breached.",
+  },
+  {
+    label: "Annual Assembly",
+    to: routes.annualAssembly,
+    blurb: "The yearly members' meeting — agenda, resolutions, and minutes.",
+  },
+  {
+    label: "Transparency report",
+    to: routes.transparencyReport,
+    blurb: "Moderation actions, finances, and data requests, in the open.",
+  },
 ];
 
 export const HEALTH = [

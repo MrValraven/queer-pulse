@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, HubBackLink } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
 import {
@@ -30,6 +30,11 @@ export function NewsletterArchivePage() {
       <div className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.heroInner}>
+            <HubBackLink
+              to={routes.magazine}
+              label="the Magazine"
+              tone="light"
+            />
             <div className={styles.eyebrow}>
               Newsletter archive · since 2024
             </div>

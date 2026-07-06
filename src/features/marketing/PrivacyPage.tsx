@@ -1,3 +1,5 @@
+import { SubpageIndex } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { LegalDoc, type LegalSection } from "./LegalDoc";
 import s from "./LegalDoc.module.css";
 
@@ -327,6 +329,18 @@ export function PrivacyPage() {
         ),
         email: "privacy@queerpulse.pt",
       }}
+      related={
+        <SubpageIndex
+          title="Exercise your rights"
+          items={[
+            {
+              label: "Data request",
+              to: routes.dsar,
+              blurb: "Ask for a copy of your data, or ask us to delete it.",
+            },
+          ]}
+        />
+      }
     />
   );
 }

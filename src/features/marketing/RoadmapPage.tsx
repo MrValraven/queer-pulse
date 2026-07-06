@@ -1,7 +1,8 @@
 import { FiCheck, FiTrendingUp } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { FadeIn, SkeletonCard } from "../../shared/components/ui";
+import { FadeIn, SkeletonCard, SubpageIndex } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
 import { BuildingCard, PlannedCard, ShippedCard } from "./RoadmapCards";
 import { HowWeDecide, SubmitIdea, TopIdeas } from "./RoadmapSections";
 import { BUILDING, HERO_STATS, PLANNED, SHIPPED } from "./roadmap.data";
@@ -107,6 +108,17 @@ export function RoadmapPage() {
           <HowWeDecide />
         </div>
       </div>
+
+      <SubpageIndex
+        title="Already shipped"
+        items={[
+          {
+            label: "Changelog",
+            to: routes.changelog,
+            blurb: "Every release, dated — what we've shipped so far.",
+          },
+        ]}
+      />
     </PageShell>
   );
 }

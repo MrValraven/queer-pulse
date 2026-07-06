@@ -1,0 +1,44 @@
+.bar {
+  margin-block-end: 22px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+
+.link[data-tone="dark"] {
+  color: rgba(var(--cream-rgb), 0.8);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.link[data-tone="dark"]:focus-visible {
+  outline-color: var(--cream);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    color: var(--accent-ink);
+  }
+  .link[data-tone="dark"]:hover {
+    color: var(--cream);
+  }
+}
+
+.link svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}

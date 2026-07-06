@@ -18,4 +18,5 @@ export { Partners } from "./Partners";
 export { SpacesMap } from "./SpacesMap";
 export { Platforms } from "./Platforms";
 export { Newsletter } from "./Newsletter";
+export { Pillars } from "./Pillars";
 export { Outro } from "./Outro";

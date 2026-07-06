@@ -1,9 +1,10 @@
 import { PageShell } from "../../shared/components/layout";
+import { SubpageIndex } from "../../shared/components/ui";
 import { MagazineCover } from "./MagazineCover";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { MagazineSections } from "./MagazineSections";
 import styles from "./MagazinePage.module.css";
-import { NAV } from "./magazinePage.data";
+import { NAV, MAGAZINE_SUBPAGES } from "./magazinePage.data";
 
 export function MagazinePage() {
   return (
@@ -30,6 +31,8 @@ export function MagazinePage() {
       <MagazineCover />
 
       <MagazineSections />
+
+      <SubpageIndex title="More from the Magazine" items={MAGAZINE_SUBPAGES} />
     </PageShell>
   );
 }

@@ -225,6 +225,7 @@ export function LegalPage() {
           { label: "Healthcare rights", href: "#healthcare" },
           { label: "Lawyer directory", href: "#lawyers" },
         ]}
+        backLink={{ to: routes.safety, label: "Safety Guide", tone: "dark" }}
       />
 
       <RightsSection

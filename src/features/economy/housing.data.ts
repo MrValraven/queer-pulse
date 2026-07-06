@@ -1,3 +1,5 @@
+import { routes } from "../../app/routeMap";
+
 export const FILTERS = [
   { value: "all", label: "All listings" },
   { value: "sublet", label: "Sublet" },
@@ -36,5 +38,19 @@ export const TIPS = [
     num: "06",
     title: "In an emergency, ask the community",
     text: "If you're suddenly homeless or in a dangerous living situation, post to the board. The community responds quickly to genuine need.",
+  },
+];
+
+export const HOUSING_SUBPAGES = [
+  {
+    label: "Housing Co-op",
+    to: routes.housingCoop,
+    blurb:
+      "Members buying and running homes together — how co-ops form, and how to join one.",
+  },
+  {
+    label: "Flatmates",
+    to: routes.flatmates,
+    blurb: "Find a room or a flatmate in a queer-friendly household.",
   },
 ];

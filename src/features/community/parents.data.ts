@@ -55,7 +55,7 @@ export const MEETUPS = [
 ];
 
 export const RESOURCES = [
-  { title: "Legal rights as a queer family", to: "/resources/legal" },
+  { title: "Legal rights as a queer family", to: "/safety/legal" },
   { title: "Chosen-family & legal recognition", to: "/family" },
   { title: "Healthcare & document guides", to: "/resources/library" },
 ];

@@ -6,6 +6,7 @@ import styles from "./SoberPage.module.css";
 import {
   Button,
   FadeIn,
+  HubBackLink,
   Outro,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -61,6 +62,11 @@ export function SoberPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
+          <HubBackLink
+            to={routes.wellbeing}
+            label="Wellbeing Hub"
+            tone="light"
+          />
           <div className={styles.label}>Sober &amp; social</div>
           <h1>
             A full social life, without <em>alcohol.</em>

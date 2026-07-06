@@ -1,7 +1,12 @@
 import { useMemo, useState } from "react";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro, Reveal } from "../../shared/components/ui";
+import {
+  Button,
+  Outro,
+  Reveal,
+  SubpageIndex,
+} from "../../shared/components/ui";
 import { useScrollReveal } from "../../shared/hooks/useScrollReveal";
 import { useCountUp } from "../../shared/hooks/useCountUp";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -107,6 +112,17 @@ export function GrantsPage() {
           See open grants
         </Button>
       </Outro>
+
+      <SubpageIndex
+        title="Also in grants"
+        items={[
+          {
+            label: "Micro Grants",
+            to: routes.microGrants,
+            blurb: "Small, fast community grants — apply in minutes.",
+          },
+        ]}
+      />
     </PageShell>
   );
 }

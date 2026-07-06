@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
-import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { FadeIn, HubBackLink, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import styles from "./CoverGalleryPage.module.css";
 
@@ -236,6 +236,11 @@ export function CoverGalleryPage() {
       <div className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.heroInner}>
+            <HubBackLink
+              to={routes.magazine}
+              label="the Magazine"
+              tone="light"
+            />
             <div className={styles.eyebrow}>
               Magazine · all covers · 2024 → present
             </div>

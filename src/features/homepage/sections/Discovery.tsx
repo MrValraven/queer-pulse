@@ -1,143 +1,294 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiUsers } from "react-icons/fi";
 import {
   Avatar,
-  EmptyState,
+  type AvatarTint,
+  Button,
   Reveal,
-  SectionHead,
   Tag,
   TagRow,
-  VisibilityBadge,
 } from "../../../shared/components/ui";
-import { linkToPath, routes } from "../../../app/routeMap";
+import { usePrefersReducedMotion } from "../../../shared/hooks";
+import { routes } from "../../../app/routeMap";
 import { useConnect } from "../../../app/providers/ConnectProvider";
-import { members, memberFilters, visibilitySay } from "../data/members";
-import { filterMembers } from "../lib/filters";
+import { members } from "../data/members";
 import type { Member } from "../data/types";
+import { featuredSpotlights, highlightRowKeys } from "./Discovery.data";
 import styles from "./Discovery.module.css";
 
-function MemberCard({ member }: { member: Member }) {
+/** Maps a member's avatar tint to the featured face's tint class (photo bg + label). */
+const tintClass: Record<AvatarTint, string | undefined> = {
+  coral: styles.tCoral,
+  jade: styles.tJade,
+  plum: styles.tPlum,
+  default: styles.tPlum,
+  auth: styles.tPlum,
+};
+
+type Spotlight = { member: Member; quote: string };
+
+const byKey = new Map(members.map((m) => [m.key, m] as const));
+
+const spotlights: Spotlight[] = featuredSpotlights
+  .map((s) => {
+    const member = byKey.get(s.key);
+    return member ? { member, quote: s.quote } : undefined;
+  })
+  .filter((s): s is Spotlight => Boolean(s));
+
+const rows = highlightRowKeys
+  .map((key) => byKey.get(key))
+  .filter((m): m is Member => Boolean(m));
+
+const profilePath = (member: Member) => `${routes.members}/${member.key}`;
+
+/** A tall, face-cropped portrait for the featured card (Unsplash-aware). */
+function portraitSrc(src?: string): string | undefined {
+  if (!src) return undefined;
+  if (!src.includes("unsplash.com")) return src;
+  const url = new URL(src);
+  url.searchParams.set("w", "640");
+  url.searchParams.set("h", "800");
+  url.searchParams.set("fit", "crop");
+  url.searchParams.set("crop", "faces");
+  url.searchParams.set("auto", "format");
+  url.searchParams.set("q", "80");
+  return url.toString();
+}
+
+const ROTATE_MS = 5500;
+
+/** One featured member: big portrait on the left, their story on the right. */
+function SpotlightFace({ member, quote }: Spotlight) {
   const { openConnect } = useConnect();
-  const isPrivate = member.visibility === "private";
+  const to = profilePath(member);
+  const portrait = portraitSrc(member.photo);
 
   return (
-    <article className={styles.card}>
-      <div className={styles.cardTop}>
-        <div className={styles.vbadge}>
-          <Avatar
-            initials={member.initials}
-            tint={member.tint}
-            size={60}
-            verified={member.verified}
-            src={member.photo}
-            alt={member.name}
-          />
-          {member.verified && (
-            <span className={styles.vtip}>Vouched by {member.vouchedBy}</span>
-          )}
-        </div>
-        <VisibilityBadge mode={member.visibility} />
-      </div>
-
-      <div>
-        <Link to={`${routes.members}/${member.key}`}>
-          <div className={styles.name}>{member.name}</div>
-        </Link>
-        <div className={styles.role}>{member.role}</div>
-        <div className={styles.hood}>
-          <span className={styles.pin} aria-hidden />
-          {member.hood}
-        </div>
-      </div>
-
-      <TagRow>
-        {member.tags.map((tag) => (
-          <Tag key={tag}>{tag}</Tag>
-        ))}
-      </TagRow>
-
-      <div className={styles.foot}>
-        <span className={styles.say}>{visibilitySay[member.visibility]}</span>
-        {isPrivate ? (
-          <Link
-            to={linkToPath(`${routes.members}/${member.key}`)}
-            className={styles.connect}
-          >
-            View profile <span aria-hidden>→</span>
-          </Link>
+    <div
+      className={[styles.face, tintClass[member.tint]]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <div className={styles.featPhoto}>
+        {portrait ? (
+          <img src={portrait} alt={member.name} referrerPolicy="no-referrer" />
         ) : (
-          <span
-            role="button"
-            tabIndex={0}
-            className={styles.connect}
-            onClick={() => openConnect(member.key)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                openConnect(member.key);
-              }
-            }}
-          >
-            Say hello <span aria-hidden>→</span>
+          <span className={styles.photoFallback} aria-hidden>
+            {member.initials}
+          </span>
+        )}
+        {member.verified && (
+          <span className={styles.photoVerified}>
+            <svg
+              width={13}
+              height={13}
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden
+            >
+              <polyline
+                points="20 6 9 17 4 12"
+                stroke="currentColor"
+                strokeWidth={3}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Verified
           </span>
         )}
       </div>
+
+      <div className={styles.featContent}>
+        <span className={styles.capMeta}>Featured member</span>
+        <Link to={to} className={styles.nameLink}>
+          <h3 className={styles.name}>{member.name}</h3>
+        </Link>
+        <p className={styles.role}>
+          {member.role} · {member.hood}
+        </p>
+        <p className={styles.quote}>{quote}</p>
+
+        <TagRow className={styles.featTags}>
+          {member.tags.slice(0, 3).map((tag) => (
+            <Tag key={tag}>{tag}</Tag>
+          ))}
+        </TagRow>
+
+        <div className={styles.featFoot}>
+          {member.verified && (
+            <span className={styles.vouch}>Vouched by {member.vouchedBy}</span>
+          )}
+          {member.visibility === "private" ? (
+            <Link to={to} className={styles.sayHi}>
+              View profile <span aria-hidden>→</span>
+            </Link>
+          ) : (
+            <span
+              role="button"
+              tabIndex={0}
+              className={styles.sayHi}
+              onClick={() => openConnect(member.key)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  openConnect(member.key);
+                }
+              }}
+            >
+              Say hello <span aria-hidden>→</span>
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FeaturedSpotlightCard({ items }: { items: Spotlight[] }) {
+  const reducedMotion = usePrefersReducedMotion();
+  const [view, setView] = useState<{ active: number; prev: number | null }>({
+    active: 0,
+    prev: null,
+  });
+  const [paused, setPaused] = useState(false);
+  const { active, prev } = view;
+
+  // Swap to `next`, keeping the outgoing member as a fading overlay.
+  const select = useCallback(
+    (next: number) => {
+      setView((v) =>
+        next === v.active
+          ? v
+          : { active: next, prev: reducedMotion ? null : v.active },
+      );
+    },
+    [reducedMotion],
+  );
+
+  useEffect(() => {
+    if (reducedMotion || paused || items.length <= 1) return;
+    const id = setTimeout(
+      () =>
+        setView((v) => ({
+          active: (v.active + 1) % items.length,
+          prev: v.active,
+        })),
+      ROTATE_MS,
+    );
+    return () => clearTimeout(id);
+  }, [active, paused, reducedMotion, items.length]);
+
+  const current = items[active];
+  if (!current) return null;
+  const previous = prev !== null ? items[prev] : undefined;
+
+  return (
+    <article
+      className={styles.feat}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
+      <div className={styles.spot}>
+        <SpotlightFace member={current.member} quote={current.quote} />
+        {previous && (
+          <div
+            key={previous.member.key}
+            className={styles.spotOverlay}
+            aria-hidden
+            inert
+            onAnimationEnd={() => setView((v) => ({ ...v, prev: null }))}
+          >
+            <SpotlightFace member={previous.member} quote={previous.quote} />
+          </div>
+        )}
+      </div>
+
+      {items.length > 1 && (
+        <div className={styles.dots} aria-label="Featured members">
+          {items.map((item, index) => (
+            <button
+              key={item.member.key}
+              type="button"
+              className={[styles.navDot, index === active && styles.navDotOn]
+                .filter(Boolean)
+                .join(" ")}
+              aria-label={`Feature ${item.member.name}`}
+              aria-current={index === active}
+              onClick={() => select(index)}
+            />
+          ))}
+        </div>
+      )}
     </article>
   );
 }
 
-export function Discovery() {
-  const [filter, setFilter] = useState<"all" | Member["category"]>("all");
-  const visible = filterMembers(members, filter);
+function MemberRow({ member }: { member: Member }) {
+  return (
+    <Link to={profilePath(member)} className={styles.rowE}>
+      <Avatar
+        src={member.photo}
+        initials={member.initials}
+        tint={member.tint}
+        size={48}
+        verified={member.verified}
+        alt={member.name}
+      />
+      <span className={styles.rowMeta}>
+        <span className={styles.rowName}>{member.name}</span>
+        <span className={styles.rowSub}>
+          {member.role} · {member.hood}
+        </span>
+      </span>
+      <span className={styles.arrow} aria-hidden>
+        →
+      </span>
+    </Link>
+  );
+}
 
+export function Discovery() {
   return (
     <section className={styles.discovery} id="discovery">
       <div className="wrap">
-        <Reveal>
-          <SectionHead
-            className={styles.head}
-            title={
-              <>
-                In the room <em>right now</em>
-              </>
-            }
-          />
+        <Reveal className={styles.eyebrow}>
+          <span className={styles.dot} aria-hidden />
+          520+ verified members
+        </Reveal>
+        <Reveal as="h2" className={styles.display} delay={60}>
+          No follower counts. No endorsements. Just <em>people.</em>
+        </Reveal>
+        <Reveal as="p" className={styles.sub} delay={120}>
+          The designers, engineers, chefs, filmmakers, ceramicists and carers
+          who make Lisbon what it is — and want to find each other, without the
+          performance.
         </Reveal>
 
-        <Reveal className={styles.filters} delay={60}>
-          {memberFilters.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              className={[
-                styles.chip,
-                filter === option.value && styles.chipActive,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setFilter(option.value)}
-            >
-              {option.label}
-            </button>
-          ))}
-        </Reveal>
-
-        {visible.length === 0 ? (
-          <EmptyState
-            compact
-            icon={<FiUsers />}
-            title="No one in that group is around right now"
-            description="People come and go through the day. Clear the filter to see everyone who's in the room at the moment."
-            action={{ label: "Clear filters", onClick: () => setFilter("all") }}
-          />
-        ) : (
-          <div className={styles.grid}>
-            {visible.map((member) => (
-              <MemberCard key={member.key} member={member} />
+        <div className={styles.eGrid}>
+          {spotlights.length > 0 && (
+            <Reveal delay={160} className={styles.featCol}>
+              <FeaturedSpotlightCard items={spotlights} />
+            </Reveal>
+          )}
+          <div className={styles.stack}>
+            {rows.map((member, index) => (
+              <Reveal key={member.key} delay={200 + index * 70}>
+                <MemberRow member={member} />
+              </Reveal>
             ))}
           </div>
-        )}
+        </div>
+
+        <Reveal className={styles.frameFoot} delay={280}>
+          <Button to={routes.members}>Explore members</Button>
+          <span className={styles.footNote}>
+            Designers, engineers, chefs, filmmakers and more — growing weekly
+          </span>
+        </Reveal>
       </div>
     </section>
   );

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { Button } from "../../shared/components/ui";
+import { Button, HubBackLink } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import {
   AgendaSection,
@@ -35,6 +35,7 @@ export function AnnualAssemblyPage() {
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
+          <HubBackLink to={routes.governance} label="Governance" tone="dark" />
           <div className={styles.eyebrow}>
             Annual Assembly · 14 November 2026 · Lisbon
           </div>

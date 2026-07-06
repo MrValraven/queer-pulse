@@ -378,21 +378,6 @@ const GlossaryPage = lazy(() =>
     default: m.GlossaryPage,
   })),
 );
-const TransDayOfVisibilityPage = lazy(() =>
-  import("../features/resources/TransDayOfVisibilityPage").then((m) => ({
-    default: m.TransDayOfVisibilityPage,
-  })),
-);
-const WorldAidsDayPage = lazy(() =>
-  import("../features/resources/WorldAidsDayPage").then((m) => ({
-    default: m.WorldAidsDayPage,
-  })),
-);
-const PrideMonthPage = lazy(() =>
-  import("../features/resources/PrideMonthPage").then((m) => ({
-    default: m.PrideMonthPage,
-  })),
-);
 const MicroGrantsPage = lazy(() =>
   import("../features/resources/MicroGrantsPage").then((m) => ({
     default: m.MicroGrantsPage,
@@ -1537,9 +1522,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/101", routes.queer101],
   ["/glossary", routes.glossary],
   ["/pronouns-guide", routes.pronounsGuide],
-  ["/trans-day-of-visibility", routes.transDayOfVisibility],
-  ["/world-aids-day", routes.worldAidsDay],
-  ["/pride-month", routes.prideMonth],
   ["/micro-grants", routes.microGrants],
   ["/intersectionality", routes.intersectionality],
   ["/trans-hub", routes.transHub],
@@ -1567,6 +1549,12 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/mentorship", routes.mentorship],
   ["/mentor-profile", routes.mentorProfile],
   ["/flatmates", routes.flatmates],
+  // Hub re-parenting (2026-07-06): old full paths → new homes
+  ["/work/housing", routes.housing],
+  ["/work/housing-coop", routes.housingCoop],
+  ["/work/flatmates", routes.flatmates],
+  ["/resources/legal", routes.legal],
+  ["/resources/micro-grants", routes.microGrants],
   ["/solidarity", routes.solidarity],
   // Auth
   ["/sign-in", routes.signIn],
@@ -1611,6 +1599,15 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/transparency-report", routes.transparencyReport],
   ["/accessibility", routes.accessibility],
   ["/guidelines", routes.guidelines],
+  // Hub re-parenting (2026-07-05): old paths → new hub-nested homes
+  ["/policies/constitution", routes.constitution],
+  ["/policies/code-of-conduct", routes.codeOfConduct],
+  ["/policies/transparency-report", routes.transparencyReport],
+  ["/about/annual-assembly", routes.annualAssembly],
+  ["/about/changelog", routes.changelog],
+  ["/policies/accessibility", routes.accessibility],
+  ["/about/press-archive", routes.pressArchive],
+  ["/policies/dsar", routes.dsar],
   // System
   ["/500", routes.serverError],
   ["/maintenance", routes.maintenance],
@@ -1774,7 +1771,7 @@ export function AppRoutes() {
         <Route path={routes.newsletter} element={<NewsletterPage />} />
         <Route path={routes.annualAssembly} element={<AnnualAssemblyPage />} />
         <Route
-          path="/about/annual-assembly/minutes/:year"
+          path="/about/governance/annual-assembly/minutes/:year"
           element={<AssemblyMinutesPage />}
         />
         <Route path={routes.getTheApp} element={<GetTheAppPage />} />
@@ -1827,12 +1824,6 @@ export function AppRoutes() {
         <Route path={routes.queer101} element={<Queer101Page />} />
         <Route path={routes.glossary} element={<GlossaryPage />} />
         <Route path={routes.pronounsGuide} element={<PronounsGuidePage />} />
-        <Route
-          path={routes.transDayOfVisibility}
-          element={<TransDayOfVisibilityPage />}
-        />
-        <Route path={routes.worldAidsDay} element={<WorldAidsDayPage />} />
-        <Route path={routes.prideMonth} element={<PrideMonthPage />} />
         <Route path={routes.microGrants} element={<MicroGrantsPage />} />
         <Route
           path={routes.intersectionality}
@@ -1940,6 +1931,12 @@ export function AppRoutes() {
         />
         <Route path="/work/landlord/:slug" element={<LandlordPage />} />
         <Route path={routes.housingCoop} element={<HousingCoopPage />} />
+        <Route
+          path="/work/housing/:slug"
+          element={
+            <ParamRedirect build={(p) => `/local/housing/${p.slug ?? ""}`} />
+          }
+        />
         <Route path={routes.skills} element={<SkillsPage />} />
         <Route path={`${routes.skills}/:id`} element={<WorkshopPage />} />
         <Route path={routes.grants} element={<GrantsPage />} />
@@ -1969,7 +1966,7 @@ export function AppRoutes() {
         <Route
           path="/housing/:slug"
           element={
-            <ParamRedirect build={(p) => `/work/housing/${p.slug ?? ""}`} />
+            <ParamRedirect build={(p) => `/local/housing/${p.slug ?? ""}`} />
           }
         />
         <Route
@@ -2139,7 +2136,19 @@ export function AppRoutes() {
           path="/annual-assembly/minutes/:year"
           element={
             <ParamRedirect
-              build={(p) => `/about/annual-assembly/minutes/${p.year ?? ""}`}
+              build={(p) =>
+                `/about/governance/annual-assembly/minutes/${p.year ?? ""}`
+              }
+            />
+          }
+        />
+        <Route
+          path="/about/annual-assembly/minutes/:year"
+          element={
+            <ParamRedirect
+              build={(p) =>
+                `/about/governance/annual-assembly/minutes/${p.year ?? ""}`
+              }
             />
           }
         />

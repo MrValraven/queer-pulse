@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { Button, HubBackLink } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import styles from "./MicroGrantsPage.module.css";
 
@@ -10,6 +10,7 @@ export function MicroGrantsHero() {
   return (
     <header className={styles.hero}>
       <div className="wrap">
+        <HubBackLink to={routes.grants} label="Grants" tone="dark" />
         <div className={styles.eye}>Community fund</div>
         <h1 className={styles.title}>
           Small money.

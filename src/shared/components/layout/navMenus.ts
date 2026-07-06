@@ -33,14 +33,28 @@ export interface MegaMenu {
   /** Rail icon for the sidebar nav; the top MegaNav ignores it. */
   icon?: IconType;
   feature?: MegaFeature;
+  /**
+   * Public stand-in for `feature`, used when the primary promo points into the
+   * gated member surface and the visitor is logged out. Lets public-facing
+   * menus (Community, Lisbon) keep a highlighted main link that actually leads
+   * somewhere a signed-out visitor can go, instead of dropping the promo.
+   */
+  featurePublic?: MegaFeature;
   columns: MegaColumn[];
 }
 
 /**
  * Filter a menu list down to the links a visitor may see. `isVisible(href)`
  * comes from `useIsLinkVisible()`. Gated links are dropped, columns that end up
- * empty are removed, a gated feature promo is stripped, and a menu with no
- * remaining columns is omitted entirely so its top-level trigger disappears too.
+ * empty are removed, and a menu with no remaining columns is omitted entirely so
+ * its top-level trigger disappears too.
+ *
+ * The feature promo is the menu's highlighted "main link". When its destination
+ * is gated (Community → members, Lisbon → directory), a logged-out visitor gets
+ * the menu's `featurePublic` stand-in instead — a promo that leads somewhere
+ * they can actually go — so the highlight never disappears. Only when neither is
+ * reachable is the promo dropped, and that menu is usually omitted anyway once
+ * all its columns are gated.
  */
 export function filterMenus(
   menus: MegaMenu[],
@@ -55,7 +69,11 @@ export function filterMenus(
         }))
         .filter((column) => column.links.length > 0);
       const feature =
-        menu.feature && isVisible(menu.feature.href) ? menu.feature : undefined;
+        menu.feature && isVisible(menu.feature.href)
+          ? menu.feature
+          : menu.featurePublic && isVisible(menu.featurePublic.href)
+            ? menu.featurePublic
+            : undefined;
       return { ...menu, columns, feature };
     })
     .filter((menu) => menu.columns.length > 0);
@@ -71,6 +89,13 @@ export const NAV_MENUS: MegaMenu[] = [
       body: "A member directory, forums, and gatherings — the everyday connective tissue of the network.",
       href: routes.members,
       cta: "Browse members",
+    },
+    featurePublic: {
+      eyebrow: "Community",
+      title: "Organise together.",
+      body: "Campaigns, mutual aid, and volunteer crews — work you can show up for, no invite needed.",
+      href: routes.activism,
+      cta: "Get involved",
     },
     columns: [
       {
@@ -109,6 +134,13 @@ export const NAV_MENUS: MegaMenu[] = [
       href: routes.directory,
       cta: "Browse the directory",
     },
+    featurePublic: {
+      eyebrow: "Lisbon",
+      title: "Places that welcome you.",
+      body: "Bars, clinics, and community spaces vouched for as safe by the people who go there.",
+      href: routes.safeSpaces,
+      cta: "Find safe spaces",
+    },
     columns: [
       {
         head: "Discover",
@@ -128,9 +160,7 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Living here",
         links: [
           { label: "New to Lisbon?", href: routes.arriving },
-          { label: "Housing Board", href: routes.housing },
-          { label: "Housing Co-op", href: routes.housingCoop },
-          { label: "Flatmates", href: routes.flatmates },
+          { label: "Housing", href: routes.housing },
           { label: "Visas & Residency", href: routes.visas },
         ],
       },
@@ -153,8 +183,6 @@ export const NAV_MENUS: MegaMenu[] = [
           { label: "Mental Health", href: routes.mentalHealth },
           { label: "Sexual Health", href: routes.sexualHealth },
           { label: "Trans Healthcare", href: routes.transHealthcare },
-          { label: "Harm Reduction", href: routes.harmReduction },
-          { label: "Sober", href: routes.sober },
           { label: "Wellbeing Hub", href: routes.wellbeing },
         ],
       },
@@ -162,10 +190,7 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Safety & rights",
         links: [
           { label: "Emergency", href: routes.emergency, featured: true },
-          { label: "Report & Safety", href: routes.report },
-          { label: "Hate Crime Guide", href: routes.hateCrime },
           { label: "Safety Guide", href: routes.safety },
-          { label: "Legal Aid", href: routes.legal },
         ],
       },
       {
@@ -176,13 +201,7 @@ export const NAV_MENUS: MegaMenu[] = [
             href: routes.resources,
             featured: true,
           },
-          { label: "Queer 101", href: routes.queer101 },
-          { label: "Glossary", href: routes.glossary },
           { label: "Trans & NB Hub", href: routes.transHub },
-          {
-            label: "Intersectionality",
-            href: routes.intersectionality,
-          },
           { label: "Coming Out", href: routes.comingOut },
           { label: "Family & parenting", href: routes.family },
           { label: "For caregivers", href: routes.caregivers },
@@ -206,10 +225,7 @@ export const NAV_MENUS: MegaMenu[] = [
         links: [
           { label: "Current issue", href: routes.magazine, featured: true },
           { label: "All issues", href: routes.issues },
-          { label: "Cover gallery", href: routes.coverGallery },
-          { label: "Long reads", href: routes.tag },
           { label: "Stories", href: routes.story },
-          { label: "Newsletter", href: routes.newsletterArchive },
           { label: "Write for us", href: routes.submitStory },
         ],
       },
@@ -233,17 +249,6 @@ export const NAV_MENUS: MegaMenu[] = [
           { label: "Platforms", href: routes.platforms },
           { label: "Reading Groups", href: routes.readingGroups },
           { label: "Lisbon scene & radio", href: routes.culture },
-        ],
-      },
-      {
-        head: "Mark the Year",
-        links: [
-          { label: "Pride Month", href: routes.prideMonth },
-          {
-            label: "Trans Day of Visibility",
-            href: routes.transDayOfVisibility,
-          },
-          { label: "World AIDS Day", href: routes.worldAidsDay },
         ],
       },
     ],
@@ -280,7 +285,6 @@ export const NAV_MENUS: MegaMenu[] = [
           },
           { label: "Solidarity Pricing", href: routes.solidarity },
           { label: "Grants", href: routes.grants },
-          { label: "Micro Grants", href: routes.microGrants },
           { label: "How our economy works", href: routes.economy },
           { label: "Offer a skill", href: routes.offer },
         ],
@@ -308,13 +312,6 @@ export const NAV_MENUS: MegaMenu[] = [
           },
           { label: "The Manifesto", href: routes.manifesto },
           { label: "Governance", href: routes.governance },
-          { label: "Constitution", href: routes.constitution },
-          { label: "Code of Conduct", href: routes.codeOfConduct },
-          { label: "Annual Assembly", href: routes.annualAssembly },
-          {
-            label: "Transparency report",
-            href: routes.transparencyReport,
-          },
           { label: "Cities", href: routes.cities },
         ],
       },
@@ -322,10 +319,8 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Using QueerPulse",
         links: [
           { label: "Help & FAQ", href: routes.help },
-          { label: "Get the app", href: routes.getTheApp },
-          { label: "Accessibility", href: routes.accessibility },
           { label: "Roadmap", href: routes.roadmap },
-          { label: "Changelog", href: routes.changelog },
+          { label: "Get the app", href: routes.getTheApp },
           {
             label: "For organisations",
             href: routes.forOrganisations,
@@ -337,10 +332,8 @@ export const NAV_MENUS: MegaMenu[] = [
         links: [
           { label: "Privacy Policy", href: routes.privacy },
           { label: "Terms of Use", href: routes.terms },
-          { label: "Data request", href: routes.dsar },
-          { label: "Contact", href: routes.contact },
           { label: "Press Kit", href: routes.pressKit },
-          { label: "Press archive", href: routes.pressArchive },
+          { label: "Contact", href: routes.contact },
         ],
       },
     ],

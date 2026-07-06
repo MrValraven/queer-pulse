@@ -1,5 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, HubBackLink, Outro } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { HateCrimePanel } from "./HateCrimeTabs";
 import styles from "./HateCrimePage.module.css";
@@ -11,6 +11,7 @@ export function HateCrimePage() {
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
+          <HubBackLink to={routes.safety} label="Safety Guide" tone="dark" />
           <div className={styles.eye}>Reporting guide · Portugal</div>
           <h1 className={styles.title}>
             How to report

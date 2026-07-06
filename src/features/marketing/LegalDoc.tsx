@@ -16,6 +16,7 @@ export interface LegalDocProps {
   toc: { id: string; label: string }[];
   sections: LegalSection[];
   contact: { text: ReactNode; email: string };
+  related?: ReactNode;
 }
 
 export function LegalDoc({
@@ -26,6 +27,7 @@ export function LegalDoc({
   toc,
   sections,
   contact,
+  related,
 }: LegalDocProps) {
   return (
     <PageShell>
@@ -75,6 +77,7 @@ export function LegalDoc({
           </div>
         </div>
       </div>
+      {related}
     </PageShell>
   );
 }

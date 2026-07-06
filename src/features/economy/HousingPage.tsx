@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { Reveal } from "../../shared/components/ui";
+import { Reveal, SubpageIndex } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { HOUSING_LISTINGS as LISTINGS } from "./housingListings";
-import { FILTERS } from "./housing.data";
+import { FILTERS, HOUSING_SUBPAGES } from "./housing.data";
 import { HousingListingGrid } from "./HousingListingGrid";
 import { HousingLandlords, HousingTips } from "./HousingSections";
 import { ListSpaceModal } from "./ListSpaceModal";
@@ -83,6 +83,12 @@ export function HousingPage() {
       <HousingTips />
 
       {listing && <ListSpaceModal onClose={() => setListing(false)} />}
+
+      <SubpageIndex
+        eyebrow="Housing"
+        title="More on housing"
+        items={HOUSING_SUBPAGES}
+      />
     </PageShell>
   );
 }

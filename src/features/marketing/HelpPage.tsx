@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, SubpageIndex } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import s from "./HelpPage.module.css";
 
@@ -335,6 +335,18 @@ export function HelpPage() {
           </div>
         </div>
       </div>
+
+      <SubpageIndex
+        title="More on using QueerPulse"
+        items={[
+          {
+            label: "Accessibility",
+            to: routes.accessibility,
+            blurb:
+              "How we build for access, and how to tell us where we fall short.",
+          },
+        ]}
+      />
     </PageShell>
   );
 }

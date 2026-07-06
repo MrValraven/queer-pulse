@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
+import { routes } from "../../app/routeMap";
 import { MEMBERS, memberName } from "../members/data/members";
 
 export interface Card {
@@ -345,4 +346,22 @@ export const NAV = [
   "Community Life",
   "Letters",
   "Archive",
+];
+
+export const MAGAZINE_SUBPAGES = [
+  {
+    label: "Cover gallery",
+    to: routes.coverGallery,
+    blurb: "Every cover we've published, in one place.",
+  },
+  {
+    label: "Long reads",
+    to: routes.tag,
+    blurb: "Our longest, deepest reporting and essays.",
+  },
+  {
+    label: "Newsletter",
+    to: routes.newsletterArchive,
+    blurb: "Past editions of the QueerPulse newsletter.",
+  },
 ];

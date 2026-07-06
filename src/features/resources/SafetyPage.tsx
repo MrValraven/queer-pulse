@@ -1,6 +1,12 @@
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro, Reveal } from "../../shared/components/ui";
+import {
+  Button,
+  Outro,
+  Reveal,
+  SubpageIndex,
+} from "../../shared/components/ui";
 import styles from "./SafetyPage.module.css";
+import { SAFETY_SUBPAGES } from "./safety.data";
 
 export function SafetyPage() {
   return (
@@ -186,6 +192,12 @@ export function SafetyPage() {
           hello@queerpulse.pt
         </Button>
       </Outro>
+
+      <SubpageIndex
+        eyebrow="Safety"
+        title="Reporting & rights"
+        items={SAFETY_SUBPAGES}
+      />
     </PageShell>
   );
 }

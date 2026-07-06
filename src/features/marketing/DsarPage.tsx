@@ -4,7 +4,7 @@ import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./DsarPage.module.css";
-import { Button, FormField } from "../../shared/components/ui";
+import { Button, FormField, HubBackLink } from "../../shared/components/ui";
 
 const PRIVACY = routes.privacy;
 
@@ -88,9 +88,7 @@ export function DsarPage() {
   return (
     <PageShell>
       <div className={styles.page}>
-        <Link to={PRIVACY} className={styles.back}>
-          ← Privacy
-        </Link>
+        <HubBackLink to={routes.privacy} label="Privacy Policy" />
         <div className={styles.eyebrow}>GDPR · Data Subject Access Request</div>
         <h1 className={styles.h1}>
           Your data, <em>your rights.</em>

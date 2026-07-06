@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
+import { HubBackLink } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { TABS } from "./transparencyReport.data";
 import {
   GovernanceSection,
@@ -19,6 +21,7 @@ export function TransparencyReportPage() {
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
+          <HubBackLink to={routes.governance} label="Governance" tone="dark" />
           <div className={styles.eyebrow}>
             Annual transparency report · 2025
           </div>

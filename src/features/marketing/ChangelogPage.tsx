@@ -5,9 +5,11 @@ import {
   EmptyState,
   FadeIn,
   FilterChips,
+  HubBackLink,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
 import styles from "./ChangelogPage.module.css";
 
 type Type = "feature" | "community" | "fix" | "policy" | "magazine";
@@ -186,6 +188,7 @@ export function ChangelogPage() {
     <PageShell>
       <div className={styles.page}>
         <div className={`wrap ${styles.wrap}`}>
+          <HubBackLink to={routes.roadmap} label="Roadmap" />
           <div className={styles.header}>
             <div className={styles.eye}>Platform changelog</div>
             <h1 className={styles.title}>
