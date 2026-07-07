@@ -3,19 +3,16 @@ import { FiBriefcase, FiBookmark, FiCheck, FiShield } from "react-icons/fi";
 import { FaRainbow } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import {
-  EmptyState,
-  Reveal,
-  SectionHead,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { EmptyState, Reveal, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSaved } from "../../app/providers/SavedProvider";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { useWorkProfile } from "../../app/providers/WorkProfileProvider";
 import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
-import { JOBS, JOB_FILTERS, EMPLOYERS, type Job } from "./jobs.data";
-import { COMPANY_SLUG_BY_NAME } from "./companies.data";
+import { JOBS, JOB_FILTERS, type Job } from "./jobs.data";
+import { useJobs } from "./api/useJobs";
+import { JobsEmployers } from "./JobsEmployers";
 import { safetyFor } from "./employerSafety.data";
 import { SafetyBadges } from "./SafetyBadges";
 import { affiliationFromLabel } from "./safetyBadges.data";
@@ -140,17 +137,24 @@ function JobSkeleton() {
 export function JobsPage() {
   const { safeOnly } = useWorkProfile();
   const { postedJobs } = usePostedJobs();
+  const { demoMode } = useDemoMode();
+  const jobsQuery = useJobs();
   const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
   const [showAll, setShowAll] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [localLoading, setLocalLoading] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 600);
+    const t = setTimeout(() => setLocalLoading(false), 600);
     return () => clearTimeout(t);
   }, []);
 
-  const allJobs = useMemo(() => [...postedJobs, ...JOBS], [postedJobs]);
+  // Demo keeps its own posted-jobs merge + timed skeleton; live reads the query.
+  const loading = demoMode ? localLoading : jobsQuery.isLoading;
+  const allJobs = useMemo(
+    () => (demoMode ? [...postedJobs, ...JOBS] : (jobsQuery.data ?? [])),
+    [demoMode, postedJobs, jobsQuery.data],
+  );
   const byCat = useMemo(
     () =>
       filter === "all" ? allJobs : allJobs.filter((j) => j.cat === filter),
@@ -283,52 +287,7 @@ export function JobsPage() {
         </div>
       </div>
 
-      <section className={styles.employers}>
-        <div className="wrap">
-          <SectionHead
-            title={
-              <>
-                Queer-run employers <em>we trust</em>
-              </>
-            }
-            subtitle="These organisations are run by or for the queer community. Working here means your money stays in the network."
-          />
-          <div className={styles.empGrid}>
-            {EMPLOYERS.map((emp) => {
-              const slug = COMPANY_SLUG_BY_NAME[emp.name];
-              return (
-                <Link
-                  key={emp.name}
-                  to={slug ? `${routes.company}/${slug}` : routes.jobs}
-                  className={styles.empCard}
-                >
-                  <div
-                    className={styles.empLogo}
-                    style={{ background: emp.bg, color: emp.text }}
-                  >
-                    {emp.logo}
-                  </div>
-                  <div className={styles.empName}>{emp.name}</div>
-                  <div className={styles.empType}>{emp.type}</div>
-                  <span
-                    className={styles.empBadge}
-                    style={{ background: emp.badgeBg, color: emp.badgeText }}
-                  >
-                    {emp.qr ? (
-                      <>
-                        <FaRainbow />{" "}
-                      </>
-                    ) : (
-                      ""
-                    )}
-                    {emp.badge}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <JobsEmployers />
     </PageShell>
   );
 }

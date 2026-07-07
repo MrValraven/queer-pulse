@@ -26,17 +26,91 @@
   }
 }
 
-/* Rail placement sits on the plum sidebar, so the chip text/chevron flip to
-   cream (plum-on-plum would be invisible) and the hover/open tint lightens. */
-.triggerRail {
-  color: var(--cream);
+/* ── Rail placement — "balanced split" ──────────────────────────────────────
+   Sits on the plum sidebar (so text/icons are cream). Identity on the left is
+   the menu trigger; a matching pair of round controls on the right (Settings
+   shortcut + menu chevron) weights both ends of the rail. */
+.railTrigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 6px;
+  border-radius: 12px;
+  background: rgba(var(--cream-rgb), 0.05);
 }
-.triggerRail[aria-expanded="true"] {
-  background: rgba(var(--cream-rgb), 0.08);
+.railMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 3px 6px 3px 4px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--cream);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur, 0.18s) var(--ease, ease);
 }
 @media (hover: hover) {
-  .triggerRail:hover {
+  .railMain:hover {
     background: rgba(var(--cream-rgb), 0.08);
+  }
+}
+.railMain:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.railName {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.railCluster {
+  flex: none;
+  display: flex;
+  gap: 5px;
+}
+.railMini {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-radius: 9px;
+  background: rgba(var(--cream-rgb), 0.05);
+  color: rgba(var(--cream-rgb), 0.78);
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+@media (hover: hover) {
+  .railMini:hover {
+    background: rgba(var(--cream-rgb), 0.1);
+    color: var(--cream);
+  }
+}
+.railMini:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.railChevIcon {
+  transition: transform var(--dur, 0.18s) var(--ease, ease);
+}
+.railChevOpen {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .railChevIcon {
+    transition: none;
   }
 }
 

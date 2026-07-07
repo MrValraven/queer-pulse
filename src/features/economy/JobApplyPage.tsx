@@ -1,11 +1,24 @@
 import { useMemo, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { FadeIn, SuccessPanel, Button } from "../../shared/components/ui";
+import {
+  FadeIn,
+  SuccessPanel,
+  Button,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
 import { JOBS } from "./jobs.data";
-import { APPLICANT } from "./jobApply.data";
+import { APPLICANT, AVAILABILITY } from "./jobApply.data";
+import { useJob } from "./api/useJob";
+import { useApplyToJob } from "./api/useJobMutations";
+import type {
+  CreateJobApplicationDto,
+  JobApplicationAnswer,
+} from "./api/jobs.api";
 import { JobApplyHeader } from "./JobApplyHeader";
 import { JobApplyForm, type JobApplyFields } from "./JobApplyForm";
 import { JobApplySidebar } from "./JobApplySidebar";
@@ -26,15 +39,35 @@ const INITIAL: JobApplyFields = {
   extra: "",
 };
 
+/** Map the apply form into the application DTO the API expects. */
+function toApplicationDto(fields: JobApplyFields): CreateJobApplicationDto {
+  const availability =
+    AVAILABILITY.find((a) => a.value === fields.when)?.title ?? fields.when;
+  const answers: JobApplicationAnswer[] = [
+    { question: "Available from", answer: availability },
+  ];
+  const add = (question: string, value: string) => {
+    if (value.trim()) answers.push({ question, answer: value.trim() });
+  };
+  add("Salary expectation", fields.salary);
+  add("Based in", fields.location);
+  add("Pronouns", fields.pronouns);
+  add("Portfolio / site", fields.site);
+  add("Instagram", fields.instagram);
+  add("Anything else", fields.extra);
+  return { coverNote: fields.letter.trim() || undefined, answers };
+}
+
 export function JobApplyPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
+  const { data: fetchedJob, isLoading } = useJob(slug);
+  const apply = useApplyToJob(slug ?? "");
   const [fields, setFields] = useState<JobApplyFields>(INITIAL);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
-  const job = JOBS.find((j) => j.slug === slug);
 
   const pct = useMemo(() => {
     let filled = [
@@ -47,7 +80,28 @@ export function JobApplyPage() {
     return Math.min(100, Math.round((filled / 5) * 100));
   }, [fields]);
 
-  if (!job) return <Navigate to={routes.jobs} replace />;
+  // Demo resolves synchronously from the mock board (no loading flash); live
+  // reads the fetched job and shows a skeleton while it loads.
+  const job =
+    fetchedJob ??
+    (demoMode ? (JOBS.find((j) => j.slug === slug) ?? null) : null);
+
+  if (!job) {
+    if (!demoMode && isLoading) {
+      return (
+        <PageShell>
+          <div className={styles.page}>
+            <Link to={routes.jobs} className={styles.back}>
+              ← Back to jobs
+            </Link>
+            <SkeletonLine width="60%" height={32} style={{ marginTop: 24 }} />
+            <SkeletonLine width="90%" height={16} style={{ marginTop: 16 }} />
+          </div>
+        </PageShell>
+      );
+    }
+    return <Navigate to={routes.jobs} replace />;
+  }
 
   const deadlineFull =
     job.deadline === "Open" ? "Open" : `${job.deadline} 2026`;
@@ -70,10 +124,33 @@ export function JobApplyPage() {
       return;
     }
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      setSubmitted(true);
-    }, 1400);
+    if (demoMode) {
+      setTimeout(() => {
+        setSubmitting(false);
+        setSubmitted(true);
+      }, 1400);
+      return;
+    }
+    apply.mutate(toApplicationDto(fields), {
+      onSuccess: () => {
+        setSubmitting(false);
+        setSubmitted(true);
+      },
+      onError: (err) => {
+        setSubmitting(false);
+        if (err instanceof ApiError && err.status === 409) {
+          showToast(
+            "You've already applied to this role — check your applications.",
+            "error",
+          );
+        } else {
+          showToast(
+            "We couldn't send your application. Please try again.",
+            "error",
+          );
+        }
+      },
+    });
   }
 
   return (

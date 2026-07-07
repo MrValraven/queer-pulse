@@ -322,13 +322,23 @@
 .utils {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+}
+/* Expanded rail: the three utilities share the footer width as equal segments,
+   so the row lines up with the full-width account chip and collapse button
+   below instead of clustering at the left. */
+.utils .utilBtn {
+  flex: 1;
 }
 .railCollapsed .footer {
   align-items: center;
 }
 .railCollapsed .utils {
   flex-direction: column;
+}
+/* Collapsed icon rail: back to fixed 38px squares stacked vertically. */
+.railCollapsed .utils .utilBtn {
+  flex: none;
 }
 .utilBtn {
   position: relative;

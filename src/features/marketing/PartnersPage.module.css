@@ -202,6 +202,12 @@
   margin-top: 6px;
   line-height: 1.6;
 }
+.becomeActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 
 @media (max-width: 900px) {
   .grid {

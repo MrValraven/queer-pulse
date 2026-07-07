@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { getPartner } from "./partnerDetails";
+import { Button, SkeletonLine } from "../../shared/components/ui";
+import { usePartner } from "./api/usePartner";
 import { routes } from "../../app/routeMap";
 import {
   PartnerTabBar,
@@ -20,12 +21,52 @@ function emName(name: string) {
   return { lead: words.join(" "), last };
 }
 
+function PartnerDetailLoading() {
+  return (
+    <PageShell>
+      <div className={s.page} aria-busy>
+        <SkeletonLine width={110} height={14} />
+        <header className={s.hero} style={{ marginTop: 24 }}>
+          <SkeletonLine width={92} height={92} style={{ borderRadius: 18 }} />
+          <div style={{ flex: 1 }}>
+            <SkeletonLine width={180} height={12} />
+            <SkeletonLine width="70%" height={40} style={{ marginTop: 14 }} />
+            <SkeletonLine width="90%" height={16} style={{ marginTop: 14 }} />
+          </div>
+        </header>
+      </div>
+    </PageShell>
+  );
+}
+
 export function PartnerDetailPage() {
   const { slug } = useParams();
   const [tab, setTab] = useState<PartnerTab>("about");
 
-  const p = getPartner(slug);
-  if (!p) return <Navigate to={routes.partners} replace />;
+  const { data, isLoading, isError } = usePartner(slug);
+
+  if (isLoading) return <PartnerDetailLoading />;
+
+  // A non-approved partner is hidden: the mock registry misses it and the live
+  // API 404s — both surface as `notFound`, which sends us back to the listing
+  // (the not-found path), NOT an error screen.
+  if (data?.notFound) return <Navigate to={routes.partners} replace />;
+
+  const p = data?.partner;
+  if (isError || !p) {
+    return (
+      <PageShell>
+        <div className={s.page}>
+          <p className={s.error}>
+            We couldn't load this partner just now. Please try again.
+          </p>
+          <Button variant="ghost" to={routes.partners}>
+            ← All partners
+          </Button>
+        </div>
+      </PageShell>
+    );
+  }
 
   const { lead, last } = emName(p.name);
 

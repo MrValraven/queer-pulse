@@ -1,0 +1,195 @@
+import { useCallback, useState } from "react";
+import type {
+  Cause,
+  Commit,
+  CreateOpportunityDto,
+} from "./api/volunteering.api";
+
+export interface TaskRow {
+  title: string;
+  desc: string;
+}
+export interface CommitmentRow {
+  label: string;
+  detail: string;
+}
+
+export interface PostOpportunityState {
+  org: string;
+  role: string;
+  cause: Cause;
+  commit: Commit;
+  time: string;
+  location: string;
+  skills: string;
+  desc: string;
+  spotsTotal: string;
+  applyRole: string;
+  why: string;
+  goodFor: string;
+  teamIntro: string;
+  team: string;
+  partnerSlug: string;
+  handle: string;
+  tasks: TaskRow[];
+  commitments: CommitmentRow[];
+}
+
+const EMPTY: PostOpportunityState = {
+  org: "",
+  role: "",
+  cause: "rights",
+  commit: "low",
+  time: "",
+  location: "",
+  skills: "",
+  desc: "",
+  spotsTotal: "",
+  applyRole: "",
+  why: "",
+  goodFor: "",
+  teamIntro: "",
+  team: "",
+  partnerSlug: "",
+  handle: "",
+  tasks: [{ title: "", desc: "" }],
+  commitments: [{ label: "", detail: "" }],
+};
+
+const splitLines = (s: string) =>
+  s
+    .split("\n")
+    .map((x) => x.trim())
+    .filter(Boolean);
+const splitCommas = (s: string) =>
+  s
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
+
+/** Fields that must be filled before the form can submit. */
+export type RequiredField =
+  "org" | "role" | "time" | "location" | "desc" | "spotsTotal";
+
+const REQUIRED: RequiredField[] = [
+  "org",
+  "role",
+  "time",
+  "location",
+  "desc",
+  "spotsTotal",
+];
+
+/**
+ * State + payload builder for the "Post an opportunity" form. Holds every field
+ * (core + optional rich lists), exposes a generic setter plus repeatable-row
+ * helpers, validates the required fields, and maps the whole thing onto the
+ * backend's `CreateOpportunityDto` (empty optional lists are dropped).
+ */
+export function usePostOpportunityForm() {
+  const [state, setState] = useState<PostOpportunityState>(EMPTY);
+  const [touched, setTouched] = useState(false);
+
+  const set = useCallback(
+    <K extends keyof PostOpportunityState>(
+      key: K,
+      value: PostOpportunityState[K],
+    ) => setState((s) => ({ ...s, [key]: value })),
+    [],
+  );
+
+  const setTask = (i: number, patch: Partial<TaskRow>) =>
+    setState((s) => ({
+      ...s,
+      tasks: s.tasks.map((t, idx) => (idx === i ? { ...t, ...patch } : t)),
+    }));
+  const addTask = () =>
+    setState((s) => ({ ...s, tasks: [...s.tasks, { title: "", desc: "" }] }));
+  const removeTask = (i: number) =>
+    setState((s) => ({ ...s, tasks: s.tasks.filter((_, idx) => idx !== i) }));
+
+  const setCommitment = (i: number, patch: Partial<CommitmentRow>) =>
+    setState((s) => ({
+      ...s,
+      commitments: s.commitments.map((c, idx) =>
+        idx === i ? { ...c, ...patch } : c,
+      ),
+    }));
+  const addCommitment = () =>
+    setState((s) => ({
+      ...s,
+      commitments: [...s.commitments, { label: "", detail: "" }],
+    }));
+  const removeCommitment = (i: number) =>
+    setState((s) => ({
+      ...s,
+      commitments: s.commitments.filter((_, idx) => idx !== i),
+    }));
+
+  const missing = REQUIRED.filter((f) => !String(state[f]).trim());
+  const spotsNum = Number.parseInt(state.spotsTotal, 10);
+  const spotsValid = Number.isFinite(spotsNum) && spotsNum > 0;
+  const valid = missing.length === 0 && spotsValid;
+
+  const errorFor = (f: RequiredField): string | null => {
+    if (!touched) return null;
+    if (f === "spotsTotal" && state.spotsTotal.trim() && !spotsValid) {
+      return "Enter a number of spots greater than zero.";
+    }
+    return missing.includes(f) ? "This field is required." : null;
+  };
+
+  const toDto = (): CreateOpportunityDto => {
+    const org = state.org.trim();
+    const role = state.role.trim();
+    const skills = splitCommas(state.skills);
+    const why = splitLines(state.why);
+    const goodFor = splitLines(state.goodFor);
+    const team = splitCommas(state.team);
+    const tasks = state.tasks
+      .filter((t) => t.title.trim())
+      .map((t) => ({ title: t.title.trim(), desc: t.desc.trim() }));
+    const commitments = state.commitments
+      .filter((c) => c.label.trim())
+      .map((c) => ({ label: c.label.trim(), detail: c.detail.trim() }));
+    return {
+      org,
+      role,
+      cause: state.cause,
+      commit: state.commit,
+      time: state.time.trim(),
+      location: state.location.trim(),
+      desc: state.desc.trim(),
+      spotsTotal: spotsNum,
+      applyRole: state.applyRole.trim() || `${role} · ${org}`,
+      ...(skills.length ? { skills } : {}),
+      ...(why.length ? { why } : {}),
+      ...(goodFor.length ? { goodFor } : {}),
+      ...(state.teamIntro.trim() ? { teamIntro: state.teamIntro.trim() } : {}),
+      ...(team.length ? { team } : {}),
+      ...(tasks.length ? { tasks } : {}),
+      ...(commitments.length ? { commitments } : {}),
+      ...(state.partnerSlug.trim()
+        ? { partnerSlug: state.partnerSlug.trim() }
+        : {}),
+      ...(state.handle.trim() ? { handle: state.handle.trim() } : {}),
+    };
+  };
+
+  return {
+    state,
+    set,
+    setTask,
+    addTask,
+    removeTask,
+    setCommitment,
+    addCommitment,
+    removeCommitment,
+    valid,
+    errorFor,
+    markTouched: () => setTouched(true),
+    toDto,
+  };
+}
+
+export type PostOpportunityForm = ReturnType<typeof usePostOpportunityForm>;

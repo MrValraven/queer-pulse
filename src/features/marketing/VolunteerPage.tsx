@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiHeart } from "react-icons/fi";
+import { FiHeart, FiPlus } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -10,9 +10,20 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { VOLUNTEER_OPPORTUNITIES as OPPS } from "./volunteerOpportunities";
+import { useOpportunities } from "./api/useOpportunities";
+import { causeToLower } from "./api/volunteering.adapters";
+import type { VolunteerCause } from "./volunteerOpportunities.types";
+import type { Cause, Commit } from "./api/volunteering.api";
 import { routes } from "../../app/routeMap";
 import s from "./VolunteerPage.module.css";
+
+const CAUSE_FILTERS = new Set<string>([
+  "Rights",
+  "Health",
+  "Youth",
+  "Housing",
+  "Arts",
+]);
 
 const FILTERS = [
   { f: "all", label: "All opportunities" },
@@ -58,17 +69,29 @@ function VolunteerCardSkeleton() {
 }
 
 export function VolunteerPage() {
-  const loading = useSimulatedLoad();
+  const simLoading = useSimulatedLoad();
   const [filter, setFilter] = useState("all");
+
+  // Translate the single chip group into the API's separate cause/commit params.
+  // Demo mode ignores these (the client-side `visible` filter below still runs).
+  const commit: Commit | undefined =
+    filter === "low" || filter === "medium" ? filter : undefined;
+  const cause: Cause | undefined = CAUSE_FILTERS.has(filter)
+    ? causeToLower(filter as VolunteerCause)
+    : undefined;
+
+  const { data, isLoading } = useOpportunities({ cause, commit });
+  const opps = useMemo(() => data?.items ?? [], [data]);
+  const loading = simLoading || isLoading;
 
   const visible = useMemo(
     () =>
-      OPPS.filter((o) => {
+      opps.filter((o) => {
         if (filter === "all") return true;
         if (filter === "low" || filter === "medium") return o.commit === filter;
         return o.cause === filter;
       }),
-    [filter],
+    [opps, filter],
   );
 
   return (
@@ -85,6 +108,11 @@ export function VolunteerPage() {
         <div className={s.note}>
           <span className={s.dot} /> Every organisation below has been vetted by
           the QueerPulse community
+        </div>
+        <div className={s.heroCta}>
+          <Button to={routes.postVolunteer} variant="ghost-dark">
+            <FiPlus aria-hidden /> Post an opportunity
+          </Button>
         </div>
       </PageHero>
 
@@ -123,7 +151,7 @@ export function VolunteerPage() {
                   ))
                 : visible.map((o, i) => (
                     <FadeIn
-                      key={o.role}
+                      key={o.slug}
                       delay={Math.min(i, 8) * 60}
                       style={{ height: "100%" }}
                     >

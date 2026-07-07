@@ -1,4 +1,11 @@
-import { FiGrid, FiShield, FiUsers, FiGlobe, FiAward } from "react-icons/fi";
+import {
+  FiGrid,
+  FiShield,
+  FiUsers,
+  FiGlobe,
+  FiAward,
+  FiInbox,
+} from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
 import { currentUser } from "../../../features/members/data/members";
@@ -31,6 +38,13 @@ export const ADMIN_NAV: AdminNavItem[] = [
     tone: "warn",
   },
   { label: "Communities", to: routes.adminCommunities, icon: FiGlobe },
+  {
+    label: "Partnerships",
+    to: routes.adminPartnerApplications,
+    icon: FiInbox,
+    count: 2,
+    tone: "warn",
+  },
   { label: "Governance", to: routes.adminGovernance, icon: FiAward },
 ];
 

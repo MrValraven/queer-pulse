@@ -8,7 +8,8 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { PARTNERS, type Region } from "./partnerDetails";
+import { type Region } from "./partnerDetails";
+import { usePartners } from "./api/usePartners";
 import { routes } from "../../app/routeMap";
 import s from "./PartnersPage.module.css";
 
@@ -46,7 +47,12 @@ function PartnerCardSkeleton() {
 }
 
 export function PartnersPage() {
-  const loading = useSimulatedLoad();
+  const { data, isLoading } = usePartners();
+  // Demo mode keeps the prototype's simulated entrance skeleton; live mode also
+  // shows it until the query resolves. Approved partners only (the endpoint and
+  // the mock registry both already exclude anything not live).
+  const loading = useSimulatedLoad() || isLoading;
+  const partners = data?.items ?? [];
 
   return (
     <PageShell>
@@ -91,9 +97,9 @@ export function PartnersPage() {
               ? Array.from({ length: 6 }).map((_, i) => (
                   <PartnerCardSkeleton key={i} />
                 ))
-              : PARTNERS.map((p, i) => (
+              : partners.map((p, i) => (
                   <FadeIn
-                    key={p.name}
+                    key={p.slug}
                     delay={Math.min(i, 8) * 60}
                     style={{ height: "100%" }}
                   >
@@ -170,12 +176,21 @@ export function PartnersPage() {
               <p>
                 We're selective about partnerships and take them seriously. If
                 your organisation is doing work that aligns with our values,
-                write to us and tell us about it.
+                tell us about it and we'll read every word.
               </p>
             </div>
-            <Button size="lg" href="mailto:partners@queerpulse.pt">
-              partners@queerpulse.pt
-            </Button>
+            <div className={s.becomeActions}>
+              <Button size="lg" to={routes.partnerApply}>
+                Apply to partner →
+              </Button>
+              <Button
+                size="lg"
+                variant="ghost"
+                href="mailto:partners@queerpulse.pt"
+              >
+                partners@queerpulse.pt
+              </Button>
+            </div>
           </div>
         </div>
       </section>

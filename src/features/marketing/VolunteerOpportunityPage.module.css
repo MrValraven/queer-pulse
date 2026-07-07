@@ -453,3 +453,97 @@
   color: var(--cream);
   font-weight: 600;
 }
+
+/* Withdraw affordance under the applied plum panel */
+.withdrawLink {
+  display: inline-block;
+  margin-top: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.7);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.withdrawLink:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+@media (hover: hover) {
+  .withdrawLink:hover:not(:disabled) {
+    color: var(--cream);
+  }
+}
+
+/* Signup-error notice under the Apply button */
+.applyError {
+  margin-top: 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+/* Poster-only "Who's signed up" roster */
+.signupList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.signupRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.16s var(--ease);
+}
+@media (hover: hover) {
+  a.signupRow:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+}
+.signupAv {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+.signupBody {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.signupBody b {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--plum);
+}
+.signupNote {
+  font-size: 12px;
+  color: var(--ink-60);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.posterActions {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+}
+.closedTag {
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-40);
+}

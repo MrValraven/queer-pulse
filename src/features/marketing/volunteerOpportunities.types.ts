@@ -45,7 +45,9 @@ export interface VolunteerOpportunity {
   spots: { label: string; value: ReactNode }[];
   applyConfirm: ReactNode;
   /* ---- partner card (optional) ---- */
-  partner: { name: string; text: ReactNode } | null;
+  /** `slug`, when present (live mode), links the card to the partner's page;
+   *  mock data omits it, so the card falls back to the generic partners hub. */
+  partner: { name: string; text: ReactNode; slug?: string } | null;
 }
 
 export const C = "var(--accent-ink)";

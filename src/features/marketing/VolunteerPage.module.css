@@ -13,6 +13,13 @@
   border-radius: 50%;
   background: var(--jade);
 }
+.heroCta {
+  margin-top: 26px;
+}
+.heroCta svg {
+  margin-right: 2px;
+  vertical-align: -2px;
+}
 
 .body {
   padding: 40px 0 80px;

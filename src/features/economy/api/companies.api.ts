@@ -1,0 +1,130 @@
+import { apiGet, apiPost, apiPatch } from "../../../shared/api/client";
+import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
+import type { JobCardDTO } from "./jobs.api";
+
+// ── Backend DTOs ─────────────────────────────────────────────────────────────
+// Shapes the NestJS companies domain returns. A company's `openRoles` are its
+// open jobs, typed with `JobCardDTO` imported from jobs.api (single source).
+
+export interface CompanyBadges {
+  queerRun: boolean;
+  queerLed: boolean;
+  verified: boolean;
+}
+
+export interface CompanyCardDTO {
+  slug: string;
+  nameText: string;
+  tagline: string;
+  badges: CompanyBadges;
+  reviewScore: number | null;
+  reviewCount: number;
+  /** Derived count of the company's open roles. */
+  openRolesCount: number;
+}
+
+export interface CompanyValue {
+  title: string;
+  desc: string;
+}
+export interface CompanyInfoItem {
+  label: string;
+  value: string;
+}
+export interface CompanyWorkItem {
+  label: string;
+  imageUrl: string | null;
+}
+export interface HiringContact {
+  name: string;
+  role: string;
+}
+/** Star-rating histogram (count of reviews at each star level). */
+export interface CompanyReviewBars {
+  one: number;
+  two: number;
+  three: number;
+  four: number;
+  five: number;
+}
+
+export interface CompanyDetailDTO extends CompanyCardDTO {
+  about: string;
+  values: CompanyValue[];
+  info: CompanyInfoItem[];
+  team: MemberRefDTO[];
+  teamCount: number;
+  hiringContact: HiringContact | null;
+  work: CompanyWorkItem[];
+  reviewBars: CompanyReviewBars;
+  openRoles: JobCardDTO[];
+  owner: MemberRefDTO | null;
+  isOwner: boolean;
+  createdAt: string;
+}
+
+export interface CompanyReviewDTO {
+  id: string;
+  author: MemberRefDTO | null;
+  title: string;
+  stars: number;
+  byline: string;
+  body: string[];
+  createdAt: string;
+}
+
+export interface CreateCompanyDto {
+  nameText: string;
+  tagline: string;
+  about: string;
+  queerRun?: boolean;
+  queerLed?: boolean; // `verified` is admin-only — the client cannot set it.
+  values?: CompanyValue[];
+  info?: CompanyInfoItem[];
+  team?: string[]; // member slugs
+  hiringContact?: HiringContact;
+  work?: CompanyWorkItem[];
+  handle?: string;
+}
+
+export type UpdateCompanyDto = Partial<CreateCompanyDto>;
+
+export interface CreateReviewDto {
+  title: string;
+  stars: number; // 1..5
+  byline: string;
+  body: string[];
+}
+
+// ── Raw calls (one per endpoint) ─────────────────────────────────────────────
+
+export function getCompanies(params: { page?: number } = {}) {
+  const q = new URLSearchParams();
+  if (params.page) q.set("page", String(params.page));
+  const qs = q.toString();
+  return apiGet<Paginated<CompanyCardDTO>>(`/companies${qs ? `?${qs}` : ""}`);
+}
+
+export const getCompany = (slug: string) =>
+  apiGet<CompanyDetailDTO>(`/companies/${slug}`);
+
+export const createCompany = (dto: CreateCompanyDto) =>
+  apiPost<CompanyDetailDTO>("/companies", dto);
+
+export const updateCompany = (slug: string, dto: UpdateCompanyDto) =>
+  apiPatch<CompanyDetailDTO>(`/companies/${slug}`, dto);
+
+export function getCompanyReviews(
+  slug: string,
+  params: { page?: number } = {},
+) {
+  const q = new URLSearchParams();
+  if (params.page) q.set("page", String(params.page));
+  const qs = q.toString();
+  return apiGet<Paginated<CompanyReviewDTO>>(
+    `/companies/${slug}/reviews${qs ? `?${qs}` : ""}`,
+  );
+}
+
+export const createReview = (slug: string, dto: CreateReviewDto) =>
+  apiPost<CompanyReviewDTO>(`/companies/${slug}/reviews`, dto);

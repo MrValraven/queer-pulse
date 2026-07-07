@@ -1,12 +1,101 @@
 import { useState } from "react";
+import { FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { ModalShell, Sending } from "./ModalKit";
 import { useEmployerAffiliation } from "../../app/providers/EmployerAffiliationProvider";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { COMPANY_PROFILES } from "./companies.data";
+import { useCompanies } from "./api/useCompanies";
+import { useCreateCompany } from "./api/useCompanyMutations";
 import { AFFILIATION_ROLES } from "./postJob.data";
 import styles from "./PostJobPage.module.css";
 
-const COMPANIES = Object.values(COMPANY_PROFILES);
+interface PickerCompany {
+  slug: string;
+  nameText: string;
+  logo: string;
+  badge: string;
+}
+
+interface NewCompany {
+  name: string;
+  tagline: string;
+  about: string;
+}
+
+/** Live-only block to add a company that isn't in the directory yet. */
+function AddCompanyBlock({
+  adding,
+  setAdding,
+  draft,
+  setDraft,
+}: {
+  adding: boolean;
+  setAdding: (b: boolean) => void;
+  draft: NewCompany;
+  setDraft: (patch: Partial<NewCompany>) => void;
+}) {
+  if (!adding) {
+    return (
+      <button
+        type="button"
+        className={styles.affItem}
+        style={{ marginTop: 12 }}
+        onClick={() => setAdding(true)}
+      >
+        <span className={styles.affLogo} aria-hidden>
+          <FiPlus />
+        </span>
+        <span>
+          <span className={styles.affName}>My company isn&apos;t listed</span>
+          <span className={styles.affMeta}>Add it to the directory</span>
+        </span>
+      </button>
+    );
+  }
+  return (
+    <>
+      <div className={styles.field} style={{ marginTop: 16 }}>
+        <div className={styles.label}>Company name</div>
+        <input
+          className={styles.input}
+          type="text"
+          value={draft.name}
+          onChange={(e) => setDraft({ name: e.target.value })}
+          placeholder="e.g. Atelier Pulso"
+        />
+      </div>
+      <div className={styles.field}>
+        <div className={styles.label}>One-line tagline</div>
+        <input
+          className={styles.input}
+          type="text"
+          value={draft.tagline}
+          onChange={(e) => setDraft({ tagline: e.target.value })}
+          placeholder="What the company does, in a sentence."
+        />
+      </div>
+      <div className={styles.field}>
+        <div className={styles.label}>About</div>
+        <textarea
+          className={styles.textarea}
+          rows={3}
+          value={draft.about}
+          onChange={(e) => setDraft({ about: e.target.value })}
+          placeholder="A short description of the company and how it works."
+        />
+      </div>
+      <button
+        type="button"
+        className={styles.back}
+        onClick={() => setAdding(false)}
+      >
+        ← Pick an existing company
+      </button>
+    </>
+  );
+}
 
 export function AffiliateCompanyModal({
   initialSlug,
@@ -18,15 +107,71 @@ export function AffiliateCompanyModal({
   onAffiliated: () => void;
 }) {
   const { affiliate } = useEmployerAffiliation();
+  const { demoMode } = useDemoMode();
+  const { showToast } = useToast();
+  const { data: liveCompanies = [] } = useCompanies();
+  const createCompany = useCreateCompany();
+
+  // Demo shows the mock profiles (unchanged); live shows API companies.
+  const companies: PickerCompany[] = demoMode
+    ? Object.values(COMPANY_PROFILES).map((c) => ({
+        slug: c.slug,
+        nameText: c.nameText,
+        logo: c.logo,
+        badge: c.badges[0]?.label ?? "Employer",
+      }))
+    : liveCompanies
+        .filter((c) => c.slug)
+        .map((c) => ({
+          slug: c.slug as string,
+          nameText: c.name,
+          logo: c.logo,
+          badge: c.badge,
+        }));
+
   const [slug, setSlug] = useState(
-    initialSlug && COMPANY_PROFILES[initialSlug] ? initialSlug : "",
+    initialSlug && companies.some((c) => c.slug === initialSlug)
+      ? initialSlug
+      : "",
   );
   const [role, setRole] = useState<string>(
     AFFILIATION_ROLES[0] ?? "Team member",
   );
   const [verifying, setVerifying] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [draft, setDraft] = useState<NewCompany>({
+    name: "",
+    tagline: "",
+    about: "",
+  });
 
-  function confirm() {
+  const canCreate =
+    draft.name.trim() !== "" &&
+    draft.tagline.trim() !== "" &&
+    draft.about.trim() !== "";
+  const busy = verifying || createCompany.isPending;
+
+  async function confirm() {
+    if (adding) {
+      if (!canCreate) return;
+      try {
+        const res = await createCompany.mutateAsync({
+          nameText: draft.name.trim(),
+          tagline: draft.tagline.trim(),
+          about: draft.about.trim(),
+        });
+        if (res?.slug) {
+          affiliate(res.slug, role);
+          onAffiliated();
+        }
+      } catch {
+        showToast(
+          "We couldn't create that company. Please try again.",
+          "error",
+        );
+      }
+      return;
+    }
     if (!slug) return;
     setVerifying(true);
     // Simulate the verification step, then grant access (create-it-live).
@@ -48,30 +193,39 @@ export function AffiliateCompanyModal({
         employer affiliations to keep the board trustworthy.
       </p>
 
-      <div className={styles.affList}>
-        {COMPANIES.map((c) => {
-          const on = c.slug === slug;
-          return (
-            <button
-              key={c.slug}
-              type="button"
-              className={[styles.affItem, on && styles.affItemSel]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setSlug(c.slug)}
-            >
-              <span className={styles.affLogo}>{c.logo}</span>
-              <span>
-                <span className={styles.affName}>{c.nameText}</span>
-                <span className={styles.affMeta}>
-                  {c.badges[0]?.label ?? "Employer"}
+      {!adding && (
+        <div className={styles.affList}>
+          {companies.map((c) => {
+            const on = c.slug === slug;
+            return (
+              <button
+                key={c.slug}
+                type="button"
+                className={[styles.affItem, on && styles.affItemSel]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => setSlug(c.slug)}
+              >
+                <span className={styles.affLogo}>{c.logo}</span>
+                <span>
+                  <span className={styles.affName}>{c.nameText}</span>
+                  <span className={styles.affMeta}>{c.badge}</span>
                 </span>
-              </span>
-              <span className={styles.affRadio} aria-hidden />
-            </button>
-          );
-        })}
-      </div>
+                <span className={styles.affRadio} aria-hidden />
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {!demoMode && (
+        <AddCompanyBlock
+          adding={adding}
+          setAdding={setAdding}
+          draft={draft}
+          setDraft={(patch) => setDraft((d) => ({ ...d, ...patch }))}
+        />
+      )}
 
       <div className={styles.field} style={{ marginTop: 16 }}>
         <div className={styles.label}>Your role there</div>
@@ -94,10 +248,16 @@ export function AffiliateCompanyModal({
         <Button
           variant="primary"
           size="lg"
-          disabled={!slug || verifying}
+          disabled={busy || (adding ? !canCreate : !slug)}
           onClick={confirm}
         >
-          {verifying ? <Sending label="Verifying…" /> : "Confirm & continue"}
+          {busy ? (
+            <Sending label={adding ? "Creating…" : "Verifying…"} />
+          ) : adding ? (
+            "Create & continue"
+          ) : (
+            "Confirm & continue"
+          )}
         </Button>
       </div>
     </ModalShell>

@@ -2,6 +2,11 @@ import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
 import type { LivingCommunity } from "./community.model";
+import { useJoinRequests } from "./api/useJoinRequests";
+import {
+  useRemoveMember,
+  useReviewJoinRequest,
+} from "./api/useCommunityMutations";
 import {
   ModJoinRequests,
   ModMemberManagement,
@@ -11,18 +16,26 @@ import {
 export function ModToolsTab({ living }: { living: LivingCommunity }) {
   const { showToast } = useToast();
   const { approveRequest, promoteToMod } = useCommunityMembership();
+  const reviewRequest = useReviewJoinRequest(living.slug);
+  const removeMember = useRemoveMember(living.slug);
 
-  // Intentional: seed local state from the prop once as a snapshot, then mutate
-  // it locally (approve/dismiss). This is not a live sync — the moderator's
-  // in-session actions own the list after mount.
-  const [requests, setRequests] = useState(living.joinRequests ?? []);
+  // Join requests come from the join-requests endpoint (demo returns the mock
+  // queue synchronously). A local resolved-id set owns the moderator's in-session
+  // approve/dismiss; the visible list derives from the (re-syncing) hook minus
+  // those ids, so a live invalidation refetch flows through without an effect.
+  const joinRequests = useJoinRequests(living.slug);
+  const [resolvedRequests, setResolvedRequests] = useState<Set<string>>(
+    new Set(),
+  );
+  const requests = joinRequests.filter((r) => !resolvedRequests.has(r.id));
   const [reports, setReports] = useState(living.reports ?? []);
   const [promoted, setPromoted] = useState<string[]>([]);
   const [removed, setRemoved] = useState<string[]>([]);
 
   const resolveRequest = (id: string, name: string, approved: boolean) => {
-    setRequests((prev) => prev.filter((r) => r.id !== id));
+    setResolvedRequests((prev) => new Set(prev).add(id));
     if (approved) approveRequest(living.slug);
+    reviewRequest.mutate({ id, action: approved ? "approve" : "decline" });
     showToast(
       approved
         ? `${name} approved — welcome them in.`
@@ -48,6 +61,7 @@ export function ModToolsTab({ living }: { living: LivingCommunity }) {
   };
   const remove = (slug: string | undefined, name: string) => {
     setRemoved((p) => [...p, memberKey(slug, name)]);
+    if (slug) removeMember.mutate(slug);
     showToast(`${name} has been removed.`, "info");
   };
 

@@ -7,7 +7,10 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { routes } from "../../../app/routeMap";
 import { useCreatedCommunities } from "../../../app/providers/CreatedCommunitiesProvider";
 import { useCommunityMembership } from "../../../app/providers/CommunityMembershipProvider";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { currentUserSlug } from "../../members/data/members";
+import { useCreateCommunity } from "../api/useCommunityMutations";
+import { draftToCreateDto } from "../api/communities.adapters";
 import { TOTAL_STEPS, type CreatedCommunity } from "./startCommunity.data";
 import { useCommunityForm } from "./useCommunityForm";
 import {
@@ -44,8 +47,10 @@ const NEXT_LABELS = [
 export function StartCommunityPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const { createCommunity } = useCreatedCommunities();
   const { createOwned } = useCommunityMembership();
+  const create = useCreateCommunity();
 
   const form = useCommunityForm();
   const { draft } = form;
@@ -76,6 +81,20 @@ export function StartCommunityPage() {
     // final step → found the community
     setPhase("opening");
     scrollUp();
+    // Live: POST /communities, then land in the new community's hub. Demo keeps
+    // the in-page create-it-live success (no network, no navigation).
+    if (!demoMode) {
+      create.mutate(draftToCreateDto(draft), {
+        onSuccess: (dto) => {
+          if (dto) navigate(`/community/${dto.slug}`);
+        },
+        onError: () => {
+          showToast("Couldn't open your community — try again.", "error");
+          setPhase("form");
+        },
+      });
+      return;
+    }
     openTimer.current = setTimeout(() => {
       const record = createCommunity(draft, currentUserSlug);
       createOwned(record.slug);

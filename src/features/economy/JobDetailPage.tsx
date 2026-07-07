@@ -4,9 +4,11 @@ import { PageShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
 import { JOBS } from "./jobs.data";
+import { useJob } from "./api/useJob";
 import { JobDetailSkeleton } from "./JobDetailSkeleton";
 import { JobDetailHeader } from "./JobDetailHeader";
 import { JobDetailBody } from "./JobDetailBody";
@@ -16,13 +18,33 @@ import styles from "./JobDetailPage.module.css";
 export function JobDetailPage() {
   const { slug } = useParams();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const { postedJobs } = usePostedJobs();
+  const jobQuery = useJob(slug);
   const [saved, setSaved] = useState(false);
-  const loading = useSimulatedLoad();
+  const simLoading = useSimulatedLoad();
 
-  const job =
-    postedJobs.find((j) => j.slug === slug) ??
-    JOBS.find((j) => j.slug === slug);
+  // Demo merges locally-posted jobs over the mock board; live reads the query.
+  const job = demoMode
+    ? (postedJobs.find((j) => j.slug === slug) ??
+      JOBS.find((j) => j.slug === slug) ??
+      null)
+    : (jobQuery.data ?? null);
+  const loading = demoMode ? simLoading : jobQuery.isLoading;
+
+  if (loading) {
+    return (
+      <PageShell>
+        <div className={styles.page}>
+          <div className={styles.breadcrumb}>
+            <Link to={routes.jobs}>Jobs</Link>
+          </div>
+          <JobDetailSkeleton />
+        </div>
+      </PageShell>
+    );
+  }
+
   if (!job) return <Navigate to={routes.jobs} replace />;
 
   const d = job.detail;
@@ -38,17 +60,6 @@ export function JobDetailPage() {
       <span className={styles.bcCurrent}>{job.title}</span>
     </div>
   );
-
-  if (loading) {
-    return (
-      <PageShell>
-        <div className={styles.page}>
-          {breadcrumb}
-          <JobDetailSkeleton />
-        </div>
-      </PageShell>
-    );
-  }
 
   function toggleSave() {
     setSaved((s) => {

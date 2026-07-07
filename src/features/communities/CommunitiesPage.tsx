@@ -12,8 +12,9 @@ import {
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
-import { communities } from "../homepage/data/communities";
 import type { Community, CommunityType } from "../homepage/data/types";
+import { useCommunities } from "./api/useCommunities";
+import { useJoinCommunity } from "./api/useCommunityMutations";
 import { getLiving } from "./livingCommunities.data";
 import { JoinModal } from "./JoinModal";
 import { CommunityCard } from "./CommunityCard";
@@ -45,10 +46,14 @@ function CommunityCardSkeleton() {
 }
 
 export function CommunitiesPage() {
-  const loading = useSimulatedLoad();
+  const { data, isLoading } = useCommunities();
+  const loading = useSimulatedLoad() || isLoading;
   const { isMember, join, requestToJoin } = useCommunityMembership();
   const [filter, setFilter] = useState<"all" | CommunityType>("all");
   const [joining, setJoining] = useState<Community | null>(null);
+  const joinMutation = useJoinCommunity(joining?.slug ?? "");
+
+  const communities = useMemo(() => data?.items ?? [], [data]);
 
   const joiningTier = joining
     ? (getLiving(joining.slug)?.accessTier ??
@@ -60,7 +65,7 @@ export function CommunitiesPage() {
       filter === "all"
         ? communities
         : communities.filter((c) => c.type === filter),
-    [filter],
+    [filter, communities],
   );
 
   return (
@@ -164,8 +169,14 @@ export function CommunitiesPage() {
           }}
           tier={joiningTier}
           onClose={() => setJoining(null)}
-          onJoined={() => joining.slug && join(joining.slug)}
-          onRequested={() => joining.slug && requestToJoin(joining.slug)}
+          onJoined={() => {
+            if (joining.slug) join(joining.slug);
+            joinMutation.mutate({});
+          }}
+          onRequested={() => {
+            if (joining.slug) requestToJoin(joining.slug);
+            joinMutation.mutate({});
+          }}
         />
       )}
     </PageShell>

@@ -937,6 +937,11 @@ const VolunteerOpportunityPage = lazy(() =>
     default: m.VolunteerOpportunityPage,
   })),
 );
+const PostVolunteerOpportunityPage = lazy(() =>
+  import("../features/marketing/PostVolunteerOpportunityPage").then((m) => ({
+    default: m.PostVolunteerOpportunityPage,
+  })),
+);
 const GuidelinesPage = lazy(() =>
   import("../features/marketing/GuidelinesPage").then((m) => ({
     default: m.GuidelinesPage,
@@ -965,6 +970,11 @@ const ResourceLibraryPage = lazy(() =>
 const PartnersPage = lazy(() =>
   import("../features/marketing/PartnersPage").then((m) => ({
     default: m.PartnersPage,
+  })),
+);
+const SubmitPartnerApplicationPage = lazy(() =>
+  import("../features/marketing/SubmitPartnerApplicationPage").then((m) => ({
+    default: m.SubmitPartnerApplicationPage,
   })),
 );
 const PartnerDetailPage = lazy(() =>
@@ -1421,6 +1431,11 @@ const AdminGovernancePage = lazy(() =>
 const ModPanelPage = lazy(() =>
   import("../features/admin/ModPanelPage").then((m) => ({
     default: m.ModPanelPage,
+  })),
+);
+const AdminPartnerApplicationsPage = lazy(() =>
+  import("../features/admin/AdminPartnerApplicationsPage").then((m) => ({
+    default: m.AdminPartnerApplicationsPage,
   })),
 );
 import { KNOWN_ROUTE_SLUGS, routes } from "./routeMap";
@@ -2118,12 +2133,20 @@ export function AppRoutes() {
         <Route path={routes.help} element={<HelpPage />} />
         <Route path={routes.volunteer} element={<VolunteerPage />} />
         <Route
+          path={routes.postVolunteer}
+          element={<PostVolunteerOpportunityPage />}
+        />
+        <Route
           path="/about/volunteer/opportunity/:slug"
           element={<VolunteerOpportunityPage />}
         />
         <Route path={routes.platforms} element={<PlatformsPage />} />
         <Route path={routes.donate} element={<DonatePage />} />
         <Route path={routes.partners} element={<PartnersPage />} />
+        <Route
+          path={routes.partnerApply}
+          element={<SubmitPartnerApplicationPage />}
+        />
         <Route
           path={`${routes.partners}/:slug`}
           element={<PartnerDetailPage />}
@@ -2279,6 +2302,10 @@ export function AppRoutes() {
         <Route
           path={routes.adminCommunities}
           element={<AdminCommunitiesPage />}
+        />
+        <Route
+          path={routes.adminPartnerApplications}
+          element={<AdminPartnerApplicationsPage />}
         />
         <Route
           path={routes.adminGovernance}

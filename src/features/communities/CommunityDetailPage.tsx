@@ -2,51 +2,75 @@ import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { FiCheck, FiClock } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, SkeletonLine } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { useAllCommunities, useCreatedDetail } from "./useAllCommunities";
-import { memberProfiles } from "../members/data/memberProfiles";
-import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAllCommunities } from "./useAllCommunities";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
 import { JoinModal } from "./JoinModal";
-import {
-  getCommunityDetail,
-  membersFor,
-  type Thread as ThreadData,
-  type Tint,
-} from "./communityDetails";
-import { getLiving } from "./livingCommunities.data";
+import { membersFor, type Thread as ThreadData } from "./communityDetails";
+import { useCommunity } from "./api/useCommunity";
+import { useRoster } from "./api/useRoster";
+import { useCommunityPosts } from "./api/useCommunityPosts";
+import { useJoinCommunity } from "./api/useCommunityMutations";
+import { CommunityHeroAvatars } from "./CommunityHeroAvatars";
 import { LivingHubTabs } from "./LivingHubTabs";
 import { FallbackHubTabs } from "./FallbackHubTabs";
 import { CommunitySidebar } from "./CommunitySidebar";
 import styles from "./CommunityDetailPage.module.css";
 
-const HERO_AV: Record<Tint, { background: string; color: string }> = {
-  coral: {
-    background: "rgba(var(--accent-rgb),.22)",
-    color: "var(--accent-soft)",
-  },
-  jade: { background: "rgba(var(--jade-rgb),.22)", color: "var(--jade-soft)" },
-  plum: { background: "rgba(247,243,238,.18)", color: "rgba(247,243,238,.8)" },
-};
-
 export function CommunityDetailPage() {
   const { slug } = useParams();
+  const { demoMode } = useDemoMode();
   const { isMember, join, leave, hasRequested, requestToJoin, roleIn } =
     useCommunityMembership();
   const [joining, setJoining] = useState(false);
 
-  const communities = useAllCommunities();
-  const createdDetail = useCreatedDetail(slug);
-  const community = communities.find((c) => c.slug === slug);
-  const detail = getCommunityDetail(slug) ?? createdDetail;
-  if (!community || !detail)
-    return <Navigate to={routes.communities} replace />;
+  const {
+    community,
+    detail,
+    living: baseLiving,
+    myRole,
+    myJoinRequestStatus,
+    notFound,
+    isLoading,
+  } = useCommunity(slug);
+  const roster = useRoster(slug);
+  const posts = useCommunityPosts(slug);
+  const joinMutation = useJoinCommunity(slug ?? "");
+  const allCommunities = useAllCommunities();
 
-  const living = getLiving(slug);
-  const joined = slug ? isMember(slug) : false;
-  const requested = slug ? hasRequested(slug) : false;
-  const role = slug ? roleIn(slug) : null;
+  if (notFound) return <Navigate to={routes.communities} replace />;
+  if (isLoading || !community || !detail) {
+    return (
+      <PageShell>
+        <div className={styles.body}>
+          <div className="wrap" aria-busy="true">
+            <SkeletonLine width="40%" height={30} />
+            <SkeletonLine width="70%" height={16} style={{ marginTop: 16 }} />
+            <SkeletonLine width="55%" height={16} style={{ marginTop: 10 }} />
+          </div>
+        </div>
+      </PageShell>
+    );
+  }
+
+  // Compose the enriched hub: roster + posts arrive from their own endpoints
+  // (in demo they equal `baseLiving`'s, keeping this byte-for-byte).
+  const living = baseLiving
+    ? { ...baseLiving, roster, pinned: posts.pinned, pulse: posts.pulse }
+    : undefined;
+
+  // Membership CTA state: the session provider is the demo source of truth;
+  // live mode reads the viewer's role/request straight off the detail DTO.
+  const joined = demoMode ? (slug ? isMember(slug) : false) : myRole != null;
+  const requested = demoMode
+    ? slug
+      ? hasRequested(slug)
+      : false
+    : myJoinRequestStatus === "pending";
+  const role = demoMode ? (slug ? roleIn(slug) : null) : myRole;
+
   const tier =
     living?.accessTier ?? (community.privateBadge ? "private" : "public");
   const joinLabel =
@@ -84,9 +108,18 @@ export function CommunityDetailPage() {
     ],
   };
   const threads = [detail.topicThread, welcome];
-  const related = communities
+  const related = allCommunities
     .filter((c) => c.slug !== slug && !c.privateBadge)
     .slice(0, 3);
+
+  const onJoined = () => {
+    if (slug) join(slug);
+    joinMutation.mutate({});
+  };
+  const onRequested = () => {
+    if (slug) requestToJoin(slug);
+    joinMutation.mutate({});
+  };
 
   return (
     <PageShell>
@@ -122,54 +155,11 @@ export function CommunityDetailPage() {
                 {joinLabel}
               </Button>
             )}
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <div className={styles.avStrip}>
-                {heroAvatars.map((m, i) => {
-                  const photo = m.slug
-                    ? memberProfiles[m.slug]?.photo
-                    : undefined;
-                  const inner = (
-                    <>
-                      <span className={styles.heroAvTip}>{m.name}</span>
-                      <span className={styles.sav} style={HERO_AV[m.tint]}>
-                        {photo ? (
-                          <img
-                            src={resolveAvatarSrc(photo)}
-                            alt={m.name}
-                            referrerPolicy="no-referrer"
-                          />
-                        ) : (
-                          m.initials
-                        )}
-                      </span>
-                    </>
-                  );
-                  return m.slug ? (
-                    <Link
-                      key={i}
-                      to={`/members/${m.slug}`}
-                      className={styles.heroAv}
-                      style={{ zIndex: heroAvatars.length - i }}
-                    >
-                      {inner}
-                    </Link>
-                  ) : (
-                    <span
-                      key={i}
-                      className={styles.heroAv}
-                      style={{ zIndex: heroAvatars.length - i }}
-                    >
-                      {inner}
-                    </span>
-                  );
-                })}
-              </div>
-              {hasCount && memberNum > 5 && (
-                <span className={styles.stripNote}>
-                  and {memberNum - 5} more
-                </span>
-              )}
-            </div>
+            <CommunityHeroAvatars
+              avatars={heroAvatars}
+              memberNum={memberNum}
+              hasCount={hasCount}
+            />
           </div>
         </div>
       </div>
@@ -212,8 +202,8 @@ export function CommunityDetailPage() {
           }}
           tier={tier}
           onClose={() => setJoining(false)}
-          onJoined={() => slug && join(slug)}
-          onRequested={() => slug && requestToJoin(slug)}
+          onJoined={onJoined}
+          onRequested={onRequested}
         />
       )}
     </PageShell>

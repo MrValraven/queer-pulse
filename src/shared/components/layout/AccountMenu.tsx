@@ -21,6 +21,7 @@ import {
   FiLogOut,
   FiDatabase,
   FiLayout,
+  FiChevronDown,
 } from "react-icons/fi";
 import { Avatar } from "../ui";
 import { useAuth } from "../../../app/providers/authContext";
@@ -145,25 +146,72 @@ export function AccountMenu({
 
   return (
     <div className={styles.wrap} ref={ref}>
-      <button
-        type="button"
-        className={[styles.trigger, placement === "rail" && styles.triggerRail]
-          .filter(Boolean)
-          .join(" ")}
-        onClick={() => setOpen((o) => !o)}
-        aria-haspopup="menu"
-        aria-expanded={open}
-      >
-        <Avatar
-          initials={initials}
-          src={photo ?? undefined}
-          alt={name}
-          tint="coral"
-          size={28}
-        />
-        <span className={styles.name}>{name.split(" ")[0]}</span>
-        <ChevronIcon open={open} />
-      </button>
+      {placement === "rail" ? (
+        // "Balanced split": identity opens the menu on the left; a matching pair
+        // of round controls (a Settings shortcut + the menu chevron) sits on the
+        // right, so weight lands at both ends of the rail instead of a lone chip.
+        <div className={styles.railTrigger}>
+          <button
+            type="button"
+            className={styles.railMain}
+            onClick={() => setOpen((o) => !o)}
+            aria-haspopup="menu"
+            aria-expanded={open}
+          >
+            <Avatar
+              initials={initials}
+              src={photo ?? undefined}
+              alt={name}
+              tint="coral"
+              size={30}
+            />
+            <span className={styles.railName}>{name.split(" ")[0]}</span>
+          </button>
+          <div className={styles.railCluster}>
+            <Link
+              to={routes.settings}
+              className={styles.railMini}
+              aria-label="Settings"
+              onClick={() => setOpen(false)}
+            >
+              <FiSettings aria-hidden />
+            </Link>
+            <button
+              type="button"
+              className={styles.railMini}
+              onClick={() => setOpen((o) => !o)}
+              aria-haspopup="menu"
+              aria-expanded={open}
+              aria-label="Account menu"
+            >
+              <FiChevronDown
+                aria-hidden
+                className={[styles.railChevIcon, open && styles.railChevOpen]
+                  .filter(Boolean)
+                  .join(" ")}
+              />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className={styles.trigger}
+          onClick={() => setOpen((o) => !o)}
+          aria-haspopup="menu"
+          aria-expanded={open}
+        >
+          <Avatar
+            initials={initials}
+            src={photo ?? undefined}
+            alt={name}
+            tint="coral"
+            size={28}
+          />
+          <span className={styles.name}>{name.split(" ")[0]}</span>
+          <ChevronIcon open={open} />
+        </button>
+      )}
 
       {open && (
         <div

@@ -1,0 +1,74 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import {
+  applyToJob,
+  closeJob,
+  createJob,
+  type CreateJobApplicationDto,
+  type CreateJobDto,
+} from "./jobs.api";
+
+/**
+ * Each mutation branches on `demoMode`: demo is a no-op (the calling component
+ * keeps its optimistic local state — e.g. PostedJobsProvider stays the demo
+ * source for posted jobs), and live calls the API then invalidates the affected
+ * query keys. Demo mode never hits the network.
+ */
+
+/** POST /jobs — Post-a-Job wizard submit. */
+export function useCreateJob() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<{ slug?: string }, Error, CreateJobDto>({
+    mutationFn: async (dto) => {
+      if (demoMode) return {};
+      const res = await createJob(dto);
+      return { slug: res.slug };
+    },
+    onSuccess: (_res, dto) => {
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["companies"] });
+      if (dto.companySlug) {
+        queryClient.invalidateQueries({
+          queryKey: ["company", dto.companySlug],
+        });
+      }
+    },
+  });
+}
+
+/** POST /jobs/:slug/close — take a listing down. */
+export function useCloseJob(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, void>({
+    mutationFn: async () => {
+      if (demoMode) return;
+      await closeJob(slug);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["job", slug] });
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+    },
+  });
+}
+
+/**
+ * POST /jobs/:slug/applications — apply flow. On a duplicate application the API
+ * answers 409; the error propagates as an `ApiError` so the caller can surface a
+ * clear "you've already applied" state.
+ */
+export function useApplyToJob(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, CreateJobApplicationDto>({
+    mutationFn: async (dto) => {
+      if (demoMode) return;
+      await applyToJob(slug, dto);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["job", slug] });
+      queryClient.invalidateQueries({ queryKey: ["my-applications"] });
+    },
+  });
+}

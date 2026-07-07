@@ -3,6 +3,13 @@
   margin: 0 auto;
   padding: 40px 28px 80px;
 }
+.error {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--plum);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
 .back {
   font-size: 13px;
   color: var(--ink-40);

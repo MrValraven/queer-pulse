@@ -20,6 +20,12 @@ import type {
 import { photoOf, roleLookup } from "./communityPeople";
 import { RoleBadge, ReactionBar } from "./CommunityBadges";
 import { AV_CLASS } from "./communityAvatar";
+import {
+  useCreatePost,
+  useReact,
+  useReply,
+  useUnreact,
+} from "./api/useCommunityMutations";
 import styles from "./PulseTab.module.css";
 
 function toggle(reactions: Reaction[], key: ReactionKey): Reaction[] {
@@ -34,10 +40,16 @@ function PulsePost({
   post,
   roleOf,
   pinned = false,
+  onReactPost,
+  onReplyPost,
 }: {
   post: Post;
   roleOf: (p: Post["author"]) => ReturnType<ReturnType<typeof roleLookup>>;
   pinned?: boolean;
+  /** Persist a reaction toggle (no-op in demo — local state owns the UI). */
+  onReactPost?: (id: string, key: ReactionKey, willReact: boolean) => void;
+  /** Persist a reply (no-op in demo). */
+  onReplyPost?: (id: string, text: string) => void;
 }) {
   const [reactions, setReactions] = useState(post.reactions);
   const [showReply, setShowReply] = useState(false);
@@ -45,6 +57,11 @@ function PulsePost({
   const [added, setAdded] = useState<PostReply[]>([]);
   const replies = [...post.replies, ...added];
   const toggleReply = () => setShowReply((s) => !s);
+  const react = (key: ReactionKey) => {
+    const willReact = !reactions.find((r) => r.key === key)?.reacted;
+    setReactions((r) => toggle(r, key));
+    onReactPost?.(post.id, key, willReact);
+  };
   const sendReply = () => {
     const text = replyDraft.trim();
     if (!text) return;
@@ -57,6 +74,7 @@ function PulsePost({
       },
     ]);
     setReplyDraft("");
+    onReplyPost?.(post.id, text);
   };
   const replyLabel = replies.length
     ? `Show ${replies.length} repl${replies.length === 1 ? "y" : "ies"}`
@@ -94,10 +112,7 @@ function PulsePost({
         </div>
       )}
       <div className={styles.pFoot}>
-        <ReactionBar
-          reactions={reactions}
-          onReact={(k) => setReactions((r) => toggle(r, k))}
-        />
+        <ReactionBar reactions={reactions} onReact={react} />
         <span
           role="button"
           tabIndex={0}
@@ -155,12 +170,24 @@ export function PulseTab({
 }) {
   const loading = useSimulatedLoad(500);
   const { showToast } = useToast();
+  const createPost = useCreatePost(community.slug);
+  const react = useReact(community.slug);
+  const unreact = useUnreact(community.slug);
+  const reply = useReply(community.slug);
   const roleOf = useMemo(
     () => roleLookup(community.roster),
     [community.roster],
   );
   const [draft, setDraft] = useState("");
   const [mine, setMine] = useState<Post[]>([]);
+
+  // Persist handlers threaded into each post. Demo mode no-ops (the local
+  // optimistic state owns the UI); live mode hits the API + invalidates.
+  const onReactPost = (id: string, key: ReactionKey, willReact: boolean) => {
+    if (willReact) react.mutate({ id, key });
+    else unreact.mutate({ id, key });
+  };
+  const onReplyPost = (id: string, text: string) => reply.mutate({ id, text });
 
   const share = () => {
     const text = draft.trim();
@@ -179,6 +206,7 @@ export function PulseTab({
       ...prev,
     ]);
     setDraft("");
+    createPost.mutate({ body: text });
     showToast("Shared with the community.", "success");
   };
 
@@ -235,14 +263,25 @@ export function PulseTab({
 
       {community.pinned.map((post) => (
         <FadeIn key={post.id}>
-          <PulsePost post={post} roleOf={roleOf} pinned />
+          <PulsePost
+            post={post}
+            roleOf={roleOf}
+            pinned
+            onReactPost={onReactPost}
+            onReplyPost={onReplyPost}
+          />
         </FadeIn>
       ))}
 
       {feed.map((item, i) =>
         item.post ? (
           <FadeIn key={item.post.id} delay={Math.min(i, 8) * 55}>
-            <PulsePost post={item.post} roleOf={roleOf} />
+            <PulsePost
+              post={item.post}
+              roleOf={roleOf}
+              onReactPost={onReactPost}
+              onReplyPost={onReplyPost}
+            />
           </FadeIn>
         ) : (
           <FadeIn key={`m-${item.moment!.id}`} delay={Math.min(i, 8) * 55}>

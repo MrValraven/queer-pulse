@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Button, FadeIn } from "../../shared/components/ui";
 import type { VolunteerOpportunity } from "./volunteerOpportunities";
+import type { SignupRow } from "./api/volunteering.adapters";
+import { VolunteerSignupsCard } from "./VolunteerSignupsCard";
 import { routes } from "../../app/routeMap";
 import styles from "./VolunteerOpportunityPage.module.css";
 
@@ -14,14 +16,38 @@ export function VolunteerOpportunitySidebar({
   applied,
   submitting,
   apply,
+  withdraw,
+  withdrawing,
+  error,
+  isFull,
+  isPoster,
+  signups,
+  signupsLoading,
+  onCloseOpportunity,
+  closing,
+  closed,
   alternatives,
 }: {
   opp: VolunteerOpportunity;
   applied: boolean;
   submitting: boolean;
   apply: () => void;
+  withdraw: () => void;
+  withdrawing: boolean;
+  error: string | null;
+  isFull: boolean;
+  isPoster: boolean;
+  signups: SignupRow[];
+  signupsLoading: boolean;
+  onCloseOpportunity: () => void;
+  closing: boolean;
+  closed: boolean;
   alternatives: VolunteerOpportunity[];
 }) {
+  const partnerTo = opp.partner?.slug
+    ? `${routes.partners}/${opp.partner.slug}`
+    : PARTNER;
+
   return (
     <aside className={styles.side}>
       {applied ? (
@@ -45,6 +71,15 @@ export function VolunteerOpportunitySidebar({
           <Button variant="ghost-dark" className={styles.ctaBtn} to={MESSAGES}>
             Message the team
           </Button>
+          <button
+            type="button"
+            className={styles.withdrawLink}
+            onClick={withdraw}
+            disabled={withdrawing}
+            aria-busy={withdrawing}
+          >
+            {withdrawing ? "Withdrawing…" : "Withdraw my interest"}
+          </button>
         </FadeIn>
       ) : (
         <div className={styles.card}>
@@ -62,7 +97,7 @@ export function VolunteerOpportunitySidebar({
           {opp.spots.map((r) => (
             <div className={styles.spotsRow} key={r.label}>
               <span>{r.label}</span>
-              {r.value}
+              {typeof r.value === "string" ? <b>{r.value}</b> : r.value}
             </div>
           ))}
           <div className={styles.cta}>
@@ -70,15 +105,24 @@ export function VolunteerOpportunitySidebar({
               variant="primary"
               className={styles.ctaBtn}
               onClick={apply}
-              disabled={submitting}
+              disabled={submitting || isFull}
               aria-busy={submitting}
             >
-              {submitting ? "Sending your application…" : "Apply →"}
+              {isFull
+                ? "This role is full"
+                : submitting
+                  ? "Sending your application…"
+                  : "Apply →"}
             </Button>
             <Button variant="ghost" className={styles.ctaBtn} to={MESSAGES}>
               Ask the team
             </Button>
           </div>
+          {error && (
+            <p className={styles.applyError} role="alert">
+              {error}
+            </p>
+          )}
           <p className={styles.footNote}>
             Returning volunteers:{" "}
             <Link to={MEMBER}>use last year's profile →</Link> · skips the
@@ -87,12 +131,22 @@ export function VolunteerOpportunitySidebar({
         </div>
       )}
 
+      {isPoster && (
+        <VolunteerSignupsCard
+          signups={signups}
+          loading={signupsLoading}
+          onClose={onCloseOpportunity}
+          closing={closing}
+          closed={closed}
+        />
+      )}
+
       {opp.partner && (
         <div className={styles.card}>
           <div className={styles.cardLabel}>In partnership with</div>
           <span className={styles.partnerPill}>{opp.partner.name}</span>
           <p className={styles.partnerText}>{opp.partner.text}</p>
-          <Link to={PARTNER} className={styles.partnerLink}>
+          <Link to={partnerTo} className={styles.partnerLink}>
             About the partnership →
           </Link>
         </div>

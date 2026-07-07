@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { ApiError } from "../../shared/api/client";
+import { useCreateJob } from "./api/useJobMutations";
+import { postJobStateToCreateJobDto } from "./api/jobs.adapters";
 import { routes } from "../../app/routeMap";
 import { PostJobStepper } from "./PostJobStepper";
 import { PostJobStepType } from "./PostJobStepType";
@@ -35,6 +39,8 @@ export function PostJobComposer({
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { addJob } = usePostedJobs();
+  const { demoMode } = useDemoMode();
+  const createJob = useCreateJob();
   const [showErrors, setShowErrors] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const { step, setStep } = form;
@@ -77,7 +83,7 @@ export function PostJobComposer({
     scrollTop();
   }
 
-  function publish() {
+  async function publish() {
     if (!form.canPublish) {
       setShowErrors(true);
       showToast(
@@ -87,10 +93,35 @@ export function PostJobComposer({
       return;
     }
     const job = form.toJob(company, role);
-    addJob(job);
-    form.clearDraft();
-    onPublished(job);
-    scrollTop();
+    // Demo keeps PostedJobsProvider as the local source of posted jobs.
+    if (demoMode) {
+      addJob(job);
+      form.clearDraft();
+      onPublished(job);
+      scrollTop();
+      return;
+    }
+    // Live: POST /jobs for the affiliated company (403 if not on its team).
+    try {
+      await createJob.mutateAsync(
+        postJobStateToCreateJobDto(form.state, company, role),
+      );
+      form.clearDraft();
+      onPublished(job);
+      scrollTop();
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 403) {
+        showToast(
+          `You're not authorised to post for ${company.nameText}. Switch to a company you're on the team of.`,
+          "error",
+        );
+      } else {
+        showToast(
+          "We couldn't publish your listing. Please try again.",
+          "error",
+        );
+      }
+    }
   }
 
   return (
@@ -156,10 +187,10 @@ export function PostJobComposer({
                 </Button>
                 <Button
                   variant="primary"
-                  disabled={!form.canPublish}
+                  disabled={!form.canPublish || createJob.isPending}
                   onClick={publish}
                 >
-                  Publish listing
+                  {createJob.isPending ? "Publishing…" : "Publish listing"}
                 </Button>
               </>
             )}
