@@ -1,4 +1,4 @@
-import { useId, useState, type CSSProperties } from "react";
+import { useId, type CSSProperties } from "react";
 import { NavLink } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
 import type { MegaMenu } from "./navMenus";
@@ -16,17 +16,24 @@ const staggerVar = (index: number): CSSProperties =>
  * One nav group in the left rail. Expanded: an accordion button revealing its
  * column heads + links. Collapsed (icon rail): an icon button whose links
  * appear in a hover/focus flyout to the right.
+ *
+ * The expanded/collapsed accordion state is controlled by the parent `Sidebar`
+ * (via `open`/`onToggle`) so a single "Collapse all" control can close every
+ * group at once.
  */
 export function SidebarGroup({
   menu,
   collapsed,
+  open,
+  onToggle,
   onNavigate,
 }: {
   menu: MegaMenu;
   collapsed: boolean;
+  open: boolean;
+  onToggle: () => void;
   onNavigate?: () => void;
 }) {
-  const [open, setOpen] = useState(false);
   const panelId = useId();
   const Icon = menu.icon;
 
@@ -86,7 +93,7 @@ export function SidebarGroup({
         className={styles.groupBtn}
         aria-expanded={open}
         aria-controls={panelId}
-        onClick={() => setOpen((o) => !o)}
+        onClick={onToggle}
       >
         {Icon ? <Icon aria-hidden className={styles.groupIcon} /> : null}
         <span className={styles.groupLabel}>{menu.key}</span>

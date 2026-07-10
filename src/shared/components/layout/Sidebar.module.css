@@ -69,6 +69,65 @@
   font-style: italic;
 }
 
+/* ── Collapse-all toolbar ────────────────────────────────────────────────── */
+/* A slim right-aligned control above the group list; only rendered in the
+   expanded rail while at least one accordion is open, so it never sits idle. */
+.toolbar {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 6px 6px;
+}
+.collapseAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(var(--cream-rgb), 0.06);
+  color: rgba(var(--cream-rgb), 0.62);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+  animation: sbToolbarIn var(--dur-base) var(--ease-out) both;
+}
+.collapseAllIcon {
+  flex: none;
+  font-size: 14px;
+}
+@media (hover: hover) {
+  .collapseAll:hover {
+    background: rgba(var(--cream-rgb), 0.12);
+    color: var(--cream);
+  }
+}
+.collapseAll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+/* Keyframe defined locally: a global one referenced from a CSS module gets its
+   animation-name hashed with no matching @keyframes and silently no-ops. */
+@keyframes sbToolbarIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .collapseAll {
+    animation: none;
+  }
+}
+
 /* ── Groups ──────────────────────────────────────────────────────────────── */
 .groups {
   flex: 1;

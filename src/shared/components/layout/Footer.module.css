@@ -7,9 +7,10 @@
 
 /* ---- Top region: brand + columns ---- */
 .grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 2.6fr);
-  gap: 56px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px 56px;
   align-items: start;
 }
 
@@ -70,10 +71,14 @@
   }
 }
 
+/* Content-sized so the four columns stay a cohesive block that hugs the right
+   edge (the `.grid` space-between drops the free space between it and the
+   brand). Even gaps keep the rhythm; `max-content` avoids the fr-collapse that
+   happens to a grid inside a shrink-to-fit flex item. */
 .cols {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 28px 36px;
+  grid-template-columns: repeat(4, max-content);
+  gap: 28px 44px;
 }
 .col h4 {
   font-size: 12px;
@@ -200,7 +205,8 @@
 /* ---- Responsive ---- */
 @media (max-width: 980px) {
   .grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
     gap: 40px;
   }
 }

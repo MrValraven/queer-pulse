@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiChevronsUp } from "react-icons/fi";
 import { NAV_MENUS, filterMenus } from "./navMenus";
 import { SidebarGroup } from "./SidebarGroup";
 import { SidebarFooter } from "./SidebarFooter";
@@ -24,6 +26,18 @@ export function Sidebar({ unreadCount }: { unreadCount?: number }) {
   const liveCount = useUnreadCount();
   const count = unreadCount ?? liveCount;
 
+  // Which accordion groups are expanded. Lifted here (rather than owned per
+  // group) so the "Collapse all" control can close every dropdown at once.
+  const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());
+  const toggleGroup = (key: string) =>
+    setOpenKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  const collapseAll = () => setOpenKeys(new Set());
+
   return (
     <aside
       className={[styles.rail, railCollapsed && styles.railCollapsed]
@@ -40,9 +54,28 @@ export function Sidebar({ unreadCount }: { unreadCount?: number }) {
         )}
       </Link>
 
+      {!railCollapsed && openKeys.size > 0 && (
+        <div className={styles.toolbar}>
+          <button
+            type="button"
+            className={styles.collapseAll}
+            onClick={collapseAll}
+          >
+            <FiChevronsUp aria-hidden className={styles.collapseAllIcon} />
+            Collapse all
+          </button>
+        </div>
+      )}
+
       <nav className={styles.groups} aria-label="Sections">
         {menus.map((menu) => (
-          <SidebarGroup key={menu.key} menu={menu} collapsed={railCollapsed} />
+          <SidebarGroup
+            key={menu.key}
+            menu={menu}
+            collapsed={railCollapsed}
+            open={openKeys.has(menu.key)}
+            onToggle={() => toggleGroup(menu.key)}
+          />
         ))}
       </nav>
 

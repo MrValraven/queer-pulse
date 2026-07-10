@@ -1,7 +1,14 @@
 /* Sidebar nav mode: offset page content to clear the fixed left rail.
    Desktop only — on mobile the nav falls back to the MegaNav drawer, so no
    offset is applied. The rail width is exposed as `--rail-w` and re-read by
-   Sidebar.module.css so the two never drift. */
+   Sidebar.module.css so the two never drift.
+
+   Everything below targets `main[data-page-main]` — the single <main> that
+   PageShell/AppShell render beside the global rail — NOT a bare `main`. Pages
+   nest their own <main> elements (e.g. a results column) and self-contained
+   frames like Studio/Cinema render their own <main> with their own nav; a bare
+   selector leaked the rail offset into all of them, shoving inner content right
+   and up. The attribute pins these rules to the one main that sits by the rail. */
 @media (min-width: 861px) {
   html[data-nav-mode="sidebar"] {
     --rail-w: 264px;
@@ -9,7 +16,7 @@
   html[data-nav-mode="sidebar"][data-nav-collapsed="true"] {
     --rail-w: 68px;
   }
-  html[data-nav-mode="sidebar"] main,
+  html[data-nav-mode="sidebar"] main[data-page-main],
   html[data-nav-mode="sidebar"] .site-footer {
     padding-left: var(--rail-w);
     transition: padding-left 220ms var(--ease, ease);
@@ -20,7 +27,7 @@
      height the Navbar would have occupied (`--nav-top` + `--nav-height`) so the
      hero keeps only its intended breathing room. The clipped strip is empty
      padding, never content. */
-  html[data-nav-mode="sidebar"] main {
+  html[data-nav-mode="sidebar"] main[data-page-main] {
     margin-top: calc(-1 * (var(--nav-top) + var(--nav-height)));
   }
   /* MegaNav mode centres the `.wrap` container (margin: 0 auto). Beside the
@@ -29,10 +36,29 @@
   html[data-nav-mode="sidebar"] .wrap {
     margin-inline: 0;
   }
+  /* Some pages centre a bespoke outer container (`margin: 0 auto` on a scoped
+     `.page`-style wrapper) instead of the shared `.wrap`, so the rule above
+     never reached them — they kept floating centred in the region beside the
+     rail. Left-hug each page's outermost container too, mirroring the `.wrap`
+     treatment, so every layout — shared wrap or bespoke — sits next to the
+     sidebar. Full-bleed sections already have zero inline margin, so this is a
+     no-op for them; the plum footer lives outside `main`, so it stays untouched. */
+  html[data-nav-mode="sidebar"] main[data-page-main] > * {
+    margin-inline: 0;
+  }
+  /* Exception: the footer. Its plum background is full-bleed, so left-hugging
+     its content leaves a lopsided empty plum band on the right of wide screens.
+     Re-centre only the footer's wrap in the space beside the rail so both
+     gutters match. Below ~1560px the wrap still fills the region and hugs the
+     rail (max-width ≥ available), so this only kicks in once there's slack —
+     exactly where the imbalance appeared. Content pages keep hugging left. */
+  html[data-nav-mode="sidebar"] .site-footer .wrap {
+    margin-inline: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-nav-mode="sidebar"] main,
+  html[data-nav-mode="sidebar"] main[data-page-main],
   html[data-nav-mode="sidebar"] .site-footer {
     transition: none;
   }

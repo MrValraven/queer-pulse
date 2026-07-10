@@ -17,7 +17,7 @@ export function AppShell({
   return (
     <>
       <Navbar unreadCount={unreadCount} />
-      <main>{children}</main>
+      <main data-page-main>{children}</main>
       <Footer />
     </>
   );

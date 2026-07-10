@@ -7,7 +7,7 @@ export function PageShell({ children }: { children: ReactNode }) {
   return (
     <>
       <Navbar />
-      <main>{children}</main>
+      <main data-page-main>{children}</main>
       <Footer />
     </>
   );
