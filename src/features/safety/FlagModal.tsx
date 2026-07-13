@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useCreateReport } from "./api/useCreateReport";
+import { reasonsFor, type ReasonCode } from "./reportReasons";
+import { logError } from "../../shared/observability/logger";
 import styles from "./FlagModal.module.css";
 
-const REASONS = [
-  "A harassment or safety incident",
-  "Discrimination or misgendering",
-  "Staff didn't intervene when needed",
-  "An accessibility problem",
-  "The atmosphere has changed",
-  "Other concern",
-];
+const REASONS = reasonsFor("venue");
 
 export function FlagModal({
   spaceName,
+  spaceId,
   onClose,
   onSubmitted,
 }: {
   spaceName: string;
+  /** Safe-space id — the report's `subjectId`. Falls back to the name. */
+  spaceId?: string;
   onClose: () => void;
   onSubmitted?: (reason: string, detail: string) => void;
 }) {
-  const [reason, setReason] = useState(REASONS[0]!);
+  const [reason, setReason] = useState<ReasonCode>(REASONS[0]!.code);
   const [detail, setDetail] = useState("");
   const [done, setDone] = useState(false);
+  const createReport = useCreateReport();
   useScrollLock();
 
   useEffect(() => {
@@ -36,10 +36,32 @@ export function FlagModal({
 
   const canSubmit = detail.trim().length >= 10;
 
+  const label = (code: ReasonCode) =>
+    REASONS.find((r) => r.code === code)?.label ?? "concern";
+
   const submit = () => {
-    if (!canSubmit) return;
-    onSubmitted?.(reason, detail.trim());
-    setDone(true);
+    if (!canSubmit || createReport.isPending) return;
+    // The "three flags → review" counter is server-derived. Demo resolves
+    // locally; live POSTs /reports with subjectType "venue".
+    createReport.mutate(
+      {
+        subjectType: "venue",
+        subjectId: spaceId ?? spaceName,
+        reasonCode: reason,
+        detail: detail.trim(),
+      },
+      {
+        onSuccess: () => {
+          onSubmitted?.(label(reason), detail.trim());
+          setDone(true);
+        },
+        onError: (err) => {
+          logError(err, { scope: "safety.flagVenue" });
+          onSubmitted?.(label(reason), detail.trim());
+          setDone(true);
+        },
+      },
+    );
   };
 
   return (
@@ -110,19 +132,22 @@ export function FlagModal({
               <div className={styles.opts}>
                 {REASONS.map((r) => (
                   <label
-                    key={r}
-                    className={[styles.opt, reason === r && styles.optChecked]
+                    key={r.code}
+                    className={[
+                      styles.opt,
+                      reason === r.code && styles.optChecked,
+                    ]
                       .filter(Boolean)
                       .join(" ")}
                   >
                     <input
                       type="radio"
                       name="flag-reason"
-                      value={r}
-                      checked={reason === r}
-                      onChange={() => setReason(r)}
+                      value={r.code}
+                      checked={reason === r.code}
+                      onChange={() => setReason(r.code)}
                     />
-                    {r}
+                    {r.label}
                   </label>
                 ))}
               </div>
@@ -157,9 +182,9 @@ export function FlagModal({
                   variant="primary"
                   className={styles.full}
                   onClick={submit}
-                  disabled={!canSubmit}
+                  disabled={!canSubmit || createReport.isPending}
                 >
-                  Submit flag
+                  {createReport.isPending ? "Submitting…" : "Submit flag"}
                 </Button>
               </div>
             </div>

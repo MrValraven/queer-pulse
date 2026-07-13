@@ -181,6 +181,22 @@
   }
 }
 
+/* Spinner for the "building your archive" status. Keyframes must be local to
+   the module to actually run. */
+.spin {
+  animation: exportSpin 0.9s linear infinite;
+}
+@keyframes exportSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation-duration: 2.4s;
+  }
+}
+
 @media (max-width: 600px) {
   .card {
     padding: 28px 22px;

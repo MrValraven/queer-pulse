@@ -1,4 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
+import { PageMeta } from "../../shared/seo";
 import {
   Barter,
   Board,
@@ -20,7 +21,6 @@ import {
   SkillsTeaser,
   SpacesMap,
   Stories,
-  TrustStrip,
   Wellbeing,
 } from "./sections";
 
@@ -31,15 +31,18 @@ import {
 export function HomePage() {
   return (
     <PageShell>
+      <PageMeta
+        title="QueerPulse — a queer professional network, rooted in Lisbon"
+        description="A quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon — no ads, no algorithm. A world, not a feature list."
+      />
       <Hero />
       <Manifesto />
-      <TrustStrip />
       <PainPoints />
       <Discovery />
       <Gatherings />
-      <Stories />
+      {/*  <Stories /> 
       <Media />
-      <ChangeMakers />
+      <ChangeMakers />*/}
       <Wellbeing />
       <Communities />
       <MicroGrants />
@@ -47,11 +50,11 @@ export function HomePage() {
       <Barter />
       <SkillsTeaser />
       <Library />
-      <Partners />
+      {/* <Partners /> */}
       <SpacesMap />
-      <Platforms />
+      {/*  <Platforms /> */}
       <Newsletter />
-      <Pillars />
+      {/* <Pillars /> */}
       <Outro />
     </PageShell>
   );

@@ -1,0 +1,15 @@
+{
+  // Editor / type-check config for the test suite. Extends the app config so
+  // tests obey the same strictness (strict, noUncheckedIndexedAccess,
+  // verbatimModuleSyntax) but adds the Vitest + jest-dom globals.
+  //
+  // NOTE: intentionally NOT wired into tsconfig.json's project references —
+  // `tsc -b` (the production build) uses tsconfig.app.json, which already picks
+  // up the colocated *.test.ts(x) files under src. This file exists so editors
+  // and an optional `tsc -p tsconfig.test.json --noEmit` get the test globals.
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "types": ["vitest/globals", "@testing-library/jest-dom", "node"]
+  },
+  "include": ["src", "vitest.config.ts"]
+}

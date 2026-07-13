@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useConnections } from "../../../app/providers/ConnectionsProvider";
 import { useSocial } from "../../../app/providers/SocialProvider";
@@ -10,27 +10,39 @@ import {
   type ConnectionView,
   type TabId,
 } from "../connections.data";
-import { getConnections } from "./connections.api";
+import { getConnections, type ConnectionsPageDTO } from "./connections.api";
 import { API_TAB, connectionDtoToView } from "./connections.adapters";
 
 export interface ConnectionsListResult {
-  /** The cards to render for this tab. */
+  /** The cards to render for this tab (all pages fetched so far in live mode). */
   views: ConnectionView[];
   /** True while the first live fetch is in flight (demo resolves instantly). */
   loading: boolean;
+  /** True when another page is available (live only; false in demo/blocked). */
+  hasNextPage: boolean;
+  /** Fetch and append the next page (no-op in demo/blocked). */
+  fetchNextPage: () => void;
+  /** True while a subsequent page loads. */
+  isFetchingNextPage: boolean;
+}
+
+interface ConnPageVM {
+  views: ConnectionView[];
+  total: number;
+  page: number;
 }
 
 /**
- * The list source for one connections tab.
+ * The list source for one connections tab, paginated in live mode.
  *
- * Demo mode returns the mock relationships exactly as the page built them
- * before this hook existed — resolved from ConnectionsProvider / SocialProvider
- * / VouchProvider through the member registry — so the demo experience is
- * byte-for-byte unchanged and never touches the network.
+ * Demo mode returns the mock relationships exactly as before — resolved from
+ * ConnectionsProvider / SocialProvider / VouchProvider through the member
+ * registry — so the demo experience is byte-for-byte unchanged and never
+ * touches the network.
  *
- * Live mode calls GET /connections?tab=… and adapts each record to the same
- * `ConnectionView` the cards already render. The "blocked" tab has no API
- * counterpart (it's owned by SocialProvider), so it always resolves locally.
+ * Live mode calls GET /connections?tab=&page= and appends each page, stopping
+ * at the server `total`. The "blocked" tab has no API counterpart (it's owned
+ * by SocialProvider), so it always resolves locally.
  */
 export function useConnectionsList(tab: TabId): ConnectionsListResult {
   const { demoMode } = useDemoMode();
@@ -63,14 +75,26 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
 
   const apiTab = API_TAB[tab];
 
-  const query = useQuery<ConnectionView[]>({
+  const query = useInfiniteQuery<ConnPageVM>({
     queryKey: ["connections", tab, demoMode],
     // Blocked has no endpoint; demo mode never fetches. In both cases we short
     // out to the locally-resolved views below and keep the query idle.
     enabled: !demoMode && apiTab !== undefined,
-    queryFn: async () => {
-      const res = await getConnections(apiTab!);
-      return res.items.map(connectionDtoToView);
+    initialPageParam: 1,
+    queryFn: async ({ pageParam }) => {
+      const res: ConnectionsPageDTO = await getConnections(
+        apiTab!,
+        pageParam as number,
+      );
+      return {
+        views: res.items.map(connectionDtoToView),
+        total: res.total,
+        page: res.page,
+      };
+    },
+    getNextPageParam: (last, all) => {
+      const loaded = all.reduce((n, p) => n + p.views.length, 0);
+      return loaded < last.total ? last.page + 1 : undefined;
     },
   });
 
@@ -78,7 +102,21 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
 
   // Demo, or a tab with no live endpoint (blocked): resolve from local state.
   if (demoMode || apiTab === undefined) {
-    return { views: demoViews, loading: false };
+    return {
+      views: demoViews,
+      loading: false,
+      hasNextPage: false,
+      fetchNextPage: () => {},
+      isFetchingNextPage: false,
+    };
   }
-  return { views: query.data ?? [], loading: query.isPending };
+
+  const views = (query.data?.pages ?? []).flatMap((p) => p.views);
+  return {
+    views,
+    loading: query.isPending,
+    hasNextPage: query.hasNextPage,
+    fetchNextPage: () => void query.fetchNextPage(),
+    isFetchingNextPage: query.isFetchingNextPage,
+  };
 }

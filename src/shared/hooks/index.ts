@@ -7,3 +7,8 @@ export { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 export { useScrollLock } from "./useScrollLock";
 export { useLocalStorage } from "./useLocalStorage";
 export { useSubmitFlow, type FlowStatus } from "./useSubmitFlow";
+export {
+  useQuickExit,
+  type QuickExitApi,
+  type QuickExitPrefs,
+} from "./useQuickExit";

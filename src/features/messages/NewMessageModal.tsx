@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { Avatar, SearchInput } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useSocial } from "../../app/providers/SocialProvider";
 import { conversations, type Conversation } from "./data";
 import styles from "./NewMessageModal.module.css";
 
@@ -13,6 +14,7 @@ interface NewMessageModalProps {
 /** Self-contained recipient picker — opens (or reuses) a thread for the chosen member. */
 export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
   useScrollLock();
+  const { isBlocked } = useSocial();
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -24,12 +26,15 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
   }, [onClose]);
 
   const people = useMemo(() => {
-    const candidates = conversations.filter((c) => !c.official);
+    // Blocked members are unreachable — never offer them as a recipient.
+    const candidates = conversations.filter(
+      (c) => !c.official && !(c.slug && isBlocked(c.slug)),
+    );
     const q = query.trim().toLowerCase();
     return q
       ? candidates.filter((c) => c.name.toLowerCase().includes(q))
       : candidates;
-  }, [query]);
+  }, [query, isBlocked]);
 
   return (
     <div className={styles.overlay} onClick={onClose}>

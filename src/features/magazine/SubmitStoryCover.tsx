@@ -1,40 +1,88 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiImage, FiX } from "react-icons/fi";
+import { useUploadImage } from "../members/api/useUploadImage";
 import styles from "./SubmitStoryPage.module.css";
+import upload from "./SubmitStoryCover.module.css";
 
+/**
+ * Story-cover picker. Uploads through `useUploadImage("story-cover")` — demo
+ * returns an object-URL preview, live uploads to storage and returns the stable
+ * public URL. `onChange` emits that URL (not the filename), so the cover is
+ * actually persisted through the submit-story save flow. Object URLs are revoked
+ * on replace/unmount.
+ */
 export function SubmitStoryCover({
   onChange,
 }: {
-  onChange: (name: string | null) => void;
+  onChange: (url: string | null) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const createdUrl = useRef<string | null>(null);
+  const uploadCover = useUploadImage("story-cover");
   const [cover, setCover] = useState<{ url: string; name: string } | null>(
     null,
   );
+  const [progress, setProgress] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  function pick(file: File | undefined) {
+  useEffect(
+    () => () => {
+      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
+    },
+    [],
+  );
+
+  function revokeCreated() {
+    if (createdUrl.current) {
+      URL.revokeObjectURL(createdUrl.current);
+      createdUrl.current = null;
+    }
+  }
+
+  async function pick(file: File | undefined) {
     if (!file) return;
-    if (cover) URL.revokeObjectURL(cover.url);
-    const url = URL.createObjectURL(file);
-    setCover({ url, name: file.name });
-    onChange(file.name);
+    setError(null);
+    setProgress(0);
+    try {
+      const url = await uploadCover(file, {
+        onProgress: (p) => setProgress(p),
+      });
+      revokeCreated();
+      if (url.startsWith("blob:")) createdUrl.current = url;
+      setCover({ url, name: file.name });
+      onChange(url);
+    } catch (err) {
+      setError(
+        err instanceof Error && err.message
+          ? err.message
+          : "We couldn't add that cover. Please try again.",
+      );
+    } finally {
+      setProgress(null);
+    }
   }
 
   function remove() {
-    if (cover) URL.revokeObjectURL(cover.url);
+    revokeCreated();
     setCover(null);
     onChange(null);
+    setError(null);
     if (inputRef.current) inputRef.current.value = "";
   }
+
+  const busy = progress !== null;
 
   return (
     <div>
       <input
         ref={inputRef}
         type="file"
-        accept="image/png,image/jpeg"
+        accept="image/png,image/jpeg,image/webp"
         hidden
-        onChange={(e) => pick(e.target.files?.[0])}
+        onChange={(e) => {
+          pick(e.target.files?.[0]);
+          e.target.value = "";
+        }}
       />
 
       {cover ? (
@@ -51,6 +99,7 @@ export function SubmitStoryCover({
                 type="button"
                 className={styles.coverLink}
                 onClick={() => inputRef.current?.click()}
+                disabled={busy}
               >
                 Replace
               </button>
@@ -58,6 +107,7 @@ export function SubmitStoryCover({
                 type="button"
                 className={styles.coverLink}
                 onClick={remove}
+                disabled={busy}
               >
                 <FiX aria-hidden="true" /> Remove
               </button>
@@ -69,13 +119,39 @@ export function SubmitStoryCover({
           type="button"
           className={styles.coverDrop}
           onClick={() => inputRef.current?.click()}
+          disabled={busy}
         >
           <FiImage className={styles.coverIcon} aria-hidden="true" />
-          <p>Add a cover image</p>
+          <p>{busy ? "Uploading…" : "Add a cover image"}</p>
           <span>
-            JPG or PNG · min 1200 × 600px · displayed at top of published story
+            JPG, PNG or WebP · min 1200 × 600px · displayed at top of published
+            story
           </span>
         </button>
+      )}
+
+      {busy && (
+        <div className={upload.progress}>
+          <div className={upload.progressLabel}>Uploading… {progress}%</div>
+          <div
+            className={upload.track}
+            role="progressbar"
+            aria-valuenow={progress ?? 0}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div
+              className={upload.bar}
+              style={{ width: `${progress ?? 0}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <p className={upload.error} role="alert">
+          {error}
+        </p>
       )}
     </div>
   );

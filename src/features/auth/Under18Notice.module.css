@@ -1,0 +1,95 @@
+/* Humane under-18 block — the repo's plum-panel pattern, warmed with a coral
+   heart instead of a jade success tick (this isn't a confirmation, it's care). */
+
+.panel {
+  background: var(--plum);
+  color: var(--cream);
+  text-align: center;
+  padding: 44px 36px 36px;
+  border-radius: 28px;
+  animation: panelIn 0.34s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
+}
+
+.icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(var(--accent-rgb), 0.18);
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: clamp(23px, 3vw, 29px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+  color: var(--cream);
+}
+
+.title em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.body {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.82);
+  margin: 0 auto 16px;
+  max-width: 44ch;
+}
+
+.links {
+  list-style: none;
+  margin: 0 auto 26px;
+  padding: 0;
+  max-width: 40ch;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.links a {
+  color: var(--cream);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(var(--accent-rgb), 0.7);
+}
+
+.links a:hover {
+  color: var(--accent);
+}
+
+.links a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}

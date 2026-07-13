@@ -8,6 +8,9 @@ export interface ChatMessage {
 
 export interface Conversation {
   id: string;
+  /** Member profile slug of the counterpart — the key a block is stored under.
+   *  Absent for official/system threads (QueerPulse Team). */
+  slug?: string;
   initials: string;
   tint: AvatarTint;
   name: string;
@@ -26,6 +29,7 @@ export const me = { initials: "SR", tint: "plum" as AvatarTint };
 export const conversations: Conversation[] = [
   {
     id: "anika",
+    slug: "anika",
     initials: "AK",
     tint: "coral",
     name: "Anika Kovač",
@@ -67,6 +71,7 @@ export const conversations: Conversation[] = [
   },
   {
     id: "jordan",
+    slug: "jordan",
     initials: "JP",
     tint: "plum",
     name: "Jordan Park",
@@ -91,6 +96,7 @@ export const conversations: Conversation[] = [
   },
   {
     id: "tomas",
+    slug: "tomas-mendes",
     initials: "TM",
     tint: "jade",
     name: "Tomás Mendes",
@@ -114,6 +120,7 @@ export const conversations: Conversation[] = [
   },
   {
     id: "maria",
+    slug: "maria",
     initials: "MF",
     tint: "jade",
     name: "Maria Ferreira",
@@ -141,6 +148,7 @@ export const conversations: Conversation[] = [
   },
   {
     id: "kai",
+    slug: "kai",
     initials: "KL",
     tint: "plum",
     name: "Kai Larsson",
@@ -192,6 +200,7 @@ export const conversations: Conversation[] = [
   },
   {
     id: "bilal",
+    slug: "bilal-kaya",
     initials: "BK",
     tint: "coral",
     name: "Bilal Kaya",

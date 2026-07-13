@@ -1,7 +1,10 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { FiCheck, FiDownload, FiLoader } from "react-icons/fi";
+import { FiAlertTriangle, FiCheck, FiDownload, FiLoader } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { logError } from "../../shared/observability/logger";
+import { changeEmail, changePassword, simulateOr } from "./api/account.api";
 import styles from "./SettingsModal.module.css";
 
 /** Shared modal shell with overlay click-to-close, ESC and a close button. */
@@ -83,7 +86,36 @@ function SuccessPanel({
   );
 }
 
-type Phase = "form" | "saving" | "done";
+/** Honest, promise-driven error panel — shown when the real request fails. */
+function ErrorPanel({
+  children,
+  onRetry,
+  onClose,
+}: {
+  children: ReactNode;
+  onRetry: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <div className={styles.success}>
+      <div className={styles.successIcon}>
+        <FiAlertTriangle size={26} color="var(--accent-ink)" />
+      </div>
+      <div className={styles.successTitle}>That didn't go through</div>
+      <p className={styles.successSub}>{children}</p>
+      <div className={styles.successActions}>
+        <Button variant="ghost-dark" onClick={onRetry}>
+          Try again
+        </Button>
+        <Button variant="ghost" onClick={onClose}>
+          Close
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+type Phase = "form" | "saving" | "done" | "error";
 
 /* ── Email change ─────────────────────────────────────────────────── */
 export function EmailChangeModal({
@@ -93,6 +125,7 @@ export function EmailChangeModal({
   currentEmail: string;
   onClose: () => void;
 }) {
+  const { demoMode } = useDemoMode();
   const [phase, setPhase] = useState<Phase>("form");
   const [email, setEmail] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -101,21 +134,29 @@ export function EmailChangeModal({
     email === confirm &&
     email !== currentEmail;
 
-  useEffect(() => {
-    if (phase !== "saving") return;
-    const t = setTimeout(() => setPhase("done"), 1200);
-    return () => clearTimeout(t);
-  }, [phase]);
-
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!valid) return;
     setPhase("saving");
+    try {
+      await simulateOr(demoMode, { pendingEmail: email }, () =>
+        changeEmail(email),
+      );
+      setPhase("done");
+    } catch (err) {
+      logError(err, { where: "EmailChangeModal" });
+      setPhase("error");
+    }
   }
 
   return (
     <ModalShell label="Change your email" onClose={onClose}>
-      {phase === "done" ? (
+      {phase === "error" ? (
+        <ErrorPanel onRetry={() => setPhase("form")} onClose={onClose}>
+          We couldn't start the email change just now — nothing has changed.
+          Check your connection and try again.
+        </ErrorPanel>
+      ) : phase === "done" ? (
         <SuccessPanel
           title={
             <>
@@ -205,6 +246,7 @@ export function EmailChangeModal({
 
 /* ── Password change ──────────────────────────────────────────────── */
 export function PasswordChangeModal({ onClose }: { onClose: () => void }) {
+  const { demoMode } = useDemoMode();
   const [phase, setPhase] = useState<Phase>("form");
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
@@ -213,21 +255,29 @@ export function PasswordChangeModal({ onClose }: { onClose: () => void }) {
   const mismatch = confirm.length > 0 && confirm !== next;
   const valid = current.length > 0 && next.length >= 8 && next === confirm;
 
-  useEffect(() => {
-    if (phase !== "saving") return;
-    const t = setTimeout(() => setPhase("done"), 1200);
-    return () => clearTimeout(t);
-  }, [phase]);
-
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!valid) return;
     setPhase("saving");
+    try {
+      await simulateOr(demoMode, undefined, () =>
+        changePassword({ current, next }),
+      );
+      setPhase("done");
+    } catch (err) {
+      logError(err, { where: "PasswordChangeModal" });
+      setPhase("error");
+    }
   }
 
   return (
     <ModalShell label="Change your password" onClose={onClose}>
-      {phase === "done" ? (
+      {phase === "error" ? (
+        <ErrorPanel onRetry={() => setPhase("form")} onClose={onClose}>
+          We couldn't update your password just now — it hasn't changed. That
+          can happen if your current password didn't match. Try again.
+        </ErrorPanel>
+      ) : phase === "done" ? (
         <SuccessPanel
           title={
             <>
@@ -236,8 +286,9 @@ export function PasswordChangeModal({ onClose }: { onClose: () => void }) {
           }
           onClose={onClose}
         >
-          Your new password is live. You'll stay signed in here, but you'll need
-          the new password on any other device.
+          Your new password is live, and we've emailed the address on file to
+          confirm the change. You'll stay signed in here, but you'll need the
+          new password on any other device.
         </SuccessPanel>
       ) : (
         <form onSubmit={submit}>

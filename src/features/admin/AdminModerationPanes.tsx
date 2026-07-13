@@ -32,6 +32,11 @@ export function OpenPane({ q }: { q: Queue }) {
     </FadeIn>
   );
 
+  // Live mode fetches asynchronously — don't flash "all caught up" while loading.
+  if (q.loading && open.length === 0) {
+    return <div className={styles.pane} aria-busy="true" />;
+  }
+
   if (open.length === 0) {
     return (
       <div className={styles.pane}>
@@ -50,9 +55,9 @@ export function OpenPane({ q }: { q: Queue }) {
       {picked.size > 0 && (
         <BulkBar
           count={picked.size}
-          onDismiss={() => q.bulkAct("dismissed")}
-          onSpam={() => q.bulkAct("removed as spam")}
-          onReassign={() => q.bulkAct("reassigned")}
+          onDismiss={() => q.bulkAct("dismissed", "dismiss")}
+          onSpam={() => q.bulkAct("removed as spam", "remove_content")}
+          onReassign={() => q.bulkAct("reassigned", "escalate")}
           onCancel={q.clearPicked}
         />
       )}

@@ -46,7 +46,7 @@ const localPlugin = {
 };
 
 export default defineConfig([
-  globalIgnores(["dist"]),
+  globalIgnores(["dist", "coverage"]),
   {
     files: ["**/*.{ts,tsx}"],
     plugins: { local: localPlugin },
@@ -106,6 +106,7 @@ export default defineConfig([
       "src/features/settings/sessions.data.tsx",
       "src/features/marketing/cities.data.tsx",
       "src/features/marketing/CitiesPage.tsx",
+      "src/features/marketing/CitiesLiveCards.tsx",
     ],
     rules: { "local/no-emoji": "off" },
   },

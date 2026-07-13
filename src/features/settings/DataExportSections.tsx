@@ -1,60 +1,65 @@
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiDownload, FiLoader } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { DATA_TYPES, ACCORDION_ITEMS } from "./dataExport.data";
+import { ACCORDION_ITEMS, DATA_TYPES } from "./dataExport.data";
+import type { ExportJob } from "./api/account.api";
 import styles from "./DataExportPage.module.css";
 
 type Format = "JSON" | "CSV" | "Both";
 
-export function DataExportSteps({ submitted }: { submitted: boolean }) {
-  const stepState = (n: number) => {
-    if (submitted) {
+/** form → identity (job building) → download-ready. */
+export type ExportPhase = "form" | "building" | "ready";
+
+export function DataExportSteps({ phase }: { phase: ExportPhase }) {
+  const state = (n: number): "" | "active" | "done" => {
+    if (phase === "form") return n === 1 ? "active" : "";
+    if (phase === "building") {
       if (n === 1) return "done";
       if (n === 2) return "active";
+      return "";
     }
-    if (n === 1) return "active";
-    return "";
+    // ready
+    if (n === 3) return "active";
+    return "done";
   };
-  const stepCls = (n: number) => {
-    const s = stepState(n);
-    return [
+  const cls = (n: number) =>
+    [
       styles.stepItem,
-      s === "active" && styles.stepItemActive,
-      s === "done" && styles.stepItemDone,
+      state(n) === "active" && styles.stepItemActive,
+      state(n) === "done" && styles.stepItemDone,
     ]
       .filter(Boolean)
       .join(" ");
-  };
 
   return (
-    <div className={stepCls(1) + " " + stepCls(2)}>
-      <div className={styles.stepsRow}>
-        <div className={stepCls(1)}>
-          <div className={styles.stepNum}>
-            {stepState(1) === "done" ? <FiCheck /> : "1"}
-          </div>
-          <div>
-            <div className={styles.stepLabel}>Choose what to export</div>
-            <div className={styles.stepDesc}>
-              Select the data types you want included in your archive.
-            </div>
+    <div className={styles.stepsRow}>
+      <div className={cls(1)}>
+        <div className={styles.stepNum}>
+          {state(1) === "done" ? <FiCheck /> : "1"}
+        </div>
+        <div>
+          <div className={styles.stepLabel}>Choose what to export</div>
+          <div className={styles.stepDesc}>
+            Select the data types you want included in your archive.
           </div>
         </div>
-        <div className={stepCls(2)}>
-          <div className={styles.stepNum}>2</div>
-          <div>
-            <div className={styles.stepLabel}>Confirm your identity</div>
-            <div className={styles.stepDesc}>
-              We send a verification link to your registered email.
-            </div>
+      </div>
+      <div className={cls(2)}>
+        <div className={styles.stepNum}>
+          {state(2) === "done" ? <FiCheck /> : "2"}
+        </div>
+        <div>
+          <div className={styles.stepLabel}>Confirm your identity</div>
+          <div className={styles.stepDesc}>
+            We email a verification link to your registered address.
           </div>
         </div>
-        <div className={styles.stepItem}>
-          <div className={styles.stepNum}>3</div>
-          <div>
-            <div className={styles.stepLabel}>Download your archive</div>
-            <div className={styles.stepDesc}>
-              Ready within 24 hours. Link expires after 7 days.
-            </div>
+      </div>
+      <div className={cls(3)}>
+        <div className={styles.stepNum}>3</div>
+        <div>
+          <div className={styles.stepLabel}>Download your archive</div>
+          <div className={styles.stepDesc}>
+            A single-use link, available for 7 days.
           </div>
         </div>
       </div>
@@ -68,12 +73,14 @@ export function DataExportForm({
   format,
   setFormat,
   onSubmit,
+  submitting,
 }: {
   checked: boolean[];
   toggleType: (i: number) => void;
   format: Format;
   setFormat: (f: Format) => void;
   onSubmit: () => void;
+  submitting: boolean;
 }) {
   return (
     <div className={styles.card}>
@@ -82,8 +89,8 @@ export function DataExportForm({
       </h2>
       <p className={styles.cardSub}>
         Select the categories you want included. You can request a full export
-        or only specific data types. The archive will be delivered as a
-        compressed folder to your registered email address.
+        or only specific data types. We'll email you a secure link the moment
+        your archive is ready.
       </p>
 
       <div className={styles.fieldLabel}>What to include</div>
@@ -148,10 +155,9 @@ export function DataExportForm({
           <circle cx="9" cy="12" r=".5" fill="currentColor" />
         </svg>
         <p className={styles.legalNoteText}>
-          Under <strong>GDPR Article 20</strong>, we are required to provide
-          your data within <strong>30 days</strong> of a verified request. We
-          typically deliver within 24 hours. The archive is encrypted in transit
-          and the download link is single-use.
+          Under <strong>GDPR Article 20</strong>, we provide your data within{" "}
+          <strong>30 days</strong> of a verified request. The archive is
+          encrypted in transit and the download link is single-use.
         </p>
       </div>
 
@@ -159,47 +165,93 @@ export function DataExportForm({
         variant="primary"
         size="lg"
         onClick={onSubmit}
+        disabled={submitting}
         style={{ width: "100%", justifyContent: "center" }}
       >
-        Request my data archive
+        {submitting ? "Requesting…" : "Request my data archive"}
       </Button>
     </div>
   );
 }
 
-export function DataExportConfirm({ onResend }: { onResend: () => void }) {
-  return (
-    <div
-      className={`${styles.card} ${styles.confirmCard} ${styles.screenIn}`}
-      key="confirm"
-    >
-      <div className={styles.confirmIcon}>
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="var(--jade)"
-          strokeWidth="2"
-          strokeLinecap="round"
-        >
-          <polyline points="3,12 8,18 21,6" />
-        </svg>
+/** Live status view: queued/processing → ready-with-download → failed/expired. */
+export function DataExportStatus({
+  job,
+  filename,
+  onRetry,
+}: {
+  job: ExportJob;
+  filename: string;
+  onRetry: () => void;
+}) {
+  const expiry =
+    job.expiresAt &&
+    new Date(job.expiresAt).toLocaleDateString(undefined, {
+      day: "numeric",
+      month: "long",
+    });
+
+  if (job.status === "ready" && job.downloadUrl) {
+    return (
+      <div
+        className={`${styles.card} ${styles.confirmCard} ${styles.screenIn}`}
+      >
+        <div className={styles.confirmIcon}>
+          <FiCheck size={24} color="var(--jade)" aria-hidden="true" />
+        </div>
+        <h2 className={styles.confirmTitle}>Your archive is ready</h2>
+        <p className={styles.confirmBody}>
+          We've also emailed this link to your registered address. It's
+          single-use
+          {expiry ? (
+            <>
+              {" "}
+              and expires on <strong>{expiry}</strong>
+            </>
+          ) : null}
+          .
+        </p>
+        <Button variant="jade" href={job.downloadUrl} download={filename}>
+          <FiDownload style={{ verticalAlign: "-2px", marginRight: 8 }} />
+          Download {filename}
+        </Button>
       </div>
-      <h2 className={styles.confirmTitle}>Verification email sent</h2>
+    );
+  }
+
+  if (job.status === "failed" || job.status === "expired") {
+    return (
+      <div
+        className={`${styles.card} ${styles.confirmCard} ${styles.screenIn}`}
+      >
+        <h2 className={styles.confirmTitle}>
+          {job.status === "expired"
+            ? "That link has expired"
+            : "That didn't work"}
+        </h2>
+        <p className={styles.confirmBody}>
+          {job.status === "expired"
+            ? "For your safety, export links expire after 7 days. Request a fresh archive and we'll build it again."
+            : "We couldn't build your archive just now — nothing left your account. Try again in a moment."}
+        </p>
+        <Button variant="primary" onClick={onRetry}>
+          Request again
+        </Button>
+      </div>
+    );
+  }
+
+  // queued | processing
+  return (
+    <div className={`${styles.card} ${styles.confirmCard} ${styles.screenIn}`}>
+      <div className={styles.confirmIcon}>
+        <FiLoader size={24} className={styles.spin} aria-hidden="true" />
+      </div>
+      <h2 className={styles.confirmTitle}>Building your archive</h2>
       <p className={styles.confirmBody}>
-        Check your inbox for a confirmation link. Once verified, your archive
-        will be ready within 24 hours.
-      </p>
-      <p className={styles.confirmResend}>
-        Didn't receive it?{" "}
-        <button
-          type="button"
-          className={styles.confirmResendLink}
-          onClick={onResend}
-        >
-          Resend
-        </button>
+        We're gathering your data and packaging it up. This can take a little
+        while — we'll email you the moment it's ready, so you can close this
+        page.
       </p>
     </div>
   );

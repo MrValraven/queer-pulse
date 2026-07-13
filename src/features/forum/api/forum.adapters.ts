@@ -1,0 +1,129 @@
+import { tintForSlug, type SlugTint } from "../../../shared/api/refs";
+import type { Reply, Thread } from "../forum.data";
+import type { ForumPostResponse, ForumThreadResponse } from "./forum.api";
+
+// Map the backend DTOs onto the EXISTING rich `Thread`/`Reply` view-models
+// (../forum.data.ts) so ForumThreadList / ThreadPage render unchanged. Author
+// colours (t/tt, bg/color) and initials are synthesized from the member handle
+// via the shared `tintForSlug`, matching the mock palette.
+
+// The Thread view-model keys on a numeric id (routing + vote sets). Backend
+// threads are keyed by slug, so we map each backend slug to a stable numeric id
+// and remember the reverse so ThreadPage (which only sees the numeric route
+// param) can resolve the slug to fetch detail/posts. Populated as threads list.
+const slugById = new Map<number, string>();
+
+/** Stable non-negative 31-bit hash of a string → the view-model's numeric id. */
+function numericId(slug: string): number {
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+  return h % 2_000_000_000;
+}
+
+/** Resolve a numeric thread id back to its backend slug (list must run first). */
+export function slugForThreadId(id: number): string | undefined {
+  return slugById.get(id);
+}
+
+const SOLID: Record<SlugTint, { t: string; tt: string }> = {
+  coral: { t: "var(--accent)", tt: "var(--paper)" },
+  jade: { t: "var(--jade)", tt: "var(--paper)" },
+  plum: { t: "var(--plum)", tt: "var(--cream)" },
+};
+const SOFT: Record<SlugTint, { bg: string; color: string }> = {
+  coral: { bg: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },
+  jade: { bg: "rgba(74,140,111,.15)", color: "var(--jade)" },
+  plum: { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
+};
+
+function initials(name: string): string {
+  const p = name.trim().split(/\s+/);
+  return `${p[0]?.[0] ?? ""}${p.length > 1 ? (p.at(-1)?.[0] ?? "") : ""}`.toUpperCase();
+}
+
+function relative(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const mins = Math.max(0, Math.floor((Date.now() - d.getTime()) / 60000));
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 30) return `${days}d ago`;
+  return d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+}
+
+/** Split a raw post body into the paragraph array the view-models render. */
+function paragraphs(body: string): string[] {
+  return body
+    .split("\n")
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+
+/** ForumThreadResponse → the `Thread` list card (body/replies filled later). */
+export function threadToCard(dto: ForumThreadResponse): Thread {
+  const id = numericId(dto.slug);
+  slugById.set(id, dto.slug);
+  const slug = dto.author.handle;
+  const tint = tintForSlug(slug);
+  const s = SOLID[tint];
+  return {
+    id,
+    cat: dto.category,
+    pinned: dto.isPinned,
+    title: dto.title,
+    excerpt: "",
+    author: {
+      i: initials(dto.author.displayName),
+      n: dto.author.displayName,
+      t: s.t,
+      tt: s.tt,
+      slug,
+      photo: dto.author.avatarUrl ?? undefined,
+    },
+    posted: relative(dto.lastActivityAt),
+    views: 0,
+    upvotes: 0,
+    comments: dto.replyCount,
+    tags: [],
+    body: [],
+    replies: [],
+  };
+}
+
+/** ForumPostResponse → a `Reply` (used for the OP body too). */
+export function postToReply(dto: ForumPostResponse, isOP = false): Reply {
+  const slug = dto.author.handle;
+  const tint = tintForSlug(slug);
+  const soft = SOFT[tint];
+  return {
+    av: initials(dto.author.displayName),
+    bg: soft.bg,
+    color: soft.color,
+    name: dto.author.displayName,
+    slug,
+    photo: dto.author.avatarUrl ?? undefined,
+    time: relative(dto.createdAt),
+    isOP,
+    body: paragraphs(dto.body),
+    reactions: dto.voteCount,
+  };
+}
+
+/** Combine thread meta + its posts page into the full `Thread` detail. */
+export function threadDetail(
+  dto: ForumThreadResponse,
+  posts: ForumPostResponse[],
+): Thread {
+  const card = threadToCard(dto);
+  const [op, ...rest] = posts;
+  return {
+    ...card,
+    excerpt: op ? (paragraphs(op.body)[0] ?? "") : "",
+    body: op ? paragraphs(op.body) : [],
+    upvotes: op?.voteCount ?? 0,
+    replies: rest.map((p) => postToReply(p)),
+  };
+}

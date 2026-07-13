@@ -12,6 +12,7 @@ import {
   SEED_INCOMING,
   SEED_SENT,
 } from "../../features/connect/connections.data";
+import { useDemoMode } from "./DemoModeProvider";
 
 interface ConnectionsState {
   /** Member slugs you're connected to (accepted). */
@@ -47,6 +48,11 @@ function seedState(): ConnectionsState {
   };
 }
 
+/** An empty relationship set — the live-mode starting point (server is authoritative). */
+function emptyState(): ConnectionsState {
+  return { connected: [], incoming: [], sent: [] };
+}
+
 function readInitial(): ConnectionsState {
   const seed = seedState();
   try {
@@ -74,19 +80,41 @@ function readInitial(): ConnectionsState {
  * and reaching out all stick across reloads and surface anywhere that reads it
  * (the connections page, the Connect modal). Blocked and vouched relationships
  * live in SocialProvider / VouchProvider; this provider deliberately doesn't
- * duplicate them. Data is still mock; this only tracks which mock slugs the user
- * has acted on.
+ * duplicate them.
+ *
+ * In DEMO mode this is the source of truth: it seeds from mock data, persists to
+ * localStorage, and tracks which mock slugs the user has acted on. In LIVE mode
+ * the server is authoritative — the provider starts empty and is only a thin
+ * optimistic layer that `useConnectionActions` nudges before it invalidates the
+ * `["connections"]` query (whose refetched server list is the truth). localStorage
+ * is not read or written in live mode, so it can never shadow the server.
  */
 export function ConnectionsProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<ConnectionsState>(readInitial);
+  const { demoMode } = useDemoMode();
+  const [state, setState] = useState<ConnectionsState>(() =>
+    demoMode ? readInitial() : emptyState(),
+  );
 
+  // Persist only in demo mode. In live mode the server owns the list, so writing
+  // it here would let a stale localStorage snapshot shadow the real data.
   useEffect(() => {
+    if (!demoMode) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       /* storage unavailable — keep in-memory only */
     }
-  }, [state]);
+  }, [demoMode, state]);
+
+  // Reset when the mode flips at runtime (the "Populate platform" toggle):
+  // re-seed from mock when entering demo, clear to empty when going live. Done
+  // with React's "adjust state during render" pattern (comparing the previous
+  // mode) rather than an effect, so there's no cascading-render round-trip.
+  const [prevDemo, setPrevDemo] = useState(demoMode);
+  if (prevDemo !== demoMode) {
+    setPrevDemo(demoMode);
+    setState(demoMode ? readInitial() : emptyState());
+  }
 
   const accept = useCallback((slug: string) => {
     setState((prev) => ({

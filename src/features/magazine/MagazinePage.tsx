@@ -1,4 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
+import { PageMeta } from "../../shared/seo";
 import { SubpageIndex } from "../../shared/components/ui";
 import { MagazineCover } from "./MagazineCover";
 import { MagazineMasthead } from "./MagazineMasthead";
@@ -9,6 +10,10 @@ import { NAV, MAGAZINE_SUBPAGES } from "./magazinePage.data";
 export function MagazinePage() {
   return (
     <PageShell>
+      <PageMeta
+        title="The Magazine — QueerPulse"
+        description="Essays, features, interviews and criticism from queer Lisbon — the QueerPulse magazine."
+      />
       <MagazineMasthead active="current" />
 
       <div className="wrap">

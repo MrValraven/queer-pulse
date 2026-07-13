@@ -12,7 +12,6 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import {
   DEFAULT_FILTERS,
   EMPTY_FILTERS,
-  PAGE_SIZE,
   SORTS,
   appliedChips,
   matchesFilters,
@@ -67,12 +66,16 @@ export function MemberDirectoryFilterPage() {
   const simLoading = useSimulatedLoad();
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [sort, setSort] = useState<SortKey>("Recently active");
-  const [visible, setVisible] = useState(PAGE_SIZE);
 
   const serverTags = filters.identities;
-  const { data, isLoading } = useMembers({ tags: serverTags });
-  const sourceMembers = data?.items ?? [];
-  const totalMembers = data?.total ?? 0;
+  const {
+    items: sourceMembers,
+    total: totalMembers,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useMembers({ tags: serverTags });
 
   // Combine hook loading with simulated skeleton load for the initial render.
   const loading = isLoading || simLoading;
@@ -89,14 +92,14 @@ export function MemberDirectoryFilterPage() {
   }, [sourceMembers, filters, sort]);
 
   const chips = useMemo(() => appliedChips(filters), [filters]);
-  const shown = filtered.slice(0, visible);
-  const remaining = filtered.length - shown.length;
+  // Server pagination drives "load more" now; client-side filtering/sorting runs
+  // over every page fetched so far. Demo mode returns the whole MEMBERS list as a
+  // single page, so `hasNextPage` is false and the full mock list renders.
+  const shown = filtered;
 
-  // Reset paging whenever the result set changes underneath us, and keep the
-  // profession selection coherent with the chosen fields.
+  // Keep the profession selection coherent with the chosen fields.
   const applyFilters = (next: FilterState) => {
     setFilters(reconcileProfessions(next));
-    setVisible(PAGE_SIZE);
   };
 
   return (
@@ -210,14 +213,15 @@ export function MemberDirectoryFilterPage() {
               </div>
             )}
 
-            {remaining > 0 && (
+            {hasNextPage && (
               <div className={styles.loadMore}>
                 <Button
                   type="button"
                   variant="ghost"
-                  onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                  disabled={isFetchingNextPage}
+                  onClick={fetchNextPage}
                 >
-                  Load {Math.min(PAGE_SIZE, remaining)} more members
+                  {isFetchingNextPage ? "Loading…" : "Load more members"}
                 </Button>
               </div>
             )}

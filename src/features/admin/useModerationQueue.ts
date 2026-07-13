@@ -1,25 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
-import {
-  EMERGENCY_REPORTS,
-  OTHER_REPORTS,
-  APPEALS,
-  type ModReport,
-  type Appeal,
-} from "./adminModeration.data";
+import type { ModReport, Appeal } from "./adminModeration.data";
+import { useModReports } from "./api/useModReports";
+import { useModAction, useModBulkAction } from "./api/useModAction";
+import { useReviewAppeal } from "./api/useReviewAppeal";
+import type { ModActionCode } from "./api/moderation.api";
+import type { ReasonCode } from "../safety/reportReasons";
 
 export type TabId = "open" | "appeals" | "resolved";
 export type FilterId = "all" | "emergencies" | "mine";
 
 /** Reports notionally assigned to the signed-in moderator (for "Assigned to me"). */
 const MINE = new Set(["r-emerg-1", "r-harass", "r-offtopic"]);
-const INITIAL_OPEN = [...EMERGENCY_REPORTS, ...OTHER_REPORTS];
 
-/** All Moderation-page state + the reversible actions that drive it. */
+/** Drawer action id (MOD_ACTIONS) → server action code (spec 04 action set). */
+const ACTION_CODE: Record<string, ModActionCode> = {
+  hide: "hide_content",
+  remove: "remove_content",
+  shield: "shield",
+  warn: "warn",
+  restrict: "restrict",
+  ban: "ban",
+  dismiss: "dismiss",
+  escalate: "escalate",
+};
+
+export interface ResolveOpts {
+  /** Toast verb, e.g. "Resolved" / "Actioned" / "Escalated". */
+  verb?: string;
+  /** MOD_ACTIONS id chosen in the drawer (mapped to a server action code). */
+  action?: string;
+  reasonCode?: ReasonCode;
+  /** The member-facing note — the reason the member reads. */
+  note?: string;
+}
+
+/**
+ * All Moderation-page view-state (tab / filter / selection / multi-select /
+ * leave animation) plus the reversible actions that drive it. The data source is
+ * `useModReports` (demo → mock arrays, live → GET /mod/reports); this hook layers
+ * optimistic row removal + Undo on top and, in live mode, fires the real
+ * PATCH mutations. Demo mode stays a pure local no-op with snapshot-restore Undo.
+ */
 export function useModerationQueue() {
   const [searchParams] = useSearchParams();
   const deepLink = searchParams.get("tab");
+  const { data, isLoading } = useModReports();
+  const modAction = useModAction();
+  const modBulk = useModBulkAction();
+  const reviewAppeal = useReviewAppeal();
+
   const [tab, setTab] = useState<TabId>(
     deepLink === "appeals"
       ? "appeals"
@@ -30,13 +61,26 @@ export function useModerationQueue() {
   const [filter, setFilter] = useState<FilterId>(
     deepLink === "emergencies" ? "emergencies" : "all",
   );
-  const [open, setOpen] = useState<ModReport[]>(INITIAL_OPEN);
-  const [appeals, setAppeals] = useState<Appeal[]>(APPEALS);
+  const [open, setOpen] = useState<ModReport[]>(data?.open ?? []);
+  const [appeals, setAppeals] = useState<Appeal[]>(data?.appeals ?? []);
   const [leaving, setLeaving] = useState<Set<string>>(new Set());
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [selected, setSelected] = useState<ModReport | null>(null);
   const [appeal, setAppeal] = useState<Appeal | null>(null);
   const { showToast } = useToast();
+
+  // Re-seed local state whenever the query data changes. In demo the reference is
+  // a stable module constant (effect runs once), so optimistic edits survive; in
+  // live each refetch is a fresh array, so a settled mutation resyncs to server
+  // truth — which doubles as the rollback when a PATCH fails.
+  const dataOpen = data?.open;
+  const dataAppeals = data?.appeals;
+  useEffect(() => {
+    if (dataOpen) setOpen(dataOpen);
+  }, [dataOpen]);
+  useEffect(() => {
+    if (dataAppeals) setAppeals(dataAppeals);
+  }, [dataAppeals]);
 
   const clearLeaving = (ids: string[]) =>
     setLeaving((prev) => {
@@ -56,10 +100,16 @@ export function useModerationQueue() {
   const others = visible.filter((r) => r.severity !== "emergency");
   const oldest = visible.length > 0 ? visible[visible.length - 1]!.age : "";
 
+  const counts = {
+    open: open.length,
+    appeals: appeals.length,
+    resolved: data?.counts.resolved ?? 0,
+  };
+
   const replayOpen = () => {
     setLeaving(new Set());
     setPicked(new Set());
-    setOpen(INITIAL_OPEN);
+    if (dataOpen) setOpen(dataOpen);
   };
 
   /** Animate ids out of the open queue, then drop them. */
@@ -81,9 +131,24 @@ export function useModerationQueue() {
       },
     });
 
-  const resolveReport = (id: string, verb = "Resolved") => {
+  const resolveReport = (id: string, opts: ResolveOpts = {}) => {
+    const verb = opts.verb ?? "Resolved";
     const snapshot = open;
     removeReports([id]);
+    // Live: fire the real PATCH. Backend writes the audit entry + notifies the
+    // reported member (mod_action) and reporter (report_outcome). Demo: no-op.
+    modAction.mutate(
+      {
+        id,
+        action: ACTION_CODE[opts.action ?? "dismiss"] ?? "dismiss",
+        reasonCode: opts.reasonCode ?? "other",
+        note: opts.note ?? "",
+      },
+      {
+        onError: () =>
+          showToast("Couldn't reach the safety service — restored.", "error"),
+      },
+    );
     undoToast(
       `${verb} · member notified`,
       () => {
@@ -96,7 +161,7 @@ export function useModerationQueue() {
 
   const openReport = (r: ModReport) => {
     if (!r.detail) {
-      resolveReport(r.id, "Actioned");
+      resolveReport(r.id, { verb: "Actioned" });
       return;
     }
     setSelected(r);
@@ -110,11 +175,18 @@ export function useModerationQueue() {
       return next;
     });
 
-  const bulkAct = (verb: string) => {
+  const bulkAct = (verb: string, action: ModActionCode = "dismiss") => {
     const ids = [...picked];
     if (ids.length === 0) return;
     const snapshot = open;
     removeReports(ids);
+    modBulk.mutate(
+      { ids, action, reasonCode: "other" },
+      {
+        onError: () =>
+          showToast("Couldn't reach the safety service — restored.", "error"),
+      },
+    );
     undoToast(
       `${ids.length} reports ${verb}`,
       () => {
@@ -125,7 +197,11 @@ export function useModerationQueue() {
     );
   };
 
-  const recordAppeal = (id: string, decision: "uphold" | "overturn") => {
+  const recordAppeal = (
+    id: string,
+    decision: "uphold" | "overturn",
+    note = "",
+  ) => {
     const a = appeals.find((x) => x.id === id);
     const snapshot = appeals;
     setLeaving((prev) => new Set([...prev, id]));
@@ -133,6 +209,13 @@ export function useModerationQueue() {
       setAppeals((list) => list.filter((x) => x.id !== id));
       clearLeaving([id]);
     }, 340);
+    reviewAppeal.mutate(
+      { id, decision, note },
+      {
+        onError: () =>
+          showToast("Couldn't reach the safety service — restored.", "error"),
+      },
+    );
     const verb = decision === "uphold" ? "Upheld" : "Overturned";
     undoToast(
       `${verb} · ${a?.appealBy ?? "member"} notified`,
@@ -161,6 +244,8 @@ export function useModerationQueue() {
     emergencies,
     others,
     oldest,
+    counts,
+    loading: isLoading,
     showToast,
     replayOpen,
     resolveReport,
@@ -168,7 +253,7 @@ export function useModerationQueue() {
     togglePick,
     bulkAct,
     recordAppeal,
-    resetAppeals: () => setAppeals(APPEALS),
+    resetAppeals: () => dataAppeals && setAppeals(dataAppeals),
     clearPicked: () => setPicked(new Set()),
   };
 }

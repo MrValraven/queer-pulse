@@ -11,13 +11,20 @@ Package manager is **pnpm** (`pnpm-lock.yaml`).
 - `pnpm lint` — ESLint over the repo (`eslint .`)
 - `pnpm preview` — serve the production build
 
-There is **no test runner** configured (no Vitest/Jest, no `test` script). Don't invent one or reference tests that don't exist.
+There **is** a test runner: **Vitest** + React Testing Library + jsdom + MSW (added by the production-readiness work — see `docs/production-readiness/02-testing-harness.md`).
+
+- `pnpm test` — run the suite once (`vitest run`)
+- `pnpm test:watch` — watch mode
+- `pnpm test:cov` — with coverage (gated on `src/shared/api/client.ts`)
+- `pnpm test:e2e` — Playwright happy-paths (not run in CI; browsers must be installed)
+
+Tests live in `src/**/*.test.ts(x)` and `src/test/**`; route-render smoke tests exercise a representative sample of routes in demo mode. Keep the suite green when changing shared code.
 
 The maintainer generally runs `dev`/`build` themselves. When you can't run a build, verify changes by reading files, `wc -l`, and the IDE diagnostics that surface after edits — and say plainly that verification was static-only.
 
 ## Big picture
 
-A large React **prototype** for QueerPulse (a queer community platform). All data is **mock/static** — there is no backend or data fetching. "Interactivity" is local component state plus toast notifications; forms simulate submission. Stack: Vite + React 19 + react-router-dom v7 + TypeScript, CSS Modules + global design tokens. Imports are relative (no path aliases).
+A large React app for QueerPulse (a queer community platform), running in **demo/live dual-mode**. It began as a pure mock/static prototype and is being wired to a real NestJS backend (out of this repo): a `DemoModeProvider` toggle makes every data hook branch `if (demoMode) return mock else callApi()`, so the prototype still runs standalone (demo, forced on when `VITE_API_URL` is unset) while live mode uses the real API (`src/shared/api/client.ts` — httpOnly-cookie session, CSRF, refresh). **Preserve this dual-mode in every change**: any live-mode code path must keep the colocated `*.data.ts` mock as its demo fallback. Stack: Vite + React 19 + react-router-dom v7 + TypeScript + @tanstack/react-query, CSS Modules + global design tokens. Imports are relative (no path aliases). See `docs/production-readiness/` for the launch-hardening plan + what's been built.
 
 ### Feature-first structure
 

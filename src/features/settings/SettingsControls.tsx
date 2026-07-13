@@ -163,9 +163,10 @@ export function DeleteAccountModal({
       >
         <h3 id="delete-account-modal-title">Delete your account?</h3>
         <p>
-          This will permanently delete your profile, messages, community posts,
+          Deleting permanently erases your profile, messages, community posts,
           and all associated data within 30 days. It cannot be undone. We
-          recommend downloading your data first.
+          recommend downloading your data first. Next, you'll confirm your
+          password and we'll email you to finish the request.
         </p>
         <div className={styles.modalBtns}>
           <button type="button" className={styles.dcBtn} onClick={onClose}>
@@ -176,7 +177,7 @@ export function DeleteAccountModal({
             className={`${styles.dcBtn} ${styles.danger}`}
             onClick={onConfirm}
           >
-            Yes, delete my account
+            Continue to delete
           </button>
         </div>
       </div>

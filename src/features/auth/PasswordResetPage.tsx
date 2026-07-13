@@ -2,31 +2,62 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { apiPost } from "../../shared/api/client";
+import { logError } from "../../shared/observability/logger";
 import { AuthLayout } from "./AuthLayout";
 import { routes } from "../../app/routeMap";
 import styles from "./auth.module.css";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * POST /auth/forgot-password — always resolves 200 server-side (no user
+ * enumeration). Demo simulates the same. Backs the honest "check your inbox"
+ * state and the resend, which hits the same idempotent endpoint.
+ */
+async function sendReset(email: string, demoMode: boolean): Promise<void> {
+  if (demoMode) {
+    await new Promise((r) => setTimeout(r, 700));
+    return;
+  }
+  await apiPost<void>("/auth/forgot-password", { email });
+}
+
 export function PasswordResetPage() {
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);
+  const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [resendLabel, setResendLabel] = useState("Resend link");
 
   const emailValid = EMAIL_RE.test(email.trim());
   const emailError = touched && email.trim().length > 0 && !emailValid;
 
-  function handleSend(e: React.FormEvent) {
+  async function handleSend(e: React.FormEvent) {
     e.preventDefault();
-    if (!emailValid) return;
-    setSent(true);
+    if (!emailValid || sending) return;
+    setSending(true);
+    try {
+      await sendReset(email.trim(), demoMode);
+      setSent(true);
+    } catch (err) {
+      logError(err, { where: "PasswordResetPage.send" });
+      showToast(
+        "We couldn't start that just now. Check your connection and try again.",
+        "error",
+      );
+    } finally {
+      setSending(false);
+    }
   }
 
-  function handleResend() {
+  async function handleResend() {
     setResendLabel("Sending…");
-    setTimeout(() => {
+    try {
+      await sendReset(email.trim(), demoMode);
       showToast("Reset link sent again", "success");
       let secs = 30;
       setResendLabel(`Resend in ${secs}s`);
@@ -39,7 +70,11 @@ export function PasswordResetPage() {
           setResendLabel(`Resend in ${secs}s`);
         }
       }, 1000);
-    }, 900);
+    } catch (err) {
+      logError(err, { where: "PasswordResetPage.resend" });
+      showToast("That didn't send. Try again in a moment.", "error");
+      setResendLabel("Resend link");
+    }
   }
 
   if (sent) {
@@ -132,8 +167,12 @@ export function PasswordResetPage() {
           )}
         </div>
 
-        <Button type="submit" className={styles.authBtn} disabled={!emailValid}>
-          Send reset link →
+        <Button
+          type="submit"
+          className={styles.authBtn}
+          disabled={!emailValid || sending}
+        >
+          {sending ? "Sending…" : "Send reset link →"}
         </Button>
       </form>
 

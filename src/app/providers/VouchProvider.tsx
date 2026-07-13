@@ -10,12 +10,8 @@ import {
 import { VouchMemberModal } from "../../features/members/VouchMemberModal";
 import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
-import {
-  vouchFor,
-  unvouch,
-  getGivenVouches,
-} from "../../features/members/api/members.api";
-import { queryClient } from "../../shared/api/queryClient";
+import { getGivenVouches } from "../../features/members/api/members.api";
+import { useVouchMutations } from "../../features/members/api/useVouchMutations";
 
 interface VouchContextValue {
   /** Member slugs the current user has vouched for, most-recent first. */
@@ -67,6 +63,10 @@ export function VouchProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
   const { refresh } = useAuth();
 
+  // The vouch / unvouch optimistic lifecycle (optimistic setVouched → API →
+  // rollback on error → invalidate + refresh on settle) now lives in React Query.
+  const { vouch, unvouch } = useVouchMutations({ setVouched, refresh });
+
   useEffect(() => {
     if (demoMode) return;
     let active = true;
@@ -86,47 +86,16 @@ export function VouchProvider({ children }: { children: ReactNode }) {
   const close = useCallback(() => setOpenSlug(null), []);
   const addVouch = useCallback(
     (slug: string) => {
-      setVouched((prev) => (prev.includes(slug) ? prev : [slug, ...prev]));
-      if (demoMode) return;
-      vouchFor(slug)
-        .then(() => {
-          // Refresh the vouchee's profile + the directory so counts update.
-          queryClient.invalidateQueries({ queryKey: ["profile"] });
-          queryClient.invalidateQueries({ queryKey: ["members"] });
-          // If the current user just crossed the threshold and got promoted,
-          // pick up the new status claim. (No-op in demo.)
-          void refresh();
-        })
-        .catch(() => {
-          // Roll back the optimistic add on failure.
-          setVouched((prev) => prev.filter((s) => s !== slug));
-        });
+      vouch.mutate(slug);
     },
-    [demoMode, refresh],
+    [vouch],
   );
 
   const removeVouch = useCallback(
     (slug: string) => {
-      let existed = false;
-      setVouched((prev) => {
-        existed = prev.includes(slug);
-        return prev.filter((s) => s !== slug);
-      });
-      if (demoMode || !existed) return;
-      unvouch(slug)
-        .then(() => {
-          // Refresh the vouchee's profile + the directory so counts update.
-          queryClient.invalidateQueries({ queryKey: ["profile"] });
-          queryClient.invalidateQueries({ queryKey: ["members"] });
-          // A withdrawal can drop the user back below a status threshold.
-          void refresh();
-        })
-        .catch(() => {
-          // Roll back the optimistic removal on failure (restore most-recent-first).
-          setVouched((prev) => (prev.includes(slug) ? prev : [slug, ...prev]));
-        });
+      unvouch.mutate(slug);
     },
-    [demoMode, refresh],
+    [unvouch],
   );
 
   const value = useMemo<VouchContextValue>(

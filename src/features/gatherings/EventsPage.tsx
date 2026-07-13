@@ -96,8 +96,13 @@ function EventSkeleton() {
 
 export function EventsPage() {
   const [active, setActive] = useState("all");
-  const { data, isLoading } = useEvents({ filter: "upcoming" });
-  const events = data?.items ?? [];
+  const {
+    items: events,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useEvents({ filter: "upcoming" });
   const loading = isLoading;
 
   const filtered = useMemo(() => {
@@ -202,6 +207,19 @@ export function EventsPage() {
                     to: "/calendar",
                   }}
                 />
+              )}
+
+              {hasNextPage && (
+                <div className={styles.loadMore}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    disabled={isFetchingNextPage}
+                    onClick={fetchNextPage}
+                  >
+                    {isFetchingNextPage ? "Loading…" : "Load more events"}
+                  </Button>
+                </div>
               )}
             </>
           )}

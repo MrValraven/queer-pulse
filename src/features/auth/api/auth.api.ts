@@ -9,6 +9,12 @@ export interface AuthUser {
   email: string;
   status: MemberStatus;
   role: MemberRole;
+  /**
+   * ISO timestamp of the member's 18+ self-attestation, or null if they haven't
+   * passed the age gate yet (spec 06). A `pending` user with a null value must be
+   * forced through the onboarding attestation before promotion to `active`.
+   */
+  ageAttestedAt: string | null;
   profile: {
     slug: string;
     firstName: string;

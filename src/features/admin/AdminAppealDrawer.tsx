@@ -18,7 +18,7 @@ export function AdminAppealDrawer({
 }: {
   appeal: Appeal;
   onClose: () => void;
-  onResolve: (id: string, decision: Decision) => void;
+  onResolve: (id: string, decision: Decision, note?: string) => void;
 }) {
   const { showToast } = useToast();
   const [decision, setDecision] = useState<Decision | null>(null);
@@ -33,7 +33,7 @@ export function AdminAppealDrawer({
       showToast("A reason is required — the member will read it", "error");
       return;
     }
-    onResolve(appeal.id, decision);
+    onResolve(appeal.id, decision, reason.trim());
     onClose();
   };
 

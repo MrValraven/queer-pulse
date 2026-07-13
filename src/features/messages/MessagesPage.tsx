@@ -1,57 +1,95 @@
 import { useMemo, useState } from "react";
 import { AppShell } from "../../shared/components/layout";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { conversations, type ChatMessage, type Conversation } from "./data";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useSocial } from "../../app/providers/SocialProvider";
+import { type ChatMessage, type Conversation } from "./data";
 import { ConversationPanel } from "./ConversationPanel";
 import { MessagesThreadList } from "./MessagesThreadList";
 import { NewMessageModal } from "./NewMessageModal";
+import { useConversations, useUnreadMessages } from "./api/useConversations";
+import { useMessageThread } from "./api/useMessageThread";
+import {
+  useMarkRead,
+  useSendMessage,
+  useStartConversation,
+} from "./api/useMessageMutations";
 import styles from "./MessagesPage.module.css";
 
 export function MessagesPage() {
-  const loading = useSimulatedLoad();
+  const { demoMode } = useDemoMode();
+  const { isBlocked } = useSocial();
+  const simLoading = useSimulatedLoad();
+
+  // Source of truth for the inbox: demo returns the scripted mock, live calls
+  // GET /conversations. Either way the page renders the same view-model.
+  const convosQuery = useConversations();
+  const baseThreads = useMemo(() => convosQuery.data ?? [], [convosQuery.data]);
+  const loading = demoMode ? simLoading : convosQuery.isLoading;
+  const unread = useUnreadMessages();
+
   const [extraThreads, setExtraThreads] = useState<Conversation[]>([]);
-  const [activeId, setActiveId] = useState(conversations[0]!.id);
+  const [activeId, setActiveId] = useState<string>("");
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState("");
-  /** Per-thread appended messages, keyed by conversation id. */
+  /** Per-thread optimistic messages sent this session, keyed by conversation id. */
   const [sent, setSent] = useState<Record<string, ChatMessage[]>>({});
   const [composing, setComposing] = useState(false);
 
   const allThreads = useMemo(
-    () => [...extraThreads, ...conversations],
-    [extraThreads],
+    () => [...extraThreads, ...baseThreads],
+    [extraThreads, baseThreads],
   );
 
+  // Default the open thread to the first available once threads load. Adjusting
+  // state during render (not in an effect) avoids a cascading re-render frame.
+  if (!activeId && allThreads.length > 0) setActiveId(allThreads[0]!.id);
+
   const active = useMemo(
-    () => allThreads.find((c) => c.id === activeId) ?? allThreads[0]!,
+    () => allThreads.find((c) => c.id === activeId) ?? allThreads[0] ?? null,
     [allThreads, activeId],
   );
 
+  // Live message history for the open thread (inert in demo mode).
+  const thread = useMessageThread(demoMode ? null : (active?.id ?? null));
+  const sendMessage = useSendMessage(active?.id ?? null);
+  const markRead = useMarkRead(active?.id ?? null);
+  const startConversation = useStartConversation();
+
+  // DM severance (spec 03): a blocked counterpart's thread is hidden. Their
+  // history stays server-side for moderation; here we just stop surfacing it.
   const visibleThreads = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return q
-      ? allThreads.filter((c) => c.name.toLowerCase().includes(q))
-      : allThreads;
-  }, [allThreads, query]);
+    return allThreads.filter(
+      (c) =>
+        !(c.slug && isBlocked(c.slug)) &&
+        (!q || c.name.toLowerCase().includes(q)),
+    );
+  }, [allThreads, query, isBlocked]);
 
-  /** Static message groups plus any messages sent this session. */
+  const activeBlocked = active?.slug ? isBlocked(active.slug) : false;
+
+  /** Base history (mock groups in demo, fetched groups in live) + session sends. */
   const messageGroups = useMemo(() => {
+    if (!active) return [];
+    const base = demoMode ? active.messages : thread.groups;
     const extra = sent[active.id];
-    if (!extra || extra.length === 0) return active.messages;
-    const groups = active.messages.map((g) => ({ ...g, items: [...g.items] }));
+    if (!extra || extra.length === 0) return base;
+    const groups = base.map((g) => ({ ...g, items: [...g.items] }));
     const today = groups.find((g) => g.day === "Today");
     if (today) {
       today.items = [...today.items, ...extra];
       return groups;
     }
     return [...groups, { day: "Today", items: extra }];
-  }, [active, sent]);
+  }, [active, demoMode, thread.groups, sent]);
 
   function openThread(id: string) {
     setActiveId(id);
     setReadIds((current) => new Set(current).add(id));
     setDraft("");
+    if (!demoMode) markRead.mutate();
   }
 
   function startThread(recipient: Conversation) {
@@ -63,23 +101,37 @@ export function MessagesPage() {
     setReadIds((current) => new Set(current).add(recipient.id));
     setQuery("");
     setDraft("");
+    if (!demoMode && recipient.slug) startConversation.mutate(recipient.slug);
   }
 
   function send() {
     const body = draft.trim();
-    if (!body) return;
+    if (!body || activeBlocked || !active) return;
+    const convId = active.id;
+    // Optimistic append — instant feedback in both modes. In live mode the
+    // server refetch is authoritative, so clear the optimistic copy on success.
     setSent((prev) => ({
       ...prev,
-      [active.id]: [
-        ...(prev[active.id] ?? []),
+      [convId]: [
+        ...(prev[convId] ?? []),
         { from: "me", text: body, time: "Just now" },
       ],
     }));
     setDraft("");
+    if (!demoMode) {
+      sendMessage.mutate(body, {
+        onSuccess: () =>
+          setSent((prev) => {
+            const next = { ...prev };
+            delete next[convId];
+            return next;
+          }),
+      });
+    }
   }
 
   return (
-    <AppShell unreadCount={3}>
+    <AppShell unreadCount={unread}>
       <div className={styles.app}>
         <MessagesThreadList
           loading={loading}
@@ -92,13 +144,16 @@ export function MessagesPage() {
           onCompose={() => setComposing(true)}
         />
 
-        <ConversationPanel
-          active={active}
-          messageGroups={messageGroups}
-          draft={draft}
-          onDraftChange={setDraft}
-          onSend={send}
-        />
+        {active && (
+          <ConversationPanel
+            active={active}
+            messageGroups={messageGroups}
+            draft={draft}
+            onDraftChange={setDraft}
+            onSend={send}
+            blocked={activeBlocked}
+          />
+        )}
       </div>
       {composing && (
         <NewMessageModal

@@ -1,4 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
+import { PageMeta } from "../../shared/seo";
 import { useToast } from "../../shared/components/feedback/useToast";
 import {
   ManifestoBody,
@@ -13,6 +14,10 @@ export function ManifestoPage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title="The Manifesto — QueerPulse"
+        description="A quiet network for people worth knowing. The QueerPulse manifesto — what we believe and how we build."
+      />
       <div className={styles.page}>
         <section className={styles.open}>
           <div className={styles.openInner}>

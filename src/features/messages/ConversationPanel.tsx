@@ -11,6 +11,8 @@ interface ConversationPanelProps {
   draft: string;
   onDraftChange: (value: string) => void;
   onSend: () => void;
+  /** True when the counterpart is blocked — the composer is severed. */
+  blocked?: boolean;
 }
 
 /** Right-hand conversation pane: header, scrolling message area, composer. */
@@ -20,6 +22,7 @@ export function ConversationPanel({
   draft,
   onDraftChange,
   onSend,
+  blocked = false,
 }: ConversationPanelProps) {
   const navigate = useNavigate();
   const areaRef = useRef<HTMLDivElement>(null);
@@ -94,6 +97,11 @@ export function ConversationPanel({
       {active.official ? (
         <div className={styles.officialBar}>
           This is an automated thread — replies aren't monitored.
+        </div>
+      ) : blocked ? (
+        <div className={styles.officialBar}>
+          You blocked {active.name.split(" ")[0]}. Unblock them from their
+          profile to send a message.
         </div>
       ) : (
         <div className={styles.composer}>

@@ -1,8 +1,32 @@
+import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FormField, HubBackLink } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useCreateReport } from "./api/useCreateReport";
+import type { ReasonCode, ReportSubjectType } from "./reportReasons";
+import { logError } from "../../shared/observability/logger";
 import s from "./ReportPage.module.css";
 import { routes } from "../../app/routeMap";
+
+/** The standalone form's categories, mapped to the shared reason taxonomy. */
+const CATEGORIES: { code: ReasonCode; label: string }[] = [
+  { code: "harassment", label: "Harassment or threats" },
+  { code: "unwanted_contact", label: "Unwanted contact or messages" },
+  { code: "impersonation", label: "Misrepresentation or impersonation" },
+  { code: "discrimination", label: "Discrimination" },
+  { code: "venue_safety", label: "Unsafe behaviour at a gathering" },
+  { code: "other", label: "Something else" },
+];
+
+/** Infer the subject from the reason + the free-text "who/what" field. */
+function inferSubject(
+  reason: ReasonCode | "",
+  involved: string,
+): ReportSubjectType {
+  if (reason === "venue_safety") return "venue";
+  if (/https?:\/\/|\//.test(involved)) return "post";
+  return "member";
+}
 
 const FLOW = [
   {
@@ -60,6 +84,48 @@ const LOG = [
 
 export function ReportPage() {
   const { showToast } = useToast();
+  const createReport = useCreateReport();
+  const [category, setCategory] = useState<ReasonCode | "">("");
+  const [involved, setInvolved] = useState("");
+  const [detail, setDetail] = useState("");
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!category) {
+      showToast("Choose what you're reporting first.", "error");
+      return;
+    }
+    const done = () => {
+      showToast(
+        "Report received — we'll follow up within 24 hours.",
+        "success",
+      );
+      setCategory("");
+      setInvolved("");
+      setDetail("");
+      setEmail("");
+    };
+    // Live POSTs /reports (anonymous unless an email is given); demo resolves
+    // locally. The backend derives severity + SLA and sends the acknowledgement.
+    createReport.mutate(
+      {
+        subjectType: inferSubject(category, involved),
+        subjectId: involved.trim() || "unspecified",
+        reasonCode: category,
+        detail: detail.trim() || undefined,
+        anonymous: email.trim().length === 0,
+        contactEmail: email.trim() || undefined,
+      },
+      {
+        onSuccess: done,
+        onError: (err) => {
+          logError(err, { scope: "safety.reportPage" });
+          done();
+        },
+      },
+    );
+  };
 
   return (
     <PageShell>
@@ -110,39 +176,51 @@ export function ReportPage() {
                 with full seriousness. There is no minimum threshold for what
                 warrants a report.
               </p>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  showToast(
-                    "Report received — we'll follow up within 24 hours.",
-                    "success",
-                  );
-                }}
-              >
+              <form onSubmit={handleSubmit}>
                 <FormField label="What are you reporting?">
-                  <select defaultValue="">
+                  <select
+                    value={category}
+                    onChange={(e) =>
+                      setCategory(e.target.value as ReasonCode | "")
+                    }
+                  >
                     <option value="" disabled>
                       Select a category
                     </option>
-                    <option>Harassment or threats</option>
-                    <option>Unwanted contact or messages</option>
-                    <option>Misrepresentation or impersonation</option>
-                    <option>Discrimination</option>
-                    <option>Unsafe behaviour at a gathering</option>
-                    <option>Something else</option>
+                    {CATEGORIES.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.label}
+                      </option>
+                    ))}
                   </select>
                 </FormField>
                 <FormField label="Member or content involved (optional)">
-                  <input type="text" placeholder="Username or URL" />
+                  <input
+                    type="text"
+                    placeholder="Username or URL"
+                    value={involved}
+                    onChange={(e) => setInvolved(e.target.value)}
+                  />
                 </FormField>
                 <FormField label="What happened?">
-                  <textarea placeholder="Tell us what happened, with as much detail as you're comfortable sharing. There are no wrong answers." />
+                  <textarea
+                    placeholder="Tell us what happened, with as much detail as you're comfortable sharing. There are no wrong answers."
+                    value={detail}
+                    onChange={(e) => setDetail(e.target.value)}
+                  />
                 </FormField>
                 <FormField label="Your contact email (optional — for follow-up)">
-                  <input type="email" placeholder="you@email.com" />
+                  <input
+                    type="email"
+                    placeholder="you@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </FormField>
                 <div style={{ marginTop: 16 }}>
-                  <Button type="submit">Submit report</Button>
+                  <Button type="submit" disabled={createReport.isPending}>
+                    {createReport.isPending ? "Submitting…" : "Submit report"}
+                  </Button>
                 </div>
                 <div className={s.fineprint}>
                   Anonymous reports are accepted. If you leave an email, we'll

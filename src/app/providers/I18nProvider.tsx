@@ -5,27 +5,24 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { en } from "../../shared/i18n/strings.en";
-import { translate } from "../../shared/i18n/translate";
-import type { Language, StringCatalog } from "../../shared/i18n/types";
+import { catalogs } from "../../shared/i18n/catalogs";
+import { parseKey, resolveEntry } from "../../shared/i18n/translate";
+import {
+  STORAGE_KEY,
+  detectLanguage,
+  intlLocale,
+} from "../../shared/i18n/locale";
+import type {
+  Language,
+  Namespace,
+  TFunction,
+  TranslateOptions,
+} from "../../shared/i18n/types";
+import { logWarn } from "../../shared/observability/logger";
 import { I18nContext } from "./i18nContext";
 
-const STORAGE_KEY = "qp-lang";
-
-/** EN is fully populated; PT is a structural placeholder for a future milestone. */
-const catalogs: Record<Language, StringCatalog> = {
-  en,
-  pt: {},
-};
-
-function getInitialLanguage(): Language {
-  if (typeof window === "undefined") return "en";
-  const stored = window.localStorage.getItem(STORAGE_KEY);
-  return stored === "pt" ? "pt" : "en";
-}
-
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+  const [language, setLanguageState] = useState<Language>(detectLanguage);
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, language);
@@ -37,13 +34,26 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const t = useCallback(
-    (key: string) => {
-      // Fall back to the EN catalog when the active language lacks the key.
-      const active = catalogs[language];
-      return active[key] !== undefined
-        ? translate(active, key)
-        : translate(en, key);
+  const t = useCallback<TFunction>(
+    (key: string, options?: TranslateOptions) => {
+      const { namespace, path } = parseKey(key);
+      const ns = namespace as Namespace;
+
+      // Active language first, then the EN catalog, then the raw key so missing
+      // strings degrade visibly rather than blanking.
+      const active = resolveEntry(
+        catalogs[language][ns],
+        path,
+        intlLocale(language),
+        options,
+      );
+      if (active !== undefined) return active;
+
+      const fallback = resolveEntry(catalogs.en[ns], path, "en", options);
+      if (fallback !== undefined) return fallback;
+
+      logWarn("i18n: missing translation key", { key, language });
+      return key;
     },
     [language],
   );

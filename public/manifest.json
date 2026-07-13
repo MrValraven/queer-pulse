@@ -1,0 +1,24 @@
+{
+  "name": "QueerPulse",
+  "short_name": "QueerPulse",
+  "description": "A quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#2d1b3d",
+  "background_color": "#f7f3ee",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -145,8 +145,9 @@ export function CreateAccountPage() {
           Create account
         </Button>
         <div className={styles.legalNote}>
-          By creating an account you agree to our{" "}
-          <Link to={routes.terms}>Terms of Use</Link> and{" "}
+          By creating an account you confirm you're{" "}
+          <Link to={`${routes.terms}#eligibility`}>18 or older</Link> and agree
+          to our <Link to={routes.terms}>Terms of Use</Link> and{" "}
           <Link to={routes.privacy}>Privacy Policy</Link>
         </div>
         <div className={styles.signinLink}>

@@ -1,6 +1,7 @@
 import { FiCheck, FiX } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { PageMeta } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
 import {
   CONTRAST_THEM,
@@ -17,6 +18,10 @@ import s from "./AboutPage.module.css";
 export function AboutPage() {
   return (
     <PageShell>
+      <PageMeta
+        title="About — QueerPulse"
+        description="Built in Lisbon, owned by us. A private, community-owned network for queer Lisbon — built to connect you to people, work and care, then get out of your way."
+      />
       <PageHero
         eyebrow="About QueerPulse"
         title={

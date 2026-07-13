@@ -63,7 +63,7 @@ export interface FeedPost {
 
 export const FEED_POST: FeedPost = {
   id: "post:gp-lisbon-gp",
-  slug: "anika-kovac",
+  slug: "anika",
   authorName: "Anika Kovač",
   authorInitials: "AK",
   authorTint: "coral",

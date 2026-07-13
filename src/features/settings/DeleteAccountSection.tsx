@@ -1,27 +1,106 @@
-import { useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { FiPause } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
+import { logError } from "../../shared/observability/logger";
 import { DELETE_CONTENT, type DeleteOption } from "./deleteAccount.data";
 import { DestructiveActionFlow } from "./DestructiveActionFlow";
 import { DESTRUCTIVE_FLOW } from "./destructiveFlows.data";
+import {
+  DeleteOptionCards,
+  DeletePendingBanner,
+} from "./DeleteAccountSections";
+import type { DeletionRequest } from "./api/account.api";
+import {
+  useCancelDeletion,
+  useDeactivate,
+  useGetDeletionRequest,
+  useReauth,
+  useRequestDeletion,
+} from "./api/useAccountMutations";
 import styles from "./DeleteAccountPage.module.css";
 
 export function DeleteAccountSection() {
   const { showToast } = useToast();
+  const { signOut } = useAuth();
+  const reauth = useReauth();
+  const requestDeletion = useRequestDeletion();
+  const deactivate = useDeactivate();
+  const cancelDeletion = useCancelDeletion();
+  const getDeletion = useGetDeletionRequest();
+
   const [opt, setOpt] = useState<DeleteOption>("deactivate");
   const [password, setPassword] = useState("");
   const [phrase, setPhrase] = useState("");
   const [flowOpen, setFlowOpen] = useState(false);
+  const [pending, setPending] = useState<DeletionRequest | null>(null);
+  const [cancelling, setCancelling] = useState(false);
 
   const content = DELETE_CONTENT[opt];
   const phraseMatch = content.phrase ? phrase === content.phrase : true;
   const canSubmit = password.length >= 1 && phraseMatch;
 
+  // On mount, surface any already-pending deletion request instead of the form.
+  useEffect(() => {
+    let active = true;
+    getDeletion()
+      .then((req) => active && setPending(req))
+      .catch((err) =>
+        logError(err, { where: "DeleteAccountSection.getDeletion" }),
+      );
+    return () => {
+      active = false;
+    };
+  }, [getDeletion]);
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setFlowOpen(true);
+  }
+
+  // Re-auth with the collected password, then run the chosen destructive action.
+  const runAction = useCallback(async () => {
+    const { reauthToken } = await reauth(password);
+    if (opt === "delete") {
+      const req = await requestDeletion(reauthToken);
+      setPending(req);
+    } else {
+      await deactivate(reauthToken);
+    }
+  }, [reauth, password, opt, requestDeletion, deactivate]);
+
+  async function handleCancel() {
+    setCancelling(true);
+    try {
+      await cancelDeletion();
+      setPending(null);
+      showToast("Deletion cancelled — welcome back.", "success");
+    } catch (err) {
+      logError(err, { where: "DeleteAccountSection.cancel" });
+      showToast("We couldn't cancel that just now. Try again.", "error");
+    } finally {
+      setCancelling(false);
+    }
+  }
+
+  if (pending && pending.status !== "erased") {
+    return (
+      <>
+        <h1 className={styles.pageTitle}>
+          Deletion <em>scheduled.</em>
+        </h1>
+        <p className={styles.pageSub}>
+          You asked us to delete your account. Here's where that stands.
+        </p>
+        <DeletePendingBanner
+          request={pending}
+          onCancel={handleCancel}
+          cancelling={cancelling}
+        />
+      </>
+    );
   }
 
   return (
@@ -34,73 +113,7 @@ export function DeleteAccountSection() {
         fits your situation.
       </p>
 
-      <div className={styles.optionGrid}>
-        <div
-          className={[
-            styles.optCard,
-            opt === "deactivate" && styles.optCardSelected,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => setOpt("deactivate")}
-        >
-          <div className={styles.optRadio}>
-            <div className={styles.optRadioInner} />
-          </div>
-          <div className={`${styles.optIcon} ${styles.optIconDefault}`}>
-            <svg
-              className={styles.optIconSvg}
-              viewBox="0 0 20 20"
-              stroke="var(--plum)"
-            >
-              <circle cx="10" cy="10" r="8" />
-              <line x1="7" y1="10" x2="13" y2="10" />
-            </svg>
-          </div>
-          <div className={styles.optTitle}>Deactivate</div>
-          <div className={styles.optDesc}>
-            Your profile becomes invisible. Your data is preserved. You can
-            reactivate any time by signing back in.
-          </div>
-          <div className={`${styles.optTag} ${styles.optTagRev}`}>
-            Reversible
-          </div>
-        </div>
-        <div
-          className={[
-            styles.optCard,
-            styles.optCardDanger,
-            opt === "delete" && styles.optCardSelected,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => setOpt("delete")}
-        >
-          <div className={styles.optRadio}>
-            <div className={styles.optRadioInner} />
-          </div>
-          <div className={`${styles.optIcon} ${styles.optIconDanger}`}>
-            <svg
-              className={styles.optIconSvg}
-              viewBox="0 0 20 20"
-              stroke="var(--accent-ink)"
-            >
-              <polyline points="4,5 16,5" />
-              <path d="M7 5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M6 5l.6 11h6.8l.6-11" />
-            </svg>
-          </div>
-          <div className={`${styles.optTitle} ${styles.optTitleDanger}`}>
-            Delete account
-          </div>
-          <div className={styles.optDesc}>
-            Permanently erases your account and all associated data within 30
-            days. This cannot be undone.
-          </div>
-          <div className={`${styles.optTag} ${styles.optTagPerm}`}>
-            Permanent
-          </div>
-        </div>
-      </div>
+      <DeleteOptionCards opt={opt} setOpt={setOpt} />
 
       {opt === "deactivate" && (
         <div className={styles.pauseStrip}>
@@ -165,7 +178,6 @@ export function DeleteAccountSection() {
             <input
               className={`${styles.cfInput} ${styles.cfInputDanger}`}
               type="text"
-              placeholder=""
               value={phrase}
               onChange={(e) => setPhrase(e.target.value)}
             />
@@ -192,6 +204,8 @@ export function DeleteAccountSection() {
       {flowOpen && (
         <DestructiveActionFlow
           content={DESTRUCTIVE_FLOW[opt]}
+          action={runAction}
+          onDone={signOut}
           onClose={() => setFlowOpen(false)}
         />
       )}

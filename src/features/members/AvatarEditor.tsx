@@ -28,6 +28,7 @@ export function AvatarEditor({
   const createdUrl = useRef<string | null>(null);
   const uploadAvatar = useUploadImage("avatar");
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(
@@ -42,9 +43,12 @@ export function AvatarEditor({
   // object URL is created and there's nothing to revoke.
   async function pick(file: File) {
     setError(null);
+    setProgress(0);
     setUploading(true);
     try {
-      const url = await uploadAvatar(file);
+      const url = await uploadAvatar(file, {
+        onProgress: (p) => setProgress(p),
+      });
       if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
       createdUrl.current = url.startsWith("blob:") ? url : null;
       onChange(url);
@@ -77,7 +81,11 @@ export function AvatarEditor({
           disabled={uploading}
         >
           <FiCamera size={15} />
-          {uploading ? "Uploading…" : photo ? "Change photo" : "Add photo"}
+          {uploading
+            ? `Uploading… ${progress}%`
+            : photo
+              ? "Change photo"
+              : "Add photo"}
         </button>
         {photo && !uploading && (
           <button

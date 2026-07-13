@@ -260,7 +260,7 @@ export function Discovery() {
           520+ verified members
         </Reveal>
         <Reveal as="h2" className={styles.display} delay={60}>
-          No follower counts. No endorsements. Just <em>people.</em>
+          The people <em>behind the pulse.</em>
         </Reveal>
         <Reveal as="p" className={styles.sub} delay={120}>
           The designers, engineers, chefs, filmmakers, ceramicists and carers

@@ -2,11 +2,20 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   type ReactNode,
 } from "react";
 import { type Draft } from "../../features/members/drafts.data";
 import { useLocalStorage } from "../../shared/hooks";
+import { useDemoMode } from "./DemoModeProvider";
+import {
+  getDrafts,
+  createDraft,
+  deleteDraft,
+  draftToDto,
+  dtoToDraft,
+} from "../../features/members/api/drafts.api";
 
 interface DraftsContextValue {
   /** User-created drafts, newest first. Merged ahead of the static mock list. */
@@ -24,6 +33,13 @@ const STORAGE_KEY = "qp.drafts.v1";
  * invite as a draft) so they show up on the Drafts page. Persists to
  * localStorage. Stored drafts must use plain-string fields — the static mock
  * drafts use JSX, but anything persisted here has to be serialisable.
+ *
+ * Dual-mode (spec 09): in demo mode this is a pure local store, unchanged and
+ * never touching the network. Live, the same localStorage store is an
+ * optimistic/offline cache — a hydration effect seeds it from the server (only
+ * the serialisable DraftDTO subset syncs; `meta`/`actions` default to empty),
+ * and each mutator applies the local change first, then syncs to the API,
+ * rolling the local state back on failure.
  */
 export function DraftsProvider({ children }: { children: ReactNode }) {
   const [drafts, setDrafts] = useLocalStorage<Draft[]>(
@@ -31,21 +47,57 @@ export function DraftsProvider({ children }: { children: ReactNode }) {
     [],
     (v): v is Draft[] => Array.isArray(v),
   );
+  const { demoMode } = useDemoMode();
+
+  // Live-only: hydrate the store from the server list on mount / mode change.
+  useEffect(() => {
+    if (demoMode) return;
+    let active = true;
+    getDrafts()
+      .then((res) => {
+        if (active) setDrafts(res.items.map(dtoToDraft));
+      })
+      .catch(() => {
+        /* unauthorized / offline — keep the cached local list */
+      });
+    return () => {
+      active = false;
+    };
+  }, [demoMode, setDrafts]);
 
   const addDraft = useCallback(
     (draft: Draft) => {
-      setDrafts((prev) =>
-        prev.some((d) => d.id === draft.id) ? prev : [draft, ...prev],
-      );
+      let existed = false;
+      setDrafts((prev) => {
+        existed = prev.some((d) => d.id === draft.id);
+        return existed ? prev : [draft, ...prev];
+      });
+      if (demoMode || existed) return;
+      createDraft(draftToDto(draft)).catch(() => {
+        // Roll back the optimistic add on failure.
+        setDrafts((prev) => prev.filter((d) => d.id !== draft.id));
+      });
     },
-    [setDrafts],
+    [setDrafts, demoMode],
   );
 
   const removeDraft = useCallback(
     (id: string) => {
-      setDrafts((prev) => prev.filter((d) => d.id !== id));
+      let removed: Draft | undefined;
+      setDrafts((prev) => {
+        removed = prev.find((d) => d.id === id);
+        return prev.filter((d) => d.id !== id);
+      });
+      if (demoMode || !removed) return;
+      const restore = removed;
+      deleteDraft(id).catch(() => {
+        // Roll back the optimistic removal on failure (restore newest-first).
+        setDrafts((prev) =>
+          prev.some((d) => d.id === id) ? prev : [restore, ...prev],
+        );
+      });
     },
-    [setDrafts],
+    [setDrafts, demoMode],
   );
 
   const value = useMemo(

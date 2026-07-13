@@ -5,22 +5,31 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { DATA_TYPES } from "./dataExport.data";
 import {
-  DataExportSteps,
   DataExportForm,
-  DataExportConfirm,
   DataExportIncluded,
+  DataExportStatus,
+  DataExportSteps,
+  type ExportPhase,
 } from "./DataExportSections";
+import { useExportFlow } from "./api/useExportFlow";
+import type { ExportFormat } from "./api/account.api";
 import styles from "./DataExportPage.module.css";
 
 type Format = "JSON" | "CSV" | "Both";
 
+const FORMAT_MAP: Record<Format, ExportFormat> = {
+  JSON: "json",
+  CSV: "csv",
+  Both: "both",
+};
+
 export function DataExportPage() {
   const { showToast } = useToast();
+  const { job, start, reset } = useExportFlow();
   const [checked, setChecked] = useState<boolean[]>(
     DATA_TYPES.map((d) => d.defaultChecked),
   );
   const [format, setFormat] = useState<Format>("JSON");
-  const [submitted, setSubmitted] = useState(false);
   const [openAcc, setOpenAcc] = useState<number | null>(null);
 
   function toggleType(i: number) {
@@ -28,12 +37,23 @@ export function DataExportPage() {
   }
 
   function handleSubmit() {
-    if (!checked.some(Boolean)) {
+    const categories = DATA_TYPES.filter((_, i) => checked[i]).map(
+      (d) => d.label,
+    );
+    if (categories.length === 0) {
       showToast("Select at least one data type.", "error");
       return;
     }
-    setSubmitted(true);
+    void start({ categories, format: FORMAT_MAP[format] });
   }
+
+  const phase: ExportPhase = !job
+    ? "form"
+    : job.status === "ready"
+      ? "ready"
+      : job.status === "failed" || job.status === "expired"
+        ? "form"
+        : "building";
 
   return (
     <PageShell>
@@ -55,19 +75,22 @@ export function DataExportPage() {
 
       <main className={styles.body}>
         <div className="wrap">
-          <DataExportSteps submitted={submitted} />
+          <DataExportSteps phase={phase} />
 
-          {!submitted ? (
+          {!job ? (
             <DataExportForm
               checked={checked}
               toggleType={toggleType}
               format={format}
               setFormat={setFormat}
               onSubmit={handleSubmit}
+              submitting={false}
             />
           ) : (
-            <DataExportConfirm
-              onResend={() => showToast("Verification email resent", "info")}
+            <DataExportStatus
+              job={job}
+              filename="queerpulse-export.json"
+              onRetry={reset}
             />
           )}
 

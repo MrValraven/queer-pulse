@@ -44,7 +44,13 @@ export function ConnectionsPage() {
   // Keep the entrance skeleton (demo resolves instantly, so this preserves the
   // simulated load-in); live mode also shows it while the first fetch is pending.
   const simulating = useSimulatedLoad();
-  const { views, loading: fetching } = useConnectionsList(tab);
+  const {
+    views,
+    loading: fetching,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useConnectionsList(tab);
   const loading = simulating || fetching;
 
   const {
@@ -163,6 +169,19 @@ export function ConnectionsPage() {
             views={views}
             noteFor={(v) => vouchNote(v.slug, hasVouched(v.slug))}
           />
+        )}
+
+        {!loading && hasNextPage && (
+          <div className={styles.loadMore}>
+            <Button
+              type="button"
+              variant="ghost"
+              disabled={isFetchingNextPage}
+              onClick={fetchNextPage}
+            >
+              {isFetchingNextPage ? "Loading…" : "Load more"}
+            </Button>
+          </div>
         )}
       </div>
     </PageShell>

@@ -81,22 +81,25 @@ export function useConnectionActions() {
     [withdraw, demoMode, invalidate],
   );
 
+  // Blocks now route through the dedicated /blocks resource owned by
+  // SocialProvider (live: POST/DELETE /blocks/:slug + connection tear-down
+  // invalidation; demo: local toggle). The legacy PATCH /connections/:id
+  // action:block path is deprecated and no longer called.
+
   /** Block a member. */
   const block = useCallback(
-    async (ref: ConnectionRef) => {
+    (ref: ConnectionRef) => {
       toggleBlock(ref.slug);
-      await patch(ref, "block");
     },
-    [toggleBlock, patch],
+    [toggleBlock],
   );
 
   /** Unblock a member. */
   const unblock = useCallback(
-    async (ref: ConnectionRef) => {
+    (ref: ConnectionRef) => {
       toggleBlock(ref.slug);
-      await patch(ref, "unblock");
     },
-    [toggleBlock, patch],
+    [toggleBlock],
   );
 
   /** Remove an accepted connection. */

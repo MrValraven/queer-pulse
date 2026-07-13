@@ -1,0 +1,73 @@
+# QueerPulse robots policy
+#
+# Public marketing / magazine / cinema / resources / safety / policies stay
+# crawlable; the gated member surface is disallowed. The single source of truth
+# for public-vs-gated is GATED_PATTERNS in src/app/authGate.ts — keep the
+# Disallow list below in sync with it (and note the /studio public exceptions).
+
+User-agent: *
+Allow: /
+
+# --- Gated member surface (see authGate.ts GATED_PATTERNS) ---
+Disallow: /account
+Disallow: /work
+Disallow: /economy
+Disallow: /admin
+Disallow: /mod
+Disallow: /feed
+Disallow: /search
+Disallow: /members
+Disallow: /member-directory-filter
+Disallow: /dating
+Disallow: /reading-groups
+Disallow: /family
+Disallow: /messages
+Disallow: /notifications
+Disallow: /mentions
+Disallow: /notification-deep-link
+Disallow: /communities
+Disallow: /community
+Disallow: /calendar
+Disallow: /events
+Disallow: /event
+Disallow: /gathering
+Disallow: /gatherings
+Disallow: /rsvp
+Disallow: /host
+Disallow: /create-gathering
+Disallow: /manage-gathering
+Disallow: /co-host-invite
+Disallow: /forum
+Disallow: /thread
+Disallow: /changemaker
+Disallow: /changemakers
+Disallow: /coming-out
+Disallow: /parents
+Disallow: /caregivers
+Disallow: /vouch
+Disallow: /qr-scanner
+Disallow: /magazine/submit-story
+Disallow: /local/directory
+Disallow: /local/map
+Disallow: /business-directory
+Disallow: /spaces-map
+Disallow: /cinema/watch
+Disallow: /cinema/membership
+
+# Studio: the public shopfront (/studio, /studio/about, /studio/press, etc.)
+# stays crawlable — only the member studio surfaces are gated.
+Allow: /studio
+Disallow: /studio/dashboard
+Disallow: /studio/library
+Disallow: /studio/upload
+Disallow: /studio/payouts
+Disallow: /studio/live
+Disallow: /studio/set
+Disallow: /studio/checkout
+Disallow: /studio/notifications
+Disallow: /studio/receipt
+Disallow: /studio/calls
+Disallow: /studio/triage
+Disallow: /studio/council
+
+Sitemap: https://queerpulse.com/sitemap.xml

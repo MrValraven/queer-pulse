@@ -4,7 +4,10 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
-import { THREADS, SELF_AUTHOR, type Thread } from "./forum.data";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { SELF_AUTHOR, type Thread } from "./forum.data";
+import { useThreads } from "./api/useForum";
+import { useCreateThread } from "./api/useForumMutations";
 import { ComposeThreadModal, type NewThreadInput } from "./ComposeThreadModal";
 import { FirstPostPrompt } from "./FirstPostPrompt";
 import { ForumSidebar } from "./ForumSidebar";
@@ -14,8 +17,13 @@ import styles from "./ForumPage.module.css";
 const PROMPT_DISMISSED_KEY = "qp_forum_prompt_dismissed";
 
 export function ForumPage() {
-  const loading = useSimulatedLoad();
+  const { demoMode } = useDemoMode();
+  const simLoading = useSimulatedLoad();
   const [cat, setCat] = useState("all");
+  // Thread source: demo returns the full mock, live calls GET /forum/threads.
+  const threadsQuery = useThreads(cat);
+  const createThread = useCreateThread();
+  const loading = demoMode ? simLoading : threadsQuery.isLoading;
   const [sort, setSort] = useState<"top" | "new">("top");
   const [voted, setVoted] = useState<Set<number>>(new Set());
   const [composing, setComposing] = useState(false);
@@ -46,8 +54,8 @@ export function ForumPage() {
   }
 
   const allThreads = useMemo(
-    () => [...extraThreads, ...THREADS],
-    [extraThreads],
+    () => [...extraThreads, ...(threadsQuery.data ?? [])],
+    [extraThreads, threadsQuery.data],
   );
 
   // Sidebar post counts derived from the real threads (members' posts), so they
@@ -95,6 +103,8 @@ export function ForumPage() {
     setSort("new");
     // Once they've posted, the first-post invitation has done its job — for good.
     dismissPrompt();
+    // Live mode persists; demo mode no-ops (the local thread above is the record).
+    createThread.mutate({ title, body, category: postCat });
   }
 
   function toggleVote(id: number) {

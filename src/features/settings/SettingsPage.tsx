@@ -133,11 +133,10 @@ export function SettingsPage() {
         <DeleteAccountModal
           onClose={() => setShowDelete(false)}
           onConfirm={() => {
+            // Funnel to the real, re-auth-gated deletion flow rather than
+            // firing a fake "we emailed you" toast that nothing backs.
             setShowDelete(false);
-            showToast(
-              "Account deletion requested — you'll get a confirmation email within 24 hours",
-              "info",
-            );
+            setPane("delete");
           }}
         />
       )}

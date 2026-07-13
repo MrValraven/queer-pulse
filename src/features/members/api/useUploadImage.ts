@@ -1,70 +1,133 @@
 import { useCallback } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { logError } from "../../../shared/observability/logger";
 import {
-  requestAvatarUpload,
-  requestWorkImageUpload,
-  type PresignedUpload,
+  requestUpload,
   type UploadContentType,
+  type UploadKind,
 } from "./uploads.api";
+import { processImage, validateTypeAndSize } from "./uploadProcessing";
 
-/** Which upload endpoint to hit. */
-export type UploadKind = "avatar" | "work-image";
+export type { UploadKind } from "./uploads.api";
 
-const REQUESTERS: Record<
-  UploadKind,
-  (ct: UploadContentType) => Promise<PresignedUpload>
-> = {
-  avatar: requestAvatarUpload,
-  "work-image": requestWorkImageUpload,
-};
+/** Options for a single upload call. */
+export interface UploadOptions {
+  /** Called with 0–100 as the storage PUT streams. No-ops in demo mode. */
+  onProgress?: (percent: number) => void;
+}
 
-/** Content types the backend accepts; anything else is rejected client-side. */
-const ALLOWED = new Set<string>([
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/gif",
-]);
+/** A PUT failure the hook knows how to react to. `transient` → one auto-retry. */
+class UploadError extends Error {
+  readonly transient: boolean;
+  constructor(message: string, transient: boolean) {
+    super(message);
+    this.name = "UploadError";
+    this.transient = transient;
+  }
+}
+
+const RETRY_MESSAGE = "We couldn't upload that image. Please try again.";
+
+/**
+ * `PUT` the blob to the presigned URL via `XMLHttpRequest` (needed for upload
+ * progress — `fetch` can't report it). `withCredentials = false` mirrors the old
+ * `credentials: "omit"`: the presign signature authorizes the request and no
+ * cookies/CSRF may be sent cross-origin. A retried PUT reuses the same URL —
+ * fine within the presign TTL (single-use TTLs would need a fresh presign).
+ */
+function putOnce(
+  url: string,
+  blob: Blob,
+  onProgress?: (percent: number) => void,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", url);
+    xhr.withCredentials = false;
+    xhr.setRequestHeader("Content-Type", blob.type);
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable && onProgress) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        onProgress?.(100);
+        resolve();
+      } else {
+        // 5xx is transient (worth a retry); 4xx is the request's fault.
+        reject(new UploadError(RETRY_MESSAGE, xhr.status >= 500));
+      }
+    };
+    xhr.onerror = () => reject(new UploadError(RETRY_MESSAGE, true));
+    xhr.ontimeout = () => reject(new UploadError(RETRY_MESSAGE, true));
+    xhr.send(blob);
+  });
+}
+
+/** One automatic retry on a transient failure, then surface the error. */
+async function putWithRetry(
+  url: string,
+  blob: Blob,
+  onProgress?: (percent: number) => void,
+): Promise<void> {
+  try {
+    await putOnce(url, blob, onProgress);
+  } catch (err) {
+    if (err instanceof UploadError && err.transient) {
+      onProgress?.(0);
+      await putOnce(url, blob, onProgress);
+      return;
+    }
+    throw err;
+  }
+}
 
 /**
  * Upload an image file and resolve to the URL it should be stored under.
  *
- * - **Demo mode:** never touches the network — returns a local `object URL`
- *   preview (same behaviour the editors have always had offline). The caller is
- *   responsible for revoking it when replaced/unmounted.
- * - **Live mode:** POSTs to request a presigned URL, then `PUT`s the raw file
- *   straight to storage (plain `fetch`, `credentials: "omit"` — the presign
- *   authorizes it, and cookies/CSRF must NOT be sent cross-origin), and returns
- *   the stable `publicUrl` to persist.
+ * Validation (type, size, dimensions) and a client-side EXIF/GPS strip run in
+ * BOTH modes — see `uploadProcessing.ts`. Then:
  *
- * The returned callback throws on an unsupported content type or a failed PUT so
- * callers can surface an error and fall back gracefully.
+ * - **Demo mode:** never touches the network — returns a local `object URL`
+ *   preview of the (stripped) image. The caller must revoke it when
+ *   replaced/unmounted (guard on `url.startsWith("blob:")`).
+ * - **Live mode:** requests a presigned URL, `PUT`s the bytes to storage with
+ *   progress + one automatic retry, and returns the stable `publicUrl`.
+ *
+ * The callback throws an `Error` with a human message on any failure so callers
+ * can render it in a `role="alert"` and re-trigger to retry.
  */
 export function useUploadImage(kind: UploadKind) {
   const { demoMode } = useDemoMode();
 
   return useCallback(
-    async (file: File): Promise<string> => {
-      if (demoMode) return URL.createObjectURL(file);
+    async (file: File, options?: UploadOptions): Promise<string> => {
+      // Guards run above the demo short-circuit so demo validates too.
+      validateTypeAndSize(file, kind);
+      const blob = await processImage(file, kind);
 
-      if (!ALLOWED.has(file.type)) {
+      if (demoMode) {
+        options?.onProgress?.(100);
+        return URL.createObjectURL(blob);
+      }
+
+      const contentType = blob.type as UploadContentType;
+      try {
+        const { uploadUrl, publicUrl } = await requestUpload(
+          kind,
+          contentType,
+          blob.size,
+        );
+        await putWithRetry(uploadUrl, blob, options?.onProgress);
+        return publicUrl;
+      } catch (err) {
+        logError(err, { scope: "useUploadImage", kind });
         throw new Error(
-          "That image type isn't supported. Use a JPEG, PNG, WebP or GIF.",
+          err instanceof UploadError ? err.message : RETRY_MESSAGE,
+          { cause: err },
         );
       }
-      const contentType = file.type as UploadContentType;
-      const { uploadUrl, publicUrl } = await REQUESTERS[kind](contentType);
-
-      const res = await fetch(uploadUrl, {
-        method: "PUT",
-        credentials: "omit",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      if (!res.ok) {
-        throw new Error("We couldn't upload that image. Please try again.");
-      }
-      return publicUrl;
     },
     [demoMode, kind],
   );

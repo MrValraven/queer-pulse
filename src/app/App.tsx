@@ -6,6 +6,8 @@ import { ThemeProvider } from "./providers/ThemeProvider";
 import { NavModeProvider } from "./providers/NavModeProvider";
 import { DemoModeProvider } from "./providers/DemoModeProvider";
 import { AuthProvider } from "./providers/AuthProvider";
+import { ConsentProvider } from "./providers/ConsentProvider";
+import { RealtimeProvider } from "../shared/api/realtime";
 import { I18nProvider } from "./providers/I18nProvider";
 import { ToastProvider } from "../shared/components/feedback/ToastProvider";
 import { AdminRoleProvider } from "./providers/AdminRoleProvider";
@@ -28,6 +30,10 @@ import { WorkshopsProvider } from "./providers/WorkshopsProvider";
 import { CommandPalette } from "../features/members/CommandPalette";
 import { RoomLoader } from "../shared/components/feedback/RoomLoader";
 import { AuthErrorToast } from "../shared/components/feedback/AuthErrorToast";
+import { QueryErrorToastBridge } from "../shared/components/feedback/QueryErrorToastBridge";
+import { ErrorBoundary } from "../shared/components/feedback/ErrorBoundary";
+import { ConsentBanner } from "../shared/components/consent/ConsentBanner";
+import { QuickExit } from "../shared/components/safety/QuickExit";
 import { ScrollManager } from "./ScrollManager";
 import { AppRoutes } from "./routes";
 
@@ -62,6 +68,13 @@ const RootProviders = composeProviders([
   DemoModeProvider,
   QueryProvider,
   AuthProvider,
+  // Realtime socket lifecycle: connects on sign-in (live mode), inert in demo /
+  // logged-out / no-backend. Needs Auth + DemoMode above it.
+  RealtimeProvider,
+  // Consent gate: governs whether analytics/error-monitoring may run. Needs the
+  // auth + demo state above it; wraps everything below so the banner/preferences
+  // are reachable app-wide.
+  ConsentProvider,
   // Inside AuthProvider: the sidebar is a signed-in-only affordance, so nav mode
   // is derived from the auth state (signed-out visitors always get the MegaNav).
   NavModeProvider,
@@ -94,15 +107,23 @@ const DataProviders = composeProviders([
 export function App() {
   return (
     <RootProviders>
-      <BrowserRouter>
-        <ScrollManager />
-        <DataProviders>
-          <AppRoutes />
-          <CommandPalette />
-        </DataProviders>
-        <RoomLoader />
-        <AuthErrorToast />
-      </BrowserRouter>
+      {/* App-level boundary: inside ToastProvider/Theme (RootProviders) so the
+          fallback themes correctly, but around the router so any page/provider
+          throw is contained instead of blanking the whole app. */}
+      <ErrorBoundary level="app">
+        <BrowserRouter>
+          <ScrollManager />
+          <DataProviders>
+            <AppRoutes />
+            <CommandPalette />
+            <QuickExit />
+          </DataProviders>
+          <RoomLoader />
+          <ConsentBanner />
+          <AuthErrorToast />
+          <QueryErrorToastBridge />
+        </BrowserRouter>
+      </ErrorBoundary>
     </RootProviders>
   );
 }

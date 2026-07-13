@@ -23,6 +23,7 @@
   --jade: #4a8c6f;
   --jade-rgb: 74, 140, 111;
   --jade-soft: #7cd7ad; /* light jade — text/icons on jade-tinted surfaces */
+  --jade-ink: #3f7d63; /* darker jade — small text on light (AA at body sizes) */
 
   /* ── Amber (warning / medium states) ── */
   --amber: #e8b44a;
@@ -62,4 +63,5 @@
   --ink: rgba(247, 243, 238, 0.92);
   --ink-60: rgba(247, 243, 238, 0.62);
   --ink-40: rgba(247, 243, 238, 0.55);
+  --jade-ink: #7cd7ad; /* on dark surfaces a lighter jade reads as "ink" */
 }

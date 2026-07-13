@@ -6,6 +6,7 @@ import { Button, EmptyState, Spinner } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useAuth } from "../../app/providers/authContext";
+import { useSocial } from "../../app/providers/SocialProvider";
 import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
@@ -27,10 +28,14 @@ export function ProfilePage() {
     updateDraft,
   } = useProfile();
   const { user } = useAuth();
+  const { isBlocked } = useSocial();
   const [previewing, setPreviewing] = useState(false);
 
   const selfSlug = user?.profile.slug ?? currentUserSlug;
   const isSelf = !slug || slug === selfSlug;
+  // A blocked member's profile is walled off. (The blocked-by direction is
+  // enforced server-side in live mode: the fetch 403s → the not-found wall.)
+  const blocked = !isSelf && !!slug && isBlocked(slug);
 
   const { data, isLoading } = useMemberProfile(isSelf ? undefined : slug);
   const otherMember = data?.member ?? null;
@@ -46,6 +51,26 @@ export function ProfilePage() {
         <div className={styles.stateWrap} role="status" aria-live="polite">
           <Spinner />
           <span>Loading profile…</span>
+        </div>
+      </PageShell>
+    );
+  }
+
+  if (blocked) {
+    return (
+      <PageShell>
+        <div className={styles.stateWrap}>
+          <EmptyState
+            className={styles.stateEmpty}
+            icon={<FiUserX />}
+            title="This profile isn't available"
+            description="You've blocked this member, so their profile is hidden. You can unblock them from your connections at any time."
+            action={{ label: "Manage blocked members", to: routes.connections }}
+            secondaryAction={{
+              label: "← Go back",
+              onClick: () => navigate(-1),
+            }}
+          />
         </div>
       </PageShell>
     );

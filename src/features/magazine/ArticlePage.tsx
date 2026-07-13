@@ -1,6 +1,12 @@
-import { useState, type CSSProperties } from "react";
+import {
+  isValidElement,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
+import { PageMeta } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
 import {
   Avatar,
@@ -24,6 +30,25 @@ import { AuthorLink } from "./AuthorLink";
 import styles from "./ArticlePage.module.css";
 
 const SIZE_PX: Record<TextSize, number> = { sm: 17, md: 19, lg: 22 };
+
+/** Flatten a ReactNode headline into plain text for <title>/OG metadata. */
+function nodeToText(node: ReactNode): string {
+  if (node === null || node === undefined || typeof node === "boolean")
+    return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(nodeToText).join("");
+  if (isValidElement(node)) {
+    const { children } = node.props as { children?: ReactNode };
+    return nodeToText(children);
+  }
+  return "";
+}
+
+/** Truncate a blurb to a sensible social-description length. */
+function clampDescription(text: string): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  return clean.length > 200 ? `${clean.slice(0, 197).trimEnd()}…` : clean;
+}
 
 function RelatedCardSkeleton({ className }: { className: string }) {
   return (
@@ -50,6 +75,7 @@ export function ArticlePage() {
   if (!article) {
     return (
       <PageShell>
+        <PageMeta title="Article not found — QueerPulse Magazine" noIndex />
         <div className={`${styles.notFound} wrap`}>
           <h2>We couldn't find that piece.</h2>
           <p>The article may have moved, or the link may be incomplete.</p>
@@ -68,8 +94,17 @@ export function ArticlePage() {
     (block): block is string => typeof block === "string",
   );
 
+  const plainTitle = nodeToText(article.title).replace(/\s+/g, " ").trim();
+
   return (
     <PageShell>
+      <PageMeta
+        title={`${plainTitle} — QueerPulse Magazine`}
+        description={blurb ? clampDescription(blurb) : undefined}
+        canonical={`${routes.article}?id=${id}`}
+        image={article.image}
+        type="article"
+      />
       <MagazineMasthead />
       <div className={styles.header}>
         <div className="wrap">

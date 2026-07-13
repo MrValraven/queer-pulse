@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiInbox } from "react-icons/fi";
+import { FiInbox, FiAlertCircle } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import {
@@ -14,7 +14,8 @@ import { useCommunityMembership } from "../../app/providers/CommunityMembershipP
 import { communities } from "../homepage/data/communities";
 import { getLiving } from "../communities/livingCommunities.data";
 import { HubPulseCard, type HubPost } from "../communities/HubPulseCard";
-import { FEED_TABS, type FeedTab } from "./feed.data";
+import { useSocial } from "../../app/providers/SocialProvider";
+import { FEED_TABS, FEED_POST, type FeedTab } from "./feed.data";
 import {
   GatheringCard,
   NewMemberCard,
@@ -22,18 +23,26 @@ import {
   SavedArticleCard,
   RecapCard,
 } from "./FeedCards";
+import { useFeed } from "./api/useFeed";
 import { FeedSidebar } from "./FeedSidebar";
 import styles from "./FeedPage.module.css";
 
-/** Each feed item tagged with the tabs it belongs to (besides "All"). */
+/** Each feed item tagged with the tabs it belongs to (besides "All"). Cards with
+ *  an identifiable author carry `authorSlug` so blocked/muted authors filter out. */
 const FEED_ITEMS: {
   key: string;
   tab: FeedTab;
   Card: () => React.ReactElement;
+  authorSlug?: string;
 }[] = [
   { key: "gathering", tab: "Gatherings", Card: GatheringCard },
-  { key: "new-member", tab: "People", Card: NewMemberCard },
-  { key: "post", tab: "Posts", Card: PostCard },
+  { key: "new-member", tab: "People", Card: NewMemberCard, authorSlug: "kai" },
+  {
+    key: "post",
+    tab: "Posts",
+    Card: () => <PostCard />,
+    authorSlug: FEED_POST.slug,
+  },
   { key: "saved-article", tab: "Posts", Card: SavedArticleCard },
   { key: "recap", tab: "Gatherings", Card: RecapCard },
 ];
@@ -72,26 +81,36 @@ function FeedSkeleton() {
 export function FeedPage() {
   const [activeTab, setActiveTab] = useState<FeedTab>("All");
   const { demoMode } = useDemoMode();
-  const [loading, setLoading] = useState(demoMode);
+  const [demoLoading, setDemoLoading] = useState(demoMode);
   const [prevDemo, setPrevDemo] = useState(demoMode);
   const { memberships } = useCommunityMembership();
+  const { blocked, muted } = useSocial();
   const { greeting, dateLine } = useNowGreeting();
+
+  // Live feed source (inert in demo mode, which renders its scripted cards).
+  const feed = useFeed(activeTab);
+
+  // Defense-in-depth: hide any author I've blocked or muted from my feed. The
+  // server is authoritative in live mode; this stops any flash of their content.
+  const hidden = new Set([...blocked, ...muted]);
 
   // When the platform is (re)populated, snap straight into the skeleton during
   // this render — adjusting state mid-render avoids a one-frame flash of data
   // before the load-in. Emptying the platform just clears the skeleton.
   if (demoMode !== prevDemo) {
     setPrevDemo(demoMode);
-    setLoading(demoMode);
+    setDemoLoading(demoMode);
   }
 
   // Simulate a fetch whenever the platform is populated (incl. toggling on),
   // so the feed skeletons out and then staggers its data back in.
   useEffect(() => {
     if (!demoMode) return;
-    const t = setTimeout(() => setLoading(false), 600);
+    const t = setTimeout(() => setDemoLoading(false), 600);
     return () => clearTimeout(t);
   }, [demoMode]);
+
+  const loading = demoMode ? demoLoading : feed.isLoading;
 
   // Cross-community aggregation: the latest pulse from communities you're in.
   const communityPulse: HubPost[] = Object.keys(memberships)
@@ -112,12 +131,24 @@ export function FeedPage() {
 
   const showCommunity = activeTab === "All" || activeTab === "Communities";
   // All feed content is mock data, gated behind the "Populate platform" toggle.
-  const pulse = demoMode && showCommunity ? communityPulse : [];
+  const pulse = (demoMode && showCommunity ? communityPulse : []).filter(
+    (item) => !item.post.author.slug || !hidden.has(item.post.author.slug),
+  );
   const staticItems =
     demoMode && activeTab !== "Communities"
-      ? FEED_ITEMS.filter(({ tab }) => activeTab === "All" || tab === activeTab)
+      ? FEED_ITEMS.filter(
+          ({ tab, authorSlug }) =>
+            (activeTab === "All" || tab === activeTab) &&
+            !(authorSlug && hidden.has(authorSlug)),
+        )
       : [];
-  const empty = pulse.length === 0 && staticItems.length === 0;
+  // Live posts (block/mute filtered — defense-in-depth over the server filter).
+  const livePosts = demoMode
+    ? []
+    : feed.posts.filter((p) => !p.slug || !hidden.has(p.slug));
+  const empty = demoMode
+    ? pulse.length === 0 && staticItems.length === 0
+    : livePosts.length === 0;
 
   return (
     <AppShell unreadCount={demoMode ? 3 : 0}>
@@ -174,29 +205,44 @@ export function FeedPage() {
                   Array.from({ length: 4 }).map((_, i) => (
                     <FeedSkeleton key={i} />
                   ))
-                ) : empty ? (
-                  !demoMode ? (
+                ) : !demoMode ? (
+                  feed.isError ? (
+                    <EmptyState
+                      icon={<FiAlertCircle />}
+                      title="Couldn't load your feed"
+                      description="Something went wrong reaching the community. Please try again."
+                      action={{
+                        label: "Retry",
+                        onClick: () => void feed.refetch(),
+                      }}
+                    />
+                  ) : empty ? (
                     <EmptyState
                       icon={<FiInbox />}
                       title="Your feed is quiet"
-                      description={
-                        <>
-                          Turn on <strong>Populate platform</strong> from your
-                          account menu to preview the feed with sample activity.
-                        </>
-                      }
+                      description="Follow people and communities and their latest activity will show up here."
                     />
                   ) : (
-                    <EmptyState
-                      icon={<FiInbox />}
-                      title={`Nothing in ${activeTab} yet`}
-                      description="When there's activity here, it'll show up in your feed."
-                      action={{
-                        label: "View everything",
-                        onClick: () => setActiveTab("All"),
-                      }}
-                    />
+                    livePosts.map((post, i) => (
+                      <div
+                        key={post.id}
+                        className={styles.cardReveal}
+                        style={{ animationDelay: `${i * 60}ms` }}
+                      >
+                        <PostCard post={post} />
+                      </div>
+                    ))
                   )
+                ) : empty ? (
+                  <EmptyState
+                    icon={<FiInbox />}
+                    title={`Nothing in ${activeTab} yet`}
+                    description="When there's activity here, it'll show up in your feed."
+                    action={{
+                      label: "View everything",
+                      onClick: () => setActiveTab("All"),
+                    }}
+                  />
                 ) : (
                   <>
                     {pulse.map((item, i) => (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiAlertTriangle, FiShield, FiInfo } from "react-icons/fi";
+import { FiAlertTriangle, FiShield, FiInfo, FiClock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from "./ui";
@@ -11,6 +11,9 @@ import {
   type ModReport,
   type ReportDetail,
 } from "./adminModeration.data";
+import { useReportAudit } from "./api/useReportAudit";
+import type { ReasonCode } from "../safety/reportReasons";
+import type { ResolveOpts } from "./useModerationQueue";
 import styles from "./AdminModerationPage.module.css";
 
 /** Reported content + surrounding thread + people involved (read-only context). */
@@ -99,6 +102,34 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
   );
 }
 
+/** Read-only immutable action history for a report (spec 04 audit trail). */
+function ReportAudit({ reportId }: { reportId: string }) {
+  const { data: entries } = useReportAudit(reportId);
+  return (
+    <section className={styles.dSec}>
+      <h3 className={styles.dSecLabel}>Action history</h3>
+      {entries && entries.length > 0 ? (
+        <ul className={styles.dAudit}>
+          {entries.map((e) => (
+            <li key={e.id} className={styles.dAuditRow}>
+              <FiClock aria-hidden />
+              <span>
+                <strong>{e.actorName}</strong> · {e.action.replace(/_/g, " ")}
+                {e.note ? ` — ${e.note}` : ""}
+              </span>
+              <time>{new Date(e.at).toLocaleString()}</time>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className={styles.dTransparency}>
+          No actions recorded yet. Every decision you make is logged here.
+        </p>
+      )}
+    </section>
+  );
+}
+
 export function AdminReportDrawer({
   report,
   onClose,
@@ -107,11 +138,11 @@ export function AdminReportDrawer({
   report: ModReport;
   onClose: () => void;
   /** Called when a report leaves the open queue (confirm or escalate). */
-  onResolve: (id: string) => void;
+  onResolve: (id: string, opts?: ResolveOpts) => void;
 }) {
   const { showToast } = useToast();
   const [action, setAction] = useState<string | null>(null);
-  const [reason, setReason] = useState<string | null>(null);
+  const [reason, setReason] = useState<ReasonCode | null>(null);
   const [note, setNote] = useState("");
 
   const sev = SEVERITY[report.severity];
@@ -123,7 +154,12 @@ export function AdminReportDrawer({
       return;
     }
     const chosen = MOD_ACTIONS.find((a) => a.id === action);
-    onResolve(report.id);
+    onResolve(report.id, {
+      verb: "Resolved",
+      action,
+      reasonCode: reason ?? "other",
+      note,
+    });
     showToast(
       `${report.reportedName} ${chosen?.done ?? "actioned"}. The member has been notified.`,
       "success",
@@ -132,7 +168,12 @@ export function AdminReportDrawer({
   };
 
   const handleEscalate = () => {
-    onResolve(report.id);
+    onResolve(report.id, {
+      verb: "Escalated",
+      action: "escalate",
+      reasonCode: reason ?? "other",
+      note,
+    });
     showToast(
       "Escalated to the safety team. They will take it from here.",
       "success",
@@ -211,7 +252,7 @@ export function AdminReportDrawer({
                 name="mod-reason"
                 value={r.id}
                 checked={reason === r.id}
-                onChange={() => setReason(r.id)}
+                onChange={() => setReason(r.id as ReasonCode)}
               />
               <span>{r.label}</span>
             </label>
@@ -231,6 +272,8 @@ export function AdminReportDrawer({
           was actioned and why, with a link to appeal. Nothing happens silently.
         </p>
       </section>
+
+      <ReportAudit reportId={report.id} />
     </AdminDrawer>
   );
 }

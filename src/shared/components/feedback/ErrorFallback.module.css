@@ -1,0 +1,82 @@
+/* Branded failure surface — mirrors SuccessPanel but for errors. Plum panel on
+   a cream page; never a white card (design-system rule). */
+
+.wrap {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  padding: 40px 20px;
+  background: var(--cream);
+}
+
+.panel {
+  background: var(--plum);
+  color: var(--cream);
+  text-align: center;
+  padding: 48px 40px 40px;
+  border-radius: 28px;
+  max-width: 34rem;
+  animation: panelIn 0.34s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
+}
+
+.icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(var(--accent-rgb), 0.18);
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: clamp(24px, 3vw, 30px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 0 0 12px;
+  color: var(--cream);
+}
+.title em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.body {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.82);
+  margin: 0 auto 24px;
+  max-width: 42ch;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ref {
+  margin: 18px 0 0;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: rgba(var(--cream-rgb), 0.6);
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}

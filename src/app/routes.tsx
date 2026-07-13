@@ -1,5 +1,13 @@
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useParams,
+  useLocation,
+} from "react-router-dom";
+import { RouteFallback } from "../shared/components/feedback/RouteFallback";
+import { ErrorBoundary } from "../shared/components/feedback/ErrorBoundary";
 const HomePage = lazy(() =>
   import("../features/homepage/HomePage").then((m) => ({
     default: m.HomePage,
@@ -1668,674 +1676,738 @@ export function AppRoutes() {
   // Walled-garden gate: bounce logged-out visitors off member-only routes to
   // sign-in (with a ?next= back-link). Public/marketing pages fall through.
   const gateRedirect = useAuthGateRedirect();
+  const { pathname } = useLocation();
   if (gateRedirect) return <Navigate to={gateRedirect} replace />;
 
   return (
-    <Suspense fallback={<div />}>
-      <Routes>
-        <Route path={routes.homepage} element={<HomePage />} />
+    // Route-level boundary: a single broken page shows the branded fallback
+    // without losing the app frame, and navigating away auto-resets it.
+    <ErrorBoundary level="route" resetKey={pathname}>
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
+          <Route path={routes.homepage} element={<HomePage />} />
 
-        {/* Member Platform */}
-        <Route path="/feed" element={<FeedPage />} />
-        <Route path={routes.members} element={<MemberDirectoryFilterPage />} />
-        <Route
-          path={routes.memberDirectoryFilter}
-          element={<Navigate to={routes.members} replace />}
-        />
-        <Route path={routes.search} element={<SearchPage />} />
-        <Route path={routes.accountProfile} element={<ProfilePage />} />
-        <Route path={`${routes.members}/:slug`} element={<ProfilePage />} />
-        <Route path="/profile/:slug" element={<MemberProfileRedirect />} />
-        <Route path={routes.publicProfile} element={<PublicProfilePage />} />
-        <Route path={routes.badges} element={<BadgesPage />} />
-        <Route path={routes.perks} element={<PerksPage />} />
-        <Route path={routes.connections} element={<ConnectionsPage />} />
-        <Route path={routes.myEvents} element={<MyEventsPage />} />
-        <Route path={routes.dating} element={<DatingPage />} />
-        <Route path={routes.readingGroups} element={<ReadingGroupsPage />} />
-        <Route path={routes.family} element={<FamilyPage />} />
-        <Route path={routes.caregivers} element={<CaregiversPage />} />
-        <Route path={routes.messages} element={<MessagesPage />} />
-        <Route path={routes.notifications} element={<NotificationsPage />} />
-        <Route
-          path={routes.notificationDeepLink}
-          element={<NotificationDeepLinkPage />}
-        />
-        <Route path={routes.mentions} element={<MentionsPage />} />
-        <Route path={routes.collections} element={<CollectionsPage />} />
-        <Route path={routes.drafts} element={<DraftsPage />} />
-        <Route path={routes.qrScanner} element={<QrScannerPage />} />
-        <Route path={routes.communities} element={<CommunitiesPage />} />
-        <Route
-          path={routes.communitiesHome}
-          element={<CommunitiesHomePage />}
-        />
-        <Route path={routes.startCommunity} element={<StartCommunityPage />} />
-        <Route path="/community/:slug" element={<CommunityDetailPage />} />
-
-        {/* Gatherings */}
-        <Route path={routes.calendar} element={<CalendarPage />} />
-        <Route path={routes.events} element={<EventsPage />} />
-        <Route path={routes.gathering} element={<GatheringPage />} />
-        <Route path={`${routes.gathering}/:slug`} element={<GatheringPage />} />
-        <Route path={routes.event} element={<EventPage />} />
-        <Route path={routes.rsvp} element={<RsvpPage />} />
-        <Route path={routes.rsvpTicket} element={<RsvpPage />} />
-        <Route path={routes.checkout} element={<CheckoutPage />} />
-        <Route path={routes.gatheringRecap} element={<GatheringRecapPage />} />
-        <Route path={routes.host} element={<HostPage />} />
-        <Route
-          path={routes.createGathering}
-          element={<CreateGatheringPage />}
-        />
-        <Route
-          path={routes.gatheringDashboard}
-          element={<GatheringDashboardPage />}
-        />
-        <Route
-          path={routes.manageGathering}
-          element={<ManageGatheringPage />}
-        />
-        <Route path={routes.coHostInvite} element={<CoHostInvitePage />} />
-        <Route
-          path={routes.gatheringCancelled}
-          element={<GatheringCancelledPage />}
-        />
-        <Route path="/gathering-photos" element={<GatheringPhotosPage />} />
-
-        {/* Magazine */}
-        <Route path={routes.magazine} element={<MagazinePage />} />
-        <Route path={routes.article} element={<ArticlePage />} />
-        <Route path={routes.author} element={<AuthorPage />} />
-        <Route path={`${routes.author}/:slug`} element={<AuthorPage />} />
-        <Route path={routes.issue} element={<IssuePage />} />
-        <Route path={routes.issues} element={<IssuesPage />} />
-        <Route path={routes.coverGallery} element={<CoverGalleryPage />} />
-        <Route path={routes.tag} element={<TagPage />} />
-        <Route path={`${routes.topic}/:tag`} element={<TopicPage />} />
-        <Route path={routes.podcastShow} element={<PodcastShowPage />} />
-        <Route path={routes.audioPlayer} element={<AudioPlayerPage />} />
-        <Route
-          path={routes.newsletterArchive}
-          element={<NewsletterArchivePage />}
-        />
-        <Route
-          path={`${routes.newsletterArchive}/:slug`}
-          element={<NewsletterArchiveIssuePage />}
-        />
-        <Route
-          path="/newsletter-archive/:slug"
-          element={
-            <ParamRedirect
-              build={(p) => `/magazine/newsletter-archive/${p.slug ?? ""}`}
-            />
-          }
-        />
-        <Route path={routes.story} element={<StoryPage />} />
-        <Route path={routes.storyTomas} element={<StoryTomasPage />} />
-        <Route path={routes.storySafety} element={<StorySafetyPage />} />
-        <Route path={routes.submitStory} element={<SubmitStoryPage />} />
-        <Route path={routes.pitchTracker} element={<PitchTrackerPage />} />
-        <Route path={routes.magazineEditor} element={<EditorDashboardPage />} />
-        <Route path={routes.creatives} element={<CreativesPage />} />
-        <Route path={routes.culture} element={<CulturePage />} />
-        <Route path={routes.manifesto} element={<ManifestoPage />} />
-        <Route path={routes.changelog} element={<ChangelogPage />} />
-        <Route path={routes.roadmap} element={<RoadmapPage />} />
-        <Route path={routes.pressArchive} element={<PressArchivePage />} />
-        <Route path={routes.newsletter} element={<NewsletterPage />} />
-        <Route path={routes.annualAssembly} element={<AnnualAssemblyPage />} />
-        <Route
-          path="/about/governance/annual-assembly/minutes/:year"
-          element={<AssemblyMinutesPage />}
-        />
-        <Route path={routes.getTheApp} element={<GetTheAppPage />} />
-        <Route
-          path={routes.componentLibrary}
-          element={<ComponentLibraryPage />}
-        />
-        <Route path={routes.cities} element={<CitiesPage />} />
-        <Route
-          path={routes.forOrganisations}
-          element={<ForOrganisationsPage />}
-        />
-        <Route path={routes.pressKit} element={<PressKitPage />} />
-        <Route path={routes.governance} element={<GovernancePage />} />
-        <Route path={routes.privacy} element={<PrivacyPage />} />
-        <Route path={routes.terms} element={<TermsPage />} />
-        <Route path={routes.dsar} element={<DsarPage />} />
-        <Route path={routes.cookies} element={<CookiesPage />} />
-        <Route path={routes.constitution} element={<ConstitutionPage />} />
-        <Route path={routes.codeOfConduct} element={<CodeOfConductPage />} />
-        <Route
-          path={routes.transparencyReport}
-          element={<TransparencyReportPage />}
-        />
-        <Route path={routes.accessibility} element={<AccessibilityPage />} />
-        <Route path={routes.guidelines} element={<GuidelinesPage />} />
-
-        {/* Resources & Wellbeing */}
-        <Route path={routes.wellbeing} element={<WellbeingPage />} />
-        <Route path={routes.mentalHealth} element={<MentalHealthPage />} />
-        <Route
-          path={`${routes.therapists}/:id`}
-          element={<TherapistProfilePage />}
-        />
-        <Route
-          path="/therapist"
-          element={
-            <Navigate to={`${routes.therapists}/ines-pereira`} replace />
-          }
-        />
-        <Route
-          path={routes.transHealthcare}
-          element={<TransHealthcarePage />}
-        />
-        <Route path={routes.harmReduction} element={<HarmReductionPage />} />
-        <Route path={routes.sexualHealth} element={<SexualHealthPage />} />
-        <Route path={routes.sober} element={<SoberPage />} />
-        <Route path={routes.hateCrime} element={<HateCrimePage />} />
-        <Route path={routes.emergency} element={<EmergencyPage />} />
-        <Route path={routes.queer101} element={<Queer101Page />} />
-        <Route path={routes.glossary} element={<GlossaryPage />} />
-        <Route path={routes.pronounsGuide} element={<PronounsGuidePage />} />
-        <Route path={routes.microGrants} element={<MicroGrantsPage />} />
-        <Route
-          path={routes.intersectionality}
-          element={<IntersectionalityPage />}
-        />
-        <Route path={routes.transHub} element={<TransHubPage />} />
-        <Route path={routes.legal} element={<LegalPage />} />
-        <Route path={routes.library} element={<LibraryPage />} />
-        <Route path={routes.runningGuide} element={<RunningGuidePage />} />
-        <Route
-          path={routes.accessibleLisbon}
-          element={<AccessibleLisbonPage />}
-        />
-        <Route path={routes.peerSupport} element={<PeerSupportPage />} />
-        <Route path={routes.artCritGuide} element={<ArtCritGuidePage />} />
-        <Route
-          path={routes.sharedEquipment}
-          element={<SharedEquipmentPage />}
-        />
-        <Route
-          path={routes.groupShowArchive}
-          element={<GroupShowArchivePage />}
-        />
-        <Route
-          path={routes.firstMeetupGuide}
-          element={<FirstMeetupGuidePage />}
-        />
-        <Route
-          path={routes.queerPaediatricians}
-          element={<QueerPaediatriciansPage />}
-        />
-        <Route
-          path={routes.schoolFormsGuide}
-          element={<SchoolFormsGuidePage />}
-        />
-        <Route
-          path={routes.communityPrivacy}
-          element={<CommunityPrivacyPage />}
-        />
-        <Route
-          path={routes.comingOutAtWork}
-          element={<ComingOutAtWorkPage />}
-        />
-        <Route
-          path={routes.lgbtqAgingGuide}
-          element={<LgbtqAgingGuidePage />}
-        />
-        <Route
-          path={routes.oralHistoryProject}
-          element={<OralHistoryProjectPage />}
-        />
-        <Route path={routes.ingredientsMap} element={<IngredientsMapPage />} />
-        <Route
-          path={routes.qtipocOrganisations}
-          element={<QtipocOrganisationsPage />}
-        />
-        <Route path={routes.qtipocArchive} element={<QtipocArchivePage />} />
-        <Route
-          path={routes.disabilityHealthcare}
-          element={<DisabilityHealthcarePage />}
-        />
-        <Route path={routes.spoonTheory} element={<SpoonTheoryPage />} />
-        <Route path={routes.safety} element={<SafetyPage />} />
-        <Route path={routes.report} element={<ReportPage />} />
-        <Route path={routes.leave} element={<LeavePage />} />
-        <Route path={routes.blockMute} element={<BlockMutePage />} />
-        <Route path={routes.appealOutcome} element={<AppealOutcomePage />} />
-        <Route path={routes.crisisChat} element={<CrisisChatPage />} />
-
-        {/* Auth & onboarding */}
-        <Route path={routes.signIn} element={<SignInPage />} />
-        <Route path={routes.createAccount} element={<CreateAccountPage />} />
-        <Route path={routes.invite} element={<InvitePage />} />
-        <Route
-          path={`${routes.invite}/:code`}
-          element={<InviteLandingPage />}
-        />
-        <Route path={routes.requestInvite} element={<RequestInvitePage />} />
-        <Route path="/auth/onboarding" element={<OnboardingPage />} />
-        <Route path={routes.welcome} element={<OnboardingPage />} />
-        <Route path={routes.welcomeTour} element={<WelcomeTourPage />} />
-        <Route path={routes.twoFactorSetup} element={<TwoFactorSetupPage />} />
-        <Route path={routes.magicLink} element={<MagicLinkPage />} />
-        <Route path={routes.passwordReset} element={<PasswordResetPage />} />
-        <Route path={routes.setNewPassword} element={<SetNewPasswordPage />} />
-        <Route path={routes.confirmEmail} element={<ConfirmEmailPage />} />
-        <Route path={routes.recoveryCodes} element={<RecoveryCodesPage />} />
-        <Route
-          path="/invite/:code"
-          element={
-            <ParamRedirect build={(p) => `/auth/invite/${p.code ?? ""}`} />
-          }
-        />
-
-        {/* Jobs & economy */}
-        <Route path={routes.jobs} element={<JobsPage />} />
-        <Route path={routes.postJob} element={<PostJobPage />} />
-        <Route path={`${routes.jobs}/:slug`} element={<JobDetailPage />} />
-        <Route path={`${routes.jobs}/:slug/apply`} element={<JobApplyPage />} />
-        <Route path={`${routes.company}/:slug`} element={<CompanyPage />} />
-        <Route path={routes.housing} element={<HousingPage />} />
-        <Route
-          path={`${routes.housing}/:slug`}
-          element={<HousingListingPage />}
-        />
-        <Route path="/work/landlord/:slug" element={<LandlordPage />} />
-        <Route path={routes.housingCoop} element={<HousingCoopPage />} />
-        <Route
-          path="/work/housing/:slug"
-          element={
-            <ParamRedirect build={(p) => `/local/housing/${p.slug ?? ""}`} />
-          }
-        />
-        <Route path={routes.skills} element={<SkillsPage />} />
-        <Route path={`${routes.skills}/:id`} element={<WorkshopPage />} />
-        <Route path={routes.grants} element={<GrantsPage />} />
-        <Route path={routes.barter} element={<BarterPage />} />
-        <Route path={`${routes.barter}/:id`} element={<BarterDetailPage />} />
-        <Route path={routes.offer} element={<OfferPage />} />
-        <Route
-          path={routes.employerReviews}
-          element={<EmployerReviewsPage />}
-        />
-        <Route
-          path={routes.applicationStatus}
-          element={<ApplicationStatusPage />}
-        />
-        <Route path={routes.mentorship} element={<MentorshipPage />} />
-        <Route
-          path={`${routes.mentorship}/:slug`}
-          element={<MentorDetailPage />}
-        />
-        <Route path={routes.mentorProfile} element={<MentorProfilePage />} />
-        <Route
-          path="/jobs/:slug"
-          element={
-            <ParamRedirect build={(p) => `/work/jobs/${p.slug ?? ""}`} />
-          }
-        />
-        <Route
-          path="/housing/:slug"
-          element={
-            <ParamRedirect build={(p) => `/local/housing/${p.slug ?? ""}`} />
-          }
-        />
-        <Route
-          path="/landlord/:slug"
-          element={
-            <ParamRedirect build={(p) => `/work/landlord/${p.slug ?? ""}`} />
-          }
-        />
-        <Route
-          path="/barter/:id"
-          element={
-            <ParamRedirect build={(p) => `/work/barter/${p.id ?? ""}`} />
-          }
-        />
-        <Route
-          path="/mentorship/:slug"
-          element={
-            <ParamRedirect build={(p) => `/work/mentorship/${p.slug ?? ""}`} />
-          }
-        />
-        <Route path={routes.economy} element={<EconomyPage />} />
-        <Route path={routes.invoiceTool} element={<InvoiceGeneratorPage />} />
-        <Route path={routes.contractTool} element={<ContractGeneratorPage />} />
-        <Route path={routes.scopeTool} element={<ScopeGeneratorPage />} />
-        <Route
-          path={routes.reciboVerdeGuide}
-          element={<ReciboVerdeGuidePage />}
-        />
-        <Route
-          path={routes.takeHomeTool}
-          element={<TakeHomeCalculatorPage />}
-        />
-        <Route path={routes.ivaTracker} element={<IvaTrackerPage />} />
-        <Route path={routes.setAsideTool} element={<SetAsidePlannerPage />} />
-        <Route path={routes.dayRateTool} element={<DayRateCalculatorPage />} />
-        <Route path={routes.rateBoard} element={<RateBoardPage />} />
-        <Route path={routes.slidingScaleTool} element={<SlidingScalePage />} />
-        <Route path={routes.comparatorTool} element={<ComparatorPage />} />
-
-        {/* Cinema */}
-        <Route path={routes.cinema} element={<CinemaPage />} />
-        <Route path="/cinema/browse" element={<CinemaBrowsePage />} />
-        <Route
-          path={routes.cinemaCollections}
-          element={<CinemaCollectionsPage />}
-        />
-        <Route
-          path={`${routes.cinemaCollections}/:slug`}
-          element={<CinemaCollectionPage />}
-        />
-        <Route
-          path={routes.cinemaMembership}
-          element={<CinemaMembershipPage />}
-        />
-        <Route path={routes.cinemaWatch} element={<WatchPage />} />
-        <Route
-          path={`${routes.cinemaFilmmaker}/:slug`}
-          element={<CinemaFilmmakerPage />}
-        />
-        <Route
-          path={`${routes.cinemaCurator}/:slug`}
-          element={<CinemaCuratorPage />}
-        />
-        <Route path={routes.cinemaAbout} element={<CinemaAboutPage />} />
-        <Route path={routes.cinemaSubmit} element={<CinemaSubmitPage />} />
-        <Route path={routes.cinemaShorts} element={<CinemaShortsPage />} />
-        <Route
-          path={routes.cinemaOpenCalls}
-          element={<CinemaOpenCallsPage />}
-        />
-        <Route path={routes.cinemaRights} element={<CinemaRightsPage />} />
-        <Route path={routes.film} element={<FilmPage />} />
-
-        {/* Studio */}
-        <Route path={routes.studio} element={<StudioPage />} />
-        <Route path={routes.studioAlbum} element={<StudioAlbumPage />} />
-        <Route path="/studio/artist" element={<StudioArtistPage />} />
-        <Route path="/studio/dashboard" element={<StudioDashboardPage />} />
-        <Route path={routes.studioUpload} element={<StudioUploadPage />} />
-        <Route path={routes.studioPayouts} element={<StudioPayoutsPage />} />
-        <Route path={routes.studioTrack} element={<StudioTrackPage />} />
-        <Route path={routes.studioLive} element={<StudioLivePage />} />
-        <Route
-          path={routes.studioCollection}
-          element={<StudioCollectionPage />}
-        />
-        <Route path={routes.studioSet} element={<StudioSetPage />} />
-        <Route path={routes.studioSearch} element={<StudioSearchPage />} />
-        <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
-        <Route path={routes.studioCheckout} element={<StudioCheckoutPage />} />
-        <Route path="/studio/sheet-store" element={<StudioSheetStorePage />} />
-        <Route
-          path="/studio/solidarity-fund"
-          element={<StudioSolidarityFundPage />}
-        />
-        <Route path={routes.studioCalls} element={<StudioOpenCallsPage />} />
-        <Route
-          path={routes.studioSetSubmission}
-          element={<StudioSetSubmissionPage />}
-        />
-        <Route path={routes.studioCouncil} element={<StudioCouncilPage />} />
-        <Route path={routes.studioTriage} element={<StudioTriagePage />} />
-        <Route
-          path={routes.studioFlagReview}
-          element={<StudioFlagReviewPage />}
-        />
-        <Route path="/studio/off-air" element={<StudioOffAirPage />} />
-        <Route path="/studio/404" element={<Studio404Page />} />
-        <Route path="/studio/500" element={<Studio500Page />} />
-        <Route path="/studio/sign-in" element={<StudioSignInPage />} />
-        <Route path="/studio/settings" element={<StudioSettingsPage />} />
-        <Route path={routes.studioAbout} element={<StudioAboutPage />} />
-        <Route
-          path={routes.studioAccessibility}
-          element={<StudioAccessibilityPage />}
-        />
-        <Route path={routes.studioTerms} element={<StudioTermsPage />} />
-        <Route path={routes.studioHelp} element={<StudioHelpPage />} />
-        <Route path={routes.studioPress} element={<StudioPressPage />} />
-        <Route path={routes.studioEndCard} element={<StudioEndCardPage />} />
-        <Route
-          path={routes.studioNotifications}
-          element={<StudioNotificationsPage />}
-        />
-        <Route path={routes.studioReceipt} element={<StudioReceiptPage />} />
-        <Route path={routes.studioRights} element={<StudioRightsPage />} />
-        <Route path={routes.studioProgram} element={<StudioProgramPage />} />
-        <Route
-          path={routes.studioBroadcast}
-          element={<StudioBroadcastPage />}
-        />
-        <Route path={routes.studioWelcome} element={<StudioWelcomePage />} />
-        <Route
-          path={routes.studioWithdrawn}
-          element={<StudioWithdrawnPage />}
-        />
-
-        {/* Community */}
-        <Route path={routes.changemakers} element={<ChangemakersPage />} />
-        <Route path="/changemaker/:slug" element={<ChangemakerStoryPage />} />
-        <Route path={routes.forum} element={<ForumPage />} />
-        <Route path="/thread" element={<ThreadPage />} />
-        <Route path="/thread/:id" element={<ThreadPage />} />
-        <Route path={routes.settings} element={<SettingsPage />} />
-
-        {/* Marketing / content */}
-        <Route path={routes.about} element={<AboutPage />} />
-        <Route path={routes.contact} element={<ContactPage />} />
-        <Route path={routes.help} element={<HelpPage />} />
-        <Route path={routes.volunteer} element={<VolunteerPage />} />
-        <Route
-          path={routes.postVolunteer}
-          element={<PostVolunteerOpportunityPage />}
-        />
-        <Route
-          path="/about/volunteer/opportunity/:slug"
-          element={<VolunteerOpportunityPage />}
-        />
-        <Route path={routes.platforms} element={<PlatformsPage />} />
-        <Route path={routes.donate} element={<DonatePage />} />
-        <Route path={routes.partners} element={<PartnersPage />} />
-        <Route
-          path={routes.partnerApply}
-          element={<SubmitPartnerApplicationPage />}
-        />
-        <Route
-          path={`${routes.partners}/:slug`}
-          element={<PartnerDetailPage />}
-        />
-        <Route path={routes.resources} element={<ResourceLibraryPage />} />
-        <Route path={routes.activism} element={<ActivismPage />} />
-        <Route path={routes.openLetter} element={<OpenLetterPage />} />
-        <Route path={routes.archive} element={<ArchivePage />} />
-        <Route
-          path="/annual-assembly/minutes/:year"
-          element={
-            <ParamRedirect
-              build={(p) =>
-                `/about/governance/annual-assembly/minutes/${p.year ?? ""}`
-              }
-            />
-          }
-        />
-        <Route
-          path="/about/annual-assembly/minutes/:year"
-          element={
-            <ParamRedirect
-              build={(p) =>
-                `/about/governance/annual-assembly/minutes/${p.year ?? ""}`
-              }
-            />
-          }
-        />
-        <Route
-          path="/volunteer-opportunity/:slug"
-          element={
-            <ParamRedirect
-              build={(p) => `/about/volunteer/opportunity/${p.slug ?? ""}`}
-            />
-          }
-        />
-        <Route
-          path="/partner/:slug"
-          element={
-            <ParamRedirect build={(p) => `/about/partners/${p.slug ?? ""}`} />
-          }
-        />
-
-        <Route path={routes.flatmates} element={<FlatmatesPage />} />
-        <Route path={routes.solidarity} element={<SolidarityPage />} />
-
-        {/* Local */}
-        <Route path={routes.safeSpaces} element={<SafeSpacesPage />} />
-        <Route
-          path={`${routes.safeSpaces}/:slug`}
-          element={<SafeSpaceDetailPage />}
-        />
-        <Route path={routes.visas} element={<VisasPage />} />
-        <Route path={routes.arriving} element={<ArrivingPage />} />
-        <Route path={routes.map} element={<MapPage />} />
-        <Route path={routes.directory} element={<DirectoryPage />} />
-        <Route path={routes.listBusiness} element={<ListBusinessPage />} />
-        <Route
-          path={`${routes.directory}/:slug`}
-          element={<DirectorySpacePage />}
-        />
-        <Route
-          path="/safe-space/:slug"
-          element={
-            <ParamRedirect
-              build={(p) => `/local/safe-spaces/${p.slug ?? ""}`}
-            />
-          }
-        />
-        <Route
-          path="/space/:slug"
-          element={
-            <ParamRedirect build={(p) => `/local/directory/${p.slug ?? ""}`} />
-          }
-        />
-
-        {/* Account hub & settings sub-flows (all under /account) */}
-        <Route
-          path={routes.account}
-          element={<Navigate to={routes.accountProfile} replace />}
-        />
-        <Route path={routes.editProfile} element={<EditProfilePage />} />
-        <Route path={routes.work} element={<WorkHubPage />} />
-        <Route path={routes.workProfile} element={<WorkProfilePage />} />
-        <Route
-          path={routes.notificationPreferences}
-          element={<NotificationPreferencesPage />}
-        />
-        <Route
-          path={routes.accessibilityPreferences}
-          element={<AccessibilityPreferencesPage />}
-        />
-        <Route path={routes.profileTheme} element={<ProfileThemePage />} />
-        <Route path={routes.linkedAccounts} element={<LinkedAccountsPage />} />
-        <Route path={routes.security} element={<SecurityPage />} />
-        <Route path={routes.sessions} element={<SessionsPage />} />
-        <Route path={routes.subscriptions} element={<SubscriptionsPage />} />
-        <Route path={routes.dataExport} element={<DataExportPage />} />
-        <Route path={routes.deleteAccount} element={<DeleteAccountPage />} />
-        <Route
-          path={routes.cancelMembership}
-          element={<CancelMembershipPage />}
-        />
-        <Route path={routes.membership} element={<MembershipPage />} />
-        <Route path={routes.giftMembership} element={<GiftMembershipPage />} />
-        <Route path={routes.sustainer} element={<SustainerPage />} />
-
-        {/* Legacy paths → new homes (keeps old links & design hrefs working) */}
-        {LEGACY_REDIRECTS.map(([from, to]) => (
+          {/* Member Platform */}
+          <Route path="/feed" element={<FeedPage />} />
           <Route
-            key={from}
-            path={from}
-            element={<Navigate to={to} replace />}
+            path={routes.members}
+            element={<MemberDirectoryFilterPage />}
           />
-        ))}
+          <Route
+            path={routes.memberDirectoryFilter}
+            element={<Navigate to={routes.members} replace />}
+          />
+          <Route path={routes.search} element={<SearchPage />} />
+          <Route path={routes.accountProfile} element={<ProfilePage />} />
+          <Route path={`${routes.members}/:slug`} element={<ProfilePage />} />
+          <Route path="/profile/:slug" element={<MemberProfileRedirect />} />
+          <Route path={routes.publicProfile} element={<PublicProfilePage />} />
+          <Route path={routes.badges} element={<BadgesPage />} />
+          <Route path={routes.perks} element={<PerksPage />} />
+          <Route path={routes.connections} element={<ConnectionsPage />} />
+          <Route path={routes.myEvents} element={<MyEventsPage />} />
+          <Route path={routes.dating} element={<DatingPage />} />
+          <Route path={routes.readingGroups} element={<ReadingGroupsPage />} />
+          <Route path={routes.family} element={<FamilyPage />} />
+          <Route path={routes.caregivers} element={<CaregiversPage />} />
+          <Route path={routes.messages} element={<MessagesPage />} />
+          <Route path={routes.notifications} element={<NotificationsPage />} />
+          <Route
+            path={routes.notificationDeepLink}
+            element={<NotificationDeepLinkPage />}
+          />
+          <Route path={routes.mentions} element={<MentionsPage />} />
+          <Route path={routes.collections} element={<CollectionsPage />} />
+          <Route path={routes.drafts} element={<DraftsPage />} />
+          <Route path={routes.qrScanner} element={<QrScannerPage />} />
+          <Route path={routes.communities} element={<CommunitiesPage />} />
+          <Route
+            path={routes.communitiesHome}
+            element={<CommunitiesHomePage />}
+          />
+          <Route
+            path={routes.startCommunity}
+            element={<StartCommunityPage />}
+          />
+          <Route path="/community/:slug" element={<CommunityDetailPage />} />
 
-        {/* System, error & account-state screens */}
-        <Route path={routes.serverError} element={<ServerErrorPage />} />
-        <Route path={routes.maintenance} element={<MaintenancePage />} />
-        <Route path={routes.offline} element={<OfflinePage />} />
-        <Route path={routes.geoRestricted} element={<GeoRestrictedPage />} />
-        <Route path={routes.pwaPrompt} element={<PwaPromptPage />} />
-        <Route path={routes.accountBanned} element={<AccountBannedPage />} />
-        <Route path={routes.accountLocked} element={<AccountLockedPage />} />
-        <Route
-          path={routes.accountSuspended}
-          element={<AccountSuspendedPage />}
-        />
-        <Route path={routes.inviteExpired} element={<InviteExpiredPage />} />
-        <Route path={routes.pendingReview} element={<PendingReviewPage />} />
-        <Route
-          path={routes.verificationNeeded}
-          element={<VerificationNeededPage />}
-        />
-        <Route path={routes.status} element={<StatusPage />} />
+          {/* Gatherings */}
+          <Route path={routes.calendar} element={<CalendarPage />} />
+          <Route path={routes.events} element={<EventsPage />} />
+          <Route path={routes.gathering} element={<GatheringPage />} />
+          <Route
+            path={`${routes.gathering}/:slug`}
+            element={<GatheringPage />}
+          />
+          <Route path={routes.event} element={<EventPage />} />
+          <Route path={routes.rsvp} element={<RsvpPage />} />
+          <Route path={routes.rsvpTicket} element={<RsvpPage />} />
+          <Route path={routes.checkout} element={<CheckoutPage />} />
+          <Route
+            path={routes.gatheringRecap}
+            element={<GatheringRecapPage />}
+          />
+          <Route path={routes.host} element={<HostPage />} />
+          <Route
+            path={routes.createGathering}
+            element={<CreateGatheringPage />}
+          />
+          <Route
+            path={routes.gatheringDashboard}
+            element={<GatheringDashboardPage />}
+          />
+          <Route
+            path={routes.manageGathering}
+            element={<ManageGatheringPage />}
+          />
+          <Route path={routes.coHostInvite} element={<CoHostInvitePage />} />
+          <Route
+            path={routes.gatheringCancelled}
+            element={<GatheringCancelledPage />}
+          />
+          <Route path="/gathering-photos" element={<GatheringPhotosPage />} />
 
-        {/* Newly built community / resource / support pages */}
-        <Route path={routes.comingOut} element={<ComingOutPage />} />
-        <Route
-          path={routes.parents}
-          element={<Navigate to={routes.family} replace />}
-        />
-        <Route path={routes.gatherings} element={<GatheringsPage />} />
-        <Route path={routes.vouch} element={<VouchPage />} />
+          {/* Magazine */}
+          <Route path={routes.magazine} element={<MagazinePage />} />
+          <Route path={routes.article} element={<ArticlePage />} />
+          <Route path={routes.author} element={<AuthorPage />} />
+          <Route path={`${routes.author}/:slug`} element={<AuthorPage />} />
+          <Route path={routes.issue} element={<IssuePage />} />
+          <Route path={routes.issues} element={<IssuesPage />} />
+          <Route path={routes.coverGallery} element={<CoverGalleryPage />} />
+          <Route path={routes.tag} element={<TagPage />} />
+          <Route path={`${routes.topic}/:tag`} element={<TopicPage />} />
+          <Route path={routes.podcastShow} element={<PodcastShowPage />} />
+          <Route path={routes.audioPlayer} element={<AudioPlayerPage />} />
+          <Route
+            path={routes.newsletterArchive}
+            element={<NewsletterArchivePage />}
+          />
+          <Route
+            path={`${routes.newsletterArchive}/:slug`}
+            element={<NewsletterArchiveIssuePage />}
+          />
+          <Route
+            path="/newsletter-archive/:slug"
+            element={
+              <ParamRedirect
+                build={(p) => `/magazine/newsletter-archive/${p.slug ?? ""}`}
+              />
+            }
+          />
+          <Route path={routes.story} element={<StoryPage />} />
+          <Route path={routes.storyTomas} element={<StoryTomasPage />} />
+          <Route path={routes.storySafety} element={<StorySafetyPage />} />
+          <Route path={routes.submitStory} element={<SubmitStoryPage />} />
+          <Route path={routes.pitchTracker} element={<PitchTrackerPage />} />
+          <Route
+            path={routes.magazineEditor}
+            element={<EditorDashboardPage />}
+          />
+          <Route path={routes.creatives} element={<CreativesPage />} />
+          <Route path={routes.culture} element={<CulturePage />} />
+          <Route path={routes.manifesto} element={<ManifestoPage />} />
+          <Route path={routes.changelog} element={<ChangelogPage />} />
+          <Route path={routes.roadmap} element={<RoadmapPage />} />
+          <Route path={routes.pressArchive} element={<PressArchivePage />} />
+          <Route path={routes.newsletter} element={<NewsletterPage />} />
+          <Route
+            path={routes.annualAssembly}
+            element={<AnnualAssemblyPage />}
+          />
+          <Route
+            path="/about/governance/annual-assembly/minutes/:year"
+            element={<AssemblyMinutesPage />}
+          />
+          <Route path={routes.getTheApp} element={<GetTheAppPage />} />
+          <Route
+            path={routes.componentLibrary}
+            element={<ComponentLibraryPage />}
+          />
+          <Route path={routes.cities} element={<CitiesPage />} />
+          <Route
+            path={routes.forOrganisations}
+            element={<ForOrganisationsPage />}
+          />
+          <Route path={routes.pressKit} element={<PressKitPage />} />
+          <Route path={routes.governance} element={<GovernancePage />} />
+          <Route path={routes.privacy} element={<PrivacyPage />} />
+          <Route path={routes.terms} element={<TermsPage />} />
+          <Route path={routes.dsar} element={<DsarPage />} />
+          <Route path={routes.cookies} element={<CookiesPage />} />
+          <Route path={routes.constitution} element={<ConstitutionPage />} />
+          <Route path={routes.codeOfConduct} element={<CodeOfConductPage />} />
+          <Route
+            path={routes.transparencyReport}
+            element={<TransparencyReportPage />}
+          />
+          <Route path={routes.accessibility} element={<AccessibilityPage />} />
+          <Route path={routes.guidelines} element={<GuidelinesPage />} />
 
-        {/* Admin & moderation panel */}
-        <Route path={routes.admin} element={<AdminDashboardPage />} />
-        <Route
-          path={routes.adminModeration}
-          element={<AdminModerationPage />}
-        />
-        <Route path={routes.adminMembers} element={<AdminMembersPage />} />
-        <Route
-          path={routes.adminCommunities}
-          element={<AdminCommunitiesPage />}
-        />
-        <Route
-          path={routes.adminPartnerApplications}
-          element={<AdminPartnerApplicationsPage />}
-        />
-        <Route
-          path={routes.adminGovernance}
-          element={<AdminGovernancePage />}
-        />
-        <Route
-          path={`${routes.adminCommunities}/:slug/mod`}
-          element={<AdminCommunityModPage />}
-        />
-        <Route path="/mod/:slug" element={<ModPanelPage />} />
+          {/* Resources & Wellbeing */}
+          <Route path={routes.wellbeing} element={<WellbeingPage />} />
+          <Route path={routes.mentalHealth} element={<MentalHealthPage />} />
+          <Route
+            path={`${routes.therapists}/:id`}
+            element={<TherapistProfilePage />}
+          />
+          <Route
+            path="/therapist"
+            element={
+              <Navigate to={`${routes.therapists}/ines-pereira`} replace />
+            }
+          />
+          <Route
+            path={routes.transHealthcare}
+            element={<TransHealthcarePage />}
+          />
+          <Route path={routes.harmReduction} element={<HarmReductionPage />} />
+          <Route path={routes.sexualHealth} element={<SexualHealthPage />} />
+          <Route path={routes.sober} element={<SoberPage />} />
+          <Route path={routes.hateCrime} element={<HateCrimePage />} />
+          <Route path={routes.emergency} element={<EmergencyPage />} />
+          <Route path={routes.queer101} element={<Queer101Page />} />
+          <Route path={routes.glossary} element={<GlossaryPage />} />
+          <Route path={routes.pronounsGuide} element={<PronounsGuidePage />} />
+          <Route path={routes.microGrants} element={<MicroGrantsPage />} />
+          <Route
+            path={routes.intersectionality}
+            element={<IntersectionalityPage />}
+          />
+          <Route path={routes.transHub} element={<TransHubPage />} />
+          <Route path={routes.legal} element={<LegalPage />} />
+          <Route path={routes.library} element={<LibraryPage />} />
+          <Route path={routes.runningGuide} element={<RunningGuidePage />} />
+          <Route
+            path={routes.accessibleLisbon}
+            element={<AccessibleLisbonPage />}
+          />
+          <Route path={routes.peerSupport} element={<PeerSupportPage />} />
+          <Route path={routes.artCritGuide} element={<ArtCritGuidePage />} />
+          <Route
+            path={routes.sharedEquipment}
+            element={<SharedEquipmentPage />}
+          />
+          <Route
+            path={routes.groupShowArchive}
+            element={<GroupShowArchivePage />}
+          />
+          <Route
+            path={routes.firstMeetupGuide}
+            element={<FirstMeetupGuidePage />}
+          />
+          <Route
+            path={routes.queerPaediatricians}
+            element={<QueerPaediatriciansPage />}
+          />
+          <Route
+            path={routes.schoolFormsGuide}
+            element={<SchoolFormsGuidePage />}
+          />
+          <Route
+            path={routes.communityPrivacy}
+            element={<CommunityPrivacyPage />}
+          />
+          <Route
+            path={routes.comingOutAtWork}
+            element={<ComingOutAtWorkPage />}
+          />
+          <Route
+            path={routes.lgbtqAgingGuide}
+            element={<LgbtqAgingGuidePage />}
+          />
+          <Route
+            path={routes.oralHistoryProject}
+            element={<OralHistoryProjectPage />}
+          />
+          <Route
+            path={routes.ingredientsMap}
+            element={<IngredientsMapPage />}
+          />
+          <Route
+            path={routes.qtipocOrganisations}
+            element={<QtipocOrganisationsPage />}
+          />
+          <Route path={routes.qtipocArchive} element={<QtipocArchivePage />} />
+          <Route
+            path={routes.disabilityHealthcare}
+            element={<DisabilityHealthcarePage />}
+          />
+          <Route path={routes.spoonTheory} element={<SpoonTheoryPage />} />
+          <Route path={routes.safety} element={<SafetyPage />} />
+          <Route path={routes.report} element={<ReportPage />} />
+          <Route path={routes.leave} element={<LeavePage />} />
+          <Route path={routes.blockMute} element={<BlockMutePage />} />
+          <Route path={routes.appealOutcome} element={<AppealOutcomePage />} />
+          <Route path={routes.crisisChat} element={<CrisisChatPage />} />
 
-        {/* Legacy aliases → canonical pages */}
-        <Route
-          path={routes.businessDirectory}
-          element={<Navigate to={routes.directory} replace />}
-        />
-        <Route
-          path={routes.spacesMap}
-          element={<Navigate to={routes.map} replace />}
-        />
+          {/* Auth & onboarding */}
+          <Route path={routes.signIn} element={<SignInPage />} />
+          <Route path={routes.createAccount} element={<CreateAccountPage />} />
+          <Route path={routes.invite} element={<InvitePage />} />
+          <Route
+            path={`${routes.invite}/:code`}
+            element={<InviteLandingPage />}
+          />
+          <Route path={routes.requestInvite} element={<RequestInvitePage />} />
+          <Route path="/auth/onboarding" element={<OnboardingPage />} />
+          <Route path={routes.welcome} element={<OnboardingPage />} />
+          <Route path={routes.welcomeTour} element={<WelcomeTourPage />} />
+          <Route
+            path={routes.twoFactorSetup}
+            element={<TwoFactorSetupPage />}
+          />
+          <Route path={routes.magicLink} element={<MagicLinkPage />} />
+          <Route path={routes.passwordReset} element={<PasswordResetPage />} />
+          <Route
+            path={routes.setNewPassword}
+            element={<SetNewPasswordPage />}
+          />
+          <Route path={routes.confirmEmail} element={<ConfirmEmailPage />} />
+          <Route path={routes.recoveryCodes} element={<RecoveryCodesPage />} />
+          <Route
+            path="/invite/:code"
+            element={
+              <ParamRedirect build={(p) => `/auth/invite/${p.code ?? ""}`} />
+            }
+          />
 
-        {/* Known-but-unbuilt features → styled "coming soon" placeholder */}
-        {KNOWN_ROUTE_SLUGS.filter((slug) => !BUILT_SLUGS.has(slug)).map(
-          (slug) => (
-            <Route key={slug} path={`/${slug}`} element={<PlaceholderPage />} />
-          ),
-        )}
-        {/* Genuinely unknown paths → 404 */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Suspense>
+          {/* Jobs & economy */}
+          <Route path={routes.jobs} element={<JobsPage />} />
+          <Route path={routes.postJob} element={<PostJobPage />} />
+          <Route path={`${routes.jobs}/:slug`} element={<JobDetailPage />} />
+          <Route
+            path={`${routes.jobs}/:slug/apply`}
+            element={<JobApplyPage />}
+          />
+          <Route path={`${routes.company}/:slug`} element={<CompanyPage />} />
+          <Route path={routes.housing} element={<HousingPage />} />
+          <Route
+            path={`${routes.housing}/:slug`}
+            element={<HousingListingPage />}
+          />
+          <Route path="/work/landlord/:slug" element={<LandlordPage />} />
+          <Route path={routes.housingCoop} element={<HousingCoopPage />} />
+          <Route
+            path="/work/housing/:slug"
+            element={
+              <ParamRedirect build={(p) => `/local/housing/${p.slug ?? ""}`} />
+            }
+          />
+          <Route path={routes.skills} element={<SkillsPage />} />
+          <Route path={`${routes.skills}/:id`} element={<WorkshopPage />} />
+          <Route path={routes.grants} element={<GrantsPage />} />
+          <Route path={routes.barter} element={<BarterPage />} />
+          <Route path={`${routes.barter}/:id`} element={<BarterDetailPage />} />
+          <Route path={routes.offer} element={<OfferPage />} />
+          <Route
+            path={routes.employerReviews}
+            element={<EmployerReviewsPage />}
+          />
+          <Route
+            path={routes.applicationStatus}
+            element={<ApplicationStatusPage />}
+          />
+          <Route path={routes.mentorship} element={<MentorshipPage />} />
+          <Route
+            path={`${routes.mentorship}/:slug`}
+            element={<MentorDetailPage />}
+          />
+          <Route path={routes.mentorProfile} element={<MentorProfilePage />} />
+          <Route
+            path="/jobs/:slug"
+            element={
+              <ParamRedirect build={(p) => `/work/jobs/${p.slug ?? ""}`} />
+            }
+          />
+          <Route
+            path="/housing/:slug"
+            element={
+              <ParamRedirect build={(p) => `/local/housing/${p.slug ?? ""}`} />
+            }
+          />
+          <Route
+            path="/landlord/:slug"
+            element={
+              <ParamRedirect build={(p) => `/work/landlord/${p.slug ?? ""}`} />
+            }
+          />
+          <Route
+            path="/barter/:id"
+            element={
+              <ParamRedirect build={(p) => `/work/barter/${p.id ?? ""}`} />
+            }
+          />
+          <Route
+            path="/mentorship/:slug"
+            element={
+              <ParamRedirect
+                build={(p) => `/work/mentorship/${p.slug ?? ""}`}
+              />
+            }
+          />
+          <Route path={routes.economy} element={<EconomyPage />} />
+          <Route path={routes.invoiceTool} element={<InvoiceGeneratorPage />} />
+          <Route
+            path={routes.contractTool}
+            element={<ContractGeneratorPage />}
+          />
+          <Route path={routes.scopeTool} element={<ScopeGeneratorPage />} />
+          <Route
+            path={routes.reciboVerdeGuide}
+            element={<ReciboVerdeGuidePage />}
+          />
+          <Route
+            path={routes.takeHomeTool}
+            element={<TakeHomeCalculatorPage />}
+          />
+          <Route path={routes.ivaTracker} element={<IvaTrackerPage />} />
+          <Route path={routes.setAsideTool} element={<SetAsidePlannerPage />} />
+          <Route
+            path={routes.dayRateTool}
+            element={<DayRateCalculatorPage />}
+          />
+          <Route path={routes.rateBoard} element={<RateBoardPage />} />
+          <Route
+            path={routes.slidingScaleTool}
+            element={<SlidingScalePage />}
+          />
+          <Route path={routes.comparatorTool} element={<ComparatorPage />} />
+
+          {/* Cinema */}
+          <Route path={routes.cinema} element={<CinemaPage />} />
+          <Route path="/cinema/browse" element={<CinemaBrowsePage />} />
+          <Route
+            path={routes.cinemaCollections}
+            element={<CinemaCollectionsPage />}
+          />
+          <Route
+            path={`${routes.cinemaCollections}/:slug`}
+            element={<CinemaCollectionPage />}
+          />
+          <Route
+            path={routes.cinemaMembership}
+            element={<CinemaMembershipPage />}
+          />
+          <Route path={routes.cinemaWatch} element={<WatchPage />} />
+          <Route
+            path={`${routes.cinemaFilmmaker}/:slug`}
+            element={<CinemaFilmmakerPage />}
+          />
+          <Route
+            path={`${routes.cinemaCurator}/:slug`}
+            element={<CinemaCuratorPage />}
+          />
+          <Route path={routes.cinemaAbout} element={<CinemaAboutPage />} />
+          <Route path={routes.cinemaSubmit} element={<CinemaSubmitPage />} />
+          <Route path={routes.cinemaShorts} element={<CinemaShortsPage />} />
+          <Route
+            path={routes.cinemaOpenCalls}
+            element={<CinemaOpenCallsPage />}
+          />
+          <Route path={routes.cinemaRights} element={<CinemaRightsPage />} />
+          <Route path={routes.film} element={<FilmPage />} />
+
+          {/* Studio */}
+          <Route path={routes.studio} element={<StudioPage />} />
+          <Route path={routes.studioAlbum} element={<StudioAlbumPage />} />
+          <Route path="/studio/artist" element={<StudioArtistPage />} />
+          <Route path="/studio/dashboard" element={<StudioDashboardPage />} />
+          <Route path={routes.studioUpload} element={<StudioUploadPage />} />
+          <Route path={routes.studioPayouts} element={<StudioPayoutsPage />} />
+          <Route path={routes.studioTrack} element={<StudioTrackPage />} />
+          <Route path={routes.studioLive} element={<StudioLivePage />} />
+          <Route
+            path={routes.studioCollection}
+            element={<StudioCollectionPage />}
+          />
+          <Route path={routes.studioSet} element={<StudioSetPage />} />
+          <Route path={routes.studioSearch} element={<StudioSearchPage />} />
+          <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
+          <Route
+            path={routes.studioCheckout}
+            element={<StudioCheckoutPage />}
+          />
+          <Route
+            path="/studio/sheet-store"
+            element={<StudioSheetStorePage />}
+          />
+          <Route
+            path="/studio/solidarity-fund"
+            element={<StudioSolidarityFundPage />}
+          />
+          <Route path={routes.studioCalls} element={<StudioOpenCallsPage />} />
+          <Route
+            path={routes.studioSetSubmission}
+            element={<StudioSetSubmissionPage />}
+          />
+          <Route path={routes.studioCouncil} element={<StudioCouncilPage />} />
+          <Route path={routes.studioTriage} element={<StudioTriagePage />} />
+          <Route
+            path={routes.studioFlagReview}
+            element={<StudioFlagReviewPage />}
+          />
+          <Route path="/studio/off-air" element={<StudioOffAirPage />} />
+          <Route path="/studio/404" element={<Studio404Page />} />
+          <Route path="/studio/500" element={<Studio500Page />} />
+          <Route path="/studio/sign-in" element={<StudioSignInPage />} />
+          <Route path="/studio/settings" element={<StudioSettingsPage />} />
+          <Route path={routes.studioAbout} element={<StudioAboutPage />} />
+          <Route
+            path={routes.studioAccessibility}
+            element={<StudioAccessibilityPage />}
+          />
+          <Route path={routes.studioTerms} element={<StudioTermsPage />} />
+          <Route path={routes.studioHelp} element={<StudioHelpPage />} />
+          <Route path={routes.studioPress} element={<StudioPressPage />} />
+          <Route path={routes.studioEndCard} element={<StudioEndCardPage />} />
+          <Route
+            path={routes.studioNotifications}
+            element={<StudioNotificationsPage />}
+          />
+          <Route path={routes.studioReceipt} element={<StudioReceiptPage />} />
+          <Route path={routes.studioRights} element={<StudioRightsPage />} />
+          <Route path={routes.studioProgram} element={<StudioProgramPage />} />
+          <Route
+            path={routes.studioBroadcast}
+            element={<StudioBroadcastPage />}
+          />
+          <Route path={routes.studioWelcome} element={<StudioWelcomePage />} />
+          <Route
+            path={routes.studioWithdrawn}
+            element={<StudioWithdrawnPage />}
+          />
+
+          {/* Community */}
+          <Route path={routes.changemakers} element={<ChangemakersPage />} />
+          <Route path="/changemaker/:slug" element={<ChangemakerStoryPage />} />
+          <Route path={routes.forum} element={<ForumPage />} />
+          <Route path="/thread" element={<ThreadPage />} />
+          <Route path="/thread/:id" element={<ThreadPage />} />
+          <Route path={routes.settings} element={<SettingsPage />} />
+
+          {/* Marketing / content */}
+          <Route path={routes.about} element={<AboutPage />} />
+          <Route path={routes.contact} element={<ContactPage />} />
+          <Route path={routes.help} element={<HelpPage />} />
+          <Route path={routes.volunteer} element={<VolunteerPage />} />
+          <Route
+            path={routes.postVolunteer}
+            element={<PostVolunteerOpportunityPage />}
+          />
+          <Route
+            path="/about/volunteer/opportunity/:slug"
+            element={<VolunteerOpportunityPage />}
+          />
+          <Route path={routes.platforms} element={<PlatformsPage />} />
+          <Route path={routes.donate} element={<DonatePage />} />
+          <Route path={routes.partners} element={<PartnersPage />} />
+          <Route
+            path={routes.partnerApply}
+            element={<SubmitPartnerApplicationPage />}
+          />
+          <Route
+            path={`${routes.partners}/:slug`}
+            element={<PartnerDetailPage />}
+          />
+          <Route path={routes.resources} element={<ResourceLibraryPage />} />
+          <Route path={routes.activism} element={<ActivismPage />} />
+          <Route path={routes.openLetter} element={<OpenLetterPage />} />
+          <Route path={routes.archive} element={<ArchivePage />} />
+          <Route
+            path="/annual-assembly/minutes/:year"
+            element={
+              <ParamRedirect
+                build={(p) =>
+                  `/about/governance/annual-assembly/minutes/${p.year ?? ""}`
+                }
+              />
+            }
+          />
+          <Route
+            path="/about/annual-assembly/minutes/:year"
+            element={
+              <ParamRedirect
+                build={(p) =>
+                  `/about/governance/annual-assembly/minutes/${p.year ?? ""}`
+                }
+              />
+            }
+          />
+          <Route
+            path="/volunteer-opportunity/:slug"
+            element={
+              <ParamRedirect
+                build={(p) => `/about/volunteer/opportunity/${p.slug ?? ""}`}
+              />
+            }
+          />
+          <Route
+            path="/partner/:slug"
+            element={
+              <ParamRedirect build={(p) => `/about/partners/${p.slug ?? ""}`} />
+            }
+          />
+
+          <Route path={routes.flatmates} element={<FlatmatesPage />} />
+          <Route path={routes.solidarity} element={<SolidarityPage />} />
+
+          {/* Local */}
+          <Route path={routes.safeSpaces} element={<SafeSpacesPage />} />
+          <Route
+            path={`${routes.safeSpaces}/:slug`}
+            element={<SafeSpaceDetailPage />}
+          />
+          <Route path={routes.visas} element={<VisasPage />} />
+          <Route path={routes.arriving} element={<ArrivingPage />} />
+          <Route path={routes.map} element={<MapPage />} />
+          <Route path={routes.directory} element={<DirectoryPage />} />
+          <Route path={routes.listBusiness} element={<ListBusinessPage />} />
+          <Route
+            path={`${routes.directory}/:slug`}
+            element={<DirectorySpacePage />}
+          />
+          <Route
+            path="/safe-space/:slug"
+            element={
+              <ParamRedirect
+                build={(p) => `/local/safe-spaces/${p.slug ?? ""}`}
+              />
+            }
+          />
+          <Route
+            path="/space/:slug"
+            element={
+              <ParamRedirect
+                build={(p) => `/local/directory/${p.slug ?? ""}`}
+              />
+            }
+          />
+
+          {/* Account hub & settings sub-flows (all under /account) */}
+          <Route
+            path={routes.account}
+            element={<Navigate to={routes.accountProfile} replace />}
+          />
+          <Route path={routes.editProfile} element={<EditProfilePage />} />
+          <Route path={routes.work} element={<WorkHubPage />} />
+          <Route path={routes.workProfile} element={<WorkProfilePage />} />
+          <Route
+            path={routes.notificationPreferences}
+            element={<NotificationPreferencesPage />}
+          />
+          <Route
+            path={routes.accessibilityPreferences}
+            element={<AccessibilityPreferencesPage />}
+          />
+          <Route path={routes.profileTheme} element={<ProfileThemePage />} />
+          <Route
+            path={routes.linkedAccounts}
+            element={<LinkedAccountsPage />}
+          />
+          <Route path={routes.security} element={<SecurityPage />} />
+          <Route path={routes.sessions} element={<SessionsPage />} />
+          <Route path={routes.subscriptions} element={<SubscriptionsPage />} />
+          <Route path={routes.dataExport} element={<DataExportPage />} />
+          <Route path={routes.deleteAccount} element={<DeleteAccountPage />} />
+          <Route
+            path={routes.cancelMembership}
+            element={<CancelMembershipPage />}
+          />
+          <Route path={routes.membership} element={<MembershipPage />} />
+          <Route
+            path={routes.giftMembership}
+            element={<GiftMembershipPage />}
+          />
+          <Route path={routes.sustainer} element={<SustainerPage />} />
+
+          {/* Legacy paths → new homes (keeps old links & design hrefs working) */}
+          {LEGACY_REDIRECTS.map(([from, to]) => (
+            <Route
+              key={from}
+              path={from}
+              element={<Navigate to={to} replace />}
+            />
+          ))}
+
+          {/* System, error & account-state screens */}
+          <Route path={routes.serverError} element={<ServerErrorPage />} />
+          <Route path={routes.maintenance} element={<MaintenancePage />} />
+          <Route path={routes.offline} element={<OfflinePage />} />
+          <Route path={routes.geoRestricted} element={<GeoRestrictedPage />} />
+          <Route path={routes.pwaPrompt} element={<PwaPromptPage />} />
+          <Route path={routes.accountBanned} element={<AccountBannedPage />} />
+          <Route path={routes.accountLocked} element={<AccountLockedPage />} />
+          <Route
+            path={routes.accountSuspended}
+            element={<AccountSuspendedPage />}
+          />
+          <Route path={routes.inviteExpired} element={<InviteExpiredPage />} />
+          <Route path={routes.pendingReview} element={<PendingReviewPage />} />
+          <Route
+            path={routes.verificationNeeded}
+            element={<VerificationNeededPage />}
+          />
+          <Route path={routes.status} element={<StatusPage />} />
+
+          {/* Newly built community / resource / support pages */}
+          <Route path={routes.comingOut} element={<ComingOutPage />} />
+          <Route
+            path={routes.parents}
+            element={<Navigate to={routes.family} replace />}
+          />
+          <Route path={routes.gatherings} element={<GatheringsPage />} />
+          <Route path={routes.vouch} element={<VouchPage />} />
+
+          {/* Admin & moderation panel */}
+          <Route path={routes.admin} element={<AdminDashboardPage />} />
+          <Route
+            path={routes.adminModeration}
+            element={<AdminModerationPage />}
+          />
+          <Route path={routes.adminMembers} element={<AdminMembersPage />} />
+          <Route
+            path={routes.adminCommunities}
+            element={<AdminCommunitiesPage />}
+          />
+          <Route
+            path={routes.adminPartnerApplications}
+            element={<AdminPartnerApplicationsPage />}
+          />
+          <Route
+            path={routes.adminGovernance}
+            element={<AdminGovernancePage />}
+          />
+          <Route
+            path={`${routes.adminCommunities}/:slug/mod`}
+            element={<AdminCommunityModPage />}
+          />
+          <Route path="/mod/:slug" element={<ModPanelPage />} />
+
+          {/* Legacy aliases → canonical pages */}
+          <Route
+            path={routes.businessDirectory}
+            element={<Navigate to={routes.directory} replace />}
+          />
+          <Route
+            path={routes.spacesMap}
+            element={<Navigate to={routes.map} replace />}
+          />
+
+          {/* Known-but-unbuilt features → styled "coming soon" placeholder */}
+          {KNOWN_ROUTE_SLUGS.filter((slug) => !BUILT_SLUGS.has(slug)).map(
+            (slug) => (
+              <Route
+                key={slug}
+                path={`/${slug}`}
+                element={<PlaceholderPage />}
+              />
+            ),
+          )}
+          {/* Genuinely unknown paths → 404 */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   );
 }

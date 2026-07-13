@@ -14,8 +14,9 @@ import { useSaved } from "../../app/providers/SavedProvider";
 import { memberAvatar } from "../members/data/members";
 import { gatheringPath } from "../gatherings/data";
 import { routes } from "../../app/routeMap";
-import { FEED_POST, type FeedReply } from "./feed.data";
+import { FEED_POST, type FeedPost, type FeedReply } from "./feed.data";
 import { MoreMenu, ReportModal } from "./FeedModeration";
+import { useLikePost, useReplyToPost } from "./api/useFeedMutations";
 import styles from "./FeedPage.module.css";
 
 export function GatheringCard() {
@@ -194,10 +195,11 @@ function PostActions({
   );
 }
 
-export function PostCard() {
-  const post = FEED_POST;
+export function PostCard({ post = FEED_POST }: { post?: FeedPost }) {
   const { openConnect } = useConnect();
   const { isSaved, toggleSave } = useSaved();
+  const likePost = useLikePost();
+  const replyToPost = useReplyToPost();
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [replies, setReplies] = useState<FeedReply[]>(post.replies);
@@ -211,6 +213,8 @@ export function PostCard() {
       { id: `r${prev.length + 1}-${Date.now()}`, author: "You", body },
     ]);
     setComposing(false);
+    // Live mode persists; demo mode no-ops (local state above is the record).
+    replyToPost.mutate({ id: post.id, body });
   }
 
   return (
@@ -239,6 +243,7 @@ export function PostCard() {
           </button>
           <MoreMenu
             authorName={post.authorName}
+            slug={post.slug}
             onReport={() => setReporting(true)}
           />
         </div>
@@ -248,8 +253,10 @@ export function PostCard() {
         liked={liked}
         likeCount={likeCount}
         onLike={() => {
-          setLiked((l) => !l);
+          const next = !liked;
+          setLiked(next);
           setLikeCount((c) => (liked ? c - 1 : c + 1));
+          likePost.mutate({ id: post.id, liked: next });
         }}
         replyCount={replies.length}
         onToggleReply={() => setComposing((c) => !c)}
@@ -292,6 +299,8 @@ export function PostCard() {
       {reporting && (
         <ReportModal
           authorName={post.authorName}
+          subjectId={post.id}
+          subjectType="post"
           onClose={() => setReporting(false)}
         />
       )}

@@ -33,7 +33,11 @@ export interface Gathering {
   ctaLabel: string;
 }
 
-export interface PainPoint {
+/** Warm (belonging/build) vs. safe (heavier safety/rights) styling. */
+export type GapTone = "warm" | "safe";
+
+interface GapAnswer {
+  /** The overheard community question. */
   question: string;
   /** Heading text before the accented words. */
   headingPrefix: string;
@@ -45,6 +49,29 @@ export interface PainPoint {
   ctaLabel: string;
   href: string;
 }
+
+/** A full-width plum hero panel that interrupts the thread at a pivotal beat. */
+export interface GapHero extends GapAnswer {
+  kind: "hero";
+  /** Small uppercase label above the question ("The gap we felt first"). */
+  eyebrow: string;
+  /** Jade "we built this" beat ("So we built the network"). */
+  builtLabel: string;
+}
+
+/** A light conversational exchange row, alternating down the central line. */
+export interface GapExchange extends GapAnswer {
+  kind: "exchange";
+  tone: GapTone;
+}
+
+/** A small serif "chapter" label between beats. */
+export interface GapMarker {
+  kind: "marker";
+  label: string;
+}
+
+export type GapThreadItem = GapHero | GapExchange | GapMarker;
 
 export interface StoryFeature {
   category: string;

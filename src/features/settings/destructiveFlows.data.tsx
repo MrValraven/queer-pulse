@@ -55,14 +55,14 @@ export const DESTRUCTIVE_FLOW: Record<
     loadingText: "Scheduling your account for deletion…",
     resultTitle: (
       <>
-        It's <em>done.</em>
+        It's <em>scheduled.</em>
       </>
     ),
     resultBody: (
       <>
-        Your account is scheduled for deletion and we've emailed you
-        confirmation. You have 30 days to change your mind — just sign in to
-        cancel. Take care of yourself.
+        Your account is scheduled for deletion. Check your inbox for a
+        confirmation email — you have <b>30 days</b> to cancel by signing back
+        in. After that, your data is permanently erased. Take care of yourself.
       </>
     ),
   },

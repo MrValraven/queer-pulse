@@ -4,6 +4,8 @@ import { Button, FormField, Sending } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { useCreateJoinRequest } from "./api/useCreateJoinRequest";
+import { AgeAttestation } from "./AgeAttestation";
+import { Under18Notice } from "./Under18Notice";
 import styles from "./auth.module.css";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,22 +32,34 @@ export function RequestInviteForm({
   const [touched, setTouched] = useState(false);
   const [why, setWhy] = useState("");
   const [agreed, setAgreed] = useState(false);
+  const [is18, setIs18] = useState(false);
+  const [under18, setUnder18] = useState(false);
 
   const emailValid = EMAIL_RE.test(email.trim());
   const emailError = touched && email.trim().length > 0 && !emailValid;
   const submitting = createJoinRequest.isPending;
   const canSubmit =
-    emailValid && why.trim().length > 0 && agreed && !submitting;
+    emailValid && why.trim().length > 0 && agreed && is18 && !submitting;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
     try {
-      await createJoinRequest.mutateAsync(why.trim());
+      await createJoinRequest.mutateAsync({ message: why.trim() });
       onSent();
     } catch {
       showToast("Could not send your request — please try again", "error");
     }
+  }
+
+  // Someone told us they're under 18 — pause on the humane block, not the form.
+  if (under18) {
+    return (
+      <Under18Notice
+        onBack={() => setUnder18(false)}
+        backLabel="Back to the form"
+      />
+    );
   }
 
   return (
@@ -136,6 +150,13 @@ export function RequestInviteForm({
           and I'm here in good faith.
         </label>
       </div>
+
+      <AgeAttestation
+        id="ri-age"
+        confirmed={is18}
+        onConfirmedChange={setIs18}
+        onUnder18={() => setUnder18(true)}
+      />
 
       <Button
         type="submit"

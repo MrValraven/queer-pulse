@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { FiShield } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Toggle } from "../../shared/components/ui";
+import { useConsent } from "../../app/providers/ConsentProvider";
 import { routes } from "../../app/routeMap";
 import { TERMS } from "./settings.data";
 import { SIM_GROUPS, type SimFlow } from "./simulations.data";
@@ -248,6 +249,34 @@ const EXPORTS: Record<
   },
 };
 
+/** Controlled consent row bound to real state (not the cosmetic ToggleRow). */
+function ConsentToggleRow({
+  title,
+  desc,
+  checked,
+  onChange,
+}: {
+  title: string;
+  desc: string;
+  checked: boolean;
+  onChange: (next: boolean) => void;
+}) {
+  return (
+    <div className={styles.toggleRow}>
+      <div className={styles.toggleLabel}>
+        <div className={styles.toggleTitle}>{title}</div>
+        <div className={styles.toggleDesc}>{desc}</div>
+      </div>
+      <Toggle
+        tone="coral"
+        checked={checked}
+        onChange={onChange}
+        label={title}
+      />
+    </div>
+  );
+}
+
 export function DataPane({
   onChange,
   onDeleteClick,
@@ -255,6 +284,7 @@ export function DataPane({
   onChange: () => void;
   onDeleteClick: () => void;
 }) {
+  const { consent, setConsent, openPreferences } = useConsent();
   const [exportKind, setExportKind] = useState<ExportKind | null>(null);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
   return (
@@ -299,24 +329,45 @@ export function DataPane({
           />
         </div>
       </Section>
-      <Section label="What we collect">
+      <Section label="Cookie & privacy choices">
+        <ToggleList>
+          <ConsentToggleRow
+            title="Analytics & usage data"
+            desc="Anonymous, aggregate usage patterns to improve the platform. No individual tracking, no ad networks. Off unless you turn it on."
+            checked={consent.analytics}
+            onChange={(next) =>
+              setConsent(
+                { analytics: next, monitoring: consent.monitoring },
+                "settings_pane",
+              )
+            }
+          />
+          <ConsentToggleRow
+            title="Crash & error reporting"
+            desc="Automatic diagnostics when something breaks, so we can fix it faster. No advertising or profiling data."
+            checked={consent.monitoring}
+            onChange={(next) =>
+              setConsent(
+                { analytics: consent.analytics, monitoring: next },
+                "settings_pane",
+              )
+            }
+          />
+        </ToggleList>
+        <div className={styles.dataCards}>
+          <DataCard
+            title="Manage cookie preferences"
+            desc="Review the full breakdown of what's stored and change any choice. Strictly necessary cookies keep you logged in and are always on."
+            btn="Open preferences"
+            onClick={openPreferences}
+          />
+        </div>
+      </Section>
+      <Section label="Personalisation">
         <ToggleList>
           <ToggleRow
-            title="Analytics & usage data"
-            desc="Anonymous usage patterns to improve the platform. No individual tracking, no third-party ad networks."
-            defaultChecked
-            onChange={onChange}
-          />
-          <ToggleRow
             title="Search personalisation"
-            desc="Use your interests and connections to improve suggested members and gatherings"
-            defaultChecked
-            onChange={onChange}
-          />
-          <ToggleRow
-            title="Crash & error reporting"
-            desc="Automatic error reports when something goes wrong. Helps us fix bugs faster."
-            defaultChecked
+            desc="Use your interests and connections to improve suggested members and gatherings. A product preference — this stays on your account, not tracking."
             onChange={onChange}
           />
         </ToggleList>

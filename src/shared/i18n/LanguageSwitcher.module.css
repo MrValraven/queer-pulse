@@ -1,0 +1,54 @@
+/*
+ * Context-adaptive segmented control. Colours derive from `currentColor` via
+ * color-mix so the same component reads correctly on the plum footer (cream
+ * text) and on a light nav (ink text) without variant props.
+ */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  border-radius: 999px;
+  color: inherit;
+}
+
+.icon {
+  margin: 0 3px 0 5px;
+  font-size: 14px;
+  flex: none;
+  opacity: 0.6;
+}
+
+.switch button {
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: color-mix(in srgb, currentColor 55%, transparent);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .switch button:hover {
+    color: currentColor;
+  }
+}
+
+.switch button.active {
+  color: currentColor;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.switch button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

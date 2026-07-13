@@ -10,6 +10,13 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { logError } from "../../shared/observability/logger";
+import {
+  revokeOtherSessions,
+  revokeSession,
+  simulateOr,
+} from "./api/account.api";
 import { routes } from "../../app/routeMap";
 import {
   ACTIVE_SESSIONS,
@@ -190,24 +197,47 @@ function SessionSkeleton() {
 
 export function SessionsPage() {
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const [signedOut, setSignedOut] = useState<Set<string>>(new Set());
   const [untrusted, setUntrusted] = useState<Set<string>>(new Set());
 
-  function handleSignOut(id: string) {
+  async function handleSignOut(id: string) {
+    // Optimistic; revert on failure so we never imply a sign-out that didn't happen.
     setSignedOut((prev) => new Set(prev).add(id));
-    showToast("Session ended", "success");
+    try {
+      await simulateOr(demoMode, undefined, () => revokeSession(id));
+      showToast(
+        "Session ended. If we didn't recognise that device, we'll email the address on file.",
+        "success",
+      );
+    } catch (err) {
+      logError(err, { where: "SessionsPage.signOut" });
+      setSignedOut((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+      showToast("We couldn't sign that session out. Try again.", "error");
+    }
   }
   function handleUntrust(id: string) {
     setUntrusted((prev) => new Set(prev).add(id));
     showToast("Device removed from trusted list", "info");
   }
-  function handleSignOutAll() {
+  async function handleSignOutAll() {
     const ids = ACTIVE_SESSIONS.filter((s) => s.variant !== "current").map(
       (s) => s.id,
     );
     setSignedOut(new Set(ids));
-    showToast("All other sessions signed out", "success");
+    try {
+      await simulateOr(demoMode, undefined, revokeOtherSessions);
+      showToast("All other sessions signed out", "success");
+    } catch (err) {
+      logError(err, { where: "SessionsPage.signOutAll" });
+      setSignedOut(new Set());
+      showToast("We couldn't sign the others out. Try again.", "error");
+    }
   }
 
   const activeSessions = ACTIVE_SESSIONS.filter((s) => !signedOut.has(s.id));
@@ -278,8 +308,8 @@ export function SessionsPage() {
           that session out, then{" "}
           <Link to={routes.passwordReset}>reset your password</Link> and{" "}
           <Link to={routes.twoFactorSetup}>re-issue your backup codes</Link>.
-          We'll send an email to the address on file with the full incident
-          report.
+          When you sign an unrecognised session out, we email the address on
+          file so there's an out-of-band record of what happened.
         </div>
       </div>
     </AppShell>

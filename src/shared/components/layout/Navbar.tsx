@@ -8,6 +8,7 @@ import { useAuth } from "../../../app/providers/authContext";
 import { useNavMode } from "../../../app/providers/navModeContext";
 import { routes } from "../../../app/routeMap";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
+import { useTranslation } from "../../i18n/useTranslation";
 import { MegaNav } from "./MegaNav";
 import { MegaNavDrawer } from "./MegaNavDrawer";
 import { Sidebar } from "./Sidebar";
@@ -29,12 +30,13 @@ function NotificationsBell({ unreadCount }: { unreadCount?: number }) {
   // than depending on each page to thread a count down. An explicit prop still
   // wins when a page passes one (e.g. the Notifications page's own live count).
   const liveCount = useUnreadCount();
+  const { t } = useTranslation();
   const count = unreadCount ?? liveCount;
   return (
     <Link
       to={routes.notifications}
       className={styles.bell}
-      aria-label="Notifications"
+      aria-label={t("nav:notifications")}
     >
       <svg width={20} height={20} viewBox="0 0 20 20" fill="none" aria-hidden>
         <path
@@ -61,6 +63,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
   const { theme, toggleTheme } = useTheme();
   const { loggedIn, signOut } = useAuth();
   const { navMode } = useNavMode();
+  const { t } = useTranslation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const drawerPanelRef = useRef<HTMLDivElement>(null);
@@ -140,7 +143,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
             type="button"
             className={styles.themeToggle}
             onClick={toggleTheme}
-            aria-label="Toggle colour theme"
+            aria-label={t("nav:toggleTheme")}
           >
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
@@ -150,7 +153,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
             <button
               type="button"
               className={styles.bell}
-              aria-label="Search (⌘K)"
+              aria-label={t("nav:search")}
               onClick={() =>
                 window.dispatchEvent(new CustomEvent("qp:open-search"))
               }
@@ -168,9 +171,11 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
             ) : (
               <>
                 <Link to={routes.signIn} className={styles.signIn}>
-                  Sign in
+                  {t("nav:signIn")}
                 </Link>
-                <Button to={routes.requestInvite}>Request an invite</Button>
+                <Button to={routes.requestInvite}>
+                  {t("nav:requestInvite")}
+                </Button>
               </>
             ))}
 
@@ -182,7 +187,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
               onClick={() => setDrawerOpen(true)}
               aria-haspopup="dialog"
               aria-expanded={drawerOpen}
-              aria-label="Open menu"
+              aria-label={t("nav:openMenu")}
             >
               <MenuIcon />
             </button>
@@ -195,7 +200,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
           className={styles.drawer}
           role="dialog"
           aria-modal="true"
-          aria-label="Menu"
+          aria-label={t("nav:menu")}
           onClick={closeDrawer}
         >
           <div
@@ -210,7 +215,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
               className={styles.drawerSignIn}
               onClick={closeDrawer}
             >
-              Search
+              {t("nav:searchShort")}
             </Link>
             {loggedIn ? (
               <>
@@ -232,7 +237,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
                     closeDrawer();
                   }}
                 >
-                  Sign out
+                  {t("nav:signOut")}
                 </Link>
               </>
             ) : (
@@ -242,14 +247,14 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
                   className={styles.drawerSignIn}
                   onClick={closeDrawer}
                 >
-                  Sign in
+                  {t("nav:signIn")}
                 </Link>
                 <Button
                   to={routes.requestInvite}
                   className={styles.drawerCta}
                   onClick={closeDrawer}
                 >
-                  Request an invite
+                  {t("nav:requestInvite")}
                 </Button>
               </>
             )}

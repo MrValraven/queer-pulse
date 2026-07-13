@@ -33,6 +33,8 @@ const DEMO_USER: AuthUser = {
   email: "you@queerpulse.test",
   status: "active",
   role: "member",
+  // A fixed adult mock — already attested so demo sessions never hit the age gate.
+  ageAttestedAt: "2026-01-01T00:00:00.000Z",
   profile: {
     slug: currentUserSlug,
     firstName: currentUser.first,

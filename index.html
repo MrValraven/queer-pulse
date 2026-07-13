@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
@@ -10,19 +12,25 @@
     />
     <meta name="theme-color" content="#2D1B3D" />
 
-    <!-- Open Graph / social link-unfurl previews (invite links, shares) -->
+    <!--
+      Base / default social metadata. NEUTRAL, brand-level copy only — this
+      static shell is served to every route and to every non-JS social scraper,
+      so it must never be invite-specific. Per-route overrides come from
+      <PageMeta> (src/shared/seo). Keep these in sync with `defaultMeta` in
+      src/shared/seo/seo.data.ts.
+    -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="QueerPulse" />
-    <meta property="og:url" content="https://queerpulse.com/invite" />
-    <meta property="og:title" content="You've been invited to QueerPulse" />
+    <meta property="og:url" content="https://queerpulse.com/" />
+    <meta
+      property="og:title"
+      content="QueerPulse — a queer professional network, rooted in Lisbon"
+    />
     <meta
       property="og:description"
-      content="A quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon — no ads, no algorithm. This invitation was created for you."
+      content="A quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon — no ads, no algorithm."
     />
-    <meta
-      property="og:image"
-      content="https://images.unsplash.com/photo-1566835770430-27dde2eb4367?w=1200&h=630&fit=crop&crop=entropy&q=80"
-    />
+    <meta property="og:image" content="https://queerpulse.com/og-default.svg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta
@@ -33,14 +41,17 @@
 
     <!-- Twitter / X card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="You've been invited to QueerPulse" />
+    <meta
+      name="twitter:title"
+      content="QueerPulse — a queer professional network, rooted in Lisbon"
+    />
     <meta
       name="twitter:description"
-      content="A quiet, vouched-for queer community in Lisbon — no ads, no algorithm. Your invitation is personal."
+      content="A quiet, vouched-for queer community in Lisbon — no ads, no algorithm."
     />
     <meta
       name="twitter:image"
-      content="https://images.unsplash.com/photo-1566835770430-27dde2eb4367?w=1200&h=630&fit=crop&crop=entropy&q=80"
+      content="https://queerpulse.com/og-default.svg"
     />
     <meta
       name="twitter:image:alt"

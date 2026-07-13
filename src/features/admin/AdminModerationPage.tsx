@@ -44,9 +44,9 @@ export function AdminModerationPage() {
       <div className={styles.toolbar}>
         <AdminTabs
           tabs={[
-            { id: "open", label: "Open", count: 23 },
-            { id: "appeals", label: "Appeals", count: 3 },
-            { id: "resolved", label: "Resolved" },
+            { id: "open", label: "Open", count: q.counts.open },
+            { id: "appeals", label: "Appeals", count: q.counts.appeals },
+            { id: "resolved", label: "Resolved", count: q.counts.resolved },
           ]}
           active={tab}
           onChange={(id) => q.setTab(id as TabId)}
@@ -82,7 +82,7 @@ export function AdminModerationPage() {
         <AdminReportDrawer
           report={q.selected}
           onClose={() => q.setSelected(null)}
-          onResolve={(id) => q.resolveReport(id)}
+          onResolve={(id, opts) => q.resolveReport(id, opts)}
         />
       )}
 

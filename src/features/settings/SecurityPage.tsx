@@ -27,7 +27,7 @@ const OUT_SCOPE = [
   "Social engineering of our team",
   "Physical attacks against infrastructure",
   "Spam or rate-limiting bypass",
-  "Third-party services (Stripe, Plausible)",
+  "Third-party infrastructure (Hetzner, Postmark, Backblaze)",
   "Clickjacking on non-sensitive pages",
   "Missing security headers (report only)",
 ];

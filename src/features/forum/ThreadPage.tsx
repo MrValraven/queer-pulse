@@ -3,8 +3,11 @@ import { Link, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { CATS, REPLY_SORTS, THREADS, type Reply } from "./forum.data";
+import { useThread } from "./api/useForum";
+import { useReply } from "./api/useForumMutations";
 import { currentUser } from "../members/data/members";
 import { ReportReplyModal } from "./ReportReplyModal";
 import { ThreadOpCard } from "./ThreadOpCard";
@@ -13,13 +16,17 @@ import { ThreadComposer } from "./ThreadComposer";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadPage() {
-  const loading = useSimulatedLoad();
+  const simLoading = useSimulatedLoad();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const { id } = useParams();
-  const thread = useMemo(
-    () => THREADS.find((t) => String(t.id) === id) ?? THREADS[0]!,
-    [id],
-  );
+  const numericId = Number(id);
+  // Detail source: demo returns the scripted mock, live fetches meta + posts.
+  const threadQuery = useThread(Number.isFinite(numericId) ? numericId : 0);
+  const thread =
+    threadQuery.data ?? THREADS.find((t) => String(t.id) === id) ?? THREADS[0]!;
+  const postReply = useReply(thread.id);
+  const loading = demoMode ? simLoading : threadQuery.isLoading;
 
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -74,6 +81,8 @@ export function ThreadPage() {
     ]);
     setReply("");
     showToast("Reply posted", "success");
+    // Live mode persists; demo mode no-ops (local reply above is the record).
+    postReply.mutate(body);
   }
 
   return (
@@ -139,6 +148,7 @@ export function ThreadPage() {
       {reportingAuthor && (
         <ReportReplyModal
           authorName={reportingAuthor}
+          subjectId={String(thread.id)}
           onClose={() => setReportingAuthor(null)}
         />
       )}

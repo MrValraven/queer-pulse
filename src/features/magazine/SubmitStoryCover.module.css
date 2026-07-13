@@ -1,0 +1,35 @@
+.progress {
+  margin-top: 12px;
+}
+
+.progressLabel {
+  font-size: 13px;
+  color: var(--ink-60, rgba(45, 27, 61, 0.6));
+  margin-bottom: 6px;
+}
+
+.track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(45, 27, 61, 0.09);
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--jade);
+  transition: width 0.2s var(--ease, ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    transition: none;
+  }
+}
+
+.error {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--coral);
+}

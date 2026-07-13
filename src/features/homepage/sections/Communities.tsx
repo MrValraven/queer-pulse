@@ -1,76 +1,125 @@
-import { Link } from "react-router-dom";
-import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
-import { linkToPath, routes } from "../../../app/routeMap";
-import { communities } from "../data/communities";
+import { useEffect, useRef, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
+import { Button, Reveal } from "../../../shared/components/ui";
+import { usePrefersReducedMotion } from "../../../shared/hooks";
+import { routes } from "../../../app/routeMap";
+import { spotlightCommunities } from "./Communities.data";
+import { useCommunityFilters } from "./useCommunityFilters";
+import { CommunitiesToolbar } from "./CommunitiesToolbar";
+import { CommunityRail } from "./CommunityRail";
+import { CommunitySpotlight } from "./CommunitySpotlight";
 import styles from "./Communities.module.css";
 
-function PrivateIcon() {
-  return (
-    <svg width={9} height={9} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect
-        x={3}
-        y={11}
-        width={18}
-        height={11}
-        rx={2.5}
-        stroke="currentColor"
-        strokeWidth={2.5}
-      />
-      <path
-        d="M7 11V7a5 5 0 0110 0v4"
-        stroke="currentColor"
-        strokeWidth={2.5}
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+const SKELETON_MS = 340;
 
 export function Communities() {
+  const { state, patch, clear, visible, total, langOptions, hoodOptions } =
+    useCommunityFilters();
+  const reduce = usePrefersReducedMotion();
+
+  const [selectedAnchor, setSelectedAnchor] = useState<string | null>(
+    spotlightCommunities[0]?.anchor ?? null,
+  );
+  const [loading, setLoading] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  // Derive the effective selection during render (no syncing effect): if the
+  // picked community has been filtered out, fall back to the first visible one.
+  const activeAnchor =
+    selectedAnchor && visible.some((d) => d.anchor === selectedAnchor)
+      ? selectedAnchor
+      : (visible[0]?.anchor ?? null);
+
+  const previewCommunity = (anchor: string) => {
+    // Don't let a hover en route to the spotlight steal a deliberate click
+    // that's still resolving its skeleton.
+    if (loading) return;
+    clearTimeout(timer.current);
+    setSelectedAnchor(anchor);
+  };
+
+  const selectCommunity = (anchor: string) => {
+    if (anchor === activeAnchor) return;
+    clearTimeout(timer.current);
+    setSelectedAnchor(anchor);
+    if (reduce) return;
+    setLoading(true);
+    timer.current = setTimeout(() => setLoading(false), SKELETON_MS);
+  };
+
+  const selected =
+    spotlightCommunities.find((d) => d.anchor === activeAnchor) ?? null;
+  const shown = visible.length;
+
   return (
     <section className={styles.section} id="communities">
       <div className="wrap">
         <Reveal>
-          <SectionHead
-            title={
-              <>
-                Find your <em>people</em>
-              </>
-            }
-            subtitle="A living directory of queer communities across Lisbon — social groups, arts collectives, activist circles, sports clubs, and more."
-            action={
+          <div className={styles.head}>
+            <div>
+              <div className={styles.eyebrow}>
+                <span className={styles.live} aria-hidden />
+                Communities · Lisboa
+              </div>
+              <h2 className={styles.title}>
+                Step inside, <em>one room at a time.</em>
+              </h2>
+            </div>
+            <div className={styles.headRight}>
+              <p className={styles.sub}>
+                Search or filter the list, then open any community to see the
+                whole room — what it is, what it does, who&apos;s inside, and
+                what you unlock by joining.
+              </p>
               <Button variant="ghost" to={routes.communities}>
-                Browse all communities →
+                Browse all communities <FiArrowRight aria-hidden />
               </Button>
-            }
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <CommunitiesToolbar
+            state={state}
+            patch={patch}
+            langOptions={langOptions}
+            hoodOptions={hoodOptions}
           />
         </Reveal>
 
-        <div className={styles.grid}>
-          {communities.map((community, index) => (
-            <Reveal key={community.name} delay={index * 45}>
-              <Link
-                to={linkToPath(community.href)}
-                className={[styles.card, community.dashed && styles.dashed]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                <span
-                  className={[styles.type, styles[community.type]].join(" ")}
-                >
-                  {community.privateBadge && <PrivateIcon />}
-                  {community.typeLabel}
-                </span>
-                <div className={styles.name}>{community.name}</div>
-                <p className={styles.desc}>{community.description}</p>
-                <div className={styles.foot}>
-                  <span className={styles.count}>{community.count}</span>
-                  <span className={styles.join}>{community.joinLabel}</span>
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
+        <Reveal>
+          <p className={styles.resultCount}>
+            {shown === total ? (
+              <>
+                <b>{total}</b> communities
+              </>
+            ) : (
+              <>
+                <b>{shown}</b> of {total} communities
+              </>
+            )}
+          </p>
+        </Reveal>
+
+        <Reveal>
+          <div className={styles.grid}>
+            <CommunityRail
+              list={visible}
+              selectedAnchor={activeAnchor}
+              onSelect={selectCommunity}
+              onPreview={previewCommunity}
+              onClear={clear}
+            />
+            <CommunitySpotlight
+              key={activeAnchor ?? "empty"}
+              community={selected}
+              loading={loading}
+              onClear={clear}
+            />
+          </div>
+        </Reveal>
       </div>
     </section>
   );

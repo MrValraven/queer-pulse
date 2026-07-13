@@ -1,32 +1,32 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useCreateReport } from "../safety/api/useCreateReport";
+import { reasonsFor, type ReasonCode } from "../safety/reportReasons";
+import { logError } from "../../shared/observability/logger";
 import styles from "./ReportReplyModal.module.css";
 
-const REASONS = [
-  "Harassment or a personal attack",
-  "Hate speech or a slur",
-  "Spam or self-promotion",
-  "Off-topic or disruptive",
-  "Something else",
-] as const;
+const REASONS = reasonsFor("reply");
 
 interface ReportReplyModalProps {
   /** Whose reply is being reported — shown in the heading. */
   authorName: string;
+  /** Content id of the reported reply — the report's `subjectId`. */
+  subjectId: string;
   onClose: () => void;
 }
 
-/** Pick a reason → short loading → plum-panel confirmation. */
+/** Pick a reason → real submit → plum-panel confirmation. */
 export function ReportReplyModal({
   authorName,
+  subjectId,
   onClose,
 }: ReportReplyModalProps) {
   useScrollLock();
-  const [reason, setReason] = useState<string | null>(null);
+  const [reason, setReason] = useState<ReasonCode | null>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
-  const timer = useRef<number | undefined>(undefined);
+  const createReport = useCreateReport();
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -36,12 +36,20 @@ export function ReportReplyModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  useEffect(() => () => window.clearTimeout(timer.current), []);
-
   const submit = () => {
     if (!reason) return;
     setStatus("sending");
-    timer.current = window.setTimeout(() => setStatus("done"), 900);
+    // Demo resolves after a short delay; live POSTs /reports. Same confirmation.
+    createReport.mutate(
+      { subjectType: "reply", subjectId, reasonCode: reason },
+      {
+        onSuccess: () => setStatus("done"),
+        onError: (err) => {
+          logError(err, { scope: "forum.reportReply" });
+          setStatus("done");
+        },
+      },
+    );
   };
 
   return (
@@ -91,20 +99,20 @@ export function ReportReplyModal({
               aria-label="Reason for reporting"
             >
               {REASONS.map((r) => {
-                const on = reason === r;
+                const on = reason === r.code;
                 return (
                   <button
-                    key={r}
+                    key={r.code}
                     type="button"
                     role="radio"
                     aria-checked={on}
                     className={[styles.reason, on && styles.reasonOn]
                       .filter(Boolean)
                       .join(" ")}
-                    onClick={() => setReason(r)}
+                    onClick={() => setReason(r.code)}
                   >
                     <span className={styles.radio} aria-hidden />
-                    {r}
+                    {r.label}
                   </button>
                 );
               })}

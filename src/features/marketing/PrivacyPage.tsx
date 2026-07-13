@@ -1,5 +1,6 @@
 import { SubpageIndex } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { POLICY_VERSION } from "../../shared/api/consent.api";
 import { LegalDoc, type LegalSection } from "./LegalDoc";
 import s from "./LegalDoc.module.css";
 
@@ -71,7 +72,8 @@ const SECTIONS: LegalSection[] = [
             location, device fingerprints, cross-site browsing history,
             biometric data, or any sensitive personal data beyond what you
             voluntarily share in your profile. We do not use analytics services
-            that track individual users.
+            that track individual users. Any anonymous, aggregate analytics or
+            error reporting stays off until you choose to turn it on.
           </p>
         </div>
       </>
@@ -207,18 +209,26 @@ const SECTIONS: LegalSection[] = [
     body: (
       <>
         <p>
-          We use a single session cookie to keep you logged in. This cookie
-          contains only your session token — no tracking information. It expires
-          when you log out or after 30 days of inactivity.
+          Signing in sets a first-party session cookie so we know it's you, plus
+          a CSRF cookie that protects your requests from forgery. These are
+          strictly necessary — the platform can't run without them — so they
+          need no consent and can't be switched off. The session cookie contains
+          only your session token and expires when you log out or after 30 days
+          of inactivity.
         </p>
         <p>
-          We do not use advertising cookies, analytics cookies, or third-party
-          tracking cookies. We do not use cookie consent banners because we only
-          use the cookies we need to.
+          We store your language, theme, and a few interface preferences in your
+          browser's localStorage. This lives on your device and never leaves it.
         </p>
         <p>
-          We store language preferences and some UI settings in your browser's
-          localStorage. This data never leaves your device.
+          Everything beyond the essentials — anonymous, aggregate usage
+          analytics and automatic error reporting — is{" "}
+          <strong>off until you opt in</strong>. The first time you visit, a
+          small banner asks; <em>Reject</em> is exactly as easy as{" "}
+          <em>Accept</em>, nothing loads unless you say yes, and the app works
+          fully either way. You can change your mind any time from Settings →
+          Data &amp; privacy → Cookie &amp; privacy choices. We never use
+          advertising, profiling, or cross-site tracking cookies.
         </p>
       </>
     ),
@@ -248,9 +258,28 @@ const SECTIONS: LegalSection[] = [
           </li>
         </ul>
         <p>
+          Two further services run <strong>only if you opt in</strong> to the
+          matching category in the consent banner or your settings — until then
+          they never load:
+        </p>
+        <ul>
+          <li>
+            <strong>Privacy-first analytics</strong> (optional) — anonymous,
+            aggregate page metrics with no personal identifiers and no
+            cross-site tracking. EU data processing agreement in place. Loads
+            only with your analytics consent.
+          </li>
+          <li>
+            <strong>Error monitoring</strong> (optional) — automatic crash
+            diagnostics so we can fix bugs faster. Carries no advertising or
+            profiling data; IP addresses are truncated. EU data processing
+            agreement in place. Loads only with your error-reporting consent.
+          </li>
+        </ul>
+        <p>
           We do not use Google Analytics, Meta Pixel, or any other advertising
-          or tracking service. If this ever changes, we will update this policy
-          and announce it to the community before it happens.
+          or cross-site tracking service. If our processors ever change, we will
+          update this policy and announce it to the community before it happens.
         </p>
       </>
     ),
@@ -299,8 +328,8 @@ export function PrivacyPage() {
       }
       meta={[
         "Effective: 1 February 2023",
-        "Last updated: 1 June 2026",
-        "Version 3.2",
+        "Last updated: 10 July 2026",
+        `Version ${POLICY_VERSION}`,
       ]}
       plain={{
         title: "Plain language summary",

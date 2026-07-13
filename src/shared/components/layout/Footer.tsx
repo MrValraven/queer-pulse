@@ -14,6 +14,7 @@ import { linkToPath } from "../../../app/routeMap";
 import { useIsLinkVisible } from "../../../app/authGate";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useTranslation } from "../../i18n/useTranslation";
+import { LanguageSwitcher } from "../../i18n/LanguageSwitcher";
 import {
   COLUMNS,
   BASE_LINKS,
@@ -58,35 +59,24 @@ function BaseLink({ link }: { link: FooterLink }) {
 /** Theme toggle + EN/PT language switch, shared by both footer variants. */
 function FooterControls() {
   const { theme, toggleTheme } = useTheme();
-  const { language, setLanguage } = useTranslation();
+  const { t } = useTranslation();
   return (
     <div className={styles.controls}>
       <button
         type="button"
         className={styles.themeToggle}
         onClick={toggleTheme}
-        aria-label="Toggle colour theme"
+        aria-label={t("footer:toggleTheme")}
       >
         {theme === "dark" ? <FiSun aria-hidden /> : <FiMoon aria-hidden />}
       </button>
-      <div className={styles.langSwitch} role="group" aria-label="Language">
-        {(["en", "pt"] as const).map((lang) => (
-          <button
-            key={lang}
-            type="button"
-            onClick={() => setLanguage(lang)}
-            aria-pressed={language === lang}
-            className={language === lang ? styles.langActive : undefined}
-          >
-            {lang.toUpperCase()}
-          </button>
-        ))}
-      </div>
+      <LanguageSwitcher />
     </div>
   );
 }
 
 export function Footer() {
+  const { t } = useTranslation();
   const isLinkVisible = useIsLinkVisible();
   const columns = COLUMNS.map((column) => ({
     ...column,
@@ -100,10 +90,7 @@ export function Footer() {
         <div className={styles.grid}>
           <div className={styles.brandCol}>
             <Wordmark to="/" />
-            <p className={styles.blurb}>
-              A queer professional network, rooted in Lisbon. Built by and for
-              the community — not designed at it.
-            </p>
+            <p className={styles.blurb}>{t("footer:blurb")}</p>
             <div className={styles.social}>
               {SOCIAL_LINKS.map((social) => {
                 const Icon = SOCIAL_ICONS[social.icon];
@@ -120,7 +107,7 @@ export function Footer() {
             </div>
           </div>
 
-          <nav className={styles.cols} aria-label="Footer">
+          <nav className={styles.cols} aria-label={t("footer:aria.footerNav")}>
             {columns.map((column) => (
               <div key={column.heading} className={styles.col}>
                 <h4>{column.heading}</h4>
@@ -135,10 +122,11 @@ export function Footer() {
         </div>
 
         <div className={styles.base}>
-          <span className={styles.copyright}>
-            © 2026 QueerPulse · Made in Lisbon with care
-          </span>
-          <nav className={styles.baseLinks} aria-label="Legal">
+          <span className={styles.copyright}>{t("footer:copyright")}</span>
+          <nav
+            className={styles.baseLinks}
+            aria-label={t("footer:aria.legalNav")}
+          >
             {baseLinks.map((link) => (
               <BaseLink key={link.href} link={link} />
             ))}

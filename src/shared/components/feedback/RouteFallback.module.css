@@ -1,0 +1,19 @@
+.wrap {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: var(--cream);
+  color: var(--plum);
+}
+
+.spin {
+  font-size: 24px;
+}
+
+.label {
+  font-size: 14px;
+  color: rgba(var(--plum-rgb), 0.7);
+}

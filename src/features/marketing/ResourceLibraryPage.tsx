@@ -9,6 +9,7 @@ import {
   SubpageIndex,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { PageMeta } from "../../shared/seo";
 import { linkToPath, routes } from "../../app/routeMap";
 import s from "./ResourceLibraryPage.module.css";
 
@@ -336,6 +337,10 @@ export function ResourceLibraryPage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title="Resource Library — QueerPulse"
+        description="Things that actually help — a curated library of free and sliding-scale health, legal, housing, money, identity and safety resources for queer Lisbon."
+      />
       <PageHero
         eyebrow="Resource Library"
         title={

@@ -51,6 +51,11 @@
 .group {
   margin-bottom: 44px;
 }
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
 .groupTitle {
   font-family: var(--serif);
   font-weight: 300;

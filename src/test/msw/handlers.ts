@@ -1,0 +1,60 @@
+import { http, HttpResponse } from "msw";
+import type { JobCardDTO } from "../../features/economy/api/jobs.api";
+import type { Paginated } from "../../shared/api/refs";
+
+/**
+ * MSW handlers for the few LIVE-mode suites. They double as executable
+ * documentation of the shapes the frontend assumes from the NestJS backend —
+ * if the real contract drifts, update these. Base URL matches the `VITE_API_URL`
+ * the live suites stub in (`http://api.test`).
+ */
+export const API = "http://api.test";
+
+const jobCard: JobCardDTO = {
+  slug: "brand-designer",
+  title: "Brand Designer",
+  company: { slug: "atelier-pulso", nameText: "Atelier Pulso" },
+  category: "Arts & Culture",
+  commitment: "Freelance",
+  seniority: "Mid",
+  format: "hybrid",
+  location: "Lisbon",
+  city: "Lisbon",
+  timezone: null,
+  pay: {
+    salary: "€2,200/mo",
+    rateMin: null,
+    rateMax: null,
+    currency: null,
+    ratePer: null,
+    hidePay: false,
+    barter: false,
+  },
+  deadline: "2026-06-30",
+  startDate: null,
+  desc: "Shape a warm, queer brand system.",
+  tags: ["brand", "figma"],
+  queerRun: true,
+  qrLabel: null,
+  status: "open",
+  createdAt: "2026-06-01",
+};
+
+export const handlers = [
+  http.get(`${API}/csrf-token`, () =>
+    HttpResponse.json({ csrfToken: "test-csrf" }),
+  ),
+  http.post(
+    `${API}/auth/refresh`,
+    () => new HttpResponse(null, { status: 200 }),
+  ),
+  http.get(`${API}/jobs`, () => {
+    const body: Paginated<JobCardDTO> = {
+      items: [jobCard],
+      total: 1,
+      page: 1,
+      pageSize: 20,
+    };
+    return HttpResponse.json(body);
+  }),
+];

@@ -1,5 +1,6 @@
 import { matchPath, useLocation } from "react-router-dom";
 import { useAuth } from "./providers/authContext";
+import { useDemoMode } from "./providers/DemoModeProvider";
 import { linkToPath, routes } from "./routeMap";
 
 /**
@@ -117,6 +118,22 @@ function matchesAny(pathname: string, patterns: string[]): boolean {
 }
 
 /**
+ * Role-gated surfaces. Being logged in is not enough for these — the admin panel
+ * requires an admin, the community/`/mod` moderation surfaces require a moderator
+ * (or admin). Enforced client-side in live mode; the backend remains the source
+ * of truth and must 403 each call regardless.
+ */
+const ADMIN_PATTERNS: string[] = ["/admin", "/admin/*"];
+const MOD_PATTERNS: string[] = ["/mod/*"];
+
+/** The role a path demands, or null when logged-in access is sufficient. */
+export function requiredRole(pathname: string): "admin" | "mod" | null {
+  if (matchesAny(pathname, ADMIN_PATTERNS)) return "admin";
+  if (matchesAny(pathname, MOD_PATTERNS)) return "mod";
+  return null;
+}
+
+/**
  * True when `pathname` is closed to logged-out visitors — i.e. it matches a
  * gated pattern and isn't a public escape hatch. This is the single source of
  * truth shared by the route guard and the nav/footer link filtering.
@@ -154,10 +171,23 @@ export function useIsLinkVisible(): (href: string) => boolean {
  * null when the visitor is allowed through (logged in, or on a public route).
  */
 export function useAuthGateRedirect(): string | null {
-  const { loggedIn } = useAuth();
+  const { loggedIn, role } = useAuth();
+  const { demoMode } = useDemoMode();
   const { pathname } = useLocation();
 
-  if (loggedIn) return null;
+  if (loggedIn) {
+    // Role-gate admin/mod surfaces in live mode. Demo mode is intentionally an
+    // explorable sandbox where the admin panel is reachable (its team role is
+    // simulated via AdminRoleProvider), so role isn't enforced there.
+    if (!demoMode) {
+      const need = requiredRole(pathname);
+      if (need === "admin" && role !== "admin") return routes.homepage;
+      if (need === "mod" && role !== "moderator" && role !== "admin") {
+        return routes.homepage;
+      }
+    }
+    return null;
+  }
   if (!isGatedPath(pathname)) return null;
 
   return `${routes.signIn}?next=${encodeURIComponent(pathname)}`;

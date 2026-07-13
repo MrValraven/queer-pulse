@@ -24,13 +24,26 @@ export interface JoinRequestDTO {
   } | null;
 }
 
+/** Payload for a prospective member's request to join. */
+export interface CreateJoinRequestInput {
+  /** The applicant's own words — why they want in (1–1000 chars). */
+  message: string;
+  /** The 18+ self-attestation (spec 06). Must be true; the backend re-validates. */
+  ageAttested: true;
+  /** Which Terms version's eligibility clause was affirmed. */
+  termsVersion: string;
+  /** Optional stronger record; server rejects a DOB computing to age < 18. */
+  dateOfBirth?: string;
+}
+
 /**
  * Submit a join request for the signed-in-but-not-yet-approved member. This route
- * is pending-ok: it works before the member is verified. Body is `{ message }`,
- * which the backend validates at 1–1000 chars.
+ * is pending-ok: it works before the member is verified. Body carries the message
+ * plus the 18+ attestation, which the mod queue sees and the backend re-validates
+ * (rejecting when `ageAttested !== true` or a supplied DOB computes to age < 18).
  */
-export const createJoinRequest = (message: string) =>
-  apiPost<JoinRequestDTO>("/join-requests", { message });
+export const createJoinRequest = (input: CreateJoinRequestInput) =>
+  apiPost<JoinRequestDTO>("/join-requests", input);
 
 /**
  * List join requests for the moderator queue (Mod/Admin only). Optional `status`

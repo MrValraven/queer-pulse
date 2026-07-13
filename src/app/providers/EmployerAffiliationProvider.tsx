@@ -7,12 +7,22 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import {
+  getAffiliation,
+  postAffiliation,
+  deleteAffiliation,
+} from "../../features/economy/api/affiliation.api";
+import { useDemoMode } from "./DemoModeProvider";
+import { logError } from "../../shared/observability/logger";
 
 /** Which company the current member is authorised to post jobs for. */
 export interface EmployerAffiliation {
   companySlug: string;
   /** The member's role at the company, e.g. "Founder", "Hiring lead". */
   role: string;
+  /** Live-only lifecycle: `pending` while affiliation is confirmed, then `active`.
+   *  Optional — consumers only check the affiliation is non-null. */
+  status?: "pending" | "active";
 }
 
 interface EmployerAffiliationContextValue {
@@ -42,8 +52,10 @@ function readInitial(): EmployerAffiliation | null {
 /**
  * Session store for the member's employer affiliation. Default is `null` — an
  * ordinary member with no company to post for — so the posting gate is visible.
- * Affiliating a company is simulated instantly (create-it-live) and persisted so
- * it survives a reload.
+ * In demo mode affiliating is simulated instantly (create-it-live, `active`) and
+ * persisted so it survives a reload. In live mode the affiliation is hydrated
+ * from GET /me/affiliation, requesting it POSTs (optimistically `pending`, then
+ * the server-confirmed status), and clearing it DELETEs — both with rollback.
  */
 export function EmployerAffiliationProvider({
   children,
@@ -53,6 +65,7 @@ export function EmployerAffiliationProvider({
   const [affiliation, setAffiliation] = useState<EmployerAffiliation | null>(
     readInitial,
   );
+  const { demoMode } = useDemoMode();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -67,11 +80,75 @@ export function EmployerAffiliationProvider({
     }
   }, [affiliation]);
 
-  const affiliate = useCallback((companySlug: string, role: string) => {
-    setAffiliation({ companySlug, role });
-  }, []);
+  // Live hydration — the member's real affiliation. Never hits the network in
+  // demo mode.
+  useEffect(() => {
+    if (demoMode) return;
+    let active = true;
+    getAffiliation()
+      .then((dto) => {
+        if (!active) return;
+        setAffiliation(
+          dto
+            ? {
+                companySlug: dto.companySlug,
+                role: dto.role,
+                status: dto.status,
+              }
+            : null,
+        );
+      })
+      .catch((err) => {
+        logError(err);
+      });
+    return () => {
+      active = false;
+    };
+  }, [demoMode]);
 
-  const clearAffiliation = useCallback(() => setAffiliation(null), []);
+  const affiliate = useCallback(
+    (companySlug: string, role: string) => {
+      if (demoMode) {
+        // Create-it-live: granted instantly, unchanged prototype behaviour.
+        setAffiliation({ companySlug, role, status: "active" });
+        return;
+      }
+      let previous: EmployerAffiliation | null = null;
+      setAffiliation((prev) => {
+        previous = prev;
+        return { companySlug, role, status: "pending" };
+      });
+      postAffiliation({ companySlug, role })
+        .then((dto) => {
+          setAffiliation({
+            companySlug: dto.companySlug,
+            role: dto.role,
+            status: dto.status,
+          });
+        })
+        .catch((err) => {
+          logError(err);
+          setAffiliation(previous);
+        });
+    },
+    [demoMode],
+  );
+
+  const clearAffiliation = useCallback(() => {
+    if (demoMode) {
+      setAffiliation(null);
+      return;
+    }
+    let previous: EmployerAffiliation | null = null;
+    setAffiliation((prev) => {
+      previous = prev;
+      return null;
+    });
+    deleteAffiliation().catch((err) => {
+      logError(err);
+      setAffiliation(previous);
+    });
+  }, [demoMode]);
 
   const value = useMemo(
     () => ({ affiliation, affiliate, clearAffiliation }),

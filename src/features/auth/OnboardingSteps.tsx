@@ -11,6 +11,10 @@ import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
 import { currentUser, getMember } from "../members/data/members";
 import { clearInviteWelcome, readInviteWelcome } from "./api/pendingInvite";
+import { useAgeAttestation } from "./api/useAgeAttestation";
+import { AgeAttestation } from "./AgeAttestation";
+import { Under18Notice } from "./Under18Notice";
+import { logError } from "../../shared/observability/logger";
 import {
   NORMS,
   INTENTS,
@@ -228,6 +232,26 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
 
 export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
   const [agreed, setAgreed] = useState(false);
+  const [is18, setIs18] = useState(false);
+  const [under18, setUnder18] = useState(false);
+  const attest = useAgeAttestation();
+
+  // This is the load-bearing age gate: Google can't tell us how old anyone is, so
+  // completing this step is what records the 18+ attestation and lets a `pending`
+  // account become `active`. Best-effort — a failed POST doesn't trap onboarding.
+  async function handleContinue() {
+    try {
+      await attest.mutateAsync({});
+    } catch (err) {
+      logError(err, { where: "onboarding.ageAttestation" });
+    }
+    onNext();
+  }
+
+  if (under18) {
+    return <Under18Notice onBack={() => setUnder18(false)} />;
+  }
+
   return (
     <>
       <div className={styles.eye}>{stepLabel}</div>
@@ -256,8 +280,18 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
           <Link to={routes.guidelines}>Community Guidelines</Link>
         </span>
       </label>
+      <AgeAttestation
+        id="ob-age"
+        confirmed={is18}
+        onConfirmedChange={setIs18}
+        onUnder18={() => setUnder18(true)}
+      />
       <div className={styles.nav}>
-        <Button onClick={onNext} disabled={!agreed}>
+        <Button
+          onClick={handleContinue}
+          disabled={!agreed || !is18 || attest.isPending}
+          aria-busy={attest.isPending}
+        >
           I agree, continue
         </Button>
         <button type="button" className={styles.back} onClick={onBack}>
