@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../../app/providers/DemoModeProvider";
+import { useAuth } from "../../../../app/providers/authContext";
 import type { PendingListing } from "../listBusiness.data";
 import {
   createListing,
@@ -22,9 +23,10 @@ export interface MyListingsResult {
  */
 export function useMyListings(page = 1) {
   const { demoMode } = useDemoMode();
+  const { loggedIn } = useAuth();
   return useQuery<MyListingsResult>({
     queryKey: ["listings", "mine", demoMode, page],
-    enabled: !demoMode,
+    enabled: !demoMode && loggedIn,
     queryFn: async () => {
       const res = await getMyListings(page);
       return {

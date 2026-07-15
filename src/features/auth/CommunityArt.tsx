@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import styles from "./auth.module.css";
 
 type Tone = "coral" | "jade" | "cream";
@@ -29,6 +30,17 @@ const FILL: Record<Tone, string> = {
  *  "drifting home" stem, rather than a hard line all the way in. */
 const toward = (from: number, target: number) => from + (target - from) * 0.34;
 
+/** Each orb enters by drifting home from a little further out. This returns the
+ *  small outward offset (in user units) it starts from — the vector pointing
+ *  away from the hearth, normalised to a short ~11-unit reach. */
+function driftFrom(o: Orb) {
+  const dx = o.cx - HEARTH.cx;
+  const dy = o.cy - HEARTH.cy;
+  const len = Math.hypot(dx, dy) || 1;
+  const reach = 11;
+  return { dx: (dx / len) * reach, dy: (dy / len) * reach };
+}
+
 /** Abstract illustration of a queer community as a gathered hearth — member
  *  orbs drifting home toward one warm coral centre that keeps a place for you.
  *  Token-built so it themes in light and dark; sits on the plum art tile. */
@@ -47,10 +59,17 @@ export function CommunityArt() {
         </radialGradient>
       </defs>
 
-      {/* Warm light field behind everything */}
-      <circle cx={HEARTH.cx} cy={HEARTH.cy} r={96} fill="url(#qpHearthGlow)" />
+      {/* Warm light field behind everything — blooms in first */}
+      <circle
+        className={styles.artGlow}
+        cx={HEARTH.cx}
+        cy={HEARTH.cy}
+        r={96}
+        fill="url(#qpHearthGlow)"
+      />
 
-      {/* Short dashed stems pulling each orb toward the hearth */}
+      {/* Short dashed stems pulling each orb toward the hearth — each fades in
+          with its orb */}
       <g
         stroke="rgba(var(--cream-rgb), 0.24)"
         strokeWidth={1.3}
@@ -60,6 +79,8 @@ export function CommunityArt() {
         {ORBS.map((o, i) => (
           <line
             key={i}
+            className={styles.artStem}
+            style={{ animationDelay: `${0.52 + i * 0.08}s` }}
             x1={o.cx}
             y1={o.cy}
             x2={toward(o.cx, HEARTH.cx)}
@@ -68,22 +89,34 @@ export function CommunityArt() {
         ))}
       </g>
 
-      {/* Member orbs */}
-      {ORBS.map((o, i) => (
-        <circle
-          key={i}
-          cx={o.cx}
-          cy={o.cy}
-          r={o.r}
-          fill={FILL[o.tone]}
-          stroke="rgba(var(--cream-rgb), 0.5)"
-          strokeWidth={1.2}
-        />
-      ))}
+      {/* Member orbs — drift home toward the hearth, one after another */}
+      {ORBS.map((o, i) => {
+        const { dx, dy } = driftFrom(o);
+        return (
+          <circle
+            key={i}
+            className={styles.artOrb}
+            style={
+              {
+                "--dx": `${dx}px`,
+                "--dy": `${dy}px`,
+                animationDelay: `${0.44 + i * 0.08}s`,
+              } as CSSProperties
+            }
+            cx={o.cx}
+            cy={o.cy}
+            r={o.r}
+            fill={FILL[o.tone]}
+            stroke="rgba(var(--cream-rgb), 0.5)"
+            strokeWidth={1.2}
+          />
+        );
+      })}
 
       {/* The hearth: a still ring, one gently pulsing ring (the brand pulse),
-          and the warm coral core */}
+          and the warm coral core — blooms in before the orbs arrive */}
       <circle
+        className={styles.hearthBloom}
         cx={HEARTH.cx}
         cy={HEARTH.cy}
         r={24}
@@ -101,6 +134,7 @@ export function CommunityArt() {
         strokeWidth={1.4}
       />
       <circle
+        className={styles.hearthBloom}
         cx={HEARTH.cx}
         cy={HEARTH.cy}
         r={14}

@@ -79,7 +79,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--plum-rgb), 0.7);
   backdrop-filter: blur(6px);
   border-radius: 6px;
@@ -167,7 +167,7 @@
 }
 .btP {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--accent);
 }
 .listeners {
@@ -478,7 +478,7 @@
 @media (hover: hover) {
   .chatActions button:hover {
     background: var(--accent);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
     border-color: var(--accent);
   }
 }

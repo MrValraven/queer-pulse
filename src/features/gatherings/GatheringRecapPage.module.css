@@ -42,7 +42,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(38px, 6vw, 72px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 12px;
@@ -94,7 +94,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(32px, 4vw, 48px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
   margin-bottom: 28px;
@@ -155,7 +155,7 @@
 }
 .whoCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 13px;
   padding: 12px;
   text-align: center;
@@ -163,7 +163,7 @@
 .whoName {
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-top: 7px;
 }
 .whoPronouns {
@@ -186,7 +186,7 @@
 }
 .sbCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -203,7 +203,7 @@
   align-items: center;
   gap: 10px;
   padding: 7px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
   font-size: 13.5px;
 }
 .sbRow:last-child {
@@ -217,7 +217,7 @@
   flex: none;
 }
 .sdrVal {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .hostRow {
@@ -226,12 +226,12 @@
   gap: 10px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .hostName {
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .hostRole {
   font-size: 12px;
@@ -253,7 +253,7 @@
 .nextTitle {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
 }

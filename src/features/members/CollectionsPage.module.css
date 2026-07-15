@@ -6,7 +6,7 @@
 .head {
   padding-bottom: 24px;
   margin-bottom: 28px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -25,7 +25,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(38px, 5vw, 52px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 10px;
@@ -59,7 +59,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 24px 26px;
   text-decoration: none;
@@ -80,16 +80,16 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-3px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
     box-shadow: 0 14px 32px -22px rgba(var(--plum-rgb), 0.4);
   }
 }
 .card.featured {
   background: var(--plum);
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .card.featured .name {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .card.featured .name em {
   color: var(--accent);
@@ -101,7 +101,7 @@
   background: rgba(var(--cream-rgb), 0.08);
 }
 .card.featured .thumb {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .card.featured .foot {
   border-top-color: rgba(var(--cream-rgb), 0.15);
@@ -125,7 +125,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -183,7 +183,7 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 12px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   font-size: 11.5px;
   color: var(--ink-40);
 }
@@ -204,7 +204,7 @@
 
 .newCard {
   background: transparent;
-  border: 1.5px dashed rgba(var(--plum-rgb), 0.2);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.2);
   border-radius: 18px;
   padding: 24px;
   cursor: pointer;
@@ -218,12 +218,12 @@
   transition:
     border-color 0.2s,
     background 0.2s;
-  color: var(--plum);
+  color: var(--text-strong);
   font-family: var(--sans);
 }
 @media (hover: hover) {
   .newCard:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
     background: rgba(var(--plum-rgb), 0.03);
   }
 }
@@ -236,14 +236,14 @@
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 300;
 }
 .newCard b {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
 }
 .newCard span {
@@ -259,7 +259,7 @@
   color: var(--ink-40);
   margin: 36px 0 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -280,7 +280,7 @@
   gap: 14px;
   padding: 14px 18px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: 12px;
   align-items: center;
   text-decoration: none;
@@ -293,7 +293,7 @@
 }
 @media (hover: hover) {
   .recentRow:hover {
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
   }
 }
 .recentKind {
@@ -314,7 +314,7 @@
 }
 .kindArticle {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .kindBusiness {
   background: rgba(var(--accent-rgb), 0.1);
@@ -323,7 +323,7 @@
 .recentInfo b {
   display: block;
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   margin-bottom: 2px;
 }
@@ -333,6 +333,6 @@
 }
 .recentAdd {
   font-size: 12.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }

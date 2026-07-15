@@ -278,7 +278,6 @@ export const routes = {
   inviteExpired: "/system/invite-expired",
   confirmEmail: "/auth/confirm-email",
   recoveryCodes: "/auth/recovery-codes",
-  setNewPassword: "/auth/set-new-password",
   verificationNeeded: "/system/verification-needed",
   rsvp: "/rsvp",
   checkout: "/checkout",

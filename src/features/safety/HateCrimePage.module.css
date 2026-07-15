@@ -31,7 +31,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(36px, 5.5vw, 68px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.97;
   margin-bottom: 14px;
@@ -73,7 +73,7 @@
 
 .tabBar {
   background: var(--cream);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
   position: sticky;
   top: 62px;
   z-index: 50;
@@ -113,7 +113,7 @@
 }
 .tabBtnActive {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .body {
@@ -139,7 +139,7 @@
   margin-bottom: 36px;
 }
 .preamble strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -155,7 +155,7 @@
   height: 44px;
   border-radius: 50%;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,7 +167,7 @@
 }
 .hcsBody {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 20px;
   margin-bottom: 4px;
@@ -175,7 +175,7 @@
 .hcsTitle {
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .hcsDesc {
@@ -208,7 +208,7 @@
 .hcsLink {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   display: inline-block;
   margin-top: 8px;
   text-decoration: none;
@@ -218,11 +218,11 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 23px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin: 36px 0 20px;
   padding-bottom: 12px;
-  border-bottom: 2px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 2px solid rgba(var(--line-rgb), 0.08);
 }
 .sectionHead em {
   font-style: italic;
@@ -237,7 +237,7 @@
 
 .defBox {
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: 14px;
   padding: 18px 20px;
   margin-bottom: 24px;
@@ -245,7 +245,7 @@
 .defBox h4 {
   font-size: 13px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 8px;
   letter-spacing: 0.01em;
 }
@@ -268,7 +268,7 @@
 }
 .sbCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 20px;
 }
@@ -282,7 +282,7 @@
 }
 .sbcItem {
   padding: 9px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .sbcItem:last-child {
   border-bottom: none;
@@ -290,7 +290,7 @@
 .sbcOrg {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .sbcRole {
   font-size: 12px;
@@ -315,7 +315,7 @@
   color: var(--jade);
 }
 .sbcLink {
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;

@@ -1,6 +1,6 @@
 .hero {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: clamp(96px, 13vw, 168px) 0 clamp(64px, 8vw, 104px);
 }
 .eyebrow {
@@ -47,7 +47,7 @@
 }
 .sectionPaper {
   background: var(--paper);
-  border-block: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-block: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .h2 {
   font-family: var(--serif);
@@ -55,7 +55,7 @@
   font-size: clamp(28px, 4vw, 44px);
   line-height: 1.08;
   letter-spacing: -0.02em;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .h2 em {
   font-style: italic;
@@ -64,7 +64,7 @@
 .leadP {
   font-size: 17px;
   line-height: 1.7;
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.78;
   max-width: 56ch;
   margin: 16px 0 40px;
@@ -76,7 +76,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 26px 24px;
 }
@@ -87,13 +87,13 @@
 .cardTitle {
   font-weight: 700;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 14px 0 8px;
 }
 .cardBody {
   font-size: 14.5px;
   line-height: 1.6;
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.74;
 }
 .steps {
@@ -118,12 +118,12 @@
 .stepTitle {
   font-weight: 700;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .stepBody {
   font-size: 15px;
   line-height: 1.65;
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.76;
   margin-top: 5px;
   max-width: 60ch;

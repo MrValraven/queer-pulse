@@ -39,19 +39,19 @@
 }
 .badgeEvent {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: transparent;
 }
 .badgeGathering {
   background: rgba(var(--plum-rgb), 0.06);
-  color: var(--plum);
-  border-color: rgba(var(--plum-rgb), 0.12);
+  color: var(--text-strong);
+  border-color: rgba(var(--line-rgb), 0.12);
 }
 .title {
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(36px, 5vw, 68px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
   max-width: 16ch;
@@ -91,7 +91,7 @@
 
 .sidebar {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 30px;
   position: sticky;
@@ -102,7 +102,7 @@
 }
 .dateDisplay {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-card);
   padding: 40px;
   text-align: center;
@@ -114,7 +114,7 @@
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.03em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .dm {
   font-size: 15px;
@@ -129,7 +129,7 @@
   align-items: center;
   gap: 12px;
   padding: 16px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   margin-bottom: 20px;
 }
 .spotsNum {
@@ -176,7 +176,7 @@
 .locReveal {
   margin-top: 18px;
   padding-top: 18px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .locHead {
   display: flex;
@@ -192,7 +192,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(var(--plum-rgb), 0.06);
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 15px;
 }
 .locHood {
@@ -217,13 +217,13 @@
 .other {
   margin-top: 80px;
   padding-top: 60px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .other h2 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 34px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 28px;
 }
@@ -238,7 +238,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px;
   display: flex;
@@ -262,7 +262,7 @@
   font-family: var(--serif);
   font-size: 28px;
   font-weight: 500;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -285,7 +285,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.2;
   margin-top: 6px;
   letter-spacing: -0.01em;

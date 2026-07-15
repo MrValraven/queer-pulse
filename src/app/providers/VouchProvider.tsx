@@ -61,14 +61,14 @@ export function VouchProvider({ children }: { children: ReactNode }) {
   }, [vouched]);
 
   const { demoMode } = useDemoMode();
-  const { refresh } = useAuth();
+  const { refresh, loggedIn } = useAuth();
 
   // The vouch / unvouch optimistic lifecycle (optimistic setVouched → API →
   // rollback on error → invalidate + refresh on settle) now lives in React Query.
   const { vouch, unvouch } = useVouchMutations({ setVouched, refresh });
 
   useEffect(() => {
-    if (demoMode) return;
+    if (demoMode || !loggedIn) return;
     let active = true;
     getGivenVouches()
       .then((rows) => {
@@ -80,7 +80,7 @@ export function VouchProvider({ children }: { children: ReactNode }) {
     return () => {
       active = false;
     };
-  }, [demoMode]);
+  }, [demoMode, loggedIn]);
 
   const openVouch = useCallback((slug: string) => setOpenSlug(slug), []);
   const close = useCallback(() => setOpenSlug(null), []);

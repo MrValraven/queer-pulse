@@ -104,6 +104,7 @@ export function EventsPage() {
     isLoading,
   } = useEvents({ filter: "upcoming" });
   const loading = isLoading;
+  const noEvents = !loading && events.length === 0;
 
   const filtered = useMemo(() => {
     const cat = EVENT_CATEGORIES.find((c) => c.key === active);
@@ -135,9 +136,11 @@ export function EventsPage() {
             }
             subtitle={eventsHeader.subtitle}
             action={
-              <Button variant="ghost" to={routes.calendar}>
-                View as calendar
-              </Button>
+              noEvents ? undefined : (
+                <Button variant="ghost" to={routes.calendar}>
+                  View as calendar
+                </Button>
+              )
             }
           />
         </div>
@@ -145,29 +148,31 @@ export function EventsPage() {
 
       <main className={styles.body}>
         <div className="wrap">
-          <div
-            className={styles.filters}
-            role="tablist"
-            aria-label="Filter events"
-          >
-            {EVENT_CATEGORIES.map((cat) => (
-              <button
-                key={cat.key}
-                type="button"
-                role="tab"
-                aria-selected={active === cat.key}
-                className={`${styles.chip} ${active === cat.key ? styles.chipActive : ""}`}
-                onClick={() => setActive(cat.key)}
-              >
-                <span
-                  className={styles.chipDot}
-                  style={{ background: cat.dot }}
-                  aria-hidden
-                />
-                {cat.label}
-              </button>
-            ))}
-          </div>
+          {!noEvents && (
+            <div
+              className={styles.filters}
+              role="tablist"
+              aria-label="Filter events"
+            >
+              {EVENT_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={active === cat.key}
+                  className={`${styles.chip} ${active === cat.key ? styles.chipActive : ""}`}
+                  onClick={() => setActive(cat.key)}
+                >
+                  <span
+                    className={styles.chipDot}
+                    style={{ background: cat.dot }}
+                    aria-hidden
+                  />
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          )}
 
           {loading ? (
             <div className={styles.list}>
@@ -193,20 +198,28 @@ export function EventsPage() {
                 </section>
               ))}
 
-              {filtered.length === 0 && (
+              {noEvents ? (
                 <EmptyState
                   icon={<FiCalendar />}
-                  title="Nothing in this category yet"
-                  description="No events match this filter for the season. Try another category, or browse everything that's on."
-                  action={{
-                    label: "Show all events",
-                    onClick: () => setActive("all"),
-                  }}
-                  secondaryAction={{
-                    label: "View as calendar",
-                    to: "/calendar",
-                  }}
+                  title="Nothing on just yet"
+                  description="No events are scheduled right now. New gatherings and partner events land here all the time — check back soon."
                 />
+              ) : (
+                filtered.length === 0 && (
+                  <EmptyState
+                    icon={<FiCalendar />}
+                    title="Nothing in this category yet"
+                    description="No events match this filter for the season. Try another category, or browse everything that's on."
+                    action={{
+                      label: "Show all events",
+                      onClick: () => setActive("all"),
+                    }}
+                    secondaryAction={{
+                      label: "View as calendar",
+                      to: "/calendar",
+                    }}
+                  />
+                )
               )}
 
               {hasNextPage && (

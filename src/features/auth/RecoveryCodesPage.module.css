@@ -19,7 +19,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -36,7 +36,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(36px, 5vw, 52px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
   margin-bottom: 14px;
@@ -82,7 +82,7 @@
   line-height: 1.6;
 }
 .status p b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .status p em {
@@ -94,7 +94,7 @@
 /* Codes card */
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 32px 36px;
   margin-bottom: 22px;
@@ -104,7 +104,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
@@ -129,12 +129,12 @@
   gap: 8px 22px;
   padding: 20px 22px;
   background: var(--cream);
-  border: 1px dashed rgba(var(--plum-rgb), 0.18);
+  border: 1px dashed rgba(var(--line-rgb), 0.18);
   border-radius: 14px;
   font-family: var(--sans);
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: 0.05em;
 }
 .grid code {
@@ -189,7 +189,7 @@
 .usage {
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   margin-bottom: 24px;
   display: grid;
@@ -203,7 +203,7 @@
   line-height: 1.55;
 }
 .usageText b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .usageBar {
@@ -233,7 +233,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }

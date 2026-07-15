@@ -3,7 +3,7 @@
   padding: 148px 0 88px;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .hero::before {
   content: "";
@@ -48,7 +48,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(38px, 5.8vw, 78px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
   max-width: 16ch;
@@ -81,7 +81,7 @@
   gap: 9px;
   font-size: 13.5px;
   color: var(--ink-40);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 999px;
   padding: 10px 18px;
   position: relative;
@@ -107,7 +107,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(30px, 4vw, 50px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
 }
@@ -130,7 +130,7 @@
   flex-wrap: wrap;
   margin-bottom: 34px;
   padding-bottom: 22px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .vfLabel {
   font-size: 11.5px;
@@ -145,7 +145,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 500;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 7px 14px;
   cursor: pointer;
@@ -159,7 +159,7 @@
 }
 @media (hover: hover) {
   .vfChip:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
     color: var(--ink);
   }
 }
@@ -181,7 +181,7 @@
 }
 .venueCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px 24px 18px;
   display: flex;
@@ -199,7 +199,7 @@
 .vcName {
   font-family: var(--serif);
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.1;
@@ -267,7 +267,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: auto;
 }
 .vcReviewer {
@@ -315,7 +315,7 @@
 }
 .commitCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -339,7 +339,7 @@
 .ccTitle {
   font-size: 16.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ccBody {
   font-size: 14px;
@@ -370,7 +370,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .accomStrip p {
@@ -394,7 +394,7 @@
 }
 .resourceCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -411,7 +411,7 @@
 .rcTitle {
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.15;
@@ -424,10 +424,10 @@
 }
 .rcLink {
   font-size: 13.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   padding-top: 10px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: auto;
 }
 .rcLink a {
@@ -459,7 +459,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
 .peerStrip h3 em {
@@ -541,7 +541,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 5px;
   letter-spacing: -0.015em;
 }
@@ -567,7 +567,7 @@
 .input,
 .select,
 .textarea {
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 15px;
   font-family: var(--sans);
@@ -617,7 +617,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 30px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .success h2 em {

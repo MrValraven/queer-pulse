@@ -47,7 +47,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(38px, 5.8vw, 76px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
   max-width: 18ch;
@@ -89,7 +89,7 @@
   line-height: 1.68;
 }
 .openingText strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
   display: block;
   margin-bottom: 3px;
@@ -97,7 +97,7 @@
 
 .ixNav {
   background: var(--cream);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   position: sticky;
   top: 64px;
   z-index: 50;
@@ -137,7 +137,7 @@
 
 .sec {
   padding: 80px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .alt {
   background: rgba(var(--plum-rgb), 0.025);
@@ -149,7 +149,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 4vw, 48px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
 }
@@ -176,7 +176,7 @@
 }
 .voiceCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -203,7 +203,7 @@
 .vcName {
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .vcContext {
   font-size: 12.5px;
@@ -229,7 +229,7 @@
 }
 .infoCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -246,7 +246,7 @@
 .icTitle {
   font-family: var(--serif);
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.18;
@@ -259,10 +259,10 @@
 }
 .icLink {
   font-size: 13.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   padding-top: 10px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: auto;
 }
 .icLink a {
@@ -323,7 +323,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 4vw, 50px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.04;
   margin-bottom: 16px;
@@ -358,7 +358,7 @@
 .ccdTitle {
   font-size: 15px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 6px;
 }
 .ccdText {
@@ -374,7 +374,7 @@
 }
 .orgCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -389,7 +389,7 @@
 .orgName {
   font-size: 16px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 5px;
 }
 .orgText {
@@ -399,7 +399,7 @@
 }
 .orgLink {
   font-size: 13px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   margin-top: 10px;
   display: block;

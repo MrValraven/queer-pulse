@@ -20,7 +20,9 @@ export function ForumThreadList({
   setSort,
   voted,
   toggleVote,
+  filtered,
   onShowAll,
+  onCompose,
 }: {
   loading: boolean;
   threads: Thread[];
@@ -28,7 +30,9 @@ export function ForumThreadList({
   setSort: (s: "top" | "new") => void;
   voted: Set<number>;
   toggleVote: (id: number) => void;
+  filtered: boolean;
   onShowAll: () => void;
+  onCompose: () => void;
 }) {
   return (
     <div>
@@ -59,12 +63,20 @@ export function ForumThreadList({
       </div>
 
       {loading && <ForumThreadListSkeleton count={5} />}
-      {!loading && threads.length === 0 && (
+      {!loading && threads.length === 0 && filtered && (
         <EmptyState
           icon={<FiMessageSquare />}
           title="Nothing in this category yet"
-          description="No posts match this filter right now. Try another category, or start the conversation yourself."
+          description="No posts here right now. Try another category, or start the conversation yourself."
           action={{ label: "Show all posts", onClick: onShowAll }}
+        />
+      )}
+      {!loading && threads.length === 0 && !filtered && (
+        <EmptyState
+          icon={<FiMessageSquare />}
+          title="Quiet in here — for now"
+          description="The commons is open to every member. Be the one to start the conversation."
+          action={{ label: "Write a post", onClick: onCompose }}
         />
       )}
       {!loading &&

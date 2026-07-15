@@ -15,7 +15,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 34px;
   display: flex;
@@ -59,7 +59,7 @@
   .card:hover {
     transform: translateY(-4px);
     box-shadow: 0 22px 44px -26px rgba(var(--plum-rgb), 0.4);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
   }
 }
 .icon {
@@ -103,7 +103,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(26px, 3vw, 34px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
 }
@@ -136,7 +136,7 @@
   padding-top: 8px;
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   display: inline-flex;
   align-items: center;
   gap: 7px;

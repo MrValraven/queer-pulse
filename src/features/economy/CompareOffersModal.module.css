@@ -10,7 +10,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 34px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
   margin-bottom: 8px;
@@ -44,13 +44,13 @@
   color: var(--ink-40);
   padding: 14px 16px 14px 0;
   white-space: nowrap;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .colHead {
   text-align: left;
   vertical-align: bottom;
   padding: 0 14px 14px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
   min-width: 200px;
 }
 .colCo {
@@ -58,7 +58,7 @@
   font-family: var(--serif);
   font-size: 19px;
   font-weight: 500;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -74,7 +74,7 @@
   font-size: 14px;
   color: var(--ink);
   line-height: 1.5;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .terms {
   list-style: none;
@@ -113,6 +113,6 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }

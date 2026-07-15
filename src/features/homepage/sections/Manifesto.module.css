@@ -2,7 +2,7 @@
   position: relative;
   overflow: hidden;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: clamp(84px, 10vw, 128px) 0;
 }
 
@@ -105,7 +105,7 @@
   flex: none;
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.09);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .icon svg {
   inline-size: 19px;
@@ -117,7 +117,7 @@
 .name {
   font-weight: 600;
   font-size: 17px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.005em;
   line-height: 1.3;
 }

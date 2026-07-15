@@ -37,7 +37,7 @@
   background: rgba(var(--accent-rgb), 0.12);
 }
 .network {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.08);
 }
 .locked {

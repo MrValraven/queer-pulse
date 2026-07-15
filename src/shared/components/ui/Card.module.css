@@ -1,6 +1,6 @@
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: var(--card-pad);
   display: flex;
@@ -19,13 +19,13 @@
   .hoverable:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-card-hover);
-    border-color: rgba(var(--plum-rgb), 0.16);
+    border-color: rgba(var(--line-rgb), 0.16);
   }
 }
 
 .divider {
   border: none;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   margin: 0 calc(-1 * var(--card-pad));
 }
 

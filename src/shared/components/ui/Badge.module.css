@@ -41,7 +41,7 @@
 }
 .badge_plum {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .badge_plum {
   background: rgba(var(--cream-rgb), 0.1);
@@ -49,7 +49,7 @@
 }
 .badge_ghost {
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   color: var(--ink-60);
 }
 

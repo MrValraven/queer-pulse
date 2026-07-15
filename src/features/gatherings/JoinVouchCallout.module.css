@@ -1,7 +1,7 @@
 /* Join / vouch callout — plum emphasis for non-members landing on a gathering. */
 .callout {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 18px;
   padding: 24px;
   display: flex;
@@ -27,7 +27,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 21px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   line-height: 1.1;
 }

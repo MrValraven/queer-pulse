@@ -39,7 +39,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(48px, 7vw, 98px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.026em;
   line-height: 0.94;
 }
@@ -92,7 +92,7 @@
 .shortV {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.012em;
 }
 .shortV em {
@@ -143,11 +143,11 @@
   border-bottom: none;
 }
 .sideNav .sideItem:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.05);
 }
 .sideItemActive {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
   border-left-color: var(--accent);
   background: rgba(var(--accent-rgb), 0.12);
@@ -194,7 +194,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 32px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.018em;
   line-height: 1.04;
 }
@@ -239,7 +239,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.012em;
   margin-bottom: 24px;
   padding-bottom: 14px;
@@ -270,7 +270,7 @@
   font-size: 15px;
   font-weight: 600;
   font-family: var(--sans);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   transition: background 0.2s var(--ease);
 }
 .faqQ:hover {
@@ -299,7 +299,7 @@
   color: var(--accent);
 }
 .faqA strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .faqA :global(.highlight) {
@@ -310,7 +310,7 @@
   border-radius: 10px;
   border: 1px solid rgba(var(--jade-rgb), 0.28);
   font-size: 14px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .faqA :global(.highlight) strong {
   color: var(--jade);
@@ -328,7 +328,7 @@
 .contactTitle {
   font-family: var(--serif);
   font-size: 22px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.012em;
   margin-bottom: 12px;
 }
@@ -344,7 +344,7 @@
   max-width: 52ch;
 }
 .contactBody strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .contactActions {
   display: flex;

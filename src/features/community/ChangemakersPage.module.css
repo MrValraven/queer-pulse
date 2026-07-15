@@ -1,6 +1,6 @@
 .hero {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 148px 0 80px;
   position: relative;
   overflow: hidden;
@@ -33,7 +33,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6vw, 78px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
   max-width: 16ch;
@@ -62,7 +62,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(34px, 4vw, 52px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -89,7 +89,7 @@
   grid-template-columns: 360px 1fr;
   gap: 40px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   overflow: hidden;
 }
@@ -107,7 +107,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 32px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin: 8px 0 14px;
 }
@@ -156,7 +156,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   overflow: hidden;
   display: flex;
@@ -190,7 +190,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .cardBio {
@@ -218,7 +218,7 @@
 .read {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 @media (hover: hover) {
   .card:hover .read {
@@ -228,7 +228,7 @@
 
 .nominate {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 88px 0;
   text-align: center;
   position: relative;
@@ -262,7 +262,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(30px, 5vw, 62px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.04;
   max-width: 18ch;
@@ -299,7 +299,7 @@
   padding: 14px 22px;
   font-family: var(--sans);
   font-size: 15px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   outline: none;
 }
 .nomInput::placeholder {

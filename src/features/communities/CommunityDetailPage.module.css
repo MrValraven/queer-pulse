@@ -79,7 +79,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(38px, 6vw, 72px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.97;
   margin-bottom: 12px;
@@ -144,7 +144,7 @@
   left: 50%;
   transform: translateX(-50%) translateY(4px);
   background: var(--cream);
-  color: var(--plum);
+  color: var(--text-strong);
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 600;
@@ -166,7 +166,7 @@
   left: 50%;
   transform: translateX(-50%);
   border: 5px solid transparent;
-  border-top-color: var(--cream);
+  border-top-color: rgba(var(--cream-rgb), 1);
 }
 .heroAv:focus-visible .heroAvTip {
   opacity: 1;
@@ -182,7 +182,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 2px solid var(--plum);
+  border: 2px solid var(--line-strong);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -265,7 +265,7 @@
 
 .gCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   display: flex;
@@ -278,7 +278,7 @@
 }
 @media (hover: hover) {
   .gCard:hover {
-    border-color: rgba(var(--plum-rgb), 0.2);
+    border-color: rgba(var(--line-rgb), 0.2);
     transform: translateY(-1px);
   }
 }
@@ -291,7 +291,7 @@
   font-family: var(--serif);
   font-size: 30px;
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -306,7 +306,7 @@
 .gTitle {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 3px;
 }
 .gMeta {
@@ -339,7 +339,7 @@
 }
 .mCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 14px;
   text-align: center;
@@ -370,7 +370,7 @@
 .mName {
   font-size: 13px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 3px;
 }
 .mRole {
@@ -387,7 +387,7 @@
 
 .thread {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   margin-bottom: 14px;
   overflow: hidden;
@@ -410,7 +410,7 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
   cursor: pointer;
   font-size: 12px;
@@ -429,7 +429,7 @@
 }
 .vbtnVoted {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--accent);
 }
 .vnum {
@@ -444,7 +444,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
   line-height: 1.25;
@@ -479,7 +479,7 @@
   white-space: nowrap;
 }
 .thBody {
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   padding: 0 22px;
 }
 .postText {
@@ -492,7 +492,7 @@
   display: flex;
   gap: 10px;
   padding: 11px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .rAv {
   width: 28px;
@@ -522,14 +522,14 @@
   gap: 10px;
   align-items: flex-end;
   padding: 12px 0 18px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .replyTa {
   flex: 1;
   font-family: var(--sans);
   font-size: 14px;
   padding: 9px 13px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   resize: none;
   min-height: 38px;
@@ -542,15 +542,15 @@
 }
 .npTa:focus-visible {
   outline: none;
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.1);
 }
 .replyTa:focus {
-  border-color: rgba(var(--plum-rgb), 0.3);
+  border-color: rgba(var(--line-rgb), 0.3);
 }
 .newPost {
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1.5px dashed rgba(var(--plum-rgb), 0.14);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.14);
   border-radius: 14px;
   padding: 16px 20px;
   display: flex;
@@ -577,7 +577,7 @@
 }
 .sbC {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px;
 }
@@ -604,7 +604,7 @@
 .sbOrgName {
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 4px;
 }
 .sbBadge {
@@ -658,7 +658,7 @@
   font-family: var(--serif);
   font-size: 52px;
   font-weight: 300;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1;
   letter-spacing: -0.03em;
   position: relative;
@@ -675,7 +675,7 @@
 .sbETitle {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 3px;
 }
 .sbEMeta {
@@ -702,7 +702,7 @@
   align-items: center;
   gap: 11px;
   padding: 9px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
   text-decoration: none;
 }
 .sbRelItem:last-child {
@@ -723,7 +723,7 @@
 .sbRelName {
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .sbRelCt {
   font-size: 12px;
@@ -741,5 +741,5 @@
 }
 .tPlum {
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }

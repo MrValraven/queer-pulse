@@ -21,9 +21,30 @@ export interface NotificationDTO {
   createdAt?: string;
 }
 
-/** GET /notifications — optionally filtered to unread only. */
-export const getNotifications = (unread?: boolean) =>
-  apiGet<NotificationDTO[]>(`/notifications${unread ? "?unread=true" : ""}`);
+/**
+ * Paginated list envelope the backend wraps notification rows in. We only need
+ * the current page's `items` here; the bell/feed don't paginate yet.
+ */
+interface NotificationsPage {
+  items: NotificationDTO[];
+  page: number;
+  hasMore: boolean;
+}
+
+/**
+ * GET /notifications — optionally filtered to unread only. The backend answers
+ * with a `{ items, page, hasMore }` envelope, so we unwrap to the row array the
+ * hooks expect. Tolerates a bare array too, in case the endpoint is ever
+ * un-paginated.
+ */
+export const getNotifications = async (
+  unread?: boolean,
+): Promise<NotificationDTO[]> => {
+  const res = await apiGet<NotificationsPage | NotificationDTO[]>(
+    `/notifications${unread ? "?unread=true" : ""}`,
+  );
+  return Array.isArray(res) ? res : (res?.items ?? []);
+};
 
 /** POST /notifications/:id/read — mark a single notification read. */
 export const markNotificationRead = (id: number | string) =>

@@ -50,9 +50,7 @@ export function eventCardToMyEvent(
     date,
     start: time,
     end,
-    venue: dto.isOnline
-      ? "Online"
-      : (dto.venue ?? dto.neighbourhood ?? ""),
+    venue: dto.isOnline ? "Online" : (dto.venue ?? dto.neighbourhood ?? ""),
     community: dto.org,
     going: dto.goingCount ?? 0,
     waitlist: dto.waitlistCount,

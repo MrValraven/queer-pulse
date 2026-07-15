@@ -6,7 +6,7 @@
   align-items: center;
   gap: 14px;
   padding: 14px 0 18px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   font-size: 13px;
 }
 .back {
@@ -18,7 +18,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .sep {
@@ -37,7 +37,7 @@
 }
 .opCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-card);
   padding: 28px 30px;
 }
@@ -66,7 +66,7 @@
   flex-wrap: wrap;
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .modBy {
   margin-top: 3px;
@@ -74,7 +74,7 @@
   color: var(--ink-40);
 }
 .modByLink {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -99,7 +99,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(26px, 3.4vw, 36px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.018em;
   line-height: 1.15;
   margin-bottom: 16px;
@@ -128,7 +128,7 @@
   align-items: center;
   gap: 10px;
   padding-top: 16px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .reaction {
   display: inline-flex;
@@ -139,7 +139,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 8px 14px;
   cursor: pointer;
@@ -150,8 +150,8 @@
 }
 @media (hover: hover) {
   .reaction:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 .reactionOn {
@@ -183,7 +183,7 @@
 .replyCount {
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .replySort {
   display: flex;
@@ -205,7 +205,7 @@
 }
 .sortBtnOn {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .reply {
@@ -213,7 +213,7 @@
   grid-template-columns: 40px 1fr;
   gap: 14px;
   padding: 20px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .replyHighlighted {
   background: rgba(var(--jade-rgb), 0.05);
@@ -242,7 +242,7 @@
 .replyName {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .opBadge {
   font-size: 10px;
@@ -278,7 +278,7 @@
   font-style: italic;
 }
 .quote {
-  border-left: 3px solid rgba(var(--plum-rgb), 0.2);
+  border-left: 3px solid rgba(var(--line-rgb), 0.2);
   padding: 4px 0 4px 14px;
   margin-bottom: 10px;
   font-size: 13.5px;
@@ -289,7 +289,7 @@
   display: block;
   font-style: normal;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 12.5px;
   margin-bottom: 3px;
 }
@@ -330,7 +330,7 @@
 .compose {
   margin-top: 28px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 16px;
   padding: 18px 20px;
 }
@@ -347,7 +347,7 @@
   height: 30px;
   border-radius: 50%;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -389,7 +389,7 @@
 .crTextarea {
   width: 100%;
   min-height: 90px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 14px;
   font-family: var(--sans);
@@ -399,7 +399,7 @@
   outline: none;
 }
 .crTextarea:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.28);
 }
 .crFooter {

@@ -1,4 +1,5 @@
 import { apiGet } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 
 // ── Backend DTOs ────────────────────────────────────────────────────────────
 // Shapes the NestJS `resources` domain returns (GET /resources, /resources/:slug,
@@ -37,16 +38,17 @@ export interface GlossaryTermResponseDTO {
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
-export function getResources(
+export async function getResources(
   params: { category?: string; page?: number } = {},
-) {
+): Promise<Paginated<ResourceResponseDTO>> {
   const q = new URLSearchParams();
   if (params.category) q.set("category", params.category);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
-  return apiGet<Paginated<ResourceResponseDTO>>(
-    `/resources${qs ? `?${qs}` : ""}`,
-  );
+  const res = await apiGet<
+    ResourceResponseDTO[] | Paginated<ResourceResponseDTO>
+  >(`/resources${qs ? `?${qs}` : ""}`);
+  return toItemsPage(res);
 }
 
 export const getResource = (slug: string) =>

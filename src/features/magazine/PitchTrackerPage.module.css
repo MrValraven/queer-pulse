@@ -9,7 +9,7 @@
 .head {
   padding-bottom: 24px;
   margin-bottom: 24px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -28,7 +28,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(36px, 5vw, 52px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 8px;
@@ -44,7 +44,7 @@
   max-width: 50ch;
 }
 .lead b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -69,7 +69,7 @@
   transition: color 0.2s;
 }
 .tabActive {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tabActive::after {
   content: "";
@@ -127,7 +127,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.25;
 }
@@ -173,7 +173,7 @@
   background: rgba(var(--accent-rgb), 0.14);
 }
 .statusCommissioned {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(45, 27, 61, 0.08);
 }
 .statusPublished {
@@ -210,7 +210,7 @@
   flex-wrap: wrap;
 }
 .meta b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -269,7 +269,7 @@
   color: var(--accent-ink);
 }
 .note b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .outline {
@@ -315,7 +315,7 @@
 @media (hover: hover) {
   .action:hover {
     background: rgba(45, 27, 61, 0.05);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .action:focus-visible {
@@ -340,7 +340,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 8px;
 }
 .empty p {

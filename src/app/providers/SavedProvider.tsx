@@ -8,6 +8,7 @@ import {
 } from "react";
 import { useLocalStorage } from "../../shared/hooks";
 import { useDemoMode } from "./DemoModeProvider";
+import { useAuth } from "./authContext";
 import {
   getSaved,
   putSaved,
@@ -65,10 +66,12 @@ export function SavedProvider({ children }: { children: ReactNode }) {
     isSavedItemArray,
   );
   const { demoMode } = useDemoMode();
+  const { loggedIn } = useAuth();
 
-  // Live-only: hydrate the store from the server list on mount / mode change.
+  // Live-only: hydrate the store from the server list once the member is signed
+  // in. Parked in demo mode and while logged out (re-runs when login lands).
   useEffect(() => {
-    if (demoMode) return;
+    if (demoMode || !loggedIn) return;
     let active = true;
     getSaved()
       .then((res) => {
@@ -80,7 +83,7 @@ export function SavedProvider({ children }: { children: ReactNode }) {
     return () => {
       active = false;
     };
-  }, [demoMode, setItems]);
+  }, [demoMode, loggedIn, setItems]);
 
   const isSaved = useCallback(
     (id: string) => items.some((it) => it.id === id),

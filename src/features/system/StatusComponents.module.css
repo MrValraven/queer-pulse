@@ -45,7 +45,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(44px, 6vw, 80px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -72,7 +72,7 @@
 
 .svcCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 18px 20px;
   display: flex;
@@ -199,7 +199,7 @@
     left: 50%;
     transform: translateX(-50%);
     background: var(--plum);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
     font-size: 11px;
     font-weight: 600;
     padding: 4px 9px;
@@ -254,7 +254,7 @@
   height: 37px;
   border-radius: 50%;
   background: var(--cream);
-  border: 2px solid rgba(var(--plum-rgb), 0.15);
+  border: 2px solid rgba(var(--line-rgb), 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -281,7 +281,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
@@ -333,7 +333,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
 }
@@ -356,7 +356,7 @@
   padding: 11px 18px;
   font-family: var(--sans);
   font-size: 14px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   min-width: 210px;
   transition: border-color 0.2s var(--ease);
 }

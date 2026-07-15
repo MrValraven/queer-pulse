@@ -15,7 +15,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(40px, 5.5vw, 56px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
   max-width: 22ch;
@@ -33,7 +33,7 @@
   margin-bottom: 24px;
 }
 .lead b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .lead em {
@@ -50,11 +50,11 @@
   margin-bottom: 32px;
 }
 .gdprStrip b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .gdprStrip a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   text-decoration: none;
 }
@@ -80,7 +80,7 @@
 .rightCard {
   padding: 18px;
   background: var(--paper);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 14px;
   cursor: pointer;
   text-align: left;
@@ -92,12 +92,12 @@
 }
 @media (hover: hover) {
   .rightCard:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
     transform: translateY(-2px);
   }
 }
 .rightCardSelected {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.04);
   box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.06);
 }
@@ -114,7 +114,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
   margin-bottom: 5px;
 }
@@ -130,7 +130,7 @@
 
 .form {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 32px 36px;
   box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.04);
@@ -139,7 +139,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
@@ -181,7 +181,7 @@
   font-size: 14.5px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 11px;
   padding: 12px 14px;
   transition:
@@ -190,7 +190,7 @@
 }
 .field input:focus,
 .field textarea:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: var(--paper);
 }
 .field textarea {
@@ -216,7 +216,7 @@
   display: flex;
   gap: 11px;
   padding: 10px 14px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 11px;
   cursor: pointer;
   transition:
@@ -225,22 +225,22 @@
 }
 @media (hover: hover) {
   .scopeRow:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
   }
 }
 .scopeRow input {
   margin-top: 3px;
-  accent-color: var(--plum);
+  accent-color: var(--text-strong);
   flex: none;
 }
 .scopeRowChecked {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.03);
 }
 .scopeRow b {
   display: block;
   font-size: 13.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 2px;
 }
@@ -264,7 +264,7 @@
   font-weight: 700;
 }
 .legalStrip a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   text-decoration: none;
 }
@@ -274,7 +274,7 @@
   gap: 14px;
   padding-top: 24px;
   margin-top: 20px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   flex-wrap: wrap;
   align-items: center;
 }
@@ -285,7 +285,7 @@
   max-width: 36ch;
 }
 .actions .info b {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .pastH {
@@ -302,7 +302,7 @@
   gap: 14px;
   padding: 14px 18px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 12px;
   margin-bottom: 8px;
   font-size: 13.5px;
@@ -310,7 +310,7 @@
   align-items: center;
 }
 .pastRow b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .pastRow .num {

@@ -14,7 +14,7 @@
   background: rgba(var(--cream-rgb), 0.66);
   backdrop-filter: var(--blur-nav);
   -webkit-backdrop-filter: var(--blur-nav);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-nav);
   transition:
@@ -36,7 +36,14 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  color: var(--plum);
+  /* Reset the UA <button> defaults — without these the search button (a real
+     <button>) falls back to the system ButtonFace fill, which shows as a bright
+     circle on the dark navbar. (The notifications bell is a <Link>, so it was
+     unaffected.) */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-strong);
   transition: background var(--dur-base) var(--ease);
 }
 @media (hover: hover) {
@@ -70,7 +77,7 @@
   font-weight: 600;
   font-size: 23px;
   letter-spacing: -0.01em;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .brand .brandItalic {
   font-style: italic;
@@ -133,7 +140,7 @@
 }
 
 .signIn {
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 13.5px;
   font-weight: 600;
   text-decoration: none;
@@ -151,9 +158,9 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   background: transparent;
-  color: var(--plum);
+  color: var(--text-strong);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -165,7 +172,7 @@
 @media (hover: hover) {
   .themeToggle:hover {
     background: rgba(var(--plum-rgb), 0.05);
-    border-color: rgba(var(--plum-rgb), 0.32);
+    border-color: rgba(var(--line-rgb), 0.32);
   }
 }
 
@@ -174,9 +181,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   background: transparent;
-  color: var(--plum);
+  color: var(--text-strong);
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -205,15 +212,15 @@
 .drawerLink {
   font-size: 18px;
   font-family: var(--serif);
-  color: var(--plum);
+  color: var(--text-strong);
   padding: 14px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .drawerSignIn {
   margin-top: 20px;
   font-size: 16px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
   padding: 12px 0;
 }
@@ -244,7 +251,7 @@
 :global([data-theme="dark"]) .themeToggle,
 :global([data-theme="dark"]) .menuButton,
 :global([data-theme="dark"]) .signIn {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 :global([data-theme="dark"]) .drawerPanel {
   background: var(--paper);

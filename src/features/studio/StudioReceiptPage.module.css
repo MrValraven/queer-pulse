@@ -38,7 +38,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(30px, 5vw, 44px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.05;
 }
@@ -102,7 +102,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   line-height: 1.1;
 }
@@ -115,7 +115,7 @@
   margin-top: 5px;
 }
 .by a {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   text-decoration: none;
   border-bottom: 1px solid var(--line);
 }
@@ -129,7 +129,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 40px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
@@ -154,7 +154,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 19px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .splitH h3 em {
   font-style: italic;
@@ -218,7 +218,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   white-space: nowrap;
 }
 .v em {
@@ -290,7 +290,7 @@
   font-family: var(--serif);
   font-size: 18px;
   font-style: italic;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.5;
 }
 .reply {
@@ -370,7 +370,7 @@
 }
 .exportBtn {
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: none;
   border: none;
   padding: 0;

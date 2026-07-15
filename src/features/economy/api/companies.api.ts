@@ -1,4 +1,5 @@
 import { apiGet, apiPost, apiPatch } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 import type { JobCardDTO } from "./jobs.api";
 
@@ -98,11 +99,14 @@ export interface CreateReviewDto {
 
 // ── Raw calls (one per endpoint) ─────────────────────────────────────────────
 
-export function getCompanies(params: { page?: number } = {}) {
+export async function getCompanies(params: { page?: number } = {}) {
   const q = new URLSearchParams();
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
-  return apiGet<Paginated<CompanyCardDTO>>(`/companies${qs ? `?${qs}` : ""}`);
+  const res = await apiGet<CompanyCardDTO[] | Paginated<CompanyCardDTO>>(
+    `/companies${qs ? `?${qs}` : ""}`,
+  );
+  return toItemsPage(res);
 }
 
 export const getCompany = (slug: string) =>
@@ -114,16 +118,17 @@ export const createCompany = (dto: CreateCompanyDto) =>
 export const updateCompany = (slug: string, dto: UpdateCompanyDto) =>
   apiPatch<CompanyDetailDTO>(`/companies/${slug}`, dto);
 
-export function getCompanyReviews(
+export async function getCompanyReviews(
   slug: string,
   params: { page?: number } = {},
 ) {
   const q = new URLSearchParams();
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
-  return apiGet<Paginated<CompanyReviewDTO>>(
+  const res = await apiGet<CompanyReviewDTO[] | Paginated<CompanyReviewDTO>>(
     `/companies/${slug}/reviews${qs ? `?${qs}` : ""}`,
   );
+  return toItemsPage(res);
 }
 
 export const createReview = (slug: string, dto: CreateReviewDto) =>

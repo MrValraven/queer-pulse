@@ -1,6 +1,6 @@
 .hero {
   padding: 128px 0 32px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .heroRow {
   display: flex;
@@ -21,7 +21,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(36px, 5vw, 60px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -90,12 +90,12 @@
 @media (hover: hover) {
   .catItem:hover {
     background: rgba(var(--plum-rgb), 0.04);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .catItemOn {
   background: rgba(var(--plum-rgb), 0.06);
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .catIcon {
@@ -125,7 +125,7 @@
 @media (hover: hover) {
   .sbLink:hover {
     background: rgba(var(--plum-rgb), 0.04);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -155,7 +155,7 @@
 }
 .sortBtnOn {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .count {
   font-size: 13.5px;
@@ -171,7 +171,7 @@
   grid-template-columns: 52px 1fr;
   gap: 16px;
   padding: 20px 4px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   color: inherit;
   align-items: start;
 }
@@ -201,7 +201,7 @@
   width: 34px;
   height: 30px;
   border-radius: 8px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   color: var(--ink-40);
   cursor: pointer;
@@ -225,7 +225,7 @@
 .voteN {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   font-variant-numeric: tabular-nums;
 }
 .badges {
@@ -254,7 +254,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.012em;
   line-height: 1.25;
 }
@@ -306,7 +306,7 @@
   object-fit: cover;
 }
 .tmAuthor {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .tmDot {

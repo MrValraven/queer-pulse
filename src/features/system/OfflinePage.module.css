@@ -1,6 +1,6 @@
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 24px;
   padding: 46px 44px 38px;
   width: 100%;
@@ -54,7 +54,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 44px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
   margin-bottom: 14px;
@@ -73,14 +73,14 @@
 }
 
 .lead b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
 .cached {
   margin-top: 28px;
   padding-top: 24px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 
 .cachedTitle {
@@ -104,7 +104,7 @@
   gap: 12px;
   padding: 11px 14px;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: 11px;
   text-decoration: none;
   color: inherit;
@@ -115,7 +115,7 @@
 
 @media (hover: hover) {
   .cachedRow:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
     transform: translateX(2px);
   }
 }
@@ -145,7 +145,7 @@
 .cachedText b {
   display: block;
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -164,7 +164,7 @@
   justify-content: space-between;
   padding-top: 22px;
   margin-top: 24px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   font-size: 13px;
   color: var(--ink-60);
   gap: 14px;
@@ -200,7 +200,7 @@
 
 .retryBtn {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border: none;
   padding: 10px 22px;
   border-radius: 999px;

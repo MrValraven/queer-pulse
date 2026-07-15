@@ -22,7 +22,7 @@
 .pkHead {
   font-family: var(--serif);
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 4px;
 }
@@ -65,7 +65,7 @@
   overflow: hidden;
 }
 .flagSwatchSelected {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 2px var(--plum);
   transform: scale(1.03);
 }
@@ -82,21 +82,21 @@
   gap: 10px;
   padding: 9px 12px;
   border-radius: 10px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   cursor: pointer;
   transition:
     border-color 0.18s var(--ease),
     background 0.18s var(--ease);
 }
 .csOptSelected {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.03);
 }
 .csRadio {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  border: 2px solid rgba(var(--plum-rgb), 0.2);
+  border: 2px solid rgba(var(--line-rgb), 0.2);
   flex: none;
   display: flex;
   align-items: center;
@@ -106,7 +106,7 @@
     background 0.2s var(--ease);
 }
 .csOptSelected .csRadio {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: var(--plum);
 }
 .csDot {
@@ -142,13 +142,13 @@
     box-shadow 0.18s var(--ease);
 }
 .patSwatchSelected {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 2px var(--plum);
 }
 
 /* Toggles */
 .tglRows {
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 13px;
   overflow: hidden;
   background: var(--paper);
@@ -159,7 +159,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .tglRow:last-child {
   border-bottom: none;
@@ -211,7 +211,7 @@
 /* Badge select */
 .badgeSelect {
   width: 100%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 10px;
   padding: 9px 12px;
   font-family: var(--sans);
@@ -248,7 +248,7 @@
 /* Profile card large */
 .profileCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   overflow: hidden;
   max-width: 380px;
@@ -300,7 +300,7 @@
 .pclName {
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 2px;
 }
@@ -327,7 +327,7 @@
 .pclLevel {
   display: inline-flex;
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: 11px;
   font-weight: 700;
   padding: 3px 9px;
@@ -338,7 +338,7 @@
 /* Directory card */
 .dirCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
   max-width: 280px;
@@ -374,7 +374,7 @@
 .dcName {
   font-family: var(--serif);
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 2px;
 }

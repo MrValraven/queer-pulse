@@ -20,12 +20,21 @@ export function useCountUp(
 ) {
   const prefersReduced = usePrefersReducedMotion();
   const [value, setValue] = useState(from);
-  const startedRef = useRef(false);
+  const valueRef = useRef(from);
+  // The target we last animated to. Lets us re-run when the target changes
+  // after the first settle (e.g. a total that arrives/updates asynchronously),
+  // instead of freezing on the initial value.
+  const animatedToRef = useRef<number | null>(null);
 
   useEffect(() => {
     // Reduced motion needs no animation — the value is derived in the return below.
-    if (!active || startedRef.current || prefersReduced) return;
-    startedRef.current = true;
+    if (!active || prefersReduced) return;
+    // Already settled on this exact target — nothing to animate.
+    if (animatedToRef.current === target) return;
+    // First run animates from `from`; a later target change animates from
+    // wherever the count currently sits so it ticks to the new value.
+    const startValue = animatedToRef.current === null ? from : valueRef.current;
+    animatedToRef.current = target;
 
     let frame = 0;
     const start = performance.now();
@@ -33,7 +42,9 @@ export function useCountUp(
       const progress = Math.min((now - start) / durationMs, 1);
       // easeOutCubic for a natural settle
       const eased = 1 - Math.pow(1 - progress, 3);
-      setValue(Math.round(from + (target - from) * eased));
+      const next = Math.round(startValue + (target - startValue) * eased);
+      valueRef.current = next;
+      setValue(next);
       if (progress < 1) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);

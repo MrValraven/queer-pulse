@@ -1,4 +1,5 @@
 import { apiGet, apiPost, apiPatch } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 
 // ── Backend DTOs ─────────────────────────────────────────────────────────────
@@ -119,12 +120,17 @@ export interface TriagePartnerApplicationDto {
 // ── Raw calls (one per endpoint) ─────────────────────────────────────────────
 
 /** GET /partners?region=&page= — approved partners only. */
-export function getPartners(params: { region?: Region; page?: number } = {}) {
+export async function getPartners(
+  params: { region?: Region; page?: number } = {},
+): Promise<Paginated<PartnerCardDTO>> {
   const q = new URLSearchParams();
   if (params.region) q.set("region", params.region);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
-  return apiGet<Paginated<PartnerCardDTO>>(`/partners${qs ? `?${qs}` : ""}`);
+  const res = await apiGet<PartnerCardDTO[] | Paginated<PartnerCardDTO>>(
+    `/partners${qs ? `?${qs}` : ""}`,
+  );
+  return toItemsPage(res);
 }
 
 /**

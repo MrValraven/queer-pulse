@@ -26,18 +26,18 @@
 }
 @media (hover: hover) {
   .tab:hover {
-    color: var(--plum);
+    color: var(--text-strong);
     background: rgba(var(--plum-rgb), 0.05);
   }
 }
 .tabOn {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 @media (hover: hover) {
   .tabOn:hover {
     background: var(--plum);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .tabCount {
@@ -48,17 +48,17 @@
   font-weight: 700;
   text-align: center;
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tabOn .tabCount {
   background: rgba(var(--cream-rgb), 0.2);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* ── variant: underline (bottom-border tabs) ─────────────────────────────── */
 .underline {
   gap: 0;
-  border-bottom: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1.5px solid rgba(var(--line-rgb), 0.1);
 }
 .underline .tab {
   border-radius: 0;
@@ -76,8 +76,8 @@
 }
 .underline .tabOn {
   background: transparent;
-  color: var(--plum);
-  border-bottom-color: var(--plum);
+  color: var(--text-strong);
+  border-bottom-color: var(--line-strong);
 }
 .underline .tabCount {
   background: transparent;
@@ -100,7 +100,7 @@
   }
 }
 .underline.dark .tabOn {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-bottom-color: var(--accent);
 }
 

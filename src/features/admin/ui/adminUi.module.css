@@ -34,7 +34,7 @@
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -0.015em;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0;
 }
 [data-theme="dark"] .h1 {
@@ -95,18 +95,18 @@
 }
 @media (hover: hover) {
   .tab:hover {
-    color: var(--plum);
+    color: var(--text-strong);
     background: rgba(var(--plum-rgb), 0.05);
   }
 }
 .tabOn {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 @media (hover: hover) {
   .tabOn:hover {
     background: var(--plum);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .tabCount {
@@ -117,18 +117,18 @@
   font-weight: 700;
   text-align: center;
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tabOn .tabCount {
   background: rgba(var(--cream-rgb), 0.2);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* ── Filter pills (secondary toggles in toolbars) ───────────────────────── */
 .filter {
   padding: 7px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   color: var(--ink-60);
   font: inherit;
@@ -141,13 +141,13 @@
 }
 @media (hover: hover) {
   .filter:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
-    color: var(--plum);
+    border-color: rgba(var(--line-rgb), 0.3);
+    color: var(--text-strong);
   }
 }
 .filterOn {
-  border-color: var(--plum);
-  color: var(--plum);
+  border-color: var(--line-strong);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.05);
 }
 
@@ -192,7 +192,7 @@
 }
 .chip_plum {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .chip_plum {
   background: rgba(var(--cream-rgb), 0.1);
@@ -200,7 +200,7 @@
 }
 .chip_ghost {
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   color: var(--ink-60);
 }
 
@@ -259,7 +259,7 @@
 }
 .av_plum {
   background: rgba(var(--plum-rgb), 0.12);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .av_plum {
   background: rgba(var(--cream-rgb), 0.12);
@@ -363,7 +363,7 @@
   align-items: flex-start;
   gap: 14px;
   padding: 22px 24px 18px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .drawerHeadMain {
   flex: 1;
@@ -375,7 +375,7 @@
   height: 34px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   background: var(--paper);
   color: var(--ink-60);
@@ -387,7 +387,7 @@
 @media (hover: hover) {
   .drawerX:hover {
     background: var(--cream);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .drawerBody {
@@ -396,7 +396,7 @@
   padding: 22px 24px;
 }
 .drawerFoot {
-  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
   padding: 16px 24px;
   background: var(--paper);
 }
@@ -421,7 +421,7 @@
   display: flex;
   flex-direction: column;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-card);
   box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.5);
   overflow: hidden;
@@ -469,7 +469,7 @@
   font-size: 22px;
   font-weight: 400;
   letter-spacing: -0.01em;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0;
 }
 [data-theme="dark"] .modalTitle {
@@ -485,7 +485,7 @@
   height: 34px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   background: var(--paper);
   color: var(--ink-60);
@@ -497,7 +497,7 @@
 @media (hover: hover) {
   .modalX:hover {
     background: var(--cream);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .modalBody {
@@ -510,7 +510,7 @@
   align-items: center;
   gap: 10px;
   padding: 16px 24px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 /* ── Segmented control (ax-seg) ──────────────────────────────────────────── */
@@ -520,7 +520,7 @@
   gap: 2px;
   border-radius: 999px;
   background: rgba(var(--plum-rgb), 0.06);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .segBtn {
   padding: 6px 14px;
@@ -538,17 +538,17 @@
 }
 @media (hover: hover) {
   .segBtn:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .segOn {
   background: var(--paper);
-  color: var(--plum);
+  color: var(--text-strong);
   box-shadow: 0 2px 8px -3px rgba(var(--plum-rgb), 0.25);
 }
 @media (hover: hover) {
   .segOn:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -596,7 +596,7 @@
   gap: 12px;
   width: 100%;
   padding: 13px 15px;
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 14px;
   background: var(--paper);
   cursor: pointer;
@@ -607,7 +607,7 @@
 }
 @media (hover: hover) {
   .checkLine:hover {
-    border-color: rgba(var(--plum-rgb), 0.28);
+    border-color: rgba(var(--line-rgb), 0.28);
   }
 }
 .checkLineOn {
@@ -620,7 +620,7 @@
   height: 22px;
   margin-top: 1px;
   border-radius: 7px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.22);
+  border: 1.5px solid rgba(var(--line-rgb), 0.22);
   display: grid;
   place-items: center;
   color: var(--paper);
@@ -664,6 +664,6 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
 }

@@ -410,7 +410,7 @@
 .playBig svg {
   width: 16px;
   height: 16px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-left: 2px;
 }
 .heroActions .tip {
@@ -558,7 +558,7 @@
 .playFab svg {
   width: 13px;
   height: 13px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-left: 1px;
 }
 .byCur {
@@ -938,7 +938,7 @@
 }
 .btP {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--accent);
 }
 .splitHint {

@@ -14,7 +14,7 @@
   font-size: clamp(30px, 4vw, 50px);
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin: 12px 0 0;
 }
 .pageH h1 em {
@@ -56,7 +56,7 @@
   font-size: clamp(32px, 4.6vw, 58px);
   line-height: 1.02;
   letter-spacing: -0.02em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin: 10px 0 0;
 }
 .collInfo h1 em {
@@ -69,7 +69,7 @@
   margin-top: 14px;
 }
 .collMeta strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .collActions {
@@ -101,7 +101,7 @@
   background: none;
   font: inherit;
   font-size: 16px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .searchBar input::placeholder {
   color: rgba(var(--cream-rgb), 0.4);
@@ -130,8 +130,8 @@
 }
 .chipOn {
   background: var(--cream);
-  border-color: var(--cream);
-  color: var(--plum);
+  border-color: rgba(var(--cream-rgb), 1);
+  color: var(--text-strong);
 }
 /* Tabs */
 .tabs {
@@ -152,7 +152,7 @@
   border-bottom: 2px solid transparent;
 }
 .tabOn {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-bottom-color: var(--accent);
 }
 
@@ -186,7 +186,7 @@
   padding: 13px 15px;
   font: inherit;
   font-size: 15px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.04);
 }
 .coInput::placeholder {
@@ -209,7 +209,7 @@
 .sumH {
   font-family: var(--serif);
   font-size: 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 4px;
 }
 .sumH em {
@@ -230,7 +230,7 @@
   align-items: baseline;
   padding-top: 16px;
   font-weight: 700;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .sumTotal span:last-child {
   font-family: var(--serif);
@@ -287,7 +287,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 4vw, 42px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .done h1 em {

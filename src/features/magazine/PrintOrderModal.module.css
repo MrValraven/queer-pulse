@@ -78,7 +78,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(24px, 3.4vw, 32px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.018em;
   line-height: 1.1;
   margin: 0 0 14px;
@@ -94,7 +94,7 @@
   margin: 0 0 24px;
 }
 .lead b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -105,7 +105,7 @@
   gap: 14px;
   padding: 14px 16px;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   margin-bottom: 22px;
 }
@@ -124,9 +124,9 @@
   width: 32px;
   height: 32px;
   border-radius: 9px;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
@@ -154,7 +154,7 @@
   text-align: center;
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .total {
   font-size: 13.5px;
@@ -163,7 +163,7 @@
 .total b {
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 400;
 }
 
@@ -185,7 +185,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .back:disabled {
@@ -199,7 +199,7 @@
 }
 .modalSuccess .close {
   background: rgba(var(--cream-rgb), 0.12);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 @media (hover: hover) {
   .modalSuccess .close:hover {
@@ -249,7 +249,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 4vw, 38px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin: 0;
 }
@@ -264,7 +264,7 @@
   line-height: 1.65;
 }
 .success p b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 

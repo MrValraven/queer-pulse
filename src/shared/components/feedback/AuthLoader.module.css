@@ -1,0 +1,80 @@
+.wrap {
+  position: relative;
+  min-height: 60vh;
+  min-height: 60svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 32px;
+  background: var(--cream);
+  text-align: center;
+}
+
+/* Soft coral halo behind the wordmark, echoing the RoomLoader take-over. */
+.wrap::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 360px;
+  height: 360px;
+  transform: translate(-50%, -58%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.09),
+    transparent 62%
+  );
+  pointer-events: none;
+}
+
+.brand {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 26px;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+}
+.brandItalic {
+  font-style: italic;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: authLoaderPulse 1.8s var(--ease) infinite;
+}
+
+.caption {
+  position: relative;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-40);
+}
+
+@keyframes authLoaderPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    animation: none;
+  }
+}

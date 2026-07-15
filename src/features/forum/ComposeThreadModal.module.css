@@ -18,7 +18,7 @@
 
 .dialog {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-card);
   padding: 28px 30px;
   width: 100%;
@@ -36,14 +36,14 @@
 
 .dialogConfirm {
   background: var(--plum);
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 
 .dialogTitle {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .dialogSub {
@@ -69,7 +69,7 @@
 .input,
 .textarea {
   width: 100%;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 11px 14px;
   font-family: var(--sans);
@@ -86,7 +86,7 @@
 }
 .input:focus,
 .textarea:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.28);
 }
 
@@ -117,7 +117,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 28px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .confirmTitle em {

@@ -54,7 +54,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(48px, 7vw, 84px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 24px;
@@ -73,7 +73,7 @@
   margin-top: 8px;
 }
 .addressed b {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* Counter strip */
@@ -96,7 +96,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(54px, 8vw, 92px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.9;
 }
@@ -114,7 +114,7 @@
   margin-top: 8px;
 }
 .countLabel b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .progress {
@@ -139,7 +139,7 @@
   color: var(--ink-60);
 }
 .pct b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -175,7 +175,7 @@
   color: var(--accent-ink);
 }
 .letter p strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .letter .lead::first-letter {
@@ -186,13 +186,13 @@
   line-height: 0.78;
   padding-right: 0.06em;
   padding-top: 0.06em;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .letter h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin: 32px 0 14px;
 }
@@ -209,7 +209,7 @@
   text-wrap: pretty;
 }
 .letter ol li b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .kicker {
@@ -248,7 +248,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
 }
 .signText span {
@@ -330,7 +330,7 @@
 .field input:focus,
 .field textarea:focus,
 .field select:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: var(--paper);
 }
 .field textarea {
@@ -404,14 +404,14 @@
 }
 .tintPlum {
   background: rgba(45, 27, 61, 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .sigText {
   font-size: 13px;
   line-height: 1.5;
 }
 .sigText b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .sigText em {
@@ -433,7 +433,7 @@
   line-height: 1.6;
 }
 .status b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .status em {

@@ -21,7 +21,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(30px, 3.5vw, 48px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -37,7 +37,7 @@
 }
 .row {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 20px 22px;
   display: flex;
@@ -59,7 +59,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin: 0 0 4px;
 }

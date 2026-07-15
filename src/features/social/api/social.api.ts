@@ -1,4 +1,5 @@
 import { apiGet, apiPost, apiDelete } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 
 /**
@@ -45,8 +46,12 @@ export interface BlockOptions {
 }
 
 /** GET /blocks — members the actor has blocked, newest first. */
-export const getBlocks = (page?: number) =>
-  apiGet<Paginated<BlockDTO>>(`/blocks${page ? `?page=${page}` : ""}`);
+export async function getBlocks(page?: number) {
+  const res = await apiGet<BlockDTO[] | Paginated<BlockDTO>>(
+    `/blocks${page ? `?page=${page}` : ""}`,
+  );
+  return toItemsPage(res);
+}
 
 /** POST /blocks/:slug — block a member (idempotent server-side). */
 export const blockMember = (slug: string, body?: BlockOptions) =>
@@ -61,8 +66,12 @@ export const getBlockStatus = (slug: string) =>
   apiGet<BlockStatus>(`/blocks/${encodeURIComponent(slug)}`);
 
 /** GET /mutes — members the actor has muted, newest first. */
-export const getMutes = (page?: number) =>
-  apiGet<Paginated<MuteDTO>>(`/mutes${page ? `?page=${page}` : ""}`);
+export async function getMutes(page?: number) {
+  const res = await apiGet<MuteDTO[] | Paginated<MuteDTO>>(
+    `/mutes${page ? `?page=${page}` : ""}`,
+  );
+  return toItemsPage(res);
+}
 
 /** POST /mutes/:slug — mute a member (one-way; target is not notified). */
 export const muteMember = (slug: string) =>

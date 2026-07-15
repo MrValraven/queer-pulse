@@ -13,6 +13,7 @@ import {
   deleteAffiliation,
 } from "../../features/economy/api/affiliation.api";
 import { useDemoMode } from "./DemoModeProvider";
+import { useAuth } from "./authContext";
 import { logError } from "../../shared/observability/logger";
 
 /** Which company the current member is authorised to post jobs for. */
@@ -66,6 +67,7 @@ export function EmployerAffiliationProvider({
     readInitial,
   );
   const { demoMode } = useDemoMode();
+  const { loggedIn } = useAuth();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -81,9 +83,9 @@ export function EmployerAffiliationProvider({
   }, [affiliation]);
 
   // Live hydration — the member's real affiliation. Never hits the network in
-  // demo mode.
+  // demo mode or while logged out (re-runs once login lands).
   useEffect(() => {
-    if (demoMode) return;
+    if (demoMode || !loggedIn) return;
     let active = true;
     getAffiliation()
       .then((dto) => {
@@ -104,7 +106,7 @@ export function EmployerAffiliationProvider({
     return () => {
       active = false;
     };
-  }, [demoMode]);
+  }, [demoMode, loggedIn]);
 
   const affiliate = useCallback(
     (companySlug: string, role: string) => {

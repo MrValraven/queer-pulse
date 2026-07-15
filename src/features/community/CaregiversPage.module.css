@@ -36,7 +36,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(46px, 7vw, 92px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.026em;
   line-height: 0.94;
 }
@@ -67,7 +67,7 @@
   border: 1px solid rgba(45, 27, 61, 0.14);
   border-radius: 999px;
   font-size: 13.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   cursor: pointer;
   transition:
@@ -82,8 +82,8 @@
 }
 .whoOn {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 
 /* ── Shared stacked section head ──────────────────────────────────── */
@@ -94,7 +94,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 3.8vw, 42px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.018em;
 }
 .sHead h2 em {
@@ -169,7 +169,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.012em;
   line-height: 1.18;
 }
@@ -223,7 +223,7 @@
   font-family: inherit;
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -266,7 +266,7 @@
   color: var(--accent-ink);
 }
 .qA strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* ── Support rooms ────────────────────────────────────────────────── */
@@ -313,7 +313,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.012em;
 }
 .grInfo h4 em {
@@ -345,7 +345,7 @@
 .dont {
   padding: 64px 0;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   position: relative;
   overflow: hidden;
 }
@@ -380,7 +380,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 4vw, 46px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
 }
 .dontInner h2 em {
@@ -408,7 +408,7 @@
 .compareD h3 {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 14px;
   letter-spacing: -0.01em;
 }

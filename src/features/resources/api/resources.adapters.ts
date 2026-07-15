@@ -2,7 +2,10 @@ import type { ReactNode } from "react";
 import { routes } from "../../../app/routeMap";
 import { CATEGORIES, GUIDES, type Guide } from "../library.data";
 import type { LetterBlock, Term, TypeKind } from "../glossary.data";
-import type { GlossaryTermResponseDTO, ResourceResponseDTO } from "./resources.api";
+import type {
+  GlossaryTermResponseDTO,
+  ResourceResponseDTO,
+} from "./resources.api";
 
 const CATEGORY_LABELS: Record<string, string> = Object.fromEntries(
   CATEGORIES.map((category) => [category.id, category.label]),

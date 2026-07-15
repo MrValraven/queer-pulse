@@ -9,7 +9,7 @@
 .head {
   padding-bottom: 32px;
   margin-bottom: 40px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
 }
 .eyebrow {
   font-size: 11px;
@@ -23,7 +23,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(40px, 5vw, 60px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -46,7 +46,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 18px;
 }
@@ -63,7 +63,7 @@
   gap: 18px;
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   transition:
     border-color 0.2s var(--ease),
@@ -71,7 +71,7 @@
 }
 @media (hover: hover) {
   .row:hover {
-    border-color: rgba(var(--plum-rgb), 0.2);
+    border-color: rgba(var(--line-rgb), 0.2);
   }
 }
 .rowUrgent {
@@ -86,7 +86,7 @@
   height: 44px;
   border-radius: 12px;
   background: rgba(var(--plum-rgb), 0.06);
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 19px;
 }
 .rowUrgent .rowIcon {
@@ -137,7 +137,7 @@
   display: block;
   padding: 22px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   text-decoration: none;
   transition:
@@ -146,7 +146,7 @@
 }
 @media (hover: hover) {
   .card:hover {
-    border-color: rgba(var(--plum-rgb), 0.22);
+    border-color: rgba(var(--line-rgb), 0.22);
     transform: translateY(-2px);
   }
 }
@@ -171,7 +171,7 @@
 .cardPrimary {
   font-family: var(--serif);
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin: 6px 0 4px;
 }
@@ -200,7 +200,7 @@
 .pCard {
   padding: 28px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
 }
 .pHead {
@@ -220,7 +220,7 @@
   flex-wrap: wrap;
   font-family: var(--serif);
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
 }
 .pPronouns {

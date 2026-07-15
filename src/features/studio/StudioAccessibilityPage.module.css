@@ -28,7 +28,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(32px, 5vw, 52px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.02;
 }
@@ -78,7 +78,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 28px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   line-height: 1.15;
 }
@@ -129,7 +129,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .ai h4 em {
@@ -209,7 +209,7 @@
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.16);
   border-bottom-width: 2px;
@@ -255,7 +255,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .contact h3 em {

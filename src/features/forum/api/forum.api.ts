@@ -1,4 +1,5 @@
 import { apiGet, apiPost } from "../../../shared/api/client";
+import { toPage } from "../../../shared/api/pagination";
 import type {
   ForumPostResponse,
   ForumThreadResponse,
@@ -14,14 +15,15 @@ import type {
 export type { ForumThreadResponse, ForumPostResponse };
 
 /** GET /forum/threads?category=&cursor= — a cursor page of threads. */
-export function getThreads(category?: string, cursor?: string) {
+export async function getThreads(category?: string, cursor?: string) {
   const q = new URLSearchParams();
   if (category && category !== "all") q.set("category", category);
   if (cursor) q.set("cursor", cursor);
   const qs = q.toString();
-  return apiGet<Paginated<ForumThreadResponse>>(
-    `/forum/threads${qs ? `?${qs}` : ""}`,
-  );
+  const res = await apiGet<
+    ForumThreadResponse[] | Paginated<ForumThreadResponse>
+  >(`/forum/threads${qs ? `?${qs}` : ""}`);
+  return toPage(res);
 }
 
 /** GET /forum/threads/:slug — thread meta (title, author, counts). */
@@ -29,13 +31,14 @@ export const getThread = (slug: string) =>
   apiGet<ForumThreadResponse>(`/forum/threads/${slug}`);
 
 /** GET /forum/threads/:slug/posts?cursor= — OP + replies, oldest-first. */
-export function getThreadPosts(slug: string, cursor?: string) {
+export async function getThreadPosts(slug: string, cursor?: string) {
   const q = new URLSearchParams();
   if (cursor) q.set("cursor", cursor);
   const qs = q.toString();
-  return apiGet<Paginated<ForumPostResponse>>(
+  const res = await apiGet<ForumPostResponse[] | Paginated<ForumPostResponse>>(
     `/forum/threads/${slug}/posts${qs ? `?${qs}` : ""}`,
   );
+  return toPage(res);
 }
 
 export interface CreateThreadDto {

@@ -7,7 +7,7 @@
 /* ── Head ── */
 .edHead {
   padding-bottom: 24px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
   margin-bottom: 22px;
   display: flex;
   justify-content: space-between;
@@ -27,7 +27,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(34px, 5vw, 50px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 8px;
@@ -41,7 +41,7 @@
   color: var(--ink-60);
 }
 .edMeta b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .edHeadR {
@@ -61,7 +61,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   border: 1.5px solid rgba(45, 27, 61, 0.18);
   background: var(--paper);
   border-radius: 999px;
@@ -76,7 +76,7 @@
 .needsHead {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 12px;
 }
 .needsHead em {
@@ -126,7 +126,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.2;
 }
 .needsReason {
@@ -136,7 +136,7 @@
 .needsCta {
   font-size: 12.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-top: 2px;
   display: inline-flex;
   align-items: center;
@@ -178,7 +178,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 34px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 5px;
@@ -218,7 +218,7 @@
 }
 .searchBox input:focus {
   outline: none;
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .searchIc {
   position: absolute;
@@ -269,13 +269,13 @@
   transition: all 0.2s;
 }
 .tbToggle:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+  border-color: var(--line-strong);
+  color: var(--text-strong);
 }
 .tbToggle.on {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .kbdHint {
   font-size: 12px;
@@ -288,7 +288,7 @@
   font-family: var(--sans);
 }
 .kbdHint:hover {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .kbdHint kbd {
   font-family: var(--sans);
@@ -319,7 +319,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 23px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 13px;
   display: flex;
@@ -378,7 +378,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
   line-height: 1.25;
 }
@@ -417,8 +417,8 @@
   transition: all 0.18s;
 }
 .editorChip:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+  border-color: var(--line-strong);
+  color: var(--text-strong);
 }
 .chipDot {
   width: 8px;
@@ -497,7 +497,7 @@
   background: rgba(var(--accent-rgb), 0.1);
 }
 .pieceStatus.review {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(45, 27, 61, 0.1);
 }
 .pieceStatus.editing {
@@ -573,7 +573,7 @@
 }
 .pieceAction {
   font-size: 12.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
@@ -596,7 +596,7 @@
 }
 .rowMore:hover {
   background: rgba(45, 27, 61, 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 @media (max-width: 640px) {
   .pieceRow {
@@ -641,7 +641,7 @@
 .empty b {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
 }
 .empty span {
@@ -707,12 +707,12 @@
 }
 .pitchAv.tintPlum {
   background: rgba(45, 27, 61, 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .pitchInfo b {
   display: block;
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   margin-bottom: 2px;
 }
@@ -742,8 +742,8 @@
   transition: all 0.18s;
 }
 .pitchQuick button:hover {
-  color: var(--plum);
-  border-color: var(--plum);
+  color: var(--text-strong);
+  border-color: var(--line-strong);
 }
 .pitchQuick button.yes:hover {
   color: #fff;
@@ -764,7 +764,7 @@
   border-top: 1px solid rgba(45, 27, 61, 0.06);
 }
 .pitchFoot button {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   background: none;
   border: none;
@@ -816,7 +816,7 @@
   color: var(--ink-60);
 }
 .issueBarRow b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .bar {
@@ -847,7 +847,7 @@
   margin-bottom: 5px;
 }
 .loadTop b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -886,7 +886,7 @@
   border-bottom: none;
 }
 .secName {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
 }
 .secSlots {
@@ -929,7 +929,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1;
 }
 .mixRow span {
@@ -952,7 +952,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   display: block;
   line-height: 1;
   margin-bottom: 3px;
@@ -1045,14 +1045,14 @@
 }
 .contribMatch {
   font-size: 11.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-top: 8px;
   font-weight: 500;
 }
 .contribLink {
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
   margin-top: 11px;
   display: inline-block;
@@ -1089,7 +1089,7 @@
   display: block;
 }
 .actTxt b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .actTxt i {
@@ -1115,7 +1115,7 @@
 }
 .qa a,
 .qa button {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
   background: none;
@@ -1212,7 +1212,7 @@
   border-top: 1px solid rgba(45, 27, 61, 0.08);
   margin-top: 4px;
   padding-top: 11px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -1231,7 +1231,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-top: 5px;
 }
@@ -1268,7 +1268,7 @@
 .mText:focus,
 .mSelect:focus {
   outline: none;
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .mRow {
   margin-top: 11px;
@@ -1300,7 +1300,7 @@
   font-family: var(--sans);
   font-weight: 700;
   font-size: 12px;
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(45, 27, 61, 0.07);
   border: 1px solid rgba(45, 27, 61, 0.12);
   border-radius: 6px;
@@ -1321,7 +1321,7 @@
   right: 0;
   z-index: 400;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   transform: translateY(110%);
   transition: transform 0.3s var(--ease);
 }
@@ -1357,11 +1357,11 @@
   cursor: pointer;
   border: 1.5px solid rgba(247, 243, 238, 0.28);
   background: transparent;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   transition: all 0.2s;
 }
 .bulkBtn:hover {
-  border-color: var(--cream);
+  border-color: rgba(var(--cream-rgb), 1);
 }
 .bulkBtn.yes {
   background: var(--jade);

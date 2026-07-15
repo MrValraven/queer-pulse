@@ -13,7 +13,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(40px, 6vw, 80px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   max-width: 16ch;
@@ -39,7 +39,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(26px, 3.4vw, 38px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 18px;
 }
@@ -59,7 +59,7 @@
 }
 .divider {
   border: none;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
   margin: 56px 0;
 }
 
@@ -74,7 +74,7 @@
   gap: 16px;
   align-items: flex-start;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 22px 24px;
 }
@@ -97,7 +97,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
@@ -148,7 +148,7 @@
 
 .reportBox {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 18px;
   padding: 32px;
   margin-top: 28px;
@@ -157,7 +157,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 10px;
 }

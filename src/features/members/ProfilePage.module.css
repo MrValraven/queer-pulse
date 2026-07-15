@@ -89,7 +89,7 @@ div.backBar {
   align-items: center;
   gap: 8px;
   background: var(--jade);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: 13px;
   font-weight: 600;
   padding: 8px 14px;
@@ -104,7 +104,7 @@ div.backBar {
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(38px, 5.2vw, 70px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
 }
@@ -197,7 +197,7 @@ div.backBar {
   gap: 14px;
   margin-top: 30px;
   padding-top: 24px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .vouchFaces {
   display: flex;
@@ -226,7 +226,7 @@ div.backBar {
   left: 50%;
   transform: translateX(-50%) translateY(4px);
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 500;
@@ -248,7 +248,7 @@ div.backBar {
   left: 50%;
   transform: translateX(-50%);
   border: 5px solid transparent;
-  border-top-color: var(--plum);
+  border-top-color: var(--line-strong);
 }
 .vouchFace:focus-visible .vouchTip {
   opacity: 1;
@@ -272,7 +272,7 @@ div.backBar {
 
 .section {
   padding: 48px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .sectionHead {
   display: flex;
@@ -285,7 +285,7 @@ div.backBar {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 32px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .sectionSub {
@@ -295,7 +295,7 @@ div.backBar {
 
 .nowCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 30px 32px;
   display: flex;
@@ -315,7 +315,7 @@ div.backBar {
   font-weight: 300;
   font-size: 24px;
   line-height: 1.42;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .nowOpen {
@@ -357,7 +357,7 @@ div.backBar {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.18;
   letter-spacing: -0.01em;
   margin: 7px 0 4px;
@@ -382,7 +382,7 @@ div.backBar {
   font-weight: 600;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 999px;
   padding: 8px 14px;
   text-decoration: none;
@@ -397,8 +397,8 @@ div.backBar {
 }
 @media (hover: hover) {
   a.socialChip:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
     transform: translateY(-1px);
   }
 }
@@ -415,7 +415,7 @@ div.backBar {
 }
 .ask {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 22px;
   display: flex;
@@ -435,7 +435,7 @@ div.backBar {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
@@ -447,7 +447,7 @@ div.backBar {
 }
 .shapingCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 24px;
   display: flex;
@@ -465,7 +465,7 @@ div.backBar {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.18;
   letter-spacing: -0.01em;
 }
@@ -488,7 +488,7 @@ div.backBar {
   gap: 14px;
   align-items: center;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 16px 18px;
   transition:
@@ -505,7 +505,7 @@ div.backBar {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.1;
 }
 .relRole {
@@ -554,7 +554,7 @@ div.backBar {
 }
 .skillCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   display: flex;
@@ -574,7 +574,7 @@ div.backBar {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -593,7 +593,7 @@ div.backBar {
 }
 @media (hover: hover) {
   .barterLink:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -605,7 +605,7 @@ div.backBar {
 }
 .groupCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
 }
@@ -613,7 +613,7 @@ div.backBar {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
   margin-bottom: 3px;
@@ -634,7 +634,7 @@ div.backBar {
   gap: 14px;
   align-items: flex-start;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   text-decoration: none;
@@ -662,7 +662,7 @@ div.backBar {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -693,7 +693,7 @@ div.backBar {
   flex-direction: column;
   gap: 8px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px 26px;
   text-decoration: none;
@@ -728,7 +728,7 @@ div.backBar {
 .recogTitle {
   font-family: var(--serif);
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.15;
 }

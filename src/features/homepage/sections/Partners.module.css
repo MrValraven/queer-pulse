@@ -1,6 +1,6 @@
 .strip {
   padding: 88px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .head {
   margin-bottom: 44px;
@@ -13,7 +13,7 @@
 }
 .badge {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 22px;
   display: flex;
@@ -29,7 +29,7 @@
   .badge:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 28px -18px rgba(var(--plum-rgb), 0.3);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
   }
 }
 .dashed {
@@ -57,7 +57,7 @@
 }
 .plum {
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .plus {
   background: transparent;

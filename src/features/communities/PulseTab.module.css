@@ -3,7 +3,7 @@
   gap: 12px;
   align-items: center;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 14px 16px;
   margin-bottom: 20px;
@@ -26,7 +26,7 @@
 }
 .joinHint {
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1.5px dashed rgba(var(--plum-rgb), 0.14);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.14);
   border-radius: 14px;
   padding: 14px 18px;
   font-size: 13.5px;
@@ -36,7 +36,7 @@
 
 .post {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 18px 20px;
   margin-bottom: 14px;
@@ -72,7 +72,7 @@
 .pName {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -140,7 +140,7 @@
   gap: 10px;
   padding: 11px 0 0;
   margin-top: 11px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .rAv {
   width: 28px;
@@ -175,14 +175,14 @@
   align-items: flex-end;
   padding-top: 12px;
   margin-top: 11px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .replyTa {
   flex: 1;
   font-family: var(--sans);
   font-size: 14px;
   padding: 9px 13px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   resize: none;
   min-height: 38px;
@@ -194,7 +194,7 @@
   transition: border-color 0.2s var(--ease);
 }
 .replyTa:focus {
-  border-color: rgba(var(--plum-rgb), 0.3);
+  border-color: rgba(var(--line-rgb), 0.3);
 }
 
 .moment {

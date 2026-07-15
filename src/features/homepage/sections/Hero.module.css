@@ -42,7 +42,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: var(--text-hero);
   line-height: 0.98;
   letter-spacing: -0.02em;
@@ -92,7 +92,7 @@
 .hood {
   font-size: 13px;
   color: var(--ink-60);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-pill);
   padding: 7px 15px;
   background: rgba(255, 255, 255, 0.4);

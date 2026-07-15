@@ -2,7 +2,7 @@
 .hero {
   padding: 128px 0 0;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   position: relative;
   overflow: hidden;
 }
@@ -68,7 +68,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(52px, 7.5vw, 108px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.026em;
   line-height: 0.94;
 }
@@ -123,7 +123,7 @@
 .sidebarRow .v {
   font-family: var(--serif);
   font-size: 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
 .sidebarRow .v em {
@@ -156,7 +156,7 @@
   justify-content: space-between;
   gap: 24px;
   padding-bottom: 16px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
   margin-bottom: 32px;
   flex-wrap: wrap;
 }
@@ -164,7 +164,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 28px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
 }
 .secHead h2 em {
@@ -240,7 +240,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 3.6vw, 46px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.022em;
   line-height: 1.02;
 }
@@ -288,7 +288,7 @@
 .det .v {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-top: 4px;
 }
@@ -309,7 +309,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 52px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.022em;
   line-height: 1;
 }
@@ -344,7 +344,7 @@
 .dlDate {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .dlRemain {
@@ -400,7 +400,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.1;
 }
@@ -428,7 +428,7 @@
 .scM .v {
   font-family: var(--serif);
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   display: block;
   letter-spacing: -0.01em;
 }
@@ -487,7 +487,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.18;
   letter-spacing: -0.01em;
 }
@@ -505,7 +505,7 @@
 .how {
   padding: 72px 0;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   position: relative;
   overflow: hidden;
 }
@@ -532,7 +532,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(32px, 4.2vw, 52px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
   margin-bottom: 40px;
 }
@@ -564,7 +564,7 @@
 .hwTitle {
   font-family: var(--serif);
   font-size: 19px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .hwTitle em {

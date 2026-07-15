@@ -13,7 +13,7 @@
 
 /* Sidebar */
 .sidebar {
-  border-right: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-right: 1px solid rgba(var(--line-rgb), 0.08);
   padding: 40px 0;
   position: sticky;
   top: 70px;
@@ -27,7 +27,7 @@
     position: static;
     height: auto;
     border-right: none;
-    border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+    border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
     padding: 16px 0;
   }
 }
@@ -124,7 +124,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(26px, 3.5vw, 40px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 6px;
 }
@@ -157,7 +157,7 @@
 }
 
 .optCard {
-  border: 2px solid rgba(var(--plum-rgb), 0.1);
+  border: 2px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
   padding: 26px 24px;
   cursor: pointer;
@@ -169,12 +169,12 @@
 
 @media (hover: hover) {
   .optCard:hover {
-    border-color: rgba(var(--plum-rgb), 0.22);
+    border-color: rgba(var(--line-rgb), 0.22);
   }
 }
 
 .optCardSelected {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.08);
 }
 
@@ -190,14 +190,14 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 2px solid rgba(var(--plum-rgb), 0.2);
+  border: 2px solid rgba(var(--line-rgb), 0.2);
   transition:
     border-color 0.15s var(--ease),
     background 0.15s var(--ease);
 }
 
 .optCardSelected .optRadio {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: var(--plum);
 }
 
@@ -252,7 +252,7 @@
 .optTitle {
   font-weight: 700;
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 
@@ -335,7 +335,7 @@
 /* What happens */
 .whatHappens {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 18px;
   padding: 26px 28px;
   margin-bottom: 32px;
@@ -344,7 +344,7 @@
 .whTitle {
   font-weight: 700;
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 16px;
 }
 
@@ -397,7 +397,7 @@
 
 .cfInput {
   width: 100%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.15);
+  border: 1.5px solid rgba(var(--line-rgb), 0.15);
   border-radius: 12px;
   padding: 12px 16px;
   font-family: var(--sans);
@@ -408,7 +408,7 @@
 }
 
 .cfInput:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .cfInput:focus:not(:focus-visible) {
   outline: none;
@@ -437,7 +437,7 @@
   font-size: 15px;
   font-weight: 600;
   background: var(--accent-ink);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border: none;
   border-radius: 999px;
   padding: 13px 24px;

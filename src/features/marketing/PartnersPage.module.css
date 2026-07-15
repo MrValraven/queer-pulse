@@ -1,13 +1,13 @@
 .interStrip {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 64px 0;
 }
 .interStrip blockquote {
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(26px, 4vw, 42px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.2;
   max-width: 22ch;
@@ -32,7 +32,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 3.6vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 8px;
 }
@@ -55,7 +55,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 24px 26px;
   display: flex;
@@ -102,7 +102,7 @@
 }
 .eu {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .int {
   background: rgba(var(--accent-rgb), 0.12);
@@ -112,7 +112,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .city {
@@ -143,7 +143,7 @@
   font-weight: 600;
   color: var(--accent-ink);
   padding-top: 10px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 
 .why {
@@ -154,7 +154,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(24px, 3vw, 36px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 18px;
 }
@@ -169,7 +169,7 @@
   margin-bottom: 14px;
 }
 .why p b {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .become {
@@ -179,7 +179,7 @@
   gap: 24px;
   flex-wrap: wrap;
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
   padding: 32px 36px;
   margin-top: 44px;
@@ -188,7 +188,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 26px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
 }
 .become h3 em {

@@ -6,7 +6,7 @@
 .head {
   padding-bottom: 28px;
   margin-bottom: 32px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
 }
 .eye {
   font-size: 11px;
@@ -20,7 +20,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(48px, 7vw, 84px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 14px;
@@ -40,14 +40,14 @@
   font-style: italic;
 }
 .sub a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
 
 .toc {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 14px;
   padding: 14px 18px;
   margin-bottom: 36px;
@@ -77,7 +77,7 @@
 }
 @media (hover: hover) {
   .toc a:hover {
-    color: var(--plum);
+    color: var(--text-strong);
     background: rgba(var(--plum-rgb), 0.05);
   }
 }
@@ -91,7 +91,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 32px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 6px;
 }
@@ -111,7 +111,7 @@
 
 .spec {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
   margin-bottom: 14px;
@@ -122,13 +122,13 @@
   align-items: baseline;
   padding: 14px 22px;
   background: rgba(var(--plum-rgb), 0.04);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .specName {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
 }
 .specName em {
@@ -167,7 +167,7 @@
 .colChip {
   padding: 18px 20px;
   border-radius: 14px;
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .colChipBar {
   width: 100%;
@@ -179,7 +179,7 @@
   display: block;
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 3px;
 }
 .colChip span {
@@ -197,7 +197,7 @@
 .typeRow {
   padding: 24px 28px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   margin-bottom: 10px;
   display: grid;
@@ -211,7 +211,7 @@
   }
 }
 .typeSample {
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .typeSample em {
@@ -226,7 +226,7 @@
   color: var(--ink-40);
 }
 .typeMeta b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   display: block;
   margin-bottom: 2px;
@@ -250,13 +250,13 @@
   background: rgba(var(--jade-rgb), 0.14);
 }
 .tagPlum {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.08);
 }
 
 .demoPill {
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   color: var(--ink-60);
   font-family: var(--sans);
   font-size: 13px;
@@ -266,8 +266,8 @@
 }
 .demoPillActive {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 
 .toggleSw {
@@ -325,7 +325,7 @@
 }
 .avPlum {
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .avSm {
   width: 28px;
@@ -341,7 +341,7 @@
 .demoCard {
   padding: 22px 24px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   max-width: 300px;
 }
@@ -350,7 +350,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 5px;
 }
@@ -366,7 +366,7 @@
 
 .codeSnippet {
   background: rgba(var(--plum-rgb), 0.04);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
   padding: 12px 22px;
   font-family: var(--sans);
   font-size: 12px;
@@ -375,7 +375,7 @@
   overflow-x: auto;
 }
 .codeSnippet code {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .codeSnippet .com {
@@ -395,7 +395,7 @@
   font-family: var(--sans);
   font-size: 14px;
   background: var(--cream);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 11px;
   padding: 11px 14px;
   box-sizing: border-box;
@@ -407,7 +407,7 @@
   color: var(--ink-40);
 }
 .footerNote a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -425,11 +425,16 @@
   padding: 13px 22px;
   background: rgba(var(--cream-rgb), 0.66);
   backdrop-filter: blur(18px) saturate(1.5);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 999px;
   box-shadow: 0 4px 20px -10px rgba(var(--plum-rgb), 0.4);
   margin-top: 18px;
   flex-wrap: wrap;
+}
+/* Frosted pill: flip to a dark frost in dark mode (the light cream channels
+   don't flip on their own, leaving a bright pill on the dark page). */
+:global([data-theme="dark"]) .navPill {
+  background: rgba(14, 8, 32, 0.66);
 }
 .navBrand {
   display: flex;
@@ -438,7 +443,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 23px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .navBrand span {

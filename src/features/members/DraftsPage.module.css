@@ -8,7 +8,7 @@
 .head {
   padding-bottom: 26px;
   margin-bottom: 22px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -31,7 +31,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(38px, 5vw, 52px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 12px;
@@ -70,7 +70,7 @@
   right: 0;
   top: calc(100% + 8px);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 14px;
   box-shadow: 0 20px 44px -18px rgba(var(--plum-rgb), 0.4);
   padding: 6px;
@@ -85,7 +85,7 @@
   border-radius: 9px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--plum);
+  color: var(--text-strong);
   transition: background 0.15s;
 }
 @media (hover: hover) {
@@ -115,7 +115,7 @@
 }
 .ciPlum {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .createItem small {
   display: block;
@@ -154,7 +154,7 @@
   font-size: 14px;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 11px;
   padding: 11px 40px;
   transition:
@@ -192,7 +192,7 @@
 @media (hover: hover) {
   .searchClear:hover {
     background: rgba(var(--plum-rgb), 0.12);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .searchClear:focus-visible {
@@ -215,9 +215,9 @@
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   padding: 9px 30px 9px 12px;
   cursor: pointer;
@@ -240,7 +240,7 @@
   display: flex;
   gap: 2px;
   margin-bottom: 8px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   overflow-x: auto;
 }
 .tab {
@@ -258,11 +258,11 @@
 }
 @media (hover: hover) {
   .tab:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .tab.active {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tab.active::after {
   content: "";
@@ -313,7 +313,7 @@
   appearance: none;
   width: 18px;
   height: 18px;
-  border: 1.6px solid rgba(var(--plum-rgb), 0.28);
+  border: 1.6px solid rgba(var(--line-rgb), 0.28);
   border-radius: 5px;
   cursor: pointer;
   flex: none;
@@ -325,7 +325,7 @@
 }
 @media (hover: hover) {
   .cbx:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
   }
 }
 .cbx:checked,
@@ -366,7 +366,7 @@
   gap: 6px 16px;
   padding: 18px 20px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   margin-bottom: 10px;
   align-items: start;
@@ -381,7 +381,7 @@
 @media (hover: hover) {
   .row:hover {
     transform: translateY(-1px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
     box-shadow: 0 10px 26px -18px rgba(var(--plum-rgb), 0.4);
   }
 }
@@ -430,7 +430,7 @@
 }
 .kindPitch {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .kindGrant {
   background: rgba(var(--accent-rgb), 0.12);
@@ -457,7 +457,7 @@
   font-weight: 500;
   font-size: 17px;
   line-height: 1.28;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
   transition: color 0.15s;
 }
@@ -604,7 +604,7 @@
 }
 @media (hover: hover) {
   .action:hover {
-    color: var(--plum);
+    color: var(--text-strong);
     background: rgba(var(--plum-rgb), 0.05);
   }
 }
@@ -659,7 +659,7 @@
 .empty {
   padding: 64px 28px;
   text-align: center;
-  border: 1px dashed rgba(var(--plum-rgb), 0.18);
+  border: 1px dashed rgba(var(--line-rgb), 0.18);
   border-radius: 16px;
 }
 .emptyIcon {
@@ -678,7 +678,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 23px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 8px;
 }
 .empty p {
@@ -700,7 +700,7 @@
   align-items: center;
   gap: 16px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 12px 14px 12px 22px;
   border-radius: 999px;
   box-shadow: 0 18px 44px -14px rgba(var(--plum-rgb), 0.6);

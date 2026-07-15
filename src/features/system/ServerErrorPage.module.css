@@ -36,7 +36,7 @@
 
 .modeTabActive {
   background: rgba(var(--cream-rgb), 0.15);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   box-shadow: 0 2px 8px -3px rgba(0, 0, 0, 0.25);
 }
 
@@ -100,7 +100,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 17px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 28px;
   position: relative;
   z-index: 1;
@@ -135,7 +135,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 5vw, 44px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.06;
   position: relative;
@@ -185,7 +185,7 @@
   align-items: center;
   gap: 12px;
   background: rgba(var(--plum-rgb), 0.05);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 12px;
   padding: 14px 16px;
   margin-bottom: 24px;
@@ -245,7 +245,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 48px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
 }

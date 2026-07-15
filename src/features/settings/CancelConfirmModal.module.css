@@ -13,7 +13,7 @@
 }
 .modal {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 34px 34px 30px;
   max-width: 440px;
@@ -48,7 +48,7 @@
 }
 .plum {
   background: rgba(var(--plum-rgb), 0.06);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .eyebrow {
@@ -63,7 +63,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.12;
 }
@@ -79,7 +79,7 @@
   max-width: 40ch;
 }
 .body b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .btns {

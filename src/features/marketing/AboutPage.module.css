@@ -14,7 +14,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.4;
   letter-spacing: -0.01em;
   border-left: 3px solid var(--accent);
@@ -30,7 +30,7 @@
 }
 .contrastCol {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 20px;
   padding: 32px 30px;
 }
@@ -51,10 +51,10 @@
   margin-bottom: 20px;
 }
 .contrastLabel {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .contrastLabelOurs {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .contrastList {
   list-style: none;
@@ -96,7 +96,7 @@
 }
 .valCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 24px 26px;
 }
@@ -104,7 +104,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
@@ -116,7 +116,7 @@
 
 .contactStrip {
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
   padding: 36px 40px;
   display: flex;
@@ -130,7 +130,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 26px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 8px;
 }

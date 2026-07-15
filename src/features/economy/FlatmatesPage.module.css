@@ -47,7 +47,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(38px, 5.8vw, 78px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
   max-width: 16ch;
@@ -92,7 +92,7 @@
   line-height: 1.6;
 }
 .ethosText strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
   display: block;
   margin-bottom: 3px;
@@ -116,7 +116,7 @@
 
 .filterBar {
   background: var(--cream);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   padding: 14px 0;
   position: sticky;
   top: 64px;
@@ -131,7 +131,7 @@
 .filterRow + .filterRow {
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .fLabel {
   font-size: 11.5px;
@@ -150,7 +150,7 @@
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 500;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 999px;
   padding: 8px 15px;
   cursor: pointer;
@@ -164,34 +164,34 @@
 }
 @media (hover: hover) {
   .typeChip:hover {
-    border-color: rgba(var(--plum-rgb), 0.38);
+    border-color: rgba(var(--line-rgb), 0.38);
     color: var(--ink);
   }
 }
 .typeOn {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .fSelect {
   font-family: var(--sans);
   font-size: 13.5px;
   color: var(--ink);
   background: var(--paper);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 999px;
   padding: 8px 30px 8px 15px;
   cursor: pointer;
   transition: border-color 0.2s var(--ease);
 }
 .fSelect:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .tagChip {
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 500;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 999px;
   padding: 6px 13px;
   cursor: pointer;
@@ -205,7 +205,7 @@
 }
 @media (hover: hover) {
   .tagChip:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
     color: var(--ink);
   }
 }
@@ -241,7 +241,7 @@
   padding: 11px 22px;
   border-radius: 999px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border: none;
   cursor: pointer;
   transition: background 0.25s var(--ease);
@@ -263,7 +263,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 26px 26px 20px;
   display: flex;
@@ -277,7 +277,7 @@
   .card:hover {
     transform: translateY(-3px);
     box-shadow: 0 18px 42px -24px rgba(var(--plum-rgb), 0.36);
-    border-color: rgba(var(--plum-rgb), 0.15);
+    border-color: rgba(var(--line-rgb), 0.15);
   }
 }
 .cardTop {
@@ -307,7 +307,7 @@
   display: inline-block;
   font-family: var(--serif);
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   font-weight: 500;
   line-height: 1.1;
@@ -386,7 +386,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 16px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: auto;
 }
 .since {
@@ -397,8 +397,8 @@
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.22);
+  color: var(--text-strong);
+  border: 1.5px solid rgba(var(--line-rgb), 0.22);
   border-radius: 999px;
   padding: 9px 18px;
   background: transparent;
@@ -412,8 +412,8 @@
 @media (hover: hover) {
   .sayBtn:hover {
     background: var(--plum);
-    color: var(--cream);
-    border-color: var(--plum);
+    color: rgba(var(--cream-rgb), 1);
+    border-color: var(--line-strong);
   }
 }
 .sayBtnSent {
@@ -425,8 +425,8 @@
 
 .hsStrip {
   background: rgba(var(--plum-rgb), 0.04);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
   padding: 40px 0;
 }
 .hsStripInner {
@@ -440,7 +440,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .hsStripText h3 em {
@@ -512,7 +512,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 26px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 5px;
   letter-spacing: -0.015em;
 }
@@ -547,7 +547,7 @@
 .input,
 .select,
 .textarea {
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 15px;
   font-family: var(--sans);
@@ -577,7 +577,7 @@
   gap: 9px;
 }
 .ttOpt {
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 14px 15px;
   cursor: pointer;
@@ -606,7 +606,7 @@
   gap: 7px;
 }
 .lfOpt {
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 999px;
   padding: 7px 14px;
   cursor: pointer;
@@ -650,7 +650,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 34px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
 }

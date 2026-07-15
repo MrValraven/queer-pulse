@@ -20,7 +20,7 @@
 }
 @media (hover: hover) {
   .bc a:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .bcCurrent {
@@ -34,7 +34,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(32px, 4.5vw, 52px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.97;
   margin-bottom: 36px;
@@ -60,7 +60,7 @@
 /* Tabs */
 .tabs {
   display: flex;
-  border-bottom: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1.5px solid rgba(var(--line-rgb), 0.1);
   margin-bottom: 32px;
 }
 .tab {
@@ -79,8 +79,8 @@
     border-color 0.2s;
 }
 .tab.active {
-  color: var(--plum);
-  border-bottom-color: var(--plum);
+  color: var(--text-strong);
+  border-bottom-color: var(--line-strong);
 }
 @media (hover: hover) {
   .tab:hover:not(.active) {
@@ -150,14 +150,14 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   position: relative;
 }
 .currAmt {
   font-size: 22px;
   font-weight: 700;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-top: 6px;
   position: relative;
 }
@@ -205,12 +205,12 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   border-radius: 12px;
   padding: 14px 10px;
   cursor: pointer;
-  color: var(--plum);
+  color: var(--text-strong);
   text-align: center;
   transition:
     background 0.2s var(--ease),
@@ -219,13 +219,13 @@
 }
 @media (hover: hover) {
   .tierBtn:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
   }
 }
 .tierBtn.sel {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .tierBtn small {
   display: block;
@@ -256,12 +256,12 @@
   font-family: var(--sans);
   font-size: 14px;
   font-weight: 700;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   border-radius: 10px;
   padding: 11px 6px;
   cursor: pointer;
-  color: var(--plum);
+  color: var(--text-strong);
   text-align: center;
   transition:
     background 0.2s var(--ease),
@@ -270,13 +270,13 @@
 }
 @media (hover: hover) {
   .amtBtn:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
   }
 }
 .amtBtn.sel {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .amtBtn small {
   display: block;
@@ -289,14 +289,14 @@
   font-family: var(--sans);
   font-size: 14px;
   padding: 10px 13px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   color: var(--ink);
   background: var(--cream);
   transition: border-color 0.2s;
 }
 .customIn:focus {
-  border-color: rgba(var(--plum-rgb), 0.3);
+  border-color: rgba(var(--line-rgb), 0.3);
 }
 .customIn:focus:not(:focus-visible) {
   outline: none;
@@ -312,7 +312,7 @@
 /* Billing info */
 .infoCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 18px;
@@ -322,7 +322,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 13px 16px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   font-size: 14px;
 }
 .infoRow:last-child {
@@ -334,7 +334,7 @@
 }
 .infoVal {
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .infoVal.ok {
   color: var(--jade);
@@ -346,7 +346,7 @@
   align-items: center;
   gap: 14px;
   background: var(--paper);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 14px;
   padding: 15px 17px;
   margin-bottom: 14px;
@@ -356,7 +356,7 @@
   font-weight: 900;
   letter-spacing: 0.08em;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 5px;
   padding: 4px 7px;
   flex: none;
@@ -364,7 +364,7 @@
 .pmNum {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .pmExp {
   font-size: 12px;
@@ -375,8 +375,8 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.18);
+  color: var(--text-strong);
+  border: 1.5px solid rgba(var(--line-rgb), 0.18);
   background: transparent;
   border-radius: 8px;
   padding: 8px 14px;
@@ -391,15 +391,15 @@
 @media (hover: hover) {
   .updBtn:hover {
     background: var(--plum);
-    color: var(--cream);
-    border-color: var(--plum);
+    color: rgba(var(--cream-rgb), 1);
+    border-color: var(--line-strong);
   }
 }
 
 /* Card form */
 .cardForm {
   background: var(--paper);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 14px;
   padding: 18px;
   margin-bottom: 14px;
@@ -428,14 +428,14 @@
   font-family: var(--sans);
   font-size: 14px;
   padding: 11px 13px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   color: var(--ink);
   background: var(--cream);
   transition: border-color 0.2s;
 }
 .cfi:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .cfi:focus:not(:focus-visible) {
   outline: none;
@@ -457,7 +457,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
   font-size: 14px;
 }
 .invRow:last-child {
@@ -465,7 +465,7 @@
 }
 .invPeriod {
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .invAmt {
   color: var(--ink-60);
@@ -504,7 +504,7 @@
   align-items: center;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   font-size: 14px;
   color: var(--ink);
 }
@@ -543,7 +543,7 @@
   gap: 16px;
   margin-top: 28px;
   padding-top: 20px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   flex-wrap: wrap;
 }
 .dngBtn {
@@ -564,7 +564,7 @@
 }
 .confirmBox {
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 14px;
   padding: 16px 18px;
   margin-top: 14px;
@@ -579,7 +579,7 @@
 .confirmHead {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 8px;
 }
 .confirmRow {
@@ -603,7 +603,7 @@
 }
 .sb {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px;
 }
@@ -611,7 +611,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 56px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.04em;
   line-height: 1;
 }
@@ -630,7 +630,7 @@
   font-weight: 600;
   color: var(--ink-60);
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   margin-bottom: 14px;
 }
 .impact {
@@ -672,7 +672,7 @@
 .sbTierName {
   margin-top: 14px;
   font-size: 13.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .nextRenewal {
@@ -696,6 +696,6 @@
 }
 @media (hover: hover) {
   .sbLink:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }

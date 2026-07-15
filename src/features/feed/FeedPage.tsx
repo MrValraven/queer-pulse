@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiInbox, FiAlertCircle } from "react-icons/fi";
+import {
+  FiInbox,
+  FiUsers,
+  FiCalendar,
+  FiUserPlus,
+  FiMessageCircle,
+} from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import {
@@ -15,7 +21,13 @@ import { communities } from "../homepage/data/communities";
 import { getLiving } from "../communities/livingCommunities.data";
 import { HubPulseCard, type HubPost } from "../communities/HubPulseCard";
 import { useSocial } from "../../app/providers/SocialProvider";
-import { FEED_TABS, FEED_POST, type FeedTab } from "./feed.data";
+import {
+  FEED_TABS,
+  FEED_POST,
+  FEED_TAB_COPY,
+  type FeedTab,
+  type FeedTabIcon,
+} from "./feed.data";
 import {
   GatheringCard,
   NewMemberCard,
@@ -46,6 +58,15 @@ const FEED_ITEMS: {
   { key: "saved-article", tab: "Posts", Card: SavedArticleCard },
   { key: "recap", tab: "Gatherings", Card: RecapCard },
 ];
+
+/** react-icons glyph for each tab's empty/error panel. */
+const TAB_ICONS: Record<FeedTabIcon, React.ReactElement> = {
+  inbox: <FiInbox />,
+  communities: <FiUsers />,
+  gatherings: <FiCalendar />,
+  people: <FiUserPlus />,
+  posts: <FiMessageCircle />,
+};
 
 /** Greeting + formatted date from the user's local machine clock. */
 function useNowGreeting() {
@@ -157,6 +178,22 @@ export function FeedPage() {
     ? pulse.length === 0 && staticItems.length === 0
     : livePosts.length === 0 && liveMembers.length === 0;
 
+  // Tab-specific empty/error copy, so each corner of the feed says what it's for.
+  const tabCopy = FEED_TAB_COPY[activeTab];
+  const emptyPanel = (
+    <EmptyState
+      icon={TAB_ICONS[tabCopy.icon]}
+      title={tabCopy.empty.title}
+      description={tabCopy.empty.description}
+      action={tabCopy.empty.action}
+      secondaryAction={
+        activeTab === "All"
+          ? undefined
+          : { label: "View everything", onClick: () => setActiveTab("All") }
+      }
+    />
+  );
+
   return (
     <AppShell unreadCount={demoMode ? 3 : 0}>
       <div className={styles.page}>
@@ -215,20 +252,16 @@ export function FeedPage() {
                 ) : !demoMode ? (
                   feed.isError ? (
                     <EmptyState
-                      icon={<FiAlertCircle />}
-                      title="Couldn't load your feed"
-                      description="Something went wrong reaching the community. Please try again."
+                      icon={TAB_ICONS[tabCopy.icon]}
+                      title={tabCopy.error.title}
+                      description={tabCopy.error.description}
                       action={{
-                        label: "Retry",
+                        label: "Try again",
                         onClick: () => void feed.refetch(),
                       }}
                     />
                   ) : empty ? (
-                    <EmptyState
-                      icon={<FiInbox />}
-                      title="Your feed is quiet"
-                      description="Follow people and communities and their latest activity will show up here."
-                    />
+                    emptyPanel
                   ) : (
                     <>
                       {livePosts.map((post, i) => (
@@ -254,15 +287,7 @@ export function FeedPage() {
                     </>
                   )
                 ) : empty ? (
-                  <EmptyState
-                    icon={<FiInbox />}
-                    title={`Nothing in ${activeTab} yet`}
-                    description="When there's activity here, it'll show up in your feed."
-                    action={{
-                      label: "View everything",
-                      onClick: () => setActiveTab("All"),
-                    }}
-                  />
+                  emptyPanel
                 ) : (
                   <>
                     {pulse.map((item, i) => (

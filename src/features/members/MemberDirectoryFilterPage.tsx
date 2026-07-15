@@ -10,7 +10,6 @@ import {
 import { useCountUp, useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import {
-  DEFAULT_FILTERS,
   EMPTY_FILTERS,
   SORTS,
   appliedChips,
@@ -64,7 +63,7 @@ function MemberHeaderSkeleton() {
 export function MemberDirectoryFilterPage() {
   const { showToast } = useToast();
   const simLoading = useSimulatedLoad();
-  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
+  const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [sort, setSort] = useState<SortKey>("Recently active");
 
   const serverTags = filters.identities;
@@ -113,10 +112,15 @@ export function MemberDirectoryFilterPage() {
             <h1 className={styles.h1}>
               Find
               <em>
-                <span className={styles.tally}>
+                <span
+                  className={styles.tally}
+                  style={{
+                    minWidth: `${totalMembers.toLocaleString().length}ch`,
+                  }}
+                >
                   {countedTotal.toLocaleString()}
                 </span>{" "}
-                members,
+                {totalMembers === 1 ? "member," : "members,"}
               </em>{" "}
               exactly.
             </h1>
@@ -146,7 +150,8 @@ export function MemberDirectoryFilterPage() {
                 <b>
                   <em>{filtered.length.toLocaleString()}</em>
                 </b>{" "}
-                of {totalMembers.toLocaleString()} members
+                of {totalMembers.toLocaleString()}{" "}
+                {totalMembers === 1 ? "member" : "members"}
               </div>
               <div className={styles.sort}>
                 <span className={styles.sortLabel}>Sort</span>

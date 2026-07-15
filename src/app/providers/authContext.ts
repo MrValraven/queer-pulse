@@ -7,6 +7,13 @@ import type {
 
 export interface AuthContextValue {
   loggedIn: boolean;
+  /**
+   * True while the live-mode session is still being determined (GET /auth/me in
+   * flight). During this window `loggedIn` is not yet trustworthy, so gated
+   * routes should hold on a loader rather than decide, and authed data fetches
+   * should stay parked. Always false in demo mode (the session is synchronous).
+   */
+  checking: boolean;
   /** True while the post-login "preparing the room" loader should be shown. */
   preparing: boolean;
   /** The signed-in user (live mode) or the mock user (demo mode); null when logged out. */

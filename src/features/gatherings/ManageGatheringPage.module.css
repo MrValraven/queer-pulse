@@ -3,7 +3,7 @@
 }
 .header {
   padding-bottom: 32px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
   margin-bottom: 36px;
 }
 .eyebrow {
@@ -27,7 +27,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(34px, 4.5vw, 54px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 10px;
@@ -87,7 +87,7 @@
 .tabBar {
   display: flex;
   gap: 2px;
-  border-bottom: 2px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 2px solid rgba(var(--line-rgb), 0.08);
   margin-bottom: 28px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -117,8 +117,8 @@
   }
 }
 .tabBtnActive {
-  color: var(--plum);
-  border-bottom-color: var(--plum);
+  color: var(--text-strong);
+  border-bottom-color: var(--line-strong);
 }
 
 .statsRow {
@@ -128,7 +128,7 @@
 }
 .statChip {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 12px;
   padding: 12px 18px;
   flex: 1;
@@ -138,7 +138,7 @@
   font-family: var(--serif);
   font-size: 28px;
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -150,7 +150,7 @@
 
 .detailBlock {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 4px 20px;
   margin-bottom: 20px;
@@ -161,7 +161,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 15px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .detailRow:last-child {
   border-bottom: none;
@@ -201,7 +201,7 @@
 }
 .descCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
@@ -238,7 +238,7 @@
 .attSearch {
   flex: 1;
   min-width: 180px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 11px;
   padding: 9px 14px;
   font-family: var(--sans);
@@ -250,7 +250,7 @@
   box-sizing: border-box;
 }
 .attSearch:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .capWrap {
   margin-bottom: 22px;
@@ -322,7 +322,7 @@
 .attName {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .attMeta {
   font-size: 12px;
@@ -373,7 +373,7 @@
 
 .composerCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 22px;
@@ -386,7 +386,7 @@
 }
 .compTa {
   width: 100%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 11px;
   padding: 12px 15px;
   font-family: var(--sans);
@@ -401,7 +401,7 @@
   box-sizing: border-box;
 }
 .compTa:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: var(--paper);
 }
 .compFooter {
@@ -430,7 +430,7 @@
 }
 .msgCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
 }
@@ -444,7 +444,7 @@
 .msgSubject {
   font-size: 14.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .msgTime {
   font-size: 12px;
@@ -478,7 +478,7 @@
   margin-bottom: 12px;
 }
 .toggleList {
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 20px;
@@ -489,7 +489,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
   background: var(--paper);
 }
 .tglRow:last-child {
@@ -586,7 +586,7 @@
 }
 .sbCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -627,7 +627,7 @@
 .sbTitle {
   font-family: var(--serif);
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 4px;
 }
 .sbMeta {

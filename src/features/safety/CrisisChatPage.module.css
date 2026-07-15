@@ -1,6 +1,6 @@
 .page {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   min-height: 100svh;
   padding: clamp(96px, 12vw, 150px) 0 clamp(64px, 8vw, 100px);
 }
@@ -73,7 +73,7 @@
 .assN {
   font-family: var(--serif);
   font-size: 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1;
 }
 .assL {
@@ -127,7 +127,7 @@
   align-items: center;
   gap: 11px;
   padding: 18px 22px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .chatDot {
   width: 9px;
@@ -138,11 +138,11 @@
 .chatHeadName {
   font-weight: 700;
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .chatHeadStatus {
   font-size: 12.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.55;
 }
 .chatBody {
@@ -162,13 +162,13 @@
 .them {
   align-self: flex-start;
   background: rgba(var(--violet-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
   border-bottom-left-radius: 4px;
 }
 .me {
   align-self: flex-end;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-bottom-right-radius: 4px;
 }
 .bubbleName {
@@ -184,11 +184,11 @@
   display: flex;
   gap: 10px;
   padding: 16px 18px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .composer input {
   flex: 1;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 12px 18px;
   font: inherit;
@@ -197,12 +197,12 @@
   outline: none;
 }
 .composer input:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
 }
 .note {
   font-size: 12.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.5;
   text-align: center;
   padding: 0 18px 16px;

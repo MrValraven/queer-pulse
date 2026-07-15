@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { FEED_POST, type FeedPost, type FeedTab } from "../feed.data";
@@ -25,6 +25,10 @@ export function useFeed(tab: FeedTab) {
   const query = useInfiniteQuery<FeedPage>({
     queryKey: ["feed", tab, demoMode],
     enabled: !demoMode,
+    // Keep the previous tab's data on screen while the new tab fetches, so
+    // switching tabs swaps content smoothly instead of flashing the skeleton
+    // (a fresh query key would otherwise report isLoading and blank the list).
+    placeholderData: keepPreviousData,
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
       const res = await getFeed(tab, pageParam as string | undefined);

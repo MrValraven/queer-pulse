@@ -240,7 +240,7 @@
   height: 50px;
   border-radius: 50%;
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border: none;
   display: flex;
   align-items: center;

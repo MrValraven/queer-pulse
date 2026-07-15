@@ -1,4 +1,5 @@
 import { apiGet, apiPost } from "../../../shared/api/client";
+import { toPage } from "../../../shared/api/pagination";
 import type {
   ConversationResponse,
   MessageResponse,
@@ -13,18 +14,28 @@ import type {
 
 export type { ConversationResponse, MessageResponse };
 
-/** GET /conversations — the inbox list, most-recent first. */
-export const getConversations = () =>
-  apiGet<Paginated<ConversationResponse>>("/conversations");
+/**
+ * GET /conversations — the inbox list, most-recent first.
+ * The backend returns a bare array (the list fits in one page); older/other
+ * envelopes wrap it in `{ data }`. Normalize to always resolve a plain array so
+ * callers never have to guess the shape.
+ */
+export async function getConversations(): Promise<ConversationResponse[]> {
+  const res = await apiGet<
+    ConversationResponse[] | Paginated<ConversationResponse>
+  >("/conversations");
+  return Array.isArray(res) ? res : (res?.data ?? []);
+}
 
 /** GET /conversations/:id/messages?cursor= — cursor page of history. */
-export function getMessages(conversationId: string, cursor?: string) {
+export async function getMessages(conversationId: string, cursor?: string) {
   const q = new URLSearchParams();
   if (cursor) q.set("cursor", cursor);
   const qs = q.toString();
-  return apiGet<Paginated<MessageResponse>>(
+  const res = await apiGet<MessageResponse[] | Paginated<MessageResponse>>(
     `/conversations/${conversationId}/messages${qs ? `?${qs}` : ""}`,
   );
+  return toPage(res);
 }
 
 /** POST /conversations/:id/messages — send. Rejects a blocked pair with 403. */

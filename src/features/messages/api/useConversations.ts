@@ -15,8 +15,8 @@ export function useConversations() {
     queryKey: ["conversations", demoMode],
     queryFn: async () => {
       if (demoMode) return mockConversations;
-      const res = await getConversations();
-      return res.data.map(conversationToView);
+      const rows = await getConversations();
+      return rows.map(conversationToView);
     },
   });
 }
@@ -34,8 +34,8 @@ export function useUnreadMessages(): number {
     queryKey: ["conversations", demoMode],
     queryFn: async () => {
       if (demoMode) return mockConversations;
-      const res = await getConversations();
-      return res.data.map(conversationToView);
+      const rows = await getConversations();
+      return rows.map(conversationToView);
     },
     select: (list) => list.filter((c) => c.unread).length,
     retry: false,

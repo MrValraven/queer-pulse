@@ -32,7 +32,7 @@
   line-height: 1.04;
   letter-spacing: -0.02em;
   margin: 14px 0 16px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .title em {
   font-style: italic;

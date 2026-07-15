@@ -26,7 +26,7 @@ export interface ProfileThemeSettings {
 
 export const DEFAULT_PROFILE_THEME: ProfileThemeSettings = {
   flag: 0,
-  coverStyle: "gradient",
+  coverStyle: "stripe",
   pattern: "none",
   showBadges: true,
   showLevel: true,

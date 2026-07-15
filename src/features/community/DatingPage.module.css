@@ -3,7 +3,7 @@
   padding: 148px 0 88px;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .hero::before {
   content: "";
@@ -32,7 +32,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(38px, 5.8vw, 76px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
   max-width: 16ch;
@@ -63,7 +63,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 4vw, 46px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
 }
@@ -86,7 +86,7 @@
 }
 .appCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -113,7 +113,7 @@
 .appName {
   font-family: var(--serif);
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   letter-spacing: -0.01em;
 }
@@ -161,7 +161,7 @@
 }
 .cultureCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -170,7 +170,7 @@
 .ccNum {
   font-family: var(--serif);
   font-size: 28px;
-  color: rgba(var(--plum-rgb), 0.12);
+  color: rgba(var(--ink-rgb), 0.12);
   line-height: 1;
   flex: none;
   min-width: 32px;
@@ -178,7 +178,7 @@
 .ccTitle {
   font-size: 16px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .ccText {
@@ -194,7 +194,7 @@
 }
 .structureCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px;
 }
@@ -209,7 +209,7 @@
 .scTitle {
   font-size: 17px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 7px;
 }
 .scText {
@@ -222,7 +222,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(22px, 3vw, 32px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-top: 60px;
   margin-bottom: 20px;
@@ -233,7 +233,7 @@
 }
 .recStrip {
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: 20px;
   padding: 32px 36px;
   display: grid;
@@ -243,7 +243,7 @@
 .recItem h4 {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .recItem p {
@@ -289,7 +289,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 4vw, 50px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.04;
   margin-bottom: 14px;
@@ -324,7 +324,7 @@
 .seName {
   font-size: 15px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .seDetail {
   font-size: 13px;

@@ -13,7 +13,7 @@
 .hero {
   padding: 180px 0 100px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   position: relative;
   overflow: hidden;
 }
@@ -56,7 +56,7 @@
   font-size: clamp(44px, 7vw, 88px);
   line-height: 0.98;
   letter-spacing: -0.02em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   max-width: 18ch;
   position: relative;
 }
@@ -89,7 +89,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.5vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .secHead h2 em {
@@ -115,7 +115,7 @@
 }
 .howItem {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 32px 28px;
   display: flex;
   flex-direction: column;
@@ -133,7 +133,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .howDesc {
@@ -154,7 +154,7 @@
 }
 .companyCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -183,7 +183,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.1;
 }
@@ -267,7 +267,7 @@
   display: flex;
   gap: 10px;
   padding-top: 14px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .coBtn {
   font-size: 13px;
@@ -276,7 +276,7 @@
 
 .verifyBox {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 20px;
   padding: 32px 36px;
   margin-top: 56px;
@@ -302,7 +302,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .verifyHead h3 em {
@@ -351,7 +351,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.5vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
 }
@@ -428,7 +428,7 @@
 }
 .coReview {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 12px;
   padding: 14px 16px;
 }

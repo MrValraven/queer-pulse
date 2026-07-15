@@ -25,7 +25,7 @@
 }
 
 .link[data-tone="dark"]:focus-visible {
-  outline-color: var(--cream);
+  outline-color: rgba(var(--cream-rgb), 1);
 }
 
 @media (hover: hover) {
@@ -33,7 +33,7 @@
     color: var(--accent-ink);
   }
   .link[data-tone="dark"]:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 

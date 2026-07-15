@@ -35,7 +35,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(40px, 6vw, 76px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.02;
   margin: 0;

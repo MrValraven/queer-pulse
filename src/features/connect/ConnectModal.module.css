@@ -57,12 +57,12 @@
   gap: 16px;
   margin-bottom: 32px;
   padding-bottom: 28px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .toName {
   font-family: var(--serif);
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   font-weight: 500;
 }
@@ -75,7 +75,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 38px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.06;
   margin-bottom: 8px;
@@ -114,7 +114,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .back:disabled {
@@ -129,7 +129,7 @@
 }
 .modalSent .close {
   background: rgba(var(--cream-rgb), 0.12);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 @media (hover: hover) {
   .modalSent .close:hover {
@@ -207,7 +207,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 38px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .sent h2 em {

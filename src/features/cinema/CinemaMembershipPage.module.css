@@ -24,7 +24,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(38px, 5.5vw, 72px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   max-width: 18ch;
@@ -53,7 +53,7 @@
 }
 .tier {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-card);
   padding: 32px 30px;
   display: flex;
@@ -62,7 +62,7 @@
   position: relative;
 }
 .featured {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 28px 60px -34px rgba(var(--plum-rgb), 0.4);
 }
 .tierBadge {
@@ -71,7 +71,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -90,7 +90,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 28px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
 }
 .tierName em {
@@ -107,7 +107,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 40px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .amount em {
@@ -187,7 +187,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.6vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .paysH h2 em {
@@ -208,7 +208,7 @@
 }
 .payCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 28px 26px;
 }
@@ -235,13 +235,13 @@
 }
 .pcIcon.plum {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .pcTitle {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
@@ -259,7 +259,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 34px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .pcNum em {
@@ -291,7 +291,7 @@
 }
 .ls {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 22px 24px;
   text-align: center;
@@ -305,7 +305,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 38px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
   margin: 8px 0 4px;
@@ -324,7 +324,7 @@
 .ledgerFoot a {
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 @media (max-width: 880px) {

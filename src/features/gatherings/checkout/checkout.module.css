@@ -35,7 +35,7 @@
   cursor: pointer;
 }
 .cop-btn.clickable:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 3px;
   border-radius: 8px;
 }
@@ -55,8 +55,8 @@
 }
 .cop-dot.active {
   background: var(--plum);
-  border-color: var(--plum);
-  color: var(--cream);
+  border-color: var(--line-strong);
+  color: rgba(var(--cream-rgb), 1);
 }
 .cop-dot.done {
   background: var(--jade);
@@ -74,7 +74,7 @@
   white-space: nowrap;
 }
 .cop-label.active {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .cop-label.done {
   color: var(--jade);
@@ -143,7 +143,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(26px, 3.5vw, 38px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
   margin-bottom: 6px;
@@ -221,7 +221,7 @@
   color: var(--ink-60);
 }
 .co-hold-spots strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .co-hold.expired {
   background: rgba(45, 27, 61, 0.05);
@@ -239,7 +239,7 @@
   cursor: pointer;
   font-size: 12.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -271,7 +271,7 @@
 }
 .co-whoami-name {
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .co-whoami-name strong {
   font-weight: 700;
@@ -292,10 +292,10 @@
   line-height: 1.4;
 }
 .co-whoami-switch:hover {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .co-whoami-switch:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -328,7 +328,7 @@
 .co-ev-title {
   font-size: 16px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 4px;
 }
 .co-ev-meta {
@@ -369,11 +369,11 @@
   border-color: rgba(45, 27, 61, 0.3);
 }
 .co-tier.sel {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(45, 27, 61, 0.02);
 }
 .co-tier:focus-within {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .co-tier input {
@@ -394,7 +394,7 @@
   transition: all 0.18s;
 }
 .co-tier.sel .co-tier-radio {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .co-tier.sel .co-tier-radio::after {
   content: "";
@@ -415,12 +415,12 @@
 .co-tier-name {
   font-size: 14.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .co-tier-price {
   font-size: 14.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   white-space: nowrap;
 }
 .co-tier-desc {
@@ -457,7 +457,7 @@
 .co-qty-lbl {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .co-qty-sub {
   font-size: 12.5px;
@@ -481,14 +481,14 @@
   justify-content: center;
   cursor: pointer;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   transition: background 0.15s;
 }
 .co-step-btn:hover {
   background: rgba(45, 27, 61, 0.05);
 }
 .co-step-btn:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: -2px;
 }
 .co-step-btn[disabled] {
@@ -501,7 +501,7 @@
   text-align: center;
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   font-variant-numeric: tabular-nums;
 }
 
@@ -529,7 +529,7 @@
 }
 .co-item-val {
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .co-item-val.discount {
   color: var(--jade);
@@ -541,7 +541,7 @@
   padding: 14px 16px 0;
   font-size: 16px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   border-top: 1.5px solid rgba(45, 27, 61, 0.1);
   margin-top: 4px;
 }
@@ -590,7 +590,7 @@
 .co-in:focus,
 .co-ta:focus,
 .co-select:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .co-in::placeholder,
 .co-ta::placeholder {
@@ -648,7 +648,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   border: 1.5px solid rgba(45, 27, 61, 0.18);
   background: transparent;
   border-radius: 10px;
@@ -660,8 +660,8 @@
 }
 .co-promo-btn:hover {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .co-promo-applied {
   display: flex;
@@ -694,7 +694,7 @@
   text-underline-offset: 2px;
 }
 .co-promo-remove:hover {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* Policy note */
@@ -708,7 +708,7 @@
 .co-policy summary {
   font-size: 13px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   list-style: none;
   display: flex;
@@ -737,7 +737,7 @@
   margin-top: 10px;
 }
 .co-policy-body strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* Express pay */
@@ -769,7 +769,7 @@
   transform: translateY(-1px);
 }
 .co-xbtn:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .co-xbtn.apple {
@@ -797,7 +797,7 @@
   width: 100%;
   text-align: left;
   background: var(--paper);
-  border: 2px solid var(--plum);
+  border: 2px solid var(--line-strong);
   border-radius: 14px;
   padding: 15px 17px;
   margin-bottom: 10px;
@@ -814,7 +814,7 @@
   opacity: 1;
 }
 .co-saved-card:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .co-sc-check {
@@ -840,7 +840,7 @@
   font-weight: 900;
   letter-spacing: 0.08em;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 4px;
   padding: 3px 6px;
   flex: none;
@@ -851,7 +851,7 @@
 .co-sc-num {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .co-sc-exp {
   font-size: 12px;
@@ -985,7 +985,7 @@
 }
 .co-check-row input:checked + .co-check-box {
   background: var(--plum);
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .co-check-row input:checked + .co-check-box::after {
   content: "✓";
@@ -994,11 +994,11 @@
   font-weight: 700;
 }
 .co-check-row input:focus-visible + .co-check-box {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .co-check-row strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -1138,7 +1138,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(30px, 4vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   margin-bottom: 6px;
 }
@@ -1171,7 +1171,7 @@
 .co-ref strong {
   font-family: var(--sans);
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
 }
@@ -1182,7 +1182,7 @@
   display: flex;
 }
 .co-ref-copy:hover {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .co-ref-copy svg {
   width: 14px;
@@ -1234,7 +1234,7 @@
 .co-cd-val {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* Logistics callouts */
@@ -1274,7 +1274,7 @@
 .co-logi-h {
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 4px;
 }
 .co-logi-p {
@@ -1298,14 +1298,14 @@
   border-radius: 10px;
   padding: 9px 15px;
   cursor: pointer;
-  color: var(--plum);
+  color: var(--text-strong);
   display: flex;
   align-items: center;
   gap: 6px;
   transition: all 0.2s;
 }
 .co-cal-btn:hover {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(45, 27, 61, 0.04);
 }
 .co-cal-btn.wallet {
@@ -1362,7 +1362,7 @@
   display: none;
 }
 .cos-edit:hover {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .cos-edit.show {
   display: block;
@@ -1370,7 +1370,7 @@
 .cos-title {
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 3px;
 }
 .cos-meta {
@@ -1395,7 +1395,7 @@
 }
 .cos-line-val {
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   white-space: nowrap;
 }
 .cos-line-val.disc {
@@ -1406,7 +1406,7 @@
   justify-content: space-between;
   font-size: 16px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-top: 12px;
 }
 .cos-note {
@@ -1464,7 +1464,7 @@
   color: var(--ink);
 }
 .co-back-btn:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -1496,7 +1496,7 @@
 .co-mb-total {
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .co-mb-note {
   font-size: 12px;
@@ -1525,7 +1525,7 @@
   right: 0;
   z-index: 120;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: 13px;
   font-weight: 600;
   padding: 9px 20px;
@@ -1557,7 +1557,7 @@
 /* First-timer reassurance */
 .co-firsttimer {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 16px;
   padding: 16px 18px;
   margin-bottom: 18px;
@@ -1615,7 +1615,7 @@
   font-family: inherit;
 }
 .co-ft-toggle:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .co-ft-chev {
   transition: transform 0.25s var(--ease);
@@ -1681,7 +1681,7 @@
   padding: 2px;
 }
 .co-ft-dismiss:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* Meet the table */
@@ -1704,7 +1704,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .co-tc-sub {
@@ -1713,7 +1713,7 @@
   margin-top: 2px;
 }
 .co-tc-sub b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .co-table-wrap {
@@ -1809,7 +1809,7 @@ button.tbl-setting {
   }
 }
 .tbl-setting:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 4px;
 }
 
@@ -1908,13 +1908,13 @@ button.tbl-setting {
 }
 .tbl-seat.plum .tbl-av {
   background: rgba(45, 27, 61, 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* Host */
 .tbl-seat.host .tbl-av {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .tbl-seat.host .tbl-plate {
   border-color: rgba(45, 27, 61, 0.18);
@@ -2023,7 +2023,7 @@ button.tbl-setting {
   width: 196px;
   transform: translateX(-50%);
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 14px;
   padding: 13px 14px;
   z-index: 20;
@@ -2173,10 +2173,10 @@ button.tbl-setting {
 }
 .co-seg-btn.on {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .co-seg-btn:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .co-seg-btn svg {
@@ -2231,7 +2231,7 @@ button.tbl-setting {
 .co-host-name {
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -2256,7 +2256,7 @@ button.tbl-setting {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   background: transparent;
   border: 1.5px solid rgba(45, 27, 61, 0.18);
   border-radius: 999px;
@@ -2266,7 +2266,7 @@ button.tbl-setting {
   white-space: nowrap;
 }
 .co-host-ask:hover {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(45, 27, 61, 0.04);
 }
 .co-ask-box {
@@ -2302,7 +2302,7 @@ button.tbl-setting {
 .co-guest-lbl {
   font-size: 13px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2312,7 +2312,7 @@ button.tbl-setting {
   height: 22px;
   border-radius: 50%;
   background: rgba(45, 27, 61, 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 11px;
   font-weight: 700;
   display: flex;
@@ -2347,7 +2347,7 @@ button.tbl-setting {
   color: var(--accent-ink);
 }
 .co-gift-toggle input:focus-visible + .co-gift-pill {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .co-gift-note {
@@ -2367,7 +2367,7 @@ button.tbl-setting {
 .co-waitlist-link button {
   background: none;
   border: none;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   cursor: pointer;
   text-decoration: underline;
@@ -2390,7 +2390,7 @@ button.tbl-setting {
 .co-waitlist-h {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 4px;
 }
 .co-waitlist-p {
@@ -2423,18 +2423,18 @@ button.tbl-setting {
   border-color: rgba(45, 27, 61, 0.3);
 }
 .co-paytab.on {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(45, 27, 61, 0.02);
   box-shadow: 0 0 0 1px var(--plum) inset;
 }
 .co-paytab:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .co-paytab-t {
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -2510,7 +2510,7 @@ button.tbl-setting {
   justify-content: center;
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   border: 1.5px solid rgba(45, 27, 61, 0.12);
   border-radius: 10px;
   background: var(--cream);
@@ -2562,7 +2562,7 @@ button.tbl-setting {
 .co-mb-ref-val {
   font-size: 16px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.04em;
 }
@@ -2625,7 +2625,7 @@ button.tbl-setting {
   font-weight: 700;
 }
 .co-coc input:focus-visible + .co-coc-check {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .co-coc-txt {
@@ -2635,7 +2635,7 @@ button.tbl-setting {
   cursor: pointer;
 }
 .co-coc-txt strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .co-coc-more {
@@ -2745,7 +2745,7 @@ button.tbl-setting {
 .co-tl-t {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-top: 2px;
 }
 .co-tl-p {
@@ -2809,7 +2809,7 @@ button.tbl-setting {
   padding: 6px 13px;
   font-size: 12px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   box-shadow: 0 4px 12px -6px rgba(45, 27, 61, 0.4);
   display: flex;
   align-items: center;
@@ -2820,7 +2820,7 @@ button.tbl-setting {
   top: 12px;
   right: 12px;
   background: rgba(45, 27, 61, 0.85);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 8px;
   padding: 5px 10px;
   font-size: 11px;
@@ -2852,11 +2852,11 @@ button.tbl-setting {
 }
 .co-rem-chip.on {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .co-rem-chip:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 
@@ -2892,7 +2892,7 @@ button.tbl-setting {
   line-height: 1.5;
 }
 .co-echo-row b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -2928,7 +2928,7 @@ button.tbl-setting {
   line-height: 1.35;
 }
 .cos-who-txt b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .cos-safe {

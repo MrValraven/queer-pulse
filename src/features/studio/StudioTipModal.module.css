@@ -16,7 +16,7 @@
   width: 100%;
   max-width: 440px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 30px 28px 28px;
   box-shadow: 0 24px 60px rgba(var(--plum-rgb), 0.22);
@@ -54,7 +54,7 @@
 @media (hover: hover) {
   .modalSuccess .close:hover {
     background: rgba(var(--cream-rgb), 0.12);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 
@@ -95,7 +95,7 @@
 
 .amount {
   padding: 14px 0;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   background: var(--cream);
   font-family: var(--serif);
@@ -121,7 +121,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 0 12px;
   margin-bottom: 18px;
@@ -157,7 +157,7 @@
   height: 15px;
   margin-right: 8px;
   border: 2px solid rgba(var(--cream-rgb), 0.35);
-  border-top-color: var(--cream);
+  border-top-color: rgba(var(--cream-rgb), 1);
   border-radius: 50%;
   vertical-align: -2px;
   animation: spin 0.7s linear infinite;
@@ -182,7 +182,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 27px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 10px;
 }

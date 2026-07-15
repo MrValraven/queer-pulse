@@ -54,12 +54,7 @@ export interface AuthorDTO {
 }
 
 export type SubmissionStatus =
-  | "draft"
-  | "submitted"
-  | "in_review"
-  | "accepted"
-  | "rejected"
-  | "published";
+  "draft" | "submitted" | "in_review" | "accepted" | "rejected" | "published";
 
 export interface StorySubmissionDTO {
   id: string;

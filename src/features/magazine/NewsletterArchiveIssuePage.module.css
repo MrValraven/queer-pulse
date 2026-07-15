@@ -17,7 +17,7 @@
 }
 
 .head {
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   padding-bottom: 36px;
   margin-bottom: 12px;
 }
@@ -53,7 +53,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(38px, 6vw, 64px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 22px;
@@ -80,7 +80,7 @@
   color: var(--ink-40);
 }
 .meta b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -89,7 +89,7 @@
 }
 .section {
   padding: 36px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .kicker {
   font-size: 11px;
@@ -103,7 +103,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(26px, 4vw, 34px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin-bottom: 14px;
@@ -136,7 +136,7 @@
   gap: 18px;
   padding: 14px 18px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   transition: border-color 0.2s var(--ease);
 }
@@ -151,7 +151,7 @@
   gap: 8px;
   font-weight: 600;
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .linkIcon {
   width: 15px;
@@ -175,7 +175,7 @@
 }
 .signoffInner {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-card);
   padding: 40px 44px;
   position: relative;
@@ -202,7 +202,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 14px;
 }

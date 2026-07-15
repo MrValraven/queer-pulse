@@ -28,7 +28,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(54px, 8vw, 108px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.95;
   margin-bottom: 24px;
@@ -47,7 +47,7 @@
   margin-bottom: 28px;
 }
 .lead b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .storeRow {
@@ -62,7 +62,7 @@
   gap: 12px;
   padding: 13px 20px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 14px;
   text-decoration: none;
   border: none;
@@ -117,7 +117,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .sendPhone h4 em {
@@ -141,18 +141,18 @@
   font-family: var(--sans);
   font-size: 14px;
   padding: 11px 14px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.15);
+  border: 1.5px solid rgba(var(--line-rgb), 0.15);
   border-radius: 11px;
   background: var(--paper);
   transition: border-color 0.2s var(--ease);
 }
 .sendForm input:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 
 .qrCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 24px;
   padding: 30px;
   box-shadow: 0 12px 40px -24px rgba(var(--plum-rgb), 0.36);
@@ -160,7 +160,7 @@
 }
 .qrFrame {
   background: var(--paper);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 18px;
   padding: 18px;
   margin-bottom: 18px;
@@ -178,7 +178,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
 }
@@ -194,7 +194,7 @@
 
 .whatSection {
   background: var(--paper);
-  border-top: 2px solid var(--plum);
+  border-top: 2px solid var(--line-strong);
   padding: 80px 0 90px;
 }
 .whatInner {
@@ -206,7 +206,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 36px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin-bottom: 8px;
@@ -235,7 +235,7 @@
 .whatCard {
   padding: 24px 26px;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: 18px;
 }
 .whatCard .ic {
@@ -273,7 +273,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
@@ -293,7 +293,7 @@
   max-width: 60ch;
 }
 .notIn b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .notIn em {
@@ -311,7 +311,7 @@
 }
 .shareCard {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 24px;
   padding: 48px;
   display: grid;
@@ -356,7 +356,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 32px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin-bottom: 10px;

@@ -34,7 +34,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 5.5vw, 76px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.97;
   max-width: 16ch;
@@ -81,7 +81,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(26px, 3.5vw, 38px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
   margin-bottom: 18px;
@@ -116,7 +116,7 @@
 .scopeCard {
   border-radius: 14px;
   padding: 18px 20px;
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .scopeIn {
   background: rgba(var(--jade-rgb), 0.06);
@@ -124,7 +124,7 @@
 }
 .scopeOut {
   background: rgba(var(--plum-rgb), 0.03);
-  border-color: rgba(var(--plum-rgb), 0.08);
+  border-color: rgba(var(--line-rgb), 0.08);
 }
 .scopeHead {
   display: flex;
@@ -201,7 +201,7 @@
   height: 35px;
   border-radius: 50%;
   background: var(--cream);
-  border: 2px solid rgba(var(--plum-rgb), 0.18);
+  border: 2px solid rgba(var(--line-rgb), 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,12 +209,12 @@
   z-index: 1;
   font-weight: 700;
   font-size: 13px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tlTitle {
   font-weight: 700;
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 4px;
 }
 .tlText {
@@ -243,7 +243,7 @@
 }
 .hallCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px;
   text-align: center;
@@ -259,7 +259,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0 auto 10px;
 }
 .hallName {
@@ -290,7 +290,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 20px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
@@ -308,7 +308,7 @@
 /* PGP */
 .pgpCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
   padding: 24px;
 }
@@ -322,7 +322,7 @@
 }
 .pgpBlock {
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 10px;
   padding: 14px;
   font-family: var(--sans);

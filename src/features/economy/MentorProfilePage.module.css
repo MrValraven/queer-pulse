@@ -15,7 +15,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -26,7 +26,7 @@
   align-items: flex-start;
   padding-bottom: 32px;
   margin-bottom: 36px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 @media (max-width: 640px) {
   .head {
@@ -63,7 +63,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(34px, 4.5vw, 46px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin-bottom: 6px;
@@ -136,7 +136,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 14px;
 }
@@ -157,7 +157,7 @@
   color: var(--accent-ink);
 }
 .sec p b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -174,13 +174,13 @@
 .what {
   padding: 16px 18px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 12px;
 }
 .what b {
   display: block;
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 3px;
 }
@@ -195,7 +195,7 @@
   grid-template-columns: 36px 1fr;
   gap: 14px;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .procRow:last-child {
   border-bottom: none;
@@ -212,7 +212,7 @@
 .procRow b {
   display: block;
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 3px;
 }
@@ -237,7 +237,7 @@
   gap: 7px;
   padding: 5px 11px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 999px;
   font-size: 13px;
   color: var(--ink);
@@ -264,7 +264,7 @@
 }
 .avPlum {
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .menteesFoot {
   font-size: 13px;
@@ -288,13 +288,13 @@
 }
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 24px;
 }
 .bookHead {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 22px 24px;
   border-radius: 18px 18px 0 0;
   margin: -22px -24px 22px;
@@ -311,7 +311,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 32px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -331,13 +331,13 @@
   padding: 9px 0;
   font-size: 13.5px;
   color: var(--ink-60);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .row:last-of-type {
   border-bottom: none;
 }
 .row b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .row .jade {
@@ -372,7 +372,7 @@
   font-size: 13.5px;
 }
 .moreLinks a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }

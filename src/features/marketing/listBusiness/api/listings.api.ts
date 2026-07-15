@@ -4,6 +4,7 @@ import {
   apiPatch,
   apiDelete,
 } from "../../../../shared/api/client";
+import { toItemsPage } from "../../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../../shared/api/refs";
 import type { ListingDraft, ListingStatus } from "../listBusiness.data";
 
@@ -33,8 +34,12 @@ export const createListing = (dto: CreateListingDto) =>
   apiPost<ListingDTO>("/listings", dto);
 
 /** GET /listings/mine?page= — the caller's own submitted listings. */
-export const getMyListings = (page = 1) =>
-  apiGet<Paginated<ListingDTO>>(`/listings/mine?page=${page}`);
+export async function getMyListings(page = 1): Promise<Paginated<ListingDTO>> {
+  const res = await apiGet<ListingDTO[] | Paginated<ListingDTO>>(
+    `/listings/mine?page=${page}`,
+  );
+  return toItemsPage(res);
+}
 
 /** GET /listings/:ref — a single listing by its reference. */
 export const getListing = (ref: string) =>

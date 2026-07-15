@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import {
   Navigate,
   Route,
@@ -7,7 +7,17 @@ import {
   useLocation,
 } from "react-router-dom";
 import { RouteFallback } from "../shared/components/feedback/RouteFallback";
+import { AuthLoader } from "../shared/components/feedback/AuthLoader";
 import { ErrorBoundary } from "../shared/components/feedback/ErrorBoundary";
+
+/**
+ * Wrap an auth/onboarding route element in its own Suspense boundary so its
+ * lazy chunk loads behind the branded {@link AuthLoader} instead of the generic
+ * app-wide {@link RouteFallback} spinner.
+ */
+const auth = (element: ReactNode) => (
+  <Suspense fallback={<AuthLoader />}>{element}</Suspense>
+);
 const HomePage = lazy(() =>
   import("../features/homepage/HomePage").then((m) => ({
     default: m.HomePage,
@@ -1171,11 +1181,6 @@ const MagicLinkPage = lazy(() =>
     default: m.MagicLinkPage,
   })),
 );
-const SetNewPasswordPage = lazy(() =>
-  import("../features/auth/SetNewPasswordPage").then((m) => ({
-    default: m.SetNewPasswordPage,
-  })),
-);
 const ConfirmEmailPage = lazy(() =>
   import("../features/auth/ConfirmEmailPage").then((m) => ({
     default: m.ConfirmEmailPage,
@@ -1442,7 +1447,8 @@ const AdminPartnerApplicationsPage = lazy(() =>
   })),
 );
 import { KNOWN_ROUTE_SLUGS, routes } from "./routeMap";
-import { useAuthGateRedirect } from "./authGate";
+import { useAuthGateRedirect, isGatedPath, isGuestOnlyPath } from "./authGate";
+import { useAuth } from "./providers/authContext";
 
 /** Top-level slugs that now have real pages — excluded from the placeholder fallback. */
 const BUILT_SLUGS = new Set([
@@ -1584,7 +1590,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/welcome-tour", routes.welcomeTour],
   ["/2fa-setup", routes.twoFactorSetup],
   ["/magic-link", routes.magicLink],
-  ["/set-new-password", routes.setNewPassword],
   ["/confirm-email", routes.confirmEmail],
   ["/recovery-codes", routes.recoveryCodes],
   // About
@@ -1669,8 +1674,17 @@ function MemberProfileRedirect() {
 export function AppRoutes() {
   // Walled-garden gate: bounce logged-out visitors off member-only routes to
   // sign-in (with a ?next= back-link). Public/marketing pages fall through.
+  const { checking } = useAuth();
   const gateRedirect = useAuthGateRedirect();
   const { pathname } = useLocation();
+  // While the live session is still being determined, hold gated routes on the
+  // branded loader — showing the page (or bouncing to sign-in) prematurely would
+  // flash. Guest-only auth screens are held too, so a signed-in member reloading
+  // one doesn't flash the sign-in form before the redirect. Public/marketing
+  // pages render immediately.
+  if (checking && (isGatedPath(pathname) || isGuestOnlyPath(pathname))) {
+    return <AuthLoader />;
+  }
   if (gateRedirect) return <Navigate to={gateRedirect} replace />;
 
   return (
@@ -1935,29 +1949,40 @@ export function AppRoutes() {
           <Route path={routes.appealOutcome} element={<AppealOutcomePage />} />
           <Route path={routes.crisisChat} element={<CrisisChatPage />} />
 
-          {/* Auth & onboarding */}
-          <Route path={routes.signIn} element={<SignInPage />} />
-          <Route path={routes.createAccount} element={<CreateAccountPage />} />
-          <Route path={routes.invite} element={<InvitePage />} />
+          {/* Auth & onboarding — branded AuthLoader fallback per chunk */}
+          <Route path={routes.signIn} element={auth(<SignInPage />)} />
+          <Route
+            path={routes.createAccount}
+            element={auth(<CreateAccountPage />)}
+          />
+          <Route path={routes.invite} element={auth(<InvitePage />)} />
           <Route
             path={`${routes.invite}/:code`}
-            element={<InviteLandingPage />}
+            element={auth(<InviteLandingPage />)}
           />
-          <Route path={routes.requestInvite} element={<RequestInvitePage />} />
-          <Route path="/auth/onboarding" element={<OnboardingPage />} />
-          <Route path={routes.welcome} element={<OnboardingPage />} />
-          <Route path={routes.welcomeTour} element={<WelcomeTourPage />} />
+          <Route
+            path={routes.requestInvite}
+            element={auth(<RequestInvitePage />)}
+          />
+          <Route path="/auth/onboarding" element={auth(<OnboardingPage />)} />
+          <Route path={routes.welcome} element={auth(<OnboardingPage />)} />
+          <Route
+            path={routes.welcomeTour}
+            element={auth(<WelcomeTourPage />)}
+          />
           <Route
             path={routes.twoFactorSetup}
-            element={<TwoFactorSetupPage />}
+            element={auth(<TwoFactorSetupPage />)}
           />
-          <Route path={routes.magicLink} element={<MagicLinkPage />} />
+          <Route path={routes.magicLink} element={auth(<MagicLinkPage />)} />
           <Route
-            path={routes.setNewPassword}
-            element={<SetNewPasswordPage />}
+            path={routes.confirmEmail}
+            element={auth(<ConfirmEmailPage />)}
           />
-          <Route path={routes.confirmEmail} element={<ConfirmEmailPage />} />
-          <Route path={routes.recoveryCodes} element={<RecoveryCodesPage />} />
+          <Route
+            path={routes.recoveryCodes}
+            element={auth(<RecoveryCodesPage />)}
+          />
           <Route
             path="/invite/:code"
             element={

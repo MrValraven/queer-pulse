@@ -1,7 +1,7 @@
 /* ── Form column ───────────────────────────────────────────────────────── */
 .formCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 28px;
 }
@@ -35,7 +35,7 @@
 .input {
   width: 100%;
   box-sizing: border-box;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 16px;
   font-family: var(--sans);
@@ -102,14 +102,14 @@
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 12px;
   background: var(--cream);
   transition: border-color 0.2s var(--ease);
 }
 @media (hover: hover) {
   .item:hover {
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
   }
 }
 .itemMain {
@@ -137,7 +137,7 @@
   font-family: var(--sans);
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   flex-shrink: 0;
 }
 .remove {
@@ -169,7 +169,7 @@
   background: var(--plum);
   border-radius: var(--radius-card);
   padding: 32px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   --bar: var(--jade);
 }
 .zoneNear {
@@ -195,7 +195,7 @@
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin: 0 0 24px;
 }
 
@@ -245,7 +245,7 @@
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 400;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 
@@ -289,7 +289,7 @@
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 400;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .hardWarnTitle svg {
   flex-shrink: 0;
@@ -315,7 +315,7 @@
 }
 .hardWarnNote em {
   font-style: normal;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .disclaimer {

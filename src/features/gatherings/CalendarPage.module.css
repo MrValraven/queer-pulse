@@ -31,7 +31,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(36px, 5.5vw, 72px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
   margin-bottom: 16px;
@@ -87,7 +87,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   background: transparent;
   cursor: pointer;
   font-size: 16px;
@@ -101,7 +101,7 @@
 }
 @media (hover: hover) {
   .navBtn:hover {
-    border-color: rgba(var(--plum-rgb), 0.4);
+    border-color: rgba(var(--line-rgb), 0.4);
     color: var(--ink);
   }
 }
@@ -109,13 +109,13 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 28px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
 }
 
 .grid {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   overflow: hidden;
 }
@@ -123,7 +123,7 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   background: rgba(var(--plum-rgb), 0.04);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .wd {
   padding: 10px 0;
@@ -141,7 +141,7 @@
 .day {
   min-height: 74px;
   padding: 8px 10px;
-  border: 0 solid rgba(var(--plum-rgb), 0.06);
+  border: 0 solid rgba(var(--line-rgb), 0.06);
   border-right-width: 1px;
   border-bottom-width: 1px;
   position: relative;
@@ -204,7 +204,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 18px;
 }
@@ -221,7 +221,7 @@
 }
 .eventCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 16px;
   display: flex;
@@ -246,7 +246,7 @@
   font-family: var(--serif);
   font-size: 26px;
   font-weight: 500;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1;
 }
 .ecM {
@@ -281,13 +281,13 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 20px;
 }
 .subStrip {
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px 26px;
   margin-top: 32px;
@@ -296,7 +296,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 10px;
 }
@@ -312,7 +312,7 @@
 }
 .subInput {
   flex: 1;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 10px;
   padding: 11px 14px;
   font-family: var(--sans);

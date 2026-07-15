@@ -29,8 +29,11 @@ export function useMyEventsState(): MyEventsValue {
   // GET /events (per cat-bearing filter) + GET /event-invites. Either way the
   // result lands here as a flat list, then every RSVP/bulk/notification
   // action below keeps mutating it locally exactly as before.
-  const { events: sourceEvents, notifs: sourceNotifs, loading: dataLoading } =
-    useMyEventsData();
+  const {
+    events: sourceEvents,
+    notifs: sourceNotifs,
+    loading: dataLoading,
+  } = useMyEventsData();
   const [events, setEvents] = useState<MyEvent[]>(sourceEvents);
   const [notifs, setNotifs] = useState<Notif[]>(sourceNotifs);
   useEffect(() => setEvents(sourceEvents), [sourceEvents]);

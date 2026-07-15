@@ -33,7 +33,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(30px, 4.6vw, 46px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.05;
 }
@@ -85,7 +85,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 19px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
@@ -120,7 +120,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(26px, 3.4vw, 34px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin-bottom: 18px;
@@ -164,7 +164,7 @@
   font-weight: 300;
   font-size: 22px;
   font-style: italic;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.4;
   border-left: 3px solid var(--accent);
   padding: 6px 0 6px 22px;
@@ -201,7 +201,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 17px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 14px;
 }
@@ -225,7 +225,7 @@
 }
 .lic li em {
   font-style: italic;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .lic li svg {
   width: 15px;
@@ -263,7 +263,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 4px;
 }
 .mt p {

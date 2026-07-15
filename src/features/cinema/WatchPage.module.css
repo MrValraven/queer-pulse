@@ -1,6 +1,8 @@
 .root {
   background: #0e0820;
-  color: var(--cream);
+  /* Permanently-dark island: base text must use the non-flipping light cream
+     channels (var(--cream) flips to near-black in dark mode). */
+  color: rgba(var(--cream-rgb), 0.92);
   min-height: 100svh;
 }
 .nav {
@@ -25,7 +27,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 19px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .brand .cin {
   font-style: italic;
@@ -51,7 +53,7 @@
 }
 @media (hover: hover) {
   .navLinks a:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .navRight {
@@ -62,7 +64,7 @@
   color: rgba(var(--cream-rgb), 0.55);
 }
 .navRight strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .stage {
@@ -120,7 +122,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 32px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .overlayHead em {
@@ -153,7 +155,7 @@
 }
 .overlayRow .k {
   font-weight: 700;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .overlayRow .t {
   font-family: var(--serif);
@@ -193,14 +195,14 @@
 .playBtn svg {
   width: 34px;
   height: 34px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-left: 5px;
 }
 .psTitle {
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .psTitle em {
@@ -268,10 +270,10 @@
 }
 .ctrlBtn.primary {
   background: rgba(var(--cream-rgb), 0.92);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ctrlBtn.primary svg {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ctrlTime {
   font-size: 12.5px;
@@ -279,7 +281,7 @@
   font-variant-numeric: tabular-nums;
 }
 .ctrlTime .cur {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .ctrlSpace {
   flex: 1;
@@ -296,7 +298,7 @@
 }
 .ctrlPillOn {
   background: rgba(var(--cream-rgb), 0.14);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: rgba(var(--cream-rgb), 0.4);
 }
 .ctrlLang {
@@ -306,7 +308,7 @@
   padding: 6px 10px;
   font-family: var(--sans);
   font-size: 12.5px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .ctrlLang:focus-visible {
   outline: none;
@@ -340,7 +342,7 @@
     border-bottom-color 0.2s var(--ease);
 }
 .spTabActive {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-bottom-color: var(--accent);
 }
 .spDot {
@@ -360,7 +362,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .spTitle em {
   font-style: italic;
@@ -411,7 +413,7 @@
   color: rgba(var(--cream-rgb), 0.5);
 }
 .spFact .v {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .lobbyMsg {
   display: flex;
@@ -426,7 +428,7 @@
   font-size: 12px;
 }
 .lobbyHead .name {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .lobbyHead .badge {
@@ -464,7 +466,7 @@
   border-radius: 8px;
   padding: 9px 12px;
   font-size: 13px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--sans);
 }
 .spInput input:focus-visible {
@@ -486,7 +488,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 28px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   margin-bottom: 20px;
 }
@@ -523,7 +525,7 @@
 .nfTitle {
   font-family: var(--serif);
   font-size: 14.5px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.2;
 }
 .nfTitle em {
@@ -583,7 +585,7 @@
 .splitLegend .v {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: block;
 }
 .splitLegend .v em {

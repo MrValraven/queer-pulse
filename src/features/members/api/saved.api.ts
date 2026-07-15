@@ -1,4 +1,5 @@
 import { apiGet, apiPut, apiDelete } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 import type { Paginated } from "../../../shared/api/refs";
 import type {
   SavedItem,
@@ -34,12 +35,17 @@ export interface SavedItemBody {
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
-export function getSaved(params: { kind?: SavedKind; page?: number } = {}) {
+export async function getSaved(
+  params: { kind?: SavedKind; page?: number } = {},
+): Promise<Paginated<SavedItemDTO>> {
   const q = new URLSearchParams();
   if (params.kind) q.set("kind", params.kind);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
-  return apiGet<Paginated<SavedItemDTO>>(`/me/saved${qs ? `?${qs}` : ""}`);
+  const res = await apiGet<SavedItemDTO[] | Paginated<SavedItemDTO>>(
+    `/me/saved${qs ? `?${qs}` : ""}`,
+  );
+  return toItemsPage(res);
 }
 
 /** Upsert a saved item. Returns 204. The id contains a colon → encode it. */

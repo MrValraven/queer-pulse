@@ -1,10 +1,8 @@
-export type CoverStyle = "gradient" | "stripe" | "subtle";
+export type CoverStyle = "stripe";
 export type PatternKey = "none" | "stripe" | "dots" | "grid";
 
 export const COVER_STYLES: { key: CoverStyle; label: string }[] = [
-  { key: "gradient", label: "Gradient wash" },
   { key: "stripe", label: "Bold stripe" },
-  { key: "subtle", label: "Subtle tint" },
 ];
 
 export const PATTERNS: {

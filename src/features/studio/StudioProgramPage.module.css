@@ -40,7 +40,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(30px, 4.5vw, 52px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -130,7 +130,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 21px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
 .count {
@@ -174,7 +174,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 27px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
 }
@@ -280,7 +280,7 @@
 .trackTitle {
   font-family: var(--serif);
   font-size: 15px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
@@ -385,7 +385,7 @@
 .collTitle {
   font-family: var(--serif);
   font-size: 16px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .collTitle em {
@@ -454,7 +454,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 22px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1;
 }
 .dateBox span {
@@ -470,7 +470,7 @@
 .bcastTitle {
   font-family: var(--serif);
   font-size: 16px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .bcastTitle em {
@@ -517,7 +517,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 19px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
 .inboxHead h2 em {
@@ -579,7 +579,7 @@
 .subTitle {
   font-family: var(--serif);
   font-size: 15px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .subTitle em {

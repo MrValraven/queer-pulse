@@ -41,7 +41,7 @@
 /* ---------- Page header ---------- */
 .ev-head {
   padding-bottom: 30px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
   margin-bottom: 34px;
 }
 .ev-eyebrow {
@@ -63,7 +63,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(38px, 5vw, 62px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
   margin-bottom: 12px;
@@ -97,7 +97,7 @@
 /* ---------- Calendar hero ---------- */
 .cal-card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px 26px 26px;
   position: sticky;
@@ -124,7 +124,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 23px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .cal-controls {
@@ -154,7 +154,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
   cursor: pointer;
   display: flex;
@@ -168,8 +168,8 @@
 }
 @media (hover: hover) {
   .cal-arrow:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 .cal-arrow svg {
@@ -204,7 +204,7 @@
 }
 .cal-view-btn.on {
   background: var(--paper);
-  color: var(--plum);
+  color: var(--text-strong);
   box-shadow: 0 1px 5px -2px rgba(var(--plum-rgb), 0.3);
 }
 
@@ -263,8 +263,8 @@
 }
 .cal-cell.selected {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .cal-cell.selected .cal-dots .cal-dot {
   box-shadow: 0 0 0 1.5px var(--plum);
@@ -307,7 +307,7 @@ button.cal-cell.has {
   font-weight: 600;
 }
 .cal-cell:focus-visible {
-  outline: 2.5px solid var(--plum);
+  outline: 2.5px solid var(--line-strong);
   outline-offset: -2px;
   z-index: 2;
 }
@@ -324,7 +324,7 @@ button.cal-cell.has {
   align-items: flex-start;
   padding: 10px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   background: rgba(var(--plum-rgb), 0.015);
   cursor: pointer;
   text-align: left;
@@ -361,7 +361,7 @@ button.cal-cell.has {
 .cw-num {
   font-family: var(--serif);
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1;
   margin-top: 2px;
 }
@@ -399,7 +399,7 @@ button.cal-cell.has {
   gap: 10px;
 }
 .cy-m {
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: 12px;
   padding: 10px 8px;
   cursor: pointer;
@@ -413,7 +413,7 @@ button.cal-cell.has {
 @media (hover: hover) {
   .cy-m:hover {
     background: rgba(var(--plum-rgb), 0.05);
-    border-color: rgba(var(--plum-rgb), 0.2);
+    border-color: rgba(var(--line-rgb), 0.2);
   }
 }
 .cy-m.now {
@@ -422,7 +422,7 @@ button.cal-cell.has {
 .cy-name {
   font-size: 12px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .cy-dots {
@@ -447,7 +447,7 @@ button.cal-cell.has {
   gap: 16px;
   margin-top: 20px;
   padding-top: 18px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .cal-leg {
   display: flex;
@@ -479,7 +479,7 @@ button.cal-cell.has {
   gap: 8px;
   margin-top: 18px;
   padding-top: 18px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .cal-sub-btn {
   display: flex;
@@ -491,7 +491,7 @@ button.cal-cell.has {
   font-weight: 600;
   color: var(--ink);
   background: rgba(var(--plum-rgb), 0.035);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: 12px;
   padding: 10px 13px;
   cursor: pointer;
@@ -502,7 +502,7 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .cal-sub-btn:hover {
-    border-color: rgba(var(--plum-rgb), 0.2);
+    border-color: rgba(var(--line-rgb), 0.2);
     background: rgba(var(--plum-rgb), 0.06);
   }
 }
@@ -528,7 +528,7 @@ button.cal-cell.has {
 .insights {
   margin-top: 16px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 18px;
   padding: 20px 22px;
   position: relative;
@@ -589,7 +589,7 @@ button.cal-cell.has {
 .ins-item .ins-n {
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .ins-item .ins-l {
   font-size: 11px;
@@ -608,7 +608,7 @@ button.cal-cell.has {
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 600;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
   border-radius: 999px;
   padding: 8px 17px;
@@ -625,14 +625,14 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .pill:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 .pill.active {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .pill .pc {
   font-size: 11.5px;
@@ -665,7 +665,7 @@ button.cal-cell.has {
 }
 .ev-search {
   width: 100%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 11px 14px 11px 40px;
   font-family: var(--sans);
@@ -676,7 +676,7 @@ button.cal-cell.has {
   transition: border-color 0.2s;
 }
 .ev-search:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .ev-filters {
   display: flex;
@@ -688,7 +688,7 @@ button.cal-cell.has {
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 600;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
   border-radius: 999px;
   padding: 6px 13px;
@@ -701,8 +701,8 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .fchip:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 .fchip.on {
@@ -724,14 +724,14 @@ button.cal-cell.has {
   font-weight: 600;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 7px 12px;
   cursor: pointer;
   outline: none;
 }
 .ev-sort:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .ctrl-btn {
   font-family: var(--sans);
@@ -739,7 +739,7 @@ button.cal-cell.has {
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 7px 13px;
   cursor: pointer;
@@ -753,14 +753,14 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .ctrl-btn:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 .ctrl-btn.on {
   background: rgba(var(--plum-rgb), 0.06);
-  color: var(--plum);
-  border-color: rgba(var(--plum-rgb), 0.25);
+  color: var(--text-strong);
+  border-color: rgba(var(--line-rgb), 0.25);
 }
 .ctrl-btn svg {
   width: 13px;
@@ -790,7 +790,7 @@ button.cal-cell.has {
   color: var(--ink-60);
 }
 .dayfilter-label strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .dayfilter-clear {
@@ -847,7 +847,7 @@ button.cal-cell.has {
 .ev-card {
   position: relative;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 18px 20px;
   display: flex;
@@ -915,7 +915,7 @@ button.cal-cell.has {
   border-radius: 13px;
   background: rgba(var(--plum-rgb), 0.04);
   padding: 10px 0 11px;
-  border: 1px solid rgba(var(--plum-rgb), 0.06);
+  border: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .ev-card.hosting .ev-tile {
   background: rgba(var(--accent-rgb), 0.1);
@@ -935,7 +935,7 @@ button.cal-cell.has {
   font-family: var(--serif);
   font-size: 27px;
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1;
   margin-top: 3px;
   letter-spacing: -0.02em;
@@ -955,7 +955,7 @@ button.cal-cell.has {
   width: 22px;
   height: 22px;
   border-radius: 7px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.25);
+  border: 1.5px solid rgba(var(--line-rgb), 0.25);
   background: var(--paper);
   cursor: pointer;
   display: none;
@@ -1023,7 +1023,7 @@ button.cal-cell.has {
 }
 .status-pill.maybe {
   background: rgba(var(--plum-rgb), 0.06);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .status-pill.maybe .sd {
   background: var(--plum);
@@ -1057,7 +1057,7 @@ button.cal-cell.has {
 .status-pill.pending {
   background: transparent;
   color: var(--ink-60);
-  border: 1px solid rgba(var(--plum-rgb), 0.18);
+  border: 1px solid rgba(var(--line-rgb), 0.18);
 }
 .status-pill.pending .sd {
   background: var(--ink-40);
@@ -1101,7 +1101,7 @@ button.cal-cell.has {
 .ev-name {
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
   margin-bottom: 5px;
@@ -1295,7 +1295,7 @@ button.cal-cell.has {
   background: var(--accent);
 }
 .acc-chip.policy {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.07);
 }
 .acc-chip.policy .ad {
@@ -1358,7 +1358,7 @@ button.cal-cell.has {
   color: var(--ink-60);
 }
 .ev-edge.cancel strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ev-edge.review {
   background: rgba(var(--accent-rgb), 0.07);
@@ -1396,7 +1396,7 @@ button.cal-cell.has {
 @media (hover: hover) {
   .ev-series:hover {
     background: rgba(var(--plum-rgb), 0.08);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .ev-series svg {
@@ -1454,7 +1454,7 @@ button.cal-cell.has {
   font-size: 12px;
   color: var(--ink-60);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 999px;
   padding: 3px 10px;
 }
@@ -1464,7 +1464,7 @@ button.cal-cell.has {
   line-height: 1.55;
 }
 .dof-info strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -1472,7 +1472,7 @@ button.cal-cell.has {
 .ev-price {
   font-size: 11.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.06);
   border-radius: 999px;
   padding: 3px 10px;
@@ -1485,7 +1485,7 @@ button.cal-cell.has {
   gap: 7px;
   margin-top: 14px;
   padding-top: 13px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .ev-card.hosting .card-tools {
   border-top-color: rgba(var(--accent-rgb), 0.16);
@@ -1499,7 +1499,7 @@ button.cal-cell.has {
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.13);
+  border: 1px solid rgba(var(--line-rgb), 0.13);
   border-radius: 999px;
   padding: 6px 13px;
   cursor: pointer;
@@ -1510,8 +1510,8 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .tool-btn:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
     background: rgba(var(--plum-rgb), 0.03);
   }
 }
@@ -1539,7 +1539,7 @@ button.cal-cell.has {
   z-index: 180;
   min-width: 208px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 14px;
   box-shadow: 0 22px 54px -18px rgba(var(--plum-rgb), 0.42);
   padding: 6px;
@@ -1599,7 +1599,7 @@ button.cal-cell.has {
 .disco {
   margin-top: 34px;
   padding-top: 26px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .disco-head {
   display: flex;
@@ -1611,7 +1611,7 @@ button.cal-cell.has {
 .disco-title {
   font-family: var(--serif);
   font-size: 23px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .disco-title em {
@@ -1625,7 +1625,7 @@ button.cal-cell.has {
 }
 .disco-card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 16px 17px;
   display: flex;
@@ -1650,7 +1650,7 @@ button.cal-cell.has {
 .disco-name {
   font-family: var(--serif);
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.22;
   margin-bottom: 5px;
 }
@@ -1674,7 +1674,7 @@ button.cal-cell.has {
 .empty {
   text-align: center;
   padding: 58px 24px;
-  border: 1.5px dashed rgba(var(--plum-rgb), 0.16);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.16);
   border-radius: 20px;
   background: rgba(var(--plum-rgb), 0.015);
   animation: qpTabIn 0.3s var(--ease) both;
@@ -1714,7 +1714,7 @@ button.cal-cell.has {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 25px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 9px;
 }
@@ -1773,7 +1773,7 @@ button.cal-cell.has {
 }
 .mview-btn.on {
   background: var(--paper);
-  color: var(--plum);
+  color: var(--text-strong);
   box-shadow: 0 2px 8px -3px rgba(var(--plum-rgb), 0.2);
 }
 .mview-btn svg {
@@ -1786,7 +1786,7 @@ button.cal-cell.has {
   position: absolute;
   z-index: 60;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 12px;
   padding: 10px 13px;
   font-size: 12px;
@@ -1924,10 +1924,10 @@ button.cal-cell.has {
   width: 14px;
   height: 14px;
   margin-top: 1px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ev-conflict strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -1942,7 +1942,7 @@ button.cal-cell.has {
   align-items: center;
   gap: 14px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 999px;
   padding: 11px 12px 11px 22px;
   box-shadow: 0 18px 44px -14px rgba(36, 20, 48, 0.6);
@@ -1970,7 +1970,7 @@ button.cal-cell.has {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.16);
   border: none;
   border-radius: 999px;
@@ -1994,7 +1994,7 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .bulk-close:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 
@@ -2006,7 +2006,7 @@ button.cal-cell.has {
   right: 0;
   z-index: 300;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   text-align: center;
   font-size: 13px;
   font-weight: 600;
@@ -2026,7 +2026,7 @@ button.cal-cell.has {
 }
 .sk-card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: 18px;
   padding: 18px 20px;
   display: flex;
@@ -2071,13 +2071,13 @@ button.cal-cell.has {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--plum);
+  color: var(--text-strong);
   transition:
     background 0.2s var(--ease),
     border-color 0.2s var(--ease);
@@ -2086,7 +2086,7 @@ button.cal-cell.has {
 @media (hover: hover) {
   .notif-btn:hover,
   .gear-btn:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
     background: rgba(var(--plum-rgb), 0.03);
   }
 }
@@ -2119,7 +2119,7 @@ button.cal-cell.has {
   width: 344px;
   max-width: calc(100vw - 40px);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 18px;
   box-shadow: 0 24px 60px -20px rgba(var(--plum-rgb), 0.42);
   z-index: 140;
@@ -2131,12 +2131,12 @@ button.cal-cell.has {
   align-items: center;
   justify-content: space-between;
   padding: 15px 18px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .notif-h-title {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .notif-clear {
@@ -2162,7 +2162,7 @@ button.cal-cell.has {
   display: flex;
   gap: 11px;
   padding: 13px 18px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   border-left: none;
   border-right: none;
   border-top: none;
@@ -2194,7 +2194,7 @@ button.cal-cell.has {
 }
 .notif-item:not(.unread) .ni-dot {
   background: transparent;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.18);
+  border: 1.5px solid rgba(var(--line-rgb), 0.18);
 }
 .ni-body {
   flex: 1;
@@ -2207,7 +2207,7 @@ button.cal-cell.has {
 }
 .ni-text strong {
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ni-time {
   font-size: 11.5px;
@@ -2274,7 +2274,7 @@ button.cal-cell.has {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 27px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
 }
@@ -2313,7 +2313,7 @@ button.cal-cell.has {
 .field input,
 .field select {
   width: 100%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 11px;
   padding: 11px 13px;
   font-family: var(--sans);
@@ -2326,7 +2326,7 @@ button.cal-cell.has {
 .field textarea:focus,
 .field input:focus,
 .field select:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .field textarea {
   resize: vertical;
@@ -2338,7 +2338,7 @@ button.cal-cell.has {
   align-items: center;
   gap: 12px;
   background: var(--paper);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 13px;
   padding: 13px 15px;
   cursor: pointer;
@@ -2350,7 +2350,7 @@ button.cal-cell.has {
   width: 21px;
   height: 21px;
   border-radius: 7px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.25);
+  border: 1.5px solid rgba(var(--line-rgb), 0.25);
   flex: none;
   display: flex;
   align-items: center;
@@ -2420,7 +2420,7 @@ button.cal-cell.has {
   justify-content: space-between;
   gap: 14px;
   padding: 13px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .set-row:last-child {
   border-bottom: none;
@@ -2446,7 +2446,7 @@ button.cal-cell.has {
   justify-content: space-between;
   gap: 12px;
   padding: 13px 15px;
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 12px;
   background: var(--paper);
   cursor: pointer;
@@ -2458,7 +2458,7 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .set-link-row:hover {
-    border-color: rgba(var(--plum-rgb), 0.25);
+    border-color: rgba(var(--line-rgb), 0.25);
   }
 }
 .slr-t {
@@ -2501,7 +2501,7 @@ button.cal-cell.has {
 }
 .confirm-panel {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 26px;
   padding: 44px 40px 38px;
   max-width: 460px;
@@ -2612,7 +2612,7 @@ button.cal-cell.has {
   align-items: center;
   gap: 14px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 11px 13px 11px 20px;
   border-radius: 999px;
   box-shadow: 0 14px 36px -12px rgba(var(--plum-rgb), 0.55);
@@ -2633,7 +2633,7 @@ button.cal-cell.has {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.16);
   border: none;
   border-radius: 999px;
@@ -2685,7 +2685,7 @@ button.cal-cell.has {
   font-size: 14px;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 12px;
   padding: 11px 14px;
   cursor: pointer;
@@ -2706,7 +2706,7 @@ button.cal-cell.has {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid rgba(var(--plum-rgb), 0.25);
+  border: 2px solid rgba(var(--line-rgb), 0.25);
   flex: none;
   position: relative;
 }
@@ -2755,13 +2755,13 @@ button.cal-cell.has {
 .ev-friends:focus-visible,
 .ev-check:focus-visible,
 .undo-btn:focus-visible {
-  outline: 2.5px solid var(--plum);
+  outline: 2.5px solid var(--line-strong);
   outline-offset: 2px;
   border-radius: 10px;
 }
 .undo-btn:focus-visible,
 .bulk-act:focus-visible {
-  outline-color: var(--cream);
+  outline-color: rgba(var(--cream-rgb), 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

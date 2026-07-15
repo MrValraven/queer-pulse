@@ -37,7 +37,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .brand em {
   font-style: italic;
@@ -58,7 +58,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 24px;
   padding: 44px 40px;
   width: 100%;
@@ -145,7 +145,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 4vw, 40px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
   margin-bottom: 14px;
@@ -210,7 +210,7 @@
   height: 42px;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,7 +222,7 @@
 .vcName {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .vcRole {
   font-size: 12.5px;
@@ -281,7 +281,7 @@
   height: 38px;
   border-radius: 50%;
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border: 3px solid var(--paper);
   box-shadow: 0 2px 8px -2px rgba(var(--plum-rgb), 0.3);
   transition: transform 0.2s var(--ease);
@@ -334,7 +334,7 @@
 .ncTitle {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ncDesc {
   font-size: 13px;
@@ -382,7 +382,7 @@
   margin-bottom: 24px;
 }
 .commCard {
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 14px;
   padding: 16px;
   transition:
@@ -396,7 +396,7 @@
 .ccName {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ccCount {
   font-size: 12px;
@@ -414,9 +414,9 @@
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 700;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.15);
+  border: 1.5px solid rgba(var(--line-rgb), 0.15);
   background: transparent;
-  color: var(--plum);
+  color: var(--text-strong);
   border-radius: 8px;
   padding: 6px 14px;
   cursor: pointer;
@@ -442,7 +442,7 @@
   align-items: center;
   gap: 14px;
   padding: 16px 18px;
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   color: inherit;
   transition:
@@ -452,7 +452,7 @@
 @media (hover: hover) {
   .qsCard:hover {
     transform: translateY(-2px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
   }
 }
 .qsIcon {
@@ -470,7 +470,7 @@
 .qsTitle {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .qsDesc {
   font-size: 12.5px;
@@ -505,7 +505,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -521,7 +521,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 999px;
   padding: 11px 18px;
   cursor: pointer;
@@ -537,8 +537,8 @@
 }
 @media (hover: hover) {
   .skip:hover {
-    color: var(--plum);
-    border-color: rgba(var(--plum-rgb), 0.24);
+    color: var(--text-strong);
+    border-color: rgba(var(--line-rgb), 0.24);
   }
 }
 @media (hover: hover) {

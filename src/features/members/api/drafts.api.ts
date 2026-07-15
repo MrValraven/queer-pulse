@@ -4,6 +4,7 @@ import {
   apiPatch,
   apiDelete,
 } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 import type { Paginated } from "../../../shared/api/refs";
 import type { Draft } from "../drafts.data";
 
@@ -31,9 +32,10 @@ export interface DraftDTO {
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
-export function getDrafts(page?: number) {
+export async function getDrafts(page?: number): Promise<Paginated<DraftDTO>> {
   const qs = page ? `?page=${page}` : "";
-  return apiGet<Paginated<DraftDTO>>(`/me/drafts${qs}`);
+  const res = await apiGet<DraftDTO[] | Paginated<DraftDTO>>(`/me/drafts${qs}`);
+  return toItemsPage(res);
 }
 
 export const createDraft = (dto: DraftDTO) =>

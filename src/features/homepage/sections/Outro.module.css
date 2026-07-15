@@ -1,6 +1,6 @@
 .outro {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: clamp(72px, 10vw, 120px) 0;
   position: relative;
   overflow: hidden;

@@ -37,7 +37,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(54px, 8vw, 108px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.95;
   margin-bottom: 24px;
@@ -56,7 +56,7 @@
   margin-bottom: 24px;
 }
 .dek b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .dek em {
@@ -65,7 +65,7 @@
 }
 .notRow {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 24px 28px;
   margin-top: 32px;
@@ -115,13 +115,13 @@
   line-height: 1;
 }
 .notRow ul li b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
 .doSection {
   background: var(--paper);
-  border-top: 2px solid var(--plum);
+  border-top: 2px solid var(--line-strong);
   padding: 80px 0 64px;
 }
 .doInner {
@@ -133,7 +133,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(36px, 5vw, 52px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin-bottom: 8px;
@@ -162,7 +162,7 @@
 .tier {
   padding: 30px 28px;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-card);
   display: flex;
   flex-direction: column;
@@ -170,8 +170,8 @@
 }
 .tierFeatured {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
   position: relative;
 }
 .tierFeatured::before {
@@ -192,7 +192,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.1;
 }
@@ -201,13 +201,13 @@
   color: var(--accent);
 }
 .tierFeatured .tierName {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .tierPrice {
   font-family: var(--serif);
   font-weight: 300;
   font-size: 48px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -216,7 +216,7 @@
   color: var(--accent);
 }
 .tierFeatured .tierPrice {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .tierPricePeriod {
   font-size: 13px;
@@ -246,7 +246,7 @@
   color: var(--ink);
   line-height: 1.55;
   padding-top: 16px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .tierFeatured .tierList {
   border-top-color: rgba(var(--cream-rgb), 0.16);
@@ -268,11 +268,11 @@
   color: var(--jade-soft);
 }
 .tierList li b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .tierFeatured .tierList li b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .tierBtn {
   margin-top: auto;
@@ -289,7 +289,7 @@
   transition: color 0.2s var(--ease);
 }
 .tierExample:hover {
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -327,7 +327,7 @@
 .proc {
   padding: 22px 24px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
 }
 .procN {
@@ -346,7 +346,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
@@ -361,7 +361,7 @@
   color: var(--accent-ink);
 }
 .proc p b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -378,7 +378,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 32px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin-bottom: 6px;
@@ -408,7 +408,7 @@
 .partnerCard {
   padding: 22px 24px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   text-decoration: none;
   color: inherit;
@@ -425,7 +425,7 @@
 @media (hover: hover) {
   .partnerCard:hover {
     transform: translateY(-2px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
   }
 }
 .partnerLogo {
@@ -433,7 +433,7 @@
   height: 48px;
   border-radius: 12px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -461,7 +461,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .partnerName em {
@@ -480,13 +480,13 @@
 .partnerCard .arrow {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-top: 6px;
 }
 
 .quoteCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 36px 40px;
 }
@@ -495,7 +495,7 @@
   font-weight: 300;
   font-style: italic;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.4;
   margin-bottom: 18px;
@@ -510,7 +510,7 @@
   gap: 12px;
   align-items: center;
   padding-top: 18px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .quoteAv {
   width: 42px;
@@ -529,7 +529,7 @@
 .quoteName {
   font-size: 14.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .quoteRole {
   font-size: 12.5px;
@@ -539,7 +539,7 @@
 .ctaSection {
   padding: 80px 0 96px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   position: relative;
   overflow: hidden;
 }
@@ -578,7 +578,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 5vw, 56px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 14px;
@@ -644,7 +644,7 @@
 .field textarea {
   font-family: var(--sans);
   font-size: 14px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
   border-radius: 10px;

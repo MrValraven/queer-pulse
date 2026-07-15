@@ -17,7 +17,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-display);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: var(--ls-display);
   line-height: var(--lh-display);
   margin: 0;
@@ -63,7 +63,7 @@
 
 /* Dark variant (plum sections) */
 .dark .title {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .dark .subtitle {
   color: rgba(var(--cream-rgb), 0.62);

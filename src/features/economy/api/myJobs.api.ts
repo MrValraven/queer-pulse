@@ -1,4 +1,5 @@
 import { apiGet } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 import type { Paginated } from "../../../shared/api/refs";
 import type { JobCardDTO } from "./jobs.api";
 
@@ -8,9 +9,12 @@ import type { JobCardDTO } from "./jobs.api";
 // getJobs' Paginated envelope + URLSearchParams style.
 
 /** GET /me/jobs?page= — the current member's own posted jobs. */
-export function getMyJobs(page?: number) {
+export async function getMyJobs(page?: number) {
   const q = new URLSearchParams();
   if (page) q.set("page", String(page));
   const qs = q.toString();
-  return apiGet<Paginated<JobCardDTO>>(`/me/jobs${qs ? `?${qs}` : ""}`);
+  const res = await apiGet<JobCardDTO[] | Paginated<JobCardDTO>>(
+    `/me/jobs${qs ? `?${qs}` : ""}`,
+  );
+  return toItemsPage(res);
 }

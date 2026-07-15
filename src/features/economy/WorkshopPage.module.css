@@ -15,7 +15,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -23,7 +23,7 @@
 .head {
   padding-bottom: 36px;
   margin-bottom: 36px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 48px;
@@ -63,7 +63,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(38px, 5.5vw, 60px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
   max-width: 18ch;
@@ -106,7 +106,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 14px;
 }
@@ -126,7 +126,7 @@
 /* Sessions table */
 .sessTable {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -135,7 +135,7 @@
   grid-template-columns: 60px 1fr auto;
   gap: 16px;
   padding: 16px 20px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: flex-start;
 }
 .sessRow:last-child {
@@ -159,7 +159,7 @@
 .sessInfo b {
   display: block;
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 3px;
 }
@@ -175,7 +175,7 @@
   text-align: right;
 }
 .sessMeta b {
-  color: var(--plum);
+  color: var(--text-strong);
   display: block;
   font-weight: 600;
 }
@@ -194,7 +194,7 @@
 .need {
   padding: 14px 16px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 12px;
   font-size: 14px;
   color: var(--ink);
@@ -205,7 +205,7 @@
   border-color: rgba(var(--jade-rgb), 0.18);
 }
 .need b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .need .tag {
@@ -249,13 +249,13 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 24px;
 }
 .bookHead {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 22px 24px;
   border-radius: 18px 18px 0 0;
   margin: -22px -24px 22px;
@@ -272,7 +272,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 38px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -293,13 +293,13 @@
   padding: 9px 0;
   font-size: 13.5px;
   color: var(--ink-60);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .row:last-of-type {
   border-bottom: none;
 }
 .row b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .row .sliding {
@@ -354,7 +354,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .tutorName a {
@@ -374,7 +374,7 @@
 }
 .whereName {
   display: block;
-  color: var(--plum);
+  color: var(--text-strong);
   font-family: var(--serif);
   font-size: 17px;
   margin-bottom: 3px;

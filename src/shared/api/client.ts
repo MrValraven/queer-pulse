@@ -145,7 +145,11 @@ async function request<T>(
   }
 
   if (res.status === 204) return undefined as T;
-  return (await res.json()) as T;
+  // Some endpoints answer 200 with an empty body (e.g. GET /me/affiliation when
+  // the member has none). `res.json()` throws on empty input, so parse the text
+  // ourselves and treat an empty body as "no content".
+  const text = await res.text();
+  return (text ? JSON.parse(text) : undefined) as T;
 }
 
 export const apiGet = <T>(path: string) => request<T>("GET", path);

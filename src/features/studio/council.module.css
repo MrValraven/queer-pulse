@@ -22,7 +22,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(32px, 5vw, 56px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -73,7 +73,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 26px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
 .fact .v em {
@@ -121,7 +121,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 21px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .curHead h3 em {
@@ -196,7 +196,7 @@
   border-bottom: none;
 }
 .st {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--serif);
 }
 .st em {
@@ -229,7 +229,7 @@
 }
 .curStat em {
   font-style: normal;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 
@@ -238,7 +238,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: 999px;
@@ -248,7 +248,7 @@
 }
 .btP {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--accent);
 }
 .btDismiss {
@@ -294,7 +294,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 26px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .kpiMini .v em {
   font-style: normal;
@@ -329,7 +329,7 @@
   margin-bottom: -1px;
 }
 .trTabOn {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-bottom-color: var(--accent);
 }
 .trTabWarn {
@@ -377,7 +377,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .subTop h3 em {
   font-style: italic;
@@ -424,7 +424,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .subNote {
   font-size: 13px;
@@ -461,7 +461,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .aside h2 em {
   font-style: italic;
@@ -564,7 +564,7 @@
   font-family: var(--sans);
   font-weight: 600;
   font-size: 12px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .detailBlock {
   margin-bottom: 16px;
@@ -596,7 +596,7 @@
   color: rgba(var(--cream-rgb), 0.4);
 }
 .dGrid .v {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .dGrid .v em {
   font-style: normal;
@@ -606,7 +606,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin: 20px 0 12px;
 }
 .shortlistH em {
@@ -616,7 +616,7 @@
 .decision h4 {
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 8px;
 }
 .decision textarea {
@@ -627,7 +627,7 @@
   padding: 11px 13px;
   font-family: var(--sans);
   font-size: 13px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   resize: vertical;
   min-height: 70px;
 }
@@ -682,7 +682,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .flagTi h3 em {
   font-style: italic;
@@ -698,7 +698,7 @@
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.08);
   border: none;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;

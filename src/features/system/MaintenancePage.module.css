@@ -5,7 +5,7 @@
   justify-content: center;
   padding: 84px 16px 40px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   position: relative;
   overflow-x: hidden;
 }
@@ -53,7 +53,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 22px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .brand em {
@@ -135,7 +135,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(54px, 9vw, 108px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.95;
   margin-bottom: 24px;
@@ -156,7 +156,7 @@
 }
 
 .lead b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 
@@ -194,7 +194,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   line-height: 1.05;
 }
@@ -265,7 +265,7 @@
 }
 
 .itemUp {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .actions {
@@ -291,7 +291,7 @@
 
 @media (hover: hover) {
   .meta a:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 

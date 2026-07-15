@@ -1,6 +1,6 @@
 .section {
   padding-block: clamp(48px, 7vw, 88px);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .eyebrow {
@@ -43,7 +43,7 @@
   padding: 22px 24px;
   border-radius: var(--radius-card);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   text-decoration: none;
   transition:
     transform 0.2s var(--ease),
@@ -59,7 +59,7 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-2px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
     box-shadow: 0 12px 28px -18px rgba(var(--plum-rgb), 0.35);
   }
 }

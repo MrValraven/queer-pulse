@@ -36,7 +36,7 @@
   font-weight: 500;
   color: var(--ink-60);
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   border-radius: 999px;
   padding: 8px 16px;
   cursor: pointer;
@@ -47,14 +47,14 @@
 }
 @media (hover: hover) {
   .chip:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 .chipOn {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 
 .grid {
@@ -64,7 +64,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 24px 26px;
   display: flex;
@@ -91,7 +91,7 @@
 .orgName {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .orgCause {
   font-size: 12px;
@@ -101,7 +101,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -154,7 +154,7 @@
   justify-content: space-between;
   gap: 10px;
   padding-top: 12px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .time {
   font-size: 12.5px;
@@ -166,7 +166,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: var(--jade);
   border: none;
   border-radius: 999px;

@@ -461,9 +461,15 @@ function buildMembers(): MemberCard[] {
 
     // Show the member's own profile tags so the card reads as one coherent person.
     const realTags = member?.tags ?? [];
+    // Language chip lists the first two, collapsing any extras into a "+N" so the
+    // chip never runs long.
+    const langLabel =
+      languages.length > 2
+        ? `${languages.slice(0, 2).join(" · ")} +${languages.length - 2}`
+        : languages.join(" · ");
     const tags: MemberCard["tags"] = [
       ...realTags.slice(0, 2).map((label) => ({ label, match: true })),
-      { label: languages.slice(0, 2).join(" · ") },
+      { label: langLabel },
     ];
 
     out.push({

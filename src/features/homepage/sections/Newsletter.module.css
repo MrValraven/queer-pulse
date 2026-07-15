@@ -1,7 +1,7 @@
 .digest {
   padding: 100px 0;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .inner {
   display: grid;
@@ -13,7 +13,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(32px, 4vw, 52px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.04;
 }
@@ -41,7 +41,7 @@
   border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--cream-rgb), 0.22);
   background: rgba(var(--cream-rgb), 0.08);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--sans);
   font-size: 14.5px;
   transition:
@@ -75,7 +75,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.08;
 }
@@ -90,7 +90,7 @@
   margin-top: 14px;
 }
 .successBody strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .successNext {
@@ -136,7 +136,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 16px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.2;
   letter-spacing: -0.01em;
 }

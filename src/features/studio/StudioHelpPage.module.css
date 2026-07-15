@@ -29,7 +29,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(32px, 5vw, 56px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -66,7 +66,7 @@
   outline: none;
   font-family: var(--sans);
   font-size: 15px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .search input::placeholder {
   color: var(--text-40);
@@ -118,7 +118,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 19px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .cat h4 em {
@@ -141,7 +141,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(24px, 3.5vw, 34px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 18px;
 }
@@ -170,7 +170,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .faqQ:focus-visible {
@@ -229,7 +229,7 @@
   text-underline-offset: 2px;
 }
 .faqAInner a:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* Still stuck — contact cards */
@@ -262,7 +262,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .cc h4 em {
   font-style: italic;
@@ -287,7 +287,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: 999px;
@@ -327,7 +327,7 @@
   text-underline-offset: 2px;
 }
 .status a:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .dot {
   width: 8px;

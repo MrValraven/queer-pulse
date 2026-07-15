@@ -14,7 +14,7 @@
   background: rgba(var(--cream-rgb), 0.66);
   backdrop-filter: var(--blur-nav);
   -webkit-backdrop-filter: var(--blur-nav);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-nav);
   transition:
@@ -33,7 +33,7 @@
   font-weight: 600;
   font-size: 23px;
   letter-spacing: -0.01em;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .brandItalic {
   font-style: italic;
@@ -90,7 +90,7 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  color: var(--plum);
+  color: var(--text-strong);
   transition: background var(--dur-base) var(--ease);
 }
 @media (hover: hover) {
@@ -122,7 +122,7 @@
   border-radius: 50%;
   border: none;
   background: transparent;
-  color: var(--plum);
+  color: var(--text-strong);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -148,7 +148,7 @@
 :global([data-theme="dark"]) .brand,
 :global([data-theme="dark"]) .bell,
 :global([data-theme="dark"]) .themeToggle {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 :global([data-theme="dark"]) .bellBadge {
   border-color: var(--paper);

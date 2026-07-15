@@ -46,14 +46,24 @@ const DEMO_USER: AuthUser = {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
-  const [loggedIn, setLoggedIn] = useState<boolean>(getInitialLoggedIn);
+  // Demo mode reads its mock session from localStorage synchronously. Live mode
+  // can't — the session lives in an httpOnly cookie we can't see from JS — so we
+  // must NOT optimistically claim "logged in" and let every data provider fire
+  // authed requests that 401. Instead we start logged-out + `checking`, and only
+  // trust `loggedIn` once GET /auth/me settles.
+  const [loggedIn, setLoggedIn] = useState<boolean>(() =>
+    demoMode ? getInitialLoggedIn() : false,
+  );
+  const [checking, setChecking] = useState<boolean>(() => !demoMode);
   const [preparing, setPreparing] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
 
-  // Demo mode: mirror the prototype's localStorage-driven mock session.
+  // Demo mode: mirror the prototype's localStorage-driven mock session. The
+  // session is known synchronously, so there's nothing to "check".
   useEffect(() => {
     if (!demoMode) return;
+    setChecking(false);
     setUser(loggedIn ? DEMO_USER : null);
   }, [demoMode, loggedIn]);
 
@@ -71,6 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoggedIn(false);
     });
     setAuthError(null);
+    setChecking(true);
     bootstrapCsrf()
       .then(fetchMe)
       .then((u) => {
@@ -93,6 +104,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               : "We couldn't reach QueerPulse to load your account. Check your connection and try again in a moment.",
           );
         }
+      })
+      .finally(() => {
+        if (active) setChecking(false);
       });
     return () => {
       active = false;
@@ -141,6 +155,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       loggedIn,
+      checking,
       preparing,
       user,
       status: user?.status ?? null,
@@ -153,6 +168,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }),
     [
       loggedIn,
+      checking,
       preparing,
       user,
       authError,

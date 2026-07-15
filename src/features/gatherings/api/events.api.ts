@@ -4,6 +4,7 @@ import {
   apiPatch,
   apiDelete,
 } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Shapes the NestJS events domain returns. Only the fields the prototype pages
@@ -116,14 +117,17 @@ export type UpdateEventDto = Partial<CreateEventDto>;
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
-export function getEvents(
+export async function getEvents(
   params: { filter?: EventFilter; page?: number } = {},
-) {
+): Promise<EventsPage> {
   const q = new URLSearchParams();
   if (params.filter) q.set("filter", params.filter);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
-  return apiGet<EventsPage>(`/events${qs ? `?${qs}` : ""}`);
+  const res = await apiGet<EventCardDTO[] | EventsPage>(
+    `/events${qs ? `?${qs}` : ""}`,
+  );
+  return toItemsPage(res);
 }
 
 export const getEvent = (slug: string) =>
@@ -188,5 +192,4 @@ export interface EventInviteDTO {
 }
 
 /** GET /event-invites — the caller's own pending event invitations. */
-export const getEventInvites = () =>
-  apiGet<EventInviteDTO[]>("/event-invites");
+export const getEventInvites = () => apiGet<EventInviteDTO[]>("/event-invites");

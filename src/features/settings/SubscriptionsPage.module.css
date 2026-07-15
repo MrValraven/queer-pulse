@@ -16,7 +16,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .eyebrow {
@@ -31,7 +31,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(36px, 5vw, 48px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
   max-width: 18ch;
@@ -61,7 +61,7 @@
   color: var(--ink-40);
   margin: 36px 0 14px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .sectionH:first-of-type {
   margin-top: 0;
@@ -70,7 +70,7 @@
 /* Newsletter cards */
 .nlCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 22px;
   display: grid;
@@ -118,7 +118,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
   margin-bottom: 4px;
 }
@@ -185,7 +185,7 @@
 /* Alert cards */
 .alertCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 22px;
   margin-bottom: 10px;
@@ -208,7 +208,7 @@
   font-family: var(--serif);
   font-weight: 700;
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .alertInfo {
   flex: 1;
@@ -216,7 +216,7 @@
 .alertInfo b {
   display: block;
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 3px;
 }
@@ -235,7 +235,7 @@
 }
 .alertAction {
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   color: var(--ink-60);
   font-family: var(--sans);
   font-size: 12px;
@@ -249,8 +249,8 @@
 }
 @media (hover: hover) {
   .alertAction:hover {
-    color: var(--plum);
-    border-color: var(--plum);
+    color: var(--text-strong);
+    border-color: var(--line-strong);
   }
 }
 @media (hover: hover) {
@@ -274,12 +274,12 @@
   font-weight: 600;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 999px;
   padding: 4px 10px;
 }
 .critChip b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .alertRow {
@@ -288,10 +288,10 @@
   font-size: 13px;
   color: var(--ink-60);
   padding: 7px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .alertRow b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .live {
@@ -312,7 +312,7 @@
 .addCard {
   padding: 18px 22px;
   background: transparent;
-  border: 1.5px dashed rgba(var(--plum-rgb), 0.18);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.18);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -322,7 +322,7 @@
   transition:
     border-color 0.2s,
     background 0.2s;
-  color: var(--plum);
+  color: var(--text-strong);
   font-family: var(--sans);
   font-size: 14px;
   font-weight: 600;
@@ -331,7 +331,7 @@
 }
 @media (hover: hover) {
   .addCard:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
     background: rgba(var(--plum-rgb), 0.03);
   }
 }
@@ -340,7 +340,7 @@
 .pronCard {
   padding: 24px 28px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   margin-bottom: 18px;
 }
@@ -350,7 +350,7 @@
   margin-bottom: 14px;
 }
 .pronCurrent b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-family: var(--serif);
   font-weight: 500;
   font-size: 24px;
@@ -378,13 +378,13 @@
 .pronChip {
   padding: 10px 14px;
   background: var(--paper);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 11px;
   cursor: pointer;
   font-family: var(--serif);
   font-weight: 400;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
   transition:
     border-color 0.2s,
@@ -397,8 +397,8 @@
 }
 .pronChipSelected {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .pronChipSelected em {
   color: var(--accent);
@@ -412,14 +412,14 @@
   flex: 1;
   font-family: var(--serif);
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   background: var(--cream);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 11px;
   padding: 10px 14px;
 }
 .pronInput:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: var(--paper);
 }
 .pronInput:focus:not(:focus-visible) {
@@ -430,7 +430,7 @@
   grid-template-columns: 1fr auto;
   gap: 14px;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: center;
 }
 .pronVisRow:last-child {
@@ -439,7 +439,7 @@
 .pronVisRow .lbl b {
   display: block;
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   margin-bottom: 2px;
 }
@@ -466,7 +466,7 @@
   color: var(--ink-60);
 }
 .saveInfo b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -481,11 +481,11 @@
   margin-top: 24px;
 }
 .pitchNote b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .pitchNote a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }

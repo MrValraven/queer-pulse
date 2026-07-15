@@ -3,7 +3,7 @@
   padding: 148px 0 88px;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .hero::before {
   content: "";
@@ -32,7 +32,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(38px, 5.8vw, 76px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
   max-width: 16ch;
@@ -73,7 +73,7 @@
 .crisisHeading {
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   letter-spacing: -0.01em;
 }
@@ -98,7 +98,7 @@
 .clName {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .clNum {
   font-size: 16px;
@@ -127,7 +127,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 4vw, 46px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
 }
@@ -164,7 +164,7 @@
 }
 .therapistCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -181,15 +181,15 @@
 @media (hover: hover) {
   .therapistCard:hover {
     transform: translateY(-3px);
-    border-color: rgba(var(--plum-rgb), 0.16);
+    border-color: rgba(var(--line-rgb), 0.16);
     box-shadow: 0 14px 34px rgba(var(--plum-rgb), 0.08);
   }
 }
 @media (hover: hover) {
   .therapistCard:hover .tcContact {
     background: var(--plum);
-    color: var(--cream);
-    border-color: var(--plum);
+    color: rgba(var(--cream-rgb), 1);
+    border-color: var(--line-strong);
   }
 }
 .therapistCard:focus-visible {
@@ -236,7 +236,7 @@
 .tcName {
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.1;
@@ -274,7 +274,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: auto;
 }
 .tcFormat {
@@ -285,8 +285,8 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.18);
+  color: var(--text-strong);
+  border: 1.5px solid rgba(var(--line-rgb), 0.18);
   border-radius: 999px;
   padding: 8px 16px;
   background: transparent;
@@ -299,8 +299,8 @@
 @media (hover: hover) {
   .tcContact:hover {
     background: var(--plum);
-    color: var(--cream);
-    border-color: var(--plum);
+    color: rgba(var(--cream-rgb), 1);
+    border-color: var(--line-strong);
   }
 }
 
@@ -311,7 +311,7 @@
 }
 .expCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -326,7 +326,7 @@
 .expTitle {
   font-size: 16px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 8px;
 }
 .expText {
@@ -342,20 +342,20 @@
 }
 .snsCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }
 .snsNum {
   font-family: var(--serif);
   font-size: 26px;
-  color: rgba(var(--plum-rgb), 0.12);
+  color: rgba(var(--ink-rgb), 0.12);
   line-height: 1;
 }
 .snsTitle {
   font-size: 15.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 8px 0 6px;
 }
 .snsText {
@@ -379,7 +379,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
 .peerStrip h3 em {

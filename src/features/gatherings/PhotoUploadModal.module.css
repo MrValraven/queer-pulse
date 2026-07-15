@@ -18,7 +18,7 @@
 
 .dialog {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-card);
   padding: 28px 30px;
   width: 100%;
@@ -35,7 +35,7 @@
 }
 .dialogConfirm {
   background: var(--plum);
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 
 .dialogTitle {
@@ -45,7 +45,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 25px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .dialogSub {
@@ -83,7 +83,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 7px 13px;
   cursor: pointer;
@@ -93,8 +93,8 @@
 }
 @media (hover: hover) {
   .fileBtn:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 .fileBtnOn {
@@ -105,7 +105,7 @@
 
 .input {
   width: 100%;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 11px 14px;
   font-family: var(--sans);
@@ -116,7 +116,7 @@
   transition: border-color 0.18s;
 }
 .input:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 
 .dialogActions {
@@ -146,7 +146,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 28px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .confirmTitle em {

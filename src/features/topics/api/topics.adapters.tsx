@@ -1,6 +1,12 @@
 import type { AvatarTint } from "../../../shared/components/ui";
 import { routes } from "../../../app/routeMap";
-import { splitForTitle, type PostCategory, type PostKind, type Topic, type TopicPost } from "../topics.data";
+import {
+  splitForTitle,
+  type PostCategory,
+  type PostKind,
+  type Topic,
+  type TopicPost,
+} from "../topics.data";
 import type { TopicDetailResponse, TopicPostResponse } from "./topics.api";
 
 // Map the backend DTOs onto the EXISTING rich `Topic`/`TopicPost` view-models
@@ -44,7 +50,9 @@ function relative(iso: string): string {
 /** `TopicPostResponse` → the mock's `TopicPost`, re-composing the flattened
  * `contextLabel`/`reactionLabel`+`replyLabel` back into the `meta`/`stats`
  * `ReactNode`s `TopicPostCard` renders. */
-export function topicPostResponseToTopicPost(dto: TopicPostResponse): TopicPost {
+export function topicPostResponseToTopicPost(
+  dto: TopicPostResponse,
+): TopicPost {
   return {
     author: dto.author,
     initials: dto.authorInitials,

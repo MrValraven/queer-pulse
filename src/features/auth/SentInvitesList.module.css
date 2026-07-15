@@ -1,7 +1,7 @@
 .wrap {
   margin-top: 32px;
   padding-top: 26px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .label {
   font-size: 11px;
@@ -22,7 +22,7 @@
   justify-content: space-between;
   gap: 14px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 13px;
   padding: 14px 16px;
 }
@@ -35,7 +35,7 @@
 .code {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: 0.01em;
 }
 .note {
@@ -71,7 +71,7 @@
 }
 .ghost {
   background: rgba(var(--plum-rgb), 0.05);
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   color: var(--ink-40);
 }
 .coral {

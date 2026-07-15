@@ -19,7 +19,7 @@
 .rosterName {
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .rosterLink {
@@ -78,7 +78,7 @@
   align-items: center;
   gap: 13px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 13px 16px;
   text-decoration: none;
@@ -88,7 +88,7 @@
 }
 @media (hover: hover) {
   .sister:hover {
-    border-color: rgba(var(--plum-rgb), 0.2);
+    border-color: rgba(var(--line-rgb), 0.2);
     transform: translateY(-1px);
   }
 }
@@ -113,7 +113,7 @@
 .sisterName {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .sisterShared {
   font-size: 12.5px;
@@ -132,7 +132,7 @@
   margin-top: 12px;
   padding: 5px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   transition:
     color 0.18s var(--ease),
     border-color 0.18s var(--ease);
@@ -151,7 +151,7 @@
 /* ---- events ---- */
 .eventRow {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   display: flex;
@@ -184,7 +184,7 @@
 }
 @media (hover: hover) {
   .recapLink:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 @media (hover: hover) {
@@ -215,7 +215,7 @@
   height: 22px;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.07);
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 11px;
   font-weight: 700;
   display: flex;
@@ -235,7 +235,7 @@
   align-items: center;
   gap: 14px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 14px 16px;
   text-decoration: none;
@@ -245,7 +245,7 @@
 }
 @media (hover: hover) {
   .resource:hover {
-    border-color: rgba(var(--plum-rgb), 0.2);
+    border-color: rgba(var(--line-rgb), 0.2);
     transform: translateY(-1px);
   }
 }
@@ -272,7 +272,7 @@
   display: block;
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .resourceNote {
   display: block;
@@ -293,7 +293,7 @@
   align-items: center;
   gap: 13px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 14px 16px;
   margin-bottom: 10px;
@@ -305,7 +305,7 @@
 .modName {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -340,7 +340,7 @@
   cursor: pointer;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   transition:
     color 0.18s var(--ease),
     border-color 0.18s var(--ease);
@@ -351,7 +351,7 @@
 }
 @media (hover: hover) {
   .declineBtn:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
     color: var(--ink);
   }
 }

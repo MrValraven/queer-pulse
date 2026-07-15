@@ -31,7 +31,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(34px, 5vw, 58px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -58,7 +58,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(24px, 3.4vw, 36px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 8px;
 }
@@ -100,7 +100,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 56px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
   margin: 8px 0;
@@ -131,7 +131,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 28px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .mini .v em {
@@ -155,7 +155,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 16px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 14px;
   display: flex;
   align-items: center;
@@ -174,7 +174,7 @@
 .flowItem .k {
   font-size: 14px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .flowItem .k em {
   font-style: italic;
@@ -217,7 +217,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: block;
   line-height: 1;
 }
@@ -232,7 +232,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 15px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -276,7 +276,7 @@
 .disbAmt {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   white-space: nowrap;
 }
 .disbAmt em {
@@ -299,7 +299,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .apply h2 em {
@@ -327,7 +327,7 @@
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: 999px;
@@ -341,7 +341,7 @@
 }
 .btP {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--accent);
 }
 .btJade {
@@ -372,7 +372,7 @@
 .chipOn {
   background: var(--cream);
   color: var(--studio-bg);
-  border-color: var(--cream);
+  border-color: rgba(var(--cream-rgb), 1);
 }
 .filterCount {
   margin-left: auto;
@@ -425,7 +425,7 @@
 .callCur .nm {
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .callCur .ro {
   font-size: 11px;
@@ -475,7 +475,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 20px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.012em;
 }
 .callMain h3 em {
@@ -499,7 +499,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 28px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .callAmt .v em {
   font-style: normal;
@@ -584,7 +584,7 @@
 .trk h5 {
   font-size: 13px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .trk h5 em {
   font-style: italic;
@@ -601,7 +601,7 @@
   padding: 11px 14px;
   font-family: var(--sans);
   font-size: 13.5px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   resize: vertical;
   min-height: 60px;
 }
@@ -651,11 +651,11 @@
   color: var(--studio-bg);
 }
 .djStepOn {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .djStepOn .num {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .djBar {
   width: 36px;
@@ -696,7 +696,7 @@
 .djFile h5 {
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .djFile p {
   font-size: 11.5px;
@@ -734,7 +734,7 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.06em;
   font-size: 12.5px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   resize: vertical;
   min-height: 150px;
   line-height: 1.7;
@@ -774,7 +774,7 @@
 }
 .mtRow h5 {
   font-size: 13.5px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--serif);
 }
 .mtRow h5 em {
@@ -824,7 +824,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 17px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 14px;
 }
 .djCard h3 em {
@@ -838,7 +838,7 @@
   display: block;
   font-size: 12px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 6px;
 }
 .field input,
@@ -850,7 +850,7 @@
   padding: 10px 13px;
   font-family: var(--sans);
   font-size: 13.5px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .djRow {
   display: flex;
@@ -865,7 +865,7 @@
 }
 .djRow .v {
   font-family: var(--serif);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .djRow .v.jade {
   color: var(--jade-light, #9be0bd);

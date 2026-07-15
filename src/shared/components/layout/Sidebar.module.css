@@ -8,7 +8,7 @@
   flex-direction: column;
   padding: 16px 12px 14px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-right: 1px solid rgba(var(--cream-rgb), 0.08);
   transition: width 220ms var(--ease, ease);
 }
@@ -29,7 +29,7 @@
   gap: 9px;
   padding: 6px 10px 14px;
   text-decoration: none;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .railCollapsed .brand {
   justify-content: center;
@@ -103,7 +103,7 @@
 @media (hover: hover) {
   .collapseAll:hover {
     background: rgba(var(--cream-rgb), 0.12);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .collapseAll:focus-visible {
@@ -180,7 +180,7 @@
 @media (hover: hover) {
   .groupBtn:hover {
     background: rgba(var(--cream-rgb), 0.08);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .groupBtn:focus-visible {
@@ -289,7 +289,7 @@
 @media (hover: hover) {
   .link:hover {
     background: rgba(var(--cream-rgb), 0.08);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .link:focus-visible {
@@ -298,13 +298,13 @@
 }
 .linkActive {
   background: var(--cream);
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 @media (hover: hover) {
   .linkActive:hover {
     background: var(--cream);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -365,7 +365,7 @@
   padding: 2px 6px 8px;
   font-family: var(--serif);
   font-size: 15px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */
@@ -419,7 +419,7 @@
 @media (hover: hover) {
   .utilBtn:hover {
     background: rgba(var(--cream-rgb), 0.1);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .utilBtn:focus-visible {
@@ -437,7 +437,7 @@
   place-items: center;
   border-radius: 999px;
   background: var(--accent);
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 9px;
   font-weight: 700;
 }
@@ -464,7 +464,7 @@
 @media (hover: hover) {
   .signIn:hover {
     background: rgba(var(--cream-rgb), 0.08);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 
@@ -490,7 +490,7 @@
 @media (hover: hover) {
   .collapseBtn:hover {
     background: rgba(var(--cream-rgb), 0.08);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .collapseBtn:focus-visible {

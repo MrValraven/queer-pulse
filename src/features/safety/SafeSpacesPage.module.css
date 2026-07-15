@@ -47,7 +47,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6vw, 84px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
   max-width: 16ch;
@@ -125,12 +125,12 @@
 }
 .bvCheck {
   font-size: 36px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .bvName {
   font-family: var(--serif);
   font-size: 15px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
   letter-spacing: 0.02em;
   text-align: center;
@@ -154,7 +154,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(26px, 3.2vw, 40px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin-bottom: 14px;
@@ -197,7 +197,7 @@
   line-height: 1.5;
 }
 .critText strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .body {
@@ -215,7 +215,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.5vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .dirHead h2 em {
@@ -234,7 +234,7 @@
   padding: 11px 22px;
   border-radius: 999px;
   background: var(--jade);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border: none;
   cursor: pointer;
   transition:
@@ -261,7 +261,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -303,7 +303,7 @@
 .typeBar,
 .typeGym {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .typeCafe,
 .typeArts {
@@ -343,7 +343,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.15;
 }
@@ -385,7 +385,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 14px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: auto;
 }
 .reviews {
@@ -418,7 +418,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.5vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .howSection h2 em {
@@ -433,7 +433,7 @@
 }
 .howCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 24px;
 }
@@ -448,7 +448,7 @@
 .howTitle {
   font-size: 16px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 7px;
 }
 .howDesc {
@@ -464,7 +464,7 @@
   background: var(--plum);
   border-radius: 24px;
   padding: 48px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
@@ -511,7 +511,7 @@
   padding: 13px 16px;
   font-family: var(--sans);
   font-size: 15px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   outline: none;
   transition: border-color 0.25s var(--ease);
@@ -534,7 +534,7 @@
 }
 .nomSelect option {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .nomTextarea {
   resize: vertical;
@@ -548,7 +548,7 @@
   padding: 13px 26px;
   border-radius: 999px;
   background: var(--jade);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border: none;
   cursor: pointer;
   transition:
@@ -566,7 +566,7 @@
 .removedSection {
   background: var(--cream);
   padding: 72px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .removedHead {
   max-width: 640px;
@@ -576,7 +576,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 4vw, 42px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 12px;
 }
@@ -607,7 +607,7 @@
 }
 .rStep {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-left: 3px solid var(--accent);
   border-radius: 12px;
   padding: 14px 16px;
@@ -618,7 +618,7 @@
 .rStep span {
   display: block;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 3px;
 }
 .removedList {
@@ -628,7 +628,7 @@
 }
 .removedCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
   display: flex;
@@ -676,7 +676,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   text-decoration: line-through;
   text-decoration-color: rgba(var(--accent-rgb), 0.5);
@@ -699,13 +699,13 @@
   justify-content: space-between;
   gap: 12px;
   padding-top: 12px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   font-size: 12.5px;
   color: var(--ink-40);
 }
 .rcLink {
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* ===== Nomination thank-you ===== */
@@ -741,7 +741,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.5vw, 42px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin-bottom: 16px;
@@ -758,7 +758,7 @@
   max-width: 52ch;
 }
 .nomThanks .nomThanksText strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .nomThanks .nomThanksSub {

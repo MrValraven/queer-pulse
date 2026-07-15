@@ -15,7 +15,7 @@
 .filter {
   padding: 7px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   color: var(--ink-60);
   font: inherit;
@@ -29,13 +29,13 @@
 }
 @media (hover: hover) {
   .filter:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
-    color: var(--plum);
+    border-color: rgba(var(--line-rgb), 0.3);
+    color: var(--text-strong);
   }
 }
 .filterOn {
-  border-color: var(--plum);
-  color: var(--plum);
+  border-color: var(--line-strong);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.06);
 }
 
@@ -87,7 +87,7 @@
   font-size: 20px;
   font-weight: 400;
   line-height: 1.15;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .emergTitle {
   color: var(--ink);
@@ -133,7 +133,7 @@
   align-items: flex-start;
   gap: 18px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
   padding: 18px 20px 18px 22px;
   overflow: hidden;
@@ -155,13 +155,13 @@
 }
 @media (hover: hover) {
   .report:hover {
-    border-color: rgba(var(--plum-rgb), 0.2);
+    border-color: rgba(var(--line-rgb), 0.2);
     box-shadow: 0 16px 34px -24px rgba(var(--plum-rgb), 0.4);
     transform: translateY(-1px);
   }
 }
 .report:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .reportStatic {
@@ -169,7 +169,7 @@
 }
 @media (hover: hover) {
   .reportStatic:hover {
-    border-color: rgba(var(--plum-rgb), 0.09);
+    border-color: rgba(var(--line-rgb), 0.09);
     box-shadow: none;
     transform: none;
   }
@@ -225,7 +225,7 @@ button.reportMain {
     transform 0.18s var(--ease);
 }
 button.reportMain:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 3px;
 }
 .reportMainNudge {
@@ -248,7 +248,7 @@ button.reportMain:focus-visible {
   font-size: 18px;
   font-weight: 400;
   line-height: 1.2;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .reportTitle {
   color: var(--ink);
@@ -273,7 +273,7 @@ button.reportMain:focus-visible {
   color: var(--ink-60);
 }
 .reportMeta strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 [data-theme="dark"] .reportMeta strong {
@@ -322,7 +322,7 @@ button.reportMain:focus-visible {
 
 /* ── Multi-select + bulk actions ────────────────────────────────────────── */
 .reportSelected {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: inset 0 0 0 1px var(--plum);
 }
 .selectBox {
@@ -333,9 +333,9 @@ button.reportMain:focus-visible {
   display: grid;
   place-items: center;
   border-radius: 7px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.28);
+  border: 1.5px solid rgba(var(--line-rgb), 0.28);
   background: var(--paper);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   cursor: pointer;
   transition:
     background 0.16s var(--ease),
@@ -343,7 +343,7 @@ button.reportMain:focus-visible {
 }
 @media (hover: hover) {
   .selectBox:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
   }
 }
 .selectBox svg {
@@ -352,10 +352,10 @@ button.reportMain:focus-visible {
 }
 .selectBoxOn {
   background: var(--plum);
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .selectBox:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 
@@ -372,7 +372,7 @@ button.reportMain:focus-visible {
   padding: 12px 18px;
   border-radius: var(--radius-pill, 999px);
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   box-shadow: 0 18px 40px -22px rgba(var(--plum-rgb), 0.7);
 }
 .bulkCount {
@@ -436,7 +436,7 @@ button.reportMain:focus-visible {
   font-size: clamp(28px, 4vw, 38px);
   font-weight: 400;
   line-height: 1.05;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .caughtTitle em {
   color: var(--accent);
@@ -482,7 +482,7 @@ button.reportMain:focus-visible {
   font-size: 22px;
   font-weight: 400;
   line-height: 1.15;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .dTitle {
   color: var(--ink);
@@ -525,7 +525,7 @@ button.reportMain:focus-visible {
   font-size: 15.5px;
   font-style: italic;
   line-height: 1.55;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .dExcerpt {
   color: var(--ink);
@@ -559,7 +559,7 @@ button.reportMain:focus-visible {
   padding: 12px 14px;
   border-radius: 14px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .dMsgFlag {
   background: rgba(var(--danger-rgb), 0.05);
@@ -579,7 +579,7 @@ button.reportMain:focus-visible {
 .dMsgAuthor {
   font-weight: 600;
   font-size: 13px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .dMsgAuthor {
   color: var(--ink);
@@ -619,7 +619,7 @@ button.reportMain:focus-visible {
   padding: 14px;
   border-radius: 14px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .dPersonTx {
   display: flex;
@@ -633,7 +633,7 @@ button.reportMain:focus-visible {
   gap: 7px;
   font-weight: 600;
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .dPersonName {
   color: var(--ink);
@@ -673,7 +673,7 @@ button.reportMain:focus-visible {
   text-align: left;
   padding: 13px 15px;
   border-radius: 14px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   cursor: pointer;
   font: inherit;
@@ -684,13 +684,13 @@ button.reportMain:focus-visible {
 }
 @media (hover: hover) {
   .dAction:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
   }
 }
 .dActionLabel {
   font-weight: 700;
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .dActionLabel {
   color: var(--ink);
@@ -701,7 +701,7 @@ button.reportMain:focus-visible {
   color: var(--ink-60);
 }
 .dActionOn {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.06);
   box-shadow: inset 0 0 0 1px var(--plum);
 }
@@ -745,7 +745,7 @@ button.reportMain:focus-visible {
   gap: 10px;
   padding: 11px 14px;
   border-radius: 12px;
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   background: var(--paper);
   font-size: 13.5px;
   color: var(--ink);
@@ -754,15 +754,15 @@ button.reportMain:focus-visible {
 }
 @media (hover: hover) {
   .dReason:hover {
-    border-color: rgba(var(--plum-rgb), 0.26);
+    border-color: rgba(var(--line-rgb), 0.26);
   }
 }
 .dReason:has(input:checked) {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.05);
 }
 .dReason input {
-  accent-color: var(--plum);
+  accent-color: var(--text-strong);
   width: 16px;
   height: 16px;
 }
@@ -778,7 +778,7 @@ button.reportMain:focus-visible {
   resize: vertical;
   padding: 12px 14px;
   border-radius: 12px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   font: inherit;
   font-size: 14px;
@@ -786,7 +786,7 @@ button.reportMain:focus-visible {
   color: var(--ink);
 }
 .dNote:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 1px;
   border-color: transparent;
 }
@@ -869,7 +869,7 @@ button.reportMain:focus-visible {
   margin-top: 12px;
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .appealBy {
   color: var(--ink);
@@ -879,7 +879,7 @@ button.reportMain:focus-visible {
   padding: 16px;
   border-radius: 14px;
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .appealOrigTop {
   display: flex;
@@ -928,7 +928,7 @@ button.reportMain:focus-visible {
   font-size: 15.5px;
   font-style: italic;
   line-height: 1.6;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .appealArg {
   color: var(--ink);
@@ -946,10 +946,10 @@ button.reportMain:focus-visible {
   padding: 6px 12px 6px 6px;
   border-radius: 999px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .appealSupporter {
   color: var(--ink);
@@ -979,7 +979,7 @@ button.reportMain:focus-visible {
   text-align: left;
   padding: 16px;
   border-radius: 16px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   cursor: pointer;
   font: inherit;
@@ -990,7 +990,7 @@ button.reportMain:focus-visible {
 }
 @media (hover: hover) {
   .decOption:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
   }
 }
 .decIco {
@@ -1001,7 +1001,7 @@ button.reportMain:focus-visible {
   place-items: center;
   border-radius: 11px;
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .decIco {
   color: var(--ink);
@@ -1019,7 +1019,7 @@ button.reportMain:focus-visible {
 .decTitle {
   font-weight: 700;
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .decTitle {
   color: var(--ink);
@@ -1030,13 +1030,13 @@ button.reportMain:focus-visible {
   color: var(--ink-60);
 }
 .decUpholdOn {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.05);
   box-shadow: inset 0 0 0 1px var(--plum);
 }
 .decUpholdOn .decIco {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .decOverturnOn {
   border-color: var(--jade);

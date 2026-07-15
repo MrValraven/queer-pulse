@@ -67,13 +67,15 @@ export function GlossaryPage() {
     [allBlocks],
   );
 
-  const blocks = allBlocks.map((b) => ({
-    ...b,
-    terms: b.terms.filter(
-      (term) =>
-        !q || term.search.includes(q) || term.name.toLowerCase().includes(q),
-    ),
-  })).filter((b) => b.terms.length > 0);
+  const blocks = allBlocks
+    .map((b) => ({
+      ...b,
+      terms: b.terms.filter(
+        (term) =>
+          !q || term.search.includes(q) || term.name.toLowerCase().includes(q),
+      ),
+    }))
+    .filter((b) => b.terms.length > 0);
 
   const empty = q && blocks.length === 0;
 

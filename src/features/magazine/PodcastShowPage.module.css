@@ -3,7 +3,7 @@
 }
 .hero {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 120px 0 64px;
   position: relative;
   overflow: hidden;
@@ -68,7 +68,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(48px, 7vw, 84px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.95;
   margin-bottom: 14px;
@@ -87,7 +87,7 @@
   margin-bottom: 22px;
 }
 .byline b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-style: normal;
   font-family: var(--sans);
   font-weight: 600;
@@ -101,7 +101,7 @@
   margin-bottom: 24px;
 }
 .meta b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .actions {
@@ -112,7 +112,7 @@
 
 .listenRow {
   background: var(--paper);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   padding: 22px 0;
 }
 .listenInner {
@@ -137,7 +137,7 @@
   gap: 9px;
   padding: 10px 16px;
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 11px;
   text-decoration: none;
   color: var(--ink);
@@ -151,7 +151,7 @@
 }
 @media (hover: hover) {
   .listenBtn:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
     transform: translateY(-1px);
   }
 }
@@ -182,7 +182,7 @@
   justify-content: space-between;
   padding-bottom: 14px;
   margin-bottom: 18px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -190,7 +190,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 28px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
 }
 .epH h2 em {
@@ -236,7 +236,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
   margin-bottom: 8px;
@@ -266,7 +266,7 @@
 .epFeatNotes {
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
 }
 
@@ -279,14 +279,14 @@
   grid-template-columns: 60px 1fr auto;
   gap: 16px;
   padding: 22px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   align-items: flex-start;
 }
 .epNum {
   font-family: var(--serif);
   font-weight: 300;
   font-size: 36px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -298,7 +298,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.22;
   margin-bottom: 6px;
@@ -327,7 +327,7 @@
   align-items: center;
 }
 .emMeta b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .epActions {
@@ -341,7 +341,7 @@
   height: 46px;
   border-radius: 50%;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border: none;
   cursor: pointer;
   display: flex;
@@ -387,7 +387,7 @@
 }
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -427,7 +427,7 @@
 .hostName {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .hostName a {
   color: inherit;
@@ -444,19 +444,19 @@
   padding: 9px 0;
   font-size: 13px;
   color: var(--ink-60);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .infoRow:last-child {
   border-bottom: none;
 }
 .infoRow b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .guestCard {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .guestCard h4 {
   color: rgba(var(--cream-rgb), 0.6);

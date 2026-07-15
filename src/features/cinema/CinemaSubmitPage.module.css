@@ -9,7 +9,7 @@
 /* ── Header ── */
 .subHeader {
   padding: 120px 0 48px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
 }
 .shInner {
   display: grid;
@@ -29,7 +29,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(46px, 6.5vw, 84px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.026em;
   line-height: 0.96;
 }
@@ -46,7 +46,7 @@
 }
 .promise {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
   padding: 24px 26px;
 }
@@ -63,7 +63,7 @@
   align-items: baseline;
   justify-content: space-between;
   padding: 12px 0;
-  border-bottom: 1px dashed rgba(var(--plum-rgb), 0.12);
+  border-bottom: 1px dashed rgba(var(--line-rgb), 0.12);
 }
 .spRow:last-of-type {
   border-bottom: none;
@@ -76,7 +76,7 @@
 .spRow .v {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .spRow .v em {
@@ -110,7 +110,7 @@
   gap: 4px;
   margin-bottom: 44px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 18px;
   padding: 6px;
 }
@@ -139,7 +139,7 @@
   }
 }
 .step:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .stepNum {
@@ -153,7 +153,7 @@
   font-weight: 700;
   flex: none;
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
   transition:
     background var(--dur-base) var(--ease),
     color var(--dur-base) var(--ease);
@@ -174,7 +174,7 @@
   line-height: 1.2;
 }
 .stepActive .stepLabel {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .stepSub {
   display: block;
@@ -188,7 +188,7 @@
 /* ── Form blocks ── */
 .formBlock {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 22px;
   padding: 36px 40px;
 }
@@ -198,14 +198,14 @@
   gap: 14px;
   margin-bottom: 28px;
   padding-bottom: 22px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .fbNum {
   width: 38px;
   height: 38px;
   border-radius: 50%;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--serif);
   font-size: 16px;
   font-weight: 500;
@@ -219,7 +219,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.012em;
 }
 .fbTitle em {
@@ -251,7 +251,7 @@
 }
 .rOpt {
   padding: 12px 14px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   cursor: pointer;
   background: var(--cream);
@@ -265,22 +265,22 @@
 }
 @media (hover: hover) {
   .rOpt:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
   }
 }
 .rOpt:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .rOptOn {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.05);
 }
 .rDot {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid rgba(var(--plum-rgb), 0.24);
+  border: 2px solid rgba(var(--line-rgb), 0.24);
   flex: none;
   display: flex;
   align-items: center;
@@ -291,7 +291,7 @@
 }
 .rOptOn .rDot,
 .revCardOn .rDot {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: var(--plum);
 }
 .rDot::after {
@@ -308,7 +308,7 @@
 }
 .rText {
   font-size: 13.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -321,7 +321,7 @@
 
 /* ── Upload zone ── */
 .uploadZone {
-  border: 2px dashed rgba(var(--plum-rgb), 0.22);
+  border: 2px dashed rgba(var(--line-rgb), 0.22);
   border-radius: 14px;
   padding: 36px;
   text-align: center;
@@ -335,12 +335,12 @@
 }
 @media (hover: hover) {
   .uploadZone:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
     background: rgba(var(--plum-rgb), 0.04);
   }
 }
 .uploadZone:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .uploadZone svg {
@@ -350,7 +350,7 @@
 .uzTitle {
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .uzSub {
   font-size: 13px;
@@ -374,24 +374,24 @@
 
 /* ── Content notes builder ── */
 .cnBuilder {
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 14px;
   overflow: hidden;
 }
 .cnbHead {
   padding: 14px 18px;
   background: rgba(var(--plum-rgb), 0.04);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .cnEntry {
   display: grid;
   grid-template-columns: 1fr 1fr 130px auto;
   gap: 12px;
   padding: 12px 18px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: center;
 }
 .cnEntry:last-of-type {
@@ -400,7 +400,7 @@
 .cnInput {
   width: 100%;
   padding: 9px 12px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 10px;
   font-family: var(--sans);
   font-size: 13.5px;
@@ -410,7 +410,7 @@
   transition: border-color var(--dur-base) var(--ease);
 }
 .cnInput:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .cnRemove {
   border: none;
@@ -429,7 +429,7 @@
   }
 }
 .cnRemove:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .cnAdd {
@@ -451,7 +451,7 @@
   }
 }
 .cnAdd:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: -2px;
 }
 
@@ -463,7 +463,7 @@
 }
 .revCard {
   padding: 20px 22px;
-  border: 2px solid rgba(var(--plum-rgb), 0.14);
+  border: 2px solid rgba(var(--line-rgb), 0.14);
   border-radius: 16px;
   cursor: pointer;
   background: var(--paper);
@@ -474,15 +474,15 @@
 }
 @media (hover: hover) {
   .revCard:hover {
-    border-color: rgba(var(--plum-rgb), 0.28);
+    border-color: rgba(var(--line-rgb), 0.28);
   }
 }
 .revCard:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .revCardOn {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.04);
 }
 .rcHead {
@@ -499,7 +499,7 @@
 .rcLabel {
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .rcTag {
   margin-left: auto;
@@ -542,7 +542,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 16px 18px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 14px;
   background: var(--cream);
   cursor: pointer;
@@ -555,14 +555,14 @@
   background: rgba(var(--jade-rgb), 0.05);
 }
 .confirm:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .confirmBox {
   width: 20px;
   height: 20px;
   border-radius: 6px;
-  border: 2px solid rgba(var(--plum-rgb), 0.24);
+  border: 2px solid rgba(var(--line-rgb), 0.24);
   flex: none;
   display: flex;
   align-items: center;
@@ -583,7 +583,7 @@
   line-height: 1.55;
 }
 .confirmText strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* ── Review summary ── */
@@ -598,7 +598,7 @@
   justify-content: space-between;
   gap: 20px;
   padding: 13px 0;
-  border-bottom: 1px dashed rgba(var(--plum-rgb), 0.12);
+  border-bottom: 1px dashed rgba(var(--line-rgb), 0.12);
 }
 .reviewRow:last-of-type {
   border-bottom: none;
@@ -610,7 +610,7 @@
 }
 .rvV {
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   text-align: right;
 }
@@ -630,7 +630,7 @@
   border-radius: 6px;
 }
 .rvEdit:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 
@@ -645,7 +645,7 @@
   justify-content: space-between;
   margin-top: 28px;
   padding-top: 24px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
   flex-wrap: wrap;
   gap: 12px;
 }
@@ -670,7 +670,7 @@
 }
 .saCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -700,7 +700,7 @@
   margin-top: 2px;
 }
 .saPoint strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .saBody {
   font-size: 13.5px;
@@ -709,7 +709,7 @@
 }
 .saLink {
   font-size: 13px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   display: block;
   margin-top: 10px;
@@ -724,7 +724,7 @@
 .saJadeTitle {
   font-family: var(--serif);
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.3;
   margin-bottom: 10px;
 }

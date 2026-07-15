@@ -109,9 +109,7 @@ export function issueToTile(
   total: number,
 ): IssueTile {
   const d = new Date(dto.publishedOn);
-  const season = Number.isNaN(d.getTime())
-    ? ""
-    : SEASON_BY_MONTH[d.getMonth()];
+  const season = Number.isNaN(d.getTime()) ? "" : SEASON_BY_MONTH[d.getMonth()];
   const year = Number.isNaN(d.getTime()) ? "" : String(d.getFullYear());
   const current = index === 0;
   const inaugural = index === total - 1;
@@ -213,17 +211,15 @@ export function mergeAuthor(
         }
       : base.featured,
     articles: liveArticles.length
-      ? liveArticles.map(
-          (a): AuthorArticle => ({
-            id: a.slug,
-            kicker: a.issueNumber ? `Issue ${a.issueNumber}` : "Web",
-            title: a.title,
-            dek: a.dek,
-            meta: a.issueNumber
-              ? `Issue ${a.issueNumber}`
-              : formatMonthYear(a.publishedAt),
-          }),
-        )
+      ? liveArticles.map((a): AuthorArticle => ({
+          id: a.slug,
+          kicker: a.issueNumber ? `Issue ${a.issueNumber}` : "Web",
+          title: a.title,
+          dek: a.dek,
+          meta: a.issueNumber
+            ? `Issue ${a.issueNumber}`
+            : formatMonthYear(a.publishedAt),
+        }))
       : base.articles,
   };
 }
@@ -264,7 +260,9 @@ function stagesFor(status: SubmissionStatus): Pitch["stages"] {
       { label: "Closed", state: "rejected" },
     ];
   }
-  const at = STAGE_STATUS_ORDER.indexOf(status === "draft" ? "submitted" : status);
+  const at = STAGE_STATUS_ORDER.indexOf(
+    status === "draft" ? "submitted" : status,
+  );
   return STAGE_LABELS.map((label, i) => ({
     label,
     state: i < at ? "done" : i === at ? "active" : "upcoming",

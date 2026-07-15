@@ -4,7 +4,7 @@
   flex-direction: column;
   gap: 18px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
   padding: 28px;
 }
@@ -35,7 +35,7 @@
 
 .rcInput,
 .rcSelect {
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 16px;
   font-family: var(--sans);
@@ -75,7 +75,7 @@
 
 .col {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
   padding: 24px;
   transition:
@@ -121,7 +121,7 @@
   font-size: clamp(30px, 5vw, 40px);
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0;
 }
 
@@ -138,7 +138,7 @@
 
 .colBreakdown {
   margin: 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .colRow {
@@ -147,7 +147,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
   font-family: var(--sans);
 }
 .colRow:last-child {
@@ -169,7 +169,7 @@
 /* ── Net-difference plum panel ───────────────────────────────────────────── */
 .diffPanel {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-card, 22px);
   padding: 32px;
   text-align: center;
@@ -202,7 +202,7 @@
   font-weight: 400;
   font-size: clamp(24px, 4vw, 30px);
   line-height: 1.2;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin: 0;
 }
 .diffValue em {
@@ -221,7 +221,7 @@
 /* ── Hidden-costs list ───────────────────────────────────────────────────── */
 .costs {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
   padding: 28px;
 }
@@ -230,7 +230,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0 0 18px;
 }
 .costsTitle em {

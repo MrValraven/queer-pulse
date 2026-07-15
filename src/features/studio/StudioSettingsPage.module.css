@@ -184,7 +184,7 @@
 }
 .segBtnOn {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* Radio cards */
@@ -335,7 +335,7 @@
 @media (hover: hover) {
   .btDanger:hover {
     background: rgba(var(--accent-rgb), 0.16);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
     border-color: var(--accent);
   }
 }

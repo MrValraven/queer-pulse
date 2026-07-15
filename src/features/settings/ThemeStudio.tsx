@@ -12,21 +12,14 @@ import styles from "./ProfileThemePage.module.css";
 
 function buildCoverBg(
   colors: string[],
-  coverStyle: CoverStyle,
+  _coverStyle: CoverStyle,
   pattern: PatternKey,
 ): string {
-  let gradient: string;
-  if (coverStyle === "gradient") {
-    gradient = `linear-gradient(to right,${colors[0]},${colors[Math.floor(colors.length / 2)]})`;
-  } else if (coverStyle === "stripe") {
-    const pct = 100 / colors.length;
-    const stops = colors
-      .map((c, i) => `${c} ${i * pct}% ${(i + 1) * pct}%`)
-      .join(",");
-    gradient = `linear-gradient(to right,${stops})`;
-  } else {
-    gradient = `linear-gradient(135deg,${colors[0]}22,${colors[Math.floor(colors.length / 2)]}22),var(--cream)`;
-  }
+  const pct = 100 / colors.length;
+  const stops = colors
+    .map((c, i) => `${c} ${i * pct}% ${(i + 1) * pct}%`)
+    .join(",");
+  const gradient = `linear-gradient(to right,${stops})`;
   const pats: Record<PatternKey, string> = {
     none: "",
     stripe:

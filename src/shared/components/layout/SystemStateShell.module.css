@@ -86,7 +86,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .brand em {

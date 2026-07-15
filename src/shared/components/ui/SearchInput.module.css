@@ -26,7 +26,7 @@
   font-size: 14.5px;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 11px 16px 11px 40px;
   outline: none;
@@ -38,7 +38,7 @@
   color: var(--ink-40);
 }
 .input:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
 }
 

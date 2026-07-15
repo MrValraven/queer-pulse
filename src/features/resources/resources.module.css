@@ -3,7 +3,7 @@
 .hero {
   padding: 180px 0 100px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   position: relative;
   overflow: hidden;
 }
@@ -46,7 +46,7 @@
   font-size: clamp(44px, 7vw, 88px);
   line-height: 0.98;
   letter-spacing: -0.02em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   max-width: 16ch;
   position: relative;
 }
@@ -82,14 +82,14 @@
 }
 @media (hover: hover) {
   .heroAnchor:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
     border-color: rgba(var(--cream-rgb), 0.5);
   }
 }
 
 .section {
   padding: 88px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .sectionPaper {
   background: var(--paper);
@@ -101,7 +101,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.5vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
   margin-bottom: 12px;
@@ -120,7 +120,7 @@
 .leadP a,
 .stepBody a,
 .resDesc a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -138,7 +138,7 @@
 /* Soft card on cream or paper */
 .card {
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -152,7 +152,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .cardSpec {
@@ -179,7 +179,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 14px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: auto;
 }
 .cardLoc {
@@ -189,7 +189,7 @@
 .cardCta {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   transition: color 0.2s;
 }
 @media (hover: hover) {
@@ -219,7 +219,7 @@
   grid-template-columns: 52px 1fr;
   gap: 20px;
   padding: 24px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .step:last-child {
   border-bottom: none;
@@ -235,7 +235,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
@@ -248,7 +248,7 @@
 /* Right cards (Legal) */
 .rightCard {
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -279,7 +279,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .rightBody {
@@ -291,7 +291,7 @@
 .rightLink {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-top: 6px;
 }
 @media (hover: hover) {
@@ -319,7 +319,7 @@
   background: var(--plum);
   border-radius: 20px;
   padding: 44px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
@@ -329,7 +329,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(24px, 3vw, 38px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.1;
 }
@@ -368,7 +368,7 @@
   font-family: var(--serif);
   font-size: 34px;
   font-weight: 400;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -392,7 +392,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -419,7 +419,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 28px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
 .emergencyStrip h3 em {
@@ -453,7 +453,7 @@
   gap: 14px;
   align-items: start;
   padding: 16px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .checkItem:last-child {
   border-bottom: none;
@@ -471,7 +471,7 @@
   gap: 18px;
   align-items: start;
   padding: 22px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .featureRow:last-child {
   border-bottom: none;
@@ -514,7 +514,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 16px;
 }
@@ -553,7 +553,7 @@
 /* ---- Q&A list (first-meetup FAQ, coming-out-at-work) ---- */
 .qaItem {
   padding: 22px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .qaItem:last-child {
   border-bottom: none;
@@ -562,7 +562,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }

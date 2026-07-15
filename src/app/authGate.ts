@@ -126,6 +126,33 @@ function matchesAny(pathname: string, patterns: string[]): boolean {
 const ADMIN_PATTERNS: string[] = ["/admin", "/admin/*"];
 const MOD_PATTERNS: string[] = ["/mod/*"];
 
+/**
+ * Guest-only surfaces: the sign-in / sign-up entry pages that only make sense to
+ * a logged-out visitor. A signed-in member has nothing to do here, so the gate
+ * bounces them to their feed (or the `?next=` they were headed for). This is the
+ * mirror image of GATED_PATTERNS. Post-signup pages (onboarding, welcome tour,
+ * member-sends-an-invite) are intentionally NOT here — being logged in is the
+ * whole point of those.
+ */
+const GUEST_ONLY_PATTERNS: string[] = [
+  routes.signIn,
+  routes.createAccount,
+  routes.magicLink,
+  routes.requestInvite,
+  "/studio/sign-in",
+];
+
+/** True when a path is only meaningful to logged-out visitors. */
+export function isGuestOnlyPath(pathname: string): boolean {
+  return matchesAny(pathname, GUEST_ONLY_PATTERNS);
+}
+
+/** Only honour same-origin internal paths from `?next=` (avoids open redirects). */
+function safeNext(next: string | null): string {
+  if (next && next.startsWith("/") && !next.startsWith("//")) return next;
+  return "/feed";
+}
+
 /** The role a path demands, or null when logged-in access is sufficient. */
 export function requiredRole(pathname: string): "admin" | "mod" | null {
   if (matchesAny(pathname, ADMIN_PATTERNS)) return "admin";
@@ -171,9 +198,14 @@ export function useIsLinkVisible(): (href: string) => boolean {
  * null when the visitor is allowed through (logged in, or on a public route).
  */
 export function useAuthGateRedirect(): string | null {
-  const { loggedIn, role } = useAuth();
+  const { loggedIn, checking, role } = useAuth();
   const { demoMode } = useDemoMode();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+
+  // Live-mode session probe still in flight: don't decide the gate yet, or we'd
+  // bounce a signed-in member reloading a gated page to sign-in before /auth/me
+  // confirms. AppRoutes holds gated paths on a loader meanwhile.
+  if (checking) return null;
 
   if (loggedIn) {
     // Role-gate admin/mod surfaces in live mode. Demo mode is intentionally an
@@ -185,6 +217,11 @@ export function useAuthGateRedirect(): string | null {
       if (need === "mod" && role !== "moderator" && role !== "admin") {
         return routes.homepage;
       }
+    }
+    // Nothing to sign into when you're already in — send members on to their
+    // feed (or the `?next=` they were headed for) instead of the auth screens.
+    if (isGuestOnlyPath(pathname)) {
+      return safeNext(new URLSearchParams(search).get("next"));
     }
     return null;
   }

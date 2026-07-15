@@ -3,6 +3,7 @@ import { AppShell } from "../../shared/components/layout";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSocial } from "../../app/providers/SocialProvider";
+import { useRealtimeConnection } from "../../shared/api/realtime";
 import { type ChatMessage, type Conversation } from "./data";
 import { ConversationPanel } from "./ConversationPanel";
 import { MessagesThreadList } from "./MessagesThreadList";
@@ -20,6 +21,10 @@ export function MessagesPage() {
   const { demoMode } = useDemoMode();
   const { isBlocked } = useSocial();
   const simLoading = useSimulatedLoad();
+
+  // Open the realtime socket only while this page is mounted — live DMs/read
+  // receipts should stream here, not app-wide. Inert in demo/logged-out.
+  useRealtimeConnection();
 
   // Source of truth for the inbox: demo returns the scripted mock, live calls
   // GET /conversations. Either way the page renders the same view-model.

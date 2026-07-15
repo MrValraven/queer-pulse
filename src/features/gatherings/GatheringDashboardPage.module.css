@@ -20,7 +20,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 19px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   text-decoration: none;
 }
 .brandDot {
@@ -125,7 +125,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 3.8vw, 48px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 28px;
@@ -144,7 +144,7 @@
   font-family: var(--serif);
   font-size: clamp(32px, 4vw, 52px);
   font-weight: 300;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.03em;
   line-height: 1;
 }
@@ -189,7 +189,7 @@
 }
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -215,7 +215,7 @@
     transparent 3px,
     transparent 12px
   );
-  border: 1.5px dashed rgba(var(--plum-rgb), 0.15);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.15);
   border-radius: 14px;
   display: flex;
   flex-direction: column;
@@ -265,7 +265,7 @@
 }
 .nameSearch {
   width: 100%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 11px;
   padding: 10px 14px;
   font-family: var(--sans);
@@ -277,7 +277,7 @@
   box-sizing: border-box;
 }
 .nameSearch:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .searchResult {
   font-size: 12.5px;
@@ -320,7 +320,7 @@
 .rrName {
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   flex: 1;
 }
 .rrTime {
@@ -341,7 +341,7 @@
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 999px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
   color: var(--ink-60);
   cursor: pointer;
@@ -353,11 +353,11 @@
 .afBtnActive {
   background: var(--plum);
   color: #fff;
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .attSearch {
   width: 100%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   padding: 9px 13px;
   font-family: var(--sans);
@@ -370,7 +370,7 @@
   box-sizing: border-box;
 }
 .attSearch:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .attRow {
   display: flex;
@@ -404,7 +404,7 @@
 .attName {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .attMeta {
   font-size: 12px;
@@ -425,7 +425,7 @@
 .chipPending {
   background: rgba(var(--plum-rgb), 0.07);
   color: var(--ink-60);
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
 }
 .manualBtn {
   font-family: var(--sans);
@@ -454,7 +454,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: 4px;
 }
 .promoteBtn {
@@ -487,7 +487,7 @@
   font-family: var(--serif);
   font-size: 44px;
   font-weight: 300;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.03em;
   line-height: 1;
   margin-bottom: 4px;
@@ -505,7 +505,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: 14px;
 }
 .peakLabel {
@@ -515,7 +515,7 @@
 .peakVal {
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .quickActions {
   display: flex;
@@ -530,7 +530,7 @@
 }
 .endCard {
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 14px 16px;
 }
@@ -582,7 +582,7 @@
 }
 .endedCard {
   background: var(--plum);
-  border: 1px solid var(--plum);
+  border: 1px solid var(--line-strong);
   border-radius: 14px;
   padding: 18px 18px 16px;
   text-align: center;
@@ -610,7 +610,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 21px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
 .endedTitle em {

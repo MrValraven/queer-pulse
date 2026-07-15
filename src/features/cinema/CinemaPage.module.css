@@ -41,7 +41,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(50px, 8.5vw, 118px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.03em;
   line-height: 0.88;
 }
@@ -90,12 +90,12 @@
     border-bottom-color 0.2s var(--ease);
 }
 .cnLinkActive {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-bottom-color: var(--accent);
 }
 @media (hover: hover) {
   .cnLink:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
     border-bottom-color: var(--accent);
   }
 }
@@ -192,7 +192,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 5vw, 76px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.96;
 }
@@ -274,7 +274,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 32px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.018em;
   line-height: 1.05;
 }
@@ -296,7 +296,7 @@
 }
 @media (hover: hover) {
   .secH .all:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 
@@ -351,7 +351,7 @@
 }
 .rent {
   background: rgba(var(--cream-rgb), 0.18);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .fKicker {
   font-size: 10.5px;
@@ -364,7 +364,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 20px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.14;
   letter-spacing: -0.01em;
 }
@@ -412,7 +412,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 26px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.42;
   max-width: 56ch;
 }
@@ -471,7 +471,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   line-height: 1.12;
   max-width: 24ch;
@@ -547,7 +547,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.2;
 }
 .short h4 em {
@@ -596,7 +596,7 @@
 .liveDate {
   font-family: var(--serif);
   font-weight: 300;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .liveDate .d {
   font-size: 38px;
@@ -615,7 +615,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 21px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.16;
 }
 .liveMain h4 em {
@@ -686,7 +686,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(30px, 4vw, 48px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.04;
 }
@@ -745,7 +745,7 @@
 .lcRow .v {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .lcRow .v em {
   font-style: normal;
@@ -784,7 +784,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 3.6vw, 42px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.06;
 }
@@ -842,7 +842,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(28px, 3.6vw, 42px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.06;
 }

@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "./DemoModeProvider";
+import { useAuth } from "./authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { logError } from "../../shared/observability/logger";
 import {
@@ -78,6 +79,7 @@ function readInitial(): SocialState {
  */
 export function SocialProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
+  const { loggedIn } = useAuth();
   const { showToast } = useToast();
   const queryClient = useQueryClient();
   const [state, setState] = useState<SocialState>(readInitial);
@@ -92,15 +94,16 @@ export function SocialProvider({ children }: { children: ReactNode }) {
     }
   }, [demoMode, state]);
 
-  // Live-mode hydration. Idle (and never fetched) in demo mode.
+  // Live-mode hydration. Idle in demo mode, and until the member is signed in —
+  // firing these while logged out just 401s and hammers the refresh endpoint.
   const blocksQuery = useQuery({
     queryKey: ["blocks", demoMode],
-    enabled: !demoMode,
+    enabled: !demoMode && loggedIn,
     queryFn: () => getBlocks(),
   });
   const mutesQuery = useQuery({
     queryKey: ["mutes", demoMode],
-    enabled: !demoMode,
+    enabled: !demoMode && loggedIn,
     queryFn: () => getMutes(),
   });
 

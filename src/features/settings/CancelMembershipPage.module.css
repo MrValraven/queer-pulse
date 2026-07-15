@@ -17,7 +17,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .eyebrow {
@@ -32,7 +32,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(38px, 5vw, 56px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
   max-width: 18ch;
@@ -79,11 +79,11 @@
 }
 .csActive .csN {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .csDone .csN {
   background: var(--jade);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .csL {
   font-size: 13px;
@@ -92,7 +92,7 @@
 }
 .csActive .csL,
 .csDone .csL {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .csBar {
   flex: 1;
@@ -108,7 +108,7 @@
 /* Pane */
 .pane {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 32px;
   box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.04);
@@ -136,7 +136,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 10px;
 }
@@ -176,7 +176,7 @@
   height: 48px;
   border-radius: 14px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -189,7 +189,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .currTier em {
   font-style: italic;
@@ -201,7 +201,7 @@
   margin-top: 3px;
 }
 .currMeta b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .currPrice {
@@ -209,7 +209,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .currCy {
@@ -232,7 +232,7 @@
   align-items: flex-start;
   gap: 14px;
   padding: 18px 20px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 14px;
   cursor: pointer;
   transition:
@@ -244,7 +244,7 @@
 }
 @media (hover: hover) {
   .alt:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
     background: rgba(var(--plum-rgb), 0.03);
   }
 }
@@ -268,7 +268,7 @@
 .altT {
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .altD {
   font-size: 13px;
@@ -294,7 +294,7 @@
   align-items: flex-start;
   gap: 14px;
   padding: 14px 16px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 12px;
   cursor: pointer;
   transition:
@@ -303,16 +303,16 @@
 }
 @media (hover: hover) {
   .reason:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
   }
 }
 .reasonChecked {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.04);
 }
 .reason input {
   margin-top: 4px;
-  accent-color: var(--plum);
+  accent-color: var(--text-strong);
   flex: none;
 }
 .reasonText {
@@ -322,7 +322,7 @@
 }
 .reasonText b {
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .reasonTextarea {
   width: 100%;
@@ -330,7 +330,7 @@
   font-size: 14px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 12px;
   padding: 14px;
   resize: vertical;
@@ -342,7 +342,7 @@
   margin-top: 12px;
 }
 .reasonTextarea:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: var(--paper);
 }
 .reasonTextarea:focus:not(:focus-visible) {
@@ -370,7 +370,7 @@
 .lose b {
   display: block;
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 4px;
 }
@@ -405,7 +405,7 @@
   line-height: 1.6;
 }
 .confirmRow label b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -416,7 +416,7 @@
   gap: 10px;
   padding-top: 24px;
   margin-top: 18px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   flex-wrap: wrap;
   align-items: center;
 }
@@ -483,7 +483,7 @@
   margin: 0 auto 8px;
 }
 .fwLead b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .fwNote {
@@ -494,7 +494,7 @@
   margin: 12px auto 0;
 }
 .fwNote b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .farewellBtns {

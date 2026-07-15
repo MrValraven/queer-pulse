@@ -85,7 +85,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: clamp(21px, 3vw, 28px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.12;
   margin-bottom: 12px;
@@ -119,7 +119,7 @@
 /* ---- plum-panel success ---- */
 .successPanel {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-card, 22px);
   width: 100%;
   max-width: 520px;
@@ -149,7 +149,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: clamp(24px, 4vw, 32px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   line-height: 1.1;
   margin-bottom: 14px;
@@ -165,7 +165,7 @@
   margin-bottom: 26px;
 }
 .successSub b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .successMeta {
@@ -183,7 +183,7 @@
   background: rgba(var(--cream-rgb), 0.12);
   border: none;
   cursor: pointer;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -199,7 +199,7 @@
 /* ---- preparing / loading panel ---- */
 .loadingPanel {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-card, 22px);
   width: 100%;
   max-width: 520px;
@@ -235,7 +235,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: clamp(20px, 3vw, 25px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   margin-bottom: 8px;
 }

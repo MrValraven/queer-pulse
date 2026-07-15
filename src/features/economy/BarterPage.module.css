@@ -31,7 +31,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6vw, 80px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
   max-width: 15ch;
@@ -63,7 +63,7 @@
   display: block;
   font-size: 14px;
   font-weight: 700;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 4px;
 }
 .principleItem span {
@@ -80,7 +80,7 @@
 
 .controls {
   padding: 28px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .controlsRow {
   display: flex;
@@ -92,7 +92,7 @@
 .search {
   flex: 1;
   min-width: 220px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 11px 16px;
   font-family: var(--sans);
@@ -102,7 +102,7 @@
   transition: border-color 0.2s;
 }
 .search:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .modeTabs {
   display: flex;
@@ -128,14 +128,14 @@
 }
 .modeTabActive {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .count {
   font-size: 13.5px;
   color: var(--ink-40);
 }
 .count b {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .cats {
   display: flex;
@@ -148,7 +148,7 @@
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   background: transparent;
   border-radius: 999px;
   padding: 7px 14px;
@@ -159,8 +159,8 @@
 }
 .chipActive {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 
 .body {
@@ -173,7 +173,7 @@
 }
 .bc {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 22px 24px;
   display: flex;
@@ -190,7 +190,7 @@
 @media (hover: hover) {
   .bc:hover {
     transform: translateY(-2px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
     box-shadow: 0 14px 32px -22px rgba(var(--plum-rgb), 0.4);
   }
 }
@@ -211,7 +211,7 @@
 .bcName {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .bcHood {
   font-size: 12.5px;
@@ -235,7 +235,7 @@
   background: rgba(var(--accent-rgb), 0.12);
 }
 .both {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.08);
 }
 .bcBlock {
@@ -265,7 +265,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
   margin-bottom: 4px;
@@ -292,7 +292,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .bcDays {
   font-size: 12px;
@@ -301,7 +301,7 @@
 .bcReach {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   background: none;
   border: none;
   cursor: pointer;
@@ -326,7 +326,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .postStrip h3 em {
@@ -350,7 +350,7 @@
   padding: 11px 14px;
   font-family: var(--sans);
   font-size: 14px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
 }
 .psInput::placeholder {
@@ -400,7 +400,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .psSuccess h3 em {

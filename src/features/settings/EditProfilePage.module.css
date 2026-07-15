@@ -14,7 +14,7 @@
 
 /* Left nav */
 .nav {
-  border-right: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-right: 1px solid rgba(var(--line-rgb), 0.09);
   padding: 32px 0;
   position: sticky;
   top: 70px;
@@ -126,7 +126,7 @@ span.navIcon svg {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 4px;
 }
@@ -170,7 +170,7 @@ span.navIcon svg {
   font-size: 28px;
   color: var(--accent-ink);
   flex: none;
-  border: 3px solid rgba(var(--plum-rgb), 0.08);
+  border: 3px solid rgba(var(--line-rgb), 0.08);
 }
 
 .photoActions {
@@ -227,7 +227,7 @@ span.navIcon svg {
 .fieldTextarea,
 .fieldSelect {
   width: 100%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 16px;
   font-family: var(--sans);
@@ -241,7 +241,7 @@ span.navIcon svg {
 .fieldInput:focus,
 .fieldTextarea:focus,
 .fieldSelect:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .fieldInput:focus:not(:focus-visible),
 .fieldTextarea:focus:not(:focus-visible),
@@ -293,7 +293,7 @@ span.navIcon svg {
   gap: 7px;
   font-size: 13.5px;
   font-weight: 600;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 999px;
   padding: 8px 14px;
   cursor: pointer;
@@ -309,15 +309,15 @@ span.navIcon svg {
 
 @media (hover: hover) {
   .pronounChip:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 
 .pronounChipSelected {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 
 /* Skills / interests */
@@ -369,7 +369,7 @@ span.navIcon svg {
 /* Visibility panel */
 .visPanel {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -380,7 +380,7 @@ span.navIcon svg {
   justify-content: space-between;
   gap: 12px;
   padding: 16px 20px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 
 .visRow:last-child {
@@ -408,7 +408,7 @@ span.navIcon svg {
 .visSelect {
   font-size: 12px;
   font-weight: 600;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 4px 10px 4px 8px;
   font-family: var(--sans);
@@ -420,7 +420,7 @@ span.navIcon svg {
 }
 
 .visSelect:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .visSelect:focus:not(:focus-visible) {
   outline: none;
@@ -433,7 +433,7 @@ span.navIcon svg {
   left: 260px;
   right: 0;
   background: var(--paper);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
   padding: 16px 52px;
   display: flex;
   align-items: center;
@@ -481,7 +481,7 @@ span.navIcon svg {
   left: 260px;
   right: 0;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 16px 52px;
   display: flex;
   align-items: center;
@@ -522,7 +522,7 @@ span.navIcon svg {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 15px;
   flex: none;
 }
@@ -534,6 +534,6 @@ span.navIcon svg {
 }
 
 .savedText strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }

@@ -170,7 +170,9 @@ export function ForumPage() {
                 setSort={setSort}
                 voted={voted}
                 toggleVote={toggleVote}
+                filtered={cat !== "all"}
                 onShowAll={() => setCat("all")}
+                onCompose={() => openCompose()}
               />
             </div>
           </div>

@@ -12,14 +12,14 @@
   align-items: center;
   gap: 10px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 999px;
   padding: 13px 20px;
 }
 .search svg {
   width: 18px;
   height: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.55;
   flex: none;
 }
@@ -48,7 +48,7 @@
 }
 .popular span {
   font-size: 13px;
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.55;
   font-weight: 600;
 }
@@ -70,7 +70,7 @@
 }
 .empty {
   text-align: center;
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.6;
   font-size: 16px;
   padding: 40px 0;
@@ -80,7 +80,7 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.5;
   margin-top: 14px;
 }

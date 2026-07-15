@@ -21,7 +21,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(38px, 5vw, 54px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.04;
   margin-bottom: 16px;
@@ -68,11 +68,11 @@
   font-family: var(--serif);
   font-size: 20px;
   font-weight: 500;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin: 26px 0 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .sectionHead:first-child {
   margin-top: 0;
@@ -93,7 +93,7 @@
 /* ── Optional (details/summary) ───────────────────────────────────────────── */
 .optional {
   margin-top: 24px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
   padding-top: 8px;
 }
 .optionalSummary {
@@ -141,7 +141,7 @@
   font-size: 14.5px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 10px;
   padding: 11px 13px;
   width: 100%;
@@ -152,7 +152,7 @@
     background 0.22s var(--ease);
 }
 .repFields input:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
   background: var(--paper);
 }
@@ -165,7 +165,7 @@
   align-items: center;
   justify-content: center;
   background: transparent;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 10px;
   color: var(--ink-60);
   cursor: pointer;
@@ -189,7 +189,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   padding: 4px 2px 2px;
   margin-bottom: 8px;
 }
@@ -206,7 +206,7 @@
   gap: 12px;
   margin-top: 28px;
   padding-top: 22px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
   flex-wrap: wrap;
 }
 

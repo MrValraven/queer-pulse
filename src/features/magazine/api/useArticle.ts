@@ -39,9 +39,7 @@ export function useArticle(id: string) {
       const dto = await getArticle(id).catch(() => null);
       if (!dto) return { article: null, related: [] };
 
-      const authorDetail = await getAuthor(dto.author.handle).catch(
-        () => null,
-      );
+      const authorDetail = await getAuthor(dto.author.handle).catch(() => null);
       const article = articleResponseToArticle(dto, authorDetail?.bio);
 
       const tag = dto.tags[0];

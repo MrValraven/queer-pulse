@@ -8,7 +8,7 @@
 .head {
   padding-bottom: 36px;
   margin-bottom: 28px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
 }
 .eyebrow {
   font-size: 11px;
@@ -22,7 +22,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(48px, 7vw, 84px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin: 0;
@@ -44,7 +44,7 @@
   margin-top: 14px;
 }
 .sub a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -66,7 +66,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   display: block;
   line-height: 1;
   margin-bottom: 5px;
@@ -106,7 +106,7 @@
 }
 .chip {
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   color: var(--ink-60);
   font-family: var(--sans);
   font-size: 13px;
@@ -121,17 +121,17 @@
 }
 @media (hover: hover) {
   .chip:hover {
-    border-color: rgba(var(--plum-rgb), 0.35);
-    color: var(--plum);
+    border-color: rgba(var(--line-rgb), 0.35);
+    color: var(--text-strong);
   }
 }
 .chipActive {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .chipActive:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* Post list */
@@ -142,7 +142,7 @@
 }
 .post {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 24px;
   text-decoration: none;
@@ -156,7 +156,7 @@
 @media (hover: hover) {
   .post:hover {
     transform: translateY(-2px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
     box-shadow: 0 14px 32px -22px rgba(var(--plum-rgb), 0.4);
   }
 }
@@ -170,7 +170,7 @@
 .postName {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .postMeta {
   font-size: 12.5px;
@@ -193,7 +193,7 @@
   background: rgba(var(--jade-rgb), 0.1);
 }
 .kindArticle {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.08);
 }
 .kindWarn {
@@ -205,7 +205,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.25;
   margin-bottom: 6px;
@@ -227,7 +227,7 @@
   align-items: center;
   margin-top: 14px;
   padding-top: 12px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
   font-size: 12.5px;
   color: var(--ink-40);
 }
@@ -274,7 +274,7 @@
 }
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -294,7 +294,7 @@
 }
 .relatedList a {
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
   padding: 6px 0;
   transition: color 0.2s var(--ease);
@@ -336,7 +336,7 @@
 .personName {
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .personDetail {
   font-size: 12px;
@@ -364,7 +364,7 @@
 .resources a {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
 }
 @media (hover: hover) {

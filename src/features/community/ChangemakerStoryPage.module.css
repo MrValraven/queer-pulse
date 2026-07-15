@@ -25,7 +25,7 @@
 @media (hover: hover) {
   .backLink:hover {
     background: rgba(var(--plum-rgb), 0.5);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 
@@ -83,7 +83,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(36px, 5.5vw, 68px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.02;
   max-width: 16ch;
@@ -107,7 +107,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 12px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   flex: none;
 }
 .bDot {
@@ -135,7 +135,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(22px, 3vw, 30px);
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.35;
   letter-spacing: -0.01em;
   margin-bottom: 28px;
@@ -152,7 +152,7 @@
   flex-wrap: wrap;
   margin-bottom: 40px;
   padding-bottom: 26px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   font-size: 13px;
   color: var(--ink-60);
 }
@@ -177,7 +177,7 @@
   font-weight: 400;
 }
 .body p b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .body p em {
@@ -191,7 +191,7 @@
   float: left;
   line-height: 0.82;
   margin: 6px 12px 0 0;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .quote {
@@ -203,7 +203,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(20px, 2.6vw, 28px);
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.35;
   letter-spacing: -0.01em;
   margin-bottom: 12px;
@@ -216,7 +216,7 @@
 
 .impactCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 24px 26px;
   margin: 40px 0;
@@ -235,7 +235,7 @@
   gap: 12px;
   align-items: flex-start;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   font-size: 15px;
   color: var(--ink);
   line-height: 1.55;
@@ -294,7 +294,7 @@
   gap: 12px;
   padding: 14px 16px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
@@ -305,7 +305,7 @@
 @media (hover: hover) {
   .moreCard:hover {
     transform: translateY(-2px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
   }
 }
 .moreAv {
@@ -330,12 +330,12 @@
 }
 .avPlum {
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .moreName {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .moreCause {
   font-size: 12px;

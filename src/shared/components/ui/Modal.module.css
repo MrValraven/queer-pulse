@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-card);
   box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.5);
   overflow: hidden;
@@ -56,7 +56,7 @@
   font-size: 22px;
   font-weight: 400;
   letter-spacing: -0.01em;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0;
 }
 [data-theme="dark"] .modalTitle {
@@ -78,7 +78,7 @@
   height: 34px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   background: var(--paper);
   color: var(--ink-60);
@@ -90,7 +90,7 @@
 @media (hover: hover) {
   .modalX:hover {
     background: var(--cream);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .modalBody {
@@ -103,7 +103,7 @@
   align-items: center;
   gap: 10px;
   padding: 16px 24px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 /* ── Bottom-sheet content modal ──────────────────────────────────────────── */
@@ -173,7 +173,7 @@
 @media (hover: hover) {
   .close:hover {
     background: rgba(var(--plum-rgb), 0.16);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .close svg {

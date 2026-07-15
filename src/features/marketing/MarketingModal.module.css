@@ -78,7 +78,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(24px, 3.4vw, 32px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.018em;
   line-height: 1.1;
   margin: 0 0 14px;
@@ -94,7 +94,7 @@
   margin: 0 0 24px;
 }
 .lead b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -113,7 +113,7 @@
   color: var(--accent);
 }
 .field input {
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 12px;
   padding: 13px 16px;
   font-family: var(--sans);
@@ -150,7 +150,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -160,7 +160,7 @@
   flex-direction: column;
   gap: 2px;
   margin: 0 0 24px;
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -172,7 +172,7 @@
   background: var(--cream);
 }
 .previewRow + .previewRow {
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .previewIc {
   flex: none;
@@ -197,7 +197,7 @@
 .previewInfo b {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .previewInfo span {
   font-size: 12.5px;
@@ -212,7 +212,7 @@
   padding: 36px 24px;
   border-radius: 16px;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   margin-bottom: 24px;
 }
 .logoStage svg {
@@ -254,7 +254,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.12);
   padding: 5px 11px;
   border-radius: 999px;
@@ -287,6 +287,8 @@
   border: none;
   cursor: pointer;
   background: rgba(var(--cream-rgb), 0.92);
+  /* Circle is always light (non-flipping cream channels), so pin the icon dark
+     — var(--text-strong) would flip to light and vanish in dark mode. */
   color: var(--plum);
   display: flex;
   align-items: center;
@@ -322,7 +324,7 @@
 }
 .modalSuccess .close {
   background: rgba(var(--cream-rgb), 0.12);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 @media (hover: hover) {
   .modalSuccess .close:hover {
@@ -356,7 +358,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 4vw, 38px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin: 0;
 }
@@ -371,7 +373,7 @@
   line-height: 1.65;
 }
 .success p b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 

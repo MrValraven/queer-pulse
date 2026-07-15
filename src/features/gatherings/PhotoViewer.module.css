@@ -34,7 +34,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .counter {
   font-size: 13px;
@@ -54,7 +54,7 @@
   background: rgba(var(--cream-rgb), 0.12);
   border: none;
   cursor: pointer;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,7 +68,7 @@
 }
 .iconBtn[aria-pressed="true"] {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .stage {
@@ -104,7 +104,7 @@
 }
 .frameLabel {
   padding: 20px 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--serif);
   font-size: 18px;
   font-weight: 400;
@@ -122,7 +122,7 @@
   padding: 5px 11px;
   border-radius: 8px;
   background: rgba(18, 11, 24, 0.55);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .tagAccent {
   background: var(--accent);
@@ -135,7 +135,7 @@
   background: rgba(var(--cream-rgb), 0.12);
   border: none;
   cursor: pointer;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;

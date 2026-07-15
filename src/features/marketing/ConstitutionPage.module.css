@@ -18,7 +18,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(56px, 9vw, 128px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.92;
   margin-bottom: 22px;
@@ -37,7 +37,7 @@
   margin-bottom: 18px;
 }
 .dek b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .dek em {
@@ -45,7 +45,7 @@
   color: var(--accent-ink);
 }
 .dek a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   text-decoration: none;
 }
@@ -54,7 +54,7 @@
   color: var(--ink-40);
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .meta b {
   color: var(--ink-60);
@@ -63,8 +63,8 @@
 
 .toc {
   background: var(--paper);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -96,7 +96,7 @@
 }
 @media (hover: hover) {
   .tocInner a:hover {
-    color: var(--plum);
+    color: var(--text-strong);
     background: rgba(var(--plum-rgb), 0.05);
   }
 }
@@ -108,7 +108,7 @@
 }
 .art {
   padding: 48px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   scroll-margin-top: 64px;
 }
 .art:last-of-type {
@@ -129,7 +129,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(30px, 4.5vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin-bottom: 22px;
@@ -151,11 +151,11 @@
   color: var(--accent-ink);
 }
 .clause strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .clause a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -177,7 +177,7 @@
   font-weight: 300;
   font-style: italic;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.55;
   border-left: 3px solid var(--accent);
   padding: 6px 0 6px 22px;
@@ -201,7 +201,7 @@
   font-weight: 600;
 }
 .version a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;

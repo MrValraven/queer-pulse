@@ -11,7 +11,7 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 600;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -36,11 +36,11 @@
 }
 .plum {
   background: rgba(var(--plum-rgb), 0.12);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .auth {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .verifiedBadge {

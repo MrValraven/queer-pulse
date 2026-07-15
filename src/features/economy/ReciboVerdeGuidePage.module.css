@@ -24,7 +24,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6vw, 80px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-top: 16px;
@@ -116,7 +116,7 @@
 /* ── Cross-link CTA row ──────────────────────────────────────────────────── */
 .ctaRow {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
   padding: 36px 36px 38px;
   margin: 8px 0 48px;
@@ -188,7 +188,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 12px;
   position: relative;

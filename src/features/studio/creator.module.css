@@ -337,7 +337,7 @@
 }
 .rangeBtnOn {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--accent);
 }
 .chart {
@@ -628,7 +628,7 @@
 }
 .stepOn .stepNum {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .stepNm {
   font-size: 14px;
@@ -1225,7 +1225,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 12px;
 }

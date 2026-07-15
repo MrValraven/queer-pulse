@@ -10,7 +10,7 @@
 }
 .card {
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 26px;
   display: flex;
@@ -40,7 +40,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -53,13 +53,13 @@
 .cta {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   display: inline-flex;
   align-items: center;
   gap: 5px;
   margin-top: auto;
   padding-top: 12px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   transition:
     gap 0.2s,
     color 0.2s;

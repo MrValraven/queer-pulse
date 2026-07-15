@@ -4,6 +4,7 @@ import {
   apiPatch,
   apiDelete,
 } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 
 // ── Backend DTOs ─────────────────────────────────────────────────────────────
@@ -118,16 +119,17 @@ export interface CommunitiesQuery {
   page?: number;
 }
 
-export function getCommunities(params: CommunitiesQuery = {}) {
+export async function getCommunities(params: CommunitiesQuery = {}) {
   const q = new URLSearchParams();
   if (params.filter) q.set("filter", params.filter);
   if (params.type) q.set("type", params.type);
   if (params.access) q.set("access", params.access);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
-  return apiGet<Paginated<CommunityCardDTO>>(
+  const res = await apiGet<CommunityCardDTO[] | Paginated<CommunityCardDTO>>(
     `/communities${qs ? `?${qs}` : ""}`,
   );
+  return toItemsPage(res);
 }
 
 export const getCommunity = (slug: string) =>
@@ -139,13 +141,14 @@ export const createCommunity = (dto: CreateCommunityDto) =>
 export const updateCommunity = (slug: string, dto: UpdateCommunityDto) =>
   apiPatch<CommunityDetailDTO>(`/communities/${slug}`, dto);
 
-export function getCommunityPosts(slug: string, page?: number) {
+export async function getCommunityPosts(slug: string, page?: number) {
   const q = new URLSearchParams();
   if (page) q.set("page", String(page));
   const qs = q.toString();
-  return apiGet<Paginated<CommunityPostDTO>>(
+  const res = await apiGet<CommunityPostDTO[] | Paginated<CommunityPostDTO>>(
     `/communities/${slug}/posts${qs ? `?${qs}` : ""}`,
   );
+  return toItemsPage(res);
 }
 
 export const createPost = (slug: string, dto: CreatePostDto) =>

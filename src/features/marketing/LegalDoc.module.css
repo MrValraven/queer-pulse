@@ -19,7 +19,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(32px, 4.5vw, 56px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
   margin-bottom: 16px;
@@ -75,7 +75,7 @@
 }
 .tocLinks a {
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
   font-weight: 500;
   transition: opacity 0.2s var(--ease);
@@ -94,11 +94,11 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .sBody {
   font-size: 15.5px;
@@ -116,7 +116,7 @@
   font-weight: 600;
 }
 .sBody a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .sBody ul {
@@ -129,12 +129,12 @@
 .sBody h4 {
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 20px 0 8px;
 }
 .highlight {
   background: rgba(var(--plum-rgb), 0.04);
-  border-left: 3px solid var(--plum);
+  border-left: 3px solid var(--line-strong);
   padding: 14px 18px;
   border-radius: 0 10px 10px 0;
   margin: 16px 0;
@@ -164,5 +164,5 @@
   max-width: 44ch;
 }
 .contactText strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }

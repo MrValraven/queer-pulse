@@ -1,7 +1,13 @@
 import { Button, Reveal, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useGovernanceFinances } from "./api/useGovernanceFinances";
-import { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } from "./governance.data";
+import {
+  COUNCIL,
+  DECISIONS,
+  HEALTH,
+  PRINCIPLES,
+  STEPS,
+} from "./governance.data";
 import { FinanceLines } from "./GovernanceFinance";
 import styles from "./GovernancePage.module.css";
 
@@ -168,7 +174,11 @@ export function FinancesSection() {
           ? Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className={styles.statCard} aria-hidden>
                 <SkeletonLine width="60%" height={26} />
-                <SkeletonLine width="80%" height={13} style={{ marginTop: 8 }} />
+                <SkeletonLine
+                  width="80%"
+                  height={13}
+                  style={{ marginTop: 8 }}
+                />
               </div>
             ))
           : stats.map((s) => (

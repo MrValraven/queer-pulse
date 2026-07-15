@@ -14,7 +14,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .header {
@@ -32,7 +32,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(30px, 4.5vw, 52px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
   margin-bottom: 14px;
@@ -48,7 +48,7 @@
 }
 .account {
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 14px;
   padding: 16px 20px;
   display: flex;
@@ -74,7 +74,7 @@
 .edit {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
 }
 @media (hover: hover) {
@@ -93,7 +93,7 @@
   color: var(--ink-40);
   margin-bottom: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .toggleRow {
   display: flex;
@@ -101,7 +101,7 @@
   justify-content: space-between;
   gap: 20px;
   padding: 16px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .toggleRow:last-child {
   border-bottom: none;
@@ -112,7 +112,7 @@
 .trTitle {
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 3px;
 }
 .trSub {
@@ -186,7 +186,7 @@
 .unsubStrip {
   margin-top: 48px;
   padding-top: 32px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .unsubTitle {
   font-size: 14px;

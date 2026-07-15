@@ -8,7 +8,7 @@
   font-size: 12px;
   color: var(--ink-40);
   padding: 14px 0 18px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   flex-wrap: wrap;
 }
 .crumbRow a {
@@ -16,14 +16,14 @@
 }
 @media (hover: hover) {
   .crumbRow a:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .sep {
   opacity: 0.4;
 }
 .cur {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .crumbBack {
@@ -102,7 +102,7 @@
 .playCircle svg {
   width: 30px;
   height: 30px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-left: 4px;
 }
 .posterCaption {
@@ -120,7 +120,7 @@
 .tipjar {
   margin-top: 18px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 18px;
   padding: 18px 20px;
 }
@@ -135,7 +135,7 @@
 .tipjarName {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tipjarName em {
   font-style: italic;
@@ -158,11 +158,11 @@
   min-width: 48px;
   padding: 8px 0;
   border-radius: 10px;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   text-align: center;
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   background: var(--cream);
   transition:
@@ -172,7 +172,7 @@
 }
 @media (hover: hover) {
   .tipChip:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
   }
 }
 .tipChipOn {
@@ -218,7 +218,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 5.4vw, 76px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
   margin: 16px 0 0;
@@ -235,7 +235,7 @@
   margin-top: 16px;
 }
 .meta a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   transition: color 0.2s var(--ease);
 }
@@ -286,20 +286,20 @@
 
 .watchBlock {
   margin-top: 28px;
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 18px;
   overflow: hidden;
 }
 .wbTabs {
   display: flex;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .wbTab {
   flex: 1;
   padding: 14px 16px;
   text-align: center;
   cursor: pointer;
-  border-right: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-right: 1px solid rgba(var(--line-rgb), 0.08);
   transition: background 0.2s;
 }
 .wbTab:last-child {
@@ -312,7 +312,7 @@
   display: block;
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tw {
   display: block;
@@ -334,7 +334,7 @@
   width: 46px;
   height: 46px;
   border-radius: 12px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -348,8 +348,8 @@
 }
 @media (hover: hover) {
   .iconBtn:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 .iconBtnOn {
@@ -377,7 +377,7 @@
   margin-top: 2px;
 }
 .wbSplit strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .wbSplit a {
   color: var(--accent-ink);
@@ -404,7 +404,7 @@
   flex: none;
 }
 .liveStrip strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .liveStrip em {
   color: var(--accent-ink);
@@ -423,7 +423,7 @@
   gap: 14px;
   margin-top: 24px;
   padding-top: 22px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .fact .k {
   font-size: 11px;
@@ -466,7 +466,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 16px;
 }
@@ -476,7 +476,7 @@
 }
 .noteFull {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
   padding: 28px 30px;
 }
@@ -502,7 +502,7 @@
 .nfName {
   font-family: var(--serif);
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .nfRole {
   font-size: 12.5px;
@@ -558,7 +558,7 @@
   font-size: 13px;
   flex: none;
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ccAv.coral {
   background: rgba(var(--accent-rgb), 0.16);
@@ -571,7 +571,7 @@
 .ccName {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ccRole {
   font-size: 12.5px;
@@ -604,7 +604,7 @@
 }
 .fmCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
   padding: 22px 24px;
 }
@@ -630,7 +630,7 @@
 .fmName {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   display: inline-block;
   transition: color 0.2s var(--ease);
 }
@@ -658,7 +658,7 @@ a.fmName:hover {
   gap: 8px;
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px dashed rgba(var(--plum-rgb), 0.12);
+  border-top: 1px dashed rgba(var(--line-rgb), 0.12);
 }
 .fmStat {
   font-size: 11px;
@@ -667,7 +667,7 @@ a.fmName:hover {
 .fmStat .n {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   display: block;
 }
 .fmStat .n em {
@@ -688,7 +688,7 @@ a.fmName:hover {
 .splitBand {
   padding: 80px 0;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   position: relative;
   overflow: hidden;
 }
@@ -758,7 +758,7 @@ a.fmName:hover {
   font-family: var(--serif);
   font-weight: 300;
   font-size: 54px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-top: 6px;
   line-height: 1;
@@ -791,13 +791,13 @@ a.fmName:hover {
 }
 .sbSeg.pay {
   background: rgba(var(--cream-rgb), 0.78);
-  color: var(--plum);
+  color: var(--text-strong);
   flex: 0 0 12%;
   justify-content: center;
 }
 .sbSeg.host {
   background: rgba(var(--cream-rgb), 0.46);
-  color: var(--plum);
+  color: var(--text-strong);
   flex: 0 0 8%;
   justify-content: center;
 }
@@ -812,7 +812,7 @@ a.fmName:hover {
 .sbLegend .v {
   font-family: var(--serif);
   font-size: 16px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: block;
 }
 .sbLegend .v em {
@@ -823,13 +823,13 @@ a.fmName:hover {
 .related {
   padding: 80px 0 100px;
   background: rgba(var(--plum-rgb), 0.03);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .related h2 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 30px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.018em;
   margin-bottom: 8px;
 }
@@ -858,7 +858,7 @@ a.fmName:hover {
   border-radius: 12px;
   overflow: hidden;
   position: relative;
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   transition:
     transform 0.3s var(--ease),
     box-shadow 0.3s var(--ease);
@@ -879,7 +879,7 @@ a.fmName:hover {
 .rfTitle {
   font-family: var(--serif);
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.18;
   letter-spacing: -0.01em;
 }

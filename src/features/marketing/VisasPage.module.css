@@ -32,7 +32,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(38px, 5.8vw, 76px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
   max-width: 16ch;
@@ -78,7 +78,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(24px, 3.5vw, 36px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 22px;
 }
@@ -93,7 +93,7 @@
 }
 .routeCard {
   background: var(--paper);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 16px;
   padding: 18px;
   cursor: pointer;
@@ -106,7 +106,7 @@
 }
 @media (hover: hover) {
   .routeCard:hover {
-    border-color: rgba(var(--plum-rgb), 0.28);
+    border-color: rgba(var(--line-rgb), 0.28);
     transform: translateY(-2px);
   }
 }
@@ -117,7 +117,7 @@
 .rcName {
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 5px;
 }
 .rcDesc {
@@ -134,7 +134,7 @@
 
 .tabNav {
   background: var(--cream);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   position: sticky;
   top: 64px;
   z-index: 50;
@@ -173,7 +173,7 @@
   }
 }
 .tabBtnActive {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   border-bottom-color: var(--accent);
 }
@@ -188,7 +188,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(30px, 4vw, 48px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
 }
@@ -212,7 +212,7 @@
 }
 .infoCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -229,7 +229,7 @@
 .icTitle {
   font-family: var(--serif);
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.18;
@@ -261,10 +261,10 @@
 }
 .icLink {
   font-size: 13.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   padding-top: 10px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: auto;
 }
 .icLink a {
@@ -326,7 +326,7 @@
   height: 32px;
   border-radius: 50%;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -354,7 +354,7 @@
 .stepTitle {
   font-size: 15.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 4px;
 }
 .stepText {
@@ -372,13 +372,13 @@
 .groundSec {
   padding: 72px 0;
   background: rgba(var(--plum-rgb), 0.025);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .secHead h2 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.5vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .secHead h2 em {
@@ -398,7 +398,7 @@
 }
 .groundCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -413,7 +413,7 @@
 .gcTitle {
   font-size: 16px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .gcBody {
@@ -433,7 +433,7 @@
 }
 .reviewCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
 }

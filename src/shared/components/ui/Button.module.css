@@ -51,12 +51,12 @@
 /* Ghost — outlined plum (on cream) */
 .ghost {
   background: transparent;
-  color: var(--plum);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.22);
+  color: var(--text-strong);
+  border: 1.5px solid rgba(var(--line-rgb), 0.22);
 }
 @media (hover: hover) {
   .ghost:hover:not(:disabled) {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
     background: rgba(var(--plum-rgb), 0.04);
     transform: translateY(-1px);
   }
@@ -65,12 +65,12 @@
 /* Ghost-dark — outlined cream (on plum) */
 .ghostDark {
   background: transparent;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border: 1.5px solid rgba(var(--cream-rgb), 0.32);
 }
 @media (hover: hover) {
   .ghostDark:hover:not(:disabled) {
-    border-color: var(--cream);
+    border-color: rgba(var(--cream-rgb), 1);
     background: rgba(var(--cream-rgb), 0.08);
     transform: translateY(-1px);
   }
@@ -111,6 +111,6 @@
   :global([data-theme="dark"]) .ghost:hover {
     background: rgba(var(--cream-rgb), 0.08);
     border-color: rgba(var(--cream-rgb), 0.42);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }

@@ -28,14 +28,14 @@
 }
 @media (hover: hover) {
   .backLink:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .phTitle {
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(36px, 5vw, 54px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 8px;
@@ -76,7 +76,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 4px;
 }
@@ -131,7 +131,7 @@
 }
 .llPill.current {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .llPill.locked {
   background: rgba(var(--cream-rgb), 0.08);
@@ -162,7 +162,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(26px, 3.5vw, 36px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -206,7 +206,7 @@
 /* Badge card */
 .badgeCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 14px 0;
   text-align: center;
@@ -259,7 +259,7 @@
 .badgeName {
   font-family: var(--serif);
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
   line-height: 1.2;
@@ -297,7 +297,7 @@
   align-items: stretch;
   gap: 14px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   overflow: hidden;
   transition: box-shadow 0.18s var(--ease);
@@ -340,7 +340,7 @@
   color: var(--jade);
 }
 .colCurrent .prlNum {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .colLocked .prlNum {
   color: var(--ink-40);
@@ -417,12 +417,12 @@
 }
 .chipCurrent {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .chipLocked {
   background: rgba(var(--plum-rgb), 0.06);
   color: var(--ink-40);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .redeemWrap {
   margin-top: 8px;

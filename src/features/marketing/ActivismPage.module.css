@@ -62,11 +62,11 @@
 }
 @media (hover: hover) {
   .navItem:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .navItemActive {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   border-left-color: var(--accent);
   background: rgba(var(--accent-rgb), 0.06);
@@ -80,7 +80,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(26px, 3.4vw, 40px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 18px;
 }
@@ -96,11 +96,11 @@
   max-width: 64ch;
 }
 .section p b {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .divider {
   border: none;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
   margin: 0 0 56px;
 }
 
@@ -112,7 +112,7 @@
 }
 .actionCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 22px 24px;
   color: inherit;
@@ -127,7 +127,7 @@
 .acTitle {
   font-size: 15.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .acBody {
@@ -254,7 +254,7 @@
   gap: 14px;
   align-items: center;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   color: inherit;
@@ -273,7 +273,7 @@
 .orgName {
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .orgDesc {
   font-size: 13px;

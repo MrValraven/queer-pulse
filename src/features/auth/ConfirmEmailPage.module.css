@@ -24,9 +24,9 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 30px;
-  color: var(--plum);
+  color: var(--text-strong);
   background: var(--cream);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 14px;
   outline: none;
   transition:
@@ -36,7 +36,7 @@
   letter-spacing: 0;
 }
 .codeRow input:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
   background: var(--paper);
 }
@@ -81,7 +81,7 @@
   justify-content: space-between;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   font-size: 13.5px;
   color: var(--ink-60);
   gap: 8px;
@@ -90,7 +90,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   font-family: var(--sans);
   font-size: 13.5px;
@@ -120,7 +120,7 @@
   margin-top: 18px;
 }
 .footLink a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
   transition: color 0.2s;

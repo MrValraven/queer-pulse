@@ -6,7 +6,13 @@ import {
   type FinanceStatDTO,
   type GovernanceFinanceResponseDTO,
 } from "./governance.api";
-import { EVENTS, EXPENSE, FIN_STATS, INCOME, type FinLine } from "../governance.data";
+import {
+  EVENTS,
+  EXPENSE,
+  FIN_STATS,
+  INCOME,
+  type FinLine,
+} from "../governance.data";
 
 export interface GovernanceFinancesResult {
   stats: FinanceStatDTO[];

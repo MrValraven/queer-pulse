@@ -9,7 +9,7 @@
 .head {
   padding-bottom: 28px;
   margin-bottom: 32px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
 }
 .eyebrow {
   font-size: 11px;
@@ -23,7 +23,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(34px, 4.5vw, 52px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
 }
@@ -44,14 +44,14 @@
   padding: 28px;
   margin-bottom: 20px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
 }
 .sectionTitle {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 23px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
 }
 .sectionTitle em {
@@ -91,7 +91,7 @@
   font-size: 14.5px;
   color: var(--ink);
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   border-radius: 11px;
   padding: 12px 14px;
   transition: border-color 0.2s var(--ease);
@@ -102,7 +102,7 @@
 }
 .fieldInput:focus,
 .fieldTextarea:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .fieldHint {
   font-size: 12.5px;
@@ -117,7 +117,7 @@
   gap: 6px;
   padding: 5px;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 13px;
   flex-wrap: wrap;
 }
@@ -138,12 +138,12 @@
 }
 @media (hover: hover) {
   .segBtn:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .segOn {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .segDesc {
   font-size: 13.5px;
@@ -165,7 +165,7 @@
   width: 100%;
   text-align: left;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 13px;
   padding: 14px 16px;
   cursor: pointer;
@@ -221,7 +221,7 @@
 
 /* ---- Visibility matrix ---- */
 .matrix {
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 13px;
   overflow: hidden;
 }
@@ -230,7 +230,7 @@
   grid-template-columns: 1.4fr 1fr 1fr;
   gap: 12px;
   padding: 12px 16px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .matrixRow:first-child {
   border-top: none;
@@ -283,14 +283,14 @@
   margin: 0 auto 24px;
   border-radius: 50%;
   background: var(--jade);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: 28px;
 }
 .successTitle {
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(32px, 4vw, 46px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
 }

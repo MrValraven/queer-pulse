@@ -45,7 +45,7 @@
     ),
     linear-gradient(160deg, #1c1230 0%, #1a1028 48%, #120920 100%);
   font-family: var(--sans);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* Vignette */
@@ -200,7 +200,7 @@
   font-size: 128px;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .q {
@@ -225,7 +225,7 @@
   font-size: 52px;
   line-height: 1.15;
   letter-spacing: -0.01em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 52px;
 }
 
@@ -294,7 +294,7 @@
 
 .cta b {
   font-weight: 700;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 @keyframes ecPulse {

@@ -47,7 +47,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6vw, 82px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
   max-width: 15ch;
@@ -115,14 +115,14 @@
   width: 54px;
   height: 54px;
   border-radius: 50%;
-  border: 2px solid rgba(var(--plum-rgb), 0.14);
+  border: 2px solid rgba(var(--line-rgb), 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   flex: none;
   background: var(--cream);
   position: relative;
@@ -141,7 +141,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(20px, 2.4vw, 28px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.012em;
   line-height: 1.16;
   margin-bottom: 12px;
@@ -214,7 +214,7 @@
 }
 .typeCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 20px;
 }
@@ -226,7 +226,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
@@ -245,7 +245,7 @@
 }
 .sidebarCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 20px;
   padding: 26px;
 }
@@ -253,7 +253,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 10px;
 }

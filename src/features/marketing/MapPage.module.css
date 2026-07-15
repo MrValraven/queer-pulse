@@ -13,7 +13,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6vw, 72px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -37,7 +37,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--plum);
+  color: var(--text-strong);
   display: block;
   letter-spacing: -0.02em;
 }
@@ -48,8 +48,8 @@
 
 .filterBar {
   padding: 18px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .fbInner {
   display: flex;
@@ -77,7 +77,7 @@
   font-weight: 500;
   color: var(--ink-60);
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   border-radius: 999px;
   padding: 6px 13px;
   cursor: pointer;
@@ -88,14 +88,14 @@
 }
 @media (hover: hover) {
   .chip:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 .chipOn {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .vibe.chipOn {
   background: var(--jade);
@@ -114,7 +114,7 @@
   top: 88px;
   /* cream tinted with plum for the map panel surface */
   background: color-mix(in srgb, var(--cream) 88%, var(--plum));
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -180,7 +180,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
 }
 .sbCount {
@@ -189,7 +189,7 @@
   margin-top: 2px;
 }
 .sbCount b {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .clear {
   font-family: var(--sans);
@@ -204,7 +204,7 @@
 }
 @media (hover: hover) {
   .clear:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .groupHead {
@@ -224,7 +224,7 @@
 
 .vc {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   margin-bottom: 10px;
@@ -235,11 +235,11 @@
 }
 @media (hover: hover) {
   .vc:hover {
-    border-color: rgba(var(--plum-rgb), 0.2);
+    border-color: rgba(var(--line-rgb), 0.2);
   }
 }
 .vcExpanded {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 14px 30px -20px rgba(var(--plum-rgb), 0.3);
 }
 .vcHead {
@@ -264,7 +264,7 @@
 .vcName {
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .vcBairro {
   font-size: 12px;
@@ -301,7 +301,7 @@
 .vcBody {
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .vcRow {
   display: flex;
@@ -333,15 +333,15 @@
   color: var(--ink-40);
 }
 .beenCount b {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .beenBtn {
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   background: var(--cream);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 999px;
   padding: 7px 14px;
   cursor: pointer;
@@ -352,12 +352,12 @@
 }
 @media (hover: hover) {
   .beenBtn:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
   }
 }
 .beenDone {
   background: var(--jade);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--jade);
 }
 

@@ -69,7 +69,7 @@
   font-size: clamp(24px, 3.4vw, 32px);
   line-height: 1.1;
   letter-spacing: -0.02em;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-block: 8px 0;
 }
 .title em {

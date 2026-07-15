@@ -32,7 +32,7 @@
   border-radius: 8px;
 }
 .back:hover {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .spacerFlex {
   flex: 1;
@@ -56,7 +56,7 @@
   gap: 7px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   background: var(--paper);
   border: 1px solid rgba(45, 27, 61, 0.12);
   border-radius: 999px;
@@ -131,15 +131,15 @@
   }
 }
 .stepActive {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .stepActive .stepDot {
   background: var(--plum);
-  border-color: var(--plum);
-  color: var(--cream);
+  border-color: var(--line-strong);
+  color: rgba(var(--cream-rgb), 1);
 }
 .stepDone {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .stepDone .stepDot {
   background: var(--jade);
@@ -172,7 +172,7 @@
   font-family: var(--serif, "Fraunces", serif);
   font-size: 30px;
   line-height: 1.1;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0 0 8px;
 }
 .stepTitle em {
@@ -197,7 +197,7 @@
 }
 .cardTitle {
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 15px;
 }
 .cardSub {
@@ -235,7 +235,7 @@
   gap: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .req {
@@ -278,7 +278,7 @@
 .select:focus,
 .textarea:focus {
   outline: none;
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 3px rgba(45, 27, 61, 0.1);
 }
 .fieldErr .input,
@@ -341,7 +341,7 @@
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .switchDesc {
   display: block;
@@ -441,12 +441,12 @@
   opacity: 0;
 }
 .checkOptSel {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(45, 27, 61, 0.05);
 }
 .checkOptSel .checkBox {
   background: var(--plum);
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .checkOptSel .checkBox svg {
   opacity: 1;
@@ -505,7 +505,7 @@
   border-radius: 999px;
   padding: 5px 6px 5px 12px;
   font-size: 13px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
 }
 .formTag button {
@@ -514,7 +514,7 @@
   border-radius: 50%;
   border: none;
   background: rgba(45, 27, 61, 0.12);
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   font-size: 13px;
   line-height: 1;
@@ -547,8 +547,8 @@
   cursor: pointer;
 }
 .chipAdd:hover {
-  border-color: var(--plum);
-  color: var(--plum);
+  border-color: var(--line-strong);
+  color: var(--text-strong);
 }
 
 /* Screening questions */
@@ -569,7 +569,7 @@
   height: 24px;
   border-radius: 50%;
   background: rgba(45, 27, 61, 0.07);
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 12px;
   font-weight: 700;
   display: grid;
@@ -614,11 +614,11 @@
   font: inherit;
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
 }
 .sqAdd:hover:not(:disabled) {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .sqAdd:disabled {
   opacity: 0.45;
@@ -633,7 +633,7 @@
   background: var(--plum);
   border-radius: 14px;
   padding: 16px 18px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .identityLogo {
   flex: none;
@@ -645,7 +645,7 @@
   font-weight: 700;
   font-size: 15px;
   background: rgba(247, 243, 238, 0.14);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .identityName {
   display: flex;
@@ -688,7 +688,7 @@
   cursor: pointer;
 }
 .identitySwitch:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* Contact grid */
@@ -741,7 +741,7 @@
   font: inherit;
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   text-decoration: underline;
 }
@@ -797,7 +797,7 @@
   color: var(--ink);
 }
 .agreeTxt a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -831,7 +831,7 @@
   justify-content: space-between;
   font-size: 13px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0 0 12px;
 }
 .expand {
@@ -875,7 +875,7 @@
   font-family: var(--serif, "Fraunces", serif);
   font-size: 18px;
   line-height: 1.2;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 8px;
 }
 .pvPoster {
@@ -920,7 +920,7 @@
   padding: 3px 9px;
   border-radius: 999px;
   background: rgba(45, 27, 61, 0.06);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .previewChipIncl {
   background: rgba(var(--jade-rgb), 0.12);
@@ -935,7 +935,7 @@
   font: inherit;
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   text-align: left;
 }
@@ -962,7 +962,7 @@
   margin-top: 6px;
 }
 .sideText strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* ============ Full listing modal body ============ */
@@ -978,7 +978,7 @@
   font-family: var(--serif, "Fraunces", serif);
   font-size: 26px;
   line-height: 1.15;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0 0 12px;
 }
 .mlPoster {
@@ -1014,7 +1014,7 @@
 .mlSection h4 {
   font-size: 13px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0 0 8px;
 }
 .mlDesc {
@@ -1033,7 +1033,7 @@
   padding: 4px 11px;
   border-radius: 999px;
   background: rgba(45, 27, 61, 0.06);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .mlChipIncl {
   background: rgba(var(--jade-rgb), 0.12);
@@ -1052,7 +1052,7 @@
   background: var(--plum);
   border-radius: 22px;
   padding: 44px 40px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   max-width: 640px;
   margin: 12px auto 0;
   text-align: center;
@@ -1135,7 +1135,7 @@
   border-color: rgba(45, 27, 61, 0.3);
 }
 .affItemSel {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(45, 27, 61, 0.04);
 }
 .affLogo {
@@ -1148,11 +1148,11 @@
   font-weight: 700;
   font-size: 14px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .affName {
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 14.5px;
 }
 .affMeta {
@@ -1169,7 +1169,7 @@
   margin-left: auto;
 }
 .affItemSel .affRadio {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   border-width: 6px;
 }
 
@@ -1216,7 +1216,7 @@
   font-family: var(--serif, "Fraunces", serif);
   font-size: 32px;
   line-height: 1.12;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0 0 10px;
 }
 .confirmTitle em {
@@ -1267,7 +1267,7 @@
 }
 .cpanelTitle {
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 14px;
 }
 .cpanelBody {
@@ -1283,7 +1283,7 @@
 .cstatN {
   font-family: var(--serif, "Fraunces", serif);
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .cstatL {
   font-size: 11.5px;
@@ -1307,11 +1307,11 @@
   padding: 7px 13px;
   font: inherit;
   font-size: 12.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
 }
 .shareBtn:hover {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 
 @media (prefers-reduced-motion: reduce) {

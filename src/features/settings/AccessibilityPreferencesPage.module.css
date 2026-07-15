@@ -24,7 +24,7 @@
 .sbHead {
   font-family: var(--serif);
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 18px;
   letter-spacing: -0.01em;
 }
@@ -60,7 +60,7 @@
 
 .sbLinkActive {
   background: rgba(var(--plum-rgb), 0.07);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* Sections */
@@ -73,7 +73,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(24px, 3.5vw, 32px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 4px;
 }
@@ -92,7 +92,7 @@
 
 /* Toggle list */
 .toggleList {
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   overflow: hidden;
   background: var(--paper);
@@ -105,7 +105,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 
 .tglRow:last-child {
@@ -173,7 +173,7 @@
 /* Slider card */
 .sliderCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 22px;
   margin-bottom: 16px;
@@ -195,12 +195,12 @@
 .sliderVal {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .sliderInput {
   width: 100%;
-  accent-color: var(--plum);
+  accent-color: var(--text-strong);
   height: 4px;
   margin-bottom: 12px;
   cursor: pointer;
@@ -213,14 +213,14 @@
   background: rgba(var(--plum-rgb), 0.03);
   border-radius: 10px;
   padding: 12px 14px;
-  border: 1px solid rgba(var(--plum-rgb), 0.07);
+  border: 1px solid rgba(var(--line-rgb), 0.07);
   transition: font-size 0.2s;
 }
 
 /* Motion preview */
 .motionPreview {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   margin-top: 12px;
@@ -281,7 +281,7 @@
 }
 
 .colorSwatchSelected {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 2px var(--plum);
 }
 
@@ -306,7 +306,7 @@
 /* Reset card */
 .resetCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 22px 24px;
   text-align: center;

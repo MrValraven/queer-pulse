@@ -6,7 +6,7 @@
 .feedCard,
 .transpCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
 }
 
@@ -46,7 +46,7 @@
   font-weight: 400;
   line-height: 1.04;
   letter-spacing: -0.015em;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0;
 }
 [data-theme="dark"] .h1 {
@@ -176,7 +176,7 @@
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0;
 }
 [data-theme="dark"] .secTitle {
@@ -196,7 +196,7 @@
 }
 @media (hover: hover) {
   .secLink:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .queue {
@@ -270,7 +270,7 @@
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 500;
-  color: var(--plum);
+  color: var(--text-strong);
   flex: none;
 }
 [data-theme="dark"] .qCount {
@@ -284,7 +284,7 @@
 @media (hover: hover) {
   .qRow:hover .qArrow {
     transform: translateX(3px);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -304,7 +304,7 @@
   font-size: 20px;
   font-weight: 400;
   letter-spacing: -0.01em;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .chTitle {
   color: var(--ink);
@@ -416,7 +416,7 @@
   font-family: var(--serif);
   font-size: 19px;
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 [data-theme="dark"] .feedTitle {
   color: var(--ink);

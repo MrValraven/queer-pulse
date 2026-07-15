@@ -28,7 +28,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(32px, 5vw, 52px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -82,13 +82,13 @@
 }
 @media (hover: hover) {
   .ntChip:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
     border-color: rgba(var(--cream-rgb), 0.2);
   }
 }
 .ntChip.on {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--accent);
 }
 .ntRead {
@@ -203,7 +203,7 @@
 }
 .ntBody h4 strong {
   font-weight: 700;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .ntBody h4 em {
   font-style: italic;
@@ -238,7 +238,7 @@
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
   border-radius: 999px;
@@ -257,7 +257,7 @@
 }
 .btP {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--accent);
 }
 @media (hover: hover) {

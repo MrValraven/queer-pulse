@@ -4,7 +4,7 @@
   justify-content: center;
   text-align: center;
   overflow: hidden;
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   position: relative;
 }
 
@@ -46,5 +46,5 @@
 }
 .plum {
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }

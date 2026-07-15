@@ -1,4 +1,5 @@
 import { apiGet, apiPost } from "../../../shared/api/client";
+import { toPage } from "../../../shared/api/pagination";
 import type { FeedItem, Paginated } from "../../../shared/contracts/contracts";
 import type { FeedTab } from "../feed.data";
 
@@ -27,13 +28,16 @@ function tabParam(tab: FeedTab): string | undefined {
 }
 
 /** GET /feed?tab=&cursor= — a cursor page of aggregated feed items. */
-export function getFeed(tab: FeedTab, cursor?: string) {
+export async function getFeed(tab: FeedTab, cursor?: string) {
   const q = new URLSearchParams();
   const t = tabParam(tab);
   if (t) q.set("tab", t);
   if (cursor) q.set("cursor", cursor);
   const qs = q.toString();
-  return apiGet<Paginated<FeedItem>>(`/feed${qs ? `?${qs}` : ""}`);
+  const res = await apiGet<FeedItem[] | Paginated<FeedItem>>(
+    `/feed${qs ? `?${qs}` : ""}`,
+  );
+  return toPage(res);
 }
 
 /** POST /community-posts — publish a new post (optionally into a community). */

@@ -5,7 +5,7 @@
 }
 .panel {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-card);
   padding: 32px 36px;
   position: relative;
@@ -48,7 +48,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(24px, 3vw, 34px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
 }
@@ -64,7 +64,7 @@
   max-width: 56ch;
 }
 .sub strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 700;
 }
 
@@ -105,7 +105,7 @@
 }
 @media (hover: hover) {
   .num:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .hours {
@@ -130,7 +130,7 @@
 }
 @media (hover: hover) {
   .jump:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 

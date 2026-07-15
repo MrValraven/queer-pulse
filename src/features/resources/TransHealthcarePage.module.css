@@ -32,7 +32,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(36px, 5.5vw, 68px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.97;
   margin-bottom: 16px;
@@ -62,7 +62,7 @@
 
 .pathBar {
   background: var(--cream);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
   position: sticky;
   top: 62px;
   z-index: 50;
@@ -85,7 +85,7 @@
   font-weight: 600;
   padding: 9px 20px;
   border-radius: 11px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.15);
+  border: 1.5px solid rgba(var(--line-rgb), 0.15);
   cursor: pointer;
   background: transparent;
   color: var(--ink-60);
@@ -99,13 +99,13 @@
 @media (hover: hover) {
   .pathBtn:hover {
     color: var(--ink);
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
   }
 }
 .pathBtnActive {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 
 .body {
@@ -133,11 +133,11 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 24px;
   padding-bottom: 14px;
-  border-bottom: 2px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 2px solid rgba(var(--line-rgb), 0.08);
 }
 .step {
   display: grid;
@@ -162,21 +162,21 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 2px solid rgba(var(--plum-rgb), 0.12);
+  border: 2px solid rgba(var(--line-rgb), 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-size: 16px;
   font-weight: 500;
-  color: var(--plum);
+  color: var(--text-strong);
   background: var(--cream);
   flex: none;
   z-index: 1;
 }
 .stepBody {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 22px;
   margin-bottom: 6px;
@@ -184,7 +184,7 @@
 .stepTitle {
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .stepDesc {
@@ -231,7 +231,7 @@
 }
 .sbCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 20px 22px;
 }
@@ -248,7 +248,7 @@
   flex-direction: column;
   gap: 3px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .sbcItem:last-child {
   border-bottom: none;
@@ -256,7 +256,7 @@
 .sbcOrg {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .sbcRole {
   font-size: 12px;
@@ -268,7 +268,7 @@
   margin-top: 2px;
 }
 .sbcLink {
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;

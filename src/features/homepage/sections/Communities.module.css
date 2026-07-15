@@ -49,7 +49,7 @@
   font-size: clamp(28px, 3.4vw, 42px);
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: var(--plum);
+  color: var(--text-strong);
   max-width: 16ch;
 }
 .title em {
@@ -78,7 +78,7 @@
   flex-wrap: wrap;
   margin-bottom: 22px;
   padding-bottom: 22px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .toolSearch {
   position: relative;
@@ -101,7 +101,7 @@
   font-size: 14px;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-pill);
   padding: 11px 16px 11px 38px;
   transition:
@@ -128,7 +128,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-pill);
   padding: 8px 13px;
   cursor: pointer;
@@ -148,13 +148,13 @@
 }
 @media (hover: hover) {
   .fchip:hover {
-    border-color: rgba(var(--plum-rgb), 0.28);
+    border-color: rgba(var(--line-rgb), 0.28);
   }
 }
 .fchip.fchipOn {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .toolSelect {
   font-family: var(--sans);
@@ -162,7 +162,7 @@
   font-weight: 500;
   color: var(--ink);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-pill);
   padding: 9px 30px 9px 14px;
   cursor: pointer;
@@ -182,7 +182,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-pill);
   padding: 8px 13px 8px 11px;
   cursor: pointer;
@@ -312,7 +312,7 @@
 }
 .railRow.railRowActive {
   background: var(--paper);
-  border-color: rgba(var(--plum-rgb), 0.1);
+  border-color: rgba(var(--line-rgb), 0.1);
   box-shadow: var(--shadow-card);
 }
 .railDot {
@@ -350,7 +350,7 @@
 }
 .railRow.railRowActive .railName {
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .rv {
   color: var(--jade);
@@ -402,7 +402,7 @@
 /* ---------- spotlight card ---------- */
 .spot {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   overflow: hidden;
   min-height: 560px;
@@ -452,7 +452,7 @@
   color: var(--violet);
 }
 .cat_activism {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .veri {
   position: absolute;
@@ -489,7 +489,7 @@
   font-size: clamp(28px, 3vw, 38px);
   line-height: 1.03;
   letter-spacing: -0.02em;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .spotName em {
   font-style: italic;
@@ -508,7 +508,7 @@
   font-weight: 400;
   font-size: 19px;
   line-height: 1.4;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
   margin: 0;
 }
@@ -539,7 +539,7 @@
   gap: 34px;
   margin-top: 26px;
   padding-top: 26px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .whhLab {
   font-size: 10.5px;
@@ -680,7 +680,7 @@
 .spotRooms {
   margin-top: 24px;
   padding-top: 22px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .rooms {
   display: flex;
@@ -696,14 +696,14 @@
   font-weight: 500;
   color: var(--ink);
   background: rgba(var(--plum-rgb), 0.045);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: 10px;
   padding: 7px 12px;
 }
 .room svg {
   width: 14px;
   height: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   flex: none;
 }
 
@@ -715,7 +715,7 @@
   gap: 18px;
   margin-top: 26px;
   padding-top: 24px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   flex-wrap: wrap;
 }
 .roster {
@@ -789,7 +789,7 @@
   gap: 10px;
   margin-left: 4px;
   padding-left: 16px;
-  border-left: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-left: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .spark {
   display: block;
@@ -863,7 +863,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .spotEmpty p {
   font-size: 14px;
@@ -910,7 +910,7 @@
   height: 18px;
 }
 .spotFootQuiet {
-  border-top: 1px dashed rgba(var(--plum-rgb), 0.16);
+  border-top: 1px dashed rgba(var(--line-rgb), 0.16);
 }
 
 /* ---------- dark mode ---------- */

@@ -9,12 +9,12 @@
   padding: 8px 14px;
   border-radius: 999px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   box-shadow: 0 4px 18px -8px rgba(var(--plum-rgb), 0.22);
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
   transition:
     color 0.2s var(--ease),
@@ -24,7 +24,7 @@
 @media (hover: hover) {
   .back:hover {
     color: var(--accent-ink);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
   }
 }
 

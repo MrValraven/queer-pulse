@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Reveal } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
-import { calendarEvents, calendarLegend } from "./data";
+import { calendarLegend } from "./data";
+import { useEvents } from "./api/useEvents";
 import { CALENDAR_TODAY } from "./calendar.data";
 import { MonthGrid, AllUpcomingEvents, sameDay } from "./CalendarGrid";
 import { CalendarSidebar } from "./CalendarSidebar";
@@ -11,7 +11,9 @@ import styles from "./CalendarPage.module.css";
 export function CalendarPage() {
   const [view, setView] = useState({ year: 2026, month: 5 });
   const [selected, setSelected] = useState<Date | null>(null);
-  const loading = useSimulatedLoad();
+  const { items: calendarEvents, isLoading: loading } = useEvents({
+    filter: "upcoming",
+  });
 
   function eventsForDate(date: Date) {
     return calendarEvents.filter((e) => sameDay(e.date, date));

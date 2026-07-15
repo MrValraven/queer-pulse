@@ -10,7 +10,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 28px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   display: flex;
   align-items: center;
@@ -46,7 +46,7 @@
   flex-direction: column;
   gap: 14px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 22px 24px;
   text-decoration: none;
@@ -86,14 +86,14 @@
 .price {
   font-family: var(--serif);
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .title {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.15;
 }
@@ -120,7 +120,7 @@
   color: var(--ink-60);
 }
 .tutor b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .foot {
@@ -129,14 +129,14 @@
   justify-content: space-between;
   gap: 12px;
   padding-top: 14px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .spots {
   font-size: 12.5px;
   color: var(--ink-40);
 }
 .spots b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .view {

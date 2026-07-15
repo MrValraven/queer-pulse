@@ -9,7 +9,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   background: transparent;
   color: var(--ink-60);
   border-radius: 999px;
@@ -22,14 +22,14 @@
 }
 @media (hover: hover) {
   .tab:hover {
-    border-color: rgba(var(--plum-rgb), 0.28);
+    border-color: rgba(var(--line-rgb), 0.28);
     color: var(--ink);
   }
 }
 .tabActive {
   background: var(--plum);
-  border-color: var(--plum);
-  color: var(--cream);
+  border-color: var(--line-strong);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* ---- section label ---- */
@@ -77,7 +77,7 @@
   font-family: var(--sans);
   font-size: 14px;
   padding: 11px 14px 11px 38px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 12px;
   background: var(--paper);
   color: var(--ink);
@@ -86,7 +86,7 @@
   transition: border-color 0.2s var(--ease);
 }
 .search:focus {
-  border-color: rgba(var(--plum-rgb), 0.3);
+  border-color: rgba(var(--line-rgb), 0.3);
 }
 
 /* ---- filter chips ---- */
@@ -100,7 +100,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   background: transparent;
   color: var(--ink-60);
   border-radius: 999px;
@@ -113,14 +113,14 @@
 }
 @media (hover: hover) {
   .chip:hover {
-    border-color: rgba(var(--plum-rgb), 0.28);
+    border-color: rgba(var(--line-rgb), 0.28);
     color: var(--ink);
   }
 }
 .chipOn {
   background: var(--plum);
-  border-color: var(--plum);
-  color: var(--cream);
+  border-color: var(--line-strong);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* ---- bulk action row ---- */
@@ -137,7 +137,7 @@
   align-items: center;
   gap: 13px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 14px 16px;
   margin-bottom: 10px;
@@ -149,7 +149,7 @@
 .modName {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -184,7 +184,7 @@
   cursor: pointer;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   transition:
     background 0.18s var(--ease),
     color 0.18s var(--ease),
@@ -196,12 +196,12 @@
 }
 @media (hover: hover) {
   .declineBtn:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
     color: var(--ink);
   }
 }
 .declineBtn:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 @media (hover: hover) {
@@ -272,7 +272,7 @@
   font-family: var(--sans);
   font-size: 14px;
   padding: 11px 14px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 12px;
   background: var(--paper);
   color: var(--ink);
@@ -281,7 +281,7 @@
   transition: border-color 0.2s var(--ease);
 }
 .settingsInput:focus {
-  border-color: rgba(var(--plum-rgb), 0.3);
+  border-color: rgba(var(--line-rgb), 0.3);
 }
 .modeRow {
   display: flex;
@@ -292,7 +292,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   background: transparent;
   color: var(--ink-60);
   border-radius: 999px;
@@ -305,21 +305,21 @@
 }
 @media (hover: hover) {
   .modeChip:hover {
-    border-color: rgba(var(--plum-rgb), 0.28);
+    border-color: rgba(var(--line-rgb), 0.28);
     color: var(--ink);
   }
 }
 .modeChipActive {
   background: var(--plum);
-  border-color: var(--plum);
-  color: var(--cream);
+  border-color: var(--line-strong);
+  color: rgba(var(--cream-rgb), 1);
 }
 .rulesArea {
   width: 100%;
   font-family: var(--sans);
   font-size: 14px;
   padding: 12px 14px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 12px;
   background: var(--paper);
   color: var(--ink);
@@ -331,7 +331,7 @@
   line-height: 1.6;
 }
 .rulesArea:focus {
-  border-color: rgba(var(--plum-rgb), 0.3);
+  border-color: rgba(var(--line-rgb), 0.3);
 }
 .saveRow {
   display: flex;
@@ -342,7 +342,7 @@
 /* ---- danger zone (plum-tinted, not white) ---- */
 .dangerZone {
   background: rgba(var(--plum-rgb), 0.06);
-  border: 1px solid rgba(var(--plum-rgb), 0.18);
+  border: 1px solid rgba(var(--line-rgb), 0.18);
   border-radius: 16px;
   padding: 22px 24px;
   margin-top: 8px;
@@ -353,7 +353,7 @@
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 16px;
 }
 .dangerRow {
@@ -362,7 +362,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .dangerRow:last-child {
   border-bottom: none;
@@ -375,7 +375,7 @@
 .dangerTitle {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 2px;
 }
 .dangerDesc {

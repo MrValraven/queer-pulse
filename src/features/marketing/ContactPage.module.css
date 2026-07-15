@@ -9,7 +9,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 5.5vw, 68px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -50,7 +50,7 @@
   display: flex;
   gap: 14px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 20px;
   transition:
@@ -76,7 +76,7 @@
 .route h3 {
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .route p {
   font-size: 13px;
@@ -92,7 +92,7 @@
 
 .form {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
   padding: 30px 32px;
   position: sticky;
@@ -102,7 +102,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
 }
 .form h2 em {

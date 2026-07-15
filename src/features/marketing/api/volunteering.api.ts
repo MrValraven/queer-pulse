@@ -4,6 +4,7 @@ import {
   apiPatch,
   apiDelete,
 } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 
 // ── Backend DTOs ─────────────────────────────────────────────────────────────
@@ -98,17 +99,18 @@ export type UpdateOpportunityDto = Partial<CreateOpportunityDto>;
 
 // ── Raw calls (one per endpoint) ─────────────────────────────────────────────
 
-export function getOpportunities(
+export async function getOpportunities(
   params: { cause?: Cause; commit?: Commit; page?: number } = {},
-) {
+): Promise<Paginated<OpportunityCardDTO>> {
   const q = new URLSearchParams();
   if (params.cause) q.set("cause", params.cause);
   if (params.commit) q.set("commit", params.commit);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
-  return apiGet<Paginated<OpportunityCardDTO>>(
-    `/volunteering${qs ? `?${qs}` : ""}`,
-  );
+  const res = await apiGet<
+    OpportunityCardDTO[] | Paginated<OpportunityCardDTO>
+  >(`/volunteering${qs ? `?${qs}` : ""}`);
+  return toItemsPage(res);
 }
 
 export const getOpportunity = (slug: string) =>

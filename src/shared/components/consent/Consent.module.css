@@ -5,7 +5,7 @@
   inset: auto 0 0 0;
   z-index: 1200;
   background: var(--cream);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.14);
+  border-top: 1px solid rgba(var(--line-rgb), 0.14);
   box-shadow: var(--shadow-toast);
   padding: 18px clamp(16px, 4vw, 40px) max(18px, env(safe-area-inset-bottom));
   animation: consentRise 0.34s var(--ease-out) both;
@@ -83,7 +83,7 @@
   align-items: flex-start;
   gap: 16px;
   padding: 16px;
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-badge);
   background: var(--paper);
 }

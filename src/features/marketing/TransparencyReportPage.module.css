@@ -1,6 +1,6 @@
 .hero {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 140px 0 70px;
   position: relative;
   overflow: hidden;
@@ -39,7 +39,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(56px, 9vw, 128px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.92;
   max-width: 14ch;
@@ -71,7 +71,7 @@
   color: rgba(var(--cream-rgb), 0.6);
 }
 .metaRow b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
@@ -87,7 +87,7 @@
 
 .tabs {
   background: var(--paper);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -120,11 +120,11 @@
 }
 @media (hover: hover) {
   .tab:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .tabActive {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tabActive::after {
   content: "";
@@ -153,7 +153,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   border-radius: 999px;
   cursor: pointer;
   transition:
@@ -164,14 +164,14 @@
 }
 @media (hover: hover) {
   .yearBtn:hover {
-    color: var(--plum);
-    border-color: rgba(var(--plum-rgb), 0.35);
+    color: var(--text-strong);
+    border-color: rgba(var(--line-rgb), 0.35);
   }
 }
 .yearCurrent {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .yearFuture {
   color: var(--ink-40);
@@ -182,7 +182,7 @@
 
 .sec {
   padding: 48px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   scroll-margin-top: 60px;
 }
 .sec:last-of-type {
@@ -200,7 +200,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(30px, 4vw, 42px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
 }
@@ -212,7 +212,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 42px;
-  color: rgba(var(--plum-rgb), 0.12);
+  color: rgba(var(--ink-rgb), 0.12);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -254,7 +254,7 @@
 .bignum {
   padding: 24px 22px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
 }
 .bignum b {
@@ -262,7 +262,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 46px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 6px;
@@ -294,7 +294,7 @@
   color: var(--accent-ink);
 }
 .bignum a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -313,14 +313,14 @@
 .source {
   padding: 22px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
 }
 .sourceAmt {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 32px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
   margin-bottom: 6px;
@@ -332,7 +332,7 @@
 .sourceName {
   font-size: 14.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 5px;
 }
 .sourceDetail {
@@ -343,7 +343,7 @@
 
 .alloc {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 32px 36px;
   margin-bottom: 18px;
@@ -352,7 +352,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 64px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 4px;
@@ -392,7 +392,7 @@
   font-size: 14px;
   color: var(--ink);
   padding: 8px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.05);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
 }
 .allocKeyRow:last-child {
   border-bottom: none;
@@ -405,7 +405,7 @@
 }
 .allocKeyRow .label {
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .allocKeyRow .detail {
   font-size: 13px;
@@ -415,7 +415,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
   white-space: nowrap;
 }
@@ -430,7 +430,7 @@
 
 .modTable {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -439,7 +439,7 @@
   grid-template-columns: 1fr auto auto auto;
   gap: 18px;
   padding: 14px 22px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: center;
   font-size: 14px;
   color: var(--ink);
@@ -456,14 +456,14 @@
   border-bottom: none;
 }
 .modRow .reason {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .modRow .count {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   text-align: right;
   min-width: 54px;
@@ -505,14 +505,14 @@
   max-width: 60ch;
 }
 .modBreakdown b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
 .reqCard {
   padding: 24px 28px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   margin-bottom: 14px;
   display: grid;
@@ -529,7 +529,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
@@ -543,14 +543,14 @@
   line-height: 1.55;
 }
 .reqD b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .reqR {
   font-family: var(--serif);
   font-weight: 300;
   font-size: 48px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   text-align: right;
@@ -603,7 +603,7 @@
   text-wrap: pretty;
 }
 .mistakeText b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .mistakeFix {
@@ -620,7 +620,7 @@
 
 .signoff {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-card);
   padding: 48px;
   margin-top: 48px;
@@ -629,7 +629,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 32px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 14px;
   max-width: 18ch;
@@ -681,7 +681,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .signRole {
   font-size: 12.5px;

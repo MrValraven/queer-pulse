@@ -48,7 +48,7 @@
   font-weight: 600;
   font-size: 22px;
   letter-spacing: -0.01em;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .brand em {
   font-style: italic;
@@ -111,7 +111,7 @@
 
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 24px;
   padding: 46px 42px 42px;
   width: 100%;
@@ -129,7 +129,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 40px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 8px;
@@ -175,11 +175,78 @@
   height: auto;
   position: relative;
 }
-/* The hearth's single gentle brand pulse — one ring easing outward. */
+/* --- One-time load-in: the community assembles around the hearth ---
+   The warm field blooms, the hearth settles, then the member orbs drift home
+   one after another. Transform/opacity only; all disabled + resting-visible
+   under reduced motion. */
+.artGlow {
+  animation: qpArtGlowIn 0.7s var(--ease-out) both;
+}
+.hearthBloom {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: qpArtBloom 0.5s var(--ease-out) both;
+  animation-delay: 0.14s;
+}
+.artOrb {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: qpArtOrbArrive 0.52s var(--ease) both;
+}
+.artStem {
+  animation: qpArtStemIn 0.5s var(--ease-out) both;
+}
+@keyframes qpArtGlowIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes qpArtBloom {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes qpArtOrbArrive {
+  from {
+    opacity: 0;
+    transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.2);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+@keyframes qpArtStemIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .artGlow,
+  .hearthBloom,
+  .artOrb,
+  .artStem {
+    animation: none;
+  }
+}
+
+/* The hearth's single gentle brand pulse — one ring easing outward. Its loop
+   is held back until the hearth has bloomed in (see the load-in above). */
 .hearthRipple {
   transform-box: fill-box;
   transform-origin: center;
-  animation: qpHearthRipple 2.8s var(--ease) infinite;
+  animation: qpHearthRipple 2.8s var(--ease) 0.9s infinite;
 }
 @media (prefers-reduced-motion: reduce) {
   .hearthRipple {
@@ -246,7 +313,7 @@
 .noticeText strong {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .noticeText span {
   font-size: 13px;
@@ -281,7 +348,7 @@
   font-size: 15.5px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 12px;
   padding: 13px 15px;
   width: 100%;
@@ -299,7 +366,7 @@
 .field input:focus,
 .field textarea:focus,
 .field select:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
   background: var(--paper);
 }
@@ -379,7 +446,7 @@
 }
 @media (hover: hover) {
   .footer a:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .footer a.invite {
@@ -412,7 +479,7 @@
   justify-content: center;
   gap: 10px;
   background: var(--paper);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.15);
+  border: 1.5px solid rgba(var(--line-rgb), 0.15);
   border-radius: 12px;
   padding: 13px 20px;
   font-family: var(--sans);
@@ -426,7 +493,7 @@
 }
 @media (hover: hover) {
   .google:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
   }
 }
 
@@ -461,7 +528,7 @@
   line-height: 1.5;
 }
 .vouchText strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .section {
@@ -527,7 +594,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 12px;
   cursor: pointer;
   transition:

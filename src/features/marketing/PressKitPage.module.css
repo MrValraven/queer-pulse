@@ -18,7 +18,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(52px, 8vw, 108px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.95;
   margin-bottom: 22px;
@@ -37,7 +37,7 @@
   margin-bottom: 24px;
 }
 .dek b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .actions {
@@ -49,8 +49,8 @@
 
 .contactStrip {
   background: var(--paper);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   margin-top: 32px;
 }
 .contactInner {
@@ -65,7 +65,7 @@
   color: var(--ink-60);
 }
 .contactInner b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .contactInner .sep {
@@ -73,7 +73,7 @@
   opacity: 0.4;
 }
 .contactInner a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -85,7 +85,7 @@
 }
 .sec {
   padding: 48px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .sec:last-of-type {
   border-bottom: none;
@@ -102,7 +102,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.8vw, 40px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
 }
@@ -130,11 +130,11 @@
   color: var(--accent-ink);
 }
 .sec p b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .sec p a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -142,7 +142,7 @@
 .boiler {
   padding: 24px 28px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   margin-bottom: 14px;
   position: relative;
@@ -176,7 +176,7 @@
   color: var(--accent-ink);
 }
 .boilerText b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .boilerCopy {
@@ -184,7 +184,7 @@
   top: 18px;
   right: 22px;
   background: transparent;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   color: var(--ink-60);
   font-family: var(--sans);
   font-size: 11.5px;
@@ -198,8 +198,8 @@
 }
 @media (hover: hover) {
   .boilerCopy:hover {
-    color: var(--plum);
-    border-color: var(--plum);
+    color: var(--text-strong);
+    border-color: var(--line-strong);
   }
 }
 .copied {
@@ -224,7 +224,7 @@
 }
 .logoCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
 }
@@ -253,10 +253,10 @@
   letter-spacing: -0.01em;
 }
 .markDark {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .markLight {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .logoDot {
   width: 11px;
@@ -272,7 +272,7 @@
 }
 .logoMeta {
   padding: 14px 18px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -281,11 +281,11 @@
   background: var(--paper);
 }
 .logoMeta b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .logoMeta a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -304,7 +304,7 @@
 .swatch {
   padding: 18px 20px;
   border-radius: 14px;
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .swatchChip {
   width: 100%;
@@ -315,7 +315,7 @@
 .swatchName {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 4px;
 }
 .swatchHex {
@@ -378,7 +378,7 @@
 }
 .teamCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 24px;
 }
@@ -402,13 +402,13 @@
 }
 .phPlum {
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .teamCard h4 {
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 3px;
 }
@@ -442,11 +442,11 @@
   gap: 6px;
   font-size: 12.5px;
   color: var(--ink-60);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
   padding-top: 12px;
 }
 .teamContact a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -464,7 +464,7 @@
 .fact {
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
 }
 .fact b {
@@ -472,7 +472,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
   margin-bottom: 5px;
@@ -497,7 +497,7 @@
   grid-template-columns: 1fr auto;
   gap: 18px;
   padding: 18px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   align-items: center;
   text-decoration: none;
   color: inherit;
@@ -525,7 +525,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 19px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
   line-height: 1.25;
   transition: color 0.2s var(--ease);
@@ -566,7 +566,7 @@
   gap: 16px;
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
@@ -581,7 +581,7 @@
 @media (hover: hover) {
   .dlCard:hover {
     transform: translateY(-2px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
     box-shadow: 0 12px 26px -22px rgba(var(--plum-rgb), 0.4);
   }
 }
@@ -597,7 +597,7 @@
   font-family: var(--sans);
   font-weight: 800;
   font-size: 11px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: 0.04em;
 }
 .dlZip {
@@ -607,7 +607,7 @@
 .dlInfo b {
   display: block;
   font-size: 14.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 3px;
 }
@@ -630,7 +630,7 @@
   line-height: 1.7;
 }
 .footerNote a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }

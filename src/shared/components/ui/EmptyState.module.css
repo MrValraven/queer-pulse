@@ -10,7 +10,7 @@
     rgba(var(--accent-rgb), 0.05),
     rgba(var(--plum-rgb), 0.02)
   );
-  border: 1px dashed rgba(var(--plum-rgb), 0.16);
+  border: 1px dashed rgba(var(--line-rgb), 0.16);
   border-radius: var(--radius-card);
 }
 

@@ -106,7 +106,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: clamp(22px, 3vw, 30px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.1;
   margin-bottom: 14px;
@@ -124,7 +124,7 @@
   margin-bottom: 16px;
 }
 .desc strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .tags {
@@ -154,7 +154,7 @@
 }
 .input,
 .textarea {
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 12px;
   padding: 13px 16px;
   font-family: var(--sans);
@@ -190,7 +190,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 12px;
   cursor: pointer;
   transition:

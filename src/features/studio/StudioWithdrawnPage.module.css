@@ -84,7 +84,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(32px, 5vw, 52px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.02;
 }
@@ -117,7 +117,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 12px;
 }
@@ -178,7 +178,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(24px, 3.4vw, 32px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
 }
@@ -277,7 +277,7 @@
 .playFab svg {
   width: 13px;
   height: 13px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-left: 1px;
 }
 .byCur {

@@ -1,7 +1,7 @@
 /* Card */
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 24px;
   padding: 46px 44px 36px;
   width: 100%;
@@ -44,7 +44,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 40px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
   margin-bottom: 16px;
@@ -63,7 +63,7 @@
 }
 
 .lead b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -96,7 +96,7 @@
 }
 
 .violation p b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -109,7 +109,7 @@
   grid-template-columns: auto 1fr;
   gap: 14px;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: flex-start;
 }
 
@@ -122,7 +122,7 @@
   height: 26px;
   border-radius: 50%;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 700;
   font-size: 12px;
   display: flex;
@@ -135,7 +135,7 @@
 .whatText b {
   display: block;
   font-size: 14.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 3px;
 }
@@ -147,7 +147,7 @@
 }
 
 .whatText a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -157,7 +157,7 @@
   gap: 10px;
   margin-top: 24px;
   padding-top: 22px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   flex-wrap: wrap;
 }
 

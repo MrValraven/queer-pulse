@@ -13,6 +13,7 @@ import { jobCardToJob } from "../../features/economy/api/jobs.adapters";
 import { getMyJobs } from "../../features/economy/api/myJobs.api";
 import { closeJob } from "../../features/economy/api/jobs.api";
 import { useDemoMode } from "./DemoModeProvider";
+import { useAuth } from "./authContext";
 import { logError } from "../../shared/observability/logger";
 
 interface PostedJobsContextValue {
@@ -49,6 +50,7 @@ function readInitial(): Job[] {
 export function PostedJobsProvider({ children }: { children: ReactNode }) {
   const [postedJobs, setPostedJobs] = useState<Job[]>(readInitial);
   const { demoMode } = useDemoMode();
+  const { loggedIn } = useAuth();
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -65,7 +67,7 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
   // modes never share a cache entry.
   const { data: serverJobs = [] } = useQuery({
     queryKey: ["myJobs", demoMode],
-    enabled: !demoMode,
+    enabled: !demoMode && loggedIn,
     queryFn: async () => {
       const res = await getMyJobs();
       return res.items.map(jobCardToJob);

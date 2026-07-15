@@ -20,7 +20,7 @@
 
 .card {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: var(--radius-card);
   padding: var(--card-pad);
   display: flex;

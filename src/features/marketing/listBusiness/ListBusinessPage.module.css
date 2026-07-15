@@ -55,7 +55,7 @@
 }
 @media (hover: hover) {
   .back:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .eyebrow {
@@ -70,7 +70,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(36px, 5vw, 58px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
   max-width: 18ch;
@@ -87,7 +87,7 @@
   max-width: 60ch;
 }
 .lead b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -98,7 +98,7 @@
   gap: 16px;
   flex-wrap: wrap;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-left: 3px solid var(--accent);
   border-radius: 14px;
   padding: 14px 18px;
@@ -109,7 +109,7 @@
   color: var(--ink);
 }
 .draftBanner .dbTxt b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .draftBanner .dbActions {
@@ -170,7 +170,7 @@
 }
 .wpActive .wpN {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .wpDone .wpN {
   background: var(--jade);
@@ -185,7 +185,7 @@
 }
 .wpActive .wpL,
 .wpDone .wpL {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .wpBar {
   width: 18px;
@@ -244,7 +244,7 @@
 /* ===== Pane card ===== */
 .pane {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 32px 34px;
   box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.04);
@@ -258,7 +258,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 27px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.012em;
   margin-bottom: 6px;
 }
@@ -278,10 +278,10 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 28px 0 14px;
   padding-top: 22px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 
 /* ===== Generic field bits the steps reuse ===== */
@@ -319,7 +319,7 @@
 }
 .chip {
   background: transparent;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   color: var(--ink-60);
   font-family: var(--sans);
   font-size: 13px;
@@ -334,14 +334,14 @@
 }
 @media (hover: hover) {
   .chip:not(.chipOn):hover {
-    border-color: rgba(var(--plum-rgb), 0.38);
-    color: var(--plum);
+    border-color: rgba(var(--line-rgb), 0.38);
+    color: var(--text-strong);
   }
 }
 .chipOn {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 @media (hover: hover) {
   .chipOn:hover {
@@ -405,7 +405,7 @@
 .pathCard {
   text-align: left;
   background: var(--cream);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 16px;
   padding: 22px;
   cursor: pointer;
@@ -416,7 +416,7 @@
 }
 @media (hover: hover) {
   .pathCard:not(.pathCardOn):hover {
-    border-color: rgba(var(--plum-rgb), 0.32);
+    border-color: rgba(var(--line-rgb), 0.32);
   }
 }
 @media (hover: hover) {
@@ -425,7 +425,7 @@
   }
 }
 .pathCardOn {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: var(--paper);
   box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.06);
 }
@@ -452,7 +452,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
@@ -522,11 +522,11 @@
   font-family: var(--serif);
   font-size: 13px;
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .dmInfo b {
   font-size: 13.5px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   display: block;
 }
@@ -538,7 +538,7 @@
   margin-left: auto;
   font-size: 12.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   background: none;
   border: none;
   cursor: pointer;
@@ -590,7 +590,7 @@
 .verifyOpt {
   text-align: left;
   padding: 15px 17px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 13px;
   cursor: pointer;
   background: transparent;
@@ -603,11 +603,11 @@
   .optCard:not(.optOn):hover,
   .radioOpt:not(.optOn):hover,
   .verifyOpt:not(.optOn):hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
   }
 }
 .optOn {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.04);
   box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.06);
 }
@@ -649,7 +649,7 @@
 .radioTxt b {
   display: block;
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 3px;
 }
@@ -674,7 +674,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.28);
+  border: 1.5px solid rgba(var(--line-rgb), 0.28);
   flex: none;
   margin-top: 1px;
   display: flex;
@@ -692,7 +692,7 @@
   transition: transform 0.2s;
 }
 .optOn .roDot {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .optOn .roDot::after {
   transform: scale(1);
@@ -712,7 +712,7 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .voBadge {
   margin-left: auto;
@@ -742,7 +742,7 @@
   width: 38px;
   height: 42px;
   flex: none;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: var(--cream);
   border-radius: 10px;
   color: var(--ink-40);
@@ -763,7 +763,7 @@
 .witAdd {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -865,7 +865,7 @@
 .hoursToolBtn {
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   background: none;
   border: none;
   cursor: pointer;
@@ -896,7 +896,7 @@
 .hday {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .htg {
   font-size: 11.5px;
@@ -905,7 +905,7 @@
   text-transform: uppercase;
   padding: 6px 8px;
   border-radius: 8px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   background: var(--cream);
   color: var(--ink-40);
   cursor: pointer;
@@ -929,13 +929,13 @@
   font-size: 13px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(var(--plum-rgb), 0.16);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 9px;
   padding: 7px 9px;
   transition: border-color 0.2s var(--ease);
 }
 .htimes input:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .htimes .dash {
   color: var(--ink-40);
@@ -1048,7 +1048,7 @@
 }
 .memToggle .mtTxt b {
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   display: block;
   margin-bottom: 2px;
@@ -1063,7 +1063,7 @@
 .paneFooter {
   padding-top: 24px;
   margin-top: 8px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .paneActions {
   display: flex;
@@ -1183,7 +1183,7 @@
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   background: none;
   border: none;
@@ -1198,7 +1198,7 @@
   grid-template-columns: 130px 1fr;
   gap: 14px;
   padding: 9px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: flex-start;
 }
 .recapRow:last-child {
@@ -1211,7 +1211,7 @@
 }
 .rv {
   font-size: 14px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 500;
   line-height: 1.55;
 }
@@ -1230,7 +1230,7 @@
 
 .slugBox {
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 12px;
   padding: 14px 16px;
   margin-bottom: 22px;
@@ -1250,7 +1250,7 @@
   word-break: break-all;
 }
 .sbUrl b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -1283,7 +1283,7 @@
   line-height: 1.5;
 }
 .vouchLine p b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -1314,7 +1314,7 @@
   line-height: 1.6;
 }
 .submitNote p b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -1345,7 +1345,7 @@
   font-style: italic;
   font-weight: 300;
   font-size: 22px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .sending .ring {
   width: 46px;
@@ -1375,7 +1375,7 @@
 .tagPill:focus-visible,
 .htg:focus-visible,
 .htimes input:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 
@@ -1410,13 +1410,13 @@
 }
 .dirCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 20px;
 }
 .dirCardEmpty {
   border-style: dashed;
-  border-color: rgba(var(--plum-rgb), 0.18);
+  border-color: rgba(var(--line-rgb), 0.18);
   background: rgba(var(--plum-rgb), 0.015);
 }
 .dirTop {
@@ -1447,7 +1447,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.1;
 }
@@ -1516,7 +1516,7 @@
 }
 .pvDetail {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px;
   margin-top: 13px;
@@ -1526,7 +1526,7 @@
   font-weight: 300;
   font-style: italic;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.4;
   padding-left: 14px;
   border-left: 2px solid var(--accent);
@@ -1534,7 +1534,7 @@
 }
 .pdTaglinePh {
   color: var(--ink-40);
-  border-left-color: rgba(var(--plum-rgb), 0.18);
+  border-left-color: rgba(var(--line-rgb), 0.18);
 }
 .pdSec {
   margin-bottom: 16px;
@@ -1589,7 +1589,7 @@
   align-items: center;
   gap: 11px;
   padding-top: 15px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .pdOwnerAv {
   width: 36px;
@@ -1608,7 +1608,7 @@
 .pdOwnerName {
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .pdOwnerRole {
   font-size: 12px;
@@ -1651,7 +1651,7 @@
   font-weight: 300;
   font-style: italic;
   font-size: clamp(20px, 2.4vw, 26px);
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.35;
   padding-left: 16px;
   border-left: 2px solid var(--accent);
@@ -1683,7 +1683,7 @@
 .fpSec {
   padding-top: 18px;
   margin-top: 18px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .fpSec h4 {
   font-size: 11px;
@@ -1728,7 +1728,7 @@
   padding: 4px 0;
 }
 .fpHrow span:first-child {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .fpHoursNote {
@@ -1753,7 +1753,7 @@
 .statusPanel {
   position: relative;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 26px;
   padding: 52px 52px 46px;
   overflow: hidden;
@@ -1844,7 +1844,7 @@
   font-style: italic;
   font-weight: 300;
   font-size: 19px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 18px;
 }
 .statusLead {
@@ -1853,7 +1853,7 @@
   line-height: 1.7;
 }
 .statusLead b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 
@@ -1916,7 +1916,7 @@
   color: var(--paper);
 }
 .tkDone .tkL {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .tkCurrent .tkDot {
   background: var(--accent);
@@ -1925,7 +1925,7 @@
   box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.25);
 }
 .tkCurrent .tkL {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 700;
 }
 .tkDone::before,
@@ -1948,7 +1948,7 @@
   line-height: 1.6;
 }
 .statusNote b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 700;
 }
 .statusActions {
@@ -1968,7 +1968,7 @@
   margin-bottom: 16px;
 }
 .withdrawConfirm p b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 700;
 }
 .statusMeta {
@@ -2010,8 +2010,8 @@
 }
 @media (hover: hover) {
   .demoFlip button:hover {
-    border-color: var(--cream);
-    color: var(--cream);
+    border-color: rgba(var(--cream-rgb), 1);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .demoFlip button:focus-visible {
@@ -2020,6 +2020,6 @@
 }
 .demoFlip .demoFlipOn {
   background: rgba(var(--cream-rgb), 0.14);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: rgba(var(--cream-rgb), 0.4);
 }

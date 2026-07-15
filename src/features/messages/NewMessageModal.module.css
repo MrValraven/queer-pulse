@@ -15,7 +15,7 @@
   max-width: 440px;
   max-height: 80vh;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px 22px 16px;
   display: flex;
@@ -32,7 +32,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .close {
@@ -49,7 +49,7 @@
 }
 @media (hover: hover) {
   .close:hover {
-    color: var(--plum);
+    color: var(--text-strong);
     background: rgba(var(--plum-rgb), 0.05);
   }
 }
@@ -97,7 +97,7 @@
 .rowName {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .rowMeta {
   font-size: 12px;

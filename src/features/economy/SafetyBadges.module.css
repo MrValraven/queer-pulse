@@ -26,7 +26,7 @@
   }
 }
 .badge:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .icon {
@@ -53,9 +53,9 @@
   border: 1px solid rgba(var(--accent-rgb), 0.28);
 }
 .friendly {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.06);
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
 }
 
 /* popover tooltip */
@@ -87,14 +87,14 @@
   top: 100%;
   left: 18px;
   border: 6px solid transparent;
-  border-top-color: var(--plum);
+  border-top-color: var(--line-strong);
 }
 .popTitle {
   display: block;
   font-family: var(--serif);
   font-weight: 500;
   font-size: 14px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 4px;
 }
 .popOpen {

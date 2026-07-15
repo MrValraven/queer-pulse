@@ -1,7 +1,7 @@
 /* Signed-out banner */
 .guestBar {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 11px 28px;
   display: flex;
   justify-content: space-between;
@@ -24,7 +24,7 @@
   background: var(--accent);
 }
 .guestLbl b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .guestActions {
@@ -35,7 +35,7 @@
 /* Owner preview banner (signed-in member viewing their own public profile) */
 .ownerBar {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 11px 28px;
   display: flex;
   justify-content: space-between;
@@ -92,7 +92,7 @@
   align-items: flex-start;
   padding-bottom: 32px;
   margin-bottom: 32px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 @media (max-width: 560px) {
   .head {
@@ -112,7 +112,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(40px, 5.2vw, 56px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
   margin-bottom: 6px;
@@ -189,7 +189,7 @@
   stroke-linecap: round;
 }
 .meta b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -213,7 +213,7 @@
   gap: 20px;
   padding-bottom: 28px;
   margin-bottom: 32px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 @media (max-width: 560px) {
   .stats {
@@ -224,7 +224,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 30px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   display: block;
   line-height: 1;
@@ -249,13 +249,13 @@
   justify-content: space-between;
   padding-bottom: 14px;
   margin-bottom: 18px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .secH h2 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .secH h2 em {
@@ -282,7 +282,7 @@
   display: block;
   padding: 18px 22px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
@@ -293,7 +293,7 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-2px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
   }
 }
 .cardKicker {
@@ -308,7 +308,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.25;
 }
@@ -337,7 +337,7 @@
 }
 .tag.primary {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* Locked */
@@ -348,7 +348,7 @@
     rgba(var(--plum-rgb), 0.03),
     rgba(var(--accent-rgb), 0.04)
   );
-  border: 1px dashed rgba(var(--plum-rgb), 0.18);
+  border: 1px dashed rgba(var(--line-rgb), 0.18);
   border-radius: 18px;
   text-align: center;
 }
@@ -357,7 +357,7 @@
   height: 54px;
   border-radius: 16px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -376,7 +376,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
@@ -406,7 +406,7 @@
 /* Bottom CTA */
 .bottomCta {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-card);
   padding: 36px 40px;
   margin-top: 48px;
@@ -425,7 +425,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   margin-bottom: 8px;
   line-height: 1.15;

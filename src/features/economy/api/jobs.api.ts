@@ -1,4 +1,5 @@
 import { apiGet, apiPost, apiPatch } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 import type { CreateCompanyDto } from "./companies.api";
 
@@ -129,7 +130,7 @@ export interface CreateJobApplicationDto {
 // ── Raw calls (one per endpoint) ─────────────────────────────────────────────
 
 /** GET /jobs?cat=&type=&page= — `cat` filters category, `type` filters commitment. */
-export function getJobs(
+export async function getJobs(
   params: { cat?: string; type?: string; page?: number } = {},
 ) {
   const q = new URLSearchParams();
@@ -137,7 +138,10 @@ export function getJobs(
   if (params.type) q.set("type", params.type);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
-  return apiGet<Paginated<JobCardDTO>>(`/jobs${qs ? `?${qs}` : ""}`);
+  const res = await apiGet<JobCardDTO[] | Paginated<JobCardDTO>>(
+    `/jobs${qs ? `?${qs}` : ""}`,
+  );
+  return toItemsPage(res);
 }
 
 export const getJob = (slug: string) => apiGet<JobDetailDTO>(`/jobs/${slug}`);

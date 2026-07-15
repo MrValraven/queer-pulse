@@ -1,6 +1,8 @@
 .root {
   background: var(--plum);
-  color: var(--cream);
+  /* Permanently-dark island: base text must use the non-flipping light cream
+     channels (var(--cream) flips to near-black in dark mode). */
+  color: rgba(var(--cream-rgb), 0.92);
   min-height: 100svh;
 }
 
@@ -36,7 +38,7 @@
   font-weight: 600;
   font-size: 21px;
   letter-spacing: -0.01em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .brand em {
   font-style: italic;
@@ -69,11 +71,11 @@
   transition: color var(--dur-base) var(--ease);
 }
 .linkActive {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 @media (hover: hover) {
   .link:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .right {
@@ -96,7 +98,7 @@
   max-width: 300px;
 }
 .footBrand .brand {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .footBrand p {
   font-size: 13.5px;
@@ -126,7 +128,7 @@
 }
 @media (hover: hover) {
   .footCol a:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .footBase {

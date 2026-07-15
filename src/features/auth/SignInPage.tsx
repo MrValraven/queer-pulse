@@ -58,6 +58,10 @@ export function SignInPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<FailedProbe | null>(null);
 
+  // Note: a signed-in member never reaches this page — the walled-garden gate
+  // (see authGate.ts / AppRoutes) treats /auth/sign-in as guest-only and
+  // redirects them to their feed before it renders.
+
   /**
    * Kick off sign-in. In demo mode this just flips local state. In live mode
    * `signIn()` does a full-page redirect to the backend, so we first probe that

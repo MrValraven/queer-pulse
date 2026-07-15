@@ -14,7 +14,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6vw, 76px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.96;
 }
@@ -53,7 +53,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 20px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .sfHead h3 em {
   font-style: italic;
@@ -67,7 +67,7 @@
 }
 @media (hover: hover) {
   .clear:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .group {
@@ -99,7 +99,7 @@
   gap: 6px;
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.1);
   border-radius: 999px;
   padding: 5px 12px;
@@ -123,7 +123,7 @@
   color: rgba(var(--cream-rgb), 0.6);
 }
 .results strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .sortWrap {
   margin-left: auto;
@@ -149,7 +149,7 @@
 @media (hover: hover) {
   .sortSel:hover {
     border-color: rgba(var(--cream-rgb), 0.4);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .sortMenu {
@@ -197,7 +197,7 @@
 @media (hover: hover) {
   .sortOpt:hover {
     background: rgba(var(--cream-rgb), 0.1);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .sortOptOn {
@@ -262,7 +262,7 @@
 }
 .rent {
   background: rgba(var(--cream-rgb), 0.18);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .fcSaves {
   position: absolute;
@@ -276,7 +276,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   z-index: 2;
 }
 .fcSaves svg {
@@ -294,7 +294,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 20px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.14;
   letter-spacing: -0.01em;
 }

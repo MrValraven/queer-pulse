@@ -47,7 +47,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6.2vw, 86px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
   max-width: 14ch;
@@ -97,7 +97,7 @@
   letter-spacing: -0.025em;
   line-height: 1.04;
   margin-bottom: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .h em {
   font-style: italic;
@@ -105,7 +105,7 @@
   color: var(--accent);
 }
 .dark .h {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .dark .h em {
   color: var(--jade);
@@ -128,7 +128,7 @@
 }
 .hoodCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -148,7 +148,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .hoodDesc {
@@ -162,7 +162,7 @@
   font-style: italic;
   color: var(--ink-40);
   padding-top: 10px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
 
 .infoGrid {
@@ -172,7 +172,7 @@
 }
 .infoCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 24px;
   display: flex;
@@ -201,7 +201,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .icBody {
@@ -236,7 +236,7 @@
   gap: 16px;
   align-items: flex-start;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 20px 22px;
   text-decoration: none;
@@ -303,7 +303,7 @@
   font-size: 44px;
   font-weight: 500;
   line-height: 1;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .fgDate .m {
   font-size: 13px;
@@ -317,7 +317,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 24px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
@@ -341,7 +341,7 @@
 }
 .cqCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 18px 20px;
   display: flex;
@@ -371,7 +371,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }

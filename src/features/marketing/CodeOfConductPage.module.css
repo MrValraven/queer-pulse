@@ -18,7 +18,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(52px, 8vw, 108px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.95;
   margin-bottom: 24px;
@@ -36,7 +36,7 @@
   max-width: 54ch;
 }
 .dek b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .dek em {
@@ -44,7 +44,7 @@
   color: var(--accent-ink);
 }
 .dek a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -79,19 +79,19 @@
   line-height: 1.65;
 }
 .distCol p b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .distCol a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
 
 .toc {
   background: var(--paper);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -124,7 +124,7 @@
 }
 @media (hover: hover) {
   .tocInner a:hover {
-    color: var(--plum);
+    color: var(--text-strong);
     background: rgba(var(--plum-rgb), 0.05);
   }
 }
@@ -136,7 +136,7 @@
 }
 .sec {
   padding: 48px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   scroll-margin-top: 70px;
 }
 .sec:last-of-type {
@@ -157,7 +157,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 4vw, 40px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
   margin-bottom: 18px;
@@ -171,7 +171,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-top: 32px;
   margin-bottom: 12px;
@@ -192,7 +192,7 @@
   color: var(--accent-ink);
 }
 .sec p strong {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .list {
@@ -219,7 +219,7 @@
   background: var(--accent);
 }
 .list li b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
 }
 .list li em {
@@ -235,7 +235,7 @@
   grid-template-columns: 36px 1fr;
   gap: 14px;
   padding: 18px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: flex-start;
 }
 .pactRow:first-child {
@@ -259,7 +259,7 @@
 .pactRow b {
   display: block;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   margin-bottom: 5px;
   font-family: var(--serif);
@@ -274,7 +274,7 @@
 
 .ladder {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 8px 0;
   margin: 18px 0 12px;
@@ -284,7 +284,7 @@
   grid-template-columns: 42px 1fr;
   gap: 18px;
   padding: 18px 24px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: flex-start;
 }
 .ladderStep:last-child {
@@ -307,12 +307,12 @@
 }
 .ladderNPlum {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ladderStep b {
   display: block;
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 4px;
 }
@@ -329,7 +329,7 @@
 
 .reportCta {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-card);
   padding: 36px 40px;
   margin: 48px 0;
@@ -338,7 +338,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   margin-bottom: 10px;
   max-width: 22ch;
@@ -374,7 +374,7 @@
   font-weight: 600;
 }
 .version a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;

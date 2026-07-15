@@ -21,7 +21,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(54px, 8.5vw, 118px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.92;
   margin-bottom: 22px;
@@ -43,7 +43,7 @@
   color: var(--accent-ink);
 }
 .dek a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -88,7 +88,7 @@
   overflow: hidden;
   margin-bottom: 18px;
   transition: box-shadow 0.3s var(--ease);
-  border: 1px solid rgba(var(--plum-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   position: relative;
 }
 .tintA {
@@ -133,7 +133,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 48px;
-  color: rgba(var(--plum-rgb), 0.5);
+  color: rgba(var(--ink-rgb), 0.5);
   letter-spacing: -0.025em;
   line-height: 0.9;
 }
@@ -151,7 +151,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -181,7 +181,7 @@
 
 .stats {
   background: var(--paper);
-  border-top: 2px solid var(--plum);
+  border-top: 2px solid var(--line-strong);
   padding: 60px 0;
   margin-top: 32px;
 }
@@ -208,7 +208,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 38px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin-bottom: 6px;
@@ -232,7 +232,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 4vw, 38px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 8px;
 }
@@ -258,7 +258,7 @@
 .illusCard {
   padding: 18px 20px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
@@ -268,7 +268,7 @@
 }
 @media (hover: hover) {
   .illusCard:hover {
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
     transform: translateY(-2px);
   }
 }
@@ -294,7 +294,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
 }
 .illusMeta {

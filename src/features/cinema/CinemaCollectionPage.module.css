@@ -2,7 +2,7 @@
 .header {
   padding: 120px 0 0;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   position: relative;
   overflow: hidden;
 }
@@ -55,7 +55,7 @@
   transition: color 0.2s var(--ease);
 }
 .crumb a:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .sep {
   opacity: 0.4;
@@ -87,7 +87,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(44px, 6.5vw, 92px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.026em;
   line-height: 0.96;
   max-width: 22ch;
@@ -122,7 +122,7 @@
 .statV {
   font-family: var(--serif);
   font-size: 22px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.012em;
 }
 .statV em {
@@ -174,7 +174,7 @@
 .essay {
   padding: 64px 0;
   background: var(--cream);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .essayInner {
   display: grid;
@@ -186,7 +186,7 @@
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 300;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.55;
   letter-spacing: -0.008em;
   max-width: 56ch;
@@ -215,7 +215,7 @@
 
 .detailsCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
   padding: 26px 28px;
 }
@@ -232,7 +232,7 @@
   justify-content: space-between;
   align-items: baseline;
   padding: 12px 0;
-  border-bottom: 1px dashed rgba(var(--plum-rgb), 0.12);
+  border-bottom: 1px dashed rgba(var(--line-rgb), 0.12);
 }
 .detailsRow:last-of-type {
   border-bottom: none;
@@ -245,7 +245,7 @@
 .detailsV {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .detailsV em {
@@ -303,7 +303,7 @@
 .orderNote p {
   font-family: var(--serif);
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.52;
   letter-spacing: -0.005em;
 }
@@ -322,7 +322,7 @@
   gap: 22px;
   align-items: start;
   padding: 32px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
   transition:
     background 0.2s var(--ease),
     padding 0.2s var(--ease);
@@ -336,7 +336,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 42px;
-  color: rgba(var(--plum-rgb), 0.18);
+  color: rgba(var(--ink-rgb), 0.18);
   letter-spacing: -0.02em;
   line-height: 1;
   padding-top: 6px;
@@ -378,7 +378,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 28px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.1;
   letter-spacing: -0.015em;
 }
@@ -401,7 +401,7 @@
   border-radius: 0 10px 10px 0;
   font-family: var(--serif);
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.52;
   max-width: 56ch;
 }
@@ -442,7 +442,7 @@
 .price {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .priceFree {
@@ -455,7 +455,7 @@
 
 .showMore {
   padding: 28px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
   text-align: center;
 }
 .showNote {
@@ -471,7 +471,7 @@
 }
 .asideCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
   padding: 22px 24px;
   margin-bottom: 18px;
@@ -519,7 +519,7 @@
   display: flex;
   gap: 12px;
   padding: 14px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .rc:first-child {
   border-top: none;
@@ -535,14 +535,14 @@
   justify-content: center;
   font-family: var(--serif);
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
   font-style: italic;
   flex: none;
 }
 .rcTitle {
   font-family: var(--serif);
   font-size: 15px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.2;
   letter-spacing: -0.008em;
   transition: color 0.2s var(--ease);
@@ -563,7 +563,7 @@
 .outro {
   padding: 88px 0;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   text-align: center;
 }
 .outroInner {
@@ -612,7 +612,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(36px, 5vw, 60px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin: 8px 0 16px;
 }

@@ -21,7 +21,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(54px, 8.5vw, 118px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.92;
   margin-bottom: 22px;
@@ -39,7 +39,7 @@
   max-width: 54ch;
 }
 .dek b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .dek em {
@@ -49,8 +49,8 @@
 
 .searchRow {
   background: var(--paper);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -76,7 +76,7 @@
   font-size: 14.5px;
   color: var(--ink);
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 12px;
   padding: 11px 14px 11px 40px;
   transition:
@@ -85,7 +85,7 @@
   box-sizing: border-box;
 }
 .searchInput input:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.06);
 }
 .searchInput svg {
@@ -122,7 +122,7 @@
 }
 .langActive {
   background: var(--plum);
-  color: var(--cream) !important;
+  color: rgba(var(--cream-rgb), 1) !important;
 }
 
 .body {
@@ -155,11 +155,11 @@
 @media (hover: hover) {
   .alphabet a:hover {
     background: rgba(var(--plum-rgb), 0.08);
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .has {
-  color: var(--plum) !important;
+  color: var(--text-strong) !important;
 }
 .no {
   color: var(--ink-40) !important;
@@ -192,7 +192,7 @@
 }
 .term {
   padding: 22px 0;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .termRow {
   display: flex;
@@ -205,7 +205,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .termType {
@@ -228,7 +228,7 @@
   background: rgba(var(--jade-rgb), 0.12);
 }
 .typeLocal {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.08);
 }
 .termDef {
@@ -243,7 +243,7 @@
   color: var(--accent-ink);
 }
 .termDef b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .termMeta {
@@ -253,7 +253,7 @@
   line-height: 1.5;
 }
 .termMeta a {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }
@@ -266,7 +266,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 8px;
 }
 .noResults p {
@@ -278,7 +278,7 @@
 
 .foot {
   background: var(--paper);
-  border-top: 2px solid var(--plum);
+  border-top: 2px solid var(--line-strong);
   padding: 60px 0;
   margin-top: 48px;
 }
@@ -292,7 +292,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 28px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 10px;
 }

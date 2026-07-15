@@ -48,7 +48,7 @@
 }
 .tierInvite,
 .tierPrivate {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.08);
 }
 

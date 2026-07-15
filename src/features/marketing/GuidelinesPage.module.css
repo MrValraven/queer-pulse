@@ -23,7 +23,7 @@
   grid-template-columns: 56px 1fr;
   gap: 24px;
   padding: 28px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .clauseNum {
   font-family: var(--serif);
@@ -36,7 +36,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 12px;
 }
@@ -51,7 +51,7 @@
   margin-bottom: 12px;
 }
 .clause p b {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .clause ul {
   margin: 0 0 12px;
@@ -85,7 +85,7 @@
 }
 .divider {
   border: none;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
   margin: 8px 0;
 }
 

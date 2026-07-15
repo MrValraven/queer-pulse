@@ -21,7 +21,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(48px, 8vw, 108px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.95;
   margin-bottom: 22px;
@@ -48,7 +48,7 @@
   max-width: 560px;
   padding: 14px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 14px;
 }
 .sub input {
@@ -84,7 +84,7 @@
   margin-top: 24px;
   padding: 26px 30px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 18px;
   position: relative;
   overflow: hidden;
@@ -100,7 +100,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
 }
@@ -115,7 +115,7 @@
   margin-top: 10px;
 }
 .subDoneBody strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .subDoneNext {
@@ -143,10 +143,10 @@
   flex-wrap: wrap;
   margin-top: 42px;
   padding-top: 24px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .stats b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-family: var(--serif);
   font-size: 24px;
   font-weight: 400;
@@ -166,7 +166,7 @@
   padding: 0 28px;
   display: flex;
   gap: 6px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   flex-wrap: wrap;
 }
 .tab {
@@ -183,11 +183,11 @@
 }
 @media (hover: hover) {
   .tab:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .tabActive {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tabActive::after {
   content: "";
@@ -219,7 +219,7 @@
 }
 .latestCard {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-card);
   padding: 36px 40px;
   position: relative;
@@ -266,7 +266,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 38px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin-bottom: 10px;
@@ -292,7 +292,7 @@
   margin-bottom: 18px;
 }
 .latestInfo b {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 
@@ -303,14 +303,14 @@
 }
 .year {
   padding: 32px 0 14px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   margin-bottom: 12px;
 }
 .year h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .year h3 em {
@@ -327,7 +327,7 @@
   grid-template-columns: 90px 1fr 240px 120px;
   gap: 24px;
   padding: 20px 8px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.06);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: center;
   text-decoration: none;
   color: inherit;
@@ -361,7 +361,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 32px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -373,7 +373,7 @@
   color: var(--jade);
 }
 .streamTrans .rowNum em {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .rowNumL {
   font-size: 10.5px;
@@ -387,7 +387,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 21px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.25;
   transition: color 0.2s var(--ease);
@@ -435,7 +435,7 @@
   font-family: var(--sans);
 }
 .rowStats b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   font-family: var(--serif);
   font-size: 18px;

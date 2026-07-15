@@ -31,14 +31,14 @@
 }
 .stateBtnActive {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .card {
   width: 100%;
   max-width: 480px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 24px;
   padding: 36px 40px;
   box-shadow: 0 6px 40px -8px rgba(var(--plum-rgb), 0.12);
@@ -83,7 +83,7 @@
 }
 @media (hover: hover) {
   .backLink:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -91,7 +91,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 30px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 10px;
 }
@@ -131,7 +131,7 @@
   gap: 14px;
   padding-bottom: 20px;
   margin-bottom: 20px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .memAv {
   width: 48px;
@@ -149,7 +149,7 @@
 .memName {
   font-size: 16px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .memMeta {
   font-size: 13px;
@@ -160,7 +160,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .cardHead em {
   font-style: italic;
@@ -174,7 +174,7 @@
 
 /* Option cards (block/mute) */
 .optionCard {
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 16px;
   padding: 18px 20px;
   margin-bottom: 12px;
@@ -184,7 +184,7 @@
     background 0.18s;
 }
 .optionSelected {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.02);
 }
 .ocHeader {
@@ -196,7 +196,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 2px solid rgba(var(--plum-rgb), 0.25);
+  border: 2px solid rgba(var(--line-rgb), 0.25);
   flex: none;
   display: flex;
   align-items: center;
@@ -218,7 +218,7 @@
 .ocTitle {
   font-size: 15px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ocDesc {
   font-size: 13px;
@@ -229,7 +229,7 @@
 .subOpts {
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px dashed rgba(var(--plum-rgb), 0.12);
+  border-top: 1px dashed rgba(var(--line-rgb), 0.12);
 }
 .subLabel {
   font-size: 11.5px;
@@ -258,15 +258,15 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 6px 12px;
   cursor: pointer;
 }
 .durBtnActive {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .warnBox {
   font-size: 12.5px;
@@ -302,7 +302,7 @@
 }
 @media (hover: hover) {
   .cancelLink:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 
@@ -323,7 +323,7 @@
   color: var(--ink-60);
 }
 .csVal {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .manageLink {
@@ -331,7 +331,7 @@
   text-align: center;
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   margin-bottom: 12px;
 }
@@ -358,7 +358,7 @@
   color: var(--ink-40);
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .reportNote a {
   color: var(--accent-ink);
@@ -401,7 +401,7 @@
   line-height: 1.6;
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .privacyNote a {
   color: var(--accent-ink);
@@ -411,13 +411,13 @@
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 14px;
 }
 .altCard {
   display: flex;
   gap: 14px;
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 16px;
   padding: 18px 20px;
   margin-bottom: 12px;
@@ -434,7 +434,7 @@
 .altTitle {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 4px;
 }
 .altDesc {
@@ -451,12 +451,12 @@
 .stillWant {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 12px;
 }
 .reasonTa {
   width: 100%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
   padding: 12px 14px;
   font-family: var(--sans);
@@ -470,7 +470,7 @@
   transition: border-color 0.2s var(--ease);
 }
 .reasonTa:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
 }
 .deleteBtn {
@@ -478,7 +478,7 @@
   font-family: var(--sans);
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: var(--danger);
   border: none;
   border-radius: 999px;
@@ -497,7 +497,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 14px;
   padding: 14px 18px;
   cursor: pointer;
@@ -509,7 +509,7 @@
 .durTitle {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .durDesc {
   font-size: 12.5px;
@@ -542,13 +542,13 @@
 .tlActive,
 .tlCurrent {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.18);
 }
 .tlDone,
 .tlSuccess {
   background: var(--jade);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .tlPending {
   background: rgba(var(--plum-rgb), 0.1);
@@ -600,7 +600,7 @@
   color: var(--ink-60);
 }
 .infoPlum strong {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .govLink {
   text-align: center;
@@ -612,7 +612,7 @@
   color: var(--accent-ink);
 }
 .refVal {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -627,11 +627,11 @@
 .pausedCard {
   background: var(--plum);
   border: none;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   text-align: center;
 }
 .pausedCard .title {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .pausedIcon {
   width: 56px;

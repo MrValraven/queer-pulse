@@ -79,7 +79,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6vw, 68px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.02;
   margin-bottom: 14px;
@@ -159,7 +159,7 @@
   font-family: var(--serif);
   font-size: 64px;
   font-weight: 300;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 0.95;
   letter-spacing: -0.04em;
 }
@@ -208,7 +208,7 @@
   line-height: 1.4;
 }
 .progLabelSmall strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .hpActivity {
@@ -344,7 +344,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.5vw, 40px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 8px;
 }
@@ -401,7 +401,7 @@
 .icTitle {
   font-size: 15px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 6px;
 }
 .icDesc {
@@ -460,7 +460,7 @@
   transition: color 0.2s;
 }
 .pillBtn.active {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .saveTag {
   font-size: 10.5px;
@@ -486,7 +486,7 @@
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   background: var(--paper);
   border: 1.5px solid rgba(45, 27, 61, 0.14);
   border-radius: 999px;
@@ -496,7 +496,7 @@
 }
 @media (hover: hover) {
   .curSelect:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
   }
 }
 .curSelectWrap::after {
@@ -546,7 +546,7 @@
 }
 .tierCard.featured {
   background: var(--plum);
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   padding-top: 34px;
   box-shadow: 0 24px 54px -26px rgba(45, 27, 61, 0.6);
   transform: scale(1.035);
@@ -633,10 +633,10 @@
   font-weight: 300;
   letter-spacing: -0.03em;
   line-height: 1;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tierCard.featured .tierAmount {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .tierPer {
   font-size: 14px;
@@ -707,12 +707,12 @@
 .tierSelectGhost {
   background: transparent;
   border-color: rgba(45, 27, 61, 0.16);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 /* Cream fill for the featured (plum) card. */
 .tierSelectLight {
   background: var(--cream);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* custom amount */
@@ -733,7 +733,7 @@
   transition: border-color 0.2s;
 }
 .customInputWrap:focus-within {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .customEur {
   padding: 12px 14px;
@@ -884,7 +884,7 @@
 .budgetTitle {
   font-family: var(--serif);
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .budgetPeriod {
@@ -952,7 +952,7 @@
 .biAmt {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-left: auto;
   font-variant-numeric: tabular-nums;
   flex: none;
@@ -975,12 +975,12 @@
 }
 .btLabel {
   font-size: 16px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .btAmt {
   font-size: 22px;
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .budgetFoot {
   font-size: 12.5px;
@@ -1073,7 +1073,7 @@
   font-family: var(--serif);
   font-size: 54px;
   font-weight: 300;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1;
   letter-spacing: -0.04em;
   margin-bottom: 4px;
@@ -1106,7 +1106,7 @@
   line-height: 1.5;
 }
 .sbProgLabel strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .sbAvs {
@@ -1125,7 +1125,7 @@
   font-size: 9px;
   font-weight: 700;
   font-family: var(--serif);
-  border: 2px solid var(--plum);
+  border: 2px solid var(--line-strong);
 }
 .avJade {
   background: rgba(74, 140, 111, 0.2);
@@ -1137,7 +1137,7 @@
 }
 .avCream {
   background: rgba(247, 243, 238, 0.1);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .avJadeDim {
   background: rgba(74, 140, 111, 0.12);
@@ -1183,7 +1183,7 @@
   font-family: var(--serif);
   font-size: 26px;
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -1207,7 +1207,7 @@
 .sbWhyHead {
   font-size: 14px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 12px;
 }
 .sbWhyText {
@@ -1270,7 +1270,7 @@
   font-family: var(--serif);
   font-size: 17px;
   line-height: 1.5;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
 }
 .testiWho {
@@ -1301,7 +1301,7 @@
 }
 .twAvPlum {
   background: rgba(45, 27, 61, 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .twName {
   font-size: 13px;
@@ -1340,7 +1340,7 @@
   cursor: pointer;
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   transition: color 0.15s;
   width: 100%;
   background: none;
@@ -1390,7 +1390,7 @@
   align-items: center;
   gap: 18px;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 999px;
   padding: 9px 10px 9px 24px;
   box-shadow: 0 20px 48px -16px rgba(45, 27, 61, 0.7);
@@ -1408,7 +1408,7 @@
   text-overflow: ellipsis;
 }
 .recapInfo strong {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .recapBtn {
@@ -1482,7 +1482,7 @@
 .pcHead {
   font-family: var(--serif);
   font-size: 24px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.15;
 }
 .pcHead em {
@@ -1523,7 +1523,7 @@
 }
 .pcTierName {
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .pcTierSub {
   font-size: 12px;
@@ -1553,7 +1553,7 @@
   border-top: 1px dashed rgba(45, 27, 61, 0.12);
 }
 .pcLine.total {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 700;
   font-size: 14px;
 }
@@ -1598,7 +1598,7 @@
   transition: border-color 0.2s;
 }
 .payField input:focus {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .payField input.invalid {
   border-color: var(--accent-ink);
@@ -1651,8 +1651,8 @@
 }
 @media (hover: hover) {
   .pmMoreToggle:hover {
-    border-color: var(--plum);
-    color: var(--plum);
+    border-color: var(--line-strong);
+    color: var(--text-strong);
   }
 }
 .pmMoreToggle .chev {
@@ -1686,8 +1686,8 @@
   gap: 6px;
 }
 .pmTab.active {
-  border-color: var(--plum);
-  color: var(--plum);
+  border-color: var(--line-strong);
+  color: var(--text-strong);
   background: var(--paper);
   box-shadow: 0 3px 10px -5px rgba(45, 27, 61, 0.3);
 }
@@ -1811,7 +1811,7 @@
 .psTitle {
   font-family: var(--serif);
   font-size: 26px;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 8px;
 }
 .psTitle em {
@@ -1853,12 +1853,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--plum);
+  color: var(--text-strong);
   transition: all 0.2s;
 }
 @media (hover: hover) {
   .psShareBtn:hover {
-    border-color: var(--plum);
+    border-color: var(--line-strong);
     background: rgba(45, 27, 61, 0.04);
     transform: translateY(-2px);
   }

@@ -27,7 +27,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(32px, 5vw, 56px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -75,7 +75,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 19px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
@@ -108,7 +108,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 30px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
 .secH h2 em {
@@ -143,7 +143,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 19px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .ri h5 em {
@@ -269,7 +269,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 21px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 10px;
 }
@@ -293,7 +293,7 @@
   text-underline-offset: 2px;
 }
 .foot a:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* ── Modal ── */
@@ -329,7 +329,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 28px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin-top: 4px;
@@ -351,7 +351,7 @@
 }
 .modalBody em {
   font-style: italic;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .keep {
   background: rgba(var(--jade-rgb), 0.08);
@@ -394,7 +394,7 @@
   background: rgba(var(--cream-rgb), 0.1);
 }
 .btConfirm {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: var(--accent);
   border-color: var(--accent);
 }

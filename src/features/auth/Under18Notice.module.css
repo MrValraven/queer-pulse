@@ -3,7 +3,7 @@
 
 .panel {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   text-align: center;
   padding: 44px 36px 36px;
   border-radius: 28px;
@@ -27,7 +27,7 @@
   line-height: 1.12;
   letter-spacing: -0.01em;
   margin: 0 0 14px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .title em {
@@ -55,7 +55,7 @@
 }
 
 .links a {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;

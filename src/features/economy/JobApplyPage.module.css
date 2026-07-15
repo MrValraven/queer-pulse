@@ -16,7 +16,7 @@
   transition: color 0.2s var(--ease);
 }
 .back:hover {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* Header */
@@ -28,7 +28,7 @@
   flex-wrap: wrap;
   margin-bottom: 42px;
   padding-bottom: 26px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
 }
 .eyebrow {
   font-size: 11px;
@@ -42,7 +42,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(34px, 5vw, 56px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   margin: 0 0 14px;
@@ -60,7 +60,7 @@
   color: var(--ink-60);
 }
 .meta b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .dot {
@@ -79,7 +79,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 40px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -132,7 +132,7 @@
 /* Section card */
 .sec {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 22px;
   padding: 32px 30px;
 }
@@ -140,7 +140,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: 22px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   margin: 0 0 4px;
 }
@@ -179,7 +179,7 @@
 /* Upload */
 .upload {
   position: relative;
-  border: 1.5px dashed rgba(var(--plum-rgb), 0.2);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.2);
   border-radius: 14px;
   padding: 22px;
   background: var(--cream);
@@ -192,7 +192,7 @@
     background 0.2s var(--ease);
 }
 .upload:hover {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: var(--paper);
 }
 .upload input[type="file"] {
@@ -219,7 +219,7 @@
 .uploadTitle {
   font-size: 14.5px;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -232,7 +232,7 @@
 .uploadCta {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   flex: none;
 }
 
@@ -247,7 +247,7 @@
   align-items: center;
   gap: 14px;
   padding: 12px 16px;
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 12px;
   background: var(--cream);
 }
@@ -262,7 +262,7 @@
   flex: none;
   font-weight: 700;
   font-size: 13px;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .idRow .idLink input {
   flex: 1;
@@ -303,7 +303,7 @@
   position: relative;
   display: block;
   padding: 14px 16px;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.1);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 12px;
   cursor: pointer;
   background: var(--paper);
@@ -313,7 +313,7 @@
     box-shadow 0.2s var(--ease);
 }
 .rcard:hover {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
 }
 .radioGrid .rcard input {
   position: absolute;
@@ -323,7 +323,7 @@
   pointer-events: none;
 }
 .rcardOn {
-  border-color: var(--plum);
+  border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.04);
   box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.06);
 }
@@ -334,7 +334,7 @@
 .rcardT {
   font-size: 14px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .rcardD {
   font-size: 12px;
@@ -351,7 +351,7 @@
   flex-wrap: wrap;
   padding-top: 28px;
   margin-top: 8px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .saved {
   font-size: 12.5px;
@@ -387,7 +387,7 @@
 }
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 22px;
 }
@@ -414,7 +414,7 @@
   line-height: 1.2;
 }
 .sideName a {
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
 }
 .sideName a:hover {
@@ -428,7 +428,7 @@
 .sideInfo {
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   display: flex;
   flex-direction: column;
   gap: 9px;
@@ -436,7 +436,7 @@
   color: var(--ink-60);
 }
 .sideInfo b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .sideInfoRow {
@@ -468,7 +468,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0 0 12px;
 }
 .tipsList {

@@ -6,7 +6,7 @@
 .head {
   padding-bottom: 32px;
   margin-bottom: 32px;
-  border-bottom: 2px solid var(--plum);
+  border-bottom: 2px solid var(--line-strong);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -25,7 +25,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(40px, 5vw, 60px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
   max-width: 18ch;
@@ -45,7 +45,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: 42px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -71,7 +71,7 @@
   display: flex;
   gap: 6px;
   margin-bottom: 28px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   flex-wrap: wrap;
 }
 .tab {
@@ -88,11 +88,11 @@
 }
 @media (hover: hover) {
   .tab:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 .tabActive {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .tabActive::after {
   content: "";
@@ -124,7 +124,7 @@
   align-items: center;
   gap: 8px 18px;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 13px 18px;
   margin-bottom: 28px;
@@ -179,13 +179,13 @@
   flex-wrap: wrap;
   margin-bottom: 14px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .groupTitle {
   font-family: var(--serif);
   font-size: 19px;
   font-weight: 500;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .groupCount {
@@ -238,7 +238,7 @@
 .app {
   position: relative;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 24px 24px 24px 27px;
   display: grid;
@@ -253,7 +253,7 @@
 @media (hover: hover) {
   .app:hover {
     transform: translateY(-1px);
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
     box-shadow: 0 12px 30px -22px rgba(var(--plum-rgb), 0.4);
   }
 }
@@ -293,7 +293,7 @@
   .appRight {
     grid-column: 1 / -1;
     padding-top: 8px;
-    border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+    border-top: 1px solid rgba(var(--line-rgb), 0.08);
   }
 }
 .appLogo {
@@ -317,7 +317,7 @@
 }
 .logoPlum {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .logoDraft {
   background: rgba(var(--plum-rgb), 0.05);
@@ -327,7 +327,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -456,7 +456,7 @@
   margin-top: 10px;
 }
 .appStatus b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .appStatus :global(.ago) {
@@ -485,7 +485,7 @@
   background: rgba(var(--accent-rgb), 0.12);
 }
 .badgeInterview {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.1);
 }
 .badgeOffer {
@@ -499,7 +499,7 @@
 .badgeDraft {
   color: var(--ink-40);
   background: rgba(var(--plum-rgb), 0.05);
-  border: 1px dashed rgba(var(--plum-rgb), 0.15);
+  border: 1px dashed rgba(var(--line-rgb), 0.15);
 }
 .badgeAttention {
   color: var(--accent-ink);
@@ -525,7 +525,7 @@
 .appAction {
   font-size: 13px;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
   display: inline-flex;
   align-items: center;

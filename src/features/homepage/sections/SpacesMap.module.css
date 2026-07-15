@@ -1,6 +1,6 @@
 .section {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding: 108px 0 116px;
   overflow: hidden;
 }
@@ -34,13 +34,13 @@
 }
 @media (hover: hover) {
   .chip:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
     border-color: rgba(var(--cream-rgb), 0.5);
   }
 }
 .chipActive {
   background: rgba(var(--cream-rgb), 0.14);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: rgba(var(--cream-rgb), 0.4);
 }
 .svg {

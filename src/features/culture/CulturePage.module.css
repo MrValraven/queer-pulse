@@ -47,7 +47,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(40px, 6vw, 84px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
   max-width: 14ch;
@@ -93,7 +93,7 @@
   }
 }
 .tabActive {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-bottom-color: var(--accent);
 }
 
@@ -115,7 +115,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(28px, 3.5vw, 44px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
 }
 .secHead em {
@@ -137,7 +137,7 @@
 }
 .pickCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   overflow: hidden;
   transition:
@@ -197,7 +197,7 @@
 }
 .badge_film {
   background: rgba(var(--plum-rgb), 0.12);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .badge_music {
   background: rgba(var(--accent-rgb), 0.18);
@@ -210,7 +210,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 17px;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.2;
   margin-bottom: 4px;
 }
@@ -244,7 +244,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(22px, 2.5vw, 32px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.015em;
 }
 .subHead em {
@@ -258,7 +258,7 @@
 }
 .threadItem {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 18px 20px;
   display: flex;
@@ -269,7 +269,7 @@
 }
 @media (hover: hover) {
   .threadItem:hover {
-    border-color: rgba(var(--plum-rgb), 0.22);
+    border-color: rgba(var(--line-rgb), 0.22);
   }
 }
 .threadBody {
@@ -303,7 +303,7 @@
 }
 .projCard {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--card-radius);
   padding: 24px;
   transition:
@@ -329,7 +329,7 @@
 .pill_Photo,
 .pill_Film {
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .pill_Music {
   background: rgba(var(--accent-rgb), 0.1);
@@ -347,7 +347,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 20px;
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
   margin-bottom: 8px;
@@ -384,7 +384,7 @@
   gap: 12px;
   flex-wrap: wrap;
   padding-top: 14px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .pcWho {
   display: flex;
@@ -461,7 +461,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: 16px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.2;
 }
 .goArtist {
@@ -498,7 +498,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(26px, 3.6vw, 48px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   line-height: 1.1;
   margin-bottom: 8px;
 }
@@ -538,7 +538,7 @@
 }
 @media (hover: hover) {
   .curatorLinks a:hover {
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
     border-color: rgba(var(--cream-rgb), 0.45);
   }
 }
@@ -570,7 +570,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(20px, 2.8vw, 30px);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
 }
@@ -626,7 +626,7 @@
   align-items: center;
   justify-content: center;
   font-size: 13px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   transition: background 0.2s var(--ease);
 }
 @media (hover: hover) {

@@ -43,6 +43,8 @@
 
   /* ── Ink (text) ── */
   --ink: #1a1a1f;
+  --ink-rgb:
+    26, 26, 31; /* ink channels for rgba() faint text — flips in dark mode */
   --ink-60: rgba(26, 26, 31, 0.62); /* body copy */
   --ink-40: rgba(
     26,
@@ -50,6 +52,21 @@
     31,
     0.55
   ); /* metadata, placeholders — 0.55 keeps small text at WCAG AA on cream */
+
+  /* ── Lines (borders / dividers / hairlines) ──
+     Borders were written as plum rgba() for hairlines and solid plum for
+     dividers. Plum doesn't flip, so on the dark page +
+     paper surfaces these borders vanish (dark-on-dark). These flip to light
+     channels in dark mode. --line-rgb preserves the per-border opacity. */
+  --line-rgb: var(--plum-rgb); /* border/hairline channels — flips in dark */
+  --line-strong: var(--plum); /* solid dividers — flips in dark */
+
+  /* ── Strong text (headings / emphasis) ──
+     Was written directly as plum `color` everywhere. Plum is ALSO the
+     brand background colour, so it can't be theme-switched. Use this token for
+     plum-coloured *text* instead: it equals plum in light mode (no visual
+     change) and flips to light ink in dark mode so headings stay legible. */
+  --text-strong: var(--plum);
 
   /* ── Studio (dark workspace palette) ── */
   --studio-bg: #1a1028;
@@ -61,7 +78,15 @@
   --cream: #0e0820;
   --paper: #1a1030;
   --ink: rgba(247, 243, 238, 0.92);
+  --ink-rgb: 247, 243, 238; /* light channels so rgba() faint text flips too */
   --ink-60: rgba(247, 243, 238, 0.62);
   --ink-40: rgba(247, 243, 238, 0.55);
   --jade-ink: #7cd7ad; /* on dark surfaces a lighter jade reads as "ink" */
+  /* Plum-coloured headings/emphasis flip to light ink so they stay legible on
+     the dark page + paper surfaces. */
+  --text-strong: rgba(247, 243, 238, 0.92);
+  /* Borders/dividers flip to light channels so hairlines stay visible on dark
+     surfaces (keeps the same per-border opacity). */
+  --line-rgb: 247, 243, 238;
+  --line-strong: rgba(247, 243, 238, 0.32);
 }

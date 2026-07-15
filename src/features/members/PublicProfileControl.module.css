@@ -1,7 +1,7 @@
 /* Plum-panel feature card for the member's own public-profile control. */
 .panel {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 22px;
   padding: 32px 36px;
   margin: 40px 0;
@@ -46,7 +46,7 @@
   font-size: clamp(24px, 3vw, 30px);
   letter-spacing: -0.015em;
   line-height: 1.1;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .title em {
   font-style: italic;
@@ -90,7 +90,7 @@
 .critMark svg {
   width: 14px;
   height: 14px;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   stroke-width: 2.4;
 }
 .critMet .critMark {
@@ -114,7 +114,7 @@
   color: rgba(var(--cream-rgb), 0.6);
 }
 .critMet .critLabel {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .critHint {
   font-size: 13px;
@@ -149,7 +149,7 @@
 .switchLabel {
   font-size: 15px;
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .status {
   font-size: 13px;

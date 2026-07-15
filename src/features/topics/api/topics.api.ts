@@ -1,4 +1,5 @@
 import { apiGet } from "../../../shared/api/client";
+import { toPage } from "../../../shared/api/pagination";
 import type {
   Paginated,
   TopicDetailResponse,
@@ -25,11 +26,12 @@ export const getTopicDetail = (slug: string) =>
   apiGet<TopicDetailResponse>(`/topics/${slug}`);
 
 /** GET /topics/:slug/posts?cursor= — that topic's post feed, newest first. */
-export function getTopicPosts(slug: string, cursor?: string) {
+export async function getTopicPosts(slug: string, cursor?: string) {
   const q = new URLSearchParams();
   if (cursor) q.set("cursor", cursor);
   const qs = q.toString();
-  return apiGet<Paginated<TopicPostResponse>>(
+  const res = await apiGet<TopicPostResponse[] | Paginated<TopicPostResponse>>(
     `/topics/${slug}/posts${qs ? `?${qs}` : ""}`,
   );
+  return toPage(res);
 }

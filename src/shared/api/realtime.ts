@@ -1,6 +1,7 @@
 import {
   createContext,
   createElement,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -173,25 +174,38 @@ class RealtimeClient {
 interface RealtimeContextValue {
   /** True while a socket is open. Always false in demo mode. */
   connected: boolean;
+  /** Register demand for the socket; returns a release fn. See `useRealtime`. */
+  request: () => () => void;
 }
 
 const RealtimeContext = createContext<RealtimeContextValue>({
   connected: false,
+  request: () => () => {},
 });
 
 /**
- * Mounts the realtime connection lifecycle. Connects only when the member is
- * signed in, a backend is configured, and demo mode is OFF — so demo/offline
- * runs are completely inert (no socket, no network). Reconnects with backoff;
- * tears the socket down on sign-out or when demo mode flips on.
+ * Mounts the realtime connection lifecycle. The socket is *demand-driven*: it
+ * opens only when the member is signed in, a backend is configured, demo mode is
+ * OFF, **and** at least one consumer has called `request()` (via `useRealtime`).
+ * So demo/offline runs are completely inert (no socket, no network), and even in
+ * live mode we don't hold a socket open on pages that don't need it — only the
+ * messages view (and any future opt-in like the notifications bell) does.
+ * Reconnects with backoff; tears the socket down on sign-out, when demo mode
+ * flips on, or when the last consumer releases its demand.
  */
 export function RealtimeProvider({ children }: { children: ReactNode }) {
   const { loggedIn } = useAuth();
   const { demoMode } = useDemoMode();
   const [connected, setConnected] = useState(false);
+  const [demand, setDemand] = useState(0);
   const clientRef = useRef<RealtimeClient | null>(null);
 
-  const active = loggedIn && !demoMode && apiAvailable;
+  const active = loggedIn && !demoMode && apiAvailable && demand > 0;
+
+  const request = useCallback(() => {
+    setDemand((n) => n + 1);
+    return () => setDemand((n) => Math.max(0, n - 1));
+  }, []);
 
   useEffect(() => {
     if (!active) return;
@@ -210,8 +224,8 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   }, [active]);
 
   const value = useMemo<RealtimeContextValue>(
-    () => ({ connected }),
-    [connected],
+    () => ({ connected, request }),
+    [connected, request],
   );
 
   return createElement(RealtimeContext.Provider, { value }, children);
@@ -220,4 +234,16 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
 /** Read the live socket status (e.g. to show a "reconnecting" hint). */
 export function useRealtime(): RealtimeContextValue {
   return useContext(RealtimeContext);
+}
+
+/**
+ * Hold the realtime socket open for as long as the calling component is mounted.
+ * Mount this on a view that needs live updates (e.g. the messages page); the
+ * socket opens on mount and closes when the last such consumer unmounts. Inert
+ * in demo/logged-out/no-backend runs — `request()` just bumps a counter that the
+ * provider's connect guard ignores until the other conditions are met.
+ */
+export function useRealtimeConnection(): void {
+  const { request } = useRealtime();
+  useEffect(() => request(), [request]);
 }

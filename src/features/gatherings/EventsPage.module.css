@@ -19,7 +19,7 @@
   gap: 8px;
   padding: 9px 16px;
   border-radius: 999px;
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
@@ -33,13 +33,13 @@
 }
 @media (hover: hover) {
   .chip:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
+    border-color: rgba(var(--line-rgb), 0.3);
   }
 }
 .chipActive {
   background: var(--plum);
-  color: var(--cream);
-  border-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
 }
 .chipDot {
   width: 8px;
@@ -61,7 +61,7 @@
   font-weight: 300;
   font-style: italic;
   font-size: clamp(22px, 3vw, 30px);
-  color: var(--plum);
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin: 0 0 18px;
 }
@@ -77,7 +77,7 @@
   gap: 20px;
   padding: 20px 24px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   text-decoration: none;
   color: inherit;
@@ -88,7 +88,7 @@
 }
 @media (hover: hover) {
   .card:hover {
-    border-color: rgba(var(--plum-rgb), 0.18);
+    border-color: rgba(var(--line-rgb), 0.18);
     transform: translateY(-2px);
     box-shadow: 0 14px 30px rgba(var(--plum-rgb), 0.08);
   }
@@ -103,13 +103,13 @@
   height: 64px;
   border-radius: 12px;
   background: var(--cream);
-  border: 1px solid rgba(var(--plum-rgb), 0.07);
+  border: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .day {
   font-family: var(--serif);
   font-size: 26px;
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1;
 }
 .month {
@@ -143,11 +143,11 @@
 }
 .badgeEvent {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .badgeGathering {
   background: rgba(var(--plum-rgb), 0.07);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .cardTitle {
   font-family: var(--serif);
@@ -163,7 +163,7 @@
   align-items: center;
   gap: 9px;
   font-size: 13px;
-  color: rgba(var(--plum-rgb), 0.6);
+  color: rgba(var(--ink-rgb), 0.6);
   font-weight: 500;
 }
 .dot {
@@ -175,7 +175,7 @@
 
 .cta {
   font-size: 20px;
-  color: rgba(var(--plum-rgb), 0.3);
+  color: rgba(var(--ink-rgb), 0.3);
   transition:
     color 0.2s var(--ease),
     transform 0.2s var(--ease);
@@ -224,7 +224,7 @@
   padding: 8px 15px;
   border-radius: 999px;
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -237,7 +237,7 @@
   transform: translateY(-1px);
 }
 .buyBtn:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
 .buyPrice {

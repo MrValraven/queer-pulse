@@ -14,7 +14,7 @@
   gap: 6px;
   padding: 8px 15px;
   border-radius: 999px;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
   color: var(--ink-60);
   font: inherit;
@@ -30,19 +30,19 @@
 }
 @media (hover: hover) {
   .chip:hover {
-    border-color: rgba(var(--plum-rgb), 0.3);
-    color: var(--plum);
+    border-color: rgba(var(--line-rgb), 0.3);
+    color: var(--text-strong);
   }
 }
 .chipOn {
   background: var(--plum);
-  border-color: var(--plum);
-  color: var(--cream);
+  border-color: var(--line-strong);
+  color: rgba(var(--cream-rgb), 1);
 }
 @media (hover: hover) {
   .chipOn:hover {
     background: var(--plum);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .chip svg {
@@ -72,13 +72,13 @@
 @media (hover: hover) {
   .dark.chip:hover {
     border-color: rgba(var(--cream-rgb), 0.4);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .dark.chipOn {
   background: rgba(var(--cream-rgb), 0.14);
   border-color: rgba(var(--cream-rgb), 0.4);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .dark.tone_jade.chipOn {
   background: rgba(var(--jade-rgb), 0.22);
