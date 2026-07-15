@@ -1,26 +1,36 @@
 import { useRef, type ChangeEvent, type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { Button, ComingSoon } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { currentUser, fullName } from "../members/data/members";
 import { PRONOUN_CHIPS, VIS_FIELDS } from "./editProfile.data";
 import styles from "./EditProfilePage.module.css";
 
 interface IdentitySectionProps {
-  /** Object-URL preview of a freshly picked photo, or null for the initials avatar. */
-  avatarPreview: string | null;
+  displayName: string;
+  location: string;
+  photo?: string;
+  onNameChange: (v: string) => void;
+  onLocationChange: (v: string) => void;
   onPickFile: (file: File) => void;
   onRemove: () => void;
-  onChange: () => void;
 }
 
 export function IdentitySection({
-  avatarPreview,
+  displayName,
+  location,
+  photo,
+  onNameChange,
+  onLocationChange,
   onPickFile,
   onRemove,
-  onChange,
 }: IdentitySectionProps) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const initials = displayName
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   function handleFile(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -41,9 +51,9 @@ export function IdentitySection({
         <div
           className={styles.photoAv}
           style={
-            avatarPreview
+            photo
               ? {
-                  backgroundImage: `url(${avatarPreview})`,
+                  backgroundImage: `url(${photo})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   color: "transparent",
@@ -51,7 +61,7 @@ export function IdentitySection({
               : undefined
           }
         >
-          {avatarPreview ? "" : currentUser.initials}
+          {photo ? "" : initials}
         </div>
         <div>
           <input
@@ -92,17 +102,19 @@ export function IdentitySection({
           <input
             className={styles.fieldInput}
             type="text"
-            defaultValue={fullName(currentUser)}
-            onChange={onChange}
+            value={displayName}
+            onChange={(e) => onNameChange(e.target.value)}
           />
         </div>
         <div className={styles.field}>
-          <div className={styles.fieldLabel}>Username</div>
+          <div className={styles.fieldLabel}>
+            Username <ComingSoon />
+          </div>
           <input
             className={styles.fieldInput}
             type="text"
-            defaultValue="@tiagocosta"
-            onChange={onChange}
+            placeholder="@username"
+            disabled
           />
         </div>
       </div>
@@ -115,8 +127,8 @@ export function IdentitySection({
           className={styles.fieldInput}
           type="text"
           placeholder="e.g. Mouraria, Intendente…"
-          defaultValue={currentUser.hood}
-          onChange={onChange}
+          value={location}
+          onChange={(e) => onLocationChange(e.target.value)}
         />
         <div className={styles.fieldHint}>
           Neighbourhood-level only — never exact address.
@@ -129,13 +141,11 @@ export function IdentitySection({
 interface PronounsSectionProps {
   selected: string[];
   onToggle: (p: string) => void;
-  onChange: () => void;
 }
 
 export function PronounsSection({
   selected,
   onToggle,
-  onChange,
 }: PronounsSectionProps) {
   return (
     <div className={styles.section} id="pronouns">
@@ -166,20 +176,23 @@ export function PronounsSection({
             </button>
           ))}
         </div>
+        <div className={styles.fieldLabel} style={{ marginTop: "10px" }}>
+          Write your own <ComingSoon />
+        </div>
         <input
           className={styles.fieldInput}
           type="text"
           placeholder="Or write your own…"
-          onChange={onChange}
+          disabled
         />
         <div className={styles.fieldHint}>
-          You can select multiple or write something custom. Pronouns are shown
-          on your profile only — not in meta tags or URLs.
+          You can select multiple chips above. Pronouns are shown on your
+          profile only — not in meta tags or URLs.
         </div>
       </div>
       <div className={styles.field}>
         <div className={styles.fieldLabel}>
-          Chosen name{" "}
+          Chosen name <ComingSoon />{" "}
           <span className={styles.fieldOptional}>
             if different from display name
           </span>
@@ -188,7 +201,7 @@ export function PronounsSection({
           className={styles.fieldInput}
           type="text"
           placeholder="Name to use in all communications"
-          onChange={onChange}
+          disabled
         />
         <div className={styles.fieldHint}>
           Used in emails from us and in any platform communications.
@@ -200,16 +213,18 @@ export function PronounsSection({
 
 interface BioSectionProps {
   bioText: string;
-  onChange: (val: string) => void;
-  onAnyChange: () => void;
+  occupation: string;
+  onBioChange: (v: string) => void;
+  onOccupationChange: (v: string) => void;
 }
 
 const BIO_MAX = 300;
 
 export function BioSection({
   bioText,
-  onChange,
-  onAnyChange,
+  occupation,
+  onBioChange,
+  onOccupationChange,
 }: BioSectionProps) {
   const overLimit = bioText.length > BIO_MAX * 0.9;
   return (
@@ -234,10 +249,7 @@ export function BioSection({
         <textarea
           className={styles.fieldTextarea}
           value={bioText}
-          onChange={(e) => {
-            onChange(e.target.value);
-            onAnyChange();
-          }}
+          onChange={(e) => onBioChange(e.target.value)}
           placeholder="A few sentences about you…"
         />
       </div>
@@ -247,31 +259,33 @@ export function BioSection({
           <input
             className={styles.fieldInput}
             type="text"
-            defaultValue={currentUser.role}
-            onChange={onAnyChange}
+            value={occupation}
+            onChange={(e) => onOccupationChange(e.target.value)}
           />
         </div>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>
-            Organisation <span className={styles.fieldOptional}>optional</span>
+            Organisation <ComingSoon />{" "}
+            <span className={styles.fieldOptional}>optional</span>
           </div>
           <input
             className={styles.fieldInput}
             type="text"
             placeholder="Where you work or study"
-            onChange={onAnyChange}
+            disabled
           />
         </div>
       </div>
       <div className={styles.field}>
         <div className={styles.fieldLabel}>
-          Link <span className={styles.fieldOptional}>optional</span>
+          Link <ComingSoon />{" "}
+          <span className={styles.fieldOptional}>optional</span>
         </div>
         <input
           className={styles.fieldInput}
           type="url"
           placeholder="https://…"
-          onChange={onAnyChange}
+          disabled
         />
         <div className={styles.fieldHint}>
           One link. No social media icons. Just a URL if you want one.
@@ -388,15 +402,15 @@ export function SkillsSection({
   );
 }
 
-export function VisibilitySection({ onChange }: { onChange: () => void }) {
+export function VisibilitySection() {
   return (
     <div className={styles.section} id="visibility">
       <h2 className={styles.sectionTitle}>
-        Field <em>visibility</em>
+        Field <em>visibility</em> <ComingSoon />
       </h2>
       <p className={styles.sectionSub}>
-        Choose who can see each part of your profile. QueerPulse is invite-only
-        so "Members" means your fellow members.
+        Per-field visibility is coming soon. For now, use the Visibility tab to
+        set who can see your whole profile.
       </p>
       <div className={styles.visPanel}>
         {VIS_FIELDS.map((f) => (
@@ -411,7 +425,7 @@ export function VisibilitySection({ onChange }: { onChange: () => void }) {
               <select
                 className={styles.visSelect}
                 defaultValue={f.defaultVal}
-                onChange={onChange}
+                disabled
               >
                 <option>Members</option>
                 <option>Connections only</option>

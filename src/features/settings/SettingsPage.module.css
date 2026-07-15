@@ -136,6 +136,15 @@
   margin-top: 3px;
   line-height: 1.5;
 }
+.accountEmail {
+  font-size: 14px;
+  color: var(--ink-70, rgba(45, 27, 61, 0.7));
+  font-variant-numeric: tabular-nums;
+}
+.comingSoonControl {
+  opacity: 0.5;
+  pointer-events: none;
+}
 
 .selectRow {
   display: flex;

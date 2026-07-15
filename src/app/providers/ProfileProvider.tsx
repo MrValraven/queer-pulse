@@ -12,6 +12,7 @@ import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge"
 import {
   currentUser,
   type Member,
+  type SkillItem,
   type SocialLink,
   type WorkItem,
 } from "../../features/members/data/members";
@@ -67,6 +68,8 @@ export interface ProfileDraft {
   socials: SocialLink[];
   /** Selected work — persisted on save via PUT /profiles/me/work. */
   work: WorkItem[];
+  /** Skills offered — persisted on save via PUT /profiles/me/skills. */
+  skills: SkillItem[];
 }
 
 function toDraft(m: Member): ProfileDraft {
@@ -82,6 +85,7 @@ function toDraft(m: Member): ProfileDraft {
     visibility: m.visibility,
     socials: (m.socials ?? []).map((s) => ({ ...s })),
     work: m.work.map((w) => ({ ...w })),
+    skills: m.skills.map((s) => ({ ...s })),
   };
 }
 
@@ -113,7 +117,8 @@ interface ProfileContextValue {
   saveError: string | null;
   startEditing: () => void;
   cancelEditing: () => void;
-  save: () => void;
+  /** Persists the draft; resolves `true` on success, `false` on failure. */
+  save: () => Promise<boolean>;
   updateDraft: (patch: Partial<ProfileDraft>) => void;
 }
 
@@ -172,27 +177,27 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   }, [profile]);
 
   const cancelEditing = useCallback(() => {
+    setDraft(toDraft(profile));
     setIsEditing(false);
-  }, []);
+  }, [profile]);
 
   const updateDraft = useCallback((patch: Partial<ProfileDraft>) => {
     setDraft((prev) => ({ ...prev, ...patch }));
   }, []);
 
-  const save = useCallback(async () => {
+  const save = useCallback(async (): Promise<boolean> => {
     setSaveError(null);
     try {
       // Persist to the backend first (no-op in demo mode); only commit the live
       // profile and show the confirmation once it actually succeeds. The core
-      // fields go through PATCH /profiles/me; the sub-lists (work, skills,
-      // groups, shapings, socials) each persist via their own PUT /profiles/me/*.
-      // The editor now mutates work + socials on the draft; the untouched lists
-      // (skills, groups, shapings) re-send from the committed profile
-      // (idempotent full-replace) to keep them in sync.
+      // fields go through PATCH /profiles/me; the editable draft lists (work,
+      // socials, skills) persist via PUT /profiles/me/*; the still-untouched
+      // lists (groups, shapings) re-send from the committed profile
+      // (idempotent full-replace).
       await persistProfile(draftToUpdateDto(draft));
       await persistLists({
         work: draft.work,
-        skills: profile.skills,
+        skills: draft.skills,
         groups: profile.groups,
         shapings: profile.shapings,
         socials: draft.socials,
@@ -203,7 +208,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
           ? err.message
           : "We couldn't save your profile. Please try again.",
       );
-      return;
+      return false;
     }
     setProfile((prev) => ({
       ...prev,
@@ -218,19 +223,14 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       visibility: draft.visibility,
       socials: draft.socials.filter((s) => s.urlOrHandle.trim()),
       work: draft.work,
+      skills: draft.skills,
     }));
     setIsEditing(false);
     setJustSaved(true);
     if (savedTimer.current) clearTimeout(savedTimer.current);
     savedTimer.current = setTimeout(() => setJustSaved(false), 5000);
-  }, [
-    draft,
-    persistProfile,
-    persistLists,
-    profile.skills,
-    profile.groups,
-    profile.shapings,
-  ]);
+    return true;
+  }, [draft, persistProfile, persistLists, profile.groups, profile.shapings]);
 
   const value = useMemo<ProfileContextValue>(
     () => ({

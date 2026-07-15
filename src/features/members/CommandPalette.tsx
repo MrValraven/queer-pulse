@@ -5,13 +5,8 @@ import { useScrollLock } from "../../shared/hooks/useScrollLock";
 import { Avatar } from "../../shared/components/ui";
 import { memberAvatar } from "./data/members";
 import { linkToPath, routes } from "../../app/routeMap";
-import {
-  SEARCH_DATA,
-  TYPE_ICON,
-  TYPE_LABEL,
-  RECENTS,
-  type SearchItem,
-} from "./search.data";
+import { TYPE_ICON, TYPE_LABEL, type SearchItem } from "./search.data";
+import { useSearchData } from "./api/useSearchData";
 import styles from "./CommandPalette.module.css";
 
 const MAX_RESULTS = 8;
@@ -67,11 +62,13 @@ export function CommandPalette() {
     if (open) inputRef.current?.focus();
   }, [open]);
 
+  const { data: searchData, recents, comingSoon } = useSearchData();
+
   const q = query.trim().toLowerCase();
   const results = useMemo(() => {
-    if (!q) return SEARCH_DATA.slice(0, MAX_RESULTS);
-    return SEARCH_DATA.filter((d) => matches(d, q)).slice(0, MAX_RESULTS);
-  }, [q]);
+    if (!q) return searchData.slice(0, MAX_RESULTS);
+    return searchData.filter((d) => matches(d, q)).slice(0, MAX_RESULTS);
+  }, [q, searchData]);
 
   // Clamp during render so a shrinking result list can't leave a stale selection.
   const activeIndex = Math.min(active, Math.max(0, results.length - 1));
@@ -140,65 +137,84 @@ export function CommandPalette() {
           <kbd className={styles.kbd}>esc</kbd>
         </div>
 
-        {!q && (
-          <div className={styles.recents}>
-            {RECENTS.slice(0, 5).map((r) => (
-              <button
-                key={r}
-                type="button"
-                className={styles.recentChip}
-                onClick={() => setQuery(r)}
-              >
-                {r}
-              </button>
-            ))}
+        {comingSoon ? (
+          <div className={styles.comingSoon}>
+            <span className={styles.comingSoonBadge}>Coming soon</span>
+            <p className={styles.comingSoonText}>
+              Live search is being wired to the community. For now it's resting
+              — turn on <em>Populate platform</em> to explore the demo.
+            </p>
           </div>
-        )}
+        ) : (
+          <>
+            {!q && (
+              <div className={styles.recents}>
+                {recents.slice(0, 5).map((r) => (
+                  <button
+                    key={r}
+                    type="button"
+                    className={styles.recentChip}
+                    onClick={() => setQuery(r)}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            )}
 
-        <ul className={styles.results} id="qp-cmd-results" role="listbox">
-          {results.length === 0 && (
-            <li className={styles.noResults}>No matches — try another word.</li>
-          )}
-          {results.map((item, i) => {
-            const Icon = TYPE_ICON[item.t];
-            const avatar = item.slug ? memberAvatar(item.slug) : undefined;
-            return (
-              <li
-                key={`${item.t}-${item.name}`}
-                role="option"
-                aria-selected={i === activeIndex}
-              >
-                <button
-                  type="button"
-                  className={[styles.row, i === activeIndex && styles.rowActive]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onMouseEnter={() => setActive(i)}
-                  onClick={() => goToItem(item)}
-                >
-                  {avatar ? (
-                    <Avatar
-                      initials={avatar.initials}
-                      tint={avatar.tint}
-                      src={avatar.photo}
-                      alt={item.name}
-                      size={34}
-                    />
-                  ) : (
-                    <span className={styles.rowIcon} aria-hidden>
-                      <Icon />
-                    </span>
-                  )}
-                  <span className={styles.rowBody}>
-                    <span className={styles.rowName}>{item.name}</span>
-                    <span className={styles.rowSub}>{item.sub}</span>
-                  </span>
-                  <span className={styles.rowType}>{TYPE_LABEL[item.t]}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+            <ul className={styles.results} id="qp-cmd-results" role="listbox">
+              {results.length === 0 && (
+                <li className={styles.noResults}>
+                  No matches — try another word.
+                </li>
+              )}
+              {results.map((item, i) => {
+                const Icon = TYPE_ICON[item.t];
+                const avatar = item.slug ? memberAvatar(item.slug) : undefined;
+                return (
+                  <li
+                    key={`${item.t}-${item.name}`}
+                    role="option"
+                    aria-selected={i === activeIndex}
+                  >
+                    <button
+                      type="button"
+                      className={[
+                        styles.row,
+                        i === activeIndex && styles.rowActive,
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onMouseEnter={() => setActive(i)}
+                      onClick={() => goToItem(item)}
+                    >
+                      {avatar ? (
+                        <Avatar
+                          initials={avatar.initials}
+                          tint={avatar.tint}
+                          src={avatar.photo}
+                          alt={item.name}
+                          size={34}
+                        />
+                      ) : (
+                        <span className={styles.rowIcon} aria-hidden>
+                          <Icon />
+                        </span>
+                      )}
+                      <span className={styles.rowBody}>
+                        <span className={styles.rowName}>{item.name}</span>
+                        <span className={styles.rowSub}>{item.sub}</span>
+                      </span>
+                      <span className={styles.rowType}>
+                        {TYPE_LABEL[item.t]}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
 
         <button type="button" className={styles.footer} onClick={goToAll}>
           <FiCornerDownLeft aria-hidden />

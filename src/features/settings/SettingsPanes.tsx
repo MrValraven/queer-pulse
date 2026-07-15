@@ -1,8 +1,12 @@
 import { useMemo, useState } from "react";
 import { FiShield } from "react-icons/fi";
 import { Button, Toggle } from "../../shared/components/ui";
+import { useAuth } from "../../app/providers/authContext";
+import { useProfile } from "../../app/providers/ProfileProvider";
 import { useConsent } from "../../app/providers/ConsentProvider";
 import { routes } from "../../app/routeMap";
+import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
+import type { Member } from "../members/data/members";
 import { TERMS } from "./settings.data";
 import { SIM_GROUPS, type SimFlow } from "./simulations.data";
 import { SimulationPreviewModal } from "./SimulationPreviewModal";
@@ -19,9 +23,7 @@ import {
 import { DataExportModal, SuggestEditModal } from "./SettingsModals";
 import styles from "./SettingsPage.module.css";
 
-const ACCOUNT_EMAIL = "sofia.andrade@email.com";
-
-const VISIBILITY_OPTIONS = [
+const VISIBILITY_OPTIONS: { v: VisibilityMode; t: string; d: string }[] = [
   {
     v: "open",
     t: "Open to connect",
@@ -55,17 +57,20 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
             title="New gathering announced"
             desc="When a gathering matching your interests is posted"
             defaultChecked
+            comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title="RSVP reminder"
             desc="48 hours before a gathering you've said you're going to"
             defaultChecked
+            comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title="Last few spots"
             desc="When a gathering you saved is almost full"
+            comingSoon
             onChange={onChange}
           />
         </ToggleList>
@@ -76,17 +81,20 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
             title="New message"
             desc="When someone sends you a direct message"
             defaultChecked
+            comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title="Connection request"
             desc="When someone asks to connect with you"
             defaultChecked
+            comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title='"Say hello" received'
             desc="When someone waves at your profile"
+            comingSoon
             onChange={onChange}
           />
         </ToggleList>
@@ -97,17 +105,20 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
             title="New post in my communities"
             desc="Activity in communities you've joined"
             defaultChecked
+            comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title="Reply to a thread I'm in"
             desc="When someone responds to a thread you've participated in"
             defaultChecked
+            comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title="Weekly community digest"
             desc="A quiet summary of what's happening — one email, once a week"
+            comingSoon
             onChange={onChange}
           />
         </ToggleList>
@@ -118,6 +129,7 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
           desc="How often to batch and send notifications by email"
           options={["Immediately", "Daily digest", "Weekly digest", "Never"]}
           defaultValue="Daily digest"
+          comingSoon
           onChange={onChange}
         />
         <SelectRow
@@ -130,6 +142,7 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
             "20:00 – 10:00",
           ]}
           defaultValue="22:00 – 08:00"
+          comingSoon
           onChange={onChange}
         />
       </Section>
@@ -174,6 +187,7 @@ export function LanguagePane({ onChange }: { onChange: () => void }) {
           desc="The language QueerPulse uses for menus, labels, and system messages"
           options={["English", "Português", "Español", "Français"]}
           defaultValue="English"
+          comingSoon
           onChange={onChange}
         />
       </Section>
@@ -209,40 +223,32 @@ export function LanguagePane({ onChange }: { onChange: () => void }) {
 
 type ExportKind = "full" | "messages";
 
-const EXPORTS: Record<
-  ExportKind,
-  { title: string; filename: string; payload: Record<string, unknown> }
-> = {
-  full: {
-    title: "Preparing your full export",
-    filename: "queerpulse-export.json",
-    payload: {
-      account: {
-        name: "Sofia Andrade",
-        email: ACCOUNT_EMAIL,
-        joined: "2024-03-11",
+export function buildExports(email: string, name: string, profile: Member) {
+  return {
+    full: {
+      title: "Preparing your full export",
+      filename: "queerpulse-export.json",
+      payload: {
+        account: { name, email },
+        profile: {
+          pronouns: profile.pronouns ?? "",
+          city: profile.hood,
+          interests: profile.tags,
+        },
+        exportedAt: new Date().toISOString(),
       },
-      profile: {
-        pronouns: "she/her",
-        city: "Lisbon",
-        interests: ["Film", "Mutual aid", "Reading"],
+    },
+    messages: {
+      title: "Preparing your messages",
+      filename: "queerpulse-messages.json",
+      payload: {
+        account: name,
+        note: "Plain export of your full message history.",
+        exportedAt: new Date().toISOString(),
       },
-      activity: { gatheringsAttended: 14, communitiesJoined: 6, posts: 38 },
-      exportedAt: new Date().toISOString(),
     },
-  },
-  messages: {
-    title: "Preparing your messages",
-    filename: "queerpulse-messages.json",
-    payload: {
-      account: "Sofia Andrade",
-      threads: 12,
-      messages: 487,
-      note: "Plain export of your full message history.",
-      exportedAt: new Date().toISOString(),
-    },
-  },
-};
+  } as const;
+}
 
 /** Controlled consent row bound to real state (not the cosmetic ToggleRow). */
 function ConsentToggleRow({
@@ -279,9 +285,20 @@ export function DataPane({
   onChange: () => void;
   onDeleteClick: () => void;
 }) {
+  const { user } = useAuth();
+  const { profile } = useProfile();
   const { consent, setConsent, openPreferences } = useConsent();
   const [exportKind, setExportKind] = useState<ExportKind | null>(null);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
+  const exports = useMemo(
+    () =>
+      buildExports(
+        user?.email ?? "—",
+        `${profile.first} ${profile.last}`.trim(),
+        profile,
+      ),
+    [user?.email, profile],
+  );
   return (
     <Pane
       title={
@@ -415,9 +432,9 @@ export function DataPane({
       </Section>
       {exportKind && (
         <DataExportModal
-          title={EXPORTS[exportKind].title}
-          filename={EXPORTS[exportKind].filename}
-          payload={EXPORTS[exportKind].payload}
+          title={exports[exportKind].title}
+          filename={exports[exportKind].filename}
+          payload={exports[exportKind].payload}
           onClose={() => setExportKind(null)}
         />
       )}
@@ -478,6 +495,7 @@ export function SimulationsPane() {
 }
 
 export function VisibilityPane({ onChange }: { onChange: () => void }) {
+  const { draft, updateDraft } = useProfile();
   return (
     <Pane
       title={
@@ -489,13 +507,17 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
     >
       <Section label="Who can see your profile">
         <div className={styles.toggleList}>
-          {VISIBILITY_OPTIONS.map((o, i) => (
+          {VISIBILITY_OPTIONS.map((o) => (
             <label key={o.v} className={styles.radioRow}>
               <input
                 type="radio"
                 name="vis"
-                defaultChecked={i === 0}
-                onChange={onChange}
+                value={o.v}
+                checked={draft.visibility === o.v}
+                onChange={() => {
+                  updateDraft({ visibility: o.v });
+                  onChange();
+                }}
               />
               <div>
                 <div className={styles.toggleTitle}>{o.t}</div>
@@ -510,18 +532,19 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
           <ToggleRow
             title='Show me in "New arrivals"'
             desc="Let the community know you've recently joined"
-            defaultChecked
+            comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title="Appear in suggested connections"
             desc="Allow the platform to suggest you to members with shared interests"
-            defaultChecked
+            comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title="Show activity status"
             desc="Let people see when you were last active (approximate)"
+            comingSoon
             onChange={onChange}
           />
         </ToggleList>
@@ -531,6 +554,7 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
 }
 
 export function AccountPane({ onChange }: { onChange: () => void }) {
+  const { user } = useAuth();
   return (
     <Pane
       title={
@@ -540,17 +564,31 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
       }
       sub="Login and security preferences."
     >
+      <Section label="Account">
+        <div className={styles.toggleList}>
+          <div className={styles.toggleRow}>
+            <div className={styles.toggleLabel}>
+              <div className={styles.toggleTitle}>Email address</div>
+              <div className={styles.toggleDesc}>
+                The address tied to your account and sign-in.
+              </div>
+            </div>
+            <div className={styles.accountEmail}>{user?.email ?? "—"}</div>
+          </div>
+        </div>
+      </Section>
       <Section label="Security">
         <ToggleList>
           <ToggleRow
             title="Two-factor authentication"
             desc="Adds a second step when logging in from a new device"
+            comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title="Login alerts"
             desc="Email me when my account is accessed from a new device"
-            defaultChecked
+            comingSoon
             onChange={onChange}
           />
         </ToggleList>

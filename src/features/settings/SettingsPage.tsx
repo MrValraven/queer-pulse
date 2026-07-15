@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useProfile } from "../../app/providers/ProfileProvider";
 import { useProfileTheme } from "../../app/providers/ProfileThemeProvider";
 import { useScrollLock } from "../../shared/hooks";
 import { AppShell } from "../../shared/components/layout";
@@ -24,6 +25,8 @@ import styles from "./SettingsPage.module.css";
 export function SettingsPage() {
   const { showToast } = useToast();
   const { commit: commitTheme, discard: discardTheme } = useProfileTheme();
+  const { save, cancelEditing, startEditing, isSaving, saveError, isEditing } =
+    useProfile();
   const [params] = useSearchParams();
   const initialPane = (() => {
     const p = params.get("pane");
@@ -33,12 +36,36 @@ export function SettingsPage() {
   const [pane, setPane] = useState<PaneId>(initialPane);
   const [dirty, setDirty] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const openedRef = useRef(false);
   useScrollLock(showDelete);
 
   // Drop any leftover unsaved theme edits when re-entering Settings.
   useEffect(() => {
     discardTheme();
   }, [discardTheme]);
+
+  // Open a profile edit session once when a profile-editing pane is active and
+  // none is already open. Track that WE opened it, so we only ever tear down our
+  // own session — never one the members profile page opened.
+  useEffect(() => {
+    if (
+      (pane === "profile" || pane === "visibility") &&
+      !isEditing &&
+      !openedRef.current
+    ) {
+      startEditing();
+      openedRef.current = true;
+    }
+  }, [pane, isEditing, startEditing]);
+
+  // Leaving Settings drops an edit session WE opened (mirrors Discard). A session
+  // opened elsewhere is left intact.
+  useEffect(
+    () => () => {
+      if (openedRef.current) cancelEditing();
+    },
+    [cancelEditing],
+  );
 
   const markChanged = () => setDirty(true);
 
@@ -102,12 +129,16 @@ export function SettingsPage() {
 
       {dirty && (
         <div className={styles.saveBar}>
-          <p>You have unsaved changes.</p>
+          <p>{saveError ?? "You have unsaved changes."}</p>
           <div style={{ display: "flex", gap: 10 }}>
             <button
               type="button"
               className={styles.discard}
               onClick={() => {
+                if (openedRef.current) {
+                  cancelEditing();
+                  openedRef.current = false;
+                }
                 discardTheme();
                 setDirty(false);
               }}
@@ -117,7 +148,18 @@ export function SettingsPage() {
             <button
               type="button"
               className={styles.saveBtn}
-              onClick={() => {
+              disabled={isSaving}
+              onClick={async () => {
+                if (openedRef.current) {
+                  const ok = await save();
+                  if (!ok) {
+                    showToast(
+                      "We couldn't save your changes. Please try again.",
+                      "error",
+                    );
+                    return;
+                  }
+                }
                 commitTheme();
                 setDirty(false);
                 showToast("Settings saved", "success");

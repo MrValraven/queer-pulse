@@ -30,3 +30,4 @@ export { Badge, CategoryLabel, type BadgeTone } from "./Badge";
 export { StatTile, StatGrid } from "./StatTile";
 export { HubBackLink } from "./HubBackLink";
 export { SubpageIndex, type SubpageItem } from "./SubpageIndex";
+export { ComingSoon } from "./ComingSoon";

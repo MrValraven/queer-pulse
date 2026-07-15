@@ -5,15 +5,14 @@ import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { linkToPath } from "../../app/routeMap";
 import {
-  SEARCH_DATA,
   TYPE_BG,
   TYPE_ICON,
   TYPE_LABEL,
-  RECENTS,
   TABS,
   type ResultType,
   type SearchItem,
 } from "./search.data";
+import { useSearchData } from "./api/useSearchData";
 import styles from "./SearchPage.module.css";
 
 /** Loading placeholder mirroring ResultCard — same icon + two lines. */
@@ -63,6 +62,23 @@ function ResultCard({ item }: { item: SearchItem }) {
   );
 }
 
+/** Live-mode placeholder — search isn't wired to the backend yet. */
+function SearchComingSoon() {
+  return (
+    <div className={styles.comingSoon}>
+      <span className={styles.comingSoonBadge}>Coming soon</span>
+      <h2 className={styles.comingSoonTitle}>
+        Search is <em>almost here.</em>
+      </h2>
+      <p className={styles.comingSoonText}>
+        We're wiring live search to the community — members, gatherings,
+        communities, and board posts, all in one place. For now it's resting.
+        Turn on <b>Populate platform</b> to explore the demo.
+      </p>
+    </div>
+  );
+}
+
 function Group({ items, label }: { items: SearchItem[]; label: string }) {
   if (!items.length) return null;
   return (
@@ -83,6 +99,7 @@ export function SearchPage() {
   // The query lives in the URL (?q=…) so it's shareable, bookmarkable, and can be
   // pre-filled by the global ⌘K command palette.
   const loading = useSimulatedLoad();
+  const { data: searchData, recents, comingSoon } = useSearchData();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
   const setQuery = (value: string) =>
@@ -91,7 +108,9 @@ export function SearchPage() {
   const q = query.trim().toLowerCase();
 
   let content: React.ReactNode;
-  if (loading) {
+  if (comingSoon) {
+    content = <SearchComingSoon />;
+  } else if (loading) {
     content = (
       <>
         <SkeletonGroup />
@@ -104,7 +123,7 @@ export function SearchPage() {
         <div className={styles.recent}>
           <div className={styles.recentLabel}>Recent searches</div>
           <div className={styles.recentChips}>
-            {RECENTS.map((r) => (
+            {recents.map((r) => (
               <button
                 key={r}
                 type="button"
@@ -128,28 +147,28 @@ export function SearchPage() {
           </div>
         </div>
         <Group
-          items={SEARCH_DATA.filter((d) => d.t === "topic")}
+          items={searchData.filter((d) => d.t === "topic")}
           label="Browse topics"
         />
         <Group
-          items={SEARCH_DATA.filter((d) => d.t === "member").slice(0, 6)}
+          items={searchData.filter((d) => d.t === "member").slice(0, 6)}
           label="Members"
         />
         <Group
-          items={SEARCH_DATA.filter((d) => d.t === "gathering")}
+          items={searchData.filter((d) => d.t === "gathering")}
           label="Upcoming gatherings"
         />
       </>
     );
   } else {
-    const hits = SEARCH_DATA.filter((d) => {
+    const hits = searchData.filter((d) => {
       const matches = `${d.name} ${d.sub} ${d.kw}`.toLowerCase().includes(q);
       return matches && (tab === "all" || d.t === tab);
     });
     // When the query is a bare "#tag" matching a known topic, offer a direct
     // jump to its feed page above the ordinary results.
     const topicJump = q.startsWith("#")
-      ? SEARCH_DATA.find((d) => d.t === "topic" && d.name.toLowerCase() === q)
+      ? searchData.find((d) => d.t === "topic" && d.name.toLowerCase() === q)
       : undefined;
     const banner = topicJump ? (
       <Link to={linkToPath(topicJump.href)} className={styles.jump}>
@@ -232,47 +251,51 @@ export function SearchPage() {
           <h1 className={styles.title}>
             Find anyone, anything <em>in the community.</em>
           </h1>
-          <div className={styles.barWrap}>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-            <input
-              className={styles.barInput}
-              type="text"
-              placeholder="Members, gatherings, communities, board posts…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <span className={styles.shortcut}>⌘K</span>
-          </div>
+          {!comingSoon && (
+            <div className={styles.barWrap}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                className={styles.barInput}
+                type="text"
+                placeholder="Members, gatherings, communities, board posts…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <span className={styles.shortcut}>⌘K</span>
+            </div>
+          )}
         </div>
       </div>
 
       <div className={styles.body}>
         <div className="wrap">
-          <div className={styles.tabs}>
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                className={[styles.tab, tab === t.id && styles.tabActive]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => setTab(t.id)}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+          {!comingSoon && (
+            <div className={styles.tabs}>
+              {TABS.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className={[styles.tab, tab === t.id && styles.tabActive]
+                    .filter(Boolean)
+                    .join(" ")}
+                  onClick={() => setTab(t.id)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          )}
           {content}
         </div>
       </div>

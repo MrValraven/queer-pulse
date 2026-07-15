@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Toggle } from "../../shared/components/ui";
+import { ComingSoon, Toggle } from "../../shared/components/ui";
 import styles from "./SettingsPage.module.css";
 
 export function Pane({
@@ -44,11 +44,14 @@ export function ToggleRow({
   title,
   desc,
   defaultChecked,
+  comingSoon,
   onChange,
 }: {
   title: string;
   desc?: string;
   defaultChecked?: boolean;
+  /** Flags a control with no backend behind it yet: shows a badge, disables the toggle. */
+  comingSoon?: boolean;
   onChange: () => void;
 }) {
   // Lift the previously-uncontrolled checkbox to local state, seeded from the
@@ -57,18 +60,26 @@ export function ToggleRow({
   return (
     <div className={styles.toggleRow}>
       <div className={styles.toggleLabel}>
-        <div className={styles.toggleTitle}>{title}</div>
+        <div className={styles.toggleTitle}>
+          {title} {comingSoon && <ComingSoon />}
+        </div>
         {desc && <div className={styles.toggleDesc}>{desc}</div>}
       </div>
-      <Toggle
-        tone="coral"
-        checked={checked}
-        onChange={(next) => {
-          setChecked(next);
-          onChange();
-        }}
-        label={title}
-      />
+      <div
+        className={comingSoon ? styles.comingSoonControl : undefined}
+        inert={comingSoon}
+      >
+        <Toggle
+          tone="coral"
+          checked={checked}
+          onChange={(next) => {
+            if (comingSoon) return;
+            setChecked(next);
+            onChange();
+          }}
+          label={title}
+        />
+      </div>
     </div>
   );
 }
@@ -78,24 +89,30 @@ export function SelectRow({
   desc,
   options,
   defaultValue,
+  comingSoon,
   onChange,
 }: {
   title: string;
   desc: string;
   options: string[];
   defaultValue: string;
+  /** Flags a control with no backend behind it yet: shows a badge, disables the select. */
+  comingSoon?: boolean;
   onChange: () => void;
 }) {
   return (
     <div className={styles.selectRow}>
       <div className={styles.toggleLabel}>
-        <div className={styles.toggleTitle}>{title}</div>
+        <div className={styles.toggleTitle}>
+          {title} {comingSoon && <ComingSoon />}
+        </div>
         <div className={styles.toggleDesc}>{desc}</div>
       </div>
       <select
         className={styles.select}
         defaultValue={defaultValue}
-        onChange={onChange}
+        disabled={comingSoon}
+        onChange={comingSoon ? undefined : onChange}
       >
         {options.map((o) => (
           <option key={o}>{o}</option>

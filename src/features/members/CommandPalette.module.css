@@ -101,6 +101,42 @@
   color: var(--ink-60);
 }
 
+.comingSoon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  padding: 34px 28px 38px;
+}
+
+.comingSoonBadge {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+.comingSoonText {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.comingSoonText em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
 .row {
   width: 100%;
   display: flex;

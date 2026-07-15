@@ -1,5 +1,6 @@
 import { useEffect, useState, type KeyboardEvent } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useProfile } from "../../app/providers/ProfileProvider";
 import {
   BioSection,
   IdentitySection,
@@ -14,8 +15,10 @@ export type ProfileSection =
 
 /**
  * Full profile editor — the rich Identity / Pronouns / Bio / Skills / Visibility
- * sections. Owns its own field state and reports any change via `onChange` (with
- * the section that changed) so the host can drive its save bar and confirmation.
+ * sections. Reads and writes the logged-in member's real profile draft via
+ * `useProfile()`; local state is only for the transient skill/interest text
+ * inputs and avatar object-URL cleanup. Reports any change via `onChange`
+ * (with the section that changed) so the host can drive its save bar.
  */
 export function EditProfilePane({
   onChange,
@@ -23,68 +26,73 @@ export function EditProfilePane({
   onChange: (section: ProfileSection) => void;
 }) {
   const { showToast } = useToast();
-  const [selectedPronouns, setSelectedPronouns] = useState<string[]>([
-    "she/her",
-  ]);
-  const [skills, setSkills] = useState([
-    "Community organising",
-    "Legal research",
-  ]);
-  const [interests, setInterests] = useState([
-    "Housing policy",
-    "Queer theory",
-    "Lisbon history",
-  ]);
+  const { draft, updateDraft } = useProfile();
   const [skillInput, setSkillInput] = useState("");
   const [interestInput, setInterestInput] = useState("");
-  const [bioText, setBioText] = useState(
-    "Former housing rights lawyer. Has been doing community organising in Mouraria since 2018. Convinced the platform needed to exist before she knew how to build it.",
-  );
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
-  // Revoke the current object URL when it's replaced or the pane unmounts.
+  // Revoke a freshly-picked avatar object URL when replaced / unmounted.
   useEffect(() => {
-    if (!avatarPreview) return;
-    return () => URL.revokeObjectURL(avatarPreview);
-  }, [avatarPreview]);
+    const url = draft.photo;
+    if (!url || !url.startsWith("blob:")) return;
+    return () => URL.revokeObjectURL(url);
+  }, [draft.photo]);
 
   function handlePickFile(file: File) {
-    setAvatarPreview(URL.createObjectURL(file));
+    updateDraft({ photo: URL.createObjectURL(file) });
     showToast("Photo updated", "success");
     onChange("identity");
   }
 
   function handleRemovePhoto() {
-    setAvatarPreview(null);
+    updateDraft({ photo: undefined });
     showToast("Photo removed.", "info");
     onChange("identity");
   }
 
+  const selectedPronouns = draft.pronouns
+    ? draft.pronouns.split(",").map((p) => p.trim()).filter(Boolean)
+    : [];
+
   function togglePronoun(p: string) {
-    setSelectedPronouns((prev) =>
-      prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p],
-    );
+    const next = selectedPronouns.includes(p)
+      ? selectedPronouns.filter((x) => x !== p)
+      : [...selectedPronouns, p];
+    updateDraft({ pronouns: next.join(", ") });
     onChange("pronouns");
+  }
+
+  function setName(displayName: string) {
+    const trimmed = displayName.trimStart();
+    const idx = trimmed.indexOf(" ");
+    const first = idx === -1 ? trimmed : trimmed.slice(0, idx);
+    const last = idx === -1 ? "" : trimmed.slice(idx + 1);
+    updateDraft({ first, last });
+    onChange("identity");
   }
 
   function addTag(key: "skills" | "interests", val: string) {
     const trimmed = val.trim();
     if (!trimmed) return;
     if (key === "skills") {
-      setSkills((prev) => (prev.includes(trimmed) ? prev : [...prev, trimmed]));
+      if (!draft.skills.some((s) => s.name === trimmed)) {
+        updateDraft({ skills: [...draft.skills, { name: trimmed, meta: "" }] });
+      }
       setSkillInput("");
     } else {
-      setInterests((prev) =>
-        prev.includes(trimmed) ? prev : [...prev, trimmed],
-      );
+      if (!draft.tags.includes(trimmed)) {
+        updateDraft({ tags: [...draft.tags, trimmed] });
+      }
       setInterestInput("");
     }
     onChange("skills");
   }
 
   function removeTag(key: "skills" | "interests", val: string) {
-    if (key === "skills") setSkills((prev) => prev.filter((s) => s !== val));
-    else setInterests((prev) => prev.filter((s) => s !== val));
+    if (key === "skills") {
+      updateDraft({ skills: draft.skills.filter((s) => s.name !== val) });
+    } else {
+      updateDraft({ tags: draft.tags.filter((t) => t !== val) });
+    }
     onChange("skills");
   }
 
@@ -101,24 +109,33 @@ export function EditProfilePane({
   return (
     <>
       <IdentitySection
-        avatarPreview={avatarPreview}
+        displayName={`${draft.first} ${draft.last}`.trim()}
+        location={draft.hood}
+        photo={draft.photo}
+        onNameChange={setName}
+        onLocationChange={(v) => {
+          updateDraft({ hood: v });
+          onChange("identity");
+        }}
         onPickFile={handlePickFile}
         onRemove={handleRemovePhoto}
-        onChange={() => onChange("identity")}
       />
-      <PronounsSection
-        selected={selectedPronouns}
-        onToggle={togglePronoun}
-        onChange={() => onChange("pronouns")}
-      />
+      <PronounsSection selected={selectedPronouns} onToggle={togglePronoun} />
       <BioSection
-        bioText={bioText}
-        onChange={setBioText}
-        onAnyChange={() => onChange("bio")}
+        bioText={draft.bio}
+        occupation={draft.role}
+        onBioChange={(v) => {
+          updateDraft({ bio: v });
+          onChange("bio");
+        }}
+        onOccupationChange={(v) => {
+          updateDraft({ role: v });
+          onChange("bio");
+        }}
       />
       <SkillsSection
-        skills={skills}
-        interests={interests}
+        skills={draft.skills.map((s) => s.name)}
+        interests={draft.tags}
         skillInput={skillInput}
         interestInput={interestInput}
         onSkillInputChange={setSkillInput}
@@ -127,7 +144,7 @@ export function EditProfilePane({
         onRemove={removeTag}
         onKeyDown={handleTagKey}
       />
-      <VisibilitySection onChange={() => onChange("visibility")} />
+      <VisibilitySection />
     </>
   );
 }
