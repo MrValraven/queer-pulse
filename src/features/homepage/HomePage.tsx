@@ -37,22 +37,22 @@ export function HomePage() {
       />
       <Hero />
       <Manifesto />
-      <PainPoints />
       <Discovery />
+      <Communities />
       <Gatherings />
+      <PainPoints />
       {/*  <Stories /> 
       <Media />
-      <ChangeMakers />*/}
-      <Wellbeing />
-      <Communities />
-      <MicroGrants />
+      <ChangeMakers />
+      <Wellbeing />*/}
+      {/*    <MicroGrants />
       <Board />
       <Barter />
       <SkillsTeaser />
       <Library />
-      {/* <Partners /> */}
+      {/* <Partners /> /}
       <SpacesMap />
-      {/*  <Platforms /> */}
+     <Platforms /> */}
       <Newsletter />
       {/* <Pillars /> */}
       <Outro />

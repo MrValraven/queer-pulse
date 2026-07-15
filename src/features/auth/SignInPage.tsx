@@ -2,15 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import type { IconType } from "react-icons";
 import { FiAlertTriangle, FiCloudOff, FiWifiOff } from "react-icons/fi";
-import { Button, FormField } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { probeBackend, type BackendProbe } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
 import { AuthLayout } from "./AuthLayout";
+import { CommunityArt } from "./CommunityArt";
 import styles from "./auth.module.css";
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type FailedProbe = Extract<BackendProbe, { ok: false }>;
 
@@ -57,10 +55,6 @@ export function SignInPage() {
   const { demoMode } = useDemoMode();
   const [searchParams] = useSearchParams();
   const dest = safeNext(searchParams.get("next"));
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [touched, setTouched] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<FailedProbe | null>(null);
 
@@ -89,13 +83,17 @@ export function SignInPage() {
     signIn(dest); // redirects the page away
   }
 
-  const emailValid = EMAIL_RE.test(email.trim());
-  const emailError = touched && email.trim().length > 0 && !emailValid;
-  const canSubmit = emailValid && password.length > 0;
   const notice = error ? noticeFor(error) : null;
 
   return (
     <AuthLayout>
+      <div className={styles.artTile}>
+        <CommunityArt />
+        <p className={styles.artCaption}>
+          The pulse is <em>still going.</em> Welcome back to it.
+        </p>
+      </div>
+
       <h1>
         Welcome <em>back.</em>
       </h1>
@@ -110,78 +108,6 @@ export function SignInPage() {
           </div>
         </div>
       )}
-
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (canSubmit) attemptSignIn();
-        }}
-      >
-        <FormField
-          label="Email"
-          error={emailError ? "Please enter a valid email address." : undefined}
-        >
-          <input
-            id="si-email"
-            type="email"
-            placeholder="you@example.com"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onBlur={() => setTouched(true)}
-            aria-invalid={emailError}
-          />
-        </FormField>
-
-        <FormField label="Password" className={styles.pwField}>
-          <input
-            id="si-pw"
-            type={showPassword ? "text" : "password"}
-            placeholder="Your password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ paddingRight: 48 }}
-          />
-          <button
-            type="button"
-            className={styles.pwToggle}
-            onClick={() => setShowPassword((s) => !s)}
-            aria-label={showPassword ? "Hide password" : "Show password"}
-          >
-            <svg
-              width={18}
-              height={18}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.7}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              <circle cx={12} cy={12} r={3} />
-            </svg>
-          </button>
-        </FormField>
-
-        <Button
-          type="submit"
-          className={styles.authBtn}
-          disabled={!canSubmit || busy}
-        >
-          {busy ? "Connecting…" : "Sign in →"}
-        </Button>
-      </form>
-
-      <div className={styles.footer}>
-        <Link to={routes.passwordReset}>Forgot password?</Link>
-        <Link to={routes.requestInvite} className="invite">
-          Not a member yet? Request an invite
-        </Link>
-      </div>
-
-      <div className={styles.divider}>or</div>
 
       <button
         type="button"
@@ -209,6 +135,12 @@ export function SignInPage() {
         </svg>
         {busy ? "Connecting…" : "Continue with Google"}
       </button>
+
+      <div className={styles.footer}>
+        <Link to={routes.requestInvite} className="invite">
+          Not a member yet? Request an invite
+        </Link>
+      </div>
     </AuthLayout>
   );
 }
