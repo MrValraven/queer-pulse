@@ -1,24 +1,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { ToastAction } from "../../shared/components/feedback/toastContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { MyEvent, Notif, Pill, Prefs } from "./myEvents.types";
 import type { MyEventsValue, MoreMenuState } from "./MyEventsContext";
-import {
-  INITIAL_EVENTS,
-  INITIAL_NOTIFS,
-  DEFAULT_PREFS,
-  PILLS,
-  MONFULL,
-  DOWFULL,
-} from "./myEvents.data";
+import { DEFAULT_PREFS, PILLS, MONFULL, DOWFULL } from "./myEvents.data";
 import { inPill, parseDate, timeStr } from "./myEvents.helpers";
 import { useMyEventsCalendar } from "./useMyEventsCalendar";
 import { useMyEventsToolbar } from "./useMyEventsToolbar";
 import { useMyEventsSelection } from "./useMyEventsSelection";
 import { useMyEventsSafety } from "./useMyEventsSafety";
+import { useMyEventsData } from "./api/useMyEventsData";
 
 /** Central state + actions for the My Events dashboard. */
 export function useMyEventsState(): MyEventsValue {
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const toast = useCallback(
     (msg: string, type: "success" | "info" = "info") => showToast(msg, type),
@@ -29,8 +25,16 @@ export function useMyEventsState(): MyEventsValue {
     [showToast],
   );
 
-  const [events, setEvents] = useState<MyEvent[]>(INITIAL_EVENTS);
-  const [notifs, setNotifs] = useState<Notif[]>(INITIAL_NOTIFS);
+  // Demo mode returns the page's own mock registry; live mode fetches from
+  // GET /events (per cat-bearing filter) + GET /event-invites. Either way the
+  // result lands here as a flat list, then every RSVP/bulk/notification
+  // action below keeps mutating it locally exactly as before.
+  const { events: sourceEvents, notifs: sourceNotifs, loading: dataLoading } =
+    useMyEventsData();
+  const [events, setEvents] = useState<MyEvent[]>(sourceEvents);
+  const [notifs, setNotifs] = useState<Notif[]>(sourceNotifs);
+  useEffect(() => setEvents(sourceEvents), [sourceEvents]);
+  useEffect(() => setNotifs(sourceNotifs), [sourceNotifs]);
   const byId = useCallback(
     (id: string) => events.find((e) => e.id === id),
     [events],
@@ -49,11 +53,16 @@ export function useMyEventsState(): MyEventsValue {
     clearTimeout(loadTimer.current);
     loadTimer.current = setTimeout(() => setLoading(false), delay);
   }, []);
-  // Initial load-in: skeleton (loading starts true) then reveal after a beat.
+  // Initial load-in: skeleton (loading starts true), then reveal after a
+  // simulated beat in demo mode, or once the live GET /events fetch resolves.
   useEffect(() => {
+    if (!demoMode) {
+      setLoading(dataLoading);
+      return;
+    }
     const t = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(t);
-  }, []);
+  }, [demoMode, dataLoading]);
   // Clear the pending soft-remove timer on unmount so it can't fire late.
   useEffect(
     () => () => {

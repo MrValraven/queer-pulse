@@ -1,8 +1,6 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { FiArrowRight, FiCheck, FiMail, FiRefreshCw } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { routes } from "../../app/routeMap";
 import {
   CODE_LENGTH,
   DEMO_2FA_CODE,
@@ -60,9 +58,6 @@ export function PasswordMethod({
           <>Confirm and continue →</>
         )}
       </Button>
-      <p className={styles.resetLine}>
-        Forgot your password? <Link to={routes.passwordReset}>Reset →</Link>
-      </p>
     </form>
   );
 }

@@ -16,12 +16,7 @@ import {
   ToggleList,
   ToggleRow,
 } from "./SettingsControls";
-import {
-  DataExportModal,
-  EmailChangeModal,
-  PasswordChangeModal,
-  SuggestEditModal,
-} from "./SettingsModals";
+import { DataExportModal, SuggestEditModal } from "./SettingsModals";
 import styles from "./SettingsPage.module.css";
 
 const ACCOUNT_EMAIL = "sofia.andrade@email.com";
@@ -536,8 +531,6 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
 }
 
 export function AccountPane({ onChange }: { onChange: () => void }) {
-  const [emailOpen, setEmailOpen] = useState(false);
-  const [pwOpen, setPwOpen] = useState(false);
   return (
     <Pane
       title={
@@ -545,29 +538,8 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
           Account <em>settings.</em>
         </>
       }
-      sub="Email, password, and login preferences."
+      sub="Login and security preferences."
     >
-      <Section label="Login">
-        <DataCard
-          title="Email address"
-          desc={ACCOUNT_EMAIL}
-          btn="Change"
-          onClick={() => setEmailOpen(true)}
-        />
-        <DataCard
-          title="Password"
-          desc="Last changed 3 months ago"
-          btn="Change"
-          onClick={() => setPwOpen(true)}
-        />
-      </Section>
-      {emailOpen && (
-        <EmailChangeModal
-          currentEmail={ACCOUNT_EMAIL}
-          onClose={() => setEmailOpen(false)}
-        />
-      )}
-      {pwOpen && <PasswordChangeModal onClose={() => setPwOpen(false)} />}
       <Section label="Security">
         <ToggleList>
           <ToggleRow

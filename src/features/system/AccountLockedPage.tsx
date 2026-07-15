@@ -63,24 +63,12 @@ export function AccountLockedPage() {
         </div>
 
         <div className={styles.whatNow}>
-          <Link to={routes.passwordReset} className={styles.wnRow}>
-            <div className={styles.wnNum}>1</div>
-            <div className={styles.wnText}>
-              <div className={styles.wnTitle}>Reset your password</div>
-              <div className={styles.wnDesc}>
-                Quickest if you're the rightful owner — we'll send a link.
-              </div>
-            </div>
-            <span className={styles.wnArrow} aria-hidden>
-              →
-            </span>
-          </Link>
           <Link to={routes.magicLink} className={styles.wnRow}>
-            <div className={styles.wnNum}>2</div>
+            <div className={styles.wnNum}>1</div>
             <div className={styles.wnText}>
               <div className={styles.wnTitle}>Sign in with a magic link</div>
               <div className={styles.wnDesc}>
-                Skip the password — confirm via email.
+                Quickest if you're the rightful owner — confirm via email.
               </div>
             </div>
             <span className={styles.wnArrow} aria-hidden>
@@ -88,7 +76,7 @@ export function AccountLockedPage() {
             </span>
           </Link>
           <Link to={routes.contact} className={styles.wnRow}>
-            <div className={styles.wnNum}>3</div>
+            <div className={styles.wnNum}>2</div>
             <div className={styles.wnText}>
               <div className={styles.wnTitle}>Contact the team</div>
               <div className={styles.wnDesc}>

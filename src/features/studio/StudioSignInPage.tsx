@@ -65,14 +65,6 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <div style={{ textAlign: "right", marginBottom: 14 }}>
-          <Link
-            to={routes.passwordReset}
-            style={{ fontSize: 12.5, color: "var(--text-60)" }}
-          >
-            Forgot password?
-          </Link>
-        </div>
         <Button type="submit" className={styles.btnFull}>
           Sign in →
         </Button>

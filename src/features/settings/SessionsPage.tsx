@@ -306,7 +306,6 @@ export function SessionsPage() {
         <div className={styles.footNote}>
           <b>Something looks wrong?</b> If you didn't sign in from Madrid, sign
           that session out, then{" "}
-          <Link to={routes.passwordReset}>reset your password</Link> and{" "}
           <Link to={routes.twoFactorSetup}>re-issue your backup codes</Link>.
           When you sign an unrecognised session out, we email the address on
           file so there's an out-of-band record of what happened.

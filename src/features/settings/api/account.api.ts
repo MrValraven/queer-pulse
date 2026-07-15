@@ -1,9 +1,4 @@
-import {
-  apiDelete,
-  apiGet,
-  apiPatch,
-  apiPost,
-} from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 
 /**
  * Account lifecycle contract — GDPR erasure (Art. 17), data portability
@@ -30,10 +25,7 @@ import {
  *
  *   Template                     Server trigger (enqueues send)        Key data
  *   ─────────────────────────    ──────────────────────────────────    ─────────────────────────────
- *   email-change-confirm         PATCH /account/email                  confirm link → new address, expiry
- *   password-changed             PATCH /account/password               when, device, "not you?" link
- *   password-reset               POST  /auth/forgot-password           reset link (single-use, short TTL)
- *   security-alert-new-device    new unrecognised session (side-effect) device, location, time, reset link
+ *   security-alert-new-device    new unrecognised session (side-effect) device, location, time
  *   gdpr-deletion-requested      POST  /account/deletion-request       cancel link, grace-end date, scope
  *   gdpr-deletion-cancelled      DELETE /account/deletion-request      confirmation the erase was stopped
  *   gdpr-export-verification     POST  /account/export                 verify link, categories, format
@@ -161,30 +153,6 @@ export const submitDsar = (dto: SubmitDsarDto) =>
 
 /** GET /account/dsar — the member's real request history. */
 export const listDsar = () => apiGet<DsarRequest[]>("/account/dsar");
-
-/* ── Credentials (spec 11 — trigger the confirmation/notification emails) ── */
-
-/**
- * PATCH /account/email — opens an email-change request. The backend enqueues a
- * confirmation email to the NEW address; the change only takes effect once the
- * emailed link is clicked. Returns the pending address so the UI can echo it.
- */
-export const changeEmail = (email: string) =>
-  apiPatch<{ pendingEmail: string }>("/account/email", { email });
-
-/**
- * PATCH /account/password — set a new password (current verified server-side).
- * On success the backend enqueues a "password changed" security email.
- */
-export const changePassword = (dto: { current: string; next: string }) =>
-  apiPatch<void>("/account/password", dto);
-
-/**
- * POST /auth/forgot-password — always 200 (no user enumeration). Enqueues the
- * reset email when the address matches an account. "Resend" hits the same route.
- */
-export const requestPasswordReset = (email: string) =>
-  apiPost<void>("/auth/forgot-password", { email });
 
 /* ── Sessions (spec 08 territory — referenced here for the security email) ── */
 

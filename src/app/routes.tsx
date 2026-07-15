@@ -1171,11 +1171,6 @@ const MagicLinkPage = lazy(() =>
     default: m.MagicLinkPage,
   })),
 );
-const PasswordResetPage = lazy(() =>
-  import("../features/auth/PasswordResetPage").then((m) => ({
-    default: m.PasswordResetPage,
-  })),
-);
 const SetNewPasswordPage = lazy(() =>
   import("../features/auth/SetNewPasswordPage").then((m) => ({
     default: m.SetNewPasswordPage,
@@ -1589,7 +1584,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/welcome-tour", routes.welcomeTour],
   ["/2fa-setup", routes.twoFactorSetup],
   ["/magic-link", routes.magicLink],
-  ["/password-reset", routes.passwordReset],
   ["/set-new-password", routes.setNewPassword],
   ["/confirm-email", routes.confirmEmail],
   ["/recovery-codes", routes.recoveryCodes],
@@ -1958,7 +1952,6 @@ export function AppRoutes() {
             element={<TwoFactorSetupPage />}
           />
           <Route path={routes.magicLink} element={<MagicLinkPage />} />
-          <Route path={routes.passwordReset} element={<PasswordResetPage />} />
           <Route
             path={routes.setNewPassword}
             element={<SetNewPasswordPage />}

@@ -205,7 +205,6 @@ export const routes = {
   partner: "/about/partners",
   partners: "/about/partners",
   partnerApply: "/about/partners/apply",
-  passwordReset: "/auth/password-reset",
   perks: "/account/perks",
   pitchTracker: "/magazine/pitches",
   platforms: "/about/platforms",

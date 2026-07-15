@@ -161,3 +161,32 @@ export const inviteToEvent = (slug: string, slugs: string[]) =>
 
 export const respondInvite = (id: string, action: "accept" | "decline") =>
   apiPatch<{ status: RsvpStatus }>(`/event-invites/${id}`, { action });
+
+export type EventInviteStatus = "pending" | "accepted" | "declined";
+
+/** The lean event summary GET /event-invites nests per row — the invitee
+ *  decides accept/decline from this, then opens GET /events/:slug to see more. */
+export interface InvitedEventDTO {
+  slug: string;
+  title: string;
+  startAt: string;
+  endAt?: string | null;
+  timezone?: string;
+  venue?: string | null;
+  isOnline?: boolean;
+  coverImageUrl?: string | null;
+}
+
+/** One row of GET /event-invites — matches the backend's `PendingEventInviteView`. */
+export interface EventInviteDTO {
+  id: string;
+  status: EventInviteStatus;
+  /** ISO 8601 — when the invite was sent. */
+  createdAt: string;
+  event: InvitedEventDTO | null;
+  inviter: EventHostDTO | null;
+}
+
+/** GET /event-invites — the caller's own pending event invitations. */
+export const getEventInvites = () =>
+  apiGet<EventInviteDTO[]>("/event-invites");

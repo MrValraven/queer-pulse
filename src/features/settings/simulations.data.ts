@@ -63,12 +63,6 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         preview: true,
       },
       {
-        title: "Reset your password",
-        desc: "The full password-recovery flow — request a reset link, then choose and confirm a new password.",
-        to: routes.passwordReset,
-        preview: true,
-      },
-      {
         title: "Confirm your email",
         desc: "Preview the email-confirmation step that verifies a newly entered address.",
         to: routes.confirmEmail,
