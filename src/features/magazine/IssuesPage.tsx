@@ -6,6 +6,7 @@ import { MagazineMasthead } from "./MagazineMasthead";
 import styles from "./IssuesPage.module.css";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useIssues } from "./api/useIssues";
 
 const ISSUE = routes.issue;
 
@@ -187,6 +188,8 @@ function IssueRowSkeleton() {
 export function IssuesPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
   const loading = useSimulatedLoad();
+  const { data: liveIssues } = useIssues();
+  const issuesList = liveIssues ?? ISSUES;
 
   return (
     <PageShell>
@@ -287,10 +290,10 @@ export function IssuesPage() {
           {view === "grid" ? (
             <div className={styles.grid}>
               {loading
-                ? Array.from({ length: ISSUES.length }).map((_, i) => (
+                ? Array.from({ length: issuesList.length }).map((_, i) => (
                     <IssueTileSkeleton key={i} />
                   ))
-                : ISSUES.map((iss, i) => (
+                : issuesList.map((iss, i) => (
                     <FadeIn
                       as={Link}
                       to={ISSUE}
@@ -321,10 +324,10 @@ export function IssuesPage() {
           ) : (
             <div className={styles.list}>
               {loading
-                ? Array.from({ length: ISSUES.length }).map((_, i) => (
+                ? Array.from({ length: issuesList.length }).map((_, i) => (
                     <IssueRowSkeleton key={i} />
                   ))
-                : ISSUES.map((iss, i) => (
+                : issuesList.map((iss, i) => (
                     <FadeIn
                       as={Link}
                       to={ISSUE}

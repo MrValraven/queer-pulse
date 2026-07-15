@@ -146,9 +146,16 @@ export function FeedPage() {
   const livePosts = demoMode
     ? []
     : feed.posts.filter((p) => !p.slug || !hidden.has(p.slug));
+  // Live "new member" items (People tab, also folded into All) — same
+  // defense-in-depth block/mute filtering as livePosts above.
+  const liveMembers = demoMode
+    ? []
+    : feed.newMembers.filter(
+        (m) => !m.actor?.handle || !hidden.has(m.actor.handle),
+      );
   const empty = demoMode
     ? pulse.length === 0 && staticItems.length === 0
-    : livePosts.length === 0;
+    : livePosts.length === 0 && liveMembers.length === 0;
 
   return (
     <AppShell unreadCount={demoMode ? 3 : 0}>
@@ -223,15 +230,28 @@ export function FeedPage() {
                       description="Follow people and communities and their latest activity will show up here."
                     />
                   ) : (
-                    livePosts.map((post, i) => (
-                      <div
-                        key={post.id}
-                        className={styles.cardReveal}
-                        style={{ animationDelay: `${i * 60}ms` }}
-                      >
-                        <PostCard post={post} />
-                      </div>
-                    ))
+                    <>
+                      {livePosts.map((post, i) => (
+                        <div
+                          key={post.id}
+                          className={styles.cardReveal}
+                          style={{ animationDelay: `${i * 60}ms` }}
+                        >
+                          <PostCard post={post} />
+                        </div>
+                      ))}
+                      {liveMembers.map((item, i) => (
+                        <div
+                          key={item.id}
+                          className={styles.cardReveal}
+                          style={{
+                            animationDelay: `${(i + livePosts.length) * 60}ms`,
+                          }}
+                        >
+                          <NewMemberCard item={item} />
+                        </div>
+                      ))}
+                    </>
                   )
                 ) : empty ? (
                   <EmptyState

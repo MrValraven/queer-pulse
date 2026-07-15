@@ -274,6 +274,47 @@ export interface PartnerResponse {
   tier: string | null;
 }
 
+// --- Topics (hashtag directory + per-topic post feed) ---
+
+export interface TopicResponse {
+  tag: string;
+  label: string;
+  description: string;
+  totalPosts: number;
+  crisisCard: boolean;
+}
+
+export interface RelatedTopicResponse {
+  tag: string;
+  count: number;
+}
+
+export interface TopicDetailResponse extends TopicResponse {
+  followerCount: number;
+  postsThisWeek: number;
+  relatedTopics: RelatedTopicResponse[];
+}
+
+export interface TopicPostResponse {
+  id: string;
+  topicId: string;
+  author: string;
+  authorInitials: string;
+  authorTone: string;
+  contextLabel: string | null;
+  kind: string;
+  category: string;
+  title: string;
+  body: string;
+  reactionCount: number;
+  reactionLabel: string;
+  replyCount: number;
+  replyLabel: string | null;
+  tags: string[];
+  href: string;
+  createdAt: string;
+}
+
 // --- Resources ---
 
 export interface ResourceResponse {
@@ -294,8 +335,20 @@ export interface GlossaryTermResponse {
 
 // --- Feed (read-time aggregation) ---
 
-export type FeedItemType = "community_post" | "forum_thread" | "gathering";
+/** `new_member` backs the "People" tab: a recently-joined active member,
+ *  surfaced by `NewMemberCard`. It carries no fields beyond the shared
+ *  `FeedItem` shape — see the field mapping below. */
+export type FeedItemType =
+  "community_post" | "forum_thread" | "gathering" | "new_member";
 
+/**
+ * For `type: "new_member"`: `actor` is the member who joined (handle/
+ * displayName/avatarUrl), `title` is their display name, `summary` is their
+ * tagline/short bio (may be empty), `link` is their profile path, and
+ * `createdAt` is when they joined. No dedicated fields were added — pronouns/
+ * neighbourhood/interest chips shown by the demo `NewMemberCard` mock aren't
+ * part of the aggregate and are simply omitted for live `new_member` items.
+ */
 export interface FeedItem {
   id: string;
   type: FeedItemType;

@@ -1,10 +1,35 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, ImageSlot } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { ISSUE_COVER_IMG } from "./issue.data";
 import styles from "./IssuePage.module.css";
 
-export function IssueCover() {
+export interface IssueCoverProps {
+  /** Overrides — sourced live from GET /magazine/issues/:number; the
+   *  prototype's hardcoded copy (features/pages/contributors counts, the
+   *  editor's letter) has no backend analogue and always stays as written. */
+  number?: string;
+  title?: ReactNode;
+  dek?: ReactNode;
+  publishedLabel?: string;
+}
+
+export function IssueCover({
+  number = "09",
+  title = (
+    <>
+      On <em>health.</em>
+    </>
+  ),
+  dek = (
+    <>
+      Twelve pieces about how we keep our bodies, our minds, and each other.
+      Reported, debated, illustrated. <em>Sometimes funny.</em>
+    </>
+  ),
+  publishedLabel = "6 Jun 2026",
+}: IssueCoverProps) {
   return (
     <>
       <div className={styles.cover}>
@@ -16,18 +41,13 @@ export function IssueCover() {
             <div>
               <div className={styles.metaRow}>
                 <span className={styles.num}>
-                  Issue <em>09</em>
+                  Issue <em>{number}</em>
                 </span>
                 <span className={styles.numL}>Spring · 2026</span>
                 <span className={styles.pill}>Current</span>
               </div>
-              <h1 className={styles.h1}>
-                On <em>health.</em>
-              </h1>
-              <p className={styles.dek}>
-                Twelve pieces about how we keep our bodies, our minds, and each
-                other. Reported, debated, illustrated. <em>Sometimes funny.</em>
-              </p>
+              <h1 className={styles.h1}>{title}</h1>
+              <p className={styles.dek}>{dek}</p>
               <div className={styles.stats}>
                 <span>
                   <b>12</b> features
@@ -39,7 +59,7 @@ export function IssueCover() {
                   <b>8</b> contributors
                 </span>
                 <span>
-                  Published <b>6 Jun 2026</b>
+                  Published <b>{publishedLabel}</b>
                 </span>
               </div>
             </div>

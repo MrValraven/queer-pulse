@@ -46,7 +46,7 @@ export const updateListing = (ref: string, dto: Partial<CreateListingDto>) =>
 
 /** DELETE /listings/:ref — withdraw an owned listing (204 No Content). */
 export const deleteListing = (ref: string) =>
-  apiDelete<{ ok: true }>(`/listings/${ref}`);
+  apiDelete<void>(`/listings/${ref}`);
 
 /**
  * PATCH /listings/:ref/status — move a listing along its review status.

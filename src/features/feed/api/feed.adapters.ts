@@ -9,8 +9,10 @@ import type { FeedItem } from "./feed.api";
 
 const AUTHOR_TINTS = ["jade", "coral", "plum"] as const;
 
-/** "2 hours ago" style relative label from an ISO timestamp. */
-function relativeTime(iso: string): string {
+/** "2 hours ago" style relative label from an ISO timestamp. Exported so
+ *  other feed cards (e.g. `NewMemberCard`'s live "Joined …" line) can reuse
+ *  the same phrasing instead of re-deriving it. */
+export function relativeTime(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
   const secs = Math.max(0, (Date.now() - d.getTime()) / 1000);
@@ -23,7 +25,10 @@ function relativeTime(iso: string): string {
   return `${days} day${days === 1 ? "" : "s"} ago`;
 }
 
-function initials(name: string): string {
+/** Two-letter initials from a "First Last" display name. Exported for reuse
+ *  by other cards deriving avatar fallback initials from a plain name string
+ *  (e.g. `NewMemberCard` for a live `new_member` item). */
+export function initials(name: string): string {
   const parts = name.trim().split(/\s+/);
   return `${parts[0]?.[0] ?? ""}${parts.length > 1 ? (parts.at(-1)?.[0] ?? "") : ""}`.toUpperCase();
 }

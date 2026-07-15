@@ -33,13 +33,26 @@ export function useFeed(tab: FeedTab) {
     getNextPageParam: (last) => last.nextCursor ?? undefined,
   });
 
+  const items = useMemo<FeedItem[]>(
+    () => (query.data?.pages ?? []).flatMap((p) => p.items),
+    [query.data],
+  );
+
   const posts = useMemo<FeedPost[]>(() => {
     if (demoMode) return [FEED_POST];
-    return (query.data?.pages ?? [])
-      .flatMap((p) => p.items)
+    return items
       .filter((it) => it.type === "community_post")
       .map(feedItemToPost);
-  }, [demoMode, query.data]);
+  }, [demoMode, items]);
 
-  return { ...query, posts };
+  // Recently-joined members ("People" tab, also folded into "All") — rendered
+  // by `NewMemberCard` directly off the raw `FeedItem`, not adapted to
+  // `FeedPost` (unlike `posts` above) since the card's shape differs enough
+  // that adapting would just be indirection.
+  const newMembers = useMemo<FeedItem[]>(() => {
+    if (demoMode) return [];
+    return items.filter((it) => it.type === "new_member");
+  }, [demoMode, items]);
+
+  return { ...query, posts, newMembers };
 }

@@ -853,8 +853,11 @@ export const TOPICS: Record<string, Topic> = {
 /** The most-followed topics, surfaced in search and as fallback related links. */
 export const FEATURED_TOPIC_TAGS = Object.keys(TOPICS);
 
-/** Split a hashtag into (head, coral tail) for the serif heading. */
-function splitForTitle(tag: string): ReactNode {
+/** Split a hashtag into (head, coral tail) for the serif heading. Exported
+ * for `api/topics.adapters.ts`, which reuses it to render a live-mode
+ * topic's plain-text `label` with the same serif styling as this generic
+ * fallback (the backend has no JSX-authored title of its own). */
+export function splitForTitle(tag: string): ReactNode {
   if (tag.length <= 3) return tagTitle(tag, "");
   const cut = Math.ceil(tag.length / 2);
   return tagTitle(tag.slice(0, cut), tag.slice(cut));

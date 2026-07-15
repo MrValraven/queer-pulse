@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { SubmitStoryMeta } from "./SubmitStoryMeta";
 import { SubmitStoryWriter } from "./SubmitStoryWriter";
 import { SubmitStoryCover } from "./SubmitStoryCover";
 import { INITIAL_DRAFT, type DraftForm } from "./submitStory.data";
+import { createStorySubmission } from "./api/magazine.api";
+import { MY_SUBMISSIONS_QUERY_KEY } from "./api/useMySubmissions";
 import styles from "./SubmitStoryPage.module.css";
 
 const MIN_WORDS = 50;
@@ -15,9 +19,12 @@ export function SubmitStoryEditor({
   onSubmit: (headline: string) => void;
 }) {
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
   const [form, setForm] = useState<DraftForm>(INITIAL_DRAFT);
   const [coverName, setCoverName] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<"saved" | "unsaved">("saved");
+  const [submitting, setSubmitting] = useState(false);
   const firstRun = useRef(true);
 
   const set = (patch: Partial<DraftForm>) =>
@@ -47,7 +54,7 @@ export function SubmitStoryEditor({
     showToast("Draft saved.", "success");
   }
 
-  function submit() {
+  async function submit() {
     if (!form.section) {
       showToast("Choose a section for your piece first.", "error");
       return;
@@ -66,6 +73,33 @@ export function SubmitStoryEditor({
       );
       return;
     }
+
+    if (!demoMode) {
+      const pitch = [form.deck, form.body]
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .join("\n\n");
+      setSubmitting(true);
+      try {
+        await createStorySubmission({
+          format: form.section,
+          workingTitle: form.headline.trim(),
+          pitch,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [MY_SUBMISSIONS_QUERY_KEY],
+        });
+      } catch {
+        showToast(
+          "Couldn't submit your story right now — please try again.",
+          "error",
+        );
+        setSubmitting(false);
+        return;
+      }
+      setSubmitting(false);
+    }
+
     onSubmit(form.headline.trim());
   }
 
@@ -95,10 +129,12 @@ export function SubmitStoryEditor({
         </Button>
         <Button
           variant="primary"
-          onClick={submit}
+          onClick={() => void submit()}
+          disabled={submitting}
+          aria-busy={submitting}
           style={{ flex: 1, justifyContent: "center" }}
         >
-          Submit for review
+          {submitting ? "Submitting…" : "Submit for review"}
         </Button>
       </div>
     </Reveal>

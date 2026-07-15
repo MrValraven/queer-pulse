@@ -13,6 +13,7 @@ import {
   selectPitches,
   type Pitch,
 } from "./pitchTracker.data";
+import { useMySubmissions } from "./api/useMySubmissions";
 import styles from "./PitchTrackerPage.module.css";
 
 function PitchCardSkeleton() {
@@ -34,10 +35,11 @@ export function PitchTrackerPage() {
   const { showToast } = useToast();
   const [tab, setTab] = useState("all");
   const [withdrawn, setWithdrawn] = useState<Set<string>>(new Set());
+  const { data: pitches } = useMySubmissions();
 
   const base = useMemo(
-    () => PITCHES.filter((p) => !withdrawn.has(p.id)),
-    [withdrawn],
+    () => (pitches ?? PITCHES).filter((p) => !withdrawn.has(p.id)),
+    [pitches, withdrawn],
   );
   const counts = useMemo(() => countByTab(base), [base]);
   const visible = useMemo(() => selectPitches(base, tab), [base, tab]);

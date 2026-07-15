@@ -12,7 +12,8 @@ import {
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { CATEGORIES, GUIDES, POPULAR } from "./library.data";
+import { CATEGORIES, POPULAR } from "./library.data";
+import { useLibraryData } from "./api/useLibraryData";
 import res from "./resources.module.css";
 import s from "./library.module.css";
 
@@ -35,11 +36,12 @@ function GuideSkeleton() {
 export function LibraryPage() {
   const [cat, setCat] = useState<string>("all");
   const [query, setQuery] = useState("");
-  const loading = useSimulatedLoad();
+  const { guides, loading: dataLoading } = useLibraryData();
+  const loading = useSimulatedLoad() || dataLoading;
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return GUIDES.filter((guide) => {
+    return guides.filter((guide) => {
       const matchCat = cat === "all" || guide.cat === cat;
       const matchQuery =
         !q ||
@@ -48,7 +50,7 @@ export function LibraryPage() {
           .includes(q);
       return matchCat && matchQuery;
     });
-  }, [cat, query]);
+  }, [cat, query, guides]);
 
   return (
     <PageShell>

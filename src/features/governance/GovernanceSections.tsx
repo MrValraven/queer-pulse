@@ -1,16 +1,7 @@
-import { Button, Reveal } from "../../shared/components/ui";
+import { Button, Reveal, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import {
-  COUNCIL,
-  DECISIONS,
-  EVENTS,
-  FIN_STATS,
-  HEALTH,
-  PRINCIPLES,
-  STEPS,
-  EXPENSE,
-  INCOME,
-} from "./governance.data";
+import { useGovernanceFinances } from "./api/useGovernanceFinances";
+import { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } from "./governance.data";
 import { FinanceLines } from "./GovernanceFinance";
 import styles from "./GovernancePage.module.css";
 
@@ -150,6 +141,11 @@ export function PrinciplesSection() {
 }
 
 export function FinancesSection() {
+  const { stats, income, expense, eventNotes, loading } =
+    useGovernanceFinances();
+  const totalIncome = stats.find((s) => s.l === "Total income this quarter")?.n;
+  const totalExpense = stats.find((s) => s.l === "Total expenditure")?.n;
+
   return (
     <Reveal as="section" className={styles.section} id="finances">
       <div className={styles.eye}>Q2 2026 · Financial transparency</div>
@@ -168,20 +164,27 @@ export function FinancesSection() {
         className={styles.statGrid}
         style={{ gridTemplateColumns: "repeat(2,1fr)", marginTop: 24 }}
       >
-        {FIN_STATS.map((s) => (
-          <div key={s.l} className={styles.statCard}>
-            <div className={styles.statN}>{s.n}</div>
-            <div className={styles.statL}>{s.l}</div>
-            <div
-              className={[
-                styles.statTrend,
-                s.up ? styles.trendUp : styles.trendOk,
-              ].join(" ")}
-            >
-              {s.trend}
-            </div>
-          </div>
-        ))}
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className={styles.statCard} aria-hidden>
+                <SkeletonLine width="60%" height={26} />
+                <SkeletonLine width="80%" height={13} style={{ marginTop: 8 }} />
+              </div>
+            ))
+          : stats.map((s) => (
+              <div key={s.l} className={styles.statCard}>
+                <div className={styles.statN}>{s.n}</div>
+                <div className={styles.statL}>{s.l}</div>
+                <div
+                  className={[
+                    styles.statTrend,
+                    s.up ? styles.trendUp : styles.trendOk,
+                  ].join(" ")}
+                >
+                  {s.trend}
+                </div>
+              </div>
+            ))}
       </div>
       <div className={styles.finCols}>
         <div>
@@ -189,32 +192,36 @@ export function FinancesSection() {
           <p className={styles.finHint}>
             Click any row to see the full breakdown.
           </p>
-          <FinanceLines
-            lines={INCOME}
-            color="var(--jade)"
-            total="Total income · €4,620"
-          />
+          {!loading && (
+            <FinanceLines
+              lines={income}
+              color="var(--jade)"
+              total={`Total income · ${totalIncome ?? ""}`}
+            />
+          )}
         </div>
         <div>
           <div className={styles.finColHead}>Where money goes</div>
           <p className={styles.finHint}>
             Click any row to see the full breakdown.
           </p>
-          <FinanceLines
-            lines={EXPENSE}
-            color="var(--accent)"
-            total="Total expenditure · €4,150"
-          />
+          {!loading && (
+            <FinanceLines
+              lines={expense}
+              color="var(--accent)"
+              total={`Total expenditure · ${totalExpense ?? ""}`}
+            />
+          )}
         </div>
       </div>
 
       <div className={styles.eventsCard}>
         <div className={styles.fecTitle}>How event finances work</div>
-        {EVENTS.map(([strong, rest]) => (
-          <div key={strong} className={styles.fecRow}>
+        {eventNotes.map((note) => (
+          <div key={note.title} className={styles.fecRow}>
             <span className={styles.fecDot} />
             <span>
-              <strong>{strong}</strong> {rest}
+              <strong>{note.title}</strong> {note.body}
             </span>
           </div>
         ))}

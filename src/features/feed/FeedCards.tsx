@@ -14,9 +14,12 @@ import { useSaved } from "../../app/providers/SavedProvider";
 import { memberAvatar } from "../members/data/members";
 import { gatheringPath } from "../gatherings/data";
 import { routes } from "../../app/routeMap";
+import { tintForSlug } from "../../shared/api/refs";
+import type { FeedItem } from "../../shared/contracts/contracts";
 import { FEED_POST, type FeedPost, type FeedReply } from "./feed.data";
 import { MoreMenu, ReportModal } from "./FeedModeration";
 import { useLikePost, useReplyToPost } from "./api/useFeedMutations";
+import { initials, relativeTime } from "./api/feed.adapters";
 import styles from "./FeedPage.module.css";
 
 export function GatheringCard() {
@@ -54,8 +57,31 @@ export function GatheringCard() {
   );
 }
 
-export function NewMemberCard() {
+/**
+ * "New member" card for the feed's People tab. With no `item`, renders the
+ * demo prototype's scripted Kai Larsson mock (unchanged). With a live
+ * `FeedItem` of type `new_member`, renders straight off its fields — see
+ * `contracts.ts#FeedItem`'s `new_member` doc for the mapping. Pronouns/
+ * neighbourhood/interest chips the demo mock shows aren't part of the
+ * aggregate, so they're simply omitted for live items rather than guessed at.
+ */
+export function NewMemberCard({ item }: { item?: FeedItem } = {}) {
   const { openConnect } = useConnect();
+  const slug = item ? (item.actor?.handle ?? "") : "kai";
+  const name = item?.title ?? "Kai Larsson";
+  const bio =
+    item?.summary ??
+    "Filmmaker making a documentary about queer nightlife in southern Europe. Looking for interviewees and collaborators.";
+  const meta = item
+    ? `Joined ${relativeTime(item.createdAt)}`
+    : "they/them · Lisbon · Joined today";
+  const profileLink = item?.link ?? "/profile/kai";
+  const avatarSrc = item
+    ? (item.actor?.avatarUrl ?? undefined)
+    : memberAvatar("kai")?.photo;
+  const avatarInitials = item ? initials(name) : "KL";
+  const tint = item ? (slug ? tintForSlug(slug) : "plum") : "plum";
+
   return (
     <article className={`${styles.card} ${styles.pad}`}>
       <div className={styles.tag}>
@@ -63,32 +89,31 @@ export function NewMemberCard() {
       </div>
       <div className={styles.nmRow}>
         <Avatar
-          initials="KL"
-          tint="plum"
+          initials={avatarInitials}
+          tint={tint}
           size={46}
-          src={memberAvatar("kai")?.photo}
-          alt="Kai Larsson"
+          src={avatarSrc}
+          alt={name}
         />
         <div className={styles.nmInfo}>
-          <div className={styles.nmName}>Kai Larsson</div>
-          <div className={styles.nmMeta}>they/them · Lisbon · Joined today</div>
-          <div className={styles.nmBio}>
-            Filmmaker making a documentary about queer nightlife in southern
-            Europe. Looking for interviewees and collaborators.
-          </div>
-          <div className={styles.nmChips}>
-            <span className={styles.nmChip}>Film</span>
-            <span className={styles.nmChip}>Queer Lisbon</span>
-          </div>
+          <div className={styles.nmName}>{name}</div>
+          <div className={styles.nmMeta}>{meta}</div>
+          <div className={styles.nmBio}>{bio}</div>
+          {!item && (
+            <div className={styles.nmChips}>
+              <span className={styles.nmChip}>Film</span>
+              <span className={styles.nmChip}>Queer Lisbon</span>
+            </div>
+          )}
           <div className={styles.nmActions}>
             <button
               type="button"
               className={styles.btnOutline}
-              onClick={() => openConnect("kai")}
+              onClick={() => openConnect(slug || undefined)}
             >
               Connect
             </button>
-            <Link to="/profile/kai" className={styles.linkBtn}>
+            <Link to={profileLink} className={styles.linkBtn}>
               View profile →
             </Link>
           </div>

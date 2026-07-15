@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
@@ -11,8 +10,8 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useConnect } from "../../app/providers/ConnectProvider";
+import { NominateChangemakerSection } from "./NominateChangemakerSection";
 import { CHANGEMAKERS } from "./changemakerStories";
 import styles from "./ChangemakersPage.module.css";
 
@@ -42,9 +41,7 @@ function MakerCardSkeleton() {
 
 export function ChangemakersPage() {
   const loading = useSimulatedLoad();
-  const { showToast } = useToast();
   const { openConnect } = useConnect();
-  const [nominee, setNominee] = useState("");
 
   return (
     <PageShell>
@@ -190,42 +187,7 @@ export function ChangemakersPage() {
         </div>
       </section>
 
-      <section className={styles.nominate}>
-        <div className="wrap">
-          <Reveal as="div" className={styles.nomEye}>
-            Community nominations
-          </Reveal>
-          <Reveal as="h2" delay={60}>
-            Know someone who should <em>be here?</em>
-          </Reveal>
-          <Reveal as="p" delay={120}>
-            We add change makers through community nominations. If you know
-            someone doing meaningful work for queer people in Lisbon, a name and
-            a sentence is enough to start.
-          </Reveal>
-          <form
-            className={styles.nomForm}
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (!nominee.trim()) return;
-              showToast(
-                `Thank you — we'll look into ${nominee.trim()}.`,
-                "success",
-              );
-              setNominee("");
-            }}
-          >
-            <input
-              className={styles.nomInput}
-              type="text"
-              placeholder="Their name…"
-              value={nominee}
-              onChange={(e) => setNominee(e.target.value)}
-            />
-            <Button type="submit">Nominate them</Button>
-          </form>
-        </div>
-      </section>
+      <NominateChangemakerSection />
     </PageShell>
   );
 }

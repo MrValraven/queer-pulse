@@ -1,10 +1,8 @@
+import { useState } from "react";
 import { Button, Avatar } from "../../shared/components/ui";
-import {
-  ModalShell,
-  SuccessPanel,
-  Sending,
-  useSubmitFlow,
-} from "./CultureModalKit";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useCreateCommissionInterest } from "./api/useCreateCommissionInterest";
+import { ModalShell, SuccessPanel, Sending } from "./CultureModalKit";
 import type { Commission } from "./culture.data";
 import styles from "./CultureModals.module.css";
 
@@ -12,6 +10,11 @@ import styles from "./CultureModals.module.css";
  * Express-interest flow for a commission. Confirms intent, then shows a
  * plum-panel "we'll connect you if the creator wants to move forward" state.
  * Calls onSent so the card keeps its sent state after closing.
+ *
+ * The commission board's projects are curated editorial content
+ * (`culture.data.tsx`), but this submission is real member data — it calls
+ * `POST /commissions/interest` in live mode (see `useCreateCommissionInterest`),
+ * demo mode keeps the prototype's simulated success.
  */
 export function CommissionInterestModal({
   commission,
@@ -22,7 +25,26 @@ export function CommissionInterestModal({
   onClose: () => void;
   onSent: () => void;
 }) {
-  const { sending, done, submit } = useSubmitFlow();
+  const { showToast } = useToast();
+  const [message, setMessage] = useState("");
+  const mutation = useCreateCommissionInterest();
+  const sending = mutation.isPending;
+  const done = mutation.isSuccess;
+
+  function submit() {
+    mutation.mutate(
+      {
+        commissionTitle: commission.title,
+        commissionCategory: commission.cat,
+        recipientName: commission.who.name,
+        message: message.trim() || undefined,
+      },
+      {
+        onError: () =>
+          showToast("Couldn't send your interest — please try again.", "error"),
+      },
+    );
+  }
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -71,6 +93,8 @@ export function CommissionInterestModal({
             <textarea
               id="ci-msg"
               placeholder="What you'd bring, what you've made before, or just hello…"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
             />
           </div>
 

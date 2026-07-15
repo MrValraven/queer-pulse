@@ -26,6 +26,7 @@ import {
 } from "./data/articles";
 import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
 import { AuthorLink } from "./AuthorLink";
+import { useArticle } from "./api/useArticle";
 
 import styles from "./ArticlePage.module.css";
 
@@ -70,7 +71,8 @@ export function ArticlePage() {
   const [textSize, setTextSize] = useState<TextSize>("md");
   const loading = useSimulatedLoad();
   const id = params.get("id") ?? defaultArticleId;
-  const article = articles[id];
+  const { data } = useArticle(id);
+  const article = data?.article ?? articles[id];
 
   if (!article) {
     return (
@@ -85,9 +87,10 @@ export function ArticlePage() {
     );
   }
 
-  const related = article.related
+  const mockRelated = (articles[id]?.related ?? [])
     .map((relatedId) => articles[relatedId])
     .filter((value): value is NonNullable<typeof value> => Boolean(value));
+  const related = data?.related ?? mockRelated;
 
   // First plain-text paragraph doubles as the saved-card blurb.
   const blurb = article.body.find(

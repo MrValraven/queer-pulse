@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./GlossaryPage.module.css";
@@ -9,13 +9,8 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
-import {
-  ALPHABET,
-  BLOCKS,
-  GLOSSARY_COPY,
-  HAS,
-  type TypeKind,
-} from "./glossary.data";
+import { ALPHABET, GLOSSARY_COPY, type TypeKind } from "./glossary.data";
+import { useGlossaryData } from "./api/useGlossaryData";
 
 const CONTACT = routes.contact;
 
@@ -63,11 +58,16 @@ function GlossarySkeleton() {
 export function GlossaryPage() {
   const [lang, setLang] = useState<Lang>("en");
   const [query, setQuery] = useState("");
-  const loading = useSimulatedLoad();
+  const { blocks: allBlocks, loading: dataLoading } = useGlossaryData();
+  const loading = useSimulatedLoad() || dataLoading;
   const q = query.trim().toLowerCase();
   const t = GLOSSARY_COPY[lang];
+  const HAS = useMemo(
+    () => new Set(allBlocks.map((b) => b.letter)),
+    [allBlocks],
+  );
 
-  const blocks = BLOCKS.map((b) => ({
+  const blocks = allBlocks.map((b) => ({
     ...b,
     terms: b.terms.filter(
       (term) =>

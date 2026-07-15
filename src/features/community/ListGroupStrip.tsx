@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useCreateReadingGroupProposal } from "./api/useCreateReadingGroupProposal";
+import type { ReadingGroupProposalFormat } from "./api/community.api";
 import { type Format, type Group } from "./readingGroups.data";
 import styles from "./ReadingGroupsPage.module.css";
 
 /** The "Start your own group" panel: a real form that lists a group and shows a
- *  plum-panel success state. The new group is handed back via onListed. */
+ *  plum-panel success state. The new group is handed back via onListed.
+ *
+ *  Submits `POST /reading-groups/proposals` in live mode (see
+ *  `useCreateReadingGroupProposal`); demo mode keeps the prototype's instant
+ *  simulated success — either way the directory card shown here is built
+ *  client-side, since the group directory itself is curated editorial content
+ *  with no server-backed listing. */
 export function ListGroupStrip({
   onListed,
 }: {
@@ -17,36 +25,53 @@ export function ListGroupStrip({
   const [formatField, setFormatField] = useState("In-person");
   const [maxField, setMaxField] = useState("6");
   const [listedGroup, setListedGroup] = useState<Group | null>(null);
+  const mutation = useCreateReadingGroupProposal();
 
   function listGroup(e: React.FormEvent) {
     e.preventDefault();
     const book = bookField.trim();
     if (!book) return;
-    // "Title — Author" → split into book + author where possible.
-    const [titlePart, authorPart] = book.split(/\s+[—-]\s+/);
-    const groupFormat: Format = formatField === "Online" ? "online" : "irl";
-    const newGroup: Group = {
-      id: `mine-${Date.now()}`,
-      genre: "fiction",
-      format: groupFormat,
-      book: titlePart?.trim() || book,
-      author: authorPart?.trim() || "You",
-      spine: (titlePart?.trim() || book).charAt(0).toUpperCase(),
-      spineColor: "var(--violet)",
-      name: "Your new group",
-      desc:
-        whyField.trim() ||
-        "A new reading group, just listed. Members will be matched soon.",
-      where: groupFormat === "online" ? "Online" : "Lisbon (TBC)",
-      frequency: "Monthly",
-      spots: Math.max(1, parseInt(maxField, 10) - 1),
-      lang: "EN / PT",
-    };
-    onListed(newGroup);
-    setListedGroup(newGroup);
-    setBookField("");
-    setWhyField("");
-    showToast("Group listed — we'll find your readers", "success");
+
+    mutation.mutate(
+      {
+        book,
+        why: whyField.trim() || undefined,
+        format: formatField as ReadingGroupProposalFormat,
+        maxPeople: parseInt(maxField, 10),
+      },
+      {
+        onSuccess: () => {
+          // "Title — Author" → split into book + author where possible.
+          const [titlePart, authorPart] = book.split(/\s+[—-]\s+/);
+          const groupFormat: Format =
+            formatField === "Online" ? "online" : "irl";
+          const newGroup: Group = {
+            id: `mine-${Date.now()}`,
+            genre: "fiction",
+            format: groupFormat,
+            book: titlePart?.trim() || book,
+            author: authorPart?.trim() || "You",
+            spine: (titlePart?.trim() || book).charAt(0).toUpperCase(),
+            spineColor: "var(--violet)",
+            name: "Your new group",
+            desc:
+              whyField.trim() ||
+              "A new reading group, just listed. Members will be matched soon.",
+            where: groupFormat === "online" ? "Online" : "Lisbon (TBC)",
+            frequency: "Monthly",
+            spots: Math.max(1, parseInt(maxField, 10) - 1),
+            lang: "EN / PT",
+          };
+          onListed(newGroup);
+          setListedGroup(newGroup);
+          setBookField("");
+          setWhyField("");
+          showToast("Group listed — we'll find your readers", "success");
+        },
+        onError: () =>
+          showToast("Couldn't list your group — please try again.", "error"),
+      },
+    );
   }
 
   return (
@@ -146,9 +171,9 @@ export function ListGroupStrip({
           <button
             type="submit"
             className={styles.ssSubmit}
-            disabled={!bookField.trim()}
+            disabled={!bookField.trim() || mutation.isPending}
           >
-            List my group
+            {mutation.isPending ? "Listing…" : "List my group"}
           </button>
         </form>
       )}

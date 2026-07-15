@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { PageShell } from "../../shared/components/layout";
 import { SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTopic } from "./api/useTopic";
 import { getTopic } from "./topics.data";
 import { TopicHeader } from "./TopicHeader";
 import { TopicFeed } from "./TopicFeed";
@@ -50,8 +52,12 @@ function TopicSkeleton() {
 
 export function TopicPage() {
   const { tag = "" } = useParams();
-  const loading = useSimulatedLoad();
-  const topic = getTopic(tag);
+  const simLoading = useSimulatedLoad();
+  const { demoMode } = useDemoMode();
+  // Detail source: demo returns the scripted mock; live fetches meta + posts.
+  const topicQuery = useTopic(tag);
+  const topic = topicQuery.data ?? getTopic(tag);
+  const loading = demoMode ? simLoading : topicQuery.isLoading;
 
   return (
     <PageShell>
