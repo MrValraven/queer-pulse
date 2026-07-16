@@ -9,9 +9,12 @@ import {
 } from "../../shared/components/ui";
 import { useCountUp, useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import {
   EMPTY_FILTERS,
   SORTS,
+  SORT_LABEL_KEY,
   appliedChips,
   matchesFilters,
   reconcileProfessions,
@@ -61,6 +64,7 @@ function MemberHeaderSkeleton() {
 }
 
 export function MemberDirectoryFilterPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const simLoading = useSimulatedLoad();
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
@@ -115,9 +119,9 @@ export function MemberDirectoryFilterPage() {
           <MemberHeaderSkeleton />
         ) : (
           <FadeIn as="header" className={styles.head}>
-            <div className={styles.eyebrow}>Members · advanced filter</div>
+            <div className={styles.eyebrow}>{t("members:directory.eyebrow")}</div>
             <h1 className={styles.h1}>
-              Find
+              {t("members:directory.findPrefix")}
               <em>
                 <span
                   className={styles.tally}
@@ -127,14 +131,17 @@ export function MemberDirectoryFilterPage() {
                 >
                   {countedTotal.toLocaleString()}
                 </span>{" "}
-                {totalMembers === 1 ? "member," : "members,"}
+                {t("members:directory.memberCountSuffix", {
+                  count: totalMembers,
+                })}
               </em>{" "}
-              exactly.
+              {t("members:directory.findSuffix")}
             </h1>
             <p className={styles.lead}>
-              Filter by what they offer, where they're based, what they're{" "}
-              <b>open to</b>. The same data goes both ways — members appear here
-              because they opted in to be findable for these reasons.
+              <Translation
+                i18nKey="members:directory.lead"
+                components={{ b: <b /> }}
+              />
             </p>
           </FadeIn>
         )}
@@ -147,28 +154,34 @@ export function MemberDirectoryFilterPage() {
             onChange={applyFilters}
             onClearAll={() => {
               applyFilters(EMPTY_FILTERS);
-              showToast("Filters cleared", "info");
+              showToast(t("members:directory.toast.filtersCleared"), "info");
             }}
           />
 
           <main>
             <div className={styles.topRow}>
               <div className={styles.count}>
-                Showing{" "}
+                {t("members:directory.showingPrefix")}{" "}
                 <b>
                   <em>{filtered.length.toLocaleString()}</em>
                 </b>{" "}
-                of {totalMembers.toLocaleString()}{" "}
-                {totalMembers === 1 ? "member" : "members"}
+                {t("members:directory.showingOf")} {totalMembers.toLocaleString()}{" "}
+                {t("members:directory.memberCountLabel", {
+                  count: totalMembers,
+                })}
               </div>
               <div className={styles.sort}>
-                <span className={styles.sortLabel}>Sort</span>
+                <span className={styles.sortLabel}>
+                  {t("members:directory.sortLabel")}
+                </span>
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value as SortKey)}
                 >
                   {SORTS.map((s) => (
-                    <option key={s}>{s}</option>
+                    <option key={s} value={s}>
+                      {t(SORT_LABEL_KEY[s])}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -184,7 +197,9 @@ export function MemberDirectoryFilterPage() {
                     {chip.label}
                     <button
                       type="button"
-                      aria-label={`Remove ${chip.label}`}
+                      aria-label={t("members:directory.removeChipLabel", {
+                        label: chip.label,
+                      })}
                       onClick={() => applyFilters(removeChip(filters, chip))}
                     >
                       ×
@@ -204,10 +219,12 @@ export function MemberDirectoryFilterPage() {
               hasActiveFilters ? (
                 <EmptyState
                   icon={<FiSearch />}
-                  title="Nothing matches your filters"
-                  description="No members fit all of these just now. Loosen a filter or two and more people will show up."
+                  title={t("members:directory.emptyFiltered.title")}
+                  description={t(
+                    "members:directory.emptyFiltered.description",
+                  )}
                   action={{
-                    label: "Clear filters",
+                    label: t("members:directory.clearFiltersCta"),
                     onClick: () => {
                       applyFilters(EMPTY_FILTERS);
                       setSort("Recently active");
@@ -217,8 +234,8 @@ export function MemberDirectoryFilterPage() {
               ) : (
                 <EmptyState
                   icon={<FiUsers />}
-                  title="No members here yet"
-                  description="This directory is still filling up. As people join QueerPulse and opt in to being findable, they'll show up here — check back soon."
+                  title={t("members:directory.emptyAll.title")}
+                  description={t("members:directory.emptyAll.description")}
                 />
               )
             ) : (
@@ -242,7 +259,9 @@ export function MemberDirectoryFilterPage() {
                   disabled={isFetchingNextPage}
                   onClick={fetchNextPage}
                 >
-                  {isFetchingNextPage ? "Loading…" : "Load more members"}
+                  {isFetchingNextPage
+                    ? t("members:directory.loadingMore")
+                    : t("members:directory.loadMoreCta")}
                 </Button>
               </div>
             )}

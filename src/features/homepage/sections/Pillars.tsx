@@ -1,14 +1,17 @@
 import { type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Reveal } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { pillars, type Pillar } from "./Pillars.data";
 import styles from "./Pillars.module.css";
 
 function PillarTile({ pillar, index }: { pillar: Pillar; index: number }) {
+  const { t } = useTranslation();
   const lead =
-    pillar.key === "community" && pillar.featured
-      ? pillar.featured
-      : pillar.desc;
+    pillar.key === "community" && pillar.featuredKey
+      ? t(pillar.featuredKey)
+      : t(pillar.descKey);
 
   return (
     <Reveal
@@ -20,7 +23,7 @@ function PillarTile({ pillar, index }: { pillar: Pillar; index: number }) {
       <img
         className={styles.bg}
         src={pillar.image}
-        alt={pillar.alt}
+        alt={t(pillar.altKey)}
         loading="lazy"
       />
       <span className={styles.scrim} aria-hidden="true" />
@@ -34,15 +37,15 @@ function PillarTile({ pillar, index }: { pillar: Pillar; index: number }) {
           <h3 className={styles.name}>
             {/* Stretched link: the whole tile leads to the pillar's hub. */}
             <Link className={styles.nameLink} to={pillar.to}>
-              {pillar.name}
+              {t(pillar.nameKey)}
             </Link>
           </h3>
           <p className={styles.desc}>{lead}</p>
           <ul className={styles.tags}>
             {pillar.tags.map((tag) => (
-              <li key={tag.label}>
+              <li key={tag.labelKey}>
                 <Link className={styles.tag} to={tag.to}>
-                  {tag.label}
+                  {t(tag.labelKey)}
                 </Link>
               </li>
             ))}
@@ -60,19 +63,23 @@ function PillarTile({ pillar, index }: { pillar: Pillar; index: number }) {
  * sub-features within.
  */
 export function Pillars() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.pillars} id="pillars">
       <div className="wrap">
         <div className={styles.head}>
           <Reveal className={styles.eyebrow}>
-            One membership · six worlds
+            {t("homepage:pillars.eyebrow")}
           </Reveal>
           <Reveal as="h2" className={styles.title} delay={60}>
-            A world, not a <em>feature list.</em>
+            <Translation
+              i18nKey="homepage:pillars.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.sub} delay={120}>
-            Six pillars of queer professional life in Lisbon — each one built by
-            and for the community, not bolted on afterwards.
+            {t("homepage:pillars.sub")}
           </Reveal>
         </div>
 

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Avatar, Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { routes } from "../../app/routeMap";
 import { memberProfiles } from "../members/data/memberProfiles";
@@ -24,6 +25,7 @@ export function CommunitySidebar({
   detail: CommunityDetail;
   related: Community[];
 }) {
+  const { t } = useTranslation();
   const { openConnect } = useConnect();
   const org = detail.organiser;
   const orgMember = org.slug ? memberProfiles[org.slug] : undefined;
@@ -39,7 +41,7 @@ export function CommunitySidebar({
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sbC}>
-        <div className={styles.sbLbl}>Organiser</div>
+        <div className={styles.sbLbl}>{t("communities:detail.sidebar.organiser")}</div>
         <div className={styles.sbOrgAv}>
           {org.slug ? (
             <Link to={`/members/${org.slug}`} title={org.name}>
@@ -65,12 +67,14 @@ export function CommunitySidebar({
           className={styles.sbFull}
           onClick={() => openConnect(org.slug)}
         >
-          Send a message
+          {t("communities:detail.sidebar.messageCta")}
         </Button>
       </div>
 
       <div className={styles.sbC}>
-        <div className={styles.sbLbl}>Next gathering</div>
+        <div className={styles.sbLbl}>
+          {t("communities:detail.sidebar.nextGathering")}
+        </div>
         <div className={styles.sbEvDate}>
           <div className={styles.sbEDd}>{detail.nextEvent.dd}</div>
           <div className={styles.sbEDm}>{detail.nextEvent.mm}</div>
@@ -87,12 +91,14 @@ export function CommunitySidebar({
           className={styles.sbFull}
           style={{ marginTop: 14 }}
         >
-          RSVP →
+          {t("communities:detail.sidebar.rsvpCta")} →
         </Button>
       </div>
 
       <div className={styles.sbC}>
-        <div className={styles.sbLbl}>Related communities</div>
+        <div className={styles.sbLbl}>
+          {t("communities:detail.sidebar.relatedCommunities")}
+        </div>
         {related.map((c) => (
           <Link
             key={c.slug}

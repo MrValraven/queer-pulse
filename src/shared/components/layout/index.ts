@@ -8,3 +8,4 @@ export { AppShell } from "./AppShell";
 export { BackToSettingsLink } from "./BackToSettingsLink";
 export { SystemStateShell } from "./SystemStateShell";
 export { AdminShell, ADMIN_NAV } from "./AdminShell";
+export { SkipToContentLink, MAIN_CONTENT_ID } from "./SkipToContentLink";

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiHeart, FiCornerUpLeft, FiArrowRight } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Post } from "./community.model";
 import { photoOf } from "./communityPeople";
 import styles from "./CommunitiesHomePage.module.css";
@@ -14,6 +15,7 @@ export interface HubPost {
 /** Compact, read-only pulse card for the aggregated hub feed (links into the
  *  community for the full, interactive version). */
 export function HubPulseCard({ item }: { item: HubPost }) {
+  const { t } = useTranslation();
   const { post, communityName, communitySlug } = item;
   const reactionTotal = post.reactions.reduce((sum, r) => sum + r.count, 0);
   return (
@@ -21,7 +23,9 @@ export function HubPulseCard({ item }: { item: HubPost }) {
       <Link to={`/community/${communitySlug}`} className={styles.pulseFrom}>
         {communityName}
         {post.kind === "announcement" && (
-          <span className={styles.announce}>Announcement</span>
+          <span className={styles.announce}>
+            {t("communities:hub.pulseCard.announcement")}
+          </span>
         )}
       </Link>
       <div className={styles.pulseHead}>
@@ -34,7 +38,9 @@ export function HubPulseCard({ item }: { item: HubPost }) {
         />
         <div>
           <div className={styles.pulseName}>{post.author.name}</div>
-          <div className={styles.pulseTime}>{post.time} ago</div>
+          <div className={styles.pulseTime}>
+            {t("communities:common.timeAgo", { time: post.time })}
+          </div>
         </div>
       </div>
       <p className={styles.pulseBody}>{post.body}</p>
@@ -46,7 +52,7 @@ export function HubPulseCard({ item }: { item: HubPost }) {
           <FiCornerUpLeft aria-hidden /> {post.replies.length}
         </span>
         <Link to={`/community/${communitySlug}`} className={styles.pulseOpen}>
-          Open <FiArrowRight aria-hidden />
+          {t("communities:hub.pulseCard.open")} <FiArrowRight aria-hidden />
         </Link>
       </div>
     </article>

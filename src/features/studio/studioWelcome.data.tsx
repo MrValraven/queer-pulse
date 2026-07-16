@@ -11,13 +11,13 @@ export interface WelcomeArtist {
 
 export interface TipChip {
   amount: number;
-  note: string;
+  noteKey: string;
 }
 
 export interface ToggleRow {
   id: string;
-  title: string;
-  body: string;
+  titleKey: string;
+  bodyKey: string;
   /** Default on-state for the switch. */
   defaultOn: boolean;
 }
@@ -85,10 +85,10 @@ export const WELCOME_ARTISTS: WelcomeArtist[] = [
 
 /** Step 2 — default tip chips (€2 default). */
 export const TIP_CHIPS: TipChip[] = [
-  { amount: 1, note: "a nod" },
-  { amount: 2, note: "a coffee" },
-  { amount: 5, note: "a round" },
-  { amount: 10, note: "a record" },
+  { amount: 1, noteKey: "studio:welcome.tip.nod" },
+  { amount: 2, noteKey: "studio:welcome.tip.coffee" },
+  { amount: 5, noteKey: "studio:welcome.tip.round" },
+  { amount: 10, noteKey: "studio:welcome.tip.record" },
 ];
 
 export const DEFAULT_TIP = 2;
@@ -97,20 +97,20 @@ export const DEFAULT_TIP = 2;
 export const TOGGLE_ROWS: ToggleRow[] = [
   {
     id: "history",
-    title: "Keep my listening history",
-    body: "A private, deletable record only you see. Off by default — nothing leaves your browser.",
+    titleKey: "studio:welcome.step3.history.title",
+    bodyKey: "studio:welcome.step3.history.body",
     defaultOn: false,
   },
   {
     id: "tip-notes",
-    title: "Make my tip notes public",
-    body: "Off keeps every note between you and the artist. You can flip any single note later.",
+    titleKey: "studio:welcome.step3.tipNotes.title",
+    bodyKey: "studio:welcome.step3.tipNotes.body",
     defaultOn: false,
   },
   {
     id: "library-sync",
-    title: "Sync my library across devices",
-    body: "Saves and follows move with you. On by default — turn off to keep it on this device only.",
+    titleKey: "studio:welcome.step3.librarySync.title",
+    bodyKey: "studio:welcome.step3.librarySync.body",
     defaultOn: true,
   },
 ];

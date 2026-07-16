@@ -19,18 +19,18 @@ export type PillarKey =
   "community" | "culture" | "livelihood" | "wellbeing" | "safety" | "activism";
 
 export interface PillarLink {
-  label: string;
+  labelKey: string;
   to: string;
 }
 
 export interface Pillar {
   key: PillarKey;
   icon: ReactNode;
-  name: string;
+  nameKey: string;
   /** Full description (single-row tiles clamp this to 3 lines). */
-  desc: string;
+  descKey: string;
   /** Shorter line used on the large featured tile (Community). */
-  featured?: string;
+  featuredKey?: string;
   /** Sub-features — each a gateway into that part of the platform. */
   tags: PillarLink[];
   /** The pillar's own hub (the whole tile links here). */
@@ -38,7 +38,7 @@ export interface Pillar {
   /** Per-pillar accent, as a design-token var — drives the tile's edge + tag hover. */
   accent: string;
   image: string;
-  alt: string;
+  altKey: string;
 }
 
 /**
@@ -46,98 +46,101 @@ export interface Pillar {
  * marketing homepage). Photos are bundled locally in `src/assets/pillars` —
  * placeholder imagery from Wikimedia Commons (CC BY / BY-SA / CC0), darkened
  * for the plum text-overlay. Swap for licensed or original shots before launch.
+ *
+ * i18n Pattern A — every string field here is platform-authored chrome
+ * (identical in demo and live mode), so name/desc/featured/alt/tag labels all
+ * hold catalog keys; `Pillars.tsx` resolves them with `t()`.
  */
 export const pillars: Pillar[] = [
   {
     key: "community",
     icon: <FiUsers />,
-    name: "Community",
-    desc: "Gatherings, groups, forum, and connections — the social fabric of queer Lisbon, online and in person.",
-    featured:
-      "The social fabric of queer Lisbon — a room with the door held open, online and in person.",
+    nameKey: "homepage:pillars.community.name",
+    descKey: "homepage:pillars.community.desc",
+    featuredKey: "homepage:pillars.community.featured",
     tags: [
-      { label: "Gatherings", to: routes.gatherings },
-      { label: "Forum", to: routes.forum },
-      { label: "Communities", to: routes.communities },
+      { labelKey: "homepage:pillars.tag.gatherings", to: routes.gatherings },
+      { labelKey: "homepage:pillars.tag.forum", to: routes.forum },
+      { labelKey: "homepage:pillars.tag.communities", to: routes.communities },
     ],
     to: routes.communities,
     accent: "var(--accent)",
     image: communityImg,
-    alt: "People celebrating around a rainbow-painted taxi at a Pride parade",
+    altKey: "homepage:pillars.community.alt",
   },
   {
     key: "culture",
     icon: <FiBookOpen />,
-    name: "Culture",
-    desc: "The magazine, stories, reading groups, and library — a living record of queer Lisbon, written from the inside.",
+    nameKey: "homepage:pillars.culture.name",
+    descKey: "homepage:pillars.culture.desc",
     tags: [
-      { label: "Magazine", to: routes.magazine },
-      { label: "Stories", to: routes.story },
-      { label: "Library", to: routes.library },
+      { labelKey: "homepage:pillars.tag.magazine", to: routes.magazine },
+      { labelKey: "homepage:pillars.tag.stories", to: routes.story },
+      { labelKey: "homepage:pillars.tag.library", to: routes.library },
     ],
     to: routes.magazine,
     accent: "var(--violet)",
     image: cultureImg,
-    alt: "Drag performers walking a Pride parade route in daylight",
+    altKey: "homepage:pillars.culture.alt",
   },
   {
     key: "livelihood",
     icon: <FiBriefcase />,
-    name: "Livelihood",
-    desc: "Jobs, skills exchange, micro-grants, and barter — a queer economy built on trust, not platform fees.",
+    nameKey: "homepage:pillars.livelihood.name",
+    descKey: "homepage:pillars.livelihood.desc",
     tags: [
-      { label: "Jobs", to: routes.jobs },
-      { label: "Skills", to: routes.skills },
-      { label: "Micro-grants", to: routes.microGrants },
+      { labelKey: "homepage:pillars.tag.jobs", to: routes.jobs },
+      { labelKey: "homepage:pillars.tag.skills", to: routes.skills },
+      { labelKey: "homepage:pillars.tag.microGrants", to: routes.microGrants },
     ],
     to: routes.jobs,
     accent: "var(--jade)",
     image: livelihoodImg,
-    alt: "Two people planning work together over laptops and notebooks",
+    altKey: "homepage:pillars.livelihood.alt",
   },
   {
     key: "wellbeing",
     icon: <FiHeart />,
-    name: "Wellbeing",
-    desc: "Mental health, sexual health, trans healthcare — queer-affirming professionals, community-vetted.",
+    nameKey: "homepage:pillars.wellbeing.name",
+    descKey: "homepage:pillars.wellbeing.desc",
     tags: [
-      { label: "Mental health", to: routes.mentalHealth },
-      { label: "Trans hub", to: routes.transHub },
-      { label: "Sexual health", to: routes.sexualHealth },
+      { labelKey: "homepage:pillars.tag.mentalHealth", to: routes.mentalHealth },
+      { labelKey: "homepage:pillars.tag.transHub", to: routes.transHub },
+      { labelKey: "homepage:pillars.tag.sexualHealth", to: routes.sexualHealth },
     ],
     to: routes.wellbeing,
     accent: "var(--amber)",
     image: wellbeingImg,
-    alt: "Two men sharing a tender kiss",
+    altKey: "homepage:pillars.wellbeing.alt",
   },
   {
     key: "safety",
     icon: <FiShield />,
-    name: "Safety",
-    desc: "Legal guides, hate crime reporting, harm reduction, and emergency contacts — know your rights.",
+    nameKey: "homepage:pillars.safety.name",
+    descKey: "homepage:pillars.safety.desc",
     tags: [
-      { label: "Legal", to: routes.legal },
-      { label: "Rights", to: routes.hateCrime },
-      { label: "Emergency", to: routes.emergency },
+      { labelKey: "homepage:pillars.tag.legal", to: routes.legal },
+      { labelKey: "homepage:pillars.tag.rights", to: routes.hateCrime },
+      { labelKey: "homepage:pillars.tag.emergency", to: routes.emergency },
     ],
     to: routes.safety,
     accent: "var(--danger)",
     image: safetyImg,
-    alt: "Demonstrators holding signs reading trans rights are human rights",
+    altKey: "homepage:pillars.safety.alt",
   },
   {
     key: "activism",
     icon: <FiActivity />,
-    name: "Activism",
-    desc: "Changemakers, volunteers, and transparent governance — building a better city from the inside out.",
+    nameKey: "homepage:pillars.activism.name",
+    descKey: "homepage:pillars.activism.desc",
     tags: [
-      { label: "Changemakers", to: routes.changemakers },
-      { label: "Volunteer", to: routes.volunteer },
-      { label: "Governance", to: routes.governance },
+      { labelKey: "homepage:pillars.tag.changemakers", to: routes.changemakers },
+      { labelKey: "homepage:pillars.tag.volunteer", to: routes.volunteer },
+      { labelKey: "homepage:pillars.tag.governance", to: routes.governance },
     ],
     to: routes.activism,
     accent: "var(--plum)",
     image: activismImg,
-    alt: "Marchers carrying a large trans-flag banner through a city street",
+    altKey: "homepage:pillars.activism.alt",
   },
 ];

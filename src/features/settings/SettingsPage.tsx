@@ -6,6 +6,7 @@ import { useScrollLock } from "../../shared/hooks";
 import { AppShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NAV, type PaneId } from "./settings.data";
 import { DeleteAccountSection } from "./DeleteAccountSection";
 import { EditProfilePane } from "./EditProfilePane";
@@ -24,6 +25,7 @@ import {
 import styles from "./SettingsPage.module.css";
 
 export function SettingsPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { commit: commitTheme, discard: discardTheme } = useProfileTheme();
   const { save, cancelEditing, startEditing, isSaving, saveError, isEditing } =
@@ -83,8 +85,8 @@ export function SettingsPage() {
       <div className={`wrap ${styles.page}`}>
         <aside className={styles.sidebar}>
           {NAV.map((g) => (
-            <div key={g.group}>
-              <h3>{g.group}</h3>
+            <div key={g.groupKey}>
+              <h3>{t(g.groupKey)}</h3>
               {g.items.map((item) => (
                 <button
                   type="button"
@@ -101,7 +103,7 @@ export function SettingsPage() {
                   <span className={styles.icon}>
                     <item.icon />
                   </span>
-                  {item.label}
+                  {t(item.labelKey)}
                 </button>
               ))}
             </div>
@@ -139,7 +141,7 @@ export function SettingsPage() {
 
       {dirty && (
         <div className={styles.saveBar}>
-          <p>{saveError ?? "You have unsaved changes."}</p>
+          <p>{saveError ?? t("settings:page.saveBar.unsaved")}</p>
           <div style={{ display: "flex", gap: 10 }}>
             <button
               type="button"
@@ -153,7 +155,7 @@ export function SettingsPage() {
                 setDirty(false);
               }}
             >
-              Discard
+              {t("settings:page.saveBar.discard")}
             </button>
             <button
               type="button"
@@ -164,7 +166,7 @@ export function SettingsPage() {
                   const ok = await save();
                   if (!ok) {
                     showToast(
-                      "We couldn't save your changes. Please try again.",
+                      t("settings:page.saveBar.saveErrorToast"),
                       "error",
                     );
                     return;
@@ -172,10 +174,10 @@ export function SettingsPage() {
                 }
                 commitTheme();
                 setDirty(false);
-                showToast("Settings saved", "success");
+                showToast(t("settings:page.saveBar.savedToast"), "success");
               }}
             >
-              Save changes
+              {t("settings:page.saveBar.save")}
             </button>
           </div>
         </div>

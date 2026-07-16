@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CommunitiesHomePage.module.css";
 
 export interface HubDigest {
@@ -9,25 +10,24 @@ export interface HubDigest {
 
 /** The quiet "this week" tile row at the top of the communities hub. */
 export function CommunitiesHomeDigest({ digest }: { digest: HubDigest }) {
+  const { t } = useTranslation();
   const tiles = [
-    { num: digest.posts, label: "new posts" },
-    { num: digest.active, label: "active members" },
-    { num: digest.events, label: "upcoming events" },
-    { num: digest.joined, label: "people joined" },
+    { num: digest.posts, labelKey: "communities:hub.digest.posts" },
+    { num: digest.active, labelKey: "communities:hub.digest.active" },
+    { num: digest.events, labelKey: "communities:hub.digest.events" },
+    { num: digest.joined, labelKey: "communities:hub.digest.joined" },
   ];
   return (
     <div className={styles.digest}>
       <div className={styles.digestSide}>
-        <div className={styles.digestLbl}>This week, quietly</div>
-        <p className={styles.digestNote}>
-          No pings — just your communities' week in one glance.
-        </p>
+        <div className={styles.digestLbl}>{t("communities:hub.digest.label")}</div>
+        <p className={styles.digestNote}>{t("communities:hub.digest.note")}</p>
       </div>
       <div className={styles.digestTiles}>
-        {tiles.map((t) => (
-          <div key={t.label} className={styles.tile}>
-            <div className={styles.tileNum}>{t.num}</div>
-            <div className={styles.tileLbl}>{t.label}</div>
+        {tiles.map((tile) => (
+          <div key={tile.labelKey} className={styles.tile}>
+            <div className={styles.tileNum}>{tile.num}</div>
+            <div className={styles.tileLbl}>{t(tile.labelKey)}</div>
           </div>
         ))}
       </div>

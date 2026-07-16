@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { WorkItem } from "./data/members";
+import { ImageProcessingError } from "./api/uploadProcessing";
 import { useUploadImage } from "./api/useUploadImage";
 import styles from "./ProfilePage.module.css";
 import editStyles from "./ProfileEdit.module.css";
@@ -25,6 +27,7 @@ export function WorkItemEditor({
   onChange: (patch: Partial<WorkItem>) => void;
   onRemove: () => void;
 }) {
+  const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
   const createdUrl = useRef<string | null>(null);
   const uploadWorkImage = useUploadImage("work-image");
@@ -48,9 +51,9 @@ export function WorkItemEditor({
       onChange({ image: url });
     } catch (err) {
       setError(
-        err instanceof Error && err.message
-          ? err.message
-          : "We couldn't add that image. Please try again.",
+        err instanceof ImageProcessingError
+          ? t(err.i18nKey, err.values)
+          : t("members:workItem.error.generic"),
       );
     } finally {
       setUploading(false);
@@ -65,7 +68,7 @@ export function WorkItemEditor({
           src={item.image}
           height={200}
           radius={14}
-          placeholder="Work"
+          placeholder={t("members:workItem.imagePlaceholder")}
           style={{ marginBottom: 14 }}
         />
         <div className={editStyles.workImageActions}>
@@ -76,13 +79,17 @@ export function WorkItemEditor({
             disabled={uploading}
           >
             <FiCamera size={14} />
-            {uploading ? "Uploading…" : item.image ? "Change" : "Add image"}
+            {uploading
+              ? t("members:workItem.uploading")
+              : item.image
+                ? t("members:workItem.change")
+                : t("members:workItem.add")}
           </button>
           {item.image && !uploading && (
             <button
               type="button"
               className={`${editStyles.avatarBtn} ${editStyles.avatarBtnGhost}`}
-              aria-label="Remove image"
+              aria-label={t("members:workItem.removeImage")}
               onClick={() => {
                 if (createdUrl.current) {
                   URL.revokeObjectURL(createdUrl.current);
@@ -116,23 +123,23 @@ export function WorkItemEditor({
       <input
         className={`${editStyles.inlineInput} ${editStyles.workCatInput}`}
         value={item.category}
-        placeholder="Category (e.g. Identity)"
-        aria-label="Work category"
+        placeholder={t("members:workItem.categoryPlaceholder")}
+        aria-label={t("members:workItem.categoryLabel")}
         onChange={(e) => onChange({ category: e.target.value })}
       />
       <input
         className={`${editStyles.inlineInput} ${editStyles.workTitleInput}`}
         value={item.title}
-        placeholder="Title"
-        aria-label="Work title"
+        placeholder={t("members:workItem.titlePlaceholder")}
+        aria-label={t("members:workItem.titleLabel")}
         onChange={(e) => onChange({ title: e.target.value })}
       />
       <div className={editStyles.workMetaRow}>
         <input
           className={`${editStyles.inlineInput} ${editStyles.workYearInput}`}
           value={item.year}
-          placeholder="Year"
-          aria-label="Work year"
+          placeholder={t("members:workItem.yearPlaceholder")}
+          aria-label={t("members:workItem.yearLabel")}
           onChange={(e) => onChange({ year: e.target.value })}
         />
         <button
@@ -140,7 +147,7 @@ export function WorkItemEditor({
           className={editStyles.workRemove}
           onClick={onRemove}
         >
-          <FiTrash2 size={14} aria-hidden /> Remove
+          <FiTrash2 size={14} aria-hidden /> {t("members:workItem.remove")}
         </button>
       </div>
     </article>

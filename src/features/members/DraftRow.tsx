@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  STATUS_LABEL,
+  DRAFT_ACTION_LABEL_KEY,
+  STATUS_LABEL_KEY,
   draftStatus,
   type Draft,
   type DraftAction,
@@ -43,6 +45,7 @@ export function DraftRow({
   onToggle: (id: string, checked: boolean) => void;
   onAction: (draft: Draft, action: DraftAction) => void;
 }) {
+  const { t } = useTranslation();
   const status = draftStatus(draft);
   const rowClass = [
     styles.row,
@@ -60,7 +63,7 @@ export function DraftRow({
         className={styles.cbx}
         checked={selected}
         onChange={(e) => onToggle(draft.id, e.target.checked)}
-        aria-label="Select draft"
+        aria-label={t("members:drafts.row.selectAriaLabel")}
       />
       <div className={`${styles.kind} ${kindClass[draft.kindVariant]}`}>
         {draft.kind}
@@ -68,7 +71,7 @@ export function DraftRow({
       <div className={styles.info}>
         <div className={styles.titleLine}>
           <span className={`${styles.chip} ${chipClass[status]}`}>
-            {STATUS_LABEL[status]}
+            {t(STATUS_LABEL_KEY[status])}
           </span>
           {draft.href ? (
             <Link to={draft.href} className={styles.title}>
@@ -94,29 +97,34 @@ export function DraftRow({
             <span style={{ width: `${draft.progress}%` }} />
           </div>
           {draft.ready ? (
-            <span className={styles.readyLabel}>Ready</span>
+            <span className={styles.readyLabel}>
+              {t(STATUS_LABEL_KEY.ready)}
+            </span>
           ) : (
             <span>{draft.progress}%</span>
           )}
         </div>
       </div>
       <div className={styles.actions}>
-        {draft.actions.map((a) => (
-          <button
-            type="button"
-            key={a.label}
-            className={[
-              styles.action,
-              a.variant === "primary" && styles.primary,
-              a.variant === "danger" && styles.danger,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => onAction(draft, a)}
-          >
-            {a.label}
-          </button>
-        ))}
+        {draft.actions.map((action) => {
+          const actionLabelKey = DRAFT_ACTION_LABEL_KEY[action.label];
+          return (
+            <button
+              type="button"
+              key={action.label}
+              className={[
+                styles.action,
+                action.variant === "primary" && styles.primary,
+                action.variant === "danger" && styles.danger,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => onAction(draft, action)}
+            >
+              {actionLabelKey ? t(actionLabelKey) : action.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

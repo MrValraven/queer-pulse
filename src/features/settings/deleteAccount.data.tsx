@@ -9,7 +9,14 @@ interface WhatItem {
 
 export const DELETE_CONTENT: Record<
   DeleteOption,
-  { wh: WhatItem[]; phrase: string | null; btnLabel: string; isDanger: boolean }
+  {
+    wh: WhatItem[];
+    phrase: string | null;
+    /** Sits under the typed-confirmation box. Must match what actually happens. */
+    confirmHint: string;
+    btnLabel: string;
+    isDanger: boolean;
+  }
 > = {
   deactivate: {
     wh: [
@@ -35,8 +42,8 @@ export const DELETE_CONTENT: Record<
         col: "var(--jade)",
         text: (
           <>
-            <strong>Reactivate instantly</strong> by signing back in with your
-            email and password.
+            <strong>Reactivate instantly</strong> by signing back in with
+            Google.
           </>
         ),
       },
@@ -59,7 +66,11 @@ export const DELETE_CONTENT: Record<
         ),
       },
     ],
-    phrase: null,
+    // Typed confirmation is the real gate on both paths now. It used to be a
+    // password box, but auth is OAuth-only and the backend never checked it, so
+    // deactivate had no confirmation step at all once that box was removed.
+    phrase: "deactivate my account",
+    confirmHint: "You can undo this at any time by signing back in.",
     btnLabel: "Deactivate my account",
     isDanger: false,
   },
@@ -113,6 +124,8 @@ export const DELETE_CONTENT: Record<
       },
     ],
     phrase: "delete my account",
+    confirmHint:
+      "You'll have 30 days to change your mind. After that it can't be reversed.",
     btnLabel: "Permanently delete my account",
     isDanger: true,
   },

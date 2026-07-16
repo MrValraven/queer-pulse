@@ -26,7 +26,18 @@ export interface AuthorFeatured {
   kicker: string;
   title: ReactNode;
   dek: string;
-  meta: string;
+  /**
+   * i18n: `meta` used to bake "Published {date} · {mins} min read · {reads}
+   * reads this week" as one opaque English string — the classic "fused mock
+   * string" trap. Split into data so `AuthorWork.tsx` composes it via
+   * `magazineFormat.ts`'s helpers and gets a translated + locale-formatted
+   * date in pt-PT.
+   */
+  publishedDate: Date;
+  minutes: number;
+  /** Already-formatted (mock uses compact forms like "1.2k"); interpolated
+   *  as an opaque token by `readsThisWeekText()`. */
+  readsThisWeek: string;
   articleId: string;
   image: string;
 }
@@ -106,7 +117,9 @@ export const AUTHORS: Record<string, Author> = {
         </>
       ),
       dek: "From the SNS to private clinics, what nobody tells you about waiting lists, referrals, and how to actually get a hormone prescription without losing a year of your life.",
-      meta: "Published 6 Jun 2026 · 8 min read · 284 reads this week",
+      publishedDate: new Date(2026, 5, 6),
+      minutes: 8,
+      readsThisWeek: "284",
       articleId: "city-changed",
       image: AUTHOR_FEATURE_IMG,
     },
@@ -281,7 +294,9 @@ export const AUTHORS: Record<string, Author> = {
         </>
       ),
       dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure — and why the people who run it don't want you to call it that.",
-      meta: "Published 6 Jun 2026 · 11 min read · 1.2k reads this week",
+      publishedDate: new Date(2026, 5, 6),
+      minutes: 11,
+      readsThisWeek: "1.2k",
       articleId: "last-bar",
       image:
         "https://images.unsplash.com/photo-1416273567255-8abe875affcd?q=80&w=1000&auto=format&fit=crop",
@@ -449,7 +464,9 @@ export const AUTHORS: Record<string, Author> = {
         </>
       ),
       dek: "On chairs, lighting, music, and what design quietly does to a body waiting to be seen — an essay about the rooms we pretend are neutral.",
-      meta: "Published 6 Jun 2026 · 7 min read · 640 reads this week",
+      publishedDate: new Date(2026, 5, 6),
+      minutes: 7,
+      readsThisWeek: "640",
       articleId: "i-arrived",
       image:
         "https://images.unsplash.com/photo-1453906971074-ce568cccbc63?q=80&w=1000&auto=format&fit=crop",
@@ -617,7 +634,9 @@ export const AUTHORS: Record<string, Author> = {
         </>
       ),
       dek: "Three decades of ILGA Portugal's helpline, told through the calls operators remember — and the ones they can't stop remembering.",
-      meta: "Published 6 Jun 2026 · 22 min read · 410 reads this week",
+      publishedDate: new Date(2026, 5, 6),
+      minutes: 22,
+      readsThisWeek: "410",
       articleId: "visibility-politics",
       image:
         "https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?q=80&w=1000&auto=format&fit=crop",
@@ -785,7 +804,9 @@ export const AUTHORS: Record<string, Author> = {
         </>
       ),
       dek: "Rui, from Farmácia do Carmo, doesn't ask follow-up questions. He has reasons — and a drawer of them going back fifteen years.",
-      meta: "Published 6 Jun 2026 · 6 min read · 720 reads this week",
+      publishedDate: new Date(2026, 5, 6),
+      minutes: 6,
+      readsThisWeek: "720",
       articleId: "mouraria-family",
       image:
         "https://images.unsplash.com/photo-1461784180009-21121b2f204c?q=80&w=1000&auto=format&fit=crop",
@@ -954,7 +975,9 @@ export const AUTHORS: Record<string, Author> = {
         </>
       ),
       dek: "A nurse on what's changed, what hasn't, and what she still does anyway — even on the shifts nobody wants to work.",
-      meta: "Published 6 Jun 2026 · 7 min read · 530 reads this week",
+      publishedDate: new Date(2026, 5, 6),
+      minutes: 7,
+      readsThisWeek: "530",
       articleId: "politics-of-staying",
       image:
         "https://images.unsplash.com/photo-1474692295473-66ba4d54e0d3?q=80&w=1000&auto=format&fit=crop",
@@ -1122,7 +1145,9 @@ export const AUTHORS: Record<string, Author> = {
         </>
       ),
       dek: "Lisbon's queer community has spent a decade finding itself. The rent tripled, the bars closed and reopened and closed again. What survived — and what did we lose?",
-      meta: "Published 6 Jun 2026 · 14 min read · 3.1k reads this week",
+      publishedDate: new Date(2026, 5, 6),
+      minutes: 14,
+      readsThisWeek: "3.1k",
       articleId: "city-changed",
       image:
         "https://images.unsplash.com/photo-1485030056468-3820ff9e6e90?q=80&w=1000&auto=format&fit=crop",
@@ -1296,7 +1321,9 @@ export const AUTHORS: Record<string, Author> = {
         </>
       ),
       dek: "A note on why this issue leads with health, why it took nine months, and why the cover story almost didn't run at all.",
-      meta: "Published 6 Jun 2026 · 4 min read · 1.9k reads this week",
+      publishedDate: new Date(2026, 5, 6),
+      minutes: 4,
+      readsThisWeek: "1.9k",
       articleId: "visibility-politics",
       image:
         "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=1000&auto=format&fit=crop",

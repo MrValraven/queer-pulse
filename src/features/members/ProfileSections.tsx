@@ -12,10 +12,11 @@ import {
 import { routes } from "../../app/routeMap";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { useVouch } from "../../app/providers/VouchProvider";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { currentUserSlug, type MemberProfile } from "./data/memberProfiles";
 import { useRecognition } from "./api/useRecognition";
 import { HeroVouchRow } from "./HeroVouchRow";
-import { VISIBILITY_LABEL } from "./profileSections.data";
+import { VISIBILITY_LABEL_KEY } from "./profileSections.data";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
 import {
   ActivitySection,
@@ -89,6 +90,7 @@ export function ProfileHero({
   /** Preview your profile as a visitor (only used on your own profile). */
   onPreview?: () => void;
 }) {
+  const { t } = useTranslation();
   const { openConnect } = useConnect();
   const { openVouch, hasVouched, removeVouch } = useVouch();
   const realSelf = self ?? profile.slug === currentUserSlug;
@@ -111,14 +113,14 @@ export function ProfileHero({
             {profile.verified && (
               <span className={styles.vbadgeLg}>
                 <CheckIcon />
-                Verified member
+                {t("members:profile.hero.verifiedBadge")}
               </span>
             )}
           </Reveal>
 
           <Reveal delay={80}>
             <Eyebrow live className={styles.eyebrow}>
-              {VISIBILITY_LABEL[profile.visibility]}
+              {t(VISIBILITY_LABEL_KEY[profile.visibility])}
             </Eyebrow>
             <h1 className={styles.name}>
               {profile.first} <em>{profile.last}</em>
@@ -134,17 +136,19 @@ export function ProfileHero({
                 className={styles.curatorLink}
                 to={`${routes.cinemaCurator}/${curatorSlug}`}
               >
-                ● Cinema curator — view programming profile →
+                {t("members:profile.hero.curatorLink")}
               </Link>
             )}
             <div className={styles.where}>
               <span className={styles.loc}>
                 <span className={styles.pin} aria-hidden />
-                {profile.hood}, Lisbon
+                {t("members:profile.hero.location", { hood: profile.hood })}
               </span>
               {profile.since && (
                 <span className={styles.muted}>
-                  Member since {profile.since}
+                  {t("members:profile.hero.memberSince", {
+                    since: profile.since,
+                  })}
                 </span>
               )}
             </div>
@@ -163,35 +167,39 @@ export function ProfileHero({
               {isSelf ? (
                 <>
                   <Button size="lg" onClick={onEdit}>
-                    <FiEdit3 aria-hidden /> Edit profile
+                    <FiEdit3 aria-hidden /> {t("members:profile.hero.editCta")}
                   </Button>
                   <Button size="lg" variant="ghost" onClick={onPreview}>
-                    <FiEye aria-hidden /> View as visitor
+                    <FiEye aria-hidden /> {t("members:profile.hero.previewCta")}
                   </Button>
                 </>
               ) : (
                 <>
                   {profile.visibility === "private" ? (
                     <Button size="lg" variant="ghost" to={routes.invite}>
-                      Request an intro
+                      {t("members:profile.hero.requestIntroCta")}
                     </Button>
                   ) : (
                     <Button size="lg" onClick={() => openConnect(profile.slug)}>
-                      Say hello
+                      {t("members:profile.hero.sayHelloCta")}
                     </Button>
                   )}
                   {!realSelf &&
                     (vouched ? (
                       <span className={styles.vouchedActions}>
                         <span className={styles.vouchedTag}>
-                          <FiCheck aria-hidden /> Vouched for {profile.first}
+                          <FiCheck aria-hidden />{" "}
+                          {t("members:profile.hero.vouchedFor", {
+                            first: profile.first,
+                          })}
                         </span>
                         <Button
                           size="lg"
                           variant="ghost"
                           onClick={() => removeVouch(profile.slug)}
                         >
-                          <FiX aria-hidden /> Withdraw vouch
+                          <FiX aria-hidden />{" "}
+                          {t("members:profile.hero.withdrawVouchCta")}
                         </Button>
                       </span>
                     ) : (
@@ -200,7 +208,9 @@ export function ProfileHero({
                         variant="ghost"
                         onClick={() => openVouch(profile.slug)}
                       >
-                        Vouch for {profile.first}
+                        {t("members:profile.hero.vouchForCta", {
+                          first: profile.first,
+                        })}
                       </Button>
                     ))}
                 </>
@@ -219,19 +229,29 @@ export function ProfileHero({
 }
 
 export function RecognitionSection() {
+  const { t } = useTranslation();
   const { level, badges, perks } = useRecognition();
   return (
-    <Section title="Recognition" subtitle="Your level, badges and member perks">
+    <Section
+      title={t("members:profile.hero.recognitionTitle")}
+      subtitle={t("members:profile.hero.recognitionSubtitle")}
+    >
       <div className={styles.recogGrid}>
         <Link to={routes.badges} className={styles.recogCard}>
           <div className={styles.recogTop}>
             <span className={styles.recogChip}>
-              Level {level.level} · {level.name}
+              {t("members:profile.hero.levelLabel", { number: level.level })} ·{" "}
+              {level.name}
             </span>
           </div>
-          <div className={styles.recogTitle}>Badges &amp; level</div>
+          <div className={styles.recogTitle}>
+            {t("members:profile.hero.badgesTitle")}
+          </div>
           <div className={styles.recogDesc}>
-            {badges.earnedCount} earned · {badges.discoverCount} to discover
+            {t("members:profile.hero.badgesDesc", {
+              earned: badges.earnedCount,
+              discover: badges.discoverCount,
+            })}
           </div>
           <div className={styles.recogXpBar}>
             <div
@@ -239,21 +259,28 @@ export function RecognitionSection() {
               style={{ width: `${level.percent}%` }}
             />
           </div>
-          <div className={styles.recogArrow}>See badges &amp; level →</div>
+          <div className={styles.recogArrow}>
+            {t("members:profile.hero.badgesArrow")}
+          </div>
         </Link>
 
         <Link to={routes.perks} className={styles.recogCard}>
           <div className={styles.recogTop}>
             <span className={`${styles.recogChip} ${styles.jade}`}>
-              {perks.availableCount} available
+              {t("members:profile.hero.perksAvailable", {
+                count: perks.availableCount,
+              })}
             </span>
           </div>
-          <div className={styles.recogTitle}>Member perks</div>
-          <div className={styles.recogDesc}>
-            Bonuses your level unlocks — early RSVP access, the Trusted Lounge
-            and more.
+          <div className={styles.recogTitle}>
+            {t("members:profile.hero.perksTitle")}
           </div>
-          <div className={styles.recogArrow}>Redeem your perks →</div>
+          <div className={styles.recogDesc}>
+            {t("members:profile.hero.perksDesc")}
+          </div>
+          <div className={styles.recogArrow}>
+            {t("members:profile.hero.perksArrow")}
+          </div>
         </Link>
       </div>
     </Section>

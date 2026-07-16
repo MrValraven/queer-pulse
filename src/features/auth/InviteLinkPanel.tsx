@@ -3,15 +3,17 @@ import { FiAlertCircle, FiLink } from "react-icons/fi";
 import { Button, Sending } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ApiError } from "../../shared/api/client";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateInvite, type CreatedInvite } from "./api/useCreateInvite";
 import { SharePreviewCard } from "./SharePreviewCard";
-import { DEFAULT_VOUCH, INVITE_URL, SENDER_NAME } from "./invite.data";
+import { INVITE_URL, SENDER_NAME, defaultVouch } from "./invite.data";
 import { sleep } from "./inviteLinkPanel.data";
 import { InviteReadyPanel } from "./InviteReadyPanel";
 import { InviteComposeFields } from "./InviteComposeFields";
 import styles from "./InvitePage.module.css";
 
 export function InviteLinkPanel() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const createInvite = useCreateInvite();
   const [vouch, setVouch] = useState("");
@@ -25,7 +27,7 @@ export function InviteLinkPanel() {
   // and shows the message inline instead of a transient toast.
   const [quotaError, setQuotaError] = useState<string | null>(null);
 
-  const description = note.trim() || DEFAULT_VOUCH;
+  const description = note.trim() || defaultVouch(t);
 
   /** Surface a failed POST /invites: a quota 403 sticks, everything else toasts. */
   function handleInviteError(err: unknown) {
@@ -37,7 +39,7 @@ export function InviteLinkPanel() {
       setQuotaError(err.message);
       showToast(err.message, "error");
     } else {
-      showToast("Could not create your invite link — try again", "error");
+      showToast(t("auth:invite.link.error.generic"), "error");
     }
   }
 
@@ -76,7 +78,7 @@ export function InviteLinkPanel() {
         setNote={setNote}
       />
 
-      <div className={styles.epLabel}>How your link will look</div>
+      <div className={styles.epLabel}>{t("auth:invite.link.previewLabel")}</div>
       <SharePreviewCard
         senderName={SENDER_NAME}
         description={description}
@@ -98,19 +100,16 @@ export function InviteLinkPanel() {
           aria-busy={generating}
         >
           {generating ? (
-            <Sending label="Generating link…" />
+            <Sending label={t("auth:invite.link.generating")} />
           ) : (
             <>
               <FiLink aria-hidden style={{ marginRight: 8 }} />
-              Generate link
+              {t("auth:invite.link.generateCta")}
             </>
           )}
         </Button>
       </div>
-      <div className={styles.formNote}>
-        One link, one person — we’ll create it when you generate. Share it only
-        with people you’d vouch for.
-      </div>
+      <div className={styles.formNote}>{t("auth:invite.link.formNote")}</div>
     </div>
   );
 }

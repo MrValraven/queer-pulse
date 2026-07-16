@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { COOKIE_CATEGORIES } from "./cookies.data";
 import styles from "./CookiesPage.module.css";
 
 export function CookiesPage() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [functional, setFunctional] = useState(true);
   const [analytics, setAnalytics] = useState(false);
 
@@ -21,70 +24,81 @@ export function CookiesPage() {
   };
 
   function save() {
-    showToast("Cookie preferences saved.", "success");
+    showToast(t("marketing:cookies.toast.saved"), "success");
   }
   function acceptAll() {
     setFunctional(true);
     setAnalytics(true);
-    showToast("Cookie preferences saved.", "success");
+    showToast(t("marketing:cookies.toast.saved"), "success");
   }
   function essentialOnly() {
     setFunctional(false);
     setAnalytics(false);
-    showToast("Cookie preferences saved.", "success");
+    showToast(t("marketing:cookies.toast.saved"), "success");
   }
 
   return (
     <PageShell>
       <header className={styles.hero}>
-        <div className={styles.eyebrow}>Cookie preferences</div>
+        <div className={styles.eyebrow}>{t("marketing:cookies.eyebrow")}</div>
         <h1 className={styles.h1}>
-          You choose what we <em>remember.</em>
+          <Translation
+            i18nKey="marketing:cookies.h1"
+            components={{ em: <em /> }}
+          />
         </h1>
-        <p className={styles.sub}>
-          We use a small number of cookies to make the platform work. Some are
-          essential — the site won't function without them. Others are optional,
-          and we'll only use them if you say yes.
-        </p>
+        <p className={styles.sub}>{t("marketing:cookies.sub")}</p>
       </header>
 
       <main className={styles.body}>
         <div className={styles.layout}>
           <div className={styles.group}>
             {COOKIE_CATEGORIES.map((cat) => {
-              const t = toggleFor[cat.id];
+              const toggle = toggleFor[cat.id];
               return (
                 <div key={cat.id} className={styles.card}>
                   <div className={styles.cardHead}>
                     <div>
-                      <div className={styles.cardTitle}>{cat.title}</div>
+                      <div className={styles.cardTitle}>{t(cat.titleKey)}</div>
                       {cat.required && (
-                        <div className={styles.cardReq}>Always on</div>
+                        <div className={styles.cardReq}>
+                          {t("marketing:cookies.alwaysOn")}
+                        </div>
                       )}
                     </div>
                     <label className={styles.toggle}>
                       <input
                         type="checkbox"
-                        checked={cat.required ? true : (t?.value ?? false)}
+                        checked={cat.required ? true : (toggle?.value ?? false)}
                         disabled={cat.required}
-                        onChange={(e) => t?.set(e.target.checked)}
+                        onChange={(e) => toggle?.set(e.target.checked)}
                       />
                       <span className={styles.toggleTrack} />
                       <span className={styles.toggleThumb} />
                     </label>
                   </div>
-                  <p className={styles.cardBody}>{cat.body}</p>
+                  <p className={styles.cardBody}>{t(cat.bodyKey)}</p>
                   <div className={styles.rowHead}>
-                    <span className={styles.colLabel}>Name</span>
-                    <span className={styles.colLabel}>Expires</span>
-                    <span className={styles.colLabel}>Provider</span>
+                    <span className={styles.colLabel}>
+                      {t("marketing:cookies.columns.name")}
+                    </span>
+                    <span className={styles.colLabel}>
+                      {t("marketing:cookies.columns.expires")}
+                    </span>
+                    <span className={styles.colLabel}>
+                      {t("marketing:cookies.columns.provider")}
+                    </span>
                   </div>
                   <div className={styles.list}>
-                    {cat.cookies.map((c) => (
-                      <div key={c.name} className={styles.row}>
-                        <span className={styles.ckName}>{c.name}</span>
-                        <span className={styles.ckExp}>{c.expires}</span>
-                        <span className={styles.ckType}>{c.provider}</span>
+                    {cat.cookies.map((cookie) => (
+                      <div key={cookie.name} className={styles.row}>
+                        <span className={styles.ckName}>{cookie.name}</span>
+                        <span className={styles.ckExp}>
+                          {t(cookie.expiresKey)}
+                        </span>
+                        <span className={styles.ckType}>
+                          {cookie.provider}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -94,62 +108,72 @@ export function CookiesPage() {
 
             <div className={styles.noAds}>
               <div className={styles.noAdsTitle}>
-                No advertising cookies. Ever.
+                {t("marketing:cookies.noAds.title")}
               </div>
-              <p>
-                We do not use advertising networks, retargeting pixels, or
-                social media tracking cookies. We do not sell your data. We
-                never have and never will. There is no version of QueerPulse
-                with ads.
-              </p>
+              <p>{t("marketing:cookies.noAds.body")}</p>
             </div>
           </div>
 
           <aside className={styles.sidebar}>
             <div className={styles.summary}>
               <h3>
-                Your <em>current settings</em>
+                <Translation
+                  i18nKey="marketing:cookies.summary.title"
+                  components={{ em: <em /> }}
+                />
               </h3>
               <div className={styles.sumRow}>
-                <span className={styles.sumName}>Essential</span>
+                <span className={styles.sumName}>
+                  {t("marketing:cookies.summary.essential")}
+                </span>
                 <span className={`${styles.sumVal} ${styles.sumReq}`}>
-                  Always on
+                  {t("marketing:cookies.alwaysOn")}
                 </span>
               </div>
               <div className={styles.sumRow}>
-                <span className={styles.sumName}>Functional</span>
+                <span className={styles.sumName}>
+                  {t("marketing:cookies.summary.functional")}
+                </span>
                 <span
                   className={`${styles.sumVal} ${functional ? styles.sumOn : styles.sumOff}`}
                 >
-                  {functional ? "On" : "Off"}
+                  {functional
+                    ? t("marketing:cookies.summary.on")
+                    : t("marketing:cookies.summary.off")}
                 </span>
               </div>
               <div className={styles.sumRow}>
-                <span className={styles.sumName}>Analytics</span>
+                <span className={styles.sumName}>
+                  {t("marketing:cookies.summary.analytics")}
+                </span>
                 <span
                   className={`${styles.sumVal} ${analytics ? styles.sumOn : styles.sumOff}`}
                 >
-                  {analytics ? "On" : "Off"}
+                  {analytics
+                    ? t("marketing:cookies.summary.on")
+                    : t("marketing:cookies.summary.off")}
                 </span>
               </div>
               <div className={styles.actions}>
                 <Button variant="primary" onClick={save}>
-                  Save my preferences
+                  {t("marketing:cookies.actions.save")}
                 </Button>
                 <Button variant="ghost" onClick={acceptAll}>
-                  Accept all
+                  {t("marketing:cookies.actions.acceptAll")}
                 </Button>
                 <Button variant="ghost" onClick={essentialOnly}>
-                  Essential only
+                  {t("marketing:cookies.actions.essentialOnly")}
                 </Button>
               </div>
             </div>
             <div className={styles.info}>
-              These settings are saved in your browser and on your account if
-              you're signed in. You can change them at any time from your{" "}
-              <Link to={routes.settings}>account settings</Link> or by returning
-              to this page. See our{" "}
-              <Link to={routes.privacy}>privacy policy</Link> for more detail.
+              <Translation
+                i18nKey="marketing:cookies.info"
+                components={{
+                  settingsLink: <Link to={routes.settings} />,
+                  privacyLink: <Link to={routes.privacy} />,
+                }}
+              />
             </div>
           </aside>
         </div>
@@ -157,14 +181,15 @@ export function CookiesPage() {
 
       <Outro
         title={
-          <>
-            Your privacy. <em>Our commitment.</em>
-          </>
+          <Translation
+            i18nKey="marketing:cookies.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="We don't track you. We don't profile you. We don't sell anything about you."
+        sub={t("marketing:cookies.outro.sub")}
       >
         <Button variant="ghost-dark" size="lg" to={routes.privacy}>
-          Read our privacy policy
+          {t("marketing:cookies.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

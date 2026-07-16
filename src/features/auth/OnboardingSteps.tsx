@@ -9,6 +9,9 @@ import {
 } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { currentUser, getMember } from "../members/data/members";
 import { clearInviteWelcome, readInviteWelcome } from "./api/pendingInvite";
 import { useAgeAttestation } from "./api/useAgeAttestation";
@@ -35,16 +38,11 @@ interface StepProps {
 }
 
 /** A clearly-styled "skip for now" affordance for non-critical steps. */
-function SkipLink({
-  onSkip,
-  label = "Skip for now — you can add this later",
-}: {
-  onSkip: () => void;
-  label?: string;
-}) {
+function SkipLink({ onSkip, label }: { onSkip: () => void; label?: string }) {
+  const { t } = useTranslation();
   return (
     <button type="button" className={styles.skip} onClick={onSkip}>
-      {label} <FiArrowRight aria-hidden />
+      {label ?? t("auth:onboarding.stepPhoto.skip")} <FiArrowRight aria-hidden />
     </button>
   );
 }
@@ -56,29 +54,32 @@ export function StepIntro({
   stepLabel: string;
   onNext: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
-      <div className={styles.eye}>{stepLabel} · Welcome to QueerPulse</div>
+      <div className={styles.eye}>
+        {stepLabel} · {t("auth:onboarding.welcomeToQueerPulse")}
+      </div>
       <div className={styles.h}>
-        Let's start your <em>onboarding</em>
+        <Translation
+          i18nKey="auth:onboarding.stepIntro.heading"
+          components={{ em: <em /> }}
+        />
       </div>
-      <div className={styles.p}>
-        A few quick steps to set up your profile and find your people. It takes
-        about two minutes — and you can change anything later.
-      </div>
+      <div className={styles.p}>{t("auth:onboarding.stepIntro.body")}</div>
       <div className={styles.normCards}>
         {ONBOARDING_PREVIEW.map((item) => (
-          <div key={item.title} className={styles.normCard}>
+          <div key={item.titleKey} className={styles.normCard}>
             <div className={styles.ncDot} />
             <div>
-              <div className={styles.ncTitle}>{item.title}</div>
-              <div className={styles.ncDesc}>{item.desc}</div>
+              <div className={styles.ncTitle}>{t(item.titleKey)}</div>
+              <div className={styles.ncDesc}>{t(item.descKey)}</div>
             </div>
           </div>
         ))}
       </div>
       <div className={styles.nav}>
-        <Button onClick={onNext}>Let's begin</Button>
+        <Button onClick={onNext}>{t("auth:onboarding.stepIntro.cta")}</Button>
       </div>
     </>
   );
@@ -91,6 +92,7 @@ export function StepWelcome({
   stepLabel: string;
   onNext: () => void;
 }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   // Who vouched + their words, stashed by the invite landing; falls back to the
   // mock inviter when onboarding is reached without an invite in flight.
@@ -106,12 +108,15 @@ export function StepWelcome({
   };
   const inviterMeta = welcome
     ? inviter.since
-      ? `Member since ${inviter.since}`
-      : "Invited you"
-    : `Member since ${INVITER.since} · ${INVITER_ROLE}`;
+      ? t("auth:onboarding.stepWelcome.memberSince", { since: inviter.since })
+      : t("auth:onboarding.stepWelcome.invitedYou")
+    : t("auth:onboarding.stepWelcome.memberSinceRole", {
+        since: INVITER.since,
+        role: INVITER_ROLE,
+      });
   const vouchText =
     welcome?.vouch ??
-    `${firstName} is exactly the kind of person this community was built for — thoughtful, creative, and genuinely invested in making queer spaces better.`;
+    t("auth:onboarding.stepWelcome.vouchFallback", { firstName });
 
   return (
     <>
@@ -121,9 +126,15 @@ export function StepWelcome({
           <path className={styles.checkMark} d="M22 36l10.5 11.5L50 24" />
         </svg>
       </div>
-      <div className={styles.eye}>{stepLabel} · You're in</div>
+      <div className={styles.eye}>
+        {stepLabel} · {t("auth:onboarding.stepWelcome.eyebrowSuffix")}
+      </div>
       <div className={styles.h}>
-        Welcome, <em>{firstName}</em>
+        <Translation
+          i18nKey="auth:onboarding.stepWelcome.heading"
+          components={{ em: <em /> }}
+          values={{ firstName }}
+        />
       </div>
       <div className={styles.vouchCard}>
         <div className={styles.vcAv} aria-hidden>
@@ -148,18 +159,16 @@ export function StepWelcome({
           <div className={styles.vcNote}>“{vouchText}”</div>
         </div>
       </div>
-      <div className={styles.p}>
-        QueerPulse is a cared-for professional network rooted in Lisbon. You
-        were invited because someone here knows your worth.
-      </div>
+      <div className={styles.p}>{t("auth:onboarding.stepWelcome.body")}</div>
       <div className={styles.nav}>
-        <Button onClick={onNext}>Let's get started</Button>
+        <Button onClick={onNext}>{t("auth:onboarding.stepWelcome.cta")}</Button>
       </div>
     </>
   );
 }
 
 export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   // Prefill from the Google account they signed in with; fall back to initials.
   const googlePhoto = user?.profile.avatarUrl ?? undefined;
@@ -179,21 +188,21 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
   }
 
   const caption = preview
-    ? "Looking good — tap the photo to change it"
+    ? t("auth:onboarding.stepPhoto.captionPreview")
     : googlePhoto
-      ? "From your Google account — tap the photo to change it"
-      : "Tap to upload a photo";
+      ? t("auth:onboarding.stepPhoto.captionGoogle")
+      : t("auth:onboarding.stepPhoto.captionUpload");
 
   return (
     <>
       <div className={styles.eye}>{stepLabel}</div>
       <div className={styles.h}>
-        Put a face to the <em>name</em>
+        <Translation
+          i18nKey="auth:onboarding.stepPhoto.heading"
+          components={{ em: <em /> }}
+        />
       </div>
-      <div className={styles.p}>
-        A photo helps members feel comfortable connecting with you. You can
-        always add this later.
-      </div>
+      <div className={styles.p}>{t("auth:onboarding.stepPhoto.body")}</div>
       <div className={styles.photoWrap}>
         <label className={styles.photoFrame}>
           <input
@@ -201,17 +210,17 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
             accept="image/*"
             className={styles.photoInput}
             onChange={handleFile}
-            aria-label="Upload a profile photo"
+            aria-label={t("auth:onboarding.stepPhoto.uploadAriaLabel")}
           />
           <ImageSlot
             shape="circle"
             tint="coral"
             width={132}
             height={132}
-            placeholder="your photo"
+            placeholder={t("auth:onboarding.stepPhoto.placeholder")}
             src={shownPhoto}
             initials={initials}
-            alt="Your profile photo"
+            alt={t("auth:onboarding.stepPhoto.photoAlt")}
           />
           <span className={styles.photoEdit} aria-hidden>
             <FiCamera />
@@ -220,10 +229,10 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
         <p className={styles.photoCaption}>{caption}</p>
       </div>
       <div className={styles.nav}>
-        <Button onClick={onNext}>Continue</Button>
+        <Button onClick={onNext}>{t("auth:onboarding.stepPhoto.continue")}</Button>
         <SkipLink onSkip={onNext} />
         <button type="button" className={styles.back} onClick={onBack}>
-          ← Back
+          {t("auth:onboarding.stepPhoto.back")}
         </button>
       </div>
     </>
@@ -231,6 +240,7 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
 }
 
 export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
+  const { t } = useTranslation();
   const [agreed, setAgreed] = useState(false);
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
@@ -256,15 +266,18 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
     <>
       <div className={styles.eye}>{stepLabel}</div>
       <div className={styles.h}>
-        This is a <em>cared-for</em> space
+        <Translation
+          i18nKey="auth:onboarding.stepNorms.heading"
+          components={{ em: <em /> }}
+        />
       </div>
       <div className={styles.normCards}>
         {NORMS.map((norm) => (
-          <div key={norm.title} className={styles.normCard}>
+          <div key={norm.titleKey} className={styles.normCard}>
             <div className={styles.ncDot} />
             <div>
-              <div className={styles.ncTitle}>{norm.title}</div>
-              <div className={styles.ncDesc}>{norm.desc}</div>
+              <div className={styles.ncTitle}>{t(norm.titleKey)}</div>
+              <div className={styles.ncDesc}>{t(norm.descKey)}</div>
             </div>
           </div>
         ))}
@@ -276,8 +289,10 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
           onChange={(e) => setAgreed(e.target.checked)}
         />
         <span className={styles.agreeLabel}>
-          I've read and agree to the{" "}
-          <Link to={routes.guidelines}>Community Guidelines</Link>
+          <Translation
+            i18nKey="auth:onboarding.stepNorms.agree"
+            components={{ guidelines: <Link to={routes.guidelines} /> }}
+          />
         </span>
       </label>
       <AgeAttestation
@@ -292,10 +307,10 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
           disabled={!agreed || !is18 || attest.isPending}
           aria-busy={attest.isPending}
         >
-          I agree, continue
+          {t("auth:onboarding.stepNorms.continue")}
         </Button>
         <button type="button" className={styles.back} onClick={onBack}>
-          ← Back
+          {t("auth:onboarding.stepNorms.back")}
         </button>
       </div>
     </>
@@ -303,6 +318,7 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
 }
 
 export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
+  const { t } = useTranslation();
   const { selected: selectedIntents, toggle: toggleIntent } = useChipSet([
     "Community",
     "Professional connections",
@@ -314,23 +330,27 @@ export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
     <>
       <div className={styles.eye}>{stepLabel}</div>
       <div className={styles.h}>
-        What brings you <em>here?</em>
+        <Translation
+          i18nKey="auth:onboarding.stepIntents.heading"
+          components={{ em: <em /> }}
+        />
       </div>
-      <div className={styles.chipHint}>
-        Pick at least one — choose as many as fit.
-      </div>
+      <div className={styles.chipHint}>{t("auth:onboarding.stepIntents.hint")}</div>
       <ChipSelect
         className={styles.chips}
-        options={INTENTS}
+        options={INTENTS.map((intent) => ({
+          value: intent.value,
+          label: t(intent.labelKey),
+        }))}
         selected={selectedIntents}
         onToggle={toggleIntent}
       />
       <div className={styles.nav}>
         <Button onClick={onNext} disabled={!hasSelection}>
-          Continue
+          {t("auth:onboarding.stepIntents.continue")}
         </Button>
         <button type="button" className={styles.back} onClick={onBack}>
-          ← Back
+          {t("auth:onboarding.stepIntents.back")}
         </button>
       </div>
     </>
@@ -338,6 +358,7 @@ export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
 }
 
 export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
+  const { t } = useTranslation();
   const [joined, setJoined] = useState<Set<string>>(new Set(["cc1"]));
   function toggleJoin(id: string) {
     setJoined((current) => {
@@ -351,10 +372,13 @@ export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
     <>
       <div className={styles.eye}>{stepLabel}</div>
       <div className={styles.h}>
-        Find your <em>communities</em>
+        <Translation
+          i18nKey="auth:onboarding.stepCommunities.heading"
+          components={{ em: <em /> }}
+        />
       </div>
       <div className={styles.p} style={{ marginBottom: 20 }}>
-        Groups you might like based on your interests.
+        {t("auth:onboarding.stepCommunities.body")}
       </div>
       <div className={styles.communityGrid}>
         {COMMUNITIES_LIST.map((community) => {
@@ -378,10 +402,10 @@ export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
               >
                 {isJoined ? (
                   <>
-                    <FiCheck /> Joined
+                    <FiCheck /> {t("auth:onboarding.stepCommunities.joined")}
                   </>
                 ) : (
-                  "Join"
+                  t("auth:onboarding.stepCommunities.join")
                 )}
               </button>
             </div>
@@ -389,13 +413,13 @@ export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
         })}
       </div>
       <div className={styles.nav}>
-        <Button onClick={onNext}>Continue</Button>
+        <Button onClick={onNext}>{t("auth:onboarding.stepCommunities.continue")}</Button>
         <SkipLink
           onSkip={onNext}
-          label="Skip for now — explore and join later"
+          label={t("auth:onboarding.stepCommunities.skip")}
         />
         <button type="button" className={styles.back} onClick={onBack}>
-          ← Back
+          {t("auth:onboarding.stepCommunities.back")}
         </button>
       </div>
     </>
@@ -403,12 +427,16 @@ export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
 }
 
 export function StepDone({ stepLabel }: { stepLabel: string }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   return (
     <>
       <div className={styles.eye}>{stepLabel}</div>
       <div className={styles.h}>
-        You're <em>part of it</em> now
+        <Translation
+          i18nKey="auth:onboarding.stepDone.heading"
+          components={{ em: <em /> }}
+        />
       </div>
       <div className={styles.quickStart}>
         {QUICK_STARTS.map((qs) => (
@@ -417,8 +445,8 @@ export function StepDone({ stepLabel }: { stepLabel: string }) {
               <qs.icon />
             </span>
             <div className={styles.qsBody}>
-              <div className={styles.qsTitle}>{qs.title}</div>
-              <div className={styles.qsDesc}>{qs.desc}</div>
+              <div className={styles.qsTitle}>{t(qs.titleKey)}</div>
+              <div className={styles.qsDesc}>{t(qs.descKey, qs.descValues)}</div>
             </div>
             <span className={styles.qsArrow}>→</span>
           </Link>
@@ -431,7 +459,7 @@ export function StepDone({ stepLabel }: { stepLabel: string }) {
             navigate(routes.feed);
           }}
         >
-          Go to my home
+          {t("auth:onboarding.stepDone.cta")}
         </Button>
       </div>
     </>

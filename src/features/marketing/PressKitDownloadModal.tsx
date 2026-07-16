@@ -1,6 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { downloadBlob } from "./downloadBlob";
 import { type PressAsset } from "./pressKitAssets.data";
 import styles from "./MarketingModal.module.css";
@@ -31,6 +33,7 @@ export function PressKitDownloadModal({
   buttonLabel: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [done, setDone] = useState(false);
   useScrollLock();
 
@@ -50,13 +53,13 @@ export function PressKitDownloadModal({
         className={`${styles.modal} ${done ? styles.modalSuccess : ""}`}
         role="dialog"
         aria-modal="true"
-        aria-label="Download press asset"
+        aria-label={t("marketing:pressKit.modal.dialogAriaLabel")}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("marketing:pressKit.modal.closeAriaLabel")}
         >
           ×
         </button>
@@ -69,14 +72,20 @@ export function PressKitDownloadModal({
               </svg>
             </div>
             <h2>
-              Download <em>started.</em>
+              <Translation
+                i18nKey="marketing:pressKit.modal.success.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p>
-              <b>{asset.filename}</b> is saving to your device. Check your
-              downloads folder — and thanks for crediting QueerPulse.
+              <Translation
+                i18nKey="marketing:pressKit.modal.success.body"
+                components={{ b: <b /> }}
+                values={{ filename: asset.filename }}
+              />
             </p>
             <Button size="lg" variant="ghost-dark" onClick={onClose}>
-              Close
+              {t("marketing:pressKit.modal.closeCta")}
             </Button>
           </div>
         ) : (
@@ -103,7 +112,7 @@ export function PressKitDownloadModal({
 
             <div className={styles.foot}>
               <button type="button" className={styles.back} onClick={onClose}>
-                ← Cancel
+                {t("marketing:pressKit.modal.cancelCta")}
               </button>
               <Button size="lg" type="button" onClick={download}>
                 {buttonLabel}

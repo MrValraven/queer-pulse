@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Avatar } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useVouch } from "../../app/providers/VouchProvider";
 import {
   memberProfiles,
@@ -24,6 +26,7 @@ export function HeroVouchRow({
   realSelf: boolean;
   isSelf: boolean;
 }) {
+  const { t } = useTranslation();
   const { hasVouched } = useVouch();
   const vouched = hasVouched(profile.slug);
 
@@ -68,8 +71,8 @@ export function HeroVouchRow({
   const namesText = !youAdded
     ? profile.voucherNames
     : baseFaces.length > 0
-      ? `${profile.voucherNames}, plus you`
-      : "you";
+      ? t("members:hero.vouch.namesPlusYou", { names: profile.voucherNames })
+      : t("members:hero.vouch.youOnly");
 
   return (
     <div className={styles.vouchRow}>
@@ -98,24 +101,20 @@ export function HeroVouchRow({
             ))}
           </div>
           <div className={styles.vouchText}>
-            Vouched for by <b>{namesText}</b>.
+            <Translation
+              i18nKey="members:hero.vouch.by"
+              components={{ b: <b /> }}
+              values={{ names: namesText }}
+            />
             <br />
-            That's the only number that matters here.
+            {t("members:hero.vouch.onlyNumberMatters")}
           </div>
         </>
       ) : (
         <div className={styles.vouchText}>
-          {isSelf ? (
-            <>
-              No vouches yet. They'll appear here as people who know you add
-              their name — the only number that matters.
-            </>
-          ) : (
-            <>
-              No vouches for {profile.first} yet. If you know them, yours could
-              be the first.
-            </>
-          )}
+          {isSelf
+            ? t("members:hero.vouch.emptySelf")
+            : t("members:hero.vouch.emptyOther", { first: profile.first })}
         </div>
       )}
     </div>

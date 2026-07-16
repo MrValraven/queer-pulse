@@ -28,25 +28,31 @@ export interface Gathering {
   title: string;
   hood: string;
   detail: string;
-  spotsLabel: string;
+  /** i18n Pattern A — "seats left" / "going" / "spots left" / "Casual" chrome. */
+  spotsLabelKey: string;
   spotsValue?: string;
-  ctaLabel: string;
+  /** i18n Pattern A — "Reserve a seat" / "I'll be there" / etc. chrome. */
+  ctaLabelKey: string;
 }
 
 /** Warm (belonging/build) vs. safe (heavier safety/rights) styling. */
 export type GapTone = "warm" | "safe";
 
+/**
+ * i18n Pattern A. All copy here is platform-authored marketing chrome
+ * (rhetorical "overheard community question" + answer), identical in demo and
+ * live mode, so every field holds a catalog key rather than a literal string.
+ * `headingKey` carries the prefix + coral-italic accent + optional suffix as
+ * one rich-text catalog entry (`<Translation components={{ em: <em /> }} />`),
+ * mirroring the `<em>` idiom used elsewhere instead of three separate keys.
+ */
 interface GapAnswer {
   /** The overheard community question. */
-  question: string;
-  /** Heading text before the accented words. */
-  headingPrefix: string;
-  /** Emphasised (coral italic) words, usually trailing. */
-  accent: string;
-  /** Optional text after the accented words. */
-  headingSuffix?: string;
-  body: string;
-  ctaLabel: string;
+  questionKey: string;
+  /** Rich-text heading: prefix + `<em>accent</em>` + optional suffix. */
+  headingKey: string;
+  bodyKey: string;
+  ctaLabelKey: string;
   href: string;
 }
 
@@ -54,9 +60,9 @@ interface GapAnswer {
 export interface GapHero extends GapAnswer {
   kind: "hero";
   /** Small uppercase label above the question ("The gap we felt first"). */
-  eyebrow: string;
+  eyebrowKey: string;
   /** Jade "we built this" beat ("So we built the network"). */
-  builtLabel: string;
+  builtLabelKey: string;
 }
 
 /** A light conversational exchange row, alternating down the central line. */
@@ -68,7 +74,7 @@ export interface GapExchange extends GapAnswer {
 /** A small serif "chapter" label between beats. */
 export interface GapMarker {
   kind: "marker";
-  label: string;
+  labelKey: string;
 }
 
 export type GapThreadItem = GapHero | GapExchange | GapMarker;
@@ -106,11 +112,13 @@ export interface ChangeMaker {
 
 export type WellbeingTone = "violet" | "jade" | "coral" | "plum";
 
+/** i18n Pattern A — a fixed set of platform-defined resource categories, so
+ * title/description/ctaLabel are chrome and hold catalog keys. */
 export interface WellbeingResource {
   href: string;
-  title: string;
-  description: string;
-  ctaLabel: string;
+  titleKey: string;
+  descriptionKey: string;
+  ctaLabelKey: string;
   tone: WellbeingTone;
   icon: WellbeingIcon;
 }
@@ -135,9 +143,11 @@ export interface Community {
   slug?: string;
 }
 
+/** i18n Pattern A — a fixed set of 3 stat labels (chrome); `value`/`countTo`
+ * are the live numbers. */
 export interface GrantStat {
   value: string;
-  label: string;
+  labelKey: string;
   /** Numeric part for the count-up animation, when applicable. */
   countTo?: number;
   prefix?: string;
@@ -184,7 +194,8 @@ export type LibraryType = "recording" | "guide" | "notes";
 export interface LibraryItem {
   href: string;
   type: LibraryType;
-  typeLabel: string;
+  /** i18n Pattern A — a fixed set of platform-defined item types (chrome). */
+  typeLabelKey: string;
   title: string;
   meta: string[];
 }

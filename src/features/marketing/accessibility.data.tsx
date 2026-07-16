@@ -2,6 +2,15 @@ import { type ReactNode } from "react";
 
 export type Badge = "yes" | "partial" | "no";
 
+/**
+ * Mock venue records. `name`, `type`, `hood`, `note` and each `features[].label`
+ * are the venue's own self-reported accessibility facts — content, not chrome
+ * (matches DirectoryPage's venue records elsewhere in this feature) — so they
+ * stay in English regardless of locale. `reviewedByCount` is the one platform-
+ * generated field (QueerPulse's own "reviewed by N disabled members" badge);
+ * it holds just the number so the phrase can live in the catalog and get
+ * pluralised. `undefined` means "QueerPulse-operated space" instead.
+ */
 export interface Venue {
   name: string;
   type: string;
@@ -9,7 +18,7 @@ export interface Venue {
   note: string;
   features: { label: string; cls: Badge }[];
   featureTags: string[];
-  reviewer: string;
+  reviewedByCount?: number;
 }
 
 export const VENUES: Venue[] = [
@@ -34,7 +43,7 @@ export const VENUES: Venue[] = [
       "sensory-friendly",
       "carer-welcome",
     ],
-    reviewer: "Reviewed by 3 disabled members",
+    reviewedByCount: 3,
   },
   {
     name: "Trumps",
@@ -49,7 +58,7 @@ export const VENUES: Venue[] = [
       { label: "Carer welcome", cls: "yes" },
     ],
     featureTags: ["accessible-bathroom", "seating", "carer-welcome"],
-    reviewer: "Reviewed by 2 disabled members",
+    reviewedByCount: 2,
   },
   {
     name: "Deep Marvila",
@@ -65,7 +74,7 @@ export const VENUES: Venue[] = [
       { label: "Carer welcome", cls: "yes" },
     ],
     featureTags: ["step-free", "seating", "carer-welcome"],
-    reviewer: "Reviewed by 2 disabled members",
+    reviewedByCount: 2,
   },
   {
     name: "A Cena",
@@ -89,7 +98,7 @@ export const VENUES: Venue[] = [
       "sensory-friendly",
       "carer-welcome",
     ],
-    reviewer: "Reviewed by 5 disabled members",
+    reviewedByCount: 5,
   },
   {
     name: "Finalmente Club",
@@ -103,7 +112,7 @@ export const VENUES: Venue[] = [
       { label: "High noise environment", cls: "no" },
     ],
     featureTags: [],
-    reviewer: "Reviewed by 4 disabled members",
+    reviewedByCount: 4,
   },
   {
     name: "Tasca do Chico",
@@ -117,7 +126,7 @@ export const VENUES: Venue[] = [
       { label: "Staff welcoming", cls: "yes" },
     ],
     featureTags: [],
-    reviewer: "Reviewed by 2 disabled members",
+    reviewedByCount: 2,
   },
   {
     name: "Queer Lisboa HQ",
@@ -138,25 +147,42 @@ export const VENUES: Venue[] = [
       "sensory-friendly",
       "carer-welcome",
     ],
-    reviewer: "QueerPulse-operated space",
+    // No count set — QueerPulse operates this space directly.
   },
 ];
 
-export const FILTERS = [
-  { id: "all", label: "All venues" },
-  { id: "step-free", label: "Step-free" },
-  { id: "accessible-bathroom", label: "Accessible bathroom" },
-  { id: "seating", label: "Seating available" },
-  { id: "hearing-loop", label: "Hearing loop" },
-  { id: "sensory-friendly", label: "Sensory-friendly" },
-  { id: "carer-welcome", label: "Carer welcome" },
+/**
+ * i18n Pattern A — everything below is platform-authored chrome (filter
+ * chips, the commitments list, resource links, the flag-issue picklist), so
+ * every label is a catalog key resolved with `t()` at the call site.
+ */
+export const FILTERS: { id: string; labelKey: string }[] = [
+  { id: "all", labelKey: "marketing:accessibility.filters.all" },
+  { id: "step-free", labelKey: "marketing:accessibility.filters.stepFree" },
+  {
+    id: "accessible-bathroom",
+    labelKey: "marketing:accessibility.filters.accessibleBathroom",
+  },
+  { id: "seating", labelKey: "marketing:accessibility.filters.seating" },
+  {
+    id: "hearing-loop",
+    labelKey: "marketing:accessibility.filters.hearingLoop",
+  },
+  {
+    id: "sensory-friendly",
+    labelKey: "marketing:accessibility.filters.sensoryFriendly",
+  },
+  {
+    id: "carer-welcome",
+    labelKey: "marketing:accessibility.filters.carerWelcome",
+  },
 ];
 
 export const COMMITMENTS: {
   icon: ReactNode;
-  title: string;
-  body: string;
-  status: string;
+  titleKey: string;
+  bodyKey: string;
+  statusKey: string;
 }[] = [
   {
     icon: (
@@ -165,9 +191,9 @@ export const COMMITMENTS: {
         <path d="M5 9h10M5 13h6" />
       </>
     ),
-    title: "Live captions at online events",
-    body: "All QueerPulse online events use automatic captions as a minimum. For larger events, human-edited captions are arranged on request.",
-    status: "Standard practice",
+    titleKey: "marketing:accessibility.commitments.captions.title",
+    bodyKey: "marketing:accessibility.commitments.captions.body",
+    statusKey: "marketing:accessibility.commitments.captions.status",
   },
   {
     icon: (
@@ -176,15 +202,15 @@ export const COMMITMENTS: {
         <circle cx="15" cy="5" r="2" />
       </>
     ),
-    title: "LGP interpretation on request",
-    body: "Portuguese Sign Language (LGP) interpretation can be arranged for QueerPulse gatherings and larger community events with at least two weeks' notice.",
-    status: "Available on request · 14 days notice",
+    titleKey: "marketing:accessibility.commitments.lgp.title",
+    bodyKey: "marketing:accessibility.commitments.lgp.body",
+    statusKey: "marketing:accessibility.commitments.lgp.status",
   },
   {
     icon: <path d="M10 3v14M3 10h14" />,
-    title: "Seating always available",
-    body: "QueerPulse gatherings always have seating available — standing-only events are not acceptable. If an event is at a venue where seating is limited, we say so clearly in the listing.",
-    status: "Non-negotiable minimum",
+    titleKey: "marketing:accessibility.commitments.seating.title",
+    bodyKey: "marketing:accessibility.commitments.seating.body",
+    statusKey: "marketing:accessibility.commitments.seating.status",
   },
   {
     icon: (
@@ -193,9 +219,9 @@ export const COMMITMENTS: {
         <path d="M10 7v4l2.5 2.5" />
       </>
     ),
-    title: "Sensory-friendly events flagged",
-    body: "Events designed with lower sensory load (quieter music, lower lighting, no strobes, quieter entry space) are flagged on the calendar with a clear indicator.",
-    status: "Flagged on every calendar listing",
+    titleKey: "marketing:accessibility.commitments.sensory.title",
+    bodyKey: "marketing:accessibility.commitments.sensory.body",
+    statusKey: "marketing:accessibility.commitments.sensory.status",
   },
   {
     icon: (
@@ -204,51 +230,56 @@ export const COMMITMENTS: {
         <path d="M4 17c0-3.31 2.69-6 6-6s6 2.69 6 6" />
       </>
     ),
-    title: "Carers & PAs welcome",
-    body: "Personal assistants and carers are always welcome at QueerPulse events at no additional cost. No justification required — just let us know when you register.",
-    status: "Always, without question",
+    titleKey: "marketing:accessibility.commitments.carers.title",
+    bodyKey: "marketing:accessibility.commitments.carers.body",
+    statusKey: "marketing:accessibility.commitments.carers.status",
   },
   {
     icon: <path d="M10 2L2 7v6a8 8 0 0 0 16 0V7L10 2z" />,
-    title: "Platform accessibility",
-    body: "QueerPulse is committed to WCAG 2.1 AA compliance. If you find something inaccessible on the platform, report it — we treat these as priority fixes, not feature requests.",
-    status: "Report via the forum or contact page",
+    titleKey: "marketing:accessibility.commitments.platform.title",
+    bodyKey: "marketing:accessibility.commitments.platform.body",
+    statusKey: "marketing:accessibility.commitments.platform.status",
   },
 ];
 
-export const RESOURCES = [
+export const RESOURCES: {
+  eyebrowKey: string;
+  titleKey: string;
+  bodyKey: string;
+  linkKey: string;
+}[] = [
   {
-    eyebrow: "Benefits & entitlements",
-    title: "Portuguese disability benefits as a migrant",
-    body: "Navigating the Portuguese social security system (Segurança Social) as an expat or recent migrant with a disability is genuinely complicated. This guide, maintained by community members, covers what you're entitled to at different stages of residency — EU citizens, non-EU residents, and people awaiting documentation.",
-    link: "Full benefits guide →",
+    eyebrowKey: "marketing:accessibility.resources.benefits.eyebrow",
+    titleKey: "marketing:accessibility.resources.benefits.title",
+    bodyKey: "marketing:accessibility.resources.benefits.body",
+    linkKey: "marketing:accessibility.resources.benefits.link",
   },
   {
-    eyebrow: "Healthcare",
-    title: "Disability-affirming, queer-friendly healthcare",
-    body: "Finding a GP or specialist who is both disability-affirming and queer-friendly is harder than it should be. Community-reviewed healthcare providers are listed here — people who understand that being disabled and queer are not separate things requiring separate appointments.",
-    link: "Health providers directory →",
+    eyebrowKey: "marketing:accessibility.resources.healthcare.eyebrow",
+    titleKey: "marketing:accessibility.resources.healthcare.title",
+    bodyKey: "marketing:accessibility.resources.healthcare.body",
+    linkKey: "marketing:accessibility.resources.healthcare.link",
   },
   {
-    eyebrow: "Legal rights",
-    title: "Disability discrimination and your rights",
-    body: "Portuguese law prohibits discrimination on grounds of disability in employment, housing, and public services. This includes the right to reasonable adjustments. If you've experienced discrimination from a landlord, employer, or service provider, there are routes to challenge it.",
-    link: "Legal resources →",
+    eyebrowKey: "marketing:accessibility.resources.legal.eyebrow",
+    titleKey: "marketing:accessibility.resources.legal.title",
+    bodyKey: "marketing:accessibility.resources.legal.body",
+    linkKey: "marketing:accessibility.resources.legal.link",
   },
   {
-    eyebrow: "Mental health",
-    title: "Chronic illness, disability, and mental health support",
-    body: "The intersection of chronic illness, disability, and queer identity creates specific mental health pressures. QueerPulse's wellbeing resources include therapists with experience of disabled queer clients, and peer support groups that don't require you to explain yourself from scratch.",
-    link: "Wellbeing resources →",
+    eyebrowKey: "marketing:accessibility.resources.mentalHealth.eyebrow",
+    titleKey: "marketing:accessibility.resources.mentalHealth.title",
+    bodyKey: "marketing:accessibility.resources.mentalHealth.body",
+    linkKey: "marketing:accessibility.resources.mentalHealth.link",
   },
 ];
 
-export const FLAG_ISSUES = [
-  "Step-free access was not as described",
-  "Accessible bathroom was unavailable or not as described",
-  "Seating was not available",
-  "Hearing loop was not working",
-  "Sensory environment was not as described",
-  "Staff were unhelpful or dismissive",
-  "Something else",
+export const FLAG_ISSUE_KEYS = [
+  "marketing:accessibility.flagIssues.stepFree",
+  "marketing:accessibility.flagIssues.bathroom",
+  "marketing:accessibility.flagIssues.seating",
+  "marketing:accessibility.flagIssues.hearingLoop",
+  "marketing:accessibility.flagIssues.sensory",
+  "marketing:accessibility.flagIssues.staff",
+  "marketing:accessibility.flagIssues.other",
 ];

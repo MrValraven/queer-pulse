@@ -39,19 +39,26 @@ import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 
 /* ── Step-up re-authentication ─────────────────────────────────────────── */
 
-export interface ReauthDto {
-  /** For password accounts. Google-only accounts re-consent via OAuth instead. */
-  password: string;
-}
 export interface ReauthResult {
   /** Short-lived, single-purpose token (~5 min) required by destructive/export routes. */
   reauthToken: string;
   expiresAt: string;
 }
 
-/** POST /account/reauth — verify identity before any erasure/export action. */
-export const reauth = (dto: ReauthDto) =>
-  apiPost<ReauthResult>("/account/reauth", dto);
+/**
+ * POST /account/reauth — mint the short-lived, single-purpose token that every
+ * erasure/export route requires.
+ *
+ * Takes NO credential, deliberately. Auth is Google OAuth + invite redemption:
+ * there is no password on a QueerPulse account, so the backend has nothing to
+ * verify one against and doesn't try — `AccountService.reauth(userId)` reads
+ * only the authenticated cookie session, and `ReauthDto` marks `password`
+ * optional purely to tolerate (and discard) it from older frontend builds. The
+ * UI used to collect a password here; it was never checked, which made it a
+ * security theatre prompt on the two most destructive flows we have. The real
+ * gate is the cookie session plus the typed confirmation in the UI.
+ */
+export const reauth = () => apiPost<ReauthResult>("/account/reauth", {});
 
 /* ── Right to erasure — account deletion ───────────────────────────────── */
 
@@ -155,6 +162,34 @@ export const submitDsar = (dto: SubmitDsarDto) =>
 export const listDsar = () => apiGet<DsarRequest[]>("/account/dsar");
 
 /* ── Sessions (spec 08 territory — referenced here for the security email) ── */
+
+/**
+ * One live session, verbatim from `GET /account/sessions`.
+ *
+ * Verified against the backend rather than guessed: `account.controller.ts`
+ * `listSessions` → `AccountService.listSessions` → `toSessionResponse`
+ * (`account-response.ts`). A "session" IS a non-revoked row in the
+ * refresh-token store, newest first. That store has no geo/IP, no
+ * last-seen and no device-name column, so this shape carries NO location and
+ * NO last-activity — the page must not invent either. `deviceLabel` is
+ * likewise always `null` today (the column doesn't exist yet); it stays in the
+ * contract because the backend already emits the key and intends to fill it.
+ * `current` is resolved server-side from the presenting `refresh_token` cookie.
+ */
+export interface SessionResponse {
+  id: string;
+  /** Always `null` today — no device-name column in the refresh-token store. */
+  deviceLabel: string | null;
+  /** Raw UA string captured at sign-in; `""` when the client sent none. */
+  userAgent: string;
+  /** True for the session making this request (matched on the refresh cookie). */
+  current: boolean;
+  createdAt: string;
+  expiresAt: string;
+}
+
+/** GET /account/sessions — every live session for the caller, newest first. */
+export const getSessions = () => apiGet<SessionResponse[]>("/account/sessions");
 
 /**
  * DELETE /account/sessions/:id — revoke one session. A revoke from an

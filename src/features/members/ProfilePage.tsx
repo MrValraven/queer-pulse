@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { FiUserX } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, Spinner } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useAuth } from "../../app/providers/authContext";
@@ -19,6 +21,7 @@ import styles from "./ProfilePage.module.css";
 import editStyles from "./ProfileEdit.module.css";
 
 export function ProfilePage() {
+  const { t } = useTranslation();
   const { slug } = useParams();
   const navigate = useNavigate();
   const {
@@ -59,7 +62,7 @@ export function ProfilePage() {
       <PageShell>
         <div className={styles.stateWrap} role="status" aria-live="polite">
           <Spinner />
-          <span>Loading profile…</span>
+          <span>{t("members:profile.loading")}</span>
         </div>
       </PageShell>
     );
@@ -72,11 +75,14 @@ export function ProfilePage() {
           <EmptyState
             className={styles.stateEmpty}
             icon={<FiUserX />}
-            title="This profile isn't available"
-            description="You've blocked this member, so their profile is hidden. You can unblock them from your connections at any time."
-            action={{ label: "Manage blocked members", to: routes.connections }}
+            title={t("members:profile.blocked.title")}
+            description={t("members:profile.blocked.description")}
+            action={{
+              label: t("members:profile.blocked.manageAction"),
+              to: routes.connections,
+            }}
             secondaryAction={{
-              label: "← Go back",
+              label: t("members:profile.goBack"),
               onClick: () => navigate(-1),
             }}
           />
@@ -92,11 +98,14 @@ export function ProfilePage() {
           <EmptyState
             className={styles.stateEmpty}
             icon={<FiUserX />}
-            title="This profile isn't here"
-            description="It may have been set to private, the member might have left, or this link could be out of date. Nothing's wrong on your end."
-            action={{ label: "Back to Members", to: routes.members }}
+            title={t("members:profile.notFound.title")}
+            description={t("members:profile.notFound.description")}
+            action={{
+              label: t("members:profile.notFound.backAction"),
+              to: routes.members,
+            }}
             secondaryAction={{
-              label: "← Go back",
+              label: t("members:profile.goBack"),
               onClick: () => navigate(-1),
             }}
           />
@@ -117,7 +126,7 @@ export function ProfilePage() {
     <PageShell>
       <div className={`${styles.backBar} wrap`}>
         <Link to={routes.members} className={styles.backLink}>
-          ← Back to the room
+          {t("members:profile.backToRoom")}
         </Link>
       </div>
 
@@ -163,10 +172,13 @@ export function ProfilePage() {
       {isSelf && previewing && (
         <div className={editStyles.previewBar}>
           <span className={editStyles.previewText}>
-            You’re previewing your profile as a <strong>visitor</strong>.
+            <Translation
+              i18nKey="members:profile.previewBanner"
+              components={{ strong: <strong /> }}
+            />
           </span>
           <Button variant="ghost-dark" onClick={() => setPreviewing(false)}>
-            Exit preview
+            {t("members:profile.exitPreview")}
           </Button>
         </div>
       )}

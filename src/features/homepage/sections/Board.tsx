@@ -7,6 +7,8 @@ import {
   Reveal,
   SectionHead,
 } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../../app/routeMap";
 import { boardFilters, boardPosts } from "../data/boardPosts";
 import { filterBoardPosts } from "../lib/filters";
@@ -15,6 +17,7 @@ import styles from "./Board.module.css";
 type BoardFilter = (typeof boardFilters)[number]["value"];
 
 export function Board() {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState<BoardFilter>("all");
   const visible = filterBoardPosts(boardPosts, filter);
 
@@ -25,11 +28,12 @@ export function Board() {
           <SectionHead
             className={styles.head}
             title={
-              <>
-                Asks &amp; <em>offers</em>
-              </>
+              <Translation
+                i18nKey="homepage:board.title"
+                components={{ em: <em /> }}
+              />
             }
-            subtitle="The community noticeboard. What the room needs this week — and what it's giving back. No job titles required."
+            subtitle={t("homepage:board.subtitle")}
           />
         </Reveal>
 
@@ -47,7 +51,7 @@ export function Board() {
                   .join(" ")}
                 onClick={() => setFilter(option.value)}
               >
-                {option.label}
+                {t(option.labelKey)}
               </button>
             ))}
           </div>
@@ -56,7 +60,7 @@ export function Board() {
             to={routes.offer}
             style={{ fontSize: 13, padding: "9px 17px" }}
           >
-            + Post something
+            {t("homepage:board.postSomethingCta")}
           </Button>
         </Reveal>
 
@@ -64,9 +68,12 @@ export function Board() {
           <EmptyState
             compact
             icon={<FiClipboard />}
-            title="Nothing on the board for that filter"
-            description="The noticeboard moves with the week. Clear the filter to see what the room is asking for and offering right now."
-            action={{ label: "Clear filters", onClick: () => setFilter("all") }}
+            title={t("homepage:board.empty.title")}
+            description={t("homepage:board.empty.description")}
+            action={{
+              label: t("homepage:board.empty.clearFilters"),
+              onClick: () => setFilter("all"),
+            }}
           />
         ) : (
           <div className={styles.grid}>
@@ -77,7 +84,9 @@ export function Board() {
                 className={styles.ask}
               >
                 <span className={[styles.kind, styles[post.kind]].join(" ")}>
-                  {post.kind === "looking" ? "Looking for" : "Offering"}
+                  {post.kind === "looking"
+                    ? t("homepage:board.kind.lookingFor")
+                    : t("homepage:board.kind.offering")}
                 </span>
                 <h3 className={styles.title}>{post.title}</h3>
                 <div className={styles.poster}>

@@ -1,7 +1,12 @@
+import type { TFunction } from "../../shared/i18n/types";
+
 /**
  * Real, client-generated file payloads for the press-kit downloads. The
  * prototype has no backend, so each "download" produces a genuine Blob from
- * these strings via downloadBlob().
+ * these strings via downloadBlob(). Every line of prose here is
+ * platform-authored chrome (a press-kit README/licence/placeholder text)
+ * that ships in the bundle regardless of demo/live mode, so it's translated
+ * in full via `t()` — see `buildKitReadme` / `buildBoilerTxt` / `assetFor`.
  */
 
 export interface PressAsset {
@@ -24,86 +29,107 @@ export function logoSvg(variant: "light" | "plum" | "coral" = "light"): string {
 </svg>`;
 }
 
-const KIT_README = `QUEERPULSE — PRESS KIT
+/** Builds the plain-text README + licence file bundled with the full kit. */
+export function buildKitReadme(t: TFunction): string {
+  return `${t("marketing:pressKit.readme.heading")}
 ======================
-Updated 14 May 2026
+${t("marketing:pressKit.readme.updated")}
 
-Licence
+${t("marketing:pressKit.readme.licenceHeading")}
 -------
-All assets in this kit are licensed under Creative Commons BY 4.0 for editorial
-use. Commercial reuse requires written permission — write to press@queerpulse.app.
+${t("marketing:pressKit.readme.licenceBody")}
 
-Contents
+${t("marketing:pressKit.readme.contentsHeading")}
 --------
-1. Boilerplate (25 / 60 / 130 words) — cleared for direct quotation.
-2. Marks — SVG + PNG @2x, three approved variations.
-3. Colour system — Plum #2D1B3D · Coral #E8775A · Cream #F7F3EE · Jade #4A8C6F.
-4. Photography — six model-released images, 3000 x 2000 px.
-5. Named spokespeople and their topics.
-6. Fact sheet (EN & PT).
-7. 2025 transparency report (audited).
+1. ${t("marketing:pressKit.readme.contents.boilerplate")}
+2. ${t("marketing:pressKit.readme.contents.marks")}
+3. ${t("marketing:pressKit.readme.contents.colour")}
+4. ${t("marketing:pressKit.readme.contents.photography")}
+5. ${t("marketing:pressKit.readme.contents.spokespeople")}
+6. ${t("marketing:pressKit.readme.contents.factSheet")}
+7. ${t("marketing:pressKit.readme.contents.transparencyReport")}
 
-Press desk
+${t("marketing:pressKit.readme.pressDeskHeading")}
 ----------
-press@queerpulse.app · +351 21 314 08 22 (Mon-Fri 10:00-18:00 WET)
-Response time: < 8 working hours · Languages: EN · PT · ES
+press@queerpulse.app · +351 21 314 08 22 (${t("marketing:pressKit.readme.hours")})
+${t("marketing:pressKit.readme.responseTime")}
 
-(This is a prototype download generated in your browser — the real ZIP is
-assembled server-side in production.)
+(${t("marketing:pressKit.readme.prototypeNote")})
 `;
+}
 
-export const KIT_MANIFEST: PressAsset = {
-  filename: "queerpulse-press-kit-README.txt",
-  mime: "text/plain;charset=utf-8",
-  content: KIT_README,
-};
+export function buildKitManifest(t: TFunction): PressAsset {
+  return {
+    filename: "queerpulse-press-kit-README.txt",
+    mime: "text/plain;charset=utf-8",
+    content: buildKitReadme(t),
+  };
+}
 
-export const KIT_PREVIEW = [
-  {
-    ic: "TXT",
-    title: "README + licence",
-    desc: "CC BY 4.0 terms · contacts · contents list",
-  },
-  {
-    ic: "SVG",
-    title: "Marks · 3 variations",
-    desc: "Light · plum · coral · vector",
-  },
-  { ic: "PNG", title: "Marks @2x", desc: "For docs, slides, web" },
-  {
-    ic: "JPG",
-    title: "Photography · 6 images",
-    desc: "3000 × 2000 px · model-released",
-  },
-  { ic: "TXT", title: "Boilerplate", desc: "25 / 60 / 130-word versions" },
-  { ic: "PDF", title: "Fact sheet · EN & PT", desc: "One-page printable" },
-];
+export function buildKitPreview(
+  t: TFunction,
+): { ic: string; title: string; desc: string }[] {
+  return [
+    {
+      ic: "TXT",
+      title: t("marketing:pressKit.preview.readme.title"),
+      desc: t("marketing:pressKit.preview.readme.desc"),
+    },
+    {
+      ic: "SVG",
+      title: t("marketing:pressKit.preview.marks.title"),
+      desc: t("marketing:pressKit.preview.marks.desc"),
+    },
+    {
+      ic: "PNG",
+      title: t("marketing:pressKit.preview.marksPng.title"),
+      desc: t("marketing:pressKit.preview.marksPng.desc"),
+    },
+    {
+      ic: "JPG",
+      title: t("marketing:pressKit.preview.photography.title"),
+      desc: t("marketing:pressKit.preview.photography.desc"),
+    },
+    {
+      ic: "TXT",
+      title: t("marketing:pressKit.preview.boilerplate.title"),
+      desc: t("marketing:pressKit.preview.boilerplate.desc"),
+    },
+    {
+      ic: "PDF",
+      title: t("marketing:pressKit.preview.factSheet.title"),
+      desc: t("marketing:pressKit.preview.factSheet.desc"),
+    },
+  ];
+}
 
-const BOILER_TXT = `QUEERPULSE — APPROVED BOILERPLATE
+/** Builds the plain-text approved-boilerplate download, reusing the same
+ * translated short/medium boilerplate copy shown on the page itself. */
+export function buildBoilerTxt(t: TFunction): string {
+  return `${t("marketing:pressKit.readme.boilerHeading")}
 =================================
 
-SHORT (25 words)
-QueerPulse is a queer professional network rooted in Lisbon — connecting LGBTQ+
-professionals, creatives, activists and community members for work, community,
-culture and mutual support.
+${t("marketing:pressKit.boiler.short.wc").toUpperCase()}
+${t("marketing:pressKit.boiler.short.text")}
 
-MEDIUM (60 words)
-QueerPulse is a queer professional network rooted in Lisbon, founded in 2024.
-We connect LGBTQ+ professionals, creatives, activists and community members for
-work, community, culture and mutual support. Membership is by invitation,
-operationally protected, and free at the solidarity tier. The platform runs a
-magazine, a podcast, a safe-spaces network, and a micro-grants fund disbursed by
-the community itself.
+${t("marketing:pressKit.boiler.med.wc").toUpperCase()}
+${t("marketing:pressKit.boiler.med.text")}
 
-These versions are cleared for direct quotation without further sign-off.
+${t("marketing:pressKit.readme.boilerCleared")}
 `;
+}
 
 /**
  * Build the file payload for a given Downloads-section row, keyed off its
  * icon label. Logos/marks become real SVGs; everything else a readable text
  * manifest describing the asset.
  */
-export function assetFor(ic: string, title: string, desc: string): PressAsset {
+export function assetFor(
+  t: TFunction,
+  ic: string,
+  title: string,
+  desc: string,
+): PressAsset {
   const slug = title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
@@ -116,14 +142,15 @@ export function assetFor(ic: string, title: string, desc: string): PressAsset {
     };
   }
   if (ic === "ZIP") {
-    return KIT_MANIFEST;
+    return buildKitManifest(t);
   }
   return {
     filename: `${slug}.txt`,
     mime: "text/plain;charset=utf-8",
     content:
-      title === "Boilerplate" || /boilerplate/i.test(title)
-        ? BOILER_TXT
-        : `QUEERPULSE — ${title.toUpperCase()}\n\n${desc}\n\nThis file is a prototype placeholder generated in your browser.\nThe production press kit ships the real asset described above.\n\npress@queerpulse.app\n`,
+      title === t("marketing:pressKit.downloads.boilerplate.title") ||
+      /boilerplate/i.test(title)
+        ? buildBoilerTxt(t)
+        : `QUEERPULSE — ${title.toUpperCase()}\n\n${desc}\n\n${t("marketing:pressKit.placeholderFile.line1")}\n${t("marketing:pressKit.placeholderFile.line2")}\n\npress@queerpulse.app\n`,
   };
 }

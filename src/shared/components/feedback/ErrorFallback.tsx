@@ -1,6 +1,8 @@
 import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../ui/Button";
 import { routes } from "../../../app/routeMap";
+import { useTranslation } from "../../i18n/useTranslation";
+import { Translation } from "../../i18n/Translation";
 import styles from "./ErrorFallback.module.css";
 
 interface ErrorFallbackProps {
@@ -17,6 +19,7 @@ interface ErrorFallbackProps {
  * end. Never a white card (design-system rule) — plum panel on cream.
  */
 export function ErrorFallback({ onReset, referenceId }: ErrorFallbackProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.wrap} role="alert">
       <div className={styles.panel}>
@@ -24,21 +27,25 @@ export function ErrorFallback({ onReset, referenceId }: ErrorFallbackProps) {
           <FiAlertTriangle size={26} color="var(--accent)" aria-hidden />
         </div>
         <h2 className={styles.title}>
-          Something broke on our <em>end</em>
+          <Translation
+            i18nKey="shared:feedback.errorFallback.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p className={styles.body}>
-          Nothing you did caused this, and nothing's lost. Try again, or head
-          back home — we're already looking into it.
-        </p>
+        <p className={styles.body}>{t("shared:feedback.errorFallback.body")}</p>
         <div className={styles.actions}>
           <Button size="lg" variant="ghost-dark" onClick={onReset}>
-            Try again
+            {t("shared:feedback.errorFallback.tryAgain")}
           </Button>
           <Button size="lg" variant="ghost-dark" to={routes.homepage}>
-            Back to home
+            {t("common:cta.backHome")}
           </Button>
         </div>
-        {referenceId && <p className={styles.ref}>Reference: {referenceId}</p>}
+        {referenceId && (
+          <p className={styles.ref}>
+            {t("shared:feedback.errorFallback.reference", { referenceId })}
+          </p>
+        )}
       </div>
     </div>
   );

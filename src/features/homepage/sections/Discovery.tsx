@@ -9,6 +9,8 @@ import {
   TagRow,
 } from "../../../shared/components/ui";
 import { usePrefersReducedMotion } from "../../../shared/hooks";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useConnect } from "../../../app/providers/ConnectProvider";
 import { members } from "../data/members";
@@ -61,6 +63,7 @@ const ROTATE_MS = 5500;
 /** One featured member: big portrait on the left, their story on the right. */
 function SpotlightFace({ member, quote }: Spotlight) {
   const { openConnect } = useConnect();
+  const { t } = useTranslation();
   const to = profilePath(member);
   const portrait = portraitSrc(member.photo);
 
@@ -95,13 +98,15 @@ function SpotlightFace({ member, quote }: Spotlight) {
                 strokeLinejoin="round"
               />
             </svg>
-            Verified
+            {t("homepage:discovery.verifiedBadge")}
           </span>
         )}
       </div>
 
       <div className={styles.featContent}>
-        <span className={styles.capMeta}>Featured member</span>
+        <span className={styles.capMeta}>
+          {t("homepage:discovery.featuredMember")}
+        </span>
         <Link to={to} className={styles.nameLink}>
           <h3 className={styles.name}>{member.name}</h3>
         </Link>
@@ -118,11 +123,14 @@ function SpotlightFace({ member, quote }: Spotlight) {
 
         <div className={styles.featFoot}>
           {member.verified && (
-            <span className={styles.vouch}>Vouched by {member.vouchedBy}</span>
+            <span className={styles.vouch}>
+              {t("homepage:discovery.vouchedBy", { name: member.vouchedBy })}
+            </span>
           )}
           {member.visibility === "private" ? (
             <Link to={to} className={styles.sayHi}>
-              View profile <span aria-hidden>→</span>
+              {t("homepage:discovery.viewProfile")}{" "}
+              <span aria-hidden>→</span>
             </Link>
           ) : (
             <span
@@ -137,7 +145,7 @@ function SpotlightFace({ member, quote }: Spotlight) {
                 }
               }}
             >
-              Say hello <span aria-hidden>→</span>
+              {t("homepage:discovery.sayHello")} <span aria-hidden>→</span>
             </span>
           )}
         </div>
@@ -147,6 +155,7 @@ function SpotlightFace({ member, quote }: Spotlight) {
 }
 
 function FeaturedSpotlightCard({ items }: { items: Spotlight[] }) {
+  const { t } = useTranslation();
   const reducedMotion = usePrefersReducedMotion();
   const [view, setView] = useState<{ active: number; prev: number | null }>({
     active: 0,
@@ -208,7 +217,10 @@ function FeaturedSpotlightCard({ items }: { items: Spotlight[] }) {
       </div>
 
       {items.length > 1 && (
-        <div className={styles.dots} aria-label="Featured members">
+        <div
+          className={styles.dots}
+          aria-label={t("homepage:discovery.featuredMembersAria")}
+        >
           {items.map((item, index) => (
             <button
               key={item.member.key}
@@ -216,7 +228,9 @@ function FeaturedSpotlightCard({ items }: { items: Spotlight[] }) {
               className={[styles.navDot, index === active && styles.navDotOn]
                 .filter(Boolean)
                 .join(" ")}
-              aria-label={`Feature ${item.member.name}`}
+              aria-label={t("homepage:discovery.featureMemberAria", {
+                name: item.member.name,
+              })}
               aria-current={index === active}
               onClick={() => select(index)}
             />
@@ -252,20 +266,23 @@ function MemberRow({ member }: { member: Member }) {
 }
 
 export function Discovery() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.discovery} id="discovery">
       <div className="wrap">
         <Reveal className={styles.eyebrow}>
           <span className={styles.dot} aria-hidden />
-          520+ verified members
+          {t("homepage:discovery.eyebrow", { count: 520 })}
         </Reveal>
         <Reveal as="h2" className={styles.display} delay={60}>
-          The people <em>behind the pulse.</em>
+          <Translation
+            i18nKey="homepage:discovery.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.sub} delay={120}>
-          The designers, engineers, chefs, filmmakers, ceramicists and carers
-          who make Lisbon what it is — and want to find each other, without the
-          performance.
+          {t("homepage:discovery.sub")}
         </Reveal>
 
         <div className={styles.eGrid}>
@@ -284,9 +301,11 @@ export function Discovery() {
         </div>
 
         <Reveal className={styles.frameFoot} delay={280}>
-          <Button to={routes.members}>Explore members</Button>
+          <Button to={routes.members}>
+            {t("homepage:discovery.exploreMembersCta")}
+          </Button>
           <span className={styles.footNote}>
-            Designers, engineers, chefs, filmmakers and more — growing weekly
+            {t("homepage:discovery.footNote")}
           </span>
         </Reveal>
       </div>

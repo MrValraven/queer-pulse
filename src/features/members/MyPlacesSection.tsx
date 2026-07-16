@@ -1,5 +1,7 @@
 import { FiClock, FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryListings } from "../../app/providers/DirectoryListingsProvider";
 import { routes } from "../../app/routeMap";
 import {
@@ -8,14 +10,17 @@ import {
 } from "../marketing/listBusiness/listBusiness.data";
 import styles from "./MyPlacesSection.module.css";
 
-const STATUS_LABEL: Record<ListingStatus, string> = {
-  review: "In review",
-  question: "Quick question",
-  live: "Live",
+/** Status-chip catalog key per listing status — a small, platform-defined
+ *  vocabulary (chrome), resolved through `t()`. */
+const STATUS_LABEL_KEY: Record<ListingStatus, string> = {
+  review: "members:myPlaces.status.review",
+  question: "members:myPlaces.status.question",
+  live: "members:myPlaces.status.live",
 };
 
 /** "Places I run" — member-submitted directory listings, shown on own profile. */
 export function MyPlacesSection({ memberSlug }: { memberSlug: string }) {
+  const { t } = useTranslation();
   const { submitted } = useDirectoryListings();
   const mine = submitted.filter(
     (l) => l.submittedBy === memberSlug && l.linkToProfile,
@@ -26,12 +31,12 @@ export function MyPlacesSection({ memberSlug }: { memberSlug: string }) {
     <section className={`${styles.section} wrap`}>
       <div className={styles.head}>
         <h2 className={styles.title}>
-          Places I <em>run</em>
+          <Translation
+            i18nKey="members:myPlaces.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p className={styles.sub}>
-          Listings you've added to the directory. Each is read by the community
-          team before it goes live.
-        </p>
+        <p className={styles.sub}>{t("members:myPlaces.subtitle")}</p>
       </div>
       <div className={styles.grid}>
         {mine.map((l) => {
@@ -54,21 +59,25 @@ export function MyPlacesSection({ memberSlug }: { memberSlug: string }) {
                   ].join(" ")}
                 >
                   {!isLive && <FiClock size={11} aria-hidden />}
-                  {STATUS_LABEL[l.status]}
+                  {t(STATUS_LABEL_KEY[l.status])}
                 </span>
               </div>
               {l.blurb && <p className={styles.blurb}>{l.blurb}</p>}
               <div className={styles.foot}>
-                <span className={styles.ref}>Ref · {l.ref}</span>
+                <span className={styles.ref}>
+                  {t("members:myPlaces.refLabel", { ref: l.ref })}
+                </span>
                 {isLive ? (
                   <Link
                     to={`${routes.directory}/${l.slug}`}
                     className={styles.viewLink}
                   >
-                    View listing →
+                    {t("members:myPlaces.viewListingCta")}
                   </Link>
                 ) : (
-                  <span className={styles.pending}>Awaiting review</span>
+                  <span className={styles.pending}>
+                    {t("members:myPlaces.awaitingReview")}
+                  </span>
                 )}
               </div>
             </article>

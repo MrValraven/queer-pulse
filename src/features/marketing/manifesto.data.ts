@@ -1,3 +1,14 @@
+/**
+ * Signer names are fictional people's own names — content, not chrome — so
+ * they stay as-is in every locale. The counts below are held as numbers so
+ * the component can format them with `useFormat()` and pluralize via the
+ * catalog, rather than baking digits into a translated string.
+ */
+export const SIGNER_TOTAL = 1847;
+export const SIGNER_EXTRA = 1836;
+export const LAST_SIGNER_NAME = "Filipa Lopes";
+export const LAST_SIGNED_MINUTES_AGO = 14;
+
 export interface Signer {
   initials: string;
   bg?: string;

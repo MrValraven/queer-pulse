@@ -2,22 +2,28 @@ import type { ReactNode } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useScrolled } from "../../shared/hooks/useScrolled";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CinemaShell.module.css";
 import { routes } from "../../app/routeMap";
 
+/** i18n Pattern A — nav labels are catalog keys, sole consumer below. */
 const LINKS = [
-  { label: "This week", to: routes.cinema },
-  { label: "Browse", to: routes.cinemaBrowse },
-  { label: "Collections", to: routes.cinemaCollections },
-  { label: "Made here", to: routes.cinemaShorts },
-  { label: "Open calls", to: routes.cinemaOpenCalls },
-  { label: "About", to: routes.cinemaAbout },
-  { label: "Membership", to: routes.cinemaMembership },
+  { labelKey: "cinema:nav.thisWeek", to: routes.cinema },
+  { labelKey: "cinema:nav.browse", to: routes.cinemaBrowse },
+  { labelKey: "cinema:nav.collections", to: routes.cinemaCollections },
+  { labelKey: "cinema:nav.madeHere", to: routes.cinemaShorts },
+  { labelKey: "cinema:nav.openCalls", to: routes.cinemaOpenCalls },
+  { labelKey: "cinema:nav.about", to: routes.cinemaAbout },
+  { labelKey: "cinema:nav.membership", to: routes.cinemaMembership },
 ];
 
 /** Dark co-op cinema frame: floating dark nav + cinema footer. */
 export function CinemaShell({ children }: { children: ReactNode }) {
   const scrolled = useScrolled(8);
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <div className={styles.root}>
       <nav
@@ -28,7 +34,7 @@ export function CinemaShell({ children }: { children: ReactNode }) {
         <Link to={routes.cinema} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
           Queer<em>Pulse</em>
-          <span className={styles.brandTag}>Cinema</span>
+          <span className={styles.brandTag}>{t("cinema:brand.tag")}</span>
         </Link>
         <div className={styles.links}>
           {LINKS.map((item) => (
@@ -42,15 +48,17 @@ export function CinemaShell({ children }: { children: ReactNode }) {
                   .join(" ")
               }
             >
-              {item.label}
+              {t(item.labelKey)}
             </NavLink>
           ))}
         </div>
         <div className={styles.right}>
           <Button variant="ghost-dark" to={routes.cinemaSubmit}>
-            Submit a film
+            {t("cinema:nav.submitCta")}
           </Button>
-          <Button to={routes.cinemaMembership}>Sustain · €7/mo</Button>
+          <Button to={routes.cinemaMembership}>
+            {t("cinema:nav.sustainCta", { price: fmt.currency(7) })}
+          </Button>
         </div>
       </nav>
 
@@ -64,36 +72,55 @@ export function CinemaShell({ children }: { children: ReactNode }) {
                 <span className={styles.pulseDot} aria-hidden />
                 Queer<em>Pulse</em>
               </Link>
-              <p>
-                A queer professional network rooted in Lisbon. Cinema is one of
-                its rooms.
-              </p>
+              <p>{t("cinema:footer.tagline")}</p>
             </div>
             <div className={styles.footCols}>
               <div className={styles.footCol}>
-                <h4>Cinema</h4>
-                <Link to={routes.cinema}>This week</Link>
-                <Link to={routes.cinemaBrowse}>Browse all</Link>
-                <Link to={routes.cinemaBrowse}>Collections</Link>
-                <Link to={routes.cinemaMembership}>Membership</Link>
+                <h4>{t("cinema:footer.cinema.heading")}</h4>
+                <Link to={routes.cinema}>
+                  {t("cinema:footer.cinema.thisWeek")}
+                </Link>
+                <Link to={routes.cinemaBrowse}>
+                  {t("cinema:footer.cinema.browseAll")}
+                </Link>
+                <Link to={routes.cinemaBrowse}>
+                  {t("cinema:footer.cinema.collections")}
+                </Link>
+                <Link to={routes.cinemaMembership}>
+                  {t("cinema:footer.cinema.membership")}
+                </Link>
               </div>
               <div className={styles.footCol}>
-                <h4>Filmmakers</h4>
-                <Link to={routes.cinemaSubmit}>Submit</Link>
-                <Link to={routes.cinemaMembership}>Revenue split</Link>
-                <Link to={routes.cinemaRights}>Rights</Link>
+                <h4>{t("cinema:footer.filmmakers.heading")}</h4>
+                <Link to={routes.cinemaSubmit}>
+                  {t("cinema:footer.filmmakers.submit")}
+                </Link>
+                <Link to={routes.cinemaMembership}>
+                  {t("cinema:footer.filmmakers.revenueSplit")}
+                </Link>
+                <Link to={routes.cinemaRights}>
+                  {t("cinema:footer.filmmakers.rights")}
+                </Link>
               </div>
               <div className={styles.footCol}>
-                <h4>About</h4>
-                <Link to={routes.governance}>Public ledger</Link>
-                <Link to={routes.accessibility}>Access</Link>
-                <Link to={routes.homepage}>QueerPulse</Link>
+                <h4>{t("cinema:footer.about.heading")}</h4>
+                <Link to={routes.governance}>
+                  {t("cinema:footer.about.publicLedger")}
+                </Link>
+                <Link to={routes.accessibility}>
+                  {t("cinema:footer.about.access")}
+                </Link>
+                <Link to={routes.homepage}>
+                  {t("cinema:footer.about.queerpulse")}
+                </Link>
               </div>
             </div>
           </div>
           <div className={styles.footBase}>
-            <div>© 2026 QueerPulse Cinema Co-op CRL — Lisbon</div>
-            <div>80% of every rent goes to the filmmaker.</div>
+            <div>
+              {t("cinema:footer.copyright", { year: new Date().getFullYear() })}
+            </div>
+            <div>{t("cinema:footer.split")}</div>
           </div>
         </div>
       </footer>

@@ -1,4 +1,5 @@
 import { PageMeta } from "../../shared/seo";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CinemaShell } from "./CinemaShell";
 import {
   AboutStrip,
@@ -16,11 +17,13 @@ import {
 import styles from "./CinemaPage.module.css";
 
 export function CinemaPage() {
+  const { t } = useTranslation();
+
   return (
     <CinemaShell>
       <PageMeta
-        title="QueerPulse Cinema — a community-owned queer film co-op"
-        description="Stream queer cinema, discover curated collections, and back films made here — QueerPulse Cinema, a community-owned film co-op in Lisbon."
+        title={t("cinema:meta.title")}
+        description={t("cinema:meta.description")}
       />
       <CinemaMast />
       <AskStrip />

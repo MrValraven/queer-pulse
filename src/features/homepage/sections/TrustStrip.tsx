@@ -1,19 +1,20 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Reveal } from "../../../shared/components/ui";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import styles from "./TrustStrip.module.css";
 
 const STROKE = "rgba(247,243,238,.75)";
 
 interface TrustItem {
-  label: string;
+  labelKey: string;
   icon: ReactNode;
 }
 
 const items: TrustItem[] = [
   {
-    label: "Every member vouched for",
+    labelKey: "homepage:trustStrip.vouched",
     icon: (
       <path
         d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
@@ -24,7 +25,7 @@ const items: TrustItem[] = [
     ),
   },
   {
-    label: "Encrypted messaging",
+    labelKey: "homepage:trustStrip.encrypted",
     icon: (
       <>
         <rect
@@ -46,7 +47,7 @@ const items: TrustItem[] = [
     ),
   },
   {
-    label: "24h moderation response",
+    labelKey: "homepage:trustStrip.moderation",
     icon: (
       <>
         <circle cx={12} cy={12} r={9} stroke={STROKE} strokeWidth={2} />
@@ -61,7 +62,7 @@ const items: TrustItem[] = [
     ),
   },
   {
-    label: "Block, mute & report",
+    labelKey: "homepage:trustStrip.blockMuteReport",
     icon: (
       <>
         <path
@@ -93,7 +94,7 @@ const items: TrustItem[] = [
     ),
   },
   {
-    label: "Granular privacy controls",
+    labelKey: "homepage:trustStrip.privacyControls",
     icon: (
       <>
         <path
@@ -117,12 +118,14 @@ const items: TrustItem[] = [
 ];
 
 export function TrustStrip() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.strip}>
       <div className="wrap">
         <Reveal className={styles.row}>
           {items.map((item) => (
-            <div key={item.label} className={styles.item}>
+            <div key={item.labelKey} className={styles.item}>
               <span className={styles.icon}>
                 <svg
                   width={14}
@@ -134,11 +137,11 @@ export function TrustStrip() {
                   {item.icon}
                 </svg>
               </span>
-              {item.label}
+              {t(item.labelKey)}
             </div>
           ))}
           <Link to={routes.report} className={styles.policyLink}>
-            Safety policy & reporting →
+            {t("homepage:trustStrip.reportCta")}
           </Link>
         </Reveal>
       </div>

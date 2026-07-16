@@ -3,6 +3,7 @@ import { FiBookmark } from "react-icons/fi";
 import { FaBookmark } from "react-icons/fa6";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSaved, type SavedItem } from "../../app/providers/SavedProvider";
 import { linkToPath, routes } from "../../app/routeMap";
 import { KIND_CARD, type KindCard } from "./savedByYou.data";
@@ -39,6 +40,7 @@ function SaveCard({
   item: SavedItem;
   onUnsave: () => void;
 }) {
+  const { t } = useTranslation();
   const cfg = KIND_CARD[item.kind];
   // Prefer an explicit readTime; otherwise lift one out of the meta line.
   const derived = splitReadTime(item.meta);
@@ -48,12 +50,14 @@ function SaveCard({
   return (
     <article className={`${styles.card} ${variantClass[cfg.variant]}`}>
       <div className={styles.top}>
-        <span className={styles.cat}>{cfg.label}</span>
+        <span className={styles.cat}>{t(cfg.labelKey)}</span>
         <button
           type="button"
           className={styles.bookmark}
-          aria-label={`Remove ${item.title} from saved`}
-          title="Remove from saved"
+          aria-label={t("members:savedByYou.removeAriaLabel", {
+            title: item.title,
+          })}
+          title={t("members:savedByYou.removeTitle")}
           onClick={onUnsave}
         >
           <FaBookmark aria-hidden />
@@ -76,7 +80,7 @@ function SaveCard({
         <div className={styles.footer}>
           {item.href ? (
             <Link to={linkToPath(item.href)} className={styles.readLink}>
-              {cfg.read} →
+              {t(cfg.readKey)} →
             </Link>
           ) : (
             <span />
@@ -95,6 +99,7 @@ function SaveCard({
  * Shows an EmptyState when nothing is saved.
  */
 export function SavedByYou() {
+  const { t } = useTranslation();
   const { items, unsave } = useSaved();
   const { showToast } = useToast();
 
@@ -102,14 +107,20 @@ export function SavedByYou() {
     return (
       <section className={styles.wrap}>
         <div className={styles.secH}>
-          <span>Saved by you · live across QueerPulse</span>
+          <span>{t("members:savedByYou.heading")}</span>
         </div>
         <EmptyState
           icon={<FiBookmark />}
-          title="Nothing saved yet"
-          description="Save articles, films, jobs and posts as you explore — they'll gather here so you can come back to them and sort them into collections."
-          action={{ label: "Browse the magazine", to: routes.magazine }}
-          secondaryAction={{ label: "Explore cinema", to: routes.cinema }}
+          title={t("members:savedByYou.empty.title")}
+          description={t("members:savedByYou.empty.description")}
+          action={{
+            label: t("members:savedByYou.empty.browseMagazineCta"),
+            to: routes.magazine,
+          }}
+          secondaryAction={{
+            label: t("members:savedByYou.empty.exploreCinemaCta"),
+            to: routes.cinema,
+          }}
         />
       </section>
     );
@@ -118,8 +129,10 @@ export function SavedByYou() {
   return (
     <section className={styles.wrap}>
       <div className={styles.secH}>
-        <span>Saved by you · live across QueerPulse</span>
-        <span className={styles.ct}>{items.length} saved</span>
+        <span>{t("members:savedByYou.heading")}</span>
+        <span className={styles.ct}>
+          {t("members:savedByYou.count", { count: items.length })}
+        </span>
       </div>
 
       <div className={styles.grid}>
@@ -129,7 +142,7 @@ export function SavedByYou() {
               item={item}
               onUnsave={() => {
                 unsave(item.id);
-                showToast("Removed from saved", "info");
+                showToast(t("members:savedByYou.toast.removed"), "info");
               }}
             />
           </FadeIn>

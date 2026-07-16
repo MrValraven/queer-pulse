@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import {
   WELCOME_ARTISTS,
@@ -10,6 +13,9 @@ import {
   TOGGLE_ROWS,
 } from "./studioWelcome.data";
 import s from "./StudioWelcomePage.module.css";
+
+/** Mock signed-in member's first name — content, not chrome. */
+const CURRENT_MEMBER_NAME = "Rita";
 
 function CheckIcon() {
   return (
@@ -35,14 +41,14 @@ function StepFollow({
   onToggle: (id: string) => void;
   onNext: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={s.stepCard}>
       <h2>
-        Follow a few <em>artists</em>
+        <Translation i18nKey="studio:welcome.step1.title" components={{ em: <em /> }} />
       </h2>
       <div className={s.scDek}>
-        We&apos;ll surface their new releases first. Pick three or more —{" "}
-        <em>the council picks the rest</em>.
+        <Translation i18nKey="studio:welcome.step1.dek" components={{ em: <em /> }} />
       </div>
       <div className={s.artGrid}>
         {WELCOME_ARTISTS.map((a) => {
@@ -76,10 +82,14 @@ function StepFollow({
       </div>
       <div className={s.nav}>
         <span className={s.count}>
-          <em>{followed.size}</em> followed
+          <Translation
+            i18nKey="studio:welcome.step1.followedCount"
+            components={{ em: <em /> }}
+            values={{ count: followed.size }}
+          />
         </span>
         <Button variant="primary" onClick={onNext}>
-          Next →
+          {t("studio:welcome.nextCta")} →
         </Button>
       </div>
     </div>
@@ -98,14 +108,15 @@ function StepTip({
   onSkip: () => void;
   onNext: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={s.stepCard}>
       <h2>
-        Set your default <em>tip</em>
+        <Translation i18nKey="studio:welcome.step2.title" components={{ em: <em /> }} />
       </h2>
       <div className={s.scDek}>
-        One tap from the player sends this straight to the artist —{" "}
-        <em>100%, no cut</em>. Change it any time.
+        <Translation i18nKey="studio:welcome.step2.dek" components={{ em: <em /> }} />
       </div>
       <div className={s.tipChips}>
         {TIP_CHIPS.map((c) => (
@@ -116,17 +127,17 @@ function StepTip({
             aria-pressed={tip === c.amount}
             onClick={() => onPick(c.amount)}
           >
-            €{c.amount}
-            <small>{c.note}</small>
+            {fmt.currency(c.amount)}
+            <small>{t(c.noteKey)}</small>
           </button>
         ))}
       </div>
       <div className={s.nav}>
         <button type="button" className={s.skip} onClick={onSkip}>
-          Skip
+          {t("studio:welcome.skipCta")}
         </button>
         <Button variant="primary" onClick={onNext}>
-          Next →
+          {t("studio:welcome.nextCta")} →
         </Button>
       </div>
     </div>

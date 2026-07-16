@@ -69,12 +69,6 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         preview: true,
       },
       {
-        title: "Set up two-factor",
-        desc: "Add a second login step from start to finish — enable 2FA and save your one-time recovery codes.",
-        to: routes.twoFactorSetup,
-        preview: true,
-      },
-      {
         title: "Verification needed",
         desc: "Preview the prompt shown when an account needs to verify identity before continuing.",
         to: routes.verificationNeeded,

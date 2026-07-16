@@ -5,6 +5,8 @@ import {
   FilterChips,
   Reveal,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   THERAPISTS,
   EXPERIENCES,
@@ -16,75 +18,86 @@ import { TherapistProfileModal } from "./TherapistProfileModal";
 import styles from "./MentalHealthPage.module.css";
 
 export function TherapistSection() {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState("all");
   const [active, setActive] = useState<Therapist | null>(null);
 
   const therapists =
     filter === "all"
       ? THERAPISTS
-      : THERAPISTS.filter((t) => t.langs.includes(filter));
+      : THERAPISTS.filter((th) => th.langs.includes(filter));
 
   return (
     <section className={styles.sec}>
       <div className="wrap">
         <Reveal className={styles.secHead}>
           <h2>
-            Queer-affirming <em>therapists in Lisbon</em>
+            <Translation
+              i18nKey="resources:mentalHealth.therapists.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            Reviewed and recommended by community members. Every therapist here
-            has been verified as genuinely queer-affirming — not just
-            "welcoming" but experienced with queer lives, identities, and the
-            specific pressures of being queer and an expat in Lisbon.
-          </p>
+          <p>{t("resources:mentalHealth.therapists.lead")}</p>
         </Reveal>
         <div className={styles.thFilter}>
-          <span className={styles.thFilterLabel}>Filter</span>
+          <span className={styles.thFilterLabel}>
+            {t("resources:mentalHealth.therapists.filterLabel")}
+          </span>
           <FilterChips
             tone="jade"
             value={filter}
             onChange={setFilter}
             options={LANGS.map((l) => ({
               value: l,
-              label: l === "all" ? "All languages" : l,
+              label:
+                l === "all"
+                  ? t("resources:mentalHealth.therapists.allLanguages")
+                  : l,
             }))}
           />
         </div>
         <div className={styles.therapistGrid}>
-          {therapists.map((t, i) => (
+          {therapists.map((therapist, index) => (
             <Reveal
-              key={t.id}
+              key={therapist.id}
               as="button"
               type="button"
               className={styles.therapistCard}
-              delay={Math.min(i, 8) * 60}
-              onClick={() => setActive(t)}
-              aria-label={`View ${t.name}'s profile`}
+              delay={Math.min(index, 8) * 60}
+              onClick={() => setActive(therapist)}
+              aria-label={t(
+                "resources:mentalHealth.therapists.viewProfileAriaLabel",
+                { name: therapist.name },
+              )}
             >
               <div className={styles.tcTop}>
                 <Avatar
-                  initials={t.initials}
+                  initials={therapist.initials}
                   size={56}
-                  src={t.photo}
-                  alt={t.name}
+                  src={therapist.photo}
+                  alt={therapist.name}
                   className={styles.tcAv}
                 />
                 <div className={styles.tcHeadText}>
-                  <div className={styles.tcName}>{t.name}</div>
-                  <div className={styles.tcCreds}>{t.creds}</div>
+                  <div className={styles.tcName}>{therapist.name}</div>
+                  <div className={styles.tcCreds}>{therapist.creds}</div>
                 </div>
                 <span
                   className={[
                     styles.tcStatus,
-                    t.acceptingNew ? styles.tcStatusOpen : styles.tcStatusFull,
+                    therapist.acceptingNew
+                      ? styles.tcStatusOpen
+                      : styles.tcStatusFull,
                   ].join(" ")}
                 >
                   <span className={styles.tcStatusDot} />
-                  {t.acceptingNew ? "Accepting" : "Waitlist"}
+                  {therapist.acceptingNew
+                    ? t("resources:mentalHealth.therapists.accepting")
+                    : t("resources:mentalHealth.therapists.waitlist")}
                 </span>
               </div>
               <div className={styles.tcTags}>
-                {t.langs.map((l) => (
+                {therapist.langs.map((l) => (
                   <span
                     key={l}
                     className={`${styles.tcTag} ${styles.tcTagLang}`}
@@ -92,16 +105,18 @@ export function TherapistSection() {
                     {l}
                   </span>
                 ))}
-                {t.specs.map((s) => (
+                {therapist.specs.map((s) => (
                   <span key={s} className={styles.tcTag}>
                     {s}
                   </span>
                 ))}
               </div>
-              <p className={styles.tcNote}>{t.note}</p>
+              <p className={styles.tcNote}>{therapist.note}</p>
               <div className={styles.tcFoot}>
-                <span className={styles.tcFormat}>{t.format}</span>
-                <span className={styles.tcContact}>View profile →</span>
+                <span className={styles.tcFormat}>{therapist.format}</span>
+                <span className={styles.tcContact}>
+                  {t("resources:mentalHealth.therapists.viewProfileCta")}
+                </span>
               </div>
             </Reveal>
           ))}
@@ -118,29 +133,30 @@ export function TherapistSection() {
 }
 
 export function ExperiencesSection() {
+  const { t } = useTranslation();
   return (
     <section className={`${styles.sec} ${styles.alt}`}>
       <div className="wrap">
         <Reveal className={styles.secHead}>
           <h2>
-            Things the community <em>has felt</em>
+            <Translation
+              i18nKey="resources:mentalHealth.experiences.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            Being a queer expat in Lisbon comes with specific pressures. Naming
-            them isn't complaining — it's the start of dealing with them.
-          </p>
+          <p>{t("resources:mentalHealth.experiences.lead")}</p>
         </Reveal>
         <div className={styles.expGrid}>
-          {EXPERIENCES.map((e, i) => (
+          {EXPERIENCES.map((experience, index) => (
             <Reveal
               className={styles.expCard}
-              key={e.title}
-              delay={Math.min(i, 8) * 60}
+              key={experience.titleKey}
+              delay={Math.min(index, 8) * 60}
             >
               <div className={styles.expBar} />
               <div>
-                <div className={styles.expTitle}>{e.title}</div>
-                <div className={styles.expText}>{e.text}</div>
+                <div className={styles.expTitle}>{t(experience.titleKey)}</div>
+                <div className={styles.expText}>{t(experience.textKey)}</div>
               </div>
             </Reveal>
           ))}
@@ -157,25 +173,25 @@ export function SnsSection({
   forum: string;
   mentorship: string;
 }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <div className="wrap">
         <Reveal className={styles.secHead}>
           <h2>
-            Accessing mental health <em>through the SNS</em>
+            <Translation
+              i18nKey="resources:mentalHealth.sns.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            Portugal's public health system covers mental health, including
-            therapy and psychiatry — but access is uneven. Here's what to
-            realistically expect.
-          </p>
+          <p>{t("resources:mentalHealth.sns.lead")}</p>
         </Reveal>
         <div className={styles.snsGrid}>
-          {SNS.map((s, i) => (
-            <Reveal className={styles.snsCard} key={s.num} delay={i * 60}>
-              <div className={styles.snsNum}>{s.num}</div>
-              <div className={styles.snsTitle}>{s.title}</div>
-              <div className={styles.snsText}>{s.text}</div>
+          {SNS.map((step, index) => (
+            <Reveal className={styles.snsCard} key={step.num} delay={index * 60}>
+              <div className={styles.snsNum}>{step.num}</div>
+              <div className={styles.snsTitle}>{t(step.titleKey)}</div>
+              <div className={styles.snsText}>{t(step.textKey)}</div>
             </Reveal>
           ))}
         </div>
@@ -183,20 +199,19 @@ export function SnsSection({
         <Reveal className={styles.peerStrip} delay={60}>
           <div>
             <h3>
-              Peer support within <em>the community</em>
+              <Translation
+                i18nKey="resources:mentalHealth.sns.peer.title"
+                components={{ em: <em /> }}
+              />
             </h3>
-            <p>
-              The mental health peer support group meets monthly. Members share
-              experiences, recommend resources, and support each other — no
-              professional facilitation, just honest conversation.
-            </p>
+            <p>{t("resources:mentalHealth.sns.peer.body")}</p>
           </div>
           <div className={styles.peerBtns}>
             <Button to={forum} variant="primary">
-              Join the group
+              {t("resources:mentalHealth.sns.peer.joinCta")}
             </Button>
             <Button to={mentorship} variant="ghost-dark">
-              Find a peer mentor →
+              {t("resources:mentalHealth.sns.peer.mentorCta")}
             </Button>
           </div>
         </Reveal>

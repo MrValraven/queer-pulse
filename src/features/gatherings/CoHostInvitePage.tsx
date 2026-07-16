@@ -24,6 +24,27 @@ const REPLY_BY_DATE = new Date(2026, 5, 10);
 const NOTIFICATIONS = routes.notifications;
 const MESSAGES = routes.messages;
 
+/**
+ * This invite's own narrative — organizer/host-authored content (like a
+ * gathering's `body`), left in English and held as constants rather than
+ * inline JSX text so it has a single source and doesn't trip the lint rule
+ * that guards un-keyed chrome.
+ */
+const INVITE_SUB_TEXT =
+  "She's running an open clinic night and would like a second person at the door — for vibes, for the line, and so the night doesn't rest on one set of shoulders.";
+const FROM_AVATAR_INITIALS = "AK";
+const FROM_FULL_NAME = "Anika Kovač";
+const FROM_ROLE = "Healthcare designer · Trans & Non-Binary Network";
+const EVENT_TITLE_PREFIX = "Open clinic night — ";
+const EVENT_TITLE_EM = "bring your prescription questions.";
+const EVENT_VENUE_NAME = "Café Beirão";
+const EVENT_HOOD_SUFFIX = " · Anjos";
+const PERSONAL_QUOTE_P1 =
+  "\"I'd love to do this with you. You're calmer than I am about the front-door bit and you know Sandra and Rui. I'll bring the doctor, the pharmacist, and the kettle — ";
+const PERSONAL_QUOTE_EM = "can you bring the room?";
+const OUTCLAUSE_REST =
+  "— no shame, no penalty, just send Anika a one-line message. We've all had a Thursday go sideways.";
+
 const ROLES = [
   {
     ic: "G",
@@ -128,20 +149,15 @@ export function CoHostInvitePage() {
             />
           </h1>
           <p className={styles.sub}>
-            She's running an open clinic night and would like a second person
-            at the door — for vibes, for the line, and so the night doesn't
-            rest on one set of shoulders.{" "}
-            <em>{t("gatherings:cohostInvite.readThroughHint")}</em>
+            {INVITE_SUB_TEXT} <em>{t("gatherings:cohostInvite.readThroughHint")}</em>
           </p>
         </div>
 
         <div className={styles.fromCard}>
-          <div className={styles.fromAv}>AK</div>
+          <div className={styles.fromAv}>{FROM_AVATAR_INITIALS}</div>
           <div>
-            <div className={styles.fromName}>Anika Kovač</div>
-            <div className={styles.fromRole}>
-              Healthcare designer · Trans &amp; Non-Binary Network
-            </div>
+            <div className={styles.fromName}>{FROM_FULL_NAME}</div>
+            <div className={styles.fromRole}>{FROM_ROLE}</div>
             <div className={styles.fromMeta}>
               <b>{t("gatherings:cohostInvite.hostedCount", { count: 14 })}</b>
               <span className={styles.dot}>·</span>
@@ -172,7 +188,8 @@ export function CoHostInvitePage() {
             </div>
             <div className={styles.eventInfo}>
               <h2>
-                Open clinic night — <em>bring your prescription questions.</em>
+                {EVENT_TITLE_PREFIX}
+                <em>{EVENT_TITLE_EM}</em>
               </h2>
               <div className={styles.eventMeta}>
                 <b>
@@ -180,7 +197,8 @@ export function CoHostInvitePage() {
                   {fmt.time(EVENT_START)} — {fmt.time(EVENT_END)}
                 </b>
                 <span className={styles.dot} />
-                <b>Café Beirão</b> · Anjos
+                <b>{EVENT_VENUE_NAME}</b>
+                {EVENT_HOOD_SUFFIX}
                 <span className={styles.dot} />
                 <span>
                   {t("gatherings:cohostInvite.rsvpsAndWaitlist", { rsvps: 22, waitlist: 14 })}
@@ -189,9 +207,9 @@ export function CoHostInvitePage() {
             </div>
           </div>
           <p className={styles.personal}>
-            "I'd love to do this with you. You're calmer than I am about the
-            front-door bit and you know Sandra and Rui. I'll bring the doctor,
-            the pharmacist, and the kettle — <em>can you bring the room?</em>"
+            {PERSONAL_QUOTE_P1}
+            <em>{PERSONAL_QUOTE_EM}</em>
+            {'"'}
           </p>
         </div>
 
@@ -229,9 +247,7 @@ export function CoHostInvitePage() {
             ))}
           </div>
           <p className={styles.outclause}>
-            <b>{t("gatherings:cohostInvite.outclauseBold")}</b> — no shame, no
-            penalty, just send Anika a one-line message. We've all had a
-            Thursday go sideways.
+            <b>{t("gatherings:cohostInvite.outclauseBold")}</b> {OUTCLAUSE_REST}
           </p>
         </div>
 

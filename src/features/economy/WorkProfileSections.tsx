@@ -1,31 +1,37 @@
 import { Tag, TagRow } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { fullName } from "../members/data/members";
 import {
   OUT_AT_WORK,
   TRANS_SUPPORT,
   VIS_MATRIX,
-  WORK_SKILLS,
-  FOCUS_AREAS,
+  WORK_SKILLS_KEYS,
+  FOCUS_AREAS_KEYS,
 } from "./workProfile.data";
 import styles from "./WorkProfilePage.module.css";
 
 /** Section 1 — professional identity: how you're named and described. */
 export function IdentitySection() {
+  const { t } = useTranslation();
   // The signed-in member (real profile live, mock currentUser in demo mode).
   const { profile } = useProfile();
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>
-        Professional <em>identity</em>
+        <Translation
+          i18nKey="economy:workProfile.identity.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.sectionSub}>
-        How you're named and described to employers.
-      </p>
+      <p className={styles.sectionSub}>{t("economy:workProfile.identity.sub")}</p>
 
       <div className={styles.fieldRow}>
         <div className={styles.field}>
-          <div className={styles.fieldLabel}>Name in use</div>
+          <div className={styles.fieldLabel}>
+            {t("economy:workProfile.identity.nameInUse")}
+          </div>
           <input
             className={styles.fieldInput}
             type="text"
@@ -34,23 +40,27 @@ export function IdentitySection() {
         </div>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>
-            Legal name{" "}
-            <span className={styles.fieldOptional}>kept private</span>
+            {t("economy:workProfile.identity.legalName")}{" "}
+            <span className={styles.fieldOptional}>
+              {t("economy:workProfile.identity.legalNameOptional")}
+            </span>
           </div>
           <input
             className={styles.fieldInput}
             type="text"
-            placeholder="Only where legally required"
+            placeholder={t("economy:workProfile.identity.legalNamePlaceholder")}
           />
           <div className={styles.fieldHint}>
-            Stored privately and used only where the law requires it.
+            {t("economy:workProfile.identity.legalNameHint")}
           </div>
         </div>
       </div>
 
       <div className={styles.fieldRow}>
         <div className={styles.field}>
-          <div className={styles.fieldLabel}>Pronouns</div>
+          <div className={styles.fieldLabel}>
+            {t("economy:workProfile.identity.pronouns")}
+          </div>
           <input
             className={styles.fieldInput}
             type="text"
@@ -58,7 +68,9 @@ export function IdentitySection() {
           />
         </div>
         <div className={styles.field}>
-          <div className={styles.fieldLabel}>Headline</div>
+          <div className={styles.fieldLabel}>
+            {t("economy:workProfile.identity.headline")}
+          </div>
           <input
             className={styles.fieldInput}
             type="text"
@@ -68,7 +80,9 @@ export function IdentitySection() {
       </div>
 
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>Location</div>
+        <div className={styles.fieldLabel}>
+          {t("economy:workProfile.identity.location")}
+        </div>
         <input
           className={styles.fieldInput}
           type="text"
@@ -77,10 +91,12 @@ export function IdentitySection() {
       </div>
 
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>Short bio</div>
+        <div className={styles.fieldLabel}>
+          {t("economy:workProfile.identity.bio")}
+        </div>
         <textarea
           className={styles.fieldTextarea}
-          placeholder="A few lines on what you do and what you're looking for…"
+          placeholder={t("economy:workProfile.identity.bioPlaceholder")}
         />
       </div>
     </section>
@@ -105,20 +121,27 @@ export function ShowUpAtWorkSection({
   safeOnly,
   onSafeOnly,
 }: ShowUpProps) {
+  const { t } = useTranslation();
   const activeOut = OUT_AT_WORK.find((o) => o.value === outChoice);
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>
-        How you show up <em>at work</em>
+        <Translation
+          i18nKey="economy:workProfile.showUp.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.sectionSub}>
-        You decide what employers see. Nothing here is shared without your
-        say-so.
-      </p>
+      <p className={styles.sectionSub}>{t("economy:workProfile.showUp.sub")}</p>
 
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>Out at work</div>
-        <div className={styles.seg} role="radiogroup" aria-label="Out at work">
+        <div className={styles.fieldLabel}>
+          {t("economy:workProfile.showUp.outAtWork")}
+        </div>
+        <div
+          className={styles.seg}
+          role="radiogroup"
+          aria-label={t("economy:workProfile.showUp.outAtWorkAriaLabel")}
+        >
           {OUT_AT_WORK.map((o) => (
             <button
               key={o.value}
@@ -130,31 +153,33 @@ export function ShowUpAtWorkSection({
                 .join(" ")}
               onClick={() => onOut(o.value)}
             >
-              {o.label}
+              {t(o.labelKey)}
             </button>
           ))}
         </div>
-        {activeOut && <p className={styles.segDesc}>{activeOut.desc}</p>}
+        {activeOut && <p className={styles.segDesc}>{t(activeOut.descKey)}</p>}
       </div>
 
       <div className={styles.field}>
         <div className={styles.fieldLabel}>
-          Trans &amp; non-binary support{" "}
-          <span className={styles.fieldOptional}>optional</span>
+          {t("economy:workProfile.showUp.transSupport")}{" "}
+          <span className={styles.fieldOptional}>
+            {t("economy:workProfile.showUp.transSupportOptional")}
+          </span>
         </div>
         <div className={styles.toggleList}>
-          {TRANS_SUPPORT.map((t) => {
-            const on = trans.includes(t.id);
+          {TRANS_SUPPORT.map((option) => {
+            const on = trans.includes(option.id);
             return (
               <button
-                key={t.id}
+                key={option.id}
                 type="button"
                 role="switch"
                 aria-checked={on}
                 className={[styles.toggleRow, on && styles.toggleRowOn]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => onToggleTrans(t.id)}
+                onClick={() => onToggleTrans(option.id)}
               >
                 <span
                   className={[styles.toggle, on && styles.toggleOn]
@@ -165,8 +190,8 @@ export function ShowUpAtWorkSection({
                   <span className={styles.toggleKnob} />
                 </span>
                 <span className={styles.toggleText}>
-                  <span className={styles.toggleLabel}>{t.label}</span>
-                  <span className={styles.toggleDesc}>{t.desc}</span>
+                  <span className={styles.toggleLabel}>{t(option.labelKey)}</span>
+                  <span className={styles.toggleDesc}>{t(option.descKey)}</span>
                 </span>
               </button>
             );
@@ -176,19 +201,25 @@ export function ShowUpAtWorkSection({
 
       <div className={styles.field}>
         <div className={styles.fieldLabel}>
-          What employers see vs the community
+          {t("economy:workProfile.showUp.matrixLabel")}
         </div>
         <div className={styles.matrix}>
           <div className={[styles.matrixRow, styles.matrixHead].join(" ")}>
-            <span className={styles.matrixField}>Field</span>
-            <span className={styles.matrixCell}>Employers see</span>
-            <span className={styles.matrixCell}>Community sees</span>
+            <span className={styles.matrixField}>
+              {t("economy:workProfile.showUp.matrixField")}
+            </span>
+            <span className={styles.matrixCell}>
+              {t("economy:workProfile.showUp.matrixEmployers")}
+            </span>
+            <span className={styles.matrixCell}>
+              {t("economy:workProfile.showUp.matrixCommunity")}
+            </span>
           </div>
           {VIS_MATRIX.map((r) => (
-            <div key={r.field} className={styles.matrixRow}>
-              <span className={styles.matrixField}>{r.field}</span>
-              <span className={styles.matrixCell}>{r.employers}</span>
-              <span className={styles.matrixCell}>{r.community}</span>
+            <div key={r.fieldKey} className={styles.matrixRow}>
+              <span className={styles.matrixField}>{t(r.fieldKey)}</span>
+              <span className={styles.matrixCell}>{t(r.employersKey)}</span>
+              <span className={styles.matrixCell}>{t(r.communityKey)}</span>
             </div>
           ))}
         </div>
@@ -213,10 +244,10 @@ export function ShowUpAtWorkSection({
         </span>
         <span className={styles.toggleText}>
           <span className={styles.toggleLabel}>
-            Only surface me to community-verified-safe employers
+            {t("economy:workProfile.showUp.safeOnly.label")}
           </span>
           <span className={styles.toggleDesc}>
-            Skip everything that hasn't been vetted by the network.
+            {t("economy:workProfile.showUp.safeOnly.desc")}
           </span>
         </span>
       </button>
@@ -226,27 +257,35 @@ export function ShowUpAtWorkSection({
 
 /** Section 3 — skills offered/sought and focus areas. */
 export function SkillsFocusSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>
-        Skills <em>&amp; focus</em>
+        <Translation
+          i18nKey="economy:workProfile.skillsFocus.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.sectionSub}>
-        Used to match you in the skills exchange and with mentors.
+        {t("economy:workProfile.skillsFocus.sub")}
       </p>
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>Skills</div>
+        <div className={styles.fieldLabel}>
+          {t("economy:workProfile.skillsFocus.skills")}
+        </div>
         <TagRow>
-          {WORK_SKILLS.map((s) => (
-            <Tag key={s}>{s}</Tag>
+          {WORK_SKILLS_KEYS.map((key) => (
+            <Tag key={key}>{t(key)}</Tag>
           ))}
         </TagRow>
       </div>
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>Focus areas</div>
+        <div className={styles.fieldLabel}>
+          {t("economy:workProfile.skillsFocus.focusAreas")}
+        </div>
         <TagRow>
-          {FOCUS_AREAS.map((f) => (
-            <Tag key={f}>{f}</Tag>
+          {FOCUS_AREAS_KEYS.map((key) => (
+            <Tag key={key}>{t(key)}</Tag>
           ))}
         </TagRow>
       </div>

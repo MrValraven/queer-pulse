@@ -1,4 +1,5 @@
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { Job } from "./jobs.data";
 import { safetyFor } from "./employerSafety.data";
@@ -7,12 +8,13 @@ import { COMPANY_SLUG_BY_NAME } from "./companies.data";
 import styles from "./JobDetailPage.module.css";
 
 export function JobDetailBody({ job }: { job: Job }) {
+  const { t } = useTranslation();
   const d = job.detail;
   const companySlug = COMPANY_SLUG_BY_NAME[job.org];
   return (
     <div>
       <div className={styles.section}>
-        <h2 className={styles.secTitle}>About the role</h2>
+        <h2 className={styles.secTitle}>{t("economy:jobDetail.section.about")}</h2>
         {d.about.map((p, i) => (
           <p key={i} className={styles.text}>
             {p}
@@ -21,7 +23,9 @@ export function JobDetailBody({ job }: { job: Job }) {
       </div>
 
       <div className={styles.section}>
-        <h2 className={styles.secTitle}>Day to day</h2>
+        <h2 className={styles.secTitle}>
+          {t("economy:jobDetail.section.dayToDay")}
+        </h2>
         <div className={styles.list}>
           {d.dayToDay.map((item) => (
             <div key={item} className={styles.li}>
@@ -33,7 +37,9 @@ export function JobDetailBody({ job }: { job: Job }) {
       </div>
 
       <div className={styles.section}>
-        <h2 className={styles.secTitle}>What we're looking for</h2>
+        <h2 className={styles.secTitle}>
+          {t("economy:jobDetail.section.lookingFor")}
+        </h2>
         <div className={styles.list}>
           {d.lookingFor.map((item) => (
             <div key={item} className={styles.li}>
@@ -45,7 +51,9 @@ export function JobDetailBody({ job }: { job: Job }) {
       </div>
 
       <div className={styles.section}>
-        <h2 className={styles.secTitle}>What we offer</h2>
+        <h2 className={styles.secTitle}>
+          {t("economy:jobDetail.section.offer")}
+        </h2>
         <div className={styles.list}>
           {d.offer.map((item) => (
             <div key={item} className={styles.li}>
@@ -57,7 +65,9 @@ export function JobDetailBody({ job }: { job: Job }) {
       </div>
 
       <div className={styles.section}>
-        <h2 className={styles.secTitle}>About {job.org}</h2>
+        <h2 className={styles.secTitle}>
+          {t("economy:jobDetail.section.aboutCompany", { company: job.org })}
+        </h2>
         <p className={styles.text}>{d.aboutCompany}</p>
         {companySlug && (
           <Button
@@ -65,7 +75,7 @@ export function JobDetailBody({ job }: { job: Job }) {
             to={`${routes.company}/${companySlug}`}
             style={{ marginTop: 16 }}
           >
-            View company profile →
+            {t("economy:jobDetail.section.viewCompany")}
           </Button>
         )}
       </div>

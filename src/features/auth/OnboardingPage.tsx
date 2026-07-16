@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./OnboardingPage.module.css";
 import { TOTAL_STEPS } from "./onboardingPage.data";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   StepIntro,
   StepWelcome,
@@ -14,6 +15,7 @@ import {
 } from "./OnboardingSteps";
 
 export function OnboardingPage() {
+  const { t } = useTranslation();
   // Seven steps in total, indexed 0–6. Step 0 is the warm "let's begin" intro,
   // counted as Step 1 so the "Step X of N" label is honest and continuous.
   const [step, setStep] = useState(0);
@@ -21,7 +23,10 @@ export function OnboardingPage() {
 
   // Linear progress: each of the TOTAL_STEPS advances the bar by an equal share.
   const progress = ((step + 1) / TOTAL_STEPS) * 100;
-  const stepLabel = `Step ${step + 1} of ${TOTAL_STEPS}`;
+  const stepLabel = t("auth:onboarding.stepLabel", {
+    current: step + 1,
+    total: TOTAL_STEPS,
+  });
 
   function go(next: number) {
     setDir(next >= step ? "fwd" : "back");
@@ -40,7 +45,8 @@ export function OnboardingPage() {
       <div className={styles.progressLabel}>{stepLabel}</div>
       <Link to={routes.homepage} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
-        Queer<em>Pulse</em>
+        {"Queer"}
+        <em>{"Pulse"}</em>
       </Link>
 
       <div className={styles.page}>

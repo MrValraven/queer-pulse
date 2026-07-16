@@ -1,5 +1,6 @@
 import { routes } from "../../app/routeMap";
 
+/** Mock therapist directory — content, left in English (see scope rule). */
 export const THERAPISTS = [
   {
     name: "Dra. Marta Seabra",
@@ -33,56 +34,61 @@ export const THERAPISTS = [
   },
 ];
 
+/**
+ * i18n Pattern A. Real-world helpline names (SOS Voz Amiga, ILGA Portugal,
+ * Rede ex aequo) are proper nouns and stay untranslated; `descKey`/`hoursKey`
+ * are chrome. Flagged for native review — crisis-line accuracy matters.
+ */
 export const CRISIS = [
   {
     name: "SOS Voz Amiga",
-    desc: "Anonymous emotional support and crisis counselling. No judgement. Available in Portuguese and English.",
+    descKey: "resources:wellbeing.crisis.sosVozAmiga.desc",
     num: "213 544 545",
-    hours: "Daily 16h–24h",
+    hoursKey: "resources:wellbeing.crisis.sosVozAmiga.hours",
   },
   {
     name: "ILGA Portugal",
-    desc: "LGBTQ+ specific support, legal guidance, and referrals to affirming services across Portugal.",
+    descKey: "resources:wellbeing.crisis.ilga.desc",
     num: "218 873 918",
-    hours: "Weekdays 10h–18h",
+    hoursKey: "resources:wellbeing.crisis.ilga.hours",
   },
   {
     name: "Rede ex aequo",
-    desc: "Support for LGBTQ+ people under 30. Online chat and phone — safe, confidential, peer-led.",
+    descKey: "resources:wellbeing.crisis.redeExAequo.desc",
     num: "redeexaequo.pt",
-    hours: "Online · Weekdays 18h–22h",
+    hoursKey: "resources:wellbeing.crisis.redeExAequo.hours",
   },
 ];
 
+/** i18n Pattern A — platform-authored guidance chrome, resolved via `t()`. */
 export const HARM = [
   {
-    title: "Nightlife safety basics",
-    desc: "What to know before you go out, what to do if something feels wrong, and how to look out for your friends and your own body.",
+    titleKey: "resources:wellbeing.harm.nightlife.title",
+    descKey: "resources:wellbeing.harm.nightlife.desc",
   },
   {
-    title: "Drugs & alcohol",
-    desc: "Honest information about substances common in the queer nightlife scene — interactions, risks, and how to ask for help without shame.",
+    titleKey: "resources:wellbeing.harm.drugsAlcohol.title",
+    descKey: "resources:wellbeing.harm.drugsAlcohol.desc",
   },
   {
-    title: "Sexual health in Lisbon",
-    desc: "PrEP access, STI testing, and affirming sexual health services that don't make you feel judged for being yourself.",
+    titleKey: "resources:wellbeing.harm.sexualHealth.title",
+    descKey: "resources:wellbeing.harm.sexualHealth.desc",
   },
   {
-    title: "Chemsex support",
-    desc: "Confidential, non-judgmental resources for members navigating chemsex — connected to real services and real people who've been there.",
+    titleKey: "resources:wellbeing.harm.chemsex.title",
+    descKey: "resources:wellbeing.harm.chemsex.desc",
   },
 ];
 
 export const WELLBEING_SUBPAGES = [
   {
-    label: "Harm Reduction",
+    labelKey: "resources:wellbeing.subpage.harmReduction.label",
     to: routes.harmReduction,
-    blurb: "Using more safely — practical, non-judgemental guidance.",
+    blurbKey: "resources:wellbeing.subpage.harmReduction.blurb",
   },
   {
-    label: "Sober",
+    labelKey: "resources:wellbeing.subpage.sober.label",
     to: routes.sober,
-    blurb:
-      "Sober and social — meetups and support that don't revolve around drinking.",
+    blurbKey: "resources:wellbeing.subpage.sober.blurb",
   },
 ];

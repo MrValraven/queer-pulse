@@ -36,10 +36,12 @@ export const DOT: Record<string, string | undefined> = {
   quiet: styles.dotQuiet,
 };
 
-export const CAT_LABEL: Record<string, string> = {
-  social: "Social",
-  arts: "Arts",
-  support: "Support",
-  activism: "Activism",
-  quiet: "Private",
+// i18n Pattern A — a fixed set of platform-defined category labels (chrome);
+// consumers resolve with `t()`.
+export const CAT_LABEL_KEY: Record<string, string> = {
+  social: "homepage:communities.category.social",
+  arts: "homepage:communities.category.arts",
+  support: "homepage:communities.category.support",
+  activism: "homepage:communities.category.activism",
+  quiet: "homepage:communities.access.private",
 };

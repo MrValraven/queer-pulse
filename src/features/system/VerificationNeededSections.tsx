@@ -1,172 +1,24 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { FiArrowRight, FiCheck, FiMail, FiRefreshCw } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import {
-  CODE_LENGTH,
-  DEMO_2FA_CODE,
-  REAUTH_EMAIL,
-  RESEND_COOLDOWN,
-} from "./verificationNeeded.data";
+import { REAUTH_EMAIL, RESEND_COOLDOWN } from "./verificationNeeded.data";
 import styles from "./VerificationNeededPage.module.css";
+
+/**
+ * Re-authentication panes.
+ *
+ * This page once offered three "methods": a password box, a 6-digit
+ * authenticator code, and a magic link. Two of them were fiction. The password
+ * input verified nothing — its submit handler called `onVerify()` straight
+ * through, and QueerPulse accounts have no password at all (Google OAuth +
+ * invite), so it existed only to make password managers offer to save a
+ * credential that doesn't exist. The authenticator pane matched against a
+ * hardcoded demo constant and referenced 2FA the platform has never had. Both
+ * are gone; the magic link is the one method whose story matches reality.
+ */
 
 function Spinner() {
   return <span className={styles.spinner} aria-hidden />;
-}
-
-/* ── Password ─────────────────────────────────────────────── */
-export function PasswordMethod({
-  busy,
-  onVerify,
-}: {
-  busy: boolean;
-  onVerify: () => void;
-}) {
-  const [password, setPassword] = useState("");
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!password || busy) return;
-    onVerify();
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <div className={styles.field}>
-        <label htmlFor="vn-pw">Your password</label>
-        <input
-          id="vn-pw"
-          type="password"
-          placeholder="••••••••••"
-          autoComplete="current-password"
-          required
-          autoFocus
-          disabled={busy}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <Button
-        type="submit"
-        className={styles.confirmBtn}
-        disabled={!password || busy}
-      >
-        {busy ? (
-          <>
-            <Spinner /> Verifying…
-          </>
-        ) : (
-          <>Confirm and continue →</>
-        )}
-      </Button>
-    </form>
-  );
-}
-
-/* ── 2FA code ─────────────────────────────────────────────── */
-export function CodeMethod({
-  busy,
-  onVerify,
-}: {
-  busy: boolean;
-  onVerify: () => void;
-}) {
-  const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(""));
-  const [error, setError] = useState(false);
-  const refs = useRef<(HTMLInputElement | null)[]>([]);
-
-  function check(code: string) {
-    if (code === DEMO_2FA_CODE) {
-      setError(false);
-      onVerify();
-    } else {
-      setError(true);
-      setDigits(Array(CODE_LENGTH).fill(""));
-      refs.current[0]?.focus();
-    }
-  }
-
-  function set(next: string[]) {
-    setDigits(next);
-    if (next.every(Boolean)) check(next.join(""));
-  }
-
-  function handleInput(i: number, val: string) {
-    const ch = val.replace(/\D/g, "").slice(0, 1);
-    const next = [...digits];
-    next[i] = ch;
-    setError(false);
-    if (ch && i < CODE_LENGTH - 1) refs.current[i + 1]?.focus();
-    set(next);
-  }
-
-  function handleKeyDown(i: number, e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Backspace" && !digits[i] && i > 0)
-      refs.current[i - 1]?.focus();
-    if (e.key === "ArrowLeft" && i > 0) refs.current[i - 1]?.focus();
-    if (e.key === "ArrowRight" && i < CODE_LENGTH - 1)
-      refs.current[i + 1]?.focus();
-  }
-
-  function handlePaste(e: React.ClipboardEvent) {
-    const text = e.clipboardData
-      .getData("text")
-      .replace(/\D/g, "")
-      .slice(0, CODE_LENGTH);
-    if (!text) return;
-    e.preventDefault();
-    const next = Array(CODE_LENGTH).fill("");
-    for (let j = 0; j < text.length; j++) next[j] = text[j];
-    refs.current[Math.min(text.length, CODE_LENGTH - 1)]?.focus();
-    set(next);
-  }
-
-  return (
-    <div className={styles.codeBlock}>
-      <p className={styles.codeLabel}>
-        Enter the 6-digit code from your authenticator app
-      </p>
-      <div
-        className={[styles.codeRow, error && styles.codeRowError]
-          .filter(Boolean)
-          .join(" ")}
-        onPaste={handlePaste}
-      >
-        {digits.map((d, i) => (
-          <input
-            key={i}
-            ref={(el) => {
-              refs.current[i] = el;
-            }}
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            maxLength={1}
-            disabled={busy}
-            value={d}
-            autoFocus={i === 0}
-            onChange={(e) => handleInput(i, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(i, e)}
-            onFocus={(e) => e.target.select()}
-          />
-        ))}
-      </div>
-      <p
-        className={[styles.codeHint, error && styles.codeHintError]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {busy ? (
-          <>
-            <Spinner /> Verifying…
-          </>
-        ) : error ? (
-          "That code didn’t match — try again."
-        ) : (
-          <>Demo · use {DEMO_2FA_CODE}</>
-        )}
-      </p>
-    </div>
-  );
 }
 
 /* ── Magic link ───────────────────────────────────────────── */

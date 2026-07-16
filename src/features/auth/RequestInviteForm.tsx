@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Button, FormField, Sending } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateJoinRequest } from "./api/useCreateJoinRequest";
 import { AgeAttestation } from "./AgeAttestation";
 import { Under18Notice } from "./Under18Notice";
@@ -26,6 +28,7 @@ export function RequestInviteForm({
   setFirst: (v: string) => void;
   onSent: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const createJoinRequest = useCreateJoinRequest();
   const [email, setEmail] = useState("");
@@ -48,7 +51,7 @@ export function RequestInviteForm({
       await createJoinRequest.mutateAsync({ message: why.trim() });
       onSent();
     } catch {
-      showToast("Could not send your request — please try again", "error");
+      showToast(t("auth:requestInvite.submitError"), "error");
     }
   }
 
@@ -57,7 +60,7 @@ export function RequestInviteForm({
     return (
       <Under18Notice
         onBack={() => setUnder18(false)}
-        backLabel="Back to the form"
+        backLabel={t("auth:requestInvite.under18BackLabel")}
       />
     );
   }
@@ -65,39 +68,35 @@ export function RequestInviteForm({
   return (
     <form onSubmit={handleSubmit}>
       <div className={styles.twoCol}>
-        <FormField label="Your name">
+        <FormField label={t("auth:requestInvite.field.name.label")}>
           <input
             id="ri-first"
             type="text"
-            placeholder="Alex"
+            placeholder={t("auth:requestInvite.field.name.placeholder")}
             autoComplete="given-name"
             value={first}
             onChange={(e) => setFirst(e.target.value)}
           />
         </FormField>
-        <FormField label="City">
+        <FormField label={t("auth:requestInvite.field.city.label")}>
           <input
             id="ri-city"
             type="text"
-            placeholder="Lisbon"
+            placeholder={t("auth:requestInvite.field.city.placeholder")}
             autoComplete="address-level2"
           />
         </FormField>
       </div>
 
       <FormField
-        label="Email"
+        label={t("auth:requestInvite.field.email.label")}
         required
-        error={
-          emailError
-            ? "That email doesn't look right — mind checking it?"
-            : undefined
-        }
+        error={emailError ? t("auth:requestInvite.field.email.error") : undefined}
       >
         <input
           id="ri-email"
           type="email"
-          placeholder="you@example.com"
+          placeholder={t("auth:requestInvite.field.email.placeholder")}
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -108,28 +107,29 @@ export function RequestInviteForm({
 
       <FormField
         label={
-          <>
-            Anyone here you know <span style={optionalStyle}>(optional)</span>
-          </>
+          <Translation
+            i18nKey="auth:requestInvite.field.mutual.label"
+            components={{ optional: <span style={optionalStyle} /> }}
+          />
         }
-        helper="Naming a mutual is the fastest route in — but it's not required."
+        helper={t("auth:requestInvite.field.mutual.helper")}
       >
         <input
           id="ri-mutual"
           type="text"
-          placeholder="A member who can vouch for you"
+          placeholder={t("auth:requestInvite.field.mutual.placeholder")}
         />
       </FormField>
 
       <FormField
-        label="Why QueerPulse"
+        label={t("auth:requestInvite.field.why.label")}
         required
         labelAside={`${why.length}/400`}
       >
         <textarea
           id="ri-why"
           maxLength={400}
-          placeholder="What you're looking for, and what brings you here. A few honest sentences is plenty."
+          placeholder={t("auth:requestInvite.field.why.placeholder")}
           value={why}
           onChange={(e) => setWhy(e.target.value)}
         />
@@ -143,11 +143,17 @@ export function RequestInviteForm({
           onChange={(e) => setAgreed(e.target.checked)}
         />
         <label htmlFor="ri-agree">
-          I've read the{" "}
-          <Link to={routes.guidelines} onClick={(e) => e.stopPropagation()}>
-            community guidelines
-          </Link>{" "}
-          and I'm here in good faith.
+          <Translation
+            i18nKey="auth:requestInvite.agree"
+            components={{
+              guidelines: (
+                <Link
+                  to={routes.guidelines}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              ),
+            }}
+          />
         </label>
       </div>
 
@@ -165,9 +171,9 @@ export function RequestInviteForm({
         aria-busy={submitting}
       >
         {submitting ? (
-          <Sending label="Sending your request…" />
+          <Sending label={t("auth:requestInvite.sending")} />
         ) : (
-          "Send my request"
+          t("auth:requestInvite.submit")
         )}
       </Button>
     </form>

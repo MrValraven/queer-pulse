@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiPlus } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { Community } from "../homepage/data/types";
 import type { CommunityEvent } from "./community.model";
@@ -36,10 +37,13 @@ export function CommunitiesHomeSidebar({
   upcoming: UpcomingItem[];
   suggestions: Community[];
 }) {
+  const { t } = useTranslation();
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sbCard}>
-        <div className={styles.sbLbl}>Your communities</div>
+        <div className={styles.sbLbl}>
+          {t("communities:hub.sidebar.yourCommunities")}
+        </div>
         {communities.map((c) => (
           <Link
             key={c.slug}
@@ -56,13 +60,15 @@ export function CommunitiesHomeSidebar({
           </Link>
         ))}
         <Link to={routes.communities} className={styles.sbFootLink}>
-          Discover more <FiArrowRight aria-hidden />
+          {t("communities:hub.sidebar.discoverMore")} <FiArrowRight aria-hidden />
         </Link>
       </div>
 
       {upcoming.length > 0 && (
         <div className={styles.sbCard}>
-          <div className={styles.sbLbl}>Upcoming in your communities</div>
+          <div className={styles.sbLbl}>
+            {t("communities:hub.sidebar.upcoming")}
+          </div>
           {upcoming.map(({ event, name, slug }) => (
             <Link
               key={event.id}
@@ -84,7 +90,9 @@ export function CommunitiesHomeSidebar({
 
       {suggestions.length > 0 && (
         <div className={styles.sbCard}>
-          <div className={styles.sbLbl}>Communities you might like</div>
+          <div className={styles.sbLbl}>
+            {t("communities:hub.sidebar.suggestions")}
+          </div>
           {suggestions.map((c) => (
             <Link
               key={c.slug}

@@ -3,6 +3,8 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, HubBackLink, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { VENUES } from "./accessibility.data";
 import {
@@ -16,6 +18,7 @@ import styles from "./AccessibilityPage.module.css";
 const INVITE = routes.requestInvite;
 
 export function AccessibilityPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const loading = useSimulatedLoad();
   const [filter, setFilter] = useState("all");
@@ -30,16 +33,21 @@ export function AccessibilityPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <HubBackLink to={routes.help} label="Help & FAQ" />
-          <div className={styles.cat}>Disability &amp; Accessibility</div>
+          <HubBackLink
+            to={routes.help}
+            label={t("marketing:accessibility.backLabel")}
+          />
+          <div className={styles.cat}>
+            {t("marketing:accessibility.category")}
+          </div>
           <h1>
-            Accessible. <em>Genuinely.</em>
+            <Translation
+              i18nKey="marketing:accessibility.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.heroSub}>
-            We don't want disability to be a footnote. This page is for disabled
-            and chronically ill members — practical, honest information about
-            accessible spaces, what QueerPulse commits to, and community
-            support.
+            {t("marketing:accessibility.hero.sub")}
           </p>
           <div className={styles.heroActions}>
             <Button
@@ -47,16 +55,15 @@ export function AccessibilityPage() {
               variant="primary"
               onClick={() => setAccomOpen(true)}
             >
-              Request event accommodations
+              {t("marketing:accessibility.hero.accomCta")}
             </Button>
             <Button href="#spaces" variant="ghost">
-              Accessible spaces directory ↓
+              {t("marketing:accessibility.hero.spacesCta")} ↓
             </Button>
           </div>
           <div className={styles.heroNote}>
             <span className={styles.dot} />
-            Venue information reviewed by disabled community members · updated
-            quarterly
+            {t("marketing:accessibility.hero.note")}
           </div>
         </div>
       </div>
@@ -75,14 +82,15 @@ export function AccessibilityPage() {
 
       <Outro
         title={
-          <>
-            You belong <em>here</em> — fully.
-          </>
+          <Translation
+            i18nKey="marketing:accessibility.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Not as an afterthought. Not with a separate entrance. As a full member of this community."
+        sub={t("marketing:accessibility.outro.sub")}
       >
         <Button to={INVITE} variant="primary" size="lg">
-          Join QueerPulse
+          {t("marketing:accessibility.outro.cta")}
         </Button>
       </Outro>
 

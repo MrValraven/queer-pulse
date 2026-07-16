@@ -208,10 +208,14 @@ export function useAuthGateRedirect(): string | null {
   if (checking) return null;
 
   if (loggedIn) {
-    // Role-gate admin/mod surfaces in live mode. Demo mode is intentionally an
-    // explorable sandbox where the admin panel is reachable (its team role is
-    // simulated via AdminRoleProvider), so role isn't enforced there.
-    if (!demoMode) {
+    // Role-gate admin/mod surfaces. Demo mode is intentionally an explorable
+    // sandbox where the admin panel is reachable (its team role is simulated via
+    // AdminRoleProvider, which defaults to "staff"), so role isn't enforced
+    // there — but that sandbox exists for local development only. Requiring DEV
+    // as well as demo means no shipped build can ever reach the bypass, even one
+    // deliberately built with VITE_DEMO=1: `import.meta.env.DEV` is inlined false
+    // by `vite build`, so the guard below is unconditional in every artifact.
+    if (!demoMode || !import.meta.env.DEV) {
       const need = requiredRole(pathname);
       if (need === "admin" && role !== "admin") return routes.homepage;
       if (need === "mod" && role !== "moderator" && role !== "admin") {

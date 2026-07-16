@@ -1,6 +1,7 @@
 import type { IconType } from "react-icons";
 import { FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { FiMessageSquare } from "react-icons/fi";
+import type { TFunction } from "../../shared/i18n/types";
 import { currentUser } from "../members/data/members";
 
 export const SENDER_NAME = `${currentUser.first} ${currentUser.last}`;
@@ -26,16 +27,19 @@ export const inviteFullUrlFor = (code: string) =>
 export const INVITE_URL = inviteUrlFor(INVITE_CODE);
 export const INVITE_FULL_URL = inviteFullUrlFor(INVITE_CODE);
 
-/** Description shown in the preview card when the member hasn't written a note. */
-export const DEFAULT_VOUCH =
-  "A quiet, vouched-for queer community in Lisbon — no ads, no algorithm. I think you'd belong here.";
+/** Description shown in the preview card when the member hasn't written a note.
+ *  Chrome — authored by the platform, not the member — so it routes through `t()`. */
+export function defaultVouch(t: TFunction): string {
+  return t("auth:invite.link.defaultVouch");
+}
 
 /** Composed when sharing so the message always carries the link. */
 export function buildShareMessage(
+  t: TFunction,
   senderFirst: string,
   fullUrl: string,
 ): string {
-  return `${senderFirst} invited you to QueerPulse — a quiet, vouched-for queer community. Your personal invite: ${fullUrl}`;
+  return t("auth:invite.link.shareMessage", { senderFirst, url: fullUrl });
 }
 
 export interface ShareTarget {

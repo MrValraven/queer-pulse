@@ -1,4 +1,5 @@
 import { FiX } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DRAFT_SORTS, type DraftSortKey } from "./drafts.data";
 import styles from "./DraftsPage.module.css";
 
@@ -14,6 +15,7 @@ export function DraftsControls({
   sort: DraftSortKey;
   onSort: (value: DraftSortKey) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.controls}>
       <div className={styles.search}>
@@ -35,14 +37,14 @@ export function DraftsControls({
           type="text"
           value={query}
           onChange={(e) => onQuery(e.target.value)}
-          placeholder="Search your drafts…"
-          aria-label="Search drafts"
+          placeholder={t("members:drafts.controls.searchPlaceholder")}
+          aria-label={t("members:drafts.controls.searchAriaLabel")}
         />
         {query && (
           <button
             type="button"
             className={styles.searchClear}
-            aria-label="Clear search"
+            aria-label={t("members:drafts.controls.clearSearchLabel")}
             onClick={() => onQuery("")}
           >
             <FiX aria-hidden />
@@ -51,16 +53,16 @@ export function DraftsControls({
       </div>
 
       <div className={styles.sort}>
-        <label htmlFor="draftSort">Sort</label>
+        <label htmlFor="draftSort">{t("members:drafts.controls.sortLabel")}</label>
         <select
           id="draftSort"
           value={sort}
           onChange={(e) => onSort(e.target.value as DraftSortKey)}
-          aria-label="Sort drafts"
+          aria-label={t("members:drafts.controls.sortAriaLabel")}
         >
           {DRAFT_SORTS.map((s) => (
             <option key={s.value} value={s.value}>
-              {s.label}
+              {t(s.labelKey)}
             </option>
           ))}
         </select>

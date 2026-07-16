@@ -162,46 +162,4 @@ export default defineConfig([
     files: ["src/app/routes.tsx"],
     rules: { "max-lines-per-function": "off" },
   },
-  // i18n sweep ratchet: features whose copy has not been extracted yet. Each
-  // path is deleted as that feature's wave lands (plan: 2026-07-16-platform-i18n-en-pt).
-  // When this list is empty, the platform is fully extracted — delete the block.
-  {
-    files: [
-      "src/features/admin/**",
-      "src/features/auth/**",
-      "src/features/cinema/**",
-      "src/features/communities/**",
-      "src/features/community/**",
-      "src/features/connect/**",
-      "src/features/culture/**",
-      "src/features/economy/**",
-      "src/features/feed/**",
-      "src/features/forum/**",
-      "src/features/governance/**",
-      "src/features/homepage/**",
-      "src/features/magazine/**",
-      "src/features/marketing/**",
-      "src/features/members/**",
-      "src/features/messages/**",
-      "src/features/myevents/**",
-      "src/features/notifications/**",
-      "src/features/resources/**",
-      // Partially swept: its catalogs exist, but headlines carrying a coral
-      // <em> were left as JSX literals because rich text was impossible before
-      // <Translation>. Finish it, then delete this line.
-      "src/features/subprofiles/**",
-      "src/features/safety/**",
-      "src/features/settings/**",
-      "src/features/social/**",
-      "src/features/studio/**",
-      "src/features/support/**",
-      "src/features/system/**",
-      "src/features/topics/**",
-      "src/shared/components/**",
-      "src/app/**",
-      // Not under src/features: the 404 + placeholder pages.
-      "src/pages/**",
-    ],
-    rules: { "local/no-literal-string": "off" },
-  },
 ]);

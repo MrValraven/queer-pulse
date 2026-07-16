@@ -1,9 +1,13 @@
 import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { skills } from "../data/skills";
 import styles from "./SkillsTeaser.module.css";
 
 export function SkillsTeaser() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.section} id="skills">
       <div className="wrap">
@@ -11,11 +15,12 @@ export function SkillsTeaser() {
           <SectionHead
             dark
             title={
-              <>
-                Learn from people <em>doing the work.</em>
-              </>
+              <Translation
+                i18nKey="homepage:skillsTeaser.title"
+                components={{ em: <em /> }}
+              />
             }
-            subtitle="Members teaching what they know. No course fees, no certificates, no imposter syndrome required."
+            subtitle={t("homepage:skillsTeaser.subtitle")}
           />
         </Reveal>
 
@@ -28,7 +33,9 @@ export function SkillsTeaser() {
                   skill.type === "teaching" ? styles.teaching : styles.learning,
                 ].join(" ")}
               >
-                {skill.type === "teaching" ? "Teaching" : "Learning"}
+                {skill.type === "teaching"
+                  ? t("homepage:skillsTeaser.teachingLabel")
+                  : t("homepage:skillsTeaser.learningLabel")}
               </span>
               <h4 className={styles.title}>{skill.title}</h4>
               <div className={styles.by}>{skill.by}</div>
@@ -38,7 +45,7 @@ export function SkillsTeaser() {
 
         <Reveal className={styles.cta}>
           <Button variant="ghost-dark" size="lg" to={routes.skills}>
-            Browse all skills &amp; learning →
+            {t("homepage:skillsTeaser.browseAllCta")}
           </Button>
         </Reveal>
       </div>

@@ -1,19 +1,20 @@
 import { routes } from "../../app/routeMap";
 
+/** i18n Pattern A — chrome subpage index, resolved via `t()` in SafetyPage. */
 export const SAFETY_SUBPAGES = [
   {
-    label: "Report & Safety",
+    labelKey: "resources:safety.subpage.report.label",
     to: routes.report,
-    blurb: "Report harassment or an unsafe space, and see what happens next.",
+    blurbKey: "resources:safety.subpage.report.blurb",
   },
   {
-    label: "Hate Crime Guide",
+    labelKey: "resources:safety.subpage.hateCrime.label",
     to: routes.hateCrime,
-    blurb: "What counts as a hate crime in Portugal, and how to report one.",
+    blurbKey: "resources:safety.subpage.hateCrime.blurb",
   },
   {
-    label: "Legal Aid",
+    labelKey: "resources:safety.subpage.legal.label",
     to: routes.legal,
-    blurb: "Know your rights and find legal support when you need it.",
+    blurbKey: "resources:safety.subpage.legal.blurb",
   },
 ];

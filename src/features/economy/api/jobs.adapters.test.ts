@@ -1,14 +1,19 @@
 import { describe, expect, it } from "vitest";
 import {
   applicationToView,
-  formatDeadline,
+  deadlineText,
   formatPay,
-  formatPosted,
   jobCardToJob,
   jobDetailToJob,
   logoFromName,
+  parseDeadline,
+  parsePosted,
+  postedText,
   postJobStateToCreateJobDto,
 } from "./jobs.adapters";
+import { createFormatters } from "../../../shared/i18n/format";
+import { catalogs } from "../../../shared/i18n/catalogs";
+import type { TFunction } from "../../../shared/i18n/types";
 import type {
   JobApplicationDTO,
   JobCardDTO,
@@ -17,6 +22,20 @@ import type {
 } from "./jobs.api";
 import type { CompanyProfile } from "../companies.data";
 import type { PostJobState } from "../usePostJobForm";
+
+/**
+ * A minimal `t` over the real `en` catalog — asserts against the shipped copy
+ * rather than a fixture, so a key that goes missing fails here too.
+ */
+const t: TFunction = (key, options) => {
+  const [ns, path] = key.split(":");
+  const value = catalogs.en[ns as "economy"]?.[path ?? ""] ?? key;
+  return Object.entries(options ?? {}).reduce(
+    (acc, [token, val]) => acc.replace(`{${token}}`, String(val)),
+    value,
+  );
+};
+const fmt = createFormatters("en-GB");
 
 const basePay: JobPay = {
   salary: null,
@@ -42,53 +61,66 @@ describe("logoFromName", () => {
 
 describe("formatPay", () => {
   it("hidePay + barter → barter/to discuss", () => {
-    expect(formatPay({ ...basePay, hidePay: true, barter: true })).toBe(
+    expect(formatPay({ ...basePay, hidePay: true, barter: true }, t)).toBe(
       "Barter / to discuss",
     );
   });
   it("hidePay without barter → Competitive", () => {
-    expect(formatPay({ ...basePay, hidePay: true })).toBe("Competitive");
+    expect(formatPay({ ...basePay, hidePay: true }, t)).toBe("Competitive");
   });
   it("explicit salary string wins", () => {
-    expect(formatPay({ ...basePay, salary: "€2,000/mo" })).toBe("€2,000/mo");
+    expect(formatPay({ ...basePay, salary: "€2,000/mo" }, t)).toBe("€2,000/mo");
   });
   it("no rates + barter → Open to barter", () => {
-    expect(formatPay({ ...basePay, barter: true })).toBe("Open to barter");
+    expect(formatPay({ ...basePay, barter: true }, t)).toBe("Open to barter");
   });
   it("no rates, no barter → To discuss", () => {
-    expect(formatPay(basePay)).toBe("To discuss");
+    expect(formatPay(basePay, t)).toBe("To discuss");
   });
   it("a min/max range with currency and period", () => {
     expect(
-      formatPay({
-        ...basePay,
-        rateMin: 20,
-        rateMax: 40,
-        currency: "£",
-        ratePer: "Hour",
-      }),
+      formatPay(
+        {
+          ...basePay,
+          rateMin: 20,
+          rateMax: 40,
+          currency: "£",
+          ratePer: "Hour",
+        },
+        t,
+      ),
     ).toContain("£20–£40");
   });
   it("a single min rate with a To-discuss period drops the period", () => {
-    expect(formatPay({ ...basePay, rateMin: 500, ratePer: "To discuss" })).toBe(
-      "€500",
-    );
+    expect(
+      formatPay({ ...basePay, rateMin: 500, ratePer: "To discuss" }, t),
+    ).toBe("€500");
   });
 });
 
-describe("formatDeadline", () => {
-  it("null → Open", () => expect(formatDeadline(null)).toBe("Open"));
-  it("invalid ISO → Open", () =>
-    expect(formatDeadline("not-a-date")).toBe("Open"));
-  it("valid ISO → day + short month", () =>
-    expect(formatDeadline("2026-06-30")).toBe("30 Jun"));
+describe("parseDeadline", () => {
+  it("null → null", () => expect(parseDeadline(null)).toBeNull());
+  it("invalid ISO → null", () => expect(parseDeadline("not-a-date")).toBeNull());
+  it("valid ISO → a Date", () =>
+    expect(parseDeadline("2026-06-30")?.getUTCFullYear()).toBe(2026));
 });
 
-describe("formatPosted", () => {
-  it("valid ISO → 'Posted <long date>'", () =>
-    expect(formatPosted("2026-06-01")).toBe("Posted 1 June 2026"));
-  it("invalid ISO → 'Posted recently'", () =>
-    expect(formatPosted("nope")).toBe("Posted recently"));
+describe("deadlineText", () => {
+  it("null → the Open chrome string", () =>
+    expect(deadlineText(null, t, fmt)).toBe("Open"));
+  it("a Date → a locale-formatted day + short month", () =>
+    expect(deadlineText(new Date("2026-06-30"), t, fmt)).toBe("30 Jun"));
+});
+
+describe("postedText", () => {
+  it("a Date → 'Posted <locale date>'", () =>
+    expect(postedText(new Date("2026-06-01"), t, fmt)).toBe(
+      "Posted 1 June 2026",
+    ));
+  it("null → 'Posted recently'", () =>
+    expect(postedText(null, t, fmt)).toBe("Posted recently"));
+  it("parsePosted rejects an invalid ISO", () =>
+    expect(parsePosted("nope")).toBeNull());
 });
 
 const card: JobCardDTO = {
@@ -115,7 +147,7 @@ const card: JobCardDTO = {
 
 describe("jobCardToJob", () => {
   it("maps card fields and derives cat slug + logo + qrLabel", () => {
-    const job = jobCardToJob(card);
+    const job = jobCardToJob(card, t);
     expect(job.slug).toBe("designer-role");
     expect(job.org).toBe("Atelier Pulso");
     expect(job.cat).toBe("arts"); // "Arts & Culture" → first token
@@ -123,19 +155,23 @@ describe("jobCardToJob", () => {
     expect(job.qr).toBe(true);
     expect(job.qrLabel).toBe("Queer-run"); // derived from queerRun when null
     expect(job.salary).toBe("€2k");
-    expect(job.deadline).toBe("30 Jun");
+    expect(job.deadline).toBeInstanceOf(Date);
+    expect(deadlineText(job.deadline, t, fmt)).toBe("30 Jun");
     expect(job.detail.about).toEqual(["Make lovely things."]);
   });
 
   it("falls back to the title for the logo when company is null", () => {
-    const job = jobCardToJob({ ...card, company: null, title: "Solo Studio" });
+    const job = jobCardToJob(
+      { ...card, company: null, title: "Solo Studio" },
+      t,
+    );
     expect(job.org).toBe("");
     expect(job.logo).toBe("SS");
     expect(job.qrLabel).toBe("Queer-run");
   });
 
   it("labels a non-queer-run listing Inclusive", () => {
-    const job = jobCardToJob({ ...card, queerRun: false, qrLabel: null });
+    const job = jobCardToJob({ ...card, queerRun: false, qrLabel: null }, t);
     expect(job.qrLabel).toBe("Inclusive");
   });
 });
@@ -161,7 +197,7 @@ describe("jobDetailToJob", () => {
       isPoster: false,
       myApplicationStatus: null,
     };
-    const job = jobDetailToJob(detail);
+    const job = jobDetailToJob(detail, t);
     expect(job.detail.about).toEqual(["Long about."]);
     expect(job.detail.dayToDay).toEqual(["Standups"]);
     expect(job.detail.reviewerNote).toBe("Vetted.");

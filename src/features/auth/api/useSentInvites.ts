@@ -3,18 +3,26 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getSentInvites, type SentInviteDTO } from "./invite.api";
 import { SENT_INVITES } from "../sentInvites.data";
 
-/** Presentation-normalized "invite I've sent" — status chip + human-readable dates. */
+/**
+ * Presentation-normalized "invite I've sent" — status chip + dates.
+ *
+ * i18n note: this adapter emits a catalog *key* for the status chip and keeps
+ * the send/expiry timestamps as `Date`s rather than pre-formatted strings —
+ * `SentInvitesList` resolves both through `t()` / `useFormat()` at render, so
+ * a language switch translates the chip and reformats the dates identically
+ * in demo and live mode (see `events.adapters.ts` for the pattern this mirrors).
+ */
 export interface SentInviteView {
   code: string;
   status: SentInviteDTO["status"];
-  /** Chip label, e.g. "Accepted", "Pending", "Expired", "Revoked". */
-  statusLabel: string;
+  /** Catalog key for the chip label, e.g. "auth:invite.sentList.status.used". */
+  statusKey: string;
   /** Chip tone, matching the design-system chip palette. */
   statusTone: "jade" | "amber" | "ghost" | "coral";
-  /** Pre-formatted send date, e.g. "18 June 2026". */
-  sentLabel: string;
-  /** Pre-formatted expiry, e.g. "25 June 2026". */
-  expiryLabel: string;
+  /** When the invite was sent. */
+  sentAt: Date;
+  /** When the invite stops working. */
+  expiresAt: Date;
   note?: string;
   /** Name of the person who accepted, if this invite was used. */
   acceptedByName?: string;
@@ -22,23 +30,13 @@ export interface SentInviteView {
 
 const STATUS_META: Record<
   SentInviteDTO["status"],
-  { label: string; tone: SentInviteView["statusTone"] }
+  { key: string; tone: SentInviteView["statusTone"] }
 > = {
-  valid: { label: "Pending", tone: "amber" },
-  used: { label: "Accepted", tone: "jade" },
-  expired: { label: "Expired", tone: "ghost" },
-  revoked: { label: "Revoked", tone: "coral" },
+  valid: { key: "auth:invite.sentList.status.valid", tone: "amber" },
+  used: { key: "auth:invite.sentList.status.used", tone: "jade" },
+  expired: { key: "auth:invite.sentList.status.expired", tone: "ghost" },
+  revoked: { key: "auth:invite.sentList.status.revoked", tone: "coral" },
 };
-
-function formatDate(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
 
 function dtoToView(dto: SentInviteDTO): SentInviteView {
   const meta = STATUS_META[dto.status];
@@ -46,10 +44,10 @@ function dtoToView(dto: SentInviteDTO): SentInviteView {
   return {
     code: dto.code,
     status: dto.status,
-    statusLabel: meta.label,
+    statusKey: meta.key,
     statusTone: meta.tone,
-    sentLabel: formatDate(dto.createdAt),
-    expiryLabel: formatDate(dto.expiresAt),
+    sentAt: new Date(dto.createdAt),
+    expiresAt: new Date(dto.expiresAt),
     note: dto.note,
     acceptedByName: accepted
       ? `${accepted.firstName} ${accepted.lastName}`.trim()

@@ -8,8 +8,11 @@ import { memberName } from "../members/data/members";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import {
+  GATHERING_TITLE,
+  RSVP_ATTENDEE_NAMES,
   RSVP_COC,
   RSVP_DETAILS,
+  RSVP_HOST_QUOTE,
   downloadIcs,
   googleCalendarUrl,
 } from "./rsvpPage.data";
@@ -31,7 +34,8 @@ export function RsvpPage() {
         <div className={styles.brand}>
           <Link to={routes.homepage} className={styles.brandLink}>
             <span className={styles.pulseDot} aria-hidden />
-            Queer<span className={styles.brandItalic}>Pulse</span>
+            {"Queer"}
+            <span className={styles.brandItalic}>{"Pulse"}</span>
           </Link>
         </div>
 
@@ -57,7 +61,7 @@ export function RsvpPage() {
               <h1 className={styles.h}>
                 <Translation i18nKey="gatherings:rsvp.title" components={{ em: <em /> }} />
               </h1>
-              <p className={styles.gName}>The Dispossessed — Reading Group #8</p>
+              <p className={styles.gName}>{GATHERING_TITLE}</p>
             </div>
 
             <div className={styles.cardBody}>
@@ -103,7 +107,7 @@ export function RsvpPage() {
                   ))}
                 </div>
                 <div className={styles.withText}>
-                  <strong>Sofia, Tomás, Beatriz, Jonas</strong>
+                  <strong>{RSVP_ATTENDEE_NAMES}</strong>
                   <br />
                   {t("gatherings:rsvp.othersCount", { count: 8 })}
                 </div>
@@ -119,12 +123,7 @@ export function RsvpPage() {
                     </div>
                   </div>
                 </div>
-                <p className={styles.hnText}>
-                  "So glad you're coming. We'll be reading chapters 10–14 this
-                  week. Bring your thoughts on Shevek's theory of time and
-                  simultaneity — it's a good one. The kitchen opens from 6:45 if
-                  you'd like to arrive early and settle in."
-                </p>
+                <p className={styles.hnText}>{RSVP_HOST_QUOTE}</p>
               </div>
 
               <div className={styles.calLabel}>{t("gatherings:rsvp.calendar.label")}</div>

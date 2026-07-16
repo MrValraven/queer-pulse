@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useScrollReveal, useCountUp } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { SUSTAIN_PRICE } from "./studioShell.data";
 import {
   PROMISES,
   PAYOUT_TOTAL,
@@ -11,12 +15,14 @@ import {
 import styles from "./StudioLandingPage.module.css";
 
 export function StudioLandingPromises() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <section className={styles.promises} id="how">
       <div className={styles.promisesH}>
-        <div className={styles.ebPlain}>The contract · not the marketing</div>
+        <div className={styles.ebPlain}>{t("studio:landing.promises.eyebrow")}</div>
         <h2>
-          Four <em>promises</em> we make, to artists and listeners.
+          <Translation i18nKey="studio:landing.promises.title" components={{ em: <em /> }} />
         </h2>
       </div>
       <div className={styles.grid4}>
@@ -24,11 +30,9 @@ export function StudioLandingPromises() {
           <div key={p.num} className={styles.promise}>
             <div className={styles.num}>{p.num}</div>
             <h3>
-              {p.titlePre}
-              <em>{p.titleEm}</em>
-              {p.titlePost}
+              <Translation i18nKey={p.titleKey} components={{ em: <em /> }} />
             </h3>
-            <p>{p.body}</p>
+            <p>{t(p.bodyKey, { price: fmt.currency(SUSTAIN_PRICE) })}</p>
           </div>
         ))}
       </div>
@@ -36,39 +40,46 @@ export function StudioLandingPromises() {
   );
 }
 
+const LEDGER_ARTIST_COUNT = 2138;
+const LEDGER_CYCLE_COUNT = 5;
+
 export function StudioLandingCounter() {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
   const total = useCountUp(PAYOUT_TOTAL, { active: isVisible });
+  const { t } = useTranslation();
+  const fmt = useFormat();
 
   return (
     <section className={styles.counter} id="artists">
       <div className={styles.counterInner} ref={ref}>
         <div className={styles.counterEb}>
           <span className={styles.liveJade} />
-          Live — updated as it happens
+          {t("studio:landing.counter.liveEyebrow")}
         </div>
         <h2>
-          Since the open beta opened, <em>QueerPulse Studio</em> has paid out:
+          <Translation i18nKey="studio:landing.counter.title" components={{ em: <em /> }} />
         </h2>
         <div className={styles.bigN}>
-          €<em>{total.toLocaleString("en-US")}</em>
+          €<em>{fmt.number(total)}</em>
         </div>
         <p className={styles.counterSub}>
-          to 2,138 artists, in five monthly cycles.
-          <Link to={routes.governance}>See the ledger →</Link>
+          {t("studio:landing.counter.sub", {
+            count: LEDGER_ARTIST_COUNT,
+            cycles: LEDGER_CYCLE_COUNT,
+          })}
+          <Link to={routes.governance}>{t("studio:landing.counter.seeLedgerCta")} →</Link>
         </p>
 
         <div className={styles.counterStats}>
           {COUNTER_STATS.map((s) => (
-            <div key={s.label} className={styles.cs}>
+            <div key={s.labelKey} className={styles.cs}>
               <div className={styles.v}>
                 <em>
-                  {(s.prefix ?? "") +
-                    s.value.toLocaleString("en-US") +
-                    (s.suffix ?? "")}
+                  {(s.prefix ?? "") + fmt.number(s.value) + (s.suffix ?? "")}
+                  {s.unitKey ? ` ${t(s.unitKey)}` : ""}
                 </em>
               </div>
-              <div className={styles.l}>{s.label}</div>
+              <div className={styles.l}>{t(s.labelKey)}</div>
             </div>
           ))}
         </div>
@@ -78,25 +89,26 @@ export function StudioLandingCounter() {
 }
 
 export function StudioLandingComparison() {
+  const { t } = useTranslation();
   return (
     <section className={styles.compareBand}>
       <div className={styles.compareInner}>
         <div className={styles.compareH}>
           <h2>
-            The <em>per-listen rate</em>, by comparison.
+            <Translation i18nKey="studio:landing.compare.title" components={{ em: <em /> }} />
           </h2>
         </div>
         <div className={styles.compareGrid}>
           {COMPARE.map((c) => (
             <div
-              key={c.label}
+              key={c.labelKey}
               className={`${styles.cmp} ${c.us ? styles.cmpUs : ""}`}
             >
-              <div className={styles.lbl}>{c.label}</div>
+              <div className={styles.lbl}>{t(c.labelKey)}</div>
               <div className={styles.v}>
                 <em>{c.value}</em>
               </div>
-              <div className={styles.ctx}>{c.ctx}</div>
+              <div className={styles.ctx}>{t(c.ctxKey)}</div>
             </div>
           ))}
         </div>
@@ -105,27 +117,39 @@ export function StudioLandingComparison() {
   );
 }
 
+/** Studio-on-top add-on price for existing QueerPulse members. */
+const STUDIO_ADD_ON_PRICE = 4;
+
 export function StudioLandingCta() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <section className={styles.ctaBand}>
       <h2>
-        Take a <em>seat</em> in the room.
+        <Translation i18nKey="studio:landing.cta.title" components={{ em: <em /> }} />
       </h2>
       <p>
-        €7 a month. Cancel any time. <em>The first listen</em> tells you whether
-        the room is for you.
+        <Translation
+          i18nKey="studio:landing.cta.body"
+          components={{ em: <em /> }}
+          values={{ price: fmt.currency(SUSTAIN_PRICE) }}
+        />
       </p>
       <div className={styles.ctaActions}>
         <Button variant="primary" size="lg" to={routes.sustainer}>
-          Sustain · €7/mo
+          {t("studio:shell.sustainCta", { price: fmt.currency(SUSTAIN_PRICE) })}
         </Button>
         <Button variant="ghost-dark" size="lg" to={routes.studioAbout}>
-          Read the plan first
+          {t("studio:landing.cta.readPlanCta")}
         </Button>
       </div>
       <div className={styles.ctaSecondary}>
-        Already a QueerPulse member? Studio is <em>€4/mo on top</em>.{" "}
-        <Link to={routes.signIn}>Sign in to add it →</Link>
+        <Translation
+          i18nKey="studio:landing.cta.secondary"
+          components={{ em: <em /> }}
+          values={{ addOnPrice: fmt.currency(STUDIO_ADD_ON_PRICE) }}
+        />{" "}
+        <Link to={routes.signIn}>{t("studio:landing.cta.secondaryLink")} →</Link>
       </div>
     </section>
   );

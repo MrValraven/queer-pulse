@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StatusCard } from "./work.data";
 import styles from "./WorkHubPage.module.css";
 
 /** Per-silo status cards — each summarises state and deep-links into that area. */
 export function WorkHubCards({ cards }: { cards: StatusCard[] }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.grid}>
       {cards.map((c) => (
@@ -12,9 +14,11 @@ export function WorkHubCards({ cards }: { cards: StatusCard[] }) {
           <span className={styles.cardIcon} aria-hidden>
             {c.icon}
           </span>
-          <div className={styles.cardLabel}>{c.label}</div>
-          <div className={styles.cardPrimary}>{c.primary}</div>
-          <div className={styles.cardNext}>{c.next}</div>
+          <div className={styles.cardLabel}>{t(c.labelKey)}</div>
+          <div className={styles.cardPrimary}>
+            {t(c.primaryKey, c.primaryValues)}
+          </div>
+          <div className={styles.cardNext}>{t(c.nextKey, c.nextValues)}</div>
           <span className={styles.cardArrow} aria-hidden>
             <FiArrowRight />
           </span>

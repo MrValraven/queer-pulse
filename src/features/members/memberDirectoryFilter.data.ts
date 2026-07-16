@@ -38,8 +38,6 @@ export interface MemberCard {
   lastName?: string;
   avatarUrl?: string | null;
   tags: { label: string; match?: boolean }[];
-  vouch: string;
-  mutuals: string;
   // ---- structured fields the filters / sort run against ----
   openTo: OpenTo[];
   hood: string;
@@ -475,8 +473,6 @@ function buildMembers(): MemberCard[] {
       meta: `${pick(PRONOUNS, r)} · ${hood}`,
       role: bio,
       tags,
-      vouch: `${vouchCount} vouch${vouchCount === 1 ? "" : "es"}`,
-      mutuals: `${mutualsCount} mutual${mutualsCount === 1 ? "" : "s"}`,
       openTo,
       hood,
       discipline,
@@ -518,6 +514,18 @@ export const SORTS: SortKey[] = [
   "A to Z",
   "Most vouched",
 ];
+
+/** Display label per sort key — a small, platform-defined vocabulary (chrome),
+ *  resolved through `t()`. `SortKey` itself stays the English literal used as
+ *  the internal comparator id (see `sortMembers`); only the on-screen label
+ *  is translated. */
+export const SORT_LABEL_KEY: Record<SortKey, string> = {
+  "Recently active": "members:directory.sort.recentlyActive",
+  "Recently joined": "members:directory.sort.recentlyJoined",
+  "Closest mutuals": "members:directory.sort.closestMutuals",
+  "A to Z": "members:directory.sort.aToZ",
+  "Most vouched": "members:directory.sort.mostVouched",
+};
 
 /** The chips shown applied at the top, with the control + value each maps to. */
 export interface AppliedChip {

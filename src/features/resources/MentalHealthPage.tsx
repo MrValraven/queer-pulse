@@ -1,5 +1,7 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CRISIS } from "./mentalHealth.data";
 import {
@@ -13,21 +15,22 @@ const FORUM = routes.forum;
 const MENTORSHIP = routes.mentorship;
 
 export function MentalHealthPage() {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
-            Mental Health
+            {t("resources:mentalHealth.hero.cat")}
           </Reveal>
           <Reveal as="h1" delay={60}>
-            You don't have to be <em>okay.</em>
+            <Translation
+              i18nKey="resources:mentalHealth.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.heroSub} delay={120}>
-            Queer-affirming therapists, honest information about accessing
-            mental health support in Lisbon, crisis resources, and a community
-            that understands what you're carrying — because we're carrying it
-            too.
+            {t("resources:mentalHealth.hero.sub")}
           </Reveal>
         </div>
       </div>
@@ -36,13 +39,14 @@ export function MentalHealthPage() {
         <div className="wrap">
           <div className={styles.crisisInner}>
             <div>
-              <div className={styles.crisisLabel}>If you need support now</div>
+              <div className={styles.crisisLabel}>
+                {t("resources:mentalHealth.crisis.label")}
+              </div>
               <div className={styles.crisisHeading}>
-                Crisis &amp; immediate support lines
+                {t("resources:mentalHealth.crisis.heading")}
               </div>
               <p className={styles.crisisSub}>
-                These lines are available now. You don't have to be in immediate
-                danger to call — if you're struggling, reaching out is enough.
+                {t("resources:mentalHealth.crisis.sub")}
               </p>
             </div>
             <div className={styles.crisisLines}>
@@ -50,7 +54,7 @@ export function MentalHealthPage() {
                 <div className={styles.crisisLine} key={c.name}>
                   <div className={styles.clName}>{c.name}</div>
                   <div className={styles.clNum}>{c.num}</div>
-                  <div className={styles.clNote}>{c.note}</div>
+                  <div className={styles.clNote}>{t(c.noteKey)}</div>
                 </div>
               ))}
             </div>
@@ -64,14 +68,15 @@ export function MentalHealthPage() {
 
       <Outro
         title={
-          <>
-            Asking for help is <em>not small.</em>
-          </>
+          <Translation
+            i18nKey="resources:mentalHealth.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="It's one of the harder things. The community is here."
+        sub={t("resources:mentalHealth.outro.sub")}
       >
         <Button to={FORUM} variant="primary" size="lg">
-          Talk to someone
+          {t("resources:mentalHealth.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

@@ -12,6 +12,7 @@ import { AccountMenu } from "./AccountMenu";
 import { Button } from "../ui";
 import { useAuth } from "../../../app/providers/authContext";
 import { useTheme } from "../../../app/providers/themeContext";
+import { useTranslation } from "../../i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import styles from "./Sidebar.module.css";
 
@@ -32,6 +33,7 @@ export function SidebarFooter({
 }) {
   const { loggedIn } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <div className={styles.footer}>
@@ -39,7 +41,7 @@ export function SidebarFooter({
         <button
           type="button"
           className={styles.utilBtn}
-          aria-label="Search"
+          aria-label={t("nav:searchShort")}
           onClick={() =>
             window.dispatchEvent(new CustomEvent("qp:open-search"))
           }
@@ -49,7 +51,7 @@ export function SidebarFooter({
         <button
           type="button"
           className={styles.utilBtn}
-          aria-label="Toggle colour theme"
+          aria-label={t("footer:toggleTheme")}
           onClick={toggleTheme}
         >
           {theme === "dark" ? <FiSun aria-hidden /> : <FiMoon aria-hidden />}
@@ -58,7 +60,7 @@ export function SidebarFooter({
           <Link
             to={routes.notifications}
             className={styles.utilBtn}
-            aria-label="Notifications"
+            aria-label={t("nav:notifications")}
           >
             <FiBell aria-hidden />
             {unreadCount > 0 && (
@@ -73,7 +75,7 @@ export function SidebarFooter({
           <Link
             to={routes.accountProfile}
             className={styles.utilBtn}
-            aria-label="Profile"
+            aria-label={t("shared:accountMenu.items.profile")}
           >
             <FiUser aria-hidden />
           </Link>
@@ -86,23 +88,27 @@ export function SidebarFooter({
         <Link
           to={routes.signIn}
           className={styles.utilBtn}
-          aria-label="Sign in"
+          aria-label={t("nav:signIn")}
         >
           <FiUser aria-hidden />
         </Link>
       ) : (
         <div className={styles.signedOut}>
           <Link to={routes.signIn} className={styles.signIn}>
-            Sign in
+            {t("nav:signIn")}
           </Link>
-          <Button to={routes.requestInvite}>Request an invite</Button>
+          <Button to={routes.requestInvite}>{t("nav:requestInvite")}</Button>
         </div>
       )}
 
       <button
         type="button"
         className={styles.collapseBtn}
-        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        aria-label={
+          collapsed
+            ? t("shared:sidebarFooter.expandAria")
+            : t("shared:sidebarFooter.collapseAria")
+        }
         onClick={onToggleRail}
       >
         {collapsed ? (
@@ -110,7 +116,7 @@ export function SidebarFooter({
         ) : (
           <>
             <FiChevronsLeft aria-hidden />
-            <span>Collapse</span>
+            <span>{t("shared:sidebarFooter.collapse")}</span>
           </>
         )}
       </button>

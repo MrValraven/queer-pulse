@@ -1,4 +1,8 @@
-import { useState, type ReactNode } from "react";
+import { useState, type ReactElement, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { routes } from "../../app/routeMap";
 import {
   NAME_TABLE,
   WHERE_CARDS,
@@ -34,23 +38,30 @@ const whereIcons: Record<WhereIcon, ReactNode> = {
 };
 
 export function NameTable() {
+  const { t } = useTranslation();
   return (
     <div className={styles.table}>
       <div className={styles.tHead}>
-        <div className={styles.tHeadCell}>Field</div>
-        <div className={styles.tHeadCell}>What it's used for</div>
-        <div className={styles.tHeadCell}>Who sees it</div>
+        <div className={styles.tHeadCell}>
+          {t("resources:pronounsGuide.table.head.field")}
+        </div>
+        <div className={styles.tHeadCell}>
+          {t("resources:pronounsGuide.table.head.use")}
+        </div>
+        <div className={styles.tHeadCell}>
+          {t("resources:pronounsGuide.table.head.who")}
+        </div>
       </div>
       {NAME_TABLE.map((r) => (
-        <div key={r.field} className={styles.tRow}>
+        <div key={r.fieldKey} className={styles.tRow}>
           <div className={`${styles.tCell} ${styles.tCellLabel}`}>
-            {r.field}
+            {t(r.fieldKey)}
           </div>
-          <div className={styles.tCell}>{r.use}</div>
+          <div className={styles.tCell}>{t(r.useKey)}</div>
           <div
             className={`${styles.tCell} ${r.whoVariant === "jade" ? styles.tCellJade : styles.tCellAccent}`}
           >
-            {r.who}
+            {t(r.whoKey)}
           </div>
         </div>
       ))}
@@ -59,19 +70,20 @@ export function NameTable() {
 }
 
 export function WhereGrid() {
+  const { t } = useTranslation();
   return (
     <div className={styles.whereGrid}>
       {WHERE_CARDS.map((c) => (
-        <div key={c.title} className={styles.whereCard}>
+        <div key={c.titleKey} className={styles.whereCard}>
           <div className={`${styles.whereIcon} ${c.jade ? styles.jade : ""}`}>
             {whereIcons[c.icon]}
           </div>
-          <div className={styles.whereTitle}>{c.title}</div>
-          <div className={styles.whereText}>{c.text}</div>
+          <div className={styles.whereTitle}>{t(c.titleKey)}</div>
+          <div className={styles.whereText}>{t(c.textKey)}</div>
           <div
             className={`${styles.whereTiming} ${c.delay ? styles.delay : ""}`}
           >
-            {c.timing}
+            {t(c.timingKey)}
           </div>
         </div>
       ))}
@@ -79,7 +91,14 @@ export function WhereGrid() {
   );
 }
 
+/** FAQ #2 (deadname) and #6 (legal name data) carry an `<a>` run needing a real link. */
+const FAQ_LINK: Record<number, ReactElement> = {
+  1: <a href="mailto:help@queerpulse.pt" />,
+  5: <Link to={routes.dataExport} />,
+};
+
 export function FaqList() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState<number | null>(null);
   return (
     <div>
@@ -87,7 +106,7 @@ export function FaqList() {
         const isOpen = open === faqIndex;
         return (
           <div
-            key={faq.q}
+            key={faq.qKey}
             className={`${styles.faqItem} ${isOpen ? styles.open : ""}`}
           >
             <button
@@ -97,7 +116,7 @@ export function FaqList() {
               aria-controls={`pronoun-faq-${faqIndex}`}
               onClick={() => setOpen(isOpen ? null : faqIndex)}
             >
-              <span className={styles.faqQText}>{faq.q}</span>
+              <span className={styles.faqQText}>{t(faq.qKey)}</span>
               <span className={styles.faqArrow}>▼</span>
             </button>
             <div
@@ -107,7 +126,16 @@ export function FaqList() {
               inert={!isOpen}
             >
               <div className={styles.faqPanelInner}>
-                <div className={styles.faqA}>{faq.a}</div>
+                <div className={styles.faqA}>
+                  {FAQ_LINK[faqIndex] ? (
+                    <Translation
+                      i18nKey={faq.aKey}
+                      components={{ a: FAQ_LINK[faqIndex] }}
+                    />
+                  ) : (
+                    t(faq.aKey)
+                  )}
+                </div>
               </div>
             </div>
           </div>

@@ -9,20 +9,23 @@ export const CANDIDATE = {
 import type { IconType } from "react-icons";
 import { FiEye, FiShield, FiUsers } from "react-icons/fi";
 
-export const MEANS: { icon: IconType; title: string; body: string }[] = [
+/** Why-vouch explainer cards — platform-authored chrome (identical regardless
+ *  of who's being vouched for), so `titleKey`/`bodyKey` hold catalog keys
+ *  rather than raw strings; the page resolves them with `t()`. */
+export const MEANS: { icon: IconType; titleKey: string; bodyKey: string }[] = [
   {
     icon: FiUsers,
-    title: "You know them, really",
-    body: "A vouch says you've met this person and you trust them in community spaces. It carries weight here.",
+    titleKey: "members:vouch.means.know.title",
+    bodyKey: "members:vouch.means.know.body",
   },
   {
     icon: FiShield,
-    title: "It keeps the space safe",
-    body: "QueerPulse is invite-and-vouch for a reason. Members vouching for members is how we stay small and trusted.",
+    titleKey: "members:vouch.means.safe.title",
+    bodyKey: "members:vouch.means.safe.body",
   },
   {
     icon: FiEye,
-    title: "It's seen by the council",
-    body: "Your note goes to the membership council alongside their application — not posted publicly.",
+    titleKey: "members:vouch.means.council.title",
+    bodyKey: "members:vouch.means.council.body",
   },
 ];

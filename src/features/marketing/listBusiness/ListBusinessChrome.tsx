@@ -1,8 +1,10 @@
 import { Fragment, type ReactNode } from "react";
 import { FiAlertCircle, FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
-  PILL_LABELS,
+  PILL_LABEL_KEYS,
   TOTAL_STEPS,
   type MissingField,
 } from "./listBusiness.data";
@@ -41,27 +43,35 @@ export function WizardChrome({
   step: number;
   savedAt: number | null;
 }) {
+  const { t } = useTranslation();
   const fill = (step / (TOTAL_STEPS - 1)) * 100;
   return (
     <div className={styles.wizTop}>
       <div className={styles.pills}>
-        {PILL_LABELS.map((label, i) => {
+        {PILL_LABEL_KEYS.map((labelKey, i) => {
           const cls =
             i < step ? styles.wpDone : i === step ? styles.wpActive : undefined;
+          const label = t(labelKey);
+          const ariaKey =
+            i < step
+              ? "marketing:listBusiness.wizard.stepAriaDone"
+              : i === step
+                ? "marketing:listBusiness.wizard.stepAriaCurrent"
+                : "marketing:listBusiness.wizard.stepAria";
           return (
-            <Fragment key={label}>
+            <Fragment key={labelKey}>
               <div
                 className={[styles.wp, cls].filter(Boolean).join(" ")}
-                aria-label={`Step ${i + 1}: ${label}${
-                  i < step ? " (done)" : i === step ? " (current)" : ""
-                }`}
+                aria-label={t(ariaKey, { number: i + 1, label })}
               >
                 <span className={styles.wpN} aria-hidden>
                   {i < step ? <FiCheck size={13} /> : i + 1}
                 </span>
                 <span className={styles.wpL}>{label}</span>
               </div>
-              {i < PILL_LABELS.length - 1 && <span className={styles.wpBar} />}
+              {i < PILL_LABEL_KEYS.length - 1 && (
+                <span className={styles.wpBar} />
+              )}
             </Fragment>
           );
         })}
@@ -75,7 +85,8 @@ export function WizardChrome({
         </div>
         {savedAt && (
           <span className={styles.draftStatus}>
-            <FiCheck size={12} aria-hidden /> Draft saved
+            <FiCheck size={12} aria-hidden />{" "}
+            {t("marketing:listBusiness.wizard.draftSaved")}
           </span>
         )}
       </div>
@@ -91,17 +102,21 @@ export function DraftBanner({
   onResume: () => void;
   onDiscard: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={`${styles.draftBanner} wrap`}>
       <div className={styles.dbTxt}>
-        <b>You have a saved draft.</b> Pick up where you left off?
+        <Translation
+          i18nKey="marketing:listBusiness.draftBanner.text"
+          components={{ b: <b /> }}
+        />
       </div>
       <div className={styles.dbActions}>
         <Button variant="ghost" onClick={onDiscard}>
-          Start fresh
+          {t("marketing:listBusiness.draftBanner.startFresh")}
         </Button>
         <Button variant="primary" onClick={onResume}>
-          Resume draft
+          {t("marketing:listBusiness.draftBanner.resume")}
         </Button>
       </div>
     </div>
@@ -131,7 +146,7 @@ export function PaneHeader({
 /** Back / next footer with the "what's still needed" hint. */
 export function PaneActions({
   onBack,
-  backLabel = "← Back",
+  backLabel,
   onNext,
   nextLabel,
   missing,
@@ -142,38 +157,52 @@ export function PaneActions({
   nextLabel: string;
   missing: MissingField[];
 }) {
+  const { t } = useTranslation();
   const blocked = missing.length > 0;
+  const back = backLabel ?? t("marketing:listBusiness.paneActions.back");
   return (
     <div className={styles.paneFooter}>
       {blocked && (
         <div className={styles.neededBar}>
           <FiAlertCircle size={15} className={styles.neededIcon} aria-hidden />
-          <span className={styles.neededLabel}>A few things left</span>
+          <span className={styles.neededLabel}>
+            {t("marketing:listBusiness.paneActions.neededLabel")}
+          </span>
           <span className={styles.neededChips}>
-            {missing.map((m) => (
-              <button
-                key={m.anchor}
-                type="button"
-                className={styles.neededChip}
-                onClick={() => jumpToField(m.anchor)}
-                aria-label={`Jump to ${m.label}`}
-              >
-                {m.label}
-                <FiArrowRight size={11} aria-hidden />
-              </button>
-            ))}
+            {missing.map((m) => {
+              const label = t(m.labelKey);
+              return (
+                <button
+                  key={m.anchor}
+                  type="button"
+                  className={styles.neededChip}
+                  onClick={() => jumpToField(m.anchor)}
+                  aria-label={t(
+                    "marketing:listBusiness.paneActions.jumpToAria",
+                    { label },
+                  )}
+                >
+                  {label}
+                  <FiArrowRight size={11} aria-hidden />
+                </button>
+              );
+            })}
           </span>
         </div>
       )}
       <div className={styles.paneActions}>
         <Button variant="ghost" onClick={onBack}>
-          {backLabel}
+          {back}
         </Button>
         <Button
           variant="primary"
           onClick={onNext}
           disabled={blocked}
-          title={blocked ? "Fill the required fields to continue" : undefined}
+          title={
+            blocked
+              ? t("marketing:listBusiness.paneActions.blockedTitle")
+              : undefined
+          }
         >
           {nextLabel}
         </Button>

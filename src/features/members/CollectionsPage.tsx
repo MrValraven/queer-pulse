@@ -3,10 +3,13 @@ import { AppShell } from "../../shared/components/layout";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSaved, type SavedItem } from "../../app/providers/SavedProvider";
 import {
   COLLECTIONS,
   RECENT_SAVES,
+  privacyLabel,
   type Collection,
   type Privacy,
   type Thumb,
@@ -25,12 +28,6 @@ type ModalState =
   | { type: "view"; id: string }
   | { type: "add"; save: RecentSave }
   | null;
-
-const PRIVACY_LABEL: Record<Privacy, string> = {
-  private: "Private",
-  shared: "Shared",
-  public: "Public",
-};
 
 const thumbClass: Record<Thumb, string> = {
   a: styles.thumbA!,
@@ -69,6 +66,7 @@ const privacyIcon: Record<Privacy, ReactNode> = {
 
 /** A single collection card in the grid. */
 function CollectionCard({ c, onOpen }: { c: Collection; onOpen: () => void }) {
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -81,15 +79,15 @@ function CollectionCard({ c, onOpen }: { c: Collection; onOpen: () => void }) {
         <div className={styles.meta}>{c.meta}</div>
       </div>
       <div className={styles.thumbs}>
-        {c.thumbs.map((t, i) => (
-          <span key={i} className={`${styles.thumb} ${thumbClass[t]}`} />
+        {c.thumbs.map((thumb, i) => (
+          <span key={i} className={`${styles.thumb} ${thumbClass[thumb]}`} />
         ))}
         <span className={styles.more}>{c.more}</span>
       </div>
       <div className={styles.foot}>
         <span className={styles.priv}>
           {privacyIcon[c.privacy]}
-          {c.privacyLabel}
+          {privacyLabel(c.privacy, c.sharedWithCount, t)}
         </span>
         <span>{c.updated}</span>
       </div>
@@ -138,6 +136,7 @@ function RecentRowSkeleton() {
 
 /** A recent, unfiled save — clicking opens the "add to collection" picker. */
 function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
+  const { t } = useTranslation();
   return (
     <button type="button" className={styles.recentRow} onClick={onAdd}>
       <div className={`${styles.recentKind} ${kindClass[r.kindVariant]}`}>
@@ -147,12 +146,15 @@ function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
         <b>{r.title}</b>
         <span>{r.saved}</span>
       </div>
-      <span className={styles.recentAdd}>+ Add to collection →</span>
+      <span className={styles.recentAdd}>
+        {t("members:collections.recentSaves.addCta")}
+      </span>
     </button>
   );
 }
 
 export function CollectionsPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { items: savedItems } = useSaved();
   const loading = useSimulatedLoad();
@@ -180,17 +182,16 @@ export function CollectionsPage() {
         id,
         count: "0",
         name,
-        meta: "Just created — start adding saves",
+        meta: t("members:collections.newCollection.defaultMeta"),
         thumbs: ["a", "b", "c"],
         more: "",
         privacy,
-        privacyLabel: PRIVACY_LABEL[privacy],
-        updated: "Updated just now",
+        updated: t("members:collections.updatedJustNow"),
       },
       ...prev,
     ]);
     setModal(null);
-    showToast("Collection created", "success");
+    showToast(t("members:collections.toast.created"), "success");
   };
 
   const addSaveToCollection = (collectionId: string, save: RecentSave) => {
@@ -211,7 +212,7 @@ export function CollectionsPage() {
           ? {
               ...c,
               count: String((Number(c.count) || 0) + 1),
-              updated: "Updated just now",
+              updated: t("members:collections.updatedJustNow"),
             }
           : c,
       ),
@@ -229,18 +230,20 @@ export function CollectionsPage() {
         <header className={styles.head}>
           <div>
             <div className={styles.eyebrow}>
-              Collections · folders for saves
+              {t("members:collections.header.eyebrow")}
             </div>
             <h1 className={styles.h1}>
-              Things you keep <em>coming back to.</em>
+              <Translation
+                i18nKey="members:collections.header.title"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.lead}>
-              Saved items, grouped however makes sense to you. Folders can be
-              private (default), shared with specific members, or public.
+              {t("members:collections.header.lead")}
             </p>
           </div>
           <Button variant="primary" onClick={() => setModal({ type: "new" })}>
-            + New collection
+            {t("members:collections.header.newCta")}
           </Button>
         </header>
 
@@ -268,16 +271,18 @@ export function CollectionsPage() {
                 onClick={() => setModal({ type: "new" })}
               >
                 <div className={styles.plus}>+</div>
-                <b>New collection</b>
-                <span>Group saves by why they matter</span>
+                <b>{t("members:collections.newCard.title")}</b>
+                <span>{t("members:collections.newCard.subtitle")}</span>
               </button>
             </>
           )}
         </div>
 
         <div className={styles.secH}>
-          <span>Recently saved · not yet in a collection</span>
-          <span className={styles.ct}>+ 7 unfiled</span>
+          <span>{t("members:collections.recentSaves.heading")}</span>
+          <span className={styles.ct}>
+            {t("members:collections.recentSaves.unfiledCount", { count: 7 })}
+          </span>
         </div>
         <div className={styles.recentList}>
           {loading

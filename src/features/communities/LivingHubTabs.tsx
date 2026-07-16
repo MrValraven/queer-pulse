@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FadeIn, Tabs } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Thread as ThreadData } from "./communityDetails";
 import type { LivingCommunity } from "./community.model";
@@ -13,14 +14,6 @@ import { ModToolsTab } from "./ModToolsTab";
 import styles from "./CommunityDetailPage.module.css";
 
 type Tab = "pulse" | "discussion" | "members" | "events" | "about" | "modtools";
-
-const BASE_TABS: { id: Tab; label: string }[] = [
-  { id: "pulse", label: "Pulse" },
-  { id: "discussion", label: "Discussion" },
-  { id: "members", label: "Members" },
-  { id: "events", label: "Events" },
-  { id: "about", label: "About" },
-];
 
 export function LivingHubTabs({
   community,
@@ -37,12 +30,23 @@ export function LivingHubTabs({
   isMember: boolean;
   role: CommunityRole | null;
 }) {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>("pulse");
 
+  const baseTabs: { id: Tab; label: string }[] = [
+    { id: "pulse", label: t("communities:detail.tabs.pulse") },
+    { id: "discussion", label: t("communities:detail.tabs.discussion") },
+    { id: "members", label: t("communities:detail.tabs.members") },
+    { id: "events", label: t("communities:detail.tabs.events") },
+    { id: "about", label: t("communities:detail.tabs.about") },
+  ];
   const isMod = role === "owner" || role === "mod";
   const tabs = isMod
-    ? [...BASE_TABS, { id: "modtools" as Tab, label: "Mod tools" }]
-    : BASE_TABS;
+    ? [
+        ...baseTabs,
+        { id: "modtools" as Tab, label: t("communities:detail.tabs.modtools") },
+      ]
+    : baseTabs;
   // If a mod opens Mod tools then leaves (role drops), fall back to Pulse.
   const active: Tab = tab === "modtools" && !isMod ? "pulse" : tab;
 

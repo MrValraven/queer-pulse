@@ -2,11 +2,14 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthLayout } from "./AuthLayout";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { RequestInviteForm } from "./RequestInviteForm";
 import { RequestInviteSent } from "./RequestInviteSent";
 import styles from "./auth.module.css";
 
 export function RequestInvitePage() {
+  const { t } = useTranslation();
   const [first, setFirst] = useState("");
   const [sent, setSent] = useState(false);
 
@@ -16,15 +19,11 @@ export function RequestInvitePage() {
 
   return (
     <AuthLayout wide>
-      <div className={styles.eyebrow}>Request an invite</div>
+      <div className={styles.eyebrow}>{t("auth:requestInvite.eyebrow")}</div>
       <h1>
-        Ask to come <em>in.</em>
+        <Translation i18nKey="auth:requestInvite.title" components={{ em: <em /> }} />
       </h1>
-      <p className={styles.sub}>
-        QueerPulse grows through trust, not advertising. The surest way in is a
-        member who'll vouch for you — if you know someone here, ask them. If you
-        don't, tell us a little about you and we'll take it from there.
-      </p>
+      <p className={styles.sub}>{t("auth:requestInvite.sub")}</p>
 
       <RequestInviteForm
         first={first}
@@ -37,7 +36,7 @@ export function RequestInvitePage() {
           to={routes.signIn}
           style={{ fontSize: 13.5, color: "var(--ink-60)", fontWeight: 500 }}
         >
-          Already a member? Sign in
+          {t("auth:requestInvite.alreadyMember")}
         </Link>
       </div>
     </AuthLayout>

@@ -32,13 +32,13 @@ export function LeavePage() {
   const [flowOpen, setFlowOpen] = useState(false);
 
   const runDeletion = useCallback(async () => {
-    const { reauthToken } = await reauth("");
+    const { reauthToken } = await reauth();
     await requestDeletion(reauthToken);
   }, [reauth, requestDeletion]);
 
   async function handlePause() {
     try {
-      const { reauthToken } = await reauth("");
+      const { reauthToken } = await reauth();
       await deactivate(reauthToken);
       setState("paused");
     } catch (err) {

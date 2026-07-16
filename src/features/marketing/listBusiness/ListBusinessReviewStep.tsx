@@ -1,9 +1,15 @@
 import { type ReactNode } from "react";
 import { FiShield } from "react-icons/fi";
 import { CheckLine } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { TFunction } from "../../../shared/i18n/types";
 import {
   ANCHOR,
+  catLabel,
   DAYS,
+  goodForLabel,
+  langLabel,
   PRICES,
   slugify,
   VERIFY,
@@ -13,22 +19,33 @@ import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import styles from "./ListBusinessPage.module.css";
 
-function label(list: { id: string; label: string }[], id: string): string {
-  return list.find((x) => x.id === id)?.label ?? id;
+function optionLabel(
+  t: TFunction,
+  list: { id: string; labelKey: string }[],
+  id: string,
+): string {
+  const found = list.find((x) => x.id === id);
+  return found ? t(found.labelKey) : id;
 }
 
 function hoursSummary(draft: ListingDraft): string {
   const open = DAYS.filter((d) => draft.hours[d.id]?.open);
   if (!open.length) return "";
+  // Day ids are the stable three-letter English keys; the summary is a
+  // compact glance, so it reuses them rather than the long localized names.
   return open.map((d) => d.id).join(", ");
 }
 
-function onlineSummary(draft: ListingDraft): string {
+function onlineSummary(t: TFunction, draft: ListingDraft): string {
   const bits: string[] = [];
-  if (draft.social.instagram) bits.push("Instagram");
-  if (draft.social.website) bits.push("Website");
-  if (draft.social.email) bits.push("Email");
-  if (draft.social.phone) bits.push("Phone");
+  if (draft.social.instagram)
+    bits.push(t("marketing:listBusiness.step5.online.instagram"));
+  if (draft.social.website)
+    bits.push(t("marketing:listBusiness.step5.online.website"));
+  if (draft.social.email)
+    bits.push(t("marketing:listBusiness.step5.online.email"));
+  if (draft.social.phone)
+    bits.push(t("marketing:listBusiness.step5.online.phone"));
   return bits.join(" · ");
 }
 
@@ -41,6 +58,7 @@ function Row({
   children: ReactNode;
   quote?: boolean;
 }) {
+  const { t } = useTranslation();
   const empty = children === "" || children === null || children === undefined;
   return (
     <div className={styles.recapRow}>
@@ -50,7 +68,13 @@ function Row({
           .filter(Boolean)
           .join(" ")}
       >
-        {empty ? <span className={styles.rvMiss}>Not added</span> : children}
+        {empty ? (
+          <span className={styles.rvMiss}>
+            {t("marketing:listBusiness.step5.notAdded")}
+          </span>
+        ) : (
+          children
+        )}
       </span>
     </div>
   );
@@ -65,12 +89,13 @@ function Group({
   onEdit: () => void;
   children: ReactNode;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.recapGroup}>
       <div className={styles.recapHead}>
         <span>{title}</span>
         <button type="button" className={styles.recapEdit} onClick={onEdit}>
-          Edit
+          {t("marketing:listBusiness.step5.editCta")}
         </button>
       </div>
       {children}
@@ -89,82 +114,122 @@ export function StepReview({
   userInitials: string;
   onEdit: (step: number) => void;
 }) {
+  const { t } = useTranslation();
   const { draft, set } = form;
   return (
     <>
       <PaneHeader
-        title="One last look"
-        em="before it goes to the team."
-        sub="Here's everything you've told us. Edit any part by jumping back — nothing's locked until you send."
+        title={t("marketing:listBusiness.step5.title")}
+        em={t("marketing:listBusiness.step5.em")}
+        sub={t("marketing:listBusiness.step5.sub")}
       />
 
       <div className={styles.slugBox}>
-        <div className={styles.sbK}>Your listing will live at</div>
+        <div className={styles.sbK}>
+          {t("marketing:listBusiness.step5.slugLabel")}
+        </div>
         <div className={styles.sbUrl}>
           queerpulse.app/directory/<b>{slugify(draft.name)}</b>
         </div>
       </div>
 
-      <Group title="You & the place" onEdit={() => onEdit(0)}>
-        <Row k="Listing as">
+      <Group
+        title={t("marketing:listBusiness.step5.group.pathPlace")}
+        onEdit={() => onEdit(0)}
+      >
+        <Row k={t("marketing:listBusiness.step5.row.listingAs")}>
           {draft.path === "claim"
-            ? "I run this place"
+            ? t("marketing:listBusiness.step5.listingAs.claim")
             : draft.path === "suggest"
-              ? "Suggesting a place I love"
+              ? t("marketing:listBusiness.step5.listingAs.suggest")
               : ""}
         </Row>
         {draft.path === "claim" && (
-          <Row k="Verification">{label(VERIFY, draft.verify)}</Row>
+          <Row k={t("marketing:listBusiness.step5.row.verification")}>
+            {optionLabel(t, VERIFY, draft.verify)}
+          </Row>
         )}
       </Group>
 
-      <Group title="Basics" onEdit={() => onEdit(1)}>
-        <Row k="Name">{draft.name}</Row>
-        <Row k="Category">{draft.cats.join(", ")}</Row>
-        <Row k="Neighbourhood">{draft.hood}</Row>
-        <Row k="Ownership">
+      <Group
+        title={t("marketing:listBusiness.step5.group.basics")}
+        onEdit={() => onEdit(1)}
+      >
+        <Row k={t("marketing:listBusiness.step5.row.name")}>{draft.name}</Row>
+        <Row k={t("marketing:listBusiness.step5.row.category")}>
+          {draft.cats.map((c) => catLabel(t, c)).join(", ")}
+        </Row>
+        <Row k={t("marketing:listBusiness.step5.row.neighbourhood")}>
+          {draft.hood}
+        </Row>
+        <Row k={t("marketing:listBusiness.step5.row.ownership")}>
           {draft.badge === "owned"
-            ? "Queer-owned"
+            ? t("marketing:listBusiness.step1.owned.tag")
             : draft.badge === "friendly"
-              ? "LGBTQ+ friendly"
+              ? t("marketing:listBusiness.step1.friendly.tag")
               : ""}
         </Row>
-        <Row k="Price">{draft.price ? label(PRICES, draft.price) : ""}</Row>
-        <Row k="One-liner">{draft.blurb}</Row>
+        <Row k={t("marketing:listBusiness.step5.row.price")}>
+          {draft.price ? optionLabel(t, PRICES, draft.price) : ""}
+        </Row>
+        <Row k={t("marketing:listBusiness.step5.row.oneLiner")}>
+          {draft.blurb}
+        </Row>
       </Group>
 
-      <Group title="Story" onEdit={() => onEdit(2)}>
-        <Row k="Tagline" quote>
+      <Group
+        title={t("marketing:listBusiness.step5.group.story")}
+        onEdit={() => onEdit(2)}
+      >
+        <Row k={t("marketing:listBusiness.step5.row.tagline")} quote>
           {draft.tagline}
         </Row>
-        <Row k="What it is">
+        <Row k={t("marketing:listBusiness.step5.row.whatItIs")}>
           {draft.whatItIs
             .map((w) => w.text.trim())
             .filter(Boolean)
             .join(" · ")}
         </Row>
-        <Row k="Tags">{draft.tags.join(", ")}</Row>
-        <Row k="Good for">{draft.goodFor.join(", ")}</Row>
-        <Row k="Languages">{draft.langs.join(", ")}</Row>
+        <Row k={t("marketing:listBusiness.step5.row.tags")}>
+          {draft.tags.join(", ")}
+        </Row>
+        <Row k={t("marketing:listBusiness.step5.row.goodFor")}>
+          {draft.goodFor.map((g) => goodForLabel(t, g)).join(", ")}
+        </Row>
+        <Row k={t("marketing:listBusiness.step5.row.languages")}>
+          {draft.langs.map((l) => langLabel(t, l)).join(", ")}
+        </Row>
       </Group>
 
-      <Group title="Practical" onEdit={() => onEdit(3)}>
-        <Row k="Address">{draft.address}</Row>
-        <Row k="Hours">{hoursSummary(draft)}</Row>
-        <Row k="Online">{onlineSummary(draft)}</Row>
+      <Group
+        title={t("marketing:listBusiness.step5.group.practical")}
+        onEdit={() => onEdit(3)}
+      >
+        <Row k={t("marketing:listBusiness.step5.row.address")}>
+          {draft.address}
+        </Row>
+        <Row k={t("marketing:listBusiness.step5.row.hours")}>
+          {hoursSummary(draft)}
+        </Row>
+        <Row k={t("marketing:listBusiness.step5.row.online")}>
+          {onlineSummary(t, draft)}
+        </Row>
       </Group>
 
-      <Group title="Photos & you" onEdit={() => onEdit(4)}>
-        <Row k="You">
+      <Group
+        title={t("marketing:listBusiness.step5.group.photosYou")}
+        onEdit={() => onEdit(4)}
+      >
+        <Row k={t("marketing:listBusiness.step5.row.you")}>
           {draft.ownerName}
           {draft.ownerRole ? ` · ${draft.ownerRole}` : ""}
         </Row>
-        <Row k="Name shown">
+        <Row k={t("marketing:listBusiness.step5.row.nameShown")}>
           {draft.visibility === "public"
-            ? "My name and role"
+            ? t("marketing:listBusiness.step5.nameShown.public")
             : draft.visibility === "role"
-              ? "My role only"
-              : "Anonymous"}
+              ? t("marketing:listBusiness.step5.nameShown.role")
+              : t("marketing:listBusiness.step5.nameShown.anon")}
         </Row>
       </Group>
 
@@ -172,28 +237,32 @@ export function StepReview({
         <div className={styles.vouchLine}>
           <span className={styles.vlAv}>{userInitials}</span>
           <p>
-            <b>Vouched by you, {userName}.</b> Your name rides along so the team
-            knows a trusted member stands behind this. Members can add their
-            vouch once it's live.
+            <Translation
+              i18nKey="marketing:listBusiness.step5.vouchLine"
+              components={{ b: <b /> }}
+              values={{ name: userName }}
+            />
           </p>
         </div>
       )}
 
-      <h3 className={styles.groupH}>Before you send</h3>
+      <h3 className={styles.groupH}>
+        {t("marketing:listBusiness.step5.beforeSendHeading")}
+      </h3>
       <div id={ANCHOR.consent} className={styles.consentChecks}>
         <div className={styles.flagOuting}>
           <CheckLine
             checked={draft.consentOuting}
             onChange={(v) => set({ consentOuting: v })}
-            title="I understand this listing will be public and searchable."
-            sub="Listing a place as queer-owned, with a name attached, is a public disclosure. I've chosen what's visible above and I'm okay with it being out in the world."
+            title={t("marketing:listBusiness.step5.consentOuting.title")}
+            sub={t("marketing:listBusiness.step5.consentOuting.sub")}
           />
         </div>
         <CheckLine
           checked={draft.consentGuide}
           onChange={(v) => set({ consentGuide: v })}
-          title="Everything here is accurate to the best of my knowledge."
-          sub="I've read the community guidelines and how my data is used."
+          title={t("marketing:listBusiness.step5.consentGuide.title")}
+          sub={t("marketing:listBusiness.step5.consentGuide.sub")}
         />
       </div>
 
@@ -202,10 +271,10 @@ export function StepReview({
           <FiShield size={15} />
         </span>
         <p>
-          <b>A human reviews every listing.</b> This keeps the directory
-          community-verified — nothing auto-publishes. We'll read it within a
-          few days and email you when it's live (or if we have a question). You
-          can edit or withdraw it any time before then.
+          <Translation
+            i18nKey="marketing:listBusiness.step5.submitNote"
+            components={{ b: <b /> }}
+          />
         </p>
       </div>
     </>

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -5,48 +6,55 @@ import {
   Reveal,
   SubpageIndex,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./SafetyPage.module.css";
 import { SAFETY_SUBPAGES } from "./safety.data";
 
 export function SafetyPage() {
+  const { t } = useTranslation();
+  const subpages = useMemo(
+    () =>
+      SAFETY_SUBPAGES.map((item) => ({
+        label: t(item.labelKey),
+        to: item.to,
+        blurb: t(item.blurbKey),
+      })),
+    [t],
+  );
+
   return (
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Safety &amp; privacy</div>
+          <div className={styles.cat}>{t("resources:safety.hero.cat")}</div>
           <h1>
-            Your visibility. <em>Your choice.</em>
+            <Translation
+              i18nKey="resources:safety.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.intro}>
-            QueerPulse is a space where being out — or not, or somewhere in
-            between — is nobody's business but yours. Here's how we protect
-            that.
-          </p>
+          <p className={styles.intro}>{t("resources:safety.hero.intro")}</p>
         </div>
       </header>
 
       <div className={styles.content}>
         <Reveal as="section" className={styles.section}>
           <h2>
-            How <em>visibility</em> works
+            <Translation
+              i18nKey="resources:safety.visibility.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            Every member chooses their own visibility level. It's not a setting
-            buried in a profile — it's a first-class part of how you exist in
-            the network. Think of it as a dimmer, not a switch.
-          </p>
+          <p>{t("resources:safety.visibility.body")}</p>
           <div className={styles.visCards}>
             <div className={`${styles.visCard} ${styles.viOpen}`}>
               <div className={styles.visIcon}>
                 <div className={styles.dot} />
               </div>
               <div>
-                <h3>Open to connect</h3>
-                <p>
-                  Your profile is visible to all members. Anyone in the network
-                  can reach out directly. You can change this at any time —
-                  there's no penalty for stepping back.
-                </p>
+                <h3>{t("resources:safety.visibility.open.title")}</h3>
+                <p>{t("resources:safety.visibility.open.body")}</p>
               </div>
             </div>
             <div className={`${styles.visCard} ${styles.viNetwork}`}>
@@ -54,12 +62,8 @@ export function SafetyPage() {
                 <div className={styles.dot} />
               </div>
               <div>
-                <h3>Network only</h3>
-                <p>
-                  Your profile is visible to members, but direct contact
-                  requires a shared connection. You're reachable, but with a
-                  layer of warmth built in.
-                </p>
+                <h3>{t("resources:safety.visibility.network.title")}</h3>
+                <p>{t("resources:safety.visibility.network.body")}</p>
               </div>
             </div>
             <div className={`${styles.visCard} ${styles.viPrivate}`}>
@@ -67,13 +71,8 @@ export function SafetyPage() {
                 <div className={styles.dot} />
               </div>
               <div>
-                <h3>Private</h3>
-                <p>
-                  Your profile is visible only to the team and your voucher. You
-                  appear in the network count but not in browsing. The right
-                  setting if you're newly out, in a sensitive situation, or just
-                  not ready. No explanation required.
-                </p>
+                <h3>{t("resources:safety.visibility.private.title")}</h3>
+                <p>{t("resources:safety.visibility.private.body")}</p>
               </div>
             </div>
           </div>
@@ -83,28 +82,23 @@ export function SafetyPage() {
 
         <Reveal as="section" className={styles.section}>
           <h2>
-            The <em>vouching</em> model
+            <Translation
+              i18nKey="resources:safety.vouching.title"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p>
-            Every member is vouched for by at least one person already in the
-            network. This isn't gatekeeping — it's the mechanism that makes the
-            room feel trustworthy. When someone vouches for you, they're saying:{" "}
-            <b>I know this person, and I think they belong here.</b>
+            <Translation
+              i18nKey="resources:safety.vouching.body1"
+              components={{ b: <b /> }}
+            />
           </p>
-          <p>
-            Vouchers aren't responsible for the people they vouch for, but they
-            are accountable in a real way. If a vouched member behaves
-            harmfully, their voucher is part of the conversation about what
-            happens next.
-          </p>
+          <p>{t("resources:safety.vouching.body2")}</p>
           <div className={styles.callout}>
-            <div className={styles.calloutHead}>On being newly out</div>
-            <p>
-              If you're not yet out in your professional life, you can be
-              Private within QueerPulse while still benefiting from the
-              community. We will never share your membership externally without
-              explicit consent.
-            </p>
+            <div className={styles.calloutHead}>
+              {t("resources:safety.vouching.calloutHead")}
+            </div>
+            <p>{t("resources:safety.vouching.calloutBody")}</p>
           </div>
         </Reveal>
 
@@ -112,23 +106,18 @@ export function SafetyPage() {
 
         <Reveal as="section" className={styles.section}>
           <h2>
-            What we <em>don't do</em> with your data
+            <Translation
+              i18nKey="resources:safety.dataUse.title"
+              components={{ em: <em /> }}
+            />
           </h2>
+          <p>{t("resources:safety.dataUse.body1")}</p>
+          <p>{t("resources:safety.dataUse.body2")}</p>
           <p>
-            We don't sell it. We don't train models on it. We don't share it
-            with third parties. We don't run advertising. We're a small,
-            member-supported network — your data is not the product.
-          </p>
-          <p>
-            What we store: your name, email, profile content, and visibility
-            setting. What we don't store: your location beyond the neighbourhood
-            you choose to share, your browsing behaviour, or anything you tell
-            us in private messages.
-          </p>
-          <p>
-            You can request everything we hold about you, or ask us to delete
-            your account, at any time. Send an email to{" "}
-            <b>hello@queerpulse.pt</b>.
+            <Translation
+              i18nKey="resources:safety.dataUse.body3"
+              components={{ b: <b /> }}
+            />
           </p>
         </Reveal>
 
@@ -136,26 +125,19 @@ export function SafetyPage() {
 
         <Reveal as="section" className={styles.section}>
           <h2>
-            If something <em>feels wrong</em>
+            <Translation
+              i18nKey="resources:safety.report.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            We take safety concerns seriously, and we respond to them ourselves
-            — not an automated system. If someone has made you feel unsafe, if a
-            message crossed a line, if something doesn't sit right, tell us.
-          </p>
-          <p>
-            We handle every report with discretion. You will not be identified
-            to the person you're reporting unless you choose to be. We will
-            follow up.
-          </p>
+          <p>{t("resources:safety.report.body1")}</p>
+          <p>{t("resources:safety.report.body2")}</p>
           <div className={styles.reportBox}>
-            <h3>Get in touch with the team</h3>
-            <p>
-              If you need to report a concern, reach out directly. We read
-              everything sent to this address and aim to respond within 24
-              hours.
-            </p>
-            <Button href="mailto:safe@queerpulse.pt">safe@queerpulse.pt</Button>
+            <h3>{t("resources:safety.report.boxTitle")}</h3>
+            <p>{t("resources:safety.report.boxBody")}</p>
+            <Button href="mailto:safe@queerpulse.pt">
+              {t("resources:safety.report.emailCta")}
+            </Button>
           </div>
         </Reveal>
 
@@ -163,40 +145,34 @@ export function SafetyPage() {
 
         <Reveal as="section" className={styles.section}>
           <h2>
-            Leaving the <em>network</em>
+            <Translation
+              i18nKey="resources:safety.leaving.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            You can leave at any time. When you do, your profile is removed from
-            the directory immediately. Any messages you've sent remain with
-            their recipients — we can't unsend them. Board posts are removed.
-            Your data is deleted within 30 days unless you ask us to keep it for
-            a specific reason.
-          </p>
-          <p>
-            There is no dark pattern here. No "are you sure?" loop. No 30-day
-            cooling-off period before deletion. You leave, you're gone, and we
-            wish you well.
-          </p>
+          <p>{t("resources:safety.leaving.body1")}</p>
+          <p>{t("resources:safety.leaving.body2")}</p>
         </Reveal>
       </div>
 
       <Outro
         title={
-          <>
-            Safety is a feature, <em>not a footnote.</em>
-          </>
+          <Translation
+            i18nKey="resources:safety.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Any questions about how the network works? Write to us."
+        sub={t("resources:safety.outro.sub")}
       >
         <Button href="mailto:hello@queerpulse.pt" variant="primary" size="lg">
-          hello@queerpulse.pt
+          {t("resources:safety.outro.cta")}
         </Button>
       </Outro>
 
       <SubpageIndex
-        eyebrow="Safety"
-        title="Reporting & rights"
-        items={SAFETY_SUBPAGES}
+        eyebrow={t("resources:safety.subpageIndex.eyebrow")}
+        title={t("resources:safety.subpageIndex.title")}
+        items={subpages}
       />
     </PageShell>
   );

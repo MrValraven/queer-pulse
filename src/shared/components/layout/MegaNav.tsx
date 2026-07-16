@@ -10,9 +10,11 @@ import { Link } from "react-router-dom";
 import { NAV_MENUS, filterMenus } from "./navMenus";
 import { linkToPath } from "../../../app/routeMap";
 import { useIsLinkVisible } from "../../../app/authGate";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./MegaNav.module.css";
 
 export function MegaNav() {
+  const { t } = useTranslation();
   const isLinkVisible = useIsLinkVisible();
   const menus = filterMenus(NAV_MENUS, isLinkVisible);
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -128,7 +130,7 @@ export function MegaNav() {
             onClick={() => toggleMenu(menu.key)}
             onKeyDown={(event) => onButtonKeyDown(event, index)}
           >
-            {menu.key}
+            {t(menu.titleKey)}
             <span className={styles.chevron} aria-hidden>
               ▾
             </span>
@@ -143,7 +145,9 @@ export function MegaNav() {
             <div
               id="mega-panel"
               role="region"
-              aria-label={`${activeMenu.key} menu`}
+              aria-label={t("shared:megaNav.panelAria", {
+                menu: t(activeMenu.titleKey),
+              })}
               className={styles.panel}
               style={{ "--nudge-x": `${nudgeX}px` } as CSSProperties}
               onMouseEnter={cancelClose}
@@ -161,26 +165,26 @@ export function MegaNav() {
                     onClick={closeMenu}
                   >
                     <span className={styles.featureEyebrow}>
-                      {activeMenu.feature.eyebrow}
+                      {t(activeMenu.feature.eyebrowKey)}
                     </span>
                     <span className={styles.featureTitle}>
-                      {activeMenu.feature.title}
+                      {t(activeMenu.feature.titleKey)}
                     </span>
                     <span className={styles.featureBody}>
-                      {activeMenu.feature.body}
+                      {t(activeMenu.feature.bodyKey)}
                     </span>
                     <span className={styles.featureCta}>
-                      {activeMenu.feature.cta}
+                      {t(activeMenu.feature.ctaKey)}
                       <span aria-hidden>→</span>
                     </span>
                   </Link>
                 )}
                 {activeMenu.columns.map((column) => (
-                  <div className={styles.col} key={column.head}>
-                    <div className={styles.colHead}>{column.head}</div>
+                  <div className={styles.col} key={column.headKey}>
+                    <div className={styles.colHead}>{t(column.headKey)}</div>
                     {column.links.map((link) => (
                       <Link
-                        key={link.label}
+                        key={link.labelKey}
                         to={linkToPath(link.href)}
                         className={[
                           styles.link,
@@ -190,7 +194,7 @@ export function MegaNav() {
                           .join(" ")}
                         onClick={closeMenu}
                       >
-                        {link.label}
+                        {t(link.labelKey)}
                       </Link>
                     ))}
                   </div>

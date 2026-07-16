@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { Reveal, SectionHead } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { gatherings } from "../data/gatherings";
 import styles from "./Gatherings.module.css";
 
 export function Gatherings() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.gather} id="gather">
       <div className="wrap">
@@ -13,11 +17,12 @@ export function Gatherings() {
             <SectionHead
               dark
               title={
-                <>
-                  Where the pulse <em>meets in person</em>
-                </>
+                <Translation
+                  i18nKey="homepage:gatherings.title"
+                  components={{ em: <em /> }}
+                />
               }
-              subtitle="Small, member-hosted gatherings across the city. Supper clubs, studio visits, quiet mixers — show up as you are."
+              subtitle={t("homepage:gatherings.subtitle")}
             />
           </Reveal>
 
@@ -44,9 +49,9 @@ export function Gatherings() {
                   <div className={styles.right}>
                     <div className={styles.spots}>
                       {event.spotsValue ? <b>{event.spotsValue}</b> : null}{" "}
-                      {event.spotsLabel}
+                      {t(event.spotsLabelKey)}
                     </div>
-                    <span className={styles.cta}>{event.ctaLabel}</span>
+                    <span className={styles.cta}>{t(event.ctaLabelKey)}</span>
                   </div>
                 </Link>
               </Reveal>

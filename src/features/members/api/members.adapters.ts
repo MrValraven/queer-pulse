@@ -98,8 +98,6 @@ export function cardDtoToMemberCard(dto: MemberCardDTO): MemberCard {
     lastName: dto.lastName,
     avatarUrl: dto.avatarUrl ?? null,
     tags: (dto.tags ?? []).map((label) => ({ label })),
-    vouch: "",
-    mutuals: "",
     openTo: [],
     hood: "",
     discipline: "",

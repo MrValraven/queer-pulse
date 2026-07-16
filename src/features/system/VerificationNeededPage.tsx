@@ -3,17 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { AuthLayout } from "../auth/AuthLayout";
 import { routes } from "../../app/routeMap";
 import {
-  CodeMethod,
   ExpiredPanel,
   MagicLinkMethod,
-  PasswordMethod,
   SuccessPanel,
 } from "./VerificationNeededSections";
-import {
-  REAUTH_SECONDS,
-  VERIFY_TABS,
-  type VerifyMethod,
-} from "./verificationNeeded.data";
+import { REAUTH_SECONDS } from "./verificationNeeded.data";
 import styles from "./VerificationNeededPage.module.css";
 
 type Stage = "input" | "verifying" | "success" | "expired";
@@ -24,7 +18,6 @@ function fmt(s: number) {
 
 export function VerificationNeededPage() {
   const navigate = useNavigate();
-  const [method, setMethod] = useState<VerifyMethod>("password");
   const [stage, setStage] = useState<Stage>("input");
   const [secondsLeft, setSecondsLeft] = useState(REAUTH_SECONDS);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -57,7 +50,6 @@ export function VerificationNeededPage() {
 
   function restart() {
     setStage("input");
-    setMethod("password");
     setSecondsLeft(REAUTH_SECONDS);
   }
 
@@ -94,8 +86,8 @@ export function VerificationNeededPage() {
       </h1>
       <p className={styles.lead}>
         For your next step we need to confirm it’s still you on this device.{" "}
-        <b>This is one of three actions</b> we re-auth for: changing your
-        password, cancelling membership, or removing your account.
+        <b>This is one of two actions</b> we re-auth for: cancelling membership,
+        or removing your account.
       </p>
 
       <div className={styles.actionCard}>
@@ -110,39 +102,10 @@ export function VerificationNeededPage() {
         </span>
       </div>
 
-      <div
-        className={styles.methods}
-        role="tablist"
-        aria-label="Verification method"
-      >
-        {VERIFY_TABS.map((tab) => (
-          <button
-            key={tab.value}
-            type="button"
-            role="tab"
-            aria-selected={method === tab.value}
-            disabled={busy}
-            className={[
-              styles.methodTab,
-              method === tab.value && styles.methodTabActive,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => setMethod(tab.value)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      <div key={method} className={styles.methodBody}>
-        {method === "password" && (
-          <PasswordMethod busy={busy} onVerify={handleVerify} />
-        )}
-        {method === "2fa" && <CodeMethod busy={busy} onVerify={handleVerify} />}
-        {method === "magic" && (
-          <MagicLinkMethod busy={busy} onVerify={handleVerify} />
-        )}
+      {/* One method, so no tablist. The password and authenticator tabs that
+          used to sit here verified nothing — see VerificationNeededSections. */}
+      <div className={styles.methodBody}>
+        <MagicLinkMethod busy={busy} onVerify={handleVerify} />
       </div>
 
       <p className={styles.foot}>

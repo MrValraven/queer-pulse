@@ -1,4 +1,5 @@
 import { Avatar, type AvatarTint } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Most tags a result card shows before collapsing the rest into a "+N" chip.
@@ -18,8 +19,8 @@ export interface MemberCardBodyProps {
   tags: { label: string; match?: boolean }[];
   /** Marks the signed-in member's own card with a "You" pill. */
   isMe?: boolean;
-  vouch?: string;
-  mutuals?: string;
+  vouchCount?: number;
+  mutualsCount?: number;
 }
 
 /**
@@ -40,9 +41,10 @@ export function MemberCardBody({
   blurb,
   tags,
   isMe = false,
-  vouch,
-  mutuals,
+  vouchCount,
+  mutualsCount,
 }: MemberCardBodyProps) {
+  const { t } = useTranslation();
   const visibleTags = tags.slice(0, MAX_CARD_TAGS);
   const overflowTags = tags.length - visibleTags.length;
   return (
@@ -58,7 +60,9 @@ export function MemberCardBody({
         <div>
           <div className={styles.mName}>
             {name}
-            {isMe && <span className={styles.mYou}>You</span>}
+            {isMe && (
+              <span className={styles.mYou}>{t("members:card.you")}</span>
+            )}
           </div>
           <div className={styles.mPron}>{meta}</div>
         </div>
@@ -88,11 +92,18 @@ export function MemberCardBody({
         )}
       </div>
       <div className={styles.mFoot}>
-        {/* Both counts are empty on live cards until the API carries them, and
-            `.vouch` draws a jade dot via ::before — so render nothing at all
-            rather than leaving a bare dot floating in the footer. */}
-        {vouch && <span className={styles.vouch}>{vouch}</span>}
-        {mutuals && <span>{mutuals}</span>}
+        {/* mutualsCount is a placeholder 0 on live cards until the API carries
+            it, and `.vouch` draws a jade dot via ::before — so render nothing
+            at all at zero rather than leaving a bare dot floating in the
+            footer. */}
+        {!!vouchCount && (
+          <span className={styles.vouch}>
+            {t("members:card.vouchCount", { count: vouchCount })}
+          </span>
+        )}
+        {!!mutualsCount && (
+          <span>{t("members:card.mutualsCount", { count: mutualsCount })}</span>
+        )}
       </div>
     </>
   );

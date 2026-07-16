@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import {
   mapFilters,
@@ -12,6 +14,7 @@ import type { MapSpaceType } from "../data/types";
 import styles from "./SpacesMap.module.css";
 
 export function SpacesMap() {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState<"all" | MapSpaceType>("all");
   const visible = visibleSpaces(mapSpaces, filter);
 
@@ -22,14 +25,15 @@ export function SpacesMap() {
           <SectionHead
             dark
             title={
-              <>
-                Find your <em>spaces in the city.</em>
-              </>
+              <Translation
+                i18nKey="homepage:spacesMap.title"
+                components={{ em: <em /> }}
+              />
             }
-            subtitle="Community-curated queer-safe venues, member studios, and gathering spaces across Lisbon. Not a business directory — this is ours."
+            subtitle={t("homepage:spacesMap.subtitle")}
             action={
               <Button variant="ghost-dark" to={routes.map}>
-                Open full map →
+                {t("homepage:spacesMap.openFullMapCta")}
               </Button>
             }
           />
@@ -49,7 +53,7 @@ export function SpacesMap() {
                   .join(" ")}
                 onClick={() => setFilter(option.value)}
               >
-                {option.label}
+                {t(option.labelKey)}
               </button>
             ))}
           </div>
@@ -126,11 +130,11 @@ export function SpacesMap() {
                   className={styles.legendDot}
                   style={{ background: MAP_COLORS[item.type] }}
                 />
-                {item.label}
+                {t(item.labelKey)}
               </div>
             ))}
             <span className={styles.legendCount}>
-              48 spaces · member-curated
+              {t("homepage:spacesMap.countLabel", { count: 48 })}
             </span>
           </div>
         </Reveal>

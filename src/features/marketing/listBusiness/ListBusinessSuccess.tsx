@@ -1,44 +1,49 @@
-import { type ReactNode, useState } from "react";
+import { useState } from "react";
 import { FiCheck, FiClock, FiMessageSquare } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import type { ListingStatus, PendingListing } from "./listBusiness.data";
 import styles from "./ListBusinessPage.module.css";
 
-const STAGES: { id: ListingStatus; label: string; icon: typeof FiClock }[] = [
-  { id: "review", label: "In review", icon: FiClock },
-  { id: "question", label: "Quick question", icon: FiMessageSquare },
-  { id: "live", label: "Live in the directory", icon: FiCheck },
+const STAGES: { id: ListingStatus; labelKey: string; icon: typeof FiClock }[] = [
+  {
+    id: "review",
+    labelKey: "marketing:listBusiness.success.stage.review",
+    icon: FiClock,
+  },
+  {
+    id: "question",
+    labelKey: "marketing:listBusiness.success.stage.question",
+    icon: FiMessageSquare,
+  },
+  {
+    id: "live",
+    labelKey: "marketing:listBusiness.success.stage.live",
+    icon: FiCheck,
+  },
 ];
 
-const NOTE: Record<ListingStatus, ReactNode> = {
-  review: (
-    <>
-      Thank you for adding to the directory.{" "}
-      <b>A real person on the community team reads every listing</b> before it
-      goes live — that's the promise behind our community-verified badge. We'll
-      review within <b>a few days</b> and email you the moment it's live.
-    </>
-  ),
-  question: (
-    <>
-      <b>The team has a small question</b> before it goes live — check your
-      email. Nothing's wrong; a quick reply is all it takes and you're back on
-      track.
-    </>
-  ),
-  live: (
-    <>
-      <b>It's live in the directory.</b> Your place is now searchable by the
-      community. Thank you for making the map a little fuller.
-    </>
-  ),
+const NOTE_KEY: Record<ListingStatus, string> = {
+  review: "marketing:listBusiness.success.note.review",
+  question: "marketing:listBusiness.success.note.question",
+  live: "marketing:listBusiness.success.note.live",
 };
 
-const TITLE: Record<ListingStatus, { text: string; em: string }> = {
-  review: { text: "It's with", em: "the community now." },
-  question: { text: "Just", em: "one quick thing." },
-  live: { text: "You're", em: "on the map." },
+const TITLE_KEYS: Record<ListingStatus, { text: string; em: string }> = {
+  review: {
+    text: "marketing:listBusiness.success.title.review.text",
+    em: "marketing:listBusiness.success.title.review.em",
+  },
+  question: {
+    text: "marketing:listBusiness.success.title.question.text",
+    em: "marketing:listBusiness.success.title.question.em",
+  },
+  live: {
+    text: "marketing:listBusiness.success.title.live.text",
+    em: "marketing:listBusiness.success.title.live.em",
+  },
 };
 
 export function ListBusinessSuccess({
@@ -54,8 +59,9 @@ export function ListBusinessSuccess({
   onWithdraw: () => void;
   onAnother: () => void;
 }) {
+  const { t } = useTranslation();
   const currentIndex = STAGES.findIndex((s) => s.id === listing.status);
-  const title = TITLE[listing.status];
+  const title = TITLE_KEYS[listing.status];
   const [confirmWithdraw, setConfirmWithdraw] = useState(false);
 
   return (
@@ -65,9 +71,11 @@ export function ListBusinessSuccess({
           <FiCheck size={34} />
         </div>
         <h2 className={styles.statusTitle}>
-          {title.text} <em>{title.em}</em>
+          {t(title.text)} <em>{t(title.em)}</em>
         </h2>
-        <div className={styles.bizEcho}>{listing.name || "Your place"}</div>
+        <div className={styles.bizEcho}>
+          {listing.name || t("marketing:listBusiness.success.fallbackName")}
+        </div>
 
         <div className={styles.tracker}>
           {STAGES.map((stage, i) => {
@@ -86,65 +94,81 @@ export function ListBusinessSuccess({
                 <span className={styles.tkDot}>
                   <Icon size={15} />
                 </span>
-                <span className={styles.tkL}>{stage.label}</span>
+                <span className={styles.tkL}>{t(stage.labelKey)}</span>
               </div>
             );
           })}
         </div>
 
         <div className={styles.statusNote}>
-          <p>{NOTE[listing.status]}</p>
+          <p>
+            <Translation
+              i18nKey={NOTE_KEY[listing.status]}
+              components={{ b: <b /> }}
+            />
+          </p>
         </div>
 
         {confirmWithdraw ? (
           <div className={styles.withdrawConfirm} role="alertdialog">
             <p>
-              Withdraw <b>{listing.name || "this listing"}</b>? This takes it
-              out of review — you can always list it again later.
+              <Translation
+                i18nKey="marketing:listBusiness.success.withdrawConfirm"
+                components={{ b: <b /> }}
+                values={{
+                  name:
+                    listing.name ||
+                    t("marketing:listBusiness.success.withdrawFallbackName"),
+                }}
+              />
             </p>
             <div className={styles.statusActions}>
               <Button
                 variant="ghost-dark"
                 onClick={() => setConfirmWithdraw(false)}
               >
-                Keep it
+                {t("marketing:listBusiness.success.keepIt")}
               </Button>
               <Button variant="primary" onClick={onWithdraw}>
-                Yes, withdraw
+                {t("marketing:listBusiness.success.yesWithdraw")}
               </Button>
             </div>
           </div>
         ) : (
           <div className={styles.statusActions}>
             <Button variant="ghost-dark" to={routes.directory}>
-              Back to the directory
+              {t("marketing:listBusiness.success.backToDirectory")}
             </Button>
             {listing.linkToProfile && (
               <Button variant="ghost-dark" to={routes.accountProfile}>
-                View on your profile →
+                {t("marketing:listBusiness.success.viewOnProfile")}
               </Button>
             )}
             <Button variant="ghost-dark" onClick={onEdit}>
-              Edit submission
+              {t("marketing:listBusiness.success.editSubmission")}
             </Button>
             <Button variant="ghost-dark" onClick={onAnother}>
-              List another place
+              {t("marketing:listBusiness.success.listAnother")}
             </Button>
             <Button
               variant="ghost-dark"
               onClick={() => setConfirmWithdraw(true)}
             >
-              Withdraw
+              {t("marketing:listBusiness.success.withdraw")}
             </Button>
           </div>
         )}
 
         <div className={styles.statusMeta}>
-          Reference · <b>{listing.ref}</b> &nbsp;·&nbsp; keep it somewhere
+          <Translation
+            i18nKey="marketing:listBusiness.success.reference"
+            components={{ b: <b /> }}
+            values={{ ref: listing.ref }}
+          />
         </div>
 
         <div className={styles.demoFlip}>
-          <span>Prototype · preview review states:</span>
+          <span>{t("marketing:listBusiness.success.demoFlip")}</span>
           {STAGES.map((s) => (
             <button
               key={s.id}
@@ -154,7 +178,7 @@ export function ListBusinessSuccess({
               }
               onClick={() => onSetStage(s.id)}
             >
-              {s.label}
+              {t(s.labelKey)}
             </button>
           ))}
         </div>

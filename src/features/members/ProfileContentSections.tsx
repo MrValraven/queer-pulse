@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Avatar, ImageSlot, KindChip } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { memberProfiles, type MemberProfile } from "./data/memberProfiles";
 import { SHAPING_META } from "./profileSections.data";
@@ -7,15 +8,19 @@ import { Section } from "./ProfileSections";
 import styles from "./ProfilePage.module.css";
 
 export function NowSection({ profile }: { profile: MemberProfile }) {
+  const { t } = useTranslation();
   return (
-    <Section title="Now" subtitle={`What ${profile.first} is in the middle of`}>
+    <Section
+      title={t("members:content.now.title")}
+      subtitle={t("members:content.now.subtitle", { first: profile.first })}
+    >
       <div className={styles.nowCard}>
         <span className={styles.nowDot} aria-hidden />
         <div className={styles.nowBody}>
           <p>{profile.now}</p>
           {profile.openTo.length > 0 && (
             <div className={styles.nowOpen}>
-              <span className="lbl">Open to</span>
+              <span className="lbl">{t("members:content.now.openLabel")}</span>
               {profile.openTo.map((item) => (
                 <span key={item} className={styles.openChip}>
                   {item}
@@ -30,11 +35,12 @@ export function NowSection({ profile }: { profile: MemberProfile }) {
 }
 
 export function SelectedWorkSection({ profile }: { profile: MemberProfile }) {
+  const { t } = useTranslation();
   if (profile.work.length === 0) return null;
   return (
     <Section
-      title="Selected work"
-      subtitle="A few things, not a portfolio dump"
+      title={t("members:content.work.title")}
+      subtitle={t("members:content.work.subtitle")}
     >
       <div className={styles.workGrid}>
         {profile.work.map((item, index) => (
@@ -44,7 +50,7 @@ export function SelectedWorkSection({ profile }: { profile: MemberProfile }) {
               src={item.image}
               height={200}
               radius={14}
-              placeholder="Work"
+              placeholder={t("members:workItem.imagePlaceholder")}
               style={{ marginBottom: 14 }}
             />
             <div className={styles.workCat}>{item.category}</div>
@@ -58,11 +64,12 @@ export function SelectedWorkSection({ profile }: { profile: MemberProfile }) {
 }
 
 export function BoardSection({ profile }: { profile: MemberProfile }) {
+  const { t } = useTranslation();
   if (profile.board.length === 0) return null;
   return (
     <Section
-      title="On the board"
-      subtitle={`What ${profile.first} is asking for and offering right now`}
+      title={t("members:content.board.title")}
+      subtitle={t("members:content.board.subtitle", { first: profile.first })}
     >
       <div className={styles.miniBoard}>
         {profile.board.map((item) => (
@@ -72,7 +79,9 @@ export function BoardSection({ profile }: { profile: MemberProfile }) {
             className={styles.ask}
           >
             <KindChip kind={item.kind}>
-              {item.kind === "looking" ? "Looking" : "Offering"}
+              {item.kind === "looking"
+                ? t("members:content.board.looking")
+                : t("members:content.board.offering")}
             </KindChip>
             <h3>{item.title}</h3>
           </Link>
@@ -83,11 +92,12 @@ export function BoardSection({ profile }: { profile: MemberProfile }) {
 }
 
 export function SkillsSection({ profile }: { profile: MemberProfile }) {
+  const { t } = useTranslation();
   if (profile.skills.length === 0) return null;
   return (
     <Section
-      title="Skills & offerings"
-      subtitle={`What ${profile.first} can help with — and swap on the barter board`}
+      title={t("members:content.skills.title")}
+      subtitle={t("members:content.skills.subtitle", { first: profile.first })}
     >
       <div className={styles.skillsGrid}>
         {profile.skills.map((skill) => (
@@ -98,18 +108,19 @@ export function SkillsSection({ profile }: { profile: MemberProfile }) {
         ))}
       </div>
       <Link to={routes.barter} className={styles.barterLink}>
-        See the full barter board →
+        {t("members:content.skills.barterCta")}
       </Link>
     </Section>
   );
 }
 
 export function GroupsSection({ profile }: { profile: MemberProfile }) {
+  const { t } = useTranslation();
   if (profile.groups.length === 0) return null;
   return (
     <Section
-      title="Groups & circles"
-      subtitle={`Where ${profile.first} shows up in the community`}
+      title={t("members:content.groups.title")}
+      subtitle={t("members:content.groups.subtitle", { first: profile.first })}
     >
       <div className={styles.groupsGrid}>
         {profile.groups.map((group) => (
@@ -124,11 +135,12 @@ export function GroupsSection({ profile }: { profile: MemberProfile }) {
 }
 
 export function ShapingsSection({ profile }: { profile: MemberProfile }) {
+  const { t } = useTranslation();
   if (Object.keys(profile.shapings).length === 0) return null;
   return (
     <Section
-      title="What shaped me"
-      subtitle="Not interests. Formative texts, films, moments."
+      title={t("members:content.shapings.title")}
+      subtitle={t("members:content.shapings.subtitle")}
     >
       <div className={styles.shapingsGrid}>
         {(["film", "book", "song", "moment"] as const).map((key) => {
@@ -139,7 +151,7 @@ export function ShapingsSection({ profile }: { profile: MemberProfile }) {
             <div key={key} className={styles.shapingCard}>
               <div className={styles.shapingLabel}>
                 <Icon />
-                &ensp;{SHAPING_META[key]!.label}
+                &ensp;{t(SHAPING_META[key]!.labelKey)}
               </div>
               <div className={styles.shapingTitle}>{item.title}</div>
               <div className={styles.shapingNote}>{item.note}</div>
@@ -152,11 +164,12 @@ export function ShapingsSection({ profile }: { profile: MemberProfile }) {
 }
 
 export function ActivitySection({ profile }: { profile: MemberProfile }) {
+  const { t } = useTranslation();
   if (profile.activity.length === 0) return null;
   return (
     <Section
-      title="Recent activity"
-      subtitle="Public moments from around the platform"
+      title={t("members:content.activity.title")}
+      subtitle={t("members:content.activity.subtitle")}
     >
       <div className={styles.activityList}>
         {profile.activity.map((item) => (
@@ -176,11 +189,12 @@ export function ActivitySection({ profile }: { profile: MemberProfile }) {
 }
 
 export function RelatedSection({ profile }: { profile: MemberProfile }) {
+  const { t } = useTranslation();
   if (profile.related.length === 0) return null;
   return (
     <Section
-      title="Also in the room"
-      subtitle="People nearby in craft or neighbourhood"
+      title={t("members:content.related.title")}
+      subtitle={t("members:content.related.subtitle")}
     >
       <div className={styles.relGrid}>
         {profile.related.map((relSlug) => {

@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
 import { Button, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { liveEvents } from "./data";
 import styles from "./CinemaPage.module.css";
 import { routes } from "../../app/routeMap";
@@ -11,26 +14,29 @@ const badgeClass: Record<string, string | undefined> = {
 };
 
 export function LiveSection() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <div className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          Live <em>this week</em>
+          <Translation
+            i18nKey="cinema:live.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <div className="sub">
-          Premieres, Q&amp;As, watch parties. Hosted by members, open by
-          default.
-        </div>
+        <div className="sub">{t("cinema:live.lead")}</div>
         <Link to={routes.calendar} className="all">
-          Full calendar →
+          {t("cinema:live.fullCalendarCta")}
         </Link>
       </div>
       <div className={styles.liveList}>
         {liveEvents.map((e) => (
-          <div key={e.day} className={styles.liveRow}>
+          <div key={e.date.toISOString()} className={styles.liveRow}>
             <div className={styles.liveDate}>
-              <div className="d">{e.day}</div>
-              <div className="m">{e.dow}</div>
+              <div className="d">{fmt.date(e.date, { day: "numeric" })}</div>
+              <div className="m">{fmt.date(e.date, { weekday: "short" })}</div>
             </div>
             <div className={styles.liveMain}>
               <h4>
@@ -41,11 +47,11 @@ export function LiveSection() {
               <div className={styles.lmSub}>{e.sub}</div>
               <div className={styles.lmTags}>
                 <span className={`${styles.bg} ${badgeClass[e.badgeClass]}`}>
-                  {e.badge}
+                  {t(e.badgeKey)}
                 </span>
-                {e.tags.map((t, i) => (
+                {e.tags.map((tag, i) => (
                   <span
-                    key={t}
+                    key={tag}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -53,13 +59,13 @@ export function LiveSection() {
                     }}
                   >
                     {i >= 0 && <span className="dot" />}
-                    {t}
+                    {tag}
                   </span>
                 ))}
               </div>
             </div>
             <Button variant="ghost-dark" to={routes.rsvp}>
-              RSVP
+              {t("cinema:live.rsvpCta")}
             </Button>
           </div>
         ))}
@@ -69,123 +75,143 @@ export function LiveSection() {
 }
 
 export function LedgerSection() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <div className={styles.ledger}>
       <div className={styles.ledgerText}>
-        <div className={styles.ledgerEb}>How this works</div>
+        <div className={styles.ledgerEb}>{t("cinema:ledger.eyebrow")}</div>
         <h2>
-          The room <em>pays</em> the filmmaker.
+          <Translation
+            i18nKey="cinema:ledger.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p>
-          QueerPulse Cinema runs as a co-op. 80% of every rent or buy goes to
-          the filmmaker. 100% of every tip. The rest covers payments, hosting,
-          and captioning. The ledger is public. The split is non-negotiable.
-        </p>
+        <p>{t("cinema:ledger.body")}</p>
         <div className={styles.ledgerActions}>
-          <Button to={routes.cinemaSubmit}>Submit your film →</Button>
+          <Button to={routes.cinemaSubmit}>
+            {t("cinema:ledger.submitCta")}
+          </Button>
           <Button variant="ghost-dark" to={routes.cinemaMembership}>
-            Become a sustainer · €7/mo
+            {t("cinema:ledger.sustainCta", { price: fmt.currency(7) })}
           </Button>
           <Button variant="ghost-dark" to={routes.governance}>
-            Read the co-op deed
+            {t("cinema:ledger.readDeedCta")}
           </Button>
           <Button variant="ghost-dark" to={routes.cinemaRights}>
-            Filmmaker rights →
+            {t("cinema:ledger.rightsCta")}
           </Button>
         </div>
       </div>
       <div className={styles.ledgerCard}>
         <div className={styles.lcHead}>
           <span className="live" />
-          Public ledger · this month
+          {t("cinema:ledger.card.heading")}
         </div>
         <div className={styles.lcRow}>
-          <span className="k">Paid to filmmakers</span>
+          <span className="k">{t("cinema:ledger.card.paidToFilmmakers")}</span>
           <span className="v">
-            €<em>8,420</em>
+            <em>{fmt.currency(8420)}</em>
           </span>
         </div>
         <div className={styles.lcRow}>
-          <span className="k">Films streamed</span>
+          <span className="k">{t("cinema:ledger.card.filmsStreamed")}</span>
           <span className="v">
-            14,<em>207</em>
+            <em>{fmt.number(14207)}</em>
           </span>
         </div>
         <div className={styles.lcRow}>
-          <span className="k">Average filmmaker share</span>
+          <span className="k">{t("cinema:ledger.card.averageShare")}</span>
           <span className="v">
-            <em>82</em>%
+            <em>{fmt.number(82)}</em>%
           </span>
         </div>
         <div className={styles.lcRow}>
-          <span className="k">Open commissions</span>
+          <span className="k">{t("cinema:ledger.card.openCommissions")}</span>
           <span className="v">
-            <em>4</em>
+            <em>{fmt.number(4)}</em>
           </span>
         </div>
-        <div className={styles.lcFoot}>
-          Updated every Monday at noon Lisbon. Audited quarterly.
-        </div>
+        <div className={styles.lcFoot}>{t("cinema:ledger.card.footnote")}</div>
       </div>
     </div>
   );
 }
 
 export function OpenCallsStrip() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const openCallsCount = 4;
+
   return (
     <div className={styles.openCallsStrip}>
       <div className={styles.openCallsText}>
         <div className={styles.openCallsEb}>
-          <span className="live" />4 calls open now
+          <span className="live" />
+          {t("cinema:openCallsStrip.eyebrow", { count: openCallsCount })}
         </div>
         <h2>
-          Make the <em>next</em> one.
+          <Translation
+            i18nKey="cinema:openCallsStrip.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p>
-          Commissions, residencies, and mentorships — funded by sustainers, paid
-          by the co-op. <em>4 calls open · €13.2k available this season.</em>
+          <Translation
+            i18nKey="cinema:openCallsStrip.body"
+            components={{ em: <em /> }}
+            values={{
+              count: openCallsCount,
+              amount: fmt.currency(13200),
+            }}
+          />
         </p>
       </div>
       <Button variant="ghost-dark" to={routes.cinemaOpenCalls}>
-        See all open calls →
+        {t("cinema:openCallsStrip.cta")}
       </Button>
     </div>
   );
 }
 
 export function AboutStrip() {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.aboutStrip}>
       <div className={styles.aboutStripText}>
-        <div className={styles.aboutStripEb}>The co-op</div>
+        <div className={styles.aboutStripEb}>{t("cinema:aboutStrip.eyebrow")}</div>
         <h2>
-          A theatre, an archive, <em>a room</em>.
+          <Translation
+            i18nKey="cinema:aboutStrip.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p>
-          Programmed by queer people, paid to queer people, governed by the
-          filmmakers and sustainers who make it possible. Read what QueerPulse
-          Cinema actually is — the deed, the split, the curators' council.
-        </p>
+        <p>{t("cinema:aboutStrip.body")}</p>
       </div>
       <Button variant="ghost-dark" to={routes.cinemaAbout}>
-        Read the co-op story →
+        {t("cinema:aboutStrip.cta")}
       </Button>
     </div>
   );
 }
 
 export function CinemaOutro() {
+  const { t } = useTranslation();
+
   return (
     <Outro
       title={
-        <>
-          Watch <em>together</em>.
-        </>
+        <Translation
+          i18nKey="cinema:outro.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Cinema is a room with people in it. The room is open."
+      sub={t("cinema:outro.sub")}
     >
       <Button size="lg" to={routes.cinemaMembership}>
-        Sustain the cinema
+        {t("cinema:outro.sustainCta")}
       </Button>
     </Outro>
   );

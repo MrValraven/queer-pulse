@@ -1,43 +1,42 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { JOBS, MENTORSHIP, type Tab } from "./economy.data";
 import { FreelanceTab, IncubatorTab, SalaryTab } from "./EconomyTabs";
 import styles from "./EconomyPage.module.css";
 
-const TAB_LABELS: Record<Tab, string> = {
-  incubator: "Business incubator",
-  freelance: "Freelance tools",
-  salary: "Salary board",
+const TAB_LABEL_KEYS: Record<Tab, string> = {
+  incubator: "economy:hub.tab.incubator",
+  freelance: "economy:hub.tab.freelance",
+  salary: "economy:hub.tab.salary",
 };
 
 export function EconomyPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>("incubator");
 
   return (
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Queer economy</div>
+          <div className={styles.cat}>{t("economy:hub.eyebrow")}</div>
           <h1>
-            Build something that <em>lasts.</em>
+            <Translation i18nKey="economy:hub.title" components={{ em: <em /> }} />
           </h1>
-          <p className={styles.lead}>
-            Tools, mentorship, and solidarity for queer founders, freelancers,
-            and professionals — because economic independence is part of queer
-            liberation.
-          </p>
+          <p className={styles.lead}>{t("economy:hub.lead")}</p>
           <div className={styles.tabs}>
-            {(["incubator", "freelance", "salary"] as Tab[]).map((t) => (
+            {(["incubator", "freelance", "salary"] as Tab[]).map((tabId) => (
               <button
-                key={t}
+                key={tabId}
                 type="button"
-                className={[styles.tab, tab === t && styles.tabActive]
+                className={[styles.tab, tab === tabId && styles.tabActive]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => setTab(t)}
+                onClick={() => setTab(tabId)}
               >
-                {TAB_LABELS[t]}
+                {t(TAB_LABEL_KEYS[tabId])}
               </button>
             ))}
           </div>
@@ -54,17 +53,15 @@ export function EconomyPage() {
 
       <Outro
         title={
-          <>
-            Build it <em>with us.</em>
-          </>
+          <Translation i18nKey="economy:hub.outro.title" components={{ em: <em /> }} />
         }
-        sub="A stronger queer economy benefits all of us. Start with the tools, stay for the community."
+        sub={t("economy:hub.outro.sub")}
       >
         <Button to={JOBS} variant="primary" size="lg">
-          Browse jobs
+          {t("economy:hub.outro.browseCta")}
         </Button>
         <Button to={MENTORSHIP} variant="ghost-dark" size="lg">
-          Find a mentor
+          {t("economy:hub.outro.hostCta")}
         </Button>
       </Outro>
     </PageShell>

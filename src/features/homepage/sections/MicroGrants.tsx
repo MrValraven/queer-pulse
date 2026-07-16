@@ -1,4 +1,6 @@
 import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useScrollReveal } from "../../../shared/hooks/useScrollReveal";
 import { useCountUp } from "../../../shared/hooks/useCountUp";
 import { routes } from "../../../app/routeMap";
@@ -7,6 +9,7 @@ import type { GrantStat } from "../data/types";
 import styles from "./MicroGrants.module.css";
 
 function StatTile({ stat }: { stat: GrantStat }) {
+  const { t } = useTranslation();
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
   const count = useCountUp(stat.countTo ?? 0, { active: isVisible });
   const display = stat.countTo
@@ -16,26 +19,29 @@ function StatTile({ stat }: { stat: GrantStat }) {
   return (
     <div className={styles.stat} ref={ref}>
       <div className={styles.statValue}>{display}</div>
-      <div className={styles.statLabel}>{stat.label}</div>
+      <div className={styles.statLabel}>{t(stat.labelKey)}</div>
     </div>
   );
 }
 
 export function MicroGrants() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.grants} id="grants">
       <div className="wrap">
         <Reveal>
           <SectionHead
             title={
-              <>
-                The community fund. <em>Small amounts, real impact.</em>
-              </>
+              <Translation
+                i18nKey="homepage:microGrants.title"
+                components={{ em: <em /> }}
+              />
             }
-            subtitle="Members contribute what they can. Others apply for €50–200 for event costs, project materials, or emergencies. No bureaucracy."
+            subtitle={t("homepage:microGrants.subtitle")}
             action={
               <Button variant="ghost" to={routes.grants}>
-                See the fund →
+                {t("homepage:microGrants.seeFundCta")}
               </Button>
             }
           />
@@ -43,7 +49,7 @@ export function MicroGrants() {
 
         <Reveal className={styles.stats}>
           {grantStats.map((stat) => (
-            <StatTile key={stat.label} stat={stat} />
+            <StatTile key={stat.labelKey} stat={stat} />
           ))}
         </Reveal>
 
@@ -61,9 +67,11 @@ export function MicroGrants() {
         </div>
 
         <Reveal className={styles.cta}>
-          <Button to={`${routes.grants}#apply`}>Apply for a grant</Button>
+          <Button to={`${routes.grants}#apply`}>
+            {t("homepage:microGrants.applyCta")}
+          </Button>
           <Button variant="ghost" to={`${routes.grants}#contribute`}>
-            Contribute to the fund →
+            {t("homepage:microGrants.contributeCta")}
           </Button>
         </Reveal>
       </div>

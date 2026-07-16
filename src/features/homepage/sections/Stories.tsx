@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { ImageSlot, Reveal, SectionHead } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { linkToPath } from "../../../app/routeMap";
 import { featureStory, storyCards } from "../data/stories";
 import styles from "./Stories.module.css";
 
 export function Stories() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.stories} id="stories">
       <div className="wrap">
@@ -12,11 +16,12 @@ export function Stories() {
           <SectionHead
             className={styles.head}
             title={
-              <>
-                The people <em>behind the pulse</em>
-              </>
+              <Translation
+                i18nKey="homepage:stories.title"
+                components={{ em: <em /> }}
+              />
             }
-            subtitle="Quiet profiles and field notes from the community. Less newsfeed, more good magazine."
+            subtitle={t("homepage:stories.subtitle")}
           />
         </Reveal>
 
@@ -27,7 +32,7 @@ export function Stories() {
               src={featureStory.image}
               height={400}
               radius={18}
-              placeholder="Story image"
+              placeholder={t("homepage:stories.imagePlaceholder")}
             />
             <div>
               <div className={styles.cat}>{featureStory.category}</div>
@@ -52,7 +57,7 @@ export function Stories() {
                   src={story.image}
                   height={230}
                   radius={16}
-                  placeholder="Story image"
+                  placeholder={t("homepage:stories.imagePlaceholder")}
                   style={{ marginBottom: 20 }}
                 />
                 <div className={styles.cat}>{story.category}</div>

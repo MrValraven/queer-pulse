@@ -5,10 +5,8 @@ import type {
   CommunityType,
   ConnectionState,
   ReportStatus,
-  Role,
   RsvpStatus,
   SubmissionStatus,
-  UserStatus,
   Visibility,
 } from "./enums";
 
@@ -62,17 +60,6 @@ export interface ProfileResponse {
   interests: string[];
   visibility: Visibility;
   isVerified: boolean;
-}
-
-/** `GET /v1/me` — the authenticated user bundle the web app boots from. */
-export interface MeResponse {
-  id: string;
-  email: string;
-  status: UserStatus;
-  roles: Role[];
-  emailVerified: boolean;
-  twoFactorEnabled: boolean;
-  profile: ProfileResponse;
 }
 
 export interface SessionResponse {
@@ -129,15 +116,6 @@ export interface CommunityPostResponse {
   author: AuthorSummary;
   replyCount: number;
   voteCount: number;
-  createdAt: string;
-}
-
-export interface NotificationResponse {
-  id: string;
-  type: string;
-  payload: Record<string, unknown>;
-  actorId: string | null;
-  readAt: string | null;
   createdAt: string;
 }
 
@@ -418,8 +396,3 @@ export interface DeletionRequestResponse {
   state: "scheduled" | "cancelled" | "completed";
   scheduledFor: string;
 }
-
-/** Login may complete, or require a second factor. */
-export type LoginResult =
-  | { status: "authenticated"; user: MeResponse }
-  | { status: "2fa_required"; challengeToken: string };

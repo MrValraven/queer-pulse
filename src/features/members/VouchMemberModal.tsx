@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberProfiles } from "./data/memberProfiles";
 import { RELATIONSHIPS } from "./vouchMember.data";
 import { VouchForm, VouchSuccess } from "./VouchMemberModalParts";
@@ -22,6 +23,7 @@ export function VouchMemberModal({
   /** Called once, when the vouch is confirmed (success state reached). */
   onVouched: () => void;
 }) {
+  const { t } = useTranslation();
   const [relationship, setRelationship] = useState<string>(RELATIONSHIPS[0]);
   const [endorsed, setEndorsed] = useState<string[]>([]);
   const [note, setNote] = useState("");
@@ -65,7 +67,7 @@ export function VouchMemberModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={`Vouch for ${first}`}
+        aria-label={t("members:vouch.modal.ariaLabel", { first })}
         className={`${styles.modal} ${status === "done" ? styles.modalDone : ""}`}
       >
         {status !== "loading" && (
@@ -73,7 +75,7 @@ export function VouchMemberModal({
             type="button"
             className={styles.close}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("members:vouch.modal.close")}
           >
             ×
           </button>

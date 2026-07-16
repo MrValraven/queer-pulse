@@ -11,15 +11,17 @@ import {
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useConnect } from "../../app/providers/ConnectProvider";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NominateChangemakerSection } from "./NominateChangemakerSection";
 import { CHANGEMAKERS } from "./changemakerStories";
 import styles from "./ChangemakersPage.module.css";
 
 const STATS = [
-  { n: "34", l: "Change makers profiled so far" },
-  { n: "6", l: "Cause areas active in Lisbon" },
-  { n: "1.2k", l: "People directly helped by their work" },
-  { n: "12", l: "Active campaigns running right now" },
+  { n: "34", labelKey: "community:changemakers.stat.profiled" },
+  { n: "6", labelKey: "community:changemakers.stat.causeAreas" },
+  { n: "1.2k", labelKey: "community:changemakers.stat.peopleHelped" },
+  { n: "12", labelKey: "community:changemakers.stat.activeCampaigns" },
 ];
 
 const FEATURED = CHANGEMAKERS[0]!;
@@ -42,27 +44,29 @@ function MakerCardSkeleton() {
 export function ChangemakersPage() {
   const loading = useSimulatedLoad();
   const { openConnect } = useConnect();
+  const { t } = useTranslation();
 
   return (
     <PageShell>
       <section className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
-            Change Makers
+            {t("community:changemakers.hero.cat")}
           </Reveal>
           <Reveal as="h1" delay={60}>
-            People making the future <em>liveable</em> for all of us.
+            <Translation
+              i18nKey="community:changemakers.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" delay={120}>
-            They're not full-time activists. They're designers, lawyers, carers,
-            and teachers who also happen to be changing things — neighbourhood
-            by neighbourhood, policy by policy, one hard conversation at a time.
+            {t("community:changemakers.hero.lead")}
           </Reveal>
           <div className={styles.stats}>
             {STATS.map((s, i) => (
               <Reveal
                 as="div"
-                key={s.l}
+                key={s.labelKey}
                 className={styles.stat}
                 delay={160 + i * 60}
               >
@@ -87,7 +91,7 @@ export function ChangemakersPage() {
                     lineHeight: 1.4,
                   }}
                 >
-                  {s.l}
+                  {t(s.labelKey)}
                 </div>
               </Reveal>
             ))}
@@ -98,7 +102,7 @@ export function ChangemakersPage() {
       <section className={styles.featured}>
         <div className="wrap">
           <Reveal as="div" className={styles.featLabel}>
-            Featured change maker
+            {t("community:changemakers.featured.label")}
           </Reveal>
           <Reveal as="div" className={styles.featCard}>
             <ImageSlot
@@ -123,10 +127,10 @@ export function ChangemakersPage() {
               </div>
               <div className={styles.featFoot}>
                 <Button to={`/changemaker/${FEATURED.slug}`}>
-                  Read her story →
+                  {t("community:changemakers.featured.readStoryCta")}
                 </Button>
                 <Button variant="ghost" onClick={() => openConnect()}>
-                  Connect
+                  {t("community:changemakers.featured.connectCta")}
                 </Button>
               </div>
             </div>
@@ -139,8 +143,8 @@ export function ChangemakersPage() {
           {!loading && MAKERS.length === 0 ? (
             <EmptyState
               icon={<FiHeart />}
-              title="No change makers profiled yet"
-              description="This is where we celebrate the people quietly making things better. Know someone doing that work? Nominate them below and we'll start the story."
+              title={t("community:changemakers.empty.title")}
+              description={t("community:changemakers.empty.description")}
             />
           ) : (
             <div className={styles.grid}>
@@ -178,7 +182,9 @@ export function ChangemakersPage() {
                         </div>
                       </div>
                       <div className={styles.cardFoot}>
-                        <span className={styles.read}>Read more →</span>
+                        <span className={styles.read}>
+                          {t("community:changemakers.card.readMoreCta")}
+                        </span>
                       </div>
                     </FadeIn>
                   ))}

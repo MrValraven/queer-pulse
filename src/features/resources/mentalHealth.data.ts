@@ -269,68 +269,82 @@ export const THERAPISTS: Therapist[] = [
   },
 ];
 
-export const CRISIS: { name: string; num: string; note: string }[] = [
+/**
+ * i18n Pattern A. Real-world helpline names (SOS Voz Amiga, SNS 24, ILGA
+ * Portugal, Samaritans) are proper nouns and stay untranslated; `noteKey`
+ * (the descriptive hours/format text) is chrome and resolved via `t()`.
+ */
+export const CRISIS: { name: string; num: string; noteKey: string }[] = [
   {
     name: "SOS Voz Amiga",
     num: "213 544 545",
-    note: "24h · Portuguese & English",
+    noteKey: "resources:mentalHealth.crisisLine.sosVozAmiga.note",
   },
-  { name: "SNS 24", num: "808 24 24 24", note: "Health line · 24h" },
-  { name: "ILGA Portugal", num: "213 887 239", note: "LGBTQ+ support line" },
+  {
+    name: "SNS 24",
+    num: "808 24 24 24",
+    noteKey: "resources:mentalHealth.crisisLine.sns24.note",
+  },
+  {
+    name: "ILGA Portugal",
+    num: "213 887 239",
+    noteKey: "resources:mentalHealth.crisisLine.ilga.note",
+  },
   {
     name: "Samaritans (online)",
     num: "jo@samaritans.org",
-    note: "Email · English · 24h response",
+    noteKey: "resources:mentalHealth.crisisLine.samaritans.note",
   },
 ];
 
-export const EXPERIENCES: { title: string; text: string }[] = [
+/** i18n Pattern A — platform-authored guidance chrome, resolved via `t()`. */
+export const EXPERIENCES: { titleKey: string; textKey: string }[] = [
   {
-    title: "Starting over in a new community",
-    text: "Losing your queer social network when you move is a genuine grief. Building a new one takes time and feels unnatural at first. The people who've been here longest remember it — it does get easier, but the early months are hard and it's okay to say so.",
+    titleKey: "resources:mentalHealth.experience.newCommunity.title",
+    textKey: "resources:mentalHealth.experience.newCommunity.text",
   },
   {
-    title: "Navigating visibility in a new culture",
-    text: "Lisbon is broadly safe but queer visibility works differently here. Some members feel more visible than at home; others feel less. Reading social situations in a second language or culture is exhausting and disorienting in ways that are hard to explain to people who haven't experienced it.",
+    titleKey: "resources:mentalHealth.experience.visibility.title",
+    textKey: "resources:mentalHealth.experience.visibility.text",
   },
   {
-    title: "The administrative grind",
-    text: "Visas, NIF, AIMA, healthcare registration, bank accounts that won't open. The bureaucratic weight of building a life in a new country is a documented source of chronic stress. It's not weakness — it's a lot. Naming it as a mental health factor is valid.",
+    titleKey: "resources:mentalHealth.experience.admin.title",
+    textKey: "resources:mentalHealth.experience.admin.text",
   },
   {
-    title: "Trans and non-binary experiences in a new system",
-    text: "Navigating healthcare, legal documents, and social situations as a trans or non-binary person in Portugal adds a specific layer of stress and labour. Portugal's legal framework is progressive but administrative reality varies. The Trans Hub has specific resources.",
+    titleKey: "resources:mentalHealth.experience.transNonbinary.title",
+    textKey: "resources:mentalHealth.experience.transNonbinary.text",
   },
   {
-    title: "Distance from family of origin",
-    text: "Moving to another country often means physical distance from family — chosen or biological. For queer people whose family relationships are complicated or conditional, this distance can be both a relief and its own kind of grief. Both are real at the same time.",
+    titleKey: "resources:mentalHealth.experience.distance.title",
+    textKey: "resources:mentalHealth.experience.distance.text",
   },
   {
-    title: "Financial anxiety",
-    text: "Lisbon's rising cost of living affects queer expats acutely. Housing insecurity, visa costs, and the pressure to perform a certain kind of queer expat life are all real stressors. The community talks about money honestly — the forum's economics thread is a good start.",
+    titleKey: "resources:mentalHealth.experience.financial.title",
+    textKey: "resources:mentalHealth.experience.financial.text",
   },
 ];
 
-export const SNS: { num: string; title: string; text: string }[] = [
+export const SNS: { num: string; titleKey: string; textKey: string }[] = [
   {
     num: "01",
-    title: "Register with a GP first",
-    text: "You need to be registered with a Centro de Saúde before accessing SNS mental health services. Register with your AR card or EU registration certificate and NISS number. Waiting lists for GP registration exist in some areas.",
+    titleKey: "resources:mentalHealth.sns.step1.title",
+    textKey: "resources:mentalHealth.sns.step1.text",
   },
   {
     num: "02",
-    title: "GP referral for psychology",
-    text: "Your GP can refer you to a psychologist or psychiatrist through the SNS. Waiting times for the first appointment are typically 3–6 months. For urgent needs, explain severity clearly — this can speed up the referral.",
+    titleKey: "resources:mentalHealth.sns.step2.title",
+    textKey: "resources:mentalHealth.sns.step2.text",
   },
   {
     num: "03",
-    title: "Language matters",
-    text: "SNS therapists and psychiatrists typically work in Portuguese. If your Portuguese is limited, private therapy in English is more practical for most expats. Online platforms (BetterHelp, Zenklub) offer English-speaking therapists at lower cost than Lisbon private rates.",
+    titleKey: "resources:mentalHealth.sns.step3.title",
+    textKey: "resources:mentalHealth.sns.step3.text",
   },
   {
     num: "04",
-    title: "Private rates in Lisbon",
-    text: "Private therapy ranges from €50–120 per session. Some therapists offer sliding scale fees — it's always worth asking. Several therapists in our directory offer community member rates for QueerPulse members.",
+    titleKey: "resources:mentalHealth.sns.step4.title",
+    textKey: "resources:mentalHealth.sns.step4.text",
   },
 ];
 

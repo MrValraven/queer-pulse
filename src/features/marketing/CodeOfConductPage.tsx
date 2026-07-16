@@ -1,6 +1,10 @@
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { HubBackLink } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { downloadBlob } from "./downloadBlob";
 import { routes } from "../../app/routeMap";
 import styles from "./CodeOfConductPage.module.css";
@@ -17,70 +21,85 @@ const REPORT = routes.report;
 const EMERGENCY = routes.emergency;
 const CHANGELOG = routes.changelog;
 
-const COC_TEXT = `QueerPulse — Code of Conduct (v2.1)
+const COC_VERSION_DATE = new Date(2026, 0, 14);
+
+function buildCocText(t: TFunction, date: string): string {
+  return `${t("marketing:coc.download.headerTitle")} (v2.1)
 ====================================
-Binding · ratified at the 2025 Annual Assembly · 14 Jan 2026
+${t("marketing:coc.download.headerMeta", { date })}
 
-A short, actually-followed agreement. Six things that are not negotiable on
-QueerPulse, and what happens if you break them.
+${t("marketing:coc.download.intro")}
 
-§01 Where this applies — every member, every QueerPulse space.
-§02 The six things you must not do.
-§03 What we mean by harm, and what we don't.
-§04 What happens if you break this (the moderation ladder).
-§05 Appeals — how to push back.
-§06 Off-platform conduct.
-§07 Changes & versioning.
+§01 ${t("marketing:coc.download.section01")}
+§02 ${t("marketing:coc.download.section02")}
+§03 ${t("marketing:coc.download.section03")}
+§04 ${t("marketing:coc.download.section04")}
+§05 ${t("marketing:coc.download.section05")}
+§06 ${t("marketing:coc.download.section06")}
+§07 ${t("marketing:coc.download.section07")}
 
-This is a mock export from the QueerPulse prototype.
+${t("marketing:coc.download.mockNote")}
 `;
+}
 
 export function CodeOfConductPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
+  const versionDate = fmt.date(COC_VERSION_DATE, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
   return (
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <HubBackLink to={routes.governance} label="Governance" />
+          <HubBackLink to={routes.governance} label={t("marketing:coc.hero.backLabel")} />
           <div className={styles.eyebrow}>
-            Code of Conduct · binding · v2.1 · Jan 2026
+            {t("marketing:coc.hero.eyebrow", { date: versionDate })}
           </div>
           <h1 className={styles.h1}>
-            A short, <em>actually-followed</em> agreement.
+            <Translation
+              i18nKey="marketing:coc.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.dek}>
-            Six things that are <b>not negotiable</b> on QueerPulse, and what
-            happens if you break them. This isn't a list of every nice behaviour
-            we'd like to see — that's the Community Guidelines.{" "}
-            <em>This is the constitution.</em>
+            <Translation
+              i18nKey="marketing:coc.hero.dek"
+              components={{ b: <b />, em: <em /> }}
+            />
           </p>
         </div>
       </section>
 
       <div className={styles.distinction}>
         <div className={styles.distCol}>
-          <h4>This page · Code of Conduct</h4>
+          <h4>{t("marketing:coc.distinction.thisPage.title")}</h4>
           <p>
-            <b>Binding.</b> Violating any of these results in a moderation
-            action, up to permanent removal. Applies to all members in all
-            spaces — DMs, gatherings, the magazine, off-platform conduct that
-            affects members here.
+            <Translation
+              i18nKey="marketing:coc.distinction.thisPage.body"
+              components={{ b: <b /> }}
+            />
           </p>
         </div>
         <div className={styles.distCol}>
-          <h4>Sister page · Community Guidelines</h4>
+          <h4>{t("marketing:coc.distinction.sister.title")}</h4>
           <p>
-            <b>Aspirational.</b> How we'd like things to feel — tone,
-            generosity, what to do when you disagree.
+            <Translation
+              i18nKey="marketing:coc.distinction.sister.body"
+              components={{ b: <b /> }}
+            />
           </p>
         </div>
       </div>
 
       <nav className={styles.toc}>
         <div className={styles.tocInner}>
-          {TOC.map((t) => (
-            <a key={t.id} href={`#${t.id}`}>
-              {t.label}
+          {TOC.map((section) => (
+            <a key={section.id} href={`#${section.id}`}>
+              {t(`marketing:${section.labelKey}`)}
             </a>
           ))}
         </div>
@@ -93,12 +112,18 @@ export function CodeOfConductPage() {
         <CocReportCta
           reportPath={REPORT}
           emergencyPath={EMERGENCY}
-          onCrisisChat={() => showToast("Opening crisis chat…", "info")}
+          onCrisisChat={() =>
+            showToast(t("marketing:coc.crisisChatToast"), "info")
+          }
         />
         <CocChangesSection
           changelogPath={CHANGELOG}
           onDownload={() =>
-            downloadBlob("code-of-conduct-v2.1.txt", COC_TEXT, "text/plain")
+            downloadBlob(
+              "code-of-conduct-v2.1.txt",
+              buildCocText(t, versionDate),
+              "text/plain",
+            )
           }
         />
       </article>

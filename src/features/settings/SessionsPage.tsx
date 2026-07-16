@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
-import { FiShield } from "react-icons/fi";
+import { FiMonitor } from "react-icons/fi";
 import {
   Button,
   EmptyState,
@@ -17,13 +17,9 @@ import {
   revokeSession,
   simulateOr,
 } from "./api/account.api";
+import { useSessions } from "./api/useSessions";
 import { routes } from "../../app/routeMap";
-import {
-  ACTIVE_SESSIONS,
-  TRUSTED_DEVICES,
-  type Session,
-  type TrustedDevice,
-} from "./sessions.data";
+import { type Session } from "./sessions.data";
 import styles from "./SessionsPage.module.css";
 
 function DesktopIcon() {
@@ -53,7 +49,6 @@ function SessionCard({
 }) {
   const isCurrent = session.variant === "current";
   const isSuspect = session.variant === "suspect";
-  const isTrusted = session.variant === "trusted";
   const cardCls = [
     styles.card,
     isCurrent && styles.cardCurrent,
@@ -87,30 +82,32 @@ function SessionCard({
               Review
             </span>
           )}
-          {isTrusted && (
-            <span className={`${styles.badge} ${styles.badgeTrusted}`}>
-              Trusted
-            </span>
-          )}
         </div>
         <div className={`${styles.row} ${isSuspect ? styles.rowSuspect : ""}`}>
-          <span>{session.loc}</span>
-          <span className={styles.sep}>·</span>
+          {/* `loc` only exists in demo — the backend stores no location. */}
+          {session.loc && (
+            <>
+              <span>{session.loc}</span>
+              <span className={styles.sep}>·</span>
+            </>
+          )}
           <span>
             Signed in <b>{session.signedIn}</b>
           </span>
         </div>
-        <div className={styles.row}>
-          <span>
-            Last activity <b>{session.lastActivity}</b>
-          </span>
-          {session.extra && (
-            <>
+        {(session.lastActivity || session.extra) && (
+          <div className={styles.row}>
+            {session.lastActivity && (
+              <span>
+                Last activity <b>{session.lastActivity}</b>
+              </span>
+            )}
+            {session.lastActivity && session.extra && (
               <span className={styles.sep}>·</span>
-              <span>{session.extra}</span>
-            </>
-          )}
-        </div>
+            )}
+            {session.extra && <span>{session.extra}</span>}
+          </div>
+        )}
       </div>
       {isCurrent ? (
         <span
@@ -132,55 +129,7 @@ function SessionCard({
   );
 }
 
-function TrustedDeviceCard({
-  device,
-  onUntrust,
-}: {
-  device: TrustedDevice;
-  onUntrust: (id: string) => void;
-}) {
-  return (
-    <div className={styles.card}>
-      <div
-        className={
-          device.deviceType === "mobile"
-            ? `${styles.ic} ${styles.icMobile}`
-            : styles.ic
-        }
-      >
-        {device.deviceType === "mobile" ? <MobileIcon /> : <DesktopIcon />}
-      </div>
-      <div className={styles.details}>
-        <div className={styles.metaRow}>
-          <span className={styles.name}>{device.device}</span>
-          <span className={`${styles.badge} ${styles.badgeTrusted}`}>
-            Trusted
-          </span>
-        </div>
-        <div className={styles.row}>
-          <span>
-            Trusted since <b>{device.since}</b>
-          </span>
-          {device.extra && (
-            <>
-              <span className={styles.sep}>·</span>
-              <span>{device.extra}</span>
-            </>
-          )}
-        </div>
-      </div>
-      <Button
-        variant="ghost"
-        className={styles.action}
-        onClick={() => onUntrust(device.id)}
-      >
-        Untrust
-      </Button>
-    </div>
-  );
-}
-
-/** Mirrors a SessionCard / TrustedDeviceCard so there's no layout shift on load. */
+/** Mirrors a SessionCard so there's no layout shift on load. */
 function SessionSkeleton() {
   return (
     <div className={styles.card}>
@@ -195,12 +144,43 @@ function SessionSkeleton() {
   );
 }
 
+/** The count + "sign out everything else" strip above the list. */
+function BulkRow({
+  others,
+  onSignOutAll,
+}: {
+  others: number;
+  onSignOutAll: () => void;
+}) {
+  return (
+    <div className={styles.bulkRow}>
+      <p>
+        {others === 0 ? (
+          <>This is the only device you're signed in on.</>
+        ) : (
+          <>
+            You're signed in on <b>{others + 1} devices</b>. Anything you don't
+            recognise, sign it out.
+          </>
+        )}
+      </p>
+      {others > 0 && (
+        <Button variant="primary" onClick={onSignOutAll}>
+          Sign out all other sessions
+        </Button>
+      )}
+    </div>
+  );
+}
+
 export function SessionsPage() {
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
-  const loading = useSimulatedLoad();
+  const { sessions, loading: fetching, failed, refetch } = useSessions();
+  const simulated = useSimulatedLoad();
+  // Demo keeps its simulated shimmer; live shows the real fetch state.
+  const loading = demoMode ? simulated : fetching;
   const [signedOut, setSignedOut] = useState<Set<string>>(new Set());
-  const [untrusted, setUntrusted] = useState<Set<string>>(new Set());
 
   async function handleSignOut(id: string) {
     // Optimistic; revert on failure so we never imply a sign-out that didn't happen.
@@ -211,6 +191,7 @@ export function SessionsPage() {
         "Session ended. If we didn't recognise that device, we'll email the address on file.",
         "success",
       );
+      refetch();
     } catch (err) {
       logError(err, { where: "SessionsPage.signOut" });
       setSignedOut((prev) => {
@@ -221,18 +202,16 @@ export function SessionsPage() {
       showToast("We couldn't sign that session out. Try again.", "error");
     }
   }
-  function handleUntrust(id: string) {
-    setUntrusted((prev) => new Set(prev).add(id));
-    showToast("Device removed from trusted list", "info");
-  }
+
   async function handleSignOutAll() {
-    const ids = ACTIVE_SESSIONS.filter((s) => s.variant !== "current").map(
-      (s) => s.id,
-    );
+    const ids = sessions
+      .filter((s) => s.variant !== "current")
+      .map((s) => s.id);
     setSignedOut(new Set(ids));
     try {
       await simulateOr(demoMode, undefined, revokeOtherSessions);
       showToast("All other sessions signed out", "success");
+      refetch();
     } catch (err) {
       logError(err, { where: "SessionsPage.signOutAll" });
       setSignedOut(new Set());
@@ -240,8 +219,8 @@ export function SessionsPage() {
     }
   }
 
-  const activeSessions = ACTIVE_SESSIONS.filter((s) => !signedOut.has(s.id));
-  const trustedDevices = TRUSTED_DEVICES.filter((d) => !untrusted.has(d.id));
+  const activeSessions = sessions.filter((s) => !signedOut.has(s.id));
+  const others = activeSessions.filter((s) => s.variant !== "current").length;
 
   return (
     <AppShell>
@@ -260,55 +239,43 @@ export function SessionsPage() {
           <Link to={routes.accountLocked}>what to do next</Link>.
         </p>
 
-        <div className={styles.bulkRow}>
-          <p>
-            You're signed in on <b>5 devices</b>.{" "}
-            <b>1 is on a network we haven't seen before</b> — review it.
-          </p>
-          <Button variant="primary" onClick={handleSignOutAll}>
-            Sign out all other sessions
-          </Button>
-        </div>
+        {!loading && !failed && (
+          <BulkRow others={others} onSignOutAll={handleSignOutAll} />
+        )}
 
         <div className={styles.sectionH}>Active now</div>
         <div className={styles.list}>
-          {loading
-            ? Array.from({ length: 5 }).map((_, i) => (
-                <SessionSkeleton key={i} />
-              ))
-            : activeSessions.map((s, i) => (
-                <FadeIn key={s.id} delay={Math.min(i, 8) * 60}>
-                  <SessionCard session={s} onSignOut={handleSignOut} />
-                </FadeIn>
-              ))}
-        </div>
-
-        <div className={styles.sectionH}>Trusted devices · skip 2FA</div>
-        <div className={styles.list}>
           {loading ? (
-            Array.from({ length: 2 }).map((_, i) => <SessionSkeleton key={i} />)
-          ) : trustedDevices.length === 0 ? (
+            Array.from({ length: 3 }).map((_, i) => <SessionSkeleton key={i} />)
+          ) : failed ? (
             <EmptyState
               compact
-              icon={<FiShield />}
-              title="No trusted devices"
-              description="You'll be asked for a second factor every time you sign in. Mark a device as trusted to skip 2FA on the ones you use most."
+              icon={<FiMonitor />}
+              title="We couldn't load your sessions"
+              description="Rather than show you a list we can't stand behind, we've shown you nothing. Try again in a moment."
+            />
+          ) : activeSessions.length === 0 ? (
+            <EmptyState
+              compact
+              icon={<FiMonitor />}
+              title="No active sessions"
+              description="Nothing is signed in right now — not even this device, which usually means your session is about to be refreshed."
             />
           ) : (
-            trustedDevices.map((d, i) => (
-              <FadeIn key={d.id} delay={Math.min(i, 8) * 60}>
-                <TrustedDeviceCard device={d} onUntrust={handleUntrust} />
+            activeSessions.map((s, i) => (
+              <FadeIn key={s.id} delay={Math.min(i, 8) * 60}>
+                <SessionCard session={s} onSignOut={handleSignOut} />
               </FadeIn>
             ))
           )}
         </div>
 
         <div className={styles.footNote}>
-          <b>Something looks wrong?</b> If you didn't sign in from Madrid, sign
-          that session out, then{" "}
-          <Link to={routes.twoFactorSetup}>re-issue your backup codes</Link>.
-          When you sign an unrecognised session out, we email the address on
-          file so there's an out-of-band record of what happened.
+          <b>Something looks wrong?</b> Sign out anything you don't recognise,
+          then <Link to={routes.accountLocked}>tell us what happened</Link> —
+          we'll help you lock things down. When you sign an unrecognised session
+          out, we email the address on file so there's an out-of-band record of
+          what happened.
         </div>
       </div>
     </AppShell>

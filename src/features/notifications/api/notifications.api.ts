@@ -1,29 +1,32 @@
 import { apiGet, apiPost } from "../../../shared/api/client";
-import type { NotifType } from "../notifications.types";
+import type { NotificationKind } from "./formatNotification";
 
 /**
- * A notification as returned by the backend. Only the fields the API actually
- * serves; the richer prototype view-model (avatars, action buttons, icon
- * glyphs) is layered on in the adapter, defaulting anything the API omits.
+ * A notification exactly as the backend serves it — the `notifications` entity,
+ * raw (`GET /notifications` returns entity rows, no view mapper). Display text
+ * is NOT sent: the API stays language-neutral and the frontend renders
+ * `type` + `payload` through i18n. See `formatNotification`.
+ *
+ * `type` is widened past {@link NotificationKind} on purpose. The backend enum
+ * can gain a member without a frontend deploy, and an unrecognised value must
+ * degrade to the generic fallback rather than blank the row.
  */
 export interface NotificationDTO {
-  id: number | string;
-  /** Semantic category; the frontend maps each to a tab + icon. */
-  type: NotifType;
-  unread: boolean;
-  /** Plain-text body of the notification. */
-  text: string;
-  /** Sub-line ("Event · Gathering", "Private message", …). */
-  meta?: string;
-  /** Relative or absolute time label the row shows ("2 min ago"). */
-  time?: string;
-  /** ISO timestamp, if the API sends one instead of a pre-formatted label. */
-  createdAt?: string;
+  /** A uuid — not a number. */
+  id: string;
+  userId: string;
+  type: NotificationKind | (string & {});
+  /** Structured jsonb. Currently opaque IDs only, no display names. */
+  payload: Record<string, unknown>;
+  /** The backend's field. The view-model inverts this to `unread`. */
+  read: boolean;
+  /** ISO timestamp. */
+  createdAt: string;
 }
 
 /**
- * Paginated list envelope the backend wraps notification rows in. We only need
- * the current page's `items` here; the bell/feed don't paginate yet.
+ * Paginated list envelope the backend wraps notification rows in. This already
+ * matches what `NotificationsService.list()` returns.
  */
 interface NotificationsPage {
   items: NotificationDTO[];
@@ -44,6 +47,18 @@ export const getNotifications = async (
     `/notifications${unread ? "?unread=true" : ""}`,
   );
   return Array.isArray(res) ? res : (res?.items ?? []);
+};
+
+/**
+ * GET /notifications/unread-count — the true unread total for the bell badge.
+ *
+ * Counted server-side across every notification, so it stays correct past the
+ * first page. Deriving it from the fetched feed instead would silently cap the
+ * badge at the page size.
+ */
+export const getUnreadCount = async (): Promise<number> => {
+  const res = await apiGet<{ count: number }>("/notifications/unread-count");
+  return res?.count ?? 0;
 };
 
 /** POST /notifications/:id/read — mark a single notification read. */

@@ -1,3 +1,5 @@
+import { useTranslation } from "../../i18n/useTranslation";
+import { Translation } from "../../i18n/Translation";
 import styles from "./AuthLoader.module.css";
 
 /**
@@ -8,13 +10,17 @@ import styles from "./AuthLoader.module.css";
  * reduced-motion, leaving a static wordmark + label.
  */
 export function AuthLoader() {
+  const { t } = useTranslation();
   return (
     <div className={styles.wrap} role="status" aria-live="polite">
       <div className={styles.brand}>
         <span className={styles.dot} aria-hidden />
-        Queer<span className={styles.brandItalic}>Pulse</span>
+        <Translation
+          i18nKey="shared:brand.wordmark"
+          components={{ em: <span className={styles.brandItalic} /> }}
+        />
       </div>
-      <p className={styles.caption}>Loading…</p>
+      <p className={styles.caption}>{t("shared:loading.label")}</p>
     </div>
   );
 }

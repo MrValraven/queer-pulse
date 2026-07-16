@@ -20,30 +20,31 @@ export type Sector = "tech" | "design" | "creative" | "ngo" | "law";
 export const JOBS = routes.jobs;
 export const MENTORSHIP = routes.mentorship;
 
+/** i18n Pattern A — platform-authored programme steps; IncubatorTab.tsx resolves titleKey/descKey/metaKey via t(). */
 export const STEPS = [
   {
     n: 1,
-    title: "Apply",
-    desc: "A short application — your idea, where you are, what you need. No pitch deck required. Decisions in 3 weeks.",
-    meta: "Applications open · Deadline 30 Jul",
+    titleKey: "economy:incubator.step.apply.title",
+    descKey: "economy:incubator.step.apply.desc",
+    metaKey: "economy:incubator.step.apply.meta",
   },
   {
     n: 2,
-    title: "Match with a mentor",
-    desc: "Matched to a community mentor based on your sector, stage, and what you told us you need. You meet fortnightly for six months.",
-    meta: "Sep–Feb · Fortnightly sessions",
+    titleKey: "economy:incubator.step.match.title",
+    descKey: "economy:incubator.step.match.desc",
+    metaKey: "economy:incubator.step.match.meta",
   },
   {
     n: 3,
-    title: "Cohort sessions",
-    desc: "Monthly workshops with the full cohort — legal, finance, fundraising, design — plus time for peer support and honest conversation.",
-    meta: "First Saturday of every month",
+    titleKey: "economy:incubator.step.cohort.title",
+    descKey: "economy:incubator.step.cohort.desc",
+    metaKey: "economy:incubator.step.cohort.meta",
   },
   {
     n: 4,
-    title: "Demo night",
-    desc: "Share what you've built with the community, investors, and the press. Low-stakes, high-support. You decide how much to reveal.",
-    meta: "March · Invite-only",
+    titleKey: "economy:incubator.step.demo.title",
+    descKey: "economy:incubator.step.demo.desc",
+    metaKey: "economy:incubator.step.demo.meta",
   },
 ];
 
@@ -63,40 +64,40 @@ export const INC_MENTORS: IncMentor[] = [
 
 export interface ToolCard {
   icon: IconType;
-  title: string;
-  desc: string;
-  cta: string;
+  titleKey: string;
+  descKey: string;
+  ctaKey: string;
   to: string;
 }
 
-/** Real document generators (PDF / copyable text), no backend. */
+/** i18n Pattern A. Real document generators (PDF / copyable text), no backend — all chrome, a static tool directory. */
 export const TOOLS: ToolCard[] = [
   {
     icon: FiDollarSign,
-    title: "Invoice maker",
-    desc: "Build a clean, Portuguese-correct fatura-recibo — NIF, IVA options, the art. 53.º exemption and art. 101.º-B dispensa notes — and save it as a real PDF. Your details are remembered for next time.",
-    cta: "Open invoice maker",
+    titleKey: "economy:tool.invoice.title",
+    descKey: "economy:tool.invoice.desc",
+    ctaKey: "economy:tool.invoice.cta",
     to: routes.invoiceTool,
   },
   {
     icon: FiFileText,
-    title: "Contract builder",
-    desc: "Assemble a freelance services contract clause by clause — scope, payment, IP, cancellation, confidentiality. Download a PDF or copy the text to edit.",
-    cta: "Open contract builder",
+    titleKey: "economy:tool.contract.title",
+    descKey: "economy:tool.contract.desc",
+    ctaKey: "economy:tool.contract.cta",
     to: routes.contractTool,
   },
   {
     icon: FiClipboard,
-    title: "Scope & quote builder",
-    desc: "Spell out exactly what you're delivering, what you're not, revisions, and timeline — add a price to turn it into a quote. Export a PDF that prevents most disputes.",
-    cta: "Open scope builder",
+    titleKey: "economy:tool.scope.title",
+    descKey: "economy:tool.scope.desc",
+    ctaKey: "economy:tool.scope.cta",
     to: routes.scopeTool,
   },
   {
     icon: FiBookOpen,
-    title: "Recibos verdes guide",
-    desc: "A plain-language guide to the Portuguese freelance tax system — registering, retention, IVA, Segurança Social, and your first year. Always current.",
-    cta: "Read the guide",
+    titleKey: "economy:tool.reciboGuide.title",
+    descKey: "economy:tool.reciboGuide.desc",
+    ctaKey: "economy:tool.reciboGuide.cta",
     to: routes.reciboVerdeGuide,
   },
 ];
@@ -105,37 +106,37 @@ export const TOOLS: ToolCard[] = [
 export const CALC_TOOLS: ToolCard[] = [
   {
     icon: FiTrendingUp,
-    title: "Take-home calculator",
-    desc: "Turn your gross freelance income into what you actually keep — after IRS and Segurança Social, with the regime-simplificado coefficients and your first years built in.",
-    cta: "Open calculator",
+    titleKey: "economy:tool.takeHome.title",
+    descKey: "economy:tool.takeHome.desc",
+    ctaKey: "economy:tool.takeHome.cta",
     to: routes.takeHomeTool,
   },
   {
     icon: FiClock,
-    title: "Day-rate calculator",
-    desc: "Work back from the income you need to a day (and hourly) rate that actually sustains you — overhead, unpaid days, and IVA included.",
-    cta: "Open calculator",
+    titleKey: "economy:tool.dayRate.title",
+    descKey: "economy:tool.dayRate.desc",
+    ctaKey: "economy:tool.dayRate.cta",
     to: routes.dayRateTool,
   },
   {
     icon: FiTarget,
-    title: "IVA threshold tracker",
-    desc: "Track your invoiced income against the €15,000 art. 53.º exemption limit, so crossing it never takes you by surprise. Saved on your device.",
-    cta: "Open tracker",
+    titleKey: "economy:tool.ivaTracker.title",
+    descKey: "economy:tool.ivaTracker.desc",
+    ctaKey: "economy:tool.ivaTracker.cta",
     to: routes.ivaTracker,
   },
   {
     icon: FiShield,
-    title: "Tax set-aside planner",
-    desc: "Work out what slice of every invoice to park now, and keep a running pot, so the IRS and Segurança Social bills never sting later.",
-    cta: "Open planner",
+    titleKey: "economy:tool.setAside.title",
+    descKey: "economy:tool.setAside.desc",
+    ctaKey: "economy:tool.setAside.cta",
     to: routes.setAsideTool,
   },
   {
     icon: FiColumns,
-    title: "Freelance vs salaried",
-    desc: "Compare what you'd actually take home as a freelancer versus an equivalent salary — net for net, with the costs a payslip hides.",
-    cta: "Compare",
+    titleKey: "economy:tool.comparator.title",
+    descKey: "economy:tool.comparator.desc",
+    ctaKey: "economy:tool.comparator.cta",
     to: routes.comparatorTool,
   },
 ];
@@ -144,16 +145,16 @@ export const CALC_TOOLS: ToolCard[] = [
 export const COMMUNITY_TOOLS: ToolCard[] = [
   {
     icon: FiBarChart2,
-    title: "Rate transparency board",
-    desc: "Anonymous day rates shared by the community, by role and experience — so nobody has to guess what to charge. Add yours, see where you stand.",
-    cta: "Open the board",
+    titleKey: "economy:tool.rateBoard.title",
+    descKey: "economy:tool.rateBoard.desc",
+    ctaKey: "economy:tool.rateBoard.cta",
     to: routes.rateBoard,
   },
   {
     icon: FiHeart,
-    title: "Sliding-scale price card",
-    desc: "Publish a sliding scale so people pay what fits their means and you still get paid fairly. Build a card and export it to share.",
-    cta: "Build a card",
+    titleKey: "economy:tool.slidingScale.title",
+    descKey: "economy:tool.slidingScale.desc",
+    ctaKey: "economy:tool.slidingScale.cta",
     to: routes.slidingScaleTool,
   },
 ];
@@ -264,13 +265,18 @@ export const BADGE_CLASS: Record<SalaryRow["type"], string> = {
   Freelance: "badgeFreelance",
   Part: "badgePart",
 };
-export const SAL_FILTERS: { id: Sector | "all"; label: string }[] = [
-  { id: "all", label: "All sectors" },
-  { id: "tech", label: "Tech" },
-  { id: "design", label: "Design" },
-  { id: "creative", label: "Creative" },
-  { id: "ngo", label: "NGO / non-profit" },
-  { id: "law", label: "Law" },
+/** i18n Pattern A — chrome filter chips, resolved via t() by SalaryTab. */
+export const SAL_FILTERS: { id: Sector | "all"; labelKey: string }[] = [
+  { id: "all", labelKey: "economy:salary.filter.all" },
+  { id: "tech", labelKey: "economy:salary.filter.tech" },
+  { id: "design", labelKey: "economy:salary.filter.design" },
+  { id: "creative", labelKey: "economy:salary.filter.creative" },
+  { id: "ngo", labelKey: "economy:salary.filter.ngo" },
+  { id: "law", labelKey: "economy:salary.filter.law" },
 ];
 
+/**
+ * @deprecated unused formatting helper — callers should use `useFormat().currency()`
+ * instead so pt-PT gets its `1 234,56 €` suffix form rather than a hardcoded `€` prefix.
+ */
 export const euro = (n: number) => "€" + Math.round(n).toLocaleString("pt-PT");

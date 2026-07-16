@@ -1,5 +1,7 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useAuth } from "../../app/providers/authContext";
@@ -22,6 +24,7 @@ import styles from "./PublicProfilePage.module.css";
  * pill; signed-out visitors get the guest sign-in bar.
  */
 export function PublicProfilePage() {
+  const { t } = useTranslation();
   const { profile } = useProfile();
   const { user } = useAuth();
   const { enabled } = usePublicProfile();
@@ -38,8 +41,8 @@ export function PublicProfilePage() {
 
         <div className={styles.stats}>
           {pub.stats.map((s, i) => (
-            <FadeIn key={s.label} delay={Math.min(i, 8) * 60}>
-              <Stat value={s.value} em={s.em} label={s.label} />
+            <FadeIn key={s.labelKey} delay={Math.min(i, 8) * 60}>
+              <Stat value={s.value} em={s.em} labelKey={s.labelKey} />
             </FadeIn>
           ))}
         </div>
@@ -47,17 +50,22 @@ export function PublicProfilePage() {
         <FadeIn as="section" className={styles.sec} delay={120}>
           <div className={styles.secH}>
             <h2>
-              What I'm <em>here for</em>
+              <Translation
+                i18nKey="members:publicProfile.hereForTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <span className={styles.secMeta}>Visible publicly</span>
+            <span className={styles.secMeta}>
+              {t("members:publicProfile.visiblePublicly")}
+            </span>
           </div>
           <div className={styles.tagRow}>
-            {pub.hereFor.map((t) => (
+            {pub.hereFor.map((item) => (
               <span
-                key={t.label}
-                className={`${styles.tag} ${t.primary ? styles.primary : ""}`}
+                key={item.label}
+                className={`${styles.tag} ${item.primary ? styles.primary : ""}`}
               >
-                {t.label}
+                {item.label}
               </span>
             ))}
           </div>
@@ -66,11 +74,14 @@ export function PublicProfilePage() {
         <FadeIn delay={180}>
           <PublicList
             heading={
-              <>
-                Public <em>writing</em>
-              </>
+              <Translation
+                i18nKey="members:publicProfile.writing.heading"
+                components={{ em: <em /> }}
+              />
             }
-            meta={`${pub.writing.length} pieces · QueerPulse Magazine`}
+            meta={t("members:publicProfile.writing.meta", {
+              count: pub.writing.length,
+            })}
             cards={pub.writing}
             to={routes.article}
           />
@@ -79,11 +90,12 @@ export function PublicProfilePage() {
         <FadeIn delay={240}>
           <PublicList
             heading={
-              <>
-                Public <em>hosting</em>
-              </>
+              <Translation
+                i18nKey="members:publicProfile.hosting.heading"
+                components={{ em: <em /> }}
+              />
             }
-            meta="Open events anyone can RSVP to"
+            meta={t("members:publicProfile.hosting.meta")}
             cards={pub.hosting}
             to={routes.gathering}
           />
@@ -92,11 +104,12 @@ export function PublicProfilePage() {
         <FadeIn delay={300}>
           <LockedSection
             heading={
-              <>
-                Posts &amp; <em>messages</em>
-              </>
+              <Translation
+                i18nKey="members:publicProfile.locked.postsHeading"
+                components={{ em: <em /> }}
+              />
             }
-            meta="Members only"
+            meta={t("members:publicProfile.membersOnly")}
             icon={
               <svg viewBox="0 0 24 24">
                 <rect x="4" y="11" width="16" height="10" rx="2" />
@@ -104,14 +117,15 @@ export function PublicProfilePage() {
               </svg>
             }
             title={
-              <>
-                Posts, replies, and DMs are <em>members-only.</em>
-              </>
+              <Translation
+                i18nKey="members:publicProfile.locked.postsTitle"
+                components={{ em: <em /> }}
+              />
             }
-            body={`QueerPulse keeps day-to-day community life behind a sign-in to protect members. Become one and ${first}'s feed unlocks immediately — including the ability to message ${first}.`}
+            body={t("members:publicProfile.locked.postsBody", { first })}
             action={
               <Button variant="primary" to={routes.requestInvite}>
-                Request an invite →
+                {t("members:publicProfile.requestInviteArrow")}
               </Button>
             }
           />
@@ -119,8 +133,8 @@ export function PublicProfilePage() {
 
         <FadeIn delay={360}>
           <LockedSection
-            heading="Connections"
-            meta="Members only"
+            heading={t("members:publicProfile.locked.connectionsHeading")}
+            meta={t("members:publicProfile.membersOnly")}
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -130,14 +144,16 @@ export function PublicProfilePage() {
               </svg>
             }
             title={
-              <>
-                Who {first} knows, <em>privately.</em>
-              </>
+              <Translation
+                i18nKey="members:publicProfile.locked.connectionsTitle"
+                components={{ em: <em /> }}
+                values={{ first }}
+              />
             }
-            body={`To protect members' networks, we don't show connection lists publicly. Sign in to see your mutuals with ${first}.`}
+            body={t("members:publicProfile.locked.connectionsBody", { first })}
             action={
               <Button variant="ghost" to={routes.signIn}>
-                Sign in
+                {t("common:cta.signIn")}
               </Button>
             }
           />

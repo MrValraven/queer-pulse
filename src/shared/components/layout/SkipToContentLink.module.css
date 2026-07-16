@@ -1,0 +1,32 @@
+/* Off-screen until focused, then a plum pill that drops in over the nav.
+   Not `display: none` / `visibility: hidden` — those remove it from the tab
+   order, which is the one thing a skip link must never lose. */
+.link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  padding: 12px 20px;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(45, 27, 61, 0.28);
+  /* Parked above the viewport rather than clipped, so focus brings it in. */
+  transform: translateY(calc(-100% - 24px));
+  transition: transform 0.2s var(--ease);
+}
+
+.link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Fallback for engines without :focus-visible on anchors. */
+.link:focus {
+  transform: translateY(0);
+}

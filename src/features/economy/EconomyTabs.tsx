@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { FiDollarSign } from "react-icons/fi";
 import { Avatar, Button, EmptyState } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { fullName, getMember } from "../members/data/members";
 import {
   BADGE_CLASS,
@@ -25,6 +27,7 @@ import {
 import styles from "./EconomyPage.module.css";
 
 export function IncubatorTab() {
+  const { t } = useTranslation();
   const [modal, setModal] = useState<"cohort" | "mentor" | null>(null);
   const [session, setSession] = useState<(typeof INC_MENTORS)[number] | null>(
     null,
@@ -34,20 +37,19 @@ export function IncubatorTab() {
       <div className={styles.incHeroBox}>
         <div>
           <div className={styles.incH}>
-            A space to build <em>your</em> thing.
+            <Translation
+              i18nKey="economy:incubator.hero.title"
+              components={{ em: <em /> }}
+            />
           </div>
-          <p className={styles.incP}>
-            The QueerPulse incubator supports queer founders in Lisbon with six
-            months of structured mentorship, peer accountability, and
-            connections to investors and collaborators who get it.
-          </p>
+          <p className={styles.incP}>{t("economy:incubator.hero.body")}</p>
           <div className={styles.incBtns}>
             <Button
               type="button"
               variant="primary"
               onClick={() => setModal("cohort")}
             >
-              Apply for cohort 3
+              {t("economy:incubator.hero.applyCta")}
             </Button>
             <Button
               type="button"
@@ -55,22 +57,22 @@ export function IncubatorTab() {
               onClick={() => setModal("mentor")}
               style={{ fontSize: 14 }}
             >
-              Become a mentor
+              {t("economy:incubator.hero.mentorCta")}
             </Button>
           </div>
         </div>
         <div className={styles.incStats}>
           <div className={styles.incStat}>
             <div className={styles.n}>24</div>
-            <div className={styles.l}>founders in 2 cohorts</div>
+            <div className={styles.l}>{t("economy:incubator.stats.founders")}</div>
           </div>
           <div className={styles.incStat}>
             <div className={styles.n}>18</div>
-            <div className={styles.l}>mentors from the community</div>
+            <div className={styles.l}>{t("economy:incubator.stats.mentors")}</div>
           </div>
           <div className={styles.incStat}>
             <div className={styles.n}>€2.4M</div>
-            <div className={styles.l}>raised by cohort alumni</div>
+            <div className={styles.l}>{t("economy:incubator.stats.raised")}</div>
           </div>
         </div>
       </div>
@@ -78,16 +80,19 @@ export function IncubatorTab() {
       <div className={styles.incCols}>
         <div>
           <h3 className={styles.colH}>
-            How the programme <em>works.</em>
+            <Translation
+              i18nKey="economy:incubator.programme.title"
+              components={{ em: <em /> }}
+            />
           </h3>
           <div className={styles.incTimeline}>
             {STEPS.map((s) => (
               <div className={styles.incStep} key={s.n}>
                 <div className={styles.incStepNum}>{s.n}</div>
                 <div className={styles.incStepBody}>
-                  <div className={styles.incStepTitle}>{s.title}</div>
-                  <div className={styles.incStepDesc}>{s.desc}</div>
-                  <div className={styles.incStepMeta}>{s.meta}</div>
+                  <div className={styles.incStepTitle}>{t(s.titleKey)}</div>
+                  <div className={styles.incStepDesc}>{t(s.descKey)}</div>
+                  <div className={styles.incStepMeta}>{t(s.metaKey)}</div>
                 </div>
               </div>
             ))}
@@ -95,7 +100,10 @@ export function IncubatorTab() {
         </div>
         <div>
           <h3 className={styles.colH}>
-            Current <em>mentors.</em>
+            <Translation
+              i18nKey="economy:incubator.mentors.title"
+              components={{ em: <em /> }}
+            />
           </h3>
           <div className={styles.mentorGrid}>
             {INC_MENTORS.map((m) => {
@@ -133,7 +141,7 @@ export function IncubatorTab() {
                     className={styles.mentorBtn}
                     onClick={() => setSession(m)}
                   >
-                    Request session
+                    {t("economy:incubator.mentors.requestCta")}
                   </button>
                 </div>
               );
@@ -166,16 +174,17 @@ export function IncubatorTab() {
 
 /** A grid of launcher cards linking out to the real tool pages. */
 function ToolGrid({ tools }: { tools: ToolCard[] }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.toolsGrid}>
-      {tools.map((t) => (
-        <Link className={styles.toolCard} key={t.title} to={t.to}>
+      {tools.map((tool) => (
+        <Link className={styles.toolCard} key={tool.titleKey} to={tool.to}>
           <div className={styles.toolIcon}>
-            <t.icon />
+            <tool.icon />
           </div>
-          <div className={styles.toolTitle}>{t.title}</div>
-          <div className={styles.toolDesc}>{t.desc}</div>
-          <span className={styles.toolCtaBtn}>{t.cta} →</span>
+          <div className={styles.toolTitle}>{t(tool.titleKey)}</div>
+          <div className={styles.toolDesc}>{t(tool.descKey)}</div>
+          <span className={styles.toolCtaBtn}>{t(tool.ctaKey)} →</span>
         </Link>
       ))}
     </div>
@@ -183,33 +192,42 @@ function ToolGrid({ tools }: { tools: ToolCard[] }) {
 }
 
 export function FreelanceTab() {
+  const { t } = useTranslation();
   return (
     <>
       <div className={styles.secHeader}>
         <div>
           <h2 className={styles.econH}>
-            Freelance <em>tools.</em>
+            <Translation
+              i18nKey="economy:freelance.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.econSub}>
-            Real, working tools — built by and for queer freelancers in
-            Portugal. Free, no sign-up, and nothing you enter leaves your
-            device.
-          </p>
+          <p className={styles.econSub}>{t("economy:freelance.sub")}</p>
         </div>
       </div>
 
       <h3 className={styles.rateH}>
-        Documents that <em>get you paid.</em>
+        <Translation
+          i18nKey="economy:freelance.section.documents"
+          components={{ em: <em /> }}
+        />
       </h3>
       <ToolGrid tools={TOOLS} />
 
       <h3 className={styles.rateH}>
-        Know your <em>numbers.</em>
+        <Translation
+          i18nKey="economy:freelance.section.numbers"
+          components={{ em: <em /> }}
+        />
       </h3>
       <ToolGrid tools={CALC_TOOLS} />
 
       <h3 className={styles.rateH}>
-        Stronger <em>together.</em>
+        <Translation
+          i18nKey="economy:freelance.section.together"
+          components={{ em: <em /> }}
+        />
       </h3>
       <ToolGrid tools={COMMUNITY_TOOLS} />
     </>
@@ -217,6 +235,7 @@ export function FreelanceTab() {
 }
 
 export function SalaryTab() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [sector, setSector] = useState<Sector | "all">("all");
   const [modal, setModal] = useState(false);
@@ -229,19 +248,19 @@ export function SalaryTab() {
       <div className={styles.secHeader}>
         <div>
           <h2 className={styles.econH}>
-            Salary <em>transparency.</em>
+            <Translation
+              i18nKey="economy:salary.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.econSub}>
-            Anonymous submissions from the community. Filter by sector, role, or
-            type. Knowledge is power.
-          </p>
+          <p className={styles.econSub}>{t("economy:salary.sub")}</p>
         </div>
         <button
           type="button"
           className={styles.primaryBtn}
           onClick={() => setModal(true)}
         >
-          + Submit yours
+          {t("economy:salary.submitCta")}
         </button>
       </div>
       <div className={styles.salFilters}>
@@ -254,24 +273,29 @@ export function SalaryTab() {
               .join(" ")}
             onClick={() => setSector(f.id)}
           >
-            {f.label}
+            {t(f.labelKey)}
           </button>
         ))}
       </div>
       <div className={styles.salTable}>
         <div className={styles.salHeader}>
-          <div className={styles.salHcell}>Role</div>
-          <div className={styles.salHcell}>Annual (gross)</div>
-          <div className={styles.salHcell}>Experience</div>
-          <div className={`${styles.salHcell} ${styles.salTypeCol}`}>Type</div>
+          <div className={styles.salHcell}>{t("economy:salary.table.role")}</div>
+          <div className={styles.salHcell}>{t("economy:salary.table.annual")}</div>
+          <div className={styles.salHcell}>{t("economy:salary.table.experience")}</div>
+          <div className={`${styles.salHcell} ${styles.salTypeCol}`}>
+            {t("economy:salary.table.type")}
+          </div>
         </div>
         {salaries.length === 0 ? (
           <EmptyState
             compact
             icon={<FiDollarSign />}
-            title="No entries in this sector yet"
-            description="Nothing's been shared for this sector so far. Clear the filter to see every submission — or add yours to help the next person negotiate."
-            action={{ label: "Clear filters", onClick: () => setSector("all") }}
+            title={t("economy:salary.empty.title")}
+            description={t("economy:salary.empty.description")}
+            action={{
+              label: t("economy:salary.empty.clear"),
+              onClick: () => setSector("all"),
+            }}
           />
         ) : (
           salaries.map((s) => (
@@ -300,22 +324,15 @@ export function SalaryTab() {
           ))
         )}
       </div>
-      <div className={styles.salAnon}>
-        All entries are anonymous. No name, email, or employer is stored.
-        Entries are reviewed by a moderator before appearing.
-      </div>
+      <div className={styles.salAnon}>{t("economy:salary.disclaimer")}</div>
       <div className={styles.salSubmitBox}>
-        <p>
-          Help the community by sharing what you earn. The more entries, the
-          more useful this becomes for everyone — especially people just
-          starting to negotiate.
-        </p>
+        <p>{t("economy:salary.helpBody")}</p>
         <button
           type="button"
           className={styles.primaryBtn}
           onClick={() => setModal(true)}
         >
-          Submit your salary
+          {t("economy:salary.submitLong")}
         </button>
       </div>
 
@@ -324,7 +341,7 @@ export function SalaryTab() {
           onClose={() => setModal(false)}
           onSubmit={() => {
             setModal(false);
-            showToast("Submitted anonymously — thank you", "success");
+            showToast(t("economy:salary.submitToast"), "success");
           }}
         />
       )}

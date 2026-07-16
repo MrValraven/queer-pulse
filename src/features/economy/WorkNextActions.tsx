@@ -1,9 +1,11 @@
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { NextAction } from "./work.data";
 import styles from "./WorkHubPage.module.css";
 
 /** The cross-silo "what needs you" list — the hub's prioritised action queue. */
 export function WorkNextActions({ actions }: { actions: NextAction[] }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.actionList}>
       {actions.map((a) => (
@@ -18,21 +20,21 @@ export function WorkNextActions({ actions }: { actions: NextAction[] }) {
           </span>
           <div className={styles.rowBody}>
             <div className={styles.rowLabel}>
-              {a.label}
-              {a.urgency && (
+              {t(a.labelKey, a.labelValues)}
+              {a.urgencyKey && (
                 <span
                   className={[styles.urgency, a.urgent && styles.urgencyUrgent]
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  {a.urgency}
+                  {t(a.urgencyKey, a.urgencyValues)}
                 </span>
               )}
             </div>
-            <div className={styles.rowContext}>{a.context}</div>
+            <div className={styles.rowContext}>{t(a.contextKey)}</div>
           </div>
           <Button variant="ghost" to={a.to}>
-            {a.cta}
+            {t(a.ctaKey)}
           </Button>
         </div>
       ))}

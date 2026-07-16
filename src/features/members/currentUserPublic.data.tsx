@@ -6,21 +6,28 @@ import type { PublicCard, PublicStat } from "./publicProfile.data";
  * colocated (`.tsx` because titles carry JSX emphasis). Keyed to the demo user
  * (tiago); in a real build this would be derived from their published writing,
  * hosted events and reach.
+ *
+ * `stats[].label` and `ctaNoteKey` hold catalog keys, not raw strings — the
+ * stat captions and the CTA-note phrasing are platform chrome (a small,
+ * platform-defined set of stat types + a fused chrome-phrase-plus-name), so
+ * they resolve through `t()` in `PublicProfileSections.tsx`. The actual
+ * writing/hosting card titles and "here for" tags stay in English: they're
+ * this fictional member's own authored words, fetched wholesale in live mode.
  */
 export interface PublicContributions {
-  stats: PublicStat[];
+  stats: (Omit<PublicStat, "label"> & { labelKey: string })[];
   writing: PublicCard[];
   hosting: PublicCard[];
   hereFor: { label: string; primary?: boolean }[];
-  ctaNote: string;
+  ctaNoteKey: string;
 }
 
 export const CURRENT_USER_PUBLIC: PublicContributions = {
   stats: [
-    { value: "4", em: true, label: "Poems published" },
-    { value: "9", label: "Events hosted" },
-    { value: "1", em: true, label: "Year on QueerPulse" },
-    { value: "320", label: "Members reached" },
+    { value: "4", em: true, labelKey: "members:publicProfile.stat.poemsPublished" },
+    { value: "9", labelKey: "members:publicProfile.stat.eventsHosted" },
+    { value: "1", em: true, labelKey: "members:publicProfile.stat.yearsOnPlatform" },
+    { value: "320", labelKey: "members:publicProfile.stat.membersReached" },
   ],
   writing: [
     {
@@ -75,6 +82,5 @@ export const CURRENT_USER_PUBLIC: PublicContributions = {
     { label: "Collaboration" },
     { label: "Non-monogamy peer support" },
   ],
-  ctaNote:
-    "Tiago's full profile, posts, and direct-message access open up once you're a member.",
+  ctaNoteKey: "members:publicProfile.head.ctaNote",
 };

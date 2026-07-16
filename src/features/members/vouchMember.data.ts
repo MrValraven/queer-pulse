@@ -12,3 +12,14 @@ export const RELATIONSHIPS = [
 ] as const;
 
 export type Relationship = (typeof RELATIONSHIPS)[number];
+
+/** Display label per relationship — a small, platform-defined vocabulary
+ *  (chrome), resolved through `t()`. `Relationship` itself stays the English
+ *  literal used as the radio's internal value/comparator. */
+export const RELATIONSHIP_LABEL_KEY: Record<Relationship, string> = {
+  "We've collaborated": "members:vouch.relationship.collaborated",
+  "We're friends": "members:vouch.relationship.friends",
+  "Same collective or group": "members:vouch.relationship.group",
+  "Met through QueerPulse": "members:vouch.relationship.metThroughQueerPulse",
+  "We're neighbours": "members:vouch.relationship.neighbours",
+};

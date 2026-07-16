@@ -8,6 +8,8 @@ import {
   HubBackLink,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { ALPHABET, GLOSSARY_COPY, type TypeKind } from "./glossary.data";
 import { useGlossaryData } from "./api/useGlossaryData";
@@ -56,12 +58,13 @@ function GlossarySkeleton() {
 }
 
 export function GlossaryPage() {
+  const { t } = useTranslation();
   const [lang, setLang] = useState<Lang>("en");
   const [query, setQuery] = useState("");
   const { blocks: allBlocks, loading: dataLoading } = useGlossaryData();
   const loading = useSimulatedLoad() || dataLoading;
   const q = query.trim().toLowerCase();
-  const t = GLOSSARY_COPY[lang];
+  const copy = GLOSSARY_COPY[lang];
   const HAS = useMemo(
     () => new Set(allBlocks.map((b) => b.letter)),
     [allBlocks],
@@ -86,20 +89,21 @@ export function GlossaryPage() {
           <div className={styles.heroInner}>
             <HubBackLink
               to={routes.resources}
-              label="Resource Library"
+              label={t("resources:glossary.backLink")}
               tone="light"
             />
-            <div className={styles.eyebrow}>{t.eyebrow}</div>
+            <div className={styles.eyebrow}>{copy.eyebrow}</div>
             <h1 className={styles.h1}>
-              A working <em>glossary.</em>
+              <Translation
+                i18nKey="resources:glossary.hero.title"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.dek}>
-              Words used here — across the platform, in the magazine, at
-              gatherings. <b>Definitions are working drafts.</b> Where a term is
-              contested, we say so. Where it's Lisbon-specific, we mark it.{" "}
-              <em>
-                Suggest edits at the bottom; the editors look at them weekly.
-              </em>
+              <Translation
+                i18nKey="resources:glossary.hero.dek"
+                components={{ b: <b />, em: <em /> }}
+              />
             </p>
           </div>
         </section>
@@ -113,7 +117,7 @@ export function GlossaryPage() {
               </svg>
               <input
                 type="text"
-                placeholder={t.searchPlaceholder}
+                placeholder={copy.searchPlaceholder}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
@@ -198,10 +202,10 @@ export function GlossaryPage() {
 
           {empty && (
             <div className={styles.noResults}>
-              <h3>{t.noResultsTitle}</h3>
-              <p>{t.noResultsBody}</p>
+              <h3>{copy.noResultsTitle}</h3>
+              <p>{copy.noResultsBody}</p>
               <Button to={CONTACT} variant="primary">
-                {t.suggestTerm}
+                {copy.suggestTerm}
               </Button>
             </div>
           )}
@@ -209,17 +213,15 @@ export function GlossaryPage() {
 
         <section className={styles.foot}>
           <div className={styles.footInner}>
-            <h3>{t.footTitle}</h3>
+            <h3>{copy.footTitle}</h3>
             <p>
-              This is a working document. Suggestions are read by the editorial
-              team weekly and discussed at the monthly assembly.{" "}
-              <em>
-                We will get things wrong; we'd rather get them wrong publicly
-                and fix them.
-              </em>
+              <Translation
+                i18nKey="resources:glossary.foot.body"
+                components={{ em: <em /> }}
+              />
             </p>
             <Button to={CONTACT} variant="primary">
-              {t.suggestEdit}
+              {copy.suggestEdit}
             </Button>
           </div>
         </section>

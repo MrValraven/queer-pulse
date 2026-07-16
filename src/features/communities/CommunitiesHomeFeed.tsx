@@ -6,6 +6,7 @@ import {
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { HubPulseCard, type HubPost } from "./HubPulseCard";
 import type { HomeTodo } from "./useCommunitiesHomeData";
 import styles from "./CommunitiesHomePage.module.css";
@@ -17,32 +18,33 @@ type PulseItem = {
 };
 
 export function CommunitiesHomeTodos({ todos }: { todos: HomeTodo[] }) {
+  const { t } = useTranslation();
   if (todos.length === 0) return null;
   return (
     <div className={styles.todos}>
       <div className={styles.todoLbl}>
-        <FiShield aria-hidden /> Needs your attention
+        <FiShield aria-hidden /> {t("communities:hub.todos.label")}
       </div>
-      {todos.map((t) => (
+      {todos.map((todo) => (
         <Link
-          key={t.slug}
-          to={`/community/${t.slug}`}
+          key={todo.slug}
+          to={`/community/${todo.slug}`}
           className={styles.todoRow}
         >
-          <span className={styles.todoName}>{t.name}</span>
+          <span className={styles.todoName}>{todo.name}</span>
           <span className={styles.todoCounts}>
-            {t.requests > 0 && (
+            {todo.requests > 0 && (
               <span className={styles.todoChip}>
-                <FiInbox aria-hidden /> {t.requests} request
-                {t.requests > 1 ? "s" : ""}
+                <FiInbox aria-hidden />{" "}
+                {t("communities:hub.todos.requests", { count: todo.requests })}
               </span>
             )}
-            {t.reports > 0 && (
+            {todo.reports > 0 && (
               <span
                 className={[styles.todoChip, styles.todoChipFlag].join(" ")}
               >
-                <FiFlag aria-hidden /> {t.reports} report
-                {t.reports > 1 ? "s" : ""}
+                <FiFlag aria-hidden />{" "}
+                {t("communities:hub.todos.reports", { count: todo.reports })}
               </span>
             )}
           </span>
@@ -77,16 +79,17 @@ export function CommunitiesHomePulse({
   loading: boolean;
   pulse: PulseItem[];
 }) {
+  const { t } = useTranslation();
   return (
     <>
-      <div className={styles.feedLbl}>Your pulse</div>
+      <div className={styles.feedLbl}>{t("communities:hub.pulse.label")}</div>
       {loading ? (
         <PulseSkeleton />
       ) : pulse.length === 0 ? (
         <EmptyState
           compact
-          title="Quiet for now"
-          description="When your communities post, it shows up here."
+          title={t("communities:hub.pulse.empty.title")}
+          description={t("communities:hub.pulse.empty.description")}
         />
       ) : (
         pulse.map((item, i) => (

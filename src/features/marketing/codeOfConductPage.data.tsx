@@ -1,112 +1,89 @@
-import { type ReactNode } from "react";
-
 export interface LadderStep {
   n: string;
-  title: string;
-  body: ReactNode;
+  titleKey: string;
+  bodyKey: string;
 }
 
 export interface PactItem {
   n: string;
-  title: string;
-  body: string;
+  titleKey: string;
+  bodyKey: string;
 }
 
+/**
+ * i18n Pattern A. All fields here are platform-authored governance chrome —
+ * the binding Code of Conduct itself — so every title/body is a catalog key.
+ * `LadderStep.bodyKey` and a couple of `PactItem.bodyKey` values carry inline
+ * `<em>` runs; the consumer (`CodeOfConductSections.tsx`) resolves those with
+ * `<Translation components={{ em: <em /> }} />` rather than baking JSX here.
+ */
 export const TOC = [
-  { id: "scope", label: "Scope" },
-  { id: "pact", label: "The six" },
-  { id: "harm", label: "What counts as harm" },
-  { id: "enforce", label: "How we enforce" },
-  { id: "appeal", label: "Appeals" },
-  { id: "offplatform", label: "Off-platform" },
-  { id: "changes", label: "Changes & versioning" },
+  { id: "scope", labelKey: "coc.toc.scope" },
+  { id: "pact", labelKey: "coc.toc.pact" },
+  { id: "harm", labelKey: "coc.toc.harm" },
+  { id: "enforce", labelKey: "coc.toc.enforce" },
+  { id: "appeal", labelKey: "coc.toc.appeal" },
+  { id: "offplatform", labelKey: "coc.toc.offplatform" },
+  { id: "changes", labelKey: "coc.toc.changes" },
 ];
 
 export const PACT: PactItem[] = [
   {
     n: "01",
-    title: "Out anyone, ever.",
-    body: 'Including with the best of intentions. Including in private. Including "just to a small group". Their identity is theirs to share. Includes deadnaming, sharing legal names without consent, posting screenshots that out a member to anyone they hadn\'t already chosen.',
+    titleKey: "coc.pact.item01.title",
+    bodyKey: "coc.pact.item01.body",
   },
   {
     n: "02",
-    title: "Misgender on purpose.",
-    body: "Mistakes are mistakes. Self-correction is welcome and expected. Repeated misgendering — particularly after correction — is treated as harassment.",
+    titleKey: "coc.pact.item02.title",
+    bodyKey: "coc.pact.item02.body",
   },
   {
     n: "03",
-    title: "Threaten or stalk.",
-    body: "Threats of physical violence, of outing, of unwanted contact. Following someone across the platform after they've asked you to stop. Coordinated pile-ons. Reporting to law enforcement.",
+    titleKey: "coc.pact.item03.title",
+    bodyKey: "coc.pact.item03.body",
   },
   {
     n: "04",
-    title: "Use slurs as slurs.",
-    body: "Reclaimed use within community is welcome. Use against another person, or to refer to a group derogatorily — including queerphobic, racist, ableist, antisemitic, anti-Roma, Islamophobic, and casteist slurs — is grounds for immediate suspension.",
+    titleKey: "coc.pact.item04.title",
+    bodyKey: "coc.pact.item04.body",
   },
   {
     n: "05",
-    title: "Solicit sexually without consent.",
-    body: 'Unsolicited explicit messages, images, or proposals. This includes "compliments" that escalate, persistent advances after a no, and assuming consent in shared spaces.',
+    titleKey: "coc.pact.item05.title",
+    bodyKey: "coc.pact.item05.body",
   },
   {
     n: "06",
-    title: "Weaponise the platform against members.",
-    body: "Using your access — to invites, to events, to DMs, to information shared in trust — against other members. Includes journalism with members as subjects without their consent. Includes scraping. Includes deceptive identity.",
+    titleKey: "coc.pact.item06.title",
+    bodyKey: "coc.pact.item06.body",
   },
 ];
 
 export const LADDER: LadderStep[] = [
   {
     n: "1",
-    title: "Quiet word",
-    body: (
-      <>
-        A moderator messages you directly. Not public. Not on your record after
-        90 days if no escalation. <em>Most situations resolve here.</em>
-      </>
-    ),
+    titleKey: "coc.ladder.step1.title",
+    bodyKey: "coc.ladder.step1.body",
   },
   {
     n: "2",
-    title: "Content removed + warning",
-    body: (
-      <>
-        The specific post/comment/message is removed. A formal warning is added
-        to your record. You can appeal in 7 days.
-      </>
-    ),
+    titleKey: "coc.ladder.step2.title",
+    bodyKey: "coc.ladder.step2.body",
   },
   {
     n: "3",
-    title: "Temporary suspension",
-    body: (
-      <>
-        You're signed out and can't post or message for 3, 7, or 30 days
-        depending on severity. You can still read public content, attend
-        already-RSVPed gatherings, and use crisis services.
-      </>
-    ),
+    titleKey: "coc.ladder.step3.title",
+    bodyKey: "coc.ladder.step3.body",
   },
   {
     n: "4",
-    title: "Permanent removal",
-    body: (
-      <>
-        Your account is closed. Connections are notified that you've left the
-        platform without naming why (unless the violation was public). Refund of
-        any active Sustainer membership pro-rated. <em>You can appeal once.</em>
-      </>
-    ),
+    titleKey: "coc.ladder.step4.title",
+    bodyKey: "coc.ladder.step4.body",
   },
   {
     n: "5",
-    title: "Legal referral",
-    body: (
-      <>
-        For violations that may also be crimes — credible threats, doxxing of
-        vulnerable members, hate crimes — we co-report with the member (if they
-        consent) to ILGA Portugal and / or law enforcement.
-      </>
-    ),
+    titleKey: "coc.ladder.step5.title",
+    bodyKey: "coc.ladder.step5.body",
   },
 ];

@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PACT, LADDER } from "./codeOfConductPage.data";
 import styles from "./CodeOfConductPage.module.css";
 
 export function CocPactSection() {
+  const { t } = useTranslation();
   return (
     <>
       <section className={styles.sec} id="scope">
@@ -11,23 +15,28 @@ export function CocPactSection() {
           §<em>01</em>
         </div>
         <h2>
-          Where this <em>applies.</em>
+          <Translation
+            i18nKey="marketing:coc.scope.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p>
-          This Code applies to <strong>every member</strong> across{" "}
-          <strong>every QueerPulse space</strong>: the website, the app,
-          gatherings, the magazine's contributor channels, direct messages, and
-          any off-platform space the organisation hosts (Discord rooms,
-          retreats, mailing lists).
+          <Translation
+            i18nKey="marketing:coc.scope.p1"
+            components={{ strong: <strong /> }}
+          />
         </p>
         <p>
-          It also applies to <em>off-platform conduct</em> when that conduct
-          materially affects QueerPulse members — see §06.
+          <Translation
+            i18nKey="marketing:coc.scope.p2"
+            components={{ em: <em /> }}
+          />
         </p>
         <p>
-          It does <em>not</em> apply to your private life, your politics
-          elsewhere, your other identities online, or anything you do
-          off-platform that doesn't touch this community.
+          <Translation
+            i18nKey="marketing:coc.scope.p3"
+            components={{ em: <em /> }}
+          />
         </p>
       </section>
 
@@ -36,12 +45,12 @@ export function CocPactSection() {
           §<em>02</em>
         </div>
         <h2>
-          The six things you <em>must not do.</em>
+          <Translation
+            i18nKey="marketing:coc.pact.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p>
-          If you do any of these, expect a moderation action. We have removed
-          people for each of these. We will remove people again.
-        </p>
+        <p>{t("marketing:coc.pact.lead")}</p>
         <div className={styles.pactList}>
           {PACT.map((p) => (
             <div className={styles.pactRow} key={p.n}>
@@ -50,95 +59,100 @@ export function CocPactSection() {
                 <em>{p.n[1]}</em>
               </div>
               <div>
-                <b>{p.title}</b>
-                <p>{p.body}</p>
+                <b>{t(`marketing:${p.titleKey}`)}</b>
+                <p>{t(`marketing:${p.bodyKey}`)}</p>
               </div>
             </div>
           ))}
         </div>
-        <p>
-          The first five are obvious. The sixth is the one that catches the most
-          thoughtful people — please read it carefully. The platform's value is
-          built on members trusting each other; using your member access against
-          another member is treated as a foundational violation.
-        </p>
+        <p>{t("marketing:coc.pact.closing")}</p>
       </section>
     </>
   );
 }
 
 export function CocHarmSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec} id="harm">
       <div className={styles.secNum}>
         §<em>03</em>
       </div>
       <h2>
-        What we mean by <em>harm</em>, and what we don't.
+        <Translation
+          i18nKey="marketing:coc.harm.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <h3>Harm we will act on</h3>
+      <h3>{t("marketing:coc.harm.actOnHeading")}</h3>
       <ul className={styles.list}>
         <li>
-          <b>Personal attacks</b> directed at individual members.
+          <b>{t("marketing:coc.harm.actOn.personalAttacks.lead")}</b>{" "}
+          {t("marketing:coc.harm.actOn.personalAttacks.rest")}
         </li>
         <li>
-          <b>Sustained harassment</b> — three or more interactions a member has
-          asked stop.
+          <b>{t("marketing:coc.harm.actOn.sustainedHarassment.lead")}</b>{" "}
+          {t("marketing:coc.harm.actOn.sustainedHarassment.rest")}
         </li>
         <li>
-          <b>Doxxing</b> of any member, including by linking pseudonyms.
+          <b>{t("marketing:coc.harm.actOn.doxxing.lead")}</b>{" "}
+          {t("marketing:coc.harm.actOn.doxxing.rest")}
         </li>
         <li>
-          <b>Intimidation</b> — threats, dog-whistles, mob tagging.
+          <b>{t("marketing:coc.harm.actOn.intimidation.lead")}</b>{" "}
+          {t("marketing:coc.harm.actOn.intimidation.rest")}
         </li>
         <li>
-          <b>Bad-faith framing</b> of community members in external press
-          without consent.
+          <b>{t("marketing:coc.harm.actOn.badFaithFraming.lead")}</b>{" "}
+          {t("marketing:coc.harm.actOn.badFaithFraming.rest")}
         </li>
       </ul>
-      <h3>Friction we won't moderate</h3>
+      <h3>{t("marketing:coc.harm.frictionHeading")}</h3>
       <ul className={styles.list}>
         <li>
-          <b>Disagreement.</b> Including loud, sharp, public disagreement.{" "}
-          <em>We have removed posts for this and been wrong</em> — see our 2025
-          transparency report.
+          <b>{t("marketing:coc.harm.friction.disagreement.lead")}</b>{" "}
+          <Translation
+            i18nKey="marketing:coc.harm.friction.disagreement.rest"
+            components={{ em: <em /> }}
+          />
         </li>
         <li>
-          <b>Hurt feelings.</b> A post making you uncomfortable doesn't, on its
-          own, breach this Code.
+          <b>{t("marketing:coc.harm.friction.hurtFeelings.lead")}</b>{" "}
+          {t("marketing:coc.harm.friction.hurtFeelings.rest")}
         </li>
         <li>
-          <b>Criticism of QueerPulse</b> — the organisation, its decisions, its
-          founders. Criticise away.
+          <b>{t("marketing:coc.harm.friction.criticism.lead")}</b>{" "}
+          {t("marketing:coc.harm.friction.criticism.rest")}
         </li>
         <li>
-          <b>Different political views</b> within the broader queer movement.
-          Coalition is not consensus.
+          <b>{t("marketing:coc.harm.friction.politicalViews.lead")}</b>{" "}
+          {t("marketing:coc.harm.friction.politicalViews.rest")}
         </li>
       </ul>
       <p>
-        <em>We will get the line wrong sometimes.</em> When we do, our appeals
-        process is fast and the next year's transparency report will name the
-        mistake.
+        <Translation
+          i18nKey="marketing:coc.harm.closing"
+          components={{ em: <em /> }}
+        />
       </p>
     </section>
   );
 }
 
 export function CocEnforceSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec} id="enforce">
       <div className={styles.secNum}>
         §<em>04</em>
       </div>
       <h2>
-        What happens if you <em>break this.</em>
+        <Translation
+          i18nKey="marketing:coc.enforce.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p>
-        Moderation is a ladder. We start at the lowest rung that fits the
-        situation. We can skip rungs if the violation is severe (§02·03, §02·05
-        typically skip directly to suspension).
-      </p>
+      <p>{t("marketing:coc.enforce.lead")}</p>
       <div className={styles.ladder}>
         {LADDER.map((l, i) => (
           <div className={styles.ladderStep} key={l.n}>
@@ -150,8 +164,13 @@ export function CocEnforceSection() {
               {l.n}
             </div>
             <div>
-              <b>{l.title}</b>
-              <p>{l.body}</p>
+              <b>{t(`marketing:${l.titleKey}`)}</b>
+              <p>
+                <Translation
+                  i18nKey={`marketing:${l.bodyKey}`}
+                  components={{ em: <em /> }}
+                />
+              </p>
             </div>
           </div>
         ))}
@@ -171,25 +190,25 @@ export function CocReportCta({
   emergencyPath,
   onCrisisChat,
 }: CocReportCtaProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.reportCta}>
       <h3>
-        Something happened. <em>What do I do?</em>
+        <Translation
+          i18nKey="marketing:coc.report.title"
+          components={{ em: <em /> }}
+        />
       </h3>
-      <p>
-        Report it. Reports are read by a real human within 6 hours (median 4.2h
-        in 2025). Anonymous reports are accepted; signed reports get a written
-        response.
-      </p>
+      <p>{t("marketing:coc.report.body")}</p>
       <div className={styles.reportActions}>
         <Button to={reportPath} variant="primary">
-          File a report
+          {t("marketing:coc.report.fileCta")}
         </Button>
         <Button type="button" variant="ghost-dark" onClick={onCrisisChat}>
-          Or talk to crisis chat first
+          {t("marketing:coc.report.crisisCta")}
         </Button>
         <Button to={emergencyPath} variant="ghost-dark">
-          Emergency · 112
+          {t("marketing:coc.report.emergencyCta")}
         </Button>
       </div>
     </div>
@@ -201,10 +220,20 @@ interface CocChangesProps {
   onDownload: () => void;
 }
 
+const PUBLISHED_DATE = new Date(2026, 0, 14);
+const CHANGELOG_V21_DATE = new Date(2026, 0, 1);
+const CHANGELOG_V20_DATE = new Date(2025, 7, 1);
+const CHANGELOG_V14_DATE = new Date(2025, 2, 1);
+const CHANGELOG_V10_DATE = new Date(2024, 2, 1);
+const RATIFIED_DATE = new Date(2026, 0, 14);
+
 export function CocChangesSection({
   changelogPath,
   onDownload,
 }: CocChangesProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const monthYear = { month: "short", year: "numeric" } as const;
   return (
     <>
       <section className={styles.sec} id="appeal">
@@ -212,19 +241,22 @@ export function CocChangesSection({
           §<em>05</em>
         </div>
         <h2>
-          Appeals — <em>how to push back.</em>
+          <Translation
+            i18nKey="marketing:coc.appeal.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p>
-          Every action above rung 1 can be appealed. Appeals are read by a
-          different moderator than the one who decided.{" "}
-          <strong>
-            Appeals overturn the original decision about 11% of the time
-          </strong>{" "}
-          — we publish that number annually.
+          <Translation
+            i18nKey="marketing:coc.appeal.p1"
+            components={{ strong: <strong /> }}
+          />
         </p>
         <p>
-          Appeals filed within <strong>7 days</strong> get a written response
-          within <strong>5 working days</strong>. We do not "ghost" appeals.
+          <Translation
+            i18nKey="marketing:coc.appeal.p2"
+            components={{ strong: <strong /> }}
+          />
         </p>
       </section>
 
@@ -233,37 +265,30 @@ export function CocChangesSection({
           §<em>06</em>
         </div>
         <h2>
-          Off-platform <em>conduct.</em>
+          <Translation
+            i18nKey="marketing:coc.offplatform.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p>
-          We are reluctant to police what members do elsewhere. But we will act
-          on off-platform conduct in two cases:
-        </p>
+        <p>{t("marketing:coc.offplatform.lead")}</p>
         <ul className={styles.list}>
           <li>
-            <b>When it materially affects QueerPulse members.</b> Posting member
-            photos publicly, doxxing on other platforms, real-world harassment
-            of someone you met here.
+            <b>{t("marketing:coc.offplatform.case1.lead")}</b>{" "}
+            {t("marketing:coc.offplatform.case1.rest")}
           </li>
           <li>
-            <b>
-              When it reveals identity-level violations that would breach §02.
-            </b>{" "}
-            Running a public TERF or SWERF account — one that denies trans
-            people their identity, or campaigns against the safety and dignity
-            of sex workers — is not a disagreement we host around. It is a §02
-            violation wherever it lives, named member or not, because trans
-            people and sex workers <em>are</em> this community.
+            <b>{t("marketing:coc.offplatform.case2.lead")}</b>{" "}
+            <Translation
+              i18nKey="marketing:coc.offplatform.case2.rest"
+              components={{ em: <em /> }}
+            />
           </li>
         </ul>
         <p>
-          We do not act on: your politics, your relationship history, your work,
-          your other identities, things you said before joining, things adjacent
-          to people you know. The bar is{" "}
-          <em>material harm to QueerPulse members</em>, not "we read your other
-          account and disagree". Denying trans people their identity, or
-          campaigning against sex workers, is not the kind of "politics" this
-          protects — that is a §02 violation, here or anywhere.
+          <Translation
+            i18nKey="marketing:coc.offplatform.closing"
+            components={{ em: <em /> }}
+          />
         </p>
       </section>
 
@@ -272,41 +297,69 @@ export function CocChangesSection({
           §<em>07</em>
         </div>
         <h2>
-          Changes &amp; <em>versioning.</em>
+          <Translation
+            i18nKey="marketing:coc.changes.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p>
-          This Code is a v2.1 document, published 14 January 2026, ratified at
-          the 2025 Annual Assembly. Substantive changes require a 14-day comment
-          period and an Assembly vote. Editorial changes (clarifying wording,
-          fixing typos) require only a moderator sign-off and are listed in the
-          changelog.
+          {t("marketing:coc.changes.p1", {
+            date: fmt.date(PUBLISHED_DATE, { day: "numeric", month: "long", year: "numeric" }),
+          })}
         </p>
         <ul className={styles.list}>
           <li>
-            <b>v2.1 · Jan 2026:</b> Added §06 (off-platform conduct) after the
-            November 2025 assembly. Clarified §02·04 reclaimed-use exception.
+            <b>
+              {t("marketing:coc.changelog.v21.lead", {
+                date: fmt.date(CHANGELOG_V21_DATE, monthYear),
+              })}
+            </b>{" "}
+            {t("marketing:coc.changelog.v21.rest")}
           </li>
           <li>
-            <b>v2.0 · Aug 2025:</b> Restructured into the current six-pact
-            format. Renamed from "Member Agreement" to "Code of Conduct".
+            <b>
+              {t("marketing:coc.changelog.v20.lead", {
+                date: fmt.date(CHANGELOG_V20_DATE, monthYear),
+              })}
+            </b>{" "}
+            {t("marketing:coc.changelog.v20.rest")}
           </li>
           <li>
-            <b>v1.4 · Mar 2025:</b> Added appeals SLA.
+            <b>
+              {t("marketing:coc.changelog.v14.lead", {
+                date: fmt.date(CHANGELOG_V14_DATE, monthYear),
+              })}
+            </b>{" "}
+            {t("marketing:coc.changelog.v14.rest")}
           </li>
           <li>
-            <b>v1.0 · Mar 2024:</b> First version, drafted with eight founding
-            members.
+            <b>
+              {t("marketing:coc.changelog.v10.lead", {
+                date: fmt.date(CHANGELOG_V10_DATE, monthYear),
+              })}
+            </b>{" "}
+            {t("marketing:coc.changelog.v10.rest")}
           </li>
         </ul>
         <p>
-          For the full change history with marked-up diffs, see{" "}
-          <Link to={changelogPath}>the Changelog</Link>.
+          <Translation
+            i18nKey="marketing:coc.changes.seeChangelog"
+            components={{ changelogLink: <Link to={changelogPath} /> }}
+          />
         </p>
       </section>
 
       <div className={styles.version}>
-        <b>Code of Conduct v2.1</b> · ratified at the 2025 Annual Assembly · 14
-        Jan 2026 · <a onClick={onDownload}>Download PDF</a> · Read the Manifesto
+        <b>{t("marketing:coc.version.label")}</b>{" "}
+        {t("marketing:coc.version.ratifiedMeta", {
+          date: fmt.date(RATIFIED_DATE, {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }),
+        })}{" "}
+        · <a onClick={onDownload}>{t("marketing:coc.version.downloadCta")}</a>{" "}
+        · {t("marketing:coc.version.readManifesto")}
       </div>
     </>
   );

@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MagazineMasthead } from "./MagazineMasthead";
 import styles from "./IssuesPage.module.css";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
@@ -9,6 +12,10 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useIssues } from "./api/useIssues";
 
 const ISSUE = routes.issue;
+/** The hardcoded "current issue" showcase below never varies by mode — see
+ *  `IssueCover`'s doc comment for the same "no backend analogue" pattern. */
+const CURRENT_ISSUE_NUMBER = "09";
+const CURRENT_ISSUE_PUBLISHED = new Date(2026, 5, 6);
 
 type Tint = "a" | "b" | "c" | "d";
 interface Issue {
@@ -22,6 +29,11 @@ interface Issue {
   dek: string;
   meta: { season: string; detail: string };
 }
+/**
+ * Content: this is the same shape `useIssues()` returns in live mode (see
+ * `issuesList = liveIssues ?? ISSUES` below) — every field here is the
+ * issue's own editorial record, so none of it is translated.
+ */
 const ISSUES: Issue[] = [
   {
     num: "09",
@@ -185,6 +197,209 @@ function IssueRowSkeleton() {
   );
 }
 
+function IssuesHero() {
+  const { t } = useTranslation();
+  return (
+    <section className={styles.hero}>
+      <div className={styles.heroInner}>
+        <div className={styles.eyebrow}>{t("magazine:issues.eyebrow")}</div>
+        <h1 className={styles.h1}>
+          <Translation
+            i18nKey="magazine:issues.heroTitle"
+            components={{ em: <em /> }}
+          />
+        </h1>
+        <p className={styles.dek}>{t("magazine:issues.heroDek")}</p>
+        <div className={styles.metaRow}>
+          <span>
+            <b>
+              <em>9</em>
+            </b>
+            {t("magazine:issues.stats.issuesPublished", { count: 9 })}
+          </span>
+          <span>
+            <b>108</b>
+            {t("magazine:issues.stats.articlesArchived", { count: 108 })}
+          </span>
+          <span>
+            <b>52</b>
+            {t("magazine:issues.stats.contributorsAllTime", { count: 52 })}
+          </span>
+          <span>
+            <b>
+              <em>11</em>
+            </b>
+            {t("magazine:issues.stats.languagesTranslated", { count: 11 })}
+          </span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CurrentIssueSection() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  return (
+    <section className={styles.current}>
+      <div className={styles.curInner}>
+        <div className={styles.curImg}>
+          {t("magazine:issues.current.coverPlaceholder", {
+            number: CURRENT_ISSUE_NUMBER,
+          })}
+        </div>
+        <div>
+          <div className={styles.curEyebrow}>
+            {t("magazine:issues.current.eyebrow", {
+              date: fmt.date(CURRENT_ISSUE_PUBLISHED),
+            })}
+          </div>
+          <div className={styles.curNum}>
+            <Translation
+              i18nKey="magazine:issue.badge"
+              values={{ number: CURRENT_ISSUE_NUMBER }}
+              components={{ em: <em /> }}
+            />
+          </div>
+          {/* Content: the current issue's own title/dek, kept in English. */}
+          <h2 className={styles.curH}>
+            On <em>health.</em>
+          </h2>
+          <p className={styles.curDek}>
+            Twelve pieces about how we keep our bodies, our minds, and each
+            other. Reported, debated, illustrated.
+          </p>
+          <div className={styles.curMeta}>
+            <span>{t("magazine:issue.stats.pagesCount", { count: 84 })}</span>
+            <span>
+              {t("magazine:issue.stats.featuresCount", { count: 12 })}
+            </span>
+            <span>
+              {t("magazine:issue.stats.contributorsCount", { count: 8 })}
+            </span>
+          </div>
+          <div className={styles.curActions}>
+            <Button to={ISSUE} variant="primary">
+              {t("magazine:issue.readCta", { number: CURRENT_ISSUE_NUMBER })}
+            </Button>
+            <Button to={routes.requestInvite} variant="ghost-dark">
+              {t("magazine:issue.orderPrintCta", {
+                price: fmt.currency(8),
+              })}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ArchiveSection({
+  view,
+  onView,
+  issuesList,
+  loading,
+}: {
+  view: "grid" | "list";
+  onView: (view: "grid" | "list") => void;
+  issuesList: Issue[];
+  loading: boolean;
+}) {
+  const { t } = useTranslation();
+  return (
+    <section className={styles.arch}>
+      <div className={styles.archH}>
+        <h2>
+          <Translation
+            i18nKey="magazine:issues.archiveHeading"
+            components={{ em: <em /> }}
+          />
+        </h2>
+        <div className={styles.viewToggle}>
+          <button
+            type="button"
+            className={view === "grid" ? styles.viewActive : undefined}
+            onClick={() => onView("grid")}
+          >
+            {t("magazine:issues.viewCoversCta")}
+          </button>
+          <button
+            type="button"
+            className={view === "list" ? styles.viewActive : undefined}
+            onClick={() => onView("list")}
+          >
+            {t("magazine:issues.viewListCta")}
+          </button>
+        </div>
+      </div>
+
+      {view === "grid" ? (
+        <div className={styles.grid}>
+          {loading
+            ? Array.from({ length: issuesList.length }).map((_, i) => (
+                <IssueTileSkeleton key={i} />
+              ))
+            : issuesList.map((iss, i) => (
+                <FadeIn
+                  as={Link}
+                  to={ISSUE}
+                  className={styles.tile}
+                  key={iss.num}
+                  delay={Math.min(i, 8) * 60}
+                >
+                  <div
+                    className={`${styles.tileCover} ${styles[TINT_CLASS[iss.tint]]}`}
+                  >
+                    {iss.cover}
+                  </div>
+                  <div
+                    className={[
+                      styles.tileNum,
+                      iss.current && styles.tileNumCurrent,
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
+                    {iss.numLabel}
+                  </div>
+                  <div className={styles.tileH}>{iss.title}</div>
+                  <div className={styles.tileDate}>{iss.date}</div>
+                </FadeIn>
+              ))}
+        </div>
+      ) : (
+        <div className={styles.list}>
+          {loading
+            ? Array.from({ length: issuesList.length }).map((_, i) => (
+                <IssueRowSkeleton key={i} />
+              ))
+            : issuesList.map((iss, i) => (
+                <FadeIn
+                  as={Link}
+                  to={ISSUE}
+                  className={styles.listRow}
+                  key={iss.num}
+                  delay={Math.min(i, 8) * 60}
+                >
+                  <div className={styles.listNum}>
+                    {iss.current ? <em>{iss.num}</em> : iss.num}
+                  </div>
+                  <div>
+                    <div className={styles.listH}>{iss.title}</div>
+                    <div className={styles.listDek}>{iss.dek}</div>
+                  </div>
+                  <div className={styles.listMeta}>
+                    <b>{iss.meta.season}</b>
+                    {iss.meta.detail}
+                  </div>
+                </FadeIn>
+              ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export function IssuesPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
   const loading = useSimulatedLoad();
@@ -195,162 +410,14 @@ export function IssuesPage() {
     <PageShell>
       <MagazineMasthead active="issues" />
       <div className={styles.page}>
-        <section className={styles.hero}>
-          <div className={styles.heroInner}>
-            <div className={styles.eyebrow}>Magazine · all editions</div>
-            <h1 className={styles.h1}>
-              Nine issues, <em>quarterly</em>, since 2024.
-            </h1>
-            <p className={styles.dek}>
-              A magazine that takes its time. Risograph print, free in PDF, paid
-              in paper. Each issue circles a single question — health, work, the
-              city, what we owe each other. Sustainer members get them in the
-              mail.
-            </p>
-            <div className={styles.metaRow}>
-              <span>
-                <b>
-                  <em>9</em>
-                </b>
-                Issues published
-              </span>
-              <span>
-                <b>108</b>Articles archived
-              </span>
-              <span>
-                <b>52</b>Contributors all-time
-              </span>
-              <span>
-                <b>
-                  <em>11</em>
-                </b>
-                Languages translated
-              </span>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.current}>
-          <div className={styles.curInner}>
-            <div className={styles.curImg}>Issue 09 cover</div>
-            <div>
-              <div className={styles.curEyebrow}>
-                Current issue · published 6 Jun 2026
-              </div>
-              <div className={styles.curNum}>
-                Issue <em>09</em>
-              </div>
-              <h2 className={styles.curH}>
-                On <em>health.</em>
-              </h2>
-              <p className={styles.curDek}>
-                Twelve pieces about how we keep our bodies, our minds, and each
-                other. Reported, debated, illustrated.
-              </p>
-              <div className={styles.curMeta}>
-                <span>84 pages</span>
-                <span>12 features</span>
-                <span>8 contributors</span>
-              </div>
-              <div className={styles.curActions}>
-                <Button to={ISSUE} variant="primary">
-                  Read issue 09 →
-                </Button>
-                <Button to={routes.requestInvite} variant="ghost-dark">
-                  Order print · €8
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.arch}>
-          <div className={styles.archH}>
-            <h2>
-              The full <em>archive</em>
-            </h2>
-            <div className={styles.viewToggle}>
-              <button
-                type="button"
-                className={view === "grid" ? styles.viewActive : undefined}
-                onClick={() => setView("grid")}
-              >
-                Covers
-              </button>
-              <button
-                type="button"
-                className={view === "list" ? styles.viewActive : undefined}
-                onClick={() => setView("list")}
-              >
-                List
-              </button>
-            </div>
-          </div>
-
-          {view === "grid" ? (
-            <div className={styles.grid}>
-              {loading
-                ? Array.from({ length: issuesList.length }).map((_, i) => (
-                    <IssueTileSkeleton key={i} />
-                  ))
-                : issuesList.map((iss, i) => (
-                    <FadeIn
-                      as={Link}
-                      to={ISSUE}
-                      className={styles.tile}
-                      key={iss.num}
-                      delay={Math.min(i, 8) * 60}
-                    >
-                      <div
-                        className={`${styles.tileCover} ${styles[TINT_CLASS[iss.tint]]}`}
-                      >
-                        {iss.cover}
-                      </div>
-                      <div
-                        className={[
-                          styles.tileNum,
-                          iss.current && styles.tileNumCurrent,
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
-                      >
-                        {iss.numLabel}
-                      </div>
-                      <div className={styles.tileH}>{iss.title}</div>
-                      <div className={styles.tileDate}>{iss.date}</div>
-                    </FadeIn>
-                  ))}
-            </div>
-          ) : (
-            <div className={styles.list}>
-              {loading
-                ? Array.from({ length: issuesList.length }).map((_, i) => (
-                    <IssueRowSkeleton key={i} />
-                  ))
-                : issuesList.map((iss, i) => (
-                    <FadeIn
-                      as={Link}
-                      to={ISSUE}
-                      className={styles.listRow}
-                      key={iss.num}
-                      delay={Math.min(i, 8) * 60}
-                    >
-                      <div className={styles.listNum}>
-                        {iss.current ? <em>{iss.num}</em> : iss.num}
-                      </div>
-                      <div>
-                        <div className={styles.listH}>{iss.title}</div>
-                        <div className={styles.listDek}>{iss.dek}</div>
-                      </div>
-                      <div className={styles.listMeta}>
-                        <b>{iss.meta.season}</b>
-                        {iss.meta.detail}
-                      </div>
-                    </FadeIn>
-                  ))}
-            </div>
-          )}
-        </section>
+        <IssuesHero />
+        <CurrentIssueSection />
+        <ArchiveSection
+          view={view}
+          onView={setView}
+          issuesList={issuesList}
+          loading={loading}
+        />
       </div>
     </PageShell>
   );

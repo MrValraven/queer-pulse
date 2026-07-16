@@ -7,6 +7,8 @@ import {
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { fullName, memberProfiles } from "./data/memberProfiles";
 import { directoryBlurb } from "./directoryBlurb";
 import { MemberCardBody } from "./MemberCardBody";
@@ -42,6 +44,7 @@ export function FiltersSidebar({
   onChange: (next: FilterState) => void;
   onClearAll: () => void;
 }) {
+  const { t } = useTranslation();
   // Counts are read off the loaded directory, never authored. On a directory
   // nobody has declared into yet, an option simply carries no number.
   const openToCounts = useMemo(() => facetCounts(members, "openTo"), [members]);
@@ -52,7 +55,7 @@ export function FiltersSidebar({
   return (
     <aside className={styles.filters}>
       <div className={styles.filterCard}>
-        <h4>What they're open to</h4>
+        <h4>{t("members:directory.filter.openToTitle")}</h4>
         {OPEN_TO_OPTIONS.map((option) => (
           <label key={option} className={styles.filterRow}>
             <input
@@ -74,7 +77,7 @@ export function FiltersSidebar({
       </div>
 
       <div className={styles.filterCard}>
-        <h4>Where they're based</h4>
+        <h4>{t("members:directory.filter.hoodTitle")}</h4>
         <ChipSelect
           options={NEIGHBOURHOODS.map((o) => o.label)}
           selected={new Set(filters.hoods)}
@@ -87,7 +90,7 @@ export function FiltersSidebar({
       <FilterProfessions filters={filters} onChange={onChange} />
 
       <div className={styles.filterCard}>
-        <h4>Identity · self-declared</h4>
+        <h4>{t("members:directory.filter.identityTitle")}</h4>
         {IDENTITY_OPTIONS.map((option) => (
           <label key={option} className={styles.filterRow}>
             <input
@@ -109,11 +112,11 @@ export function FiltersSidebar({
       </div>
 
       <div className={styles.filterCard}>
-        <h4>Member age</h4>
+        <h4>{t("members:directory.filter.ageTitle")}</h4>
         <div className={styles.range}>
           <input
             type="number"
-            placeholder="From"
+            placeholder={t("members:directory.filter.fromPlaceholder")}
             min={0}
             max={9}
             value={filters.yearsFrom}
@@ -127,7 +130,7 @@ export function FiltersSidebar({
           <span>→</span>
           <input
             type="number"
-            placeholder="Years"
+            placeholder={t("members:directory.filter.yearsPlaceholder")}
             min={0}
             max={9}
             value={filters.yearsTo}
@@ -140,13 +143,15 @@ export function FiltersSidebar({
           />
         </div>
         <p className={styles.rangeNote}>
-          Years on QueerPulse.{" "}
-          <em>Newer members appear with a "first year" badge by default.</em>
+          <Translation
+            i18nKey="members:directory.filter.ageNote"
+            components={{ em: <em /> }}
+          />
         </p>
       </div>
 
       <div className={styles.filterCard}>
-        <h4>Languages</h4>
+        <h4>{t("members:directory.filter.languagesTitle")}</h4>
         <ChipSelect
           options={LANGUAGES.map((o) => o.label)}
           selected={new Set(filters.languages)}
@@ -161,9 +166,11 @@ export function FiltersSidebar({
 
       <div className={styles.clearRow}>
         <button type="button" onClick={onClearAll}>
-          Clear all filters
+          {t("members:directory.clearAllFiltersCta")}
         </button>
-        <span>{appliedCount} applied</span>
+        <span>
+          {t("members:directory.appliedCount", { count: appliedCount })}
+        </span>
       </div>
     </aside>
   );
@@ -253,8 +260,8 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
         blurb={blurb}
         tags={tags}
         isMe={isMe}
-        vouch={member.vouch}
-        mutuals={member.mutuals}
+        vouchCount={member.vouchCount}
+        mutualsCount={member.mutualsCount}
       />
     </Link>
   );

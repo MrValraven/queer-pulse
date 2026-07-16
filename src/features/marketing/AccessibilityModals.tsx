@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
-import { FLAG_ISSUES } from "./accessibility.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { FLAG_ISSUE_KEYS } from "./accessibility.data";
 import styles from "./AccessibilityPage.module.css";
 
 const Check = () => (
@@ -56,35 +58,42 @@ export function FlagVenueModal({
   venue: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [done, setDone] = useState(false);
   return (
-    <ModalShell onClose={onClose} label="Flag an accessibility issue">
+    <ModalShell
+      onClose={onClose}
+      label={t("marketing:accessibility.flagModal.ariaLabel")}
+    >
       {done ? (
         <div className={styles.success}>
           <div className={styles.sucIcon}>
             <Check />
           </div>
           <h2>
-            Flag <em>received.</em>
+            <Translation
+              i18nKey="marketing:accessibility.flagModal.doneTitle"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            Thank you. We'll follow up with the venue and update the listing
-            within two weeks.
-          </p>
+          <p>{t("marketing:accessibility.flagModal.doneBody")}</p>
           <Button type="button" variant="ghost" onClick={onClose}>
-            Close
+            {t("marketing:accessibility.flagModal.closeCta")}
           </Button>
         </div>
       ) : (
         <>
-          <div className={styles.modalTitle}>Flag an accessibility issue</div>
+          <div className={styles.modalTitle}>
+            {t("marketing:accessibility.flagModal.title")}
+          </div>
           <p className={styles.modalSub}>
-            Tell us what you experienced. We'll follow up with the venue and
-            update the listing. Your name is not shared with the venue.
+            {t("marketing:accessibility.flagModal.sub")}
           </p>
           <div className={styles.fields}>
             <div>
-              <label className={styles.fieldLabel}>Venue</label>
+              <label className={styles.fieldLabel}>
+                {t("marketing:accessibility.flagModal.venueLabel")}
+              </label>
               <input
                 className={styles.input}
                 type="text"
@@ -93,28 +102,40 @@ export function FlagVenueModal({
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>Type of issue</label>
+              <label className={styles.fieldLabel}>
+                {t("marketing:accessibility.flagModal.issueTypeLabel")}
+              </label>
               <select className={styles.select} defaultValue="">
-                <option value="">Select…</option>
-                {FLAG_ISSUES.map((o) => (
-                  <option key={o}>{o}</option>
+                <option value="">
+                  {t("marketing:accessibility.flagModal.issueTypePlaceholder")}
+                </option>
+                {FLAG_ISSUE_KEYS.map((key) => (
+                  <option key={key}>{t(key)}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className={styles.fieldLabel}>What happened</label>
+              <label className={styles.fieldLabel}>
+                {t("marketing:accessibility.flagModal.whatHappenedLabel")}
+              </label>
               <textarea
                 className={styles.textarea}
                 rows={3}
-                placeholder="Describe what you experienced. Be specific — it helps us follow up accurately."
+                placeholder={t(
+                  "marketing:accessibility.flagModal.whatHappenedPlaceholder",
+                )}
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>When did this happen?</label>
+              <label className={styles.fieldLabel}>
+                {t("marketing:accessibility.flagModal.whenLabel")}
+              </label>
               <input
                 className={styles.input}
                 type="text"
-                placeholder="Approximate date or event name"
+                placeholder={t(
+                  "marketing:accessibility.flagModal.whenPlaceholder",
+                )}
               />
             </div>
           </div>
@@ -124,10 +145,10 @@ export function FlagVenueModal({
               variant="primary"
               onClick={() => setDone(true)}
             >
-              Submit flag
+              {t("marketing:accessibility.flagModal.submitCta")}
             </Button>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t("marketing:accessibility.flagModal.cancelCta")}
             </Button>
           </div>
         </>
@@ -137,63 +158,84 @@ export function FlagVenueModal({
 }
 
 export function AccommodationsModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const [done, setDone] = useState(false);
   return (
-    <ModalShell onClose={onClose} label="Request accommodations">
+    <ModalShell
+      onClose={onClose}
+      label={t("marketing:accessibility.accomModal.ariaLabel")}
+    >
       {done ? (
         <div className={styles.success}>
           <div className={styles.sucIcon}>
             <Check />
           </div>
           <h2>
-            Request <em>sent.</em>
+            <Translation
+              i18nKey="marketing:accessibility.accomModal.doneTitle"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            We'll confirm what we can arrange, usually within 48 hours. Thank
-            you for letting us know.
-          </p>
+          <p>{t("marketing:accessibility.accomModal.doneBody")}</p>
           <Button type="button" variant="ghost" onClick={onClose}>
-            Close
+            {t("marketing:accessibility.accomModal.closeCta")}
           </Button>
         </div>
       ) : (
         <>
-          <div className={styles.modalTitle}>Request accommodations</div>
+          <div className={styles.modalTitle}>
+            {t("marketing:accessibility.accomModal.title")}
+          </div>
           <p className={styles.modalSub}>
-            Tell us what you need for an upcoming QueerPulse event. We'll
-            confirm what we can arrange and be honest about what we can't.
+            {t("marketing:accessibility.accomModal.sub")}
           </p>
           <div className={styles.fields}>
             <div>
-              <label className={styles.fieldLabel}>Your name</label>
+              <label className={styles.fieldLabel}>
+                {t("marketing:accessibility.accomModal.nameLabel")}
+              </label>
               <input
                 className={styles.input}
                 type="text"
-                placeholder="First name or nickname"
+                placeholder={t(
+                  "marketing:accessibility.accomModal.namePlaceholder",
+                )}
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>Event (if specific)</label>
+              <label className={styles.fieldLabel}>
+                {t("marketing:accessibility.accomModal.eventLabel")}
+              </label>
               <input
                 className={styles.input}
                 type="text"
-                placeholder="Event name or date, or 'all upcoming events'"
+                placeholder={t(
+                  "marketing:accessibility.accomModal.eventPlaceholder",
+                )}
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>What you need</label>
+              <label className={styles.fieldLabel}>
+                {t("marketing:accessibility.accomModal.needLabel")}
+              </label>
               <textarea
                 className={styles.textarea}
                 rows={4}
-                placeholder="Tell us what would make the event accessible for you. You don't need to justify it or share your diagnosis — just describe what you need."
+                placeholder={t(
+                  "marketing:accessibility.accomModal.needPlaceholder",
+                )}
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>How to reach you</label>
+              <label className={styles.fieldLabel}>
+                {t("marketing:accessibility.accomModal.contactLabel")}
+              </label>
               <input
                 className={styles.input}
                 type="text"
-                placeholder="Email or QueerPulse username"
+                placeholder={t(
+                  "marketing:accessibility.accomModal.contactPlaceholder",
+                )}
               />
             </div>
           </div>
@@ -203,10 +245,10 @@ export function AccommodationsModal({ onClose }: { onClose: () => void }) {
               variant="primary"
               onClick={() => setDone(true)}
             >
-              Send request
+              {t("marketing:accessibility.accomModal.submitCta")}
             </Button>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t("marketing:accessibility.accomModal.cancelCta")}
             </Button>
           </div>
         </>

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { type TabId } from "./audioPlayer.data";
+import { type TabId, CHAPTERS } from "./audioPlayer.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAudioPlayer } from "./useAudioPlayer";
 import { AudioPlayerMain } from "./AudioPlayerMain";
 import { ChaptersTab, NotesTab, TranscriptTab } from "./AudioPlayerTabs";
@@ -7,6 +8,7 @@ import { Footer } from "../../shared/components/layout";
 import styles from "./AudioPlayerPage.module.css";
 
 export function AudioPlayerPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<TabId>("notes");
   const player = useAudioPlayer();
 
@@ -24,7 +26,7 @@ export function AudioPlayerPage() {
                 .join(" ")}
               onClick={() => setTab("notes")}
             >
-              Show notes
+              {t("magazine:audio.tabs.showNotes")}
             </button>
             <button
               type="button"
@@ -33,7 +35,7 @@ export function AudioPlayerPage() {
                 .join(" ")}
               onClick={() => setTab("chapters")}
             >
-              Chapters · 6
+              {t("magazine:audio.tabs.chapters", { count: CHAPTERS.length })}
             </button>
             <button
               type="button"
@@ -42,7 +44,7 @@ export function AudioPlayerPage() {
                 .join(" ")}
               onClick={() => setTab("transcript")}
             >
-              Transcript
+              {t("magazine:audio.tabs.transcript")}
             </button>
           </div>
 

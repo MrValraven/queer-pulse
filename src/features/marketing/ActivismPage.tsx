@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
 import { ACTIVISM_NAV, CONVICTION_ITEMS } from "./activism.data";
 import {
@@ -15,6 +17,7 @@ import {
 import s from "./ActivismPage.module.css";
 
 export function ActivismPage() {
+  const { t } = useTranslation();
   const [active, setActive] = useState("start");
 
   useEffect(() => {
@@ -36,17 +39,18 @@ export function ActivismPage() {
   return (
     <PageShell>
       <PageHero
-        eyebrow="Activism & community action"
+        eyebrow={t("marketing:activism.hero.eyebrow")}
         title={
-          <>
-            Your activism <em>matters</em> — even when it doesn't feel like it.
-          </>
+          <Translation
+            i18nKey="marketing:activism.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Community action is not just for full-time activists. It's for the person who shows up, who uses their skills, who makes their neighbourhood a little better. This page is for you."
+        sub={t("marketing:activism.hero.sub")}
       >
         <div className={s.conviction}>
           {CONVICTION_ITEMS.map((c) => (
-            <div key={c.n} className={s.convItem}>
+            <div key={c.wordKey} className={s.convItem}>
               <div
                 className="n"
                 style={{
@@ -57,7 +61,7 @@ export function ActivismPage() {
                   marginBottom: 6,
                 }}
               >
-                {c.n}
+                {t(c.wordKey)}
               </div>
               <div
                 style={{
@@ -66,7 +70,7 @@ export function ActivismPage() {
                   lineHeight: 1.55,
                 }}
               >
-                {c.l}
+                {t(c.restKey)}
               </div>
             </div>
           ))}
@@ -76,7 +80,9 @@ export function ActivismPage() {
       <div className="wrap">
         <div className={s.layout}>
           <nav className={s.nav}>
-            <div className={s.navLabel}>On this page</div>
+            <div className={s.navLabel}>
+              {t("marketing:activism.nav.onThisPage")}
+            </div>
             {ACTIVISM_NAV.map((item) => (
               <a
                 key={item.id}
@@ -85,7 +91,7 @@ export function ActivismPage() {
                   .filter(Boolean)
                   .join(" ")}
               >
-                {item.label}
+                {t(item.labelKey)}
               </a>
             ))}
           </nav>
@@ -110,14 +116,15 @@ export function ActivismPage() {
 
       <Outro
         title={
-          <>
-            Want to make something <em>happen?</em>
-          </>
+          <Translation
+            i18nKey="marketing:activism.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Post it on the board. Find collaborators in the network. Start small. Start now."
+        sub={t("marketing:activism.outro.sub")}
       >
         <Button size="lg" to={linkToPath("#board")}>
-          See the board
+          {t("marketing:activism.outro.seeBoardCta")}
         </Button>
       </Outro>
     </PageShell>

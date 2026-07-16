@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiCheck, FiActivity, FiMessageCircle } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Community } from "../homepage/data/types";
 import { getLiving } from "./livingCommunities.data";
 import { photoOf } from "./communityPeople";
@@ -16,16 +17,17 @@ export function CommunityCard({
   joined: boolean;
   onJoin: (c: Community) => void;
 }) {
+  const { t } = useTranslation();
   const living = getLiving(community.slug);
   const tier =
     living?.accessTier ?? (community.privateBadge ? "private" : "public");
   const roster = living?.roster.slice(0, 4) ?? [];
   const joinLabel =
     tier === "public"
-      ? "Join"
+      ? t("communities:card.join.public")
       : tier === "invite"
-        ? "Join with invite"
-        : "Request";
+        ? t("communities:card.join.invite")
+        : t("communities:card.join.request");
 
   return (
     <Link to={`/community/${community.slug}`} className={styles.card}>
@@ -41,11 +43,16 @@ export function CommunityCard({
       {living && (
         <div className={styles.statsRow}>
           <span className={styles.stat}>
-            <FiActivity aria-hidden /> {living.stats.activeThisWeek} active this
-            week
+            <FiActivity aria-hidden />{" "}
+            {t("communities:card.stats.active", {
+              count: living.stats.activeThisWeek,
+            })}
           </span>
           <span className={styles.stat}>
-            <FiMessageCircle aria-hidden /> {living.stats.postsThisWeek} posts
+            <FiMessageCircle aria-hidden />{" "}
+            {t("communities:card.stats.posts", {
+              count: living.stats.postsThisWeek,
+            })}
           </span>
         </div>
       )}
@@ -72,10 +79,10 @@ export function CommunityCard({
 
         {joined ? (
           <span className={[styles.joinBtn, styles.joined].join(" ")}>
-            <FiCheck aria-hidden /> Joined
+            <FiCheck aria-hidden /> {t("communities:card.joined")}
           </span>
         ) : tier === "private" ? (
-          <span className={styles.joinBtn}>View</span>
+          <span className={styles.joinBtn}>{t("communities:card.view")}</span>
         ) : (
           <span
             className={styles.joinBtn}

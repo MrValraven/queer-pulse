@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateChangemakerNomination } from "./api/useCreateChangemakerNomination";
 import styles from "./ChangemakersPage.module.css";
 
@@ -13,6 +15,7 @@ import styles from "./ChangemakersPage.module.css";
  */
 export function NominateChangemakerSection() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [nominee, setNominee] = useState("");
   const nominationMutation = useCreateChangemakerNomination();
 
@@ -20,15 +23,16 @@ export function NominateChangemakerSection() {
     <section className={styles.nominate}>
       <div className="wrap">
         <Reveal as="div" className={styles.nomEye}>
-          Community nominations
+          {t("community:changemakers.nominate.eyebrow")}
         </Reveal>
         <Reveal as="h2" delay={60}>
-          Know someone who should <em>be here?</em>
+          <Translation
+            i18nKey="community:changemakers.nominate.heading"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" delay={120}>
-          We add change makers through community nominations. If you know
-          someone doing meaningful work for queer people in Lisbon, a name and a
-          sentence is enough to start.
+          {t("community:changemakers.nominate.lead")}
         </Reveal>
         <form
           className={styles.nomForm}
@@ -41,14 +45,16 @@ export function NominateChangemakerSection() {
               {
                 onSuccess: () => {
                   showToast(
-                    `Thank you — we'll look into ${nomineeName}.`,
+                    t("community:changemakers.nominate.successToast", {
+                      name: nomineeName,
+                    }),
                     "success",
                   );
                   setNominee("");
                 },
                 onError: () =>
                   showToast(
-                    "Couldn't send your nomination — please try again.",
+                    t("community:changemakers.nominate.errorToast"),
                     "error",
                   ),
               },
@@ -58,12 +64,14 @@ export function NominateChangemakerSection() {
           <input
             className={styles.nomInput}
             type="text"
-            placeholder="Their name…"
+            placeholder={t("community:changemakers.nominate.namePlaceholder")}
             value={nominee}
             onChange={(e) => setNominee(e.target.value)}
           />
           <Button type="submit" disabled={nominationMutation.isPending}>
-            {nominationMutation.isPending ? "Sending…" : "Nominate them"}
+            {nominationMutation.isPending
+              ? t("community:changemakers.nominate.submitPending")
+              : t("community:changemakers.nominate.submitCta")}
           </Button>
         </form>
       </div>

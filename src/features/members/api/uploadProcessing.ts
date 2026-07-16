@@ -1,4 +1,22 @@
+import type { TranslateOptions } from "../../../shared/i18n/types";
 import type { UploadContentType, UploadKind } from "./uploads.api";
+
+/**
+ * Thrown by the upload pipeline instead of a hardcoded English `Error` —
+ * carries a `members:` catalog key (+ interpolation values) so the UI can
+ * resolve it through `t()` rather than rendering source-code English
+ * straight into a `role="alert"`. Runs in both demo and live mode, so the
+ * message itself is chrome, not fetched content.
+ */
+export class ImageProcessingError extends Error {
+  constructor(
+    readonly i18nKey: string,
+    readonly values?: TranslateOptions,
+  ) {
+    super(i18nKey);
+    this.name = "ImageProcessingError";
+  }
+}
 
 /** Content types the backend accepts; anything else is rejected client-side. */
 export const ALLOWED = new Set<UploadContentType>([
@@ -51,15 +69,13 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
 /** Type + size guards. Throws a human-readable `Error` the UI shows in role="alert". */
 export function validateTypeAndSize(file: File, kind: UploadKind): void {
   if (!ALLOWED.has(file.type as UploadContentType)) {
-    throw new Error(
-      "That image type isn't supported. Use a JPEG, PNG, WebP or GIF.",
-    );
+    throw new ImageProcessingError("members:upload.error.unsupportedType");
   }
   const limit = UPLOAD_LIMITS[kind];
   if (file.size > limit.maxBytes) {
-    throw new Error(
-      `That image is too large — keep it under ${limit.maxLabel}.`,
-    );
+    throw new ImageProcessingError("members:upload.error.tooLarge", {
+      maxLabel: limit.maxLabel,
+    });
   }
 }
 
@@ -142,16 +158,17 @@ export async function processImage(
   try {
     decoded = await decode(file);
   } catch {
-    throw new Error("We couldn't read that image. Try a different file.");
+    throw new ImageProcessingError("members:upload.error.decodeFailed");
   }
   try {
     if (
       (limit.minWidth && decoded.width < limit.minWidth) ||
       (limit.minHeight && decoded.height < limit.minHeight)
     ) {
-      throw new Error(
-        `This image is too small — it needs to be at least ${limit.minWidth} × ${limit.minHeight}px.`,
-      );
+      throw new ImageProcessingError("members:upload.error.tooSmall", {
+        minWidth: limit.minWidth,
+        minHeight: limit.minHeight,
+      });
     }
     return await stripMetadata(file, decoded);
   } finally {

@@ -1,7 +1,16 @@
+/**
+ * Mock job listings. Per the i18n scope rule, everything a poster authors —
+ * `title`, `desc`, `org`, `tags`, `salary`, and the whole `detail` body — stays
+ * in English: in live mode it arrives from `GET /jobs` as the employer's own
+ * words. Only the chrome around it (filters, "Apply by", badge labels) is
+ * translated, and dates are held as real `Date`s so `useFormat()` can render
+ * them per locale instead of baking "30 Jun" into the data.
+ */
 export interface JobDetail {
   /** Display category for breadcrumb + sidebar (e.g. "Design"). */
   category: string;
-  posted: string;
+  /** When the listing went up; `null` renders as "Posted recently". */
+  posted: Date | null;
   about: string[];
   dayToDay: string[];
   lookingFor: string[];
@@ -23,7 +32,8 @@ export interface Job {
   type: string;
   location: string;
   salary: string;
-  deadline: string;
+  /** Applications close on this date; `null` = an open-ended listing. */
+  deadline: Date | null;
   desc: string;
   tags: string[];
   detail: JobDetail;
@@ -43,12 +53,12 @@ export const JOBS: Job[] = [
     type: "Full-time",
     location: "Príncipe Real · In-person",
     salary: "€1,200–1,500/mo",
-    deadline: "30 Jun",
+    deadline: new Date(2026, 5, 30),
     desc: "Inês is building out her studio. Looking for a junior designer who cares about type, editorial systems, and making beautiful things. Training provided.",
     tags: ["Graphic design", "Type", "Branding"],
     detail: {
       category: "Design",
-      posted: "Posted 1 June 2026",
+      posted: new Date(2026, 5, 1),
       about: [
         "Inês Mateus is building out Atelier Pulso, her design studio in Príncipe Real. She's looking for a junior graphic designer who cares deeply about type, publication design, and the craft of making things beautiful. You'll be working closely with Inês from day one — this is a small studio, not a junior-on-production setup.",
         "The studio is queer-run and works deliberately slowly. Clients are mostly independent: small publishers, community organisations, independent galleries, and the occasional mid-size company that has earned the studio's trust. The work is varied, the standards are high, and you'll be trusted with real creative responsibility earlier than you might expect.",
@@ -93,12 +103,12 @@ export const JOBS: Job[] = [
     type: "Full-time",
     location: "Intendente · In-person",
     salary: "€1,100–1,300/mo",
-    deadline: "15 Jul",
+    deadline: new Date(2026, 6, 15),
     desc: "Coordinate ILGA Portugal's community outreach programmes across Lisbon. Manage volunteers, build partnerships. Portuguese required.",
     tags: ["Community", "Outreach", "Advocacy"],
     detail: {
       category: "Community",
-      posted: "Posted 4 June 2026",
+      posted: new Date(2026, 5, 4),
       about: [
         "ILGA Portugal is looking for a Community Outreach Coordinator to run our programmes across Lisbon — from neighbourhood drop-ins to partnerships with schools, clinics, and local associations. This is a public-facing role for someone who is as comfortable in a community centre as in a coordination meeting.",
         "You would join a small, tightly-knit team that has been doing this work for decades. The role is grounded in trust: with volunteers, with the people who walk through our door, and with the partner organisations we hold accountable.",
@@ -140,12 +150,12 @@ export const JOBS: Job[] = [
     type: "Full-time · Hybrid",
     location: "Marvila · Hybrid",
     salary: "€2,800–3,800/mo",
-    deadline: "Open",
+    deadline: null,
     desc: "Growing Lisbon fintech with a strong LGBTQ+ ERG and a genuine commitment to inclusion. Looking for a mid-level backend engineer.",
     tags: ["Backend", "Rust", "Go", "Fintech"],
     detail: {
       category: "Tech",
-      posted: "Posted 28 May 2026",
+      posted: new Date(2026, 4, 28),
       about: [
         "A growing Lisbon fintech is hiring a mid-level backend engineer to work on the core of its payments platform. The stack is Rust and Go, the team is small and senior, and the problems are the genuinely hard kind: correctness, latency, and money that has to add up.",
         "This listing is on QueerPulse because the company has a real LGBTQ+ employee resource group, inclusive benefits, and a track record we have checked rather than taken on faith.",
@@ -187,12 +197,12 @@ export const JOBS: Job[] = [
     type: "Part-time",
     location: "Lisbon · Flexible",
     salary: "€700/mo",
-    deadline: "20 Jun",
+    deadline: new Date(2026, 5, 20),
     desc: "Help coordinate Rainbow Arts Collective exhibitions, events, and residencies. 20 hours per week.",
     tags: ["Arts admin", "Programming", "Events"],
     detail: {
       category: "Arts & Culture",
-      posted: "Posted 30 May 2026",
+      posted: new Date(2026, 4, 30),
       about: [
         "Rainbow Arts Collective is looking for a part-time Programme Coordinator to keep our exhibitions, events, and residencies running smoothly. Twenty hours a week, flexibly arranged, with a couple of fixed days around install and opening nights.",
         "This is an organising role for someone who loves art but is energised by logistics — the spreadsheets, the artist emails, the install schedule — as much as the work on the walls.",
@@ -234,12 +244,12 @@ export const JOBS: Job[] = [
     type: "Part-time",
     location: "Lisbon · In-person",
     salary: "€900/mo",
-    deadline: "Open",
+    deadline: null,
     desc: "Facilitate peer support groups for LGBTQ+ people in Lisbon. Lived experience matters more than formal qualifications.",
     tags: ["Mental health", "Peer support", "Facilitation"],
     detail: {
       category: "Care",
-      posted: "Posted 2 June 2026",
+      posted: new Date(2026, 5, 2),
       about: [
         "Opus Diversus runs peer support groups for LGBTQ+ people across Lisbon, and we are looking for a part-time facilitator to hold a regular weekly group and a few one-off sessions. This is care work, and we treat it as such — with supervision, boundaries, and support for you.",
         "We hire for lived experience and the ability to hold a room, not for a clinical CV. Training is provided, and you will never run a group alone before you are ready.",
@@ -281,12 +291,12 @@ export const JOBS: Job[] = [
     type: "Part-time",
     location: "Anjos · In-person",
     salary: "€800/mo",
-    deadline: "15 Jul",
+    deadline: new Date(2026, 6, 15),
     desc: "Opening September 2026. We're looking for someone who loves queer literature and wants to help build something new in Anjos.",
     tags: ["Bookshop", "Retail", "Community"],
     detail: {
       category: "Food & Retail",
-      posted: "Posted 5 June 2026",
+      posted: new Date(2026, 5, 5),
       about: [
         "Livraria Devagar is a new queer bookshop opening in Anjos in September 2026, and we want a part-time bookseller to help us open the doors and shape what the shop becomes. You would be one of the first people in the room, which means real say in the sections, the events, and the feel of the place.",
         "This is retail, so there are tills and shelves and slow afternoons — but it is also community work, and the right person will love both halves equally.",
@@ -317,14 +327,15 @@ export const JOBS: Job[] = [
   },
 ];
 
+/** i18n Pattern A — chrome filter chips, resolved via t() by JobsPage. */
 export const JOB_FILTERS = [
-  { value: "all", label: "All roles" },
-  { value: "design", label: "Design" },
-  { value: "tech", label: "Tech" },
-  { value: "arts", label: "Arts & Culture" },
-  { value: "care", label: "Care" },
-  { value: "food", label: "Food" },
-  { value: "community", label: "Community" },
+  { value: "all", labelKey: "economy:jobs.filter.all" },
+  { value: "design", labelKey: "economy:jobs.filter.design" },
+  { value: "tech", labelKey: "economy:jobs.filter.tech" },
+  { value: "arts", labelKey: "economy:jobs.filter.arts" },
+  { value: "care", labelKey: "economy:jobs.filter.care" },
+  { value: "food", labelKey: "economy:jobs.filter.food" },
+  { value: "community", labelKey: "economy:jobs.filter.community" },
 ];
 
 export const EMPLOYERS = [

@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./AgeAttestation.module.css";
 
 interface AgeAttestationProps {
@@ -24,6 +26,7 @@ export function AgeAttestation({
   onConfirmedChange,
   onUnder18,
 }: AgeAttestationProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.wrap}>
       <label className={styles.row} htmlFor={id}>
@@ -33,15 +36,18 @@ export function AgeAttestation({
           checked={confirmed}
           onChange={(e) => onConfirmedChange(e.target.checked)}
         />
-        <span className={styles.label}>I confirm I'm 18 or older.</span>
+        <span className={styles.label}>{t("auth:ageAttestation.confirmLabel")}</span>
       </label>
       <p className={styles.helper}>
-        QueerPulse is an adults-only community —{" "}
-        <Link to={`${routes.terms}#eligibility`}>here's why</Link>. No ID
-        needed; we trust you.{" "}
-        <button type="button" className={styles.under18} onClick={onUnder18}>
-          Not 18 yet?
-        </button>
+        <Translation
+          i18nKey="auth:ageAttestation.helper"
+          components={{
+            eligibility: <Link to={`${routes.terms}#eligibility`} />,
+            under18: (
+              <button type="button" className={styles.under18} onClick={onUnder18} />
+            ),
+          }}
+        />
       </p>
     </div>
   );

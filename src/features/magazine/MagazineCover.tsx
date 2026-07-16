@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberName } from "../members/data/members";
 import { routes } from "../../app/routeMap";
 import { AuthorLink } from "./AuthorLink";
@@ -9,6 +10,8 @@ const COVER_IMG =
   "https://images.unsplash.com/photo-1601399470081-29ab3942fd8b?q=80&w=1600&auto=format&fit=crop";
 
 export function MagazineCover() {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.coverRebalanced}>
       <div className={styles.csImage}>
@@ -18,24 +21,29 @@ export function MagazineCover() {
           height="100%"
           radius={0}
           src={COVER_IMG}
-          alt="Cover portrait"
-          placeholder="Cover portrait — full bleed, dramatic lighting"
+          alt={t("magazine:cover.coverAlt")}
+          placeholder={t("magazine:cover.coverPlaceholder")}
           style={{ position: "absolute", inset: 0 }}
         />
-        <div className={styles.csImageLabel}>Cover · June 2026</div>
+        <div className={styles.csImageLabel}>
+          {t("magazine:cover.coverImageLabel")}
+        </div>
       </div>
       <div className={styles.csText}>
         <div className={styles.csTextInner}>
-          <div className={styles.csKicker}>Cover story · Feature</div>
+          <div className={styles.csKicker}>{t("magazine:cover.kicker")}</div>
+          {/* Content: this is the cover story's own headline — kept in
+              English, it arrives from the API in live mode. */}
           <h1 className={styles.csTitle}>
             The city changed.
             <br />
             <em>Did we?</em>
           </h1>
           <div className={styles.csByline}>
-            By <AuthorLink name={memberName("sofia")} /> · Photography by{" "}
-            {memberName("andre")}
+            By <AuthorLink name={memberName("sofia")} /> ·{" "}
+            {t("magazine:cover.photographyBy")} {memberName("andre")}
           </div>
+          {/* Content: the cover story's own standfirst. */}
           <p className={styles.csExcerpt}>
             Lisbon's queer community has spent a decade finding itself. The rent
             has tripled. The bars have closed and reopened and closed again.
@@ -45,7 +53,7 @@ export function MagazineCover() {
             className={styles.csRead}
             to={`${routes.article}?id=city-changed`}
           >
-            Read the full feature <span>→</span>
+            {t("magazine:cover.readFullFeatureCta")} <span>→</span>
           </Link>
         </div>
       </div>

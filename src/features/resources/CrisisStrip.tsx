@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { FiAlertCircle, FiPhone } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CRISIS_LINES } from "./crisisStrip.data";
 import styles from "./crisisStrip.module.css";
@@ -11,8 +13,13 @@ import styles from "./crisisStrip.module.css";
  * copy-paste friendly. Reusable within the resources feature.
  */
 export function CrisisStrip() {
+  const { t } = useTranslation();
+
   return (
-    <section className={styles.section} aria-label="Crisis and emergency help">
+    <section
+      className={styles.section}
+      aria-label={t("resources:crisis.ariaLabel")}
+    >
       <div className="wrap">
         <div className={styles.panel}>
           <div className={styles.head}>
@@ -21,34 +28,38 @@ export function CrisisStrip() {
             </span>
             <div>
               <h2 className={styles.title}>
-                In crisis <em>right now?</em>
+                <Translation
+                  i18nKey="resources:crisis.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
               <p className={styles.sub}>
-                If you are in immediate danger, call <strong>112</strong>. These
-                lines are free and confidential — tap to call, or copy the
-                number.
+                <Translation
+                  i18nKey="resources:crisis.body"
+                  components={{ strong: <strong /> }}
+                />
               </p>
             </div>
           </div>
 
           <ul className={styles.lines}>
             {CRISIS_LINES.map((line) => (
-              <li key={line.name} className={styles.line}>
-                <div className={styles.lineName}>{line.name}</div>
+              <li key={line.tel} className={styles.line}>
+                <div className={styles.lineName}>{t(line.nameKey)}</div>
                 <a className={styles.num} href={`tel:${line.tel}`}>
                   <FiPhone aria-hidden /> {line.display}
                 </a>
-                <div className={styles.hours}>{line.hours}</div>
+                <div className={styles.hours}>{t(line.hoursKey)}</div>
               </li>
             ))}
           </ul>
 
           <div className={styles.actions}>
             <Button variant="ghost-dark" to={routes.emergency}>
-              QueerPulse emergency support
+              {t("resources:crisis.emergencyCta")}
             </Button>
             <Link className={styles.jump} to="#crisis">
-              All crisis resources ↓
+              {t("resources:crisis.jumpCta")}
             </Link>
           </div>
         </div>

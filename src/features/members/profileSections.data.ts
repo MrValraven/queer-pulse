@@ -1,15 +1,18 @@
 import type { IconType } from "react-icons";
 import { FiBook, FiMusic, FiPlay, FiStar } from "react-icons/fi";
 
-export const SHAPING_META: Record<string, { label: string; icon: IconType }> = {
-  film: { label: "A film", icon: FiPlay },
-  book: { label: "A book or text", icon: FiBook },
-  song: { label: "A song or album", icon: FiMusic },
-  moment: { label: "A moment", icon: FiStar },
+/** Icon + catalog key for each "What shaped me" slot. Resolve `labelKey` with
+ *  `t()` — the label text itself is platform chrome, not a fetched value. */
+export const SHAPING_META: Record<string, { labelKey: string; icon: IconType }> = {
+  film: { labelKey: "members:shaping.film", icon: FiPlay },
+  book: { labelKey: "members:shaping.book", icon: FiBook },
+  song: { labelKey: "members:shaping.song", icon: FiMusic },
+  moment: { labelKey: "members:shaping.moment", icon: FiStar },
 };
 
-export const VISIBILITY_LABEL = {
-  open: "Open to connect",
-  network: "Network only",
-  private: "Private",
+/** Catalog key per visibility state, shown as the hero's Eyebrow badge. */
+export const VISIBILITY_LABEL_KEY = {
+  open: "members:visibility.open",
+  network: "members:visibility.network",
+  private: "members:visibility.private",
 } as const;

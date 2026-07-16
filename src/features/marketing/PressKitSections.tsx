@@ -1,21 +1,28 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  BOILER,
+  buildBoiler,
+  buildDownloads,
+  buildFacts,
+  buildImages,
+  buildLogos,
+  buildSwatches,
+  buildTeam,
   COVERAGE,
-  DOWNLOADS,
-  FACTS,
-  IMAGES,
-  LOGOS,
-  SWATCHES,
-  TEAM,
 } from "./pressKit.data";
 import { PressKitDownloadModal } from "./PressKitDownloadModal";
 import { assetFor, logoSvg, type PressAsset } from "./pressKitAssets.data";
 import logoStyles from "./MarketingModal.module.css";
 import styles from "./PressKitPage.module.css";
 
+const FACTS_AS_OF = new Date(2026, 4, 14);
+
 export function BoilerplateSection() {
+  const { t } = useTranslation();
+  const boiler = useMemo(() => buildBoiler(t), [t]);
   const [copied, setCopied] = useState<string | null>(null);
   const copy = (id: string, text: string) => {
     if (navigator.clipboard) navigator.clipboard.writeText(text);
@@ -26,15 +33,20 @@ export function BoilerplateSection() {
     <section className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          Boilerplate · <em>cleared for reuse</em>
+          <Translation
+            i18nKey="marketing:pressKit.boiler.section.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>§01</span>
       </div>
       <p>
-        Three lengths, all approved for direct quotation without further
-        sign-off. Click <b>copy</b> to put a clean version on your clipboard.
+        <Translation
+          i18nKey="marketing:pressKit.boiler.section.lead"
+          components={{ b: <b /> }}
+        />
       </p>
-      {BOILER.map((b) => (
+      {boiler.map((b) => (
         <div className={styles.boiler} key={b.id}>
           <div className={styles.boilerH}>
             {b.label}
@@ -47,7 +59,9 @@ export function BoilerplateSection() {
               .join(" ")}
             onClick={() => copy(b.id, b.text)}
           >
-            {copied === b.id ? "Copied" : "Copy"}
+            {copied === b.id
+              ? t("marketing:pressKit.boiler.copiedCta")
+              : t("marketing:pressKit.boiler.copyCta")}
           </button>
           <div className={styles.boilerText}>{b.text}</div>
         </div>
@@ -64,6 +78,8 @@ const LOGO_VARIANTS: ("light" | "plum" | "coral")[] = [
 const LOGO_NAMES = ["primary-light", "inverse-plum", "coral-solidarity"];
 
 export function MarkSection() {
+  const { t } = useTranslation();
+  const logos = useMemo(() => buildLogos(), []);
   const [open, setOpen] = useState<number | null>(null);
   const variant = open !== null ? LOGO_VARIANTS[open] : "light";
   const asset: PressAsset = {
@@ -75,17 +91,16 @@ export function MarkSection() {
     <section className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          The <em>mark</em> and how to use it
+          <Translation
+            i18nKey="marketing:pressKit.mark.section.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>§02</span>
       </div>
-      <p>
-        Three approved variations. The wordmark always carries the coral pulse
-        dot — except in the inverse "coral" variant, where the dot becomes plum.
-        Don't recolour the dot to anything else.
-      </p>
+      <p>{t("marketing:pressKit.mark.section.lead")}</p>
       <div className={styles.logoGrid}>
-        {LOGOS.map((l, i) => (
+        {logos.map((l, i) => (
           <div className={styles.logoCard} key={i}>
             <div className={`${styles.logoDisplay} ${styles[l.display]}`}>
               <span
@@ -111,7 +126,7 @@ export function MarkSection() {
                   }
                 }}
               >
-                SVG · PNG
+                {t("marketing:pressKit.mark.downloadLinkLabel")}
               </a>
             </div>
           </div>
@@ -119,18 +134,19 @@ export function MarkSection() {
       </div>
       {open !== null && (
         <PressKitDownloadModal
-          eyebrow="Brand mark · SVG"
+          eyebrow={t("marketing:pressKit.mark.modal.eyebrow")}
           title={
-            <>
-              The <em>mark</em>, ready to use.
-            </>
+            <Translation
+              i18nKey="marketing:pressKit.mark.modal.title"
+              components={{ em: <em /> }}
+            />
           }
           lead={
-            <>
-              Preview the {LOGO_VARIANTS[open]} variant below. Download
-              generates a real, clean <b>.svg</b> file — vector, recolour-safe,
-              with the pulse dot intact.
-            </>
+            <Translation
+              i18nKey="marketing:pressKit.mark.modal.lead"
+              components={{ b: <b /> }}
+              values={{ variant: LOGO_VARIANTS[open] ?? "light" }}
+            />
           }
           asset={asset}
           preview={
@@ -140,35 +156,37 @@ export function MarkSection() {
               <span dangerouslySetInnerHTML={{ __html: logoSvg(variant) }} />
             </div>
           }
-          buttonLabel="Download · SVG"
+          buttonLabel={t("marketing:pressKit.mark.modal.buttonLabel")}
           onClose={() => setOpen(null)}
         />
       )}
       <p style={{ fontSize: 14, color: "var(--ink-60)", marginTop: 18 }}>
-        <b>Spacing:</b> always leave one full <em>P</em>-height of clear space
-        around the mark. <b>Minimum size:</b> 88px wide on screen, 18 mm in
-        print. <b>Don't:</b> stretch, recolour, set on busy photos, or pair with
-        rainbow gradients we didn't make.
+        <Translation
+          i18nKey="marketing:pressKit.mark.usageNote"
+          components={{ b: <b />, em: <em /> }}
+        />
       </p>
     </section>
   );
 }
 
 export function ColourSection() {
+  const { t } = useTranslation();
+  const swatches = useMemo(() => buildSwatches(t), [t]);
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          Colour, <em>full system</em>
+          <Translation
+            i18nKey="marketing:pressKit.colour.section.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>§03</span>
       </div>
-      <p>
-        The whole brand runs on four hues. We do not introduce additional accent
-        colours — including campaign-specific ones.
-      </p>
+      <p>{t("marketing:pressKit.colour.section.lead")}</p>
       <div className={styles.swatchRow}>
-        {SWATCHES.map((s) => (
+        {swatches.map((s) => (
           <div className={styles.swatch} key={s.name}>
             <div
               className={styles.swatchChip}
@@ -188,21 +206,27 @@ export function ColourSection() {
 }
 
 export function PhotographySection() {
+  const { t } = useTranslation();
+  const images = useMemo(() => buildImages(t), [t]);
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          Cleared <em>photography</em>
+          <Translation
+            i18nKey="marketing:pressKit.photography.section.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>§04</span>
       </div>
       <p>
-        Six images, model-released and pre-cleared for editorial use. Credit:{" "}
-        <em>photographs by André Bento for QueerPulse</em>. Resolution: 3000 ×
-        2000 px JPG.
+        <Translation
+          i18nKey="marketing:pressKit.photography.section.lead"
+          components={{ em: <em /> }}
+        />
       </p>
       <div className={styles.imgGrid}>
-        {IMAGES.map((img, i) => (
+        {images.map((img, i) => (
           <div className={`${styles.imgCard} ${styles[img.tint]}`} key={i}>
             {img.label}
           </div>
@@ -213,36 +237,41 @@ export function PhotographySection() {
 }
 
 export function TeamSection() {
+  const { t } = useTranslation();
+  const team = useMemo(() => buildTeam(t), [t]);
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          Named <em>spokespeople</em>
+          <Translation
+            i18nKey="marketing:pressKit.team.section.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>§05</span>
       </div>
       <p>
-        Three founding members are available for press comment. Quote them on
-        their stated topics; don't paraphrase.{" "}
-        <em>Other members are not available without explicit consent</em> —
-        please don't approach members directly through the platform.
+        <Translation
+          i18nKey="marketing:pressKit.team.section.lead"
+          components={{ em: <em /> }}
+        />
       </p>
       <div className={styles.teamGrid}>
-        {TEAM.map((t) => (
-          <div className={styles.teamCard} key={t.email}>
+        {team.map((member) => (
+          <div className={styles.teamCard} key={member.email}>
             <div
-              className={[styles.ph, t.phCls && styles[t.phCls]]
+              className={[styles.ph, member.phCls && styles[member.phCls]]
                 .filter(Boolean)
                 .join(" ")}
             >
-              {t.ph}
+              {member.ph}
             </div>
-            <h4>{t.name}</h4>
-            <div className={styles.teamRole}>{t.role}</div>
-            <p>{t.desc}</p>
-            <div className={styles.teamLangs}>{t.langs}</div>
+            <h4>{member.name}</h4>
+            <div className={styles.teamRole}>{member.role}</div>
+            <p>{member.desc}</p>
+            <div className={styles.teamLangs}>{member.langs}</div>
             <div className={styles.teamContact}>
-              <a href={`mailto:${t.email}`}>{t.email}</a>
+              <a href={`mailto:${member.email}`}>{member.email}</a>
             </div>
           </div>
         ))}
@@ -252,20 +281,34 @@ export function TeamSection() {
 }
 
 export function FactsSection() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const facts = useMemo(() => buildFacts(t), [t]);
+  const asOf = fmt.date(FACTS_AS_OF, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          Quick <em>facts</em> · as of 14 May 2026
+          <Translation
+            i18nKey="marketing:pressKit.facts.section.title"
+            components={{ em: <em /> }}
+            values={{ date: asOf }}
+          />
         </h2>
         <span className={styles.secNum}>§06</span>
       </div>
       <p>
-        Sourced from the 2025 transparency report.{" "}
-        <em>Please link to the transparency page when citing.</em>
+        <Translation
+          i18nKey="marketing:pressKit.facts.section.lead"
+          components={{ em: <em /> }}
+        />
       </p>
       <div className={styles.factsGrid}>
-        {FACTS.map((f, i) => (
+        {facts.map((f, i) => (
           <div className={styles.fact} key={i}>
             <b>{f.b}</b>
             <span>{f.s}</span>
@@ -277,18 +320,24 @@ export function FactsSection() {
 }
 
 export function CoverageSection() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          Recent <em>coverage</em>
+          <Translation
+            i18nKey="marketing:pressKit.coverage.section.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>§07</span>
       </div>
       <p>
-        Selected English- and Portuguese-language pieces from 2024–2026.{" "}
-        <em>Hit-counts welcome but not necessary</em> — link to Press instead.
+        <Translation
+          i18nKey="marketing:pressKit.coverage.section.lead"
+          components={{ em: <em /> }}
+        />
       </p>
       <div className={styles.covList}>
         {COVERAGE.map((c, i) => (
@@ -299,7 +348,9 @@ export function CoverageSection() {
             onClick={(e) => {
               e.preventDefault();
               showToast(
-                `Opening coverage in ${c.source.split(" · ")[0]}…`,
+                t("marketing:pressKit.coverage.openingToast", {
+                  source: c.source.split(" · ")[0] ?? c.source,
+                }),
                 "info",
               );
             }}
@@ -321,23 +372,25 @@ export function CoverageSection() {
 }
 
 export function DownloadsSection() {
+  const { t } = useTranslation();
+  const downloads = useMemo(() => buildDownloads(t), [t]);
   const [open, setOpen] = useState<number | null>(null);
-  const d = open !== null ? DOWNLOADS[open] : null;
-  const asset = d ? assetFor(d.ic, d.title, d.desc) : null;
+  const d = open !== null ? downloads[open] : null;
+  const asset = d ? assetFor(t, d.ic, d.title, d.desc) : null;
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          <em>Downloads</em>
+          <Translation
+            i18nKey="marketing:pressKit.downloads.section.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>§08</span>
       </div>
-      <p>
-        Direct file links. The full kit is a 38 MB ZIP with everything below;
-        individual files are smaller.
-      </p>
+      <p>{t("marketing:pressKit.downloads.section.lead")}</p>
       <div className={styles.downloadRow}>
-        {DOWNLOADS.map((dl, i) => (
+        {downloads.map((dl, i) => (
           <button
             type="button"
             className={styles.dlCard}
@@ -361,17 +414,22 @@ export function DownloadsSection() {
       </div>
       {d && asset && (
         <PressKitDownloadModal
-          eyebrow={`Download · ${d.ic}`}
+          eyebrow={t("marketing:pressKit.downloads.modal.eyebrow", {
+            format: d.ic,
+          })}
           title={<>{d.title}.</>}
           lead={
-            <>
-              {d.desc}. Download now generates a real <b>{asset.filename}</b> in
-              your browser — a working stand-in for the production asset.
-            </>
+            <Translation
+              i18nKey="marketing:pressKit.downloads.modal.lead"
+              components={{ b: <b /> }}
+              values={{ desc: d.desc, filename: asset.filename }}
+            />
           }
           rows={[{ ic: d.ic, title: asset.filename, desc: d.desc }]}
           asset={asset}
-          buttonLabel={`Download · ${asset.filename.split(".").pop()?.toUpperCase()}`}
+          buttonLabel={t("marketing:pressKit.downloads.modal.buttonLabel", {
+            format: asset.filename.split(".").pop()?.toUpperCase() ?? "",
+          })}
           onClose={() => setOpen(null)}
         />
       )}

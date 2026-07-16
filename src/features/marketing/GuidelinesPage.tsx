@@ -1,199 +1,165 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useMemo } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
 import s from "./GuidelinesPage.module.css";
 
 interface Clause {
   num: string;
-  titlePre: string;
-  titleEm: string;
+  titlePreKey: string;
+  titleEmKey: string;
   body: ReactNode;
 }
 
-const CLAUSES: Clause[] = [
-  {
-    num: "01",
-    titlePre: "What this place ",
-    titleEm: "is",
-    body: (
-      <>
-        <p>
-          QueerPulse is a professional network for LGBTQ+ people in Lisbon. It
-          exists because we believe queer professionals deserve a space that
-          feels like theirs — not a corporate platform that tolerates us, not a
-          social app that algorithmically rewards performance.
-        </p>
-        <p>
-          The network is built on trust between people. Vouching is how that
-          trust works. If you're here, someone who knows you put their name to
-          that fact. That means something.
-        </p>
-      </>
-    ),
-  },
-  {
-    num: "02",
-    titlePre: "What we're here ",
-    titleEm: "to do",
-    body: (
-      <>
-        <p>
-          QueerPulse is for finding collaborators, getting mentoring,
-          discovering what's happening in the city, and meeting people you'd
-          actually want to know. It is not for:
-        </p>
-        <ul>
-          <li>Building a following or growing an audience</li>
-          <li>Pitching services to people who didn't ask</li>
-          <li>Scraping contacts for external use</li>
-          <li>Performing queerness as a brand identity</li>
-          <li>Treating other members as leads rather than people</li>
-        </ul>
-        <p>
-          If something you're doing would feel uncomfortable at a small dinner
-          among friends, it probably shouldn't happen here.
-        </p>
-      </>
-    ),
-  },
-  {
-    num: "03",
-    titlePre: "How we treat ",
-    titleEm: "each other",
-    body: (
-      <>
-        <p>
-          The basics: don't be cruel. Don't weaponise someone's identity or
-          visibility. Don't out people — inside or outside the network. Don't
-          use someone's private information to harm them.
-        </p>
-        <p>
-          Beyond the basics: try to be generous. Give people the benefit of the
-          doubt. When you disagree, say so directly and kindly rather than
-          complaining about them to others.
-        </p>
-        <p>
-          <b>On pronouns:</b> use the pronouns someone has shared. If you don't
-          know, ask or use neutral forms until you do. Mistakes happen and are
-          forgiven. Refusals are not.
-        </p>
-      </>
-    ),
-  },
-  {
-    num: "04",
-    titlePre: "On privacy and ",
-    titleEm: "visibility",
-    body: (
-      <>
-        <p>
-          What someone shares within QueerPulse stays within QueerPulse —
-          whether someone is a member, their visibility setting, what they've
-          posted on the board, and anything said in private messages.
-        </p>
-        <p>
-          Outing someone — to employers, family, the press, or anyone outside
-          the network — is a serious violation and will result in immediate
-          removal.
-        </p>
-      </>
-    ),
-  },
-  {
-    num: "05",
-    titlePre: "On the board and ",
-    titleEm: "gatherings",
-    body: (
-      <>
-        <p>
-          Asks and Offers should be genuine. Don't post things you're not
-          actually offering, or requests you're not actually making. The board
-          works because people trust it.
-        </p>
-        <p>
-          Gatherings run on the understanding that participants treat each
-          other's homes, studios, and spaces with care. If you RSVP, show up or
-          let the host know in advance.
-        </p>
-      </>
-    ),
-  },
-  {
-    num: "06",
-    titlePre: "On conflict and ",
-    titleEm: "disagreement",
-    body: (
-      <>
-        <p>
-          Conflict will happen. Our preference is for direct, private
-          conversation first. If that fails, or if the conflict involves a
-          potential safety issue, bring it to the team.
-        </p>
-        <p>
-          The team is not a court. We make judgment calls based on the full
-          picture as we understand it. We will be honest about what we don't
-          know.
-        </p>
-      </>
-    ),
-  },
-  {
-    num: "07",
-    titlePre: "The lines we ",
-    titleEm: "don't cross",
-    body: (
-      <>
-        <p>
-          Most of this document is about tone and intent. But there are things
-          that result in immediate removal, no discussion:
-        </p>
-        <div className={s.hardLines}>
-          <div className={s.hlHead}>Immediate removal</div>
+const REVISED_DATE = new Date(2026, 5, 1);
+
+/**
+ * i18n Pattern B. Every clause is platform-authored governance chrome (the
+ * Community Guidelines), so each paragraph/list item becomes a catalog key;
+ * bodies that carry inline `<b>` keep the tag placeholder in the catalog
+ * string via `<Translation>` rather than splitting the sentence.
+ */
+function buildClauses(t: TFunction): Clause[] {
+  return [
+    {
+      num: "01",
+      titlePreKey: "guidelines.clause01.titlePre",
+      titleEmKey: "guidelines.clause01.titleEm",
+      body: (
+        <>
+          <p>{t("marketing:guidelines.clause01.p1")}</p>
+          <p>{t("marketing:guidelines.clause01.p2")}</p>
+        </>
+      ),
+    },
+    {
+      num: "02",
+      titlePreKey: "guidelines.clause02.titlePre",
+      titleEmKey: "guidelines.clause02.titleEm",
+      body: (
+        <>
+          <p>{t("marketing:guidelines.clause02.p1")}</p>
           <ul>
-            <li>Outing a member outside the network</li>
-            <li>Sharing a member's private information without consent</li>
-            <li>Sexual harassment or unsolicited explicit contact</li>
-            <li>
-              Racism, transphobia, biphobia, or any targeted discrimination
-            </li>
-            <li>
-              Using the network to harm someone — financially, professionally,
-              or personally
-            </li>
-            <li>Impersonating another member</li>
+            <li>{t("marketing:guidelines.clause02.li1")}</li>
+            <li>{t("marketing:guidelines.clause02.li2")}</li>
+            <li>{t("marketing:guidelines.clause02.li3")}</li>
+            <li>{t("marketing:guidelines.clause02.li4")}</li>
+            <li>{t("marketing:guidelines.clause02.li5")}</li>
           </ul>
-        </div>
-      </>
-    ),
-  },
-];
+          <p>{t("marketing:guidelines.clause02.p2")}</p>
+        </>
+      ),
+    },
+    {
+      num: "03",
+      titlePreKey: "guidelines.clause03.titlePre",
+      titleEmKey: "guidelines.clause03.titleEm",
+      body: (
+        <>
+          <p>{t("marketing:guidelines.clause03.p1")}</p>
+          <p>{t("marketing:guidelines.clause03.p2")}</p>
+          <p>
+            <b>{t("marketing:guidelines.clause03.p3Lead")}</b>{" "}
+            {t("marketing:guidelines.clause03.p3Rest")}
+          </p>
+        </>
+      ),
+    },
+    {
+      num: "04",
+      titlePreKey: "guidelines.clause04.titlePre",
+      titleEmKey: "guidelines.clause04.titleEm",
+      body: (
+        <>
+          <p>{t("marketing:guidelines.clause04.p1")}</p>
+          <p>{t("marketing:guidelines.clause04.p2")}</p>
+        </>
+      ),
+    },
+    {
+      num: "05",
+      titlePreKey: "guidelines.clause05.titlePre",
+      titleEmKey: "guidelines.clause05.titleEm",
+      body: (
+        <>
+          <p>{t("marketing:guidelines.clause05.p1")}</p>
+          <p>{t("marketing:guidelines.clause05.p2")}</p>
+        </>
+      ),
+    },
+    {
+      num: "06",
+      titlePreKey: "guidelines.clause06.titlePre",
+      titleEmKey: "guidelines.clause06.titleEm",
+      body: (
+        <>
+          <p>{t("marketing:guidelines.clause06.p1")}</p>
+          <p>{t("marketing:guidelines.clause06.p2")}</p>
+        </>
+      ),
+    },
+    {
+      num: "07",
+      titlePreKey: "guidelines.clause07.titlePre",
+      titleEmKey: "guidelines.clause07.titleEm",
+      body: (
+        <>
+          <p>{t("marketing:guidelines.clause07.p1")}</p>
+          <div className={s.hardLines}>
+            <div className={s.hlHead}>
+              {t("marketing:guidelines.clause07.hardLinesHead")}
+            </div>
+            <ul>
+              <li>{t("marketing:guidelines.clause07.li1")}</li>
+              <li>{t("marketing:guidelines.clause07.li2")}</li>
+              <li>{t("marketing:guidelines.clause07.li3")}</li>
+              <li>{t("marketing:guidelines.clause07.li4")}</li>
+              <li>{t("marketing:guidelines.clause07.li5")}</li>
+              <li>{t("marketing:guidelines.clause07.li6")}</li>
+            </ul>
+          </div>
+        </>
+      ),
+    },
+  ];
+}
 
 export function GuidelinesPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const clauses = useMemo(() => buildClauses(t), [t]);
+  const revisedDate = fmt.date(REVISED_DATE, { month: "long", year: "numeric" });
+
   return (
     <PageShell>
       <PageHero
-        eyebrow="Community guidelines"
+        eyebrow={t("marketing:guidelines.hero.eyebrow")}
         title={
-          <>
-            The Code <em>of Care.</em>
-          </>
+          <Translation
+            i18nKey="marketing:guidelines.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="This is not a terms of service. It's how we want to treat each other — written plainly, without legal language, by the people who built this room."
+        sub={t("marketing:guidelines.hero.sub")}
       />
 
       <div className="wrap">
         <div className={s.content}>
           <div className={s.updated}>
-            <span className={s.uDot} /> Last revised June 2026 · Version 1.4
+            <span className={s.uDot} />{" "}
+            {t("marketing:guidelines.updatedMeta", { date: revisedDate })}
           </div>
-          {CLAUSES.map((c) => (
+          {clauses.map((c) => (
             <div key={c.num} className={s.clause}>
               <div className={s.clauseNum}>{c.num}</div>
               <div>
                 <h2>
-                  {c.titlePre}
-                  <em>{c.titleEm}</em>
+                  {t(`marketing:${c.titlePreKey}`)}
+                  <em>{t(`marketing:${c.titleEmKey}`)}</em>
                 </h2>
                 {c.body}
               </div>
@@ -209,18 +175,16 @@ export function GuidelinesPage() {
             </div>
             <div>
               <h2>
-                If something isn't <em>right</em>
+                {t("marketing:guidelines.final.titlePre")}
+                <em>{t("marketing:guidelines.final.titleEm")}</em>
               </h2>
               <p>
-                Tell us. We read every message sent to <b>safe@queerpulse.pt</b>{" "}
-                and respond within 24 hours. You will not be identified to the
-                person you're reporting unless you choose to be.
+                <Translation
+                  i18nKey="marketing:guidelines.final.p1"
+                  components={{ b: <b /> }}
+                />
               </p>
-              <p>
-                If you think this document is wrong about something, or missing
-                something, write to us. It's a living document — Version 1.4 is
-                not the final word.
-              </p>
+              <p>{t("marketing:guidelines.final.p2")}</p>
             </div>
           </div>
         </div>
@@ -228,14 +192,15 @@ export function GuidelinesPage() {
 
       <Outro
         title={
-          <>
-            A room worth being <em>in.</em>
-          </>
+          <Translation
+            i18nKey="marketing:guidelines.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="The code of care only works if everyone holds it. We're grateful you're here."
+        sub={t("marketing:guidelines.outro.sub")}
       >
         <Button size="lg" to={routes.homepage}>
-          Back to QueerPulse
+          {t("marketing:guidelines.outro.backCta")}
         </Button>
       </Outro>
     </PageShell>

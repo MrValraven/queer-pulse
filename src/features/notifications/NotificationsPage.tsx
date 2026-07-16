@@ -13,6 +13,9 @@ import { notificationTabs, type NotifType, type Notification } from "./data";
 import { MENTION_DAYS } from "./mentions.data";
 import styles from "./NotificationsPage.module.css";
 
+/** Opaque row id: a uuid in live mode, a number in the demo mock. */
+type NotificationId = Notification["id"];
+
 /** Unread @-mentions, from the same mock source the Mentions thread renders. */
 const unreadMentions = MENTION_DAYS.reduce(
   (total, group) => total + group.items.filter((m) => m.unread).length,
@@ -26,8 +29,8 @@ export function NotificationsPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [filter, setFilter] = useState<"all" | NotifType>("all");
-  const [readIds, setReadIds] = useState<Set<number>>(new Set());
-  const [resolvedIds, setResolvedIds] = useState<Set<number>>(new Set());
+  const [readIds, setReadIds] = useState<Set<NotificationId>>(new Set());
+  const [resolvedIds, setResolvedIds] = useState<Set<NotificationId>>(new Set());
 
   const visible = useMemo(
     () =>
@@ -44,7 +47,7 @@ export function NotificationsPage() {
   const recent = visible.slice(0, 7);
   const earlier = visible.slice(7);
 
-  function markRead(id: number) {
+  function markRead(id: NotificationId) {
     // Skip no-op clicks on rows that are already read (avoids a stray live POST).
     const item = notifications.find((n) => n.id === id);
     if (!item?.unread || readIds.has(id)) return;
@@ -55,7 +58,7 @@ export function NotificationsPage() {
     setReadIds(new Set(notifications.map((n) => n.id)));
     markAllReadMutation.mutate();
   }
-  function resolve(id: number, toast: string) {
+  function resolve(id: NotificationId, toast: string) {
     setResolvedIds((current) => new Set(current).add(id));
     showToast(toast, "success");
   }

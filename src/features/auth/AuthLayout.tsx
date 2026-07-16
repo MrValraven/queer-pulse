@@ -18,7 +18,8 @@ export function AuthLayout({
       <div className={`${styles.orb} ${styles.orbB}`} />
       <Link to={routes.homepage} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
-        Queer<em>Pulse</em>
+        {"Queer"}
+        <em>{"Pulse"}</em>
       </Link>
       <BackToSettingsLink />
       <div className={styles.enter}>

@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./InvitePage.module.css";
 
 interface InviteComposeFieldsProps {
@@ -20,15 +21,19 @@ export function InviteComposeFields({
   note,
   setNote,
 }: InviteComposeFieldsProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.card}>
       <div className={styles.field}>
         <label>
-          Why you’re inviting them <span style={optionalStyle}>(optional)</span>
+          {t("auth:invite.compose.vouch.label")}{" "}
+          <span style={optionalStyle}>
+            {t("auth:common.optionalSuffix")}
+          </span>
         </label>
         <textarea
           maxLength={280}
-          placeholder="A few words on why they belong here. They’ll read this as they join."
+          placeholder={t("auth:invite.compose.vouch.placeholder")}
           value={vouch}
           onChange={(e) => setVouch(e.target.value)}
         />
@@ -37,11 +42,14 @@ export function InviteComposeFields({
 
       <div className={styles.field}>
         <label>
-          Personal note <span style={optionalStyle}>(optional)</span>
+          {t("auth:invite.compose.note.label")}{" "}
+          <span style={optionalStyle}>
+            {t("auth:common.optionalSuffix")}
+          </span>
         </label>
         <textarea
           maxLength={200}
-          placeholder="A line they'll see in the link preview."
+          placeholder={t("auth:invite.compose.note.placeholder")}
           value={note}
           onChange={(e) => setNote(e.target.value)}
         />

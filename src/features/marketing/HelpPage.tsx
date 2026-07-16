@@ -1,262 +1,182 @@
-import { useState, type ReactNode } from "react";
+import { useState, type ReactElement } from "react";
 import { Link } from "react-router-dom";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, SubpageIndex } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import s from "./HelpPage.module.css";
 
 interface QA {
-  q: string;
-  a: ReactNode;
+  qKey: string;
+  aKey: string;
+  aComponents?: Record<string, ReactElement>;
 }
 interface Category {
   id: string;
-  label: string;
-  headPre: string;
-  headEm: string;
+  labelKey: string;
+  headKey: string;
   qa: QA[];
 }
 
 const CATEGORIES: Category[] = [
   {
     id: "getting-started",
-    label: "Getting started",
-    headPre: "Getting ",
-    headEm: "started",
+    labelKey: "marketing:help.category.gettingStarted.label",
+    headKey: "marketing:help.category.gettingStarted.head",
     qa: [
       {
-        q: "How do I get an invitation to QueerPulse?",
-        a: (
-          <>
-            QueerPulse is invite-only. You need to be invited by an existing
-            member, or apply to the waitlist via the homepage. A member may then
-            vouch for you — <strong>Level 3+ members</strong> can submit
-            vouches, reviewed by our moderation team before an invite is sent.
-          </>
-        ),
+        qKey: "marketing:help.qa.invite.q",
+        aKey: "marketing:help.qa.invite.a",
+        aComponents: { strong: <strong /> },
       },
       {
-        q: "What happens after I accept my invite?",
-        a: "You'll create your account, complete a short onboarding (around 5 minutes), and be introduced to a few members you might want to connect with. You'll set identity and interest preferences — these are private and shape what you see.",
+        qKey: "marketing:help.qa.afterAccept.q",
+        aKey: "marketing:help.qa.afterAccept.a",
       },
       {
-        q: "Is QueerPulse only for people in Lisbon?",
-        a: "No — members join from across Portugal and internationally. In-person gatherings are primarily Lisbon-based for now, but this will expand as the community grows in other cities.",
+        qKey: "marketing:help.qa.lisbonOnly.q",
+        aKey: "marketing:help.qa.lisbonOnly.a",
       },
       {
-        q: "Is QueerPulse free?",
-        a: (
-          <>
-            Yes — joining and using the platform is entirely free, and always
-            will be.{" "}
-            <Link to={routes.cinemaMembership}>Supporting members</Link>{" "}
-            contribute voluntarily (from €5/month), but this is never required
-            and doesn't affect your access.
-          </>
-        ),
+        qKey: "marketing:help.qa.free.q",
+        aKey: "marketing:help.qa.free.a",
+        aComponents: { link: <Link to={routes.cinemaMembership} /> },
       },
     ],
   },
   {
     id: "account",
-    label: "Your account",
-    headPre: "Your ",
-    headEm: "account",
+    labelKey: "marketing:help.category.account.label",
+    headKey: "marketing:help.category.account.head",
     qa: [
       {
-        q: "How do I change my display name or pronouns?",
-        a: (
-          <>
-            Go to your profile and click "Edit profile" (or the{" "}
-            <Link to={routes.settings}>Settings</Link> page). Your display name
-            can differ from your legal name. Pronoun changes take effect
-            immediately across the platform.
-          </>
-        ),
+        qKey: "marketing:help.qa.changeName.q",
+        aKey: "marketing:help.qa.changeName.a",
+        aComponents: { settingsLink: <Link to={routes.settings} /> },
       },
       {
-        q: "Can I make my profile private?",
-        a: (
-          <>
-            Yes. In <Link to={routes.settings}>Settings → Visibility</Link>, set
-            it to <strong>Open</strong>, <strong>Network only</strong>, or{" "}
-            <strong>Private</strong>. Private profiles are hidden from the
-            directory and search, but you can still browse and join gatherings.
-          </>
-        ),
+        qKey: "marketing:help.qa.privateProfile.q",
+        aKey: "marketing:help.qa.privateProfile.a",
+        aComponents: {
+          settingsLink: <Link to={routes.settings} />,
+          strong: <strong />,
+        },
       },
       {
-        q: "How do I delete my account?",
-        a: (
-          <>
-            Go to{" "}
-            <Link to={routes.settings}>Settings → Data &amp; privacy</Link> and
-            find "Delete account". We show what gets removed and offer gentler
-            alternatives (deactivating). If you still want to delete, your data
-            is removed within 30 days.
-          </>
-        ),
+        qKey: "marketing:help.qa.deleteAccount.q",
+        aKey: "marketing:help.qa.deleteAccount.a",
+        aComponents: { settingsLink: <Link to={routes.settings} /> },
       },
       {
-        q: "What does my level mean and how do I level up?",
-        a: "Your level reflects your participation — attending gatherings, making connections, contributing, and supporting the platform. Each level unlocks new perks.",
+        qKey: "marketing:help.qa.levels.q",
+        aKey: "marketing:help.qa.levels.a",
       },
     ],
   },
   {
     id: "gatherings",
-    label: "Gatherings",
-    headPre: "",
-    headEm: "Gatherings",
+    labelKey: "marketing:help.category.gatherings.label",
+    headKey: "marketing:help.category.gatherings.head",
     qa: [
       {
-        q: "How do I RSVP to a gathering?",
-        a: (
-          <>
-            Find a gathering in the <Link to={routes.calendar}>Gatherings</Link>{" "}
-            section and click RSVP. If open, you'll get a confirmation with a QR
-            code for the door. Level 4+ members get{" "}
-            <strong>48-hour early access</strong>.
-          </>
-        ),
+        qKey: "marketing:help.qa.rsvp.q",
+        aKey: "marketing:help.qa.rsvp.a",
+        aComponents: {
+          calendarLink: <Link to={routes.calendar} />,
+          strong: <strong />,
+        },
       },
       {
-        q: "Can I host a gathering?",
-        a: (
-          <>
-            Yes — members at Level 3+ can apply to{" "}
-            <Link to={routes.host}>host</Link>. Your idea is reviewed by the
-            team (usually within 3 days). Once approved, you get host tools —
-            attendee list, messaging, check-in.
-          </>
-        ),
+        qKey: "marketing:help.qa.hostGathering.q",
+        aKey: "marketing:help.qa.hostGathering.a",
+        aComponents: { hostLink: <Link to={routes.host} /> },
       },
       {
-        q: "What if I can't make it after RSVPing?",
-        a: "You can cancel your RSVP from the event page or ticket. Please do this early — it releases your spot to someone on the waitlist. Hosts are notified so they can manage capacity.",
+        qKey: "marketing:help.qa.cantMakeIt.q",
+        aKey: "marketing:help.qa.cantMakeIt.a",
       },
       {
-        q: "How does the waitlist work?",
-        a: "If a gathering is full, you can join the waitlist. You'll be notified as soon as a spot opens — usually because someone cancelled. Spots are released in order.",
+        qKey: "marketing:help.qa.waitlist.q",
+        aKey: "marketing:help.qa.waitlist.a",
       },
     ],
   },
   {
     id: "safety",
-    label: "Safety & moderation",
-    headPre: "Safety &amp; ",
-    headEm: "moderation",
+    labelKey: "marketing:help.category.safety.label",
+    headKey: "marketing:help.category.safety.head",
     qa: [
       {
-        q: "How do I report a member?",
-        a: 'Go to the member\'s profile and find "Report". Select a category and describe what happened. All reports go to our moderation queue and are reviewed by a human — not an algorithm.',
+        qKey: "marketing:help.qa.reportMember.q",
+        aKey: "marketing:help.qa.reportMember.a",
       },
       {
-        q: "What happens after I file a report?",
-        a: (
-          <>
-            A moderator reviews it — for high-severity reports, usually within
-            24 hours. You'll be notified of the outcome. The reported member is
-            never told who filed. You can also <strong>block or mute</strong>{" "}
-            someone privately.
-          </>
-        ),
+        qKey: "marketing:help.qa.afterReport.q",
+        aKey: "marketing:help.qa.afterReport.a",
+        aComponents: { strong: <strong /> },
       },
       {
-        q: "Can I appeal a moderation decision?",
-        a: (
-          <>
-            Yes. Appeals are reviewed by a different moderator than the one who
-            made the original decision, and ultimately by the{" "}
-            <Link to={routes.governance}>advisory council</Link>. We aim to
-            respond within 5 business days.
-          </>
-        ),
+        qKey: "marketing:help.qa.appeal.q",
+        aKey: "marketing:help.qa.appeal.a",
+        aComponents: { governanceLink: <Link to={routes.governance} /> },
       },
       {
-        q: "How do I block or mute someone?",
-        a: (
-          <>
-            <strong>Muting</strong> hides someone's activity from your feed —
-            they're never told. <strong>Blocking</strong> prevents them from
-            viewing your profile or messaging you. Both are private actions.
-          </>
-        ),
+        qKey: "marketing:help.qa.blockMute.q",
+        aKey: "marketing:help.qa.blockMute.a",
+        aComponents: { strong: <strong /> },
       },
     ],
   },
   {
     id: "membership",
-    label: "Membership",
-    headPre: "",
-    headEm: "Membership",
+    labelKey: "marketing:help.category.membership.label",
+    headKey: "marketing:help.category.membership.head",
     qa: [
       {
-        q: "How do I become a supporting member?",
-        a: (
-          <>
-            Visit the{" "}
-            <Link to={routes.cinemaMembership}>supporting membership page</Link>
-            . Tiers start at €5/month, handled via Stripe. Your badge appears on
-            your profile immediately.
-          </>
-        ),
+        qKey: "marketing:help.qa.becomeSupporter.q",
+        aKey: "marketing:help.qa.becomeSupporter.a",
+        aComponents: { membershipLink: <Link to={routes.cinemaMembership} /> },
       },
       {
-        q: "How do invites work?",
-        a: "All members get 1 invite per month. Level 5+ members get 2. Invites expire after 7 days if not accepted. The quota resets on the 1st of each month.",
+        qKey: "marketing:help.qa.invitesWork.q",
+        aKey: "marketing:help.qa.invitesWork.a",
       },
       {
-        q: "What is vouching and how does it work?",
-        a: (
-          <>
-            Vouching is how members advocate for people on the waitlist. Level
-            3+ members can vouch once per month with a short statement, reviewed
-            by moderation before an invite is sent.
-          </>
-        ),
+        qKey: "marketing:help.qa.vouching.q",
+        aKey: "marketing:help.qa.vouching.a",
       },
       {
-        q: "What are perks and how do I redeem them?",
-        a: "Perks are benefits unlocked as you level up — early RSVP access, an increased invite quota, and more. Some activate automatically; others you claim on the Perks page.",
+        qKey: "marketing:help.qa.perks.q",
+        aKey: "marketing:help.qa.perks.a",
       },
     ],
   },
   {
     id: "technical",
-    label: "Technical",
-    headPre: "",
-    headEm: "Technical",
+    labelKey: "marketing:help.category.technical.label",
+    headKey: "marketing:help.category.technical.head",
     qa: [
       {
-        q: "How do I manage my email notifications?",
-        a: (
-          <>
-            Go to <Link to={routes.settings}>Settings → Notifications</Link>.
-            You can toggle each type individually and set how often we batch
-            them (immediately, daily, or weekly), plus quiet hours.
-          </>
-        ),
+        qKey: "marketing:help.qa.emailNotifications.q",
+        aKey: "marketing:help.qa.emailNotifications.a",
+        aComponents: { settingsLink: <Link to={routes.settings} /> },
       },
       {
-        q: "Which browsers and devices are supported?",
-        a: "QueerPulse works on any modern browser — Chrome, Firefox, Safari, Edge — on desktop and mobile. There is no app to install; the site is fully responsive.",
+        qKey: "marketing:help.qa.browserSupport.q",
+        aKey: "marketing:help.qa.browserSupport.a",
       },
       {
-        q: "Something looks broken. What do I do?",
-        a: (
-          <>
-            Try a hard refresh first. If it persists, write to us via{" "}
-            <Link to={routes.contact}>Contact</Link> with your browser and what
-            you were doing — crash reports help us fix things faster.
-          </>
-        ),
+        qKey: "marketing:help.qa.somethingBroken.q",
+        aKey: "marketing:help.qa.somethingBroken.a",
+        aComponents: { contactLink: <Link to={routes.contact} /> },
       },
     ],
   },
 ];
 
 export function HelpPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState(CATEGORIES[0]!.id);
   const [open, setOpen] = useState<string | null>(`${CATEGORIES[0]!.id}-0`);
   const category = CATEGORIES.find((c) => c.id === tab)!;
@@ -265,13 +185,14 @@ export function HelpPage() {
     <PageShell>
       <PageHero
         plum={false}
-        eyebrow="Help Centre"
+        eyebrow={t("marketing:help.hero.eyebrow")}
         title={
-          <>
-            How can we <em>help?</em>
-          </>
+          <Translation
+            i18nKey="marketing:help.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Answers to the questions members ask most. Can't find what you need? Write to us — a real person reads every message."
+        sub={t("marketing:help.hero.sub")}
       >
         <div className={s.tabs}>
           {CATEGORIES.map((c) => (
@@ -286,7 +207,7 @@ export function HelpPage() {
                 setOpen(`${c.id}-0`);
               }}
             >
-              {c.label}
+              {t(c.labelKey)}
             </button>
           ))}
         </div>
@@ -295,8 +216,10 @@ export function HelpPage() {
       <div className="wrap">
         <div className={s.body}>
           <h2 className={s.hsHead}>
-            {category.headPre.replace("&amp;", "&")}
-            <em>{category.headEm}</em>
+            <Translation
+              i18nKey={category.headKey}
+              components={{ em: <em /> }}
+            />
           </h2>
           <div className={s.accordion}>
             {category.qa.map((item, i) => {
@@ -309,7 +232,7 @@ export function HelpPage() {
                     className={s.accQ}
                     onClick={() => setOpen(isOpen ? null : key)}
                   >
-                    {item.q}
+                    {t(item.qKey)}
                     <span
                       className={[s.chevron, isOpen && s.chevronOpen]
                         .filter(Boolean)
@@ -318,7 +241,14 @@ export function HelpPage() {
                       ›
                     </span>
                   </button>
-                  {isOpen && <div className={s.accA}>{item.a}</div>}
+                  {isOpen && (
+                    <div className={s.accA}>
+                      <Translation
+                        i18nKey={item.aKey}
+                        components={item.aComponents}
+                      />
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -326,24 +256,23 @@ export function HelpPage() {
 
           <div className={s.helpContact}>
             <div>
-              <h3>Still stuck?</h3>
-              <p>
-                We answer every message ourselves, usually within a day or two.
-              </p>
+              <h3>{t("marketing:help.stillStuck.title")}</h3>
+              <p>{t("marketing:help.stillStuck.body")}</p>
             </div>
-            <Button to={routes.contact}>Contact us →</Button>
+            <Button to={routes.contact}>
+              {t("marketing:help.stillStuck.cta")}
+            </Button>
           </div>
         </div>
       </div>
 
       <SubpageIndex
-        title="More on using QueerPulse"
+        title={t("marketing:help.subpageIndex.title")}
         items={[
           {
-            label: "Accessibility",
+            label: t("marketing:help.subpageIndex.accessibility.label"),
             to: routes.accessibility,
-            blurb:
-              "How we build for access, and how to tell us where we fall short.",
+            blurb: t("marketing:help.subpageIndex.accessibility.blurb"),
           },
         ]}
       />

@@ -12,6 +12,10 @@ export const FALLBACK_INVITER = {
 
 export type Visibility = "open" | "network" | "private";
 
+// Self-identification shorthand the member picks for themselves — kept as the
+// widely-recognised English pronoun-set convention (he/him, she/her, they/them
+// …) rather than translated, the same way a member's own pronouns are never
+// translated on their profile.
 export const PRONOUNS = [
   "he/him",
   "she/her",
@@ -20,45 +24,21 @@ export const PRONOUNS = [
   "he/they",
 ];
 
-export const STRENGTH_LABELS = [
-  "At least 10 characters",
-  "Weak",
-  "Fair",
-  "Good",
-  "Strong",
-];
-export const STRENGTH_COLORS = [
-  "var(--ink-40)",
-  "var(--accent-ink)",
-  "var(--amber)",
-  "var(--jade)",
-  "var(--jade)",
-];
-export const PW_MIN = 10;
-
-export function passwordScore(value: string): number {
-  let score = 0;
-  if (value.length >= 10) score++;
-  if (value.length >= 14) score++;
-  if (/[0-9]/.test(value) || /[^a-zA-Z0-9]/.test(value)) score++;
-  if (value.length >= 18) score++;
-  return Math.min(score, 4);
-}
-
+/** i18n Pattern A — visibility radio options, keyed for the component to resolve via `t()`. */
 export const VIS_OPTS = [
   {
     value: "open",
-    label: "Visible to all members",
-    sub: "Your profile appears in the member directory",
+    labelKey: "auth:createAccount.visibility.open.label",
+    subKey: "auth:createAccount.visibility.open.sub",
   },
   {
     value: "network",
-    label: "Visible to connections only",
-    sub: "Only people you've connected with can see your full profile",
+    labelKey: "auth:createAccount.visibility.network.label",
+    subKey: "auth:createAccount.visibility.network.sub",
   },
   {
     value: "private",
-    label: "Private",
-    sub: "Your profile is hidden; you can still browse and join gatherings",
+    labelKey: "auth:createAccount.visibility.private.label",
+    subKey: "auth:createAccount.visibility.private.sub",
   },
 ] as const;

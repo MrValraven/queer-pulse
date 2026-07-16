@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ComingSoon, Toggle } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./SettingsPage.module.css";
 
 export function Pane({
@@ -172,6 +173,7 @@ export function DeleteAccountModal({
   onClose: () => void;
   onConfirm: () => void;
 }) {
+  const { t } = useTranslation();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -189,23 +191,20 @@ export function DeleteAccountModal({
         aria-labelledby="delete-account-modal-title"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 id="delete-account-modal-title">Delete your account?</h3>
-        <p>
-          Deleting permanently erases your profile, messages, community posts,
-          and all associated data within 30 days. It cannot be undone. We
-          recommend downloading your data first. Next, you'll confirm your
-          password and we'll email you to finish the request.
-        </p>
+        <h3 id="delete-account-modal-title">
+          {t("settings:controls.deleteModal.title")}
+        </h3>
+        <p>{t("settings:controls.deleteModal.body")}</p>
         <div className={styles.modalBtns}>
           <button type="button" className={styles.dcBtn} onClick={onClose}>
-            Cancel
+            {t("settings:controls.deleteModal.cancel")}
           </button>
           <button
             type="button"
             className={`${styles.dcBtn} ${styles.danger}`}
             onClick={onConfirm}
           >
-            Continue to delete
+            {t("settings:controls.deleteModal.continue")}
           </button>
         </div>
       </div>

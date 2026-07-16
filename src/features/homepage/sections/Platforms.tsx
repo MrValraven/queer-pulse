@@ -1,24 +1,29 @@
 import { Link } from "react-router-dom";
 import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../../app/routeMap";
 import { platforms } from "../data/platforms";
 import styles from "./Platforms.module.css";
 
 export function Platforms() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.strip}>
       <div className="wrap">
         <Reveal>
           <SectionHead
             title={
-              <>
-                The wider <em>queer ecosystem</em>
-              </>
+              <Translation
+                i18nKey="homepage:platforms.title"
+                components={{ em: <em /> }}
+              />
             }
-            subtitle="Other LGBTQ+ platforms, media, and communities worth knowing about — beyond QueerPulse."
+            subtitle={t("homepage:platforms.subtitle")}
             action={
               <Button variant="ghost" to={routes.platforms}>
-                See all platforms →
+                {t("homepage:platforms.seeAllCta")}
               </Button>
             }
           />
@@ -52,9 +57,11 @@ export function Platforms() {
                 className={[styles.name, styles.nameMuted].join(" ")}
                 style={{ display: "block" }}
               >
-                24 more
+                {t("homepage:platforms.moreCount", { count: 24 })}
               </span>
-              <span className={styles.cat}>Browse all →</span>
+              <span className={styles.cat}>
+                {t("homepage:platforms.browseAllCta")}
+              </span>
             </span>
           </Link>
         </Reveal>

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type Badge, type PerkLadderRow } from "./badges.data";
 import { useRecognition } from "./api/useRecognition";
@@ -18,11 +20,13 @@ const rarityClass = {
 } as const;
 
 export function LevelCard() {
+  const { t } = useTranslation();
   const { level, levelLadder } = useRecognition();
   return (
     <div className={styles.levelCard}>
       <div className={styles.lcLevel}>
-        Level {level.level} · <em>{level.name}</em>
+        {t("members:profile.hero.levelLabel", { number: level.level })} ·{" "}
+        <em>{level.name}</em>
       </div>
       <div className={styles.xpBarWrap}>
         <div className={styles.xpBar}>
@@ -32,8 +36,12 @@ export function LevelCard() {
           />
         </div>
         <div className={styles.xpLabel}>
-          {level.xp} / {level.xpMax} XP to Level {level.level + 1} ·{" "}
-          {level.nextName}
+          {t("members:badges.xpToNextLevel", {
+            xp: level.xp,
+            xpMax: level.xpMax,
+            nextLevel: level.level + 1,
+            nextName: level.nextName,
+          })}
         </div>
       </div>
       <div className={styles.levelLadder}>
@@ -47,7 +55,7 @@ export function LevelCard() {
         ))}
       </div>
       <a href="#how-xp" className={styles.howLink}>
-        How to earn XP →
+        {t("members:badges.howToEarnXp")}
       </a>
     </div>
   );
@@ -68,16 +76,23 @@ function BadgeCard({ badge, locked }: { badge: Badge; locked?: boolean }) {
 }
 
 export function EarnedBadges() {
+  const { t } = useTranslation();
   const { badges } = useRecognition();
   return (
     <section className={styles.section}>
       <div className={styles.sectionRow}>
         <h2 className={styles.sectionHead}>
-          Your <em>badges</em>
+          <Translation
+            i18nKey="members:badges.earnedHeading"
+            components={{ em: <em /> }}
+          />
         </h2>
       </div>
       <div className={styles.sectionSub}>
-        {badges.earnedCount} earned · {badges.discoverCount} to discover
+        {t("members:profile.hero.badgesDesc", {
+          earned: badges.earnedCount,
+          discover: badges.discoverCount,
+        })}
       </div>
       <div className={styles.badgeGrid}>
         {badges.earned.map((badge, i) => (
@@ -91,25 +106,29 @@ export function EarnedBadges() {
 }
 
 export function LockedBadges() {
+  const { t } = useTranslation();
   const { badges } = useRecognition();
   const [open, setOpen] = useState(false);
   return (
     <section className={styles.section}>
       <div className={styles.sectionRow}>
         <h2 className={styles.sectionHead}>
-          <em>Locked</em> badges
+          <Translation
+            i18nKey="members:badges.lockedHeading"
+            components={{ em: <em /> }}
+          />
         </h2>
         <button
           type="button"
           className={styles.expandLink}
           onClick={() => setOpen((v) => !v)}
         >
-          {open ? "Hide ▴" : `Show ${badges.discoverCount} more ▾`}
+          {open
+            ? t("members:badges.hideMore")
+            : t("members:badges.showMore", { count: badges.discoverCount })}
         </button>
       </div>
-      <div className={styles.sectionSub}>
-        Earn XP and attend gatherings to unlock these.
-      </div>
+      <div className={styles.sectionSub}>{t("members:badges.lockedSub")}</div>
       {open && (
         <div className={styles.badgeGrid}>
           {badges.locked.map((badge, i) => (
@@ -207,14 +226,18 @@ function PerkRow({ row }: { row: PerkLadderRow }) {
 }
 
 export function PerksLadder() {
+  const { t } = useTranslation();
   const { perks } = useRecognition();
   return (
     <section className={styles.section} id="how-xp">
       <h2 className={styles.sectionHead} style={{ marginBottom: 6 }}>
-        What your level <em>unlocks</em>
+        <Translation
+          i18nKey="members:badges.perksUnlockHeading"
+          components={{ em: <em /> }}
+        />
       </h2>
       <div className={styles.sectionSub}>
-        Each level grants new access and member benefits.
+        {t("members:badges.perksUnlockSub")}
       </div>
       <div className={styles.perksLadder}>
         {perks.ladder.map((row) => (
@@ -222,7 +245,7 @@ export function PerksLadder() {
         ))}
       </div>
       <div className={styles.redeemWrap}>
-        <Button to={routes.perks}>Redeem your perks →</Button>
+        <Button to={routes.perks}>{t("members:profile.hero.perksArrow")}</Button>
       </div>
     </section>
   );

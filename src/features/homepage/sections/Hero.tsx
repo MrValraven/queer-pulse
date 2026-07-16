@@ -1,41 +1,46 @@
 import { Button, Eyebrow, Reveal } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { neighbourhoods } from "../data/gatherings";
 import styles from "./Hero.module.css";
 
 export function Hero() {
+  const { t } = useTranslation();
+
   return (
     <header className={styles.hero} id="top">
       <div className="wrap">
         <div className={styles.inner}>
           <Reveal>
             <Eyebrow live className={styles.eyebrow}>
-              A queer professional network · Lisbon
+              {t("homepage:hero.eyebrow")}
             </Eyebrow>
           </Reveal>
 
           <Reveal as="h1" className={styles.title} delay={60}>
-            Where Lisbon's queer talent <em>finds each other.</em>
+            <Translation
+              i18nKey="homepage:hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
 
           <Reveal as="p" className={styles.sub} delay={120}>
-            A quiet, vouched-for network for LGBTQ+ professionals in the city.
-            No follower counts, no hustle, no performing — just people worth
-            knowing, and a room that already feels like yours.
+            {t("homepage:hero.sub")}
           </Reveal>
 
           <Reveal className={styles.cta} delay={180}>
             <Button size="lg" to={routes.requestInvite}>
-              Request an invite
+              {t("homepage:hero.requestInviteCta")}
             </Button>
             <Button size="lg" variant="ghost" href="#discovery">
-              Explore members
+              {t("homepage:hero.exploreMembersCta")}
             </Button>
           </Reveal>
 
           <Reveal as="p" className={styles.note} delay={220}>
             <span className={styles.liveDot} aria-hidden />
-            Invite-only · every member is vouched for by another
+            {t("homepage:hero.note")}
           </Reveal>
 
           <Reveal className={styles.ticker} delay={260}>

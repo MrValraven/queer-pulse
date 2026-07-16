@@ -1,20 +1,23 @@
-/** "What happens next" reassurance shown on the request-invite confirmation. */
+/**
+ * "What happens next" reassurance shown on the request-invite confirmation.
+ * i18n Pattern A — chrome, keyed for the component to resolve via `t()`.
+ */
 export interface NextStep {
-  title: string;
-  body: string;
+  titleKey: string;
+  bodyKey: string;
 }
 
 export const WHAT_NEXT: NextStep[] = [
   {
-    title: "A real person reads it",
-    body: "No algorithm, no waitlist score — a member of the community looks at every request.",
+    titleKey: "auth:requestInvite.whatNext.readsIt.title",
+    bodyKey: "auth:requestInvite.whatNext.readsIt.body",
   },
   {
-    title: "We look for a connection",
-    body: "If someone already here can vouch for you, that’s the surest way in. Naming a mutual helps.",
+    titleKey: "auth:requestInvite.whatNext.connection.title",
+    bodyKey: "auth:requestInvite.whatNext.connection.body",
   },
   {
-    title: "You hear back either way",
-    body: "We’ll email you whatever we decide, usually within a couple of weeks. No chasing needed.",
+    titleKey: "auth:requestInvite.whatNext.hearBack.title",
+    bodyKey: "auth:requestInvite.whatNext.hearBack.body",
   },
 ];

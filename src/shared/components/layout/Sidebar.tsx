@@ -8,6 +8,8 @@ import { useIsLinkVisible } from "../../../app/authGate";
 import { useNavMode } from "../../../app/providers/navModeContext";
 import { useAuth } from "../../../app/providers/authContext";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
+import { useTranslation } from "../../i18n/useTranslation";
+import { Translation } from "../../i18n/Translation";
 import styles from "./Sidebar.module.css";
 
 /**
@@ -17,6 +19,7 @@ import styles from "./Sidebar.module.css";
  * drawer on mobile. Switch modes from the account menu ("Navigation").
  */
 export function Sidebar({ unreadCount }: { unreadCount?: number }) {
+  const { t } = useTranslation();
   const isVisible = useIsLinkVisible();
   const menus = filterMenus(NAV_MENUS, isVisible);
   const { railCollapsed, toggleRail } = useNavMode();
@@ -43,13 +46,16 @@ export function Sidebar({ unreadCount }: { unreadCount?: number }) {
       className={[styles.rail, railCollapsed && styles.railCollapsed]
         .filter(Boolean)
         .join(" ")}
-      aria-label="Primary"
+      aria-label={t("shared:sidebar.ariaPrimary")}
     >
       <Link to={loggedIn ? "/feed" : "/"} className={styles.brand}>
         <span className={styles.brandDot} aria-hidden />
         {!railCollapsed && (
           <span className={styles.brandName}>
-            Queer<em>Pulse</em>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em /> }}
+            />
           </span>
         )}
       </Link>
@@ -62,12 +68,12 @@ export function Sidebar({ unreadCount }: { unreadCount?: number }) {
             onClick={collapseAll}
           >
             <FiChevronsUp aria-hidden className={styles.collapseAllIcon} />
-            Collapse all
+            {t("shared:sidebar.collapseAll")}
           </button>
         </div>
       )}
 
-      <nav className={styles.groups} aria-label="Sections">
+      <nav className={styles.groups} aria-label={t("shared:sidebar.ariaSections")}>
         {menus.map((menu) => (
           <SidebarGroup
             key={menu.key}

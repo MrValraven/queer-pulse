@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { FiCheck, FiClock } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAllCommunities } from "./useAllCommunities";
@@ -20,6 +21,7 @@ import { CommunitySidebar } from "./CommunitySidebar";
 import styles from "./CommunityDetailPage.module.css";
 
 export function CommunityDetailPage() {
+  const { t } = useTranslation();
   const { slug } = useParams();
   const { demoMode } = useDemoMode();
   const { isMember, join, leave, hasRequested, requestToJoin, roleIn } =
@@ -75,10 +77,10 @@ export function CommunityDetailPage() {
     living?.accessTier ?? (community.privateBadge ? "private" : "public");
   const joinLabel =
     tier === "invite"
-      ? "Join with invite"
+      ? t("communities:detail.join.invite")
       : tier === "public"
-        ? "Join community"
-        : "Request to join";
+        ? t("communities:detail.join.public")
+        : t("communities:detail.join.request");
 
   const memberNum = parseInt(community.count, 10);
   const hasCount = !Number.isNaN(memberNum);
@@ -87,11 +89,11 @@ export function CommunityDetailPage() {
 
   const welcome: ThreadData = {
     votes: 38,
-    title: `Welcome, new members — introduce yourself`,
+    title: t("communities:detail.welcomeThread.title"),
     author: detail.organiser,
     time: "2 weeks ago",
     replyCount: 18,
-    post: `New to ${community.name}? Say hello here. Tell us your name, where you're from, and what brought you here. We read every one.`,
+    post: t("communities:detail.welcomeThread.post", { name: community.name }),
     replies: [
       {
         initials: members[6]!.initials,
@@ -126,7 +128,7 @@ export function CommunityDetailPage() {
       <div className={styles.hero}>
         <div className={`wrap ${styles.heroInner}`}>
           <Link to={routes.communities} className={styles.breadcrumb}>
-            ← Communities
+            {t("communities:detail.breadcrumb")}
           </Link>
           <div className={styles.typeBadge}>
             <span className={styles.dot} />
@@ -144,11 +146,11 @@ export function CommunityDetailPage() {
           <div className={styles.actRow}>
             {joined ? (
               <Button variant="jade" onClick={() => slug && leave(slug)}>
-                <FiCheck aria-hidden /> Joined
+                <FiCheck aria-hidden /> {t("communities:detail.joined")}
               </Button>
             ) : requested ? (
               <Button variant="ghost" disabled>
-                <FiClock aria-hidden /> Requested
+                <FiClock aria-hidden /> {t("communities:detail.requested")}
               </Button>
             ) : (
               <Button variant="primary" onClick={() => setJoining(true)}>

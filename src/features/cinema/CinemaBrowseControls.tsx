@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChipSelect } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   ACCESS_FILTERS,
-  FORMATS,
-  MADE_BY,
-  COUNTRIES,
-  ACCESSIBILITY,
-  MOODS,
+  FORMAT_OPTIONS,
+  MADE_BY_OPTIONS,
+  COUNTRY_OPTIONS,
+  ACCESSIBILITY_OPTIONS,
+  MOOD_OPTIONS,
   SORT_OPTIONS,
   type BrowseFilters,
   type SortKey,
@@ -47,12 +49,16 @@ export function CinemaBrowseSidebar({
   const formatSelected = filters.format
     ? new Set([filters.format])
     : new Set<string>();
+  const { t } = useTranslation();
 
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sfHead}>
         <h3>
-          Filter <em>&amp;</em> sort
+          <Translation
+            i18nKey="cinema:browse.filters.heading"
+            components={{ em: <em /> }}
+          />
         </h3>
         <span
           className={styles.clear}
@@ -66,66 +72,81 @@ export function CinemaBrowseSidebar({
             }
           }}
         >
-          Clear all
+          {t("cinema:browse.filters.clearAll")}
         </span>
       </div>
 
-      <FilterGroup label="Access">
+      <FilterGroup label={t("cinema:browse.filters.groupAccess")}>
         <ChipSelect
           tint="dark"
           tick={false}
           options={ACCESS_FILTERS.map((a) => ({
             value: a.value,
-            label: a.label,
+            label: t(a.labelKey),
           }))}
           selected={filters.access}
           onToggle={(v) => toggleSet("access", v)}
         />
       </FilterGroup>
 
-      <FilterGroup label="Format">
+      <FilterGroup label={t("cinema:browse.filters.groupFormat")}>
         <ChipSelect
           tint="dark"
           tick={false}
-          options={FORMATS}
+          options={FORMAT_OPTIONS.map((f) => ({
+            value: f.value,
+            label: t(f.labelKey),
+          }))}
           selected={formatSelected}
           onToggle={setFormat}
         />
       </FilterGroup>
 
-      <FilterGroup label="Made by">
+      <FilterGroup label={t("cinema:browse.filters.groupMadeBy")}>
         <ChipSelect
           tint="dark"
           tick={false}
-          options={MADE_BY}
+          options={MADE_BY_OPTIONS.map((m) => ({
+            value: m.value,
+            label: t(m.labelKey),
+          }))}
           selected={filters.madeBy}
           onToggle={(v) => toggleSet("madeBy", v)}
         />
       </FilterGroup>
-      <FilterGroup label="Country of origin">
+      <FilterGroup label={t("cinema:browse.filters.groupCountry")}>
         <ChipSelect
           tint="dark"
           tick={false}
-          options={COUNTRIES}
+          options={COUNTRY_OPTIONS.map((c) => ({
+            value: c.value,
+            label: t(c.labelKey),
+          }))}
           selected={filters.country}
           onToggle={(v) => toggleSet("country", v)}
         />
       </FilterGroup>
-      <FilterGroup label="Accessibility">
+      <FilterGroup label={t("cinema:browse.filters.groupAccessibility")}>
         <ChipSelect
           tint="dark"
           tone="jade"
           tick={false}
-          options={ACCESSIBILITY}
+          options={ACCESSIBILITY_OPTIONS.map((a) => ({
+            value: a.value,
+            label: t(a.labelKey),
+          }))}
           selected={filters.accessibility}
           onToggle={(v) => toggleSet("accessibility", v)}
         />
       </FilterGroup>
-      <FilterGroup label="Mood">
+      <FilterGroup label={t("cinema:browse.filters.groupMood")}>
         <ChipSelect
           tint="dark"
           tick={false}
-          options={MOODS}
+          options={MOOD_OPTIONS.map((m) => ({
+            value: m.value,
+            label: t(m.labelKey),
+          }))}
           selected={filters.mood}
           onToggle={(v) => toggleSet("mood", v)}
         />
@@ -144,6 +165,7 @@ export function SortDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
   const current =
     SORT_OPTIONS.find((o) => o.value === value) ?? SORT_OPTIONS[0]!;
 
@@ -166,7 +188,7 @@ export function SortDropdown({
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
-        {current.label}
+        {t(current.labelKey)}
         <svg
           width={12}
           height={12}
@@ -197,7 +219,7 @@ export function SortDropdown({
                   setOpen(false);
                 }}
               >
-                {o.label}
+                {t(o.labelKey)}
               </button>
             </li>
           ))}

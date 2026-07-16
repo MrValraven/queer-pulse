@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { Button } from "../../../shared/components/ui";
-import { DAYS, initials, PRICES, type ListingDraft } from "./listBusiness.data";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import {
+  catLabel,
+  DAYS,
+  goodForLabel,
+  initials,
+  langLabel,
+  PRICES,
+  type ListingDraft,
+} from "./listBusiness.data";
 import { ListBusinessFullPreview } from "./ListBusinessFullPreview";
 import styles from "./ListBusinessPage.module.css";
 
@@ -20,6 +29,7 @@ export function ListBusinessPreview({
   draft: ListingDraft;
   userName: string;
 }) {
+  const { t } = useTranslation();
   const [showFull, setShowFull] = useState(false);
   const hasCard = draft.name.trim().length > 0;
   const price = PRICES.find((p) => p.id === draft.price);
@@ -31,7 +41,7 @@ export function ListBusinessPreview({
     <aside className={styles.previewCol}>
       <div className={styles.pvHead}>
         <span className={styles.dot} />
-        Live preview · updates as you type
+        {t("marketing:listBusiness.preview.head")}
       </div>
 
       <div
@@ -52,15 +62,20 @@ export function ListBusinessPreview({
               {hasCard ? (
                 draft.name
               ) : (
-                <span className={styles.dirNamePh}>Your place</span>
+                <span className={styles.dirNamePh}>
+                  {t("marketing:listBusiness.preview.placeholderName")}
+                </span>
               )}
             </div>
             <div className={styles.dirMeta}>
               {draft.cats.length || draft.hood
-                ? [draft.cats.join(", "), draft.hood]
+                ? [
+                    draft.cats.map((c) => catLabel(t, c)).join(", "),
+                    draft.hood,
+                  ]
                     .filter(Boolean)
                     .join(" · ")
-                : "Category · neighbourhood"}
+                : t("marketing:listBusiness.preview.placeholderMeta")}
             </div>
           </div>
         </div>
@@ -69,12 +84,12 @@ export function ListBusinessPreview({
           <div className={styles.dirBadgeRow}>
             {draft.badge === "owned" && (
               <span className={`${styles.dirBadge} ${styles.dirBadgeJade}`}>
-                Queer-owned
+                {t("marketing:listBusiness.step1.owned.tag")}
               </span>
             )}
             {draft.badge === "friendly" && (
               <span className={`${styles.dirBadge} ${styles.dirBadgeCoral}`}>
-                LGBTQ+ friendly
+                {t("marketing:listBusiness.step1.friendly.tag")}
               </span>
             )}
             {price && (
@@ -91,13 +106,13 @@ export function ListBusinessPreview({
             .join(" ")}
         >
           {draft.blurb ||
-            "Your place will appear here as you fill in the form — exactly as it'll look in the directory grid."}
+            t("marketing:listBusiness.preview.placeholderBlurb")}
         </div>
 
         {draft.tags.length > 0 && (
           <div className={styles.dirTags}>
-            {draft.tags.map((t) => (
-              <span key={t}>{t}</span>
+            {draft.tags.map((tag) => (
+              <span key={tag}>{tag}</span>
             ))}
           </div>
         )}
@@ -110,12 +125,12 @@ export function ListBusinessPreview({
             .join(" ")}
         >
           {draft.tagline ||
-            "Your tagline becomes the pull-quote at the top of your page."}
+            t("marketing:listBusiness.preview.placeholderTagline")}
         </div>
 
         {wit.length > 0 && (
           <div className={styles.pdSec}>
-            <h5>What it is</h5>
+            <h5>{t("marketing:listBusiness.preview.whatItIs")}</h5>
             <ul className={styles.pdWit}>
               {wit.map((w) => (
                 <li key={w.id}>{w.text}</li>
@@ -126,10 +141,10 @@ export function ListBusinessPreview({
 
         {draft.goodFor.length > 0 && (
           <div className={styles.pdSec}>
-            <h5>Good for</h5>
+            <h5>{t("marketing:listBusiness.preview.goodFor")}</h5>
             <div className={styles.pdChips}>
               {draft.goodFor.map((g) => (
-                <span key={g}>{g}</span>
+                <span key={g}>{goodForLabel(t, g)}</span>
               ))}
             </div>
           </div>
@@ -137,10 +152,10 @@ export function ListBusinessPreview({
 
         {draft.langs.length > 0 && (
           <div className={styles.pdSec}>
-            <h5>Languages</h5>
+            <h5>{t("marketing:listBusiness.preview.languages")}</h5>
             <div className={styles.pdChips}>
               {draft.langs.map((l) => (
-                <span key={l}>{l}</span>
+                <span key={l}>{langLabel(t, l)}</span>
               ))}
             </div>
           </div>
@@ -148,7 +163,7 @@ export function ListBusinessPreview({
 
         {hrs && (
           <div className={styles.pdSec}>
-            <h5>Hours</h5>
+            <h5>{t("marketing:listBusiness.preview.hours")}</h5>
             <div className={styles.dirMeta}>{hrs}</div>
           </div>
         )}
@@ -166,8 +181,9 @@ export function ListBusinessPreview({
               </div>
               <div className={styles.pdOwnerRole}>
                 {draft.visibility === "role"
-                  ? "Role shown · name private"
-                  : draft.ownerRole || "Your role"}
+                  ? t("marketing:listBusiness.preview.roleShown")
+                  : draft.ownerRole ||
+                    t("marketing:listBusiness.preview.yourRole")}
                 {draft.linkToProfile ? ` · ${userName}` : ""}
               </div>
             </div>
@@ -181,16 +197,17 @@ export function ListBusinessPreview({
           onClick={() => setShowFull(true)}
           disabled={!hasCard}
           title={
-            !hasCard ? "Add a name first to preview the full page" : undefined
+            !hasCard
+              ? t("marketing:listBusiness.preview.fullDisabledTitle")
+              : undefined
           }
         >
-          Preview the full page →
+          {t("marketing:listBusiness.preview.fullCta")}
         </Button>
       </div>
 
       <div className={styles.pvFoot}>
-        This is a preview. Your listing goes live only after the community team
-        reviews it.
+        {t("marketing:listBusiness.preview.foot")}
       </div>
 
       {showFull && (

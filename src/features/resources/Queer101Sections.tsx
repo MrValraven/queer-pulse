@@ -1,48 +1,50 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, HubBackLink, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { FAQ, GLOSSARY, RESOURCES, TALK, type ResType } from "./queer101.data";
+import {
+  FAQ,
+  GLOSSARY,
+  RESOURCES,
+  RES_CLASS,
+  RES_TYPE_LABEL_KEY,
+  TALK,
+} from "./queer101.data";
 import { SuggestEditModal } from "./SuggestEditModal";
 import styles from "./Queer101Page.module.css";
 
-const RES_CLASS: Record<ResType, string> = {
-  Book: "typeBook",
-  Film: "typeFilm",
-  Podcast: "typePodcast",
-  Guide: "typeGuide",
-};
-
 export function Queer101Hero() {
+  const { t } = useTranslation();
   return (
     <div className={styles.hero}>
       <div className="wrap">
         <HubBackLink
           to={routes.resources}
-          label="Resource Library"
+          label={t("resources:queer101.hero.backLink")}
           tone="light"
         />
-        <div className={styles.label}>Queer 101</div>
+        <div className={styles.label}>{t("resources:queer101.hero.label")}</div>
         <h1>
-          Start here, wherever <em>here</em> is.
+          <Translation
+            i18nKey="resources:queer101.hero.title"
+            components={{ em: <em /> }}
+          />
         </h1>
-        <p className={styles.lead}>
-          For people newly exploring their identity — or just looking for
-          language that fits. You don't need to have anything figured out. This
-          is not a test.
-        </p>
+        <p className={styles.lead}>{t("resources:queer101.hero.lead")}</p>
         <div className={styles.reassure}>
           <div className={styles.reassureNote}>
             <span className={styles.dot} />
-            No account required to read any of this
+            {t("resources:queer101.hero.reassure.noAccount")}
           </div>
           <div className={styles.reassureNote}>
             <span className={styles.dot} />
-            Nothing you read here is shared with anyone
+            {t("resources:queer101.hero.reassure.private")}
           </div>
           <div className={styles.reassureNote}>
             <span className={styles.dot} />
-            You can leave and come back whenever you want
+            {t("resources:queer101.hero.reassure.leaveReturn")}
           </div>
         </div>
       </div>
@@ -51,21 +53,23 @@ export function Queer101Hero() {
 }
 
 export function Queer101Faq() {
+  const { t } = useTranslation();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
     <div className={styles.sec}>
       <div className="wrap">
         <h2 className={styles.h}>
-          Common <em>questions.</em>
+          <Translation
+            i18nKey="resources:queer101.faq.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p className={styles.sub}>
-          Honest answers, without assumptions about where you are right now.
-        </p>
+        <p className={styles.sub}>{t("resources:queer101.faq.sub")}</p>
         <div className={styles.faqList}>
           {FAQ.map((f, i) => (
             <div
-              key={f.q}
+              key={f.qKey}
               className={[styles.faqItem, openFaq === i && styles.faqItemOpen]
                 .filter(Boolean)
                 .join(" ")}
@@ -75,10 +79,10 @@ export function Queer101Faq() {
                 className={styles.faqQ}
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
               >
-                <span className={styles.faqQText}>{f.q}</span>
+                <span className={styles.faqQText}>{t(f.qKey)}</span>
                 <span className={styles.faqArrow}>+</span>
               </button>
-              {openFaq === i && <div className={styles.faqA}>{f.a}</div>}
+              {openFaq === i && <div className={styles.faqA}>{t(f.aKey)}</div>}
             </div>
           ))}
         </div>
@@ -88,6 +92,7 @@ export function Queer101Faq() {
 }
 
 export function Queer101Glossary() {
+  const { t } = useTranslation();
   const [editOpen, setEditOpen] = useState(false);
   const [query, setQuery] = useState("");
   const q = query.toLowerCase();
@@ -96,7 +101,7 @@ export function Queer101Glossary() {
     (g) =>
       !q ||
       g.keywords.includes(q) ||
-      `${g.term} ${g.def}`.toLowerCase().includes(q),
+      `${t(g.termKey)} ${t(g.defKey)}`.toLowerCase().includes(q),
   );
 
   return (
@@ -105,11 +110,13 @@ export function Queer101Glossary() {
         <div className={styles.glossHeadRow}>
           <div>
             <h2 className={styles.h}>
-              Language &amp; <em>terminology.</em>
+              <Translation
+                i18nKey="resources:queer101.glossary.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.sub} style={{ marginBottom: 0 }}>
-              A living document. Community-edited — if a definition feels
-              incomplete or wrong, flag it.
+              {t("resources:queer101.glossary.sub")}
             </p>
           </div>
           <button
@@ -117,28 +124,26 @@ export function Queer101Glossary() {
             className={styles.glossEditBtn}
             onClick={() => setEditOpen(true)}
           >
-            Suggest an edit
+            {t("resources:queer101.glossary.suggestEditCta")}
           </button>
         </div>
         <input
           className={styles.glossSearch}
           type="search"
-          placeholder="Search terms…"
+          placeholder={t("resources:queer101.glossary.searchPlaceholder")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <div className={styles.glossGrid}>
           {glossary.map((g) => (
-            <div className={styles.glossCard} key={g.term}>
-              <div className={styles.glossTerm}>{g.term}</div>
-              <div className={styles.glossDef}>{g.def}</div>
+            <div className={styles.glossCard} key={g.termKey}>
+              <div className={styles.glossTerm}>{t(g.termKey)}</div>
+              <div className={styles.glossDef}>{t(g.defKey)}</div>
             </div>
           ))}
         </div>
         <div className={styles.glossNotice}>
-          This glossary is a starting point, not an authority. Language evolves,
-          people disagree, and definitions that feel right for one person may
-          not for another.
+          {t("resources:queer101.glossary.notice")}
         </div>
       </div>
       {editOpen && <SuggestEditModal onClose={() => setEditOpen(false)} />}
@@ -147,25 +152,26 @@ export function Queer101Glossary() {
 }
 
 export function Queer101Resources() {
+  const { t } = useTranslation();
   return (
     <div className={styles.sec}>
       <div className="wrap">
         <h2 className={styles.h}>
-          Curated <em>resources.</em>
+          <Translation
+            i18nKey="resources:queer101.resources.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p className={styles.sub}>
-          Books, films, and guides chosen by the community — not an algorithm.
-          Updated regularly.
-        </p>
+        <p className={styles.sub}>{t("resources:queer101.resources.sub")}</p>
         <div className={styles.resGrid}>
           {RESOURCES.map((r) => (
             <div className={styles.resCard} key={r.title}>
               <div className={`${styles.resType} ${styles[RES_CLASS[r.type]]}`}>
-                {r.type}
+                {t(RES_TYPE_LABEL_KEY[r.type])}
               </div>
               <div className={styles.resTitle}>{r.title}</div>
               <div className={styles.resBy}>{r.by}</div>
-              <div className={styles.resDesc}>{r.desc}</div>
+              <div className={styles.resDesc}>{t(r.descKey)}</div>
             </div>
           ))}
         </div>
@@ -175,25 +181,25 @@ export function Queer101Resources() {
 }
 
 export function Queer101TalkOptions() {
+  const { t } = useTranslation();
   return (
     <div className={`${styles.sec} ${styles.dark}`}>
       <div className="wrap">
         <div className={styles.talkBox}>
           <h3>
-            Want to talk to <em>someone?</em>
+            <Translation
+              i18nKey="resources:queer101.talk.title"
+              components={{ em: <em /> }}
+            />
           </h3>
-          <p>
-            Exploring your identity can be joyful, confusing, or both at once.
-            Sometimes it helps to talk with someone who's been through something
-            similar — without advice, without pressure.
-          </p>
+          <p>{t("resources:queer101.talk.body")}</p>
           <div className={styles.talkOptions}>
-            {TALK.map((t) => (
-              <div className={styles.talkOpt} key={t.title}>
-                <div className={styles.talkOptTitle}>{t.title}</div>
-                <div className={styles.talkOptDesc}>{t.desc}</div>
-                <Link to={t.link.href} className={styles.talkOptLink}>
-                  {t.link.label}
+            {TALK.map((item) => (
+              <div className={styles.talkOpt} key={item.titleKey}>
+                <div className={styles.talkOptTitle}>{t(item.titleKey)}</div>
+                <div className={styles.talkOptDesc}>{t(item.descKey)}</div>
+                <Link to={item.link.href} className={styles.talkOptLink}>
+                  {t(item.link.labelKey)}
                 </Link>
               </div>
             ))}
@@ -205,20 +211,22 @@ export function Queer101TalkOptions() {
 }
 
 export function Queer101Outro() {
+  const { t } = useTranslation();
   return (
     <Outro
       title={
-        <>
-          You're welcome <em>here.</em>
-        </>
+        <Translation
+          i18nKey="resources:queer101.outro.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Wherever you are in the process. However long it takes. This community isn't going anywhere."
+      sub={t("resources:queer101.outro.sub")}
     >
       <Button to={routes.requestInvite} variant="primary" size="lg">
-        Join QueerPulse
+        {t("resources:queer101.outro.joinCta")}
       </Button>
       <Button to={routes.communities} variant="ghost-dark" size="lg">
-        Explore communities
+        {t("resources:queer101.outro.exploreCta")}
       </Button>
     </Outro>
   );

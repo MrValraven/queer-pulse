@@ -263,13 +263,16 @@ export const TYPE_ICON: Record<ResultType, IconType> = {
   topic: FiHash,
   page: FiLayers,
 };
-export const TYPE_LABEL: Record<ResultType, string> = {
-  member: "Members",
-  gathering: "Gatherings",
-  community: "Communities",
-  board: "Board",
-  topic: "Topics",
-  page: "Pages",
+/** Category labels are catalog keys, not raw strings: a small, closed set of
+ *  platform-defined result-type names (chrome), resolved through `t()` by the
+ *  consuming component. */
+export const TYPE_LABEL_KEY: Record<ResultType, string> = {
+  member: "members:search.type.member",
+  gathering: "members:search.type.gathering",
+  community: "members:search.type.community",
+  board: "members:search.type.board",
+  topic: "members:search.type.topic",
+  page: "members:search.type.page",
 };
 export const RECENTS = [
   "portrait sessions",
@@ -279,11 +282,11 @@ export const RECENTS = [
   "sublet arroios",
   "documentary composer",
 ];
-export const TABS: { id: ResultType | "all"; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "topic", label: "Topics" },
-  { id: "member", label: "Members" },
-  { id: "gathering", label: "Gatherings" },
-  { id: "community", label: "Communities" },
-  { id: "board", label: "Board" },
+export const TABS: { id: ResultType | "all"; labelKey: string }[] = [
+  { id: "all", labelKey: "members:search.type.all" },
+  { id: "topic", labelKey: "members:search.type.topic" },
+  { id: "member", labelKey: "members:search.type.member" },
+  { id: "gathering", labelKey: "members:search.type.gathering" },
+  { id: "community", labelKey: "members:search.type.community" },
+  { id: "board", labelKey: "members:search.type.board" },
 ];

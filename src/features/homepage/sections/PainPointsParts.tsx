@@ -1,63 +1,57 @@
 import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { linkToPath } from "../../../app/routeMap";
 import type { GapExchange, GapHero, GapMarker } from "../data/types";
 import styles from "./PainPoints.module.css";
 
-/** prefix + coral-italic emphasis + optional suffix, shared by heroes and rows. */
+/** Rich-text heading (prefix + coral-italic accent + optional suffix), shared
+ * by heroes and rows — `headingKey`'s catalog value carries the `<em>` run. */
 function GapHeading({
   className,
-  headingPrefix,
-  accent,
-  headingSuffix,
+  headingKey,
 }: {
   className?: string;
-  headingPrefix: string;
-  accent: string;
-  headingSuffix?: string;
+  headingKey: string;
 }) {
   return (
     <h3 className={className}>
-      {headingPrefix}
-      <em>{accent}</em>
-      {headingSuffix}
+      <Translation i18nKey={headingKey} components={{ em: <em /> }} />
     </h3>
   );
 }
 
 /** The jade "we built this" beat used on the hero panels. */
-function BuiltBeat({ label }: { label: string }) {
+function BuiltBeat({ labelKey }: { labelKey: string }) {
+  const { t } = useTranslation();
   return (
     <div className={`${styles.built} ${styles.heroBuilt}`}>
       <span className={styles.builtChk} aria-hidden="true">
         <FiCheck />
       </span>
-      {label}
+      {t(labelKey)}
     </div>
   );
 }
 
 /** A full-width plum hero panel that interrupts the thread. */
 export function GapHeroPanel({ item }: { item: GapHero }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.hero}>
       <div>
-        <div className={styles.heroEye}>{item.eyebrow}</div>
-        <p className={styles.heroBubble}>{item.question}</p>
-        <GapHeading
-          className={styles.heroAns}
-          headingPrefix={item.headingPrefix}
-          accent={item.accent}
-          headingSuffix={item.headingSuffix}
-        />
+        <div className={styles.heroEye}>{t(item.eyebrowKey)}</div>
+        <p className={styles.heroBubble}>{t(item.questionKey)}</p>
+        <GapHeading className={styles.heroAns} headingKey={item.headingKey} />
       </div>
       <div>
-        <p className={styles.heroBody}>{item.body}</p>
-        <BuiltBeat label={item.builtLabel} />
+        <p className={styles.heroBody}>{t(item.bodyKey)}</p>
+        <BuiltBeat labelKey={item.builtLabelKey} />
         <div className={styles.heroCta}>
           <Button variant="primary" to={linkToPath(item.href)}>
-            {item.ctaLabel}
+            {t(item.ctaLabelKey)}
           </Button>
         </div>
       </div>
@@ -67,9 +61,10 @@ export function GapHeroPanel({ item }: { item: GapHero }) {
 
 /** A serif "chapter" caption that masks the thread line between beats. */
 export function GapMarkerRow({ item }: { item: GapMarker }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.marker}>
-      <span>{item.label}</span>
+      <span>{t(item.labelKey)}</span>
     </div>
   );
 }
@@ -82,6 +77,7 @@ export function GapExchangeRow({
   item: GapExchange;
   flip: boolean;
 }) {
+  const { t } = useTranslation();
   const cls = [
     styles.exch,
     flip && styles.flip,
@@ -93,18 +89,13 @@ export function GapExchangeRow({
   return (
     <div className={cls}>
       <div className={styles.qside}>
-        <p className={styles.bubble}>{item.question}</p>
+        <p className={styles.bubble}>{t(item.questionKey)}</p>
       </div>
       <div className={styles.answer}>
-        <GapHeading
-          className={styles.ansH}
-          headingPrefix={item.headingPrefix}
-          accent={item.accent}
-          headingSuffix={item.headingSuffix}
-        />
-        <p className={styles.ansBody}>{item.body}</p>
+        <GapHeading className={styles.ansH} headingKey={item.headingKey} />
+        <p className={styles.ansBody}>{t(item.bodyKey)}</p>
         <Link to={linkToPath(item.href)} className={styles.link}>
-          {item.ctaLabel}
+          {t(item.ctaLabelKey)}
           <FiArrowRight aria-hidden="true" />
         </Link>
       </div>

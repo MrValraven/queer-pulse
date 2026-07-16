@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { routes } from "../../app/routeMap";
 import type { Author } from "./authorContent.data";
 import styles from "./AuthorPage.module.css";
 
 export function AuthorHeader({ author }: { author: Author }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { isFollowing, toggleFollow } = useSocial();
   const following = isFollowing(author.slug);
@@ -16,6 +18,8 @@ export function AuthorHeader({ author }: { author: Author }) {
     <>
       <header className={styles.hero}>
         <div>
+          {/* Content: eyebrow/name/role/bio/pronouns are the writer's own
+              profile fields — kept in English like a member bio. */}
           <div className={styles.eyebrow}>{author.eyebrow}</div>
           <h1 className={styles.name}>{author.name}</h1>
           <div className={styles.role}>{author.role}</div>
@@ -26,12 +30,16 @@ export function AuthorHeader({ author }: { author: Author }) {
               onClick={() => {
                 const now = toggleFollow(author.slug);
                 showToast(
-                  now ? `Following ${label}` : `Unfollowed ${label}`,
+                  now
+                    ? t("magazine:author.followingToast", { name: label })
+                    : t("magazine:author.unfollowedToast", { name: label }),
                   now ? "success" : "info",
                 );
               }}
             >
-              {following ? "Following" : "Follow writer"}
+              {following
+                ? t("magazine:author.followingCta")
+                : t("magazine:author.followWriterCta")}
             </Button>
             <Button variant="ghost" to={routes.newsletter}>
               {author.columnLabel}
@@ -44,8 +52,8 @@ export function AuthorHeader({ author }: { author: Author }) {
           radius={24}
           className={styles.portrait}
           src={author.portrait}
-          alt={`Portrait of ${author.slug}`}
-          placeholder="Portrait"
+          alt={t("magazine:author.portraitAlt", { slug: author.slug })}
+          placeholder={t("magazine:author.portraitPlaceholder")}
           style={{ aspectRatio: "4/5", height: "auto" }}
         />
       </header>

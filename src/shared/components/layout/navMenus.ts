@@ -9,27 +9,36 @@ import {
 } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 export interface MegaLink {
-  label: string;
+  /** Catalog key for the visible label — resolve with `t()`. */
+  labelKey: string;
   href: string;
   featured?: boolean;
 }
 
 export interface MegaColumn {
-  head: string;
+  /** Catalog key for the column heading — resolve with `t()`. */
+  headKey: string;
   links: MegaLink[];
 }
 
 /** Promo cell shown on the left of each mega panel, foregrounding the menu's hero destination. */
 export interface MegaFeature {
-  eyebrow: string;
-  title: string;
-  body: string;
+  eyebrowKey: string;
+  titleKey: string;
+  bodyKey: string;
   href: string;
-  cta: string;
+  ctaKey: string;
 }
 
 export interface MegaMenu {
+  /**
+   * Stable English identifier — used for React keys, DOM ids, and internal
+   * comparisons (open/trigger tracking). Never rendered directly; the visible
+   * name is `titleKey`, resolved via `t()`.
+   */
   key: string;
+  /** Catalog key for the menu's visible name (button text, aria-labels). */
+  titleKey: string;
   /** Rail icon for the sidebar nav; the top MegaNav ignores it. */
   icon?: IconType;
   feature?: MegaFeature;
@@ -82,258 +91,424 @@ export function filterMenus(
 export const NAV_MENUS: MegaMenu[] = [
   {
     key: "Community",
+    titleKey: "shared:megaNav.community.title",
     icon: FiUsers,
     feature: {
-      eyebrow: "Community",
-      title: "Find your people.",
-      body: "A member directory, forums, and gatherings — the everyday connective tissue of the network.",
+      eyebrowKey: "shared:megaNav.community.feature.eyebrow",
+      titleKey: "shared:megaNav.community.feature.title",
+      bodyKey: "shared:megaNav.community.feature.body",
       href: routes.members,
-      cta: "Browse members",
+      ctaKey: "shared:megaNav.community.feature.cta",
     },
     featurePublic: {
-      eyebrow: "Community",
-      title: "Organise together.",
-      body: "Campaigns, mutual aid, and volunteer crews — work you can show up for, no invite needed.",
+      eyebrowKey: "shared:megaNav.community.featurePublic.eyebrow",
+      titleKey: "shared:megaNav.community.featurePublic.title",
+      bodyKey: "shared:megaNav.community.featurePublic.body",
       href: routes.activism,
-      cta: "Get involved",
+      ctaKey: "shared:megaNav.community.featurePublic.cta",
     },
     columns: [
       {
-        head: "People",
+        headKey: "shared:megaNav.community.col.people.head",
         links: [
-          { label: "Members directory", href: routes.members },
-          { label: "Forum", href: routes.forum },
-          { label: "Dating", href: routes.dating },
+          {
+            labelKey: "shared:megaNav.community.col.people.membersDirectory",
+            href: routes.members,
+          },
+          { labelKey: "nav:forum", href: routes.forum },
+          {
+            labelKey: "shared:megaNav.community.col.people.dating",
+            href: routes.dating,
+          },
         ],
       },
       {
-        head: "Gather",
+        headKey: "shared:megaNav.community.col.gather.head",
         links: [
-          { label: "Events", href: routes.events },
-          { label: "Calendar", href: routes.calendar },
-          { label: "Host a gathering", href: routes.host },
-          { label: "Communities", href: routes.communities },
+          {
+            labelKey: "shared:megaNav.community.col.gather.events",
+            href: routes.events,
+          },
+          { labelKey: "nav:calendar", href: routes.calendar },
+          {
+            labelKey: "shared:megaNav.community.col.gather.hostGathering",
+            href: routes.host,
+          },
+          { labelKey: "nav:communities", href: routes.communities },
         ],
       },
       {
-        head: "Organise",
+        headKey: "shared:megaNav.community.col.organise.head",
         links: [
-          { label: "Volunteer", href: routes.volunteer },
-          { label: "Activism", href: routes.activism },
-          { label: "Change Makers", href: routes.changemakers },
+          {
+            labelKey: "shared:megaNav.community.col.organise.volunteer",
+            href: routes.volunteer,
+          },
+          {
+            labelKey: "shared:megaNav.community.col.organise.activism",
+            href: routes.activism,
+          },
+          {
+            labelKey: "shared:megaNav.community.col.organise.changeMakers",
+            href: routes.changemakers,
+          },
         ],
       },
     ],
   },
   {
     key: "Lisbon",
+    titleKey: "shared:megaNav.lisbon.title",
     icon: FiMapPin,
     feature: {
-      eyebrow: "Lisbon",
-      title: "Queer-owned Lisbon.",
-      body: "Bars, clinics, salons, and shops that welcome you — found and vouched for by the community.",
+      eyebrowKey: "shared:megaNav.lisbon.feature.eyebrow",
+      titleKey: "shared:megaNav.lisbon.feature.title",
+      bodyKey: "shared:megaNav.lisbon.feature.body",
       href: routes.directory,
-      cta: "Browse the directory",
+      ctaKey: "shared:megaNav.lisbon.feature.cta",
     },
     featurePublic: {
-      eyebrow: "Lisbon",
-      title: "Places that welcome you.",
-      body: "Bars, clinics, and community spaces vouched for as safe by the people who go there.",
+      eyebrowKey: "shared:megaNav.lisbon.featurePublic.eyebrow",
+      titleKey: "shared:megaNav.lisbon.featurePublic.title",
+      bodyKey: "shared:megaNav.lisbon.featurePublic.body",
       href: routes.safeSpaces,
-      cta: "Find safe spaces",
+      ctaKey: "shared:megaNav.lisbon.featurePublic.cta",
     },
     columns: [
       {
-        head: "Discover",
+        headKey: "shared:megaNav.lisbon.col.discover.head",
         links: [
           {
-            label: "Business Directory",
+            labelKey: "shared:megaNav.lisbon.col.discover.businessDirectory",
             href: routes.directory,
             featured: true,
           },
-          { label: "Spaces Map", href: routes.map },
-          { label: "Safe Spaces", href: routes.safeSpaces },
-          { label: "Partners", href: routes.partners },
+          {
+            labelKey: "shared:megaNav.lisbon.col.discover.spacesMap",
+            href: routes.map,
+          },
+          {
+            labelKey: "shared:megaNav.lisbon.col.discover.safeSpaces",
+            href: routes.safeSpaces,
+          },
+          {
+            labelKey: "shared:megaNav.lisbon.col.discover.partners",
+            href: routes.partners,
+          },
         ],
       },
       {
-        head: "Living here",
+        headKey: "shared:megaNav.lisbon.col.livingHere.head",
         links: [
-          { label: "New to Lisbon?", href: routes.arriving },
-          { label: "Housing", href: routes.housing },
-          { label: "Visas & Residency", href: routes.visas },
+          { labelKey: "nav:arriving", href: routes.arriving },
+          {
+            labelKey: "shared:megaNav.lisbon.col.livingHere.housing",
+            href: routes.housing,
+          },
+          {
+            labelKey: "shared:megaNav.lisbon.col.livingHere.visasResidency",
+            href: routes.visas,
+          },
         ],
       },
     ],
   },
   {
     key: "Resources",
+    titleKey: "shared:megaNav.resources.title",
     icon: FiLifeBuoy,
     feature: {
-      eyebrow: "Support",
-      title: "Help when you need it.",
-      body: "Health, safety, and rights — plus a library to learn at your own pace.",
+      eyebrowKey: "shared:megaNav.resources.feature.eyebrow",
+      titleKey: "shared:megaNav.resources.feature.title",
+      bodyKey: "shared:megaNav.resources.feature.body",
       href: routes.resources,
-      cta: "Open the library",
+      ctaKey: "shared:megaNav.resources.feature.cta",
     },
     columns: [
       {
-        head: "Health & wellbeing",
-        links: [
-          { label: "Mental Health", href: routes.mentalHealth },
-          { label: "Sexual Health", href: routes.sexualHealth },
-          { label: "Trans Healthcare", href: routes.transHealthcare },
-          { label: "Wellbeing Hub", href: routes.wellbeing },
-        ],
-      },
-      {
-        head: "Safety & rights",
-        links: [
-          { label: "Emergency", href: routes.emergency, featured: true },
-          { label: "Safety Guide", href: routes.safety },
-        ],
-      },
-      {
-        head: "Learn & belong",
+        headKey: "shared:megaNav.resources.col.health.head",
         links: [
           {
-            label: "Resource Library",
+            labelKey: "shared:megaNav.resources.col.health.mentalHealth",
+            href: routes.mentalHealth,
+          },
+          {
+            labelKey: "shared:megaNav.resources.col.health.sexualHealth",
+            href: routes.sexualHealth,
+          },
+          {
+            labelKey: "shared:megaNav.resources.col.health.transHealthcare",
+            href: routes.transHealthcare,
+          },
+          {
+            labelKey: "shared:megaNav.resources.col.health.wellbeingHub",
+            href: routes.wellbeing,
+          },
+        ],
+      },
+      {
+        headKey: "shared:megaNav.resources.col.safety.head",
+        links: [
+          {
+            labelKey: "shared:megaNav.resources.col.safety.emergency",
+            href: routes.emergency,
+            featured: true,
+          },
+          {
+            labelKey: "shared:megaNav.resources.col.safety.safetyGuide",
+            href: routes.safety,
+          },
+        ],
+      },
+      {
+        headKey: "shared:megaNav.resources.col.learn.head",
+        links: [
+          {
+            labelKey: "shared:megaNav.resources.col.learn.resourceLibrary",
             href: routes.resources,
             featured: true,
           },
-          { label: "Trans & NB Hub", href: routes.transHub },
-          { label: "Coming Out", href: routes.comingOut },
-          { label: "Family & parenting", href: routes.family },
-          { label: "For caregivers", href: routes.caregivers },
+          {
+            labelKey: "shared:megaNav.resources.col.learn.transNbHub",
+            href: routes.transHub,
+          },
+          {
+            labelKey: "shared:megaNav.resources.col.learn.comingOut",
+            href: routes.comingOut,
+          },
+          {
+            labelKey: "shared:megaNav.resources.col.learn.familyParenting",
+            href: routes.family,
+          },
+          {
+            labelKey: "shared:megaNav.resources.col.learn.forCaregivers",
+            href: routes.caregivers,
+          },
         ],
       },
     ],
   },
   {
     key: "Culture",
+    titleKey: "shared:megaNav.culture.title",
     icon: FiBookOpen,
     feature: {
-      eyebrow: "The Magazine",
-      title: "Read the new issue.",
-      body: "Essays, interviews, reviews and reportage from the community — published the first of every month.",
+      eyebrowKey: "shared:megaNav.culture.feature.eyebrow",
+      titleKey: "shared:megaNav.culture.feature.title",
+      bodyKey: "shared:megaNav.culture.feature.body",
       href: routes.magazine,
-      cta: "Open Issue 18",
+      ctaKey: "shared:megaNav.culture.feature.cta",
     },
     columns: [
       {
-        head: "The Magazine",
-        links: [
-          { label: "Current issue", href: routes.magazine, featured: true },
-          { label: "All issues", href: routes.issues },
-          { label: "Stories", href: routes.story },
-          { label: "Write for us", href: routes.submitStory },
-        ],
-      },
-      {
-        head: "Screen & Sound",
-        links: [
-          { label: "Cinema · queer film", href: routes.cinema, featured: true },
-          { label: "The Back Room (podcast)", href: routes.podcastShow },
-          { label: "Radio · Now playing", href: routes.audioPlayer },
-        ],
-      },
-      {
-        head: "Makers & Scene",
+        headKey: "shared:megaNav.culture.col.magazine.head",
         links: [
           {
-            label: "Studio · queer music",
+            labelKey: "shared:megaNav.culture.col.magazine.currentIssue",
+            href: routes.magazine,
+            featured: true,
+          },
+          {
+            labelKey: "shared:megaNav.culture.col.magazine.allIssues",
+            href: routes.issues,
+          },
+          {
+            labelKey: "shared:megaNav.culture.col.magazine.stories",
+            href: routes.story,
+          },
+          {
+            labelKey: "shared:megaNav.culture.col.magazine.writeForUs",
+            href: routes.submitStory,
+          },
+        ],
+      },
+      {
+        headKey: "shared:megaNav.culture.col.screenSound.head",
+        links: [
+          {
+            labelKey: "shared:megaNav.culture.col.screenSound.cinema",
+            href: routes.cinema,
+            featured: true,
+          },
+          {
+            labelKey: "shared:megaNav.culture.col.screenSound.podcast",
+            href: routes.podcastShow,
+          },
+          {
+            labelKey: "shared:megaNav.culture.col.screenSound.radio",
+            href: routes.audioPlayer,
+          },
+        ],
+      },
+      {
+        headKey: "shared:megaNav.culture.col.makers.head",
+        links: [
+          {
+            labelKey: "shared:megaNav.culture.col.makers.studio",
             href: routes.studio,
             featured: true,
           },
-          { label: "Creatives", href: routes.creatives },
-          { label: "Platforms", href: routes.platforms },
-          { label: "Reading Groups", href: routes.readingGroups },
-          { label: "Lisbon scene & radio", href: routes.culture },
+          {
+            labelKey: "shared:megaNav.culture.col.makers.creatives",
+            href: routes.creatives,
+          },
+          {
+            labelKey: "shared:megaNav.culture.col.makers.platforms",
+            href: routes.platforms,
+          },
+          {
+            labelKey: "shared:megaNav.culture.col.makers.readingGroups",
+            href: routes.readingGroups,
+          },
+          {
+            labelKey: "shared:megaNav.culture.col.makers.lisbonScene",
+            href: routes.culture,
+          },
         ],
       },
     ],
   },
   {
     key: "Work",
+    titleKey: "shared:megaNav.work.title",
     icon: FiBriefcase,
     feature: {
-      eyebrow: "Your workspace",
-      title: "Your Work, in one place.",
-      body: "Track applications, mentors, and grants — and show up to work exactly as yourself.",
+      eyebrowKey: "shared:megaNav.work.feature.eyebrow",
+      titleKey: "shared:megaNav.work.feature.title",
+      bodyKey: "shared:megaNav.work.feature.body",
       href: routes.work,
-      cta: "Open your workspace",
+      ctaKey: "shared:megaNav.work.feature.cta",
     },
     columns: [
       {
-        head: "Career",
+        headKey: "shared:megaNav.work.col.career.head",
         links: [
-          { label: "Your Work", href: routes.work, featured: true },
-          { label: "Job Board", href: routes.jobs },
-          { label: "Skills & Learning", href: routes.skills },
-          { label: "Mentorship", href: routes.mentorship },
-          { label: "Employer Reviews", href: routes.employerReviews },
-          { label: "Work profile", href: routes.workProfile },
+          {
+            labelKey: "shared:megaNav.work.col.career.yourWork",
+            href: routes.work,
+            featured: true,
+          },
+          {
+            labelKey: "shared:megaNav.work.col.career.jobBoard",
+            href: routes.jobs,
+          },
+          {
+            labelKey: "shared:megaNav.work.col.career.skillsLearning",
+            href: routes.skills,
+          },
+          {
+            labelKey: "shared:megaNav.work.col.career.mentorship",
+            href: routes.mentorship,
+          },
+          {
+            labelKey: "shared:megaNav.work.col.career.employerReviews",
+            href: routes.employerReviews,
+          },
+          {
+            labelKey: "shared:megaNav.work.col.career.workProfile",
+            href: routes.workProfile,
+          },
         ],
       },
       {
-        head: "Economy",
+        headKey: "shared:megaNav.work.col.economy.head",
         links: [
           {
-            label: "Skills Exchange",
+            labelKey: "shared:megaNav.work.col.economy.skillsExchange",
             href: routes.barter,
             featured: true,
           },
-          { label: "Solidarity Pricing", href: routes.solidarity },
-          { label: "Grants", href: routes.grants },
-          { label: "How our economy works", href: routes.economy },
-          { label: "Offer a skill", href: routes.offer },
+          {
+            labelKey: "shared:megaNav.work.col.economy.solidarityPricing",
+            href: routes.solidarity,
+          },
+          {
+            labelKey: "shared:megaNav.work.col.economy.grants",
+            href: routes.grants,
+          },
+          {
+            labelKey: "shared:megaNav.work.col.economy.howItWorks",
+            href: routes.economy,
+          },
+          {
+            labelKey: "shared:megaNav.work.col.economy.offerSkill",
+            href: routes.offer,
+          },
         ],
       },
     ],
   },
   {
     key: "About",
+    titleKey: "shared:megaNav.about.title",
     icon: FiInfo,
     feature: {
-      eyebrow: "About",
-      title: "What QueerPulse is.",
-      body: "Our mission, how we're governed, and the legal small print.",
+      eyebrowKey: "shared:megaNav.about.feature.eyebrow",
+      titleKey: "shared:megaNav.about.feature.title",
+      bodyKey: "shared:megaNav.about.feature.body",
       href: routes.about,
-      cta: "About QueerPulse",
+      ctaKey: "shared:megaNav.about.feature.cta",
     },
     columns: [
       {
-        head: "Mission & governance",
+        headKey: "shared:megaNav.about.col.mission.head",
         links: [
           {
-            label: "About QueerPulse",
+            labelKey: "shared:megaNav.about.col.mission.aboutQueerPulse",
             href: routes.about,
             featured: true,
           },
-          { label: "The Manifesto", href: routes.manifesto },
-          { label: "Governance", href: routes.governance },
-          { label: "Cities", href: routes.cities },
+          {
+            labelKey: "shared:megaNav.about.col.mission.manifesto",
+            href: routes.manifesto,
+          },
+          {
+            labelKey: "shared:adminNav.items.governance",
+            href: routes.governance,
+          },
+          {
+            labelKey: "shared:megaNav.about.col.mission.cities",
+            href: routes.cities,
+          },
         ],
       },
       {
-        head: "Using QueerPulse",
+        headKey: "shared:megaNav.about.col.using.head",
         links: [
-          { label: "Help & FAQ", href: routes.help },
-          { label: "Roadmap", href: routes.roadmap },
-          { label: "Get the app", href: routes.getTheApp },
+          { labelKey: "shared:megaNav.about.col.using.helpFaq", href: routes.help },
           {
-            label: "For organisations",
+            labelKey: "shared:megaNav.about.col.using.roadmap",
+            href: routes.roadmap,
+          },
+          {
+            labelKey: "shared:megaNav.about.col.using.getTheApp",
+            href: routes.getTheApp,
+          },
+          {
+            labelKey: "shared:megaNav.about.col.using.forOrganisations",
             href: routes.forOrganisations,
           },
         ],
       },
       {
-        head: "Legal & press",
+        headKey: "shared:megaNav.about.col.legal.head",
         links: [
-          { label: "Privacy Policy", href: routes.privacy },
-          { label: "Terms of Use", href: routes.terms },
-          { label: "Press Kit", href: routes.pressKit },
-          { label: "Contact", href: routes.contact },
+          {
+            labelKey: "shared:megaNav.about.col.legal.privacyPolicy",
+            href: routes.privacy,
+          },
+          {
+            labelKey: "shared:megaNav.about.col.legal.termsOfUse",
+            href: routes.terms,
+          },
+          {
+            labelKey: "shared:megaNav.about.col.legal.pressKit",
+            href: routes.pressKit,
+          },
+          {
+            labelKey: "shared:megaNav.about.col.legal.contact",
+            href: routes.contact,
+          },
         ],
       },
     ],

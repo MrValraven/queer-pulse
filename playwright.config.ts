@@ -9,8 +9,12 @@ import { defineConfig, devices } from "@playwright/test";
  *     pnpm exec playwright install   # first time: fetch browser binaries
  *     pnpm test:e2e
  *
- * `webServer` boots `pnpm dev`; with no VITE_API_URL the app forces demo mode,
- * so these specs stay green in a backend-less checkout.
+ * `webServer` boots `pnpm dev` with demo mode explicitly opted into (VITE_DEMO=1)
+ * and no API URL, so these specs stay green in a backend-less checkout. Demo is
+ * never inferred from a missing VITE_API_URL (see src/shared/api/config.ts), so
+ * the opt-in has to be stated. Both vars are set on the command line to beat any
+ * local `.env` — process.env VITE_* wins over .env files in Vite's loadEnv, which
+ * keeps the run identical on a machine that has a backend configured.
  */
 export default defineConfig({
   testDir: "./e2e",
@@ -24,7 +28,7 @@ export default defineConfig({
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    command: "pnpm dev",
+    command: "VITE_API_URL= VITE_DEMO=1 pnpm dev",
     url: "http://localhost:5173",
     reuseExistingServer: true,
     timeout: 120_000,

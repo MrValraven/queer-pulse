@@ -38,9 +38,10 @@ import {
 } from "../../../features/admin/adminRole";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { currentUser, fullName } from "../../../features/members/data/members";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./AccountMenu.module.css";
 
-type AccountItem = { label: string; to: string; icon: IconType };
+type AccountItem = { labelKey: string; to: string; icon: IconType };
 
 /**
  * The canonical account links, grouped by type. Each inner array is a cluster;
@@ -53,33 +54,85 @@ type AccountItem = { label: string; to: string; icon: IconType };
 export const ACCOUNT_GROUPS: AccountItem[][] = [
   // You / people
   [
-    { label: "Profile", to: routes.accountProfile, icon: FiUser },
-    { label: "Connections", to: routes.connections, icon: FiUserPlus },
+    {
+      labelKey: "shared:accountMenu.items.profile",
+      to: routes.accountProfile,
+      icon: FiUser,
+    },
+    {
+      labelKey: "shared:accountMenu.items.connections",
+      to: routes.connections,
+      icon: FiUserPlus,
+    },
   ],
   // Talking & belonging
   [
-    { label: "Messages", to: routes.messages, icon: FiMessageSquare },
-    { label: "Communities", to: routes.communitiesHome, icon: FiUsers },
+    {
+      labelKey: "shared:accountMenu.items.messages",
+      to: routes.messages,
+      icon: FiMessageSquare,
+    },
+    { labelKey: "nav:communities", to: routes.communitiesHome, icon: FiUsers },
   ],
   // Career
   [
-    { label: "Applications", to: routes.applicationStatus, icon: FiFileText },
-    { label: "Work", to: routes.work, icon: FiBriefcase },
-    { label: "Subprofiles", to: routes.subprofilesDashboard, icon: FiLayers },
+    {
+      labelKey: "shared:accountMenu.items.applications",
+      to: routes.applicationStatus,
+      icon: FiFileText,
+    },
+    {
+      labelKey: "shared:accountMenu.items.work",
+      to: routes.work,
+      icon: FiBriefcase,
+    },
+    {
+      labelKey: "shared:accountMenu.items.subprofiles",
+      to: routes.subprofilesDashboard,
+      icon: FiLayers,
+    },
   ],
   // Activity
   [
-    { label: "Events", to: routes.myEvents, icon: FiCalendar },
-    { label: "Feed", to: "/feed", icon: FiRss },
+    {
+      labelKey: "shared:accountMenu.items.events",
+      to: routes.myEvents,
+      icon: FiCalendar,
+    },
+    { labelKey: "shared:accountMenu.items.feed", to: "/feed", icon: FiRss },
   ],
   // Your stuff / system
   [
-    { label: "Drafts", to: routes.drafts, icon: FiEdit3 },
-    { label: "Pitches", to: routes.pitchTracker, icon: FiSend },
-    { label: "Saved", to: routes.collections, icon: FiBookmark },
-    { label: "Membership", to: routes.sustainer, icon: FiHeart },
-    { label: "Settings", to: routes.settings, icon: FiSettings },
-    { label: "Help", to: routes.help, icon: FiHelpCircle },
+    {
+      labelKey: "shared:accountMenu.items.drafts",
+      to: routes.drafts,
+      icon: FiEdit3,
+    },
+    {
+      labelKey: "shared:accountMenu.items.pitches",
+      to: routes.pitchTracker,
+      icon: FiSend,
+    },
+    {
+      labelKey: "shared:accountMenu.items.saved",
+      to: routes.collections,
+      icon: FiBookmark,
+    },
+    {
+      labelKey: "shared:accountMenu.items.membership",
+      to: routes.sustainer,
+      icon: FiHeart,
+    },
+    {
+      labelKey: "shared:accountMenu.items.settings",
+      to: routes.settings,
+      icon: FiSettings,
+    },
+    {
+      labelKey: "shared:accountMenu.items.help",
+      to: routes.help,
+      icon: FiHelpCircle,
+    },
   ],
 ];
 
@@ -126,6 +179,7 @@ export function AccountMenu({
   const { demoMode, available, toggle } = useDemoMode();
   const { role, setRole } = useAdminRole();
   const { navMode, setNavMode } = useNavMode();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -173,7 +227,7 @@ export function AccountMenu({
             <Link
               to={routes.settings}
               className={styles.railMini}
-              aria-label="Settings"
+              aria-label={t("shared:accountMenu.items.settings")}
               onClick={() => setOpen(false)}
             >
               <FiSettings aria-hidden />
@@ -184,7 +238,7 @@ export function AccountMenu({
               onClick={() => setOpen((o) => !o)}
               aria-haspopup="menu"
               aria-expanded={open}
-              aria-label="Account menu"
+              aria-label={t("shared:accountMenu.ariaLabel")}
             >
               <FiChevronDown
                 aria-hidden
@@ -232,7 +286,9 @@ export function AccountMenu({
             />
             <div className={styles.headerText}>
               <div className={styles.headerName}>{name}</div>
-              <div className={styles.headerMeta}>Profile &amp; account</div>
+              <div className={styles.headerMeta}>
+                {t("shared:accountMenu.header.subtitle")}
+              </div>
             </div>
           </div>
 
@@ -249,7 +305,7 @@ export function AccountMenu({
                     onClick={() => setOpen(false)}
                   >
                     <Icon aria-hidden className={styles.itemIcon} />
-                    <span className={styles.itemLabel}>{item.label}</span>
+                    <span className={styles.itemLabel}>{t(item.labelKey)}</span>
                   </Link>
                 );
               })}
@@ -262,7 +318,9 @@ export function AccountMenu({
                     onClick={() => setOpen(false)}
                   >
                     <FiLayout aria-hidden className={styles.itemIcon} />
-                    <span className={styles.itemLabel}>Magazine editor</span>
+                    <span className={styles.itemLabel}>
+                      {t("shared:accountMenu.staff.magazineEditor")}
+                    </span>
                   </Link>
                   <Link
                     to={routes.admin}
@@ -271,7 +329,9 @@ export function AccountMenu({
                     onClick={() => setOpen(false)}
                   >
                     <FiShield aria-hidden className={styles.itemIcon} />
-                    <span className={styles.itemLabel}>Admin</span>
+                    <span className={styles.itemLabel}>
+                      {t("shared:accountMenu.staff.admin")}
+                    </span>
                   </Link>
                 </>
               )}
@@ -283,7 +343,9 @@ export function AccountMenu({
                   onClick={() => setOpen(false)}
                 >
                   <FiTool aria-hidden className={styles.itemIcon} />
-                  <span className={styles.itemLabel}>Mod tools</span>
+                  <span className={styles.itemLabel}>
+                    {t("shared:accountMenu.mod.modTools")}
+                  </span>
                 </Link>
               )}
             </div>
@@ -309,7 +371,7 @@ export function AccountMenu({
               }}
             >
               <FiLogOut aria-hidden className={styles.itemIcon} />
-              <span className={styles.itemLabel}>Sign out</span>
+              <span className={styles.itemLabel}>{t("nav:signOut")}</span>
             </Link>
           </div>
         </div>
@@ -337,6 +399,7 @@ function AccountMenuControls({
   navMode: NavMode;
   setNavMode: (mode: NavMode) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <div className={styles.divider} />
@@ -349,22 +412,30 @@ function AccountMenuControls({
         onClick={() => toggle()}
       >
         <FiDatabase aria-hidden className={styles.itemIcon} />
-        <span className={styles.itemLabel}>Populate platform</span>
+        <span className={styles.itemLabel}>
+          {t("shared:accountMenu.controls.populatePlatform")}
+        </span>
         <span
           className={[styles.populateState, demoMode && styles.populateOn]
             .filter(Boolean)
             .join(" ")}
           aria-hidden
         >
-          {available ? (demoMode ? "On" : "Off") : "No API"}
+          {available
+            ? demoMode
+              ? t("shared:accountMenu.controls.on")
+              : t("shared:accountMenu.controls.off")
+            : t("shared:accountMenu.controls.noApi")}
         </span>
       </button>
       <div className={styles.divider} />
-      <div className={styles.roleLabel}>Acting as</div>
+      <div className={styles.roleLabel}>
+        {t("shared:accountMenu.controls.actingAs")}
+      </div>
       <div
         className={styles.roleSwitch}
         role="group"
-        aria-label="Simulated team role"
+        aria-label={t("shared:accountMenu.controls.simulatedRoleAria")}
       >
         {(["staff", "mod", "member"] as const).map((r) => (
           <button
@@ -375,16 +446,22 @@ function AccountMenuControls({
               .join(" ")}
             onClick={() => setRole(r)}
           >
-            {r === "staff" ? "Staff" : r === "mod" ? "Mod" : "Member"}
+            {r === "staff"
+              ? t("shared:accountMenu.controls.roleStaff")
+              : r === "mod"
+                ? t("shared:accountMenu.controls.roleMod")
+                : t("shared:accountMenu.controls.roleMember")}
           </button>
         ))}
       </div>
       <div className={styles.divider} />
-      <div className={styles.roleLabel}>Navigation</div>
+      <div className={styles.roleLabel}>
+        {t("shared:accountMenu.controls.navigation")}
+      </div>
       <div
         className={styles.roleSwitch}
         role="group"
-        aria-label="Navigation layout"
+        aria-label={t("shared:accountMenu.controls.navigationLayoutAria")}
       >
         {(["mega", "sidebar"] as const).map((m) => (
           <button
@@ -395,7 +472,9 @@ function AccountMenuControls({
               .join(" ")}
             onClick={() => setNavMode(m)}
           >
-            {m === "mega" ? "Top bar" : "Sidebar"}
+            {m === "mega"
+              ? t("shared:accountMenu.controls.navTopBar")
+              : t("shared:accountMenu.controls.navSidebar")}
           </button>
         ))}
       </div>

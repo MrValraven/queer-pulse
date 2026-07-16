@@ -4,6 +4,9 @@ import { FiLink, FiMail } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { InviteEmailForm } from "./InviteEmailForm";
 import { InviteLinkPanel } from "./InviteLinkPanel";
 import { SentInvitesList } from "./SentInvitesList";
@@ -11,7 +14,14 @@ import styles from "./InvitePage.module.css";
 
 type Mode = "email" | "link";
 
+// Illustrative fixed dates for the static "invite sent" mock summary card —
+// not wired to a real send time, so kept as constants rather than `Date.now()`.
+const MOCK_SENT_AT = new Date(2026, 5, 6, 10, 42);
+const MOCK_EXPIRES_AT = new Date(2026, 5, 13);
+
 export function InvitePage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [mode, setMode] = useState<Mode>("email");
   const [sentName, setSentName] = useState<string | null>(null);
 
@@ -36,29 +46,44 @@ export function InvitePage() {
                 </svg>
               </div>
               <div className={styles.sentHead}>
-                Invitation sent to <em>{sentName}</em>
+                <Translation
+                  i18nKey="auth:invite.sent.headline"
+                  components={{ em: <em /> }}
+                  values={{ name: sentName }}
+                />
               </div>
               <div className={styles.sentSub}>
-                We've sent {sentName} an email. They have 7 days to accept.
-                You'll be notified when they join.
+                {t("auth:invite.sent.sub", { name: sentName })}
               </div>
               <div className={styles.summaryCard}>
                 <div className={styles.srRow}>
-                  <span className={styles.srLabel}>Invited</span>
+                  <span className={styles.srLabel}>
+                    {t("auth:invite.sent.summary.invited")}
+                  </span>
                   <span className={styles.srVal}>{sentName} Lima</span>
                 </div>
                 <div className={styles.srRow}>
-                  <span className={styles.srLabel}>Sent</span>
-                  <span className={styles.srVal}>Today, 10:42</span>
+                  <span className={styles.srLabel}>
+                    {t("auth:invite.sent.summary.sent")}
+                  </span>
+                  <span className={styles.srVal}>
+                    {t("auth:invite.sent.summary.sentToday", {
+                      time: fmt.time(MOCK_SENT_AT),
+                    })}
+                  </span>
                 </div>
                 <div className={styles.srRow}>
-                  <span className={styles.srLabel}>Expires</span>
-                  <span className={styles.srVal}>13 June 2026</span>
+                  <span className={styles.srLabel}>
+                    {t("auth:invite.sent.summary.expires")}
+                  </span>
+                  <span className={styles.srVal}>
+                    {fmt.date(MOCK_EXPIRES_AT)}
+                  </span>
                 </div>
               </div>
               <div className={styles.actions}>
                 <Button variant="ghost" to={routes.accountProfile}>
-                  Back to my profile
+                  {t("auth:common.backToProfile")}
                 </Button>
               </div>
             </div>
@@ -73,27 +98,29 @@ export function InvitePage() {
       <div className={styles.page}>
         <div className={styles.inner}>
           <Link to={routes.accountProfile} className={styles.backLink}>
-            ← Back to my profile
+            ← {t("auth:common.backToProfile")}
           </Link>
-          <div className={styles.eyebrow}>Invite someone</div>
+          <div className={styles.eyebrow}>{t("auth:invite.eyebrow")}</div>
           <div className={styles.title}>
-            Bring someone <em>in</em>
+            <Translation
+              i18nKey="auth:invite.title"
+              components={{ em: <em /> }}
+            />
           </div>
-          <div className={styles.sub}>
-            QueerPulse grows through trust, not advertising. Use your invite for
-            someone you'd genuinely vouch for.
-          </div>
+          <div className={styles.sub}>{t("auth:invite.sub")}</div>
           <div className={styles.quotaRow}>
             <div className={styles.quotaChip}>
-              1 invite available this month
+              {t("auth:invite.quota.available")}
             </div>
-            <div className={styles.resetNote}>Resets 1 July 2026</div>
+            <div className={styles.resetNote}>
+              {t("auth:invite.quota.resets")}
+            </div>
           </div>
 
           <div
             className={styles.segmented}
             role="tablist"
-            aria-label="Delivery method"
+            aria-label={t("auth:invite.deliveryMethod.ariaLabel")}
           >
             <button
               type="button"
@@ -103,7 +130,7 @@ export function InvitePage() {
               onClick={() => setMode("email")}
             >
               <FiMail aria-hidden />
-              Send via email
+              {t("auth:invite.deliveryMethod.email")}
             </button>
             <button
               type="button"
@@ -113,7 +140,7 @@ export function InvitePage() {
               onClick={() => setMode("link")}
             >
               <FiLink aria-hidden />
-              Share a link
+              {t("auth:invite.deliveryMethod.link")}
             </button>
           </div>
 

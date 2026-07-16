@@ -44,7 +44,7 @@ export const RSVP_ATTENDEE_NAMES = "Sofia, Tomás, Beatriz, Jonas";
 export const RSVP_HOST_QUOTE =
   "\"So glad you're coming. We'll be reading chapters 10–14 this week. Bring your thoughts on Shevek's theory of time and simultaneity — it's a good one. The kitchen opens from 6:45 if you'd like to arrive early and settle in.\"";
 
-const GATHERING_TITLE = "The Dispossessed — Reading Group #8";
+export const GATHERING_TITLE = "The Dispossessed — Reading Group #8";
 const GATHERING_LOCATION = "Mouraria Community Centre";
 const GATHERING_DETAILS_TEXT =
   "Reading group #8 — chapters 10–14 of The Dispossessed. The kitchen opens from 6:45 PM if you'd like to arrive early. RSVP'd via QueerPulse.";

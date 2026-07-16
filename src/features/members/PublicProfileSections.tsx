@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useCountUp } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
 import { SocialLinksRow } from "./SocialLinksRow";
@@ -24,16 +26,19 @@ function parseStat(value: string): {
   return { num: parseFloat(match[1]!), suffix: match[2]!, decimals };
 }
 
-/** Animated public stat (counts up the leading number, respects reduced motion via useCountUp). */
+/** Animated public stat (counts up the leading number, respects reduced motion via useCountUp).
+ *  `labelKey` is a catalog key — the stat caption is platform chrome (a small,
+ *  platform-defined set of stat types), not the fictional member's own words. */
 export function Stat({
   value,
   em,
-  label,
+  labelKey,
 }: {
   value: string;
   em?: boolean;
-  label: string;
+  labelKey: string;
 }) {
+  const { t } = useTranslation();
   const { num, suffix, decimals } = parseStat(value);
   const animatable = Number.isFinite(num);
   const scale = Math.pow(10, decimals);
@@ -44,7 +49,7 @@ export function Stat({
   return (
     <div className={styles.stat}>
       <b>{em ? <em>{display}</em> : display}</b>
-      <span>{label}</span>
+      <span>{t(labelKey)}</span>
     </div>
   );
 }
@@ -57,18 +62,21 @@ export function PublicPreviewBar({
   owner: boolean;
   enabled: boolean;
 }) {
+  const { t } = useTranslation();
   if (owner) {
     return (
       <div className={styles.ownerBar}>
         <span className={styles.ownerLbl}>
-          Preview of your public profile · this is how non-members see you
+          {t("members:publicProfile.preview.ownerLabel")}
           <span className={`${styles.pill} ${enabled ? styles.pillOn : ""}`}>
-            {enabled ? "Live" : "Off"}
+            {enabled
+              ? t("members:publicProfile.pill.live")
+              : t("members:publicProfile.pill.off")}
           </span>
         </span>
         <div className={styles.guestActions}>
           <Button variant="ghost-dark" to={routes.accountProfile}>
-            ← Back to your profile
+            {t("members:publicProfile.preview.backToProfile")}
           </Button>
         </div>
       </div>
@@ -77,14 +85,17 @@ export function PublicPreviewBar({
   return (
     <div className={styles.guestBar}>
       <span className={styles.guestLbl}>
-        You're not signed in · viewing the <b>public version</b> of this profile
+        <Translation
+          i18nKey="members:publicProfile.preview.guestLabel"
+          components={{ b: <b /> }}
+        />
       </span>
       <div className={styles.guestActions}>
         <Button variant="ghost-dark" to={routes.signIn}>
-          Sign in
+          {t("common:cta.signIn")}
         </Button>
         <Button variant="primary" to={routes.requestInvite}>
-          Request an invite
+          {t("common:cta.requestInvite")}
         </Button>
       </div>
     </div>
@@ -99,6 +110,7 @@ export function PublicProfileHead({
   profile: Member;
   contributions: PublicContributions;
 }) {
+  const { t } = useTranslation();
   const curatorSlug = curatorSlugForName(`${profile.first} ${profile.last}`);
   return (
     <header className={styles.head}>
@@ -109,11 +121,16 @@ export function PublicProfileHead({
         size={160}
       />
       <div>
-        <div className={styles.eyebrow}>Public profile · @{profile.slug}</div>
+        <div className={styles.eyebrow}>
+          {t("members:publicProfile.head.eyebrow", { slug: profile.slug })}
+        </div>
         <h1 className={styles.name}>
           {profile.first} <em>{profile.last}</em>
           {profile.verified && (
-            <span className={styles.verified} title="Verified member">
+            <span
+              className={styles.verified}
+              title={t("members:profile.hero.verifiedBadge")}
+            >
               <svg viewBox="0 0 24 24">
                 <polyline points="4,12.5 10,18 20,6" />
               </svg>
@@ -131,7 +148,7 @@ export function PublicProfileHead({
             className={styles.curatorLink}
             to={`${routes.cinemaCurator}/${curatorSlug}`}
           >
-            ● Cinema curator — view programming profile →
+            {t("members:profile.hero.curatorLink")}
           </Link>
         )}
         <p className={styles.bio}>{profile.bio}</p>
@@ -143,30 +160,44 @@ export function PublicProfileHead({
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
-            <b>{profile.hood}</b>, Lisbon
+            <Translation
+              i18nKey="members:publicProfile.head.location"
+              components={{ b: <b /> }}
+              values={{ hood: profile.hood }}
+            />
           </span>
           <span>
             <svg viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="9" />
               <polyline points="12 7 12 12 15 14" />
             </svg>
-            Member since <b>{profile.since}</b>
+            <Translation
+              i18nKey="members:publicProfile.head.memberSince"
+              components={{ b: <b /> }}
+              values={{ since: profile.since }}
+            />
           </span>
           {profile.vouchers.length > 0 && (
             <span>
               <svg viewBox="0 0 24 24">
                 <path d="M12 22s-8-4-8-12V4l8-2 8 2v6c0 8-8 12-8 12z" />
               </svg>
-              <b>Vouched-for</b> by {profile.vouchers.length} members
+              <Translation
+                i18nKey="members:publicProfile.head.vouchedFor"
+                components={{ b: <b /> }}
+                values={{ count: profile.vouchers.length }}
+              />
             </span>
           )}
         </div>
 
         <div className={styles.ctaRow}>
           <Button variant="primary" to={routes.requestInvite}>
-            Request an invite to connect
+            {t("members:publicProfile.head.requestInviteCta")}
           </Button>
-          <div className={styles.ctaNote}>{contributions.ctaNote}</div>
+          <div className={styles.ctaNote}>
+            {t(contributions.ctaNoteKey, { firstName: profile.first })}
+          </div>
         </div>
       </div>
     </header>
@@ -235,23 +266,24 @@ export function LockedSection({
 }
 
 export function BottomCta({ firstName }: { firstName: string }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.bottomCta}>
       <div>
         <h3>
-          Want the <em>full picture?</em>
+          <Translation
+            i18nKey="members:publicProfile.bottomCta.title"
+            components={{ em: <em /> }}
+          />
         </h3>
-        <p>
-          QueerPulse is invite-based — {firstName} can vouch for you if you've
-          met in person. Or request an invite from us directly.
-        </p>
+        <p>{t("members:publicProfile.bottomCta.body", { firstName })}</p>
       </div>
       <div className={styles.bottomCtaActions}>
         <Button variant="primary" to={routes.requestInvite}>
-          Request an invite
+          {t("common:cta.requestInvite")}
         </Button>
         <Button variant="ghost-dark" to={routes.vouch}>
-          Ask {firstName} to vouch
+          {t("members:publicProfile.bottomCta.vouchCta", { firstName })}
         </Button>
       </div>
     </div>

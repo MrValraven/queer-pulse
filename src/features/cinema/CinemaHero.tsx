@@ -1,39 +1,60 @@
 import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { coverFilm } from "./data";
-import { SECTION_NAV } from "./cinemaPage.data";
+import {
+  PROGRAMME_WEEK,
+  PROGRAMME_WEEK_END,
+  PROGRAMME_WEEK_START,
+  SECTION_NAV_KEYS,
+} from "./cinemaPage.data";
 import styles from "./CinemaPage.module.css";
 import { routes } from "../../app/routeMap";
 
 export function CinemaMast() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <section className={styles.mast}>
       <div className="wrap">
         <div className={styles.mastRow}>
           <div>
-            <div className={styles.issue}>Programme — Week 23 · 2026</div>
+            <div className={styles.issue}>
+              {t("cinema:mast.issueLabel", {
+                week: PROGRAMME_WEEK,
+                year: PROGRAMME_WEEK_START.getFullYear(),
+              })}
+            </div>
             <h1 className={styles.mastBrand}>
               Queer<em>Pulse</em> Cinema
             </h1>
           </div>
           <div className={styles.mastMeta}>
-            <div className={styles.issue}>8 — 14 June</div>
+            <div className={styles.issue}>
+              {fmt.date(PROGRAMME_WEEK_START, { day: "numeric" })} —{" "}
+              {fmt.date(PROGRAMME_WEEK_END, { day: "numeric", month: "long" })}
+            </div>
             <div className={styles.mastTag}>
-              A theatre, an archive, a co-op.{" "}
-              <em>Eighty percent of every rent</em> goes to the filmmaker.
+              <Translation
+                i18nKey="cinema:mast.tagline"
+                components={{ em: <em /> }}
+              />
             </div>
           </div>
         </div>
         <div className={styles.secNav}>
-          {SECTION_NAV.map((label, i) => (
+          {SECTION_NAV_KEYS.map((labelKey, i) => (
             <Link
-              key={label}
+              key={labelKey}
               to={routes.cinemaBrowse}
               className={[styles.cnLink, i === 0 && styles.cnLinkActive]
                 .filter(Boolean)
                 .join(" ")}
             >
-              {label}
+              {t(labelKey)}
             </Link>
           ))}
         </div>
@@ -43,6 +64,7 @@ export function CinemaMast() {
 }
 
 export function AskStrip() {
+  const { t } = useTranslation();
   return (
     <div className={styles.askStrip}>
       <div className="wrap">
@@ -61,10 +83,9 @@ export function AskStrip() {
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
               <path d="M12 17h.01" />
             </svg>
-            Not sure what to watch? Tell us your mood and we'll pick one film —
-            no algorithm, just curators.
+            {t("cinema:ask.text")}
           </div>
-          <Button to={routes.cinemaBrowse}>Ask the room →</Button>
+          <Button to={routes.cinemaBrowse}>{t("cinema:ask.cta")}</Button>
         </div>
       </div>
     </div>
@@ -72,6 +93,9 @@ export function AskStrip() {
 }
 
 export function CinemaCover() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <section className={styles.cover}>
       <div className={styles.cvImg}>
@@ -87,11 +111,11 @@ export function CinemaCover() {
         <div className={styles.cvOverlay} />
         <div className={styles.cvMarks}>
           <span className="pulse" />
-          <span>Now showing</span>
+          <span>{t("cinema:cover.nowShowing")}</span>
           <span className="dot" />
-          <span>Free for sustainers</span>
+          <span>{t("cinema:cover.freeForSustainers")}</span>
           <span className="dot" />
-          <span>Live Q&amp;A · Wed 21:00</span>
+          <span>{t("cinema:cover.liveQna")}</span>
         </div>
       </div>
       <div className={styles.cvText}>
@@ -108,18 +132,24 @@ export function CinemaCover() {
         </div>
         <div className={styles.cvActions}>
           <Button size="lg" to={routes.film}>
-            Watch now
+            {t("cinema:cover.watchNowCta")}
           </Button>
           <Button variant="ghost-dark" to={routes.film}>
-            Rent · €3
+            {t("cinema:cover.rentCta", { price: fmt.currency(3) })}
           </Button>
           <Button variant="ghost-dark" to={routes.rsvp}>
-            RSVP live Q&amp;A
+            {t("cinema:cover.rsvpCta")}
           </Button>
         </div>
         <div className={styles.cvSplit}>
-          If you rent, <strong>€2.40 goes directly to Maria.</strong> €0.60
-          covers payments &amp; hosting.
+          <Translation
+            i18nKey="cinema:cover.splitNote"
+            components={{ strong: <strong /> }}
+            values={{
+              filmmakerShare: fmt.currency(2.4),
+              platformShare: fmt.currency(0.6),
+            }}
+          />
         </div>
       </div>
     </section>

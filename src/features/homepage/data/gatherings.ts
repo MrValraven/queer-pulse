@@ -1,5 +1,7 @@
 import type { Gathering } from "./types";
 
+// Lisbon neighbourhood names are proper nouns and read identically in both
+// catalogs (see the gatherings feature's `HOOD_KEYS` for the same call).
 export const neighbourhoods: string[] = [
   "Príncipe Real",
   "Alfama",
@@ -21,8 +23,8 @@ export const gatherings: Gathering[] = [
     hood: "Mouraria",
     detail: "Hosted by Tomás B.",
     spotsValue: "8",
-    spotsLabel: "seats left",
-    ctaLabel: "Reserve a seat",
+    spotsLabelKey: "homepage:gatherings.spots.seatsLeft",
+    ctaLabelKey: "homepage:gatherings.cta.reserveSeat",
   },
   {
     id: "portfolio-night",
@@ -33,8 +35,8 @@ export const gatherings: Gathering[] = [
     hood: "Príncipe Real",
     detail: "Open to all members",
     spotsValue: "32",
-    spotsLabel: "going",
-    ctaLabel: "I'll be there",
+    spotsLabelKey: "homepage:gatherings.spots.going",
+    ctaLabelKey: "homepage:gatherings.cta.illBeThere",
   },
   {
     id: "studio-visit",
@@ -45,8 +47,8 @@ export const gatherings: Gathering[] = [
     hood: "Graça",
     detail: "Limited to 10",
     spotsValue: "3",
-    spotsLabel: "spots left",
-    ctaLabel: "Request a spot",
+    spotsLabelKey: "homepage:gatherings.spots.spotsLeft",
+    ctaLabelKey: "homepage:gatherings.cta.requestSpot",
   },
   {
     id: "founders-breakfast",
@@ -56,7 +58,7 @@ export const gatherings: Gathering[] = [
     title: "Founders & Builders Breakfast",
     hood: "Marvila",
     detail: "Early start, good coffee",
-    spotsLabel: "Casual",
-    ctaLabel: "RSVP",
+    spotsLabelKey: "homepage:gatherings.spots.casual",
+    ctaLabelKey: "homepage:gatherings.cta.rsvp",
   },
 ];

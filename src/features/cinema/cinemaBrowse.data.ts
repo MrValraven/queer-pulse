@@ -25,27 +25,39 @@ export function browsePoster(film: CinemaFilm): string | undefined {
   return BROWSE_POSTER_BY_ID[film.id] ?? film.image;
 }
 
-export const ACCESS_FILTERS: { value: Access; label: string }[] = [
-  { value: "free", label: "Free" },
-  { value: "member", label: "Sustainer" },
-  { value: "rent", label: "Rent · €3" },
+/**
+ * i18n Pattern A. `value` is the canonical (untranslated) identifier used by
+ * `filterFilms()`/`sortFilms()` and by the "made by"/mood per-film lookups
+ * below — it never changes. `labelKey` is what the sidebar/active-chips UI
+ * displays, resolved with `t()` in `CinemaBrowseControls.tsx` /
+ * `CinemaBrowsePage.tsx`.
+ */
+export const ACCESS_FILTERS: { value: Access; labelKey: string }[] = [
+  { value: "free", labelKey: "cinema:access.free" },
+  { value: "member", labelKey: "cinema:access.sustainer" },
+  { value: "rent", labelKey: "cinema:browse.filters.accessRent" },
 ];
 
-export const FORMATS = [
-  "Documentary",
-  "Feature",
-  "Short",
-  "Series",
-  "Experimental",
+export const FORMAT_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "Documentary", labelKey: "cinema:format.documentary" },
+  { value: "Feature", labelKey: "cinema:format.feature" },
+  { value: "Short", labelKey: "cinema:format.short" },
+  { value: "Series", labelKey: "cinema:format.series" },
+  { value: "Experimental", labelKey: "cinema:format.experimental" },
 ];
+export const FORMATS = FORMAT_OPTIONS.map((f) => f.value);
 
-export const MADE_BY = [
-  "Trans filmmakers",
-  "Lesbian filmmakers",
-  "Gay filmmakers",
-  "Non-binary filmmakers",
-  "QP members",
+export const MADE_BY_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "Trans filmmakers", labelKey: "cinema:browse.madeBy.trans" },
+  { value: "Lesbian filmmakers", labelKey: "cinema:browse.madeBy.lesbian" },
+  { value: "Gay filmmakers", labelKey: "cinema:browse.madeBy.gay" },
+  {
+    value: "Non-binary filmmakers",
+    labelKey: "cinema:browse.madeBy.nonBinary",
+  },
+  { value: "QP members", labelKey: "cinema:browse.madeBy.qpMembers" },
 ];
+export const MADE_BY = MADE_BY_OPTIONS.map((m) => m.value);
 
 /**
  * "Made by" tags per film. Not on the shared film record, so kept here as a
@@ -71,23 +83,31 @@ const MOOD_BY_ID: Record<string, string[]> = {
 };
 
 /** Country names shown in the sidebar, with the film code(s) they match. */
-const COUNTRY_OPTIONS: { label: string; codes: string[] }[] = [
-  { label: "Portugal", codes: ["PT"] },
-  { label: "Brazil", codes: ["BR"] },
-  { label: "France", codes: ["FR"] },
-  { label: "Japan", codes: ["JP"] },
-  { label: "UK", codes: ["UK"] },
-  { label: "Senegal", codes: ["SN"] },
-  { label: "Egypt", codes: ["EG"] },
-];
-export const COUNTRIES = COUNTRY_OPTIONS.map((c) => c.label);
+export const COUNTRY_OPTIONS: { value: string; labelKey: string; codes: string[] }[] =
+  [
+    { value: "Portugal", labelKey: "cinema:browse.country.portugal", codes: ["PT"] },
+    { value: "Brazil", labelKey: "cinema:browse.country.brazil", codes: ["BR"] },
+    { value: "France", labelKey: "cinema:browse.country.france", codes: ["FR"] },
+    { value: "Japan", labelKey: "cinema:browse.country.japan", codes: ["JP"] },
+    { value: "UK", labelKey: "cinema:browse.country.uk", codes: ["UK"] },
+    { value: "Senegal", labelKey: "cinema:browse.country.senegal", codes: ["SN"] },
+    { value: "Egypt", labelKey: "cinema:browse.country.egypt", codes: ["EG"] },
+  ];
+export const COUNTRIES = COUNTRY_OPTIONS.map((c) => c.value);
 
-export const ACCESSIBILITY = [
-  "PT subtitles",
-  "EN subtitles",
-  "Audio description",
-  "Sign language",
+export const ACCESSIBILITY_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "PT subtitles", labelKey: "cinema:browse.accessibility.ptSubtitles" },
+  { value: "EN subtitles", labelKey: "cinema:browse.accessibility.enSubtitles" },
+  {
+    value: "Audio description",
+    labelKey: "cinema:browse.accessibility.audioDescription",
+  },
+  {
+    value: "Sign language",
+    labelKey: "cinema:browse.accessibility.signLanguage",
+  },
 ];
+export const ACCESSIBILITY = ACCESSIBILITY_OPTIONS.map((a) => a.value);
 
 /** Maps an accessibility label to the `subs` substring(s) that satisfy it. */
 const ACCESS_NEEDLE: Record<string, string[]> = {
@@ -97,14 +117,15 @@ const ACCESS_NEEDLE: Record<string, string[]> = {
   "Sign language": ["Sign", "LGP", "BSL"],
 };
 
-export const MOODS = [
-  "Slow",
-  "Tender",
-  "Political",
-  "Funny",
-  "Healing",
-  "Joyful",
+export const MOOD_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "Slow", labelKey: "cinema:browse.mood.slow" },
+  { value: "Tender", labelKey: "cinema:browse.mood.tender" },
+  { value: "Political", labelKey: "cinema:browse.mood.political" },
+  { value: "Funny", labelKey: "cinema:browse.mood.funny" },
+  { value: "Healing", labelKey: "cinema:browse.mood.healing" },
+  { value: "Joyful", labelKey: "cinema:browse.mood.joyful" },
 ];
+export const MOODS = MOOD_OPTIONS.map((m) => m.value);
 
 export interface BrowseFilters {
   access: Set<Access>;
@@ -126,8 +147,8 @@ export const emptyFilters = (): BrowseFilters => ({
 
 function matchCountry(film: CinemaFilm, selected: Set<string>): boolean {
   const filmCodes = film.country.split("/").map((c) => c.trim());
-  return [...selected].some((label) => {
-    const codes = COUNTRY_OPTIONS.find((c) => c.label === label)?.codes ?? [];
+  return [...selected].some((value) => {
+    const codes = COUNTRY_OPTIONS.find((c) => c.value === value)?.codes ?? [];
     return codes.some((code) => filmCodes.includes(code));
   });
 }
@@ -168,12 +189,15 @@ export function filterFilms(filters: BrowseFilters): CinemaFilm[] {
 
 export type SortKey = "curated" | "newest" | "oldest" | "az";
 
-export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: "curated", label: "Curators' pick" },
-  { value: "newest", label: "Newest first" },
-  { value: "oldest", label: "Oldest first" },
-  { value: "az", label: "Title A–Z" },
+export const SORT_OPTIONS: { value: SortKey; labelKey: string }[] = [
+  { value: "curated", labelKey: "cinema:browse.sort.curated" },
+  { value: "newest", labelKey: "cinema:browse.sort.newest" },
+  { value: "oldest", labelKey: "cinema:browse.sort.oldest" },
+  { value: "az", labelKey: "cinema:browse.sort.az" },
 ];
+
+/** Number of films in the full (unfiltered) catalogue, for the hero copy. */
+export const FILM_CATALOGUE_COUNT = 142;
 
 function filmTitle(f: CinemaFilm): string {
   return `${f.titlePre}${f.titleEm ?? ""}${f.titlePost ?? ""}`.trim();

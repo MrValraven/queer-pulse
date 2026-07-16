@@ -1,4 +1,5 @@
 import { SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Badge, Venue } from "./accessibility.data";
 import styles from "./AccessibilityPage.module.css";
 
@@ -15,6 +16,7 @@ export function AccessibleVenueCard({
   v: Venue;
   onFlag: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.venueCard}>
       <div className={styles.vcName}>{v.name}</div>
@@ -35,9 +37,15 @@ export function AccessibleVenueCard({
         ))}
       </div>
       <div className={styles.vcFoot}>
-        <span className={styles.vcReviewer}>{v.reviewer}</span>
+        <span className={styles.vcReviewer}>
+          {v.reviewedByCount !== undefined
+            ? t("marketing:accessibility.venue.reviewedBy", {
+                count: v.reviewedByCount,
+              })
+            : t("marketing:accessibility.venue.operatedBadge")}
+        </span>
         <button type="button" className={styles.flagBtn} onClick={onFlag}>
-          Flag an issue
+          {t("marketing:accessibility.venue.flagCta")}
         </button>
       </div>
     </div>

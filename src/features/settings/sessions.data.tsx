@@ -1,6 +1,15 @@
 import type { ReactNode } from "react";
 
-export type SessionVariant = "current" | "trusted" | "suspect" | "normal";
+/**
+ * Demo fallback for `SessionsPage`. Live mode fetches the real
+ * `GET /account/sessions` instead (see `api/useSessions.ts`); this mock is the
+ * demo branch only, and is the richer of the two shapes — the backend's
+ * refresh-token store has no location or last-activity column, so `loc` and
+ * `lastActivity` are optional and simply absent in live mode rather than
+ * invented (see `api/sessions.adapters.ts`).
+ */
+
+export type SessionVariant = "current" | "suspect" | "normal";
 export type DeviceType = "desktop" | "mobile";
 
 export interface Session {
@@ -8,17 +17,11 @@ export interface Session {
   device: string;
   variant: SessionVariant;
   deviceType: DeviceType;
-  loc: ReactNode;
+  /** Where the session was seen. Demo-only — the backend stores no geo/IP. */
+  loc?: ReactNode;
   signedIn: string;
-  lastActivity: string;
-  extra?: string;
-}
-
-export interface TrustedDevice {
-  id: string;
-  device: string;
-  deviceType: DeviceType;
-  since: string;
+  /** Demo-only — the backend stores no last-seen timestamp. */
+  lastActivity?: string;
   extra?: string;
 }
 
@@ -35,12 +38,11 @@ export const ACTIVE_SESSIONS: Session[] = [
     ),
     signedIn: "4 hours ago",
     lastActivity: "2 min ago",
-    extra: "2FA on this device",
   },
   {
     id: "iphone",
     device: "iPhone 14 · QueerPulse app 2.4.1",
-    variant: "trusted",
+    variant: "normal",
     deviceType: "mobile",
     loc: (
       <>
@@ -75,7 +77,7 @@ export const ACTIVE_SESSIONS: Session[] = [
     ),
     signedIn: "14h ago",
     lastActivity: "11h ago",
-    extra: "2FA used — but new location",
+    extra: "New location",
   },
   {
     id: "ipad",
@@ -89,21 +91,5 @@ export const ACTIVE_SESSIONS: Session[] = [
     ),
     signedIn: "2 months ago",
     lastActivity: "last Sunday",
-  },
-];
-
-export const TRUSTED_DEVICES: TrustedDevice[] = [
-  {
-    id: "td-macbook",
-    device: "MacBook Pro · This device",
-    deviceType: "desktop",
-    since: "14 Mar 2026",
-    extra: "Re-confirmed every 90 days",
-  },
-  {
-    id: "td-iphone",
-    device: "iPhone 14",
-    deviceType: "mobile",
-    since: "17 May 2026",
   },
 ];

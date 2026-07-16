@@ -7,6 +7,7 @@ import {
   FiType,
 } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSaved } from "../../app/providers/SavedProvider";
 import { routes } from "../../app/routeMap";
 import styles from "./ArticleToolbar.module.css";
@@ -50,6 +51,7 @@ export function ArticleToolbar({
   articleDescription,
   articleReadTime,
 }: Props) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { isSaved, toggleSave: toggleSaved } = useSaved();
 
@@ -65,7 +67,9 @@ export function ArticleToolbar({
   function toggleSave() {
     const title =
       articleTitle ??
-      (typeof document !== "undefined" ? document.title : "This article");
+      (typeof document !== "undefined"
+        ? document.title
+        : t("magazine:toolbar.fallbackTitle"));
     const next = toggleSaved({
       id,
       kind: "article",
@@ -76,7 +80,7 @@ export function ArticleToolbar({
       readTime: articleReadTime,
     });
     showToast(
-      next ? "Saved to your reading list" : "Removed from your reading list",
+      next ? t("magazine:toolbar.savedToast") : t("magazine:toolbar.removedToast"),
       next ? "success" : "info",
     );
   }
@@ -85,22 +89,30 @@ export function ArticleToolbar({
     const url = window.location.href;
     try {
       await navigator.clipboard.writeText(url);
-      showToast("Link copied to clipboard", "success");
+      showToast(t("magazine:toolbar.linkCopiedToast"), "success");
     } catch {
-      showToast("Could not copy the link", "info");
+      showToast(t("magazine:toolbar.linkCopyErrorToast"), "info");
     }
   }
 
   return (
-    <div className={styles.toolbar} role="toolbar" aria-label="Reading tools">
-      <div className={styles.group} role="group" aria-label="Adjust text size">
+    <div
+      className={styles.toolbar}
+      role="toolbar"
+      aria-label={t("magazine:toolbar.ariaLabel")}
+    >
+      <div
+        className={styles.group}
+        role="group"
+        aria-label={t("magazine:toolbar.textSizeGroupAriaLabel")}
+      >
         <FiType className={styles.groupIcon} aria-hidden />
         <button
           type="button"
           className={styles.iconBtn}
           onClick={decSize}
           disabled={sizeIndex === 0}
-          aria-label="Decrease text size"
+          aria-label={t("magazine:toolbar.decreaseTextSizeAriaLabel")}
         >
           <FiMinus aria-hidden />
         </button>
@@ -112,7 +124,7 @@ export function ArticleToolbar({
           className={styles.iconBtn}
           onClick={incSize}
           disabled={sizeIndex === SIZES.length - 1}
-          aria-label="Increase text size"
+          aria-label={t("magazine:toolbar.increaseTextSizeAriaLabel")}
         >
           <FiPlus aria-hidden />
         </button>
@@ -127,28 +139,32 @@ export function ArticleToolbar({
           .join(" ")}
         onClick={toggleSave}
         aria-pressed={saved}
-        aria-label={saved ? "Remove from reading list" : "Save to reading list"}
+        aria-label={
+          saved
+            ? t("magazine:toolbar.removeFromReadingListAriaLabel")
+            : t("magazine:toolbar.saveToReadingListAriaLabel")
+        }
       >
         <FiBookmark
           aria-hidden
           style={{ fill: saved ? "currentColor" : "none" }}
         />
-        <span>{saved ? "Saved" : "Save"}</span>
+        <span>{saved ? t("magazine:toolbar.savedCta") : t("magazine:toolbar.saveCta")}</span>
       </button>
 
       <button
         type="button"
         className={styles.action}
         onClick={share}
-        aria-label="Copy a link to this article"
+        aria-label={t("magazine:toolbar.copyLinkAriaLabel")}
       >
         <FiShare2 aria-hidden />
-        <span>Share</span>
+        <span>{t("magazine:toolbar.shareCta")}</span>
       </button>
 
       {saved && (
         <span className={styles.savedHint} aria-hidden>
-          <FiCheck /> In your list
+          <FiCheck /> {t("magazine:toolbar.savedHint")}
         </span>
       )}
     </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { DIRECTORY_BLURB_MAX_CHARS } from "./directoryBlurb";
 import { DirectoryCardPreview } from "./DirectoryCardPreview";
@@ -18,6 +19,7 @@ const COUNTER_VISIBLE_FROM = DIRECTORY_BLURB_MAX_CHARS - 30;
  * enforce a number the design already enforces visually would just be rude.
  */
 export function ProfileShortBioField() {
+  const { t } = useTranslation();
   const { draft, updateDraft } = useProfile();
 
   const length = draft.role.trim().length;
@@ -26,15 +28,16 @@ export function ProfileShortBioField() {
 
   return (
     <div className={styles.field}>
-      <label className={styles.fieldLabel}>Short bio</label>
+      <label className={styles.fieldLabel}>
+        {t("members:profileEdit.shortBio.label")}
+      </label>
       <p className={styles.fieldHelp}>
-        The line people read in the members directory, before they open your
-        profile.
+        {t("members:profileEdit.shortBio.help")}
       </p>
       <InlineTextarea
         value={draft.role}
-        ariaLabel="Short bio"
-        placeholder="A line or two on who you are and what you're around for."
+        ariaLabel={t("members:profileEdit.shortBio.label")}
+        placeholder={t("members:profileEdit.shortBio.placeholder")}
         rows={2}
         className={styles.shortBioInput}
         onChange={(value) => updateDraft({ role: value })}
@@ -45,8 +48,11 @@ export function ProfileShortBioField() {
             .filter(Boolean)
             .join(" ")}
         >
-          {length} / {DIRECTORY_BLURB_MAX_CHARS}
-          {isOverLimit && " — your card shows the first two lines"}
+          {t("members:profileEdit.shortBio.counter", {
+            length,
+            max: DIRECTORY_BLURB_MAX_CHARS,
+          })}
+          {isOverLimit && ` ${t("members:profileEdit.shortBio.overLimit")}`}
         </p>
       )}
       <DirectoryCardPreview />

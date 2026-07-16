@@ -13,10 +13,14 @@ export default defineConfig({
     css: false,
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     exclude: ["e2e/**", "node_modules/**", "dist/**"],
-    // Default: empty API URL => config.ts freezes apiAvailable=false => demo mode
-    // is forced on, so route/provider suites are deterministic and network-free.
-    // Suites that exercise the live path override this with vi.stubEnv.
-    env: { VITE_API_URL: "" },
+    // Default: demo mode explicitly opted into (VITE_DEMO=1) with no API URL =>
+    // config.ts freezes apiAvailable=false => demo is forced on, so route and
+    // provider suites are deterministic and network-free. Demo is NEVER inferred
+    // from an empty VITE_API_URL any more (see src/shared/api/config.ts), so the
+    // opt-in has to be stated here or every suite would flip to the live path.
+    // Suites that exercise the live path stub VITE_API_URL with vi.stubEnv; with
+    // an API URL present demo defaults back OFF, so they need no VITE_DEMO change.
+    env: { VITE_API_URL: "", VITE_DEMO: "1" },
     coverage: {
       provider: "v8",
       include: [

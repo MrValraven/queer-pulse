@@ -1,4 +1,5 @@
 import { FiEdit3, FiPlus } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SocialLink } from "./data/members";
 import { socialHref, socialPlatform } from "./socialLinks.data";
 import styles from "./ProfilePage.module.css";
@@ -23,6 +24,7 @@ export function SocialLinksRow({
   /** Open the inline profile editor at the Links section. */
   onEdit?: () => void;
 }) {
+  const { t } = useTranslation();
   const items = (links ?? []).filter((l) => l.urlOrHandle.trim());
   // Visitors with an empty list see nothing; on your own profile we always show
   // the row so there's an obvious way to add links.
@@ -65,16 +67,16 @@ export function SocialLinksRow({
             className={`${styles.socialChip} ${styles.socialChipAdd}`}
             onClick={onEdit}
           >
-            <FiPlus aria-hidden /> <span>Add links</span>
+            <FiPlus aria-hidden /> <span>{t("members:social.addLinks")}</span>
           </button>
         ) : (
           <button
             type="button"
             className={`${styles.socialChip} ${styles.socialChipEdit}`}
-            aria-label="Edit your links"
+            aria-label={t("members:social.editLinksLabel")}
             onClick={onEdit}
           >
-            <FiEdit3 aria-hidden /> <span>Edit</span>
+            <FiEdit3 aria-hidden /> <span>{t("members:social.editLinks")}</span>
           </button>
         ))}
     </div>

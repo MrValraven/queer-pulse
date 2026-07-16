@@ -1,5 +1,6 @@
 import { useId, useState, type ReactNode } from "react";
 import { FiInfo } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SafetySignals } from "./employerSafety.data";
 import {
   AFFILIATION_DEFS,
@@ -79,6 +80,7 @@ export function SafetyBadges({
   affiliation,
   affiliationLabel,
 }: SafetyBadgesProps) {
+  const { t } = useTranslation();
   const aff = affiliation ? AFFILIATION_DEFS[affiliation] : null;
 
   const badges: { key: string; tone: "safe" }[] = [];
@@ -98,8 +100,10 @@ export function SafetyBadges({
       {aff && (
         <ExplainBadge
           icon={aff.icon}
-          label={affiliationLabel ?? aff.label}
-          blurb={aff.blurb}
+          // `affiliationLabel` is the employer's own wording (fetched in live
+          // mode); the default is chrome and resolves through the catalog.
+          label={affiliationLabel ?? t(aff.labelKey)}
+          blurb={t(aff.blurbKey)}
           tone={affiliation as "run" | "friendly"}
           compact={compact}
         />
@@ -111,8 +115,8 @@ export function SafetyBadges({
           <ExplainBadge
             key={b.key}
             icon={def.icon}
-            label={def.label}
-            blurb={def.blurb}
+            label={t(def.labelKey)}
+            blurb={t(def.blurbKey)}
             tone={b.tone}
             compact={compact}
           />

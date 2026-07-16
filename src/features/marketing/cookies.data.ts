@@ -1,49 +1,86 @@
 /** localStorage key that records an explicit sign-out for the prototype auth state. */
 export const AUTH_STORAGE_KEY = "qp_logged_in";
 
+/**
+ * i18n Pattern A. `name` (technical cookie identifier) and `provider` (brand
+ * name) are never translated. `expiresKey` resolves through `t()` since a
+ * duration word ("Session", "30 days") reads differently in pt-PT.
+ */
 export interface CookieRow {
   name: string;
-  expires: string;
+  expiresKey: string;
   provider: string;
 }
 
 export interface CookieCategory {
   id: "essential" | "functional" | "analytics";
-  title: string;
+  titleKey: string;
   required?: boolean;
-  body: string;
+  bodyKey: string;
   cookies: CookieRow[];
 }
 
 export const COOKIE_CATEGORIES: CookieCategory[] = [
   {
     id: "essential",
-    title: "Essential cookies",
+    titleKey: "marketing:cookies.essential.title",
     required: true,
-    body: "These cookies are required for the platform to function. They manage your session, remember your login, and protect against cross-site request forgery. They cannot be disabled.",
+    bodyKey: "marketing:cookies.essential.body",
     cookies: [
-      { name: "qp_session", expires: "Session", provider: "QueerPulse" },
-      { name: "qp_csrf", expires: "Session", provider: "QueerPulse" },
-      { name: "qp_auth", expires: "30 days", provider: "QueerPulse" },
-      { name: "qp_prefs", expires: "1 year", provider: "QueerPulse" },
+      {
+        name: "qp_session",
+        expiresKey: "marketing:cookies.expires.session",
+        provider: "QueerPulse",
+      },
+      {
+        name: "qp_csrf",
+        expiresKey: "marketing:cookies.expires.session",
+        provider: "QueerPulse",
+      },
+      {
+        name: "qp_auth",
+        expiresKey: "marketing:cookies.expires.days30",
+        provider: "QueerPulse",
+      },
+      {
+        name: "qp_prefs",
+        expiresKey: "marketing:cookies.expires.year1",
+        provider: "QueerPulse",
+      },
     ],
   },
   {
     id: "functional",
-    title: "Functional cookies",
-    body: "These remember choices you've made — your theme preference, notification settings, and language selection — so you don't have to reconfigure them every time you visit.",
+    titleKey: "marketing:cookies.functional.title",
+    bodyKey: "marketing:cookies.functional.body",
     cookies: [
-      { name: "qp_theme", expires: "1 year", provider: "QueerPulse" },
-      { name: "qp_lang", expires: "1 year", provider: "QueerPulse" },
-      { name: "qp_notif", expires: "6 months", provider: "QueerPulse" },
+      {
+        name: "qp_theme",
+        expiresKey: "marketing:cookies.expires.year1",
+        provider: "QueerPulse",
+      },
+      {
+        name: "qp_lang",
+        expiresKey: "marketing:cookies.expires.year1",
+        provider: "QueerPulse",
+      },
+      {
+        name: "qp_notif",
+        expiresKey: "marketing:cookies.expires.months6",
+        provider: "QueerPulse",
+      },
     ],
   },
   {
     id: "analytics",
-    title: "Analytics cookies",
-    body: "We use Plausible — a privacy-first, EU-hosted analytics tool — to understand which features are used and where the platform is slow. Plausible does not track individuals, use fingerprinting, or share data with third parties. All data is aggregated and anonymised before we see it.",
+    titleKey: "marketing:cookies.analytics.title",
+    bodyKey: "marketing:cookies.analytics.body",
     cookies: [
-      { name: "plausible_ignore", expires: "Session", provider: "Plausible" },
+      {
+        name: "plausible_ignore",
+        expiresKey: "marketing:cookies.expires.session",
+        provider: "Plausible",
+      },
     ],
   },
 ];

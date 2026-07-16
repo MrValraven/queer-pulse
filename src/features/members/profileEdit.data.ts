@@ -10,25 +10,27 @@ export const PRONOUN_OPTIONS = [
   "ze/zir",
 ] as const;
 
-/** Visibility / connect-status options shown as a segmented control on the hero. */
+/** Visibility / connect-status options shown as a segmented control on the
+ *  hero. `labelKey`/`hintKey` resolve through `t()` — this copy is platform
+ *  chrome, not a fetched value, in both demo and live mode. */
 export const VISIBILITY_OPTIONS: {
   value: VisibilityMode;
-  label: string;
-  hint: string;
+  labelKey: string;
+  hintKey: string;
 }[] = [
   {
     value: "open",
-    label: "Open to connect",
-    hint: "Anyone on QueerPulse can say hello.",
+    labelKey: "members:visibility.open",
+    hintKey: "members:visibility.hint.open",
   },
   {
     value: "network",
-    label: "Network only",
-    hint: "Only people you’re connected to.",
+    labelKey: "members:visibility.network",
+    hintKey: "members:visibility.hint.network",
   },
   {
     value: "private",
-    label: "Private",
-    hint: "Members must request an intro first.",
+    labelKey: "members:visibility.private",
+    hintKey: "members:visibility.hint.private",
   },
 ];

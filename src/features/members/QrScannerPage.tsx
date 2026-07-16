@@ -1,18 +1,35 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./QrScannerPage.module.css";
 
 type Mode = "safe" | "event" | "profile";
 
-const MODES: { id: Mode; label: string; hint: string }[] = [
-  { id: "safe", label: "Safe space", hint: "Point at a sticker" },
-  { id: "event", label: "Event ticket", hint: "Point at your ticket" },
-  { id: "profile", label: "Profile", hint: "Point at a profile code" },
+/** `labelKey`/`hintKey` are catalog keys — a small, platform-defined mode
+ *  vocabulary (chrome), resolved through `t()`. */
+const MODES: { id: Mode; labelKey: string; hintKey: string }[] = [
+  {
+    id: "safe",
+    labelKey: "members:qrScanner.mode.safe.label",
+    hintKey: "members:qrScanner.mode.safe.hint",
+  },
+  {
+    id: "event",
+    labelKey: "members:qrScanner.mode.event.label",
+    hintKey: "members:qrScanner.mode.event.hint",
+  },
+  {
+    id: "profile",
+    labelKey: "members:qrScanner.mode.profile.label",
+    hintKey: "members:qrScanner.mode.profile.hint",
+  },
 ];
 
 export function QrScannerPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [mode, setMode] = useState<Mode>("safe");
@@ -23,14 +40,17 @@ export function QrScannerPage() {
     const timers: ReturnType<typeof setTimeout>[] = [];
     timers.push(
       setTimeout(() => {
-        showToast("Mercearia Rosa · verified safe space", "success");
+        showToast(
+          t("members:qrScanner.scanToast", { name: "Mercearia Rosa" }),
+          "success",
+        );
         timers.push(setTimeout(() => navigate(routes.safeSpaces), 1500));
       }, 6000),
     );
     return () => timers.forEach(clearTimeout);
-  }, [navigate, showToast]);
+  }, [navigate, showToast, t]);
 
-  const hint = MODES.find((m) => m.id === mode)!.hint;
+  const hintKey = MODES.find((m) => m.id === mode)!.hintKey;
 
   return (
     <div className={styles.root}>
@@ -39,7 +59,7 @@ export function QrScannerPage() {
           type="button"
           className={styles.iconBtn}
           onClick={() => navigate(-1)}
-          aria-label="Close"
+          aria-label={t("members:qrScanner.closeAriaLabel")}
         >
           <svg viewBox="0 0 24 24">
             <line x1="18" y1="6" x2="6" y2="18" />
@@ -47,13 +67,16 @@ export function QrScannerPage() {
           </svg>
         </button>
         <div className={styles.title}>
-          Scan a <em>QueerPulse</em> code
+          <Translation
+            i18nKey="members:qrScanner.title"
+            components={{ em: <em /> }}
+          />
         </div>
         <button
           type="button"
           className={`${styles.iconBtn} ${flash ? styles.flashOn : ""}`}
           onClick={() => setFlash((v) => !v)}
-          aria-label="Flash"
+          aria-label={t("members:qrScanner.flashAriaLabel")}
           aria-pressed={flash}
         >
           <svg viewBox="0 0 24 24">
@@ -67,7 +90,7 @@ export function QrScannerPage() {
           <rect x="4" y="11" width="16" height="10" rx="2" />
           <path d="M8 11V8a4 4 0 0 1 8 0v3" />
         </svg>
-        <span>Camera stays on this device · we never upload frames</span>
+        <span>{t("members:qrScanner.privacyNote")}</span>
       </div>
 
       <div className={styles.view}>
@@ -77,23 +100,25 @@ export function QrScannerPage() {
           <div className={styles.line} />
         </div>
         <div className={styles.hint}>
-          <b>{hint}</b>
+          <b>{t(hintKey)}</b>
           <br />
-          Safe-space window stickers · gathering tickets · profile sharing codes
+          {t("members:qrScanner.hintSuffix")}
         </div>
       </div>
 
       <div className={styles.alt}>
-        <span>Can't scan?</span>
+        <span>{t("members:qrScanner.cantScan")}</span>
         <button
           type="button"
-          onClick={() => showToast("Open code · paste flow", "info")}
+          onClick={() =>
+            showToast(t("members:qrScanner.manualToast"), "info")
+          }
         >
-          Enter code manually
+          {t("members:qrScanner.enterCodeCta")}
         </button>
         <span className={styles.dot}>·</span>
         <button type="button" onClick={() => navigate(routes.help)}>
-          Help with codes
+          {t("members:qrScanner.helpCta")}
         </button>
       </div>
 
@@ -105,7 +130,7 @@ export function QrScannerPage() {
             className={`${styles.mode} ${mode === m.id ? styles.active : ""}`}
             onClick={() => setMode(m.id)}
           >
-            {m.label}
+            {t(m.labelKey)}
           </button>
         ))}
       </div>

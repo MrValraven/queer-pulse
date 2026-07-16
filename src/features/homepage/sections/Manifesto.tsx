@@ -1,31 +1,36 @@
 import { Button, Reveal } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { manifestoAssurances } from "./Manifesto.data";
 import styles from "./Manifesto.module.css";
 
 export function Manifesto() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.manifesto} id="about">
       <div className="wrap">
         <div className={styles.grid}>
           <div className={styles.intro}>
-            <Reveal className={styles.label}>What this is</Reveal>
+            <Reveal className={styles.label}>
+              {t("homepage:manifesto.label")}
+            </Reveal>
             <Reveal as="h2" className={styles.lead} delay={60}>
-              We're not building a platform. We're keeping a <em>room.</em>
+              <Translation
+                i18nKey="homepage:manifesto.lead"
+                components={{ em: <em /> }}
+              />
             </Reveal>
             <Reveal as="p" className={styles.body} delay={120}>
-              A room has a door — and someone you trust at it. Everyone here was
-              introduced by a member who believed you belonged. That's not a
-              growth hack. That's how trust actually works.
+              {t("homepage:manifesto.body1")}
             </Reveal>
             <Reveal as="p" className={styles.body} delay={160}>
-              It means the people you meet here are vouched for. It means
-              conversations are encrypted. It means the moderators are real
-              people who respond within 24 hours, every time.
+              {t("homepage:manifesto.body2")}
             </Reveal>
             <Reveal className={styles.actions} delay={220}>
               <Button variant="ghost-dark" to={routes.safety}>
-                How we keep it safe →
+                {t("homepage:manifesto.safetyCta")}
               </Button>
             </Reveal>
           </div>
@@ -34,7 +39,7 @@ export function Manifesto() {
             {manifestoAssurances.map((item, index) => (
               <Reveal
                 as="li"
-                key={item.title}
+                key={item.titleKey}
                 className={styles.assurance}
                 delay={index * 70}
               >
@@ -42,8 +47,8 @@ export function Manifesto() {
                   {item.icon}
                 </span>
                 <div className={styles.copy}>
-                  <div className={styles.name}>{item.title}</div>
-                  <p className={styles.desc}>{item.description}</p>
+                  <div className={styles.name}>{t(item.titleKey)}</div>
+                  <p className={styles.desc}>{t(item.descriptionKey)}</p>
                 </div>
               </Reveal>
             ))}

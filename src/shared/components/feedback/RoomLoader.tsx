@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../app/providers/authContext";
 import { useScrollLock } from "../../hooks";
+import { useTranslation } from "../../i18n/useTranslation";
+import { Translation } from "../../i18n/Translation";
 import styles from "./RoomLoader.module.css";
 
-const STEPS = ["Signing you in", "Getting your data", "Preparing the room"];
+const STEP_KEYS = [
+  "shared:feedback.roomLoader.steps.signingIn",
+  "shared:feedback.roomLoader.steps.gettingData",
+  "shared:feedback.roomLoader.steps.preparingRoom",
+];
 const STEP_MS = 750;
 
 function CheckIcon() {
@@ -30,6 +36,7 @@ const EXIT_MS = 520;
 
 export function RoomLoader() {
   const { preparing, endPreparing } = useAuth();
+  const { t } = useTranslation();
   const [step, setStep] = useState(0);
   // `mounted` keeps the overlay in the tree through its fade-out; `shown` drives
   // the opacity/transform transition (false on mount and during exit).

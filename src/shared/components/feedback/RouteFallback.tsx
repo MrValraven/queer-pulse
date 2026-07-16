@@ -1,5 +1,6 @@
 import { Spinner } from "../ui/Spinner";
 import { usePrefersReducedMotion } from "../../hooks";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./RouteFallback.module.css";
 
 /**
@@ -10,10 +11,11 @@ import styles from "./RouteFallback.module.css";
  */
 export function RouteFallback() {
   const reduced = usePrefersReducedMotion();
+  const { t } = useTranslation();
   return (
     <div className={styles.wrap} role="status" aria-live="polite">
       {!reduced && <Spinner className={styles.spin} />}
-      <span className={styles.label}>Loading…</span>
+      <span className={styles.label}>{t("shared:loading.label")}</span>
     </div>
   );
 }

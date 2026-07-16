@@ -7,6 +7,7 @@ import {
 } from "react";
 import { FiX } from "react-icons/fi";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PRONOUN_OPTIONS, VISIBILITY_OPTIONS } from "./profileEdit.data";
 import styles from "./ProfileEdit.module.css";
 
@@ -80,25 +81,26 @@ export function PronounPicker({
   value: string;
   onChange: (v: string) => void;
 }) {
+  const { t } = useTranslation();
   const isPreset = (PRONOUN_OPTIONS as readonly string[]).includes(value);
   return (
     <div className={styles.chips}>
-      {PRONOUN_OPTIONS.map((p) => (
+      {PRONOUN_OPTIONS.map((pronoun) => (
         <button
-          key={p}
+          key={pronoun}
           type="button"
-          className={`${styles.chip} ${value === p ? styles.chipSelected : ""}`}
-          aria-pressed={value === p}
-          onClick={() => onChange(value === p ? "" : p)}
+          className={`${styles.chip} ${value === pronoun ? styles.chipSelected : ""}`}
+          aria-pressed={value === pronoun}
+          onClick={() => onChange(value === pronoun ? "" : pronoun)}
         >
-          {p}
+          {pronoun}
         </button>
       ))}
       <input
         className={`${styles.inlineInput} ${styles.customPronoun}`}
         value={isPreset ? "" : value}
-        placeholder="custom…"
-        aria-label="Custom pronouns"
+        placeholder={t("members:profileEdit.customPronounPlaceholder")}
+        aria-label={t("members:profileEdit.customPronounsLabel")}
         onChange={(e) => onChange(e.target.value)}
       />
     </div>
@@ -109,18 +111,19 @@ export function PronounPicker({
 export function TagEditor({
   tags,
   onChange,
-  placeholder = "Add a tag…",
+  placeholder,
 }: {
   tags: string[];
   onChange: (next: string[]) => void;
   placeholder?: string;
 }) {
+  const { t } = useTranslation();
   const [input, setInput] = useState("");
   function add() {
-    const v = input.trim();
-    if (!v) return;
-    if (!tags.some((t) => t.toLowerCase() === v.toLowerCase()))
-      onChange([...tags, v]);
+    const value = input.trim();
+    if (!value) return;
+    if (!tags.some((tag) => tag.toLowerCase() === value.toLowerCase()))
+      onChange([...tags, value]);
     setInput("");
   }
   function handleKey(e: KeyboardEvent<HTMLInputElement>) {
@@ -133,14 +136,14 @@ export function TagEditor({
   }
   return (
     <div className={styles.tagEditor}>
-      {tags.map((t) => (
-        <span key={t} className={styles.tag}>
-          {t}
+      {tags.map((tag) => (
+        <span key={tag} className={styles.tag}>
+          {tag}
           <button
             type="button"
             className={styles.tagRemove}
-            aria-label={`Remove ${t}`}
-            onClick={() => onChange(tags.filter((x) => x !== t))}
+            aria-label={t("members:profileEdit.removeTagLabel", { tag })}
+            onClick={() => onChange(tags.filter((x) => x !== tag))}
           >
             <FiX size={13} />
           </button>
@@ -149,8 +152,8 @@ export function TagEditor({
       <input
         className={`${styles.inlineInput} ${styles.tagInput}`}
         value={input}
-        placeholder={placeholder}
-        aria-label="Add a tag"
+        placeholder={placeholder ?? t("members:profileEdit.addTagPlaceholder")}
+        aria-label={t("members:profileEdit.addTagLabel")}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKey}
         onBlur={add}
@@ -167,13 +170,14 @@ export function VisibilityPicker({
   value: VisibilityMode;
   onChange: (v: VisibilityMode) => void;
 }) {
+  const { t } = useTranslation();
   const active = VISIBILITY_OPTIONS.find((o) => o.value === value);
   return (
     <div>
       <div
         className={styles.segmented}
         role="radiogroup"
-        aria-label="Profile visibility"
+        aria-label={t("members:profileEdit.visibilityGroupLabel")}
       >
         {VISIBILITY_OPTIONS.map((o) => (
           <button
@@ -184,11 +188,11 @@ export function VisibilityPicker({
             className={`${styles.segment} ${value === o.value ? styles.segmentActive : ""}`}
             onClick={() => onChange(o.value)}
           >
-            {o.label}
+            {t(o.labelKey)}
           </button>
         ))}
       </div>
-      {active && <p className={styles.visHint}>{active.hint}</p>}
+      {active && <p className={styles.visHint}>{t(active.hintKey)}</p>}
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import type { ImageSlotTint } from "../../shared/components/ui/ImageSlot";
+import type { Formatters } from "../../shared/i18n/format";
+import type { TFunction } from "../../shared/i18n/types";
 import { memberName } from "../members/data/members";
 
 export type Access = "free" | "member" | "rent";
@@ -6,7 +8,8 @@ export type Access = "free" | "member" | "rent";
 export interface CinemaFilm {
   id: string;
   access: Access;
-  accessLabel: string;
+  /** Only set when `access === "rent"` — the price `accessLabel()` formats. */
+  rentPrice?: number;
   kicker: string;
   /** Title parts: plain + emphasised + trailing. */
   titlePre: string;
@@ -28,7 +31,6 @@ export const films: CinemaFilm[] = [
   {
     id: "cascais",
     access: "free",
-    accessLabel: "Free",
     kicker: "Narrative feature",
     titlePre: "A summer in ",
     titleEm: "Cascais",
@@ -46,7 +48,6 @@ export const films: CinemaFilm[] = [
   {
     id: "paris",
     access: "member",
-    accessLabel: "Sustainer",
     kicker: "Documentary",
     titlePre: "Paris is ",
     titleEm: "still",
@@ -65,7 +66,6 @@ export const films: CinemaFilm[] = [
   {
     id: "pharmacy",
     access: "free",
-    accessLabel: "Free",
     kicker: "Short · 18 min",
     titlePre: "The pharmacy at 3am",
     meta: "Rui Almeida · PT · 18 min",
@@ -82,7 +82,7 @@ export const films: CinemaFilm[] = [
   {
     id: "mother",
     access: "rent",
-    accessLabel: "Rent · €3",
+    rentPrice: 3,
     kicker: "Narrative feature",
     titlePre: "Mother, ",
     titleEm: "weather",
@@ -100,7 +100,6 @@ export const films: CinemaFilm[] = [
   {
     id: "archive",
     access: "member",
-    accessLabel: "Sustainer",
     kicker: "Documentary",
     titlePre: "The archive ",
     titleEm: "keepers",
@@ -118,7 +117,6 @@ export const films: CinemaFilm[] = [
   {
     id: "carta",
     access: "free",
-    accessLabel: "Free",
     kicker: "Series · 4 ep",
     titlePre: "Carta a quem ",
     titleEm: "fica",
@@ -155,12 +153,54 @@ export const coverFilm = {
 /**
  * Why a film appears in "More from the programme", relative to the cover film.
  * Returns a short badge label derived from shared curator / country / format.
+ * i18n Pattern A idiom (mirrors gatherings' `spotsText(spots, t, fmt)`): the
+ * country code is a proper noun and isn't translated, `format` resolves
+ * through `formatLabel()` below.
  */
-export function filmRelationReason(film: CinemaFilm): string {
+export function filmRelationReason(film: CinemaFilm, t: TFunction): string {
   if (film.country === coverFilm.country)
-    return `Same country · ${film.country}`;
-  if (film.format === coverFilm.format) return `Same form · ${film.format}`;
-  return `Curator's pick`;
+    return t("cinema:film.relation.sameCountry", { country: film.country });
+  if (film.format === coverFilm.format)
+    return t("cinema:film.relation.sameForm", {
+      format: formatLabel(film.format, t),
+    });
+  return t("cinema:film.relation.curatorsPick");
+}
+
+/**
+ * `format` is a small fixed taxonomy ("Feature", "Documentary", "Short",
+ * "Series", "Experimental") stored on `CinemaFilm` in English so filtering/
+ * sorting logic (cinemaBrowse.data.ts) keeps a stable canonical value; this
+ * resolves the *displayed* label through the catalog. Unknown values (there
+ * shouldn't be any) fall back to the raw string rather than crashing.
+ */
+const FORMAT_LABEL_KEYS: Record<string, string> = {
+  Feature: "cinema:format.feature",
+  Documentary: "cinema:format.documentary",
+  Short: "cinema:format.short",
+  Series: "cinema:format.series",
+  Experimental: "cinema:format.experimental",
+};
+
+export function formatLabel(format: string, t: TFunction): string {
+  const key = FORMAT_LABEL_KEYS[format];
+  return key ? t(key) : format;
+}
+
+/**
+ * `access` is the canonical (untranslated) enum used for filtering; this
+ * resolves the displayed badge text, formatting the rent price through
+ * `useFormat().currency()` so pt-PT renders `3,00 €` rather than a baked `€3`.
+ */
+export function accessLabel(
+  film: Pick<CinemaFilm, "access" | "rentPrice">,
+  t: TFunction,
+  fmt: Formatters,
+): string {
+  if (film.access === "rent")
+    return t("cinema:access.rent", { price: fmt.currency(film.rentPrice ?? 0) });
+  if (film.access === "member") return t("cinema:access.sustainer");
+  return t("cinema:access.free");
 }
 
 export const collections = [
@@ -250,11 +290,17 @@ export const shorts: CinemaShort[] = [
   },
 ];
 
+/**
+ * `date` is a real `Date` (mock, but real) so `LiveSection` can format the
+ * day/weekday through `useFormat()` instead of baking an English weekday
+ * abbreviation ("Wed") into the record. `badgeKey` is chrome (a small fixed
+ * set of event-type badges); `titlePre/titleEm/titlePost`, `sub` and `tags`
+ * are organizer-authored event copy and stay in English.
+ */
 export const liveEvents = [
   {
-    day: "10",
-    dow: "Wed",
-    badge: "Premiere",
+    date: new Date(2026, 5, 10),
+    badgeKey: "cinema:live.badge.premiere",
     badgeClass: "premiere",
     titlePre: "Premiere · ",
     titleEm: "The light between rooms",
@@ -263,9 +309,8 @@ export const liveEvents = [
     tags: ["21:00 Lisbon · online + at the room", "EN + PT live captions"],
   },
   {
-    day: "12",
-    dow: "Fri",
-    badge: "Watch party",
+    date: new Date(2026, 5, 12),
+    badgeKey: "cinema:live.badge.watchParty",
     badgeClass: "party",
     titlePre: "Watch party · ",
     titleEm: "Paris is still burning",
@@ -273,9 +318,8 @@ export const liveEvents = [
     tags: ["22:00 Lisbon · online", "Sustainer access"],
   },
   {
-    day: "13",
-    dow: "Sat",
-    badge: "In the room",
+    date: new Date(2026, 5, 13),
+    badgeKey: "cinema:live.badge.inTheRoom",
     badgeClass: "live",
     titlePre: "Open mic · ",
     titleEm: "Made here",

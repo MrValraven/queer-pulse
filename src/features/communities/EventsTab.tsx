@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { CommunityEvent } from "./community.model";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
 
 function EventRow({ ev }: { ev: CommunityEvent }) {
+  const { t } = useTranslation();
   return (
     <div
       className={[styles.eventRow, ev.past && styles.eventPast]
@@ -27,12 +29,12 @@ function EventRow({ ev }: { ev: CommunityEvent }) {
       {ev.past ? (
         ev.recapHref && (
           <Link to={routes.gathering} className={styles.recapLink}>
-            Read recap <FiArrowRight aria-hidden />
+            {t("communities:detail.events.recapCta")} <FiArrowRight aria-hidden />
           </Link>
         )
       ) : (
         <Button variant="primary" to={routes.gathering}>
-          RSVP
+          {t("communities:detail.events.rsvpCta")}
         </Button>
       )}
     </div>
@@ -40,11 +42,12 @@ function EventRow({ ev }: { ev: CommunityEvent }) {
 }
 
 export function EventsTab({ events }: { events: CommunityEvent[] }) {
+  const { t } = useTranslation();
   const upcoming = events.filter((e) => !e.past);
   const past = events.filter((e) => e.past);
   return (
     <div>
-      <div className={detail.secLbl}>Upcoming gatherings</div>
+      <div className={detail.secLbl}>{t("communities:detail.events.upcoming")}</div>
       {upcoming.map((ev) => (
         <EventRow key={ev.id} ev={ev} />
       ))}
@@ -52,7 +55,7 @@ export function EventsTab({ events }: { events: CommunityEvent[] }) {
       {past.length > 0 && (
         <>
           <div className={detail.secLbl} style={{ marginTop: 32 }}>
-            Past gatherings
+            {t("communities:detail.events.past")}
           </div>
           {past.map((ev) => (
             <EventRow key={ev.id} ev={ev} />

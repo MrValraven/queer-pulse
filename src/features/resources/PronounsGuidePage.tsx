@@ -1,26 +1,31 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
 import { NameTable, WhereGrid, FaqList } from "./PronounsGuideSections";
 import styles from "./PronounsGuidePage.module.css";
 
 export function PronounsGuidePage() {
+  const { t } = useTranslation();
   const { loggedIn } = useAuth();
   return (
     <PageShell>
       <header className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.heroEye}>
-            For trans &amp; nonbinary members
+            {t("resources:pronounsGuide.hero.eyebrow")}
           </div>
           <h1 className={styles.heroH}>
-            Names, pronouns, <em>done right.</em>
+            <Translation
+              i18nKey="resources:pronounsGuide.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.heroSub}>
-            How QueerPulse handles chosen names and pronouns — and what to do
-            when your name or gender changes across the platform.
+            {t("resources:pronounsGuide.hero.sub")}
           </p>
         </div>
       </header>
@@ -29,75 +34,69 @@ export function PronounsGuidePage() {
         <div className={styles.layout}>
           <div>
             <Reveal as="section" className={styles.section}>
-              <div className={styles.proseEye}>The basics</div>
+              <div className={styles.proseEye}>
+                {t("resources:pronounsGuide.basics.eyebrow")}
+              </div>
               <h2 className={styles.proseH}>
-                Chosen name vs. <em>legal name.</em>
+                <Translation
+                  i18nKey="resources:pronounsGuide.basics.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
               <div className={styles.proseBody}>
                 <p>
-                  QueerPulse uses your <strong>chosen name</strong> everywhere.
-                  Your legal name is only stored if you've provided it
-                  separately — for example, if you applied for event ticketing
-                  that required it. In all other contexts, we use whatever
-                  you've entered as your display name or chosen name in
-                  settings.
+                  <Translation
+                    i18nKey="resources:pronounsGuide.basics.body1"
+                    components={{ strong: <strong /> }}
+                  />
                 </p>
-                <p>
-                  If you're in the process of changing your legal name and want
-                  QueerPulse to reflect your new name before the paperwork is
-                  done, you can update your display name at any time — no
-                  documentation required.
-                </p>
+                <p>{t("resources:pronounsGuide.basics.body2")}</p>
               </div>
               <NameTable />
             </Reveal>
 
             <Reveal as="section" className={styles.section}>
-              <div className={styles.proseEye}>When you update your name</div>
+              <div className={styles.proseEye}>
+                {t("resources:pronounsGuide.whenUpdate.eyebrow")}
+              </div>
               <h2 className={styles.proseH}>
-                What changes, <em>and when.</em>
+                <Translation
+                  i18nKey="resources:pronounsGuide.whenUpdate.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
               <div className={styles.proseBody}>
-                <p>
-                  Updating your display name is immediate across most of the
-                  platform. A few things propagate slightly later — here's what
-                  to expect.
-                </p>
+                <p>{t("resources:pronounsGuide.whenUpdate.body")}</p>
               </div>
               <WhereGrid />
             </Reveal>
 
             <Reveal as="section" className={styles.section}>
-              <div className={styles.proseEye}>Pronouns</div>
+              <div className={styles.proseEye}>
+                {t("resources:pronounsGuide.pronouns.eyebrow")}
+              </div>
               <h2 className={styles.proseH}>
-                Setting and <em>changing pronouns.</em>
+                <Translation
+                  i18nKey="resources:pronounsGuide.pronouns.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
               <div className={styles.proseBody}>
-                <p>
-                  Your pronouns appear on your profile page, next to your name
-                  in message threads, and in the member directory if you've made
-                  that section visible. They do not appear in URLs, notification
-                  emails, or search result snippets.
-                </p>
-                <p>
-                  You can set multiple pronoun sets (e.g. she/they) and add a
-                  custom string if none of the presets fit. Changes take effect
-                  immediately and there's no limit to how often you can update
-                  them.
-                </p>
-                <p>
-                  If another member uses the wrong pronouns for you in the forum
-                  or messages, you can report it using the report function on
-                  any post or message. Our moderation team treats repeated
-                  misgendering as a code of conduct issue.
-                </p>
+                <p>{t("resources:pronounsGuide.pronouns.body1")}</p>
+                <p>{t("resources:pronounsGuide.pronouns.body2")}</p>
+                <p>{t("resources:pronounsGuide.pronouns.body3")}</p>
               </div>
             </Reveal>
 
             <Reveal as="section" className={styles.section}>
-              <div className={styles.proseEye}>Common questions</div>
+              <div className={styles.proseEye}>
+                {t("resources:pronounsGuide.faq.eyebrow")}
+              </div>
               <h2 className={styles.proseH}>
-                Things people <em>ask us.</em>
+                <Translation
+                  i18nKey="resources:pronounsGuide.faq.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
               <FaqList />
             </Reveal>
@@ -107,36 +106,36 @@ export function PronounsGuidePage() {
             {loggedIn && (
               <div className={styles.sidebarCard}>
                 <h3>
-                  Update your <em>name now</em>
+                  <Translation
+                    i18nKey="resources:pronounsGuide.sidebar.updateName.title"
+                    components={{ em: <em /> }}
+                  />
                 </h3>
-                <p>
-                  Make changes to your display name, chosen name, and pronouns
-                  in your profile settings.
-                </p>
+                <p>{t("resources:pronounsGuide.sidebar.updateName.body")}</p>
                 <Button variant="primary" to={routes.settings}>
-                  Edit profile
+                  {t("resources:pronounsGuide.sidebar.updateName.cta")}
                 </Button>
               </div>
             )}
             <div className={styles.commitment}>
-              <h4>Our commitment</h4>
+              <h4>{t("resources:pronounsGuide.sidebar.commitment.title")}</h4>
               <p>
-                QueerPulse will never require documentation to change your name
-                or pronouns. No legal name verification. No deadnaming by staff.
-                If something on the platform misgenders you,{" "}
-                <Link to={routes.contact}>tell us</Link> and we'll fix it.
+                <Translation
+                  i18nKey="resources:pronounsGuide.sidebar.commitment.body"
+                  components={{ a: <Link to={routes.contact} /> }}
+                />
               </p>
             </div>
             <div className={styles.sidebarCard}>
               <h3>
-                Something <em>wrong?</em>
+                <Translation
+                  i18nKey="resources:pronounsGuide.sidebar.wrong.title"
+                  components={{ em: <em /> }}
+                />
               </h3>
-              <p>
-                If you've found your deadname somewhere on the platform, or
-                something isn't updating correctly, contact us directly.
-              </p>
+              <p>{t("resources:pronounsGuide.sidebar.wrong.body")}</p>
               <Button variant="ghost" to={routes.contact}>
-                Contact us
+                {t("resources:pronounsGuide.sidebar.wrong.cta")}
               </Button>
             </div>
           </aside>
@@ -145,14 +144,15 @@ export function PronounsGuidePage() {
 
       <Outro
         title={
-          <>
-            Questions about <em>your identity settings?</em>
-          </>
+          <Translation
+            i18nKey="resources:pronounsGuide.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Write to us. We'll respond within two working days."
+        sub={t("resources:pronounsGuide.outro.sub")}
       >
         <Button variant="ghost-dark" size="lg" to={routes.contact}>
-          Contact us
+          {t("resources:pronounsGuide.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

@@ -1,5 +1,6 @@
 import { isValidElement, type ReactNode } from "react";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import type { TFunction } from "../../../shared/i18n/types";
 import { memberName } from "../../members/data/members";
 
 /** A paragraph (plain text or rich JSX) or a pull quote. */
@@ -38,15 +39,22 @@ export interface Article {
 
 /**
  * Why a related article is being recommended, derived from shared fields.
- * Used to render a small relationship badge on each related card.
+ * Used to render a small relationship badge on each related card. This badge
+ * is platform chrome (an algorithm's own explanation), so it is translated —
+ * the tag/section names it interpolates are the article's own content
+ * fields and stay in English either way.
  */
-export function relationReason(current: Article, candidate: Article): string {
-  if (candidate.byline === current.byline) return "Same author";
+export function relationReason(
+  current: Article,
+  candidate: Article,
+  t: TFunction,
+): string {
+  if (candidate.byline === current.byline) return t("magazine:relation.sameAuthor");
   const sharedTag = candidate.tags.find((tag) => current.tags.includes(tag));
-  if (sharedTag) return `Same tag: ${sharedTag}`;
+  if (sharedTag) return t("magazine:relation.sameTag", { tag: sharedTag });
   if (candidate.section === current.section)
-    return `Same section: ${candidate.section}`;
-  return "Editor’s pick";
+    return t("magazine:relation.sameSection", { section: candidate.section });
+  return t("magazine:relation.editorsPick");
 }
 
 export const articles: Record<string, Article> = {

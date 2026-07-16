@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Button, Sending } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GLOSSARY } from "./queer101.data";
 import { ResourceModal, PlumSuccess } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
 
 export function SuggestEditModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const [term, setTerm] = useState("");
   const [change, setChange] = useState("");
   const [phase, setPhase] = useState<"form" | "loading" | "done">("form");
@@ -19,54 +22,60 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
 
   return (
     <ResourceModal
-      title={phase === "done" ? "" : "Suggest an edit"}
+      title={phase === "done" ? "" : t("resources:suggestEdit.modalTitle")}
       onClose={onClose}
     >
       {phase === "done" ? (
         <PlumSuccess
           title={
-            <>
-              Suggestion <em>received.</em>
-            </>
+            <Translation
+              i18nKey="resources:suggestEdit.success.title"
+              components={{ em: <em /> }}
+            />
           }
-          sub="The editors look at suggestions weekly and discuss bigger changes at the monthly assembly. This is a living document precisely because of edits like yours."
+          sub={t("resources:suggestEdit.success.sub")}
           onClose={onClose}
         />
       ) : (
         <>
           <div className={styles.body}>
-            <p className={styles.sub}>
-              Community-edited. If a definition feels incomplete or wrong, tell
-              us which term and what you'd change.
-            </p>
+            <p className={styles.sub}>{t("resources:suggestEdit.body.intro")}</p>
 
-            <span className={styles.label}>Which term</span>
+            <span className={styles.label}>
+              {t("resources:suggestEdit.form.termLabel")}
+            </span>
             <select
               className={styles.select}
               value={term}
               onChange={(e) => setTerm(e.target.value)}
             >
-              <option value="">Select a term…</option>
+              <option value="">
+                {t("resources:suggestEdit.form.selectPlaceholder")}
+              </option>
               {GLOSSARY.map((g) => (
-                <option key={g.term} value={g.term}>
-                  {g.term}
+                <option key={g.termKey} value={t(g.termKey)}>
+                  {t(g.termKey)}
                 </option>
               ))}
-              <option value="__new">A term that's missing</option>
+              <option value="__new">
+                {t("resources:suggestEdit.form.newTermOption")}
+              </option>
             </select>
 
-            <span className={styles.label}>Suggested change</span>
+            <span className={styles.label}>
+              {t("resources:suggestEdit.form.changeLabel")}
+            </span>
             <textarea
               className={styles.textarea}
               value={change}
               onChange={(e) => setChange(e.target.value)}
-              placeholder="What's off, and how you'd put it instead. Sources welcome but not required."
+              placeholder={t("resources:suggestEdit.form.changePlaceholder")}
             />
           </div>
 
           <div className={styles.footer}>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t("resources:suggestEdit.cancelCta")}
             </Button>
             <Button
               type="button"
@@ -75,9 +84,9 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
               disabled={!valid || phase === "loading"}
             >
               {phase === "loading" ? (
-                <Sending label="Sending…" />
+                <Sending label={t("resources:suggestEdit.sendingLabel")} />
               ) : (
-                "Send suggestion"
+                t("resources:suggestEdit.sendCta")
               )}
             </Button>
           </div>

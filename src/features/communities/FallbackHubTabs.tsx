@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FadeIn, Tabs } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
   CommunityDetail,
   Person,
@@ -28,6 +29,7 @@ export function FallbackHubTabs({
   memberNum: number;
   threads: ThreadData[];
 }) {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>("about");
 
   // Simulate a short fetch when opening a data-heavy tab so its grid/threads
@@ -49,13 +51,17 @@ export function FallbackHubTabs({
         className={styles.tabs}
         variant="underline"
         tabs={[
-          { id: "about", label: "About" },
+          { id: "about", label: t("communities:detail.tabs.about") },
           {
             id: "members",
-            label: "Members",
+            label: t("communities:detail.tabs.members"),
             count: hasCount ? memberNum : undefined,
           },
-          { id: "forum", label: "Forum", count: threads.length },
+          {
+            id: "forum",
+            label: t("communities:detail.tabs.forum"),
+            count: threads.length,
+          },
         ]}
         active={tab}
         onChange={(id) => setTab(id as Tab)}

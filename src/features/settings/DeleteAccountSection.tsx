@@ -32,7 +32,6 @@ export function DeleteAccountSection() {
   const getDeletion = useGetDeletionRequest();
 
   const [opt, setOpt] = useState<DeleteOption>("deactivate");
-  const [password, setPassword] = useState("");
   const [phrase, setPhrase] = useState("");
   const [flowOpen, setFlowOpen] = useState(false);
   const [pending, setPending] = useState<DeletionRequest | null>(null);
@@ -40,7 +39,7 @@ export function DeleteAccountSection() {
 
   const content = DELETE_CONTENT[opt];
   const phraseMatch = content.phrase ? phrase === content.phrase : true;
-  const canSubmit = password.length >= 1 && phraseMatch;
+  const canSubmit = phraseMatch;
 
   // On mount, surface any already-pending deletion request instead of the form.
   useEffect(() => {
@@ -60,16 +59,23 @@ export function DeleteAccountSection() {
     setFlowOpen(true);
   }
 
-  // Re-auth with the collected password, then run the chosen destructive action.
+  // Mint the step-up token, then run the chosen destructive action.
+  //
+  // No password is collected or sent. `POST /account/reauth` takes no
+  // credential to check — auth is OAuth-only, so the backend has nothing to
+  // verify a password against and its `ReauthDto` explicitly tolerates and
+  // ignores the field (`account.service.ts: reauth(userId)`). The confirmation
+  // that gates this form is the typed phrase below, which is a real, checked
+  // gate; a password box that the server discards only looked like one.
   const runAction = useCallback(async () => {
-    const { reauthToken } = await reauth(password);
+    const { reauthToken } = await reauth();
     if (opt === "delete") {
       const req = await requestDeletion(reauthToken);
       setPending(req);
     } else {
       await deactivate(reauthToken);
     }
-  }, [reauth, password, opt, requestDeletion, deactivate]);
+  }, [reauth, opt, requestDeletion, deactivate]);
 
   async function handleCancel() {
     setCancelling(true);
@@ -155,17 +161,6 @@ export function DeleteAccountSection() {
       </div>
 
       <form className={styles.confirmForm} onSubmit={handleSubmit}>
-        <div>
-          <div className={styles.cfLabel}>Confirm with your password</div>
-          <input
-            className={styles.cfInput}
-            type="password"
-            placeholder="Your current password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-          />
-        </div>
         {content.phrase && (
           <div>
             <div className={styles.cfLabel}>
@@ -176,14 +171,17 @@ export function DeleteAccountSection() {
               to confirm
             </div>
             <input
-              className={`${styles.cfInput} ${styles.cfInputDanger}`}
+              className={[
+                styles.cfInput,
+                content.isDanger && styles.cfInputDanger,
+              ]
+                .filter(Boolean)
+                .join(" ")}
               type="text"
               value={phrase}
               onChange={(e) => setPhrase(e.target.value)}
             />
-            <div className={styles.cfHint}>
-              This action is permanent and cannot be reversed.
-            </div>
+            <div className={styles.cfHint}>{content.confirmHint}</div>
           </div>
         )}
         <div className={styles.formActions}>

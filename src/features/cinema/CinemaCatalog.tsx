@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import { FiStar } from "react-icons/fi";
 import { Avatar, ImageSlot } from "../../shared/components/ui";
-import { collections, films, shorts } from "./data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { accessLabel, collections, films, shorts } from "./data";
+import { PROGRAMME_WEEK } from "./cinemaPage.data";
 import styles from "./CinemaPage.module.css";
 import { routes } from "../../app/routeMap";
 
@@ -12,18 +16,21 @@ const accessClass = {
 };
 
 export function ProgrammeSection() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <div className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          This week's <em>programme</em>
+          <Translation
+            i18nKey="cinema:programme.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <div className="sub">
-          Six films, hand-picked. Available all week. Rotates Monday at noon
-          Lisbon.
-        </div>
+        <div className="sub">{t("cinema:programme.lead")}</div>
         <Link to={routes.cinemaBrowse} className="all">
-          All programmes →
+          {t("cinema:programme.allCta")}
         </Link>
       </div>
       <div className={styles.prog}>
@@ -40,7 +47,7 @@ export function ProgrammeSection() {
                 style={{ position: "absolute", inset: 0 }}
               />
               <span className={`${styles.fTag} ${accessClass[film.access]}`}>
-                {film.accessLabel}
+                {accessLabel(film, t, fmt)}
               </span>
             </div>
             <div className={styles.fKicker}>{film.kicker}</div>
@@ -59,9 +66,12 @@ export function ProgrammeSection() {
 
       <div className={styles.note}>
         <div className={styles.noteTag}>
-          Curator's <em>notebook</em>
+          <Translation
+            i18nKey="cinema:programme.notebook.eyebrow"
+            components={{ em: <em /> }}
+          />
           <br />
-          week 23
+          {t("cinema:programme.notebook.week", { week: PROGRAMME_WEEK })}
         </div>
         <div>
           <p className={styles.nq}>
@@ -71,7 +81,9 @@ export function ProgrammeSection() {
           </p>
           <div className={styles.sig}>
             — Sara Marques, programming lead.{" "}
-            <Link to={routes.cinemaBrowse}>Read the full note →</Link>
+            <Link to={routes.cinemaBrowse}>
+              {t("cinema:programme.notebook.readMoreCta")}
+            </Link>
           </div>
         </div>
       </div>
@@ -80,18 +92,20 @@ export function ProgrammeSection() {
 }
 
 export function CollectionsSection() {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          Wander a <em>collection</em>
+          <Translation
+            i18nKey="cinema:collectionsSection.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <div className="sub">
-          Curators build these slowly, over months. They're not playlists —
-          they're arguments.
-        </div>
+        <div className="sub">{t("cinema:collectionsSection.lead")}</div>
         <Link to={routes.cinemaBrowse} className="all">
-          All collections →
+          {t("cinema:collectionsSection.allCta")}
         </Link>
       </div>
       <div className={styles.collGrid}>
@@ -115,7 +129,7 @@ export function CollectionsSection() {
             <div className={styles.collCount}>
               <span>{c.count}</span>
               <span>
-                <em>{c.total}</em> total
+                <em>{c.total}</em> {t("cinema:collectionsSection.totalSuffix")}
               </span>
             </div>
           </Link>
@@ -126,18 +140,20 @@ export function CollectionsSection() {
 }
 
 export function MadeHereSection() {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.sec}>
       <div className={styles.secH}>
         <h2>
-          Made <em>here</em>
+          <Translation
+            i18nKey="cinema:madeHere.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <div className="sub">
-          Shorts &amp; mid-lengths from QueerPulse members. Free to watch, paid
-          to make.
-        </div>
+        <div className="sub">{t("cinema:madeHere.lead")}</div>
         <Link to={routes.cinemaShorts} className="all">
-          Explore Made Here →
+          {t("cinema:madeHere.exploreCta")}
         </Link>
       </div>
       <div className={styles.shortGrid}>

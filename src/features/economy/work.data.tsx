@@ -10,6 +10,7 @@ import {
   FiMessageCircle,
 } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
+import type { TFunction } from "../../shared/i18n/types";
 import { APPS } from "./applicationStatus.data";
 import { MENTORS } from "./mentorship.data";
 
@@ -18,120 +19,152 @@ const sentApps = APPS.filter((a) => a.cat !== "draft").length;
 const offers = APPS.filter((a) => a.cat === "offer").length;
 const openMentors = MENTORS.filter((m) => m.btn !== "Join waitlist").length;
 
-/** A live one-line summary of where work stands, derived from the mock data. */
-export const workStatusLine = `${activeApps} active application${activeApps === 1 ? "" : "s"} · ${
-  offers ? `${offers} offer to respond to` : "no offers yet"
-} · 2 mentor threads`;
+/**
+ * i18n Pattern B. This live one-line summary fuses chrome phrasing with counts
+ * derived from mock data — in live mode the counts come over the wire and the
+ * phrase is still chrome, so it's built from `t()` at render, memoized by the
+ * sole consumer (`WorkHubPage.tsx`) via `useMemo(() => workStatusLine(t), [t])`.
+ */
+export function workStatusLine(t: TFunction): string {
+  const apps = t("economy:workHub.statusLine.apps", { count: activeApps });
+  const offerPart = offers
+    ? t("economy:workHub.statusLine.offers", { count: offers })
+    : t("economy:workHub.statusLine.noOffers");
+  return `${apps} · ${offerPart} · ${t("economy:workHub.statusLine.mentorThreads")}`;
+}
 
 export interface NextAction {
   id: string;
   icon: ReactNode;
-  label: string;
-  context: string;
-  /** Short urgency chip, e.g. "Closes in 3 days". */
-  urgency?: string;
+  labelKey: string;
+  labelValues?: Record<string, string | number>;
+  contextKey: string;
+  /** Short urgency chip key, e.g. "Closes in {days} days". */
+  urgencyKey?: string;
+  urgencyValues?: Record<string, string | number>;
   /** When true the chip + row read as urgent (coral). */
   urgent?: boolean;
   to: string;
-  cta: string;
+  ctaKey: string;
 }
 
-/** Cross-silo "what needs you" list — the spine's prioritised next actions. */
+/**
+ * i18n Pattern A with interpolation. Cross-silo "what needs you" list — the
+ * spine's prioritised next actions. `Casa Viva`/`Inês` are mock-content
+ * proper nouns (in live mode they'd come over the wire), passed as `{token}`
+ * values rather than baked into the chrome phrase.
+ */
 export const NEXT_ACTIONS: NextAction[] = [
   {
     id: "offer",
     icon: <FiClock />,
-    label: "Respond to your offer from Casa Viva",
-    context: "They’re waiting on your decision.",
-    urgency: "Closes in 3 days",
+    labelKey: "economy:workHub.next.offer.label",
+    labelValues: { company: "Casa Viva" },
+    contextKey: "economy:workHub.next.offer.context",
+    urgencyKey: "economy:workHub.next.offer.urgency",
+    urgencyValues: { days: 3 },
     urgent: true,
     to: routes.applicationStatus,
-    cta: "Review offer",
+    ctaKey: "economy:workHub.next.offer.cta",
   },
   {
     id: "mentor",
     icon: <FiMessageCircle />,
-    label: "Inês replied about your mentor match",
-    context: "A first intro call is on the table.",
+    labelKey: "economy:workHub.next.mentor.label",
+    labelValues: { name: "Inês" },
+    contextKey: "economy:workHub.next.mentor.context",
     to: routes.mentorship,
-    cta: "Read reply",
+    ctaKey: "economy:workHub.next.mentor.cta",
   },
   {
     id: "grant",
     icon: <FiDollarSign />,
-    label: "Micro-grant deadline this Friday",
-    context: "Queer Creators Fund · up to €500.",
-    urgency: "Due Fri",
+    labelKey: "economy:workHub.next.grant.label",
+    contextKey: "economy:workHub.next.grant.context",
+    urgencyKey: "economy:workHub.next.grant.urgency",
     to: routes.grants,
-    cta: "See grant",
+    ctaKey: "economy:workHub.next.grant.cta",
   },
   {
     id: "profile",
     icon: <FiStar />,
-    label: "Your work profile is 70% complete",
-    context: "Add your out-at-work preference to be matched safely.",
+    labelKey: "economy:workHub.next.profile.label",
+    labelValues: { percent: 70 },
+    contextKey: "economy:workHub.next.profile.context",
     to: routes.workProfile,
-    cta: "Finish profile",
+    ctaKey: "economy:workHub.next.profile.cta",
   },
 ];
 
 export interface StatusCard {
   key: string;
   icon: ReactNode;
-  label: string;
-  primary: string;
-  next: string;
+  labelKey: string;
+  primaryKey: string;
+  primaryValues?: Record<string, string | number>;
+  nextKey: string;
+  nextValues?: Record<string, string | number>;
   to: string;
 }
 
-/** One card per Work-section silo, summarising state + a deep link. */
+/**
+ * i18n Pattern A with interpolation. `contextValues`/`grant.context` carry the
+ * fund name — mock content in demo mode, live data in live mode — as a
+ * `{token}` next to a chrome phrase, same idiom as `NEXT_ACTIONS` above.
+ */
 export const STATUS_CARDS: StatusCard[] = [
   {
     key: "apps",
     icon: <FiBriefcase />,
-    label: "Applications",
-    primary: `${activeApps} active / ${sentApps} sent`,
-    next: offers ? `${offers} offer to respond to` : "No offers yet",
+    labelKey: "economy:workHub.card.apps.label",
+    primaryKey: "economy:workHub.card.apps.primary",
+    primaryValues: { active: activeApps, sent: sentApps },
+    nextKey: offers
+      ? "economy:workHub.statusLine.offers"
+      : "economy:workHub.card.apps.noOffers",
+    nextValues: offers ? { count: offers } : undefined,
     to: routes.applicationStatus,
   },
   {
     key: "mentor",
     icon: <FiAward />,
-    label: "Mentorship",
-    primary: "1 active mentorship",
-    next: `${openMentors} mentors with open spots`,
+    labelKey: "economy:workHub.card.mentor.label",
+    primaryKey: "economy:workHub.card.mentor.primary",
+    nextKey: "economy:workHub.card.mentor.next",
+    nextValues: { count: openMentors },
     to: routes.mentorship,
   },
   {
     key: "skills",
     icon: <FiBookOpen />,
-    label: "Skills exchange",
-    primary: "Teaching 2 · Learning 1",
-    next: "A new request matches you",
+    labelKey: "economy:workHub.card.skills.label",
+    primaryKey: "economy:workHub.card.skills.primary",
+    nextKey: "economy:workHub.card.skills.next",
     to: routes.skills,
   },
   {
     key: "saved",
     icon: <FiBookmark />,
-    label: "Saved roles",
-    primary: "5 saved jobs",
-    next: "2 closing this week",
+    labelKey: "economy:workHub.card.saved.label",
+    primaryKey: "economy:workHub.card.saved.primary",
+    nextKey: "economy:workHub.card.saved.next",
     to: routes.jobs,
   },
   {
     key: "grants",
     icon: <FiDollarSign />,
-    label: "Grants & funding",
-    primary: "2 deadlines this month",
-    next: "Queer Creators Fund opens soon",
+    labelKey: "economy:workHub.card.grants.label",
+    primaryKey: "economy:workHub.card.grants.primary",
+    nextKey: "economy:workHub.card.grants.next",
+    nextValues: { fund: "Queer Creators Fund" },
     to: routes.grants,
   },
   {
     key: "reviews",
     icon: <FiStar />,
-    label: "Employer reviews",
-    primary: "You’ve reviewed 2",
-    next: "1 draft to finish",
+    labelKey: "economy:workHub.card.reviews.label",
+    primaryKey: "economy:workHub.card.reviews.primary",
+    nextKey: "economy:workHub.card.reviews.next",
     to: routes.employerReviews,
   },
 ];

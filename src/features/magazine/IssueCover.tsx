@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ISSUE_COVER_IMG } from "./issue.data";
 import styles from "./IssuePage.module.css";
@@ -30,36 +32,47 @@ export function IssueCover({
   ),
   publishedLabel = "6 Jun 2026",
 }: IssueCoverProps) {
+  const { t } = useTranslation();
   return (
     <>
       <div className={styles.cover}>
         <div className={styles.coverInner}>
           <Link to={routes.magazine} className={styles.back}>
-            ← All issues
+            {t("magazine:issue.backToAllIssues")}
           </Link>
           <div className={styles.spread}>
             <div>
               <div className={styles.metaRow}>
                 <span className={styles.num}>
-                  Issue <em>{number}</em>
+                  <Translation
+                    i18nKey="magazine:issue.badge"
+                    values={{ number }}
+                    components={{ em: <em /> }}
+                  />
                 </span>
+                {/* Content: this issue's own season line — kept as written. */}
                 <span className={styles.numL}>Spring · 2026</span>
-                <span className={styles.pill}>Current</span>
+                <span className={styles.pill}>
+                  {t("magazine:issue.currentPill")}
+                </span>
               </div>
               <h1 className={styles.h1}>{title}</h1>
               <p className={styles.dek}>{dek}</p>
               <div className={styles.stats}>
                 <span>
-                  <b>12</b> features
+                  <b>{t("magazine:issue.stats.featuresCount", { count: 12 })}</b>
                 </span>
                 <span>
-                  <b>84</b> pages
+                  <b>{t("magazine:issue.stats.pagesCount", { count: 84 })}</b>
                 </span>
                 <span>
-                  <b>8</b> contributors
+                  <b>
+                    {t("magazine:issue.stats.contributorsCount", { count: 8 })}
+                  </b>
                 </span>
                 <span>
-                  Published <b>{publishedLabel}</b>
+                  {t("magazine:issue.stats.publishedPrefix")}{" "}
+                  <b>{publishedLabel}</b>
                 </span>
               </div>
             </div>
@@ -67,8 +80,8 @@ export function IssueCover({
               tint="coral"
               radius={18}
               src={ISSUE_COVER_IMG}
-              alt='Issue 09 cover · "On Health"'
-              placeholder='Issue 09 cover · "On Health"'
+              alt={t("magazine:issue.coverAlt", { number })}
+              placeholder={t("magazine:issue.coverAlt", { number })}
               style={{ aspectRatio: "3/4", height: "auto" }}
             />
           </div>
@@ -77,7 +90,11 @@ export function IssueCover({
 
       <section className={styles.letter}>
         <div className={styles.letterInner}>
-          <div className={styles.letterEyebrow}>Editor's letter</div>
+          <div className={styles.letterEyebrow}>
+            {t("magazine:issue.letterEyebrow")}
+          </div>
+          {/* Content: the editor's own letter — an authored essay, kept in
+              English like every other piece of magazine prose. */}
           <h2>
             The body is <em>a political object.</em> So is the appointment.
           </h2>

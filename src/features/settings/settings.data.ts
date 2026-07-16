@@ -31,56 +31,91 @@ export type PaneId =
 export type NavItem = {
   id: PaneId;
   icon: IconType;
-  label: string;
+  labelKey: string;
   danger?: boolean;
 };
 
-export const NAV: { group: string; items: NavItem[] }[] = [
+/**
+ * i18n Pattern A — group/item labels are catalog keys; `SettingsPage.tsx`
+ * resolves them with `t()`. `id`/`PaneId` stay stable identifiers (the
+ * `?pane=` query param persists these), never translated strings.
+ */
+export const NAV: { groupKey: string; items: NavItem[] }[] = [
   {
-    group: "Preferences",
+    groupKey: "settings:nav.group.preferences",
     items: [
-      { id: "notifications", icon: FiBell, label: "Notifications" },
+      {
+        id: "notifications",
+        icon: FiBell,
+        labelKey: "settings:nav.item.notifications",
+      },
       {
         id: "language",
         icon: FiMessageCircle,
-        label: "Language & terminology",
+        labelKey: "settings:nav.item.language",
       },
     ],
   },
   {
-    group: "Privacy & data",
+    groupKey: "settings:nav.group.privacyData",
     items: [
-      { id: "data", icon: FiLock, label: "Data & privacy" },
-      { id: "visibility", icon: FiEye, label: "Visibility" },
-      { id: "safety", icon: FiShield, label: "Safety" },
+      { id: "data", icon: FiLock, labelKey: "settings:nav.item.data" },
+      {
+        id: "visibility",
+        icon: FiEye,
+        labelKey: "settings:nav.item.visibility",
+      },
+      { id: "safety", icon: FiShield, labelKey: "settings:nav.item.safety" },
     ],
   },
   {
-    group: "Account",
+    groupKey: "settings:nav.group.account",
     items: [
-      { id: "profile", icon: FiEdit2, label: "Profile" },
-      { id: "account", icon: FiSettings, label: "Account" },
+      { id: "profile", icon: FiEdit2, labelKey: "settings:nav.item.profile" },
+      {
+        id: "account",
+        icon: FiSettings,
+        labelKey: "settings:nav.item.account",
+      },
     ],
   },
   {
-    group: "Personalisation",
+    groupKey: "settings:nav.group.personalisation",
     items: [
-      { id: "profile-theme", icon: FiDroplet, label: "Profile theme" },
-      { id: "accessibility", icon: FiSliders, label: "Accessibility" },
-      { id: "interests", icon: FiHeart, label: "Interests" },
+      {
+        id: "profile-theme",
+        icon: FiDroplet,
+        labelKey: "settings:nav.item.profileTheme",
+      },
+      {
+        id: "accessibility",
+        icon: FiSliders,
+        labelKey: "settings:nav.item.accessibility",
+      },
+      {
+        id: "interests",
+        icon: FiHeart,
+        labelKey: "settings:nav.item.interests",
+      },
     ],
   },
   {
-    group: "Prototype",
-    items: [{ id: "simulations", icon: FiPlayCircle, label: "Simulations" }],
+    groupKey: "settings:nav.group.prototype",
+    items: [
+      {
+        id: "simulations",
+        icon: FiPlayCircle,
+        labelKey: "settings:nav.item.simulations",
+      },
+    ],
   },
   {
-    group: "Danger zone",
+    groupKey: "settings:nav.group.dangerZone",
     items: [
       {
         id: "delete",
         icon: FiAlertTriangle,
-        label: "Delete account",
+        labelKey: "settings:nav.item.deleteAccount",
         danger: true,
       },
     ],
@@ -88,20 +123,17 @@ export const NAV: { group: string; items: NavItem[] }[] = [
 ];
 
 export const TERMS = [
+  { nameKey: "settings:terms.queer.name", defKey: "settings:terms.queer.def" },
   {
-    name: "Queer",
-    def: "An umbrella term for sexual and gender identities that aren't heterosexual or cisgender. Reclaimed from a slur; usage varies — some older members may prefer not to use it.",
+    nameKey: "settings:terms.cisgender.name",
+    defKey: "settings:terms.cisgender.def",
   },
   {
-    name: "Cisgender",
-    def: "Describes someone whose gender identity matches the sex they were assigned at birth. Not a value judgement — simply a neutral descriptor.",
+    nameKey: "settings:terms.nonBinary.name",
+    defKey: "settings:terms.nonBinary.def",
   },
   {
-    name: "Non-binary",
-    def: "A gender identity that sits outside the man/woman binary. Some non-binary people use they/them; always ask rather than assume.",
-  },
-  {
-    name: "Two-spirit",
-    def: "A term used by some Indigenous North American cultures for a person embodying both masculine and feminine spirits. Not interchangeable with Western LGBTQ+ terms.",
+    nameKey: "settings:terms.twoSpirit.name",
+    defKey: "settings:terms.twoSpirit.def",
   },
 ];

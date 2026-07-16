@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../../app/routeMap";
 import { wellbeingResources } from "../data/wellbeing";
 import type { WellbeingIcon, WellbeingTone } from "../data/types";
@@ -95,20 +97,23 @@ function Icon({ name, color }: { name: WellbeingIcon; color: string }) {
 }
 
 export function Wellbeing() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.wellbeing} id="wellbeing">
       <div className="wrap">
         <Reveal>
           <SectionHead
             title={
-              <>
-                Your <em>wellbeing matters here.</em>
-              </>
+              <Translation
+                i18nKey="homepage:wellbeing.title"
+                components={{ em: <em /> }}
+              />
             }
-            subtitle="A professional network without health infrastructure is incomplete. Resources, directories, and care — built in, not bolted on."
+            subtitle={t("homepage:wellbeing.subtitle")}
             action={
               <Button variant="ghost" to={routes.wellbeing}>
-                All resources →
+                {t("homepage:wellbeing.allResourcesCta")}
               </Button>
             }
           />
@@ -116,7 +121,7 @@ export function Wellbeing() {
 
         <div className={styles.grid}>
           {wellbeingResources.map((resource, index) => (
-            <Reveal key={resource.title} delay={index * 55}>
+            <Reveal key={resource.titleKey} delay={index * 55}>
               <Link to={linkToPath(resource.href)} className={styles.card}>
                 <span
                   className={styles.icon}
@@ -127,9 +132,9 @@ export function Wellbeing() {
                     color={TONE_COLOR[resource.tone]}
                   />
                 </span>
-                <div className={styles.name}>{resource.title}</div>
-                <p className={styles.desc}>{resource.description}</p>
-                <span className={styles.cta}>{resource.ctaLabel}</span>
+                <div className={styles.name}>{t(resource.titleKey)}</div>
+                <p className={styles.desc}>{t(resource.descriptionKey)}</p>
+                <span className={styles.cta}>{t(resource.ctaLabelKey)}</span>
               </Link>
             </Reveal>
           ))}

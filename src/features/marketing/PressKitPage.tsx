@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PressKitDownloadModal } from "./PressKitDownloadModal";
-import { KIT_MANIFEST, KIT_PREVIEW } from "./pressKitAssets.data";
+import { buildKitManifest, buildKitPreview } from "./pressKitAssets.data";
 import {
   BoilerplateSection,
   ColourSection,
@@ -17,23 +19,29 @@ import {
 import styles from "./PressKitPage.module.css";
 
 export function PressKitPage() {
+  const { t } = useTranslation();
   const [showDownload, setShowDownload] = useState(false);
+  const kitManifest = useMemo(() => buildKitManifest(t), [t]);
+  const kitPreview = useMemo(() => buildKitPreview(t), [t]);
 
   return (
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.eyebrow}>
-            For journalists, researchers &amp; partners
+            {t("marketing:pressKit.hero.eyebrow")}
           </div>
           <h1 className={styles.h1}>
-            Press <em>kit.</em>
+            <Translation
+              i18nKey="marketing:pressKit.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.dek}>
-            Everything you need to write about, photograph, or fact-check
-            QueerPulse.{" "}
-            <b>Boilerplate, marks, photos, stats, and named spokespeople</b> —
-            pre-cleared for reuse under the terms below. Updated 14 May 2026.
+            <Translation
+              i18nKey="marketing:pressKit.hero.dek"
+              components={{ b: <b /> }}
+            />
           </p>
           <div className={styles.actions}>
             <Button
@@ -41,10 +49,10 @@ export function PressKitPage() {
               variant="primary"
               onClick={() => setShowDownload(true)}
             >
-              Download full kit · ZIP
+              {t("marketing:pressKit.hero.downloadKitCta")}
             </Button>
             <Button href="mailto:press@queerpulse.app" variant="ghost">
-              Or ask a person
+              {t("marketing:pressKit.hero.askPersonCta")}
             </Button>
           </div>
         </div>
@@ -53,20 +61,32 @@ export function PressKitPage() {
       <div className={styles.contactStrip}>
         <div className={styles.contactInner}>
           <span>
-            <b>Press desk:</b>{" "}
+            <Translation
+              i18nKey="marketing:pressKit.contact.deskLabel"
+              components={{ b: <b /> }}
+            />{" "}
             <a href="mailto:press@queerpulse.app">press@queerpulse.app</a>
           </span>
           <span className={styles.sep}>·</span>
           <span>
-            <b>Phone:</b> +351 21 314 08 22 (Mon–Fri 10:00–18:00 WET)
+            <Translation
+              i18nKey="marketing:pressKit.contact.phoneLabel"
+              components={{ b: <b /> }}
+            />
           </span>
           <span className={styles.sep}>·</span>
           <span>
-            <b>Response time:</b> &lt; 8 working hours
+            <Translation
+              i18nKey="marketing:pressKit.contact.responseLabel"
+              components={{ b: <b /> }}
+            />
           </span>
           <span className={styles.sep}>·</span>
           <span>
-            <b>Languages:</b> EN · PT · ES
+            <Translation
+              i18nKey="marketing:pressKit.contact.languagesLabel"
+              components={{ b: <b /> }}
+            />
           </span>
         </div>
       </div>
@@ -82,63 +102,69 @@ export function PressKitPage() {
         <DownloadsSection />
 
         <div className={styles.footerNote}>
-          All assets above are licensed under{" "}
-          <a
-            href="https://creativecommons.org/licenses/by/4.0/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Creative Commons BY 4.0
-          </a>{" "}
-          for editorial use.
+          <Translation
+            i18nKey="marketing:pressKit.footerNote.licence"
+            components={{
+              a: (
+                <a
+                  href="https://creativecommons.org/licenses/by/4.0/"
+                  target="_blank"
+                  rel="noreferrer"
+                />
+              ),
+            }}
+          />
           <br />
-          Commercial reuse requires written permission — write to{" "}
-          <a href="mailto:press@queerpulse.app">press@queerpulse.app</a>.
+          <Translation
+            i18nKey="marketing:pressKit.footerNote.commercial"
+            components={{ a: <a href="mailto:press@queerpulse.app" /> }}
+          />
         </div>
       </div>
 
       <Outro
         title={
-          <>
-            Writing about <em>QueerPulse?</em>
-          </>
+          <Translation
+            i18nKey="marketing:pressKit.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="We're happy to help. Write to the press team and we'll get back to you within a working day."
+        sub={t("marketing:pressKit.outro.sub")}
       >
         <Button size="lg" href="mailto:press@queerpulse.app">
-          Contact press team
+          {t("marketing:pressKit.outro.contactCta")}
         </Button>
       </Outro>
 
       {showDownload && (
         <PressKitDownloadModal
-          eyebrow="Full press kit · 38 MB"
+          eyebrow={t("marketing:pressKit.downloadModal.eyebrow")}
           title={
-            <>
-              Everything, in <em>one kit.</em>
-            </>
+            <Translation
+              i18nKey="marketing:pressKit.downloadModal.title"
+              components={{ em: <em /> }}
+            />
           }
           lead={
-            <>
-              Here's what's inside before you grab it. Hitting download
-              generates a real <b>README + licence</b> file now; the full asset
-              bundle ships in the production ZIP.
-            </>
+            <Translation
+              i18nKey="marketing:pressKit.downloadModal.lead"
+              components={{ b: <b /> }}
+            />
           }
-          rows={KIT_PREVIEW}
-          asset={KIT_MANIFEST}
-          buttonLabel="Download · README"
+          rows={kitPreview}
+          asset={kitManifest}
+          buttonLabel={t("marketing:pressKit.downloadModal.buttonLabel")}
           onClose={() => setShowDownload(false)}
         />
       )}
 
       <SubpageIndex
-        title="Looking for older coverage?"
+        title={t("marketing:pressKit.subpageIndex.title")}
         items={[
           {
-            label: "Press archive",
+            label: t("marketing:pressKit.subpageIndex.archive.label"),
             to: routes.pressArchive,
-            blurb: "Past press mentions, releases, and media coverage.",
+            blurb: t("marketing:pressKit.subpageIndex.archive.blurb"),
           },
         ]}
       />

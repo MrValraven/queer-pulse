@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useEscapeToCancel } from "./profileEditControls";
 import styles from "./ProfileEdit.module.css";
@@ -11,6 +13,7 @@ import styles from "./ProfileEdit.module.css";
  * banner with a jade check (the design-system success pattern).
  */
 export function ProfileEditBar() {
+  const { t } = useTranslation();
   const { isEditing, justSaved, isSaving, saveError, save, cancelEditing } =
     useProfile();
   useEscapeToCancel(cancelEditing, isEditing);
@@ -39,15 +42,19 @@ export function ProfileEditBar() {
               {saveError}
             </span>
           ) : (
-            "You’re editing your profile — unsaved changes"
+            t("members:profileEdit.bar.unsaved")
           )}
         </span>
         <div className={styles.saveActions}>
           <Button variant="ghost" onClick={cancelEditing} disabled={isSaving}>
-            Discard
+            {t("members:profileEdit.bar.discard")}
           </Button>
           <Button variant="primary" onClick={save} disabled={isSaving}>
-            {isSaving ? "Saving…" : saveError ? "Try again" : "Save profile"}
+            {isSaving
+              ? t("members:profileEdit.bar.saving")
+              : saveError
+                ? t("members:profileEdit.bar.tryAgain")
+                : t("members:profileEdit.bar.save")}
           </Button>
         </div>
       </div>
@@ -64,7 +71,10 @@ export function ProfileEditBar() {
           <FiCheck />
         </span>
         <span className={styles.savedText}>
-          Saved. <strong>Your profile is live.</strong>
+          <Translation
+            i18nKey="members:profileEdit.bar.savedBanner"
+            components={{ strong: <strong /> }}
+          />
         </span>
       </div>
     );

@@ -6,7 +6,11 @@ import {
   type UploadContentType,
   type UploadKind,
 } from "./uploads.api";
-import { processImage, validateTypeAndSize } from "./uploadProcessing";
+import {
+  ImageProcessingError,
+  processImage,
+  validateTypeAndSize,
+} from "./uploadProcessing";
 
 export type { UploadKind } from "./uploads.api";
 
@@ -17,16 +21,16 @@ export interface UploadOptions {
 }
 
 /** A PUT failure the hook knows how to react to. `transient` → one auto-retry. */
-class UploadError extends Error {
+class UploadError extends ImageProcessingError {
   readonly transient: boolean;
-  constructor(message: string, transient: boolean) {
-    super(message);
+  constructor(i18nKey: string, transient: boolean) {
+    super(i18nKey);
     this.name = "UploadError";
     this.transient = transient;
   }
 }
 
-const RETRY_MESSAGE = "We couldn't upload that image. Please try again.";
+const RETRY_KEY = "members:upload.error.retry";
 
 /**
  * `PUT` the blob to the presigned URL via `XMLHttpRequest` (needed for upload
@@ -56,11 +60,11 @@ function putOnce(
         resolve();
       } else {
         // 5xx is transient (worth a retry); 4xx is the request's fault.
-        reject(new UploadError(RETRY_MESSAGE, xhr.status >= 500));
+        reject(new UploadError(RETRY_KEY, xhr.status >= 500));
       }
     };
-    xhr.onerror = () => reject(new UploadError(RETRY_MESSAGE, true));
-    xhr.ontimeout = () => reject(new UploadError(RETRY_MESSAGE, true));
+    xhr.onerror = () => reject(new UploadError(RETRY_KEY, true));
+    xhr.ontimeout = () => reject(new UploadError(RETRY_KEY, true));
     xhr.send(blob);
   });
 }
@@ -95,8 +99,9 @@ async function putWithRetry(
  * - **Live mode:** requests a presigned URL, `PUT`s the bytes to storage with
  *   progress + one automatic retry, and returns the stable `publicUrl`.
  *
- * The callback throws an `Error` with a human message on any failure so callers
- * can render it in a `role="alert"` and re-trigger to retry.
+ * The callback throws an `ImageProcessingError` (a catalog key + optional
+ * interpolation values) on any failure, so callers resolve it through `t()`
+ * and render it in a `role="alert"`, then re-trigger to retry.
  */
 export function useUploadImage(kind: UploadKind) {
   const { demoMode } = useDemoMode();
@@ -123,10 +128,8 @@ export function useUploadImage(kind: UploadKind) {
         return publicUrl;
       } catch (err) {
         logError(err, { scope: "useUploadImage", kind });
-        throw new Error(
-          err instanceof UploadError ? err.message : RETRY_MESSAGE,
-          { cause: err },
-        );
+        if (err instanceof ImageProcessingError) throw err;
+        throw new ImageProcessingError(RETRY_KEY);
       }
     },
     [demoMode, kind],

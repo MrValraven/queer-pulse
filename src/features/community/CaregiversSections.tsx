@@ -1,8 +1,16 @@
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
-import { DO_SAY, DONT_SAY, FAQS, LESSONS, ROOMS } from "./caregivers.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  buildDoSay,
+  buildDontSay,
+  buildFaqs,
+  buildLessons,
+  buildRooms,
+} from "./caregivers.data";
 import styles from "./CaregiversPage.module.css";
 
 /** Stacked section heading (title over an optional lead), matching the design. */
@@ -23,22 +31,27 @@ function SectionHead({
 
 /** Five short reads, each linking to the closest existing guide. */
 export function StartHere() {
+  const { t } = useTranslation();
+  const lessons = useMemo(() => buildLessons(t), [t]);
+
   return (
     <section className={styles.start}>
       <div className="wrap">
         <SectionHead
           title={
-            <>
-              Start <em>here</em>
-            </>
+            <Translation
+              i18nKey="community:caregivers.startHere.title"
+              components={{ em: <em /> }}
+            />
           }
         >
-          Five short reads. Each is one specific question, answered concretely,
-          in language we'd want to hear ourselves.{" "}
-          <em>Not a course. Not 50 modules.</em> Five reads.
+          <Translation
+            i18nKey="community:caregivers.startHere.lead"
+            components={{ em: <em /> }}
+          />
         </SectionHead>
         <div className={styles.lessons}>
-          {LESSONS.map((lesson) => (
+          {lessons.map((lesson) => (
             <Link key={lesson.n} to={lesson.to} className={styles.lesson}>
               <div className={styles.lessonN}>
                 <em>{lesson.n}</em>
@@ -60,18 +73,21 @@ export function StartHere() {
 /** Self-contained FAQ accordion — owns its open/closed state. */
 export function CommonQuestions() {
   const [open, setOpen] = useState(0);
+  const faqs = useMemo(() => buildFaqs(), []);
+
   return (
     <section className={styles.questions}>
       <div className="wrap">
         <SectionHead
           title={
-            <>
-              Common <em>questions</em>
-            </>
+            <Translation
+              i18nKey="community:caregivers.commonQuestions.title"
+              components={{ em: <em /> }}
+            />
           }
         />
         <div className={styles.qList}>
-          {FAQS.map((faq, i) => {
+          {faqs.map((faq, i) => {
             const isOpen = open === i;
             return (
               <div
@@ -101,20 +117,24 @@ export function CommonQuestions() {
 
 /** Members-only support rooms, routed to the Peer Support hub. */
 export function VoiceRooms() {
+  const { t } = useTranslation();
+  const rooms = useMemo(() => buildRooms(t), [t]);
+
   return (
     <section className={styles.groups}>
       <div className="wrap">
         <SectionHead
           title={
-            <>
-              Talk to <em>others</em> like you
-            </>
+            <Translation
+              i18nKey="community:caregivers.voiceRooms.title"
+              components={{ em: <em /> }}
+            />
           }
         >
-          Members-only support rooms. Joining is opt-in and quiet.
+          {t("community:caregivers.voiceRooms.lead")}
         </SectionHead>
         <div className={styles.grGrid}>
-          {ROOMS.map((room, i) => (
+          {rooms.map((room, i) => (
             <Link key={i} to={room.to} className={styles.gr2}>
               <div className={styles.grInfo}>
                 <h4>{room.title}</h4>
@@ -134,35 +154,49 @@ export function VoiceRooms() {
 
 /** The plum "Don't say / Do say" comparison strip. */
 export function DontDoSay() {
+  const { t } = useTranslation();
+  const dontSay = useMemo(() => buildDontSay(t), [t]);
+  const doSay = useMemo(() => buildDoSay(), []);
+
   return (
     <section className={styles.dont}>
       <div className="wrap">
         <div className={styles.dontInner}>
-          <div className={styles.dEb}>— a small list —</div>
+          <div className={styles.dEb}>
+            {t("community:caregivers.dontDoSay.eyebrow")}
+          </div>
           <h2>
-            Don't say. <em>Do say.</em>
+            <Translation
+              i18nKey="community:caregivers.dontDoSay.heading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p className={styles.dLead}>
-            A few of the things we wish people had been told. Not exhaustive,
-            not a script — just a few opening moves that help.
+            {t("community:caregivers.dontDoSay.lead")}
           </p>
           <div className={styles.compareD}>
             <div>
               <h3>
-                Don't <em>say</em>
+                <Translation
+                  i18nKey="community:caregivers.dontDoSay.dontHeading"
+                  components={{ em: <em /> }}
+                />
               </h3>
               <ul>
-                {DONT_SAY.map((line) => (
+                {dontSay.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
             </div>
             <div>
               <h3>
-                Do <em>say</em>
+                <Translation
+                  i18nKey="community:caregivers.dontDoSay.doHeading"
+                  components={{ em: <em /> }}
+                />
               </h3>
               <ul>
-                {DO_SAY.map((line, i) => (
+                {doSay.map((line, i) => (
                   <li key={i}>{line}</li>
                 ))}
               </ul>

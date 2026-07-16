@@ -9,6 +9,7 @@ import { useNavMode } from "../../../app/providers/navModeContext";
 import { routes } from "../../../app/routeMap";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
 import { useTranslation } from "../../i18n/useTranslation";
+import { Translation } from "../../i18n/Translation";
 import { MegaNav } from "./MegaNav";
 import { MegaNavDrawer } from "./MegaNavDrawer";
 import { Sidebar } from "./Sidebar";
@@ -19,7 +20,10 @@ function Brand({ to }: { to: string }) {
   return (
     <Link to={to} className={styles.brand}>
       <span className={styles.pulseDot} aria-hidden />
-      Queer<span className={styles.brandItalic}>Pulse</span>
+      <Translation
+        i18nKey="shared:brand.wordmark"
+        components={{ em: <span className={styles.brandItalic} /> }}
+      />
     </Link>
   );
 }
@@ -226,7 +230,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
                     className={styles.drawerSignIn}
                     onClick={closeDrawer}
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                   </Link>
                 ))}
                 <Link

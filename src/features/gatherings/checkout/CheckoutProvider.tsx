@@ -9,6 +9,7 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import {
+  EVENT_ARRIVAL_DATE,
   MAX_SEATS,
   MEMBER_RATE,
   OPEN_SEAT_INDICES,
@@ -274,8 +275,13 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
       dir: "forward",
     }));
     window.scrollTo({ top: 0, behavior: "smooth" });
-    showToast(t("gatherings:checkout.payment.confirmedToast"), "success");
-  }, [showToast, t]);
+    showToast(
+      t("gatherings:checkout.payment.confirmedToast", {
+        date: fmt.date(EVENT_ARRIVAL_DATE, { day: "numeric", month: "long" }),
+      }),
+      "success",
+    );
+  }, [showToast, t, fmt]);
 
   const dismissFirstTimer = useCallback(
     () => patch({ firstTimerDismissed: true }),

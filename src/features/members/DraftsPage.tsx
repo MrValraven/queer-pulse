@@ -5,6 +5,8 @@ import { AppShell } from "../../shared/components/layout";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDrafts } from "../../app/providers/DraftsProvider";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { DraftsHeader } from "./DraftsHeader";
@@ -13,8 +15,9 @@ import { DraftRow } from "./DraftRow";
 import { DraftsBulkBar } from "./DraftsBulkBar";
 import {
   DRAFTS,
+  DRAFT_ACTION_LABEL_KEY,
   DRAFT_TABS,
-  KEPT_META,
+  buildKeptMeta,
   countByCategory,
   selectDrafts,
   type Draft,
@@ -54,11 +57,13 @@ function DraftRowSkeleton() {
 }
 
 export function DraftsPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const loading = useSimulatedLoad();
   const { demoMode } = useDemoMode();
   const { drafts: userDrafts, addDraft, removeDraft } = useDrafts();
+  const keptMeta = useMemo(() => buildKeptMeta(t), [t]);
 
   const [category, setCategory] = useState<"all" | DraftCategory>("all");
   const [query, setQuery] = useState("");
@@ -80,10 +85,10 @@ export function DraftsPage() {
       .filter((d) => !hidden.has(d.id))
       .map((d): Draft =>
         kept.has(d.id)
-          ? { ...d, status: "draft", deadlineDays: null, meta: KEPT_META }
+          ? { ...d, status: "draft", deadlineDays: null, meta: keptMeta }
           : d,
       );
-  }, [userDrafts, hidden, kept, demoMode]);
+  }, [userDrafts, hidden, kept, demoMode, keptMeta]);
 
   const counts = useMemo(() => countByCategory(base), [base]);
   const visible = useMemo(
@@ -137,11 +142,11 @@ export function DraftsPage() {
     });
 
     showToast(
-      ids.length === 1 ? "Draft deleted" : `${ids.length} drafts deleted`,
+      t("members:drafts.toast.deleted", { count: ids.length }),
       "info",
       undefined,
       {
-        label: "Undo",
+        label: t("members:drafts.toast.undo"),
         onClick: () => {
           if (staticDel.length)
             setHidden((p) => {
@@ -159,9 +164,12 @@ export function DraftsPage() {
     if (action.deletes) deleteDrafts([draft.id]);
     else if (action.keeps) {
       setKept((prev) => new Set(prev).add(draft.id));
-      showToast("Draft kept — 30 more days", "success");
+      showToast(t("members:drafts.toast.kept"), "success");
     } else if (draft.href) navigate(draft.href);
-    else showToast(action.label, "info");
+    else {
+      const actionLabelKey = DRAFT_ACTION_LABEL_KEY[action.label];
+      showToast(actionLabelKey ? t(actionLabelKey) : action.label, "info");
+    }
   }
 
   return (
@@ -175,17 +183,22 @@ export function DraftsPage() {
           onSort={setSort}
         />
 
-        <div className={styles.tabs} role="tablist" aria-label="Draft types">
-          {DRAFT_TABS.map((t) => (
+        <div
+          className={styles.tabs}
+          role="tablist"
+          aria-label={t("members:drafts.tabsAriaLabel")}
+        >
+          {DRAFT_TABS.map((tab) => (
             <button
               type="button"
-              key={t.key}
+              key={tab.key}
               role="tab"
-              aria-selected={category === t.key}
-              className={`${styles.tab} ${category === t.key ? styles.active : ""}`}
-              onClick={() => setCategory(t.key)}
+              aria-selected={category === tab.key}
+              className={`${styles.tab} ${category === tab.key ? styles.active : ""}`}
+              onClick={() => setCategory(tab.key)}
             >
-              {t.label} <span className={styles.tabCount}>{counts[t.key]}</span>
+              {t(tab.labelKey)}{" "}
+              <span className={styles.tabCount}>{counts[tab.key]}</span>
             </button>
           ))}
         </div>
@@ -197,12 +210,14 @@ export function DraftsPage() {
             className={styles.cbx}
             checked={allSelected}
             onChange={(e) => toggleSelectAll(e.target.checked)}
-            aria-label="Select all visible drafts"
+            aria-label={t("members:drafts.selectAllAriaLabel")}
           />
-          <span>Select all</span>
+          <span>{t("members:drafts.selectAll")}</span>
           <span className={styles.visCount}>
-            {visible.length} of {base.length} draft
-            {base.length === 1 ? "" : "s"}
+            {t("members:drafts.visibleCount", {
+              visible: visible.length,
+              count: base.length,
+            })}
           </span>
         </div>
 
@@ -225,10 +240,10 @@ export function DraftsPage() {
         )}
 
         <div className={styles.dangerBlock}>
-          <b>About the 90-day rule:</b> drafts you haven't touched in 87+ days
-          get an email reminder, then auto-delete on day 90. You can extend any
-          draft 30 days at a time.{" "}
-          <em>This is to keep your drafts list honest — not to lose work.</em>
+          <Translation
+            i18nKey="members:drafts.dangerNote"
+            components={{ b: <b />, em: <em /> }}
+          />
         </div>
       </div>
 
@@ -249,15 +264,15 @@ function EmptyState({
   query: string;
   baseEmpty: boolean;
 }) {
-  let title = "Nothing here yet.";
-  let text = "No drafts in this category. Switch tabs, or start something new.";
+  const { t } = useTranslation();
+  let title = t("members:drafts.empty.defaultTitle");
+  let text = t("members:drafts.empty.defaultText");
   if (query.trim()) {
-    title = "No matches.";
-    text = `Nothing in your drafts matches "${query.trim()}". Try a different word, or clear the search.`;
+    title = t("members:drafts.empty.noMatchTitle");
+    text = t("members:drafts.empty.noMatchText", { query: query.trim() });
   } else if (baseEmpty) {
-    title = "All caught up.";
-    text =
-      "No drafts left — nothing half-written waiting on you. When you start something and step away, it'll be saved here.";
+    title = t("members:drafts.empty.allCaughtUpTitle");
+    text = t("members:drafts.empty.allCaughtUpText");
   }
   return (
     <div className={styles.empty}>
@@ -267,7 +282,7 @@ function EmptyState({
       <h3>{title}</h3>
       <p>{text}</p>
       <Button variant="primary" to={routes.communitiesHome}>
-        Start something new
+        {t("members:drafts.empty.startCta")}
       </Button>
     </div>
   );

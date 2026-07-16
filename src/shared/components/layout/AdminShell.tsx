@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FiSearch, FiMoon, FiSun, FiBell } from "react-icons/fi";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useToast } from "../feedback/useToast";
+import { useTranslation } from "../../i18n/useTranslation";
 import { AdminSidebar } from "./AdminSidebar";
 import styles from "./AdminShell.module.css";
 
@@ -17,7 +18,7 @@ export function AdminShell({
   children,
   title,
   breadcrumb = [],
-  searchPlaceholder = "Search reports, members, communities…",
+  searchPlaceholder,
 }: {
   children: ReactNode;
   title: ReactNode;
@@ -26,6 +27,9 @@ export function AdminShell({
 }) {
   const { theme, toggleTheme } = useTheme();
   const { showToast } = useToast();
+  const { t } = useTranslation();
+  const resolvedSearchPlaceholder =
+    searchPlaceholder ?? t("shared:adminShell.searchPlaceholder");
 
   return (
     <div className={styles.shell}>
@@ -53,10 +57,13 @@ export function AdminShell({
             <FiSearch aria-hidden />
             <input
               type="text"
-              placeholder={searchPlaceholder}
+              placeholder={resolvedSearchPlaceholder}
               onKeyDown={(e) => {
                 if (e.key === "Enter")
-                  showToast("Search is illustrative in this prototype", "info");
+                  showToast(
+                    t("shared:adminShell.toastSearchIllustrative"),
+                    "info",
+                  );
               }}
             />
           </label>
@@ -66,8 +73,8 @@ export function AdminShell({
               type="button"
               className={styles.iconBtn}
               onClick={toggleTheme}
-              title="Toggle theme"
-              aria-label="Toggle theme"
+              title={t("shared:adminShell.toggleTheme")}
+              aria-label={t("shared:adminShell.toggleTheme")}
             >
               {theme === "dark" ? (
                 <FiSun aria-hidden />
@@ -78,9 +85,9 @@ export function AdminShell({
             <button
               type="button"
               className={styles.iconBtn}
-              onClick={() => showToast("No new alerts", "info")}
-              title="Alerts"
-              aria-label="Alerts"
+              onClick={() => showToast(t("shared:adminShell.toastNoAlerts"), "info")}
+              title={t("shared:adminShell.alerts")}
+              aria-label={t("shared:adminShell.alerts")}
             >
               <span className={styles.iconDot} aria-hidden />
               <FiBell aria-hidden />

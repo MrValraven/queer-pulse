@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PerkGroups, PerksSidebar } from "./PerksSections";
 import { useRecognition } from "./api/useRecognition";
@@ -19,25 +21,34 @@ function StarIcon() {
 }
 
 export function PerksPage() {
+  const { t } = useTranslation();
   const { level, perks } = useRecognition();
   return (
     <AppShell>
       <div className={styles.page}>
         <div className="wrap">
           <Link to={routes.badges} className={styles.backLink}>
-            ← Badges &amp; level
+            {t("members:perks.page.backToBadges")}
           </Link>
-          <div className={styles.phEyebrow}>Member perks</div>
+          <div className={styles.phEyebrow}>
+            {t("members:profile.hero.perksTitle")}
+          </div>
           <h1 className={styles.phTitle}>
-            Your <em>bonuses</em>
+            <Translation
+              i18nKey="members:perks.page.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <div className={styles.phStatusRow}>
             <span className={styles.levelChip}>
               <StarIcon />
-              Level {level.level} · {level.name}
+              {t("members:profile.hero.levelLabel", { number: level.level })}{" "}
+              · {level.name}
             </span>
             <span className={styles.perksAvail}>
-              {perks.availableCount} perks available to redeem
+              {t("members:perks.page.availableToRedeem", {
+                count: perks.availableCount,
+              })}
             </span>
           </div>
 

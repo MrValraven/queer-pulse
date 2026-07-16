@@ -9,6 +9,8 @@ import {
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
@@ -20,14 +22,14 @@ import { JoinModal } from "./JoinModal";
 import { CommunityCard } from "./CommunityCard";
 import styles from "./CommunitiesPage.module.css";
 
-const FILTERS: { value: "all" | CommunityType; label: string }[] = [
-  { value: "all", label: "All communities" },
-  { value: "social", label: "Social" },
-  { value: "arts", label: "Arts" },
-  { value: "activism", label: "Activism" },
-  { value: "support", label: "Support" },
-  { value: "sports", label: "Sports" },
-  { value: "professional", label: "Professional" },
+const FILTERS: { value: "all" | CommunityType; labelKey: string }[] = [
+  { value: "all", labelKey: "communities:category.all" },
+  { value: "social", labelKey: "communities:category.social" },
+  { value: "arts", labelKey: "communities:category.arts" },
+  { value: "activism", labelKey: "communities:category.activism" },
+  { value: "support", labelKey: "communities:category.support" },
+  { value: "sports", labelKey: "communities:category.sports" },
+  { value: "professional", labelKey: "communities:category.professional" },
 ];
 
 function CommunityCardSkeleton() {
@@ -46,6 +48,7 @@ function CommunityCardSkeleton() {
 }
 
 export function CommunitiesPage() {
+  const { t } = useTranslation();
   const { data, isLoading } = useCommunities();
   const loading = useSimulatedLoad() || isLoading;
   const { isMember, join, requestToJoin } = useCommunityMembership();
@@ -73,19 +76,20 @@ export function CommunitiesPage() {
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.eyebrow}>
-            Community Directory
+            {t("communities:discover.hero.eyebrow")}
           </Reveal>
           <Reveal as="h1" className={styles.title} delay={60}>
-            Find your <em>people.</em>
+            <Translation
+              i18nKey="communities:discover.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.lede} delay={120}>
-            A living directory of queer communities across Lisbon. Social clubs,
-            arts collectives, activist groups, sports teams, support circles,
-            and professional networks — something for where you are right now.
+            {t("communities:discover.hero.lead")}
           </Reveal>
           <Reveal delay={180} className={styles.heroCta}>
             <Button to={routes.communitiesHome} variant="primary">
-              Go to your hub
+              {t("communities:discover.hero.cta")}
             </Button>
           </Reveal>
         </div>
@@ -106,7 +110,7 @@ export function CommunitiesPage() {
                   .join(" ")}
                 onClick={() => setFilter(option.value)}
               >
-                {option.label}
+                {t(option.labelKey)}
               </button>
             ))}
           </Reveal>
@@ -115,20 +119,22 @@ export function CommunitiesPage() {
             communities.length === 0 ? (
               <EmptyState
                 icon={<FiUsers />}
-                title="No communities yet"
-                description="The directory is still finding its feet. Be one of the first to gather your people — start a community and others will follow."
+                title={t("communities:discover.empty.none.title")}
+                description={t("communities:discover.empty.none.description")}
                 action={{
-                  label: "Start a community",
+                  label: t("communities:discover.empty.none.cta"),
                   to: routes.startCommunity,
                 }}
               />
             ) : (
               <EmptyState
                 icon={<FiUsers />}
-                title="Nothing matches your filters"
-                description="No communities in this category yet. Switch back to all communities to see everything across Lisbon."
+                title={t("communities:discover.empty.filtered.title")}
+                description={t(
+                  "communities:discover.empty.filtered.description",
+                )}
                 action={{
-                  label: "Clear filters",
+                  label: t("communities:discover.empty.filtered.cta"),
                   onClick: () => setFilter("all"),
                 }}
               />
@@ -160,14 +166,15 @@ export function CommunitiesPage() {
 
       <Outro
         title={
-          <>
-            Not finding the right <em>space?</em>
-          </>
+          <Translation
+            i18nKey="communities:discover.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Suggest a community to add to the directory, or post on the board to find people who share your interest — and maybe start something together."
+        sub={t("communities:discover.outro.sub")}
       >
         <Button to="/#board" size="lg">
-          See the board →
+          {t("communities:discover.outro.cta")} →
         </Button>
       </Outro>
 

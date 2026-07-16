@@ -10,19 +10,23 @@ export const MAP_COLORS: Record<MapSpaceType, string> = {
   org: "#7A52B8", // --violet (was #9B6FD4, an off-token purple)
 };
 
-export const mapFilters: { value: "all" | MapSpaceType; label: string }[] = [
-  { value: "all", label: "All spaces" },
-  { value: "venue", label: "Safe venues" },
-  { value: "studio", label: "Member studios" },
-  { value: "community", label: "Community spaces" },
-  { value: "org", label: "Organisations" },
+// i18n Pattern A — a fixed set of platform-defined space types (chrome).
+export const mapFilters: {
+  value: "all" | MapSpaceType;
+  labelKey: string;
+}[] = [
+  { value: "all", labelKey: "homepage:spacesMap.type.all" },
+  { value: "venue", labelKey: "homepage:spacesMap.type.venue" },
+  { value: "studio", labelKey: "homepage:spacesMap.type.studio" },
+  { value: "community", labelKey: "homepage:spacesMap.type.community" },
+  { value: "org", labelKey: "homepage:spacesMap.type.org" },
 ];
 
-export const mapLegend: { type: MapSpaceType; label: string }[] = [
-  { type: "venue", label: "Safe venues" },
-  { type: "studio", label: "Member studios" },
-  { type: "community", label: "Community spaces" },
-  { type: "org", label: "Organisations" },
+export const mapLegend: { type: MapSpaceType; labelKey: string }[] = [
+  { type: "venue", labelKey: "homepage:spacesMap.type.venue" },
+  { type: "studio", labelKey: "homepage:spacesMap.type.studio" },
+  { type: "community", labelKey: "homepage:spacesMap.type.community" },
+  { type: "org", labelKey: "homepage:spacesMap.type.org" },
 ];
 
 export const mapSpaces: MapSpace[] = [

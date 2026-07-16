@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from "react";
 import { FiCheck, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ResourceModal.module.css";
 
 /** Bottom-sheet / centred modal shell. Mounted only when open, so it locks scroll unconditionally. */
@@ -15,6 +16,7 @@ export function ResourceModal({
   children: ReactNode;
 }) {
   useScrollLock();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -39,7 +41,7 @@ export function ResourceModal({
               type="button"
               className={styles.close}
               onClick={onClose}
-              aria-label="Close"
+              aria-label={t("resources:modal.closeAriaLabel")}
             >
               <FiX />
             </button>
@@ -49,7 +51,7 @@ export function ResourceModal({
             type="button"
             className={styles.closeFloat}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("resources:modal.closeAriaLabel")}
           >
             <FiX />
           </button>
@@ -65,13 +67,14 @@ export function PlumSuccess({
   title,
   sub,
   onClose,
-  closeLabel = "Done",
+  closeLabel,
 }: {
   title: ReactNode;
   sub: ReactNode;
   onClose: () => void;
   closeLabel?: string;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.success}>
       <div className={styles.successIcon}>
@@ -81,7 +84,7 @@ export function PlumSuccess({
       <p className={styles.successSub}>{sub}</p>
       <div className={styles.successActions}>
         <Button type="button" variant="ghost-dark" onClick={onClose}>
-          {closeLabel}
+          {closeLabel ?? t("resources:modal.doneCta")}
         </Button>
       </div>
     </div>

@@ -11,7 +11,8 @@ import { routes } from "../../../app/routeMap";
 import { currentUser } from "../../../features/members/data/members";
 
 export interface AdminNavItem {
-  label: string;
+  /** Catalog key for the visible label — resolve with `t()`. */
+  labelKey: string;
   to: string;
   icon: IconType;
   end?: boolean;
@@ -22,30 +23,39 @@ export interface AdminNavItem {
 }
 
 export const ADMIN_NAV: AdminNavItem[] = [
-  { label: "Overview", to: routes.admin, icon: FiGrid, end: true },
   {
-    label: "Moderation",
+    labelKey: "shared:adminNav.items.overview",
+    to: routes.admin,
+    icon: FiGrid,
+    end: true,
+  },
+  {
+    labelKey: "shared:adminNav.items.moderation",
     to: routes.adminModeration,
     icon: FiShield,
     count: 23,
     tone: "alert",
   },
   {
-    label: "Members",
+    labelKey: "nav:members",
     to: routes.adminMembers,
     icon: FiUsers,
     count: 11,
     tone: "warn",
   },
-  { label: "Communities", to: routes.adminCommunities, icon: FiGlobe },
+  { labelKey: "nav:communities", to: routes.adminCommunities, icon: FiGlobe },
   {
-    label: "Partnerships",
+    labelKey: "shared:adminNav.items.partnerships",
     to: routes.adminPartnerApplications,
     icon: FiInbox,
     count: 2,
     tone: "warn",
   },
-  { label: "Governance", to: routes.adminGovernance, icon: FiAward },
+  {
+    labelKey: "shared:adminNav.items.governance",
+    to: routes.adminGovernance,
+    icon: FiAward,
+  },
 ];
 
 export interface StewardedCommunity {

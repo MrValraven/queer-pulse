@@ -16,6 +16,8 @@ import {
   SkeletonLine,
   Tag,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MagazineMasthead } from "./MagazineMasthead";
 import {
@@ -67,6 +69,7 @@ function RelatedCardSkeleton({ className }: { className: string }) {
 }
 
 export function ArticlePage() {
+  const { t } = useTranslation();
   const [params] = useSearchParams();
   const [textSize, setTextSize] = useState<TextSize>("md");
   const loading = useSimulatedLoad();
@@ -77,11 +80,11 @@ export function ArticlePage() {
   if (!article) {
     return (
       <PageShell>
-        <PageMeta title="Article not found — QueerPulse Magazine" noIndex />
+        <PageMeta title={t("magazine:article.notFoundMetaTitle")} noIndex />
         <div className={`${styles.notFound} wrap`}>
-          <h2>We couldn't find that piece.</h2>
-          <p>The article may have moved, or the link may be incomplete.</p>
-          <Button to={routes.magazine}>Back to the magazine</Button>
+          <h2>{t("magazine:article.notFoundTitle")}</h2>
+          <p>{t("magazine:article.notFoundBody")}</p>
+          <Button to={routes.magazine}>{t("magazine:article.notFoundCta")}</Button>
         </div>
       </PageShell>
     );
@@ -102,7 +105,7 @@ export function ArticlePage() {
   return (
     <PageShell>
       <PageMeta
-        title={`${plainTitle} — QueerPulse Magazine`}
+        title={`${plainTitle}${t("magazine:article.pageTitleSuffix")}`}
         description={blurb ? clampDescription(blurb) : undefined}
         canonical={`${routes.article}?id=${id}`}
         image={article.image}
@@ -112,7 +115,8 @@ export function ArticlePage() {
       <div className={styles.header}>
         <div className="wrap">
           <Link to={routes.magazine} className={styles.back}>
-            ← Magazine <span style={{ opacity: 0.5 }}>·</span> {article.section}
+            {t("magazine:article.backToMagazine")}{" "}
+            <span style={{ opacity: 0.5 }}>·</span> {article.section}
           </Link>
           <div className={styles.kicker}>{article.kicker}</div>
           <h1 className={styles.title}>{article.title}</h1>
@@ -194,7 +198,10 @@ export function ArticlePage() {
         <div className={styles.related}>
           <div className="wrap">
             <div className={styles.relatedHead}>
-              Keep <em>reading</em>
+              <Translation
+                i18nKey="magazine:article.relatedHeading"
+                components={{ em: <em /> }}
+              />
             </div>
             <div className={styles.relGrid}>
               {loading
@@ -218,7 +225,7 @@ export function ArticlePage() {
                         {rel.byline} · {rel.readTime}
                       </div>
                       <Tag className={styles.relReason}>
-                        {relationReason(article, rel)}
+                        {relationReason(article, rel, t)}
                       </Tag>
                     </FadeIn>
                   ))}

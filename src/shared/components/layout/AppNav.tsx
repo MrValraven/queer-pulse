@@ -3,22 +3,25 @@ import { Button } from "../ui";
 import { useScrolled } from "../../hooks/useScrolled";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
+import { useTranslation } from "../../i18n/useTranslation";
+import { Translation } from "../../i18n/Translation";
 import { routes } from "../../../app/routeMap";
 import { AccountMenu } from "./AccountMenu";
 import styles from "./AppNav.module.css";
 
 const APP_LINKS = [
-  { label: "Home", to: "/feed" },
-  { label: "Members", to: "/members" },
-  { label: "Subprofiles", to: routes.subprofiles },
-  { label: "Communities", to: "/communities" },
-  { label: "Messages", to: "/messages" },
+  { labelKey: "shared:appNav.links.home", to: "/feed" },
+  { labelKey: "nav:members", to: "/members" },
+  { labelKey: "shared:appNav.links.subprofiles", to: routes.subprofiles },
+  { labelKey: "nav:communities", to: "/communities" },
+  { labelKey: "shared:appNav.links.messages", to: "/messages" },
 ];
 
 /** Logged-in navigation: brand, app links, notifications bell, profile + messages. */
 export function AppNav({ unreadCount }: { unreadCount?: number }) {
   const scrolled = useScrolled(8);
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation();
   // Self-sourcing badge: explicit prop wins, else derive from the shared
   // notifications query cache (demo mock count / live fetched feed).
   const liveCount = useUnreadCount();
@@ -32,7 +35,10 @@ export function AppNav({ unreadCount }: { unreadCount?: number }) {
     >
       <Link to="/feed" className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
-        Queer<span className={styles.brandItalic}>Pulse</span>
+        <Translation
+          i18nKey="shared:brand.wordmark"
+          components={{ em: <span className={styles.brandItalic} /> }}
+        />
       </Link>
 
       <div className={styles.links}>
@@ -46,7 +52,7 @@ export function AppNav({ unreadCount }: { unreadCount?: number }) {
                 .join(" ")
             }
           >
-            {item.label}
+            {t(item.labelKey)}
           </NavLink>
         ))}
       </div>
@@ -56,7 +62,7 @@ export function AppNav({ unreadCount }: { unreadCount?: number }) {
           type="button"
           className={styles.themeToggle}
           onClick={toggleTheme}
-          aria-label="Toggle colour theme"
+          aria-label={t("footer:toggleTheme")}
         >
           {theme === "dark" ? <SunIcon /> : <MoonIcon />}
         </button>
@@ -64,7 +70,7 @@ export function AppNav({ unreadCount }: { unreadCount?: number }) {
         <Link
           to="/notifications"
           className={styles.bell}
-          aria-label="Notifications"
+          aria-label={t("nav:notifications")}
         >
           <svg
             width={20}
@@ -85,7 +91,7 @@ export function AppNav({ unreadCount }: { unreadCount?: number }) {
         </Link>
 
         <AccountMenu />
-        <Button to="/messages">Messages</Button>
+        <Button to="/messages">{t("shared:appNav.links.messages")}</Button>
       </div>
     </nav>
   );

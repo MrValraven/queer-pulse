@@ -3,6 +3,8 @@ import { FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useWorkProfile } from "../../app/providers/WorkProfileProvider";
 import {
@@ -14,6 +16,7 @@ import styles from "./WorkProfilePage.module.css";
 
 /** The Work Profile — identity & safety controls at the heart of the workspace. */
 export function WorkProfilePage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const {
     outAtWork,
@@ -27,7 +30,7 @@ export function WorkProfilePage() {
 
   function save() {
     setSaved(true);
-    showToast("Work profile saved", "success");
+    showToast(t("economy:workProfile.savedToast"), "success");
   }
 
   if (saved) {
@@ -39,18 +42,20 @@ export function WorkProfilePage() {
               <FiCheck />
             </div>
             <h1 className={styles.successTitle}>
-              Your work profile is <em>set.</em>
+              <Translation
+                i18nKey="economy:workProfile.success.title"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.successSub}>
-              You appear to employers exactly as you choose to — and never
-              otherwise.
+              {t("economy:workProfile.success.sub")}
             </p>
             <div className={styles.successActions}>
               <Button variant="ghost-dark" to={routes.work}>
-                Back to your workspace
+                {t("economy:workProfile.success.backCta")}
               </Button>
               <Button variant="ghost-dark" onClick={() => setSaved(false)}>
-                Keep editing
+                {t("economy:workProfile.success.editCta")}
               </Button>
             </div>
           </div>
@@ -63,14 +68,14 @@ export function WorkProfilePage() {
     <PageShell>
       <div className={styles.page}>
         <header className={styles.head}>
-          <div className={styles.eyebrow}>Work profile</div>
+          <div className={styles.eyebrow}>{t("economy:workProfile.eyebrow")}</div>
           <h1 className={styles.h1}>
-            How you show up <em>at work.</em>
+            <Translation
+              i18nKey="economy:workProfile.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.sub}>
-            This controls what employers see — and what stays yours. Nothing
-            here is shared without your say-so.
-          </p>
+          <p className={styles.sub}>{t("economy:workProfile.sub")}</p>
         </header>
 
         <IdentitySection />
@@ -86,7 +91,7 @@ export function WorkProfilePage() {
 
         <div className={styles.saveBar}>
           <Button variant="primary" size="lg" onClick={save}>
-            Save work profile
+            {t("economy:workProfile.saveCta")}
           </Button>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { FiPlus } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { WorkItem } from "./data/members";
 import { WorkItemEditor } from "./WorkItemEditor";
 import { Section } from "./ProfileSections";
@@ -19,6 +20,7 @@ export function WorkEditor({
   work: WorkItem[];
   onChange: (next: WorkItem[]) => void;
 }) {
+  const { t } = useTranslation();
   function update(index: number, patch: Partial<WorkItem>) {
     onChange(work.map((w, i) => (i === index ? { ...w, ...patch } : w)));
   }
@@ -31,8 +33,8 @@ export function WorkEditor({
 
   return (
     <Section
-      title="Selected work"
-      subtitle="A few things, not a portfolio dump"
+      title={t("members:content.work.title")}
+      subtitle={t("members:content.work.subtitle")}
     >
       <div className={styles.workGrid}>
         {work.map((item, index) => (
@@ -46,7 +48,7 @@ export function WorkEditor({
         ))}
         <button type="button" className={editStyles.addWorkCard} onClick={add}>
           <FiPlus size={22} aria-hidden />
-          <span>Add work</span>
+          <span>{t("members:profileEdit.work.add")}</span>
         </button>
       </div>
     </Section>

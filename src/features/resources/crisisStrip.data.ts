@@ -1,30 +1,38 @@
-/** Crisis lines surfaced in the prominent strip at the top of Wellbeing. */
+/**
+ * Crisis lines surfaced in the prominent strip at the top of Wellbeing.
+ *
+ * i18n Pattern A — `nameKey`/`hoursKey` are resolved by the sole consumer,
+ * CrisisStrip.tsx. The organisation/helpline names (SOS Voz Amiga, ILGA
+ * Portugal) are real-world proper nouns and read identically in both
+ * catalogs; only the descriptive wording and the hours are translated.
+ * `display`/`tel` are literal phone numbers — language-agnostic, untouched.
+ */
 export interface CrisisLine {
-  name: string;
+  nameKey: string;
   /** Human-readable number, easy to scan. */
   display: string;
   /** Digits only for the tel: href (no spaces). */
   tel: string;
-  hours: string;
+  hoursKey: string;
 }
 
 export const CRISIS_LINES: CrisisLine[] = [
   {
-    name: "Emergency (police · ambulance)",
+    nameKey: "resources:crisis.line.emergency.name",
     display: "112",
     tel: "112",
-    hours: "Always · free",
+    hoursKey: "resources:crisis.line.emergency.hours",
   },
   {
-    name: "SOS Voz Amiga",
+    nameKey: "resources:crisis.line.sosVozAmiga.name",
     display: "213 544 545",
     tel: "213544545",
-    hours: "Daily 16h–24h",
+    hoursKey: "resources:crisis.line.sosVozAmiga.hours",
   },
   {
-    name: "ILGA Portugal — LGBTQ+ line",
+    nameKey: "resources:crisis.line.ilga.name",
     display: "218 873 918",
     tel: "218873918",
-    hours: "Weekdays 10h–18h",
+    hoursKey: "resources:crisis.line.ilga.hours",
   },
 ];

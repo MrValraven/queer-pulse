@@ -20,18 +20,19 @@ function daysFromNow(days: number): string {
 }
 
 /**
- * Step-up re-auth. In live mode this verifies the password server-side and
- * returns a single-purpose token the destructive/export routes require; in demo
- * it resolves a fake token so the flow still gates on the field being filled.
+ * Step-up re-auth. Live mode confirms the caller's cookie session server-side
+ * and returns the single-purpose token the destructive/export routes require;
+ * demo resolves a fake token so the flow still runs end to end. No credential
+ * is passed — see the note on `reauth` in `account.api.ts`.
  */
 export function useReauth() {
   const { demoMode } = useDemoMode();
   return useCallback(
-    (password: string): Promise<ReauthResult> =>
+    (): Promise<ReauthResult> =>
       simulateOr(
         demoMode,
         { reauthToken: "demo-reauth", expiresAt: daysFromNow(0) },
-        () => reauth({ password }),
+        reauth,
       ),
     [demoMode],
   );

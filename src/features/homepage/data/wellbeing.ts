@@ -1,58 +1,57 @@
 import type { WellbeingResource } from "./types";
 import { routes } from "../../../app/routeMap";
 
+/**
+ * i18n Pattern A — a fixed set of platform-defined wellbeing categories
+ * (identical in demo and live mode), so title/description/ctaLabel hold
+ * catalog keys rather than literal strings.
+ */
 export const wellbeingResources: WellbeingResource[] = [
   {
     href: `${routes.wellbeing}#therapists`,
-    title: "Queer-affirming therapists",
-    description:
-      "A curated directory of LGBTQ+-affirming therapists and psychiatrists in Lisbon — vetted by community members, not an algorithm.",
-    ctaLabel: "Find a therapist →",
+    titleKey: "homepage:wellbeing.therapists.title",
+    descriptionKey: "homepage:wellbeing.therapists.description",
+    ctaLabelKey: "homepage:wellbeing.therapists.cta",
     tone: "violet",
     icon: "heart",
   },
   {
     href: `${routes.wellbeing}#peer-support`,
-    title: "Mental health peer support",
-    description:
-      "A moderated space for members going through difficult times. Shared experience, no advice unless asked, no judgement.",
-    ctaLabel: "Join the group →",
+    titleKey: "homepage:wellbeing.peerSupport.title",
+    descriptionKey: "homepage:wellbeing.peerSupport.description",
+    ctaLabelKey: "homepage:wellbeing.peerSupport.cta",
     tone: "jade",
     icon: "people",
   },
   {
     href: `${routes.wellbeing}#crisis`,
-    title: "Crisis & emergency resources",
-    description:
-      "Immediate support lines and safe spaces — available 24 hours, specific to LGBTQ+ situations. No one navigates a crisis alone.",
-    ctaLabel: "View resources →",
+    titleKey: "homepage:wellbeing.crisis.title",
+    descriptionKey: "homepage:wellbeing.crisis.description",
+    ctaLabelKey: "homepage:wellbeing.crisis.cta",
     tone: "coral",
     icon: "phone",
   },
   {
     href: routes.legal,
-    title: "Legal aid & your rights",
-    description:
-      "Know your rights at work, in housing, and in healthcare. Queer-friendly lawyers, discrimination guides, and contract templates.",
-    ctaLabel: "Get informed →",
+    titleKey: "homepage:wellbeing.legal.title",
+    descriptionKey: "homepage:wellbeing.legal.description",
+    ctaLabelKey: "homepage:wellbeing.legal.cta",
     tone: "plum",
     icon: "shield",
   },
   {
     href: routes.employerReviews,
-    title: "Queer employer reviews",
-    description:
-      "Is your workplace actually safe? Anonymous reviews by LGBTQ+ employees — beyond the Pride logo, behind the closed office door.",
-    ctaLabel: "Read & write reviews →",
+    titleKey: "homepage:wellbeing.employerReviews.title",
+    descriptionKey: "homepage:wellbeing.employerReviews.description",
+    ctaLabelKey: "homepage:wellbeing.employerReviews.cta",
     tone: "coral",
     icon: "briefcase",
   },
   {
     href: `${routes.wellbeing}#harm-reduction`,
-    title: "Harm reduction",
-    description:
-      "Non-judgmental guides for nightlife safety — practical information for the community as it actually exists, not as some would prefer.",
-    ctaLabel: "Read the guide →",
+    titleKey: "homepage:wellbeing.harmReduction.title",
+    descriptionKey: "homepage:wellbeing.harmReduction.description",
+    ctaLabelKey: "homepage:wellbeing.harmReduction.cta",
     tone: "jade",
     icon: "info",
   },

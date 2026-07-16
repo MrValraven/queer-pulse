@@ -4,6 +4,8 @@ import { PageShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
@@ -17,6 +19,8 @@ import styles from "./JobDetailPage.module.css";
 
 export function JobDetailPage() {
   const { slug } = useParams();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const { postedJobs } = usePostedJobs();
@@ -37,7 +41,7 @@ export function JobDetailPage() {
       <PageShell>
         <div className={styles.page}>
           <div className={styles.breadcrumb}>
-            <Link to={routes.jobs}>Jobs</Link>
+            <Link to={routes.jobs}>{t("economy:jobDetail.breadcrumb.jobs")}</Link>
           </div>
           <JobDetailSkeleton />
         </div>
@@ -48,12 +52,15 @@ export function JobDetailPage() {
   if (!job) return <Navigate to={routes.jobs} replace />;
 
   const d = job.detail;
-  const deadlineFull =
-    job.deadline === "Open" ? "Open" : `${job.deadline} 2026`;
+  // The full deadline: a locale-formatted date, or the "Open" chrome string
+  // when the listing has no closing date.
+  const deadlineFull = job.deadline
+    ? fmt.date(job.deadline)
+    : t("economy:jobs.card.deadlineOpen");
 
   const breadcrumb = (
     <div className={styles.breadcrumb}>
-      <Link to={routes.jobs}>Jobs</Link>
+      <Link to={routes.jobs}>{t("economy:jobDetail.breadcrumb.jobs")}</Link>
       <span className={styles.bcSep}>›</span>
       <span>{d.category}</span>
       <span className={styles.bcSep}>›</span>
@@ -64,7 +71,11 @@ export function JobDetailPage() {
   function toggleSave() {
     setSaved((s) => {
       showToast(
-        s ? "Listing removed from saved." : "Listing saved to your profile.",
+        t(
+          s
+            ? "economy:jobDetail.unsavedToast"
+            : "economy:jobDetail.savedToast",
+        ),
         "info",
       );
       return !s;

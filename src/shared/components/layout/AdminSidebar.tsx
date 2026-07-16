@@ -2,28 +2,33 @@ import { Link, NavLink } from "react-router-dom";
 import { FiSettings, FiArrowLeft } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 import { useToast } from "../feedback/useToast";
+import { useTranslation } from "../../i18n/useTranslation";
+import { Translation } from "../../i18n/Translation";
 import { AdminRoleSwitcher } from "./AdminRoleSwitcher";
 import { ADMIN_NAV, ADMIN_PROFILE } from "./adminNav.data";
 import styles from "./AdminShell.module.css";
 
 export function AdminSidebar() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   return (
     <aside className={styles.sidebar}>
       <Link to={routes.admin} className={styles.brand}>
         <span className={styles.brandDot} aria-hidden />
         <span className={styles.brandName}>
-          Queer<em>Pulse</em>
+          <Translation i18nKey="shared:brand.wordmark" components={{ em: <em /> }} />
         </span>
-        <span className={styles.brandBadge}>Admin</span>
+        <span className={styles.brandBadge}>
+          {t("shared:adminSidebar.badge")}
+        </span>
       </Link>
 
       <AdminRoleSwitcher />
 
       <nav className={styles.nav}>
-        <div className={styles.navHead}>Oversight</div>
-        {ADMIN_NAV.map(({ label, to, icon: Icon, end, count, tone }) => (
+        <div className={styles.navHead}>{t("shared:adminSidebar.oversight")}</div>
+        {ADMIN_NAV.map(({ labelKey, to, icon: Icon, end, count, tone }) => (
           <NavLink
             key={to}
             to={to}
@@ -35,7 +40,7 @@ export function AdminSidebar() {
             }
           >
             <Icon aria-hidden />
-            <span className={styles.navLabel}>{label}</span>
+            <span className={styles.navLabel}>{t(labelKey)}</span>
             {count != null && (
               <span
                 className={[
@@ -52,13 +57,13 @@ export function AdminSidebar() {
 
       <Link to={routes.homepage} className={styles.backToPlatform}>
         <FiArrowLeft aria-hidden />
-        <span>Back to platform</span>
+        <span>{t("shared:adminSidebar.backToPlatform")}</span>
       </Link>
 
       <button
         type="button"
         className={styles.me}
-        onClick={() => showToast("Your admin profile", "info")}
+        onClick={() => showToast(t("shared:adminSidebar.toastProfile"), "info")}
       >
         <span className={styles.meAv}>{ADMIN_PROFILE.initials}</span>
         <span className={styles.meTx}>

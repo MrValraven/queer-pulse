@@ -9,6 +9,8 @@ import {
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { routes } from "../../app/routeMap";
@@ -17,44 +19,45 @@ import styles from "./resources.module.css";
 
 interface Right {
   badge: "protected" | "know" | "practical";
-  badgeLabel: string;
-  title: string;
-  body: string;
-  linkLabel: string;
+  titleKey: string;
+  bodyKey: string;
+  linkKey: string;
   to: string;
 }
 
+/**
+ * i18n Pattern A — platform-authored legal guidance chrome, resolved via
+ * `t()` in RightsSection. Real-world proper nouns inside the body strings
+ * (ACT, SNS, ILGA Portugal) stay untranslated as part of the catalog value
+ * itself. This is legal information — flagged for native review.
+ */
 const WORKPLACE: Right[] = [
   {
     badge: "protected",
-    badgeLabel: "Protected right",
-    title: "Protection from dismissal",
-    body: "You cannot be legally dismissed because of your sexual orientation or gender identity. Constructive dismissal — making conditions intolerable — is also prohibited. Keep records of everything.",
-    linkLabel: "Read the full guide →",
+    titleKey: "resources:legal.workplace.dismissal.title",
+    bodyKey: "resources:legal.workplace.dismissal.body",
+    linkKey: "resources:legal.link.readGuide",
     to: routes.library,
   },
   {
     badge: "protected",
-    badgeLabel: "Protected right",
-    title: "Harassment at work",
-    body: "Harassment on grounds of sexual orientation or gender identity is unlawful. Your employer has a legal duty to investigate complaints. Failure to act makes them liable. Document every incident with dates.",
-    linkLabel: "Read the full guide →",
+    titleKey: "resources:legal.workplace.harassment.title",
+    bodyKey: "resources:legal.workplace.harassment.body",
+    linkKey: "resources:legal.link.readGuide",
     to: routes.library,
   },
   {
     badge: "know",
-    badgeLabel: "Know this",
-    title: "Pronouns & name at work",
-    body: "Persistent misgendering after being corrected can constitute harassment. Trans employees have the right to use their preferred name before any legal name change.",
-    linkLabel: "Read the full guide →",
+    titleKey: "resources:legal.workplace.pronouns.title",
+    bodyKey: "resources:legal.workplace.pronouns.body",
+    linkKey: "resources:legal.link.readGuide",
     to: routes.library,
   },
   {
     badge: "practical",
-    badgeLabel: "Practical",
-    title: "Making a complaint",
-    body: "The ACT (Autoridade para as Condições do Trabalho) handles workplace discrimination complaints. You can report anonymously. We have a step-by-step guide and template complaint letter.",
-    linkLabel: "Get the template →",
+    titleKey: "resources:legal.workplace.complaint.title",
+    bodyKey: "resources:legal.workplace.complaint.body",
+    linkKey: "resources:legal.link.getTemplate",
     to: routes.library,
   },
 ];
@@ -62,26 +65,23 @@ const WORKPLACE: Right[] = [
 const HOUSING: Right[] = [
   {
     badge: "protected",
-    badgeLabel: "Protected right",
-    title: "Rental discrimination",
-    body: "A landlord refusing to rent to you due to sexual orientation or gender identity is acting illegally. Document any evidence — screenshots, recordings with consent, written refusals.",
-    linkLabel: "Read the full guide →",
+    titleKey: "resources:legal.housing.rental.title",
+    bodyKey: "resources:legal.housing.rental.body",
+    linkKey: "resources:legal.link.readGuide",
     to: routes.library,
   },
   {
     badge: "practical",
-    badgeLabel: "Practical",
-    title: "Same-sex couples & rentals",
-    body: "Same-sex couples have equal rights in tenancy agreements. Both partners can be named on a lease. There are protections against removal if one partner leaves or dies.",
-    linkLabel: "Read the full guide →",
+    titleKey: "resources:legal.housing.samesex.title",
+    bodyKey: "resources:legal.housing.samesex.body",
+    linkKey: "resources:legal.link.readGuide",
     to: routes.library,
   },
   {
     badge: "practical",
-    badgeLabel: "Practical",
-    title: "Eviction protections",
-    body: "Eviction on discriminatory grounds has additional protections. If you're facing displacement in a gentrifying area, community organisers can help — contact Catarina Vaz via QueerPulse.",
-    linkLabel: "Find support →",
+    titleKey: "resources:legal.housing.eviction.title",
+    bodyKey: "resources:legal.housing.eviction.body",
+    linkKey: "resources:legal.link.findSupport",
     to: routes.changemakers,
   },
 ];
@@ -89,30 +89,31 @@ const HOUSING: Right[] = [
 const HEALTHCARE: Right[] = [
   {
     badge: "protected",
-    badgeLabel: "Protected right",
-    title: "Trans healthcare via SNS",
-    body: "Since 2018, trans healthcare including hormone therapy and surgical procedures is available through the SNS. Waiting lists exist — we have a guide to navigating them.",
-    linkLabel: "Trans Hub guide →",
+    titleKey: "resources:legal.healthcare.sns.title",
+    bodyKey: "resources:legal.healthcare.sns.body",
+    linkKey: "resources:legal.link.transHubGuide",
     to: routes.transHub,
   },
   {
     badge: "protected",
-    badgeLabel: "Protected right",
-    title: "Refusal of treatment",
-    body: "Healthcare providers cannot legally refuse treatment on grounds of sexual orientation or gender identity. If this happens, document it and contact ILGA Portugal immediately.",
-    linkLabel: "Report a refusal →",
+    titleKey: "resources:legal.healthcare.refusal.title",
+    bodyKey: "resources:legal.healthcare.refusal.body",
+    linkKey: "resources:legal.link.reportRefusal",
     to: routes.report,
   },
   {
     badge: "practical",
-    badgeLabel: "Practical",
-    title: "PrEP access",
-    body: "PrEP is available via the SNS at no cost if you meet eligibility criteria. Our guide walks through the process, including which clinics are most welcoming in Lisbon.",
-    linkLabel: "PrEP access guide →",
+    titleKey: "resources:legal.healthcare.prep.title",
+    bodyKey: "resources:legal.healthcare.prep.body",
+    linkKey: "resources:legal.link.prepGuide",
     to: routes.wellbeing,
   },
 ];
 
+/**
+ * Mock lawyer directory. In live mode this is a fetched, vetted directory —
+ * name/spec/tags/loc are content, left in English per the scope rule.
+ */
 const LAWYERS = [
   {
     name: "Sofia Mendonça",
@@ -162,16 +163,22 @@ function LawyerSkeleton() {
 function RightsSection({
   id,
   title,
-  lead,
+  leadKey,
   cream,
   rights,
 }: {
   id: string;
   title: ReactNode;
-  lead: string;
+  leadKey: string;
   cream?: boolean;
   rights: Right[];
 }) {
+  const { t } = useTranslation();
+  const badgeLabel: Record<Right["badge"], string> = {
+    protected: t("resources:legal.badge.protected"),
+    know: t("resources:legal.badge.know"),
+    practical: t("resources:legal.badge.practical"),
+  };
   return (
     <section
       className={`${styles.section} ${cream ? styles.sectionCream : styles.sectionPaper}`}
@@ -180,22 +187,22 @@ function RightsSection({
       <div className="wrap">
         <Reveal as="h2">{title}</Reveal>
         <Reveal as="p" className={styles.leadP}>
-          {lead}
+          {t(leadKey)}
         </Reveal>
         <div className={styles.grid}>
           {rights.map((right, index) => (
             <Reveal
-              key={right.title}
+              key={right.titleKey}
               className={styles.rightCard}
               delay={index * 55}
             >
               <span className={`${styles.badge} ${badgeClass[right.badge]}`}>
-                {right.badgeLabel}
+                {badgeLabel[right.badge]}
               </span>
-              <div className={styles.rightTitle}>{right.title}</div>
-              <div className={styles.rightBody}>{right.body}</div>
+              <div className={styles.rightTitle}>{t(right.titleKey)}</div>
+              <div className={styles.rightBody}>{t(right.bodyKey)}</div>
               <Link to={right.to} className={styles.rightLink}>
-                {right.linkLabel}
+                {t(right.linkKey)}
               </Link>
             </Reveal>
           ))}
@@ -206,57 +213,66 @@ function RightsSection({
 }
 
 export function LegalPage() {
+  const { t } = useTranslation();
   const { openConnect } = useConnect();
   const loading = useSimulatedLoad();
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Legal Aid"
+        eyebrow={t("resources:legal.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            Know your rights. <em>Have your receipts.</em>
-          </>
+          <Translation
+            i18nKey="resources:legal.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="Legal guides, queer-friendly lawyers, and discrimination resources for LGBTQ+ people in Portugal — because knowing your rights is the first step to defending them."
+        lead={t("resources:legal.hero.lead")}
         anchors={[
-          { label: "Workplace rights", href: "#workplace" },
-          { label: "Housing rights", href: "#housing" },
-          { label: "Healthcare rights", href: "#healthcare" },
-          { label: "Lawyer directory", href: "#lawyers" },
+          { label: t("resources:legal.hero.anchor.workplace"), href: "#workplace" },
+          { label: t("resources:legal.hero.anchor.housing"), href: "#housing" },
+          { label: t("resources:legal.hero.anchor.healthcare"), href: "#healthcare" },
+          { label: t("resources:legal.hero.anchor.lawyers"), href: "#lawyers" },
         ]}
-        backLink={{ to: routes.safety, label: "Safety Guide", tone: "dark" }}
+        backLink={{
+          to: routes.safety,
+          label: t("resources:legal.hero.backLink"),
+          tone: "dark",
+        }}
       />
 
       <RightsSection
         id="workplace"
         title={
-          <>
-            Workplace <em>rights</em>
-          </>
+          <Translation
+            i18nKey="resources:legal.workplace.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="Portugal's Labour Code prohibits discrimination on grounds of sexual orientation and gender identity. Here's what that means in practice."
+        leadKey="resources:legal.workplace.lead"
         rights={WORKPLACE}
       />
       <RightsSection
         id="housing"
         cream
         title={
-          <>
-            Housing <em>rights</em>
-          </>
+          <Translation
+            i18nKey="resources:legal.housing.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="Discrimination in housing rental is illegal in Portugal. In practice it still happens — here's how to respond when it does."
+        leadKey="resources:legal.housing.lead"
         rights={HOUSING}
       />
       <RightsSection
         id="healthcare"
         title={
-          <>
-            Healthcare <em>rights</em>
-          </>
+          <Translation
+            i18nKey="resources:legal.healthcare.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="LGBTQ+ people in Portugal have full rights to access public healthcare. Trans-specific access has improved significantly since 2018."
+        leadKey="resources:legal.healthcare.lead"
         rights={HEALTHCARE}
       />
 
@@ -267,12 +283,13 @@ export function LegalPage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            Queer-friendly <em>lawyers</em>
+            <Translation
+              i18nKey="resources:legal.lawyers.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Vetted by community members, with specific experience in LGBTQ+
-            cases in Portugal. Initial consultations are free for QueerPulse
-            members.
+            {t("resources:legal.lawyers.lead")}
           </Reveal>
           <div className={styles.grid} aria-busy={loading}>
             {loading
@@ -310,7 +327,7 @@ export function LegalPage() {
                           }
                         }}
                       >
-                        Request consultation →
+                        {t("resources:legal.lawyers.requestConsultationCta")}
                       </span>
                     </div>
                   </FadeIn>
@@ -320,17 +337,15 @@ export function LegalPage() {
           <Reveal className={styles.emergencyStrip}>
             <div>
               <h3>
-                Facing something <em>urgent?</em>
+                <Translation
+                  i18nKey="resources:legal.lawyers.emergency.title"
+                  components={{ em: <em /> }}
+                />
               </h3>
-              <p>
-                If you're dealing with an immediate legal situation — arrest,
-                eviction notice, or workplace suspension — use the QueerPulse
-                emergency network. Someone who can help is usually reachable
-                within hours.
-              </p>
+              <p>{t("resources:legal.lawyers.emergency.body")}</p>
             </div>
             <Button variant="ghost-dark" size="lg" to={routes.emergency}>
-              <FiAlertOctagon /> Emergency network →
+              <FiAlertOctagon /> {t("resources:legal.lawyers.emergencyCta")}
             </Button>
           </Reveal>
         </div>
@@ -338,14 +353,15 @@ export function LegalPage() {
 
       <Outro
         title={
-          <>
-            You have <em>rights.</em>
-          </>
+          <Translation
+            i18nKey="resources:legal.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Knowledge is the first line of defence. Share these resources with anyone who needs them."
+        sub={t("resources:legal.outro.sub")}
       >
         <Button to={routes.requestInvite} variant="primary" size="lg">
-          Request an invite
+          {t("resources:legal.outro.requestInviteCta")}
         </Button>
       </Outro>
     </PageShell>

@@ -5,6 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, Reveal, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { deadlineText } from "./api/jobs.adapters";
 import { useSaved } from "../../app/providers/SavedProvider";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
@@ -19,6 +23,8 @@ import { affiliationFromLabel } from "./safetyBadges.data";
 import styles from "./JobsPage.module.css";
 
 function JobCard({ job }: { job: Job }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const { isSaved, toggleSave } = useSaved();
   const navigate = useNavigate();
@@ -43,7 +49,10 @@ function JobCard({ job }: { job: Job }) {
       description: job.desc,
     });
     showToast(
-      now ? `Saved ${job.title}` : `Removed ${job.title} from saved`,
+      t(
+        now ? "economy:jobs.card.savedToast" : "economy:jobs.card.unsavedToast",
+        { title: job.title },
+      ),
       "success",
     );
   }
@@ -81,7 +90,11 @@ function JobCard({ job }: { job: Job }) {
           <span className={styles.dot} />
           <span>{job.location}</span>
           <span className={styles.dot} />
-          <span>Apply by {job.deadline}</span>
+          <span>
+            {t("economy:jobs.card.applyBy", {
+              date: deadlineText(job.deadline, t, fmt),
+            })}
+          </span>
         </div>
       </div>
       <div className={styles.actions}>
@@ -89,9 +102,12 @@ function JobCard({ job }: { job: Job }) {
           role="button"
           tabIndex={0}
           aria-pressed={saved}
-          aria-label={
-            saved ? `Remove ${job.title} from saved` : `Save ${job.title}`
-          }
+          aria-label={t(
+            saved
+              ? "economy:jobs.card.unsaveAriaLabel"
+              : "economy:jobs.card.saveAriaLabel",
+            { title: job.title },
+          )}
           className={[styles.saveBtn, saved && styles.saveBtnOn]
             .filter(Boolean)
             .join(" ")}
@@ -101,19 +117,21 @@ function JobCard({ job }: { job: Job }) {
           }}
         >
           <FiBookmark fill={saved ? "currentColor" : "none"} />
-          {saved ? "Saved" : "Save"}
+          {t(saved ? "economy:jobs.card.saved" : "economy:jobs.card.save")}
         </span>
         <span
           role="button"
           tabIndex={0}
-          aria-label={`Apply for ${job.title}`}
+          aria-label={t("economy:jobs.card.applyAriaLabel", {
+            title: job.title,
+          })}
           className={styles.apply}
           onClick={apply}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") apply(e);
           }}
         >
-          Apply →
+          {t("economy:jobs.card.applyCta")}
         </span>
       </div>
     </Link>
@@ -135,6 +153,7 @@ function JobSkeleton() {
 }
 
 export function JobsPage() {
+  const { t } = useTranslation();
   const { safeOnly } = useWorkProfile();
   const { postedJobs } = usePostedJobs();
   const { demoMode } = useDemoMode();
@@ -175,24 +194,25 @@ export function JobsPage() {
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
-            Job Board
+            {t("economy:jobs.eyebrow")}
           </Reveal>
           <Reveal as="h1" delay={60}>
-            Work that <em>doesn't ask you to hide.</em>
+            <Translation
+              i18nKey="economy:jobs.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" delay={120}>
-            Queer-run businesses and verified queer-inclusive employers — jobs
-            where you can show up as yourself. No rainbow capitalism. Every
-            listing is vetted by the community.
+            {t("economy:jobs.lead")}
           </Reveal>
           <Reveal className={styles.badges} delay={160}>
             <span className={styles.badge}>
-              <FaRainbow /> Queer-run
+              <FaRainbow /> {t("economy:jobs.badge.queerRun")}
             </span>
             <span className={styles.badge}>
-              <FiCheck /> Community verified
+              <FiCheck /> {t("economy:jobs.badge.verified")}
             </span>
-            <span className={styles.badge}>Lisbon + remote</span>
+            <span className={styles.badge}>{t("economy:jobs.badge.location")}</span>
           </Reveal>
         </div>
       </div>
@@ -213,7 +233,7 @@ export function JobsPage() {
                     .join(" ")}
                   onClick={() => setFilter(f.value)}
                 >
-                  {f.label}
+                  {t(f.labelKey)}
                 </button>
               ))}
             </div>
@@ -222,7 +242,7 @@ export function JobsPage() {
               className={styles.postBtn}
               onClick={() => navigate(routes.postJob)}
             >
-              + Post a job
+              {t("economy:jobs.postCta")}
             </button>
           </div>
           {safeOnly && (
@@ -231,10 +251,12 @@ export function JobsPage() {
                 <FiShield />
               </span>
               <span className={styles.sbText}>
-                Matched to your work profile — showing{" "}
-                <strong>verified-safe employers</strong>.{" "}
+                <Translation
+                  i18nKey="economy:jobs.safetyBanner.text"
+                  components={{ strong: <strong /> }}
+                />{" "}
                 <Link to={routes.workProfile} className={styles.sbLink}>
-                  Change in your work profile
+                  {t("economy:jobs.safetyBanner.link")}
                 </Link>
               </span>
               <button
@@ -243,8 +265,12 @@ export function JobsPage() {
                 onClick={() => setShowAll((s) => !s)}
               >
                 {showAll
-                  ? "Show verified only"
-                  : `Show all${hiddenCount ? ` (${hiddenCount} more)` : ""}`}
+                  ? t("economy:jobs.safetyBanner.showVerified")
+                  : hiddenCount
+                    ? t("economy:jobs.safetyBanner.showAllCount", {
+                        count: hiddenCount,
+                      })
+                    : t("economy:jobs.safetyBanner.showAll")}
               </button>
             </div>
           )}
@@ -254,27 +280,21 @@ export function JobsPage() {
             ) : visible.length === 0 ? (
               <EmptyState
                 icon={<FiBriefcase />}
-                title="No roles match right now"
-                description={
+                title={t("economy:jobs.empty.title")}
+                description={t(
                   verifiedOnly
-                    ? "Nothing in this category is verified-safe yet. Show all roles, or pick a different category."
-                    : "No openings in this category at the moment. Browse every role, or check back soon — listings are added weekly."
-                }
-                action={
-                  verifiedOnly
-                    ? {
-                        label: "Show all roles",
-                        onClick: () => setShowAll(true),
-                      }
-                    : {
-                        label: "Show all roles",
-                        onClick: () => setFilter("all"),
-                      }
-                }
+                    ? "economy:jobs.empty.verifiedDescription"
+                    : "economy:jobs.empty.description",
+                )}
+                action={{
+                  label: t("economy:jobs.empty.showAll"),
+                  onClick: () =>
+                    verifiedOnly ? setShowAll(true) : setFilter("all"),
+                }}
                 secondaryAction={
                   filter !== "all"
                     ? {
-                        label: "Clear category",
+                        label: t("economy:jobs.empty.clearCategory"),
                         onClick: () => setFilter("all"),
                       }
                     : undefined

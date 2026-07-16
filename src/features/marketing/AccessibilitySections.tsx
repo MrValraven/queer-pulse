@@ -1,5 +1,7 @@
 import { Button, FadeIn } from "../../shared/components/ui";
 import type { ToastContextValue } from "../../shared/components/feedback/toastContext";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { COMMITMENTS, FILTERS, RESOURCES } from "./accessibility.data";
 import {
@@ -22,21 +24,23 @@ export function AccessibleSpacesSection({
   venues: Venue[];
   onFlag: (name: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec} id="spaces">
       <div className="wrap">
         <div className={styles.secHead}>
           <h2>
-            Accessible <em>spaces</em>
+            <Translation
+              i18nKey="marketing:accessibility.spaces.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            Not a binary accessible/not-accessible list. Real detail, reviewed
-            by disabled members of this community. Filter by what matters to
-            you.
-          </p>
+          <p>{t("marketing:accessibility.spaces.body")}</p>
         </div>
         <div className={styles.venueFilter}>
-          <span className={styles.vfLabel}>Filter</span>
+          <span className={styles.vfLabel}>
+            {t("marketing:accessibility.spaces.filterLabel")}
+          </span>
           {FILTERS.map((f) => (
             <button
               key={f.id}
@@ -46,20 +50,20 @@ export function AccessibleSpacesSection({
                 .join(" ")}
               onClick={() => setFilter(f.id)}
             >
-              {f.label}
+              {t(f.labelKey)}
             </button>
           ))}
         </div>
         <div className={styles.venueGrid}>
           {loading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <AccessibleVenueCardSkeleton key={i} />
+            Array.from({ length: 4 }).map((_, index) => (
+              <AccessibleVenueCardSkeleton key={index} />
             ))
           ) : venues.length === 0 ? (
             <div className={styles.venueEmpty}>
-              <p>No venues match that filter yet.</p>
+              <p>{t("marketing:accessibility.spaces.emptyTitle")}</p>
               <p className={styles.small}>
-                Know of one? Let us know in the forum.
+                {t("marketing:accessibility.spaces.emptyBody")}
               </p>
             </div>
           ) : (
@@ -80,22 +84,22 @@ export function CommitmentsSection({
 }: {
   onRequestAccom: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className={`${styles.sec} ${styles.secAlt}`}>
       <div className="wrap">
         <div className={styles.secHead}>
           <h2>
-            Our <em>commitments</em>
+            <Translation
+              i18nKey="marketing:accessibility.commitments.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            These are what QueerPulse does to make gatherings, events, and the
-            platform more accessible. Not a brochure — a baseline we're
-            accountable to, and want to keep improving.
-          </p>
+          <p>{t("marketing:accessibility.commitments.body")}</p>
         </div>
         <div className={styles.commitGrid}>
           {COMMITMENTS.map((c) => (
-            <div className={styles.commitCard} key={c.title}>
+            <div className={styles.commitCard} key={c.titleKey}>
               <div className={styles.ccIcon}>
                 <svg
                   viewBox="0 0 20 20"
@@ -108,22 +112,19 @@ export function CommitmentsSection({
                   {c.icon}
                 </svg>
               </div>
-              <div className={styles.ccTitle}>{c.title}</div>
-              <div className={styles.ccBody}>{c.body}</div>
-              <div className={styles.ccStatus}>{c.status}</div>
+              <div className={styles.ccTitle}>{t(c.titleKey)}</div>
+              <div className={styles.ccBody}>{t(c.bodyKey)}</div>
+              <div className={styles.ccStatus}>{t(c.statusKey)}</div>
             </div>
           ))}
         </div>
         <div className={styles.accomStrip}>
           <div>
-            <h3>Need something specific for a QueerPulse event?</h3>
-            <p>
-              Request accommodations in advance and we'll do everything we can.
-              No need to justify or explain — just tell us what you need.
-            </p>
+            <h3>{t("marketing:accessibility.commitments.accomTitle")}</h3>
+            <p>{t("marketing:accessibility.commitments.accomBody")}</p>
           </div>
           <Button type="button" variant="primary" onClick={onRequestAccom}>
-            Request accommodations
+            {t("marketing:accessibility.commitments.accomCta")}
           </Button>
         </div>
       </div>
@@ -136,27 +137,35 @@ export function ResourcesSection({
 }: {
   showToast: ToastContextValue["showToast"];
 }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <div className="wrap">
         <div className={styles.secHead}>
           <h2>
-            Resources for disabled <em>queer people in Lisbon</em>
+            <Translation
+              i18nKey="marketing:accessibility.resources.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            Practical support for navigating disability as a queer person in
-            Portugal — benefits, healthcare, and community.
-          </p>
+          <p>{t("marketing:accessibility.resources.body")}</p>
         </div>
         <div className={styles.resourceGrid}>
           {RESOURCES.map((r) => (
-            <div className={styles.resourceCard} key={r.title}>
-              <div className={styles.rcEyebrow}>{r.eyebrow}</div>
-              <div className={styles.rcTitle}>{r.title}</div>
-              <div className={styles.rcBody}>{r.body}</div>
+            <div className={styles.resourceCard} key={r.titleKey}>
+              <div className={styles.rcEyebrow}>{t(r.eyebrowKey)}</div>
+              <div className={styles.rcTitle}>{t(r.titleKey)}</div>
+              <div className={styles.rcBody}>{t(r.bodyKey)}</div>
               <div className={styles.rcLink}>
-                <a onClick={() => showToast("Opening resource…", "info")}>
-                  {r.link}
+                <a
+                  onClick={() =>
+                    showToast(
+                      t("marketing:accessibility.resources.openingToast"),
+                      "info",
+                    )
+                  }
+                >
+                  {t(r.linkKey)} →
                 </a>
               </div>
             </div>
@@ -165,24 +174,28 @@ export function ResourcesSection({
         <div className={styles.peerStrip}>
           <div>
             <h3>
-              Peer support — <em>disabled &amp; chronically ill members</em>
+              <Translation
+                i18nKey="marketing:accessibility.peer.title"
+                components={{ em: <em /> }}
+              />
             </h3>
-            <p>
-              A closed community group within QueerPulse for disabled and
-              chronically ill members. No inspiration required. Just people who
-              understand.
-            </p>
+            <p>{t("marketing:accessibility.peer.body")}</p>
           </div>
           <div className={styles.peerActions}>
             <Button
               type="button"
               variant="primary"
-              onClick={() => showToast("Joining the group…", "success")}
+              onClick={() =>
+                showToast(
+                  t("marketing:accessibility.peer.joiningToast"),
+                  "success",
+                )
+              }
             >
-              Join the group
+              {t("marketing:accessibility.peer.joinCta")}
             </Button>
             <Button to={routes.mentorship} variant="ghost-dark">
-              Find a peer mentor →
+              {t("marketing:accessibility.peer.mentorCta")} →
             </Button>
           </div>
         </div>

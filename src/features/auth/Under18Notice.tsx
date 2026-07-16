@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./Under18Notice.module.css";
 
 interface Under18NoticeProps {
@@ -16,48 +18,37 @@ interface Under18NoticeProps {
  * QueerPulse is 18+ *today*, that this isn't a judgement, points to queer
  * resources that are for them right now, and leaves the door open to come back.
  */
-export function Under18Notice({
-  onBack,
-  backLabel = "Back",
-}: Under18NoticeProps) {
+export function Under18Notice({ onBack, backLabel }: Under18NoticeProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.panel}>
       <div className={styles.icon}>
         <FiHeart size={26} color="var(--accent)" aria-hidden />
       </div>
       <h2 className={styles.title}>
-        We'll be here <em>when you're ready</em>
+        <Translation i18nKey="auth:under18.title" components={{ em: <em /> }} />
       </h2>
-      <p className={styles.body}>
-        QueerPulse is an 18+ community for now, so we can't set you up with an
-        account just yet — and that's not a judgement on you. You belong in
-        queer community; this particular room just isn't open to under-18s
-        today. Come back when you turn 18 and there'll be a place for you.
-      </p>
-      <p className={styles.body}>
-        In the meantime, there's plenty here that's for you right now:
-      </p>
+      <p className={styles.body}>{t("auth:under18.body1")}</p>
+      <p className={styles.body}>{t("auth:under18.body2")}</p>
       <ul className={styles.links}>
         <li>
-          <Link to={routes.queer101}>
-            Queer 101 — the basics, no gatekeeping
-          </Link>
+          <Link to={routes.queer101}>{t("auth:under18.link.queer101")}</Link>
         </li>
         <li>
-          <Link to={routes.comingOut}>Coming out, at your own pace</Link>
+          <Link to={routes.comingOut}>{t("auth:under18.link.comingOut")}</Link>
         </li>
         <li>
-          <Link to={routes.resources}>Community resources &amp; support</Link>
+          <Link to={routes.resources}>{t("auth:under18.link.resources")}</Link>
         </li>
         <li>
           <Link to={`${routes.terms}#eligibility`}>
-            Why we're 18+ (our Terms)
+            {t("auth:under18.link.eligibility")}
           </Link>
         </li>
       </ul>
       <div className={styles.actions}>
         <Button variant="ghost-dark" onClick={onBack}>
-          {backLabel}
+          {backLabel ?? t("auth:under18.backDefault")}
         </Button>
       </div>
     </div>

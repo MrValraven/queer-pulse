@@ -1,21 +1,27 @@
 import { routes } from "../../app/routeMap";
 
-/** Logged-out marketing landing for QueerPulse Studio (shown at /studio). */
+/**
+ * Logged-out marketing landing for QueerPulse Studio (shown at /studio).
+ * i18n Pattern A throughout — chrome nav/footer/promise/stat copy holds
+ * catalog keys; the components resolve them with `t()`.
+ */
 
 export interface FooterLink {
   label: string;
+  labelKey: string;
   to: string;
 }
 export interface FooterColumn {
   title: string;
+  titleKey: string;
   links: FooterLink[];
 }
 
 export const TOP_NAV: FooterLink[] = [
-  { label: "About the co-op", to: routes.studioAbout },
-  { label: "Public ledger", to: routes.governance },
-  { label: "How it works", to: "#how" },
-  { label: "For artists", to: "#artists" },
+  { label: "About the co-op", labelKey: "studio:landing.nav.aboutCoop", to: routes.studioAbout },
+  { label: "Public ledger", labelKey: "studio:landing.nav.publicLedger", to: routes.governance },
+  { label: "How it works", labelKey: "studio:landing.nav.howItWorks", to: "#how" },
+  { label: "For artists", labelKey: "studio:landing.nav.forArtists", to: "#artists" },
 ];
 
 export const HERO_SET_ART =
@@ -51,48 +57,45 @@ export const DEMO_WAVE: { h: number; played: boolean }[] = [
 
 export interface Promise {
   num: string;
-  titlePre: string;
-  titleEm: string;
-  titlePost?: string;
-  body: string;
+  titleKey: string;
+  bodyKey: string;
 }
 
 export const PROMISES: Promise[] = [
   {
     num: "i.",
-    titlePre: "A fair, ",
-    titleEm: "visible",
-    titlePost: " share.",
-    body: "80% of every listen to the artist. 100% of every tip. The other 20% covers payments, hosting, captions, sheet-music typesetting, and council stipends. The split is on every artist page, every receipt, every album.",
+    titleKey: "studio:landing.promises.share.title",
+    bodyKey: "studio:landing.promises.share.body",
   },
   {
     num: "ii.",
-    titlePre: "A room ",
-    titleEm: "programmed",
-    titlePost: " by humans.",
-    body: 'Every track on the homepage has a curator’s name and a one-paragraph note. No "popular near you", no "made for you", no infinite scroll. The week is small, hand-built, and dated.',
+    titleKey: "studio:landing.promises.humans.title",
+    bodyKey: "studio:landing.promises.humans.body",
   },
   {
     num: "iii.",
-    titlePre: "Co-owned by the ",
-    titleEm: "listeners",
-    titlePost: ".",
-    body: "Sustainers (€7/mo) become voting co-op members after twelve months. They elect the council, approve the rate card, and see every euro on the ledger. The platform is structurally accountable to the room.",
+    titleKey: "studio:landing.promises.coOwned.title",
+    bodyKey: "studio:landing.promises.coOwned.body",
   },
   {
     num: "iv.",
-    titlePre: "Privacy as a ",
-    titleEm: "default",
-    titlePost: ".",
-    body: "No listening data sold, syndicated, or used to recommend. Personal play history is private and deletable in one click. Aggregate plays exist for the ledger; nothing else leaves the building.",
+    titleKey: "studio:landing.promises.privacy.title",
+    bodyKey: "studio:landing.promises.privacy.body",
   },
 ];
 
+/**
+ * `prefix`/`suffix` are symbolic (currency/percent glyphs), not language
+ * prose, so they stay as literal display fragments. `unitKey` is the one spot
+ * a unit *word* ("days") is glued to the animated number — it resolves
+ * through `t()` and is appended with its own space.
+ */
 export interface CounterStat {
   value: number;
   prefix?: string;
   suffix?: string;
-  label: string;
+  unitKey?: string;
+  labelKey: string;
 }
 
 /** The big headline payout figure. */
@@ -103,40 +106,45 @@ export const COUNTER_STATS: CounterStat[] = [
     value: 5,
     prefix: "€0.0",
     suffix: "",
-    label: "per qualifying play · 15× Spotify",
+    labelKey: "studio:landing.counter.stat.perPlay",
   },
-  { value: 80, suffix: ".3%", label: "share to artists, aggregate" },
-  { value: 2104, label: "sustainers in the co-op" },
-  { value: 9, suffix: ".4 days", label: "median council answer time" },
+  { value: 80, suffix: ".3%", labelKey: "studio:landing.counter.stat.artistShare" },
+  { value: 2104, labelKey: "studio:landing.counter.stat.sustainers" },
+  {
+    value: 9,
+    suffix: ".4",
+    unitKey: "studio:landing.counter.unit.days",
+    labelKey: "studio:landing.counter.stat.councilAnswerTime",
+  },
 ];
 
 export interface CompareCard {
-  label: string;
+  labelKey: string;
   value: string;
-  ctx: string;
+  ctxKey: string;
   us?: boolean;
 }
 
 export const COMPARE: CompareCard[] = [
   {
-    label: "Spotify · avg",
+    labelKey: "studio:landing.compare.spotify.label",
     value: "€0.003",
-    ctx: "Pro-rata · ad-blended · about 3 cents per 10 plays",
+    ctxKey: "studio:landing.compare.spotify.ctx",
   },
   {
-    label: "Apple Music",
+    labelKey: "studio:landing.compare.apple.label",
     value: "€0.007",
-    ctx: "Slightly better, still mostly nominal",
+    ctxKey: "studio:landing.compare.apple.ctx",
   },
   {
-    label: "Tidal HiFi",
+    labelKey: "studio:landing.compare.tidal.label",
     value: "€0.012",
-    ctx: "User-centric · hi-fi tier only",
+    ctxKey: "studio:landing.compare.tidal.ctx",
   },
   {
-    label: "QP Studio · committed floor",
+    labelKey: "studio:landing.compare.us.label",
     value: "€0.05",
-    ctx: "No ads · no shareholders · sustainer-pooled. Set annually by vote.",
+    ctxKey: "studio:landing.compare.us.ctx",
     us: true,
   },
 ];
@@ -144,38 +152,62 @@ export const COMPARE: CompareCard[] = [
 export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: "Studio",
+    titleKey: "studio:landing.footer.col.studio",
     links: [
-      { label: "This week", to: routes.studio },
-      { label: "Sheet music", to: routes.studioSheetStore },
-      { label: "DJ sets", to: routes.studioSet },
-      { label: "Live broadcast", to: routes.studioLive },
+      { label: "This week", labelKey: "studio:landing.footer.col.studio.thisWeek", to: routes.studio },
+      { label: "Sheet music", labelKey: "studio:rail.main.sheetMusic", to: routes.studioSheetStore },
+      { label: "DJ sets", labelKey: "studio:landing.footer.col.studio.djSets", to: routes.studioSet },
+      {
+        label: "Live broadcast",
+        labelKey: "studio:landing.footer.col.studio.liveBroadcast",
+        to: routes.studioLive,
+      },
     ],
   },
   {
     title: "Artists",
+    titleKey: "studio:landing.footer.col.artists",
     links: [
-      { label: "Submit music", to: routes.studioUpload },
-      { label: "Artist dashboard", to: routes.studioDashboard },
-      { label: "Revenue split", to: routes.studioAbout },
-      { label: "Rights & takedown", to: routes.studioRights },
+      { label: "Submit music", labelKey: "studio:landing.footer.col.artists.submitMusic", to: routes.studioUpload },
+      {
+        label: "Artist dashboard",
+        labelKey: "studio:landing.footer.col.artists.dashboard",
+        to: routes.studioDashboard,
+      },
+      {
+        label: "Revenue split",
+        labelKey: "studio:landing.footer.col.artists.revenueSplit",
+        to: routes.studioAbout,
+      },
+      {
+        label: "Rights & takedown",
+        labelKey: "studio:rail.contribute.rightsTakedown",
+        to: routes.studioRights,
+      },
     ],
   },
   {
     title: "The co-op",
+    titleKey: "studio:rail.section.coop",
     links: [
-      { label: "The strategy plan", to: routes.studioAbout },
-      { label: "Trust & terms", to: routes.studioTerms },
-      { label: "Public ledger", to: routes.governance },
-      { label: "Accessibility", to: routes.studioAccessibility },
+      { label: "The strategy plan", labelKey: "studio:landing.footer.col.coop.strategyPlan", to: routes.studioAbout },
+      { label: "Trust & terms", labelKey: "studio:rail.utility.trustTerms", to: routes.studioTerms },
+      { label: "Public ledger", labelKey: "studio:landing.nav.publicLedger", to: routes.governance },
+      { label: "Accessibility", labelKey: "studio:rail.utility.accessibility", to: routes.studioAccessibility },
     ],
   },
   {
     title: "Council",
+    titleKey: "studio:landing.footer.col.council",
     links: [
-      { label: "Programming", to: routes.studioProgram },
-      { label: "Submissions", to: routes.studioTriage },
-      { label: "Curator council", to: routes.studioCouncil },
-      { label: "Open calls", to: routes.studioCalls },
+      { label: "Programming", labelKey: "studio:landing.footer.col.council.programming", to: routes.studioProgram },
+      { label: "Submissions", labelKey: "studio:landing.footer.col.council.submissions", to: routes.studioTriage },
+      {
+        label: "Curator council",
+        labelKey: "studio:landing.footer.col.council.curatorCouncil",
+        to: routes.studioCouncil,
+      },
+      { label: "Open calls", labelKey: "studio:rail.contribute.openCalls", to: routes.studioCalls },
     ],
   },
 ];

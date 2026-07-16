@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { AuthLayout } from "./AuthLayout";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./auth.module.css";
 import pageStyles from "./ConfirmEmailPage.module.css";
 
@@ -12,6 +14,7 @@ const CODE_LENGTH = 6;
 
 export function ConfirmEmailPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(""));
   const [error, setError] = useState(false);
@@ -68,13 +71,13 @@ export function ConfirmEmailPage() {
 
   function checkCode(full: string) {
     if (DEMO_CODES.includes(full)) {
-      setMessage("Verified. Welcome aboard.");
+      setMessage(t("auth:confirmEmail.verified"));
       setMessageOk(true);
-      showToast("Email confirmed", "success");
+      showToast(t("auth:confirmEmail.toastConfirmed"), "success");
       setTimeout(() => navigate(routes.welcome), 950);
     } else {
       setError(true);
-      setMessage("That code didn't match. Try again, or resend below.");
+      setMessage(t("auth:confirmEmail.codeMismatch"));
       setMessageOk(false);
       setDigits(Array(CODE_LENGTH).fill(""));
       setTimeout(() => inputRefs.current[0]?.focus(), 50);
@@ -83,7 +86,7 @@ export function ConfirmEmailPage() {
 
   function handleResend() {
     if (cooling) return;
-    showToast("Sent again — check spam too", "info");
+    showToast(t("auth:confirmEmail.resendToast"), "info");
     setCooling(true);
     let t = 45;
     setTimer(t);
@@ -117,18 +120,16 @@ export function ConfirmEmailPage() {
       </div>
 
       <h1>
-        Check your <em>inbox.</em>
+        <Translation i18nKey="auth:confirmEmail.title" components={{ em: <em /> }} />
       </h1>
       <p className={styles.sub} style={{ marginBottom: 0 }}>
-        We sent a six-digit code to{" "}
-        <strong style={{ color: "var(--ink)", fontWeight: 600 }}>
-          {DEMO_EMAIL}
-        </strong>
-        . It expires in{" "}
-        <strong style={{ color: "var(--ink)", fontWeight: 600 }}>
-          10 minutes
-        </strong>
-        .
+        <Translation
+          i18nKey="auth:confirmEmail.sub"
+          components={{
+            strong: <strong style={{ color: "var(--ink)", fontWeight: 600 }} />,
+          }}
+          values={{ email: DEMO_EMAIL }}
+        />
       </p>
 
       <div
@@ -163,20 +164,27 @@ export function ConfirmEmailPage() {
       </div>
 
       <div className={pageStyles.auxRow}>
-        <span>Didn't get the code?</span>
+        <span>{t("auth:confirmEmail.didntGetCode")}</span>
         <button
           type="button"
           onClick={handleResend}
           disabled={cooling}
           className={pageStyles.resend}
         >
-          {cooling ? "" : "Resend"}
+          {cooling ? "" : t("auth:confirmEmail.resend")}
         </button>
-        {cooling && <span className={pageStyles.auxTimer}>wait {timer}s</span>}
+        {cooling && (
+          <span className={pageStyles.auxTimer}>
+            {t("auth:confirmEmail.waitSeconds", { seconds: timer })}
+          </span>
+        )}
       </div>
 
       <p className={pageStyles.footLink}>
-        Wrong email? <Link to={routes.createAccount}>Start over</Link>
+        <Translation
+          i18nKey="auth:confirmEmail.wrongEmail"
+          components={{ startOver: <Link to={routes.createAccount} /> }}
+        />
       </p>
     </AuthLayout>
   );

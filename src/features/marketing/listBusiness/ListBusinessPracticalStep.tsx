@@ -1,5 +1,6 @@
 import { FiCheck, FiMapPin } from "react-icons/fi";
 import { Button, FormField } from "../../../shared/components/ui";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ANCHOR, DAYS, validateSocials } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
@@ -8,36 +9,37 @@ import styles from "./ListBusinessPage.module.css";
 const SOCIALS: {
   key: "instagram" | "website" | "email" | "phone";
   type: string;
-  placeholder: string;
-  err: string;
+  placeholderKey: string;
+  errKey: string;
 }[] = [
   {
     key: "instagram",
     type: "text",
-    placeholder: "Instagram · @handle",
-    err: "",
+    placeholderKey: "marketing:listBusiness.social.instagram.placeholder",
+    errKey: "",
   },
   {
     key: "website",
     type: "url",
-    placeholder: "Website · yourplace.pt",
-    err: "That doesn't look like a web address.",
+    placeholderKey: "marketing:listBusiness.social.website.placeholder",
+    errKey: "marketing:listBusiness.social.website.err",
   },
   {
     key: "email",
     type: "email",
-    placeholder: "Email · hello@yourplace.pt",
-    err: "That doesn't look like an email.",
+    placeholderKey: "marketing:listBusiness.social.email.placeholder",
+    errKey: "marketing:listBusiness.social.email.err",
   },
   {
     key: "phone",
     type: "tel",
-    placeholder: "Phone · +351 …",
-    err: "That doesn't look like a phone number.",
+    placeholderKey: "marketing:listBusiness.social.phone.placeholder",
+    errKey: "marketing:listBusiness.social.phone.err",
   },
 ];
 
 export function StepPractical({ form }: { form: ListingForm }) {
+  const { t } = useTranslation();
   const { draft, set, setDay, copyMonToAll, clearHours, setSocial } = form;
   const socialOk = validateSocials(draft.social);
   const anyOpen = DAYS.some((d) => draft.hours[d.id]?.open);
@@ -45,23 +47,23 @@ export function StepPractical({ form }: { form: ListingForm }) {
   return (
     <>
       <PaneHeader
-        title="The"
-        em="practical"
-        sub="How people find you, when you're open, and where to reach you. Share only what you want public."
+        title={t("marketing:listBusiness.step3.title")}
+        em={t("marketing:listBusiness.step3.em")}
+        sub={t("marketing:listBusiness.step3.sub")}
       />
 
       <FormField
         id={ANCHOR.address}
-        label="Address"
+        label={t("marketing:listBusiness.step3.addressLabel")}
         required
-        helper="Street and number is enough — we'll place the pin from there."
+        helper={t("marketing:listBusiness.step3.addressHelper")}
       >
         <div className={styles.geoRow}>
           <div>
             <input
               type="text"
               maxLength={120}
-              placeholder="R. Antero de Quental 26, 1170-024 Lisboa"
+              placeholder={t("marketing:listBusiness.step3.addressPlaceholder")}
               value={draft.address}
               onChange={(e) =>
                 set({ address: e.target.value, geocoded: false })
@@ -72,7 +74,7 @@ export function StepPractical({ form }: { form: ListingForm }) {
             variant="ghost"
             onClick={() => set({ geocoded: draft.address.trim().length > 0 })}
           >
-            Find on map
+            {t("marketing:listBusiness.step3.findOnMap")}
           </Button>
         </div>
       </FormField>
@@ -99,12 +101,17 @@ export function StepPractical({ form }: { form: ListingForm }) {
             </span>
           </div>
           <div className={styles.mapStatus}>
-            <FiCheck size={13} /> Pin placed near {draft.address.split(",")[0]}
+            <FiCheck size={13} />{" "}
+            {t("marketing:listBusiness.step3.pinPlaced", {
+              place: draft.address.split(",")[0] ?? "",
+            })}
           </div>
         </>
       )}
 
-      <h3 className={styles.groupH}>Opening hours *</h3>
+      <h3 className={styles.groupH}>
+        {t("marketing:listBusiness.step3.hoursHeading")}
+      </h3>
       <div className={styles.hoursTools}>
         <span
           className={[
@@ -112,29 +119,32 @@ export function StepPractical({ form }: { form: ListingForm }) {
             anyOpen ? styles.openNowOpen : styles.openNowClosed,
           ].join(" ")}
         >
-          {anyOpen ? "Has open hours" : "All closed"}
+          {anyOpen
+            ? t("marketing:listBusiness.step3.hasOpenHours")
+            : t("marketing:listBusiness.step3.allClosed")}
         </span>
         <button
           type="button"
           className={styles.hoursToolBtn}
           onClick={copyMonToAll}
         >
-          Copy Monday to all days
+          {t("marketing:listBusiness.step3.copyMonday")}
         </button>
         <button
           type="button"
           className={styles.hoursToolBtn}
           onClick={clearHours}
         >
-          Mark all closed
+          {t("marketing:listBusiness.step3.markAllClosed")}
         </button>
       </div>
       <div id={ANCHOR.hours} className={styles.hoursGrid}>
         {DAYS.map((d) => {
           const h = draft.hours[d.id]!;
+          const dayLabel = t(d.labelKey);
           return (
             <div key={d.id} className={styles.hrow}>
-              <span className={styles.hday}>{d.label}</span>
+              <span className={styles.hday}>{dayLabel}</span>
               <button
                 type="button"
                 aria-pressed={h.open}
@@ -143,7 +153,9 @@ export function StepPractical({ form }: { form: ListingForm }) {
                   .join(" ")}
                 onClick={() => setDay(d.id, { open: !h.open })}
               >
-                {h.open ? "Open" : "Closed"}
+                {h.open
+                  ? t("marketing:listBusiness.step3.open")
+                  : t("marketing:listBusiness.step3.closed")}
               </button>
               <div className={styles.htimes}>
                 {h.open ? (
@@ -151,50 +163,60 @@ export function StepPractical({ form }: { form: ListingForm }) {
                     <input
                       type="time"
                       value={h.from}
-                      aria-label={`${d.label} opens`}
+                      aria-label={t("marketing:listBusiness.step3.opensAria", {
+                        day: dayLabel,
+                      })}
                       onChange={(e) => setDay(d.id, { from: e.target.value })}
                     />
                     <span className={styles.dash}>–</span>
                     <input
                       type="time"
                       value={h.to}
-                      aria-label={`${d.label} closes`}
+                      aria-label={t("marketing:listBusiness.step3.closesAria", {
+                        day: dayLabel,
+                      })}
                       onChange={(e) => setDay(d.id, { to: e.target.value })}
                     />
                   </>
                 ) : (
-                  <span className={styles.closedLbl}>Closed</span>
+                  <span className={styles.closedLbl}>
+                    {t("marketing:listBusiness.step3.closed")}
+                  </span>
                 )}
               </div>
             </div>
           );
         })}
       </div>
-      <FormField label="A short hours note — optional">
+      <FormField label={t("marketing:listBusiness.step3.hoursNoteLabel")}>
         <input
           type="text"
           maxLength={80}
-          placeholder="Closed Mondays. The back room books separately."
+          placeholder={t("marketing:listBusiness.step3.hoursNotePlaceholder")}
           value={draft.hoursNote}
           onChange={(e) => set({ hoursNote: e.target.value })}
         />
       </FormField>
 
-      <h3 className={styles.groupH}>Find you online</h3>
+      <h3 className={styles.groupH}>
+        {t("marketing:listBusiness.step3.onlineHeading")}
+      </h3>
       <p className={styles.onlineHint}>
-        You choose what's public. Leave anything blank you'd rather keep off the
-        listing.
+        {t("marketing:listBusiness.step3.onlineHint")}
       </p>
       <div id={ANCHOR.social} className={styles.twoCol}>
         {SOCIALS.map((s) => {
           const value = draft.social[s.key];
           const valid = socialOk[s.key];
           return (
-            <FormField key={s.key} error={!valid && s.err ? s.err : undefined}>
+            <FormField
+              key={s.key}
+              error={!valid && s.errKey ? t(s.errKey) : undefined}
+            >
               <input
                 type={s.type}
                 aria-invalid={!valid}
-                placeholder={s.placeholder}
+                placeholder={t(s.placeholderKey)}
                 value={value}
                 onChange={(e) => setSocial(s.key, e.target.value)}
               />

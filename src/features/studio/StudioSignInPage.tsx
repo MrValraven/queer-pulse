@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import styles from "./StudioSignInPage.module.css";
 
@@ -9,17 +12,20 @@ type Tab = "in" | "join";
 type Tier = "studio" | "coop";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const STUDIO_TIER_PRICE = 7;
+const COOP_TIER_PRICE = 11;
+const STUDIO_SHARE_PERCENT = 0.8;
 
 function SignInPane({ onSwitch }: { onSwitch: () => void }) {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [googleLoading, setGoogleLoading] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    showToast("Signed in — welcome back", "success");
+    showToast(t("studio:signin.in.signedInToast"), "success");
     setTimeout(() => navigate(routes.studio), 900);
   }
 
@@ -27,7 +33,7 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
     if (googleLoading) return;
     setGoogleLoading(true);
     setTimeout(() => {
-      showToast("Signed in with Google — welcome back", "success");
+      showToast(t("studio:signin.in.signedInGoogleToast"), "success");
       navigate(routes.studio);
     }, 1100);
   }
@@ -35,42 +41,37 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
   return (
     <div className={styles.pane}>
       <h1>
-        Welcome <em>back.</em>
+        <Translation i18nKey="studio:signin.in.title" components={{ em: <em /> }} />
       </h1>
-      <p className={styles.lede}>
-        Studio is a tab on your QueerPulse account, not a new login. Sign in
-        with the member account you already have.
-      </p>
+      <p className={styles.lede}>{t("studio:signin.in.lede")}</p>
 
       <form onSubmit={handleSubmit}>
         <div className={styles.field}>
-          <label htmlFor="si-email">Email</label>
+          <label htmlFor="si-email">{t("studio:signin.emailLabel")}</label>
           <input
             id="si-email"
             type="email"
-            placeholder="you@example.com"
+            placeholder={t("studio:signin.emailPlaceholder")}
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div className={styles.field} style={{ marginBottom: 8 }}>
-          <label htmlFor="si-pw">Password</label>
-          <input
-            id="si-pw"
-            type="password"
-            placeholder="Your password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <Button type="submit" className={styles.btnFull}>
-          Sign in →
+        {/* No password field: QueerPulse accounts are Google OAuth + invite —
+            there has never been a password to type here, and this pane's submit
+            is still a prototype stub. An inert `type="password"` input would
+            have password managers offering to save a credential that doesn't
+            exist, on a screen that verifies nothing. */}
+        <Button
+          type="submit"
+          className={styles.btnFull}
+          style={{ marginTop: 8 }}
+        >
+          {t("studio:signin.in.submitCta")} →
         </Button>
       </form>
 
-      <div className={styles.divider}>or</div>
+      <div className={styles.divider}>{t("studio:signin.orDivider")}</div>
       <button
         type="button"
         className={styles.btnGoogle}
@@ -99,11 +100,11 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
             />
           </svg>
         )}
-        {googleLoading ? "Signing in…" : "Continue with Google"}
+        {googleLoading ? t("studio:signin.googleLoading") : t("studio:signin.googleContinue")}
       </button>
 
       <div className={styles.foot}>
-        New here?{" "}
+        {t("studio:signin.in.newHere")}{" "}
         <a
           href="#"
           onClick={(e) => {
@@ -111,11 +112,11 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
             onSwitch();
           }}
         >
-          Join the room →
+          {t("studio:signin.in.joinCta")} →
         </a>
         <span className={styles.free}>
-          Just want to listen?{" "}
-          <Link to={routes.studioLanding}>Stream one set free, no account</Link>
+          {t("studio:signin.in.freePrompt")}{" "}
+          <Link to={routes.studioLanding}>{t("studio:signin.in.freeCta")}</Link>
         </span>
       </div>
     </div>
@@ -124,8 +125,9 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
 
 function JoinPane({ onSwitch }: { onSwitch: () => void }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [tier, setTier] = useState<Tier>("studio");
 
   function handleSubmit(e: React.FormEvent) {
@@ -133,43 +135,33 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
     navigate(routes.studioCheckout);
   }
 
-  const canSubmit = EMAIL_RE.test(email.trim()) && password.length >= 8;
+  const canSubmit = EMAIL_RE.test(email.trim());
 
   return (
     <div className={styles.pane}>
       <h1>
-        Join the <em>room.</em>
+        <Translation i18nKey="studio:signin.join.title" components={{ em: <em /> }} />
       </h1>
-      <p className={styles.lede}>
-        Pick how much of the co-op you want. You can change tiers or cancel any
-        month — no lock-in, no winback emails.
-      </p>
+      <p className={styles.lede}>{t("studio:signin.join.lede")}</p>
 
       <form onSubmit={handleSubmit}>
         <div className={styles.field}>
-          <label htmlFor="j-email">Email</label>
+          <label htmlFor="j-email">{t("studio:signin.emailLabel")}</label>
           <input
             id="j-email"
             type="email"
-            placeholder="you@example.com"
+            placeholder={t("studio:signin.emailPlaceholder")}
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div className={styles.field} style={{ marginBottom: 22 }}>
-          <label htmlFor="j-pw">Choose a password</label>
-          <input
-            id="j-pw"
-            type="password"
-            placeholder="At least 8 characters"
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        {/* No "choose a password": signing up creates a QueerPulse account, and
+            those are Google OAuth + invite. A password chosen here would go
+            nowhere — see the note in SignInPane. */}
+        <div className={styles.tierLbl} style={{ marginTop: 22 }}>
+          {t("studio:signin.join.chooseTier")}
         </div>
-
-        <div className={styles.tierLbl}>Choose your tier</div>
 
         <div
           className={[styles.tier, tier === "studio" ? styles.tierOn : ""]
@@ -189,17 +181,14 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
           <div className={styles.tierInfo}>
             <div className={styles.tierTop}>
               <h4>
-                Studio <em>only</em>
+                <Translation i18nKey="studio:signin.join.tier.studio.title" components={{ em: <em /> }} />
               </h4>
               <div className={styles.tierPrice}>
-                €<em>7</em>
-                <b>/mo</b>
+                €<em>{STUDIO_TIER_PRICE}</em>
+                <b>{t("studio:signin.perMonth")}</b>
               </div>
             </div>
-            <p>
-              Everything in Studio — the council's weekly set, live rooms, the
-              full catalogue, lossless audio, direct artist subscriptions.
-            </p>
+            <p>{t("studio:signin.join.tier.studio.body")}</p>
             <div className={styles.tierIncl}>
               <svg
                 viewBox="0 0 24 24"
@@ -209,7 +198,9 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
               >
                 <path d="M20 6L9 17l-5-5" />
               </svg>
-              80% of your fee reaches artists by play
+              {t("studio:signin.join.tier.studio.incl", {
+                sharePercent: fmt.number(STUDIO_SHARE_PERCENT, { style: "percent" }),
+              })}
             </div>
           </div>
         </div>
@@ -230,21 +221,19 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
           }}
         >
           <div className={styles.tierDot} />
-          <div className={styles.tierRec}>Best value</div>
+          <div className={styles.tierRec}>{t("studio:signin.join.tier.coop.badge")}</div>
           <div className={styles.tierInfo}>
             <div className={styles.tierTop}>
               <h4>
-                The whole <em>co-op</em>
+                <Translation i18nKey="studio:signin.join.tier.coop.title" components={{ em: <em /> }} />
               </h4>
               <div className={styles.tierPrice}>
-                €<em>11</em>
-                <b>/mo</b>
+                €<em>{COOP_TIER_PRICE}</em>
+                <b>{t("studio:signin.perMonth")}</b>
               </div>
             </div>
             <p>
-              Studio <em>plus</em> Cinema, the Magazine, Gatherings, reading
-              groups, and a vote at the annual assembly. One membership, the
-              entire QueerPulse.
+              <Translation i18nKey="studio:signin.join.tier.coop.body" components={{ em: <em /> }} />
             </p>
             <div className={styles.tierIncl}>
               <svg
@@ -255,7 +244,7 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
               >
                 <path d="M20 6L9 17l-5-5" />
               </svg>
-              One member account across every surface
+              {t("studio:signin.join.tier.coop.incl")}
             </div>
           </div>
         </div>
@@ -266,12 +255,12 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
           style={{ marginTop: 8 }}
           disabled={!canSubmit}
         >
-          Continue to payment →
+          {t("studio:signin.join.submitCta")} →
         </Button>
       </form>
 
       <div className={styles.foot}>
-        Already a member?{" "}
+        {t("studio:signin.join.alreadyMember")}{" "}
         <a
           href="#"
           onClick={(e) => {
@@ -279,19 +268,32 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
             onSwitch();
           }}
         >
-          Sign in →
+          {t("studio:signin.tabs.signIn")} →
         </a>
         <span className={styles.free}>
-          Not ready?{" "}
-          <Link to={routes.studioLanding}>Listen to one free set first</Link>
+          {t("studio:signin.join.notReady")}{" "}
+          <Link to={routes.studioLanding}>{t("studio:signin.join.freeCta")}</Link>
         </span>
       </div>
     </div>
   );
 }
 
+/** Mock "now playing" moment shown in the sign-in aside — content, not chrome. */
+const ASIDE_NOW_PLAYING = {
+  listening: 312,
+  titlePre: "Carta para a ",
+  titleEm: "santa",
+  artist: "Mariana Sol",
+  album: "Cidade dos santos",
+  paidThisMonth: 11940,
+};
+const ASIDE_TIP_PERCENT = 1;
+
 export function StudioSignInPage() {
   const [tab, setTab] = useState<Tab>("in");
+  const { t } = useTranslation();
+  const fmt = useFormat();
 
   return (
     <div className={styles.root}>
@@ -299,30 +301,34 @@ export function StudioSignInPage() {
         <div className={styles.asideBrand}>
           <span className={styles.pulseDot} />
           <span className={styles.wordmark}>
-            Queer<em>Pulse</em>
+            <Translation i18nKey="studio:brand.lockup" components={{ em: <em /> }} />
           </span>
-          <span className={styles.product}>Studio</span>
+          <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
         </div>
         <div className={styles.asideBody}>
           <div className={styles.asideEb}>
             <span className={styles.live} />
-            On the air now · 312 in the room
+            {t("studio:signin.aside.onAirNow", { count: ASIDE_NOW_PLAYING.listening })}
           </div>
           <h2>
-            A streaming co-op that <em>pays</em> the people who made the song.
+            <Translation i18nKey="studio:signin.aside.title" components={{ em: <em /> }} />
           </h2>
           <p className={styles.asideSub}>
-            Eighty cents of every euro reaches the artist. Tips pass through at{" "}
-            <em>100%</em>. The ledger is public, updated every Monday at noon.
+            <Translation
+              i18nKey="studio:signin.aside.body"
+              components={{ em: <em /> }}
+              values={{ tipPercent: fmt.number(ASIDE_TIP_PERCENT, { style: "percent" }) }}
+            />
           </p>
           <div className={styles.nowPlaying}>
             <div className={styles.cover} />
             <div className={styles.nowInfo}>
               <div className={styles.nowTitle}>
-                Carta para a <em>santa</em>
+                {ASIDE_NOW_PLAYING.titlePre}
+                <em>{ASIDE_NOW_PLAYING.titleEm}</em>
               </div>
               <div className={styles.nowArtist}>
-                Mariana Sol · Cidade dos santos
+                {ASIDE_NOW_PLAYING.artist} · {ASIDE_NOW_PLAYING.album}
               </div>
             </div>
             <div className={styles.bars}>
@@ -333,7 +339,11 @@ export function StudioSignInPage() {
             </div>
           </div>
           <div className={styles.asideFoot}>
-            Paid to artists this month: <em>€11,940</em> · and counting.
+            <Translation
+              i18nKey="studio:signin.aside.paidThisMonth"
+              components={{ em: <em /> }}
+              values={{ amount: fmt.currency(ASIDE_NOW_PLAYING.paidThisMonth) }}
+            />
           </div>
         </div>
       </aside>
@@ -343,9 +353,9 @@ export function StudioSignInPage() {
           <div className={styles.mobrand}>
             <span className={styles.pulseDot} />
             <span className={styles.wordmark}>
-              Queer<em>Pulse</em>
+              <Translation i18nKey="studio:brand.lockup" components={{ em: <em /> }} />
             </span>
-            <span className={styles.product}>Studio</span>
+            <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
           </div>
 
           <div className={styles.segTabs}>
@@ -354,14 +364,14 @@ export function StudioSignInPage() {
               className={tab === "in" ? styles.segOn : ""}
               onClick={() => setTab("in")}
             >
-              Sign in
+              {t("studio:signin.tabs.signIn")}
             </button>
             <button
               type="button"
               className={tab === "join" ? styles.segOn : ""}
               onClick={() => setTab("join")}
             >
-              Join
+              {t("studio:signin.tabs.join")}
             </button>
           </div>
 

@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { FiCheck, FiFolder, FiPlus, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
 import type { SavedItem } from "../../app/providers/SavedProvider";
-import type { Collection, Privacy } from "./collections.data";
+import { privacyLabel, type Collection, type Privacy } from "./collections.data";
 import styles from "./CollectionsModals.module.css";
 
 /** Shared frame: backdrop click-to-close, close button, scroll lock. */
@@ -19,6 +21,7 @@ function Modal({
   label?: string;
   children: ReactNode;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -38,13 +41,13 @@ function Modal({
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-label={label ?? "Dialog"}
+        aria-label={label ?? t("members:collections.modal.defaultDialogLabel")}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("members:collections.modal.close")}
         >
           <FiX aria-hidden />
         </button>
@@ -54,10 +57,10 @@ function Modal({
   );
 }
 
-const PRIVACY_OPTIONS: { value: Privacy; label: string }[] = [
-  { value: "private", label: "Private" },
-  { value: "shared", label: "Shared with members" },
-  { value: "public", label: "Public" },
+const PRIVACY_OPTION_KEYS: { value: Privacy; labelKey: string }[] = [
+  { value: "private", labelKey: "members:collections.modal.privacyOption.private" },
+  { value: "shared", labelKey: "members:collections.modal.privacyOption.shared" },
+  { value: "public", labelKey: "members:collections.modal.privacyOption.public" },
 ];
 
 /** Name a new collection and pick its privacy. */
@@ -68,15 +71,24 @@ export function NewCollectionModal({
   onClose: () => void;
   onCreate: (name: string, privacy: Privacy) => void;
 }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [privacy, setPrivacy] = useState<Privacy>("private");
   const canCreate = name.trim().length > 0;
 
   return (
-    <Modal onClose={onClose} label="New collection">
-      <div className={styles.eyebrow}>New collection</div>
+    <Modal
+      onClose={onClose}
+      label={t("members:collections.modal.newCollection.dialogLabel")}
+    >
+      <div className={styles.eyebrow}>
+        {t("members:collections.modal.newCollection.eyebrow")}
+      </div>
       <h2 className={styles.title}>
-        What are you <em>gathering?</em>
+        <Translation
+          i18nKey="members:collections.modal.newCollection.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <form
         onSubmit={(e) => {
@@ -86,36 +98,42 @@ export function NewCollectionModal({
         }}
       >
         <div className={styles.field}>
-          <label htmlFor="nc-name">Collection name</label>
+          <label htmlFor="nc-name">
+            {t("members:collections.modal.newCollection.nameLabel")}
+          </label>
           <input
             id="nc-name"
             type="text"
             autoFocus
-            placeholder="e.g. Lisbon recs, Bring to therapy…"
+            placeholder={t(
+              "members:collections.modal.newCollection.namePlaceholder",
+            )}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className={styles.field}>
-          <label htmlFor="nc-priv">Who can see it</label>
+          <label htmlFor="nc-priv">
+            {t("members:collections.modal.newCollection.visibilityLabel")}
+          </label>
           <select
             id="nc-priv"
             value={privacy}
             onChange={(e) => setPrivacy(e.target.value as Privacy)}
           >
-            {PRIVACY_OPTIONS.map((o) => (
+            {PRIVACY_OPTION_KEYS.map((o) => (
               <option key={o.value} value={o.value}>
-                {o.label}
+                {t(o.labelKey)}
               </option>
             ))}
           </select>
         </div>
         <div className={styles.foot}>
           <button type="button" className={styles.back} onClick={onClose}>
-            ← Cancel
+            {t("members:collections.modal.newCollection.cancel")}
           </button>
           <Button type="submit" disabled={!canCreate}>
-            Create collection →
+            {t("members:collections.modal.newCollection.submit")}
           </Button>
         </div>
       </form>
@@ -133,10 +151,15 @@ export function ViewCollectionModal({
   items: SavedItem[];
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
-    <Modal onClose={onClose} label="View collection">
+    <Modal
+      onClose={onClose}
+      label={t("members:collections.modal.view.dialogLabel")}
+    >
       <div className={styles.eyebrow}>
-        {collection.privacyLabel} · {collection.updated}
+        {privacyLabel(collection.privacy, collection.sharedWithCount, t)} ·{" "}
+        {collection.updated}
       </div>
       <h2 className={styles.title}>{collection.name}</h2>
       <p className={styles.sub}>{collection.meta}</p>
@@ -144,7 +167,7 @@ export function ViewCollectionModal({
       {items.length === 0 ? (
         <div className={styles.empty}>
           <FiFolder aria-hidden />
-          <p>Nothing in here yet. Add saves from the list below the grid.</p>
+          <p>{t("members:collections.modal.view.emptyText")}</p>
         </div>
       ) : (
         <div className={styles.list}>
@@ -174,7 +197,7 @@ export function ViewCollectionModal({
 
       <div className={styles.foot}>
         <Button variant="ghost" onClick={onClose}>
-          Close
+          {t("members:collections.modal.view.close")}
         </Button>
       </div>
     </Modal>
@@ -193,25 +216,35 @@ export function AddToCollectionModal({
   onClose: () => void;
   onPick: (collectionId: string) => void;
 }) {
+  const { t } = useTranslation();
   const [added, setAdded] = useState<string | null>(null);
 
   if (added) {
     const c = collections.find((x) => x.id === added);
     return (
-      <Modal onClose={onClose} label="Added to collection">
+      <Modal
+        onClose={onClose}
+        label={t("members:collections.modal.add.success.dialogLabel")}
+      >
         <div className={styles.success}>
           <div className={styles.successIcon}>
             <FiCheck size={26} aria-hidden />
           </div>
           <h2>
-            Added to <em>your collection.</em>
+            <Translation
+              i18nKey="members:collections.modal.add.success.title"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p>
-            Saved into <b>{c?.name}</b>. You'll find it there whenever you come
-            back.
+            <Translation
+              i18nKey="members:collections.modal.add.success.body"
+              components={{ b: <b /> }}
+              values={{ name: c?.name }}
+            />
           </p>
           <Button variant="ghost-dark" onClick={onClose}>
-            Done
+            {t("members:collections.modal.add.success.done")}
           </Button>
         </div>
       </Modal>
@@ -219,9 +252,13 @@ export function AddToCollectionModal({
   }
 
   return (
-    <Modal onClose={onClose} label="Add to collection">
-      <div className={styles.eyebrow}>Add to collection</div>
-      <h2 className={styles.title}>Where should this live?</h2>
+    <Modal onClose={onClose} label={t("members:collections.modal.add.dialogLabel")}>
+      <div className={styles.eyebrow}>
+        {t("members:collections.modal.add.eyebrow")}
+      </div>
+      <h2 className={styles.title}>
+        {t("members:collections.modal.add.title")}
+      </h2>
       <p className={styles.sub}>{itemTitle}</p>
       <div className={styles.pickList}>
         {collections.map((c) => (
@@ -237,7 +274,9 @@ export function AddToCollectionModal({
             <span className={styles.pickIc}>{c.count}</span>
             <span className={styles.pickInfo}>
               <span className={styles.pickName}>{c.name}</span>
-              <span className={styles.pickMeta}>{c.privacyLabel}</span>
+              <span className={styles.pickMeta}>
+                {privacyLabel(c.privacy, c.sharedWithCount, t)}
+              </span>
             </span>
             <FiPlus aria-hidden className={styles.pickAdd} />
           </button>
@@ -245,7 +284,7 @@ export function AddToCollectionModal({
       </div>
       <div className={styles.foot}>
         <button type="button" className={styles.back} onClick={onClose}>
-          ← Cancel
+          {t("members:collections.modal.add.cancel")}
         </button>
       </div>
     </Modal>

@@ -1,69 +1,88 @@
-export const ACTIVISM_NAV = [
-  { id: "start", label: "Where to start" },
-  { id: "local", label: "Local action in Lisbon" },
-  { id: "skills", label: "Using your skills" },
-  { id: "mobilise", label: "Mobilising others" },
-  { id: "feel", label: "When it's not enough" },
-  { id: "orgs", label: "Organisations to know" },
-  { id: "volunteer", label: "Volunteer opportunities" },
+/**
+ * i18n Pattern A — this file holds catalog *keys*; the components resolve
+ * them with `t()`. The nav rail, conviction strip, "where to start" steps and
+ * skills cards are platform-authored chrome, so they're translated.
+ *
+ * `ORGS` and `VOLUNTEER_ROLES` stay untranslated: partner-organisation
+ * profile copy and volunteer-opportunity descriptions are explicitly called
+ * out as content in `docs/i18n/extraction-brief.md` §1 — in live mode each
+ * org's name/description and each posting's title/commitment/description
+ * would arrive from the partners/volunteering API as that org's own
+ * authored text, not platform chrome.
+ */
+export const ACTIVISM_NAV: { id: string; labelKey: string }[] = [
+  { id: "start", labelKey: "activism.nav.start" },
+  { id: "local", labelKey: "activism.nav.local" },
+  { id: "skills", labelKey: "activism.nav.skills" },
+  { id: "mobilise", labelKey: "activism.nav.mobilise" },
+  { id: "feel", labelKey: "activism.nav.feel" },
+  { id: "orgs", labelKey: "activism.nav.orgs" },
+  { id: "volunteer", labelKey: "activism.nav.volunteer" },
 ];
 
-export const CONVICTION_ITEMS = [
+export const CONVICTION_ITEMS: { wordKey: string; restKey: string }[] = [
   {
-    n: "Local",
-    l: "impact is underrated. Your neighbourhood, your building, your industry — all of it counts.",
+    wordKey: "activism.conviction.local.word",
+    restKey: "activism.conviction.local.rest",
   },
   {
-    n: "Real",
-    l: "change is made by people with day jobs who do something on their lunch break or after work.",
+    wordKey: "activism.conviction.real.word",
+    restKey: "activism.conviction.real.rest",
   },
   {
-    n: "Yours",
-    l: "to define. Activism doesn't look one way. Find the version that fits who you are.",
-  },
-];
-
-export const START_STEPS = [
-  {
-    num: "01",
-    title: "Identify one thing that bothers you",
-    body: "Not everything. One thing — in your neighbourhood, your industry, your building. That's where you start. The scope is manageable, the knowledge is yours.",
-  },
-  {
-    num: "02",
-    title: "Find one other person who cares",
-    body: "Solo action burns out faster. Find someone — on the board, at a gathering, through the network. Two people is enough to start.",
-  },
-  {
-    num: "03",
-    title: "Use your skills, not just your time",
-    body: "The most sustainable activism uses what you're already good at. A photographer, a writer, a developer, a therapist — your profession is already political.",
-  },
-  {
-    num: "04",
-    title: "Do something small and finish it",
-    body: "A finished small thing beats an unfinished ambitious one every time. Show up to one meeting. Write one email. Build the muscle before the marathon.",
+    wordKey: "activism.conviction.yours.word",
+    restKey: "activism.conviction.yours.rest",
   },
 ];
 
-export const SKILLS_CARDS = [
+export const START_STEPS: { num: string; titleKey: string; bodyKey: string }[] =
+  [
+    {
+      num: "01",
+      titleKey: "activism.start.step1.title",
+      bodyKey: "activism.start.step1.body",
+    },
+    {
+      num: "02",
+      titleKey: "activism.start.step2.title",
+      bodyKey: "activism.start.step2.body",
+    },
+    {
+      num: "03",
+      titleKey: "activism.start.step3.title",
+      bodyKey: "activism.start.step3.body",
+    },
+    {
+      num: "04",
+      titleKey: "activism.start.step4.title",
+      bodyKey: "activism.start.step4.body",
+    },
+  ];
+
+export const SKILLS_CARDS: { titleKey: string; bodyKey: string }[] = [
   {
-    title: "Design & visual communication",
-    body: "Posters, identity systems for community organisations, accessible information design. Your craft is disproportionately valuable to underfunded causes.",
+    titleKey: "activism.skills.design.title",
+    bodyKey: "activism.skills.design.body",
   },
   {
-    title: "Technology",
-    body: "Websites, databases, tools. Most community organisations run on systems years out of date. A few hours of your skills can have an outsized impact.",
+    titleKey: "activism.skills.tech.title",
+    bodyKey: "activism.skills.tech.body",
   },
   {
-    title: "Food & hospitality",
-    body: "Feed people at community events. Run a pay-what-you-can dinner. The act of nourishing people in a safe space is never neutral.",
+    titleKey: "activism.skills.food.title",
+    bodyKey: "activism.skills.food.body",
   },
   {
-    title: "Care & therapy",
-    body: "Offer sliding-scale or pro-bono sessions. Run a support group. Peer support is one of the most impactful things a trained professional can do.",
+    titleKey: "activism.skills.care.title",
+    bodyKey: "activism.skills.care.body",
   },
 ];
+
+/** The open letter's live signature count + hand-delivery target — held as
+ * numbers so the component can format them with `useFormat()` rather than
+ * baking the digits into the catalog string. */
+export const OPEN_LETTER_SIGNATURES = 2847;
+export const OPEN_LETTER_TARGET = 5000;
 
 export const ORGS = [
   {

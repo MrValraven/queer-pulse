@@ -1,29 +1,39 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
+  buildDecisionRows,
+  buildDeedParagraphs,
+  buildLedgerRows,
+  buildPrinciples,
+  buildSplitLegend,
   curators,
-  decisionRows,
-  deedParagraphs,
-  ledgerRows,
-  principles,
-  splitLegend,
   splitSegments,
 } from "./cinemaAbout.data";
 import styles from "./CinemaAboutPage.module.css";
 
 export function AboutHero() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.hero}>
       <div className={`wrap ${styles.heroInner}`}>
-        <div className={styles.heroEb}>QueerPulse Cinema · the co-op</div>
+        <div className={styles.heroEb}>{t("cinema:about.hero.eyebrow")}</div>
         <h1 className={styles.heroTitle}>
-          A theatre, an archive, <em>a co-op</em>.
+          <Translation
+            i18nKey="cinema:about.hero.title"
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.heroSub}>
-          QueerPulse Cinema is not a streaming platform. It's a room —
-          programmed by queer people, <em>paid to queer people</em>, governed by
-          the filmmakers and sustainers who make it possible.
+          <Translation
+            i18nKey="cinema:about.hero.sub"
+            components={{ em: <em /> }}
+          />
         </p>
       </div>
     </section>
@@ -31,29 +41,37 @@ export function AboutHero() {
 }
 
 export function TheDeed() {
+  const { t } = useTranslation();
+  const deedParagraphs = useMemo(() => buildDeedParagraphs(t), [t]);
+
   return (
     <section className={styles.deed}>
       <div className={`wrap ${styles.deedInner}`}>
         <div className={styles.deedLabel}>
-          The <em>deed</em> · in plain language
+          <Translation
+            i18nKey="cinema:about.deed.label"
+            components={{ em: <em /> }}
+          />
         </div>
-        <div className={styles.deedText}>
-          {deedParagraphs.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
+        <div className={styles.deedText}>{deedParagraphs}</div>
       </div>
     </section>
   );
 }
 
 export function Principles() {
+  const { t } = useTranslation();
+  const principles = useMemo(() => buildPrinciples(t), [t]);
+
   return (
     <section className={styles.principles}>
       <div className="wrap">
         <div className={styles.prHead}>
           <h2>
-            Six <em>principles</em>
+            <Translation
+              i18nKey="cinema:about.principles.title"
+              components={{ em: <em /> }}
+            />
           </h2>
         </div>
         <div className={styles.prGrid}>
@@ -71,6 +89,12 @@ export function Principles() {
 }
 
 export function SplitVisual() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const splitLegend = useMemo(() => buildSplitLegend(fmt, t), [fmt, t]);
+  const rentPrice = fmt.currency(3);
+  const buyPrice = fmt.currency(8);
+
   const segClass: Record<string, string | undefined> = {
     fm: styles.segFm,
     pay: styles.segPay,
@@ -81,30 +105,36 @@ export function SplitVisual() {
       <div className={`wrap ${styles.splitInner}`}>
         <div className={styles.svText}>
           <h2>
-            The split, <em>explained</em>
+            <Translation
+              i18nKey="cinema:about.split.title"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p>
-            When you rent a film for €3.00, €2.40 goes to the filmmaker. That's
-            80%. The remaining 20% covers payment processing (Stripe/IBAN,
-            roughly 12%) and video hosting and captioning costs (roughly 8%).
+            {t("cinema:about.split.body1", {
+              rentPrice,
+              filmmakerShare: fmt.currency(2.4),
+            })}
           </p>
           <p>
-            For a direct buy at €8.00, the same 80/20 applies:{" "}
-            <em>€6.40 to the filmmaker.</em> For tips, 100% goes to them — we
-            don't take anything off a tip.
+            <Translation
+              i18nKey="cinema:about.split.body2"
+              components={{ em: <em /> }}
+              values={{ buyPrice, buyFilmmakerShare: fmt.currency(6.4) }}
+            />
           </p>
-          <p>
-            The sustainer library pool is distributed monthly based on
-            per-minute-watched, with 80% going to filmmakers from the subscriber
-            revenue after platform costs.
-          </p>
+          <p>{t("cinema:about.split.body3")}</p>
           <Link to={routes.governance} className={styles.svLink}>
-            View the full public accounts →
+            {t("cinema:about.split.viewAccountsCta")}
           </Link>
         </div>
         <div className={styles.svVisual}>
-          <div className={styles.svvHead}>Example: €3.00 rental</div>
-          <div className={styles.svvLabel}>How €3.00 divides</div>
+          <div className={styles.svvHead}>
+            {t("cinema:about.split.exampleHeading", { price: rentPrice })}
+          </div>
+          <div className={styles.svvLabel}>
+            {t("cinema:about.split.divideLabel", { price: rentPrice })}
+          </div>
           <div className={styles.svvBar}>
             {splitSegments.map((s) => (
               <div
@@ -122,9 +152,7 @@ export function SplitVisual() {
               </div>
             ))}
           </div>
-          <div className={styles.svvNote}>
-            Tips are 100% to the filmmaker. No deduction.
-          </div>
+          <div className={styles.svvNote}>{t("cinema:about.split.tipsNote")}</div>
         </div>
       </div>
     </section>
@@ -132,6 +160,7 @@ export function SplitVisual() {
 }
 
 export function CuratorsCouncil() {
+  const { t } = useTranslation();
   const avClass: Record<string, string | undefined> = {
     coral: styles.avCoral,
     jade: styles.avJade,
@@ -141,13 +170,12 @@ export function CuratorsCouncil() {
     <section className={styles.council}>
       <div className="wrap">
         <h2>
-          The curators' <em>council</em>
+          <Translation
+            i18nKey="cinema:about.council.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p className={styles.councilSub}>
-          Six people who programme the cinema. They rotate every year —
-          nominated by the community, confirmed by sustainers' vote. Each brings
-          a different geography, focus, and way of looking.
-        </p>
+        <p className={styles.councilSub}>{t("cinema:about.council.sub")}</p>
         <div className={styles.councilGrid}>
           {curators.map((c) => (
             <Link
@@ -182,12 +210,25 @@ export function CuratorsCouncil() {
 }
 
 export function Governance() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const ledgerRows = useMemo(() => buildLedgerRows(t, fmt), [t, fmt]);
+  const decisionRows = useMemo(() => buildDecisionRows(t), [t]);
+  const ledgerMonth = fmt.date(new Date(2026, 5, 1), {
+    month: "long",
+    year: "numeric",
+  });
+
   return (
     <section className={styles.gov}>
       <div className={`wrap ${styles.govInner}`}>
         <div className={styles.govBlock}>
           <h3>
-            Public <em>ledger</em> · June 2026
+            <Translation
+              i18nKey="cinema:about.gov.ledgerTitle"
+              components={{ em: <em /> }}
+              values={{ month: ledgerMonth }}
+            />
           </h3>
           {ledgerRows.map((row) => (
             <div key={row.k} className={styles.govRow}>
@@ -197,13 +238,16 @@ export function Governance() {
           ))}
           <div className={styles.govAction}>
             <Button variant="ghost-dark" to={routes.governance}>
-              Full accounts →
+              {t("cinema:about.gov.fullAccountsCta")}
             </Button>
           </div>
         </div>
         <div className={styles.govBlock}>
           <h3>
-            How decisions <em>get made</em>
+            <Translation
+              i18nKey="cinema:about.gov.decisionsTitle"
+              components={{ em: <em /> }}
+            />
           </h3>
           {decisionRows.map((row) => (
             <div key={row.k} className={styles.govRow}>
@@ -213,7 +257,7 @@ export function Governance() {
           ))}
           <div className={styles.govAction}>
             <Button variant="ghost-dark" to={routes.cinemaMembership}>
-              Filmmaker rights →
+              {t("cinema:about.gov.rightsCta")}
             </Button>
           </div>
         </div>

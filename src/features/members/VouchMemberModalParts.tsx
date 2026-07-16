@@ -1,6 +1,8 @@
 import { Avatar, Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { currentUser, type MemberProfile } from "./data/memberProfiles";
-import { RELATIONSHIPS } from "./vouchMember.data";
+import { RELATIONSHIPS, RELATIONSHIP_LABEL_KEY } from "./vouchMember.data";
 import styles from "./VouchMemberModal.module.css";
 
 /**
@@ -16,6 +18,7 @@ export function VouchSuccess({
   first: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.success}>
       <div className={styles.facePair}>
@@ -35,7 +38,7 @@ export function VouchSuccess({
             tint={currentUser.tint}
             size={74}
             src={currentUser.photo}
-            alt="You"
+            alt={t("members:card.you")}
           />
           <span className={styles.faceCheck} aria-hidden>
             <svg width={15} height={15} viewBox="0 0 24 24" fill="none">
@@ -52,11 +55,18 @@ export function VouchSuccess({
         </span>
       </div>
       <h2 className={styles.successTitle}>
-        That's <em>{first}</em>, backed.
+        <Translation
+          i18nKey="members:vouch.modal.success.title"
+          components={{ em: <em /> }}
+          values={{ first }}
+        />
       </h2>
       <p className={styles.successSub}>
-        Your face just joined <b>{first}</b>'s circle of vouches — that's how
-        trust travels here. Member by member, name by name.
+        <Translation
+          i18nKey="members:vouch.modal.success.body"
+          components={{ b: <b /> }}
+          values={{ first }}
+        />
       </p>
       <Button
         variant="ghost-dark"
@@ -64,7 +74,7 @@ export function VouchSuccess({
         className={styles.doneBtn}
         onClick={onClose}
       >
-        Done
+        {t("members:vouch.modal.success.doneCta")}
       </Button>
     </div>
   );
@@ -102,17 +112,19 @@ export function VouchForm({
   onClose: () => void;
   onSubmit: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div>
-      <div className={styles.eye}>Add your vouch</div>
+      <div className={styles.eye}>{t("members:vouch.modal.form.eyebrow")}</div>
       <div className={styles.title}>
-        Stand behind <em>{first}</em>
+        <Translation
+          i18nKey="members:vouch.modal.form.title"
+          components={{ em: <em /> }}
+          values={{ first }}
+        />
       </div>
       <p className={styles.sub}>
-        A vouch is you, publicly, saying you know {first} and trust them in
-        community spaces. It carries weight here — QueerPulse is
-        invite-and-vouch, and your name goes on their profile beside the others
-        who've backed them.
+        {t("members:vouch.modal.form.sub", { first })}
       </p>
 
       <div className={styles.candidate}>
@@ -130,7 +142,9 @@ export function VouchForm({
         </div>
       </div>
 
-      <div className={styles.label}>How do you know {first}?</div>
+      <div className={styles.label}>
+        {t("members:vouch.modal.form.relationshipLabel", { first })}
+      </div>
       <div className={styles.opts}>
         {RELATIONSHIPS.map((r) => (
           <label
@@ -146,7 +160,7 @@ export function VouchForm({
               checked={relationship === r}
               onChange={() => setRelationship(r)}
             />
-            {r}
+            {t(RELATIONSHIP_LABEL_KEY[r])}
           </label>
         ))}
       </div>
@@ -154,8 +168,10 @@ export function VouchForm({
       {profile.tags.length > 0 && (
         <>
           <div className={styles.label}>
-            What can you vouch they're great at?{" "}
-            <span className={styles.optional}>optional</span>
+            {t("members:vouch.modal.form.endorseLabel")}{" "}
+            <span className={styles.optional}>
+              {t("members:vouch.modal.form.optional")}
+            </span>
           </div>
           <div className={styles.chips}>
             {profile.tags.map((tag) => {
@@ -197,22 +213,26 @@ export function VouchForm({
         </>
       )}
 
-      <div className={styles.label}>Your note</div>
+      <div className={styles.label}>{t("members:vouch.modal.form.noteLabel")}</div>
       <textarea
         className={styles.textarea}
-        placeholder={`How do you know ${first}, and what should other members know?`}
+        placeholder={t("members:vouch.modal.form.notePlaceholder", { first })}
         value={note}
         onChange={(e) => setNote(e.target.value)}
       />
       <div className={styles.counter}>
         {note.trim().length < 12
-          ? `${12 - note.trim().length} more characters to submit`
-          : `${note.trim().length} characters`}
+          ? t("members:vouch.modal.form.charsToSubmit", {
+              count: 12 - note.trim().length,
+            })
+          : t("members:vouch.modal.form.charsCount", {
+              count: note.trim().length,
+            })}
       </div>
 
       <div className={styles.actions}>
         <Button variant="ghost" onClick={onClose}>
-          Cancel
+          {t("members:vouch.modal.form.cancel")}
         </Button>
         <Button
           variant="primary"
@@ -223,10 +243,10 @@ export function VouchForm({
           {status === "loading" ? (
             <>
               <span className={styles.spinner} aria-hidden />
-              Sending your vouch…
+              {t("members:vouch.modal.form.sending")}
             </>
           ) : (
-            `Vouch for ${first}`
+            t("members:profile.hero.vouchForCta", { first })
           )}
         </Button>
       </div>

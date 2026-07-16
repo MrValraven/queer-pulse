@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 import { PageShell } from "../../shared/components/layout";
 import styles from "./LegalDoc.module.css";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 
 export interface LegalSection {
   id: string;
@@ -29,6 +30,7 @@ export function LegalDoc({
   contact,
   related,
 }: LegalDocProps) {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <div className={styles.page}>
@@ -51,7 +53,9 @@ export function LegalDoc({
 
           {toc.length > 0 && (
             <div className={styles.toc}>
-              <div className={styles.tocTitle}>Contents</div>
+              <div className={styles.tocTitle}>
+                {t("marketing:legal.toc.title")}
+              </div>
               <div className={styles.tocLinks}>
                 {toc.map((t) => (
                   <a key={t.id} href={`#${t.id}`}>
@@ -72,7 +76,7 @@ export function LegalDoc({
           <div className={styles.contact}>
             <div className={styles.contactText}>{contact.text}</div>
             <Button href={`mailto:${contact.email}`} variant="ghost-dark">
-              Email us →
+              {t("marketing:legal.contact.emailCta")}
             </Button>
           </div>
         </div>

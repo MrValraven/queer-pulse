@@ -2,17 +2,18 @@ import type { BoardPost } from "./types";
 import { routes } from "../../../app/routeMap";
 import { MEMBERS, memberName } from "../../members/data/members";
 
+// i18n Pattern A — a fixed filter-chip vocabulary (chrome).
 export const boardFilters: {
   value: "all" | "looking" | "offering" | "design" | "tech" | "space" | "care";
-  label: string;
+  labelKey: string;
 }[] = [
-  { value: "all", label: "All" },
-  { value: "looking", label: "Asking" },
-  { value: "offering", label: "Offering" },
-  { value: "design", label: "Design" },
-  { value: "tech", label: "Tech" },
-  { value: "space", label: "Space" },
-  { value: "care", label: "Care & support" },
+  { value: "all", labelKey: "homepage:board.filter.all" },
+  { value: "looking", labelKey: "homepage:board.filter.asking" },
+  { value: "offering", labelKey: "homepage:board.filter.offering" },
+  { value: "design", labelKey: "homepage:board.filter.design" },
+  { value: "tech", labelKey: "homepage:board.filter.tech" },
+  { value: "space", labelKey: "homepage:board.filter.space" },
+  { value: "care", labelKey: "homepage:board.filter.care" },
 ];
 
 // Poster name + initials come from the canonical registry; `posterMeta` is the

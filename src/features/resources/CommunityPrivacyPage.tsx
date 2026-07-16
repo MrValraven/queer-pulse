@@ -2,9 +2,11 @@ import { FiGlobe, FiUsers, FiShield } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { TIERS, HOW_TO } from "./communityPrivacy.data";
+import { TIERS, HOW_TO_KEYS } from "./communityPrivacy.data";
 import styles from "./resources.module.css";
 
 const ICONS: Record<string, IconType> = {
@@ -14,20 +16,28 @@ const ICONS: Record<string, IconType> = {
 };
 
 export function CommunityPrivacyPage() {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Coming Out · Privacy"
+        eyebrow={t("resources:communityPrivacy.hero.eyebrow")}
         eyebrowDotColor="var(--violet)"
         title={
-          <>
-            You control <em>what's visible.</em>
-          </>
+          <Translation
+            i18nKey="resources:communityPrivacy.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="This space runs on reduced visibility by default. Here's exactly what shows where — on your public profile, inside the community, and to the mod team — so you can be here on your own terms."
+        lead={t("resources:communityPrivacy.hero.lead")}
         anchors={[
-          { label: "What shows where", href: "#tiers" },
-          { label: "Your controls", href: "#controls" },
+          {
+            label: t("resources:communityPrivacy.hero.anchor.tiers"),
+            href: "#tiers",
+          },
+          {
+            label: t("resources:communityPrivacy.hero.anchor.controls"),
+            href: "#controls",
+          },
         ]}
       />
 
@@ -37,26 +47,28 @@ export function CommunityPrivacyPage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            What shows <em>where</em>
+            <Translation
+              i18nKey="resources:communityPrivacy.tiers.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Three layers, from fully public to mod-only. Most of this space
-            lives in the bottom two.
+            {t("resources:communityPrivacy.tiers.lead")}
           </Reveal>
           <div>
-            {TIERS.map((t) => {
-              const Icon = ICONS[t.icon]!;
+            {TIERS.map((tier) => {
+              const Icon = ICONS[tier.icon]!;
               return (
-                <Reveal key={t.title} className={styles.featureRow}>
+                <Reveal key={tier.titleKey} className={styles.featureRow}>
                   <span className={styles.featureIcon}>
                     <Icon aria-hidden />
                   </span>
                   <div>
                     <div className={styles.cardName} style={{ fontSize: 19 }}>
-                      {t.title}
+                      {t(tier.titleKey)}
                     </div>
                     <div className={styles.cardSpec} style={{ marginTop: 4 }}>
-                      {t.body}
+                      {t(tier.bodyKey)}
                     </div>
                   </div>
                 </Reveal>
@@ -72,17 +84,20 @@ export function CommunityPrivacyPage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            Your <em>controls</em>
+            <Translation
+              i18nKey="resources:communityPrivacy.controls.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <div className={styles.checklist}>
-            {HOW_TO.map((h) => (
+            {HOW_TO_KEYS.map((key) => (
               <Reveal
-                key={h}
+                key={key}
                 className={styles.checkItem}
                 style={{ gridTemplateColumns: "1fr" }}
               >
                 <div className={styles.cardSpec} style={{ flex: "none" }}>
-                  {h}
+                  {t(key)}
                 </div>
               </Reveal>
             ))}
@@ -92,14 +107,15 @@ export function CommunityPrivacyPage() {
 
       <Outro
         title={
-          <>
-            Nothing here is <em>on your profile.</em>
-          </>
+          <Translation
+            i18nKey="resources:communityPrivacy.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Adjust your visibility any time — it's all in your settings."
+        sub={t("resources:communityPrivacy.outro.sub")}
       >
         <Button to={routes.settings} variant="primary" size="lg">
-          Open privacy settings
+          {t("resources:communityPrivacy.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

@@ -3,6 +3,8 @@ import { FiCheck, FiCopy } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { currentUser } from "../members/data/members";
 import type { CreatedInvite } from "./api/useCreateInvite";
 import { SHARE_TARGETS, buildShareMessage } from "./invite.data";
@@ -11,18 +13,20 @@ import styles from "./InvitePage.module.css";
 
 /** Ready: the invite exists. Quiet plum success panel with the live link. */
 export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [copied, setCopied] = useState(false);
-  const message = buildShareMessage(currentUser.first, invite.fullUrl);
+  const message = buildShareMessage(t, currentUser.first, invite.fullUrl);
 
   async function copyLink() {
     try {
       await navigator.clipboard.writeText(invite.fullUrl);
       setCopied(true);
-      showToast("Link copied", "success");
+      showToast(t("auth:invite.ready.linkCopied"), "success");
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      showToast("Couldn’t copy — select and copy the link", "error");
+      showToast(t("auth:invite.ready.copyFailed"), "error");
     }
   }
 
@@ -32,12 +36,12 @@ export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
         <FiCheck />
       </div>
       <h2 className={styles.readyHead}>
-        Your link is <em>ready</em>
+        <Translation
+          i18nKey="auth:invite.ready.headline"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.readySub}>
-        It’s one-time and personal to whoever you send it, and it expires in 7
-        days. Share it only with someone you’d vouch for.
-      </p>
+      <p className={styles.readySub}>{t("auth:invite.ready.sub")}</p>
 
       <div className={styles.readyLinkRow}>
         <input
@@ -50,15 +54,21 @@ export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
           type="button"
           className={`${styles.readyCopyBtn} ${copied ? styles.readyCopyBtnDone : ""}`}
           onClick={copyLink}
-          aria-label={copied ? "Link copied" : "Copy invite link"}
+          aria-label={
+            copied
+              ? t("auth:invite.ready.linkCopied")
+              : t("auth:invite.ready.copyLinkAriaLabel")
+          }
         >
           {copied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}
-          {copied ? "Copied" : "Copy"}
+          {copied ? t("auth:common.copied") : t("auth:common.copy")}
         </button>
       </div>
 
       <div className={styles.readyShare}>
-        <span className={styles.readyShareLabel}>Or send it through</span>
+        <span className={styles.readyShareLabel}>
+          {t("auth:invite.ready.shareThrough")}
+        </span>
         <div className={styles.readyShareTargets}>
           {SHARE_TARGETS.map(({ key, label, Icon, build }) => (
             <a
@@ -76,7 +86,8 @@ export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
       </div>
 
       <div className={styles.readyMeta}>
-        One-time link · {expiryLabel(invite.expiresAt)}
+        {t("auth:invite.ready.oneTimeLink")} ·{" "}
+        {expiryLabel(invite.expiresAt, t, fmt)}
       </div>
 
       <Button
@@ -84,7 +95,7 @@ export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
         to={routes.accountProfile}
         className={styles.readyDone}
       >
-        Back to my profile
+        {t("auth:common.backToProfile")}
       </Button>
     </div>
   );

@@ -1,8 +1,11 @@
 import { type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { StudioRail } from "./StudioRail";
 import { StudioPlayer } from "./StudioPlayer";
+import { CURRENT_MEMBER_INITIALS, SUSTAIN_PRICE } from "./studioShell.data";
 import styles from "./studio.module.css";
 
 export function StudioShell({
@@ -13,6 +16,8 @@ export function StudioShell({
   hidePlayer?: boolean;
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.root}>
       <div className={styles.app}>
@@ -23,7 +28,7 @@ export function StudioShell({
             <div className={styles.navs}>
               <button
                 type="button"
-                aria-label="Back"
+                aria-label={t("studio:shell.back")}
                 onClick={() => navigate(-1)}
               >
                 <svg
@@ -38,7 +43,7 @@ export function StudioShell({
               </button>
               <button
                 type="button"
-                aria-label="Forward"
+                aria-label={t("studio:shell.forward")}
                 onClick={() => navigate(1)}
               >
                 <svg
@@ -65,17 +70,19 @@ export function StudioShell({
               </svg>
               <input
                 type="text"
-                placeholder="search artists, tracks, sheet music…"
+                placeholder={t("studio:shell.searchPlaceholder")}
               />
             </div>
             <div className={styles.topRight}>
               <Link to={routes.studioDashboard} className={styles.creatorLink}>
-                For artists →
+                {t("studio:shell.forArtistsCta")} →
               </Link>
               <Link to={routes.cinemaMembership} className={styles.sustainPill}>
-                Sustain · €7/mo
+                {t("studio:shell.sustainCta", {
+                  price: fmt.currency(SUSTAIN_PRICE),
+                })}
               </Link>
-              <div className={styles.avatar}>RM</div>
+              <div className={styles.avatar}>{CURRENT_MEMBER_INITIALS}</div>
             </div>
           </div>
 

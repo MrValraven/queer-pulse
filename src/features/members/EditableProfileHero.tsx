@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Reveal } from "../../shared/components/ui";
 import type { ImageSlotTint } from "../../shared/components/ui";
 import { usePrefersReducedMotion } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { AvatarEditor } from "./AvatarEditor";
 import {
@@ -31,6 +32,7 @@ export function EditableProfileHero({
   /** When entered via the "Add/Edit links" affordance, scroll + focus the Links field. */
   focusLinks?: boolean;
 }) {
+  const { t } = useTranslation();
   const { profile, draft, updateDraft } = useProfile();
   const linksRef = useRef<HTMLDivElement>(null);
   const reduced = usePrefersReducedMotion();
@@ -67,7 +69,7 @@ export function EditableProfileHero({
           <Reveal delay={80}>
             <div className={styles.field}>
               <label className={styles.fieldLabel}>
-                Status &amp; visibility
+                {t("members:profileEdit.field.statusVisibility")}
               </label>
               <VisibilityPicker
                 value={draft.visibility}
@@ -76,19 +78,21 @@ export function EditableProfileHero({
             </div>
 
             <div className={styles.field}>
-              <label className={styles.fieldLabel}>Name</label>
+              <label className={styles.fieldLabel}>
+                {t("members:profileEdit.field.name")}
+              </label>
               <div className={styles.nameEdit}>
                 <InlineText
                   value={draft.first}
-                  ariaLabel="First name"
-                  placeholder="First"
+                  ariaLabel={t("members:profileEdit.field.firstNameLabel")}
+                  placeholder={t("members:profileEdit.field.firstPlaceholder")}
                   className={styles.nameInput}
                   onChange={(v) => updateDraft({ first: v })}
                 />
                 <InlineText
                   value={draft.last}
-                  ariaLabel="Last name"
-                  placeholder="Last"
+                  ariaLabel={t("members:profileEdit.field.lastNameLabel")}
+                  placeholder={t("members:profileEdit.field.lastPlaceholder")}
                   className={`${styles.nameInput} ${styles.lastInput}`}
                   onChange={(v) => updateDraft({ last: v })}
                 />
@@ -98,7 +102,9 @@ export function EditableProfileHero({
             <ProfileShortBioField />
 
             <div className={styles.field}>
-              <label className={styles.fieldLabel}>Pronouns</label>
+              <label className={styles.fieldLabel}>
+                {t("members:profileEdit.field.pronouns")}
+              </label>
               <PronounPicker
                 value={draft.pronouns}
                 onChange={(v) => updateDraft({ pronouns: v })}
@@ -106,42 +112,50 @@ export function EditableProfileHero({
             </div>
 
             <div className={styles.field}>
-              <label className={styles.fieldLabel}>Neighbourhood</label>
+              <label className={styles.fieldLabel}>
+                {t("members:profileEdit.field.neighbourhood")}
+              </label>
               <InlineText
                 value={draft.hood}
-                ariaLabel="Neighbourhood"
-                placeholder="e.g. Arroios"
+                ariaLabel={t("members:profileEdit.field.neighbourhood")}
+                placeholder={t(
+                  "members:profileEdit.field.neighbourhoodPlaceholder",
+                )}
                 className={styles.hoodInput}
                 onChange={(v) => updateDraft({ hood: v })}
               />
             </div>
 
             <div className={styles.field}>
-              <label className={styles.fieldLabel}>Bio</label>
+              <label className={styles.fieldLabel}>
+                {t("members:profileEdit.field.bio")}
+              </label>
               <p className={styles.fieldHelp}>
-                The longer version, on your profile page. If you leave your
-                short bio empty, your directory card borrows the opening of
-                this.
+                {t("members:profileEdit.field.bioHelp")}
               </p>
               <InlineTextarea
                 value={draft.bio}
-                ariaLabel="Bio"
+                ariaLabel={t("members:profileEdit.field.bio")}
                 className={styles.bioInput}
                 onChange={(v) => updateDraft({ bio: v })}
               />
             </div>
 
             <div className={styles.field}>
-              <label className={styles.fieldLabel}>Tags</label>
+              <label className={styles.fieldLabel}>
+                {t("members:profileEdit.field.tags")}
+              </label>
               <TagEditor
                 tags={draft.tags}
-                placeholder="Add a skill…"
+                placeholder={t("members:profileEdit.field.addSkillPlaceholder")}
                 onChange={(tags) => updateDraft({ tags })}
               />
             </div>
 
             <div className={styles.field} ref={linksRef}>
-              <label className={styles.fieldLabel}>Links</label>
+              <label className={styles.fieldLabel}>
+                {t("members:profileEdit.field.links")}
+              </label>
               <SocialLinksEditor
                 links={draft.socials}
                 onChange={(socials) => updateDraft({ socials })}

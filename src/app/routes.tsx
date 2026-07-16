@@ -1186,11 +1186,6 @@ const StudioOffAirPage = lazy(() =>
     default: m.StudioOffAirPage,
   })),
 );
-const TwoFactorSetupPage = lazy(() =>
-  import("../features/auth/TwoFactorSetupPage").then((m) => ({
-    default: m.TwoFactorSetupPage,
-  })),
-);
 const MagicLinkPage = lazy(() =>
   import("../features/auth/MagicLinkPage").then((m) => ({
     default: m.MagicLinkPage,
@@ -1199,11 +1194,6 @@ const MagicLinkPage = lazy(() =>
 const ConfirmEmailPage = lazy(() =>
   import("../features/auth/ConfirmEmailPage").then((m) => ({
     default: m.ConfirmEmailPage,
-  })),
-);
-const RecoveryCodesPage = lazy(() =>
-  import("../features/auth/RecoveryCodesPage").then((m) => ({
-    default: m.RecoveryCodesPage,
   })),
 );
 const StudioSignInPage = lazy(() =>
@@ -1603,10 +1593,8 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/onboarding", "/auth/onboarding"],
   ["/welcome", routes.welcome],
   ["/welcome-tour", routes.welcomeTour],
-  ["/2fa-setup", routes.twoFactorSetup],
   ["/magic-link", routes.magicLink],
   ["/confirm-email", routes.confirmEmail],
-  ["/recovery-codes", routes.recoveryCodes],
   // About
   ["/contact", routes.contact],
   ["/help", routes.help],
@@ -1999,18 +1987,10 @@ export function AppRoutes() {
             path={routes.welcomeTour}
             element={auth(<WelcomeTourPage />)}
           />
-          <Route
-            path={routes.twoFactorSetup}
-            element={auth(<TwoFactorSetupPage />)}
-          />
           <Route path={routes.magicLink} element={auth(<MagicLinkPage />)} />
           <Route
             path={routes.confirmEmail}
             element={auth(<ConfirmEmailPage />)}
-          />
-          <Route
-            path={routes.recoveryCodes}
-            element={auth(<RecoveryCodesPage />)}
           />
           <Route
             path="/invite/:code"

@@ -1,6 +1,7 @@
 import { FiCheck, FiLock } from "react-icons/fi";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { SpotlightCommunity } from "./Communities.data";
-import { CAT_LABEL, DOT } from "./communityClasses";
+import { CAT_LABEL_KEY, DOT } from "./communityClasses";
 import styles from "./Communities.module.css";
 
 interface RailProps {
@@ -18,20 +19,24 @@ export function CommunityRail({
   onPreview,
   onClear,
 }: RailProps) {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.rail}>
       <div className={styles.railLab}>
-        {list.length ? `Showing · ${list.length}` : "No matches"}
+        {list.length
+          ? t("homepage:communities.rail.showingCount", { count: list.length })
+          : t("homepage:communities.rail.noMatches")}
       </div>
 
       {list.length === 0 ? (
         <div className={styles.railEmpty}>
-          <b>No communities match.</b>
+          <b>{t("homepage:communities.rail.emptyTitle")}</b>
           <br />
-          Try a broader filter or clear your search.
+          {t("homepage:communities.rail.emptyBody")}
           <br />
           <button type="button" onClick={onClear}>
-            Clear filters
+            {t("homepage:communities.clearFiltersCta")}
           </button>
         </div>
       ) : (
@@ -55,7 +60,9 @@ export function CommunityRail({
                 .filter(Boolean)
                 .join(" ")}
             >
-              <span className="visuallyHidden">{CAT_LABEL[d.category]} · </span>
+              <span className="visuallyHidden">
+                {t(CAT_LABEL_KEY[d.category])} ·{" "}
+              </span>
             </span>
             <span className={styles.railText}>
               <span className={styles.railName}>
@@ -73,7 +80,7 @@ export function CommunityRail({
                 <>
                   <FiLock aria-hidden />
                   <span className="visuallyHidden">
-                    Private — no headcount shown
+                    {t("homepage:communities.rail.privateNoHeadcount")}
                   </span>
                 </>
               ) : (

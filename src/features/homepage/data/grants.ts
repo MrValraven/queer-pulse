@@ -3,12 +3,21 @@ import type { GrantItem, GrantStat } from "./types";
 export const grantStats: GrantStat[] = [
   {
     value: "€3,240",
-    label: "contributed this year",
+    labelKey: "homepage:microGrants.stat.contributed",
     countTo: 3240,
     prefix: "€",
   },
-  { value: "28", label: "grants awarded since launch", countTo: 28 },
-  { value: "€115", label: "average grant amount", countTo: 115, prefix: "€" },
+  {
+    value: "28",
+    labelKey: "homepage:microGrants.stat.grantsAwarded",
+    countTo: 28,
+  },
+  {
+    value: "€115",
+    labelKey: "homepage:microGrants.stat.averageAmount",
+    countTo: 115,
+    prefix: "€",
+  },
 ];
 
 export const grantItems: GrantItem[] = [

@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { SUSTAIN_PRICE } from "./studioShell.data";
 import { DEMO_WAVE, HERO_SET_ART } from "./studioLanding.data";
 import styles from "./StudioLandingPage.module.css";
+
+/** The mock "on the air" moment shown in the hero clock — a Wednesday broadcast slot. */
+const ON_AIR_MOMENT = new Date(2026, 5, 10, 21, 18);
+const HERO_SHARE_PERCENT = 0.8;
+const HERO_TIP_PERCENT = 1;
 
 const PayIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -11,30 +20,42 @@ const PayIcon = () => (
 );
 
 export function StudioLandingHero() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <section className={styles.hero} id="top">
       <div className={styles.heroInner}>
         <div>
           <div className={styles.eb}>
             <span className={styles.live} />
-            <span>On the air now</span>
+            <span>{t("studio:landing.hero.onAirNow")}</span>
             <span className={styles.sep}>·</span>
-            <span className={styles.clock}>Wed · 21:18 Lisbon</span>
+            <span className={styles.clock}>
+              {t("studio:landing.hero.clock", {
+                weekday: fmt.date(ON_AIR_MOMENT, { weekday: "short" }),
+                time: fmt.time(ON_AIR_MOMENT),
+              })}
+            </span>
           </div>
           <h1>
-            Music, <em>programmed</em> by queer ears.
+            <Translation i18nKey="studio:landing.hero.title" components={{ em: <em /> }} />
           </h1>
           <p className={styles.dek}>
-            A co-op streaming room. <em>80%</em> of every listen to the artist.{" "}
-            <em>100%</em> of every tip. The ledger is public. The curators have
-            names. <em>No algorithm has ever set foot in here.</em>
+            <Translation
+              i18nKey="studio:landing.hero.dek"
+              components={{ em: <em /> }}
+              values={{
+                sharePercent: fmt.number(HERO_SHARE_PERCENT, { style: "percent" }),
+                tipPercent: fmt.number(HERO_TIP_PERCENT, { style: "percent" }),
+              }}
+            />
           </p>
           <div className={styles.actions}>
             <Button variant="primary" size="lg" to={routes.sustainer}>
-              Sustain the room · €7/mo
+              {t("studio:landing.hero.sustainCta", { price: fmt.currency(SUSTAIN_PRICE) })}
             </Button>
             <Button variant="ghost-dark" size="lg" href="#demo">
-              Listen to a demo set · free
+              {t("studio:landing.hero.demoCta")}
             </Button>
           </div>
         </div>
@@ -45,20 +66,31 @@ export function StudioLandingHero() {
   );
 }
 
+/** Demo set + track content — mock, kept in English regardless of language. */
+const DEMO_SET = { titlePre: "Vespertina, ", titleEm: "vol. iv" };
+const DEMO_META = { curator: "Sara Marques", duration: "1h 42m", trackCount: 12, listening: 312 };
+const DEMO_TRACK = { number: 6, titlePre: "Carta para a ", titleEm: "santa" };
+const DEMO_ARTIST = { name: "Mariana Sol", album: "Cidade dos santos" };
+const DEMO_PER_PLAY_AMOUNT = 0.05;
+const DEMO_QUOTE_ATTRIBUTION = "Sara Marques";
+
 function DemoCard() {
   const [playing, setPlaying] = useState(false);
+  const { t } = useTranslation();
+  const fmt = useFormat();
 
   return (
     <div className={styles.demoCard} id="demo">
       <div className={styles.demoInner}>
         <div className={styles.demoEb}>
-          <span className={styles.live} /> The Wednesday set · free preview
+          <span className={styles.live} /> {t("studio:landing.demo.eyebrow")}
         </div>
         <h3>
-          Vespertina, <em>vol. iv</em>
+          {DEMO_SET.titlePre}
+          <em>{DEMO_SET.titleEm}</em>
         </h3>
         <div className={styles.demoMeta}>
-          programmed by Sara Marques · 1h 42m · 12 tracks · 312 listening
+          {t("studio:landing.demo.meta", DEMO_META)}
         </div>
 
         <div className={styles.demoRow}>
@@ -94,7 +126,11 @@ function DemoCard() {
               <button
                 type="button"
                 className={styles.demoPlay}
-                aria-label={playing ? "Pause preview" : "Play preview"}
+                aria-label={
+                  playing
+                    ? t("studio:landing.demo.pauseAria")
+                    : t("studio:landing.demo.playAria")
+                }
                 aria-pressed={playing}
                 onClick={() => setPlaying((p) => !p)}
               >
@@ -111,10 +147,15 @@ function DemoCard() {
               </button>
               <div className={styles.demoInfo}>
                 <div className={styles.t}>
-                  Track 6 · Carta para a <em>santa</em>
+                  {t("studio:landing.demo.trackPrefix", { n: DEMO_TRACK.number })}{" "}
+                  {DEMO_TRACK.titlePre}
+                  <em>{DEMO_TRACK.titleEm}</em>
                 </div>
                 <div className={styles.a}>
-                  Mariana Sol · from Cidade dos santos
+                  {t("studio:landing.demo.byLine", {
+                    artist: DEMO_ARTIST.name,
+                    album: DEMO_ARTIST.album,
+                  })}
                 </div>
               </div>
             </div>
@@ -124,15 +165,20 @@ function DemoCard() {
         <div className={styles.payPill}>
           <PayIcon />
           <span>
-            This listen pays Mariana <em>€0.05</em> when you’re a sustainer.
-            Right now, the room is open as a demo.
+            <Translation
+              i18nKey="studio:landing.demo.payNote"
+              components={{ em: <em /> }}
+              values={{ artist: DEMO_ARTIST.name, amount: fmt.currency(DEMO_PER_PLAY_AMOUNT) }}
+            />
           </span>
         </div>
 
         <div className={styles.note}>
-          “Stay through the second verse of track six.{" "}
-          <em>The piano leaves you there on purpose.</em>” — Sara Marques,
-          programming lead
+          <Translation
+            i18nKey="studio:landing.demo.quote"
+            components={{ em: <em /> }}
+            values={{ attribution: DEMO_QUOTE_ATTRIBUTION }}
+          />
         </div>
       </div>
     </div>

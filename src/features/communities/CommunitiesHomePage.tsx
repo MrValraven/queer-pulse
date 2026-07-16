@@ -1,6 +1,8 @@
 import { FiUsers } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { Button, EmptyState } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { useProfile } from "../../app/providers/ProfileProvider";
@@ -14,6 +16,7 @@ import { useCommunitiesHomeData } from "./useCommunitiesHomeData";
 import styles from "./CommunitiesHomePage.module.css";
 
 export function CommunitiesHomePage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad(500);
   // The signed-in member (real profile live, mock currentUser in demo mode).
   const { profile } = useProfile();
@@ -27,21 +30,24 @@ export function CommunitiesHomePage() {
         <div className="wrap">
           <div className={styles.head}>
             <div>
-              <div className={styles.eyebrow}>Your communities</div>
+              <div className={styles.eyebrow}>{t("communities:hub.eyebrow")}</div>
               <h1 className={styles.h1}>
-                Welcome back, <em>{firstName}</em>
+                <Translation
+                  i18nKey="communities:hub.welcome"
+                  values={{ name: firstName }}
+                  components={{ em: <em /> }}
+                />
               </h1>
               <p className={styles.sub}>
-                Here's what's been happening across your {myCommunities.length}{" "}
-                communities.
+                {t("communities:hub.sub", { count: myCommunities.length })}
               </p>
             </div>
             <div className={styles.headActions}>
               <Button variant="ghost" to={routes.communities}>
-                Discover communities
+                {t("communities:hub.discoverCta")}
               </Button>
               <Button variant="primary" to={routes.startCommunity}>
-                Start a community
+                {t("communities:hub.startCta")}
               </Button>
             </div>
           </div>
@@ -49,9 +55,12 @@ export function CommunitiesHomePage() {
           {myCommunities.length === 0 ? (
             <EmptyState
               icon={<FiUsers />}
-              title="You haven't joined any communities yet"
-              description="Browse by interest and find where you belong — there's no rush."
-              action={{ label: "Discover communities", to: routes.communities }}
+              title={t("communities:hub.empty.title")}
+              description={t("communities:hub.empty.description")}
+              action={{
+                label: t("communities:hub.discoverCta"),
+                to: routes.communities,
+              }}
             />
           ) : (
             <>

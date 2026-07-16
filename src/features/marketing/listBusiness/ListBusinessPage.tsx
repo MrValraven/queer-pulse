@@ -4,6 +4,8 @@ import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../../shared/components/layout";
 import { FadeIn } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useDirectoryListings } from "../../../app/providers/DirectoryListingsProvider";
 import { currentUser, currentUserSlug } from "../../members/data/members";
@@ -25,19 +27,20 @@ import styles from "./ListBusinessPage.module.css";
 
 type Phase = "form" | "sending" | "success";
 
-const NEXT_LABELS = [
-  "Next: the basics →",
-  "Next: the story →",
-  "Next: practical →",
-  "Next: photos & you →",
-  "Review your listing →",
-  "Send it to the team →",
+const NEXT_LABEL_KEYS = [
+  "marketing:listBusiness.next.basics",
+  "marketing:listBusiness.next.story",
+  "marketing:listBusiness.next.practical",
+  "marketing:listBusiness.next.photos",
+  "marketing:listBusiness.next.review",
+  "marketing:listBusiness.next.send",
 ];
 
 const USER_NAME = `${currentUser.first} ${currentUser.last}`;
 
 export function ListBusinessPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { addListing, withdrawListing, setStatus } = useDirectoryListings();
 
@@ -80,7 +83,7 @@ export function ListBusinessPage() {
       setListing(created);
       clearDraft();
       setPhase("success");
-      showToast("Your listing is with the community team", "success");
+      showToast(t("marketing:listBusiness.toast.submitted"), "success");
       scrollUp();
     }, 1400);
   };
@@ -114,7 +117,7 @@ export function ListBusinessPage() {
   };
   const withdraw = () => {
     if (listing) withdrawListing(listing.ref);
-    showToast("Listing withdrawn", "info");
+    showToast(t("marketing:listBusiness.toast.withdrawn"), "info");
     navigate(routes.directory);
   };
   const listAnother = () => {
@@ -130,17 +133,23 @@ export function ListBusinessPage() {
       <header className={styles.hero}>
         <div className={`${styles.heroInner} wrap`}>
           <Link to={routes.directory} className={styles.back}>
-            <FiArrowLeft size={14} /> Back to the directory
+            <FiArrowLeft size={14} />{" "}
+            {t("marketing:listBusiness.hero.backCta")}
           </Link>
-          <div className={styles.eyebrow}>The directory · add a place</div>
+          <div className={styles.eyebrow}>
+            {t("marketing:listBusiness.hero.eyebrow")}
+          </div>
           <h1 className={styles.h1}>
-            Add your place to <em>the people's directory.</em>
+            <Translation
+              i18nKey="marketing:listBusiness.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.lead}>
-            Queer-owned or queer-friendly, big or tiny — if your place is good
-            to our people, it belongs here. Tell us about it and the community
-            team will take it from there.{" "}
-            <b>Every listing is read by a human before it goes live.</b>
+            <Translation
+              i18nKey="marketing:listBusiness.hero.lead"
+              components={{ b: <b /> }}
+            />
           </p>
         </div>
       </header>
@@ -176,9 +185,16 @@ export function ListBusinessPage() {
                     )}
                     <PaneActions
                       onBack={back}
-                      backLabel={step === 0 ? "Cancel" : "← Back"}
+                      backLabel={
+                        step === 0
+                          ? t("marketing:listBusiness.paneActions.cancel")
+                          : undefined
+                      }
                       onNext={next}
-                      nextLabel={NEXT_LABELS[step] ?? "Continue →"}
+                      nextLabel={t(
+                        NEXT_LABEL_KEYS[step] ??
+                          "marketing:listBusiness.next.continue",
+                      )}
                       missing={form.missing[step] ?? []}
                     />
                   </div>
@@ -196,7 +212,7 @@ export function ListBusinessPage() {
               <div className={styles.statusInner}>
                 <div className={styles.sending}>
                   <div className={styles.ring} />
-                  <p>Sending your place to the team…</p>
+                  <p>{t("marketing:listBusiness.sending")}</p>
                 </div>
               </div>
             </div>

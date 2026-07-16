@@ -1,4 +1,6 @@
 import { Reveal } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { gapsThread } from "../data/painPoints";
 import { GapExchangeRow, GapHeroPanel, GapMarkerRow } from "./PainPointsParts";
 import styles from "./PainPoints.module.css";
@@ -11,6 +13,7 @@ import styles from "./PainPoints.module.css";
  * derived from their position (every other exchange flips).
  */
 export function PainPoints() {
+  const { t } = useTranslation();
   // Every other exchange flips to the mirrored layout. Derive it purely from
   // how many exchanges precede this one, so the render stays side-effect free.
   const isFlipped = (index: number) =>
@@ -23,15 +26,15 @@ export function PainPoints() {
       <Reveal className={styles.head}>
         <div className={styles.eyebrow}>
           <span className={styles.live} aria-hidden="true" />
-          Why we built QueerPulse
+          {t("homepage:painPoints.eyebrow")}
         </div>
         <h2 className={styles.title}>
-          We built this because we <em>felt these gaps.</em>
+          <Translation
+            i18nKey="homepage:painPoints.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p className={styles.sub}>
-          Real questions the community kept asking. QueerPulse is the answer we
-          wanted to exist.
-        </p>
+        <p className={styles.sub}>{t("homepage:painPoints.sub")}</p>
       </Reveal>
 
       <div className={styles.thread}>

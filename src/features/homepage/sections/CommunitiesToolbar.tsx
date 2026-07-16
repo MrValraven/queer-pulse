@@ -1,4 +1,5 @@
 import { FiSearch } from "react-icons/fi";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CommunityCategory } from "./Communities.data";
 import {
   LANG_LABEL,
@@ -9,14 +10,30 @@ import styles from "./Communities.module.css";
 
 const CATS: Array<{
   key: CommunityCategory | "all";
-  label: string;
+  labelKey: string;
   dot?: string;
 }> = [
-  { key: "all", label: "All" },
-  { key: "social", label: "Social", dot: styles.dotSocial },
-  { key: "arts", label: "Arts", dot: styles.dotArts },
-  { key: "support", label: "Support", dot: styles.dotSupport },
-  { key: "activism", label: "Activism", dot: styles.dotActivism },
+  { key: "all", labelKey: "homepage:communities.category.all" },
+  {
+    key: "social",
+    labelKey: "homepage:communities.category.social",
+    dot: styles.dotSocial,
+  },
+  {
+    key: "arts",
+    labelKey: "homepage:communities.category.arts",
+    dot: styles.dotArts,
+  },
+  {
+    key: "support",
+    labelKey: "homepage:communities.category.support",
+    dot: styles.dotSupport,
+  },
+  {
+    key: "activism",
+    labelKey: "homepage:communities.category.activism",
+    dot: styles.dotActivism,
+  },
 ];
 
 interface ToolbarProps {
@@ -32,6 +49,8 @@ export function CommunitiesToolbar({
   langOptions,
   hoodOptions,
 }: ToolbarProps) {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.tools}>
       <div className={styles.toolSearch}>
@@ -40,8 +59,8 @@ export function CommunitiesToolbar({
           type="search"
           value={state.q}
           onChange={(e) => patch({ q: e.target.value })}
-          placeholder="Search communities…"
-          aria-label="Search communities"
+          placeholder={t("homepage:communities.toolbar.searchPlaceholder")}
+          aria-label={t("homepage:communities.toolbar.searchAriaLabel")}
         />
       </div>
 
@@ -57,7 +76,7 @@ export function CommunitiesToolbar({
             onClick={() => patch({ cat: c.key })}
           >
             {c.dot && <span className={[styles.fdot, c.dot].join(" ")} />}
-            {c.label}
+            {t(c.labelKey)}
           </button>
         ))}
       </div>
@@ -66,9 +85,11 @@ export function CommunitiesToolbar({
         className={styles.toolSelect}
         value={state.lang}
         onChange={(e) => patch({ lang: e.target.value })}
-        aria-label="Filter by language"
+        aria-label={t("homepage:communities.toolbar.langAriaLabel")}
       >
-        <option value="all">All languages</option>
+        <option value="all">
+          {t("homepage:communities.toolbar.langAllOption")}
+        </option>
         {langOptions.map((l) => (
           <option key={l} value={l}>
             {LANG_LABEL[l] ?? l}
@@ -80,9 +101,11 @@ export function CommunitiesToolbar({
         className={styles.toolSelect}
         value={state.hood}
         onChange={(e) => patch({ hood: e.target.value })}
-        aria-label="Filter by neighbourhood"
+        aria-label={t("homepage:communities.toolbar.hoodAriaLabel")}
       >
-        <option value="all">All areas</option>
+        <option value="all">
+          {t("homepage:communities.toolbar.hoodAllOption")}
+        </option>
         {hoodOptions.map((h) => (
           <option key={h} value={h}>
             {h}
@@ -99,23 +122,31 @@ export function CommunitiesToolbar({
         onClick={() => patch({ open: !state.open })}
       >
         <span className={styles.tg} aria-hidden />
-        Open to join
+        {t("homepage:communities.access.open")}
       </button>
 
       <span className={styles.toolSpacer} />
 
       <span className={styles.toolSort}>
-        Sort
+        {t("homepage:communities.toolbar.sortLabel")}
         <select
           className={styles.toolSelect}
           value={state.sort}
           onChange={(e) => patch({ sort: e.target.value as SortKey })}
-          aria-label="Sort communities"
+          aria-label={t("homepage:communities.toolbar.sortAriaLabel")}
         >
-          <option value="active">Most active</option>
-          <option value="size">Largest</option>
-          <option value="new">Newest</option>
-          <option value="near">Nearest</option>
+          <option value="active">
+            {t("homepage:communities.toolbar.sort.active")}
+          </option>
+          <option value="size">
+            {t("homepage:communities.toolbar.sort.size")}
+          </option>
+          <option value="new">
+            {t("homepage:communities.toolbar.sort.new")}
+          </option>
+          <option value="near">
+            {t("homepage:communities.toolbar.sort.near")}
+          </option>
         </select>
       </span>
     </div>

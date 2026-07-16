@@ -12,6 +12,9 @@ import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { probeBackend, type BackendProbe } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { AuthLayout } from "./AuthLayout";
 import { CommunityArt } from "./CommunityArt";
 import styles from "./auth.module.css";
@@ -30,72 +33,72 @@ type Notice = { Icon: IconType; title: string; body: string };
  * (which reflects Google's own `?error=`, so unknown values reach us and fall
  * through to the generic notice — never render the raw code).
  */
-function noticeForAuthError(code: string): Notice {
+function noticeForAuthError(code: string, t: TFunction): Notice {
   switch (code) {
     case "invite_required":
       return {
         Icon: FiUserPlus,
-        title: "QueerPulse is invite-only",
-        body: "There's no account for that Google sign-in yet. Members bring in the people they know — ask someone you trust for an invitation, or request one below.",
+        title: t("auth:signIn.notice.inviteRequired.title"),
+        body: t("auth:signIn.notice.inviteRequired.body"),
       };
     case "invite_invalid":
       return {
         Icon: FiUserPlus,
-        title: "That invitation didn't work",
-        body: "It may have already been used, run out, or been meant for a different email. Ask whoever invited you to send a fresh one.",
+        title: t("auth:signIn.notice.inviteInvalid.title"),
+        body: t("auth:signIn.notice.inviteInvalid.body"),
       };
     case "access_denied":
       return {
         Icon: FiAlertTriangle,
-        title: "Google sign-in was cancelled",
-        body: "Nothing happened, and nothing was shared. You can try again whenever you're ready.",
+        title: t("auth:signIn.notice.accessDenied.title"),
+        body: t("auth:signIn.notice.accessDenied.body"),
       };
     case "no_email":
       return {
         Icon: FiMail,
-        title: "That Google account has no email",
-        body: "We need an email address to find your account. Try signing in with a different Google account.",
+        title: t("auth:signIn.notice.noEmail.title"),
+        body: t("auth:signIn.notice.noEmail.body"),
       };
     case "email_unverified":
       return {
         Icon: FiMail,
-        title: "That email isn't verified with Google",
-        body: "Verify the email on your Google account, then come back and try again.",
+        title: t("auth:signIn.notice.emailUnverified.title"),
+        body: t("auth:signIn.notice.emailUnverified.body"),
       };
     case "invalid_state":
     case "oauth_failed":
     default:
       return {
         Icon: FiAlertTriangle,
-        title: "Sign-in didn't go through",
-        body: "Something interrupted the sign-in on the way back — it's on us, not you. Give it a moment and try again.",
+        title: t("auth:signIn.notice.oauthFailed.title"),
+        body: t("auth:signIn.notice.oauthFailed.body"),
       };
   }
 }
 
 /** Map each probe failure to a specific, no-blame notice for the member. */
-function noticeFor(err: FailedProbe): Notice {
+function noticeFor(err: FailedProbe, t: TFunction): Notice {
   switch (err.reason) {
     case "offline":
       return {
         Icon: FiWifiOff,
-        title: "You're offline",
-        body: "We can't reach QueerPulse — your device isn't connected right now. Reconnect and try again.",
+        title: t("auth:signIn.notice.offline.title"),
+        body: t("auth:signIn.notice.offline.body"),
       };
     case "server":
       return {
         Icon: FiAlertTriangle,
-        title: "Something went wrong on our side",
-        body: `QueerPulse ran into an error signing you in${
-          err.status ? ` (${err.status})` : ""
-        } — it's on us, not you. Give it a moment and try again.`,
+        title: t("auth:signIn.notice.serverError.title"),
+        body: t("auth:signIn.notice.serverError.body", {
+          status: err.status ? ` (${err.status})` : "",
+        }),
       };
     case "unreachable":
     default:
       return {
         Icon: FiCloudOff,
-        title: "Sign-in is taking a breather",
-        body: "We can't reach QueerPulse right now — nothing's wrong on your end. Give it a moment and try again.",
+        title: t("auth:signIn.notice.unreachable.title"),
+        body: t("auth:signIn.notice.unreachable.body"),
       };
   }
 }
@@ -108,6 +111,7 @@ function safeNext(next: string | null): string {
 
 export function SignInPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { signIn } = useAuth();
   const { demoMode } = useDemoMode();
   const [searchParams] = useSearchParams();
@@ -150,9 +154,9 @@ export function SignInPage() {
   // A fresh probe failure describes what just happened, so it wins over the
   // `?error=` left in the URL by an earlier callback.
   const notice = probeError
-    ? noticeFor(probeError)
+    ? noticeFor(probeError, t)
     : authError
-      ? noticeForAuthError(authError)
+      ? noticeForAuthError(authError, t)
       : null;
 
   return (
@@ -160,14 +164,17 @@ export function SignInPage() {
       <div className={styles.artTile}>
         <CommunityArt />
         <p className={styles.artCaption}>
-          The pulse is <em>still going.</em> Welcome back to it.
+          <Translation
+            i18nKey="auth:signIn.artCaption"
+            components={{ em: <em /> }}
+          />
         </p>
       </div>
 
       <h1>
-        Welcome <em>back.</em>
+        <Translation i18nKey="auth:signIn.title" components={{ em: <em /> }} />
       </h1>
-      <p className={styles.sub}>Sign in to your QueerPulse account.</p>
+      <p className={styles.sub}>{t("auth:signIn.subtitle")}</p>
 
       {notice && (
         <div className={styles.notice} role="alert">
@@ -203,12 +210,12 @@ export function SignInPage() {
             fill="#EA4335"
           />
         </svg>
-        {busy ? "Connecting…" : "Continue with Google"}
+        {busy ? t("auth:signIn.connecting") : t("auth:signIn.googleCta")}
       </button>
 
       <div className={styles.footer}>
         <Link to={routes.requestInvite} className="invite">
-          Not a member yet? Request an invite
+          {t("auth:common.notAMemberYet")}
         </Link>
       </div>
     </AuthLayout>

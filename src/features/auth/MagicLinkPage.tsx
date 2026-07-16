@@ -4,11 +4,14 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { AuthLayout } from "./AuthLayout";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./auth.module.css";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function MagicLinkPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);
@@ -47,7 +50,7 @@ export function MagicLinkPage() {
   }
 
   function handleResend() {
-    showToast("Sent again — check spam too", "info");
+    showToast(t("auth:confirmEmail.resendToast"), "info");
     startCooldown();
   }
 
@@ -73,17 +76,19 @@ export function MagicLinkPage() {
             </svg>
           </div>
           <h1>
-            Check your <em>email.</em>
+            <Translation i18nKey="auth:magicLink.sentTitle" components={{ em: <em /> }} />
           </h1>
           <p
             className={styles.sub}
             style={{ maxWidth: "30ch", margin: "0 auto 24px" }}
           >
-            A sign-in link is on its way to{" "}
-            <strong style={{ color: "var(--ink)", fontWeight: 600 }}>
-              {email}
-            </strong>
-            . Tap it on this device to come back signed in.
+            <Translation
+              i18nKey="auth:magicLink.sentBody"
+              components={{
+                strong: <strong style={{ color: "var(--ink)", fontWeight: 600 }} />,
+              }}
+              values={{ email }}
+            />
           </p>
           <p
             style={{
@@ -93,7 +98,7 @@ export function MagicLinkPage() {
               marginBottom: 24,
             }}
           >
-            Didn't get it? Look in spam, or{" "}
+            {t("auth:magicLink.resendPromptPrefix")}{" "}
             <button
               type="button"
               onClick={handleResend}
@@ -109,7 +114,9 @@ export function MagicLinkPage() {
                 padding: "4px 0",
               }}
             >
-              {cooldown > 0 ? `resend in ${cooldown}s` : "resend link"}
+              {cooldown > 0
+                ? t("auth:magicLink.resendIn", { seconds: cooldown })
+                : t("auth:magicLink.resendLink")}
             </button>
           </p>
           <div className={styles.footer}>
@@ -121,7 +128,7 @@ export function MagicLinkPage() {
                 fontWeight: 500,
               }}
             >
-              ← Use a different method
+              {t("auth:magicLink.useDifferentMethod")}
             </Link>
           </div>
         </div>
@@ -132,21 +139,18 @@ export function MagicLinkPage() {
   return (
     <AuthLayout>
       <h1>
-        Sign in with a <em>link.</em>
+        <Translation i18nKey="auth:magicLink.title" components={{ em: <em /> }} />
       </h1>
-      <p className={styles.sub}>
-        We'll email you a one-tap link. No password, no app, no friction.
-        Expires in 10 minutes.
-      </p>
+      <p className={styles.sub}>{t("auth:magicLink.sub")}</p>
 
       <form onSubmit={handleSend}>
         <div className={styles.field}>
-          <label htmlFor="ml-email">Email</label>
+          <label htmlFor="ml-email">{t("auth:magicLink.emailLabel")}</label>
           <div className={styles.fieldWrap}>
             <input
               id="ml-email"
               type="email"
-              placeholder="you@example.com"
+              placeholder={t("auth:magicLink.emailPlaceholder")}
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -161,17 +165,17 @@ export function MagicLinkPage() {
                 fontWeight: 500,
               }}
             >
-              Please enter a valid email address.
+              {t("auth:magicLink.emailError")}
             </span>
           )}
         </div>
 
         <Button type="submit" className={styles.authBtn} disabled={!emailValid}>
-          Send me a link →
+          {t("auth:magicLink.submit")}
         </Button>
       </form>
 
-      <div className={styles.divider}>or</div>
+      <div className={styles.divider}>{t("auth:magicLink.dividerOr")}</div>
 
       <div className={styles.footer}>
         <Link
@@ -179,13 +183,13 @@ export function MagicLinkPage() {
           className={styles.signinLink}
           style={{ color: "var(--plum)", fontWeight: 600, fontSize: 13.5 }}
         >
-          Sign in with password instead
+          {t("auth:magicLink.signInWithPassword")}
         </Link>
         <Link
           to={routes.requestInvite}
           style={{ fontSize: 13.5, color: "var(--ink-60)", fontWeight: 500 }}
         >
-          Not a member yet? Request an invite
+          {t("auth:magicLink.notAMemberPrompt")}
         </Link>
       </div>
     </AuthLayout>

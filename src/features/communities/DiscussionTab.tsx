@@ -7,6 +7,7 @@ import {
   FilterChips,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Thread as ThreadData } from "./communityDetails";
 import { CommunityThread } from "./CommunityThread";
 import detail from "./CommunityDetailPage.module.css";
@@ -16,6 +17,7 @@ const CHIPS = ["All", "Pinned", "Newest"] as const;
 type Chip = (typeof CHIPS)[number];
 
 export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [q, setQ] = useState("");
   const [chip, setChip] = useState<Chip>("All");
@@ -42,7 +44,7 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
         votes: 1,
         title,
         author: { initials: "Me", name: "You", tint: "plum" },
-        time: "just now",
+        time: t("communities:common.justNow"),
         replyCount: 0,
         post: text,
         replies: [],
@@ -50,34 +52,40 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
       ...prev,
     ]);
     setNewPost("");
-    showToast("Discussion started.", "success");
+    showToast(t("communities:detail.discussion.startedToast"), "success");
   };
+
+  const chipOptions = [
+    { value: "All", label: t("communities:detail.discussion.chip.all") },
+    { value: "Pinned", label: t("communities:detail.discussion.chip.pinned") },
+    { value: "Newest", label: t("communities:detail.discussion.chip.newest") },
+  ];
 
   return (
     <div>
       <SearchInput
         className={styles.searchRow}
-        ariaLabel="Search discussions"
-        placeholder="Search this community's discussions…"
+        ariaLabel={t("communities:detail.discussion.searchAria")}
+        placeholder={t("communities:detail.discussion.searchPlaceholder")}
         value={q}
         onChange={setQ}
       />
       <FilterChips
         className={styles.chips}
-        options={CHIPS}
+        options={chipOptions}
         value={chip}
         onChange={(c) => setChip(c as Chip)}
       />
 
       {shown.length === 0 ? (
         <EmptyState
-          title="Nothing matches yet"
-          description="Try a different search, or start the discussion below."
+          title={t("communities:detail.discussion.empty.title")}
+          description={t("communities:detail.discussion.empty.description")}
         />
       ) : (
-        shown.map((t, i) => (
-          <FadeIn key={t.title} delay={Math.min(i, 8) * 55}>
-            <CommunityThread data={t} />
+        shown.map((thread, i) => (
+          <FadeIn key={thread.title} delay={Math.min(i, 8) * 55}>
+            <CommunityThread data={thread} />
           </FadeIn>
         ))
       )}
@@ -92,7 +100,7 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
         <textarea
           className={detail.npTa}
           rows={1}
-          placeholder="Start a new discussion in this community…"
+          placeholder={t("communities:detail.forum.newPostPlaceholder")}
           value={newPost}
           onChange={(e) => setNewPost(e.target.value)}
         />
@@ -101,7 +109,7 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
           onClick={post}
           style={{ whiteSpace: "nowrap", fontSize: 13 }}
         >
-          Post
+          {t("communities:detail.forum.postCta")}
         </Button>
       </div>
     </div>

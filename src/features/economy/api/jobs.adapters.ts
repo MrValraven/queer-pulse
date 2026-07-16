@@ -1,4 +1,6 @@
 import { memberRefToPerson, type Person } from "../../../shared/api/refs";
+import type { Formatters } from "../../../shared/i18n/format";
+import type { TFunction } from "../../../shared/i18n/types";
 import type { CompanyProfile } from "../companies.data";
 import type { Job } from "../jobs.data";
 import type {
@@ -24,12 +26,25 @@ export function logoFromName(name: string): string {
   return (words[0] ?? "").slice(0, 2).toUpperCase() || "?";
 }
 
-/** Render a pay object to the prototype's single salary string. */
-export function formatPay(pay: JobPay): string {
-  if (pay.hidePay) return pay.barter ? "Barter / to discuss" : "Competitive";
+/**
+ * Render a pay object to the prototype's single salary string.
+ *
+ * i18n: the phrases here are chrome composed in source code, which is exactly
+ * what proves they're translatable — so this takes `t` and resolves catalog
+ * keys rather than emitting English. `pay.salary` is the poster's own free-text
+ * pay string and passes through untranslated (it's fetched in live mode).
+ */
+export function formatPay(pay: JobPay, t: TFunction): string {
+  if (pay.hidePay) {
+    return t(
+      pay.barter ? "economy:jobs.pay.barterOrDiscuss" : "economy:jobs.pay.competitive",
+    );
+  }
   if (pay.salary) return pay.salary;
   if (pay.rateMin == null && pay.rateMax == null) {
-    return pay.barter ? "Open to barter" : "To discuss";
+    return t(
+      pay.barter ? "economy:jobs.pay.openToBarter" : "economy:jobs.pay.toDiscuss",
+    );
   }
   const cur = pay.currency ?? "€";
   const per =
@@ -43,23 +58,47 @@ export function formatPay(pay: JobPay): string {
   return `${range}${per ? ` ${per}` : ""}`.trim();
 }
 
-/** ISO date → "30 Jun"; null/invalid → "Open". */
-export function formatDeadline(iso: string | null): string {
-  if (!iso) return "Open";
+/**
+ * ISO date → a real `Date`; null/invalid → `null` ("no deadline").
+ *
+ * i18n: deliberately parses rather than formats. The old version baked an
+ * `en-GB` "30 Jun" into the view-model, which PT could never re-render; the
+ * consumer now formats through `useFormat()` and resolves the null case to
+ * `economy:jobs.card.deadlineOpen`.
+ */
+export function parseDeadline(iso: string | null): Date | null {
+  if (!iso) return null;
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "Open";
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  return Number.isNaN(d.getTime()) ? null : d;
 }
 
-/** ISO date → "Posted 1 June 2026". */
-export function formatPosted(iso: string): string {
+/** ISO date → a real `Date`; invalid → `null` ("posted recently"). */
+export function parsePosted(iso: string): Date | null {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "Posted recently";
-  return `Posted ${d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  })}`;
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+/**
+ * Resolve the "Posted …" line. Chrome phrase + a locale-formatted date, so it
+ * takes both `t` and `fmt` rather than baking either.
+ */
+export function postedText(
+  posted: Date | null,
+  t: TFunction,
+  fmt: Formatters,
+): string {
+  if (!posted) return t("economy:jobs.posted.recently");
+  return t("economy:jobs.posted.on", { date: fmt.date(posted) });
+}
+
+/** Resolve a job deadline to its display string — a date, or "Open". */
+export function deadlineText(
+  deadline: Date | null,
+  t: TFunction,
+  fmt: Formatters,
+): string {
+  if (!deadline) return t("economy:jobs.card.deadlineOpen");
+  return fmt.date(deadline, { day: "numeric", month: "short" });
 }
 
 /** Backend display category ("Arts & Culture") → the view-model's filter slug. */
@@ -74,13 +113,21 @@ function catSlug(category: string): string {
  * body (only the full GET /jobs/:slug response carries it). Reused verbatim for
  * both the jobs list AND a company's `openRoles`.
  */
-export function jobCardToJob(dto: JobCardDTO): Job {
+export function jobCardToJob(dto: JobCardDTO, t: TFunction): Job {
   const org = dto.company?.nameText ?? "";
   return {
     slug: dto.slug,
     cat: catSlug(dto.category),
     qr: dto.queerRun,
-    qrLabel: dto.qrLabel ?? (dto.queerRun ? "Queer-run" : "Inclusive"),
+    // `dto.qrLabel` is the company's own wording (fetched); the fallback is
+    // chrome, so it resolves through the catalog.
+    qrLabel:
+      dto.qrLabel ??
+      t(
+        dto.queerRun
+          ? "economy:safetyBadge.affiliation.run.label"
+          : "economy:jobs.qrLabel.inclusive",
+      ),
     org,
     logo: logoFromName(org || dto.title),
     logoBg: LOGO_BG,
@@ -88,13 +135,13 @@ export function jobCardToJob(dto: JobCardDTO): Job {
     title: dto.title,
     type: dto.commitment,
     location: dto.location,
-    salary: formatPay(dto.pay),
-    deadline: formatDeadline(dto.deadline),
+    salary: formatPay(dto.pay, t),
+    deadline: parseDeadline(dto.deadline),
     desc: dto.desc,
     tags: dto.tags,
     detail: {
       category: dto.category,
-      posted: formatPosted(dto.createdAt),
+      posted: parsePosted(dto.createdAt),
       about: dto.desc ? [dto.desc] : [],
       dayToDay: [],
       lookingFor: dto.tags,
@@ -107,13 +154,13 @@ export function jobCardToJob(dto: JobCardDTO): Job {
 }
 
 /** Layer the full detail body over the card mapping for GET /jobs/:slug. */
-export function jobDetailToJob(dto: JobDetailDTO): Job {
-  const base = jobCardToJob(dto);
+export function jobDetailToJob(dto: JobDetailDTO, t: TFunction): Job {
+  const base = jobCardToJob(dto, t);
   return {
     ...base,
     detail: {
       category: dto.category,
-      posted: formatPosted(dto.createdAt),
+      posted: parsePosted(dto.createdAt),
       about: dto.detail.about,
       dayToDay: dto.detail.dayToDay,
       lookingFor: dto.detail.lookingFor,
@@ -143,6 +190,8 @@ export function postJobStateToCreateJobDto(
   company: CompanyProfile,
   _role: string,
 ): CreateJobDto {
+  // Matches the badge's English source label — a data predicate over the
+  // company record, not user-facing copy, so it stays untranslated.
   const queerRun = company.badges.some((b) => /queer/i.test(b.label));
   const location = needsCity(state.format)
     ? state.city || "Lisbon"

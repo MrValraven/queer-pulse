@@ -1,6 +1,7 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./BackToSettingsLink.module.css";
 
 /**
@@ -10,11 +11,12 @@ import styles from "./BackToSettingsLink.module.css";
  */
 export function BackToSettingsLink() {
   const [params] = useSearchParams();
+  const { t } = useTranslation();
   if (params.get("from") !== "sim") return null;
   return (
     <Link to={`${routes.settings}?pane=simulations`} className={styles.back}>
       <FiArrowLeft aria-hidden />
-      Back to settings
+      {t("shared:backToSettingsLink.label")}
     </Link>
   );
 }

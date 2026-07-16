@@ -1,5 +1,6 @@
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   Barter,
   Board,
@@ -29,11 +30,13 @@ import {
  * the design prototype. Plum and cream sections alternate for rhythm.
  */
 export function HomePage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <PageMeta
-        title="QueerPulse — a queer professional network, rooted in Lisbon"
-        description="A quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon — no ads, no algorithm. A world, not a feature list."
+        title={t("homepage:meta.title")}
+        description={t("homepage:meta.description")}
       />
       <Hero />
       <Manifesto />

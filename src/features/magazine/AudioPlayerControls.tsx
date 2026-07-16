@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { FiMoon, FiX } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SPEEDS, secToTime } from "./audioPlayer.data";
 import type { AudioPlayer } from "./useAudioPlayer";
 import styles from "./AudioPlayerPage.module.css";
 
 export function PlayerTransport({ player }: { player: AudioPlayer }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.controls}>
       <button
         type="button"
         className={styles.ctrl}
-        title="Previous chapter"
+        title={t("magazine:audio.controls.previousChapter")}
         onClick={player.prevChapter}
       >
         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -21,7 +23,7 @@ export function PlayerTransport({ player }: { player: AudioPlayer }) {
       <button
         type="button"
         className={styles.ctrl}
-        title="-15s"
+        title={t("magazine:audio.controls.back15s")}
         onClick={() => player.nudge(-15)}
       >
         <svg viewBox="0 0 24 24">
@@ -33,7 +35,11 @@ export function PlayerTransport({ player }: { player: AudioPlayer }) {
         type="button"
         className={styles.playBtn}
         onClick={player.togglePlay}
-        title={player.playing ? "Pause" : "Play"}
+        title={
+          player.playing
+            ? t("magazine:audio.controls.pause")
+            : t("magazine:audio.controls.play")
+        }
       >
         {player.playing ? (
           <svg viewBox="0 0 24 24">
@@ -49,7 +55,7 @@ export function PlayerTransport({ player }: { player: AudioPlayer }) {
       <button
         type="button"
         className={styles.ctrl}
-        title="+30s"
+        title={t("magazine:audio.controls.forward30s")}
         onClick={() => player.nudge(30)}
       >
         <svg viewBox="0 0 24 24">
@@ -60,7 +66,7 @@ export function PlayerTransport({ player }: { player: AudioPlayer }) {
       <button
         type="button"
         className={styles.ctrl}
-        title="Next chapter"
+        title={t("magazine:audio.controls.nextChapter")}
         onClick={player.nextChapter}
       >
         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -79,6 +85,7 @@ export function PlayerSecondary({
   player: AudioPlayer;
   onSleep: () => void;
 }) {
+  const { t } = useTranslation();
   const [saved, setSaved] = useState(false);
   const [liked, setLiked] = useState(false);
 
@@ -112,7 +119,7 @@ export function PlayerSecondary({
           <svg viewBox="0 0 24 24">
             <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
           </svg>
-          Save
+          {t("magazine:audio.controls.saveCta")}
         </button>
         <button
           type="button"
@@ -124,7 +131,7 @@ export function PlayerSecondary({
           <svg viewBox="0 0 24 24">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
           </svg>
-          Like
+          {t("magazine:audio.controls.likeCta")}
         </button>
         {player.sleepRemaining !== null ? (
           <span className={styles.sleepChip}>
@@ -133,7 +140,7 @@ export function PlayerSecondary({
             <button
               type="button"
               className={styles.sleepChipX}
-              title="Cancel sleep timer"
+              title={t("magazine:audio.controls.cancelSleepTimer")}
               onClick={player.cancelSleep}
             >
               <FiX />
@@ -144,7 +151,7 @@ export function PlayerSecondary({
             <svg viewBox="0 0 24 24">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
-            Sleep
+            {t("magazine:audio.controls.sleepCta")}
           </button>
         )}
       </div>

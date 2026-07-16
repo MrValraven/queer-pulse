@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { FiSearch, FiCornerDownLeft } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks/useScrollLock";
 import { Avatar } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberAvatar } from "./data/members";
 import { linkToPath, routes } from "../../app/routeMap";
-import { TYPE_ICON, TYPE_LABEL, type SearchItem } from "./search.data";
+import { TYPE_ICON, TYPE_LABEL_KEY, type SearchItem } from "./search.data";
 import { useSearchData } from "./api/useSearchData";
 import styles from "./CommandPalette.module.css";
 
@@ -25,6 +27,7 @@ function matches(item: SearchItem, q: string) {
  * /search page with the query preserved in the URL.
  */
 export function CommandPalette() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -117,7 +120,7 @@ export function CommandPalette() {
         className={styles.panel}
         role="dialog"
         aria-modal="true"
-        aria-label="Search QueerPulse"
+        aria-label={t("members:commandPalette.ariaLabel")}
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.inputRow}>
@@ -129,7 +132,7 @@ export function CommandPalette() {
             role="combobox"
             aria-expanded
             aria-controls="qp-cmd-results"
-            placeholder="Search members, gatherings, communities…"
+            placeholder={t("members:commandPalette.placeholder")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
@@ -139,10 +142,17 @@ export function CommandPalette() {
 
         {comingSoon ? (
           <div className={styles.comingSoon}>
-            <span className={styles.comingSoonBadge}>Coming soon</span>
+            <span className={styles.comingSoonBadge}>
+              {t("members:search.comingSoon.badge")}
+            </span>
             <p className={styles.comingSoonText}>
-              Live search is being wired to the community. For now it's resting
-              — turn on <em>Populate platform</em> to explore the demo.
+              <Translation
+                i18nKey="members:commandPalette.comingSoonBody"
+                components={{ em: <em /> }}
+                values={{
+                  toggleName: t("shared:accountMenu.controls.populatePlatform"),
+                }}
+              />
             </p>
           </div>
         ) : (
@@ -165,7 +175,7 @@ export function CommandPalette() {
             <ul className={styles.results} id="qp-cmd-results" role="listbox">
               {results.length === 0 && (
                 <li className={styles.noResults}>
-                  No matches — try another word.
+                  {t("members:commandPalette.noMatches")}
                 </li>
               )}
               {results.map((item, i) => {
@@ -206,7 +216,7 @@ export function CommandPalette() {
                         <span className={styles.rowSub}>{item.sub}</span>
                       </span>
                       <span className={styles.rowType}>
-                        {TYPE_LABEL[item.t]}
+                        {t(TYPE_LABEL_KEY[item.t])}
                       </span>
                     </button>
                   </li>
@@ -219,11 +229,13 @@ export function CommandPalette() {
         <button type="button" className={styles.footer} onClick={goToAll}>
           <FiCornerDownLeft aria-hidden />
           {query.trim() ? (
-            <>
-              See all results for “<b>{query.trim()}</b>”
-            </>
+            <Translation
+              i18nKey="members:commandPalette.seeAllResults"
+              components={{ b: <b /> }}
+              values={{ query: query.trim() }}
+            />
           ) : (
-            "Open full search"
+            t("members:commandPalette.openFullSearch")
           )}
         </button>
       </div>

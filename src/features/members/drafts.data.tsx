@@ -1,60 +1,86 @@
 import type { ReactNode } from "react";
+import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
 
 export type DraftCategory = "posts" | "articles" | "applications" | "grants";
 export type DraftStatus = "draft" | "ready" | "stale" | "atrisk";
 export type DraftSortKey = "edited" | "deadline" | "progress" | "title";
 
-/** Tabs: "all" plus one per category. Counts are derived live from the list. */
-export const DRAFT_TABS: { key: "all" | DraftCategory; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "posts", label: "Posts & replies" },
-  { key: "articles", label: "Articles & pitches" },
-  { key: "applications", label: "Applications" },
-  { key: "grants", label: "Grant applications" },
+/** Tabs: "all" plus one per category. Counts are derived live from the list.
+ *  `labelKey` is a catalog key — a small, platform-defined tab vocabulary
+ *  (chrome), resolved through `t()` by the consuming component. */
+export const DRAFT_TABS: { key: "all" | DraftCategory; labelKey: string }[] = [
+  { key: "all", labelKey: "members:drafts.tabs.all" },
+  { key: "posts", labelKey: "members:drafts.tabs.posts" },
+  { key: "articles", labelKey: "members:drafts.tabs.articles" },
+  { key: "applications", labelKey: "members:drafts.tabs.applications" },
+  { key: "grants", labelKey: "members:drafts.tabs.grants" },
 ];
 
-export const DRAFT_SORTS: { value: DraftSortKey; label: string }[] = [
-  { value: "edited", label: "Recently edited" },
-  { value: "deadline", label: "Closest deadline" },
-  { value: "progress", label: "Least complete" },
-  { value: "title", label: "Alphabetical" },
+export const DRAFT_SORTS: { value: DraftSortKey; labelKey: string }[] = [
+  { value: "edited", labelKey: "members:drafts.sort.edited" },
+  { value: "deadline", labelKey: "members:drafts.sort.deadline" },
+  { value: "progress", labelKey: "members:drafts.sort.progress" },
+  { value: "title", labelKey: "members:drafts.sort.title" },
 ];
 
-export const STATUS_LABEL: Record<DraftStatus, string> = {
-  draft: "Draft",
-  ready: "Ready",
-  stale: "Stale",
-  atrisk: "At risk",
+/** Status-chip label per status — chrome, resolved through `t()`. */
+export const STATUS_LABEL_KEY: Record<DraftStatus, string> = {
+  draft: "members:drafts.status.draft",
+  ready: "members:drafts.status.ready",
+  stale: "members:drafts.status.stale",
+  atrisk: "members:drafts.status.atrisk",
 };
 
-/** Items in the "Start something" create menu on the drafts header. */
+/**
+ * Draft-row action buttons are a small, closed, platform-defined set of verbs
+ * (chrome) reused across every draft record below — keyed here by the
+ * English label already baked into each `DRAFTS` entry's `actions[].label`,
+ * so consumers resolve the on-screen text via
+ * `t(DRAFT_ACTION_LABEL_KEY[action.label] ?? action.label)` without having to
+ * touch every record's `actions` array individually.
+ */
+export const DRAFT_ACTION_LABEL_KEY: Record<string, string> = {
+  Resume: "members:drafts.action.resume",
+  Delete: "members:drafts.action.delete",
+  Send: "members:drafts.action.send",
+  Review: "members:drafts.action.review",
+  "Keep 30 more days": "members:drafts.action.keep30",
+  "Delete now": "members:drafts.action.deleteNow",
+  "Send reply": "members:drafts.action.sendReply",
+  Edit: "members:drafts.action.edit",
+};
+
+/** Items in the "Start something" create menu on the drafts header. `badge`
+ *  stays an untranslated short code — it mirrors the same visual short-code
+ *  badges used for `Draft.kind` (POST/PITCH/JOB), a terse icon-like label
+ *  rather than a sentence. `labelKey`/`subKey` are chrome, translated. */
 export const CREATE_ITEMS: {
   badge: string;
   tint: "jade" | "plum";
-  label: string;
-  sub: string;
+  labelKey: string;
+  subKey: string;
   to: string;
 }[] = [
   {
     badge: "POST",
     tint: "jade",
-    label: "New post",
-    sub: "Share to a community",
+    labelKey: "members:drafts.create.newPost.label",
+    subKey: "members:drafts.create.newPost.sub",
     to: routes.communitiesHome,
   },
   {
     badge: "PITCH",
     tint: "plum",
-    label: "Pitch a story",
-    sub: "To QueerPulse Magazine",
+    labelKey: "members:drafts.create.pitchStory.label",
+    subKey: "members:drafts.create.pitchStory.sub",
     to: routes.submitStory,
   },
   {
     badge: "JOB",
     tint: "jade",
-    label: "Start an application",
-    sub: "From a saved job",
+    labelKey: "members:drafts.create.startApplication.label",
+    subKey: "members:drafts.create.startApplication.sub",
     to: routes.jobs,
   },
 ];
@@ -100,17 +126,25 @@ export interface Draft {
   searchText?: string;
 }
 
-/** Meta shown after a draft has been kept 30 more days. */
-export const KEPT_META: DraftMeta[] = [
-  {
-    label: (
-      <>
-        Started <b>87 days ago</b>
-      </>
-    ),
-  },
-  { label: "Kept · resets 90-day timer" },
-];
+/**
+ * Meta shown after a draft has been kept 30 more days. A function of `t`
+ * (Pattern B) rather than a plain export: the second line is fixed platform
+ * chrome that needs translating, while the first keeps the same demo-data
+ * shape as the per-draft `meta` entries below (content, left in English).
+ * Memoize with `useMemo(() => buildKeptMeta(t), [t])` in the consumer.
+ */
+export function buildKeptMeta(t: TFunction): DraftMeta[] {
+  return [
+    {
+      label: (
+        <>
+          Started <b>87 days ago</b>
+        </>
+      ),
+    },
+    { label: t("members:drafts.keptMeta.resetNote") },
+  ];
+}
 
 export const DRAFTS: Draft[] = [
   {

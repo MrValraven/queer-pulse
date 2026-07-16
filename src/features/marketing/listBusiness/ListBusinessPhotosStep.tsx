@@ -5,6 +5,8 @@ import {
   ImageSlot,
   Toggle,
 } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ANCHOR,
   NOTIFY,
@@ -19,17 +21,21 @@ import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import styles from "./ListBusinessPage.module.css";
 
-const GALLERY: { key: PhotoKey; wide?: boolean; caption: string }[] = [
-  { key: "wide", wide: true, caption: "Wide shot of the space" },
-  { key: "d1", caption: "A detail" },
-  { key: "d2", caption: "A detail" },
-  { key: "vibe", caption: "People / vibe" },
+const GALLERY: { key: PhotoKey; wide?: boolean; captionKey: string }[] = [
+  {
+    key: "wide",
+    wide: true,
+    captionKey: "marketing:listBusiness.step4.gallery.wide",
+  },
+  { key: "d1", captionKey: "marketing:listBusiness.step4.gallery.detail" },
+  { key: "d2", captionKey: "marketing:listBusiness.step4.gallery.detail" },
+  { key: "vibe", captionKey: "marketing:listBusiness.step4.gallery.vibe" },
 ];
-const ALT_LABELS: Record<PhotoKey, string> = {
-  wide: "Wide shot · alt text",
-  d1: "Detail 1 · alt text",
-  d2: "Detail 2 · alt text",
-  vibe: "Vibe · alt text",
+const ALT_LABEL_KEYS: Record<PhotoKey, string> = {
+  wide: "marketing:listBusiness.step4.alt.wide",
+  d1: "marketing:listBusiness.step4.alt.d1",
+  d2: "marketing:listBusiness.step4.alt.d2",
+  vibe: "marketing:listBusiness.step4.alt.vibe",
 };
 
 function RadioStack({
@@ -43,6 +49,7 @@ function RadioStack({
   onChange: (id: string) => void;
   label: string;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.stack} role="radiogroup" aria-label={label}>
       {options.map((o) => {
@@ -60,8 +67,8 @@ function RadioStack({
           >
             <span className={styles.roDot} aria-hidden />
             <span className={styles.radioTxt}>
-              <b>{o.label}</b>
-              <span>{o.desc}</span>
+              <b>{t(o.labelKey)}</b>
+              <span>{t(o.descKey)}</span>
             </span>
           </button>
         );
@@ -77,18 +84,19 @@ export function StepPhotosYou({
   form: ListingForm;
   userName: string;
 }) {
+  const { t } = useTranslation();
   const { draft, set, setAlt, toggleIn } = form;
   return (
     <>
       <PaneHeader
-        title="Photos, and"
-        em="a little about you."
-        sub="Pictures help people feel the room before they arrive. And we like to know who's behind the door."
+        title={t("marketing:listBusiness.step4.title")}
+        em={t("marketing:listBusiness.step4.em")}
+        sub={t("marketing:listBusiness.step4.sub")}
       />
 
       <FormField
-        label="A few photos — optional"
-        helper="Landscape works best · aim for ≥1200px wide · under 5MB each · no text-heavy graphics."
+        label={t("marketing:listBusiness.step4.photosLabel")}
+        helper={t("marketing:listBusiness.step4.photosHelper")}
       >
         <div className={styles.galGrid}>
           {GALLERY.map((g) => (
@@ -98,7 +106,7 @@ export function StepPhotosYou({
               tint="coral"
               radius={14}
               height={g.wide ? 150 : 110}
-              placeholder={g.caption}
+              placeholder={t(g.captionKey)}
               alt={draft.alt[g.key]}
             />
           ))}
@@ -106,11 +114,11 @@ export function StepPhotosYou({
         <div className={styles.altList}>
           {GALLERY.map((g) => (
             <div key={g.key} className={styles.altRow}>
-              <span className={styles.altK}>{ALT_LABELS[g.key]}</span>
+              <span className={styles.altK}>{t(ALT_LABEL_KEYS[g.key])}</span>
               <input
                 type="text"
                 maxLength={100}
-                placeholder="Describe it for blind & low-vision members"
+                placeholder={t("marketing:listBusiness.step4.altPlaceholder")}
                 value={draft.alt[g.key]}
                 onChange={(e) => setAlt(g.key, e.target.value)}
               />
@@ -119,32 +127,46 @@ export function StepPhotosYou({
         </div>
       </FormField>
 
-      <h3 className={styles.groupH}>A little about you</h3>
+      <h3 className={styles.groupH}>
+        {t("marketing:listBusiness.step4.aboutYouHeading")}
+      </h3>
 
-      <FormField id={ANCHOR.rel} label="Your connection to the place" required>
+      <FormField
+        id={ANCHOR.rel}
+        label={t("marketing:listBusiness.step4.relLabel")}
+        required
+      >
         <RadioStack
           options={REL}
           value={draft.rel}
           onChange={(id) => set({ rel: id as OwnerRel })}
-          label="Your connection"
+          label={t("marketing:listBusiness.step4.relAria")}
         />
       </FormField>
 
       <div className={styles.twoCol}>
-        <FormField id={ANCHOR.ownerName} label="Your name" required>
+        <FormField
+          id={ANCHOR.ownerName}
+          label={t("marketing:listBusiness.step4.ownerNameLabel")}
+          required
+        >
           <input
             type="text"
             maxLength={50}
-            placeholder="e.g. Sandra Lopes"
+            placeholder={t("marketing:listBusiness.step4.ownerNamePlaceholder")}
             value={draft.ownerName}
             onChange={(e) => set({ ownerName: e.target.value })}
           />
         </FormField>
-        <FormField id={ANCHOR.ownerRole} label="Your role" required>
+        <FormField
+          id={ANCHOR.ownerRole}
+          label={t("marketing:listBusiness.step4.ownerRoleLabel")}
+          required
+        >
           <input
             type="text"
             maxLength={40}
-            placeholder="e.g. Owner & baker"
+            placeholder={t("marketing:listBusiness.step4.ownerRolePlaceholder")}
             value={draft.ownerRole}
             onChange={(e) => set({ ownerRole: e.target.value })}
           />
@@ -152,66 +174,69 @@ export function StepPhotosYou({
       </div>
 
       <FormField
-        label="A line or two about you — optional"
+        label={t("marketing:listBusiness.step4.ownerBioLabel")}
         labelAside={`${draft.ownerBio.length} / 220`}
       >
         <textarea
           maxLength={220}
-          placeholder="We took over a 60-year-old pastelaria in 2019 and rebuilt it around one rule: everyone's welcome, exactly as they are."
+          placeholder={t("marketing:listBusiness.step4.ownerBioPlaceholder")}
           value={draft.ownerBio}
           onChange={(e) => set({ ownerBio: e.target.value })}
         />
       </FormField>
 
-      <FormField label="Who can see your name?" required>
+      <FormField label={t("marketing:listBusiness.step4.visLabel")} required>
         <RadioStack
           options={VIS}
           value={draft.visibility}
           onChange={(id) => set({ visibility: id as OwnerVisibility })}
-          label="Name visibility"
+          label={t("marketing:listBusiness.step4.visAria")}
         />
       </FormField>
 
-      <FormField label="Link to your member profile? — optional">
+      <FormField label={t("marketing:listBusiness.step4.linkProfileLabel")}>
         <div className={styles.memToggle}>
           <div className={styles.mtTxt}>
-            <b>Show I'm a QueerPulse member</b>
+            <b>{t("marketing:listBusiness.step4.linkProfileTitle")}</b>
             <span>
-              Puts a familiar, verified face on the listing. You're signed in as{" "}
-              {userName}.
+              {t("marketing:listBusiness.step4.linkProfileDesc", {
+                name: userName,
+              })}
             </span>
           </div>
           <Toggle
             checked={draft.linkToProfile}
             onChange={(v) => set({ linkToProfile: v })}
-            label="Link to member profile"
+            label={t("marketing:listBusiness.step4.linkProfileToggleLabel")}
           />
         </div>
       </FormField>
 
-      <h3 className={styles.groupH}>Staying in the loop</h3>
+      <h3 className={styles.groupH}>
+        {t("marketing:listBusiness.step4.loopHeading")}
+      </h3>
       <FormField
         id={ANCHOR.contactEmail}
-        label="Your contact email"
+        label={t("marketing:listBusiness.step4.contactEmailLabel")}
         required
-        helper="For you, the submitter — kept private, never shown on the listing."
+        helper={t("marketing:listBusiness.step4.contactEmailHelper")}
       >
         <input
           type="email"
-          placeholder="So we can reach you about this listing"
+          placeholder={t("marketing:listBusiness.step4.contactEmailPlaceholder")}
           value={draft.contactEmail}
           onChange={(e) => set({ contactEmail: e.target.value })}
         />
       </FormField>
 
-      <FormField label="Email me when… — optional">
+      <FormField label={t("marketing:listBusiness.step4.notifyLabel")}>
         <div className={styles.stack}>
           {NOTIFY.map((n) => (
             <CheckLine
               key={n.id}
               checked={draft.notify.includes(n.id)}
               onChange={() => toggleIn("notify", n.id)}
-              title={n.label}
+              title={t(n.labelKey)}
             />
           ))}
         </div>
@@ -220,10 +245,10 @@ export function StepPhotosYou({
       <div className={styles.consent}>
         <FiShield size={17} aria-hidden />
         <p>
-          You're in control of what's public.{" "}
-          <b>Contact details you leave blank stay off the listing.</b> Want your
-          name kept private? Pick "role only" or "anonymous" above — that's
-          completely fine.
+          <Translation
+            i18nKey="marketing:listBusiness.step4.consent"
+            components={{ b: <b /> }}
+          />
         </p>
       </div>
     </>

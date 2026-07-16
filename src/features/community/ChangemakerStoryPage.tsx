@@ -2,6 +2,8 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/ConnectProvider";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CHANGEMAKERS, getChangemaker, type Tint } from "./changemakerStories";
 import styles from "./ChangemakerStoryPage.module.css";
@@ -27,18 +29,20 @@ const Tick = () => (
 export function ChangemakerStoryPage() {
   const { slug } = useParams();
   const { openConnect } = useConnect();
+  const { t } = useTranslation();
   const cm = getChangemaker(slug);
   if (!cm) return <Navigate to={routes.changemakers} replace />;
 
   const others = CHANGEMAKERS.filter((c) => c.slug !== cm.slug).slice(0, 3);
   const [first, ...rest] = cm.body;
+  const firstName = cm.name.split(" ")[0] ?? cm.name;
 
   return (
     <PageShell>
       <div className={styles.back}>
         <div className="wrap">
           <Link to={routes.changemakers} className={styles.backLink}>
-            ← Change Makers
+            {t("community:changemakerStory.backCta")}
           </Link>
         </div>
       </div>
@@ -51,7 +55,11 @@ export function ChangemakerStoryPage() {
         <div className={styles.heroOverlay} />
         <div className={styles.heroLabel}>
           <div className="wrap">
-            <div className={styles.cat}>Change Maker · {cm.cause}</div>
+            <div className={styles.cat}>
+              {t("community:changemakerStory.categoryLabel", {
+                cause: cm.cause,
+              })}
+            </div>
             <h1 className={styles.title}>{cm.name}</h1>
             <div className={styles.byline}>
               <span className={styles.bylineAv}>{cm.initials}</span>
@@ -90,7 +98,9 @@ export function ChangemakerStoryPage() {
 
           <div className={styles.impactCard}>
             <div className={styles.impactLabel}>
-              Why we highlight {cm.name.split(" ")[0]}
+              {t("community:changemakerStory.impactLabel", {
+                name: firstName,
+              })}
             </div>
             {cm.impact.map((row) => (
               <div className={styles.impactRow} key={row}>

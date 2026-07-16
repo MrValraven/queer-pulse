@@ -1,7 +1,13 @@
 import type { ReactNode } from "react";
 
 export interface Entry {
-  kicker: string;
+  /** Content: the TOC entry's own genre/category label — arrives from the
+   *  API alongside the article in live mode (mirrors `articles.tsx`'s
+   *  `kicker` field), so it stays as a plain English string. */
+  category: string;
+  /** Content-adjacent read-time datum; composed with chrome via
+   *  `magazine:format.min` in the component so PT gets its own phrasing. */
+  minutes: number;
   title: ReactNode;
   dek: string;
   byline: ReactNode;
@@ -16,12 +22,19 @@ export const ISSUE_COVER_IMG =
 export const PRINT_EDITION_IMG =
   "https://images.unsplash.com/photo-1759926967575-e3254dc7d531?q=80&w=600&auto=format&fit=crop";
 
-export const TOC: { heading: string; entries: Entry[] }[] = [
+/**
+ * i18n Pattern A — TOC section headings are a small closed taxonomy the
+ * platform itself defines (mirrors `NAV_ITEMS`), so they're translated via
+ * keys; `entries` content (title/dek/byline/category) is the issue's own
+ * editorial material and stays in English.
+ */
+export const TOC: { headingKey: string; entries: Entry[] }[] = [
   {
-    heading: "Cover story",
+    headingKey: "contents.heading.coverStory",
     entries: [
       {
-        kicker: "Cover · 14 min read",
+        category: "Cover",
+        minutes: 14,
         title: (
           <>
             Five things I learned{" "}
@@ -40,10 +53,11 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
     ],
   },
   {
-    heading: "Features",
+    headingKey: "contents.heading.features",
     entries: [
       {
-        kicker: "Reportage · 11 min",
+        category: "Reportage",
+        minutes: 11,
         title: (
           <>
             Inside the back room of <em>Café Beirão.</em>
@@ -59,7 +73,8 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
         articleId: "last-bar",
       },
       {
-        kicker: "Interview · 9 min",
+        category: "Interview",
+        minutes: 9,
         title: (
           <>
             Dr. Inês Pereira on <em>fifteen minutes of someone else's time.</em>
@@ -75,7 +90,8 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
         articleId: "kiko-neves",
       },
       {
-        kicker: "Essay · 7 min",
+        category: "Essay",
+        minutes: 7,
         title: (
           <>
             The waiting room is <em>also part of the treatment.</em>
@@ -91,7 +107,8 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
         articleId: "i-arrived",
       },
       {
-        kicker: "Long read · 22 min",
+        category: "Long read",
+        minutes: 22,
         title: (
           <>
             A history of the lifeline, <em>1995–2025.</em>
@@ -109,10 +126,11 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
     ],
   },
   {
-    heading: "Profiles",
+    headingKey: "contents.heading.profiles",
     entries: [
       {
-        kicker: "Profile · 6 min",
+        category: "Profile",
+        minutes: 6,
         title: (
           <>
             The pharmacist who fills <em>every prescription.</em>
@@ -128,7 +146,8 @@ export const TOC: { heading: string; entries: Entry[] }[] = [
         articleId: "mouraria-family",
       },
       {
-        kicker: "Profile · 7 min",
+        category: "Profile",
+        minutes: 7,
         title: "Twenty years in a hospital corridor.",
         dek: "A nurse on what's changed, what hasn't, and what she still does anyway.",
         byline: (

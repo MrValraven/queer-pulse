@@ -1,24 +1,29 @@
 import { Link } from "react-router-dom";
 import { Button, Reveal, SectionHead } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../../app/routeMap";
 import { swaps } from "../data/swaps";
 import styles from "./Barter.module.css";
 
 export function Barter() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.barter} id="barter">
       <div className="wrap">
         <Reveal>
           <SectionHead
             title={
-              <>
-                Swap what you know <em>for what you need.</em>
-              </>
+              <Translation
+                i18nKey="homepage:barter.title"
+                components={{ em: <em /> }}
+              />
             }
-            subtitle="A structured barter system — skills for skills, expertise for expertise. Post what you offer and what you want. No money, no platforms."
+            subtitle={t("homepage:barter.subtitle")}
             action={
               <Button variant="ghost" to={routes.barter}>
-                Browse all swaps →
+                {t("homepage:barter.browseAllCta")}
               </Button>
             }
           />
@@ -30,14 +35,16 @@ export function Barter() {
               <Link to={linkToPath(swap.href)} className={styles.card}>
                 <div>
                   <span className={[styles.label, styles.offering].join(" ")}>
-                    Offering
+                    {t("homepage:barter.offeringLabel")}
                   </span>
                   <div className={styles.skill}>{swap.offering}</div>
                 </div>
-                <div className={styles.divider}>in exchange for</div>
+                <div className={styles.divider}>
+                  {t("homepage:barter.inExchangeFor")}
+                </div>
                 <div>
                   <span className={[styles.label, styles.wanting].join(" ")}>
-                    Wanting
+                    {t("homepage:barter.wantingLabel")}
                   </span>
                   <div className={styles.skill}>{swap.wanting}</div>
                 </div>

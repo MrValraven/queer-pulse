@@ -2,6 +2,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { FiCheck, FiDownload, FiLoader } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./SettingsModal.module.css";
 
 /** Shared modal shell with overlay click-to-close, ESC and a close button. */
@@ -14,6 +16,7 @@ function ModalShell({
   onClose: () => void;
   children: ReactNode;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -39,7 +42,7 @@ function ModalShell({
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("settings:modals.common.close")}
         >
           ×
         </button>
@@ -67,6 +70,7 @@ function SuccessPanel({
   children: ReactNode;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.success}>
       <div className={styles.successIcon}>
@@ -76,7 +80,7 @@ function SuccessPanel({
       <p className={styles.successSub}>{children}</p>
       <div className={styles.successActions}>
         <Button variant="ghost-dark" onClick={onClose}>
-          Done
+          {t("settings:modals.common.done")}
         </Button>
       </div>
     </div>
@@ -93,6 +97,7 @@ export function SuggestEditModal({
   term: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>("form");
   const [suggestion, setSuggestion] = useState("");
   const [why, setWhy] = useState("");

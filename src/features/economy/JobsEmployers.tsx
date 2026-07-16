@@ -1,6 +1,8 @@
 import { FaRainbow } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { SectionHead } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useCompanies } from "./api/useCompanies";
 
@@ -13,6 +15,7 @@ import styles from "./JobsPage.module.css";
  * (heading included) while loading, on error, or when there are no employers.
  */
 export function JobsEmployers() {
+  const { t } = useTranslation();
   const { data: employers = [] } = useCompanies();
 
   if (employers.length === 0) return null;
@@ -22,11 +25,12 @@ export function JobsEmployers() {
       <div className="wrap">
         <SectionHead
           title={
-            <>
-              Queer-run employers <em>we trust</em>
-            </>
+            <Translation
+              i18nKey="economy:jobs.employers.title"
+              components={{ em: <em /> }}
+            />
           }
-          subtitle="These organisations are run by or for the queer community. Working here means your money stays in the network."
+          subtitle={t("economy:jobs.employers.subtitle")}
         />
         <div className={styles.empGrid}>
           {employers.map((emp) => (

@@ -1,32 +1,40 @@
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
 import { SubpageIndex } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MagazineCover } from "./MagazineCover";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { MagazineSections } from "./MagazineSections";
 import styles from "./MagazinePage.module.css";
-import { NAV, MAGAZINE_SUBPAGES } from "./magazinePage.data";
+import { NAV_ITEMS, MAGAZINE_SUBPAGES } from "./magazinePage.data";
 
 export function MagazinePage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <PageMeta
-        title="The Magazine — QueerPulse"
-        description="Essays, features, interviews and criticism from queer Lisbon — the QueerPulse magazine."
+        title={t("magazine:landing.meta.title")}
+        description={t("magazine:landing.meta.description")}
       />
       <MagazineMasthead active="current" />
 
       <div className="wrap">
-        <nav className={styles.inIssue} aria-label="In this issue">
-          <span className={styles.inIssueLabel}>In this issue</span>
+        <nav
+          className={styles.inIssue}
+          aria-label={t("magazine:landing.inIssueAriaLabel")}
+        >
+          <span className={styles.inIssueLabel}>
+            {t("magazine:landing.inIssueLabel")}
+          </span>
           <span className={styles.inIssueLinks}>
-            {NAV.map((label) => (
+            {NAV_ITEMS.map((item) => (
               <a
-                key={label}
+                key={item.anchor}
                 className={styles.inIssueLink}
-                href={`#${label.toLowerCase().replace(/\s+/g, "-")}`}
+                href={`#${item.anchor}`}
               >
-                {label}
+                {t(item.labelKey)}
               </a>
             ))}
           </span>
@@ -37,7 +45,14 @@ export function MagazinePage() {
 
       <MagazineSections />
 
-      <SubpageIndex title="More from the Magazine" items={MAGAZINE_SUBPAGES} />
+      <SubpageIndex
+        title={t("magazine:landing.subpageIndexTitle")}
+        items={MAGAZINE_SUBPAGES.map((subpage) => ({
+          label: t(subpage.labelKey),
+          to: subpage.to,
+          blurb: t(subpage.blurbKey),
+        }))}
+      />
     </PageShell>
   );
 }

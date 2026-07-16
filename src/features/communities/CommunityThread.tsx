@@ -2,11 +2,13 @@ import { useState } from "react";
 import { FiMessageCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Thread as ThreadData } from "./communityDetails";
 import { AV_CLASS } from "./communityAvatar";
 import styles from "./CommunityDetailPage.module.css";
 
 export function CommunityThread({ data }: { data: ThreadData }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [open, setOpen] = useState(false);
   const [voted, setVoted] = useState(false);
@@ -17,7 +19,7 @@ export function CommunityThread({ data }: { data: ThreadData }) {
     if (!reply.trim()) return;
     setExtra((e) => [...e, { name: "You", text: reply.trim() }]);
     setReply("");
-    showToast("Reply posted.", "success");
+    showToast(t("communities:detail.thread.replyToast"), "success");
   };
 
   return (
@@ -61,7 +63,8 @@ export function CommunityThread({ data }: { data: ThreadData }) {
             <span className={styles.thName}>{data.author.name}</span>
             <span>{data.time}</span>
             <span className={styles.thReplies}>
-              <FiMessageCircle /> {data.replyCount} replies
+              <FiMessageCircle />{" "}
+              {t("communities:detail.thread.replies", { count: data.replyCount })}
             </span>
           </div>
         </div>
@@ -94,7 +97,7 @@ export function CommunityThread({ data }: { data: ThreadData }) {
             <textarea
               className={styles.replyTa}
               rows={1}
-              placeholder="Reply to this thread…"
+              placeholder={t("communities:detail.thread.replyPlaceholder")}
               value={reply}
               onChange={(e) => setReply(e.target.value)}
             />
@@ -103,7 +106,7 @@ export function CommunityThread({ data }: { data: ThreadData }) {
               onClick={post}
               style={{ padding: "9px 16px", fontSize: 13 }}
             >
-              Reply
+              {t("communities:detail.thread.replyCta")}
             </Button>
           </div>
         </div>

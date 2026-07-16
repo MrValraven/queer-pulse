@@ -16,7 +16,11 @@ export interface NotifAction {
 }
 
 export interface Notification {
-  id: number;
+  /**
+   * A uuid in live mode, a small number in the demo mock. Opaque either way —
+   * only ever compared and used as a React key, never arithmetic.
+   */
+  id: string | number;
   type: NotifType;
   unread: boolean;
   /** Either an avatar (initials + tint) or an emoji icon with a background. */

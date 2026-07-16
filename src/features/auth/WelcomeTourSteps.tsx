@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes, linkToPath } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   VOUCH,
-  NEIGHBOURHOODS,
+  NEIGHBOURHOOD_KEYS,
   VISIBILITY_OPTIONS,
   INTERESTS,
   TOUR_COMMUNITIES,
@@ -20,16 +22,14 @@ interface StepProps {
 }
 
 export function TourWelcome({ onNext }: { onNext: () => void }) {
+  const { t } = useTranslation();
   return (
     <>
-      <div className={styles.eye}>You're in</div>
+      <div className={styles.eye}>{t("auth:tour.welcome.eyebrow")}</div>
       <h1 className={styles.h}>
-        Welcome to <em>QueerPulse.</em>
+        <Translation i18nKey="auth:tour.welcome.heading" components={{ em: <em /> }} />
       </h1>
-      <p className={styles.p}>
-        Somebody in the community thought you belonged here — and that's how
-        everyone arrived. We're glad you made it.
-      </p>
+      <p className={styles.p}>{t("auth:tour.welcome.body")}</p>
       <div className={styles.vouchCard}>
         <div className={styles.vcAv}>{VOUCH.initials}</div>
         <div>
@@ -39,55 +39,58 @@ export function TourWelcome({ onNext }: { onNext: () => void }) {
         </div>
       </div>
       <div className={styles.q101}>
-        <span className={styles.q101Label}>Still finding the language?</span>
-        If you're newly exploring your identity — not just new to Lisbon —{" "}
-        <Link to={routes.queer101} className={styles.q101Link}>
-          Queer 101
-        </Link>{" "}
-        is a quiet place to start. No account needed to read it.
+        <span className={styles.q101Label}>{t("auth:tour.welcome.q101Label")}</span>
+        <Translation
+          i18nKey="auth:tour.welcome.q101Body"
+          components={{
+            q101: <Link to={routes.queer101} className={styles.q101Link} />,
+          }}
+        />
       </div>
       <div className={styles.nav}>
         <span />
-        <Button onClick={onNext}>Let's set you up →</Button>
+        <Button onClick={onNext}>{t("auth:tour.welcome.cta")}</Button>
       </div>
     </>
   );
 }
 
 export function TourProfile({ onNext, onBack }: StepProps) {
+  const { t } = useTranslation();
   const [visibility, setVisibility] = useState("open");
   return (
     <>
-      <div className={styles.eye}>Your profile</div>
+      <div className={styles.eye}>{t("auth:tour.profile.eyebrow")}</div>
       <h2 className={styles.h}>
-        Tell us a little about <em>yourself.</em>
+        <Translation i18nKey="auth:tour.profile.heading" components={{ em: <em /> }} />
       </h2>
-      <p className={styles.p}>
-        This is how the community will know you. You can change everything
-        later.
-      </p>
+      <p className={styles.p}>{t("auth:tour.profile.body")}</p>
       <div className={styles.fields}>
         <div className={styles.row}>
-          <input className={styles.input} type="text" placeholder="Your name" />
           <input
             className={styles.input}
             type="text"
-            placeholder="Pronouns (optional)"
+            placeholder={t("auth:tour.profile.namePlaceholder")}
+          />
+          <input
+            className={styles.input}
+            type="text"
+            placeholder={t("auth:tour.profile.pronounsPlaceholder")}
           />
         </div>
         <input
           className={styles.input}
           type="text"
-          placeholder="What you do — your role or practice"
+          placeholder={t("auth:tour.profile.rolePlaceholder")}
         />
         <select className={styles.select} defaultValue="">
-          <option value="">Your neighbourhood in Lisbon</option>
-          {NEIGHBOURHOODS.map((hood) => (
-            <option key={hood}>{hood}</option>
+          <option value="">{t("auth:tour.profile.neighbourhoodDefault")}</option>
+          {NEIGHBOURHOOD_KEYS.map((hoodKey) => (
+            <option key={hoodKey}>{t(hoodKey)}</option>
           ))}
         </select>
       </div>
-      <div className={styles.fieldLabel}>How visible would you like to be?</div>
+      <div className={styles.fieldLabel}>{t("auth:tour.profile.visibilityLabel")}</div>
       <div className={styles.visOpts}>
         {VISIBILITY_OPTIONS.map((opt) => (
           <label key={opt.value} className={styles.visOpt}>
@@ -99,17 +102,17 @@ export function TourProfile({ onNext, onBack }: StepProps) {
               onChange={() => setVisibility(opt.value)}
             />
             <span className={styles.visText}>
-              <span>{opt.title}</span>
-              <small>{opt.desc}</small>
+              <span>{t(opt.titleKey)}</span>
+              <small>{t(opt.descKey)}</small>
             </span>
           </label>
         ))}
       </div>
       <div className={styles.nav}>
         <button type="button" className={styles.back} onClick={onBack}>
-          ← Back
+          {t("auth:tour.nav.back")}
         </button>
-        <Button onClick={onNext}>Continue →</Button>
+        <Button onClick={onNext}>{t("auth:tour.nav.continue")}</Button>
       </div>
     </>
   );

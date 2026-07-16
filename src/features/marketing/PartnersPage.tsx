@@ -8,6 +8,8 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { type Region } from "./partnerDetails";
 import { usePartners } from "./api/usePartners";
 import { routes } from "../../app/routeMap";
@@ -47,6 +49,7 @@ function PartnerCardSkeleton() {
 }
 
 export function PartnersPage() {
+  const { t } = useTranslation();
   const { data, isLoading } = usePartners();
   // Demo mode keeps the prototype's simulated entrance skeleton; live mode also
   // shows it until the query resolves. Approved partners only (the endpoint and
@@ -57,27 +60,25 @@ export function PartnersPage() {
   return (
     <PageShell>
       <PageHero
-        eyebrow="Partners & community"
+        eyebrow={t("marketing:partners.hero.eyebrow")}
         title={
-          <>
-            Community is stronger when <em>communities connect.</em>
-          </>
+          <Translation
+            i18nKey="marketing:partners.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="QueerPulse doesn't exist in isolation. We're part of a wider network of queer organisations, communities, and spaces across Portugal and beyond."
+        sub={t("marketing:partners.hero.sub")}
       />
 
       <section className={s.interStrip}>
         <div className="wrap">
           <blockquote>
-            Queer liberation is <em>intersectional,</em> or it isn't liberation
-            at all.
+            <Translation
+              i18nKey="marketing:partners.interstitial.quote"
+              components={{ em: <em /> }}
+            />
           </blockquote>
-          <p>
-            Our partnerships reflect that belief. We work with organisations
-            that centre race, disability, class, trans identity, and migrant
-            experience alongside queerness — because the people in our community
-            are whole people, with layered lives and layered needs.
-          </p>
+          <p>{t("marketing:partners.interstitial.body")}</p>
         </div>
       </section>
 
@@ -85,12 +86,12 @@ export function PartnersPage() {
         <div className="wrap">
           <div className={s.head}>
             <h2>
-              The communities <em>we work with</em>
+              <Translation
+                i18nKey="marketing:partners.section.title"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              Partnerships built on shared values, not brand alignment. Each of
-              these organisations is doing real, necessary work.
-            </p>
+            <p>{t("marketing:partners.section.sub")}</p>
           </div>
           <div className={s.grid}>
             {loading
@@ -129,13 +130,15 @@ export function PartnersPage() {
                       </div>
                       <div className={s.desc}>{p.desc}</div>
                       <div className={s.tags}>
-                        {p.tags.map((t) => (
-                          <span key={t} className={s.tag}>
-                            {t}
+                        {p.tags.map((tag) => (
+                          <span key={tag} className={s.tag}>
+                            {tag}
                           </span>
                         ))}
                       </div>
-                      <div className={s.foot}>View partnership →</div>
+                      <div className={s.foot}>
+                        {t("marketing:partners.card.viewCta")}
+                      </div>
                     </Link>
                   </FadeIn>
                 ))}
@@ -143,45 +146,35 @@ export function PartnersPage() {
 
           <div className={s.why}>
             <h2>
-              On <em>intersectionality</em> and why it matters to us
+              <Translation
+                i18nKey="marketing:partners.why.title"
+                components={{ em: <em /> }}
+              />
             </h2>
+            <p>{t("marketing:partners.why.p1")}</p>
+            <p>{t("marketing:partners.why.p2")}</p>
             <p>
-              QueerPulse is a professional network. We could have built it as a
-              neutral space — focused only on career connections, deliberately
-              agnostic about politics. We chose not to, and this is why:
+              <Translation
+                i18nKey="marketing:partners.why.p3"
+                components={{ strong: <b /> }}
+              />
             </p>
-            <p>
-              The people in our community are not just queer. They are queer and
-              Black, queer and disabled, queer and migrant, queer and
-              working-class, queer and trans. The systems that create difficulty
-              in their lives don't operate along one axis. Neither can our
-              response.
-            </p>
-            <p>
-              <b>In practice, this means:</b> we prioritise partnerships with
-              organisations that centre identities marginalised within queer
-              spaces as well as outside them. We work to ensure the network
-              doesn't replicate the exclusions of the mainstream.
-            </p>
-            <p>
-              We're not perfect at this. We're trying to be honest about it.
-            </p>
+            <p>{t("marketing:partners.why.p4")}</p>
           </div>
 
           <div className={s.become}>
             <div>
               <h3>
-                Want to <em>partner with us?</em>
+                <Translation
+                  i18nKey="marketing:partners.become.title"
+                  components={{ em: <em /> }}
+                />
               </h3>
-              <p>
-                We're selective about partnerships and take them seriously. If
-                your organisation is doing work that aligns with our values,
-                tell us about it and we'll read every word.
-              </p>
+              <p>{t("marketing:partners.become.body")}</p>
             </div>
             <div className={s.becomeActions}>
               <Button size="lg" to={routes.partnerApply}>
-                Apply to partner →
+                {t("marketing:partners.become.applyCta")}
               </Button>
               <Button
                 size="lg"
@@ -197,14 +190,15 @@ export function PartnersPage() {
 
       <Outro
         title={
-          <>
-            You don't have to navigate this <em>alone.</em>
-          </>
+          <Translation
+            i18nKey="marketing:partners.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="QueerPulse, and the organisations we work with, exist so that you don't have to start from zero."
+        sub={t("marketing:partners.outro.sub")}
       >
         <Button size="lg" to={routes.requestInvite}>
-          Request an invite
+          {t("common:cta.requestInvite")}
         </Button>
       </Outro>
     </PageShell>

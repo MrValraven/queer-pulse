@@ -177,45 +177,57 @@ export function useListingForm(initial?: ListingDraft) {
 
   /* ---- per-step "what's still needed" gating ---- */
   const missing = useMemo(() => {
-    /** A still-missing item + the DOM anchor its chip jumps to. */
-    const add = (list: MissingField[], label: string, anchor: string) =>
-      list.push({ label, anchor });
+    /** A still-missing item + the DOM anchor its chip jumps to. Holds the
+     * catalog key, not the resolved string, so the chip label follows the
+     * active language without this hook needing `t`. */
+    const add = (list: MissingField[], labelKey: string, anchor: string) =>
+      list.push({ labelKey, anchor });
 
     const s0: MissingField[] = [];
-    if (!draft.path) add(s0, "how you know the place", ANCHOR.path);
+    if (!draft.path)
+      add(s0, "marketing:listBusiness.missing.path", ANCHOR.path);
     if (draft.path === "claim" && !draft.verify)
-      add(s0, "a way to verify", ANCHOR.verify);
+      add(s0, "marketing:listBusiness.missing.verify", ANCHOR.verify);
 
     const s1: MissingField[] = [];
-    if (!draft.name.trim()) add(s1, "a name", ANCHOR.name);
-    if (!draft.cats.length) add(s1, "a category", ANCHOR.cats);
-    if (!draft.hood) add(s1, "a neighbourhood", ANCHOR.hood);
-    if (!draft.badge) add(s1, "who runs it", ANCHOR.badge);
-    if (!draft.price) add(s1, "a price band", ANCHOR.price);
-    if (!draft.blurb.trim()) add(s1, "the one-liner", ANCHOR.blurb);
+    if (!draft.name.trim())
+      add(s1, "marketing:listBusiness.missing.name", ANCHOR.name);
+    if (!draft.cats.length)
+      add(s1, "marketing:listBusiness.missing.cats", ANCHOR.cats);
+    if (!draft.hood) add(s1, "marketing:listBusiness.missing.hood", ANCHOR.hood);
+    if (!draft.badge)
+      add(s1, "marketing:listBusiness.missing.badge", ANCHOR.badge);
+    if (!draft.price)
+      add(s1, "marketing:listBusiness.missing.price", ANCHOR.price);
+    if (!draft.blurb.trim())
+      add(s1, "marketing:listBusiness.missing.blurb", ANCHOR.blurb);
 
     const s2: MissingField[] = [];
-    if (!draft.tagline.trim()) add(s2, "a tagline", ANCHOR.tagline);
+    if (!draft.tagline.trim())
+      add(s2, "marketing:listBusiness.missing.tagline", ANCHOR.tagline);
     if (!draft.whatItIs.some((w) => w.text.trim()))
-      add(s2, "what it is", ANCHOR.whatItIs);
+      add(s2, "marketing:listBusiness.missing.whatItIs", ANCHOR.whatItIs);
 
     const s3: MissingField[] = [];
-    if (!draft.address.trim()) add(s3, "an address", ANCHOR.address);
+    if (!draft.address.trim())
+      add(s3, "marketing:listBusiness.missing.address", ANCHOR.address);
     if (!DAYS.some((d) => draft.hours[d.id]?.open))
-      add(s3, "opening hours", ANCHOR.hours);
+      add(s3, "marketing:listBusiness.missing.hours", ANCHOR.hours);
     if (!allSocialsValid(draft.social))
-      add(s3, "valid contact links", ANCHOR.social);
+      add(s3, "marketing:listBusiness.missing.social", ANCHOR.social);
 
     const s4: MissingField[] = [];
-    if (!draft.rel) add(s4, "your connection", ANCHOR.rel);
-    if (!draft.ownerName.trim()) add(s4, "your name", ANCHOR.ownerName);
-    if (!draft.ownerRole.trim()) add(s4, "your role", ANCHOR.ownerRole);
+    if (!draft.rel) add(s4, "marketing:listBusiness.missing.rel", ANCHOR.rel);
+    if (!draft.ownerName.trim())
+      add(s4, "marketing:listBusiness.missing.ownerName", ANCHOR.ownerName);
+    if (!draft.ownerRole.trim())
+      add(s4, "marketing:listBusiness.missing.ownerRole", ANCHOR.ownerRole);
     if (!emailValid(draft.contactEmail))
-      add(s4, "a contact email", ANCHOR.contactEmail);
+      add(s4, "marketing:listBusiness.missing.contactEmail", ANCHOR.contactEmail);
 
     const s5: MissingField[] = [];
     if (!draft.consentOuting || !draft.consentGuide)
-      add(s5, "both confirmations", ANCHOR.consent);
+      add(s5, "marketing:listBusiness.missing.consent", ANCHOR.consent);
 
     const m: Record<number, MissingField[]> = {
       0: s0,

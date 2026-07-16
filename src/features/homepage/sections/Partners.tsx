@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { Reveal, SectionHead } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../../app/routeMap";
 import { partners } from "../data/partners";
 import styles from "./Partners.module.css";
 
 export function Partners() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.strip}>
       <div className="wrap">
@@ -12,11 +16,12 @@ export function Partners() {
           <SectionHead
             className={styles.head}
             title={
-              <>
-                Community is stronger when <em>communities connect.</em>
-              </>
+              <Translation
+                i18nKey="homepage:partners.title"
+                components={{ em: <em /> }}
+              />
             }
-            subtitle="We work with organisations that share our values — across Portugal and beyond."
+            subtitle={t("homepage:partners.subtitle")}
           />
         </Reveal>
 
@@ -48,9 +53,11 @@ export function Partners() {
                 className={[styles.name, styles.nameMuted].join(" ")}
                 style={{ display: "block" }}
               >
-                See all partners
+                {t("homepage:partners.seeAllLabel")}
               </span>
-              <span className={styles.loc}>8 communities</span>
+              <span className={styles.loc}>
+                {t("homepage:partners.moreCount", { count: 8 })}
+              </span>
             </span>
           </Link>
         </Reveal>

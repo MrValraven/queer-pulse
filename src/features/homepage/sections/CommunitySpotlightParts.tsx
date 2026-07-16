@@ -5,6 +5,7 @@ import {
   FiMessageSquare,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CommunityFace, RoomKey } from "./Communities.data";
 import { FACE_TINT } from "./communityClasses";
 import styles from "./Communities.module.css";
@@ -78,20 +79,24 @@ const ROOM_ICON: Record<RoomKey, IconType> = {
   Events: FiCalendar,
   Resources: FiBook,
 };
-const ROOM_DESC: Record<RoomKey, string> = {
-  Pulse: "the live feed",
-  Discussions: "threads",
-  Events: "gatherings & RSVPs",
-  Resources: "guides & library",
+// i18n Pattern A — the room names themselves (Pulse/Discussions/Events/
+// Resources) are kept in English as product feature names (like Cinema/
+// Studio); only the tooltip description is chrome and gets translated.
+const ROOM_DESC_KEY: Record<RoomKey, string> = {
+  Pulse: "homepage:communities.room.pulse",
+  Discussions: "homepage:communities.room.discussions",
+  Events: "homepage:communities.room.events",
+  Resources: "homepage:communities.room.resources",
 };
 
 export function RoomChips({ rooms }: { rooms: RoomKey[] }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.rooms}>
       {rooms.map((r) => {
         const Icon = ROOM_ICON[r];
         return (
-          <span key={r} className={styles.room} title={ROOM_DESC[r]}>
+          <span key={r} className={styles.room} title={t(ROOM_DESC_KEY[r])}>
             <Icon aria-hidden />
             {r}
           </span>

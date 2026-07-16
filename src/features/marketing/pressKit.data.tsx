@@ -1,94 +1,127 @@
 import { type ReactNode } from "react";
+import { Translation } from "../../shared/i18n/Translation";
+import type { TFunction } from "../../shared/i18n/types";
 
-export const BOILER = [
-  {
-    id: "short",
-    label: "25 words · for headers, intros",
-    wc: "25 words · 154 char",
-    text: "QueerPulse is a queer professional network rooted in Lisbon — connecting LGBTQ+ professionals, creatives, activists and community members for work, community, culture and mutual support.",
-  },
-  {
-    id: "med",
-    label: "60 words · for press releases, capsule bios",
-    wc: "60 words · 408 char",
-    text: "QueerPulse is a queer professional network rooted in Lisbon, founded in 2024. We connect LGBTQ+ professionals, creatives, activists and community members for work, community, culture and mutual support. Membership is by invitation, operationally protected, and free at the solidarity tier. The platform runs a magazine, a podcast, a safe-spaces network, and a micro-grants fund disbursed by the community itself.",
-  },
-  {
-    id: "long",
-    label: '130 words · for longer features, "about" sections',
-    wc: "130 words",
-    text: "QueerPulse is a Lisbon-based queer professional network, founded in 2024 by eight community members in the back room of Café Beirão. It is operated by Associação QueerPulse, a not-for-profit registered in Portugal (NIPC 517 426 884), and supported by Sustainer memberships, one-off donations, and three programme grants. Membership is by vouched invitation. The platform supports a magazine, a podcast (The Back Room), a verified safe-spaces network across Lisbon, a micro-grants fund disbursed within 14 days by a rotating community circle, and an operational partnership with ILGA Portugal for legal aid and helpline handoffs. Annual transparency reports are independently audited and published publicly.",
-  },
-];
+/**
+ * i18n Pattern B — several fields carry inline `<em>`/`<b>` runs, so this file
+ * exports `buildX(t)` functions rather than plain-string Pattern A arrays.
+ *
+ * Scope split (see `docs/i18n/extraction-brief.md` §1):
+ * - Boilerplate, logo/colour/photography/fact-sheet metadata, spokespeople
+ *   roles and availability: platform-authored press-kit chrome → translated.
+ * - `COVERAGE` headlines + sources: real press pieces written by other
+ *   publications → left in English (they're quotations, not our copy).
+ * - Swatch `name`/`hex` and spokespeople names: proper nouns → left as-is.
+ */
 
-export const LOGOS: { display: string; mark: string; meta: ReactNode }[] = [
-  {
-    display: "displayCream",
-    mark: "markDark",
-    meta: (
-      <>
-        <b>Primary · light</b> · for cream/white backgrounds
-      </>
-    ),
-  },
-  {
-    display: "displayPlum",
-    mark: "markLight",
-    meta: (
-      <>
-        <b>Inverse · plum</b> · for dark backgrounds
-      </>
-    ),
-  },
-  {
-    display: "displayCoral",
-    mark: "markLight markCoral",
-    meta: (
-      <>
-        <b>Coral · solidarity</b> · use sparingly · pride contexts
-      </>
-    ),
-  },
-];
+export function buildBoiler(
+  t: TFunction,
+): { id: string; label: string; wc: string; text: string }[] {
+  return [
+    {
+      id: "short",
+      label: t("marketing:pressKit.boiler.short.label"),
+      wc: t("marketing:pressKit.boiler.short.wc"),
+      text: t("marketing:pressKit.boiler.short.text"),
+    },
+    {
+      id: "med",
+      label: t("marketing:pressKit.boiler.med.label"),
+      wc: t("marketing:pressKit.boiler.med.wc"),
+      text: t("marketing:pressKit.boiler.med.text"),
+    },
+    {
+      id: "long",
+      label: t("marketing:pressKit.boiler.long.label"),
+      wc: t("marketing:pressKit.boiler.long.wc"),
+      text: t("marketing:pressKit.boiler.long.text"),
+    },
+  ];
+}
 
-export const SWATCHES = [
-  {
-    bg: "#2D1B3D",
-    name: "Plum",
-    hex: "#2D1B3D",
-    meta: "Brand anchor · headings, dark surfaces",
-  },
-  {
-    bg: "#E8775A",
-    name: "Coral",
-    hex: "#E8775A",
-    meta: "Accent · CTAs, italic emphasis, the pulse dot",
-  },
-  {
-    bg: "#F7F3EE",
-    name: "Cream",
-    hex: "#F7F3EE",
-    meta: "Page background · never pure white",
-    border: true,
-  },
-  {
-    bg: "#4A8C6F",
-    name: "Jade",
-    hex: "#4A8C6F",
-    meta: "Verified · live · success",
-  },
-];
+export function buildLogos(): {
+  display: string;
+  mark: string;
+  meta: ReactNode;
+}[] {
+  return [
+    {
+      display: "displayCream",
+      mark: "markDark",
+      meta: (
+        <Translation
+          i18nKey="marketing:pressKit.mark.logo.light.meta"
+          components={{ b: <b /> }}
+        />
+      ),
+    },
+    {
+      display: "displayPlum",
+      mark: "markLight",
+      meta: (
+        <Translation
+          i18nKey="marketing:pressKit.mark.logo.plum.meta"
+          components={{ b: <b /> }}
+        />
+      ),
+    },
+    {
+      display: "displayCoral",
+      mark: "markLight markCoral",
+      meta: (
+        <Translation
+          i18nKey="marketing:pressKit.mark.logo.coral.meta"
+          components={{ b: <b /> }}
+        />
+      ),
+    },
+  ];
+}
 
-export const IMAGES = [
-  { tint: "tintA", label: "01 · Founding members at Café Beirão" },
-  { tint: "tintB", label: "02 · Open clinic night, in progress" },
-  { tint: "tintC", label: "03 · The print magazine, fanned" },
-  { tint: "tintA", label: "04 · Trans Hub office · Mouraria" },
-  { tint: "tintB", label: "05 · A gathering · Atelier Pulso" },
-  { tint: "tintC", label: "06 · Map detail · safe spaces" },
-];
+export function buildSwatches(
+  t: TFunction,
+): { bg: string; name: string; hex: string; meta: string; border?: boolean }[] {
+  return [
+    {
+      bg: "#2D1B3D",
+      name: "Plum",
+      hex: "#2D1B3D",
+      meta: t("marketing:pressKit.colour.plum.meta"),
+    },
+    {
+      bg: "#E8775A",
+      name: "Coral",
+      hex: "#E8775A",
+      meta: t("marketing:pressKit.colour.coral.meta"),
+    },
+    {
+      bg: "#F7F3EE",
+      name: "Cream",
+      hex: "#F7F3EE",
+      meta: t("marketing:pressKit.colour.cream.meta"),
+      border: true,
+    },
+    {
+      bg: "#4A8C6F",
+      name: "Jade",
+      hex: "#4A8C6F",
+      meta: t("marketing:pressKit.colour.jade.meta"),
+    },
+  ];
+}
 
-export const TEAM: {
+export function buildImages(t: TFunction): { tint: string; label: string }[] {
+  return [
+    { tint: "tintA", label: t("marketing:pressKit.photography.image1") },
+    { tint: "tintB", label: t("marketing:pressKit.photography.image2") },
+    { tint: "tintC", label: t("marketing:pressKit.photography.image3") },
+    { tint: "tintA", label: t("marketing:pressKit.photography.image4") },
+    { tint: "tintB", label: t("marketing:pressKit.photography.image5") },
+    { tint: "tintC", label: t("marketing:pressKit.photography.image6") },
+  ];
+}
+
+export function buildTeam(t: TFunction): {
   ph: string;
   phCls: string;
   name: ReactNode;
@@ -96,119 +129,132 @@ export const TEAM: {
   desc: ReactNode;
   langs: ReactNode;
   email: string;
-}[] = [
-  {
-    ph: "MR",
-    phCls: "",
-    name: (
-      <>
-        Marta <em>Reis</em>
-      </>
-    ),
-    role: "Co-founder · Editor in chief",
-    desc: (
-      <>
-        For: editorial decisions, the magazine, governance, the manifesto.{" "}
-        <em>Not for: individual member stories, moderation decisions.</em>
-      </>
-    ),
-    langs: (
-      <>
-        <b>EN · PT · ES</b> · available on 48h notice
-      </>
-    ),
-    email: "marta@queerpulse.app",
-  },
-  {
-    ph: "CV",
-    phCls: "phJade",
-    name: (
-      <>
-        Catarina <em>Vaz</em>
-      </>
-    ),
-    role: "Co-founder · Co-treasurer · Trans Hub",
-    desc: "For: trans-affirming healthcare, finances, transparency, mutual aid, ILGA partnership.",
-    langs: (
-      <>
-        <b>EN · PT</b> · available on 24h notice
-      </>
-    ),
-    email: "catarina@queerpulse.app",
-  },
-  {
-    ph: "AB",
-    phCls: "phPlum",
-    name: (
-      <>
-        André <em>Bento</em>
-      </>
-    ),
-    role: "Co-founder · Co-treasurer · Design",
-    desc: "For: platform design, technical decisions, partnerships, infrastructure. Photographer for in-house imagery.",
-    langs: (
-      <>
-        <b>EN · PT</b> · available on 72h notice
-      </>
-    ),
-    email: "andre@queerpulse.app",
-  },
-];
+}[] {
+  return [
+    {
+      ph: "MR",
+      phCls: "",
+      name: (
+        <>
+          Marta <em>Reis</em>
+        </>
+      ),
+      role: t("marketing:pressKit.team.marta.role"),
+      desc: (
+        <Translation
+          i18nKey="marketing:pressKit.team.marta.desc"
+          components={{ em: <em /> }}
+        />
+      ),
+      langs: (
+        <Translation
+          i18nKey="marketing:pressKit.team.marta.langs"
+          components={{ b: <b /> }}
+        />
+      ),
+      email: "marta@queerpulse.app",
+    },
+    {
+      ph: "CV",
+      phCls: "phJade",
+      name: (
+        <>
+          Catarina <em>Vaz</em>
+        </>
+      ),
+      role: t("marketing:pressKit.team.catarina.role"),
+      desc: t("marketing:pressKit.team.catarina.desc"),
+      langs: (
+        <Translation
+          i18nKey="marketing:pressKit.team.catarina.langs"
+          components={{ b: <b /> }}
+        />
+      ),
+      email: "catarina@queerpulse.app",
+    },
+    {
+      ph: "AB",
+      phCls: "phPlum",
+      name: (
+        <>
+          André <em>Bento</em>
+        </>
+      ),
+      role: t("marketing:pressKit.team.andre.role"),
+      desc: t("marketing:pressKit.team.andre.desc"),
+      langs: (
+        <Translation
+          i18nKey="marketing:pressKit.team.andre.langs"
+          components={{ b: <b /> }}
+        />
+      ),
+      email: "andre@queerpulse.app",
+    },
+  ];
+}
 
-export const FACTS: { b: ReactNode; s: string }[] = [
-  {
-    b: (
-      <>
-        <em>2024</em>
-      </>
-    ),
-    s: "Founded · Lisbon",
-  },
-  { b: <>1,847</>, s: "Active members at year-end 2025" },
-  {
-    b: (
-      <>
-        <em>96</em>%
-      </>
-    ),
-    s: "Of every euro goes to programs",
-  },
-  {
-    b: (
-      <>
-        €<em>278</em>k
-      </>
-    ),
-    s: "Total raised in 2025",
-  },
-  { b: <>284</>, s: "Gatherings held in 2025" },
-  {
-    b: (
-      <>
-        <em>147</em>
-      </>
-    ),
-    s: "Micro-grants disbursed in 2025",
-  },
-  {
-    b: (
-      <>
-        <em>42</em>
-      </>
-    ),
-    s: "Verified safe spaces in Lisbon",
-  },
-  { b: <>9</>, s: "Magazine issues to date" },
-  {
-    b: (
-      <>
-        22<em>%</em>
-      </>
-    ),
-    s: "Trans / non-binary members",
-  },
-];
+/** `b` holds the figure itself (numeric markup); `s` is the translated label
+ * shown under it. */
+export function buildFacts(t: TFunction): { b: ReactNode; s: string }[] {
+  return [
+    {
+      b: (
+        <>
+          <em>2024</em>
+        </>
+      ),
+      s: t("marketing:pressKit.facts.founded"),
+    },
+    { b: <>1,847</>, s: t("marketing:pressKit.facts.activeMembers") },
+    {
+      b: (
+        <>
+          <em>96</em>%
+        </>
+      ),
+      s: t("marketing:pressKit.facts.toPrograms"),
+    },
+    {
+      b: (
+        <>
+          €<em>278</em>k
+        </>
+      ),
+      s: t("marketing:pressKit.facts.totalRaised"),
+    },
+    { b: <>284</>, s: t("marketing:pressKit.facts.gatherings") },
+    {
+      b: (
+        <>
+          <em>147</em>
+        </>
+      ),
+      s: t("marketing:pressKit.facts.microGrants"),
+    },
+    {
+      b: (
+        <>
+          <em>42</em>
+        </>
+      ),
+      s: t("marketing:pressKit.facts.safeSpaces"),
+    },
+    { b: <>9</>, s: t("marketing:pressKit.facts.magazineIssues") },
+    {
+      b: (
+        <>
+          22<em>%</em>
+        </>
+      ),
+      s: t("marketing:pressKit.facts.transNonBinary"),
+    },
+  ];
+}
 
+/**
+ * Real press coverage — each headline and outlet is another publication's own
+ * wording, so this list stays in English regardless of locale.
+ */
 export const COVERAGE: {
   source: string;
   title: ReactNode;
@@ -265,41 +311,45 @@ export const COVERAGE: {
   },
 ];
 
-export const DOWNLOADS = [
-  {
-    ic: "ZIP",
-    icCls: "dlZip",
-    title: "Complete press kit",
-    desc: "Marks, photography, boilerplate, fact sheet · 38 MB",
-  },
-  {
-    ic: "SVG",
-    icCls: "",
-    title: "Marks · SVG bundle",
-    desc: "3 variations · cleared for editorial use · 18 KB",
-  },
-  {
-    ic: "PNG",
-    icCls: "",
-    title: "Marks · PNG @ 2x",
-    desc: "For Word docs, slides, web · 8 MB",
-  },
-  {
-    ic: "JPG",
-    icCls: "",
-    title: "Photography · 6 images",
-    desc: "3000 × 2000 px · model-released · 24 MB",
-  },
-  {
-    ic: "PDF",
-    icCls: "",
-    title: "Fact sheet",
-    desc: "One-page printable · EN & PT versions · 380 KB",
-  },
-  {
-    ic: "PDF",
-    icCls: "",
-    title: "2025 transparency report",
-    desc: "84 pages · audited · 4.2 MB",
-  },
-];
+export function buildDownloads(
+  t: TFunction,
+): { ic: string; icCls: string; title: string; desc: string }[] {
+  return [
+    {
+      ic: "ZIP",
+      icCls: "dlZip",
+      title: t("marketing:pressKit.downloads.completeKit.title"),
+      desc: t("marketing:pressKit.downloads.completeKit.desc"),
+    },
+    {
+      ic: "SVG",
+      icCls: "",
+      title: t("marketing:pressKit.downloads.marksSvg.title"),
+      desc: t("marketing:pressKit.downloads.marksSvg.desc"),
+    },
+    {
+      ic: "PNG",
+      icCls: "",
+      title: t("marketing:pressKit.downloads.marksPng.title"),
+      desc: t("marketing:pressKit.downloads.marksPng.desc"),
+    },
+    {
+      ic: "JPG",
+      icCls: "",
+      title: t("marketing:pressKit.downloads.photography.title"),
+      desc: t("marketing:pressKit.downloads.photography.desc"),
+    },
+    {
+      ic: "PDF",
+      icCls: "",
+      title: t("marketing:pressKit.downloads.factSheet.title"),
+      desc: t("marketing:pressKit.downloads.factSheet.desc"),
+    },
+    {
+      ic: "PDF",
+      icCls: "",
+      title: t("marketing:pressKit.downloads.transparency.title"),
+      desc: t("marketing:pressKit.downloads.transparency.desc"),
+    },
+  ];
+}

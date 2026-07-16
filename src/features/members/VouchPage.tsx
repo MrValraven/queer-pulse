@@ -3,19 +3,23 @@ import { FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Avatar, Button, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CANDIDATE, MEANS } from "./vouch.data";
 import styles from "./VouchPage.module.css";
 
 export function VouchPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [sent, setSent] = useState(false);
   const [note, setNote] = useState("");
+  const candidateFirstName = CANDIDATE.name.split(" ")[0]!;
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setSent(true);
-    showToast(`Your vouch for ${CANDIDATE.name} is on its way to the council.`);
+    showToast(t("members:vouch.page.toast", { name: CANDIDATE.name }));
   }
 
   return (
@@ -29,12 +33,15 @@ export function VouchPage() {
                   <FiCheck />
                 </div>
                 <h1 className={styles.panelTitle}>
-                  That's a <em>real welcome.</em>
+                  <Translation
+                    i18nKey="members:vouch.page.success.title"
+                    components={{ em: <em /> }}
+                  />
                 </h1>
                 <p className={styles.panelSub}>
-                  Your vouch for {CANDIDATE.name} has gone to the membership
-                  council. They'll know someone already had their back before
-                  they even walked in.
+                  {t("members:vouch.page.success.body", {
+                    name: CANDIDATE.name,
+                  })}
                 </p>
                 <div className={styles.panelActions}>
                   <Button
@@ -42,18 +49,23 @@ export function VouchPage() {
                     variant="ghost-dark"
                     size="lg"
                   >
-                    Back to connections
+                    {t("members:vouch.page.success.connectionsCta")}
                   </Button>
                   <Button to={routes.members} variant="jade" size="lg">
-                    Browse members
+                    {t("members:vouch.page.success.browseCta")}
                   </Button>
                 </div>
               </Reveal>
             ) : (
               <>
-                <Reveal className={styles.eyebrow}>Vouch</Reveal>
+                <Reveal className={styles.eyebrow}>
+                  {t("members:vouch.page.eyebrow")}
+                </Reveal>
                 <Reveal as="h1" className={styles.title} delay={60}>
-                  Tell us you <em>know them.</em>
+                  <Translation
+                    i18nKey="members:vouch.page.title"
+                    components={{ em: <em /> }}
+                  />
                 </Reveal>
 
                 <Reveal className={styles.candidate} delay={120}>
@@ -74,7 +86,7 @@ export function VouchPage() {
                 <div className={styles.means}>
                   {MEANS.map((mean, index) => (
                     <Reveal
-                      key={mean.title}
+                      key={mean.titleKey}
                       className={styles.mean}
                       delay={index * 50}
                     >
@@ -82,8 +94,10 @@ export function VouchPage() {
                         <mean.icon />
                       </span>
                       <div>
-                        <div className={styles.meanTitle}>{mean.title}</div>
-                        <div className={styles.meanBody}>{mean.body}</div>
+                        <div className={styles.meanTitle}>
+                          {t(mean.titleKey)}
+                        </div>
+                        <div className={styles.meanBody}>{t(mean.bodyKey)}</div>
                       </div>
                     </Reveal>
                   ))}
@@ -91,21 +105,23 @@ export function VouchPage() {
 
                 <Reveal as="form" delay={120} onSubmit={handleSubmit}>
                   <label className={styles.label} htmlFor="vouch-note">
-                    Add a short note (optional)
+                    {t("members:vouch.page.noteLabel")}
                   </label>
                   <textarea
                     id="vouch-note"
                     className={styles.textarea}
-                    placeholder="How do you know Jonas, and what should the council know?"
+                    placeholder={t("members:vouch.page.notePlaceholder", {
+                      name: candidateFirstName,
+                    })}
                     value={note}
                     onChange={(event) => setNote(event.target.value)}
                   />
                   <div className={styles.actions}>
                     <Button type="submit" variant="primary" size="lg">
-                      Send my vouch →
+                      {t("members:vouch.page.submitCta")}
                     </Button>
                     <Button to={routes.members} variant="ghost" size="lg">
-                      Not right now
+                      {t("members:vouch.page.skipCta")}
                     </Button>
                   </div>
                 </Reveal>

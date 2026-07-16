@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type Perk, sidebarCopy } from "./perks.data";
 import { useRecognition } from "./api/useRecognition";
@@ -71,13 +73,14 @@ function LockMini() {
 }
 
 function ClaimButton({ label, toast }: { label: string; toast: string }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [claimed, setClaimed] = useState(false);
 
   if (claimed) {
     return (
       <span className={styles.claimedChip}>
-        <FiCheck aria-hidden /> Claimed
+        <FiCheck aria-hidden /> {t("members:perks.claim.claimed")}
       </span>
     );
   }
@@ -94,13 +97,14 @@ function ClaimButton({ label, toast }: { label: string; toast: string }) {
 }
 
 function PerkFooter({ perk }: { perk: Perk }) {
+  const { t } = useTranslation();
   const f = perk.footer;
   switch (f.type) {
     case "active-auto":
       return (
         <div className={styles.actionRow}>
           <span className={styles.claimedChip}>
-            <CheckMini /> Already active
+            <CheckMini /> {t("members:perks.claim.alreadyActive")}
           </span>
           <span className={styles.autoChip}>
             <AutoCheck /> {f.autoLabel}
@@ -132,7 +136,7 @@ function PerkFooter({ perk }: { perk: Perk }) {
       return (
         <div className={styles.actionRow}>
           <span className={styles.claimedChip}>
-            <CheckMini /> Active
+            <CheckMini /> {t("members:perks.claim.active")}
           </span>
           <span className={styles.claimedDate}>{f.date}</span>
         </div>
@@ -185,6 +189,7 @@ export function PerkGroups() {
 }
 
 export function PerksSidebar() {
+  const { t } = useTranslation();
   const { level } = useRecognition();
   const { showToast } = useToast();
   const [idea, setIdea] = useState("");
@@ -197,9 +202,12 @@ export function PerksSidebar() {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sbCard}>
-        <div className={styles.sbTitle}>Your level</div>
+        <div className={styles.sbTitle}>
+          {t("members:perks.sidebar.yourLevelTitle")}
+        </div>
         <div className={styles.miniLevel}>
-          Level {level.level} · <em>{level.name}</em>
+          {t("members:profile.hero.levelLabel", { number: level.level })} ·{" "}
+          <em>{level.name}</em>
         </div>
         <div className={styles.miniXpBar}>
           <div
@@ -208,37 +216,45 @@ export function PerksSidebar() {
           />
         </div>
         <div className={styles.miniXpLabel}>
-          {level.xp} / {level.xpMax} XP · {level.xpToNext} to Level{" "}
-          {level.level + 1}
+          {t("members:perks.sidebar.xpSummary", {
+            xp: level.xp,
+            xpMax: level.xpMax,
+            xpToNext: level.xpToNext,
+            nextLevel: level.level + 1,
+          })}
         </div>
         <div className={styles.nextPerkNote}>
-          Next perks unlock at{" "}
-          <strong>
-            Level {level.level + 1} · {level.nextName}
-          </strong>{" "}
-          — host without approval &amp; an increased invite quota.
+          <Translation
+            i18nKey="members:perks.sidebar.nextUnlockNote"
+            components={{ strong: <strong /> }}
+            values={{ nextLevel: level.level + 1, nextName: level.nextName }}
+          />
         </div>
         <Link to={routes.badges} className={styles.sbLink}>
-          See all badges &amp; levels →
+          {t("members:perks.sidebar.seeAllBadgesCta")}
         </Link>
       </div>
 
       <div className={styles.sbCard}>
-        <div className={styles.sbTitle}>Perks explained</div>
+        <div className={styles.sbTitle}>
+          {t("members:perks.sidebar.explainedTitle")}
+        </div>
         <div className={styles.explainText}>{sidebarCopy.explain}</div>
       </div>
 
       <div className={styles.sbCard}>
-        <div className={styles.sbTitle}>Suggest a perk</div>
+        <div className={styles.sbTitle}>
+          {t("members:perks.sidebar.suggestTitle")}
+        </div>
         <div className={styles.suggestLabel}>{sidebarCopy.suggestPrompt}</div>
         <textarea
           className={styles.suggestTa}
-          placeholder="Share an idea…"
+          placeholder={t("members:perks.sidebar.suggestPlaceholder")}
           value={idea}
           onChange={(e) => setIdea(e.target.value)}
         />
         <Button variant="ghost" className={styles.suggestBtn} onClick={send}>
-          Send suggestion
+          {t("members:perks.sidebar.sendSuggestionCta")}
         </Button>
       </div>
     </aside>

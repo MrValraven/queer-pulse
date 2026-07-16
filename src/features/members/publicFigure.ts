@@ -2,13 +2,18 @@ import type { Member } from "./data/members";
 import type { PublicContributions } from "./currentUserPublic.data";
 
 /** One requirement toward unlocking a public profile — shown to the member as a
- *  checklist so eligibility reads as something you grow into, not a mystery. */
+ *  checklist so eligibility reads as something you grow into, not a mystery.
+ *  `labelKey`/`hintKey` are catalog keys, not raw strings: this is a small,
+ *  platform-defined checklist (chrome), resolved through `t()` by the
+ *  consuming component (`PublicProfileControl.tsx`), which is the only place
+ *  with access to the translation function — this evaluator stays a pure,
+ *  React-free function. */
 export interface EligibilityCriterion {
   key: "verified" | "contributes" | "established" | "trusted";
-  label: string;
+  labelKey: string;
   met: boolean;
-  /** Short "how you get there" line, shown under the label. */
-  hint: string;
+  /** Catalog key for the short "how you get there" line shown under the label. */
+  hintKey: string;
 }
 
 export interface PublicEligibility {
@@ -37,27 +42,28 @@ export function evaluatePublicEligibility(
   const criteria: EligibilityCriterion[] = [
     {
       key: "verified",
-      label: "Verified member",
+      // Same wording as the profile hero's verified badge — reuse its key.
+      labelKey: "members:profile.hero.verifiedBadge",
       met: member.verified === true,
-      hint: "Confirm your identity so people know it's really you.",
+      hintKey: "members:publicProfile.eligibility.verified.hint",
     },
     {
       key: "contributes",
-      label: "Contributes publicly",
+      labelKey: "members:publicProfile.eligibility.contributes.label",
       met: publicPieces >= 1,
-      hint: "Publish writing or host an open event the public can see.",
+      hintKey: "members:publicProfile.eligibility.contributes.hint",
     },
     {
       key: "established",
-      label: "A year on QueerPulse",
+      labelKey: "members:publicProfile.eligibility.established.label",
       met: Number.isFinite(yearsOn) && yearsOn >= 1,
-      hint: "Public profiles open up after your first year here.",
+      hintKey: "members:publicProfile.eligibility.established.hint",
     },
     {
       key: "trusted",
-      label: "Vouched-for by 2+ members",
+      labelKey: "members:publicProfile.eligibility.trusted.label",
       met: member.vouchers.length >= 2,
-      hint: "A couple of members vouching for you unlocks this.",
+      hintKey: "members:publicProfile.eligibility.trusted.hint",
     },
   ];
 

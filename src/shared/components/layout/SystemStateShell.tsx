@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { Translation } from "../../i18n/Translation";
 import { BackToSettingsLink } from "./BackToSettingsLink";
 import styles from "./SystemStateShell.module.css";
 
@@ -48,7 +49,7 @@ export function SystemStateShell({
           className={`${styles.pulseDot} ${mutedBrand ? styles.pulseDotMuted : ""}`}
           aria-hidden
         />
-        Queer<em>Pulse</em>
+        <Translation i18nKey="shared:brand.wordmark" components={{ em: <em /> }} />
       </Link>
       <BackToSettingsLink />
       <div className={styles.enter}>{children}</div>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { NAV_MENUS, filterMenus } from "./navMenus";
 import { linkToPath } from "../../../app/routeMap";
 import { useIsLinkVisible } from "../../../app/authGate";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./MegaNavDrawer.module.css";
 
 interface MegaNavDrawerProps {
@@ -10,6 +11,7 @@ interface MegaNavDrawerProps {
 }
 
 export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
+  const { t } = useTranslation();
   const isLinkVisible = useIsLinkVisible();
   const menus = filterMenus(NAV_MENUS, isLinkVisible);
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
               aria-expanded={isOpen}
               onClick={() => setOpenKey(isOpen ? null : menu.key)}
             >
-              {menu.key}
+              {t(menu.titleKey)}
               <span className={styles.sectionChevron} aria-hidden>
                 ▾
               </span>
@@ -39,11 +41,11 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
             {isOpen && (
               <div className={styles.panel}>
                 {menu.columns.map((column) => (
-                  <div key={column.head}>
-                    <div className={styles.colHead}>{column.head}</div>
+                  <div key={column.headKey}>
+                    <div className={styles.colHead}>{t(column.headKey)}</div>
                     {column.links.map((link) => (
                       <Link
-                        key={link.label}
+                        key={link.labelKey}
                         to={linkToPath(link.href)}
                         className={[
                           styles.link,
@@ -53,7 +55,7 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
                           .join(" ")}
                         onClick={onNavigate}
                       >
-                        {link.label}
+                        {t(link.labelKey)}
                       </Link>
                     ))}
                   </div>

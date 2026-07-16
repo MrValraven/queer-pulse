@@ -3,13 +3,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 
 /**
- * Demo-mode AuthProvider only. Env is left empty so `apiAvailable` is false and
- * demo mode is forced on — the live path (bootstrapCsrf → fetchMe) never runs,
- * so no network is touched. AuthProvider needs DemoModeProvider above it.
+ * Demo-mode AuthProvider only. Demo is an explicit opt-in (`VITE_DEMO=1`), and
+ * with no API URL it's forced on — so the live path (bootstrapCsrf → fetchMe)
+ * never runs and no network is touched. AuthProvider needs DemoModeProvider
+ * above it.
  */
 async function loadDemoAuth() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", "");
+  vi.stubEnv("VITE_DEMO", "1");
   const { DemoModeProvider } = await import("./DemoModeProvider");
   const { AuthProvider } = await import("./AuthProvider");
   const { useAuth } = await import("./authContext");

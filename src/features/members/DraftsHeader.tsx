@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CREATE_ITEMS } from "./drafts.data";
 import styles from "./DraftsPage.module.css";
 
 /** Drafts page header: title block + a "Start something" create-menu dropdown. */
 export function DraftsHeader() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -29,14 +32,20 @@ export function DraftsHeader() {
   return (
     <header className={styles.head}>
       <div className={styles.headText}>
-        <div className={styles.eyebrow}>Drafts · only visible to you</div>
+        <div className={styles.eyebrow}>
+          {t("members:drafts.header.eyebrow")}
+        </div>
         <h1 className={styles.h1}>
-          Things you <em>started.</em>
+          <Translation
+            i18nKey="members:drafts.header.title"
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.lead}>
-          Posts, articles, applications, and pitches you haven't sent yet.{" "}
-          <em>Auto-saved every 8 seconds.</em> Drafts older than 90 days get a
-          polite reminder, then a polite second one, then quietly delete.
+          <Translation
+            i18nKey="members:drafts.header.lead"
+            components={{ em: <em /> }}
+          />
         </p>
       </div>
 
@@ -56,14 +65,14 @@ export function DraftsHeader() {
               strokeLinecap="round"
             />
           </svg>
-          Start something
+          {t("members:drafts.header.startCta")}
         </Button>
 
         {open && (
           <div className={styles.createMenu} role="menu">
             {CREATE_ITEMS.map((item) => (
               <Link
-                key={item.label}
+                key={item.labelKey}
                 to={item.to}
                 role="menuitem"
                 className={styles.createItem}
@@ -75,8 +84,8 @@ export function DraftsHeader() {
                   {item.badge}
                 </span>
                 <span>
-                  {item.label}
-                  <small>{item.sub}</small>
+                  {t(item.labelKey)}
+                  <small>{t(item.subKey)}</small>
                 </span>
               </Link>
             ))}

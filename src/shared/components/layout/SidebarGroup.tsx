@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
 import type { MegaMenu } from "./navMenus";
 import { linkToPath } from "../../../app/routeMap";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./Sidebar.module.css";
 
 /**
@@ -36,6 +37,8 @@ export function SidebarGroup({
 }) {
   const panelId = useId();
   const Icon = menu.icon;
+  const { t } = useTranslation();
+  const title = t(menu.titleKey);
 
   // A single entrance cascade runs across every row (subheads + links) in the
   // panel, so the children stream in top-to-bottom when the group opens.
@@ -43,13 +46,13 @@ export function SidebarGroup({
   const links = (
     <div className={styles.groupLinks}>
       {menu.columns.map((col) => (
-        <div key={col.head} className={styles.groupCol}>
+        <div key={col.headKey} className={styles.groupCol}>
           <div className={styles.groupSubhead} style={staggerVar(row++)}>
-            {col.head}
+            {t(col.headKey)}
           </div>
           {col.links.map((link) => (
             <NavLink
-              key={link.label}
+              key={link.labelKey}
               to={linkToPath(link.href)}
               onClick={onNavigate}
               style={staggerVar(row++)}
@@ -59,7 +62,7 @@ export function SidebarGroup({
                   .join(" ")
               }
             >
-              {link.label}
+              {t(link.labelKey)}
             </NavLink>
           ))}
         </div>
@@ -73,13 +76,13 @@ export function SidebarGroup({
         <button
           type="button"
           className={styles.groupBtn}
-          aria-label={menu.key}
+          aria-label={title}
           aria-haspopup="true"
         >
           {Icon ? <Icon aria-hidden className={styles.groupIcon} /> : null}
         </button>
-        <div className={styles.flyout} role="region" aria-label={menu.key}>
-          <div className={styles.flyoutHead}>{menu.key}</div>
+        <div className={styles.flyout} role="region" aria-label={title}>
+          <div className={styles.flyoutHead}>{title}</div>
           {links}
         </div>
       </div>
@@ -96,7 +99,7 @@ export function SidebarGroup({
         onClick={onToggle}
       >
         {Icon ? <Icon aria-hidden className={styles.groupIcon} /> : null}
-        <span className={styles.groupLabel}>{menu.key}</span>
+        <span className={styles.groupLabel}>{title}</span>
         <FiChevronDown
           className={[styles.chevron, open && styles.chevronOpen]
             .filter(Boolean)

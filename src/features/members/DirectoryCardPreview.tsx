@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { directoryBlurb, isBlurbBorrowedFromBio } from "./directoryBlurb";
 import { MemberCardBody } from "./MemberCardBody";
@@ -13,6 +14,7 @@ import styles from "./ProfileEdit.module.css";
  * lookalike, it stops being a preview.
  */
 export function DirectoryCardPreview() {
+  const { t } = useTranslation();
   const { profile, draft } = useProfile();
 
   const name = `${draft.first} ${draft.last}`.trim();
@@ -25,7 +27,7 @@ export function DirectoryCardPreview() {
   return (
     <div className={styles.previewWrap}>
       <span className={styles.previewCaption}>
-        How your card reads in the directory
+        {t("members:directory.preview.caption")}
       </span>
       <div className={`${card.mCard} ${card.mCardMe} ${card.mCardStatic}`}>
         <MemberCardBody
@@ -41,8 +43,7 @@ export function DirectoryCardPreview() {
       </div>
       {borrowedFromBio && (
         <p className={styles.previewNote}>
-          Nothing here yet, so your card borrows the opening of your bio. Write
-          a short bio and it'll use that instead.
+          {t("members:directory.preview.borrowedNote")}
         </p>
       )}
     </div>

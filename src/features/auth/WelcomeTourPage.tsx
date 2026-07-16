@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
-import { TOUR_STEP_FILLS, TOUR_STEP_LABELS } from "./welcomeTour.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { TOUR_STEP_FILLS } from "./welcomeTour.data";
 import {
   TourWelcome,
   TourProfile,
@@ -18,6 +19,7 @@ import styles from "./WelcomeTourPage.module.css";
  * Distinct from the OnboardingPage flow at /welcome.
  */
 export function WelcomeTourPage() {
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
 
   function go(next: number) {
@@ -25,15 +27,21 @@ export function WelcomeTourPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  const stepLabel =
+    step === 6
+      ? t("auth:tour.allSet")
+      : t("auth:tour.stepLabel", { current: step, total: 6 });
+
   return (
     <div className={styles.root}>
       <nav className={styles.topNav}>
         <Link to={routes.homepage} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
-          Queer<em>Pulse</em>
+          {"Queer"}
+          <em>{"Pulse"}</em>
         </Link>
         <Link to={routes.homepage} className={styles.skip}>
-          Skip setup →
+          {t("auth:tour.skipSetup")}
         </Link>
       </nav>
 
@@ -46,9 +54,7 @@ export function WelcomeTourPage() {
                 style={{ width: TOUR_STEP_FILLS[step - 1] }}
               />
             </div>
-            <div className={styles.stepsLabel}>
-              {TOUR_STEP_LABELS[step - 1]}
-            </div>
+            <div className={styles.stepsLabel}>{stepLabel}</div>
           </div>
 
           <div key={step} className={styles.step}>

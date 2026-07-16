@@ -1,28 +1,36 @@
 import { Link } from "react-router-dom";
 import { Button, ImageSlot, Reveal } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { changemakers } from "../data/changemakers";
 import styles from "./ChangeMakers.module.css";
 
 export function ChangeMakers() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.section} id="changemakers">
       <div className="wrap">
         <div className={styles.top}>
           <div>
-            <Reveal className={styles.eyebrow}>Community voices</Reveal>
+            <Reveal className={styles.eyebrow}>
+              {t("homepage:changeMakers.eyebrow")}
+            </Reveal>
             <Reveal as="h2" className={styles.title} delay={60}>
-              People <em>making it better</em> — every day
+              <Translation
+                i18nKey="homepage:changeMakers.title"
+                components={{ em: <em /> }}
+              />
             </Reveal>
           </div>
           <div className={styles.aside}>
             <Reveal as="p" className={styles.sub}>
-              Advocates, organisers, and artists reshaping queer life in Lisbon.
-              Real people, real work, real change.
+              {t("homepage:changeMakers.sub")}
             </Reveal>
             <Reveal delay={60}>
               <Button variant="ghost-dark" to={routes.changemakers}>
-                Meet all change makers →
+                {t("homepage:changeMakers.cta")}
               </Button>
             </Reveal>
           </div>
@@ -40,7 +48,9 @@ export function ChangeMakers() {
                   src={person.image}
                   height={240}
                   radius={0}
-                  placeholder={`Portrait: ${person.name}`}
+                  placeholder={t("homepage:changeMakers.portraitPlaceholder", {
+                    name: person.name,
+                  })}
                 />
                 <div className={styles.body}>
                   <div className={styles.cause}>{person.cause}</div>

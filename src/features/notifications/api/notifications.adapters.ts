@@ -1,6 +1,8 @@
 import type { IconType } from "react-icons";
 import { FiBell, FiCalendar, FiMessageCircle, FiUsers } from "react-icons/fi";
+import type { TFunction } from "../../../shared/i18n/types";
 import type { Notification, NotifType } from "../notifications.types";
+import { formatNotification } from "./formatNotification";
 import type { NotificationDTO } from "./notifications.api";
 
 /** Each notification kind → the icon its row renders with (no avatar from the API). */
@@ -22,19 +24,28 @@ const KIND_ICON_BG: Record<NotifType, string> = {
 /**
  * Map a backend notification to the prototype's rich Notification view-model,
  * defaulting the prototype-only fields (avatars, action buttons) gracefully.
- * The live API serves plain text + a kind, so every row renders with the
- * kind's icon; interactive actions stay a mock-only affordance for now.
+ *
+ * The API serves no display text — only `type` + structured `payload` — so the
+ * row's text and sub-line are rendered here through i18n, in the caller's
+ * active language. Interactive actions stay a mock-only affordance for now.
  */
-export function notificationDtoToView(dto: NotificationDTO): Notification {
-  const kind: NotifType = dto.type ?? "platform";
+export function notificationDtoToView(
+  dto: NotificationDTO,
+  t: TFunction,
+): Notification {
+  const { text, meta, category } = formatNotification(dto.type, dto.payload, t);
   return {
-    id: Number(dto.id),
-    type: kind,
-    unread: dto.unread,
-    icon: { Glyph: KIND_ICONS[kind] ?? FiBell, bg: KIND_ICON_BG[kind] },
-    text: dto.text,
-    meta: dto.meta ?? "",
-    time: dto.time ?? formatTime(dto.createdAt),
+    // Backend ids are uuids — pass through as-is. Coercing with Number() would
+    // yield NaN for every row (duplicate React keys, un-markable rows).
+    id: dto.id,
+    type: category,
+    // The backend sends `read`; the view-model is phrased the other way round.
+    // Missing/!boolean degrades to unread so a row is never silently swallowed.
+    unread: dto.read !== true,
+    icon: { Glyph: KIND_ICONS[category] ?? FiBell, bg: KIND_ICON_BG[category] },
+    text,
+    meta,
+    time: formatTime(dto.createdAt),
   };
 }
 

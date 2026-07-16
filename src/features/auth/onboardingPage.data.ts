@@ -2,18 +2,26 @@ import type { IconType } from "react-icons";
 import { FiBookOpen, FiCalendar, FiUsers } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 
+/**
+ * i18n Pattern A — every field below is platform-authored chrome (the intro
+ * preview cards, community norms, intent chips, and quick-start tiles), so
+ * the component resolves each `*Key` through `t()`. `COMMUNITIES_LIST` is the
+ * one exception: in live mode it's `GET /communities?recommended=true`, so its
+ * `name`/`desc`/`count` are a community's own authored content and stay
+ * English — see docs/i18n/extraction-brief.md §1.
+ */
 export const ONBOARDING_PREVIEW = [
   {
-    title: "Make it yours",
-    desc: "Add a photo so members can put a face to your name.",
+    titleKey: "auth:onboarding.preview.makeItYours.title",
+    descKey: "auth:onboarding.preview.makeItYours.desc",
   },
   {
-    title: "Set your intentions",
-    desc: "Tell us what brings you here, and we’ll tailor things.",
+    titleKey: "auth:onboarding.preview.setIntentions.title",
+    descKey: "auth:onboarding.preview.setIntentions.desc",
   },
   {
-    title: "Find your communities",
-    desc: "Join the groups that match what you care about.",
+    titleKey: "auth:onboarding.preview.findCommunities.title",
+    descKey: "auth:onboarding.preview.findCommunities.desc",
   },
 ];
 
@@ -24,34 +32,42 @@ export const TOTAL_STEPS = 7;
 
 export const NORMS = [
   {
-    title: "Be present",
-    desc: "Give conversations your genuine attention. Scrolling past is fine; engaging half-heartedly isn't.",
+    titleKey: "auth:onboarding.stepNorms.norm.bePresent.title",
+    descKey: "auth:onboarding.stepNorms.norm.bePresent.desc",
   },
   {
-    title: "Respect names and pronouns",
-    desc: "Use the name and pronouns each member shares. If you're unsure, ask — that's always welcome here.",
+    titleKey: "auth:onboarding.stepNorms.norm.namesPronouns.title",
+    descKey: "auth:onboarding.stepNorms.norm.namesPronouns.desc",
   },
   {
-    title: "What's shared here stays here",
-    desc: "Members share things here they might not share elsewhere. Treat that as a privilege.",
+    titleKey: "auth:onboarding.stepNorms.norm.staysHere.title",
+    descKey: "auth:onboarding.stepNorms.norm.staysHere.desc",
   },
   {
-    title: "Ask before you photograph",
-    desc: "At gatherings, always ask before photographing other members, even in a shared space.",
+    titleKey: "auth:onboarding.stepNorms.norm.askBeforePhoto.title",
+    descKey: "auth:onboarding.stepNorms.norm.askBeforePhoto.desc",
   },
 ];
 
-export const INTENTS = [
-  "Community",
-  "Gatherings & events",
-  "Professional connections",
-  "Dating",
-  "Resources & support",
-  "Contributing",
-  "Housing",
-  "Finding flatmates",
-  "Activism",
-  "Creative collaboration",
+/**
+ * Chip options for "what brings you here". `value` is the stable English
+ * identifier used for selection state (and the 3 preset defaults in
+ * `StepIntents`); `labelKey` is what the chip displays, resolved via `t()`.
+ */
+export const INTENTS: { value: string; labelKey: string }[] = [
+  { value: "Community", labelKey: "auth:onboarding.intent.community" },
+  { value: "Gatherings & events", labelKey: "auth:onboarding.intent.gatherings" },
+  {
+    value: "Professional connections",
+    labelKey: "auth:onboarding.intent.professional",
+  },
+  { value: "Dating", labelKey: "auth:onboarding.intent.dating" },
+  { value: "Resources & support", labelKey: "auth:onboarding.intent.resources" },
+  { value: "Contributing", labelKey: "auth:onboarding.intent.contributing" },
+  { value: "Housing", labelKey: "auth:onboarding.intent.housing" },
+  { value: "Finding flatmates", labelKey: "auth:onboarding.intent.flatmates" },
+  { value: "Activism", labelKey: "auth:onboarding.intent.activism" },
+  { value: "Creative collaboration", labelKey: "auth:onboarding.intent.creative" },
 ];
 
 export const COMMUNITIES_LIST = [
@@ -89,28 +105,31 @@ export const QUICK_STARTS: {
   to: string;
   icon: IconType;
   iconBg: string;
-  title: string;
-  desc: string;
+  titleKey: string;
+  descKey: string;
+  /** Interpolation values for `descKey`, e.g. the member-count stat. */
+  descValues?: Record<string, string | number>;
 }[] = [
   {
     to: routes.members,
     icon: FiUsers,
     iconBg: "rgba(45,27,61,.07)",
-    title: "Browse the member directory",
-    desc: "482 members in Lisbon and beyond",
+    titleKey: "auth:onboarding.quickStart.browseDirectory.title",
+    descKey: "auth:onboarding.quickStart.browseDirectory.desc",
+    descValues: { count: 482 },
   },
   {
     to: "/calendar",
     icon: FiCalendar,
     iconBg: "rgba(232,119,90,.08)",
-    title: "See upcoming gatherings",
-    desc: "Real-world events for the community",
+    titleKey: "auth:onboarding.quickStart.gatherings.title",
+    descKey: "auth:onboarding.quickStart.gatherings.desc",
   },
   {
     to: "/magazine",
     icon: FiBookOpen,
     iconBg: "rgba(74,140,111,.08)",
-    title: "Read the community magazine",
-    desc: "Published the first of every month",
+    titleKey: "auth:onboarding.quickStart.magazine.title",
+    descKey: "auth:onboarding.quickStart.magazine.desc",
   },
 ];

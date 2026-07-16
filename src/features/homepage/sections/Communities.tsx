@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Button, Reveal } from "../../../shared/components/ui";
 import { usePrefersReducedMotion } from "../../../shared/hooks";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { spotlightCommunities } from "./Communities.data";
 import { useCommunityFilters } from "./useCommunityFilters";
@@ -13,6 +15,7 @@ import styles from "./Communities.module.css";
 const SKELETON_MS = 340;
 
 export function Communities() {
+  const { t } = useTranslation();
   const { state, patch, clear, visible, total, langOptions, hoodOptions } =
     useCommunityFilters();
   const reduce = usePrefersReducedMotion();
@@ -61,20 +64,20 @@ export function Communities() {
             <div>
               <div className={styles.eyebrow}>
                 <span className={styles.live} aria-hidden />
-                Communities · Lisboa
+                {t("homepage:communities.eyebrow")}
               </div>
               <h2 className={styles.title}>
-                Step inside, <em>one room at a time.</em>
+                <Translation
+                  i18nKey="homepage:communities.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
             </div>
             <div className={styles.headRight}>
-              <p className={styles.sub}>
-                Search or filter the list, then open any community to see the
-                whole room — what it is, what it does, who&apos;s inside, and
-                what you unlock by joining.
-              </p>
+              <p className={styles.sub}>{t("homepage:communities.sub")}</p>
               <Button variant="ghost" to={routes.communities}>
-                Browse all communities <FiArrowRight aria-hidden />
+                {t("homepage:communities.browseAllCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Button>
             </div>
           </div>
@@ -91,15 +94,15 @@ export function Communities() {
 
         <Reveal>
           <p className={styles.resultCount}>
-            {shown === total ? (
-              <>
-                <b>{total}</b> communities
-              </>
-            ) : (
-              <>
-                <b>{shown}</b> of {total} communities
-              </>
-            )}
+            <Translation
+              i18nKey={
+                shown === total
+                  ? "homepage:communities.resultCount.all"
+                  : "homepage:communities.resultCount.shown"
+              }
+              values={{ count: shown, total }}
+              components={{ b: <b /> }}
+            />
           </p>
         </Reveal>
 

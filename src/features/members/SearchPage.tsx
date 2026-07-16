@@ -3,11 +3,13 @@ import { Link, useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
 import {
   TYPE_BG,
   TYPE_ICON,
-  TYPE_LABEL,
+  TYPE_LABEL_KEY,
   TABS,
   type ResultType,
   type SearchItem,
@@ -47,6 +49,7 @@ function SkeletonGroup() {
 }
 
 function ResultCard({ item }: { item: SearchItem }) {
+  const { t } = useTranslation();
   const TypeIcon = TYPE_ICON[item.t];
   return (
     <Link to={linkToPath(item.href)} className={styles.card}>
@@ -54,7 +57,7 @@ function ResultCard({ item }: { item: SearchItem }) {
         <TypeIcon />
       </div>
       <div className={styles.cardBody}>
-        <div className={styles.cardType}>{TYPE_LABEL[item.t]}</div>
+        <div className={styles.cardType}>{t(TYPE_LABEL_KEY[item.t])}</div>
         <div className={styles.cardName}>{item.name}</div>
         <div className={styles.cardSub}>{item.sub}</div>
       </div>
@@ -64,16 +67,26 @@ function ResultCard({ item }: { item: SearchItem }) {
 
 /** Live-mode placeholder — search isn't wired to the backend yet. */
 function SearchComingSoon() {
+  const { t } = useTranslation();
   return (
     <div className={styles.comingSoon}>
-      <span className={styles.comingSoonBadge}>Coming soon</span>
+      <span className={styles.comingSoonBadge}>
+        {t("members:search.comingSoon.badge")}
+      </span>
       <h2 className={styles.comingSoonTitle}>
-        Search is <em>almost here.</em>
+        <Translation
+          i18nKey="members:search.comingSoon.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.comingSoonText}>
-        We're wiring live search to the community — members, gatherings,
-        communities, and board posts, all in one place. For now it's resting.
-        Turn on <b>Populate platform</b> to explore the demo.
+        <Translation
+          i18nKey="members:search.comingSoon.body"
+          components={{ b: <b /> }}
+          values={{
+            toggleName: t("shared:accountMenu.controls.populatePlatform"),
+          }}
+        />
       </p>
     </div>
   );
@@ -96,6 +109,7 @@ function Group({ items, label }: { items: SearchItem[]; label: string }) {
 }
 
 export function SearchPage() {
+  const { t } = useTranslation();
   // The query lives in the URL (?q=…) so it's shareable, bookmarkable, and can be
   // pre-filled by the global ⌘K command palette.
   const loading = useSimulatedLoad();
@@ -121,7 +135,9 @@ export function SearchPage() {
     content = (
       <>
         <div className={styles.recent}>
-          <div className={styles.recentLabel}>Recent searches</div>
+          <div className={styles.recentLabel}>
+            {t("members:search.recentSearches")}
+          </div>
           <div className={styles.recentChips}>
             {recents.map((r) => (
               <button
@@ -148,15 +164,15 @@ export function SearchPage() {
         </div>
         <Group
           items={searchData.filter((d) => d.t === "topic")}
-          label="Browse topics"
+          label={t("members:search.browseTopics")}
         />
         <Group
           items={searchData.filter((d) => d.t === "member").slice(0, 6)}
-          label="Members"
+          label={t(TYPE_LABEL_KEY.member)}
         />
         <Group
           items={searchData.filter((d) => d.t === "gathering")}
-          label="Upcoming gatherings"
+          label={t("members:search.upcomingGatherings")}
         />
       </>
     );
@@ -173,7 +189,11 @@ export function SearchPage() {
     const banner = topicJump ? (
       <Link to={linkToPath(topicJump.href)} className={styles.jump}>
         <span className={styles.jumpText}>
-          Jump to <b>{topicJump.name}</b>
+          <Translation
+            i18nKey="members:search.jumpTo"
+            components={{ b: <b /> }}
+            values={{ name: topicJump.name }}
+          />
         </span>
         <span className={styles.jumpArrow} aria-hidden>
           →
@@ -182,8 +202,11 @@ export function SearchPage() {
     ) : null;
     const countEl = (
       <div className={styles.count}>
-        <b>{hits.length}</b> result{hits.length === 1 ? "" : "s"} for "
-        <b>{query.trim()}</b>"
+        <Translation
+          i18nKey="members:search.resultCount"
+          components={{ b: <b /> }}
+          values={{ count: hits.length, query: query.trim() }}
+        />
       </div>
     );
     if (!hits.length) {
@@ -203,11 +226,8 @@ export function SearchPage() {
               <circle cx="11" cy="11" r="7" />
               <path d="m21 21-4.35-4.35" />
             </svg>
-            <h3>Nothing found</h3>
-            <p>
-              Try a different word — member name, neighbourhood, skill, or type
-              of gathering.
-            </p>
+            <h3>{t("members:search.empty.title")}</h3>
+            <p>{t("members:search.empty.body")}</p>
           </div>
         </>
       );
@@ -227,7 +247,7 @@ export function SearchPage() {
             <Group
               key={typ}
               items={hits.filter((h) => h.t === typ)}
-              label={TYPE_LABEL[typ]}
+              label={t(TYPE_LABEL_KEY[typ])}
             />
           ))}
         </>
@@ -237,7 +257,7 @@ export function SearchPage() {
         <>
           {banner}
           {countEl}
-          <Group items={hits} label={TYPE_LABEL[tab]} />
+          <Group items={hits} label={t(TYPE_LABEL_KEY[tab])} />
         </>
       );
     }
@@ -247,9 +267,12 @@ export function SearchPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.label}>Search</div>
+          <div className={styles.label}>{t("members:search.hero.label")}</div>
           <h1 className={styles.title}>
-            Find anyone, anything <em>in the community.</em>
+            <Translation
+              i18nKey="members:search.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           {!comingSoon && (
             <div className={styles.barWrap}>
@@ -268,7 +291,7 @@ export function SearchPage() {
               <input
                 className={styles.barInput}
                 type="text"
-                placeholder="Members, gatherings, communities, board posts…"
+                placeholder={t("members:search.hero.placeholder")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
@@ -282,16 +305,19 @@ export function SearchPage() {
         <div className="wrap">
           {!comingSoon && (
             <div className={styles.tabs}>
-              {TABS.map((t) => (
+              {TABS.map((tabOption) => (
                 <button
-                  key={t.id}
+                  key={tabOption.id}
                   type="button"
-                  className={[styles.tab, tab === t.id && styles.tabActive]
+                  className={[
+                    styles.tab,
+                    tab === tabOption.id && styles.tabActive,
+                  ]
                     .filter(Boolean)
                     .join(" ")}
-                  onClick={() => setTab(t.id)}
+                  onClick={() => setTab(tabOption.id)}
                 >
-                  {t.label}
+                  {t(tabOption.labelKey)}
                 </button>
               ))}
             </div>

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ImageSlot, type ImageSlotTint } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ImageProcessingError } from "./api/uploadProcessing";
 import { useUploadImage } from "./api/useUploadImage";
 import styles from "./ProfileEdit.module.css";
 
@@ -24,6 +26,7 @@ export function AvatarEditor({
   onChange: (url: string) => void;
   onRemove: () => void;
 }) {
+  const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
   const createdUrl = useRef<string | null>(null);
   const uploadAvatar = useUploadImage("avatar");
@@ -54,9 +57,9 @@ export function AvatarEditor({
       onChange(url);
     } catch (err) {
       setError(
-        err instanceof Error && err.message
-          ? err.message
-          : "We couldn't add that photo. Please try again.",
+        err instanceof ImageProcessingError
+          ? t(err.i18nKey, err.values)
+          : t("members:avatar.error.generic"),
       );
     } finally {
       setUploading(false);
@@ -82,16 +85,16 @@ export function AvatarEditor({
         >
           <FiCamera size={15} />
           {uploading
-            ? `Uploading… ${progress}%`
+            ? t("members:avatar.uploading", { percent: progress })
             : photo
-              ? "Change photo"
-              : "Add photo"}
+              ? t("members:avatar.change")
+              : t("members:avatar.add")}
         </button>
         {photo && !uploading && (
           <button
             type="button"
             className={`${styles.avatarBtn} ${styles.avatarBtnGhost}`}
-            aria-label="Remove photo"
+            aria-label={t("members:avatar.remove")}
             onClick={() => {
               if (createdUrl.current) {
                 URL.revokeObjectURL(createdUrl.current);

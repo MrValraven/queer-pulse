@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./auth.module.css";
 
 type Tone = "coral" | "jade" | "cream";
@@ -45,12 +46,13 @@ function driftFrom(o: Orb) {
  *  orbs drifting home toward one warm coral centre that keeps a place for you.
  *  Token-built so it themes in light and dark; sits on the plum art tile. */
 export function CommunityArt() {
+  const { t } = useTranslation();
   return (
     <svg
       className={styles.artSvg}
       viewBox="0 0 300 150"
       role="img"
-      aria-label="A community gathered around one warm centre, keeping a place for you"
+      aria-label={t("auth:communityArt.ariaLabel")}
     >
       <defs>
         <radialGradient id="qpHearthGlow">

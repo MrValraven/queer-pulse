@@ -2,11 +2,16 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { SUSTAIN_PRICE } from "./studioShell.data";
 import { TOP_NAV, FOOTER_COLUMNS } from "./studioLanding.data";
 import styles from "./StudioLandingPage.module.css";
 
 /** Logged-out marketing chrome for the Studio landing: sticky topbar + footer. */
 export function StudioLandingShell({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.page}>
       <header className={styles.top}>
@@ -14,20 +19,20 @@ export function StudioLandingShell({ children }: { children: ReactNode }) {
           <span className={styles.pulseDot} aria-hidden />
           Queer<span className={styles.q}>Pulse</span>
         </Link>
-        <span className={styles.product}>Studio</span>
+        <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
         <nav className={styles.topNav}>
           {TOP_NAV.map((l) => (
             <Link key={l.label} to={l.to}>
-              {l.label}
+              {t(l.labelKey)}
             </Link>
           ))}
         </nav>
         <div className={styles.topRight}>
           <Button variant="ghost-dark" to={routes.signIn}>
-            Sign in
+            {t("common:cta.signIn")}
           </Button>
           <Button variant="primary" to={routes.sustainer}>
-            Sustain · €7/mo
+            {t("studio:shell.sustainCta", { price: fmt.currency(SUSTAIN_PRICE) })}
           </Button>
         </div>
       </header>
@@ -40,6 +45,8 @@ export function StudioLandingShell({ children }: { children: ReactNode }) {
 }
 
 function StudioLandingFooter() {
+  const { t } = useTranslation();
+  const currentYear = new Date().getFullYear();
   return (
     <footer className={styles.foot}>
       <div className={styles.footInner}>
@@ -48,18 +55,15 @@ function StudioLandingFooter() {
             <span className={styles.pulseDot} aria-hidden />
             Queer<span className={styles.q}>Pulse</span>
           </Link>
-          <p>
-            A queer professional network rooted in Lisbon. Studio is one of its
-            rooms — alongside Cinema, Magazine, and Gatherings.
-          </p>
+          <p>{t("studio:landing.footer.tagline")}</p>
         </div>
         <div className={styles.footCols}>
           {FOOTER_COLUMNS.map((col) => (
             <div key={col.title} className={styles.footCol}>
-              <h4>{col.title}</h4>
+              <h4>{t(col.titleKey)}</h4>
               {col.links.map((l) => (
                 <Link key={l.label} to={l.to}>
-                  {l.label}
+                  {t(l.labelKey)}
                 </Link>
               ))}
             </div>
@@ -67,8 +71,8 @@ function StudioLandingFooter() {
         </div>
       </div>
       <div className={styles.footBase}>
-        <span>© 2026 QueerPulse Studio Co-op CRL — Lisbon</span>
-        <span>EN · PT</span>
+        <span>{t("studio:landing.footer.copyright", { year: currentYear })}</span>
+        <span>{t("studio:landing.footer.languages")}</span>
       </div>
     </footer>
   );

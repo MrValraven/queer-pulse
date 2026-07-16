@@ -7,6 +7,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type {
   CommunityDetail,
@@ -21,6 +22,7 @@ const GATHERING = routes.gathering;
 const MEMBER = routes.members;
 
 export function AboutTab({ detail }: { detail: CommunityDetail }) {
+  const { t } = useTranslation();
   return (
     <div>
       {detail.about.map((p, i) => (
@@ -29,7 +31,7 @@ export function AboutTab({ detail }: { detail: CommunityDetail }) {
         </p>
       ))}
 
-      <div className={styles.secLbl}>Who this is for</div>
+      <div className={styles.secLbl}>{t("communities:detail.about.whoFor")}</div>
       {detail.whoFor.map((w) => (
         <div className={styles.bullet} key={w}>
           <div className={styles.bulletDot} />
@@ -37,7 +39,9 @@ export function AboutTab({ detail }: { detail: CommunityDetail }) {
         </div>
       ))}
 
-      <div className={styles.secLbl}>Upcoming gathering</div>
+      <div className={styles.secLbl}>
+        {t("communities:detail.about.upcomingGathering")}
+      </div>
       <Link to={GATHERING} className={styles.gCard}>
         <div className={styles.gDate}>
           <div className={styles.gDd}>{detail.nextEvent.dd}</div>
@@ -73,6 +77,7 @@ export function MembersTab({
   memberNum: number;
   loading?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div>
       <div className={styles.memberGrid} aria-busy={loading}>
@@ -119,8 +124,11 @@ export function MembersTab({
       {!loading && (
         <p className={styles.showing}>
           {hasCount
-            ? `Showing 8 of ${memberNum} members`
-            : "Showing the core members"}
+            ? t("communities:detail.members.showingOf", {
+                shown: 8,
+                count: memberNum,
+              })
+            : t("communities:detail.members.showingCore")}
         </p>
       )}
     </div>
@@ -134,6 +142,7 @@ export function ForumTab({
   threads: ThreadData[];
   loading?: boolean;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [newPost, setNewPost] = useState("");
   const [extraThreads, setExtraThreads] = useState<ThreadData[]>([]);
@@ -147,7 +156,7 @@ export function ForumTab({
         votes: 1,
         title,
         author: { initials: "Me", name: "You", tint: "plum" },
-        time: "just now",
+        time: t("communities:common.justNow"),
         replyCount: 0,
         post: text,
         replies: [],
@@ -155,7 +164,7 @@ export function ForumTab({
       ...prev,
     ]);
     setNewPost("");
-    showToast("Post added to the community forum.", "success");
+    showToast(t("communities:detail.forum.postedToast"), "success");
   };
 
   if (loading) {
@@ -200,7 +209,7 @@ export function ForumTab({
         <textarea
           className={styles.npTa}
           rows={1}
-          placeholder="Start a new discussion in this community…"
+          placeholder={t("communities:detail.forum.newPostPlaceholder")}
           value={newPost}
           onChange={(e) => setNewPost(e.target.value)}
         />
@@ -209,7 +218,7 @@ export function ForumTab({
           onClick={post}
           style={{ whiteSpace: "nowrap", fontSize: 13 }}
         >
-          Post
+          {t("communities:detail.forum.postCta")}
         </Button>
       </div>
     </div>

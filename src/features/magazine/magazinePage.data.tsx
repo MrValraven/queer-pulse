@@ -49,8 +49,10 @@ const COMMUNITY_IMG3 =
 
 export interface ArchiveIssue {
   title: string;
-  month: string;
-  count: string;
+  /** Held as a `Date` so the component formats it through `useFormat()`. */
+  date: Date;
+  issueNumber: number;
+  articleCount: number;
   bg: string;
 }
 
@@ -314,54 +316,66 @@ export const LETTERS: Letter[] = [
 export const ARCHIVE: ArchiveIssue[] = [
   {
     title: "The Night We Stopped Pretending",
-    month: "May 2026",
-    count: "Issue 17 · 8 articles",
+    date: new Date(2026, 4, 1),
+    issueNumber: 17,
+    articleCount: 8,
     bg: "var(--plum)",
   },
   {
     title: "What Solidarity Actually Costs",
-    month: "April 2026",
-    count: "Issue 16 · 7 articles",
+    date: new Date(2026, 3, 1),
+    issueNumber: 16,
+    articleCount: 7,
     bg: "var(--jade)",
   },
   {
     title: "Bodies in Translation",
-    month: "March 2026",
-    count: "Issue 15 · 9 articles",
+    date: new Date(2026, 2, 1),
+    issueNumber: 15,
+    articleCount: 9,
     bg: "var(--accent-ink)",
   },
   {
     title: "The Queer City Guide",
-    month: "February 2026",
-    count: "Issue 14 · 6 articles",
+    date: new Date(2026, 1, 1),
+    issueNumber: 14,
+    articleCount: 6,
     bg: "#1E3A5F",
   },
 ];
 
-export const NAV = [
-  "Features",
-  "Essays",
-  "Interviews",
-  "Reviews",
-  "Community Life",
-  "Letters",
-  "Archive",
+/**
+ * i18n Pattern A — section nav anchors. The anchor slugs are fixed English
+ * strings (they must match the `id`s rendered by `MagazineSections`
+ * regardless of language); only the visible label is translated.
+ */
+export const NAV_ITEMS: { anchor: string; labelKey: string }[] = [
+  { anchor: "features", labelKey: "magazine:landing.nav.features" },
+  { anchor: "essays", labelKey: "magazine:landing.nav.essays" },
+  { anchor: "interviews", labelKey: "magazine:landing.nav.interviews" },
+  { anchor: "reviews", labelKey: "magazine:landing.nav.reviews" },
+  {
+    anchor: "community-life",
+    labelKey: "magazine:landing.nav.communityLife",
+  },
+  { anchor: "letters", labelKey: "magazine:landing.nav.letters" },
+  { anchor: "archive", labelKey: "magazine:landing.nav.archive" },
 ];
 
 export const MAGAZINE_SUBPAGES = [
   {
-    label: "Cover gallery",
+    labelKey: "magazine:landing.subpages.covers.label",
     to: routes.coverGallery,
-    blurb: "Every cover we've published, in one place.",
+    blurbKey: "magazine:landing.subpages.covers.blurb",
   },
   {
-    label: "Long reads",
+    labelKey: "magazine:landing.subpages.longreads.label",
     to: routes.tag,
-    blurb: "Our longest, deepest reporting and essays.",
+    blurbKey: "magazine:landing.subpages.longreads.blurb",
   },
   {
-    label: "Newsletter",
+    labelKey: "magazine:landing.subpages.newsletter.label",
     to: routes.newsletterArchive,
-    blurb: "Past editions of the QueerPulse newsletter.",
+    blurbKey: "magazine:landing.subpages.newsletter.blurb",
   },
 ];

@@ -12,13 +12,18 @@ import {
 } from "react-icons/fi";
 import { useState } from "react";
 import { FormField } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ANCHOR,
   CATS,
+  catLabel,
   findDuplicates,
   GOODFOR,
+  goodForLabel,
   initials,
   LANGS,
+  langLabel,
   NEIGHBOURHOODS,
   PRICES,
   VERIFY,
@@ -43,19 +48,20 @@ export function StepPath({
   form: ListingForm;
   userName: string;
 }) {
+  const { t } = useTranslation();
   const { draft, pickPath, set } = form;
   return (
     <>
       <PaneHeader
-        title="How do you"
-        em="know this place?"
-        sub="Both paths are welcome, and both go through the same community review. It just changes a couple of questions later."
+        title={t("marketing:listBusiness.step0.title")}
+        em={t("marketing:listBusiness.step0.em")}
+        sub={t("marketing:listBusiness.step0.sub")}
       />
       <div
         id={ANCHOR.path}
         className={styles.pathGrid}
         role="radiogroup"
-        aria-label="Your relationship to the place"
+        aria-label={t("marketing:listBusiness.step0.pathAria")}
       >
         <button
           type="button"
@@ -72,11 +78,8 @@ export function StepPath({
           <span className={`${styles.pcIc} ${styles.pcIcOwn}`}>
             <FiHome />
           </span>
-          <b>I run this place</b>
-          <span>
-            You own it, lead it, or work here. We'll ask you to verify ownership
-            so the directory stays trustworthy.
-          </span>
+          <b>{t("marketing:listBusiness.step0.claim.title")}</b>
+          <span>{t("marketing:listBusiness.step0.claim.desc")}</span>
         </button>
         <button
           type="button"
@@ -93,21 +96,15 @@ export function StepPath({
           <span className={`${styles.pcIc} ${styles.pcIcSug}`}>
             <FiHeart />
           </span>
-          <b>I'm suggesting a place I love</b>
-          <span>
-            A spot that's been good to you. The team will reach out to the owner
-            before it goes live.
-          </span>
+          <b>{t("marketing:listBusiness.step0.suggest.title")}</b>
+          <span>{t("marketing:listBusiness.step0.suggest.desc")}</span>
         </button>
       </div>
 
       {draft.path === "claim" && (
         <div id={ANCHOR.verify} className={styles.revealBlock}>
-          <label>How should we verify you run this place?</label>
-          <p>
-            It's what keeps the directory trustworthy. Pick whatever's easiest
-            for you.
-          </p>
+          <label>{t("marketing:listBusiness.step0.verifyLabel")}</label>
+          <p>{t("marketing:listBusiness.step0.verifyHelp")}</p>
           <div className={styles.stack}>
             {VERIFY.map((v: VerifyOption) => {
               const Icon = VERIFY_ICON[v.id] ?? FiMail;
@@ -127,10 +124,10 @@ export function StepPath({
                     <Icon size={17} />
                   </span>
                   <span className={styles.radioTxt}>
-                    <b>{v.label}</b>
-                    <span>{v.desc}</span>
+                    <b>{t(v.labelKey)}</b>
+                    <span>{t(v.descKey)}</span>
                   </span>
-                  <span className={styles.voBadge}>{v.badge}</span>
+                  <span className={styles.voBadge}>{t(v.badgeKey)}</span>
                 </button>
               );
             })}
@@ -141,9 +138,11 @@ export function StepPath({
       <div className={styles.consent}>
         <FiInfo size={17} aria-hidden />
         <p>
-          You're signed in as <b>{userName}</b> — we'll attach this submission
-          to your member profile so the team knows who to thank (and ask, if
-          needed).
+          <Translation
+            i18nKey="marketing:listBusiness.step0.signedInAs"
+            components={{ b: <b /> }}
+            values={{ name: userName }}
+          />
         </p>
       </div>
     </>
@@ -152,26 +151,27 @@ export function StepPath({
 
 /* ===== Step 1 — Basics ===== */
 export function StepBasics({ form }: { form: ListingForm }) {
+  const { t } = useTranslation();
   const { draft, set, toggleCat, pickBadge } = form;
   const dups = findDuplicates(draft.name);
   return (
     <>
       <PaneHeader
-        title="Start with"
-        em="the basics."
-        sub="Just enough to put your place on the map. You can make it sing in the next step."
+        title={t("marketing:listBusiness.step1.title")}
+        em={t("marketing:listBusiness.step1.em")}
+        sub={t("marketing:listBusiness.step1.sub")}
       />
 
       <FormField
         id={ANCHOR.name}
-        label="What's it called?"
+        label={t("marketing:listBusiness.step1.nameLabel")}
         required
-        helper="The name as people would search for it."
+        helper={t("marketing:listBusiness.step1.nameHelper")}
       >
         <input
           type="text"
           maxLength={60}
-          placeholder="e.g. Café Beirão"
+          placeholder={t("marketing:listBusiness.step1.namePlaceholder")}
           value={draft.name}
           onChange={(e) => set({ name: e.target.value })}
         />
@@ -179,7 +179,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
       {dups.length > 0 && (
         <div className={styles.dupNotice} role="alert">
           <div className={styles.dnHead}>
-            A place by this name may already be in the directory:
+            {t("marketing:listBusiness.step1.dupHead")}
           </div>
           {dups.map((m) => (
             <div key={m.name} className={styles.dupMatch}>
@@ -187,7 +187,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
               <span className={styles.dmInfo}>
                 <b>{m.name}</b>
                 <span>
-                  {m.cat} · {m.hood}
+                  {catLabel(t, m.cat)} · {m.hood}
                 </span>
               </span>
             </div>
@@ -197,10 +197,14 @@ export function StepBasics({ form }: { form: ListingForm }) {
 
       <FormField
         id={ANCHOR.cats}
-        label="What kind of place is it? — pick up to 2"
+        label={t("marketing:listBusiness.step1.catsLabel")}
         required
       >
-        <div className={styles.chipRow} role="group" aria-label="Category">
+        <div
+          className={styles.chipRow}
+          role="group"
+          aria-label={t("marketing:listBusiness.step1.catsAria")}
+        >
           {CATS.map((c) => {
             const on = draft.cats.includes(c);
             const full = draft.cats.length >= 2 && !on;
@@ -215,19 +219,25 @@ export function StepBasics({ form }: { form: ListingForm }) {
                   .join(" ")}
                 onClick={() => toggleCat(c)}
               >
-                {c}
+                {catLabel(t, c)}
               </button>
             );
           })}
         </div>
       </FormField>
 
-      <FormField id={ANCHOR.hood} label="Which neighbourhood?" required>
+      <FormField
+        id={ANCHOR.hood}
+        label={t("marketing:listBusiness.step1.hoodLabel")}
+        required
+      >
         <select
           value={draft.hood}
           onChange={(e) => set({ hood: e.target.value })}
         >
-          <option value="">Pick a Lisbon neighbourhood…</option>
+          <option value="">
+            {t("marketing:listBusiness.step1.hoodPlaceholder")}
+          </option>
           {NEIGHBOURHOODS.map((h) => (
             <option key={h} value={h}>
               {h}
@@ -238,14 +248,14 @@ export function StepBasics({ form }: { form: ListingForm }) {
 
       <FormField
         id={ANCHOR.badge}
-        label="Who runs it?"
+        label={t("marketing:listBusiness.step1.badgeLabel")}
         required
-        helper="Queer-owned, or a place that genuinely welcomes us? Both belong here — this is a welcome, not a gate."
+        helper={t("marketing:listBusiness.step1.badgeHelper")}
       >
         <div
           className={styles.optGrid}
           role="radiogroup"
-          aria-label="Ownership"
+          aria-label={t("marketing:listBusiness.step1.badgeAria")}
         >
           <button
             type="button"
@@ -257,10 +267,10 @@ export function StepBasics({ form }: { form: ListingForm }) {
             onClick={() => pickBadge("owned")}
           >
             <span className={`${styles.ownTag} ${styles.ownTagJade}`}>
-              Queer-owned
+              {t("marketing:listBusiness.step1.owned.tag")}
             </span>
-            <b>Owned or led by our community</b>
-            <span>You, your co-owners, or leadership are LGBTQ+.</span>
+            <b>{t("marketing:listBusiness.step1.owned.title")}</b>
+            <span>{t("marketing:listBusiness.step1.owned.desc")}</span>
           </button>
           <button
             type="button"
@@ -275,25 +285,24 @@ export function StepBasics({ form }: { form: ListingForm }) {
             onClick={() => pickBadge("friendly")}
           >
             <span className={`${styles.ownTag} ${styles.ownTagCoral}`}>
-              LGBTQ+ friendly
+              {t("marketing:listBusiness.step1.friendly.tag")}
             </span>
-            <b>A place that welcomes us</b>
-            <span>Not queer-owned, but actively safe and affirming.</span>
+            <b>{t("marketing:listBusiness.step1.friendly.title")}</b>
+            <span>{t("marketing:listBusiness.step1.friendly.desc")}</span>
           </button>
         </div>
       </FormField>
       {draft.badge === "owned" && (
         <div className={styles.revealBlock}>
-          <label>A light touch — how is it queer-owned?</label>
-          <p>
-            No documents. Just a sentence the reviewer can sanity-check. This is
-            what keeps the badge meaningful.
-          </p>
+          <label>{t("marketing:listBusiness.step1.evidenceLabel")}</label>
+          <p>{t("marketing:listBusiness.step1.evidenceHelp")}</p>
           <FormField>
             <input
               type="text"
               maxLength={120}
-              placeholder="e.g. Co-owned by me (Sandra, she/her) and Rui (he/him) since 2019"
+              placeholder={t(
+                "marketing:listBusiness.step1.evidencePlaceholder",
+              )}
               value={draft.evidence}
               onChange={(e) => set({ evidence: e.target.value })}
             />
@@ -301,11 +310,15 @@ export function StepBasics({ form }: { form: ListingForm }) {
         </div>
       )}
 
-      <FormField id={ANCHOR.price} label="Roughly the price?" required>
+      <FormField
+        id={ANCHOR.price}
+        label={t("marketing:listBusiness.step1.priceLabel")}
+        required
+      >
         <div
           className={styles.priceRow}
           role="radiogroup"
-          aria-label="Price band"
+          aria-label={t("marketing:listBusiness.step1.priceAria")}
         >
           {PRICES.map((p) => {
             const on = draft.price === p.id;
@@ -321,7 +334,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
                 onClick={() => set({ price: p.id })}
               >
                 <span className={styles.priceSym}>{p.sym}</span>
-                <span className={styles.priceLbl}>{p.label}</span>
+                <span className={styles.priceLbl}>{t(p.labelKey)}</span>
               </button>
             );
           })}
@@ -330,14 +343,14 @@ export function StepBasics({ form }: { form: ListingForm }) {
 
       <FormField
         id={ANCHOR.blurb}
-        label="The one-liner"
+        label={t("marketing:listBusiness.step1.blurbLabel")}
         required
-        helper="This is the blurb on your directory card. One sentence, plain and warm."
+        helper={t("marketing:listBusiness.step1.blurbHelper")}
         labelAside={`${draft.blurb.length} / 140`}
       >
         <textarea
           maxLength={140}
-          placeholder="A queer-run pastelaria by day, community room by night."
+          placeholder={t("marketing:listBusiness.step1.blurbPlaceholder")}
           value={draft.blurb}
           onChange={(e) => set({ blurb: e.target.value })}
         />
@@ -348,6 +361,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
 
 /* ===== Step 2 — Story ===== */
 export function StepStory({ form }: { form: ListingForm }) {
+  const { t } = useTranslation();
   const { draft, set, setWit, addWit, delWit, addTag, removeTag, toggleIn } =
     form;
   const [tagInput, setTagInput] = useState("");
@@ -358,26 +372,26 @@ export function StepStory({ form }: { form: ListingForm }) {
   return (
     <>
       <PaneHeader
-        title="Now,"
-        em="the story."
-        sub="This is what fills out your detail page. Write like you'd describe the place to a friend who's new in town."
+        title={t("marketing:listBusiness.step2.title")}
+        em={t("marketing:listBusiness.step2.em")}
+        sub={t("marketing:listBusiness.step2.sub")}
       />
 
       <FormField
         id={ANCHOR.tagline}
-        label="Tagline"
+        label={t("marketing:listBusiness.step2.taglineLabel")}
         required
         helper={
-          <>
-            A single line shown big and italic at the top of your page.{" "}
-            <em>Make it the heart of the place.</em>
-          </>
+          <Translation
+            i18nKey="marketing:listBusiness.step2.taglineHelper"
+            components={{ em: <em /> }}
+          />
         }
       >
         <input
           type="text"
           maxLength={120}
-          placeholder="Nobody gets misgendered. The back room is always yours."
+          placeholder={t("marketing:listBusiness.step2.taglinePlaceholder")}
           value={draft.tagline}
           onChange={(e) => set({ tagline: e.target.value })}
         />
@@ -385,9 +399,9 @@ export function StepStory({ form }: { form: ListingForm }) {
 
       <FormField
         id={ANCHOR.whatItIs}
-        label="What it actually is"
+        label={t("marketing:listBusiness.step2.witLabel")}
         required
-        helper="Two to four short lines. The things you'd want a stranger to know walking in."
+        helper={t("marketing:listBusiness.step2.witHelper")}
       >
         <div>
           {draft.whatItIs.map((line, i) => (
@@ -395,11 +409,11 @@ export function StepStory({ form }: { form: ListingForm }) {
               <input
                 type="text"
                 maxLength={90}
-                placeholder={
+                placeholder={t(
                   i === 0
-                    ? "e.g. Galão, pastéis, two daily specials"
-                    : "One more thing worth knowing"
-                }
+                    ? "marketing:listBusiness.step2.witFirstPlaceholder"
+                    : "marketing:listBusiness.step2.witMorePlaceholder",
+                )}
                 value={line.text}
                 onChange={(e) => setWit(i, e.target.value)}
               />
@@ -407,7 +421,7 @@ export function StepStory({ form }: { form: ListingForm }) {
                 type="button"
                 className={styles.witDel}
                 onClick={() => delWit(i)}
-                aria-label="Remove line"
+                aria-label={t("marketing:listBusiness.step2.witRemoveAria")}
               >
                 <FiX />
               </button>
@@ -415,18 +429,18 @@ export function StepStory({ form }: { form: ListingForm }) {
           ))}
           {draft.whatItIs.length < 4 && (
             <button type="button" className={styles.witAdd} onClick={addWit}>
-              <FiPlus size={14} /> Add another line
+              <FiPlus size={14} /> {t("marketing:listBusiness.step2.witAdd")}
             </button>
           )}
         </div>
       </FormField>
 
-      <FormField label="Tags — a few words people might filter by">
+      <FormField label={t("marketing:listBusiness.step2.tagsLabel")}>
         <div className={styles.tagInputWrap}>
           <input
             type="text"
             maxLength={24}
-            placeholder="e.g. Wheelchair-accessible"
+            placeholder={t("marketing:listBusiness.step2.tagsPlaceholder")}
             value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
             onKeyDown={(e) => {
@@ -441,20 +455,22 @@ export function StepStory({ form }: { form: ListingForm }) {
             className={styles.hoursToolBtn}
             onClick={commitTag}
           >
-            Add
+            {t("marketing:listBusiness.step2.tagsAddCta")}
           </button>
         </div>
         {draft.tags.length > 0 && (
           <div className={styles.tagList}>
-            {draft.tags.map((t) => (
+            {draft.tags.map((tag) => (
               <button
-                key={t}
+                key={tag}
                 type="button"
                 className={styles.tagPill}
-                onClick={() => removeTag(t)}
-                aria-label={`Remove ${t}`}
+                onClick={() => removeTag(tag)}
+                aria-label={t("marketing:listBusiness.step2.tagRemoveAria", {
+                  tag,
+                })}
               >
-                {t} <FiX size={11} />
+                {tag} <FiX size={11} />
               </button>
             ))}
           </div>
@@ -462,10 +478,14 @@ export function StepStory({ form }: { form: ListingForm }) {
       </FormField>
 
       <FormField
-        label="Good for… — tick what's true"
-        helper="The little things that tell our people they're safe and welcome."
+        label={t("marketing:listBusiness.step2.goodForLabel")}
+        helper={t("marketing:listBusiness.step2.goodForHelper")}
       >
-        <div className={styles.gfGrid} role="group" aria-label="Good for">
+        <div
+          className={styles.gfGrid}
+          role="group"
+          aria-label={t("marketing:listBusiness.step2.goodForAria")}
+        >
           {GOODFOR.map((g) => {
             const on = draft.goodFor.includes(g);
             return (
@@ -478,15 +498,19 @@ export function StepStory({ form }: { form: ListingForm }) {
                   .join(" ")}
                 onClick={() => toggleIn("goodFor", g)}
               >
-                {on && <FiCheck size={12} />} {g}
+                {on && <FiCheck size={12} />} {goodForLabel(t, g)}
               </button>
             );
           })}
         </div>
       </FormField>
 
-      <FormField label="Languages spoken — optional">
-        <div className={styles.chipRow} role="group" aria-label="Languages">
+      <FormField label={t("marketing:listBusiness.step2.langsLabel")}>
+        <div
+          className={styles.chipRow}
+          role="group"
+          aria-label={t("marketing:listBusiness.step2.langsAria")}
+        >
           {LANGS.map((l) => {
             const on = draft.langs.includes(l);
             return (
@@ -499,7 +523,7 @@ export function StepStory({ form }: { form: ListingForm }) {
                   .join(" ")}
                 onClick={() => toggleIn("langs", l)}
               >
-                {l}
+                {langLabel(t, l)}
               </button>
             );
           })}

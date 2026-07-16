@@ -1,17 +1,34 @@
 /* ===========================================================
    List Your Business — static option data, types, helpers.
-   Ported from the design bundle (qp-listing.js), English only.
+   Ported from the design bundle (qp-listing.js).
+
+   i18n note: option lists below (CATS, GOODFOR, LANGS) double as both
+   platform-authored chrome (the visible chip/dropdown label) AND the raw
+   value stored in `ListingDraft`/sent to the backend verbatim (the DTO is
+   the draft as-is — see `api/listings.api.ts`). Translating the stored value
+   itself would mean a language switch silently rewrites already-submitted
+   data, so these keep their canonical English id and gain a `_LABEL_KEYS`
+   lookup + `xLabel(s)` helper resolved with `t()` only at render time — the
+   "fused mock string" pattern from the extraction brief, applied to enum
+   values instead of a composed sentence. REL/VIS/NOTIFY/VERIFY/PRICES/DAYS
+   already had a separate `id`, so their label fields become `labelKey`s
+   directly. NEIGHBOURHOODS (Lisbon place names) are left untouched — proper
+   nouns that read identically in pt-PT, same rationale as the gatherings
+   HOOD_KEYS neighbourhood rail.
    =========================================================== */
+
+import type { TFunction } from "../../../shared/i18n/types";
 
 export const TOTAL_STEPS = 6;
 
-export const PILL_LABELS = [
-  "You & the place",
-  "Basics",
-  "Story",
-  "Practical",
-  "Photos & you",
-  "Review",
+/** Step-pill labels, as catalog keys — resolved with `t()` by the consumer. */
+export const PILL_LABEL_KEYS = [
+  "marketing:listBusiness.wizard.pill.path",
+  "marketing:listBusiness.wizard.pill.basics",
+  "marketing:listBusiness.wizard.pill.story",
+  "marketing:listBusiness.wizard.pill.practical",
+  "marketing:listBusiness.wizard.pill.photos",
+  "marketing:listBusiness.wizard.pill.review",
 ];
 
 /* ---------- Field anchors ----------
@@ -39,13 +56,18 @@ export const ANCHOR = {
   consent: "lb-consent",
 } as const;
 
-/** A still-unfilled required field: its human label + the anchor to jump to. */
+/** A still-unfilled required field: its label key + the anchor to jump to. */
 export interface MissingField {
-  label: string;
+  labelKey: string;
   anchor: string;
 }
 
 /* ---------- Option data ---------- */
+
+/* CATS / GOODFOR / LANGS keep their canonical English id — that id IS the
+   value stored in `ListingDraft` and sent to the backend verbatim — and gain
+   a `_LABEL_KEYS` lookup resolved with `t()` only at render, so a language
+   switch can never rewrite already-entered draft data. */
 
 export const CATS = [
   "Food & drink",
@@ -58,16 +80,33 @@ export const CATS = [
   "Gym & Fitness",
 ] as const;
 
+export const CAT_LABEL_KEYS: Record<string, string> = {
+  "Food & drink": "marketing:listBusiness.cat.foodDrink",
+  "Design & craft": "marketing:listBusiness.cat.designCraft",
+  "Health & care": "marketing:listBusiness.cat.healthCare",
+  Spaces: "marketing:listBusiness.cat.spaces",
+  Culture: "marketing:listBusiness.cat.culture",
+  Tech: "marketing:listBusiness.cat.tech",
+  "Barbershop & Salon": "marketing:listBusiness.cat.barbershopSalon",
+  "Gym & Fitness": "marketing:listBusiness.cat.gymFitness",
+};
+
+/** Display label for a stored category id. Falls back to the id itself. */
+export function catLabel(t: TFunction, id: string): string {
+  const key = CAT_LABEL_KEYS[id];
+  return key ? t(key) : id;
+}
+
 export interface PriceBand {
   id: string;
-  label: string;
+  labelKey: string;
   sym: string;
 }
 export const PRICES: PriceBand[] = [
-  { id: "Free", label: "Free", sym: "€0" },
-  { id: "€", label: "Affordable", sym: "€" },
-  { id: "€€", label: "Mid-range", sym: "€€" },
-  { id: "€€€", label: "Higher-end", sym: "€€€" },
+  { id: "Free", labelKey: "marketing:listBusiness.price.free", sym: "€0" },
+  { id: "€", labelKey: "marketing:listBusiness.price.affordable", sym: "€" },
+  { id: "€€", labelKey: "marketing:listBusiness.price.midRange", sym: "€€" },
+  { id: "€€€", labelKey: "marketing:listBusiness.price.higherEnd", sym: "€€€" },
 ];
 
 export const GOODFOR = [
@@ -83,6 +122,25 @@ export const GOODFOR = [
   "Accessible bathroom",
 ];
 
+export const GOODFOR_LABEL_KEYS: Record<string, string> = {
+  "Wheelchair accessible": "marketing:listBusiness.goodFor.wheelchairAccessible",
+  "Gender-neutral toilets": "marketing:listBusiness.goodFor.genderNeutralToilets",
+  "Step-free entrance": "marketing:listBusiness.goodFor.stepFreeEntrance",
+  "Walk-ins welcome": "marketing:listBusiness.goodFor.walkInsWelcome",
+  "Quiet, low-sensory hours": "marketing:listBusiness.goodFor.quietLowSensory",
+  "Solo-friendly": "marketing:listBusiness.goodFor.soloFriendly",
+  "Dog-friendly": "marketing:listBusiness.goodFor.dogFriendly",
+  "Hosts community events": "marketing:listBusiness.goodFor.hostsCommunityEvents",
+  "Budget-friendly": "marketing:listBusiness.goodFor.budgetFriendly",
+  "Accessible bathroom": "marketing:listBusiness.goodFor.accessibleBathroom",
+};
+
+/** Display label for a stored good-for id. Falls back to the id itself. */
+export function goodForLabel(t: TFunction, id: string): string {
+  const key = GOODFOR_LABEL_KEYS[id];
+  return key ? t(key) : id;
+}
+
 export const LANGS = [
   "Português",
   "English",
@@ -92,101 +150,128 @@ export const LANGS = [
   "Other",
 ];
 
+export const LANG_LABEL_KEYS: Record<string, string> = {
+  "Português": "marketing:listBusiness.lang.portugues",
+  English: "marketing:listBusiness.lang.english",
+  "Español": "marketing:listBusiness.lang.espanol",
+  "Français": "marketing:listBusiness.lang.francais",
+  "LGP (sign)": "marketing:listBusiness.lang.lgp",
+  Other: "marketing:listBusiness.lang.other",
+};
+
+/** Display label for a stored language id. Falls back to the id itself. */
+export function langLabel(t: TFunction, id: string): string {
+  const key = LANG_LABEL_KEYS[id];
+  return key ? t(key) : id;
+}
+
 export interface OptionRow {
   id: string;
-  label: string;
-  desc: string;
+  labelKey: string;
+  descKey: string;
 }
 
 export const REL: OptionRow[] = [
-  { id: "own", label: "I own or co-own it", desc: "You're the proprietor." },
+  {
+    id: "own",
+    labelKey: "marketing:listBusiness.rel.own.label",
+    descKey: "marketing:listBusiness.rel.own.desc",
+  },
   {
     id: "run",
-    label: "I manage or help run it",
-    desc: "Day-to-day, it's partly yours.",
+    labelKey: "marketing:listBusiness.rel.run.label",
+    descKey: "marketing:listBusiness.rel.run.desc",
   },
   {
     id: "work",
-    label: "I work here",
-    desc: "Staff, with the owner's blessing to list.",
+    labelKey: "marketing:listBusiness.rel.work.label",
+    descKey: "marketing:listBusiness.rel.work.desc",
   },
   {
     id: "regular",
-    label: "I'm a regular who loves it",
-    desc: "Suggesting a place that's been good to you.",
+    labelKey: "marketing:listBusiness.rel.regular.label",
+    descKey: "marketing:listBusiness.rel.regular.desc",
   },
 ];
 
 export const VIS: OptionRow[] = [
   {
     id: "public",
-    label: "My name and role",
-    desc: "Both shown on the listing.",
+    labelKey: "marketing:listBusiness.vis.public.label",
+    descKey: "marketing:listBusiness.vis.public.desc",
   },
-  { id: "role", label: "My role only", desc: '"Owner", but no name.' },
+  {
+    id: "role",
+    labelKey: "marketing:listBusiness.vis.role.label",
+    descKey: "marketing:listBusiness.vis.role.desc",
+  },
   {
     id: "anon",
-    label: "Keep me anonymous",
-    desc: "Visible only to the community team.",
+    labelKey: "marketing:listBusiness.vis.anon.label",
+    descKey: "marketing:listBusiness.vis.anon.desc",
   },
 ];
 
 export interface NotifyOption {
   id: string;
-  label: string;
+  labelKey: string;
   on: boolean;
 }
 export const NOTIFY: NotifyOption[] = [
-  { id: "live", label: "It goes live", on: true },
-  { id: "question", label: "The team has a question", on: true },
-  { id: "news", label: "Occasional directory news", on: false },
+  { id: "live", labelKey: "marketing:listBusiness.notify.live.label", on: true },
+  {
+    id: "question",
+    labelKey: "marketing:listBusiness.notify.question.label",
+    on: true,
+  },
+  { id: "news", labelKey: "marketing:listBusiness.notify.news.label", on: false },
 ];
 
 export interface VerifyOption {
   id: string;
-  label: string;
-  desc: string;
-  badge: string;
+  labelKey: string;
+  descKey: string;
+  badgeKey: string;
 }
 export const VERIFY: VerifyOption[] = [
   {
     id: "email",
-    label: "Business email",
-    desc: "We send a code to an address on your domain.",
-    badge: "Fastest",
+    labelKey: "marketing:listBusiness.verify.email.label",
+    descKey: "marketing:listBusiness.verify.email.desc",
+    badgeKey: "marketing:listBusiness.verify.email.badge",
   },
   {
     id: "instagram",
-    label: "Instagram",
-    desc: "Confirm with a DM from the listed account.",
-    badge: "Easy",
+    labelKey: "marketing:listBusiness.verify.instagram.label",
+    descKey: "marketing:listBusiness.verify.instagram.desc",
+    badgeKey: "marketing:listBusiness.verify.instagram.badge",
   },
   {
     id: "post",
-    label: "Postcard to the address",
-    desc: "Old-school. A code arrives in 3–5 days.",
-    badge: "3–5 days",
+    labelKey: "marketing:listBusiness.verify.post.label",
+    descKey: "marketing:listBusiness.verify.post.desc",
+    badgeKey: "marketing:listBusiness.verify.post.badge",
   },
   {
     id: "later",
-    label: "Verify after review",
-    desc: "The team verifies with you directly, human to human.",
-    badge: "Human",
+    labelKey: "marketing:listBusiness.verify.later.label",
+    descKey: "marketing:listBusiness.verify.later.desc",
+    badgeKey: "marketing:listBusiness.verify.later.badge",
   },
 ];
 
 export interface DayDef {
   id: string;
-  label: string;
+  labelKey: string;
 }
 export const DAYS: DayDef[] = [
-  { id: "Mon", label: "Monday" },
-  { id: "Tue", label: "Tuesday" },
-  { id: "Wed", label: "Wednesday" },
-  { id: "Thu", label: "Thursday" },
-  { id: "Fri", label: "Friday" },
-  { id: "Sat", label: "Saturday" },
-  { id: "Sun", label: "Sunday" },
+  { id: "Mon", labelKey: "marketing:listBusiness.day.mon" },
+  { id: "Tue", labelKey: "marketing:listBusiness.day.tue" },
+  { id: "Wed", labelKey: "marketing:listBusiness.day.wed" },
+  { id: "Thu", labelKey: "marketing:listBusiness.day.thu" },
+  { id: "Fri", labelKey: "marketing:listBusiness.day.fri" },
+  { id: "Sat", labelKey: "marketing:listBusiness.day.sat" },
+  { id: "Sun", labelKey: "marketing:listBusiness.day.sun" },
 ];
 
 export const NEIGHBOURHOODS = [

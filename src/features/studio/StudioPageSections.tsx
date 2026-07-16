@@ -4,6 +4,9 @@ import { FiHeart, FiPlus, FiCheck } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useSaved } from "../../app/providers/SavedProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { StudioTipModal } from "./StudioTipModal";
 import { SET, TRACKS, HERO_ART, type TrackCard } from "./studioPage.data";
 import { routes } from "../../app/routeMap";
@@ -13,11 +16,45 @@ const HERO_TRACK = {
   id: "post:studio-carta-para-a-santa",
   kind: "post" as const,
   title: "Carta para a santa",
+  titlePre: "Carta para a ",
+  titleEm: "santa",
   href: "/studio",
   meta: "Mariana Sol",
+  artist: "Mariana Sol",
+  album: "Cidade dos santos",
+  year: "2026",
+  place: "Sintra",
   description:
     "A letter to the saint who never wrote back — solo voice and piano, in one take.",
 };
+
+/** Live-session stats — mock numbers only; the surrounding sentences are chrome. */
+const HERO_STATS = {
+  onAirTrack: 6,
+  listeningNow: 312,
+  trackTotal: 11,
+  duration: "4:18",
+  audioFormat: "Flac · 24/48",
+  perPlayAmount: 0.05,
+};
+
+const WEDNESDAY_SET = {
+  titlePre: "Vespertina, ",
+  titleEm: "vol. iv",
+  description:
+    "Twelve tracks for the hour between sunset and the second bottle.",
+  curator: "Sara Marques",
+  listeners: 312,
+  sustainers: 89,
+  casual: 223,
+  cities: 41,
+  ledgerPaidArtists: 11940,
+  ledgerPlays: "202k",
+  ledgerArtistShare: 0.803,
+  ledgerPerPlay: 0.05,
+};
+
+const RECAP_AVATARS = ["JR", "RT", "SC", "YR", "PL", "DO"];
 
 const tagClass: Record<TrackCard["tag"], string> = {
   free: styles.tagFree!,
@@ -27,6 +64,8 @@ const tagClass: Record<TrackCard["tag"], string> = {
 export function StudioHero() {
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [tipOpen, setTipOpen] = useState(false);
   const saved = isSaved(HERO_TRACK.id);
 
@@ -47,29 +86,40 @@ export function StudioHero() {
         <div className={styles.heroInfo}>
           <div className={styles.eb}>
             <span className={styles.live} />
-            Track 6 · on the air now
+            {t("studio:room.hero.onAirEyebrow", { track: HERO_STATS.onAirTrack })}
           </div>
           <h1>
-            Carta para a <em>santa</em>
+            {HERO_TRACK.titlePre}
+            <em>{HERO_TRACK.titleEm}</em>
           </h1>
           <div className={styles.by}>
-            by <strong>Mariana Sol</strong> · from <em>Cidade dos santos</em> ·
-            2026 · Sintra
+            by <strong>{HERO_TRACK.artist}</strong> · from <em>{HERO_TRACK.album}</em> ·{" "}
+            {HERO_TRACK.year} · {HERO_TRACK.place}
           </div>
           <div className={styles.stats}>
             <span>
-              <em>312</em> listening
+              <Translation
+                i18nKey="studio:room.hero.listening"
+                components={{ em: <em /> }}
+                values={{ count: HERO_STATS.listeningNow }}
+              />
             </span>
             <span className={styles.dot} />
-            <span>Track 6 of 11 · 4:18</span>
+            <span>
+              {t("studio:room.hero.trackPosition", {
+                current: HERO_STATS.onAirTrack,
+                total: HERO_STATS.trackTotal,
+                duration: HERO_STATS.duration,
+              })}
+            </span>
             <span className={styles.dot} />
-            <span>Flac · 24/48</span>
+            <span>{HERO_STATS.audioFormat}</span>
           </div>
           <div className={styles.heroActions}>
             <Link
               to={routes.studioAlbum}
               className={styles.playBig}
-              aria-label="Play"
+              aria-label={t("studio:player.play")}
             >
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
@@ -80,18 +130,20 @@ export function StudioHero() {
               onClick={() => {
                 const now = toggleSave(HERO_TRACK);
                 showToast(
-                  now ? "Added to your library" : "Removed from your library",
+                  now
+                    ? t("studio:room.hero.addedToast")
+                    : t("studio:room.hero.removedToast"),
                   now ? "success" : "info",
                 );
               }}
             >
               {saved ? (
                 <>
-                  <FiCheck /> In library
+                  <FiCheck /> {t("studio:room.hero.inLibrary")}
                 </>
               ) : (
                 <>
-                  <FiPlus /> Library
+                  <FiPlus /> {t("studio:room.hero.addLibrary")}
                 </>
               )}
             </button>
@@ -100,7 +152,7 @@ export function StudioHero() {
               className={styles.tip}
               onClick={() => setTipOpen(true)}
             >
-              <FiHeart /> Tip €2
+              <FiHeart /> {t("studio:player.tipCta", { amount: fmt.currency(HERO_STATS.perPlayAmount) })}
             </button>
           </div>
           <div className={styles.payPill}>
@@ -113,15 +165,22 @@ export function StudioHero() {
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
             </svg>
             <span>
-              This listen pays Mariana <em>€0.05</em>.{" "}
-              <span className={styles.small}>Tip on top? 100% to her.</span>
+              <Translation
+                i18nKey="studio:room.hero.payNote"
+                components={{ em: <em /> }}
+                values={{
+                  artist: HERO_TRACK.artist,
+                  amount: fmt.currency(HERO_STATS.perPlayAmount),
+                }}
+              />{" "}
+              <span className={styles.small}>{t("studio:room.hero.tipOnTop")}</span>
             </span>
           </div>
         </div>
       </div>
       {tipOpen && (
         <StudioTipModal
-          recipient="Mariana Sol"
+          recipient={HERO_TRACK.artist}
           onClose={() => setTipOpen(false)}
         />
       )}
@@ -130,24 +189,27 @@ export function StudioHero() {
 }
 
 export function StudioSetSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.row}>
       <div className={styles.rowH}>
         <h2>
-          The Wednesday <em>set</em>
+          <Translation i18nKey="studio:room.set.title" components={{ em: <em /> }} />
         </h2>
         <div className={styles.sub}>
-          Programmed by Sara Marques · synchronous · 312 in the room
+          {t("studio:room.set.subtitle", {
+            curator: WEDNESDAY_SET.curator,
+            count: WEDNESDAY_SET.listeners,
+          })}
         </div>
       </div>
       <div className={styles.split}>
         <div className={styles.setCard}>
           <h3>
-            Vespertina, <em>vol. iv</em>
+            {WEDNESDAY_SET.titlePre}
+            <em>{WEDNESDAY_SET.titleEm}</em>
           </h3>
-          <div className={styles.setDesc}>
-            Twelve tracks for the hour between sunset and the second bottle.
-          </div>
+          <div className={styles.setDesc}>{WEDNESDAY_SET.description}</div>
           {SET.map((row) => (
             <div
               key={row.n}
@@ -189,19 +251,31 @@ export function StudioSetSection() {
 }
 
 function StudioSideCol() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.sideCol}>
       <div className={styles.sideCard}>
         <div className={styles.eb}>
           <span className={styles.live} />
-          In the room with you
+          {t("studio:room.set.sideHeading")}
         </div>
         <div className={styles.ct}>
-          <em>312</em> listening
+          <Translation
+            i18nKey="studio:room.hero.listening"
+            components={{ em: <em /> }}
+            values={{ count: WEDNESDAY_SET.listeners }}
+          />
         </div>
-        <div className={styles.sub}>89 sustainers · 223 casual · 41 cities</div>
+        <div className={styles.sub}>
+          {t("studio:room.set.sideSub", {
+            sustainers: WEDNESDAY_SET.sustainers,
+            casual: WEDNESDAY_SET.casual,
+            cities: WEDNESDAY_SET.cities,
+          })}
+        </div>
         <div className={styles.avStack}>
-          {["JR", "RT", "SC", "YR", "PL", "DO"].map((a, i) => (
+          {RECAP_AVATARS.map((a, i) => (
             <span
               key={a}
               className={[styles.av, i % 2 === 1 && styles.jade]
@@ -215,31 +289,30 @@ function StudioSideCol() {
       </div>
 
       <div className={styles.ledgerCard}>
-        <div className={styles.head}>Ledger · this month</div>
+        <div className={styles.head}>{t("studio:room.set.ledgerHead")}</div>
         <div className={styles.lrow}>
-          <span className={styles.k}>Paid to artists</span>
+          <span className={styles.k}>{t("studio:room.set.ledgerPaidArtists")}</span>
+          <span className={styles.v}>{fmt.currency(WEDNESDAY_SET.ledgerPaidArtists)}</span>
+        </div>
+        <div className={styles.lrow}>
+          <span className={styles.k}>{t("studio:room.set.ledgerPlays")}</span>
+          <span className={styles.v}>{WEDNESDAY_SET.ledgerPlays}</span>
+        </div>
+        <div className={styles.lrow}>
+          <span className={styles.k}>{t("studio:room.set.ledgerArtistShare")}</span>
           <span className={styles.v}>
-            €<em>11,940</em>
+            {fmt.number(WEDNESDAY_SET.ledgerArtistShare, {
+              style: "percent",
+              maximumFractionDigits: 1,
+            })}
           </span>
         </div>
         <div className={styles.lrow}>
-          <span className={styles.k}>Plays</span>
-          <span className={styles.v}>202k</span>
-        </div>
-        <div className={styles.lrow}>
-          <span className={styles.k}>Artist share</span>
-          <span className={styles.v}>
-            <em>80.3</em>%
-          </span>
-        </div>
-        <div className={styles.lrow}>
-          <span className={styles.k}>Per play</span>
-          <span className={styles.v}>
-            €<em>0.05</em>
-          </span>
+          <span className={styles.k}>{t("studio:room.set.ledgerPerPlay")}</span>
+          <span className={styles.v}>{fmt.currency(WEDNESDAY_SET.ledgerPerPlay)}</span>
         </div>
         <Link to={routes.governance} className={styles.cta}>
-          Read the plan →
+          {t("studio:room.set.readPlanCta")} →
         </Link>
       </div>
     </div>
@@ -247,43 +320,43 @@ function StudioSideCol() {
 }
 
 export function StudioTracksSection() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <section className={styles.row}>
       <div className={styles.rowH}>
         <h2>
-          This week, <em>programmed</em>
+          <Translation i18nKey="studio:room.tracks.title" components={{ em: <em /> }} />
         </h2>
-        <div className={styles.sub}>
-          Eight singles, each with a curator's name on it. Rotates Monday.
-        </div>
+        <div className={styles.sub}>{t("studio:room.tracks.subtitle")}</div>
         <Link to={routes.studioAlbum} className={styles.all}>
-          All →
+          {t("studio:room.tracks.allCta")} →
         </Link>
       </div>
       <div className={styles.rowGrid}>
-        {TRACKS.map((t) => (
+        {TRACKS.map((track) => (
           <Link
-            key={t.titlePre}
+            key={track.titlePre}
             to={routes.studioAlbum}
             className={styles.card}
           >
             <div className={styles.cardCov}>
               <ImageSlot
-                src={t.image}
-                tint={t.cvTint}
+                src={track.image}
+                tint={track.cvTint}
                 width="100%"
                 height="100%"
                 radius={10}
                 placeholder="cover"
                 style={{ position: "absolute", inset: 0 }}
               />
-              <span className={`${styles.tag} ${tagClass[t.tag]}`}>
-                {t.tagLabel}
+              <span className={`${styles.tag} ${tagClass[track.tag]}`}>
+                {track.tagLabel}
               </span>
               <span
                 role="button"
                 tabIndex={0}
-                aria-label="Play"
+                aria-label={t("studio:player.play")}
                 className={styles.playFab}
                 onClick={(e) => {
                   e.preventDefault();
@@ -301,17 +374,17 @@ export function StudioTracksSection() {
                 </svg>
               </span>
             </div>
-            <div className={styles.byCur}>{t.curator}</div>
+            <div className={styles.byCur}>{track.curator}</div>
             <h4>
-              {t.titlePre}
-              {t.titleEm && <em>{t.titleEm}</em>}
+              {track.titlePre}
+              {track.titleEm && <em>{track.titleEm}</em>}
             </h4>
             <div className={styles.meta}>
-              <span>{t.who}</span> · {t.time}
+              <span>{track.who}</span> · {track.time}
             </div>
             <div className={styles.payLine}>
-              <span>per play</span>
-              <em>€0.05</em>
+              <span>{t("studio:room.tracks.perPlay")}</span>
+              <em>{fmt.currency(HERO_STATS.perPlayAmount)}</em>
             </div>
           </Link>
         ))}

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { memberProfiles } from "../members/data/memberProfiles";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Person, Tint } from "./communityDetails";
 import styles from "./CommunityDetailPage.module.css";
 
@@ -23,6 +24,7 @@ export function CommunityHeroAvatars({
   memberNum: number;
   hasCount: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <div className={styles.avStrip}>
@@ -65,7 +67,9 @@ export function CommunityHeroAvatars({
         })}
       </div>
       {hasCount && memberNum > 5 && (
-        <span className={styles.stripNote}>and {memberNum - 5} more</span>
+        <span className={styles.stripNote}>
+          {t("communities:detail.hero.andMore", { count: memberNum - 5 })}
+        </span>
       )}
     </div>
   );

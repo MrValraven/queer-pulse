@@ -14,6 +14,8 @@ import {
   ImageSlot,
   type ImageSlotTint,
 } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../../app/routeMap";
 import type {
   CommunityAccess,
@@ -25,10 +27,10 @@ import { RoomChips, RosterFaces, Sparkline } from "./CommunitySpotlightParts";
 import { CAT_CLASS, FACE_TINT, WD_CLASS } from "./communityClasses";
 import styles from "./Communities.module.css";
 
-const ACCESS: Record<CommunityAccess, { label: string; icon: IconType }> = {
-  open: { label: "Open to join", icon: FiLogIn },
-  request: { label: "Request to join", icon: FiCheck },
-  private: { label: "Private", icon: FiLock },
+const ACCESS: Record<CommunityAccess, { labelKey: string; icon: IconType }> = {
+  open: { labelKey: "homepage:communities.access.open", icon: FiLogIn },
+  request: { labelKey: "homepage:communities.access.request", icon: FiCheck },
+  private: { labelKey: "homepage:communities.access.private", icon: FiLock },
 };
 
 const communityHref = (anchor: string) =>
@@ -79,20 +81,19 @@ function SpotlightSkeleton() {
 }
 
 function EmptySpotlight({ onClear }: { onClear: () => void }) {
+  const { t } = useTranslation();
   return (
     <article className={styles.spot}>
       <div className={styles.spotEmpty}>
-        <h3>Nothing here — yet.</h3>
-        <p>
-          No community matches those filters. Widen your search, or start the
-          one that&apos;s missing.
-        </p>
+        <h3>{t("homepage:communities.spotlight.emptyTitle")}</h3>
+        <p>{t("homepage:communities.spotlight.emptyBody")}</p>
         <div className={styles.emptyActions}>
           <Button variant="primary" onClick={onClear}>
-            Clear filters
+            {t("homepage:communities.clearFiltersCta")}
           </Button>
           <Button variant="ghost" to={routes.startCommunity}>
-            Start a community <FiArrowRight aria-hidden />
+            {t("homepage:communities.spotlight.startCommunityCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       </div>
@@ -101,13 +102,16 @@ function EmptySpotlight({ onClear }: { onClear: () => void }) {
 }
 
 function QuietSpotlight({ community: d }: { community: QuietCommunity }) {
+  const { t } = useTranslation();
   return (
     <article
       className={[styles.spot, styles.spotQuiet, styles.spotFade].join(" ")}
     >
       <div className={styles.spotBody}>
         <div className={styles.quietTop}>
-          <span className={styles.membersOnly}>Members only · private</span>
+          <span className={styles.membersOnly}>
+            {t("homepage:communities.spotlight.quiet.membersOnlyPrivate")}
+          </span>
           <span className={styles.quietLock}>
             <FiLock aria-hidden />
           </span>
@@ -116,10 +120,11 @@ function QuietSpotlight({ community: d }: { community: QuietCommunity }) {
         <p className={styles.spotDesc}>{d.desc}</p>
         <div className={[styles.spotFoot, styles.spotFootQuiet].join(" ")}>
           <span className={styles.membersOnly}>
-            Discreet &amp; safe · no headcount
+            {t("homepage:communities.spotlight.quiet.discreetSafe")}
           </span>
           <Button variant="ghost" to={communityHref(d.anchor)}>
-            Enter <FiArrowRight aria-hidden />
+            {t("homepage:communities.spotlight.quiet.enterCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       </div>
@@ -128,6 +133,7 @@ function QuietSpotlight({ community: d }: { community: QuietCommunity }) {
 }
 
 function FullSpotlight({ community: d }: { community: FullCommunity }) {
+  const { t } = useTranslation();
   const access = ACCESS[d.access];
   const AccessIcon = access.icon;
   return (
@@ -184,7 +190,9 @@ function FullSpotlight({ community: d }: { community: FullCommunity }) {
 
         <div className={styles.spotCols}>
           <div className={styles.spotMain}>
-            <div className={styles.whhLab}>What happens here</div>
+            <div className={styles.whhLab}>
+              {t("homepage:communities.spotlight.whatHappensHere")}
+            </div>
             <div className={styles.whhList}>
               {d.does.map(([label, cadence]) => (
                 <div key={label} className={styles.whhItem}>
@@ -215,7 +223,11 @@ function FullSpotlight({ community: d }: { community: FullCommunity }) {
                   </span>
                 )}
               </span>
-              Kept by <b>{d.host.name}</b> &amp; {d.host.extra}
+              <Translation
+                i18nKey="homepage:communities.spotlight.keptBy"
+                values={{ name: d.host.name, extra: d.host.extra }}
+                components={{ b: <b /> }}
+              />
             </span>
 
             <div className={styles.cmeta}>
@@ -225,11 +237,13 @@ function FullSpotlight({ community: d }: { community: FullCommunity }) {
                   .join(" ")}
               >
                 <AccessIcon aria-hidden />
-                {access.label}
+                {t(access.labelKey)}
               </span>
               <span className={styles.mi}>
                 <FiClock aria-hidden />
-                Since {d.founded}
+                {t("homepage:communities.spotlight.sinceLabel", {
+                  year: d.founded,
+                })}
               </span>
             </div>
             <div className={styles.cmeta}>
@@ -255,7 +269,9 @@ function FullSpotlight({ community: d }: { community: FullCommunity }) {
         </div>
 
         <div className={styles.spotRooms}>
-          <div className={styles.whhLab}>What you get when you join</div>
+          <div className={styles.whhLab}>
+            {t("homepage:communities.spotlight.whatYouGet")}
+          </div>
           <RoomChips rooms={d.rooms} />
         </div>
 
@@ -280,10 +296,11 @@ function FullSpotlight({ community: d }: { community: FullCommunity }) {
           </div>
           <div className={styles.actions}>
             <Button variant="ghost" to={communityHref(d.anchor)}>
-              <FiEye aria-hidden /> Peek inside
+              <FiEye aria-hidden />{" "}
+              {t("homepage:communities.spotlight.peekInsideCta")}
             </Button>
             <Button variant="primary" to={communityHref(d.anchor)}>
-              Join
+              {t("homepage:communities.spotlight.joinCta")}
             </Button>
           </div>
         </div>

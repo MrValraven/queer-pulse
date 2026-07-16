@@ -1,3 +1,5 @@
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./InvitePage.module.css";
 
 interface SharePreviewCardProps {
@@ -16,25 +18,30 @@ export function SharePreviewCard({
   description,
   url,
 }: SharePreviewCardProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.previewWrap}>
       <div className={styles.previewHero} aria-hidden>
         <div className={styles.previewHeroBrand}>
-          Queer<em>Pulse</em>
+          {"Queer"}
+          <em>{"Pulse"}</em>
         </div>
         <div className={styles.previewHeroTitle}>
-          Walk into a room <br />
-          <em>where you already belong</em>
+          {t("auth:sharePreview.heroTitle.line1")} <br />
+          <Translation
+            i18nKey="auth:sharePreview.heroTitle.line2"
+            components={{ em: <em /> }}
+          />
         </div>
         <div className={styles.previewHeroExplainer}>
-          A queer network. Rooted in Lisbon.
+          {t("auth:sharePreview.heroExplainer")}
         </div>
-        <div className={styles.previewHeroSub}>Invite-only · 247 members</div>
+        <div className={styles.previewHeroSub}>{t("auth:sharePreview.heroSub")}</div>
       </div>
       <div className={styles.previewMeta}>
         <div className={styles.previewDomain}>{url.split("/")[0]}</div>
         <div className={styles.previewTitle}>
-          {senderName} invited you to QueerPulse
+          {t("auth:sharePreview.title", { senderName })}
         </div>
         <div className={styles.previewDesc}>{description}</div>
       </div>

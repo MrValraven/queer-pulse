@@ -1,4 +1,5 @@
 import { Avatar, Button, VisibilityBadge } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { fullName, type Member } from "../members/data/members";
@@ -23,6 +24,7 @@ function completenessOf(member: Member): number {
 
 /** The Work Profile summary module — identity at the centre of the workspace. */
 export function WorkProfileCard() {
+  const { t } = useTranslation();
   // The signed-in member (real profile live, mock currentUser in demo mode).
   const { profile } = useProfile();
   const completeness = completenessOf(profile);
@@ -51,7 +53,7 @@ export function WorkProfileCard() {
 
       <div className={styles.pMeterRow}>
         <span className={styles.pMeterLabel}>
-          Profile {completeness}% complete
+          {t("economy:workProfile.card.meterLabel", { percent: completeness })}
         </span>
         <div className={styles.meter}>
           <div
@@ -62,11 +64,9 @@ export function WorkProfileCard() {
       </div>
 
       <div className={styles.pFoot}>
-        <p className={styles.pNote}>
-          This controls how you appear to employers — and what stays yours.
-        </p>
+        <p className={styles.pNote}>{t("economy:workProfile.card.note")}</p>
         <Button variant="primary" to={routes.workProfile}>
-          Edit work profile
+          {t("economy:workProfile.card.editCta")}
         </Button>
       </div>
     </div>

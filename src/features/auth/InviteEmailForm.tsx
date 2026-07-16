@@ -3,6 +3,8 @@ import { FiCheck } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDrafts } from "../../app/providers/DraftsProvider";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { SENDER_NAME } from "./invite.data";
 import styles from "./InvitePage.module.css";
 
@@ -12,7 +14,35 @@ interface InviteEmailFormProps {
 
 type DraftState = "idle" | "saving" | "saved";
 
+/** Compose the cross-app Drafts entry for an in-progress invite. Chrome copy,
+ *  authored here rather than fetched, so it routes through `t()`. */
+function buildInviteDraft(
+  t: TFunction,
+  draftId: string,
+  first: string,
+  know: string,
+  filled: number,
+) {
+  const name = first.trim();
+  return {
+    id: draftId,
+    kind: "INVITE" as const,
+    kindVariant: "post" as const,
+    title: t("auth:invite.draft.title", {
+      name: name || t("auth:invite.draft.titleFallbackName"),
+    }),
+    desc: know.trim() || t("auth:invite.draft.descFallback"),
+    meta: [{ label: t("auth:invite.draft.savedJustNow"), variant: "pulse" }],
+    progress: Math.min(95, 25 + filled * 25),
+    actions: [
+      { label: t("auth:common.resume"), variant: "primary" as const },
+      { label: t("auth:common.delete"), variant: "danger" as const, deletes: true },
+    ],
+  };
+}
+
 export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { addDraft, removeDraft } = useDrafts();
   const [first, setFirst] = useState("");
@@ -28,26 +58,11 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
     // Simulate a write — flips to a persisted "Saved" confirmation and pushes a
     // real entry onto the cross-app Drafts store.
     window.setTimeout(() => {
-      const name = first.trim();
       const filled = [first, know, note].filter((v) => v.trim()).length;
       removeDraft(draftId); // replace any earlier save of this same draft
-      addDraft({
-        id: draftId,
-        kind: "INVITE",
-        kindVariant: "post",
-        title: `Invitation · ${name || "someone"}`,
-        desc:
-          know.trim() ||
-          "A friend you want to vouch for — invite not sent yet.",
-        meta: [{ label: "Saved just now", variant: "pulse" }],
-        progress: Math.min(95, 25 + filled * 25),
-        actions: [
-          { label: "Resume", variant: "primary" },
-          { label: "Delete", variant: "danger", deletes: true },
-        ],
-      });
+      addDraft(buildInviteDraft(t, draftId, first, know, filled));
       setDraftState("saved");
-      showToast("Draft saved — find it in Drafts", "success");
+      showToast(t("auth:invite.draft.savedToast"), "success");
     }, 650);
   }
 
@@ -65,10 +80,10 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
     >
       <div className={styles.card}>
         <div className={styles.twoCol}>
-          <FormField label="First name">
+          <FormField label={t("auth:invite.email.firstName.label")}>
             <input
               type="text"
-              placeholder="Rosa"
+              placeholder={t("auth:invite.email.firstName.placeholder")}
               value={first}
               onChange={(e) => {
                 setFirst(e.target.value);
@@ -76,21 +91,27 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
               }}
             />
           </FormField>
-          <FormField label="Last name">
-            <input type="text" placeholder="Lima" />
+          <FormField label={t("auth:invite.email.lastName.label")}>
+            <input
+              type="text"
+              placeholder={t("auth:invite.email.lastName.placeholder")}
+            />
           </FormField>
         </div>
-        <FormField label="Their email">
-          <input type="email" placeholder="rosa@email.com" />
+        <FormField label={t("auth:invite.email.email.label")}>
+          <input
+            type="email"
+            placeholder={t("auth:invite.email.email.placeholder")}
+          />
         </FormField>
         <FormField
-          label="How you know them"
+          label={t("auth:invite.email.howYouKnowThem.label")}
           labelAside={`${know.length}/300`}
-          helper="This becomes part of your vouch — shown to the moderation team, not the invitee."
+          helper={t("auth:invite.email.howYouKnowThem.helper")}
         >
           <textarea
             maxLength={300}
-            placeholder="How you met, and what makes them a good fit — this is your vouch."
+            placeholder={t("auth:invite.email.howYouKnowThem.placeholder")}
             value={know}
             onChange={(e) => {
               setKnow(e.target.value);
@@ -101,7 +122,7 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
         <FormField
           label={
             <>
-              Personal note{" "}
+              {t("auth:invite.email.note.label")}{" "}
               <span
                 style={{
                   fontWeight: 400,
@@ -110,7 +131,7 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
                   fontSize: 11,
                 }}
               >
-                (optional)
+                {t("auth:common.optionalSuffix")}
               </span>
             </>
           }
@@ -118,7 +139,7 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
         >
           <textarea
             maxLength={200}
-            placeholder="A message they'll see in their invite email."
+            placeholder={t("auth:invite.email.note.placeholder")}
             value={note}
             onChange={(e) => {
               setNote(e.target.value);
@@ -128,45 +149,47 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
         </FormField>
       </div>
 
-      <div className={styles.epLabel}>What they'll receive</div>
+      <div className={styles.epLabel}>{t("auth:invite.email.preview.label")}</div>
       <div className={styles.emailPreview}>
         <div className={styles.epContent}>
           <div className={styles.epBrand}>
-            Queer<em>Pulse</em>
+            {"Queer"}
+            <em>{"Pulse"}</em>
           </div>
           <div className={styles.epSubject}>
-            {SENDER_NAME} has invited you to QueerPulse
+            {t("auth:invite.email.preview.subject", { name: SENDER_NAME })}
           </div>
           <div className={styles.epNote}>
-            “
-            {note.trim() ||
-              "I think you'd belong here — it's exactly the kind of space we've talked about."}
-            ”
+            “{note.trim() || t("auth:invite.email.preview.noteFallback")}”
           </div>
-          <div className={styles.epBtn}>Open your invitation →</div>
-          <div className={styles.epExpire}>Invite expires in 7 days</div>
+          <div className={styles.epBtn}>
+            {t("auth:invite.email.preview.openCta")}
+          </div>
+          <div className={styles.epExpire}>
+            {t("auth:invite.email.preview.expiresIn7Days")}
+          </div>
         </div>
       </div>
 
       <div className={styles.actions}>
-        <Button type="submit">Send invitation</Button>
+        <Button type="submit">{t("auth:invite.email.submit")}</Button>
         <Button
           type="button"
           variant="ghost"
           onClick={saveDraft}
           disabled={draftState !== "idle"}
         >
-          {draftState === "saving" && "Saving…"}
+          {draftState === "saving" && t("auth:common.saving")}
           {draftState === "saved" && (
             <>
-              <FiCheck aria-hidden /> Saved to drafts
+              <FiCheck aria-hidden /> {t("auth:invite.email.savedToDrafts")}
             </>
           )}
-          {draftState === "idle" && "Save as draft"}
+          {draftState === "idle" && t("auth:invite.email.saveAsDraft")}
         </Button>
       </div>
       <div className={styles.formNote}>
-        Your invitation is valid for 7 days. Unused invites don't roll over.
+        {t("auth:invite.email.formNote")}
       </div>
     </form>
   );

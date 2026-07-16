@@ -2,12 +2,14 @@ import { routes } from "../../../app/routeMap";
 
 /** A single footer link. `icon` (when present) renders a leading glyph. */
 export interface FooterLink {
-  label: string;
+  /** Catalog key for the visible label — resolve with `t()`. */
+  labelKey: string;
   href: string;
   icon?: "emergency" | "accessibility";
 }
 export interface FooterColumn {
-  heading: string;
+  /** Catalog key for the column heading — resolve with `t()`. */
+  headingKey: string;
   links: FooterLink[];
 }
 
@@ -17,63 +19,105 @@ export interface FooterColumn {
  */
 export const COLUMNS: FooterColumn[] = [
   {
-    heading: "Community",
+    headingKey: "shared:megaNav.community.title",
     links: [
-      { label: "Gatherings", href: "#gather" },
-      { label: "Calendar", href: routes.calendar },
-      { label: "Forum", href: routes.forum },
-      { label: "Communities", href: routes.communities },
-      { label: "Change Makers", href: routes.changemakers },
-      { label: "Activism", href: routes.activism },
+      { labelKey: "nav:gatherings", href: "#gather" },
+      { labelKey: "nav:calendar", href: routes.calendar },
+      { labelKey: "nav:forum", href: routes.forum },
+      { labelKey: "nav:communities", href: routes.communities },
+      {
+        labelKey: "shared:megaNav.community.col.organise.changeMakers",
+        href: routes.changemakers,
+      },
+      {
+        labelKey: "shared:megaNav.community.col.organise.activism",
+        href: routes.activism,
+      },
     ],
   },
   {
-    heading: "Lisbon Life",
+    headingKey: "shared:footerData.col.lisbonLife.head",
     links: [
-      { label: "Spaces Map", href: routes.map },
-      { label: "Business Directory", href: routes.directory },
-      { label: "Housing Board", href: routes.housing },
-      { label: "Job Board", href: routes.jobs },
-      { label: "New to Lisbon?", href: routes.arriving },
-      { label: "Skills Exchange", href: routes.barter },
+      { labelKey: "shared:megaNav.lisbon.col.discover.spacesMap", href: routes.map },
+      {
+        labelKey: "shared:megaNav.lisbon.col.discover.businessDirectory",
+        href: routes.directory,
+      },
+      {
+        labelKey: "shared:footerData.col.lisbonLife.housingBoard",
+        href: routes.housing,
+      },
+      { labelKey: "shared:megaNav.work.col.career.jobBoard", href: routes.jobs },
+      { labelKey: "nav:arriving", href: routes.arriving },
+      {
+        labelKey: "shared:megaNav.work.col.economy.skillsExchange",
+        href: routes.barter,
+      },
     ],
   },
   {
-    heading: "Support",
+    headingKey: "shared:footerData.col.support.head",
     links: [
-      { label: "Wellbeing Hub", href: routes.wellbeing },
-      { label: "Therapist Directory", href: `${routes.wellbeing}#therapists` },
-      { label: "Legal Aid", href: routes.legal },
-      { label: "Trans & NB Hub", href: routes.transHub },
-      { label: "Grants", href: routes.grants },
-      { label: "Report & Safety", href: routes.report },
+      {
+        labelKey: "shared:megaNav.resources.col.health.wellbeingHub",
+        href: routes.wellbeing,
+      },
+      {
+        labelKey: "shared:footerData.col.support.therapistDirectory",
+        href: `${routes.wellbeing}#therapists`,
+      },
+      { labelKey: "shared:footerData.col.support.legalAid", href: routes.legal },
+      {
+        labelKey: "shared:megaNav.resources.col.learn.transNbHub",
+        href: routes.transHub,
+      },
+      { labelKey: "shared:megaNav.work.col.economy.grants", href: routes.grants },
+      {
+        labelKey: "shared:footerData.col.support.reportSafety",
+        href: routes.report,
+      },
     ],
   },
   {
-    heading: "Members",
+    headingKey: "nav:members",
     links: [
-      { label: "Members", href: "#discovery" },
-      { label: "Messages", href: routes.messages },
-      { label: "Guide Library", href: routes.library },
-      { label: "Mentorship", href: routes.mentorship },
-      { label: "Request an invite", href: routes.requestInvite },
+      { labelKey: "nav:members", href: "#discovery" },
+      { labelKey: "shared:accountMenu.items.messages", href: routes.messages },
+      {
+        labelKey: "shared:footerData.col.members.guideLibrary",
+        href: routes.library,
+      },
+      {
+        labelKey: "shared:megaNav.work.col.career.mentorship",
+        href: routes.mentorship,
+      },
+      { labelKey: "common:cta.requestInvite", href: routes.requestInvite },
     ],
   },
 ];
 
 /** Quiet legal / utility row in the bottom bar of the full footer. */
 export const BASE_LINKS: FooterLink[] = [
-  { label: "Emergency", href: routes.emergency, icon: "emergency" },
-  { label: "Privacy", href: routes.privacy },
-  { label: "Cookies", href: routes.cookies },
-  { label: "Community guidelines", href: routes.guidelines },
-  { label: "Accessibility", href: routes.accessibility, icon: "accessibility" },
-  { label: "Security", href: routes.security },
-  { label: "Governance", href: routes.governance },
-  { label: "Contact", href: routes.contact },
+  {
+    labelKey: "shared:megaNav.resources.col.safety.emergency",
+    href: routes.emergency,
+    icon: "emergency",
+  },
+  { labelKey: "shared:footerData.base.privacy", href: routes.privacy },
+  { labelKey: "shared:footerData.base.cookies", href: routes.cookies },
+  { labelKey: "shared:footerData.base.guidelines", href: routes.guidelines },
+  {
+    labelKey: "shared:footerData.base.accessibility",
+    href: routes.accessibility,
+    icon: "accessibility",
+  },
+  { labelKey: "shared:footerData.base.security", href: routes.security },
+  { labelKey: "shared:adminNav.items.governance", href: routes.governance },
+  { labelKey: "shared:megaNav.about.col.legal.contact", href: routes.contact },
 ];
 
 export interface SocialLink {
+  /** Kept in English (brand names / a common borrowed term) — no catalog key. */
   label: string;
   href: string;
   icon: "instagram" | "youtube" | "mastodon" | "newsletter";

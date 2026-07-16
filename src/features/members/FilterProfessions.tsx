@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { ChipSelect, SearchInput } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   ALL_PROFESSIONS,
   DISCIPLINES,
@@ -24,6 +25,7 @@ export function FilterProfessions({
   filters: FilterState;
   onChange: (next: FilterState) => void;
 }) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
 
@@ -69,13 +71,13 @@ export function FilterProfessions({
   return (
     <>
       <div className={styles.filterCard}>
-        <h4>What they do</h4>
+        <h4>{t("members:directory.filter.whatTheyDoTitle")}</h4>
         <SearchInput
           className={styles.searchField}
-          placeholder="Search a field or profession…"
+          placeholder={t("members:directory.filter.searchPlaceholder")}
           value={query}
           onChange={setQuery}
-          ariaLabel="Search fields and professions"
+          ariaLabel={t("members:directory.filter.searchAriaLabel")}
         />
         {disciplineOptions.length > 0 ? (
           <ChipSelect
@@ -90,13 +92,13 @@ export function FilterProfessions({
           />
         ) : (
           <p className={styles.rangeNote}>
-            <em>No field matches "{query}".</em>
+            <em>{t("members:directory.filter.noFieldMatch", { query })}</em>
           </p>
         )}
       </div>
 
       <div className={styles.filterCard}>
-        <h4>Profession</h4>
+        <h4>{t("members:directory.filter.professionTitle")}</h4>
         {professionPool.length > 0 ? (
           <ChipSelect
             options={professionPool}
@@ -105,20 +107,21 @@ export function FilterProfessions({
           />
         ) : (
           <p className={styles.rangeNote}>
-            <em>No profession matches "{query}".</em>
+            <em>
+              {t("members:directory.filter.noProfessionMatch", { query })}
+            </em>
           </p>
         )}
         <p className={styles.rangeNote}>
-          {q ? (
-            <em>Matching your search across every field.</em>
-          ) : filters.disciplines.length ? (
-            <em>
-              Showing professions within your selected field
-              {filters.disciplines.length > 1 ? "s" : ""}.
-            </em>
-          ) : (
-            <em>Pick a field above, or search to find any profession.</em>
-          )}
+          <em>
+            {q
+              ? t("members:directory.filter.matchingSearch")
+              : filters.disciplines.length
+                ? t("members:directory.filter.showingWithinField", {
+                    count: filters.disciplines.length,
+                  })
+                : t("members:directory.filter.pickField")}
+          </em>
         </p>
       </div>
     </>

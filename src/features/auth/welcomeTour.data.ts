@@ -31,15 +31,6 @@ import { memberName } from "../members/data/members";
 
 export const TOUR_STEP_FILLS = ["17%", "34%", "50%", "67%", "84%", "100%"];
 
-export const TOUR_STEP_LABELS = [
-  "Step 1 of 6",
-  "Step 2 of 6",
-  "Step 3 of 6",
-  "Step 4 of 6",
-  "Step 5 of 6",
-  "You're in!",
-];
-
 export const VOUCH = {
   initials: "IT",
   name: memberName("ines"),
@@ -47,52 +38,58 @@ export const VOUCH = {
   note: "Knew you'd be a great fit. Looking forward to seeing you at the next gathering — I might finally have someone to talk type with.",
 };
 
-export const NEIGHBOURHOODS = [
-  "Príncipe Real",
-  "Mouraria",
-  "Bairro Alto",
-  "Cais do Sodré",
-  "Arroios",
-  "Alfama",
-  "Graça",
-  "Marvila",
-  "Estrela",
-  "Intendente",
-  "Elsewhere in Lisbon",
-  "New to Lisbon — still finding my feet",
+/**
+ * Lisbon neighbourhood names are proper nouns (and read identically in both
+ * catalogs), but route through keys anyway for consistency with the dropdown's
+ * two genuinely-chrome phrases ("Elsewhere in Lisbon", "New to Lisbon…") —
+ * see `gatherings.data.ts`'s `HOOD_KEYS` for the same pattern.
+ */
+export const NEIGHBOURHOOD_KEYS = [
+  "auth:tour.neighbourhood.principeReal",
+  "auth:tour.neighbourhood.mouraria",
+  "auth:tour.neighbourhood.bairroAlto",
+  "auth:tour.neighbourhood.caisDoSodre",
+  "auth:tour.neighbourhood.arroios",
+  "auth:tour.neighbourhood.alfama",
+  "auth:tour.neighbourhood.graca",
+  "auth:tour.neighbourhood.marvila",
+  "auth:tour.neighbourhood.estrela",
+  "auth:tour.neighbourhood.intendente",
+  "auth:tour.neighbourhood.elsewhere",
+  "auth:tour.neighbourhood.newToLisbon",
 ];
 
 export const VISIBILITY_OPTIONS = [
   {
     value: "open",
-    title: "Open to connect",
-    desc: "Anyone in the network can see your profile and say hello",
+    titleKey: "auth:tour.visibility.open.title",
+    descKey: "auth:tour.visibility.open.desc",
   },
   {
     value: "network",
-    title: "Network only",
-    desc: "Reachable through mutual connections",
+    titleKey: "auth:tour.visibility.network.title",
+    descKey: "auth:tour.visibility.network.desc",
   },
   {
     value: "private",
-    title: "Keep it quiet for now",
-    desc: "I'll reach out when I'm ready",
+    titleKey: "auth:tour.visibility.private.title",
+    descKey: "auth:tour.visibility.private.desc",
   },
 ];
 
-export const INTERESTS: { icon: IconType; label: string }[] = [
-  { icon: FiPenTool, label: "Design" },
-  { icon: FiMonitor, label: "Tech" },
-  { icon: FiFilm, label: "Film" },
-  { icon: FiMusic, label: "Music" },
-  { icon: FaHandFist, label: "Activism" },
-  { icon: FaLeaf, label: "Wellbeing" },
-  { icon: FaUtensils, label: "Food" },
-  { icon: FiActivity, label: "Sports" },
-  { icon: FiBookOpen, label: "Writing" },
-  { icon: FiTool, label: "Craft" },
-  { icon: FaLandmark, label: "Policy" },
-  { icon: FiGlobe, label: "Community" },
+export const INTERESTS: { icon: IconType; value: string; labelKey: string }[] = [
+  { icon: FiPenTool, value: "Design", labelKey: "auth:tour.interest.design" },
+  { icon: FiMonitor, value: "Tech", labelKey: "auth:tour.interest.tech" },
+  { icon: FiFilm, value: "Film", labelKey: "auth:tour.interest.film" },
+  { icon: FiMusic, value: "Music", labelKey: "auth:tour.interest.music" },
+  { icon: FaHandFist, value: "Activism", labelKey: "auth:tour.interest.activism" },
+  { icon: FaLeaf, value: "Wellbeing", labelKey: "auth:tour.interest.wellbeing" },
+  { icon: FaUtensils, value: "Food", labelKey: "auth:tour.interest.food" },
+  { icon: FiActivity, value: "Sports", labelKey: "auth:tour.interest.sports" },
+  { icon: FiBookOpen, value: "Writing", labelKey: "auth:tour.interest.writing" },
+  { icon: FiTool, value: "Craft", labelKey: "auth:tour.interest.craft" },
+  { icon: FaLandmark, value: "Policy", labelKey: "auth:tour.interest.policy" },
+  { icon: FiGlobe, value: "Community", labelKey: "auth:tour.interest.community" },
 ];
 
 export const TOUR_COMMUNITIES = [
@@ -157,74 +154,74 @@ export const CONNECTIONS = [
 /** Explore cards — `href` uses original prototype filenames, resolved via linkToPath(). */
 export const EXPLORE_CARDS: {
   icon: IconType;
-  name: string;
-  desc: string;
+  nameKey: string;
+  descKey: string;
   href: string;
 }[] = [
   {
     icon: FiUsers,
-    name: "Members",
-    desc: "Browse and say hello to people in the network",
+    nameKey: "auth:tour.exploreCard.members.name",
+    descKey: "auth:tour.exploreCard.members.desc",
     href: "QueerPulse Homepage.html#discovery",
   },
   {
     icon: FiCalendar,
-    name: "Gatherings",
-    desc: "RSVP to something happening near you",
+    nameKey: "auth:tour.exploreCard.gatherings.name",
+    descKey: "auth:tour.exploreCard.gatherings.desc",
     href: "QueerPulse Homepage.html#gather",
   },
   {
     icon: FaHandshake,
-    name: "Communities",
-    desc: "Find an ongoing group to join",
+    nameKey: "auth:tour.exploreCard.communities.name",
+    descKey: "auth:tour.exploreCard.communities.desc",
     href: "QueerPulse Communities.html",
   },
   {
     icon: FiPenTool,
-    name: "Culture",
-    desc: "Book club, art showcase, commission board, radio",
+    nameKey: "auth:tour.exploreCard.culture.name",
+    descKey: "auth:tour.exploreCard.culture.desc",
     href: "QueerPulse Culture.html",
   },
   {
     icon: FiBriefcase,
-    name: "Economy",
-    desc: "Incubator, freelance tools, salary transparency",
+    nameKey: "auth:tour.exploreCard.economy.name",
+    descKey: "auth:tour.exploreCard.economy.desc",
     href: "QueerPulse Economy.html",
   },
   {
     icon: FaSeedling,
-    name: "Queer 101",
-    desc: "Still exploring your identity? A quiet place to start",
+    nameKey: "auth:tour.exploreCard.queer101.name",
+    descKey: "auth:tour.exploreCard.queer101.desc",
     href: "QueerPulse 101.html",
   },
   {
     icon: FaHandFist,
-    name: "Volunteer",
-    desc: "Find a way to give back to the local community",
+    nameKey: "auth:tour.exploreCard.volunteer.name",
+    descKey: "auth:tour.exploreCard.volunteer.desc",
     href: "QueerPulse Volunteer.html",
   },
   {
     icon: FiMapPin,
-    name: "New to Lisbon?",
-    desc: "A guide to settling into the queer scene here",
+    nameKey: "auth:tour.exploreCard.arriving.name",
+    descKey: "auth:tour.exploreCard.arriving.desc",
     href: "QueerPulse Arriving.html",
   },
   {
     icon: FaHospital,
-    name: "Sexual health",
-    desc: "Testing, PrEP, HIV resources — queer-specific & direct",
+    nameKey: "auth:tour.exploreCard.sexualHealth.name",
+    descKey: "auth:tour.exploreCard.sexualHealth.desc",
     href: "QueerPulse Sexual Health.html",
   },
   {
     icon: FiCheckCircle,
-    name: "Safe spaces",
-    desc: "Community-verified venues — earned, not self-declared",
+    nameKey: "auth:tour.exploreCard.safeSpaces.name",
+    descKey: "auth:tour.exploreCard.safeSpaces.desc",
     href: "QueerPulse Safe Spaces.html",
   },
   {
     icon: FaLeaf,
-    name: "Sober & social",
-    desc: "A full social life, without alcohol at the centre",
+    nameKey: "auth:tour.exploreCard.sober.name",
+    descKey: "auth:tour.exploreCard.sober.desc",
     href: "QueerPulse Sober.html",
   },
 ];

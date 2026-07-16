@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
 import { useAdminRole } from "../../../features/admin/adminRole";
 import { useToast } from "../feedback/useToast";
+import { useTranslation } from "../../i18n/useTranslation";
 import { modPanel } from "../../../app/routeMap";
 import { STEWARDED, ADMIN_PROFILE } from "./adminNav.data";
 import styles from "./AdminShell.module.css";
@@ -12,6 +13,7 @@ const COMMUNITY_SLUGS = ["trans-hub", "rainbow-arts"];
 export function AdminRoleSwitcher() {
   const { role, setRole } = useAdminRole();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -44,10 +46,14 @@ export function AdminRoleSwitcher() {
         <span className={styles.switchAv}>{ADMIN_PROFILE.initials}</span>
         <span className={styles.switchTx}>
           <span className={styles.switchRole}>
-            {isStaff ? "Staff admin" : "Community mod"}
+            {isStaff
+              ? t("shared:adminRoleSwitcher.roleStaffAdmin")
+              : t("shared:adminRoleSwitcher.roleCommunityMod")}
           </span>
           <span className={styles.switchScope}>
-            {isStaff ? "All communities" : "Stewarded spaces"}
+            {isStaff
+              ? t("shared:adminRoleSwitcher.scopeAll")
+              : t("shared:adminRoleSwitcher.scopeStewarded")}
           </span>
         </span>
         <FiChevronDown
@@ -60,7 +66,9 @@ export function AdminRoleSwitcher() {
 
       {open && (
         <div className={styles.switchMenu} role="menu">
-          <div className={styles.switchSep}>Your roles</div>
+          <div className={styles.switchSep}>
+            {t("shared:adminRoleSwitcher.yourRoles")}
+          </div>
           <button
             type="button"
             role="menuitemradio"
@@ -71,7 +79,7 @@ export function AdminRoleSwitcher() {
             onClick={() => {
               setRole("staff");
               setOpen(false);
-              showToast("Now acting as Staff admin", "info");
+              showToast(t("shared:adminRoleSwitcher.toastNowStaff"), "info");
             }}
           >
             <span
@@ -84,14 +92,18 @@ export function AdminRoleSwitcher() {
               {ADMIN_PROFILE.initials}
             </span>
             <span>
-              <span className={styles.switchOptName}>Staff admin</span>
+              <span className={styles.switchOptName}>
+                {t("shared:adminRoleSwitcher.roleStaffAdmin")}
+              </span>
               <span className={styles.switchOptMeta}>
-                Platform-wide oversight
+                {t("shared:adminRoleSwitcher.staffOversight")}
               </span>
             </span>
           </button>
 
-          <div className={styles.switchSep}>Communities you steward</div>
+          <div className={styles.switchSep}>
+            {t("shared:adminRoleSwitcher.communitiesYouSteward")}
+          </div>
           {STEWARDED.map((c, i) => (
             <button
               key={c.name}

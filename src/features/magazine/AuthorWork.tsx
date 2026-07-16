@@ -5,9 +5,17 @@ import {
   ImageSlot,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import type { Author } from "./authorContent.data";
+import {
+  minReadText,
+  publishedText,
+  readsThisWeekText,
+} from "./magazineFormat";
 import styles from "./AuthorPage.module.css";
 
 function ArtCardSkeleton() {
@@ -24,17 +32,28 @@ function ArtCardSkeleton() {
 }
 
 export function AuthorWork({ author }: { author: Author }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const loading = useSimulatedLoad();
+  const featuredMeta = [
+    publishedText(fmt.date(author.featured.publishedDate), t),
+    minReadText(author.featured.minutes, t),
+    readsThisWeekText(author.featured.readsThisWeek, t),
+  ].join(" · ");
 
   return (
     <>
       <div className={styles.sec}>
         <h2>
-          Most recent · <em>featured</em>
+          <Translation
+            i18nKey="magazine:author.work.mostRecentHeading"
+            components={{ em: <em /> }}
+          />
         </h2>
       </div>
       <div className={styles.featured}>
         <div>
+          {/* Content: kicker/title/dek are the writer's own article fields. */}
           <div className={styles.featKicker}>{author.featured.kicker}</div>
           <h3 className={styles.featTitle}>
             <Link to={`${routes.article}?id=${author.featured.articleId}`}>
@@ -42,23 +61,27 @@ export function AuthorWork({ author }: { author: Author }) {
             </Link>
           </h3>
           <p className={styles.featDek}>{author.featured.dek}</p>
-          <p className={styles.featMeta}>{author.featured.meta}</p>
+          <p className={styles.featMeta}>{featuredMeta}</p>
         </div>
         <ImageSlot
           tint="jade"
           className={styles.featImg}
           radius={18}
           src={author.featured.image}
-          alt={`Hero image for ${author.firstName}'s featured story`}
-          placeholder="Featured story"
+          alt={t("magazine:author.work.featuredImageAlt", {
+            name: author.firstName,
+          })}
+          placeholder={t("magazine:author.work.featuredImagePlaceholder")}
           style={{ height: "auto" }}
         />
       </div>
 
       <div className={styles.sec}>
-        <h2>Selected work</h2>
+        <h2>{t("magazine:author.work.selectedWorkHeading")}</h2>
         <Link to={routes.magazine}>
-          All {author.stats[0]?.value} articles →
+          {t("magazine:author.work.allArticlesCta", {
+            count: author.articles.length,
+          })}
         </Link>
       </div>
       <div className={styles.articles}>
@@ -74,6 +97,8 @@ export function AuthorWork({ author }: { author: Author }) {
                 className={styles.art}
                 delay={Math.min(index, 8) * 60}
               >
+                {/* Content: per-article kicker/title/dek/meta — the writer's
+                    own back-catalogue fields. */}
                 <div className={styles.artKicker}>{article.kicker}</div>
                 <div className={styles.artTitle}>{article.title}</div>
                 <div className={styles.artDek}>{article.dek}</div>
@@ -87,7 +112,7 @@ export function AuthorWork({ author }: { author: Author }) {
           <h3>{author.readingTitle}</h3>
           <p>{author.readingBlurb}</p>
           <Button to={routes.library} style={{ marginTop: 8 }}>
-            See all picks →
+            {t("magazine:author.work.seeAllPicksCta")}
           </Button>
         </div>
         <ol>
@@ -101,7 +126,11 @@ export function AuthorWork({ author }: { author: Author }) {
 
       <div className={styles.sec}>
         <h2>
-          Find {author.firstName} <em>elsewhere</em>
+          <Translation
+            i18nKey="magazine:author.work.findElsewhereHeading"
+            values={{ name: author.firstName }}
+            components={{ em: <em /> }}
+          />
         </h2>
       </div>
       <div className={styles.elsewhere}>

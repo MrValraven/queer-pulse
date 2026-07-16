@@ -14,6 +14,7 @@ import { linkToPath } from "../../../app/routeMap";
 import { useIsLinkVisible } from "../../../app/authGate";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useTranslation } from "../../i18n/useTranslation";
+import { Translation } from "../../i18n/Translation";
 import { LanguageSwitcher } from "../../i18n/LanguageSwitcher";
 import {
   COLUMNS,
@@ -38,12 +39,16 @@ function Wordmark({ to }: { to: string }) {
   return (
     <Link to={to} className={styles.brand}>
       <span className={styles.pulseDot} aria-hidden />
-      Queer<span className={styles.brandItalic}>Pulse</span>
+      <Translation
+        i18nKey="shared:brand.wordmark"
+        components={{ em: <span className={styles.brandItalic} /> }}
+      />
     </Link>
   );
 }
 
 function BaseLink({ link }: { link: FooterLink }) {
+  const { t } = useTranslation();
   const Icon = link.icon ? LINK_ICONS[link.icon] : null;
   return (
     <Link
@@ -51,7 +56,7 @@ function BaseLink({ link }: { link: FooterLink }) {
       className={link.icon === "emergency" ? styles.emergency : undefined}
     >
       {Icon && <Icon aria-hidden />}
-      {link.label}
+      {t(link.labelKey)}
     </Link>
   );
 }
@@ -109,11 +114,11 @@ export function Footer() {
 
           <nav className={styles.cols} aria-label={t("footer:aria.footerNav")}>
             {columns.map((column) => (
-              <div key={column.heading} className={styles.col}>
-                <h4>{column.heading}</h4>
+              <div key={column.headingKey} className={styles.col}>
+                <h4>{t(column.headingKey)}</h4>
                 {column.links.map((link) => (
                   <Link key={link.href} to={linkToPath(link.href)}>
-                    {link.label}
+                    {t(link.labelKey)}
                   </Link>
                 ))}
               </div>

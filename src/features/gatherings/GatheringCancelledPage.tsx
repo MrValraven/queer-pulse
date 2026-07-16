@@ -14,13 +14,36 @@ const CALENDAR = routes.calendar;
 const GATHERING = routes.gathering;
 const MESSAGES = routes.messages;
 
-/** The cancelling host's first name — organizer-authored content. */
+/** The cancelling host's name — organizer-authored content. */
 const HOST_NAME = "Marta";
+const HOST_LAST_NAME = "Reis";
 const CANCELLED_HOURS_AGO = 4;
 const EVENT_START = new Date(2026, 5, 20, 14, 0);
 const EVENT_END = new Date(2026, 5, 20, 17, 0);
 const RESCHEDULE_DATE = new Date(2026, 6, 19);
 const REFUND_PRICE_EUR = 5;
+
+/**
+ * This cancellation's own narrative — organizer-authored content (like a
+ * gathering's `body`), left in English and held as constants rather than
+ * inline JSX text so it has a single source and doesn't trip the lint rule
+ * that guards un-keyed chrome.
+ */
+const CANCELLATION_REASON = "Host illness · cancelled ";
+const EVENT_VENUE_LINE = "Largo do Carmo · Lisbon";
+const EXPLAINER_P1 =
+  "Marta is out sick — she dropped us a message yesterday and we waited 24h hoping a co-host could step in. ";
+const EXPLAINER_EM = "Nobody available this week.";
+const EXPLAINER_P2 =
+  " We're not rescheduling immediately because the studio's painting work starts Monday, but the next visit is already on the calendar for ";
+const EXPLAINER_DATE_TEXT = "19 July";
+const REFUND_NOTE = "Refunded to Visa ending 4729 within 3–5 business days.";
+const NOTE_QUOTE_P1 = "\"I'm so sorry, especially to the three of you";
+const NOTE_QUOTE_EM = "who travelled in.";
+const NOTE_P1 =
+  "It's a chest cold and not anything dramatic, but I lose my voice the moment I try to talk for more than ten minutes — and a studio visit where I can't talk is a tour, not a visit.";
+const NOTE_P2 =
+  "July 19 will happen. The painting is done by then and we'll have the new riso press set up. Promise.";
 
 const Tick = () => (
   <svg viewBox="0 0 24 24">
@@ -42,7 +65,8 @@ const ALTS: {
     date: RESCHEDULE_DATE,
     title: (
       <>
-        Studio visit · <em>Atelier Pulso · July</em>
+        {"Studio visit · "}
+        <em>{"Atelier Pulso · July"}</em>
       </>
     ),
     venue: "Largo do Carmo",
@@ -55,7 +79,8 @@ const ALTS: {
     date: new Date(2026, 5, 22),
     title: (
       <>
-        Sunday risograph workshop — <em>Bairro Alto</em>
+        {"Sunday risograph workshop — "}
+        <em>{"Bairro Alto"}</em>
       </>
     ),
     venue: "Editora Anjos",
@@ -68,7 +93,8 @@ const ALTS: {
     date: new Date(2026, 5, 28),
     title: (
       <>
-        Portfolio night — <em>creatives only</em>
+        {"Portfolio night — "}
+        <em>{"creatives only"}</em>
       </>
     ),
     venue: "Café Beirão back room",
@@ -100,7 +126,8 @@ export function GatheringCancelledPage() {
           <div>
             <h2>{t("gatherings:cancelled.stampTitle")}</h2>
             <p>
-              Host illness · cancelled <b>{cancelledAgo}</b>.{" "}
+              {CANCELLATION_REASON}
+              <b>{cancelledAgo}</b>.{" "}
               {t("gatherings:cancelled.stampBody")}
             </p>
           </div>
@@ -114,7 +141,8 @@ export function GatheringCancelledPage() {
             </div>
             <div className={styles.eventInfo}>
               <h2>
-                Studio visit · <em>Atelier Pulso open hours.</em>
+                {"Studio visit · "}
+                <em>{"Atelier Pulso open hours."}</em>
               </h2>
               <div className={styles.eventMeta}>
                 <span>
@@ -122,10 +150,10 @@ export function GatheringCancelledPage() {
                   {fmt.time(EVENT_START)} — {fmt.time(EVENT_END)}
                 </span>
                 <span className={styles.dot} />
-                <span>Largo do Carmo · Lisbon</span>
+                <span>{EVENT_VENUE_LINE}</span>
                 <span className={styles.dot} />
                 <span>
-                  {t("gatherings:common.hostedBy")} {HOST_NAME} Reis
+                  {t("gatherings:common.hostedBy")} {HOST_NAME} {HOST_LAST_NAME}
                 </span>
               </div>
             </div>
@@ -133,17 +161,19 @@ export function GatheringCancelledPage() {
           <div className={styles.explainer}>
             <h3>{t("gatherings:cancelled.explainerTitle")}</h3>
             <p>
-              Marta is out sick — she dropped us a message yesterday and we
-              waited 24h hoping a co-host could step in.{" "}
-              <em>Nobody available this week.</em> We're not rescheduling
-              immediately because the studio's painting work starts Monday, but
-              the next visit is already on the calendar for <b>19 July</b>.
+              {EXPLAINER_P1}
+              <em>{EXPLAINER_EM}</em>
+              {EXPLAINER_P2}
+              <b>{EXPLAINER_DATE_TEXT}</b>.
             </p>
           </div>
           <div className={styles.host}>
-            <div className={styles.hostAv}>MR</div>
+            <div className={styles.hostAv}>{"MR"}</div>
             <div className={styles.hostText}>
-              <b>{HOST_NAME} Reis</b> · {t("gatherings:cancelled.hostSentLabel")}
+              <b>
+                {HOST_NAME} {HOST_LAST_NAME}
+              </b>{" "}
+              · {t("gatherings:cancelled.hostSentLabel")}
             </div>
             <Link to={MESSAGES} className={styles.hostLink}>
               {t("gatherings:cancelled.sendWellWishesCta")} →
@@ -161,7 +191,7 @@ export function GatheringCancelledPage() {
             </div>
             <div>
               <b>{t("gatherings:cancelled.refundTitle", { price: fmt.currency(REFUND_PRICE_EUR) })}</b>
-              <span>Refunded to Visa ending 4729 within 3–5 business days.</span>
+              <span>{REFUND_NOTE}</span>
             </div>
           </div>
           <div className={styles.infoRow}>
@@ -207,18 +237,13 @@ export function GatheringCancelledPage() {
         <div className={styles.noteCard}>
           <div className={styles.noteEyebrow}>{t("gatherings:cancelled.noteEyebrow", { host: HOST_NAME })}</div>
           <h3>
-            "I'm so sorry, especially to the three of you{" "}
-            <em>who travelled in.</em>"
+            {NOTE_QUOTE_P1}
+            {" "}
+            <em>{NOTE_QUOTE_EM}</em>
+            {'"'}
           </h3>
-          <p>
-            It's a chest cold and not anything dramatic, but I lose my voice the
-            moment I try to talk for more than ten minutes — and a studio visit
-            where I can't talk is a tour, not a visit.
-          </p>
-          <p>
-            July 19 will happen. The painting is done by then and we'll have the
-            new riso press set up. Promise.
-          </p>
+          <p>{NOTE_P1}</p>
+          <p>{NOTE_P2}</p>
           <div className={styles.noteSign}>
             — <b>{HOST_NAME}</b> ·{" "}
             {t("gatherings:cancelled.noteSentVia", { time: cancelledAgo })}

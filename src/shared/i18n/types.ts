@@ -9,7 +9,39 @@ export const LANGUAGES: readonly Language[] = ["en", "pt"] as const;
  * `catalogs/`. Keeping them enumerated gives us typo-safe namespace ids.
  */
 export type Namespace =
-  "common" | "nav" | "footer" | "auth" | "subprofiles" | "gatherings";
+  | "common"
+  | "nav"
+  | "footer"
+  | "auth"
+  | "subprofiles"
+  | "gatherings"
+  | "homepage"
+  | "marketing"
+  | "members"
+  | "magazine"
+  | "communities"
+  | "community"
+  | "resources"
+  | "economy"
+  | "studio"
+  | "cinema"
+  | "settings"
+  | "admin"
+  | "system"
+  | "safety"
+  | "feed"
+  | "forum"
+  | "topics"
+  | "governance"
+  | "myevents"
+  | "support"
+  | "connect"
+  | "messages"
+  | "culture"
+  | "notifications"
+  | "social"
+  | "pages"
+  | "shared";
 
 /** Flat key → translated string. Keys are dot paths, e.g. `signIn.title`. */
 export type Catalog = Record<string, string>;
