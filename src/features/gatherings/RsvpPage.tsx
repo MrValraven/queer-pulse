@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { Avatar, Button } from "../../shared/components/ui";
 import { Footer } from "../../shared/components/layout";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { memberName } from "../members/data/members";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
@@ -17,6 +20,8 @@ import styles from "./RsvpPage.module.css";
 const RSVP_SLUG = "reading-group-8";
 
 export function RsvpPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const unrsvp = useUnrsvp(RSVP_SLUG);
 
@@ -48,19 +53,17 @@ export function RsvpPage() {
                   />
                 </svg>
               </div>
-              <div className={styles.eyebrow}>You're going</div>
+              <div className={styles.eyebrow}>{t("gatherings:rsvp.eyebrow")}</div>
               <h1 className={styles.h}>
-                You're <em>in.</em>
+                <Translation i18nKey="gatherings:rsvp.title" components={{ em: <em /> }} />
               </h1>
-              <p className={styles.gName}>
-                The Dispossessed — Reading Group #8
-              </p>
+              <p className={styles.gName}>The Dispossessed — Reading Group #8</p>
             </div>
 
             <div className={styles.cardBody}>
               <div className={styles.details}>
                 {RSVP_DETAILS.map((detail) => (
-                  <div key={detail.label} className={styles.detail}>
+                  <div key={detail.labelKey} className={styles.detail}>
                     <span
                       className={styles.detailIcon}
                       style={{ background: detail.bg }}
@@ -68,14 +71,20 @@ export function RsvpPage() {
                       <detail.icon />
                     </span>
                     <div>
-                      <div className={styles.detailLabel}>{detail.label}</div>
-                      <div className={styles.detailVal}>{detail.value}</div>
+                      <div className={styles.detailLabel}>
+                        {t(detail.labelKey)}
+                      </div>
+                      <div className={styles.detailVal}>
+                        {typeof detail.value === "string"
+                          ? detail.value
+                          : `${fmt.date(detail.value, { day: "numeric", month: "long" })} · ${fmt.time(detail.value)}`}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className={styles.withLabel}>You're going with</div>
+              <div className={styles.withLabel}>{t("gatherings:rsvp.withLabel")}</div>
               <div className={styles.withRow}>
                 <div style={{ display: "flex" }}>
                   {[
@@ -96,7 +105,7 @@ export function RsvpPage() {
                 <div className={styles.withText}>
                   <strong>Sofia, Tomás, Beatriz, Jonas</strong>
                   <br />
-                  and 8 other members
+                  {t("gatherings:rsvp.othersCount", { count: 8 })}
                 </div>
               </div>
 
@@ -105,7 +114,9 @@ export function RsvpPage() {
                   <Avatar initials="ML" tint="plum" size={28} />
                   <div>
                     <div className={styles.hnName}>{memberName("mariana")}</div>
-                    <div className={styles.hnRole}>Reading group organiser</div>
+                    <div className={styles.hnRole}>
+                      {t("gatherings:rsvp.host.roleLabel")}
+                    </div>
                   </div>
                 </div>
                 <p className={styles.hnText}>
@@ -116,7 +127,7 @@ export function RsvpPage() {
                 </p>
               </div>
 
-              <div className={styles.calLabel}>Add to calendar</div>
+              <div className={styles.calLabel}>{t("gatherings:rsvp.calendar.label")}</div>
               <div className={styles.calRow}>
                 <button
                   type="button"
@@ -129,34 +140,34 @@ export function RsvpPage() {
                     )
                   }
                 >
-                  Google Calendar
+                  {t("gatherings:rsvp.calendar.googleCta")}
                 </button>
                 <button
                   type="button"
                   className={styles.calBtn}
                   onClick={() => {
                     downloadIcs();
-                    showToast("Calendar file downloaded.", "success");
+                    showToast(
+                      t("gatherings:rsvp.calendar.downloadedToast"),
+                      "success",
+                    );
                   }}
                 >
-                  Apple / .ics
+                  {t("gatherings:rsvp.calendar.appleCta")}
                 </button>
               </div>
 
               <div className={styles.ctas}>
                 <Button size="lg" to={routes.gathering}>
-                  View gathering details
+                  {t("gatherings:rsvp.viewDetailsCta")}
                 </Button>
                 <Button
                   variant="ghost"
                   onClick={() =>
-                    showToast(
-                      "Invite link copied. Share it with someone who should come.",
-                      "success",
-                    )
+                    showToast(t("gatherings:rsvp.inviteCopiedToast"), "success")
                   }
                 >
-                  Tell a friend — copy invite link
+                  {t("gatherings:rsvp.inviteCta")}
                 </Button>
               </div>
             </div>
@@ -166,15 +177,14 @@ export function RsvpPage() {
         <div className={styles.coc}>
           <div className={styles.cocInner}>
             <h2 className={styles.cocTitle}>
-              What to <em>expect</em>
+              <Translation i18nKey="gatherings:rsvp.coc.title" components={{ em: <em /> }} />
             </h2>
             <div className={styles.cocItems}>
               {RSVP_COC.map((item) => (
-                <div key={item.strong} className={styles.cocItem}>
+                <div key={item.id} className={styles.cocItem}>
                   <div className={styles.cocDot} />
                   <p className={styles.cocText}>
-                    <strong>{item.strong}</strong>
-                    {item.rest}
+                    <strong>{t(item.strongKey)}</strong> {t(item.restKey, item.restValues)}
                   </p>
                 </div>
               ))}
@@ -184,17 +194,18 @@ export function RsvpPage() {
 
         <div className={styles.footer}>
           <p>
-            You RSVPed as a QueerPulse member.{" "}
+            {t("gatherings:rsvp.footer.membership")}{" "}
             <Link
               to={routes.gathering}
               onClick={() => {
                 unrsvp.mutate();
-                showToast("Your RSVP has been cancelled.", "info");
+                showToast(t("gatherings:rsvp.footer.cancelledToast"), "info");
               }}
             >
-              Cancel RSVP
+              {t("gatherings:rsvp.footer.cancelCta")}
             </Link>{" "}
-            · <Link to={routes.privacy}>Privacy policy</Link>
+            ·{" "}
+            <Link to={routes.privacy}>{t("gatherings:rsvp.footer.privacyCta")}</Link>
           </p>
         </div>
       </div>

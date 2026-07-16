@@ -5,7 +5,15 @@ import {
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { RECAP_PHOTOS, RECAP_ATTENDEES } from "./gatheringRecap.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  RECAP_PHOTOS,
+  RECAP_ATTENDEES,
+  RECAP_ATTENDED_COUNT,
+  RECAP_MORE_ATTENDED_COUNT,
+  RECAP_WRITEUP,
+} from "./gatheringRecap.data";
 import type { RecapPhoto } from "./PhotoUploadModal";
 import styles from "./GatheringRecapPage.module.css";
 
@@ -18,34 +26,28 @@ export function GatheringRecapMain({
   submittedPhotos: RecapPhoto[];
   onSubmitPhoto: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div>
-      <div className={styles.sectionEyebrow}>The write-up</div>
-      <div className={styles.sectionHead}>
-        The <em>gathering</em>
+      <div className={styles.sectionEyebrow}>
+        {t("gatherings:recap.writeupEyebrow")}
       </div>
-      <p className={styles.writeup}>
-        We took over the terrace at A Cevicheria on a warm Saturday morning, and
-        for three hours it became ours — a little corner of Príncipe Real that
-        felt genuinely, unmistakably queer. Thirty-eight people came. Some knew
-        each other; most didn't, at least not yet. By noon, you wouldn't have
-        known the difference.
-      </p>
-      <p className={styles.writeup}>
-        There was a long table of food that kept getting replenished. There were
-        conversations that started with "how do you know the host?" and turned
-        into something else entirely — plans, collaborations, phone numbers
-        exchanged. Two people who'd been connected on QueerPulse for months
-        finally met in person.
-      </p>
-      <p className={styles.writeup}>
-        These gatherings don't have agendas. They're just time — held,
-        deliberately, for people like us to be in a room together. This one was
-        a good one. We'll do it again in July.
-      </p>
+      <div className={styles.sectionHead}>
+        <Translation
+          i18nKey="gatherings:recap.gatheringHeading"
+          components={{ em: <em /> }}
+        />
+      </div>
+      {RECAP_WRITEUP.map((paragraph, index) => (
+        <p key={index} className={styles.writeup}>
+          {paragraph}
+        </p>
+      ))}
 
       <div className={styles.photos}>
-        <div className={styles.sectionEyebrow}>From the day</div>
+        <div className={styles.sectionEyebrow}>
+          {t("gatherings:recap.fromTheDayEyebrow")}
+        </div>
         <div className={styles.photosGrid} aria-busy={loading}>
           {loading
             ? Array.from({ length: 6 }).map((_, i) => (
@@ -62,7 +64,7 @@ export function GatheringRecapMain({
                     src={photo.image}
                     height={140}
                     radius={12}
-                    placeholder="photo from the gathering"
+                    placeholder={t("gatherings:recap.photoPlaceholder")}
                   />
                 </FadeIn>
               ))}
@@ -72,7 +74,7 @@ export function GatheringRecapMain({
                 tint={photo.tint}
                 height={140}
                 radius={12}
-                placeholder="your photo"
+                placeholder={t("gatherings:recap.upload.photoPlaceholder")}
               />
               <figcaption className={styles.newPhotoCaption}>
                 {photo.caption}
@@ -81,7 +83,7 @@ export function GatheringRecapMain({
           ))}
         </div>
         <div className={styles.photoCaption}>
-          Photos by community members ·{" "}
+          {t("gatherings:recap.photosByMembers")} ·{" "}
           <button
             type="button"
             onClick={onSubmitPhoto}
@@ -93,18 +95,24 @@ export function GatheringRecapMain({
               cursor: "pointer",
             }}
           >
-            Submit yours →
+            {t("gatherings:recap.submitYoursCta")} →
           </button>
         </div>
       </div>
 
       <div className={styles.who}>
-        <div className={styles.sectionEyebrow}>Who was there</div>
+        <div className={styles.sectionEyebrow}>
+          {t("gatherings:recap.whoWasThereEyebrow")}
+        </div>
         <div
           className={styles.sectionHead}
           style={{ fontSize: "clamp(24px,3vw,34px)", marginBottom: 20 }}
         >
-          38 members <em>attended</em>
+          <Translation
+            i18nKey="gatherings:recap.attendedHeading"
+            values={{ count: RECAP_ATTENDED_COUNT }}
+            components={{ em: <em /> }}
+          />
         </div>
         <div className={styles.whoGrid} aria-busy={loading}>
           {loading
@@ -140,7 +148,11 @@ export function GatheringRecapMain({
                 </FadeIn>
               ))}
         </div>
-        <div className={styles.moreLabel}>+ 30 more members attended</div>
+        <div className={styles.moreLabel}>
+          {t("gatherings:recap.moreAttended", {
+            count: RECAP_MORE_ATTENDED_COUNT,
+          })}
+        </div>
       </div>
     </div>
   );

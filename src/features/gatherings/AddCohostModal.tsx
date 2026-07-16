@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberPicker } from "./MemberPicker";
 import { MEMBER_POOL, type CohostCandidate } from "./manageCohosts.data";
 import modal from "./GatheringModals.module.css";
@@ -15,6 +17,7 @@ export function AddCohostModal({
   onPick: (candidate: CohostCandidate) => void;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
 
   useEffect(() => {
@@ -40,31 +43,31 @@ export function AddCohostModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Add a cohost"
+        aria-label={t("gatherings:cohost.addModal.eyebrow")}
         className={modal.modal}
       >
         <button
           type="button"
           className={modal.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("gatherings:cohost.closeAria")}
         >
           <FiX />
         </button>
-        <div className={modal.eye}>Add a cohost</div>
+        <div className={modal.eye}>{t("gatherings:cohost.addModal.eyebrow")}</div>
         <div className={modal.title}>
-          Share the <em>load</em>
+          <Translation
+            i18nKey="gatherings:cohost.addModal.title"
+            components={{ em: <em /> }}
+          />
         </div>
-        <p className={modal.sub}>
-          A cohost can edit the page, message guests and manage RSVPs alongside
-          you. Pick someone you trust — they'll be asked to accept.
-        </p>
+        <p className={modal.sub}>{t("gatherings:cohost.addModal.sub")}</p>
 
         <MemberPicker
           candidates={MEMBER_POOL}
           excludeSlugs={excludeSlugs}
           onToggle={pick}
-          searchLabel="Search members to add as cohost"
+          searchLabel={t("gatherings:cohost.addModal.searchLabel")}
         />
       </div>
     </div>

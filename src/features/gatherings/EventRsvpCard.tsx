@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { TIERS } from "./eventPage.data";
-import { EVENT_CAPACITY, EVENT_IS_FULL } from "./eventRsvp.data";
+import { EVENT_CAPACITY, EVENT_FILLED, EVENT_IS_FULL } from "./eventRsvp.data";
 import { WaitlistSuccess, ReservedSuccess } from "./EventRsvpSuccess";
 import { useRsvp, useUnrsvp } from "./api/useEventMutations";
 import styles from "./EventPage.module.css";
@@ -11,6 +14,8 @@ import styles from "./EventPage.module.css";
  *  demo no-op path working and gives live mode a slug to target. */
 export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const rsvp = useRsvp(slug);
   const unrsvp = useUnrsvp(slug);
   const [selectedTier, setSelectedTier] = useState(1);
@@ -22,6 +27,8 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
   const emailValid = /^\S+@\S+\.\S+$/.test(email);
   const canSubmit = fullName.trim().length > 0 && emailValid;
   const isFull = EVENT_IS_FULL;
+  const spotsRemaining = EVENT_CAPACITY - EVENT_FILLED;
+  const fillPercent = Math.round((EVENT_FILLED / EVENT_CAPACITY) * 100);
 
   function joinWaitlist() {
     rsvp.mutate("maybe");
@@ -57,34 +64,35 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
         <>
           <div className={styles.ticketHead}>
             <div className={styles.ticketHeadTitle}>
-              {isFull ? "This gathering is full" : "Reserve your place"}
+              {isFull
+                ? t("gatherings:event.rsvp.headTitleFull")
+                : t("gatherings:event.rsvp.headTitle")}
             </div>
             <div className={styles.ticketHeadSub}>
               {isFull
-                ? "Join the waitlist — we'll email you if a spot opens."
-                : "Pay what you can. All tiers include everything."}
+                ? t("gatherings:event.rsvp.headSubFull")
+                : t("gatherings:event.rsvp.headSub")}
             </div>
           </div>
           <div className={styles.spotsText}>
-            {isFull ? (
-              <span>
-                <strong>0 spots</strong> remaining
-              </span>
-            ) : (
-              <span>
-                <strong>5 spots</strong> remaining
-              </span>
-            )}
             <span>
-              {isFull
-                ? `${EVENT_CAPACITY} of ${EVENT_CAPACITY} filled`
-                : `21 of ${EVENT_CAPACITY} filled`}
+              <Translation
+                i18nKey="gatherings:event.rsvp.spotsRemaining"
+                values={{ count: isFull ? 0 : spotsRemaining }}
+                components={{ strong: <strong /> }}
+              />
+            </span>
+            <span>
+              {t("gatherings:event.rsvp.filledOfCapacity", {
+                filled: isFull ? EVENT_CAPACITY : EVENT_FILLED,
+                capacity: EVENT_CAPACITY,
+              })}
             </span>
           </div>
           <div className={styles.spotsBar}>
             <div
               className={styles.spotsFill}
-              style={{ width: isFull ? "100%" : "81%" }}
+              style={{ width: isFull ? "100%" : `${fillPercent}%` }}
             />
           </div>
           {!isFull && (
@@ -92,7 +100,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
               {TIERS.map((tier, index) => (
                 <button
                   type="button"
-                  key={tier.name}
+                  key={tier.nameKey}
                   className={[
                     styles.tier,
                     selectedTier === index && styles.tierSelected,
@@ -107,11 +115,13 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
                       className={styles.tierName}
                       style={{ display: "block" }}
                     >
-                      {tier.name}
+                      {t(tier.nameKey)}
                     </span>
-                    <span className={styles.tierDesc}>{tier.desc}</span>
+                    <span className={styles.tierDesc}>{t(tier.descKey)}</span>
                   </span>
-                  <span className={styles.tierPrice}>{tier.price}</span>
+                  <span className={styles.tierPrice}>
+                    {fmt.currency(tier.price)}
+                  </span>
                 </button>
               ))}
             </div>
@@ -123,7 +133,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
               inputMode="text"
               autoComplete="name"
               autoCapitalize="words"
-              placeholder="Your name *"
+              placeholder={t("gatherings:event.rsvp.namePlaceholder")}
               required
               aria-required="true"
               value={fullName}
@@ -137,7 +147,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
               autoCapitalize="none"
               autoCorrect="off"
               spellCheck={false}
-              placeholder="Your email *"
+              placeholder={t("gatherings:event.rsvp.emailPlaceholder")}
               required
               aria-required="true"
               value={email}
@@ -149,13 +159,14 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
                 type="text"
                 inputMode="text"
                 autoComplete="off"
-                placeholder="Dietary requirements (optional)"
+                placeholder={t("gatherings:event.rsvp.dietaryPlaceholder")}
               />
             )}
             <div className={styles.requiredHint}>
-              <span className={styles.req}>*</span> Name and email are required
-              — we send your {isFull ? "waitlist update" : "confirmation"}{" "}
-              there.
+              <span className={styles.req}>*</span>{" "}
+              {isFull
+                ? t("gatherings:event.rsvp.requiredHintFull")
+                : t("gatherings:event.rsvp.requiredHint")}
             </div>
             <button
               type="button"
@@ -170,18 +181,19 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
               }}
               disabled={!canSubmit}
               title={
-                !canSubmit
-                  ? "Enter your name and a valid email to continue"
-                  : undefined
+                !canSubmit ? t("gatherings:event.rsvp.disabledHint") : undefined
               }
             >
-              {isFull ? "Join the waitlist →" : "Reserve my place →"}
+              {isFull
+                ? t("gatherings:event.rsvp.joinWaitlistCta")
+                : t("gatherings:event.rsvp.reserveCta")}{" "}
+              →
             </button>
           </div>
           <div className={styles.note}>
             {isFull
-              ? "We'll email you the moment a spot opens. Leaving the waitlist is one click."
-              : "You'll receive a confirmation email. You can cancel up to 48 hours before the event."}
+              ? t("gatherings:event.rsvp.noteFull")
+              : `${t("gatherings:event.rsvp.confirmationEmailNote")} ${t("gatherings:event.rsvp.cancelPolicy")}`}
           </div>
         </>
       )}

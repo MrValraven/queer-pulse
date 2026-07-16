@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   ManageGatheringTabs,
@@ -27,7 +28,7 @@ interface GatheringState {
   date: string;
   location: string;
   description: string;
-  details: { label: string; value: string }[];
+  details: { id: string; labelKey: string; value: string }[];
 }
 
 function renderTitle(title: string) {
@@ -41,6 +42,7 @@ function renderTitle(title: string) {
 }
 
 export function ManageGatheringPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const updateEvent = useUpdateEvent(MANAGE_SLUG);
@@ -49,9 +51,9 @@ export function ManageGatheringPage() {
   const [messageOpen, setMessageOpen] = useState(false);
 
   const dateDetail =
-    GATHERING_DETAILS.find((d) => d.label === "Date")?.value ?? "";
+    GATHERING_DETAILS.find((detail) => detail.id === "date")?.value ?? "";
   const venueDetail =
-    GATHERING_DETAILS.find((d) => d.label === "Venue")?.value ?? "";
+    GATHERING_DETAILS.find((detail) => detail.id === "venue")?.value ?? "";
 
   const [gathering, setGathering] = useState<GatheringState>({
     title: GATHERING_TITLE,
@@ -63,22 +65,29 @@ export function ManageGatheringPage() {
 
   const cancelGathering = () => {
     if (
-      window.confirm("Cancel Pride Brunch? All 14 attendees will be notified.")
+      window.confirm(
+        t("gatherings:manage.cancelConfirm", {
+          title: gathering.title,
+          count: ATTENDEE_COUNT,
+        }),
+      )
     ) {
       cancelEvent.mutate();
       navigate(routes.gatheringCancelled);
     }
   };
 
-  const updateDetail = (label: string, value: string) => {
+  const updateDetail = (id: string, value: string) => {
     setGathering((g) => ({
       ...g,
-      details: g.details.map((d) => (d.label === label ? { ...d, value } : d)),
-      ...(label === "Date" ? { date: value } : {}),
-      ...(label === "Venue" ? { location: value } : {}),
+      details: g.details.map((detail) =>
+        detail.id === id ? { ...detail, value } : detail,
+      ),
+      ...(id === "date" ? { date: value } : {}),
+      ...(id === "venue" ? { location: value } : {}),
     }));
     // Map the edited detail onto the closest UpdateEventDto field.
-    if (label === "Venue") updateEvent.mutate({ venue: value });
+    if (id === "venue") updateEvent.mutate({ venue: value });
   };
 
   return (
@@ -87,12 +96,13 @@ export function ManageGatheringPage() {
         <div className="wrap">
           <div className={styles.header}>
             <div className={styles.eyebrow}>
-              <div className={styles.phDot} /> Hosting
+              <div className={styles.phDot} /> {t("gatherings:manage.eyebrow")}
             </div>
             <div className={styles.title}>{renderTitle(gathering.title)}</div>
             <div className={styles.phRow}>
               <div className={styles.status}>
-                <div className={styles.statusDot} /> Approved · 12 days to go
+                <div className={styles.statusDot} />{" "}
+                {t("gatherings:manage.status.approvedDaysToGo", { count: 12 })}
               </div>
               <div className={styles.actions}>
                 <Button
@@ -100,21 +110,21 @@ export function ManageGatheringPage() {
                   className={styles.actionBtn}
                   onClick={() => setEditOpen(true)}
                 >
-                  Edit details
+                  {t("gatherings:manage.actions.editDetails")}
                 </Button>
                 <Button
                   variant="ghost"
                   className={styles.actionBtn}
                   onClick={() => setMessageOpen(true)}
                 >
-                  Message attendees
+                  {t("gatherings:manage.actions.messageAttendees")}
                 </Button>
                 <Button
                   variant="primary"
                   className={styles.actionBtn}
                   to={routes.gatheringDashboard}
                 >
-                  Day-of dashboard →
+                  {t("gatherings:manage.actions.dayOfDashboard")} →
                 </Button>
               </div>
             </div>
@@ -132,7 +142,9 @@ export function ManageGatheringPage() {
               }
             />
             <ManageGatheringSidebar
-              onCopyLink={() => showToast("Link copied!", "success")}
+              onCopyLink={() =>
+                showToast(t("gatherings:manage.linkCopiedToast"), "success")
+              }
             />
           </div>
         </div>
@@ -154,12 +166,12 @@ export function ManageGatheringPage() {
               date: draft.date,
               location: draft.location,
               description: draft.description,
-              details: g.details.map((d) =>
-                d.label === "Date"
-                  ? { ...d, value: draft.date }
-                  : d.label === "Venue"
-                    ? { ...d, value: draft.location }
-                    : d,
+              details: g.details.map((detail) =>
+                detail.id === "date"
+                  ? { ...detail, value: draft.date }
+                  : detail.id === "venue"
+                    ? { ...detail, value: draft.location }
+                    : detail,
               ),
             }));
             updateEvent.mutate({

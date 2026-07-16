@@ -7,6 +7,7 @@ import {
   FiPause,
 } from "react-icons/fi";
 import { useScrollLock, usePrefersReducedMotion } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Pic } from "./gatheringPhotos.data";
 import styles from "./PhotoViewer.module.css";
 
@@ -24,6 +25,7 @@ export function PhotoViewer({
   onClose: () => void;
 }) {
   useScrollLock();
+  const { t } = useTranslation();
   const reduced = usePrefersReducedMotion();
   const [index, setIndex] = useState(startIndex);
   // Auto-advance only starts on for slideshow, and never when reduced motion is on.
@@ -59,7 +61,7 @@ export function PhotoViewer({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Photo viewer"
+      aria-label={t("gatherings:photos.viewerAriaLabel")}
       className={styles.overlay}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -75,7 +77,11 @@ export function PhotoViewer({
               type="button"
               className={styles.iconBtn}
               aria-pressed={playing}
-              aria-label={playing ? "Pause slideshow" : "Play slideshow"}
+              aria-label={
+                playing
+                  ? t("gatherings:photos.pauseSlideshowAriaLabel")
+                  : t("gatherings:photos.playSlideshowAriaLabel")
+              }
               onClick={() => setPlaying((p) => !p)}
             >
               {playing ? <FiPause /> : <FiPlay />}
@@ -85,7 +91,7 @@ export function PhotoViewer({
             type="button"
             className={styles.iconBtn}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("gatherings:photos.closeAriaLabel")}
           >
             <FiX />
           </button>
@@ -97,7 +103,7 @@ export function PhotoViewer({
           type="button"
           className={styles.nav}
           onClick={() => go(-1)}
-          aria-label="Previous photo"
+          aria-label={t("gatherings:photos.prevPhotoAriaLabel")}
         >
           <FiChevronLeft />
         </button>
@@ -129,7 +135,7 @@ export function PhotoViewer({
           type="button"
           className={styles.nav}
           onClick={() => go(1)}
-          aria-label="Next photo"
+          aria-label={t("gatherings:photos.nextPhotoAriaLabel")}
         >
           <FiChevronRight />
         </button>

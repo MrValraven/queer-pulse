@@ -106,7 +106,7 @@
   white-space: nowrap;
 }
 @media (hover: hover) {
-  .tabBtn:hover {
+  .tabBtn:not(.tabBtnActive):hover {
     background: rgba(var(--plum-rgb), 0.05);
     color: var(--ink);
   }

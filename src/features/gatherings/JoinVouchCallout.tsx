@@ -1,5 +1,7 @@
 import { FiShield, FiUserPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./JoinVouchCallout.module.css";
 
@@ -9,6 +11,8 @@ import styles from "./JoinVouchCallout.module.css";
  * Plum-panel emphasis treatment so it reads as important, not a flimsy card.
  */
 export function JoinVouchCallout() {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.callout}>
       <span className={styles.icon} aria-hidden>
@@ -16,20 +20,19 @@ export function JoinVouchCallout() {
       </span>
       <div className={styles.body}>
         <div className={styles.title}>
-          New here? <em>Get vouched in.</em>
+          <Translation
+            i18nKey="gatherings:vouchCallout.title"
+            components={{ em: <em /> }}
+          />
         </div>
-        <p className={styles.text}>
-          QueerPulse gatherings are members-only. To join, someone in the
-          network vouches for you, or you request an invite and a member follows
-          up. It keeps every room safe.
-        </p>
+        <p className={styles.text}>{t("gatherings:vouchCallout.body")}</p>
         <div className={styles.actions}>
           <Button variant="ghost-dark" to={routes.requestInvite}>
-            Request an invite
+            {t("gatherings:vouchCallout.requestInviteCta")}
           </Button>
           <Button variant="ghost-dark" to={routes.safety}>
             <FiShield aria-hidden style={{ marginRight: 6 }} />
-            How we keep it safe
+            {t("gatherings:vouchCallout.safetyCta")}
           </Button>
         </div>
       </div>

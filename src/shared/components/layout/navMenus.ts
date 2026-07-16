@@ -110,6 +110,7 @@ export const NAV_MENUS: MegaMenu[] = [
         head: "Gather",
         links: [
           { label: "Events", href: routes.events },
+          { label: "Calendar", href: routes.calendar },
           { label: "Host a gathering", href: routes.host },
           { label: "Communities", href: routes.communities },
         ],
@@ -151,7 +152,6 @@ export const NAV_MENUS: MegaMenu[] = [
             featured: true,
           },
           { label: "Spaces Map", href: routes.map },
-          { label: "Calendar", href: routes.calendar },
           { label: "Safe Spaces", href: routes.safeSpaces },
           { label: "Partners", href: routes.partners },
         ],

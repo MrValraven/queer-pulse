@@ -1,18 +1,22 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
-  Avatar,
   ChipSelect,
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { fullName, memberProfiles } from "./data/memberProfiles";
+import { directoryBlurb } from "./directoryBlurb";
+import { MemberCardBody } from "./MemberCardBody";
 import { initialsOf, tintForSlug } from "./api/members.adapters";
 import {
-  IDENTITY,
+  IDENTITY_OPTIONS,
   LANGUAGES,
   NEIGHBOURHOODS,
-  OPEN_TO,
+  OPEN_TO_OPTIONS,
+  facetCounts,
   type FilterState,
   type MemberCard,
 } from "./memberDirectoryFilter.data";
@@ -24,39 +28,47 @@ function toggle(arr: string[], value: string): string[] {
   return arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
 }
 
-/** Most tags a result card shows before collapsing the rest into a "+N" chip.
- *  Keeps every card's tag row bounded regardless of how rich the profile is. */
-const MAX_CARD_TAGS = 3;
-
 export function FiltersSidebar({
   filters,
+  members,
   appliedCount,
   onChange,
   onClearAll,
 }: {
   filters: FilterState;
+  /** Every member loaded so far — the population the counts are taken from. */
+  members: MemberCard[];
   appliedCount: number;
   onChange: (next: FilterState) => void;
   onClearAll: () => void;
 }) {
+  // Counts are read off the loaded directory, never authored. On a directory
+  // nobody has declared into yet, an option simply carries no number.
+  const openToCounts = useMemo(() => facetCounts(members, "openTo"), [members]);
+  const identityCounts = useMemo(
+    () => facetCounts(members, "identities"),
+    [members],
+  );
   return (
     <aside className={styles.filters}>
       <div className={styles.filterCard}>
         <h4>What they're open to</h4>
-        {OPEN_TO.map((o) => (
-          <label key={o.label} className={styles.filterRow}>
+        {OPEN_TO_OPTIONS.map((option) => (
+          <label key={option} className={styles.filterRow}>
             <input
               type="checkbox"
-              checked={filters.openTo.includes(o.label)}
+              checked={filters.openTo.includes(option)}
               onChange={() =>
                 onChange({
                   ...filters,
-                  openTo: toggle(filters.openTo, o.label),
+                  openTo: toggle(filters.openTo, option),
                 })
               }
             />
-            {o.label}
-            <span className={styles.ct}>{o.count}</span>
+            {option}
+            {openToCounts[option] !== undefined && (
+              <span className={styles.ct}>{openToCounts[option]}</span>
+            )}
           </label>
         ))}
       </div>
@@ -76,20 +88,22 @@ export function FiltersSidebar({
 
       <div className={styles.filterCard}>
         <h4>Identity · self-declared</h4>
-        {IDENTITY.map((o) => (
-          <label key={o.label} className={styles.filterRow}>
+        {IDENTITY_OPTIONS.map((option) => (
+          <label key={option} className={styles.filterRow}>
             <input
               type="checkbox"
-              checked={filters.identities.includes(o.label)}
+              checked={filters.identities.includes(option)}
               onChange={() =>
                 onChange({
                   ...filters,
-                  identities: toggle(filters.identities, o.label),
+                  identities: toggle(filters.identities, option),
                 })
               }
             />
-            {o.label}
-            <span className={styles.ct}>{o.count}</span>
+            {option}
+            {identityCounts[option] !== undefined && (
+              <span className={styles.ct}>{identityCounts[option]}</span>
+            )}
           </label>
         ))}
       </div>
@@ -185,6 +199,7 @@ export function MemberResultSkeleton() {
 
 export function MemberResultCard({ member }: { member: MemberCard }) {
   const { user } = useAuth();
+  const { demoMode } = useDemoMode();
   // The signed-in member sees their own card marked "You" — for now they may be
   // the only registered account, so this keeps the directory from reading as a
   // stranger's list. As other members join, every other card renders normally.
@@ -208,13 +223,20 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
   // Live/API cards (including the signed-in member's own) can arrive without a
   // tagline or tags; fall back to the colocated profile so the card still reads
   // as a whole person rather than a blank row.
-  const role = member.role || profile?.role || "";
+  // The card's blurb is the member's short bio, falling back to the opening of
+  // their longer bio. In live mode the backend has already resolved that fallback
+  // into `tagline` (the card DTO carries no bio — see directoryBlurb.ts), so
+  // `member.role` is already final and the bio branch never fires. The registry
+  // bio is passed only in demo mode: pulling a mock bio onto a live card would
+  // put words in a real member's mouth.
+  const blurb = directoryBlurb(
+    member.role || profile?.role,
+    demoMode ? profile?.bio : undefined,
+  );
   const tags: MemberCard["tags"] =
     member.tags.length > 0
       ? member.tags
       : (profile?.tags ?? []).map((label) => ({ label }));
-  const visibleTags = tags.slice(0, MAX_CARD_TAGS);
-  const overflowTags = tags.length - visibleTags.length;
   return (
     <Link
       to={`/members/${member.slug}`}
@@ -222,50 +244,18 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
         .filter(Boolean)
         .join(" ")}
     >
-      <div className={styles.mHead}>
-        <Avatar
-          initials={initials}
-          tint={tint}
-          src={photo}
-          size={48}
-          alt={name}
-        />
-        <div>
-          <div className={styles.mName}>
-            {name}
-            {isMe && <span className={styles.mYou}>You</span>}
-          </div>
-          <div className={styles.mPron}>{member.meta}</div>
-        </div>
-      </div>
-      <div className={styles.mRole}>{role}</div>
-      <div className={styles.mTags}>
-        {visibleTags.map((tag) => (
-          <span
-            key={tag.label}
-            className={[styles.mTag, tag.match && styles.mTagMatch]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            {tag.label}
-          </span>
-        ))}
-        {overflowTags > 0 && (
-          <span
-            className={styles.mTagMore}
-            title={tags
-              .slice(MAX_CARD_TAGS)
-              .map((t) => t.label)
-              .join(", ")}
-          >
-            +{overflowTags}
-          </span>
-        )}
-      </div>
-      <div className={styles.mFoot}>
-        <span className={styles.vouch}>{member.vouch}</span>
-        <span>{member.mutuals}</span>
-      </div>
+      <MemberCardBody
+        name={name}
+        initials={initials}
+        tint={tint}
+        photo={photo}
+        meta={member.meta}
+        blurb={blurb}
+        tags={tags}
+        isMe={isMe}
+        vouch={member.vouch}
+        mutuals={member.mutuals}
+      />
     </Link>
   );
 }

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { calendarLegend } from "./data";
 import { useEvents } from "./api/useEvents";
 import { CALENDAR_TODAY } from "./calendar.data";
@@ -9,6 +11,7 @@ import { CalendarSidebar } from "./CalendarSidebar";
 import styles from "./CalendarPage.module.css";
 
 export function CalendarPage() {
+  const { t } = useTranslation();
   const [view, setView] = useState({ year: 2026, month: 5 });
   const [selected, setSelected] = useState<Date | null>(null);
   const { items: calendarEvents, isLoading: loading } = useEvents({
@@ -45,24 +48,25 @@ export function CalendarPage() {
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.eyebrow}>
-            Community Calendar
+            {t("gatherings:calendar.eyebrow")}
           </Reveal>
           <Reveal as="h1" className={styles.title} delay={60}>
-            Everything happening <em>in one place.</em>
+            <Translation
+              i18nKey="gatherings:calendar.heroTitle"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.sub} delay={120}>
-            QueerPulse gatherings, ILGA Portugal events, Rede ex aequo, Opus
-            Diversus, community screenings, and more — all in one shared
-            calendar.
+            {t("gatherings:calendar.heroSub")}
           </Reveal>
           <Reveal className={styles.legend} delay={160}>
             {calendarLegend.map((item) => (
-              <div key={item.label} className={styles.legItem}>
+              <div key={item.labelKey} className={styles.legItem}>
                 <span
                   className={styles.legDot}
                   style={{ background: item.color }}
                 />
-                {item.label}
+                {t(item.labelKey)}
               </div>
             ))}
           </Reveal>

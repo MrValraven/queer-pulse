@@ -20,7 +20,7 @@
     border-color 0.18s var(--ease);
 }
 @media (hover: hover) {
-  .tab:hover {
+  .tab:not(.tabOn):hover {
     border-color: var(--line-strong);
     color: var(--text-strong);
   }

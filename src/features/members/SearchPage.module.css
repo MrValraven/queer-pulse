@@ -102,7 +102,7 @@
     border-color 0.25s var(--ease);
 }
 @media (hover: hover) {
-  .tab:hover {
+  .tab:not(.tabActive):hover {
     color: var(--ink);
     border-color: rgba(var(--line-rgb), 0.4);
   }

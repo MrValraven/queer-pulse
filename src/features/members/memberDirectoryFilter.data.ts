@@ -1,10 +1,5 @@
 import { memberProfiles } from "./data/memberProfiles";
 
-export interface CheckOption {
-  label: string;
-  count: string;
-  checked?: boolean;
-}
 export interface ChipOption {
   label: string;
   active?: boolean;
@@ -63,14 +58,18 @@ export interface MemberCard {
   mutualsCount: number;
 }
 
-export const OPEN_TO: CheckOption[] = [
-  { label: "Mentoring junior peers", count: "142", checked: true },
-  { label: "Portfolio reviews", count: "28" },
-  { label: "Hosting gatherings", count: "84", checked: true },
-  { label: "Co-hosting an event", count: "62" },
-  { label: "Collaborating on something", count: "214" },
-  { label: "Coffee with new arrivals", count: "312" },
-  { label: "Vouching for a stranger", count: "68" },
+/** The vocabulary of things a member can be open to — the filter's checkbox
+ *  rows, in display order. The count beside each row is never authored here: it
+ *  is counted off the members actually loaded (see `facetCounts`), so an empty
+ *  directory shows no numbers rather than an invented population. */
+export const OPEN_TO_OPTIONS: OpenTo[] = [
+  "Mentoring junior peers",
+  "Portfolio reviews",
+  "Hosting gatherings",
+  "Co-hosting an event",
+  "Collaborating on something",
+  "Coffee with new arrivals",
+  "Vouching for a stranger",
 ];
 
 export const NEIGHBOURHOODS: ChipOption[] = [
@@ -183,15 +182,30 @@ export function professionsForFields(disciplines: string[]): string[] {
   return Array.from(seen);
 }
 
-export const IDENTITY: CheckOption[] = [
-  { label: "Trans & non-binary", count: "408" },
-  { label: "Lesbian", count: "214" },
-  { label: "Gay", count: "312" },
-  { label: "Bi / Pan", count: "288" },
-  { label: "Aro / ace spectrum", count: "96" },
-  { label: "QPOC / queer of colour", count: "142" },
-  { label: "Disabled / chronic illness", count: "88" },
+/** Self-declared identity vocabulary — same contract as `OPEN_TO_OPTIONS`:
+ *  labels only, counts come from the loaded members. */
+export const IDENTITY_OPTIONS: Identity[] = [
+  "Trans & non-binary",
+  "Lesbian",
+  "Gay",
+  "Bi / Pan",
+  "Aro / ace spectrum",
+  "QPOC / queer of colour",
+  "Disabled / chronic illness",
 ];
+
+/** How many of `members` declare each value of a multi-select facet. Only
+ *  values someone actually declares get a key, so a caller can tell "nobody"
+ *  (absent) apart from a real zero it never asked about. */
+export function facetCounts(
+  members: MemberCard[],
+  field: "openTo" | "identities",
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const member of members)
+    for (const value of member[field]) counts[value] = (counts[value] ?? 0) + 1;
+  return counts;
+}
 
 export const LANGUAGES: ChipOption[] = [
   { label: "PT", active: true },
@@ -211,24 +225,8 @@ const HOODS = [
   "Príncipe Real",
 ];
 const DISCIPLINE_POOL = Object.keys(PROFESSIONS_BY_FIELD);
-const OPEN_POOL: OpenTo[] = [
-  "Mentoring junior peers",
-  "Portfolio reviews",
-  "Hosting gatherings",
-  "Co-hosting an event",
-  "Collaborating on something",
-  "Coffee with new arrivals",
-  "Vouching for a stranger",
-];
-const IDENTITY_POOL: Identity[] = [
-  "Trans & non-binary",
-  "Lesbian",
-  "Gay",
-  "Bi / Pan",
-  "Aro / ace spectrum",
-  "QPOC / queer of colour",
-  "Disabled / chronic illness",
-];
+const OPEN_POOL: OpenTo[] = OPEN_TO_OPTIONS;
+const IDENTITY_POOL: Identity[] = IDENTITY_OPTIONS;
 const LANG_POOL = ["PT", "EN", "ES", "FR", "DE"];
 const PRONOUNS = ["she/her", "he/him", "they/them", "she/they", "he/they"];
 

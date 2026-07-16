@@ -261,6 +261,11 @@
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 20px;
 }
+/* Let the empty state span the full grid width so it centers, rather than
+   sitting in a single left-hand column. */
+.empty {
+  grid-column: 1 / -1;
+}
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);

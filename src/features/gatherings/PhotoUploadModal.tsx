@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { FiCheck, FiImage, FiUploadCloud } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./PhotoUploadModal.module.css";
 
 export interface RecapPhoto {
@@ -24,6 +26,7 @@ const SAMPLE_FILES = [
 
 export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
   useScrollLock();
+  const { t } = useTranslation();
   const [picked, setPicked] = useState(0);
   const [caption, setCaption] = useState("");
   const [done, setDone] = useState(false);
@@ -53,15 +56,17 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
               <FiCheck />
             </span>
             <h2 id="photo-title" className={styles.confirmTitle}>
-              Added to <em>the recap</em>
+              <Translation
+                i18nKey="gatherings:recap.upload.confirmTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.confirmBody}>
-              Thanks for sharing — your photo is now in the gallery for everyone
-              who was there.
+              {t("gatherings:recap.upload.confirmBody")}
             </p>
             <div className={styles.confirmActions}>
               <Button variant="ghost-dark" onClick={onClose}>
-                Done
+                {t("gatherings:recap.upload.doneCta")}
               </Button>
             </div>
           </div>
@@ -71,18 +76,18 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
               e.preventDefault();
               onSubmit({
                 id: `photo-${Date.now()}`,
-                caption: caption.trim() || "A moment from the day",
+                caption:
+                  caption.trim() || t("gatherings:recap.upload.defaultCaption"),
                 tint: SAMPLE_FILES[picked]!.tint,
               });
               setDone(true);
             }}
           >
             <h2 id="photo-title" className={styles.dialogTitle}>
-              <FiImage aria-hidden /> Add a photo
+              <FiImage aria-hidden /> {t("gatherings:recap.upload.title")}
             </h2>
             <p className={styles.dialogSub}>
-              Share a moment from the gathering. Choose a photo and add a
-              caption.
+              {t("gatherings:recap.upload.subtitle")}
             </p>
 
             <div className={styles.preview}>
@@ -90,11 +95,13 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
                 tint={SAMPLE_FILES[picked]!.tint}
                 height={150}
                 radius={12}
-                placeholder="your photo"
+                placeholder={t("gatherings:recap.upload.photoPlaceholder")}
               />
             </div>
 
-            <div className={styles.fieldLabel}>Choose a photo</div>
+            <div className={styles.fieldLabel}>
+              {t("gatherings:recap.upload.choosePhotoLabel")}
+            </div>
             <div className={styles.fileRow}>
               {SAMPLE_FILES.map((f, i) => (
                 <button
@@ -111,13 +118,13 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
             </div>
 
             <label className={styles.fieldLabel} htmlFor="photo-caption">
-              Caption
+              {t("gatherings:recap.upload.captionLabel")}
             </label>
             <input
               id="photo-caption"
               className={styles.input}
               type="text"
-              placeholder="Say something about this moment…"
+              placeholder={t("gatherings:recap.upload.captionPlaceholder")}
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               autoFocus
@@ -125,10 +132,10 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
 
             <div className={styles.dialogActions}>
               <Button variant="ghost" type="button" onClick={onClose}>
-                Cancel
+                {t("gatherings:recap.upload.cancelCta")}
               </Button>
               <Button variant="primary" type="submit">
-                Add photo
+                {t("gatherings:recap.upload.addPhotoCta")}
               </Button>
             </div>
           </form>

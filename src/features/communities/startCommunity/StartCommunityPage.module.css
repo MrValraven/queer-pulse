@@ -398,7 +398,7 @@
     background 0.2s var(--ease);
 }
 @media (hover: hover) {
-  .chip:hover {
+  .chip:not(.chipActive):hover {
     border-color: rgba(var(--line-rgb), 0.38);
     color: var(--text-strong);
   }

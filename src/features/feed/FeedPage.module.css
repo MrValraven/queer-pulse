@@ -123,6 +123,11 @@
 .cardReveal {
   animation: sbReveal 0.4s var(--ease) both;
 }
+/* A tab switch re-mounts the list, so the same reveal replays — but quicker, so
+   changing tab reads as instant rather than as another page load. */
+.listSwitch .cardReveal {
+  animation-duration: 0.25s;
+}
 .pad {
   padding: 18px 20px;
 }
@@ -825,6 +830,7 @@
 @media (prefers-reduced-motion: reduce) {
   .revealRow,
   .cardReveal,
+  .listSwitch .cardReveal,
   .greetingRow,
   .postActionOn svg {
     animation: none;

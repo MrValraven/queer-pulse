@@ -1,5 +1,8 @@
 import { FiCalendar, FiMessageCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import { TIERS } from "./eventPage.data";
 import { EVENT_ICS, downloadIcs } from "./eventRsvp.data";
@@ -14,6 +17,8 @@ export function WaitlistSuccess({
   email: string;
   onLeave: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.ticketCard}>
       <div className={styles.successCard}>
@@ -31,18 +36,24 @@ export function WaitlistSuccess({
           </svg>
         </div>
         <h3 className={styles.successTitle}>
-          You're <em>#{waitlistPos}</em> on the waitlist.
+          <Translation
+            i18nKey="gatherings:event.rsvp.waitlistTitle"
+            values={{ position: waitlistPos }}
+            components={{ em: <em /> }}
+          />
         </h3>
         <p className={styles.successText}>
-          This gathering is full, but we'll <strong>email {email}</strong> the
-          moment a spot opens — usually within a day or two of someone
-          cancelling.
+          <Translation
+            i18nKey="gatherings:event.rsvp.waitlistBody"
+            values={{ email }}
+            components={{ strong: <strong /> }}
+          />
         </p>
         <div className={styles.successMeta}>
-          You can leave the waitlist at any time.
+          {t("gatherings:event.rsvp.waitlistMeta")}
         </div>
         <Button variant="ghost-dark" onClick={onLeave}>
-          Leave the waitlist
+          {t("gatherings:event.rsvp.leaveWaitlistCta")}
         </Button>
       </div>
     </div>
@@ -58,6 +69,10 @@ export function ReservedSuccess({
   email: string;
   onCancel: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const tier = TIERS[selectedTier]!;
+
   return (
     <div className={styles.successCard}>
       <div className={styles.successIcon}>
@@ -73,33 +88,46 @@ export function ReservedSuccess({
         </svg>
       </div>
       <h3 className={styles.successTitle}>
-        You're <em>going.</em>
+        <Translation
+          i18nKey="gatherings:event.rsvp.reservedTitle"
+          components={{ em: <em /> }}
+        />
       </h3>
       <p className={styles.successText}>
-        Reserved on the <strong>{TIERS[selectedTier]!.name}</strong> tier
-        {TIERS[selectedTier]!.price !== "€0" && (
+        <Translation
+          i18nKey="gatherings:event.rsvp.reservedTier"
+          values={{ tier: t(tier.nameKey) }}
+          components={{ strong: <strong /> }}
+        />
+        {tier.price > 0 && (
           <>
             {" · "}
-            <strong>{TIERS[selectedTier]!.price}</strong>
+            <strong>{fmt.currency(tier.price)}</strong>
           </>
         )}
       </p>
       <p className={styles.successText}>
-        A confirmation is on its way to <strong>{email}</strong>.
+        <Translation
+          i18nKey="gatherings:event.rsvp.confirmationOnWay"
+          values={{ email }}
+          components={{ strong: <strong /> }}
+        />
       </p>
       <div className={styles.successActions}>
         <Button variant="ghost-dark" onClick={() => downloadIcs(EVENT_ICS)}>
-          <FiCalendar aria-hidden /> Add to calendar
+          <FiCalendar aria-hidden />{" "}
+          {t("gatherings:event.rsvp.addToCalendarCta")}
         </Button>
         <Button variant="ghost-dark" to={routes.messages}>
-          <FiMessageCircle aria-hidden /> Message host
+          <FiMessageCircle aria-hidden />{" "}
+          {t("gatherings:event.rsvp.messageHostCta")}
         </Button>
       </div>
       <div className={styles.successMeta}>
-        You can cancel up to 48 hours before the event.
+        {t("gatherings:event.rsvp.cancelPolicy")}
       </div>
       <Button variant="ghost-dark" onClick={onCancel}>
-        Cancel my reservation
+        {t("gatherings:event.rsvp.cancelReservationCta")}
       </Button>
     </div>
   );

@@ -48,9 +48,4 @@ export const HOUSING_SUBPAGES = [
     blurb:
       "Members buying and running homes together — how co-ops form, and how to join one.",
   },
-  {
-    label: "Flatmates",
-    to: routes.flatmates,
-    blurb: "Find a room or a flatmate in a queer-friendly household.",
-  },
 ];

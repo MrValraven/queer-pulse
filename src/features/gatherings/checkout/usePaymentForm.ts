@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { DECLINE_CARD } from "./checkout.data";
 import { useCheckout } from "./checkoutContext";
 import {
@@ -36,6 +37,7 @@ export function usePaymentForm() {
     selectNewCard,
   } = useCheckout();
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   const [card, setCard] = useState<CardFields>({
     num: "",
@@ -94,7 +96,7 @@ export function usePaymentForm() {
 
   function validate(): boolean {
     if (!cocAgreed) {
-      showToast("Please agree to the Code of Care to continue.", "error");
+      showToast(t("gatherings:checkout.validation.cocRequired"), "error");
       return false;
     }
     if (method === "mbway") {
@@ -131,10 +133,8 @@ export function usePaymentForm() {
       const declined = declineCheck?.replace(/\s/g, "") === DECLINE_CARD;
       setProcessing(false);
       if (declined) {
-        setPayError(
-          "Your card was declined. No money has left your account. Try another card or an express option above.",
-        );
-        showToast("Payment declined — please try again.", "error");
+        setPayError(t("gatherings:checkout.validation.declinedError"));
+        showToast(t("gatherings:checkout.validation.paymentDeclinedToast"), "error");
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
@@ -145,7 +145,7 @@ export function usePaymentForm() {
   function submit() {
     if (!validate()) {
       if (cocAgreed) {
-        setPayError("Please check the highlighted fields and try again.");
+        setPayError(t("gatherings:checkout.validation.fieldsError"));
       }
       return;
     }
@@ -156,10 +156,14 @@ export function usePaymentForm() {
 
   function express(label: string) {
     if (!cocAgreed) {
-      showToast("Please agree to the Code of Care to continue.", "error");
+      showToast(t("gatherings:checkout.validation.cocRequired"), "error");
       return;
     }
-    showToast("Confirming with " + label + "…", "info", 1600);
+    showToast(
+      t("gatherings:checkout.express.confirmingToast", { label }),
+      "info",
+      1600,
+    );
     run(null);
   }
 

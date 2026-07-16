@@ -1,13 +1,34 @@
 import { FiLock } from "react-icons/fi";
-import { EVENT, TIER_MAP } from "./checkout.data";
+import { EVENT, type TierId } from "./checkout.data";
 import { useCheckout } from "./checkoutContext";
-import { eur } from "./checkout.validation";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import { cx } from "./cx";
 import s from "./checkout.module.css";
 
+/** Mock: guests confirmed so far for this supper. Chrome phrase + count are
+ * split so the number can carry a real plural in the catalog. */
+const GUESTS_CONFIRMED_COUNT = 5;
+
+const TIER_NAME_KEY: Record<TierId, string> = {
+  solidarity: "gatherings:checkout.summary.tier.solidarity",
+  standard: "gatherings:checkout.summary.tier.standard",
+  supporter: "gatherings:checkout.summary.tier.supporter",
+};
+
+/** Mock avatar initials for the "who's coming" strip — fictional guests, so
+ * these stay as data (expression-rendered) rather than authored prose. */
+const HOST_INITIALS = "TB";
+const GUEST_A_INITIALS = "MS";
+const GUEST_B_INITIALS = "K";
+const HOST_FIRST_NAME = "Tomás";
+
 export function CheckoutSidebar() {
   const { step, tier, qty, promo, paid, pricing, goStep } = useCheckout();
-  const tierName = TIER_MAP[tier].name + " seat";
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const tierName = t(TIER_NAME_KEY[tier]);
 
   return (
     <aside className={s["co-sidebar"]}>
@@ -20,7 +41,7 @@ export function CheckoutSidebar() {
               type="button"
               onClick={() => goStep(1, "back")}
             >
-              Edit order
+              {t("gatherings:checkout.summary.editOrderCta")}
             </button>
           )}
         </div>
@@ -29,18 +50,26 @@ export function CheckoutSidebar() {
         <div className={s["cos-divider"]} />
 
         <div>
-          <SLine label={`${qty} × ${tierName}`} value={eur(pricing.subtotal)} />
+          <SLine
+            label={t("gatherings:checkout.summary.lineItem", {
+              count: qty,
+              tier: tierName,
+            })}
+            value={fmt.currency(pricing.subtotal)}
+          />
           {pricing.memberDisc > 0 && (
             <SLine
-              label="Member discount"
-              value={"− " + eur(pricing.memberDisc)}
+              label={t("gatherings:checkout.summary.memberDiscount")}
+              value={"− " + fmt.currency(pricing.memberDisc)}
               disc
             />
           )}
           {pricing.promoDisc > 0 && (
             <SLine
-              label={"Promo · " + promo}
-              value={"− " + eur(pricing.promoDisc)}
+              label={t("gatherings:checkout.summary.promoLabel", {
+                code: promo ?? "",
+              })}
+              value={"− " + fmt.currency(pricing.promoDisc)}
               disc
             />
           )}
@@ -48,17 +77,21 @@ export function CheckoutSidebar() {
 
         <div className={s["cos-divider"]} />
         <div className={s["cos-total"]}>
-          <span>Total</span>
-          <span>{eur(pricing.total)}</span>
+          <span>{t("gatherings:checkout.summary.total")}</span>
+          <span>{fmt.currency(pricing.total)}</span>
         </div>
         <div className={s["cos-note"]}>
-          Includes all fees. Processed securely by Stripe.
+          {t("gatherings:checkout.summary.feesNote")}
         </div>
 
         {paid && (
           <div className={s["cos-paid"]}>
             <span className={s["cos-paid-dot"]} />
-            <span>Paid · {eur(pricing.total)}</span>
+            <span>
+              {t("gatherings:checkout.summary.paidLabel", {
+                amount: fmt.currency(pricing.total),
+              })}
+            </span>
           </div>
         )}
 
@@ -68,7 +101,7 @@ export function CheckoutSidebar() {
               className={s["cos-who-av"]}
               style={{ background: "var(--plum)", color: "var(--cream)" }}
             >
-              TB
+              {HOST_INITIALS}
             </div>
             <div
               className={s["cos-who-av"]}
@@ -77,7 +110,7 @@ export function CheckoutSidebar() {
                 color: "var(--jade)",
               }}
             >
-              MS
+              {GUEST_A_INITIALS}
             </div>
             <div
               className={s["cos-who-av"]}
@@ -86,7 +119,7 @@ export function CheckoutSidebar() {
                 color: "var(--accent-ink)",
               }}
             >
-              K
+              {GUEST_B_INITIALS}
             </div>
             <div
               className={s["cos-who-av"]}
@@ -96,14 +129,21 @@ export function CheckoutSidebar() {
             </div>
           </div>
           <div className={s["cos-who-txt"]}>
-            <b>Tomás</b> is hosting
-            <br />5 guests confirmed so far
+            <Translation
+              i18nKey="gatherings:checkout.summary.hostingLine"
+              values={{ hostName: HOST_FIRST_NAME }}
+              components={{ name: <b /> }}
+            />
+            <br />
+            {t("gatherings:checkout.summary.guestsConfirmed", {
+              count: GUESTS_CONFIRMED_COUNT,
+            })}
           </div>
         </div>
 
         <div className={s["cos-safe"]}>
           <FiLock />
-          Invite-only · every member is verified before they can book.
+          {t("gatherings:checkout.summary.safetyNote")}
         </div>
       </div>
     </aside>

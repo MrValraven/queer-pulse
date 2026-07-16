@@ -1,15 +1,19 @@
 import { FiHeart } from "react-icons/fi";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { PRON_OPTIONS } from "./checkout.data";
 import { useCheckout } from "./checkoutContext";
 import s from "./checkout.module.css";
 
 export function GuestDetails() {
   const { qty, guests, updateGuest } = useCheckout();
+  const { t } = useTranslation();
   if (qty <= 1) return null;
 
   return (
     <div>
-      <div className={s["co-sec"]}>Who's joining you</div>
+      <div className={s["co-sec"]}>
+        {t("gatherings:checkout.guest.sectionTitle")}
+      </div>
       <div>
         {guests.map((g, i) => {
           const num = i + 2;
@@ -18,7 +22,9 @@ export function GuestDetails() {
               <div className={s["co-guest-head"]}>
                 <div className={s["co-guest-lbl"]}>
                   <span className={s["co-guest-num"]}>{num}</span>
-                  Guest {num}
+                  {t("gatherings:checkout.guest.guestNumberLabel", {
+                    number: num,
+                  })}
                 </div>
                 <label className={s["co-gift-toggle"]}>
                   <input
@@ -27,7 +33,7 @@ export function GuestDetails() {
                     onChange={(e) => updateGuest(i, "gift", e.target.checked)}
                   />
                   <span className={s["co-gift-pill"]}>
-                    <FiHeart /> Gift this seat
+                    <FiHeart /> {t("gatherings:checkout.guest.giftToggleLabel")}
                   </span>
                 </label>
               </div>
@@ -36,7 +42,7 @@ export function GuestDetails() {
                 <>
                   <div className={s["co-field"]}>
                     <label className={s["co-lbl"]} htmlFor={`gmail${i}`}>
-                      Their email
+                      {t("gatherings:checkout.guest.emailLabel")}
                     </label>
                     <input
                       className={s["co-in"]}
@@ -44,24 +50,30 @@ export function GuestDetails() {
                       type="email"
                       value={g.email}
                       onChange={(e) => updateGuest(i, "email", e.target.value)}
-                      placeholder="they@example.com"
+                      placeholder={t(
+                        "gatherings:checkout.guest.emailPlaceholder",
+                      )}
                     />
                   </div>
                   <div className={s["co-field"]} style={{ marginTop: 12 }}>
                     <label className={s["co-lbl"]} htmlFor={`gnote${i}`}>
-                      A note <span className={s.opt}>optional</span>
+                      {t("gatherings:checkout.guest.noteLabel")}{" "}
+                      <span className={s.opt}>
+                        {t("gatherings:checkout.guest.optionalTag")}
+                      </span>
                     </label>
                     <textarea
                       className={s["co-ta"]}
                       id={`gnote${i}`}
                       value={g.note}
                       onChange={(e) => updateGuest(i, "note", e.target.value)}
-                      placeholder="See you Saturday!"
+                      placeholder={t(
+                        "gatherings:checkout.guest.notePlaceholder",
+                      )}
                     />
                   </div>
                   <div className={s["co-gift-note"]}>
-                    We'll email a claimable ticket — they add their own name
-                    &amp; dietary needs.
+                    {t("gatherings:checkout.guest.giftNote")}
                   </div>
                 </>
               ) : (
@@ -69,19 +81,21 @@ export function GuestDetails() {
                   <div className={s["co-grid-2"]}>
                     <div className={s["co-field"]}>
                       <label className={s["co-lbl"]} htmlFor={`gname${i}`}>
-                        Name
+                        {t("gatherings:checkout.guest.nameLabel")}
                       </label>
                       <input
                         className={s["co-in"]}
                         id={`gname${i}`}
                         value={g.name}
                         onChange={(e) => updateGuest(i, "name", e.target.value)}
-                        placeholder="Their name"
+                        placeholder={t(
+                          "gatherings:checkout.guest.namePlaceholder",
+                        )}
                       />
                     </div>
                     <div className={s["co-field"]}>
                       <label className={s["co-lbl"]} htmlFor={`gpron${i}`}>
-                        Pronouns
+                        {t("gatherings:checkout.guest.pronounsLabel")}
                       </label>
                       <select
                         className={s["co-select"]}
@@ -89,7 +103,9 @@ export function GuestDetails() {
                         value={g.pron}
                         onChange={(e) => updateGuest(i, "pron", e.target.value)}
                       >
-                        <option value="">Select…</option>
+                        <option value="">
+                          {t("gatherings:checkout.guest.pronounsPlaceholder")}
+                        </option>
                         {PRON_OPTIONS.map((p) => (
                           <option key={p}>{p}</option>
                         ))}
@@ -98,7 +114,7 @@ export function GuestDetails() {
                   </div>
                   <div className={s["co-field"]} style={{ marginTop: 12 }}>
                     <label className={s["co-lbl"]} htmlFor={`gdiet${i}`}>
-                      Dietary needs <span className={s.opt}>optional</span>
+                      {t("gatherings:checkout.guest.dietaryLabel")}
                     </label>
                     <input
                       className={s["co-in"]}
@@ -107,7 +123,9 @@ export function GuestDetails() {
                       onChange={(e) =>
                         updateGuest(i, "dietary", e.target.value)
                       }
-                      placeholder="e.g. vegan, no shellfish"
+                      placeholder={t(
+                        "gatherings:checkout.guest.dietaryPlaceholder",
+                      )}
                     />
                   </div>
                 </>

@@ -11,6 +11,7 @@ import {
   TagEditor,
   VisibilityPicker,
 } from "./profileEditControls";
+import { ProfileShortBioField } from "./ProfileShortBioField";
 import { SocialLinksEditor } from "./SocialLinksEditor";
 import base from "./ProfilePage.module.css";
 import styles from "./ProfileEdit.module.css";
@@ -94,16 +95,7 @@ export function EditableProfileHero({
               </div>
             </div>
 
-            <div className={styles.field}>
-              <label className={styles.fieldLabel}>Role</label>
-              <InlineText
-                value={draft.role}
-                ariaLabel="Role or title"
-                placeholder="e.g. Fullstack Developer"
-                className={styles.roleInput}
-                onChange={(v) => updateDraft({ role: v })}
-              />
-            </div>
+            <ProfileShortBioField />
 
             <div className={styles.field}>
               <label className={styles.fieldLabel}>Pronouns</label>
@@ -126,6 +118,11 @@ export function EditableProfileHero({
 
             <div className={styles.field}>
               <label className={styles.fieldLabel}>Bio</label>
+              <p className={styles.fieldHelp}>
+                The longer version, on your profile page. If you leave your
+                short bio empty, your directory card borrows the opening of
+                this.
+              </p>
               <InlineTextarea
                 value={draft.bio}
                 ariaLabel="Bio"

@@ -6,6 +6,8 @@ import {
   type ReactNode,
 } from "react";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import {
   MAX_SEATS,
   MEMBER_RATE,
@@ -90,8 +92,32 @@ function loadState(): CheckoutState {
   return { ...INITIAL, seatPick: normalizeSeatPick([], INITIAL.qty) };
 }
 
+/** Pure line-item math, pulled out of the component so the provider's own
+ * body stays under the per-component line limit. */
+function computePricing(
+  tier: TierId,
+  qty: number,
+  isGuest: boolean,
+  promo: string | null,
+): Pricing {
+  const unit = TIER_MAP[tier].price;
+  const subtotal = unit * qty;
+  const memberDisc = isGuest ? 0 : subtotal * MEMBER_RATE;
+  const afterMember = subtotal - memberDisc;
+  const promoDisc = promo ? afterMember * PROMO_RATE : 0;
+  return {
+    unit,
+    subtotal,
+    memberDisc,
+    promoDisc,
+    total: afterMember - promoDisc,
+  };
+}
+
 export function CheckoutProvider({ children }: { children: ReactNode }) {
   const { showToast } = useToast();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [state, setState] = useState<CheckoutState>(loadState);
 
   useEffect(() => {
@@ -106,20 +132,10 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
     setState((s) => ({ ...s, ...partial }));
   }, []);
 
-  const pricing = useMemo<Pricing>(() => {
-    const unit = TIER_MAP[state.tier].price;
-    const subtotal = unit * state.qty;
-    const memberDisc = state.isGuest ? 0 : subtotal * MEMBER_RATE;
-    const afterMember = subtotal - memberDisc;
-    const promoDisc = state.promo ? afterMember * PROMO_RATE : 0;
-    return {
-      unit,
-      subtotal,
-      memberDisc,
-      promoDisc,
-      total: afterMember - promoDisc,
-    };
-  }, [state.tier, state.qty, state.isGuest, state.promo]);
+  const pricing = useMemo<Pricing>(
+    () => computePricing(state.tier, state.qty, state.isGuest, state.promo),
+    [state.tier, state.qty, state.isGuest, state.promo],
+  );
 
   const email = state.isGuest ? state.guestEmail.trim() : MEMBER_EMAIL;
 
@@ -148,12 +164,17 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
       if (!val) return "empty";
       if (VALID_PROMOS.includes(val)) {
         patch({ promo: val });
-        showToast("Code applied — extra 5% off.", "success");
+        showToast(
+          t("gatherings:checkout.promo.appliedToast", {
+            percent: fmt.number(PROMO_RATE, { style: "percent" }),
+          }),
+          "success",
+        );
         return "ok";
       }
       return "invalid";
     },
-    [patch, showToast],
+    [patch, showToast, t, fmt],
   );
 
   const removePromo = useCallback(() => patch({ promo: null }), [patch]);
@@ -162,13 +183,15 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
     (v: Visibility) => {
       patch({ visibility: v });
       showToast(
-        v === "private"
-          ? "You'll attend privately — hidden from the guest list."
-          : "You'll appear on the guest list.",
+        t(
+          v === "private"
+            ? "gatherings:checkout.summary.visibilityPrivateToast"
+            : "gatherings:checkout.summary.visibilityPublicToast",
+        ),
         "info",
       );
     },
-    [patch, showToast],
+    [patch, showToast, t],
   );
 
   const pickSeat = useCallback((seatIdx: number) => {
@@ -199,8 +222,8 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
   );
   const removeSavedCard = useCallback(() => {
     patch({ savedCardRemoved: true, usingSaved: false });
-    showToast("Saved card removed.", "info");
-  }, [patch, showToast]);
+    showToast(t("gatherings:checkout.card.removedToast"), "info");
+  }, [patch, showToast, t]);
 
   const setCoc = useCallback(
     (agreed: boolean) => patch({ cocAgreed: agreed }),
@@ -234,13 +257,13 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
 
   const tryGoStep2 = useCallback((): boolean => {
     if (state.isGuest && !validEmail(state.guestEmail.trim())) {
-      showToast("Add an email so we can send your ticket.", "error");
+      showToast(t("gatherings:checkout.validation.guestEmailRequired"), "error");
       return false;
     }
     setState((s) => ({ ...s, reachedStep2: true, step: 2, dir: "forward" }));
     window.scrollTo({ top: 0, behavior: "smooth" });
     return true;
-  }, [state.isGuest, state.guestEmail, showToast]);
+  }, [state.isGuest, state.guestEmail, showToast, t]);
 
   const confirmPayment = useCallback(() => {
     setState((s) => ({
@@ -251,8 +274,8 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
       dir: "forward",
     }));
     window.scrollTo({ top: 0, behavior: "smooth" });
-    showToast("Payment confirmed — see you on the 28th!", "success");
-  }, [showToast]);
+    showToast(t("gatherings:checkout.payment.confirmedToast"), "success");
+  }, [showToast, t]);
 
   const dismissFirstTimer = useCallback(
     () => patch({ firstTimerDismissed: true }),

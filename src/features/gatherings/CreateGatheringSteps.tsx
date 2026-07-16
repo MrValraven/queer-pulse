@@ -1,56 +1,69 @@
 import { FiCheck } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   ACCESS_OPTIONS,
-  CONFIRM_CHECKS,
+  CONFIRM_CHECK_KEYS,
   HOODS,
   LANGS,
   TYPES,
+  accessLabelKey,
+  hoodLabelKey,
+  langLabelKey,
+  typeNameKey,
 } from "./createGathering.data";
 import type { GatheringForm } from "./useGatheringForm";
 import styles from "./CreateGatheringPage.module.css";
 
 export function TypeStep({ form }: { form: GatheringForm }) {
+  const { t } = useTranslation();
   return (
     <div>
       <div className={styles.stepTitle}>
-        What kind of <em>gathering?</em>
+        <Translation
+          i18nKey="gatherings:create.step1.title"
+          components={{ em: <em /> }}
+        />
       </div>
-      <p className={styles.stepSub}>
-        Choose the format. This determines some of the fields that follow.
-      </p>
+      <p className={styles.stepSub}>{t("gatherings:create.step1.sub")}</p>
       <div className={styles.types}>
-        {TYPES.map((t) => (
+        {TYPES.map((option) => (
           <button
-            key={t.name}
+            key={option.value}
             type="button"
             className={[
               styles.typeCard,
-              form.type === t.name && styles.typeCardSelected,
+              form.type === option.value && styles.typeCardSelected,
             ]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => form.selectType(t.name, t.icon)}
+            onClick={() => form.selectType(option.value, option.icon)}
           >
             <div className={styles.typeIcon}>
-              <t.icon />
+              <option.icon />
             </div>
-            <span className={styles.typeName}>{t.name}</span>
-            <span className={styles.typeSub}>{t.sub}</span>
+            <span className={styles.typeName}>{t(option.nameKey)}</span>
+            <span className={styles.typeSub}>{t(option.subKey)}</span>
           </button>
         ))}
       </div>
-      <label className={styles.label}>Event title</label>
+      <label className={styles.label}>
+        {t("gatherings:create.step1.titleLabel")}
+      </label>
       <input
         className={styles.input}
         type="text"
-        placeholder="A clear, specific title — not a pun, not a mystery"
+        placeholder={t("gatherings:create.step1.titlePlaceholder")}
         value={form.title}
         onChange={(e) => form.setTitle(e.target.value)}
       />
-      <label className={styles.label}>Short description</label>
+      <label className={styles.label}>
+        {t("gatherings:create.step1.descLabel")}
+      </label>
       <textarea
         className={styles.textarea}
-        placeholder="What will people do? What should they expect? What makes this gathering worth attending?"
+        placeholder={t("gatherings:create.step1.descPlaceholder")}
         value={form.desc}
         onChange={(e) => form.setDesc(e.target.value)}
       />
@@ -59,18 +72,21 @@ export function TypeStep({ form }: { form: GatheringForm }) {
 }
 
 export function DatePlaceStep({ form }: { form: GatheringForm }) {
+  const { t } = useTranslation();
   return (
     <div>
       <div className={styles.stepTitle}>
-        When and <em>where?</em>
+        <Translation
+          i18nKey="gatherings:create.step2.title"
+          components={{ em: <em /> }}
+        />
       </div>
-      <p className={styles.stepSub}>
-        The location is only shared with confirmed attendees — not shown on the
-        public listing.
-      </p>
+      <p className={styles.stepSub}>{t("gatherings:create.step2.sub")}</p>
       <div className={styles.row2}>
         <div>
-          <label className={styles.label}>Date</label>
+          <label className={styles.label}>
+            {t("gatherings:create.step2.dateLabel")}
+          </label>
           <input
             className={styles.input}
             type="date"
@@ -79,7 +95,9 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
           />
         </div>
         <div>
-          <label className={styles.label}>Time</label>
+          <label className={styles.label}>
+            {t("gatherings:create.step2.timeLabel")}
+          </label>
           <input
             className={styles.input}
             type="time"
@@ -90,7 +108,9 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
       </div>
       <div className={styles.row2}>
         <div>
-          <label className={styles.label}>End time (optional)</label>
+          <label className={styles.label}>
+            {t("gatherings:create.step2.endTimeLabel")}
+          </label>
           <input
             className={styles.input}
             type="time"
@@ -99,42 +119,52 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
           />
         </div>
         <div>
-          <label className={styles.label}>Neighbourhood</label>
+          <label className={styles.label}>
+            {t("gatherings:create.step2.hoodLabel")}
+          </label>
           <select
             className={styles.select}
             value={form.hood}
             onChange={(e) => form.setHood(e.target.value)}
           >
-            <option value="">Select…</option>
-            {HOODS.map((h) => (
-              <option key={h}>{h}</option>
+            <option value="">
+              {t("gatherings:create.step2.hoodPlaceholder")}
+            </option>
+            {HOODS.map((hood) => (
+              <option key={hood.value} value={hood.value}>
+                {t(hood.labelKey)}
+              </option>
             ))}
           </select>
         </div>
       </div>
-      <label className={styles.label}>Venue name</label>
-      <input
-        className={styles.input}
-        type="text"
-        placeholder="e.g. Casa da Mariquinhas, My studio, Jardim do Torel"
-        value={form.venue}
-        onChange={(e) => form.setVenue(e.target.value)}
-      />
       <label className={styles.label}>
-        Full address (shared only with confirmed attendees)
+        {t("gatherings:create.step2.venueLabel")}
       </label>
       <input
         className={styles.input}
         type="text"
-        placeholder="Street address"
-        value={form.address}
-        onChange={(e) => form.setAddress(e.target.value)}
+        placeholder={t("gatherings:create.step2.venuePlaceholder")}
+        value={form.venue}
+        onChange={(e) => form.setVenue(e.target.value)}
       />
-      <label className={styles.label}>Getting there (optional)</label>
+      <label className={styles.label}>
+        {t("gatherings:create.step2.addressLabel")}
+      </label>
       <input
         className={styles.input}
         type="text"
-        placeholder="e.g. Ring the bell on the left, 5 min walk from Intendente metro"
+        placeholder={t("gatherings:create.step2.addressPlaceholder")}
+        value={form.address}
+        onChange={(e) => form.setAddress(e.target.value)}
+      />
+      <label className={styles.label}>
+        {t("gatherings:create.step2.directionsLabel")}
+      </label>
+      <input
+        className={styles.input}
+        type="text"
+        placeholder={t("gatherings:create.step2.directionsPlaceholder")}
         value={form.directions}
         onChange={(e) => form.setDirections(e.target.value)}
       />
@@ -143,79 +173,85 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
 }
 
 export function CapacityStep({ form }: { form: GatheringForm }) {
+  const { t } = useTranslation();
   return (
     <div>
       <div className={styles.stepTitle}>
-        Who and <em>how many?</em>
+        <Translation
+          i18nKey="gatherings:create.step3.title"
+          components={{ em: <em /> }}
+        />
       </div>
-      <p className={styles.stepSub}>
-        Set a realistic cap. It's easier to open more spots than to turn people
-        away at the door.
-      </p>
+      <p className={styles.stepSub}>{t("gatherings:create.step3.sub")}</p>
       <div className={styles.row2}>
         <div>
-          <label className={styles.label}>Capacity</label>
+          <label className={styles.label}>
+            {t("gatherings:create.step3.capLabel")}
+          </label>
           <input
             className={styles.input}
             type="number"
             min={2}
             max={200}
-            placeholder="Max attendees"
+            placeholder={t("gatherings:create.step3.capPlaceholder")}
             value={form.cap}
             onChange={(e) => form.setCap(e.target.value)}
           />
         </div>
         <div>
-          <label className={styles.label}>Language</label>
+          <label className={styles.label}>
+            {t("gatherings:create.step3.langLabel")}
+          </label>
           <select
             className={styles.select}
             value={form.lang}
             onChange={(e) => form.setLang(e.target.value)}
           >
-            {LANGS.map((l) => (
-              <option key={l}>{l}</option>
+            {LANGS.map((lang) => (
+              <option key={lang.value} value={lang.value}>
+                {t(lang.labelKey)}
+              </option>
             ))}
           </select>
         </div>
       </div>
       <label className={styles.label}>
-        Accessibility — what can you confirm?
+        {t("gatherings:create.step3.accessLabel")}
       </label>
-      <p className={styles.hint}>
-        Only tick what you can genuinely confirm. Attendees will rely on this
-        information.
-      </p>
+      <p className={styles.hint}>{t("gatherings:create.step3.accessHint")}</p>
       <div className={styles.accessList}>
-        {ACCESS_OPTIONS.map((name) => {
-          const on = form.access.has(name);
+        {ACCESS_OPTIONS.map((option) => {
+          const on = form.access.has(option.value);
           return (
             <div
-              key={name}
+              key={option.value}
               className={[styles.accessItem, on && styles.accessItemSelected]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => form.toggleAccess(name)}
+              onClick={() => form.toggleAccess(option.value)}
               role="checkbox"
               aria-checked={on}
               tabIndex={0}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  form.toggleAccess(name);
+                  form.toggleAccess(option.value);
                 }
               }}
             >
               <div className={styles.accessCheck}>{on ? <FiCheck /> : ""}</div>
-              <span className={styles.accessName}>{name}</span>
+              <span className={styles.accessName}>{t(option.labelKey)}</span>
             </div>
           );
         })}
       </div>
-      <label className={styles.label}>Accessibility notes (optional)</label>
+      <label className={styles.label}>
+        {t("gatherings:create.step3.notesLabel")}
+      </label>
       <input
         className={styles.input}
         type="text"
-        placeholder="Anything else attendees should know — steps, parking, sound level…"
+        placeholder={t("gatherings:create.step3.notesPlaceholder")}
         value={form.accessNotes}
         onChange={(e) => form.setAccessNotes(e.target.value)}
       />
@@ -224,15 +260,16 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
 }
 
 export function PricingStep({ form }: { form: GatheringForm }) {
+  const { t } = useTranslation();
   return (
     <div>
       <div className={styles.stepTitle}>
-        Tickets and <em>pricing.</em>
+        <Translation
+          i18nKey="gatherings:create.step4.title"
+          components={{ em: <em /> }}
+        />
       </div>
-      <p className={styles.stepSub}>
-        QueerPulse takes 0% of ticket revenue. All money goes directly to you.
-        Sliding scale is mandatory for any paid event.
-      </p>
+      <p className={styles.stepSub}>{t("gatherings:create.step4.sub")}</p>
       <div
         className={styles.freeToggle}
         onClick={() => form.setFree(!form.free)}
@@ -254,24 +291,30 @@ export function PricingStep({ form }: { form: GatheringForm }) {
           {form.free ? <FiCheck /> : ""}
         </div>
         <div>
-          <div className={styles.freeLabel}>Free event — no tickets needed</div>
+          <div className={styles.freeLabel}>
+            {t("gatherings:create.step4.freeLabel")}
+          </div>
         </div>
       </div>
       {!form.free && (
         <div>
           <p className={styles.hint}>
-            Set three tiers. The sliding scale is not optional — if your event
-            is paid, all three tiers must be offered. Members choose their tier
-            privately.
+            {t("gatherings:create.step4.tiersHint")}
           </p>
           <div className={styles.tierHead}>
             <span />
-            <span className={styles.tierColHead}>Price / person</span>
-            <span className={styles.tierColHead}>Spots</span>
+            <span className={styles.tierColHead}>
+              {t("gatherings:create.step4.priceColHead")}
+            </span>
+            <span className={styles.tierColHead}>
+              {t("gatherings:create.step4.spotsColHead")}
+            </span>
             <span />
           </div>
           <div className={styles.tierRow}>
-            <span className={styles.tierLabel}>Free / solidarity</span>
+            <span className={styles.tierLabel}>
+              {t("gatherings:create.step4.tier.solidarity.name")}
+            </span>
             <div className={styles.moneyCell}>
               <span className={styles.moneyPrefix}>€</span>
               <input
@@ -279,7 +322,9 @@ export function PricingStep({ form }: { form: GatheringForm }) {
                 type="number"
                 min={0}
                 defaultValue="0"
-                aria-label="Free / solidarity price in euros"
+                aria-label={t(
+                  "gatherings:create.step4.tier.solidarity.priceAria",
+                )}
               />
             </div>
             <div className={styles.spotsCell}>
@@ -288,18 +333,23 @@ export function PricingStep({ form }: { form: GatheringForm }) {
                 type="number"
                 min={0}
                 defaultValue="3"
-                aria-label="Free / solidarity number of spots"
+                aria-label={t(
+                  "gatherings:create.step4.tier.solidarity.spotsAria",
+                )}
               />
-              <span className={styles.spotsSuffix}>ppl</span>
+              <span className={styles.spotsSuffix}>
+                {t("gatherings:create.step4.spotsSuffix")}
+              </span>
             </div>
             <span />
           </div>
           <div className={styles.tierNote}>
-            This tier is for members who cannot afford to pay. Set aside at
-            least 2–3 spots.
+            {t("gatherings:create.step4.tier.solidarity.note")}
           </div>
           <div className={styles.tierRow}>
-            <span className={styles.tierLabel}>Standard</span>
+            <span className={styles.tierLabel}>
+              {t("gatherings:create.step4.tier.standard.name")}
+            </span>
             <div className={styles.moneyCell}>
               <span className={styles.moneyPrefix}>€</span>
               <input
@@ -308,7 +358,9 @@ export function PricingStep({ form }: { form: GatheringForm }) {
                 min={0}
                 value={form.stdPrice}
                 onChange={(e) => form.setStdPrice(e.target.value)}
-                aria-label="Standard price in euros"
+                aria-label={t(
+                  "gatherings:create.step4.tier.standard.priceAria",
+                )}
               />
             </div>
             <div className={styles.spotsCell}>
@@ -317,14 +369,20 @@ export function PricingStep({ form }: { form: GatheringForm }) {
                 type="number"
                 min={0}
                 defaultValue="8"
-                aria-label="Standard number of spots"
+                aria-label={t(
+                  "gatherings:create.step4.tier.standard.spotsAria",
+                )}
               />
-              <span className={styles.spotsSuffix}>ppl</span>
+              <span className={styles.spotsSuffix}>
+                {t("gatherings:create.step4.spotsSuffix")}
+              </span>
             </div>
             <span />
           </div>
           <div className={styles.tierRow}>
-            <span className={styles.tierLabel}>Supporter</span>
+            <span className={styles.tierLabel}>
+              {t("gatherings:create.step4.tier.supporter.name")}
+            </span>
             <div className={styles.moneyCell}>
               <span className={styles.moneyPrefix}>€</span>
               <input
@@ -333,7 +391,9 @@ export function PricingStep({ form }: { form: GatheringForm }) {
                 min={0}
                 value={form.supPrice}
                 onChange={(e) => form.setSupPrice(e.target.value)}
-                aria-label="Supporter price in euros"
+                aria-label={t(
+                  "gatherings:create.step4.tier.supporter.priceAria",
+                )}
               />
             </div>
             <div className={styles.spotsCell}>
@@ -342,33 +402,38 @@ export function PricingStep({ form }: { form: GatheringForm }) {
                 type="number"
                 min={0}
                 defaultValue="5"
-                aria-label="Supporter number of spots"
+                aria-label={t(
+                  "gatherings:create.step4.tier.supporter.spotsAria",
+                )}
               />
-              <span className={styles.spotsSuffix}>ppl</span>
+              <span className={styles.spotsSuffix}>
+                {t("gatherings:create.step4.spotsSuffix")}
+              </span>
             </div>
             <span />
           </div>
           <p className={styles.hint} style={{ marginTop: 8 }}>
-            Supporter tier income subsidises the free tier. Suggested: standard
-            × 1.8.
+            {t("gatherings:create.step4.tier.supporterHint")}
           </p>
         </div>
       )}
       <label className={styles.label} style={{ marginTop: 4 }}>
-        What's included in the ticket?
+        {t("gatherings:create.step4.includedLabel")}
       </label>
       <input
         className={styles.input}
         type="text"
-        placeholder="e.g. Shared dinner and wine, materials provided, just your time"
+        placeholder={t("gatherings:create.step4.includedPlaceholder")}
         value={form.included}
         onChange={(e) => form.setIncluded(e.target.value)}
       />
-      <label className={styles.label}>Anything to bring / prepare?</label>
+      <label className={styles.label}>
+        {t("gatherings:create.step4.bringLabel")}
+      </label>
       <input
         className={styles.input}
         type="text"
-        placeholder="Optional — e.g. Bring something to share, wear comfortable shoes"
+        placeholder={t("gatherings:create.step4.bringPlaceholder")}
         value={form.bring}
         onChange={(e) => form.setBring(e.target.value)}
       />
@@ -377,6 +442,8 @@ export function PricingStep({ form }: { form: GatheringForm }) {
 }
 
 export function ReviewStep({ form }: { form: GatheringForm }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const TypeIcon = form.typeIcon;
   const accessList = [...form.access];
   const accessVal =
@@ -384,7 +451,7 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
       <span className={styles.reviewAccess}>
         {accessList.map((a) => (
           <span key={a} className={styles.reviewAccessTag}>
-            <FiCheck /> {a}
+            <FiCheck /> {t(accessLabelKey(a) ?? a)}
           </span>
         ))}
         {form.accessNotes.trim() && (
@@ -395,39 +462,74 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
       </span>
     ) : (
       <span className={styles.reviewAccessEmpty}>
-        None specified yet — add what you can confirm
+        {t("gatherings:create.step5.accessEmpty")}
       </span>
     );
+
+  const scheduledAt = form.date
+    ? new Date(`${form.date}T${form.time || "00:00"}`)
+    : undefined;
+  const dateTimeValue =
+    scheduledAt && !Number.isNaN(scheduledAt.getTime())
+      ? t("gatherings:create.step5.dateTimeValue", {
+          date: fmt.date(scheduledAt, { day: "numeric", month: "short" }),
+          time: fmt.time(scheduledAt),
+        })
+      : "—";
+
+  const hoodLabel = form.hood ? t(hoodLabelKey(form.hood) ?? form.hood) : "—";
+  const langLabel = t(langLabelKey(form.lang) ?? form.lang);
+  const typeLabel = form.type ? t(typeNameKey(form.type) ?? form.type) : "—";
+
   const review = [
     {
-      l: "Type",
+      l: t("gatherings:create.step5.row.type"),
       v: (
         <>
-          {TypeIcon && <TypeIcon />} <strong>{form.type || "—"}</strong>
+          {TypeIcon && <TypeIcon />} <strong>{typeLabel}</strong>
         </>
       ),
     },
-    { l: "Title", v: <strong>{form.title || "—"}</strong> },
-    { l: "Date & time", v: `${form.date || "—"} at ${form.time || "—"}` },
-    { l: "Location", v: `${form.venue || "—"}, ${form.hood || "—"}` },
-    { l: "Capacity", v: `${form.cap || "—"} people · ${form.lang}` },
     {
-      l: "Pricing",
-      v: form.free
-        ? "Free event"
-        : `Sliding scale · Free / €${form.stdPrice || "—"} / €${form.supPrice || "—"}`,
+      l: t("gatherings:create.step5.row.title"),
+      v: <strong>{form.title || "—"}</strong>,
     },
-    { l: "Accessibility", v: accessVal },
+    { l: t("gatherings:create.step5.row.dateTime"), v: dateTimeValue },
+    {
+      l: t("gatherings:create.step5.row.location"),
+      v: t("gatherings:create.step5.locationValue", {
+        venue: form.venue || "—",
+        hood: hoodLabel,
+      }),
+    },
+    {
+      l: t("gatherings:create.step5.row.capacity"),
+      v: t("gatherings:create.step5.capacityValue", {
+        cap: form.cap || "—",
+        lang: langLabel,
+      }),
+    },
+    {
+      l: t("gatherings:create.step5.row.pricing"),
+      v: form.free
+        ? t("gatherings:create.step5.pricingFree")
+        : t("gatherings:create.step5.pricingSliding", {
+            std: form.stdPrice ? fmt.currency(Number(form.stdPrice)) : "—",
+            sup: form.supPrice ? fmt.currency(Number(form.supPrice)) : "—",
+          }),
+    },
+    { l: t("gatherings:create.step5.row.accessibility"), v: accessVal },
   ];
   const remaining = 3 - form.checkedCount;
   return (
     <div>
       <div className={styles.stepTitle}>
-        Review and <em>publish.</em>
+        <Translation
+          i18nKey="gatherings:create.step5.title"
+          components={{ em: <em /> }}
+        />
       </div>
-      <p className={styles.stepSub}>
-        Check the details before your gathering goes live.
-      </p>
+      <p className={styles.stepSub}>{t("gatherings:create.step5.sub")}</p>
       <div className={styles.reviewGrid}>
         {review.map((r) => (
           <div className={styles.reviewRow} key={r.l}>
@@ -437,15 +539,17 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
         ))}
       </div>
       <div className={styles.label} style={{ marginBottom: 4 }}>
-        Before you publish — confirm all three
+        {t("gatherings:create.step5.confirmHeading")}
       </div>
       <p className={styles.checkIntro}>
-        Tick each box to confirm. The <strong>Publish gathering</strong> button
-        stays disabled until all three are checked.
+        <Translation
+          i18nKey="gatherings:create.step5.confirmIntro"
+          components={{ strong: <strong /> }}
+        />
       </p>
-      {CONFIRM_CHECKS.map((text, i) => (
+      {CONFIRM_CHECK_KEYS.map((textKey, i) => (
         <div
-          key={text}
+          key={textKey}
           className={styles.checkRow}
           onClick={() => form.toggleCheck(i)}
           role="checkbox"
@@ -465,7 +569,7 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
           >
             {form.checks[i] ? <FiCheck /> : ""}
           </div>
-          <span className={styles.checkText}>{text}</span>
+          <span className={styles.checkText}>{t(textKey)}</span>
         </div>
       ))}
       <div
@@ -477,21 +581,16 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
           .join(" ")}
       >
         {form.allChecked ? (
-          "All set — you can publish now."
+          t("gatherings:create.step5.allSet")
         ) : (
-          <>
-            <span className={styles.checkCount}>{form.checkedCount}</span> of 3
-            confirmed — tick the{" "}
-            {remaining === 1 ? (
-              "last box"
-            ) : (
-              <>
-                remaining <span className={styles.checkCount}>{remaining}</span>{" "}
-                boxes
-              </>
-            )}{" "}
-            to publish.
-          </>
+          <Translation
+            i18nKey="gatherings:create.step5.progress"
+            values={{ count: remaining, checkedCount: form.checkedCount }}
+            components={{
+              num: <span className={styles.checkCount} />,
+              remaining: <span className={styles.checkCount} />,
+            }}
+          />
         )}
       </div>
     </div>

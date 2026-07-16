@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
 import styles from "./GatheringModals.module.css";
 
@@ -12,6 +14,7 @@ export function MessageAttendeesModal({
   attendeeCount: number;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -41,54 +44,60 @@ export function MessageAttendeesModal({
       {done ? (
         <GatheringSuccessPanel
           title={
-            <>
-              Message <em>sent.</em>
-            </>
+            <Translation
+              i18nKey="gatherings:manage.messageModal.successTitle"
+              components={{ em: <em /> }}
+            />
           }
           sub={
-            <>
-              "{subject}" went out to all{" "}
-              <b>{attendeeCount} confirmed attendees</b>. They'll get it by
-              email and in their QueerPulse notifications.
-            </>
+            <Translation
+              i18nKey="gatherings:manage.messageModal.successSub"
+              values={{ subject, count: attendeeCount }}
+              components={{ b: <b /> }}
+            />
           }
-          meta={`Sent just now · ${attendeeCount} recipients`}
+          meta={t("gatherings:manage.messageModal.successMeta", {
+            count: attendeeCount,
+          })}
           onClose={onClose}
         />
       ) : (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Write to your guests"
+          aria-label={t("gatherings:manage.messageModal.title")}
           className={styles.modal}
         >
           <button
             type="button"
             className={styles.close}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("gatherings:manage.closeAria")}
           >
             <FiX />
           </button>
-          <div className={styles.eye}>Message attendees</div>
-          <div className={styles.title}>Write to your guests</div>
-          <p className={styles.sub}>
-            This reaches everyone who's confirmed for this gathering. Keep it
-            short — a venue note, a schedule change, or a warm hello.
-          </p>
+          <div className={styles.eye}>
+            {t("gatherings:manage.messageModal.eyebrow")}
+          </div>
+          <div className={styles.title}>
+            {t("gatherings:manage.messageModal.title")}
+          </div>
+          <p className={styles.sub}>{t("gatherings:manage.messageModal.sub")}</p>
 
           <div className={styles.fields}>
-            <FormField label="Subject" required>
+            <FormField label={t("gatherings:manage.messageModal.subjectLabel")} required>
               <input
                 type="text"
-                placeholder="e.g. One small change to the start time"
+                placeholder={t(
+                  "gatherings:manage.messageModal.subjectPlaceholder",
+                )}
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
               />
             </FormField>
-            <FormField label="Message" required>
+            <FormField label={t("gatherings:manage.messageModal.bodyLabel")} required>
               <textarea
-                placeholder="Write an update for your guests…"
+                placeholder={t("gatherings:manage.writeUpdatePlaceholder")}
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
               />
@@ -97,10 +106,12 @@ export function MessageAttendeesModal({
 
           <div className={styles.actions}>
             <Button variant="primary" onClick={send} disabled={!canSend}>
-              Send to {attendeeCount} attendees
+              {t("gatherings:manage.messageModal.sendCta", {
+                count: attendeeCount,
+              })}
             </Button>
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {t("gatherings:manage.cancelCta")}
             </Button>
           </div>
         </div>

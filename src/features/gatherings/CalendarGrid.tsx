@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiChevronRight, FiCalendar } from "react-icons/fi";
 import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type CalendarEvent } from "./data";
-import { MONTHS, MSHORT, CALENDAR_TODAY } from "./calendar.data";
+import { CALENDAR_TODAY, WEEKDAY_REFERENCE } from "./calendar.data";
 import styles from "./CalendarPage.module.css";
 
 export function sameDay(a: Date, b: Date) {
@@ -28,6 +30,7 @@ export function EventCardSkeleton() {
 
 export function EventCard({ event }: { event: CalendarEvent }) {
   const navigate = useNavigate();
+  const fmt = useFormat();
   return (
     <div
       className={styles.eventCard}
@@ -44,7 +47,7 @@ export function EventCard({ event }: { event: CalendarEvent }) {
       <div className={styles.ecDate}>
         <div className={styles.ecD}>{event.date.getDate()}</div>
         <div className={styles.ecM} style={{ color: event.orgColor }}>
-          {MSHORT[event.date.getMonth()]}
+          {fmt.date(event.date, { month: "short" })}
         </div>
       </div>
       <div>
@@ -53,7 +56,7 @@ export function EventCard({ event }: { event: CalendarEvent }) {
         </div>
         <div className={styles.ecTitle}>{event.title}</div>
         <div className={styles.ecMeta}>
-          {event.hood} · {event.time}
+          {event.hood} · {fmt.time(event.date)}
         </div>
       </div>
     </div>
@@ -73,8 +76,11 @@ export function MonthGrid({
   changeMonth: (delta: number) => void;
   onSelect: (date: Date) => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const firstDayOffset = (new Date(view.year, view.month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(view.year, view.month + 1, 0).getDate();
+  const monthLabelDate = new Date(view.year, view.month, 1);
 
   return (
     <>
@@ -83,27 +89,27 @@ export function MonthGrid({
           type="button"
           className={styles.navBtn}
           onClick={() => changeMonth(-1)}
-          aria-label="Previous month"
+          aria-label={t("gatherings:calendar.prevMonth")}
         >
           <FiChevronLeft />
         </button>
         <div className={styles.monthLabel}>
-          {MONTHS[view.month]} {view.year}
+          {fmt.date(monthLabelDate, { month: "long", year: "numeric" })}
         </div>
         <button
           type="button"
           className={styles.navBtn}
           onClick={() => changeMonth(1)}
-          aria-label="Next month"
+          aria-label={t("gatherings:calendar.nextMonth")}
         >
           <FiChevronRight />
         </button>
       </div>
       <div className={styles.grid}>
         <div className={styles.weekdays}>
-          {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((d) => (
-            <div key={d} className={styles.wd}>
-              {d}
+          {WEEKDAY_REFERENCE.map((referenceDate) => (
+            <div key={referenceDate.getDate()} className={styles.wd}>
+              {fmt.date(referenceDate, { weekday: "short" })}
             </div>
           ))}
         </div>
@@ -163,18 +169,22 @@ export function AllUpcomingEvents({
   loading: boolean;
   upcoming: CalendarEvent[];
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.allEvents}>
-      <h3>All upcoming events</h3>
+      <h3>{t("gatherings:calendar.upcomingTitle")}</h3>
       <div className={styles.eventList}>
         {loading ? (
           Array.from({ length: 5 }).map((_, i) => <EventCardSkeleton key={i} />)
         ) : upcoming.length === 0 ? (
           <EmptyState
             icon={<FiCalendar />}
-            title="No upcoming gatherings"
-            description="The calendar's quiet for now. Browse what's happening across the community, or be the one to start something."
-            action={{ label: "Browse events", to: routes.events }}
+            title={t("gatherings:calendar.emptyTitle")}
+            description={t("gatherings:calendar.emptyDescription")}
+            action={{
+              label: t("gatherings:calendar.browseEventsCta"),
+              to: routes.events,
+            }}
           />
         ) : (
           upcoming.map((event, index) => (

@@ -5,12 +5,14 @@ import { nav as enNav } from "./en/nav";
 import { footer as enFooter } from "./en/footer";
 import { auth as enAuth } from "./en/auth";
 import { subprofiles as enSubprofiles } from "./en/subprofiles";
+import { gatherings as enGatherings } from "./en/gatherings";
 
 import { common as ptCommon } from "./pt/common";
 import { nav as ptNav } from "./pt/nav";
 import { footer as ptFooter } from "./pt/footer";
 import { auth as ptAuth } from "./pt/auth";
 import { subprofiles as ptSubprofiles } from "./pt/subprofiles";
+import { gatherings as ptGatherings } from "./pt/gatherings";
 
 /**
  * The full catalog registry, keyed `language → namespace → catalog`.
@@ -28,6 +30,7 @@ export const catalogs: Record<Language, Record<Namespace, Catalog>> = {
     footer: enFooter,
     auth: enAuth,
     subprofiles: enSubprofiles,
+    gatherings: enGatherings,
   },
   pt: {
     common: ptCommon,
@@ -35,5 +38,6 @@ export const catalogs: Record<Language, Record<Namespace, Catalog>> = {
     footer: ptFooter,
     auth: ptAuth,
     subprofiles: ptSubprofiles,
+    gatherings: ptGatherings,
   },
 };

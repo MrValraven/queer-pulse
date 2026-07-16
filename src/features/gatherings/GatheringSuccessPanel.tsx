@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { FiX, FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./GatheringModals.module.css";
 
 export function GatheringSuccessPanel({
@@ -8,7 +9,7 @@ export function GatheringSuccessPanel({
   sub,
   meta,
   onClose,
-  closeLabel = "Done",
+  closeLabel,
 }: {
   title: ReactNode;
   sub: ReactNode;
@@ -16,18 +17,20 @@ export function GatheringSuccessPanel({
   onClose: () => void;
   closeLabel?: string;
 }) {
+  const { t } = useTranslation();
+
   return (
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Confirmation"
+      aria-label={t("gatherings:successPanel.ariaLabel")}
       className={styles.successPanel}
     >
       <button
         type="button"
         className={styles.successClose}
         onClick={onClose}
-        aria-label="Close"
+        aria-label={t("gatherings:successPanel.closeAriaLabel")}
       >
         <FiX />
       </button>
@@ -39,7 +42,7 @@ export function GatheringSuccessPanel({
       {meta && <div className={styles.successMeta}>{meta}</div>}
       <div className={styles.actions}>
         <Button variant="ghost-dark" onClick={onClose}>
-          {closeLabel}
+          {closeLabel ?? t("gatherings:successPanel.defaultCloseLabel")}
         </Button>
       </div>
     </div>

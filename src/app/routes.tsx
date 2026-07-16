@@ -1053,11 +1053,6 @@ const SafeSpaceDetailPage = lazy(() =>
     default: m.SafeSpaceDetailPage,
   })),
 );
-const FlatmatesPage = lazy(() =>
-  import("../features/economy/FlatmatesPage").then((m) => ({
-    default: m.FlatmatesPage,
-  })),
-);
 const SolidarityPage = lazy(() =>
   import("../features/economy/SolidarityPage").then((m) => ({
     default: m.SolidarityPage,
@@ -1592,11 +1587,11 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/application-status", routes.applicationStatus],
   ["/mentorship", routes.mentorship],
   ["/mentor-profile", routes.mentorProfile],
-  ["/flatmates", routes.flatmates],
+  ["/flatmates", `${routes.housing}?tab=flatmates`],
   // Hub re-parenting (2026-07-06): old full paths → new homes
   ["/work/housing", routes.housing],
   ["/work/housing-coop", routes.housingCoop],
-  ["/work/flatmates", routes.flatmates],
+  ["/work/flatmates", `${routes.housing}?tab=flatmates`],
   ["/resources/legal", routes.legal],
   ["/resources/micro-grants", routes.microGrants],
   ["/solidarity", routes.solidarity],
@@ -2301,7 +2296,13 @@ export function AppRoutes() {
             }
           />
 
-          <Route path={routes.flatmates} element={<FlatmatesPage />} />
+          {/* Flatmates merged into the Housing board as a tab. */}
+          <Route
+            path={routes.flatmates}
+            element={
+              <Navigate to={`${routes.housing}?tab=flatmates`} replace />
+            }
+          />
           <Route path={routes.solidarity} element={<SolidarityPage />} />
 
           {/* Local */}

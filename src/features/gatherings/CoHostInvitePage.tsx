@@ -1,6 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { FiStar } from "react-icons/fi";
@@ -9,6 +12,14 @@ import styles from "./CoHostInvitePage.module.css";
 
 /** Placeholder invite id for this static co-host invitation. */
 const INVITE_ID = "cohost-anika-clinic";
+/** The inviting host's first name — organizer-authored content. */
+const HOST_NAME = "Anika";
+/** The clinic night's start/end — real `Date`s so the meta row can be
+ *  formatted with `useFormat()` instead of a baked "Thu 19:00 — 21:00". */
+const EVENT_START = new Date(2026, 5, 12, 19, 0);
+const EVENT_END = new Date(2026, 5, 12, 21, 0);
+const INVITED_HOURS_AGO = 2;
+const REPLY_BY_DATE = new Date(2026, 5, 10);
 
 const NOTIFICATIONS = routes.notifications;
 const MESSAGES = routes.messages;
@@ -18,42 +29,42 @@ const ROLES = [
     ic: "G",
     title: "Greet at the door, 18:30 — 19:30",
     desc: "Check names against the RSVP list. Anika will join you by 19:00.",
-    perm: "Required",
+    permKey: "gatherings:cohostInvite.permRequired",
     permCls: "permYes",
   },
   {
     ic: "R",
     title: "Manage the room flow",
     desc: "Walk between Dr. Pereira and the pharmacist's tables so neither gets a queue.",
-    perm: "Required",
+    permKey: "gatherings:cohostInvite.permRequired",
     permCls: "permYes",
   },
   {
     ic: "M",
     title: "Co-moderate questions",
     desc: "If a public Q&A breaks out, you and Anika tag-team it.",
-    perm: "Required",
+    permKey: "gatherings:cohostInvite.permRequired",
     permCls: "permYes",
   },
   {
     ic: "P",
     title: "Edit the event page",
     desc: "Add/remove RSVPs, change time, send updates, post a recap after.",
-    perm: "Granted",
+    permKey: "gatherings:cohostInvite.permGranted",
     permCls: "permYes",
   },
   {
     ic: "F",
     title: "Access the host fund",
     desc: "€60 spending budget for tea/coffee, small first-aid kit, and after-snacks.",
-    perm: "Anika only",
+    permKey: "gatherings:cohostInvite.permHostOnly",
     permCls: "permNo",
   },
   {
     ic: "C",
     title: "Cancel the event",
     desc: "This stays with Anika as the lead host.",
-    perm: "Anika only",
+    permKey: "gatherings:cohostInvite.permHostOnly",
     permCls: "permNo",
   },
 ];
@@ -75,6 +86,8 @@ const COMMITMENTS = [
 ];
 
 export function CoHostInvitePage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const respondInvite = useRespondInvite();
@@ -82,7 +95,7 @@ export function CoHostInvitePage() {
   const accept = () => {
     respondInvite.mutate({ id: INVITE_ID, action: "accept" });
     showToast(
-      "You're co-hosting with Anika — host tools unlocked",
+      t("gatherings:cohostInvite.acceptedToast", { host: HOST_NAME }),
       "success",
       3500,
     );
@@ -91,7 +104,7 @@ export function CoHostInvitePage() {
   const decline = () => {
     respondInvite.mutate({ id: INVITE_ID, action: "decline" });
     showToast(
-      "Polite no sent to Anika. She'll find another second pair of hands.",
+      t("gatherings:cohostInvite.declinedToast", { host: HOST_NAME }),
       "info",
       3000,
     );
@@ -102,21 +115,23 @@ export function CoHostInvitePage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={NOTIFICATIONS} className={styles.back}>
-          ← Notifications
+          {t("gatherings:cohostInvite.back")}
         </Link>
 
         <div className={styles.hero}>
-          <span className={styles.eyebrow}>Co-host invitation</span>
+          <span className={styles.eyebrow}>{t("gatherings:cohostInvite.eyebrow")}</span>
           <h1 className={styles.h1}>
-            Anika wants you to <em>co-host</em> with her.
+            <Translation
+              i18nKey="gatherings:cohostInvite.title"
+              values={{ host: HOST_NAME }}
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.sub}>
-            She's running an open clinic night and would like a second person at
-            the door — for vibes, for the line, and so the night doesn't rest on
-            one set of shoulders.{" "}
-            <em>
-              Read it through, decide tomorrow if you'd rather sleep on it.
-            </em>
+            She's running an open clinic night and would like a second person
+            at the door — for vibes, for the line, and so the night doesn't
+            rest on one set of shoulders.{" "}
+            <em>{t("gatherings:cohostInvite.readThroughHint")}</em>
           </p>
         </div>
 
@@ -128,40 +143,48 @@ export function CoHostInvitePage() {
               Healthcare designer · Trans &amp; Non-Binary Network
             </div>
             <div className={styles.fromMeta}>
-              <b>Hosted 14 gatherings</b>
+              <b>{t("gatherings:cohostInvite.hostedCount", { count: 14 })}</b>
               <span className={styles.dot}>·</span>
               <b>
-                4.9 <FiStar />
+                {fmt.number(4.9, { minimumFractionDigits: 1 })} <FiStar />
               </b>{" "}
-              from attendees
-              <span className={styles.dot}>·</span>You've been to 3 of hers
+              {t("gatherings:cohostInvite.ratingFromAttendees")}
+              <span className={styles.dot}>·</span>
+              {t("gatherings:cohostInvite.attendedCount", { count: 3 })}
             </div>
           </div>
           <div className={styles.fromStats}>
-            <b>11 mutuals</b>
+            <b>{t("gatherings:cohostInvite.mutualsCount", { count: 11 })}</b>
             <br />
-            Invited <b>2 hours ago</b>
+            {t("gatherings:cohostInvite.invitedAgo", {
+              time: fmt.relativeTime(-INVITED_HOURS_AGO, "hour"),
+            })}
             <br />
-            Reply by <b>10 Jun</b>
+            {t("gatherings:cohostInvite.replyBy", { date: fmt.date(REPLY_BY_DATE, { day: "numeric", month: "short" }) })}
           </div>
         </div>
 
         <div className={styles.eventCard}>
           <div className={styles.eventH}>
             <div className={styles.eventDate}>
-              <div className="d">12</div>
-              <div className="m">Jun</div>
+              <div className="d">{fmt.date(EVENT_START, { day: "2-digit" })}</div>
+              <div className="m">{fmt.date(EVENT_START, { month: "short" })}</div>
             </div>
             <div className={styles.eventInfo}>
               <h2>
                 Open clinic night — <em>bring your prescription questions.</em>
               </h2>
               <div className={styles.eventMeta}>
-                <b>Thu 19:00 — 21:00</b>
+                <b>
+                  {fmt.date(EVENT_START, { weekday: "short" })}{" "}
+                  {fmt.time(EVENT_START)} — {fmt.time(EVENT_END)}
+                </b>
                 <span className={styles.dot} />
                 <b>Café Beirão</b> · Anjos
                 <span className={styles.dot} />
-                <span>22 RSVPs · 14 waitlist</span>
+                <span>
+                  {t("gatherings:cohostInvite.rsvpsAndWaitlist", { rsvps: 22, waitlist: 14 })}
+                </span>
               </div>
             </div>
           </div>
@@ -174,7 +197,7 @@ export function CoHostInvitePage() {
 
         <div className={styles.roleCard}>
           <h3>
-            What being <em>co-host</em> would mean
+            <Translation i18nKey="gatherings:cohostInvite.rolesTitle" components={{ em: <em /> }} />
           </h3>
           <div>
             {ROLES.map((r) => (
@@ -185,7 +208,7 @@ export function CoHostInvitePage() {
                   <span>{r.desc}</span>
                 </div>
                 <div className={`${styles.rolePerm} ${styles[r.permCls]}`}>
-                  {r.perm}
+                  {t(r.permKey, { host: HOST_NAME })}
                 </div>
               </div>
             ))}
@@ -194,12 +217,9 @@ export function CoHostInvitePage() {
 
         <div className={styles.commitCard}>
           <h3>
-            The honest <em>commitment</em>
+            <Translation i18nKey="gatherings:cohostInvite.commitTitle" components={{ em: <em /> }} />
           </h3>
-          <p className={styles.commitSub}>
-            What this actually costs you. We'd rather you say no than show up
-            tired.
-          </p>
+          <p className={styles.commitSub}>{t("gatherings:cohostInvite.commitSub")}</p>
           <div className={styles.commitGrid}>
             {COMMITMENTS.map((c) => (
               <div className={styles.commit} key={c.b}>
@@ -209,12 +229,9 @@ export function CoHostInvitePage() {
             ))}
           </div>
           <p className={styles.outclause}>
-            <b>
-              If something comes up, you can step back any time before the
-              day-of
-            </b>{" "}
-            — no shame, no penalty, just send Anika a one-line message. We've
-            all had a Thursday go sideways.
+            <b>{t("gatherings:cohostInvite.outclauseBold")}</b> — no shame, no
+            penalty, just send Anika a one-line message. We've all had a
+            Thursday go sideways.
           </p>
         </div>
 
@@ -223,25 +240,28 @@ export function CoHostInvitePage() {
             type="button"
             className={styles.later}
             onClick={() =>
-              showToast("Snoozed — will remind you tomorrow", "info")
+              showToast(t("gatherings:cohostInvite.snoozedToast"), "info")
             }
           >
-            Sleep on it
+            {t("gatherings:cohostInvite.sleepCta")}
           </button>
           <div className={styles.actionsRight}>
             <Button variant="ghost" onClick={decline}>
-              Decline politely
+              {t("gatherings:cohostInvite.declineCta")}
             </Button>
             <Button variant="primary" onClick={accept}>
-              Yes — co-host with Anika
+              {t("gatherings:cohostInvite.acceptCta", { host: HOST_NAME })}
             </Button>
           </div>
         </div>
         <p className={styles.actionMeta}>
-          Either choice messages Anika directly. She'll see your decision but
-          not be notified by push — <b>this is meant to be relaxed</b>.{" "}
+          <Translation
+            i18nKey="gatherings:cohostInvite.actionMeta"
+            values={{ host: HOST_NAME }}
+            components={{ b: <b /> }}
+          />{" "}
           <Link to={MESSAGES} style={{ color: "var(--plum)", fontWeight: 600 }}>
-            Open messages →
+            {t("gatherings:cohostInvite.openMessagesCta")} →
           </Link>
         </p>
       </div>

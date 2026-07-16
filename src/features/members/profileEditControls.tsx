@@ -41,11 +41,16 @@ export function InlineTextarea({
   onChange,
   ariaLabel,
   className,
+  placeholder,
+  rows = 3,
 }: {
   value: string;
   onChange: (v: string) => void;
   ariaLabel: string;
   className?: string;
+  placeholder?: string;
+  /** Starting height. The textarea grows past this as the value wraps. */
+  rows?: number;
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
   useLayoutEffect(() => {
@@ -59,7 +64,8 @@ export function InlineTextarea({
       ref={ref}
       className={`${styles.inlineInput} ${className ?? ""}`}
       value={value}
-      rows={3}
+      rows={rows}
+      placeholder={placeholder}
       aria-label={ariaLabel}
       onChange={(e) => onChange(e.target.value)}
     />

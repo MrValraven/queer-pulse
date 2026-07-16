@@ -23,6 +23,9 @@ export const EVENT_IS_FULL = false;
 /** Total capacity, for spots/waitlist copy. */
 export const EVENT_CAPACITY = 26;
 
+/** How many of the capacity are already filled, for the progress bar/copy. */
+export const EVENT_FILLED = 21;
+
 /** Escape text per RFC 5545 (commas, semicolons, newlines, backslashes). */
 function escapeIcs(value: string): string {
   return value

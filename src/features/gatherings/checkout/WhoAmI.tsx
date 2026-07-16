@@ -1,8 +1,15 @@
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { MEMBER_RATE } from "./checkout.data";
 import { useCheckout } from "./checkoutContext";
 import s from "./checkout.module.css";
 
+const MEMBER_NAME = "Alex Rivera";
+const MEMBER_EMAIL = "alex.rivera@example.com";
+
 export function WhoAmI() {
   const { isGuest, toggleGuest } = useCheckout();
+  const { t } = useTranslation();
 
   return (
     <div className={s["co-whoami"]}>
@@ -10,19 +17,26 @@ export function WhoAmI() {
       <div>
         <div className={s["co-whoami-name"]}>
           {isGuest ? (
-            <>
-              Checking out as a <strong>guest</strong>
-            </>
+            <Translation
+              i18nKey="gatherings:checkout.whoami.guestTitle"
+              components={{ strong: <strong /> }}
+            />
           ) : (
-            <>
-              Signed in as <strong>Alex Rivera</strong>
-            </>
+            <Translation
+              i18nKey="gatherings:checkout.whoami.memberTitle"
+              components={{ strong: <strong /> }}
+              values={{ name: MEMBER_NAME }}
+            />
           )}
         </div>
         <div className={s["co-whoami-mail"]}>
           {isGuest
-            ? "Members get 10% off — sign in to save it"
-            : "alex.rivera@example.com · Member"}
+            ? t("gatherings:checkout.whoami.memberDiscountNote", {
+                rate: MEMBER_RATE * 100,
+              })
+            : t("gatherings:checkout.whoami.memberEmailLine", {
+                email: MEMBER_EMAIL,
+              })}
         </div>
       </div>
       <button
@@ -32,15 +46,15 @@ export function WhoAmI() {
       >
         {isGuest ? (
           <>
-            Sign back in
+            {t("gatherings:checkout.whoami.signBackInCta")}
             <br />
-            as Alex
+            {t("gatherings:checkout.whoami.asNameCta", { name: "Alex" })}
           </>
         ) : (
           <>
-            Not you?
+            {t("gatherings:checkout.whoami.notYouCta")}
             <br />
-            Check out as guest
+            {t("gatherings:checkout.whoami.checkoutAsGuestCta")}
           </>
         )}
       </button>

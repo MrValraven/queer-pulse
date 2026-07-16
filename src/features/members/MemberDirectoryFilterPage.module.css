@@ -330,6 +330,21 @@
     border-color: rgba(var(--jade-rgb), 0.55);
   }
 }
+/* The same card standing still, for the profile editor's preview: it shows what
+   the directory shows, but it isn't a link, so it must not lift or glow under the
+   cursor. Declared here rather than in ProfileEdit.module.css on purpose — these
+   rules only reliably beat `.mCard:hover` by coming later in the SAME file;
+   across two CSS modules the winner would depend on bundle import order. */
+.mCardStatic {
+  cursor: default;
+}
+@media (hover: hover) {
+  .mCardStatic:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: rgba(var(--jade-rgb), 0.4);
+  }
+}
 .mPron {
   font-size: 11.5px;
   color: var(--ink-40);

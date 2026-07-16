@@ -9,10 +9,13 @@ import styles from "./JobsPage.module.css";
 /**
  * The "employers we trust" grid at the foot of the job board. Sources its
  * companies from `useCompanies` — demo returns the mock EMPLOYERS registry
- * (slugs pre-resolved), live calls GET /companies.
+ * (slugs pre-resolved), live calls GET /companies. Renders nothing at all
+ * (heading included) while loading, on error, or when there are no employers.
  */
 export function JobsEmployers() {
   const { data: employers = [] } = useCompanies();
+
+  if (employers.length === 0) return null;
 
   return (
     <section className={styles.employers}>

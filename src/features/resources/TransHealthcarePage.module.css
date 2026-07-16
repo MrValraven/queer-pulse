@@ -97,9 +97,12 @@
   white-space: nowrap;
 }
 @media (hover: hover) {
-  .pathBtn:hover {
+  .pathBtn:not(.pathBtnActive):hover {
     color: var(--ink);
     border-color: rgba(var(--line-rgb), 0.3);
+  }
+  .pathBtnActive:hover {
+    background: var(--plum-deep);
   }
 }
 .pathBtnActive {

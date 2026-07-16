@@ -2,6 +2,9 @@ import { Link, useParams } from "react-router-dom";
 import { FiLock } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Avatar, Button, Tag } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { routes } from "../../app/routeMap";
 import { memberProfiles } from "../members/data/memberProfiles";
@@ -11,6 +14,7 @@ import {
   gatheringKind,
   gatheringPath,
   resolveGathering,
+  spotsText,
 } from "./data";
 import { useEvent } from "./api/useEvent";
 
@@ -18,11 +22,13 @@ import styles from "./GatheringPage.module.css";
 
 export function GatheringPage() {
   const { slug: param } = useParams();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { data } = useEvent(param);
   const gathering = data?.gathering ?? resolveGathering(param);
   const kind = gatheringKind(gathering);
   const host = gathering.hostSlug ? memberProfiles[gathering.hostSlug] : null;
-  const spotsNum = parseInt(gathering.spots, 10);
+  const spotsCount = gathering.spots.values?.count;
   const { openConnect } = useConnect();
 
   const others = Object.values(gatheringDetails).filter(
@@ -35,7 +41,7 @@ export function GatheringPage() {
         <div className="wrap">
           <div className={styles.back}>
             <Link to={routes.calendar} className={styles.backLink}>
-              ← Gatherings
+              {t("gatherings:common.backToGatherings")}
             </Link>
           </div>
 
@@ -44,18 +50,20 @@ export function GatheringPage() {
               <div className={styles.typeRow}>
                 <span className={styles.type}>{gathering.type}</span>
                 <Tag
-                  className={
-                    kind === "event" ? styles.badgeEvent : styles.badgeGathering
-                  }
+                  className={kind === "event" ? styles.badgeEvent : styles.badgeGathering}
                 >
-                  {kind === "event" ? "QueerPulse event" : "Member gathering"}
+                  {t(
+                    kind === "event"
+                      ? "gatherings:gathering.badge.event"
+                      : "gatherings:gathering.badge.gathering",
+                  )}
                 </Tag>
               </div>
               <h1 className={styles.title}>{gathering.title}</h1>
               <div className={styles.meta}>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
-                  {gathering.day} {gathering.month} 2026
+                  {fmt.date(gathering.date, { day: "numeric", month: "long", year: "numeric" })}
                 </span>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
@@ -63,19 +71,16 @@ export function GatheringPage() {
                 </span>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
-                  Hosted by {gathering.host}
+                  {t("gatherings:common.hostedBy")} {gathering.host}
                 </span>
               </div>
               <p className={styles.body}>{gathering.body}</p>
               <div className={styles.cta}>
-                <Button
-                  size="lg"
-                  onClick={() => openConnect(gathering.hostSlug)}
-                >
-                  {gathering.cta} →
+                <Button size="lg" onClick={() => openConnect(gathering.hostSlug)}>
+                  {t(gathering.ctaKey)} →
                 </Button>
                 <Button size="lg" variant="ghost" to={routes.calendar}>
-                  See all gatherings
+                  {t("gatherings:gathering.seeAllCta")}
                 </Button>
               </div>
 
@@ -86,17 +91,21 @@ export function GatheringPage() {
 
             <aside className={styles.sidebar}>
               <div className={styles.dateDisplay}>
-                <div className={styles.dd}>{gathering.day}</div>
-                <div className={styles.dm}>{gathering.month} 2026</div>
+                <div className={styles.dd}>
+                  {fmt.date(gathering.date, { day: "2-digit" })}
+                </div>
+                <div className={styles.dm}>
+                  {fmt.date(gathering.date, { month: "short", year: "numeric" })}
+                </div>
               </div>
 
-              {Number.isFinite(spotsNum) ? (
+              {spotsCount !== undefined ? (
                 <div className={styles.spotsRow}>
-                  <div className={styles.spotsNum}>{spotsNum}</div>
+                  <div className={styles.spotsNum}>{spotsCount}</div>
                   <div className={styles.spotsLbl}>
-                    spots remaining
+                    {t("gatherings:gathering.spotsRemainingLabel")}
                     <br />
-                    <span>Move quickly if this speaks to you</span>
+                    <span>{t("gatherings:gathering.spotsUrgencyNote")}</span>
                   </div>
                 </div>
               ) : (
@@ -105,12 +114,12 @@ export function GatheringPage() {
                     className={styles.hostName}
                     style={{ color: "var(--ink-60)" }}
                   >
-                    {gathering.spots}
+                    {spotsText(gathering.spots, t, fmt)}
                   </div>
                 </div>
               )}
 
-              <div className={styles.sh}>Hosted by</div>
+              <div className={styles.sh}>{t("gatherings:common.hostedBy")}</div>
               {host ? (
                 <div className={styles.hostRow}>
                   <Avatar
@@ -137,7 +146,8 @@ export function GatheringPage() {
               ) : (
                 <div className={styles.hostRow}>
                   <div className={styles.hostName}>
-                    Hosted by {gathering.host || "QueerPulse"}
+                    {t("gatherings:common.hostedBy")}{" "}
+                    {gathering.host || "QueerPulse"}
                   </div>
                 </div>
               )}
@@ -146,7 +156,7 @@ export function GatheringPage() {
                 className={styles.fullBtn}
                 onClick={() => openConnect(gathering.hostSlug)}
               >
-                {gathering.cta}
+                {t(gathering.ctaKey)}
               </Button>
 
               <div className={styles.locReveal}>
@@ -157,7 +167,7 @@ export function GatheringPage() {
                   <div>
                     <div className={styles.locHood}>{gathering.hood}</div>
                     <div className={styles.locNote}>
-                      Full location shared with confirmed guests after you RSVP.
+                      {t("gatherings:gathering.locationNote")}
                     </div>
                   </div>
                 </div>
@@ -167,7 +177,7 @@ export function GatheringPage() {
 
           <div className={styles.other}>
             <h2>
-              More <em>gatherings</em>
+              <Translation i18nKey="gatherings:gathering.moreTitle" components={{ em: <em /> }} />
             </h2>
             <div className={styles.cards}>
               {others.map((other) => (
@@ -177,14 +187,14 @@ export function GatheringPage() {
                   className={styles.card}
                 >
                   <div className={styles.dateMini}>
-                    <div className={styles.gd}>{other.day}</div>
-                    <div className={styles.gm}>{other.month}</div>
+                    <div className={styles.gd}>{fmt.date(other.date, { day: "2-digit" })}</div>
+                    <div className={styles.gm}>{fmt.date(other.date, { month: "short" })}</div>
                   </div>
                   <div>
                     <div className={styles.cardType}>{other.type}</div>
                     <h3 className={styles.cardTitle}>{other.title}</h3>
                     <div className={styles.cardHood}>
-                      {other.hood} · {other.spots}
+                      {other.hood} · {spotsText(other.spots, t, fmt)}
                     </div>
                   </div>
                 </Link>

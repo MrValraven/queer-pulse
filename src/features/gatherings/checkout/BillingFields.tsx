@@ -1,17 +1,37 @@
 import { BILLING_COUNTRIES } from "./checkout.data";
 import { validPostal } from "./checkout.validation";
 import type { PaymentForm } from "./usePaymentForm";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { cx } from "./cx";
 import s from "./checkout.module.css";
 
+/** `BILLING_COUNTRIES` (in `checkout.data.ts`, out of this slice) holds
+ * English labels; map each option value to its own catalog key here so the
+ * dropdown renders localized country names without touching that file. */
+const COUNTRY_NAME_KEY: Record<string, string> = {
+  PT: "gatherings:checkout.billing.country.pt",
+  ES: "gatherings:checkout.billing.country.es",
+  FR: "gatherings:checkout.billing.country.fr",
+  DE: "gatherings:checkout.billing.country.de",
+  IT: "gatherings:checkout.billing.country.it",
+  NL: "gatherings:checkout.billing.country.nl",
+  IE: "gatherings:checkout.billing.country.ie",
+  GB: "gatherings:checkout.billing.country.gb",
+  US: "gatherings:checkout.billing.country.us",
+  OTHER: "gatherings:checkout.billing.country.other",
+};
+
 export function BillingFields({ pf }: { pf: PaymentForm }) {
+  const { t } = useTranslation();
+
   return (
     <>
-      <div className={s["co-sec"]}>Billing</div>
+      <div className={s["co-sec"]}>{t("gatherings:checkout.billing.heading")}</div>
       <div className={s["co-grid-2"]}>
         <div className={s["co-field"]}>
           <label className={s["co-lbl"]} htmlFor="billCountry">
-            Country
+            {t("gatherings:checkout.billing.countryLabel")}
           </label>
           <select
             className={s["co-select"]}
@@ -22,14 +42,14 @@ export function BillingFields({ pf }: { pf: PaymentForm }) {
           >
             {BILLING_COUNTRIES.map((c) => (
               <option key={c.value} value={c.value}>
-                {c.label}
+                {t(COUNTRY_NAME_KEY[c.value] ?? c.value)}
               </option>
             ))}
           </select>
         </div>
         <div className={s["co-field"]}>
           <label className={s["co-lbl"]} htmlFor="billPostal">
-            Postal code
+            {t("gatherings:checkout.billing.postalLabel")}
           </label>
           <input
             className={cx(s["co-in"], pf.errors.postal && s.invalid)}
@@ -48,7 +68,7 @@ export function BillingFields({ pf }: { pf: PaymentForm }) {
             }
           />
           <div className={cx(s["co-err"], pf.errors.postal && s.show)}>
-            Enter your postal code.
+            {t("gatherings:checkout.billing.postalError")}
           </div>
         </div>
       </div>
@@ -61,7 +81,10 @@ export function BillingFields({ pf }: { pf: PaymentForm }) {
         />
         <span className={s["co-check-box"]} aria-hidden />
         <span>
-          I need a <strong>VAT invoice</strong> for a business
+          <Translation
+            i18nKey="gatherings:checkout.billing.vatCheckbox"
+            components={{ strong: <strong /> }}
+          />
         </span>
       </label>
       {pf.vatOpen && (
@@ -69,24 +92,24 @@ export function BillingFields({ pf }: { pf: PaymentForm }) {
           <div className={s["co-grid-2"]}>
             <div className={s["co-field"]}>
               <label className={s["co-lbl"]} htmlFor="vatCompany">
-                Company name
+                {t("gatherings:checkout.billing.companyLabel")}
               </label>
               <input
                 className={s["co-in"]}
                 id="vatCompany"
                 type="text"
-                placeholder="Company, Lda."
+                placeholder={t("gatherings:checkout.billing.companyPlaceholder")}
               />
             </div>
             <div className={s["co-field"]}>
               <label className={s["co-lbl"]} htmlFor="vatNumber">
-                VAT / NIF number
+                {t("gatherings:checkout.billing.vatNumberLabel")}
               </label>
               <input
                 className={s["co-in"]}
                 id="vatNumber"
                 type="text"
-                placeholder="PT123456789"
+                placeholder={t("gatherings:checkout.billing.vatNumberPlaceholder")}
               />
             </div>
           </div>

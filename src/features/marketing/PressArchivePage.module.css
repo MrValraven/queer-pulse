@@ -119,7 +119,7 @@
     border-color 0.2s var(--ease);
 }
 @media (hover: hover) {
-  .chip:hover {
+  .chip:not(.chipActive):hover {
     color: var(--text-strong);
   }
 }

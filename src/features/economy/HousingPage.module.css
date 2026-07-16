@@ -64,6 +64,12 @@
   flex: none;
 }
 
+.tabBar {
+  background: var(--cream);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+  padding: 18px 0;
+}
+
 .body {
   padding: 72px 0 90px;
 }
@@ -96,7 +102,7 @@
     border-color var(--dur-base) var(--ease);
 }
 @media (hover: hover) {
-  .chip:hover {
+  .chip:not(.chipActive):hover {
     color: var(--ink);
     border-color: rgba(var(--line-rgb), 0.4);
   }

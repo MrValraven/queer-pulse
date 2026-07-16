@@ -2,31 +2,47 @@ import type { IconType } from "react-icons";
 import { FiCalendar, FiMapPin, FiUser } from "react-icons/fi";
 import { memberName } from "../members/data/members";
 
+/**
+ * `value` is either plain organizer-authored content (location, host name —
+ * leave English) or a `Date` for the one row that's a timestamp, so
+ * `RsvpPage` can format it with `useFormat()` instead of a baked
+ * "Sunday 22 June · 7:00 PM" string.
+ */
 export const RSVP_DETAILS: {
   icon: IconType;
   bg: string;
-  label: string;
-  value: string;
+  labelKey: string;
+  value: string | Date;
 }[] = [
   {
     icon: FiCalendar,
     bg: "rgba(232,119,90,.1)",
-    label: "Date & time",
-    value: "Sunday 22 June · 7:00 PM",
+    labelKey: "gatherings:rsvp.details.dateTime",
+    value: new Date(2026, 5, 22, 19, 0),
   },
   {
     icon: FiMapPin,
     bg: "rgba(74,140,111,.1)",
-    label: "Location",
+    labelKey: "gatherings:rsvp.details.location",
     value: "Mouraria Community Centre",
   },
   {
     icon: FiUser,
     bg: "rgba(45,27,61,.07)",
-    label: "Host",
+    labelKey: "gatherings:rsvp.details.host",
     value: memberName("mariana"),
   },
 ];
+
+/** Reading-group organiser's first name — used to fill the Code of Care copy. */
+export const RSVP_HOST_NAME = memberName("mariana");
+
+/** Fictional attendees + the organiser's own words — organizer/member content,
+ *  left in English; held as constants (not inline JSX text) so the page's
+ *  copy has a single source. */
+export const RSVP_ATTENDEE_NAMES = "Sofia, Tomás, Beatriz, Jonas";
+export const RSVP_HOST_QUOTE =
+  "\"So glad you're coming. We'll be reading chapters 10–14 this week. Bring your thoughts on Shevek's theory of time and simultaneity — it's a good one. The kitchen opens from 6:45 if you'd like to arrive early and settle in.\"";
 
 const GATHERING_TITLE = "The Dispossessed — Reading Group #8";
 const GATHERING_LOCATION = "Mouraria Community Centre";
@@ -92,21 +108,37 @@ export function downloadIcs() {
   URL.revokeObjectURL(url);
 }
 
-export const RSVP_COC = [
+/**
+ * Code of Care items shown on the confirmation page. `strongKey`/`restKey` are
+ * platform chrome (the same safety framing appears on every RSVP), reused
+ * verbatim; the organiser item interpolates the host's name so it stays
+ * correct if the array is ever reused for a different gathering.
+ */
+export const RSVP_COC: {
+  id: string;
+  strongKey: string;
+  restKey: string;
+  restValues?: Record<string, string>;
+}[] = [
   {
-    strong: "This is an affirming space.",
-    rest: " Bring your whole self — including the parts you usually have to leave at the door. Queer identity, trans experience, neurodivergence, disability: you're welcome as you are.",
+    id: "affirming",
+    strongKey: "gatherings:rsvp.coc.affirming.strong",
+    restKey: "gatherings:rsvp.coc.affirming.rest",
   },
   {
-    strong: "We practise active consent.",
-    rest: " Ask before touching, check before sharing photos, and take cues from each other. When in doubt, ask.",
+    id: "consent",
+    strongKey: "gatherings:rsvp.coc.consent.strong",
+    restKey: "gatherings:rsvp.coc.consent.rest",
   },
   {
-    strong: "What happens here stays here.",
-    rest: " This is a private community. Please don't share personal information, stories, or photos from gatherings without consent.",
+    id: "privacy",
+    strongKey: "gatherings:rsvp.coc.privacy.strong",
+    restKey: "gatherings:rsvp.coc.privacy.rest",
   },
   {
-    strong: "If something doesn't feel right, tell the organiser.",
-    rest: " Mariana is there to make the space work for everyone. You don't need to manage it alone.",
+    id: "organiser",
+    strongKey: "gatherings:rsvp.coc.organiser.strong",
+    restKey: "gatherings:rsvp.coc.organiser.rest",
+    restValues: { host: RSVP_HOST_NAME },
   },
 ];

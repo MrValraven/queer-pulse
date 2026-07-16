@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useMediaQuery } from "../../../shared/hooks/useMediaQuery";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { TFunction } from "../../../shared/i18n/types";
 import {
   OPEN_SEAT_INDICES,
   RING_ORDER,
@@ -13,9 +15,13 @@ import { cx } from "./cx";
 import s from "./checkout.module.css";
 
 const CENTER = 50;
+// Mock content (mirrors EVENT.title/neighbourhood in shortened form) — not chrome.
+const TABLE_ENGRAVE_TITLE = "Supper #13";
+const TABLE_ENGRAVE_NEIGHBOURHOOD = "Mouraria";
 
 /** Display name for a seat as currently occupied, or null if it's an empty open setting. */
 function occupantName(
+  t: TFunction,
   seat: Seat,
   index: number,
   seatPick: number[],
@@ -24,13 +30,17 @@ function occupantName(
   if (seat.role === "guest" || seat.role === "host") return seat.name ?? null;
   const pos = seatPick.indexOf(index);
   if (pos < 0) return null;
-  if (pos === 0) return "You";
+  if (pos === 0) return t("gatherings:checkout.table.youLabel");
   const first = guests[pos - 1]?.name?.trim().split(" ")[0];
-  return first || `Guest ${pos + 1}`;
+  return (
+    first ||
+    t("gatherings:checkout.table.guestNumberFallback", { number: pos + 1 })
+  );
 }
 
 /** Walk the ring from `fromIdx` in `dir` to the first occupied seat (skipping yourself). */
 function neighbour(
+  t: TFunction,
   fromIdx: number,
   dir: 1 | -1,
   seatPick: number[],
@@ -45,7 +55,7 @@ function neighbour(
     if (i === undefined || i === seatPick[0]) continue;
     const seat = SEATS[i];
     if (!seat) continue;
-    const nm = occupantName(seat, i, seatPick, guests);
+    const nm = occupantName(t, seat, i, seatPick, guests);
     if (nm) return nm;
   }
   return null;
@@ -54,6 +64,7 @@ function neighbour(
 export function MeetTheTable() {
   const { qty, visibility, guests, seatPick, setVisibility, pickSeat } =
     useCheckout();
+  const { t } = useTranslation();
   const priv = visibility === "private";
   const hoverEnabled = useMediaQuery("(hover: hover)");
   const [activeCard, setActiveCard] = useState<number | null>(null);
@@ -107,13 +118,21 @@ export function MeetTheTable() {
     }
     // open setting — occupied by the party?
     const pos = seatPick.indexOf(index);
-    if (pos < 0) return { ...base, variant: "open", av: "+", name: "Empty" };
+    if (pos < 0)
+      return {
+        ...base,
+        variant: "open",
+        av: "+",
+        name: t("gatherings:checkout.table.emptySeatLabel"),
+      };
     if (pos === 0) {
       return {
         ...base,
         variant: "you",
-        av: priv ? "" : "You",
-        name: priv ? "You (private)" : "You",
+        av: priv ? "" : t("gatherings:checkout.table.youLabel"),
+        name: priv
+          ? t("gatherings:checkout.table.youPrivateLabel")
+          : t("gatherings:checkout.table.youLabel"),
         priv,
       };
     }
@@ -124,7 +143,9 @@ export function MeetTheTable() {
         variant: "you",
         av: "",
         gift: true,
-        name: priv ? "Private" : "Gift",
+        name: priv
+          ? t("gatherings:checkout.table.privateLabel")
+          : t("gatherings:checkout.table.giftLabel"),
       };
     }
     const first = g?.name?.trim().split(" ")[0];
@@ -132,7 +153,12 @@ export function MeetTheTable() {
       ...base,
       variant: "you",
       av: g?.name ? g.name.trim().charAt(0).toUpperCase() : String(pos + 1),
-      name: priv ? "Private" : first || `Guest ${pos + 1}`,
+      name: priv
+        ? t("gatherings:checkout.table.privateLabel")
+        : first ||
+          t("gatherings:checkout.table.guestNumberFallback", {
+            number: pos + 1,
+          }),
       pron: g?.pron || undefined,
     };
   });
@@ -141,36 +167,52 @@ export function MeetTheTable() {
   const confirmed = SEATS.filter(
     (x) => x.role === "guest" || x.role === "host",
   ).length;
-  const youTxt = qty === 1 ? "you" : `you +${qty - 1}`;
+  const youTxt = t("gatherings:checkout.table.youCount", {
+    count: qty,
+    extra: qty - 1,
+  });
 
   const yourSeat = seatPick[0];
   const left =
-    yourSeat != null ? neighbour(yourSeat, -1, seatPick, guests) : null;
+    yourSeat != null ? neighbour(t, yourSeat, -1, seatPick, guests) : null;
   const right =
-    yourSeat != null ? neighbour(yourSeat, 1, seatPick, guests) : null;
+    yourSeat != null ? neighbour(t, yourSeat, 1, seatPick, guests) : null;
   const legend =
     left && right
-      ? `You're sitting between ${left} and ${right} — tap another empty place to move.`
-      : "Tap an empty place to choose your seat.";
+      ? t("gatherings:checkout.table.legendBetween", { left, right })
+      : t("gatherings:checkout.table.legendDefault");
 
   return (
     <div className={s["co-tablecard"]}>
       <div className={s["co-tc-head"]}>
         <div>
-          <div className={s["co-tc-title"]}>Meet the table</div>
+          <div className={s["co-tc-title"]}>
+            {t("gatherings:checkout.table.title")}
+          </div>
           <div className={s["co-tc-sub"]}>
-            <b>{confirmed} at the table</b> · <b>{youTxt}</b> ·{" "}
-            <b>{remaining}</b> open
+            <b>
+              {t("gatherings:checkout.table.atTableCount", {
+                count: confirmed,
+              })}
+            </b>{" "}
+            · <b>{youTxt}</b> ·{" "}
+            <b>
+              {t("gatherings:checkout.table.openCount", { count: remaining })}
+            </b>
           </div>
         </div>
-        <div className={s["co-seg"]} role="group" aria-label="Your visibility">
+        <div
+          className={s["co-seg"]}
+          role="group"
+          aria-label={t("gatherings:checkout.table.visibilityGroupAria")}
+        >
           <button
             className={cx(s["co-seg-btn"], !priv && s.on)}
             type="button"
             onClick={() => setVisibility("show")}
             aria-pressed={!priv}
           >
-            <FiEye /> On the list
+            <FiEye /> {t("gatherings:checkout.table.onListLabel")}
           </button>
           <button
             className={cx(s["co-seg-btn"], priv && s.on)}
@@ -178,7 +220,7 @@ export function MeetTheTable() {
             onClick={() => setVisibility("private")}
             aria-pressed={priv}
           >
-            <FiEyeOff /> Attend privately
+            <FiEyeOff /> {t("gatherings:checkout.table.attendPrivatelyLabel")}
           </button>
         </div>
       </div>
@@ -187,8 +229,8 @@ export function MeetTheTable() {
         <div className={s["tbl-surface"]}>
           <span className={s["tbl-candle"]} />
           <span className={s["tbl-engrave"]}>
-            <b>Supper #13</b>
-            Mouraria
+            <b>{TABLE_ENGRAVE_TITLE}</b>
+            {TABLE_ENGRAVE_NEIGHBOURHOOD}
           </span>
         </div>
         {rendered.map((r) => (

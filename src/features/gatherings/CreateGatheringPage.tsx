@@ -4,8 +4,15 @@ import { FiAward, FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { PILL_LABELS, TIPS, TOTAL_STEPS } from "./createGathering.data";
+import {
+  PILL_LABEL_KEYS,
+  TIP_KEYS,
+  TOTAL_STEPS,
+  accessLabelKey,
+} from "./createGathering.data";
 import { useGatheringForm } from "./useGatheringForm";
 import { useCreateEvent } from "./api/useEventMutations";
 import { formToCreateEventDto } from "./api/events.adapters";
@@ -21,6 +28,7 @@ import styles from "./CreateGatheringPage.module.css";
 export function CreateGatheringPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const form = useGatheringForm();
   const createEvent = useCreateEvent();
@@ -34,10 +42,10 @@ export function CreateGatheringPage() {
       if (!form.allChecked) return;
       createEvent.mutate(formToCreateEventDto(form), {
         onError: () =>
-          showToast("Couldn't publish your gathering — try again.", "error"),
+          showToast(t("gatherings:create.toast.publishError"), "error"),
       });
       setStep(6);
-      showToast("Your gathering is live", "success");
+      showToast(t("gatherings:create.toast.published"), "success");
     } else {
       setStep((s) => s + 1);
     }
@@ -53,20 +61,20 @@ export function CreateGatheringPage() {
       <section className={styles.section}>
         <div className="wrap">
           <div className={styles.head}>
-            <div className={styles.eye}>List your event</div>
+            <div className={styles.eye}>{t("gatherings:create.eyebrow")}</div>
             <h2 className={styles.title}>
-              Create your <em>gathering.</em>
+              <Translation
+                i18nKey="gatherings:create.title"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p className={styles.sub}>
-              Fill in the details below and your event will be live on the
-              QueerPulse gatherings board immediately.
-            </p>
+            <p className={styles.sub}>{t("gatherings:create.lead")}</p>
           </div>
 
           {!isSuccess && (
             <div className={styles.progressWrap}>
               <div className={styles.stepPills}>
-                {PILL_LABELS.map((l, i) => {
+                {PILL_LABEL_KEYS.map((labelKey, i) => {
                   const s = i + 1;
                   const cls =
                     s < step
@@ -75,8 +83,8 @@ export function CreateGatheringPage() {
                         ? styles.pillActive
                         : styles.pillPending;
                   return (
-                    <div key={l} className={`${styles.pill} ${cls}`}>
-                      {l}
+                    <div key={labelKey} className={`${styles.pill} ${cls}`}>
+                      {t(labelKey)}
                     </div>
                   );
                 })}
@@ -108,22 +116,23 @@ export function CreateGatheringPage() {
                     <FiAward />
                   </div>
                   <div className={styles.successTitle}>
-                    Your gathering <em>is live.</em>
+                    <Translation
+                      i18nKey="gatherings:create.success.title"
+                      components={{ em: <em /> }}
+                    />
                   </div>
                   <p className={styles.successSub}>
-                    It's now visible on the QueerPulse gatherings board. Members
-                    can see it and RSVP. You'll get an email notification for
-                    each new attendee.
+                    {t("gatherings:create.success.body")}
                   </p>
                   {form.access.size > 0 && (
                     <div className={styles.successAccess}>
                       <span className={styles.successAccessLbl}>
-                        Accessibility shown to attendees
+                        {t("gatherings:create.success.accessLabel")}
                       </span>
                       <div className={styles.successAccessTags}>
                         {[...form.access].map((a) => (
                           <span key={a} className={styles.successAccessTag}>
-                            <FiCheck /> {a}
+                            <FiCheck /> {t(accessLabelKey(a) ?? a)}
                           </span>
                         ))}
                       </div>
@@ -131,10 +140,10 @@ export function CreateGatheringPage() {
                   )}
                   <div className={styles.successActions}>
                     <Button to={routes.gathering} variant="ghost-dark">
-                      View on board →
+                      {t("gatherings:create.success.viewCta")} →
                     </Button>
                     <Button to={routes.event} variant="primary">
-                      See your event page →
+                      {t("gatherings:create.success.eventCta")} →
                     </Button>
                   </div>
                 </div>
@@ -143,7 +152,11 @@ export function CreateGatheringPage() {
               {!isSuccess && (
                 <div className={styles.nav}>
                   <button type="button" className={styles.back} onClick={back}>
-                    {step === 1 ? "Cancel" : "← Back"}
+                    {step === 1 ? (
+                      t("gatherings:create.nav.cancel")
+                    ) : (
+                      <>← {t("gatherings:create.nav.back")}</>
+                    )}
                   </button>
                   <button
                     type="button"
@@ -152,13 +165,15 @@ export function CreateGatheringPage() {
                     disabled={!canPublish}
                     title={
                       !canPublish
-                        ? "Confirm all three boxes above to publish"
+                        ? t("gatherings:create.nav.publishHint")
                         : undefined
                     }
                   >
-                    {step === TOTAL_STEPS
-                      ? "Publish gathering →"
-                      : "Continue →"}
+                    {step === TOTAL_STEPS ? (
+                      <>{t("gatherings:create.nav.publish")} →</>
+                    ) : (
+                      <>{t("gatherings:create.nav.continue")} →</>
+                    )}
                   </button>
                 </div>
               )}
@@ -166,20 +181,19 @@ export function CreateGatheringPage() {
 
             <aside className={styles.sidebar}>
               <div className={styles.tipCard}>
-                <div className={styles.tipTitle}>Tip for this step</div>
+                <div className={styles.tipTitle}>
+                  {t("gatherings:create.sidebar.tipLabel")}
+                </div>
                 <div className={styles.tipBody}>
-                  {TIPS[Math.min(step, TOTAL_STEPS) - 1]}
+                  {t(TIP_KEYS[Math.min(step, TOTAL_STEPS) - 1]!)}
                 </div>
               </div>
               <div className={styles.tipCard}>
                 <div className={styles.tipTitle}>
-                  What happens after you publish
+                  {t("gatherings:create.sidebar.afterTitle")}
                 </div>
                 <div className={styles.tipBody}>
-                  Your gathering appears on the board immediately. RSVPs come to
-                  your QueerPulse inbox. Full addresses are shared only with
-                  confirmed attendees. You can edit or cancel at any time up to
-                  48 hours before.
+                  {t("gatherings:create.sidebar.afterBody")}
                 </div>
               </div>
             </aside>

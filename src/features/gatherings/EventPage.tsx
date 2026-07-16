@@ -3,31 +3,52 @@ import { PageShell } from "../../shared/components/layout";
 import { Avatar, ImageSlot } from "../../shared/components/ui";
 import { FiLock } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
-import { DETAILS, HERO_IMAGE } from "./eventPage.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { spotsText } from "./data";
+import {
+  DETAILS,
+  EVENT_ABOUT_ACCESSIBILITY_TEXT,
+  EVENT_ABOUT_P1,
+  EVENT_ABOUT_P2,
+  EVENT_DATE,
+  EVENT_HERO_ALT,
+  EVENT_HOOD_LABEL,
+  EVENT_HOST_NAME,
+  EVENT_PILL_LOCATION,
+  EVENT_PRICE_MAX,
+  EVENT_PRICE_MIN,
+  EVENT_SPOTS,
+  EVENT_TITLE_EM,
+  EVENT_TITLE_LINE,
+  EVENT_TYPE_LABEL,
+  HERO_IMAGE,
+} from "./eventPage.data";
 import { EventRsvpCard } from "./EventRsvpCard";
 import { JoinVouchCallout } from "./JoinVouchCallout";
 import styles from "./EventPage.module.css";
 
 export function EventPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
           <Link to={routes.calendar} className={styles.back}>
-            ← Gatherings
+            {t("gatherings:common.backToGatherings")}
           </Link>
-          <div className={styles.type}>
-            Community gathering · Food &amp; conversation
-          </div>
+          <div className={styles.type}>{EVENT_TYPE_LABEL}</div>
           <h1 className={styles.title}>
-            Newcomer
+            {EVENT_TITLE_LINE}
             <br />
-            <em>Welcome Dinner</em>
+            <em>{EVENT_TITLE_EM}</em>
           </h1>
           <div className={styles.hostRow}>
             <Avatar initials="MC" tint="coral" size={34} />
             <div className={styles.by}>
-              Hosted by <strong>Mateus Costa</strong> ·{" "}
+              {t("gatherings:common.hostedBy")} <strong>{EVENT_HOST_NAME}</strong> ·{" "}
               <Link
                 to={routes.members}
                 style={{
@@ -35,17 +56,29 @@ export function EventPage() {
                   textDecoration: "underline",
                 }}
               >
-                View profile
+                {t("gatherings:event.hero.viewProfileCta")}
               </Link>
             </div>
           </div>
           <div className={styles.pills}>
             <span className={`${styles.pill} ${styles.pillHighlight}`}>
-              Sat 14 June · 7:00pm
+              {fmt.date(EVENT_DATE, {
+                weekday: "short",
+                day: "numeric",
+                month: "long",
+              })}{" "}
+              · {fmt.time(EVENT_DATE)}
             </span>
-            <span className={styles.pill}>Casa do Alentejo, Intendente</span>
-            <span className={styles.pill}>Sliding scale · €0–€15</span>
-            <span className={styles.pill}>5 spots left</span>
+            <span className={styles.pill}>{EVENT_PILL_LOCATION}</span>
+            <span className={styles.pill}>
+              {t("gatherings:event.pills.slidingScale", {
+                min: EVENT_PRICE_MIN,
+                max: EVENT_PRICE_MAX,
+              })}
+            </span>
+            <span className={styles.pill}>
+              {spotsText(EVENT_SPOTS, t, fmt)}
+            </span>
           </div>
         </div>
         <ImageSlot
@@ -53,7 +86,7 @@ export function EventPage() {
           src={HERO_IMAGE}
           height={320}
           radius={0}
-          placeholder="Event image — warm dinner setting, long communal table, candlelight"
+          placeholder={EVENT_HERO_ALT}
           className={styles.imgStrip}
         />
       </div>
@@ -63,39 +96,33 @@ export function EventPage() {
           <div className={styles.layout}>
             <div>
               <div className={styles.section}>
-                <div className={styles.sectionTitle}>About this gathering</div>
+                <div className={styles.sectionTitle}>
+                  {t("gatherings:event.about.title")}
+                </div>
                 <div className={styles.text}>
+                  <p>{EVENT_ABOUT_P1}</p>
+                  <p>{EVENT_ABOUT_P2}</p>
                   <p>
-                    Once a month, we set a long table for people who have
-                    recently arrived in Lisbon — or who arrived a while ago and
-                    never quite found their people. This dinner is informal,
-                    unhurried, and bilingual. You don't need to know anyone.
-                  </p>
-                  <p>
-                    We eat well, we stay too long, we probably talk about
-                    housing at some point. The idea is to make introductions
-                    that have a chance of becoming something real. Some of the
-                    people at the last dinner have since become flatmates,
-                    collaborators, or close friends.
-                  </p>
-                  <p>
-                    <strong>Accessibility:</strong> Casa do Alentejo is
-                    accessible by wheelchair via the side entrance on Rua de
-                    Palma. Step-free access to all areas.
+                    <strong>{t("gatherings:event.about.accessibilityLabel")}:</strong>{" "}
+                    {EVENT_ABOUT_ACCESSIBILITY_TEXT}
                   </p>
                 </div>
               </div>
 
               <div className={styles.section}>
-                <div className={styles.sectionTitle}>Event details</div>
+                <div className={styles.sectionTitle}>
+                  {t("gatherings:event.details.title")}
+                </div>
                 <div className={styles.details}>
                   {DETAILS.map((detail) => (
-                    <div key={detail.label} className={styles.detail}>
+                    <div key={detail.labelKey} className={styles.detail}>
                       <div className={styles.detailIcon}>
                         <detail.icon />
                       </div>
                       <div>
-                        <div className={styles.detailLabel}>{detail.label}</div>
+                        <div className={styles.detailLabel}>
+                          {t(detail.labelKey)}
+                        </div>
                         <div className={styles.detailValue}>{detail.value}</div>
                         <div className={styles.detailSub}>{detail.sub}</div>
                       </div>
@@ -107,10 +134,9 @@ export function EventPage() {
                     <FiLock />
                   </span>
                   <div>
-                    <div className={styles.locRevealHood}>Intendente</div>
+                    <div className={styles.locRevealHood}>{EVENT_HOOD_LABEL}</div>
                     <div className={styles.locRevealNote}>
-                      The exact address and door details are shared with
-                      confirmed guests after you RSVP.
+                      {t("gatherings:event.details.locationNote")}
                     </div>
                   </div>
                 </div>
@@ -118,20 +144,11 @@ export function EventPage() {
 
               <div className={styles.section}>
                 <div className={styles.sectionTitle}>
-                  Community guidelines for this event
+                  {t("gatherings:event.guidelines.title")}
                 </div>
                 <div className={styles.text}>
-                  <p>
-                    This is a private QueerPulse event. Everyone here has been
-                    invited because someone vouched for them or because they are
-                    already a member. The Code of Care applies. Be warm. Be
-                    present. Don't take photos of people without asking.
-                  </p>
-                  <p>
-                    The sliding scale is not a suggestion — if you can pay the
-                    higher tier, please do. It directly subsidises someone
-                    else's ticket.
-                  </p>
+                  <p>{t("gatherings:event.guidelines.body1")}</p>
+                  <p>{t("gatherings:event.guidelines.body2")}</p>
                 </div>
               </div>
             </div>
@@ -149,12 +166,9 @@ export function EventPage() {
                     marginBottom: 6,
                   }}
                 >
-                  QueerPulse members only
+                  {t("gatherings:event.membersOnly.title")}
                 </div>
-                <p>
-                  This event is private. If someone forwarded you this link, ask
-                  them to invite you to the network first.
-                </p>
+                <p>{t("gatherings:event.membersOnly.body")}</p>
               </div>
 
               <div className={styles.calloutWrap}>

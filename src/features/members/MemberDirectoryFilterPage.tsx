@@ -142,6 +142,7 @@ export function MemberDirectoryFilterPage() {
         <div className={styles.grid}>
           <FiltersSidebar
             filters={filters}
+            members={sourceMembers}
             appliedCount={chips.length}
             onChange={applyFilters}
             onClearAll={() => {

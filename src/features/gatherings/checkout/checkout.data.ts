@@ -1,35 +1,56 @@
+import type { TFunction } from "../../../shared/i18n/types";
+import type { Formatters } from "../../../shared/i18n/format";
+
 /* Static config + copy for the checkout flow.
    Mirrors the design's pricing model, seat map, and confirmation content. */
 
 export type TierId = "solidarity" | "standard" | "supporter";
 
+/**
+ * i18n Pattern A. `name`/`desc`/`tag` stay as plain English strings too —
+ * CheckoutSidebar.tsx, CheckoutMobileBar.tsx and PriceSummary.tsx (outside this
+ * slice) still read `.name` directly, so the key fields are additive rather
+ * than a breaking rename. `TierSelect.tsx` (this slice) reads the `*Key`
+ * fields through `t()`. `price` stays a number, formatted with
+ * `useFormat().currency()` at render.
+ */
 export interface Tier {
   id: TierId;
   name: string;
+  nameKey: string;
   price: number;
   desc: string;
+  descKey: string;
   tag?: string;
+  tagKey?: string;
 }
 
 export const TIERS: Tier[] = [
   {
     id: "solidarity",
     name: "Solidarity",
+    nameKey: "gatherings:checkout.tiers.solidarity.name",
     price: 6,
     desc: "If money's tight right now. No questions, no proof — same seat, same welcome.",
+    descKey: "gatherings:checkout.tiers.solidarity.desc",
   },
   {
     id: "standard",
     name: "Standard",
+    nameKey: "gatherings:checkout.tiers.standard.name",
     price: 12,
     desc: "Covers your meal, ingredients, and the host's time.",
+    descKey: "gatherings:checkout.tiers.standard.desc",
     tag: "Most pick this",
+    tagKey: "gatherings:checkout.tiers.standard.tag",
   },
   {
     id: "supporter",
     name: "Supporter",
+    nameKey: "gatherings:checkout.tiers.supporter.name",
     price: 18,
     desc: "Pays it forward — you quietly cover a solidarity seat for someone else.",
+    descKey: "gatherings:checkout.tiers.supporter.desc",
   },
 ];
 
@@ -56,6 +77,15 @@ export const EVENT = {
   hostInitials: "TB",
   seatsTotal: 9,
 };
+
+/**
+ * Real `Date`s for the two moments the checkout copy talks about, so any new
+ * chrome sentence can go through `useFormat()` instead of baking a string —
+ * `EVENT.dateLong`/`dateShort` above stay as-is (untouched, cross-slice
+ * fields consumed by CheckoutSidebar.tsx outside this slice).
+ */
+export const EVENT_ARRIVAL_DATE = new Date(2026, 5, 28, 19, 30);
+export const ADDRESS_UNLOCK_DATE = new Date(2026, 5, 28, 10, 0);
 
 export interface Seat {
   x: number;
@@ -192,51 +222,101 @@ export const PRON_OPTIONS = [
   "prefer not to say",
 ];
 
-export const FIRST_TIMER_STEPS = [
+/**
+ * i18n Pattern A. `titleKey`/`bodyKey` are chrome (platform-authored onboarding
+ * copy) resolved by `FirstTimerCard.tsx`, the sole consumer. `n` is a decorative
+ * step numeral, not language content. Step 1's body carries a `{time}` token —
+ * `FirstTimerCard.tsx` fills it from `EVENT_ARRIVAL_DATE` via `useFormat()`
+ * instead of baking "7:30" into the string.
+ */
+export interface FirstTimerStep {
+  n: string;
+  titleKey: string;
+  bodyKey: string;
+}
+
+export const FIRST_TIMER_STEPS: FirstTimerStep[] = [
   {
     n: "01",
-    title: "You arrive",
-    body: "Doors at 7:30. Come as you are — no dress code, no small-talk pressure.",
+    titleKey: "gatherings:checkout.firstTimer.step1.title",
+    bodyKey: "gatherings:checkout.firstTimer.step1.body",
   },
   {
     n: "02",
-    title: "We share a meal",
-    body: "A home-cooked dinner around one table, eight of us, three unhurried hours.",
+    titleKey: "gatherings:checkout.firstTimer.step2.title",
+    bodyKey: "gatherings:checkout.firstTimer.step2.body",
   },
   {
     n: "03",
-    title: "You leave full",
-    body: "Of food, and usually a few new numbers in your phone. Leave whenever you like.",
+    titleKey: "gatherings:checkout.firstTimer.step3.title",
+    bodyKey: "gatherings:checkout.firstTimer.step3.body",
   },
 ];
 
-export const COC_LIST = [
-  "Consent first — ask before photos, and take a no gracefully.",
-  "What's shared at the table stays at the table.",
-  "Respect names and pronouns, always.",
-  "If something feels off, tell the host — we've got you.",
+/** i18n Pattern A — chrome list, sole consumer is `CodeOfCare.tsx`. */
+export const COC_KEYS = [
+  "gatherings:checkout.coc.item1",
+  "gatherings:checkout.coc.item2",
+  "gatherings:checkout.coc.item3",
+  "gatherings:checkout.coc.item4",
 ];
 
-export const TIMELINE = [
+export interface TimelineItem {
+  key: string;
+  when: string;
+  title: string;
+  body: string;
+  future: boolean;
+}
+
+/**
+ * i18n Pattern B. The "when" column mixes a real date/time (needs
+ * `useFormat()` for PT's 24h clock) with a special "right now" case that isn't
+ * a date at all, so the raw source lives here and `ConfirmationNext.tsx`
+ * memoizes `buildTimeline(t, fmt)`. `Mouraria` and `EVENT.hostName` are fused
+ * content inside otherwise-chrome sentences, so they're passed as
+ * interpolation values rather than baked into the catalog string.
+ */
+const TIMELINE_SOURCE: {
+  date: Date | null;
+  titleKey: string;
+  bodyKey: string;
+  future: boolean;
+}[] = [
   {
-    when: "Right now",
-    title: "Ticket in your inbox",
-    body: "Your confirmation and QR ticket are already on their way.",
+    date: null,
+    titleKey: "gatherings:checkout.timeline.ticket.title",
+    bodyKey: "gatherings:checkout.timeline.ticket.body",
     future: false,
   },
   {
-    when: "28 June · 10:00 AM",
-    title: "The address unlocks",
-    body: "Exact door, buzzer code and directions to Mouraria arrive the morning of.",
+    date: ADDRESS_UNLOCK_DATE,
+    titleKey: "gatherings:checkout.timeline.address.title",
+    bodyKey: "gatherings:checkout.timeline.address.body",
     future: true,
   },
   {
-    when: "28 June · 7:30 PM",
-    title: "You arrive & we eat",
-    body: "Come as you are. Tomás handles the rest — three unhurried hours together.",
+    date: EVENT_ARRIVAL_DATE,
+    titleKey: "gatherings:checkout.timeline.arrive.title",
+    bodyKey: "gatherings:checkout.timeline.arrive.body",
     future: true,
   },
 ];
+
+export function buildTimeline(t: TFunction, fmt: Formatters): TimelineItem[] {
+  return TIMELINE_SOURCE.map((item, index) => ({
+    key: String(index),
+    when: item.date
+      ? `${fmt.date(item.date, { day: "numeric", month: "long" })} · ${fmt.time(item.date)}`
+      : t("gatherings:checkout.timeline.now"),
+    title: t(item.titleKey),
+    body: t(item.bodyKey, {
+      neighbourhood: "Mouraria",
+      host: EVENT.hostName.split(" ")[0] ?? EVENT.hostName,
+    }),
+    future: item.future,
+  }));
+}
 
 export const BILLING_COUNTRIES = [
   { value: "PT", label: "Portugal" },

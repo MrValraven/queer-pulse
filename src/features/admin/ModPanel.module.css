@@ -21,7 +21,7 @@
     border-color 0.18s var(--ease);
 }
 @media (hover: hover) {
-  .tab:hover {
+  .tab:not(.tabActive):hover {
     border-color: rgba(var(--line-rgb), 0.28);
     color: var(--ink);
   }
@@ -112,7 +112,7 @@
     border-color 0.18s var(--ease);
 }
 @media (hover: hover) {
-  .chip:hover {
+  .chip:not(.chipOn):hover {
     border-color: rgba(var(--line-rgb), 0.28);
     color: var(--ink);
   }
@@ -304,7 +304,7 @@
     border-color 0.18s var(--ease);
 }
 @media (hover: hover) {
-  .modeChip:hover {
+  .modeChip:not(.modeChipActive):hover {
     border-color: rgba(var(--line-rgb), 0.28);
     color: var(--ink);
   }

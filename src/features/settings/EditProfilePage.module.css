@@ -333,7 +333,7 @@ span.navIcon svg {
 }
 
 @media (hover: hover) {
-  .pronounChip:hover {
+  .pronounChip:not(.pronounChipSelected):hover {
     border-color: var(--line-strong);
     color: var(--text-strong);
   }

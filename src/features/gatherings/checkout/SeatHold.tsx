@@ -1,3 +1,5 @@
+import { MAX_SEATS } from "./checkout.data";
+import { Translation } from "../../../shared/i18n/Translation";
 import { cx } from "./cx";
 import { fmtClock } from "./useSeatHold";
 import s from "./checkout.module.css";
@@ -15,21 +17,33 @@ export function SeatHold({ left, expired, reHold }: Props) {
         <span className={s["co-hold-dot"]} aria-hidden />
         <span aria-live="polite">
           {expired ? (
-            <>
-              Your seat hold expired —{" "}
-              <button className={s["co-rehold"]} type="button" onClick={reHold}>
-                hold it again
-              </button>
-            </>
+            <Translation
+              i18nKey="gatherings:checkout.hold.expiredText"
+              components={{
+                retry: (
+                  <button
+                    className={s["co-rehold"]}
+                    type="button"
+                    onClick={reHold}
+                  />
+                ),
+              }}
+            />
           ) : (
-            <>
-              Seat held for you · <strong>{fmtClock(left)}</strong>
-            </>
+            <Translation
+              i18nKey="gatherings:checkout.hold.activeText"
+              values={{ clock: fmtClock(left) }}
+              components={{ time: <strong /> }}
+            />
           )}
         </span>
       </div>
       <div className={s["co-hold-spots"]}>
-        Only <strong>2</strong> seats left
+        <Translation
+          i18nKey="gatherings:checkout.hold.spotsLeft"
+          values={{ count: MAX_SEATS }}
+          components={{ strong: <strong /> }}
+        />
       </div>
     </div>
   );

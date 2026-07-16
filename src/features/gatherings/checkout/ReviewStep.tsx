@@ -1,4 +1,6 @@
 import { Button } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { EVENT } from "./checkout.data";
 import { useCheckout } from "./checkoutContext";
 import { FirstTimerCard } from "./FirstTimerCard";
@@ -20,16 +22,17 @@ interface Props {
 
 export function ReviewStep({ hold }: Props) {
   const { tryGoStep2 } = useCheckout();
+  const { t } = useTranslation();
 
   return (
     <>
       <h1 className={s["co-step-title"]}>
-        Reserve your <em>seat</em>
+        <Translation
+          i18nKey="gatherings:checkout.review.title"
+          components={{ em: <em /> }}
+        />
       </h1>
-      <p className={s["co-step-lede"]}>
-        Pick what works for your budget — every seat at the table is the same
-        welcome.
-      </p>
+      <p className={s["co-step-lede"]}>{t("gatherings:checkout.review.lede")}</p>
 
       <FirstTimerCard />
       <SeatHold left={hold.left} expired={hold.expired} reHold={hold.reHold} />
@@ -45,7 +48,10 @@ export function ReviewStep({ hold }: Props) {
             {EVENT.neighbourhood}
           </div>
           <div className={s["co-ev-host"]}>
-            Hosted by {EVENT.hostName} · {EVENT.seatsTotal} seats total
+            {t("gatherings:checkout.review.hostedBy", {
+              host: EVENT.hostName,
+              count: EVENT.seatsTotal,
+            })}
           </div>
         </div>
       </div>
@@ -53,31 +59,35 @@ export function ReviewStep({ hold }: Props) {
       <HostCard />
       <MeetTheTable />
 
-      <div className={s["co-sec"]}>Choose your ticket</div>
+      <div className={s["co-sec"]}>{t("gatherings:checkout.tiers.sectionTitle")}</div>
       <TierSelect />
 
-      <div className={s["co-sec"]}>How many seats?</div>
+      <div className={s["co-sec"]}>{t("gatherings:checkout.seats.sectionTitle")}</div>
       <SeatQuantity />
 
       <PriceSummary />
 
       <div className={s["co-sec"]}>
-        Promo code <span className={s["co-sec-opt"]}>optional</span>
+        {t("gatherings:checkout.review.promoLabel")}{" "}
+        <span className={s["co-sec-opt"]}>
+          {t("gatherings:checkout.review.promoOptional")}
+        </span>
       </div>
       <PromoCode />
 
-      <div className={s["co-sec"]}>Your details</div>
+      <div className={s["co-sec"]}>
+        {t("gatherings:checkout.attendee.sectionTitle")}
+      </div>
       <AttendeeDetails />
       <GuestDetails />
 
       <details className={s["co-policy"]}>
-        <summary>Cancellation &amp; refund policy</summary>
+        <summary>{t("gatherings:checkout.review.policySummary")}</summary>
         <div className={s["co-policy-body"]}>
-          Full refund if you cancel up to <strong>48 hours</strong> before the
-          gathering. Within 48 hours we can transfer your seat to a future
-          supper, since ingredients are already bought. Life happens — if
-          something urgent comes up, <strong>just message the host</strong> and
-          we'll sort it out.
+          <Translation
+            i18nKey="gatherings:checkout.review.policyBody"
+            components={{ strong: <strong /> }}
+          />
         </div>
       </details>
 
@@ -88,7 +98,7 @@ export function ReviewStep({ hold }: Props) {
           onClick={() => tryGoStep2()}
           style={{ padding: "13px 28px", fontSize: 15 }}
         >
-          Continue to payment →
+          {t("gatherings:checkout.review.continueCta")} →
         </Button>
       </div>
     </>

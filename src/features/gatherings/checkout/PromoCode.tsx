@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { useCheckout } from "./checkoutContext";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { cx } from "./cx";
 import s from "./checkout.module.css";
 
 export function PromoCode() {
   const { promo, applyPromo, removePromo } = useCheckout();
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
   function apply() {
     const result = applyPromo(value);
     if (result === "invalid") {
-      setError("That code isn't valid or has expired.");
+      setError(t("gatherings:checkout.promo.invalidError"));
     } else if (result === "ok") {
       setError("");
       setValue("");
@@ -22,14 +25,18 @@ export function PromoCode() {
     return (
       <div className={s["co-promo-applied"]}>
         <span>
-          Code <span className={s.code}>{promo}</span> applied
+          <Translation
+            i18nKey="gatherings:checkout.promo.appliedLabel"
+            values={{ code: promo }}
+            components={{ code: <span className={s.code} /> }}
+          />
         </span>
         <button
           className={s["co-promo-remove"]}
           type="button"
           onClick={removePromo}
         >
-          Remove
+          {t("gatherings:checkout.promo.removeCta")}
         </button>
       </div>
     );
@@ -52,14 +59,14 @@ export function PromoCode() {
               apply();
             }
           }}
-          placeholder="Enter code"
+          placeholder={t("gatherings:checkout.promo.inputPlaceholder")}
           autoComplete="off"
-          aria-label="Promo code"
+          aria-label={t("gatherings:checkout.promo.inputAriaLabel")}
         />
         <div className={cx(s["co-err"], error && s.show)}>{error}</div>
       </div>
       <button className={s["co-promo-btn"]} type="button" onClick={apply}>
-        Apply
+        {t("gatherings:checkout.promo.applyCta")}
       </button>
     </div>
   );

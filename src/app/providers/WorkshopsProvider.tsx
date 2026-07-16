@@ -10,6 +10,7 @@ import {
   WORKSHOPS,
   type Workshop,
 } from "../../features/economy/workshops.data";
+import { useDemoMode } from "./DemoModeProvider";
 
 interface WorkshopsContextValue {
   workshops: Workshop[];
@@ -21,6 +22,7 @@ interface WorkshopsContextValue {
 const WorkshopsContext = createContext<WorkshopsContextValue | null>(null);
 
 export function WorkshopsProvider({ children }: { children: ReactNode }) {
+  const { demoMode } = useDemoMode();
   const [added, setAdded] = useState<Workshop[]>([]);
 
   const addWorkshop = useCallback((workshop: Workshop) => {
@@ -28,13 +30,16 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<WorkshopsContextValue>(() => {
-    const workshops = [...added, ...WORKSHOPS];
+    // Workshops have no live backend yet, so the seeded catalogue only exists
+    // in demo mode ("Populate platform"). Workshops a member lists themselves
+    // are real to them either way, so they survive the toggle.
+    const workshops = demoMode ? [...added, ...WORKSHOPS] : added;
     return {
       workshops,
       getWorkshop: (id) => workshops.find((w) => w.id === id),
       addWorkshop,
     };
-  }, [added, addWorkshop]);
+  }, [demoMode, added, addWorkshop]);
 
   return (
     <WorkshopsContext.Provider value={value}>

@@ -1,5 +1,6 @@
 import type { CSSProperties, FocusEvent } from "react";
 import { FiHeart } from "react-icons/fi";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AttendeeCard } from "./AttendeeCard";
 import type { Seat } from "./checkout.data";
 import { cx } from "./cx";
@@ -43,15 +44,16 @@ export function TableSeat({
   onOpenCard,
   onCloseCard,
 }: TableSeatProps) {
+  const { t } = useTranslation();
   const isPickable = r.variant === "open";
   const hasCard = r.variant === "guest" || r.variant === "host";
   const cardId = `attendee-card-${r.index}`;
 
   const label = isPickable
-    ? "Choose this seat"
+    ? t("gatherings:checkout.table.chooseSeatAria")
     : hasCard
-      ? `About ${r.name}`
-      : "Your seat";
+      ? t("gatherings:checkout.table.aboutSeatAria", { name: r.name })
+      : t("gatherings:checkout.table.yourSeatAria");
 
   // Close the card when focus leaves the whole seat unit (keyboard tab-away).
   const handleBlur = (e: FocusEvent<HTMLDivElement>) => {
@@ -122,7 +124,11 @@ export function TableSeat({
       <span className={s["tbl-label"]}>
         <span className={s["tbl-name"]}>{r.name}</span>
         {r.pron && <span className={s["tbl-pron"]}>{r.pron}</span>}
-        {isPickable && <span className={s["tbl-sit"]}>Sit here</span>}
+        {isPickable && (
+          <span className={s["tbl-sit"]}>
+            {t("gatherings:checkout.table.sitHereLabel")}
+          </span>
+        )}
         {r.joined && <span className={s["tbl-joined"]}>{r.joined}</span>}
       </span>
 

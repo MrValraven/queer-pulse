@@ -1,27 +1,23 @@
 import { Button, Reveal } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { SPACES } from "./hostPage.data";
 import styles from "./HostPage.module.css";
 
 export function HostSidebar() {
+  const { t } = useTranslation();
   return (
     <Reveal as="aside" className={styles.sidebar} delay={90}>
       <div className={styles.sidebarCard}>
-        <h3>Ready to list your gathering?</h3>
-        <p>
-          Once you have a date, a format, and a rough idea of who you're
-          inviting, you can list it on the QueerPulse gatherings page.
-        </p>
+        <h3>{t("gatherings:host.sidebar.readyTitle")}</h3>
+        <p>{t("gatherings:host.sidebar.readyBody")}</p>
         <Button className={styles.fullBtn} to={routes.createGathering}>
-          Create your gathering →
+          {t("gatherings:host.createGatheringCta")} →
         </Button>
       </div>
       <div className={styles.sidebarCard}>
-        <h3>Partner spaces</h3>
-        <p>
-          Spaces that have hosted QueerPulse gatherings and are open to hosting
-          more.
-        </p>
+        <h3>{t("gatherings:host.sidebar.spacesTitle")}</h3>
+        <p>{t("gatherings:host.sidebar.spacesBody")}</p>
         <div className={styles.spaceList}>
           {SPACES.map((space) => (
             <div key={space.name} className={styles.spaceRow}>

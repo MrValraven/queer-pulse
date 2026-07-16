@@ -1,28 +1,38 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { FEATURED, HOODS, WAYS } from "./gatheringsPage.data";
+import { spotsText } from "./data";
+import { FEATURED, HOOD_KEYS, WAYS } from "./gatheringsPage.data";
 import styles from "./GatheringsPage.module.css";
 
 export function GatheringsPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <Reveal className={styles.eyebrow}>Gatherings</Reveal>
+          <Reveal className={styles.eyebrow}>
+            {t("gatherings:landing.hero.eyebrow")}
+          </Reveal>
           <Reveal as="h1" className={styles.title} delay={60}>
-            The community, <em>in the same room.</em>
+            <Translation
+              i18nKey="gatherings:landing.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.lead} delay={120}>
-            Supper clubs, mixers, studio visits, screenings, and skill swaps —
-            real-world gatherings across Lisbon, hosted by members for members.
-            This is where the platform stops being a screen.
+            {t("gatherings:landing.hero.lead")}
           </Reveal>
           <Reveal className={styles.hoods} delay={160}>
-            {HOODS.map((hood) => (
-              <span key={hood} className={styles.hood}>
-                {hood}
+            {HOOD_KEYS.map((hoodKey) => (
+              <span key={hoodKey} className={styles.hood}>
+                {t(hoodKey)}
               </span>
             ))}
           </Reveal>
@@ -32,26 +42,28 @@ export function GatheringsPage() {
       <section className={styles.section}>
         <div className="wrap">
           <Reveal as="h2" className={styles.h2}>
-            Find your way <em>in.</em>
+            <Translation
+              i18nKey="gatherings:landing.ways.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            Whether you're turning up for the first time or hosting your tenth
-            supper club, start here.
+            {t("gatherings:landing.ways.lead")}
           </Reveal>
           <div className={styles.grid}>
             {WAYS.map((way, index) => (
               <Reveal
-                key={way.title}
+                key={way.titleKey}
                 className={styles.wayCard}
                 delay={index * 55}
               >
                 <div className={styles.wayIcon}>
                   <way.icon />
                 </div>
-                <div className={styles.wayTitle}>{way.title}</div>
-                <div className={styles.wayBody}>{way.body}</div>
+                <div className={styles.wayTitle}>{t(way.titleKey)}</div>
+                <div className={styles.wayBody}>{t(way.bodyKey)}</div>
                 <Link to={way.to} className={styles.wayLink}>
-                  {way.cta} →
+                  {t(way.ctaKey)} →
                 </Link>
               </Reveal>
             ))}
@@ -62,11 +74,13 @@ export function GatheringsPage() {
       <section className={`${styles.section} ${styles.sectionPaper}`}>
         <div className="wrap">
           <Reveal as="h2" className={styles.h2}>
-            Happening <em>soon.</em>
+            <Translation
+              i18nKey="gatherings:landing.featured.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            A taste of the next few weeks. The full board lives on the events
-            page.
+            {t("gatherings:landing.featured.lead")}
           </Reveal>
           <div className={styles.events}>
             {FEATURED.map((event, index) => (
@@ -78,15 +92,21 @@ export function GatheringsPage() {
                 delay={index * 55}
               >
                 <div className={styles.date}>
-                  <div className={styles.dateDd}>{event.dd}</div>
-                  <div className={styles.dateMm}>{event.mm}</div>
+                  <div className={styles.dateDd}>
+                    {fmt.date(event.date, { day: "2-digit" })}
+                  </div>
+                  <div className={styles.dateMm}>
+                    {fmt.date(event.date, { month: "short" })}
+                  </div>
                 </div>
                 <div className={styles.eventBody}>
                   <div className={styles.eventType}>{event.type}</div>
                   <div className={styles.eventTitle}>{event.title}</div>
                   <div className={styles.eventMeta}>{event.hood}</div>
                 </div>
-                <span className={styles.eventSpots}>{event.spots}</span>
+                <span className={styles.eventSpots}>
+                  {spotsText(event.spots, t, fmt)}
+                </span>
               </Reveal>
             ))}
           </div>
@@ -95,17 +115,18 @@ export function GatheringsPage() {
 
       <Outro
         title={
-          <>
-            Bring people <em>together.</em>
-          </>
+          <Translation
+            i18nKey="gatherings:landing.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Every gathering started with one member deciding to host. The platform handles the rest — tickets, sliding scale, and a listing on the board."
+        sub={t("gatherings:landing.outro.sub")}
       >
         <Button to={routes.events} variant="primary" size="lg">
-          Browse all events
+          {t("gatherings:landing.outro.browseCta")}
         </Button>
         <Button to={routes.host} variant="ghost-dark" size="lg">
-          Host a gathering
+          {t("gatherings:landing.outro.hostCta")}
         </Button>
       </Outro>
     </PageShell>

@@ -3,6 +3,8 @@ import { FiX, FiCheck } from "react-icons/fi";
 import { MdQrCodeScanner } from "react-icons/md";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Guest } from "./gatheringDashboard.data";
 import styles from "./QrScanModal.module.css";
 
@@ -17,6 +19,7 @@ export function QrScanModal({
   onCheckIn: (name: string) => void;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -52,14 +55,14 @@ export function QrScanModal({
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Checked in"
+          aria-label={t("gatherings:qr.success.ariaLabel")}
           className={styles.success}
         >
           <button
             type="button"
             className={styles.successClose}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("gatherings:qr.closeAria")}
           >
             <FiX />
           </button>
@@ -67,7 +70,10 @@ export function QrScanModal({
             <FiCheck />
           </div>
           <div className={styles.successTitle}>
-            Checked <em>in.</em>
+            <Translation
+              i18nKey="gatherings:qr.success.title"
+              components={{ em: <em /> }}
+            />
           </div>
           <div className={styles.guestRow}>
             <span
@@ -79,7 +85,9 @@ export function QrScanModal({
             <div>
               <div className={styles.guestName}>{scanned.name}</div>
               <div className={styles.guestMeta}>
-                {scanned.pronouns} · QR scanned
+                {t("gatherings:qr.success.scannedMeta", {
+                  pronouns: scanned.pronouns,
+                })}
               </div>
             </div>
           </div>
@@ -89,10 +97,10 @@ export function QrScanModal({
               onClick={() => setScanned(null)}
               disabled={pending.length <= 1}
             >
-              Scan next
+              {t("gatherings:qr.success.scanNextCta")}
             </Button>
             <Button variant="ghost-dark" onClick={onClose}>
-              Done
+              {t("gatherings:qr.success.doneCta")}
             </Button>
           </div>
         </div>
@@ -110,19 +118,19 @@ export function QrScanModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Scan member QR"
+        aria-label={t("gatherings:qr.title")}
         className={styles.modal}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("gatherings:qr.closeAria")}
         >
           <FiX />
         </button>
-        <div className={styles.eye}>Check-in</div>
-        <div className={styles.title}>Scan member QR</div>
+        <div className={styles.eye}>{t("gatherings:qr.eyebrow")}</div>
+        <div className={styles.title}>{t("gatherings:qr.title")}</div>
 
         <div className={styles.viewfinder}>
           <span className={`${styles.corner} ${styles.tl}`} />
@@ -136,8 +144,8 @@ export function QrScanModal({
             </span>
             <span className={styles.vfHint}>
               {scanning
-                ? "Reading QR code…"
-                : "Point the camera at a member QR code"}
+                ? t("gatherings:qr.readingHint")
+                : t("gatherings:qr.pointHint")}
             </span>
           </div>
         </div>
@@ -149,12 +157,12 @@ export function QrScanModal({
           disabled={scanning || pending.length === 0}
         >
           {scanning
-            ? "Scanning…"
+            ? t("gatherings:qr.scanningCta")
             : pending.length === 0
-              ? "Everyone is checked in"
-              : "Simulate scan"}
+              ? t("gatherings:qr.allCheckedInCta")
+              : t("gatherings:qr.simulateCta")}
         </Button>
-        <div className={styles.note}>Demo mode — no real camera is used.</div>
+        <div className={styles.note}>{t("gatherings:qr.demoNote")}</div>
       </div>
     </div>
   );

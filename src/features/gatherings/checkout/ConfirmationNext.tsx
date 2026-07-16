@@ -1,34 +1,36 @@
+import { useMemo } from "react";
 import { FiCalendar, FiCreditCard, FiGift, FiMapPin } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import { routes } from "../../../app/routeMap";
-import { TIMELINE } from "./checkout.data";
+import {
+  ADDRESS_UNLOCK_DATE,
+  EVENT,
+  buildTimeline,
+  type TimelineItem,
+} from "./checkout.data";
 import { useCheckout } from "./checkoutContext";
 import { downloadIcs, googleCalendarUrl } from "./calendar";
 import { cx } from "./cx";
 import s from "./checkout.module.css";
 
-export function ConfirmationNext() {
-  const { ref, reminders, toggleReminder } = useCheckout();
-  const { showToast } = useToast();
-  const noReminders = !reminders.email && !reminders.sms;
-
-  function copyShare() {
-    const link = "https://queerpulse.pt/gathering/supper-club-13";
-    navigator.clipboard
-      ?.writeText(link)
-      .then(() =>
-        showToast("Link copied — share it with a friend.", "success"),
-      );
-  }
+/** Timeline + "roughly where" map + the two logistics cards. */
+function WhatsNextSection({ timeline }: { timeline: TimelineItem[] }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
 
   return (
     <>
-      <div className={s["co-sec"]}>What happens next</div>
+      <div className={s["co-sec"]}>
+        {t("gatherings:checkout.timeline.sectionTitle")}
+      </div>
       <div className={s["co-timeline"]}>
-        {TIMELINE.map((item) => (
+        {timeline.map((item) => (
           <div
-            key={item.when}
+            key={item.key}
             className={cx(s["co-tl-item"], item.future && s.future)}
           >
             <div className={s["co-tl-dot"]} />
@@ -39,19 +41,27 @@ export function ConfirmationNext() {
         ))}
       </div>
 
-      <div className={s["co-sec"]}>Roughly where</div>
+      <div className={s["co-sec"]}>
+        {t("gatherings:checkout.confirm.mapSectionTitle")}
+      </div>
       <div
         className={s["co-map"]}
         role="img"
-        aria-label="Approximate location in Mouraria, Lisbon"
+        aria-label={t("gatherings:checkout.confirm.mapAriaLabel", {
+          place: "Mouraria, Lisbon",
+        })}
       >
         <div className={s["co-map-blur"]} />
         <div className={s["co-map-pin"]} />
         <div className={s["co-map-note"]}>
-          Exact spot revealed morning of the supper
+          {t("gatherings:checkout.confirm.mapNote")}
         </div>
         <div className={s["co-map-label"]}>
-          <FiMapPin /> Mouraria · 5 min from Martim Moniz
+          <FiMapPin />{" "}
+          {t("gatherings:checkout.confirm.mapLabel", {
+            neighbourhood: "Mouraria",
+            landmark: "Martim Moniz",
+          })}
         </div>
       </div>
 
@@ -60,30 +70,59 @@ export function ConfirmationNext() {
           <div className={s["co-logi-ic"]}>
             <FiMapPin />
           </div>
-          <div className={s["co-logi-h"]}>How you'll get the address</div>
+          <div className={s["co-logi-h"]}>
+            {t("gatherings:checkout.confirm.addressCardTitle")}
+          </div>
           <div className={s["co-logi-p"]}>
-            We keep supper spots private for safety. The exact door, buzzer code
-            and directions land in your inbox at{" "}
-            <strong>10 AM on the 28th</strong>.
+            <Translation
+              i18nKey="gatherings:checkout.confirm.addressCardBody"
+              components={{ strong: <strong /> }}
+              values={{
+                time: fmt.time(ADDRESS_UNLOCK_DATE),
+                date: fmt.date(ADDRESS_UNLOCK_DATE, {
+                  day: "numeric",
+                  month: "long",
+                }),
+              }}
+            />
           </div>
         </div>
         <div className={cx(s["co-logi-card"], s.jade)}>
           <div className={s["co-logi-ic"]}>
             <FiGift />
           </div>
-          <div className={s["co-logi-h"]}>What to bring</div>
+          <div className={s["co-logi-h"]}>
+            {t("gatherings:checkout.confirm.bringCardTitle")}
+          </div>
           <div className={s["co-logi-p"]}>
-            Just yourself. If you'd like, a bottle to share is always welcome —
-            the host cooks everything else.
+            {t("gatherings:checkout.confirm.bringCardBody")}
           </div>
         </div>
       </div>
+    </>
+  );
+}
 
-      <div className={s["co-sec"]}>Remind me</div>
+/** Reminder chips + the three "add to calendar" actions. */
+function ReminderAndCalendarSection({
+  bookingRef,
+}: {
+  bookingRef: string | null;
+}) {
+  const { reminders, toggleReminder } = useCheckout();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
+  const noReminders = !reminders.email && !reminders.sms;
+
+  return (
+    <>
+      <div className={s["co-sec"]}>
+        {t("gatherings:checkout.confirm.remindSectionTitle")}
+      </div>
       <div
         className={s["co-rem-chips"]}
         role="group"
-        aria-label="Reminder preferences"
+        aria-label={t("gatherings:checkout.confirm.reminderGroupAria")}
       >
         <button
           className={cx(s["co-rem-chip"], reminders.email && s.on)}
@@ -91,7 +130,7 @@ export function ConfirmationNext() {
           onClick={() => toggleReminder("email")}
           aria-pressed={reminders.email}
         >
-          Email
+          {t("gatherings:checkout.confirm.reminderEmail")}
         </button>
         <button
           className={cx(s["co-rem-chip"], reminders.sms && s.on)}
@@ -99,7 +138,7 @@ export function ConfirmationNext() {
           onClick={() => toggleReminder("sms")}
           aria-pressed={reminders.sms}
         >
-          SMS
+          {t("gatherings:checkout.confirm.reminderSms")}
         </button>
         <button
           className={cx(s["co-rem-chip"], noReminders && s.on)}
@@ -107,11 +146,13 @@ export function ConfirmationNext() {
           onClick={() => toggleReminder("none")}
           aria-pressed={noReminders}
         >
-          No reminders
+          {t("gatherings:checkout.confirm.reminderNone")}
         </button>
       </div>
 
-      <div className={s["co-sec"]}>Add to your calendar</div>
+      <div className={s["co-sec"]}>
+        {t("gatherings:checkout.confirm.calendarSectionTitle")}
+      </div>
       <div className={s["co-cal-row"]}>
         <button
           className={s["co-cal-btn"]}
@@ -120,27 +161,59 @@ export function ConfirmationNext() {
             window.open(googleCalendarUrl(), "_blank", "noopener,noreferrer")
           }
         >
-          <FiCalendar /> Google Calendar
+          <FiCalendar /> {t("gatherings:checkout.confirm.googleCalendarCta")}
         </button>
         <button
           className={s["co-cal-btn"]}
           type="button"
           onClick={() => {
-            downloadIcs(ref);
-            showToast("Calendar file downloaded.", "success");
+            downloadIcs(
+              t("gatherings:checkout.confirm.icsDescription", {
+                host: EVENT.hostName,
+                ref: bookingRef ?? "",
+              }),
+            );
+            showToast(
+              t("gatherings:checkout.confirm.calendarDownloadedToast"),
+              "success",
+            );
           }}
         >
-          <FiCalendar /> Apple / .ics
+          <FiCalendar /> {t("gatherings:checkout.confirm.appleIcsCta")}
         </button>
         <button
           className={cx(s["co-cal-btn"], s.wallet)}
           type="button"
-          onClick={() => showToast("Ticket added to your wallet.", "success")}
+          onClick={() =>
+            showToast(
+              t("gatherings:checkout.confirm.walletAddedToast"),
+              "success",
+            )
+          }
         >
-          <FiCreditCard /> Add to Wallet
+          <FiCreditCard /> {t("gatherings:checkout.confirm.addToWalletCta")}
         </button>
       </div>
+    </>
+  );
+}
 
+/** The two rows of follow-up actions (view/share, transfer/add-guest). */
+function NextActions() {
+  const { showToast } = useToast();
+  const { t } = useTranslation();
+
+  function copyShare() {
+    const link = "https://queerpulse.pt/gathering/supper-club-13";
+    navigator.clipboard
+      ?.writeText(link)
+      .then(() =>
+        showToast(t("gatherings:checkout.confirm.shareLinkToast"), "success"),
+      );
+  }
+
+  return (
+    <>
       <div
         style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}
       >
@@ -149,14 +222,14 @@ export function ConfirmationNext() {
           to={routes.gathering}
           style={{ flex: 1, justifyContent: "center" }}
         >
-          View gathering details
+          {t("gatherings:checkout.confirm.viewGatheringCta")}
         </Button>
         <Button
           variant="ghost"
           onClick={copyShare}
           style={{ flex: 1, justifyContent: "center" }}
         >
-          Tell a friend
+          {t("gatherings:checkout.confirm.tellFriendCta")}
         </Button>
       </div>
       <div
@@ -171,23 +244,40 @@ export function ConfirmationNext() {
         <button
           className={s["co-back-btn"]}
           type="button"
-          onClick={() => showToast("Transfer link sent to your email.", "info")}
+          onClick={() =>
+            showToast(t("gatherings:checkout.confirm.transferSentToast"), "info")
+          }
           style={{ color: "var(--ink-60)" }}
         >
-          Transfer my seat
+          {t("gatherings:checkout.confirm.transferSeatCta")}
         </button>
         <span style={{ color: "var(--ink-40)" }}>·</span>
         <button
           className={s["co-back-btn"]}
           type="button"
           onClick={() =>
-            showToast("Add-a-guest link sent to your email.", "info")
+            showToast(t("gatherings:checkout.confirm.addGuestSentToast"), "info")
           }
           style={{ color: "var(--ink-60)" }}
         >
-          Add a guest
+          {t("gatherings:checkout.confirm.addGuestCta")}
         </button>
       </div>
+    </>
+  );
+}
+
+export function ConfirmationNext() {
+  const { ref } = useCheckout();
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const timeline = useMemo(() => buildTimeline(t, fmt), [t, fmt]);
+
+  return (
+    <>
+      <WhatsNextSection timeline={timeline} />
+      <ReminderAndCalendarSection bookingRef={ref} />
+      <NextActions />
     </>
   );
 }

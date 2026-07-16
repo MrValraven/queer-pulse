@@ -1,16 +1,24 @@
 import { FiClock, FiSmartphone } from "react-icons/fi";
 import { useCheckout } from "./checkoutContext";
-import { eur, validMbway } from "./checkout.validation";
+import { validMbway } from "./checkout.validation";
 import type { PaymentForm } from "./usePaymentForm";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import { cx } from "./cx";
 import s from "./checkout.module.css";
 
+/** Mock Multibanco entity code — invariant reference data, not chrome. */
+const MULTIBANCO_ENTITY = "11249";
+
 export function MbwayPanel({ pf }: { pf: PaymentForm }) {
+  const { t } = useTranslation();
+
   return (
     <div className={s["co-paypanel"] + " " + s.on}>
       <div className={s["co-field"]}>
         <label className={s["co-lbl"]} htmlFor="mbwayPhone">
-          MB WAY phone number
+          {t("gatherings:checkout.payment.mbwayPhoneLabel")}
         </label>
         <div className={s["co-mbway-phone"]}>
           <span className={s["co-mbway-cc"]}>+351</span>
@@ -30,15 +38,12 @@ export function MbwayPanel({ pf }: { pf: PaymentForm }) {
           />
         </div>
         <div className={cx(s["co-err"], pf.errors.phone && s.show)}>
-          Enter your 9-digit MB WAY number.
+          {t("gatherings:checkout.payment.mbwayError")}
         </div>
       </div>
       <div className={s["co-mbway-note"]}>
         <FiSmartphone />
-        <span>
-          Tap pay and we'll send a request to your MB WAY app. You have 4
-          minutes to approve it — your seat is held until then.
-        </span>
+        <span>{t("gatherings:checkout.payment.mbwayNote")}</span>
       </div>
     </div>
   );
@@ -46,28 +51,40 @@ export function MbwayPanel({ pf }: { pf: PaymentForm }) {
 
 export function MultibancoPanel() {
   const { mbRef, pricing } = useCheckout();
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <div className={s["co-paypanel"] + " " + s.on}>
       <div className={s["co-mb-ref"]}>
         <div className={s["co-mb-ref-row"]}>
-          <span className={s["co-mb-ref-lbl"]}>Entity</span>
-          <span className={s["co-mb-ref-val"]}>11249</span>
+          <span className={s["co-mb-ref-lbl"]}>
+            {t("gatherings:checkout.payment.multibancoEntityLabel")}
+          </span>
+          <span className={s["co-mb-ref-val"]}>{MULTIBANCO_ENTITY}</span>
         </div>
         <div className={s["co-mb-ref-row"]}>
-          <span className={s["co-mb-ref-lbl"]}>Reference</span>
+          <span className={s["co-mb-ref-lbl"]}>
+            {t("gatherings:checkout.payment.multibancoReferenceLabel")}
+          </span>
           <span className={s["co-mb-ref-val"]}>{mbRef ?? "—"}</span>
         </div>
         <div className={s["co-mb-ref-row"]}>
-          <span className={s["co-mb-ref-lbl"]}>Amount</span>
-          <span className={s["co-mb-ref-val"]}>{eur(pricing.total)}</span>
+          <span className={s["co-mb-ref-lbl"]}>
+            {t("gatherings:checkout.payment.multibancoAmountLabel")}
+          </span>
+          <span className={s["co-mb-ref-val"]}>
+            {fmt.currency(pricing.total)}
+          </span>
         </div>
       </div>
       <div className={s["co-mb-hint"]}>
         <FiClock />
         <span>
-          Pay this reference at any ATM or through home banking within{" "}
-          <strong>3 days</strong>. We'll hold your seat and email your ticket
-          the moment it clears.
+          <Translation
+            i18nKey="gatherings:checkout.payment.multibancoHint"
+            components={{ strong: <strong /> }}
+          />
         </span>
       </div>
     </div>

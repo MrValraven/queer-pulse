@@ -16,7 +16,7 @@ export function useGatheringForm() {
   const [address, setAddress] = useState("");
   const [directions, setDirections] = useState("");
   const [cap, setCap] = useState("14");
-  const [lang, setLang] = useState(LANGS[0]);
+  const [lang, setLang] = useState(LANGS[0]!.value);
   const [access, setAccess] = useState<Set<string>>(new Set());
   const [accessNotes, setAccessNotes] = useState("");
   const [free, setFree] = useState(false);

@@ -1,4 +1,7 @@
-/* Calendar helpers for the confirmation step. */
+/* Calendar helpers for the confirmation step.
+   No user-facing chrome lives here except the ICS `description` param, which
+   callers build with `t()` — this stays a plain function so it's easy to test
+   without an i18n context. */
 
 export function googleCalendarUrl(): string {
   return (
@@ -9,7 +12,7 @@ export function googleCalendarUrl(): string {
   );
 }
 
-export function downloadIcs(ref: string | null): void {
+export function downloadIcs(description: string): void {
   const ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -18,8 +21,7 @@ export function downloadIcs(ref: string | null): void {
     "DTEND:20260628T220000",
     "SUMMARY:Queer Supper Club #13",
     "LOCATION:Mouraria, Lisbon",
-    "DESCRIPTION:QueerPulse gathering. Hosted by Tomás Beto. Ref " +
-      (ref ?? ""),
+    "DESCRIPTION:" + description,
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");

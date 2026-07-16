@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Seat } from "./checkout.data";
 import { cx } from "./cx";
 import s from "./checkout.module.css";
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export function AttendeeCard({ id, seat, placement, align, onClose }: Props) {
+  const { t } = useTranslation();
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -25,7 +28,9 @@ export function AttendeeCard({ id, seat, placement, align, onClose }: Props) {
       id={id}
       className={cx(s["tbl-card"], s[placement], s[align])}
       role="tooltip"
-      aria-label={`About ${seat.name}`}
+      aria-label={t("gatherings:checkout.table.aboutSeatAria", {
+        name: seat.name,
+      })}
     >
       <div className={s["tbl-card-name"]}>{seat.name}</div>
       {seat.pron && <div className={s["tbl-card-pron"]}>{seat.pron}</div>}

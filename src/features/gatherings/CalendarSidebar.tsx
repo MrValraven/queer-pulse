@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type CalendarEvent } from "./data";
 import { EventCard } from "./CalendarGrid";
@@ -13,19 +15,23 @@ export function CalendarSidebar({
   selected: Date | null;
   selectedEvents: CalendarEvent[];
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [subscribed, setSubscribed] = useState(false);
 
   return (
     <div className={styles.side}>
-      <div className={styles.csHead}>Selected day</div>
+      <div className={styles.csHead}>
+        {t("gatherings:calendar.selectedDayLabel")}
+      </div>
       <div className={styles.csSelectedDay}>
         {selected
-          ? selected.toLocaleDateString("en-GB", {
+          ? fmt.date(selected, {
               weekday: "long",
               day: "numeric",
               month: "long",
             })
-          : "Click any day with events to see details"}
+          : t("gatherings:calendar.selectDayPrompt")}
       </div>
       <div className={styles.eventList}>
         {selected &&
@@ -34,15 +40,14 @@ export function CalendarSidebar({
               <EventCard key={index} event={event} />
             ))
           ) : (
-            <div className={styles.emptyDay}>No events on this day.</div>
+            <div className={styles.emptyDay}>
+              {t("gatherings:calendar.noEventsDay")}
+            </div>
           ))}
       </div>
       <div className={styles.subStrip}>
-        <h3>Subscribe to calendar</h3>
-        <p>
-          Get all queer community events delivered to your calendar app. Works
-          with Google Calendar, Apple Calendar, and Outlook.
-        </p>
+        <h3>{t("gatherings:calendar.subscribeTitle")}</h3>
+        <p>{t("gatherings:calendar.subscribeBody")}</p>
         <form
           className={styles.subForm}
           onSubmit={(event) => {
@@ -53,10 +58,12 @@ export function CalendarSidebar({
           <input
             className={styles.subInput}
             type="email"
-            placeholder="your@email.com"
+            placeholder={t("gatherings:calendar.emailPlaceholder")}
           />
           <Button type="submit" variant="primary" disabled={subscribed}>
-            {subscribed ? "Subscribed" : "Subscribe"}
+            {subscribed
+              ? t("gatherings:calendar.subscribedCta")
+              : t("gatherings:calendar.subscribeCta")}
           </Button>
         </form>
       </div>
@@ -69,7 +76,7 @@ export function CalendarSidebar({
             color: "var(--accent-ink)",
           }}
         >
-          Host your own gathering →
+          {t("gatherings:calendar.hostCta")} →
         </Link>
       </div>
     </div>

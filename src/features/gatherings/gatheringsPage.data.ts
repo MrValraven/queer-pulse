@@ -1,80 +1,104 @@
 import type { IconType } from "react-icons";
 import { FiCalendar, FiCamera, FiHeart, FiTag } from "react-icons/fi";
+import type { SpotsLabel } from "./data";
 
+/**
+ * i18n Pattern A — the data file holds catalog *keys*, the component resolves
+ * them with `t()`. Everything here is platform-authored chrome (a static nav
+ * grid, a decorative neighbourhood rail), so it is translated; the mock event
+ * records below keep their organizer-authored fields in English.
+ */
 export const WAYS: {
   icon: IconType;
-  title: string;
-  body: string;
+  titleKey: string;
+  bodyKey: string;
   to: string;
-  cta: string;
+  ctaKey: string;
 }[] = [
   {
     icon: FiTag,
-    title: "Browse what's on",
-    body: "Supper clubs, mixers, studio visits, screenings, and skill swaps — filter by neighbourhood, type, and date.",
+    titleKey: "gatherings:landing.ways.browse.title",
+    bodyKey: "gatherings:landing.ways.browse.body",
     to: "/events",
-    cta: "See all events",
+    ctaKey: "gatherings:landing.ways.browse.cta",
   },
   {
     icon: FiCalendar,
-    title: "The calendar view",
-    body: "The whole month at a glance, with RSVPs you've made and the gatherings near you highlighted.",
+    titleKey: "gatherings:landing.ways.calendar.title",
+    bodyKey: "gatherings:landing.ways.calendar.body",
     to: "/calendar",
-    cta: "Open the calendar",
+    ctaKey: "gatherings:landing.ways.calendar.cta",
   },
   {
     icon: FiHeart,
-    title: "Host your own",
-    body: "A step-by-step guide to running a supper club, workshop, or screening — with partner spaces and member support.",
+    titleKey: "gatherings:landing.ways.host.title",
+    bodyKey: "gatherings:landing.ways.host.body",
     to: "/host",
-    cta: "Host a gathering",
+    ctaKey: "gatherings:landing.ways.host.cta",
   },
   {
     icon: FiCamera,
-    title: "Relive the last one",
-    body: "Photos, notes, and the headcount from gatherings that have already happened.",
+    titleKey: "gatherings:landing.ways.recap.title",
+    bodyKey: "gatherings:landing.ways.recap.body",
     to: "/gathering-recap",
-    cta: "See recaps",
+    ctaKey: "gatherings:landing.ways.recap.cta",
   },
 ];
 
-export const FEATURED = [
+/**
+ * Mock event records. `type`, `title` and `hood` are organizer-authored — in
+ * live mode they arrive from `GET /events` and are never translated. The date
+ * is held as a `Date` so the component can format it through `useFormat()`,
+ * and the seat-count line reuses the shared `SpotsLabel` shape from `./data`
+ * because in live mode the phrase is chrome and only the number comes over the
+ * wire.
+ */
+export const FEATURED: {
+  date: Date;
+  type: string;
+  title: string;
+  hood: string;
+  spots: SpotsLabel;
+  to: string;
+}[] = [
   {
-    dd: "06",
-    mm: "Jun",
+    date: new Date(2026, 5, 6),
     type: "Supper Club",
     title: "Queer Supper Club №12",
     hood: "Mouraria",
-    spots: "8 seats left",
+    spots: { key: "gatherings:spots.seatsLeft", values: { count: 8 } },
     to: "/gathering",
   },
   {
-    dd: "14",
-    mm: "Jun",
+    date: new Date(2026, 5, 14),
     type: "Mixer",
     title: "Portfolio Night: Designers & Photographers",
     hood: "Príncipe Real",
-    spots: "32 going",
+    spots: { key: "gatherings:spots.going", values: { count: 32 } },
     to: "/event",
   },
   {
-    dd: "21",
-    mm: "Jun",
+    date: new Date(2026, 5, 21),
     type: "Workshop",
     title: "Riso printing for beginners",
     hood: "Marvila",
-    spots: "4 spots left",
+    spots: { key: "gatherings:spots.spotsLeft", values: { count: 4 } },
     to: "/event",
   },
 ];
 
-export const HOODS = [
-  "Príncipe Real",
-  "Alfama",
-  "Marvila",
-  "Mouraria",
-  "Graça",
-  "Cais do Sodré",
-  "Arroios",
-  "Bairro Alto",
+/**
+ * Lisbon neighbourhood names are proper nouns and read identically in both
+ * catalogs — they route through keys anyway so the rail stays uniform and the
+ * one non-place entry ("Online") has somewhere to live.
+ */
+export const HOOD_KEYS = [
+  "gatherings:hood.principeReal",
+  "gatherings:hood.alfama",
+  "gatherings:hood.marvila",
+  "gatherings:hood.mouraria",
+  "gatherings:hood.graca",
+  "gatherings:hood.caisDoSodre",
+  "gatherings:hood.arroios",
+  "gatherings:hood.bairroAlto",
 ];

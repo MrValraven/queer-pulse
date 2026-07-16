@@ -42,6 +42,48 @@ const localPlugin = {
         };
       },
     },
+    "no-literal-string": {
+      meta: {
+        type: "problem",
+        docs: {
+          description:
+            "Disallow user-facing string literals in JSX; route copy through t() or <Translation>.",
+        },
+        messages: {
+          literal:
+            "Hardcoded user-facing string. Move it to a catalog and use t() or <Translation>.",
+        },
+      },
+      create(context) {
+        // Attributes a screen reader or the user actually reads.
+        const USER_FACING_ATTRS = new Set([
+          "aria-label",
+          "placeholder",
+          "title",
+          "alt",
+        ]);
+        // Two+ consecutive letters = prose. Skips punctuation, "·", "→", numbers.
+        const PROSE = /[A-Za-z]{2,}/;
+        return {
+          JSXText(node) {
+            if (PROSE.test(node.value)) {
+              context.report({ node, messageId: "literal" });
+            }
+          },
+          JSXAttribute(node) {
+            if (!USER_FACING_ATTRS.has(node.name?.name)) return;
+            const value = node.value;
+            if (
+              value?.type === "Literal" &&
+              typeof value.value === "string" &&
+              PROSE.test(value.value)
+            ) {
+              context.report({ node, messageId: "literal" });
+            }
+          },
+        };
+      },
+    },
   },
 };
 
@@ -98,6 +140,11 @@ export default defineConfig([
       //    patterns guarded by a cleanup (e.g. swap → setTimeout → reset). Warn
       //    until each is reviewed; keep it on the radar without blocking CI.
       "react-hooks/set-state-in-effect": "warn",
+      // 6. No hardcoded user-facing copy — it must resolve through the i18n
+      //    catalogs. Error, with un-swept features exempted by path below; each
+      //    exemption is deleted as its wave lands, so the rule only ratchets
+      //    tighter and new pages can never add literals.
+      "local/no-literal-string": "error",
     },
   },
   // Country-flag emojis (🇵🇹 🇪🇸 …) have no react-icons equivalent — exempt these files.
@@ -114,5 +161,47 @@ export default defineConfig([
   {
     files: ["src/app/routes.tsx"],
     rules: { "max-lines-per-function": "off" },
+  },
+  // i18n sweep ratchet: features whose copy has not been extracted yet. Each
+  // path is deleted as that feature's wave lands (plan: 2026-07-16-platform-i18n-en-pt).
+  // When this list is empty, the platform is fully extracted — delete the block.
+  {
+    files: [
+      "src/features/admin/**",
+      "src/features/auth/**",
+      "src/features/cinema/**",
+      "src/features/communities/**",
+      "src/features/community/**",
+      "src/features/connect/**",
+      "src/features/culture/**",
+      "src/features/economy/**",
+      "src/features/feed/**",
+      "src/features/forum/**",
+      "src/features/governance/**",
+      "src/features/homepage/**",
+      "src/features/magazine/**",
+      "src/features/marketing/**",
+      "src/features/members/**",
+      "src/features/messages/**",
+      "src/features/myevents/**",
+      "src/features/notifications/**",
+      "src/features/resources/**",
+      // Partially swept: its catalogs exist, but headlines carrying a coral
+      // <em> were left as JSX literals because rich text was impossible before
+      // <Translation>. Finish it, then delete this line.
+      "src/features/subprofiles/**",
+      "src/features/safety/**",
+      "src/features/settings/**",
+      "src/features/social/**",
+      "src/features/studio/**",
+      "src/features/support/**",
+      "src/features/system/**",
+      "src/features/topics/**",
+      "src/shared/components/**",
+      "src/app/**",
+      // Not under src/features: the 404 + placeholder pages.
+      "src/pages/**",
+    ],
+    rules: { "local/no-literal-string": "off" },
   },
 ]);

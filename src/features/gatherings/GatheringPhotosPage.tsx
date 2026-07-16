@@ -4,10 +4,31 @@ import { FiPlay } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { DownloadAlbumModal } from "./DownloadAlbumModal";
 import { PhotoViewer } from "./PhotoViewer";
-import { CHIPS, PICS, CONTRIBUTORS } from "./gatheringPhotos.data";
+import {
+  ALL_CHIP_KEY,
+  CHIPS,
+  CONTRIBUTORS,
+  PHOTOS_CONSENTED_COUNT,
+  PHOTOS_DEK,
+  PHOTOS_DEK_EMPHASIS,
+  PHOTOS_DEK_SUFFIX,
+  PHOTOS_EVENT_DATE,
+  PHOTOS_EVENT_TITLE,
+  PHOTOS_EXTRA_ATTENDEE_COUNT,
+  PHOTOS_HOST_MEMBER,
+  PHOTOS_HOST_ORG,
+  PHOTOS_NEXT_EVENT_DATE,
+  PHOTOS_PHOTOGRAPHER,
+  PHOTOS_TOTAL_COUNT,
+  PHOTOS_VENUE,
+  PICS,
+} from "./gatheringPhotos.data";
 import styles from "./GatheringPhotosPage.module.css";
 
 function PhotoSkeleton({ span }: { span?: string }) {
@@ -27,6 +48,184 @@ const MEMBER = routes.members;
 const CALENDAR = routes.calendar;
 const REPORT = routes.report;
 
+/**
+ * The hero eyebrow/title/dek. "Open clinic night", "Café Beirão", the two
+ * attendee names, and the dek's descriptive sentences are this specific
+ * album's own content — in live mode they'd come straight off the album
+ * record, so they stay in English. The surrounding labels ("Hosted by",
+ * "Photos by") and every count are chrome + real data through `t()`/`fmt`.
+ */
+function GatheringPhotosHero() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  return (
+    <section className={styles.hero}>
+      <div className={styles.heroInner}>
+        <Link to={RECAP} className={styles.back}>
+          ← {t("gatherings:photos.backToRecap")}
+        </Link>
+        <div className={styles.eyebrow}>
+          <span>
+            {t("gatherings:photos.albumLabel", { count: PHOTOS_TOTAL_COUNT })}
+          </span>
+          <span className={styles.sep}>·</span>
+          <span>{PHOTOS_EVENT_TITLE}</span>
+          <span className={styles.sep}>·</span>
+          <span>{PHOTOS_VENUE}</span>
+        </div>
+        <h1 className={styles.h1}>
+          {PHOTOS_EVENT_TITLE} ·{" "}
+          <em>
+            {fmt.date(PHOTOS_EVENT_DATE, { day: "numeric", month: "short" })}
+          </em>
+        </h1>
+        <p className={styles.dek}>
+          {PHOTOS_DEK} <em>{PHOTOS_DEK_EMPHASIS}</em> {PHOTOS_DEK_SUFFIX}
+        </p>
+        <div className={styles.meta}>
+          <span>
+            {t("gatherings:photos.hostedBy")} <b>{PHOTOS_HOST_MEMBER}</b>{" "}
+            &amp; <b>{PHOTOS_HOST_ORG}</b>
+          </span>
+          <span>
+            {t("gatherings:photos.photosByLabel")}{" "}
+            <Link to={MEMBER}>{PHOTOS_PHOTOGRAPHER}</Link>{" "}
+            {t("gatherings:photos.plusAttendees", {
+              count: PHOTOS_EXTRA_ATTENDEE_COUNT,
+            })}
+          </span>
+          <span>
+            <b>{PHOTOS_TOTAL_COUNT}</b>{" "}
+            {t("gatherings:photos.photosLabel", { count: PHOTOS_TOTAL_COUNT })}{" "}
+            · <b>{PHOTOS_CONSENTED_COUNT}</b>{" "}
+            {t("gatherings:photos.consentToPublish")}
+          </span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function GatheringPhotosControls({
+  chip,
+  setChip,
+  onDownload,
+  onSlideshow,
+}: {
+  chip: number;
+  setChip: (index: number) => void;
+  onDownload: () => void;
+  onSlideshow: () => void;
+}) {
+  const { t } = useTranslation();
+  const chipLabels = [t(ALL_CHIP_KEY), ...CHIPS];
+  return (
+    <div className={styles.controls}>
+      <div className={styles.controlsInner}>
+        {chipLabels.map((label, i) => (
+          <button
+            key={label}
+            type="button"
+            className={[styles.chip, chip === i && styles.chipActive]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => setChip(i)}
+          >
+            {label}
+            {i === 0 && <span> {PHOTOS_TOTAL_COUNT}</span>}
+          </button>
+        ))}
+        <div className={styles.right}>
+          <button type="button" className={styles.action} onClick={onDownload}>
+            {t("gatherings:photos.downloadAllCta")}
+          </button>
+          <button type="button" className={styles.action} onClick={onSlideshow}>
+            <FiPlay style={{ verticalAlign: "-2px", marginRight: 4 }} />{" "}
+            {t("gatherings:photos.slideshowCta")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** The reusable "how we handle gathering photos" policy block + credits +
+ *  footer actions. The policy copy is platform boilerplate (chrome); the
+ *  photographer names are content. */
+function GatheringPhotosFooter() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  return (
+    <section className={styles.foot}>
+      <div className={styles.footInner}>
+        <h3>
+          <Translation
+            i18nKey="gatherings:photos.policyTitle"
+            components={{ em: <em /> }}
+          />
+        </h3>
+        <p>
+          <Translation
+            i18nKey="gatherings:photos.policyBody1"
+            components={{ b: <b /> }}
+          />
+        </p>
+        <p>
+          <Translation
+            i18nKey="gatherings:photos.policyBody2"
+            components={{
+              em: <em />,
+              mailLink: <a href="mailto:photos@queerpulse.app" />,
+              privLink: <Link to={routes.privacy} />,
+            }}
+          />
+        </p>
+
+        <h3 style={{ marginTop: 24 }}>
+          <Translation
+            i18nKey="gatherings:photos.photographersTitle"
+            components={{ em: <em /> }}
+          />
+        </h3>
+        <div className={styles.contrib}>
+          {CONTRIBUTORS.map((c) => (
+            <Link to={MEMBER} className={styles.pill} key={c.name}>
+              <span
+                className={styles.pillAv}
+                style={{ background: c.bg, color: c.color }}
+              >
+                {c.initials}
+              </span>
+              <b>{c.name}</b>
+              <span className={styles.ct}>
+                {c.count}{" "}
+                {t("gatherings:photos.photosLabel", { count: c.count })}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        <div className={styles.footActions}>
+          <Button variant="primary" to={RECAP}>
+            ← {t("gatherings:photos.readRecapCta")}
+          </Button>
+          <Button variant="ghost" to={CALENDAR}>
+            {t("gatherings:photos.nextClinicCta", {
+              date: fmt.date(PHOTOS_NEXT_EVENT_DATE, {
+                day: "numeric",
+                month: "short",
+              }),
+            })}
+          </Button>
+          <Button variant="ghost" to={REPORT}>
+            {t("gatherings:photos.flagCta")}
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function GatheringPhotosPage() {
   const [chip, setChip] = useState(0);
   const [viewer, setViewer] = useState<{
@@ -38,77 +237,13 @@ export function GatheringPhotosPage() {
 
   return (
     <PageShell>
-      <section className={styles.hero}>
-        <div className={styles.heroInner}>
-          <Link to={RECAP} className={styles.back}>
-            ← Back to recap
-          </Link>
-          <div className={styles.eyebrow}>
-            <span>Photo album · 28 photos</span>
-            <span className={styles.sep}>·</span>
-            <span>Open clinic night</span>
-            <span className={styles.sep}>·</span>
-            <span>Café Beirão</span>
-          </div>
-          <h1 className={styles.h1}>
-            Open clinic night · <em>12 Jun.</em>
-          </h1>
-          <p className={styles.dek}>
-            A photo album from the back room of Café Beirão. Photos by André
-            Bento and three attending members who opted to share.{" "}
-            <em>
-              Faces are blurred by default unless the person opted in by name
-            </em>{" "}
-            — that's our standard policy on gathering photography.
-          </p>
-          <div className={styles.meta}>
-            <span>
-              Hosted by <b>Anika Kovač</b> &amp; <b>Trans Hub</b>
-            </span>
-            <span>
-              Photos by <Link to={MEMBER}>André Bento</Link> + 3 attendees
-            </span>
-            <span>
-              <b>28</b> photos · <b>14</b> with consent to publish
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <div className={styles.controls}>
-        <div className={styles.controlsInner}>
-          {CHIPS.map((c, i) => (
-            <button
-              key={c}
-              type="button"
-              className={[styles.chip, chip === i && styles.chipActive]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setChip(i)}
-            >
-              {c}
-              {i === 0 && <span> 28</span>}
-            </button>
-          ))}
-          <div className={styles.right}>
-            <button
-              type="button"
-              className={styles.action}
-              onClick={() => setDownloading(true)}
-            >
-              Download all
-            </button>
-            <button
-              type="button"
-              className={styles.action}
-              onClick={() => setViewer({ index: 0, slideshow: true })}
-            >
-              <FiPlay style={{ verticalAlign: "-2px", marginRight: 4 }} />{" "}
-              Slideshow
-            </button>
-          </div>
-        </div>
-      </div>
+      <GatheringPhotosHero />
+      <GatheringPhotosControls
+        chip={chip}
+        setChip={setChip}
+        onDownload={() => setDownloading(true)}
+        onSlideshow={() => setViewer({ index: 0, slideshow: true })}
+      />
 
       <div className={styles.mosaic}>
         {loading
@@ -142,57 +277,7 @@ export function GatheringPhotosPage() {
             ))}
       </div>
 
-      <section className={styles.foot}>
-        <div className={styles.footInner}>
-          <h3>
-            How we handle <em>gathering photos</em>
-          </h3>
-          <p>
-            Every photo here was taken by an attending member with consent from
-            the people in the frame. <b>Faces are blurred by default</b> unless
-            the person specifically opted in by name. This isn't a privacy
-            nicety — it's how we make sure people show up next time.
-          </p>
-          <p>
-            If you see yourself in a photo and want it removed (or unblurred),
-            email{" "}
-            <a href="mailto:photos@queerpulse.app">photos@queerpulse.app</a> —
-            we'll handle it within 24 hours, no questions.{" "}
-            <em>You can also untick "appear in event photos" globally</em> in{" "}
-            <Link to={routes.privacy}>Privacy settings</Link>.
-          </p>
-
-          <h3 style={{ marginTop: 24 }}>
-            Photographers <em>this event</em>
-          </h3>
-          <div className={styles.contrib}>
-            {CONTRIBUTORS.map((c) => (
-              <Link to={MEMBER} className={styles.pill} key={c.name}>
-                <span
-                  className={styles.pillAv}
-                  style={{ background: c.bg, color: c.color }}
-                >
-                  {c.initials}
-                </span>
-                <b>{c.name}</b>
-                <span className={styles.ct}>{c.count}</span>
-              </Link>
-            ))}
-          </div>
-
-          <div className={styles.footActions}>
-            <Button variant="primary" to={RECAP}>
-              ← Read the recap
-            </Button>
-            <Button variant="ghost" to={CALENDAR}>
-              Next clinic · 10 Jul
-            </Button>
-            <Button variant="ghost" to={REPORT}>
-              Flag a photo
-            </Button>
-          </div>
-        </div>
-      </section>
+      <GatheringPhotosFooter />
 
       {viewer && (
         <PhotoViewer
@@ -205,7 +290,7 @@ export function GatheringPhotosPage() {
 
       {downloading && (
         <DownloadAlbumModal
-          photoCount={28}
+          photoCount={PHOTOS_TOTAL_COUNT}
           onClose={() => setDownloading(false)}
         />
       )}

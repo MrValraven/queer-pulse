@@ -172,7 +172,7 @@
   font-family: var(--sans);
 }
 @media (hover: hover) {
-  .chip:hover {
+  .chip:not(.chipActive):hover {
     color: var(--ink);
     border-color: rgba(var(--line-rgb), 0.3);
   }

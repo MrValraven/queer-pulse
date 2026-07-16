@@ -526,7 +526,7 @@
     border-color 0.25s var(--ease);
 }
 @media (hover: hover) {
-  .salChip:hover {
+  .salChip:not(.salChipActive):hover {
     color: var(--ink);
     border-color: rgba(var(--line-rgb), 0.38);
   }

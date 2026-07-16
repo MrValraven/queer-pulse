@@ -3,16 +3,27 @@ import { FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage } from "../members/api/useUploadImage";
 import { PhotoUploadModal, type RecapPhoto } from "./PhotoUploadModal";
 import { GatheringRecapMain } from "./GatheringRecapSections";
 import { GatheringRecapSidebar } from "./GatheringRecapSidebar";
+import {
+  RECAP_ATTENDED_COUNT,
+  RECAP_EVENT_DATE,
+  RECAP_EVENT_SUBTITLE,
+  RECAP_EVENT_TITLE,
+  RECAP_VENUE,
+} from "./gatheringRecap.data";
 import styles from "./GatheringRecapPage.module.css";
 
 /** A submitted recap photo carrying the real uploaded URL (used in live mode). */
 type SubmittedPhoto = RecapPhoto & { image?: string };
 
 export function GatheringRecapPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const loading = useSimulatedLoad();
   const uploadPhoto = useUploadImage("gathering-photo");
@@ -46,7 +57,7 @@ export function GatheringRecapPage() {
       showToast(
         err instanceof Error && err.message
           ? err.message
-          : "We couldn't add that photo. Please try again.",
+          : t("gatherings:recap.uploadErrorToast"),
         "error",
       );
     } finally {
@@ -60,22 +71,31 @@ export function GatheringRecapPage() {
       { ...photo, image: uploadedUrl.current ?? undefined },
     ]);
     uploadedUrl.current = null;
-    showToast("Your photo was added to the recap.", "success");
+    showToast(t("gatherings:recap.photoAddedToast"), "success");
   }
 
   return (
     <AppShell unreadCount={3}>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.eyebrow}>Gathering recap</div>
+          <div className={styles.eyebrow}>{t("gatherings:recap.eyebrow")}</div>
           <div className={styles.title}>
-            Pride Brunch — <em>June Edition</em>
+            {RECAP_EVENT_TITLE} — <em>{RECAP_EVENT_SUBTITLE}</em>
           </div>
           <div className={styles.meta}>
-            Saturday 21 June 2026 · Príncipe Real, Lisbon
+            {fmt.date(RECAP_EVENT_DATE, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}{" "}
+            · {RECAP_VENUE}
           </div>
           <div className={styles.attendedChip}>
-            <FiCheck /> 38 attended
+            <FiCheck />{" "}
+            {t("gatherings:recap.attendedCount", {
+              count: RECAP_ATTENDED_COUNT,
+            })}
           </div>
         </div>
       </div>
@@ -91,7 +111,9 @@ export function GatheringRecapPage() {
               }}
             />
             <GatheringRecapSidebar
-              onCopyLink={() => showToast("Link copied!", "success")}
+              onCopyLink={() =>
+                showToast(t("gatherings:recap.linkCopiedToast"), "success")
+              }
             />
           </div>
         </div>

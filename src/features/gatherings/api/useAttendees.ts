@@ -15,22 +15,12 @@ export interface AttendeesResult {
 /** Shape the mock manage-page attendee arrays into the shared AttendeeRow. */
 function mockRows(): AttendeesResult {
   const going: AttendeeRow[] = GOING_ATTENDEES.map((a) => ({
-    id: a.id,
+    ...a,
     slug: a.id,
-    initials: a.initials,
-    bg: a.bg,
-    color: a.color,
-    name: a.name,
-    meta: a.meta,
   }));
   const waitlist: AttendeeRow[] = WAITLIST_ATTENDEES.map((a) => ({
-    id: a.id,
+    ...a,
     slug: a.id,
-    initials: a.initials,
-    bg: a.bg,
-    color: a.color,
-    name: a.name,
-    meta: a.meta,
   }));
   return {
     going,

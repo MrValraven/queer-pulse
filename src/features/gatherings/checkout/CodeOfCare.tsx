@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { COC_LIST } from "./checkout.data";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { COC_KEYS } from "./checkout.data";
 import { useCheckout } from "./checkoutContext";
 import { cx } from "./cx";
 import s from "./checkout.module.css";
 
 export function CodeOfCare() {
   const { cocAgreed, setCoc } = useCheckout();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,20 +25,24 @@ export function CodeOfCare() {
         </label>
         <div>
           <label className={s["co-coc-txt"]} htmlFor="cocCheck">
-            I've read the <strong>Code of Care</strong> and I'm coming ready to
-            look out for the people at this table.
+            <Translation
+              i18nKey="gatherings:checkout.coc.agreementLabel"
+              components={{ strong: <strong /> }}
+            />
           </label>
           <button
             className={s["co-coc-more"]}
             type="button"
             onClick={() => setOpen((o) => !o)}
           >
-            {open ? "Hide ←" : "What's that? →"}
+            {open
+              ? `${t("gatherings:checkout.coc.hide")} ←`
+              : `${t("gatherings:checkout.coc.whatsThat")} →`}
           </button>
           <div className={s["co-coc-body"]}>
             <ul className={s["co-coc-list"]}>
-              {COC_LIST.map((item) => (
-                <li key={item}>{item}</li>
+              {COC_KEYS.map((key) => (
+                <li key={key}>{t(key)}</li>
               ))}
             </ul>
           </div>

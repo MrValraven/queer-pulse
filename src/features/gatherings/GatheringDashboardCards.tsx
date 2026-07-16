@@ -9,7 +9,17 @@ import {
 import { MdQrCodeScanner } from "react-icons/md";
 import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { RECENT, WAITLIST, type Guest } from "./gatheringDashboard.data";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  ARRIVAL_TICKS,
+  PEAK_ARRIVAL_END,
+  PEAK_ARRIVAL_START,
+  RECENT,
+  WAITLIST,
+  type Guest,
+} from "./gatheringDashboard.data";
 import { QrScanModal } from "./QrScanModal";
 import styles from "./GatheringDashboardPage.module.css";
 
@@ -20,19 +30,23 @@ export function CheckInColumn({
   guests: Guest[];
   onCheckIn: (name: string) => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [scanQuery, setScanQuery] = useState("");
   const [scanOpen, setScanOpen] = useState(false);
   const scanMatches = useMemo(() => {
     if (scanQuery.length < 2) return null;
-    return guests.filter((g) =>
-      g.name.toLowerCase().includes(scanQuery.toLowerCase()),
+    return guests.filter((guest) =>
+      guest.name.toLowerCase().includes(scanQuery.toLowerCase()),
     );
   }, [guests, scanQuery]);
 
   return (
     <div className={styles.col}>
       <div className={styles.card}>
-        <div className={styles.cardHead}>Check-in</div>
+        <div className={styles.cardHead}>
+          {t("gatherings:dashboard.checkin.heading")}
+        </div>
         <div className={styles.cardBody}>
           <div
             className={styles.qrArea}
@@ -50,9 +64,9 @@ export function CheckInColumn({
               <MdQrCodeScanner />
             </div>
             <div className={styles.qrLabel}>
-              QR scanner area
+              {t("gatherings:dashboard.checkin.qrAreaLine1")}
               <br />
-              tap to open camera
+              {t("gatherings:dashboard.checkin.qrAreaLine2")}
             </div>
           </div>
           <Button
@@ -60,17 +74,19 @@ export function CheckInColumn({
             className={styles.scanBtn}
             onClick={() => setScanOpen(true)}
           >
-            Scan member QR
+            {t("gatherings:dashboard.checkin.scanCta")}
           </Button>
           <div className={styles.orDivider}>
             <div className={styles.orLine} />
-            <div className={styles.orText}>or search by name</div>
+            <div className={styles.orText}>
+              {t("gatherings:dashboard.checkin.orDivider")}
+            </div>
             <div className={styles.orLine} />
           </div>
           <input
             className={styles.nameSearch}
             type="text"
-            placeholder="Search guest list…"
+            placeholder={t("gatherings:dashboard.checkin.searchPlaceholder")}
             value={scanQuery}
             onChange={(e) => setScanQuery(e.target.value)}
           />
@@ -78,10 +94,14 @@ export function CheckInColumn({
             <div className={styles.searchResult}>
               {scanMatches.length > 0 ? (
                 <span className={styles.searchMatch}>
-                  {scanMatches.length} match{scanMatches.length > 1 ? "es" : ""}
+                  {t("gatherings:dashboard.checkin.matchCount", {
+                    count: scanMatches.length,
+                  })}
                 </span>
               ) : (
-                <span className={styles.searchNone}>Not on guest list</span>
+                <span className={styles.searchNone}>
+                  {t("gatherings:dashboard.checkin.noMatch")}
+                </span>
               )}
             </div>
           )}
@@ -89,19 +109,28 @@ export function CheckInColumn({
       </div>
 
       <div className={styles.card}>
-        <div className={styles.cardHead}>Recent check-ins</div>
+        <div className={styles.cardHead}>
+          {t("gatherings:dashboard.checkin.recentHeading")}
+        </div>
         <div className={styles.cardBody}>
           <div className={styles.recentList}>
-            {RECENT.map((r) => (
-              <div className={styles.recentRow} key={r.name}>
+            {RECENT.map((recentGuest) => (
+              <div className={styles.recentRow} key={recentGuest.name}>
                 <div
                   className={styles.rrAv}
-                  style={{ background: r.bg, color: r.color }}
+                  style={{
+                    background: recentGuest.bg,
+                    color: recentGuest.color,
+                  }}
                 >
-                  {r.initials}
+                  {recentGuest.initials}
                 </div>
-                <div className={styles.rrName}>{r.name}</div>
-                <div className={styles.rrTime}>{r.time}</div>
+                <div className={styles.rrName}>{recentGuest.name}</div>
+                <div className={styles.rrTime}>
+                  {recentGuest.minutesAgo === 0
+                    ? t("gatherings:dashboard.checkin.justNow")
+                    : fmt.relativeTime(-recentGuest.minutesAgo, "minute")}
+                </div>
               </div>
             ))}
           </div>
@@ -128,6 +157,8 @@ export function GuestListCard({
   checkedIn: number;
   onCheckIn: (name: string) => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [filter, setFilter] = useState<"all" | "in" | "pending">("all");
   const [query, setQuery] = useState("");
@@ -136,25 +167,38 @@ export function GuestListCard({
   const visible = useMemo(
     () =>
       guests.filter(
-        (g) =>
-          (filter === "all" || g.status === filter) &&
-          (!query || g.name.toLowerCase().includes(query.toLowerCase())),
+        (guest) =>
+          (filter === "all" || guest.status === filter) &&
+          (!query || guest.name.toLowerCase().includes(query.toLowerCase())),
       ),
     [guests, filter, query],
   );
 
+  const filterTabs = [
+    [
+      "all",
+      t("gatherings:dashboard.guestList.filterAll", { count: guests.length }),
+    ],
+    [
+      "in",
+      t("gatherings:dashboard.guestList.filterCheckedIn", { count: checkedIn }),
+    ],
+    [
+      "pending",
+      t("gatherings:dashboard.guestList.filterPending", {
+        count: guests.length - checkedIn,
+      }),
+    ],
+  ] as const;
+
   return (
     <div className={styles.card}>
-      <div className={styles.cardHead}>Guests</div>
+      <div className={styles.cardHead}>
+        {t("gatherings:dashboard.guestList.heading")}
+      </div>
       <div className={styles.cardBody}>
         <div className={styles.filterBar}>
-          {(
-            [
-              ["all", `All (${guests.length})`],
-              ["in", `Checked in (${checkedIn})`],
-              ["pending", `Not yet (${guests.length - checkedIn})`],
-            ] as const
-          ).map(([id, label]) => (
+          {filterTabs.map(([id, label]) => (
             <button
               key={id}
               type="button"
@@ -170,7 +214,7 @@ export function GuestListCard({
         <input
           className={styles.attSearch}
           type="text"
-          placeholder="Search guests…"
+          placeholder={t("gatherings:dashboard.guestList.searchPlaceholder")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -180,17 +224,21 @@ export function GuestListCard({
               <EmptyState
                 compact
                 icon={<FiUsers />}
-                title="No one's on the guest list yet"
-                description="As people reserve their spot, they'll appear here ready to check in. Share your gathering to bring the first guests in."
+                title={t("gatherings:dashboard.guestList.emptyAllTitle")}
+                description={t(
+                  "gatherings:dashboard.guestList.emptyAllDescription",
+                )}
               />
             ) : (
               <EmptyState
                 compact
                 icon={<FiUsers />}
-                title="No guests in this view"
-                description="No one matches your current filter or search. Try widening it to see everyone expected."
+                title={t("gatherings:dashboard.guestList.emptyFilterTitle")}
+                description={t(
+                  "gatherings:dashboard.guestList.emptyFilterDescription",
+                )}
                 action={{
-                  label: "Clear filters",
+                  label: t("gatherings:dashboard.guestList.clearFiltersCta"),
                   onClick: () => {
                     setFilter("all");
                     setQuery("");
@@ -198,40 +246,42 @@ export function GuestListCard({
                 }}
               />
             ))}
-          {visible.map((g) => (
-            <div className={styles.attRow} key={g.name}>
+          {visible.map((guest) => (
+            <div className={styles.attRow} key={guest.name}>
               <div
                 className={styles.attAv}
-                style={{ background: g.bg, color: g.color }}
+                style={{ background: guest.bg, color: guest.color }}
               >
-                {g.initials}
+                {guest.initials}
               </div>
               <div className={styles.attInfo}>
-                <div className={styles.attName}>{g.name}</div>
-                <div className={styles.attMeta}>{g.pronouns}</div>
-                {g.status === "pending" && (
+                <div className={styles.attName}>{guest.name}</div>
+                <div className={styles.attMeta}>{guest.pronouns}</div>
+                {guest.status === "pending" && (
                   <button
                     type="button"
                     className={styles.manualBtn}
-                    onClick={() => onCheckIn(g.name)}
+                    onClick={() => onCheckIn(guest.name)}
                   >
-                    Check in manually
+                    {t("gatherings:dashboard.guestList.checkInManuallyCta")}
                   </button>
                 )}
               </div>
               <div>
-                {g.status === "in" ? (
+                {guest.status === "in" && guest.time ? (
                   <FadeIn
-                    key={g.time}
+                    key={guest.time.getTime()}
                     className={`${styles.checkinChip} ${styles.chipIn}`}
                   >
-                    Checked in {g.time}
+                    {t("gatherings:dashboard.guestList.checkedInChip", {
+                      time: fmt.time(guest.time),
+                    })}
                   </FadeIn>
                 ) : (
                   <div
                     className={`${styles.checkinChip} ${styles.chipPending}`}
                   >
-                    Expected
+                    {t("gatherings:dashboard.guestList.expectedChip")}
                   </div>
                 )}
               </div>
@@ -241,45 +291,54 @@ export function GuestListCard({
 
         <div
           className={styles.waitlistToggle}
-          onClick={() => setWaitlistOpen((o) => !o)}
+          onClick={() => setWaitlistOpen((open) => !open)}
           role="button"
           tabIndex={0}
           aria-expanded={waitlistOpen}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              setWaitlistOpen((o) => !o);
+              setWaitlistOpen((open) => !open);
             }
           }}
         >
-          <span>{waitlistOpen ? <FiChevronDown /> : <FiChevronRight />}</span> 3
-          on waitlist — promote
+          <span>{waitlistOpen ? <FiChevronDown /> : <FiChevronRight />}</span>{" "}
+          {t("gatherings:dashboard.guestList.waitlistToggle", {
+            count: WAITLIST.length,
+          })}
         </div>
         {waitlistOpen && (
           <div>
-            {WAITLIST.map((w) => (
-              <div className={styles.attRow} key={w.name}>
+            {WAITLIST.map((waitlisted) => (
+              <div className={styles.attRow} key={waitlisted.name}>
                 <div
                   className={styles.attAv}
-                  style={{ background: w.bg, color: w.color }}
+                  style={{ background: waitlisted.bg, color: waitlisted.color }}
                 >
-                  {w.initials}
+                  {waitlisted.initials}
                 </div>
                 <div className={styles.attInfo}>
-                  <div className={styles.attName}>{w.name}</div>
-                  <div className={styles.attMeta}>{w.meta}</div>
+                  <div className={styles.attName}>{waitlisted.name}</div>
+                  <div className={styles.attMeta}>
+                    {waitlisted.pronouns} ·{" "}
+                    {t("gatherings:dashboard.waitlist.position", {
+                      position: waitlisted.waitlistPosition,
+                    })}
+                  </div>
                 </div>
                 <button
                   type="button"
                   className={styles.promoteBtn}
                   onClick={() =>
                     showToast(
-                      `${w.name.split(" ")[0]} promoted to guest list`,
+                      t("gatherings:dashboard.guestList.promotedToast", {
+                        name: waitlisted.name.split(" ")[0]!,
+                      }),
                       "success",
                     )
                   }
                 >
-                  Promote
+                  {t("gatherings:dashboard.guestList.promoteCta")}
                 </button>
               </div>
             ))}
@@ -291,13 +350,17 @@ export function GuestListCard({
 }
 
 export function StatsColumn() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [eventEnded, setEventEnded] = useState(false);
   const [wrapping, setWrapping] = useState(false);
   return (
     <div className={styles.col}>
       <div className={styles.card}>
-        <div className={styles.cardHead}>Arrival rate</div>
+        <div className={styles.cardHead}>
+          {t("gatherings:dashboard.stats.arrivalRateHeading")}
+        </div>
         <div className={styles.cardBody}>
           <svg
             className={styles.sparkline}
@@ -327,11 +390,10 @@ export function StatsColumn() {
             <circle cx="120" cy="10" r="4" fill="var(--accent)" />
           </svg>
           <div className={styles.sparkLabels}>
-            <span>11:00</span>
-            <span>11:15</span>
-            <span>11:30</span>
-            <span>11:45</span>
-            <span>Now</span>
+            {ARRIVAL_TICKS.map((tick) => (
+              <span key={tick.getTime()}>{fmt.time(tick)}</span>
+            ))}
+            <span>{t("gatherings:dashboard.stats.now")}</span>
           </div>
         </div>
       </div>
@@ -341,33 +403,51 @@ export function StatsColumn() {
           <div className={styles.statBig}>
             <em>64%</em>
           </div>
-          <div className={styles.statLabel}>Attendance rate so far</div>
+          <div className={styles.statLabel}>
+            {t("gatherings:dashboard.stats.attendanceRateLabel")}
+          </div>
           <div className={styles.peakRow}>
-            <div className={styles.peakLabel}>Peak arrival</div>
-            <div className={styles.peakVal}>11:15–11:30</div>
+            <div className={styles.peakLabel}>
+              {t("gatherings:dashboard.stats.peakArrivalLabel")}
+            </div>
+            <div className={styles.peakVal}>
+              {fmt.time(PEAK_ARRIVAL_START)}–{fmt.time(PEAK_ARRIVAL_END)}
+            </div>
           </div>
         </div>
       </div>
 
       <div className={styles.card}>
-        <div className={styles.cardHead}>Quick actions</div>
+        <div className={styles.cardHead}>
+          {t("gatherings:dashboard.stats.quickActionsHeading")}
+        </div>
         <div className={styles.cardBody}>
           <div className={styles.quickActions}>
             <Button
               variant="ghost"
               className={styles.qaBtn}
-              onClick={() => showToast("Message sent to 9 guests", "success")}
+              onClick={() =>
+                showToast(
+                  t("gatherings:dashboard.stats.messageSentToast", {
+                    count: 9,
+                  }),
+                  "success",
+                )
+              }
             >
-              Message all attendees
+              {t("gatherings:dashboard.stats.messageAllCta")}
             </Button>
             <Button
               variant="ghost"
               className={styles.qaBtn}
               onClick={() =>
-                showToast("We're starting — sent to all guests", "success")
+                showToast(
+                  t("gatherings:dashboard.stats.startingSentToast"),
+                  "success",
+                )
               }
             >
-              Send "We're starting" <FiSend />
+              {t("gatherings:dashboard.stats.startingCta")} <FiSend />
             </Button>
           </div>
         </div>
@@ -379,19 +459,22 @@ export function StatsColumn() {
             <FiCheck />
           </span>
           <div className={styles.endedTitle}>
-            Event <em>wrapped</em>
+            <Translation
+              i18nKey="gatherings:dashboard.stats.wrappedTitle"
+              components={{ em: <em /> }}
+            />
           </div>
           <div className={styles.endedText}>
-            Check-in is closed and a follow-up has been sent to all 9 attendees
-            with the recap and photo link.
+            {t("gatherings:dashboard.stats.wrappedText", { count: 9 })}
           </div>
         </div>
       ) : (
         <div className={styles.endCard}>
-          <div className={styles.eeLabel}>End of event</div>
+          <div className={styles.eeLabel}>
+            {t("gatherings:dashboard.stats.endOfEventLabel")}
+          </div>
           <div className={styles.eeText}>
-            When the gathering wraps up, send a follow-up and close the check-in
-            window.
+            {t("gatherings:dashboard.stats.endOfEventText")}
           </div>
           <label className={styles.endToggle}>
             <input
@@ -399,7 +482,7 @@ export function StatsColumn() {
               checked={wrapping}
               onChange={(e) => setWrapping(e.target.checked)}
             />
-            The gathering has wrapped up
+            {t("gatherings:dashboard.stats.wrappedCheckbox")}
           </label>
           <Button
             variant="ghost"
@@ -407,15 +490,18 @@ export function StatsColumn() {
             disabled={!wrapping}
             onClick={() => {
               setEventEnded(true);
-              showToast("Follow-up sent — check-in closed", "success");
+              showToast(
+                t("gatherings:dashboard.stats.followUpToast"),
+                "success",
+              );
             }}
           >
-            End event &amp; send follow-up
+            {t("gatherings:dashboard.stats.endEventCta")}
           </Button>
           <div className={styles.eeNote}>
             {wrapping
-              ? "Ready to send the follow-up"
-              : "Mark the gathering as wrapped to enable"}
+              ? t("gatherings:dashboard.stats.readyNote")
+              : t("gatherings:dashboard.stats.notReadyNote")}
           </div>
         </div>
       )}

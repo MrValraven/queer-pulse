@@ -99,8 +99,69 @@ function FeedSkeleton() {
   );
 }
 
+function FeedGreeting({
+  greeting,
+  dateLine,
+  first,
+  populated,
+}: {
+  greeting: string;
+  dateLine: string;
+  first: string;
+  populated: boolean;
+}) {
+  return (
+    <div className={styles.greetingRow}>
+      <div>
+        <div className={styles.greeting}>
+          {greeting}, <em>{first}</em>
+        </div>
+        <div className={styles.greetingDate}>{dateLine}</div>
+      </div>
+      <Link to={routes.messages} className={styles.msgChip}>
+        <svg width={13} height={13} viewBox="0 0 13 13" fill="none" aria-hidden>
+          <path
+            d="M1 2.5h11v7H1zM1 2.5l5.5 4 5.5-4"
+            stroke="var(--jade)"
+            strokeWidth={1.4}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        {populated ? "2 new messages" : "Messages"}
+      </Link>
+    </div>
+  );
+}
+
+function FeedTabs({
+  activeTab,
+  onSelect,
+}: {
+  activeTab: FeedTab;
+  onSelect: (tab: FeedTab) => void;
+}) {
+  return (
+    <div className={styles.tabs}>
+      {FEED_TABS.map((tab) => (
+        <button
+          type="button"
+          key={tab}
+          className={[styles.tab, activeTab === tab && styles.tabActive]
+            .filter(Boolean)
+            .join(" ")}
+          onClick={() => onSelect(tab)}
+        >
+          {tab}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export function FeedPage() {
   const [activeTab, setActiveTab] = useState<FeedTab>("All");
+  const [hasSwitchedTab, setHasSwitchedTab] = useState(false);
   const { demoMode } = useDemoMode();
   const [demoLoading, setDemoLoading] = useState(demoMode);
   const [prevDemo, setPrevDemo] = useState(demoMode);
@@ -180,76 +241,61 @@ export function FeedPage() {
     ? pulse.length === 0 && staticItems.length === 0
     : livePosts.length === 0 && liveMembers.length === 0;
 
+  const selectTab = (tab: FeedTab) => {
+    setHasSwitchedTab(true);
+    setActiveTab(tab);
+  };
+
+  // Card entrance timing. The first paint of the page is a load, so it earns the
+  // slower, more generous stagger; a tab switch should feel instant, so the step
+  // tightens and stops compounding after the sixth card rather than trailing off.
+  const revealDelay = (index: number) =>
+    hasSwitchedTab ? `${Math.min(index, 5) * 40}ms` : `${index * 60}ms`;
+
   // Tab-specific empty/error copy, so each corner of the feed says what it's for.
   const tabCopy = FEED_TAB_COPY[activeTab];
   const emptyPanel = (
-    <EmptyState
-      icon={TAB_ICONS[tabCopy.icon]}
-      title={tabCopy.empty.title}
-      description={tabCopy.empty.description}
-      action={tabCopy.empty.action}
-      secondaryAction={
-        activeTab === "All"
-          ? undefined
-          : { label: "View everything", onClick: () => setActiveTab("All") }
-      }
-    />
+    <div className={styles.cardReveal}>
+      <EmptyState
+        icon={TAB_ICONS[tabCopy.icon]}
+        title={tabCopy.empty.title}
+        description={tabCopy.empty.description}
+        action={tabCopy.empty.action}
+        secondaryAction={
+          activeTab === "All"
+            ? undefined
+            : { label: "View everything", onClick: () => selectTab("All") }
+        }
+      />
+    </div>
   );
 
   return (
     <AppShell unreadCount={demoMode ? 3 : 0}>
       <div className={styles.page}>
         <div className="wrap">
-          <div className={styles.greetingRow}>
-            <div>
-              <div className={styles.greeting}>
-                {greeting}, <em>{profile.first}</em>
-              </div>
-              <div className={styles.greetingDate}>{dateLine}</div>
-            </div>
-            <Link to={routes.messages} className={styles.msgChip}>
-              <svg
-                width={13}
-                height={13}
-                viewBox="0 0 13 13"
-                fill="none"
-                aria-hidden
-              >
-                <path
-                  d="M1 2.5h11v7H1zM1 2.5l5.5 4 5.5-4"
-                  stroke="var(--jade)"
-                  strokeWidth={1.4}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              {demoMode ? "2 new messages" : "Messages"}
-            </Link>
-          </div>
+          <FeedGreeting
+            greeting={greeting}
+            dateLine={dateLine}
+            first={profile.first}
+            populated={demoMode}
+          />
 
           <div className={styles.layout}>
             <div>
-              <div className={styles.tabs}>
-                {FEED_TABS.map((tab) => (
-                  <button
-                    type="button"
-                    key={tab}
-                    className={[
-                      styles.tab,
-                      activeTab === tab && styles.tabActive,
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                    onClick={() => setActiveTab(tab)}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-              <div className={styles.list}>
+              <FeedTabs activeTab={activeTab} onSelect={selectTab} />
+              {/* Keyed on the tab so every switch re-mounts the panel and the
+                  card reveal replays — without this, cards shared between two
+                  tabs keep their DOM nodes and silently jump into place. */}
+              <div
+                key={activeTab}
+                className={[styles.list, hasSwitchedTab && styles.listSwitch]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
                 {loading ? (
-                  Array.from({ length: 4 }).map((_, i) => (
-                    <FeedSkeleton key={i} />
+                  Array.from({ length: 4 }).map((_, index) => (
+                    <FeedSkeleton key={index} />
                   ))
                 ) : !demoMode ? (
                   feed.isError ? (
@@ -266,21 +312,23 @@ export function FeedPage() {
                     emptyPanel
                   ) : (
                     <>
-                      {livePosts.map((post, i) => (
+                      {livePosts.map((post, index) => (
                         <div
                           key={post.id}
                           className={styles.cardReveal}
-                          style={{ animationDelay: `${i * 60}ms` }}
+                          style={{ animationDelay: revealDelay(index) }}
                         >
                           <PostCard post={post} />
                         </div>
                       ))}
-                      {liveMembers.map((item, i) => (
+                      {liveMembers.map((item, index) => (
                         <div
                           key={item.id}
                           className={styles.cardReveal}
                           style={{
-                            animationDelay: `${(i + livePosts.length) * 60}ms`,
+                            animationDelay: revealDelay(
+                              index + livePosts.length,
+                            ),
                           }}
                         >
                           <NewMemberCard item={item} />
@@ -292,21 +340,21 @@ export function FeedPage() {
                   emptyPanel
                 ) : (
                   <>
-                    {pulse.map((item, i) => (
+                    {pulse.map((item, index) => (
                       <div
                         key={item.post.id}
                         className={styles.cardReveal}
-                        style={{ animationDelay: `${i * 60}ms` }}
+                        style={{ animationDelay: revealDelay(index) }}
                       >
                         <HubPulseCard item={item} />
                       </div>
                     ))}
-                    {staticItems.map(({ key, Card }, i) => (
+                    {staticItems.map(({ key, Card }, index) => (
                       <div
                         key={key}
                         className={styles.cardReveal}
                         style={{
-                          animationDelay: `${(i + pulse.length) * 60}ms`,
+                          animationDelay: revealDelay(index + pulse.length),
                         }}
                       >
                         <Card />

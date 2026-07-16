@@ -2,37 +2,58 @@ import { useState } from "react";
 import { FiCheck, FiStar } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { EVENT } from "./checkout.data";
 import { cx } from "./cx";
 import s from "./checkout.module.css";
 
+const SUPPER_COUNT = 24;
+const HOST_SINCE_YEAR = 2024;
+const HOST_RATING = "4.9";
+const HOST_GUEST_COUNT = 180;
+
 export function HostCard() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState("");
+  const hostFirstName = EVENT.hostName.split(" ")[0] ?? EVENT.hostName;
 
   function send() {
     if (!msg.trim()) return;
     setOpen(false);
     setMsg("");
-    showToast("Sent to Tomás — you'll get a reply by email.", "success");
+    showToast(
+      t("gatherings:checkout.host.messageSentToast", { host: hostFirstName }),
+      "success",
+    );
   }
 
   return (
     <div className={s["co-host"]}>
       <div className={s["co-host-av"]}>
-        TB
+        {EVENT.hostInitials}
         <span className={s["co-host-vbadge"]} aria-hidden>
           <FiCheck />
         </span>
       </div>
       <div>
         <div className={s["co-host-name"]}>
-          Tomás Beto <span className={s["co-host-verif"]}>Verified host</span>
+          {EVENT.hostName}{" "}
+          <span className={s["co-host-verif"]}>
+            {t("gatherings:checkout.host.verifiedBadge")}
+          </span>
         </div>
         <div className={s["co-host-meta"]}>
-          Hosting since 2024 · 24 suppers · 4.9{" "}
-          <FiStar aria-hidden style={{ verticalAlign: "-1px" }} /> from 180
-          guests
+          {t("gatherings:checkout.host.statsLineBeforeStar", {
+            count: SUPPER_COUNT,
+            year: HOST_SINCE_YEAR,
+            rating: HOST_RATING,
+          })}{" "}
+          <FiStar aria-hidden style={{ verticalAlign: "-1px" }} />{" "}
+          {t("gatherings:checkout.host.statsLineAfterStar", {
+            guestCount: HOST_GUEST_COUNT,
+          })}
         </div>
       </div>
       <button
@@ -40,7 +61,7 @@ export function HostCard() {
         type="button"
         onClick={() => setOpen((o) => !o)}
       >
-        Ask a question
+        {t("gatherings:checkout.host.askQuestionCta")}
       </button>
       <div className={cx(s["co-ask-box"], open && s.show)}>
         <label
@@ -48,14 +69,14 @@ export function HostCard() {
           htmlFor="askInput"
           style={{ marginTop: 8 }}
         >
-          Message Tomás before you book
+          {t("gatherings:checkout.host.messageLabel", { host: hostFirstName })}
         </label>
         <textarea
           className={s["co-ta"]}
           id="askInput"
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
-          placeholder="e.g. Is the space step-free? Can I come solo?"
+          placeholder={t("gatherings:checkout.host.messagePlaceholder")}
         />
         <div className={s["co-ask-send"]}>
           <Button
@@ -63,7 +84,7 @@ export function HostCard() {
             onClick={send}
             style={{ padding: "9px 18px", fontSize: 13.5 }}
           >
-            Send to host →
+            {t("gatherings:checkout.host.sendCta")} →
           </Button>
         </div>
       </div>

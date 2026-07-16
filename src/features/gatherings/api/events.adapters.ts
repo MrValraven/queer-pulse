@@ -3,8 +3,11 @@ import {
   orgColors,
   type CalendarEvent,
   type GatheringDetail,
+  type SpotsLabel,
 } from "../data";
 import type { GatheringForm } from "../useGatheringForm";
+import type { Formatters } from "../../../shared/i18n/format";
+import type { TFunction } from "../../../shared/i18n/types";
 import type {
   AttendeeDTO,
   CreateEventDto,
@@ -13,23 +16,13 @@ import type {
 } from "./events.api";
 
 // Map each backend DTO onto the EXISTING mock view-model types the pages
-// already render. Fields the prototype invents (colours, day/month strings,
-// spot copy) are derived from the DTO or defaulted so nothing renders blank.
-
-const MSHORT = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+// already render. Fields the prototype invents (colours, spot copy) are derived
+// from the DTO or defaulted so nothing renders blank.
+//
+// i18n note: this adapter deliberately emits *catalog keys + values*, never
+// composed English. Dates stay as `Date`; the pages format them through
+// `useFormat()`. That keeps the live path and the demo `data.ts` registry on one
+// shape, so a language switch translates both identically.
 
 /** Pick a category dot colour from the org label, matching the mock palette. */
 function orgColorFor(org?: string): string {
@@ -40,42 +33,33 @@ function orgColorFor(org?: string): string {
   return orgColors.partner;
 }
 
-/** Format an ISO timestamp to the "7:30pm" style the cards use. */
-function timeLabel(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  let h = d.getHours();
-  const m = d.getMinutes();
-  const ampm = h >= 12 ? "pm" : "am";
-  h = h % 12 || 12;
-  return m === 0
-    ? `${h}${ampm}`
-    : `${h}:${m.toString().padStart(2, "0")}${ampm}`;
-}
-
-/** Two-digit day-of-month string ("06") the date chips render. */
-function dayLabel(iso: string): string {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime())
-    ? ""
-    : d.getDate().toString().padStart(2, "0");
-}
-
-function monthLabel(iso: string): string {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? "" : MSHORT[d.getMonth()]!;
-}
-
 function hostName(dto?: EventCardDTO["host"], org?: string): string {
   if (dto) return `${dto.firstName} ${dto.lastName}`.trim();
   return org ?? "QueerPulse";
 }
 
-/** Human "spots" copy the detail sidebars show. */
-function spotsLabel(dto: EventCardDTO): string {
-  if (typeof dto.spotsLeft === "number") return `${dto.spotsLeft} spots left`;
-  if (typeof dto.goingCount === "number") return `${dto.goingCount} going`;
-  return "Open to all";
+/** The "spots" line as a catalog key + its interpolation values. */
+function spotsLabel(dto: EventCardDTO): SpotsLabel {
+  if (typeof dto.spotsLeft === "number")
+    return {
+      key: "gatherings:spots.spotsLeft",
+      values: { count: dto.spotsLeft },
+    };
+  if (typeof dto.goingCount === "number")
+    return { key: "gatherings:spots.going", values: { count: dto.goingCount } };
+  return { key: "gatherings:spots.openToAll" };
+}
+
+/** Split a `"€6–18"` / `"€10"` price string from the API into euro numbers. */
+function priceRange(price?: string): { priceMin?: number; priceMax?: number } {
+  if (!price) return {};
+  const nums = price.match(/\d+(?:[.,]\d+)?/g);
+  if (!nums?.length) return {};
+  const [min, max] = nums;
+  return {
+    priceMin: Number(min!.replace(",", ".")),
+    ...(max ? { priceMax: Number(max.replace(",", ".")) } : {}),
+  };
 }
 
 /** GET /events card → the EventsPage / calendar `CalendarEvent` shape. */
@@ -87,11 +71,10 @@ export function cardToCalendarEvent(dto: EventCardDTO): CalendarEvent {
     orgColor: orgColorFor(org),
     title: dto.title,
     hood: dto.neighbourhood ?? dto.venue ?? (dto.isOnline ? "Online" : ""),
-    time: timeLabel(dto.startAt),
     to: gatheringPath(dto.slug),
     kind: dto.host ? "gathering" : "event",
     ticketed: dto.ticketed,
-    price: dto.price,
+    ...priceRange(dto.price),
   };
 }
 
@@ -100,14 +83,13 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
   return {
     slug: dto.slug,
     type: dto.type ?? "Gathering",
-    day: dayLabel(dto.startAt),
-    month: monthLabel(dto.startAt),
+    date: new Date(dto.startAt),
     title: dto.title,
     hood: dto.neighbourhood ?? dto.venue ?? (dto.isOnline ? "Online" : ""),
     host: hostName(dto.host, dto.org),
     hostSlug: dto.host?.slug ?? "",
     spots: spotsLabel(dto),
-    cta: "RSVP",
+    ctaKey: "gatherings:cta.rsvp",
     body: dto.description ?? "",
   };
 }
@@ -127,32 +109,63 @@ export interface AttendeeRow {
   bg: string;
   color: string;
   name: string;
-  meta: string;
+  /** The person's own pronouns — content, never translated. */
+  pronouns?: string;
+  /** When they RSVP'd. Formatted at render via `useFormat()`. */
+  rsvpAt?: Date;
+  /** When they joined the waitlist, and their place in the queue. */
+  waitlistedAt?: Date;
+  waitlistPosition?: number;
 }
 
 function initialsOf(first: string, last: string): string {
   return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase();
 }
 
+/**
+ * Compose an attendee's meta line — "she/her · RSVP'd 2 Jun".
+ *
+ * The pronouns are the person's own words and pass through untouched; the
+ * "RSVP'd"/"On waitlist since" phrasing is chrome and the date is locale
+ * formatted, so both go through `t` / `fmt` here rather than being baked into
+ * the row. One composition point keeps every list rendering it identically.
+ */
+export function attendeeMeta(
+  row: AttendeeRow,
+  t: TFunction,
+  fmt: Formatters,
+): string {
+  const shortDate = (d: Date) =>
+    fmt.date(d, { day: "numeric", month: "short" });
+  return [
+    row.pronouns,
+    row.rsvpAt &&
+      t("gatherings:attendee.rsvpdOn", { date: shortDate(row.rsvpAt) }),
+    row.waitlistedAt &&
+      t("gatherings:attendee.waitlistedSince", {
+        date: shortDate(row.waitlistedAt),
+      }),
+    row.waitlistPosition !== undefined &&
+      t("gatherings:attendee.waitlistPosition", {
+        position: row.waitlistPosition,
+      }),
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
 /** DTO → the row shape ManageGatheringTabs / dashboard lists render. */
 export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
   const tint = AV_TINTS[index % AV_TINTS.length]!;
-  const name = `${dto.firstName} ${dto.lastName}`.trim();
-  const when = dto.rsvpAt
-    ? new Date(dto.rsvpAt).toLocaleDateString(undefined, {
-        day: "numeric",
-        month: "short",
-      })
-    : "";
-  const metaBits = [dto.pronouns, when && `RSVP'd ${when}`].filter(Boolean);
   return {
     id: `att-${dto.slug}`,
     slug: dto.slug,
     initials: initialsOf(dto.firstName, dto.lastName),
     bg: tint.bg,
     color: tint.color,
-    name,
-    meta: metaBits.join(" · "),
+    name: `${dto.firstName} ${dto.lastName}`.trim(),
+    pronouns: dto.pronouns,
+    ...(dto.rsvpAt ? { rsvpAt: new Date(dto.rsvpAt) } : {}),
   };
 }
 

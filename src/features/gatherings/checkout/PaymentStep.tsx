@@ -3,7 +3,9 @@ import { FiAlertCircle, FiLock } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { routes } from "../../../app/routeMap";
 import { useCheckout } from "./checkoutContext";
-import { eur } from "./checkout.validation";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import type { PaymentForm } from "./usePaymentForm";
 import { ExpressPay } from "./ExpressPay";
 import { PaymentMethodTabs } from "./PaymentMethodTabs";
@@ -13,24 +15,33 @@ import { CodeOfCare } from "./CodeOfCare";
 import { cx } from "./cx";
 import s from "./checkout.module.css";
 
+/** Trust-badge card networks — brand marks, expression-rendered so they read
+ * as data rather than authored prose (matches CardForm's BRAND_LABEL map). */
+const TRUST_CARD_BRANDS = ["VISA", "MC", "AMEX"];
+
 export function PaymentStep({ pf }: { pf: PaymentForm }) {
   const { method, pricing, goStep } = useCheckout();
+  const { t } = useTranslation();
+  const fmt = useFormat();
 
+  const amount = fmt.currency(pricing.total);
   const payLabel =
     method === "mbway"
-      ? `Send request for ${eur(pricing.total)} →`
+      ? t("gatherings:checkout.payment.payCtaMbway", { amount })
       : method === "multibanco"
-        ? `Confirm booking · ${eur(pricing.total)} →`
-        : `Pay ${eur(pricing.total)} →`;
+        ? t("gatherings:checkout.payment.payCtaMultibanco", { amount })
+        : t("gatherings:checkout.payment.payCtaCard", { amount });
 
   return (
     <>
       <h1 className={s["co-step-title"]}>
-        Payment <em>details</em>
+        <Translation
+          i18nKey="gatherings:checkout.payment.title"
+          components={{ em: <em /> }}
+        />
       </h1>
       <p className={s["co-step-lede"]}>
-        Encrypted and processed by Stripe. QueerPulse never sees or stores your
-        card number.
+        {t("gatherings:checkout.payment.lede")}
       </p>
 
       <div
@@ -54,14 +65,19 @@ export function PaymentStep({ pf }: { pf: PaymentForm }) {
       <div className={s["co-trust"]}>
         <span className={s["co-trust-lock"]}>
           <FiLock />
-          256-bit encrypted
+          {t("gatherings:checkout.payment.trustLock")}
         </span>
         <div className={s["co-trust-cards"]}>
-          <span className={s["co-card-chip"]}>VISA</span>
-          <span className={s["co-card-chip"]}>MC</span>
-          <span className={s["co-card-chip"]}>AMEX</span>
+          {TRUST_CARD_BRANDS.map((brand) => (
+            <span key={brand} className={s["co-card-chip"]}>
+              {brand}
+            </span>
+          ))}
           <span className={s["co-stripe-badge"]}>
-            via <strong>Stripe</strong>
+            <Translation
+              i18nKey="gatherings:checkout.payment.viaStripe"
+              components={{ strong: <strong /> }}
+            />
           </span>
         </div>
       </div>
@@ -72,17 +88,24 @@ export function PaymentStep({ pf }: { pf: PaymentForm }) {
         disabled={!pf.canPay || pf.processing}
         onClick={pf.submit}
       >
-        {pf.processing ? "Processing…" : payLabel}
+        {pf.processing
+          ? t("gatherings:checkout.payment.processingLabel")
+          : payLabel}
       </Button>
       <p className={s["co-terms"]}>
-        By paying you agree to our{" "}
-        <Link to={routes.terms}>terms of service</Link> and{" "}
-        <Link to={routes.privacy}>privacy policy</Link>. You can cancel for a
-        full refund up to 48h before.
+        <Translation
+          i18nKey="gatherings:checkout.payment.termsNotice"
+          components={{
+            terms: <Link to={routes.terms} />,
+            privacy: <Link to={routes.privacy} />,
+          }}
+        />
       </p>
       <p className={s["co-demo-hint"]}>
-        Demo: use card <strong>4000 0000 0000 0002</strong> to see a
-        declined-payment flow.
+        <Translation
+          i18nKey="gatherings:checkout.payment.demoHint"
+          components={{ strong: <strong /> }}
+        />
       </p>
 
       <div className={s["co-step-nav"]}>
@@ -91,7 +114,7 @@ export function PaymentStep({ pf }: { pf: PaymentForm }) {
           type="button"
           onClick={() => goStep(1, "back")}
         >
-          ← Back to review
+          {t("gatherings:checkout.payment.backToReviewCta")}
         </button>
       </div>
     </>

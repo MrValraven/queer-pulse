@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import type { IconType } from "react-icons";
-import { FiAlertTriangle, FiCloudOff, FiWifiOff } from "react-icons/fi";
+import {
+  FiAlertTriangle,
+  FiCloudOff,
+  FiMail,
+  FiUserPlus,
+  FiWifiOff,
+} from "react-icons/fi";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { probeBackend, type BackendProbe } from "../../shared/api/client";
@@ -12,12 +18,63 @@ import styles from "./auth.module.css";
 
 type FailedProbe = Extract<BackendProbe, { ok: false }>;
 
+type Notice = { Icon: IconType; title: string; body: string };
+
+/**
+ * Map a `?error=<code>` from the backend's Google callback to a notice.
+ *
+ * The callback is a full-page redirect, so a failed sign-in comes back as a
+ * navigation to this page rather than a response we can read — the code in the
+ * query is the only thing that survives the round trip. Codes come from
+ * `SignupRejectedError.reason`, the `state` nonce check, and `OAuthCallbackError`
+ * (which reflects Google's own `?error=`, so unknown values reach us and fall
+ * through to the generic notice — never render the raw code).
+ */
+function noticeForAuthError(code: string): Notice {
+  switch (code) {
+    case "invite_required":
+      return {
+        Icon: FiUserPlus,
+        title: "QueerPulse is invite-only",
+        body: "There's no account for that Google sign-in yet. Members bring in the people they know — ask someone you trust for an invitation, or request one below.",
+      };
+    case "invite_invalid":
+      return {
+        Icon: FiUserPlus,
+        title: "That invitation didn't work",
+        body: "It may have already been used, run out, or been meant for a different email. Ask whoever invited you to send a fresh one.",
+      };
+    case "access_denied":
+      return {
+        Icon: FiAlertTriangle,
+        title: "Google sign-in was cancelled",
+        body: "Nothing happened, and nothing was shared. You can try again whenever you're ready.",
+      };
+    case "no_email":
+      return {
+        Icon: FiMail,
+        title: "That Google account has no email",
+        body: "We need an email address to find your account. Try signing in with a different Google account.",
+      };
+    case "email_unverified":
+      return {
+        Icon: FiMail,
+        title: "That email isn't verified with Google",
+        body: "Verify the email on your Google account, then come back and try again.",
+      };
+    case "invalid_state":
+    case "oauth_failed":
+    default:
+      return {
+        Icon: FiAlertTriangle,
+        title: "Sign-in didn't go through",
+        body: "Something interrupted the sign-in on the way back — it's on us, not you. Give it a moment and try again.",
+      };
+  }
+}
+
 /** Map each probe failure to a specific, no-blame notice for the member. */
-function noticeFor(err: FailedProbe): {
-  Icon: IconType;
-  title: string;
-  body: string;
-} {
+function noticeFor(err: FailedProbe): Notice {
   switch (err.reason) {
     case "offline":
       return {
@@ -56,7 +113,10 @@ export function SignInPage() {
   const [searchParams] = useSearchParams();
   const dest = safeNext(searchParams.get("next"));
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<FailedProbe | null>(null);
+  const [probeError, setProbeError] = useState<FailedProbe | null>(null);
+  // Set when the backend's Google callback bounced us back here after a failed
+  // or rejected sign-in (invite-only gate, cancelled consent, bad state nonce).
+  const authError = searchParams.get("error");
 
   // Note: a signed-in member never reaches this page — the walled-garden gate
   // (see authGate.ts / AppRoutes) treats /auth/sign-in as guest-only and
@@ -71,7 +131,7 @@ export function SignInPage() {
    */
   async function attemptSignIn() {
     if (busy) return;
-    setError(null);
+    setProbeError(null);
     if (demoMode) {
       signIn(dest);
       navigate(dest);
@@ -81,13 +141,19 @@ export function SignInPage() {
     const probe = await probeBackend();
     if (!probe.ok) {
       setBusy(false);
-      setError(probe);
+      setProbeError(probe);
       return;
     }
     signIn(dest); // redirects the page away
   }
 
-  const notice = error ? noticeFor(error) : null;
+  // A fresh probe failure describes what just happened, so it wins over the
+  // `?error=` left in the URL by an earlier callback.
+  const notice = probeError
+    ? noticeFor(probeError)
+    : authError
+      ? noticeForAuthError(authError)
+      : null;
 
   return (
     <AuthLayout>

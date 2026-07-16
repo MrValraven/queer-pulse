@@ -61,8 +61,9 @@ export function WorkshopsSection({ active = "all" }: { active?: string }) {
   const filtered =
     active === "all" ? workshops : workshops.filter((w) => w.cat === active);
 
-  // When a category filter hides every workshop, step out of the way entirely.
-  if (filtered.length === 0 && active !== "all") return null;
+  // With no workshops to show — none listed at all, or a category filter that
+  // hides them all — the section has nothing to say, so step out of the way.
+  if (filtered.length === 0) return null;
 
   return (
     <div>
@@ -84,8 +85,12 @@ export function WorkshopsSection({ active = "all" }: { active?: string }) {
       </p>
 
       <div className={styles.grid}>
-        {filtered.map((workshop, i) => (
-          <FadeIn key={workshop.id} delay={Math.min(i, 8) * 60}>
+        {filtered.map((workshop, index) => (
+          <FadeIn
+            key={workshop.id}
+            className={styles.cardWrap}
+            delay={Math.min(index, 8) * 60}
+          >
             <WorkshopCard workshop={workshop} />
           </FadeIn>
         ))}

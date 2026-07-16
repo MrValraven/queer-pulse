@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { cx } from "./cx";
 import s from "./checkout.module.css";
 
 export function OfflineBanner() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [offline, setOffline] = useState(
     () => typeof navigator !== "undefined" && !navigator.onLine,
   );
@@ -12,7 +14,7 @@ export function OfflineBanner() {
   useEffect(() => {
     const goOnline = () => {
       setOffline(false);
-      showToast("Back online — you're all set.", "success");
+      showToast(t("gatherings:checkout.offline.backOnlineToast"), "success");
     };
     const goOffline = () => setOffline(true);
     window.addEventListener("online", goOnline);
@@ -21,12 +23,12 @@ export function OfflineBanner() {
       window.removeEventListener("online", goOnline);
       window.removeEventListener("offline", goOffline);
     };
-  }, [showToast]);
+  }, [showToast, t]);
 
   return (
     <div className={cx(s["co-offline"], offline && s.show)} role="status">
       <span className={s["co-off-dot"]} aria-hidden />
-      You're offline — your progress is saved. We'll reconnect automatically.
+      {t("gatherings:checkout.offline.bannerText")}
     </div>
   );
 }

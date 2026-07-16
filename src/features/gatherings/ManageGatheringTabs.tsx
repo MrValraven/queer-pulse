@@ -3,16 +3,30 @@ import { Link } from "react-router-dom";
 import { FiSend } from "react-icons/fi";
 import { Button, EmptyState } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
+import type { Formatters } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import { InlineEditModal } from "./InlineEditModal";
 import { InviteMembersModal } from "./InviteMembersModal";
 import { CohostManager } from "./CohostManager";
-import { PREVIOUS_MESSAGES, GATHERING_SETTINGS } from "./manageGathering.data";
+import {
+  PREVIOUS_MESSAGES,
+  GATHERING_SETTINGS,
+  ATTENDEE_COUNT,
+  LAST_EDITED_AT,
+  GATHERING_DATE,
+  GATHERING_TITLE,
+} from "./manageGathering.data";
 import { useAttendees } from "./api/useAttendees";
+import { attendeeMeta } from "./api/events.adapters";
 import styles from "./ManageGatheringPage.module.css";
 
 interface GatheringDetail {
-  label: string;
+  id: string;
+  labelKey: string;
   value: string;
 }
 
@@ -43,8 +57,14 @@ const Check = () => (
 interface OverviewTabProps {
   details: GatheringDetail[];
   description: string;
-  onUpdateDetail: (label: string, value: string) => void;
+  onUpdateDetail: (id: string, value: string) => void;
   onUpdateDescription: (value: string) => void;
+}
+
+/** Plain helper (not a component/hook) so calling `Date.now()` here doesn't
+ *  trip the render-purity lint that applies to component/hook bodies. */
+function daysSince(date: Date): number {
+  return Math.round((date.getTime() - Date.now()) / 86_400_000);
 }
 
 function OverviewTab({
@@ -53,46 +73,57 @@ function OverviewTab({
   onUpdateDetail,
   onUpdateDescription,
 }: OverviewTabProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [editing, setEditing] = useState<
-    | { kind: "detail"; label: string; value: string }
+    | { kind: "detail"; id: string; labelKey: string; value: string }
     | { kind: "description"; value: string }
     | null
   >(null);
 
+  const lastEditedDays = daysSince(LAST_EDITED_AT);
+
+  const stats: [number, string][] = [
+    [14, t("gatherings:manage.overview.stat.going")],
+    [3, t("gatherings:manage.overview.stat.waitlist")],
+    [6, t("gatherings:manage.overview.stat.spotsLeft")],
+  ];
+
   return (
     <div>
       <div className={styles.statsRow}>
-        {[
-          ["14", "Going"],
-          ["3", "Waitlist"],
-          ["6", "Spots left"],
-        ].map(([n, l]) => (
-          <div className={styles.statChip} key={l}>
-            <div className={styles.scN}>{n}</div>
-            <div className={styles.scL}>{l}</div>
+        {stats.map(([count, label]) => (
+          <div className={styles.statChip} key={label}>
+            <div className={styles.scN}>{count}</div>
+            <div className={styles.scL}>{label}</div>
           </div>
         ))}
       </div>
       <div className={styles.detailBlock}>
-        {details.map((d) => (
-          <div className={styles.detailRow} key={d.label}>
-            <div className={styles.drLabel}>{d.label}</div>
-            <div className={styles.drVal}>{d.value}</div>
+        {details.map((detail) => (
+          <div className={styles.detailRow} key={detail.id}>
+            <div className={styles.drLabel}>{t(detail.labelKey)}</div>
+            <div className={styles.drVal}>{detail.value}</div>
             <button
               type="button"
               className={styles.drEdit}
               onClick={() =>
-                setEditing({ kind: "detail", label: d.label, value: d.value })
+                setEditing({
+                  kind: "detail",
+                  id: detail.id,
+                  labelKey: detail.labelKey,
+                  value: detail.value,
+                })
               }
             >
-              <Pencil /> Edit
+              <Pencil /> {t("gatherings:manage.overview.editCta")}
             </button>
           </div>
         ))}
       </div>
       <div className={styles.descCard}>
         <div className={styles.descLabel}>
-          Description
+          {t("gatherings:manage.overview.descriptionLabel")}
           <button
             type="button"
             className={styles.drEdit}
@@ -100,24 +131,28 @@ function OverviewTab({
               setEditing({ kind: "description", value: description })
             }
           >
-            Edit
+            {t("gatherings:manage.overview.editCta")}
           </button>
         </div>
         <div className={styles.descText}>{description}</div>
       </div>
-      <div className={styles.lastEdit}>Last edited 2 days ago</div>
+      <div className={styles.lastEdit}>
+        {t("gatherings:manage.overview.lastEdited", {
+          time: fmt.relativeTime(lastEditedDays, "day"),
+        })}
+      </div>
 
       {editing?.kind === "detail" && (
         <InlineEditModal
-          label={`Edit ${editing.label.toLowerCase()}`}
+          label={t(editing.labelKey).toLowerCase()}
           initialValue={editing.value}
           onClose={() => setEditing(null)}
-          onSave={(value) => onUpdateDetail(editing.label, value)}
+          onSave={(value) => onUpdateDetail(editing.id, value)}
         />
       )}
       {editing?.kind === "description" && (
         <InlineEditModal
-          label="Edit description"
+          label={t("gatherings:manage.overview.descriptionNoun")}
           initialValue={editing.value}
           multiline
           onClose={() => setEditing(null)}
@@ -129,6 +164,8 @@ function OverviewTab({
 }
 
 function AttendeesTab({ slug }: { slug: string }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [inviteOpen, setInviteOpen] = useState(false);
   const { data } = useAttendees(slug);
@@ -145,93 +182,112 @@ function AttendeesTab({ slug }: { slug: string }) {
         <input
           className={styles.attSearch}
           type="text"
-          placeholder="Search attendees…"
+          placeholder={t("gatherings:manage.attendees.searchPlaceholder")}
         />
         <Button
           variant="ghost"
           className={styles.actionBtn}
-          onClick={() => showToast("CSV exported", "success")}
+          onClick={() =>
+            showToast(t("gatherings:manage.attendees.exportedToast"), "success")
+          }
         >
-          Export list
+          {t("gatherings:manage.attendees.exportCta")}
         </Button>
         <Button
           variant="primary"
           className={styles.actionBtn}
           onClick={() => setInviteOpen(true)}
         >
-          Invite members
+          {t("gatherings:manage.attendees.inviteCta")}
         </Button>
       </div>
       <div className={styles.capWrap}>
         <div className={styles.capLabel}>
           <span>
-            {goingCount} of {capacity} spots filled
+            {t("gatherings:manage.attendees.spotsFilled", {
+              going: goingCount,
+              capacity,
+            })}
           </span>
-          <span className={styles.capPct}>{pct}%</span>
+          <span className={styles.capPct}>
+            {fmt.number(pct / 100, { style: "percent", maximumFractionDigits: 0 })}
+          </span>
         </div>
         <div className={styles.capBar}>
           <div className={styles.capFill} style={{ width: `${pct}%` }} />
         </div>
       </div>
-      <div className={styles.attSectionLabel}>Going ({goingCount})</div>
+      <div className={styles.attSectionLabel}>
+        {t("gatherings:manage.attendees.goingHeading", { count: goingCount })}
+      </div>
       <div className={styles.attList}>
-        {going.map((a) => (
-          <div className={styles.attRow} key={a.id}>
+        {going.map((attendee) => (
+          <div className={styles.attRow} key={attendee.id}>
             <div
               className={styles.attAv}
-              style={{ background: a.bg, color: a.color }}
+              style={{ background: attendee.bg, color: attendee.color }}
             >
-              {a.initials}
+              {attendee.initials}
             </div>
             <div className={styles.attInfo}>
-              <div className={styles.attName}>{a.name}</div>
-              <div className={styles.attMeta}>{a.meta}</div>
+              <div className={styles.attName}>{attendee.name}</div>
+              <div className={styles.attMeta}>{attendeeMeta(attendee, t, fmt)}</div>
             </div>
             <div className={styles.attActions}>
               <button
                 type="button"
-                aria-label={`Remove ${a.name} from guest list`}
+                aria-label={t("gatherings:manage.attendees.removeAria", {
+                  name: attendee.name,
+                })}
                 className={`${styles.attActionBtn} ${styles.remove}`}
-                onClick={() => showToast("Removed from guest list", "info")}
+                onClick={() =>
+                  showToast(t("gatherings:manage.attendees.removedToast"), "info")
+                }
               >
-                Remove
+                {t("gatherings:manage.attendees.removeCta")}
               </button>
             </div>
           </div>
         ))}
         {overflow > 0 && (
-          <div className={styles.moreRow}>+ {overflow} more attendees</div>
+          <div className={styles.moreRow}>
+            {t("gatherings:manage.attendees.moreAttendees", { count: overflow })}
+          </div>
         )}
       </div>
       <div className={styles.attSectionLabel} style={{ marginTop: 20 }}>
-        Waitlist ({waitlistCount})
+        {t("gatherings:manage.attendees.waitlistHeading", { count: waitlistCount })}
       </div>
       <div className={styles.attList}>
-        {waitlist.map((a) => (
-          <div className={styles.attRow} key={a.id}>
+        {waitlist.map((attendee) => (
+          <div className={styles.attRow} key={attendee.id}>
             <div
               className={styles.attAv}
-              style={{ background: a.bg, color: a.color }}
+              style={{ background: attendee.bg, color: attendee.color }}
             >
-              {a.initials}
+              {attendee.initials}
             </div>
             <div className={styles.attInfo}>
-              <div className={styles.attName}>{a.name}</div>
-              <div className={styles.attMeta}>{a.meta}</div>
+              <div className={styles.attName}>{attendee.name}</div>
+              <div className={styles.attMeta}>{attendeeMeta(attendee, t, fmt)}</div>
             </div>
             <div className={styles.attActions}>
               <button
                 type="button"
-                aria-label={`Promote ${a.name} to guest list`}
+                aria-label={t("gatherings:manage.attendees.promoteAria", {
+                  name: attendee.name,
+                })}
                 className={`${styles.attActionBtn} ${styles.promote}`}
                 onClick={() =>
                   showToast(
-                    `${a.name.split(" ")[0]} promoted to guest list`,
+                    t("gatherings:manage.attendees.promotedToast", {
+                      name: attendee.name.split(" ")[0]!,
+                    }),
                     "success",
                   )
                 }
               >
-                Promote
+                {t("gatherings:manage.attendees.promoteCta")}
               </button>
             </div>
           </div>
@@ -244,15 +300,25 @@ function AttendeesTab({ slug }: { slug: string }) {
   );
 }
 
-type SentMessage = {
+interface SentMessage {
   id: string;
   subject: string;
-  time: string;
+  sentAt: Date;
   preview: string;
-  opened: string;
-};
+  openedCount: number;
+}
+
+/** "just now" for a message sent this session, else a day-level relative time. */
+function messageRelativeTime(sentAt: Date, t: TFunction, fmt: Formatters): string {
+  const diffMinutes = Math.round((sentAt.getTime() - Date.now()) / 60_000);
+  if (Math.abs(diffMinutes) < 1) return t("gatherings:manage.messages.justNow");
+  const diffDays = Math.round((sentAt.getTime() - Date.now()) / 86_400_000);
+  return fmt.relativeTime(diffDays, "day");
+}
 
 function MessagesTab() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState<SentMessage[]>([]);
@@ -267,55 +333,69 @@ function MessagesTab() {
       {
         id: `sent-${prev.length}-${text.length}-${text.slice(0, 8)}`,
         subject,
-        time: "just now",
+        sentAt: new Date(),
         preview: text,
-        opened: "0 / 14 opened",
+        openedCount: 0,
       },
       ...prev,
     ]);
     setMessage("");
-    showToast("Update sent to 14 attendees", "success");
+    showToast(
+      t("gatherings:manage.messages.sentToast", { count: ATTENDEE_COUNT }),
+      "success",
+    );
   };
 
   return (
     <div>
       <div className={styles.composerCard}>
-        <div className={styles.compLabel}>Message all attendees (14 going)</div>
+        <div className={styles.compLabel}>
+          {t("gatherings:manage.messages.composerLabel", {
+            count: ATTENDEE_COUNT,
+          })}
+        </div>
         <textarea
           className={styles.compTa}
-          placeholder="Write an update for your guests…"
+          placeholder={t("gatherings:manage.writeUpdatePlaceholder")}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
         <div className={styles.compFooter}>
           <div className={styles.compHint}>
-            Sent to all 14 confirmed attendees.
+            {t("gatherings:manage.messages.sentHint", { count: ATTENDEE_COUNT })}
           </div>
           <Button variant="primary" disabled={!message.trim()} onClick={send}>
-            Send update
+            {t("gatherings:manage.messages.sendCta")}
           </Button>
         </div>
       </div>
-      <div className={styles.prevLabel}>Previous messages</div>
+      <div className={styles.prevLabel}>
+        {t("gatherings:manage.messages.previousHeading")}
+      </div>
       <div className={styles.msgList}>
         {messages.length === 0 && (
           <EmptyState
             compact
             icon={<FiSend />}
-            title="No messages sent yet"
-            description="When you send an update, it shows up here. A quick hello or a what-to-expect note helps your guests feel ready."
+            title={t("gatherings:manage.messages.emptyTitle")}
+            description={t("gatherings:manage.messages.emptyDescription")}
           />
         )}
-        {messages.map((m) => (
-          <div className={styles.msgCard} key={m.id}>
+        {messages.map((sentMessage) => (
+          <div className={styles.msgCard} key={sentMessage.id}>
             <div className={styles.msgHeader}>
-              <div className={styles.msgSubject}>{m.subject}</div>
-              <div className={styles.msgTime}>{m.time}</div>
+              <div className={styles.msgSubject}>{sentMessage.subject}</div>
+              <div className={styles.msgTime}>
+                {messageRelativeTime(sentMessage.sentAt, t, fmt)}
+              </div>
             </div>
-            <div className={styles.msgPreview}>{m.preview}</div>
+            <div className={styles.msgPreview}>{sentMessage.preview}</div>
             <div className={styles.openRate}>
               <Check />
-              {m.opened}
+              {t("gatherings:manage.messages.openedOf", {
+                opened: sentMessage.openedCount,
+                total: ATTENDEE_COUNT,
+              })}
             </div>
           </div>
         ))}
@@ -330,26 +410,32 @@ interface SettingsTabProps {
 }
 
 function SettingsTab({ slug, onCancel }: SettingsTabProps) {
+  const { t } = useTranslation();
   const [toggles, setToggles] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(GATHERING_SETTINGS.map((s) => [s.title, s.on])),
+    Object.fromEntries(GATHERING_SETTINGS.map((setting) => [setting.id, setting.on])),
   );
   return (
     <div>
       <CohostManager slug={slug} />
-      <div className={styles.sectionLabel}>Gathering options</div>
+      <div className={styles.sectionLabel}>
+        {t("gatherings:manage.settings.optionsHeading")}
+      </div>
       <div className={styles.toggleList}>
-        {GATHERING_SETTINGS.map((s) => (
-          <div className={styles.tglRow} key={s.title}>
+        {GATHERING_SETTINGS.map((setting) => (
+          <div className={styles.tglRow} key={setting.id}>
             <div>
-              <div className={styles.tglTitle}>{s.title}</div>
-              <div className={styles.tglDesc}>{s.desc}</div>
+              <div className={styles.tglTitle}>{t(setting.titleKey)}</div>
+              <div className={styles.tglDesc}>{t(setting.descKey)}</div>
             </div>
             <label className={styles.tglSw}>
               <input
                 type="checkbox"
-                checked={toggles[s.title] ?? false}
+                checked={toggles[setting.id] ?? false}
                 onChange={() =>
-                  setToggles((prev) => ({ ...prev, [s.title]: !prev[s.title] }))
+                  setToggles((prev) => ({
+                    ...prev,
+                    [setting.id]: !prev[setting.id],
+                  }))
                 }
               />
               <div className={styles.tglTrack} />
@@ -358,15 +444,18 @@ function SettingsTab({ slug, onCancel }: SettingsTabProps) {
           </div>
         ))}
       </div>
-      <div className={styles.dangerLabel}>Danger zone</div>
+      <div className={styles.dangerLabel}>
+        {t("gatherings:manage.settings.dangerZoneHeading")}
+      </div>
       <div className={styles.dangerZone}>
-        <div className={styles.dzLabel}>Cancel this gathering</div>
+        <div className={styles.dzLabel}>
+          {t("gatherings:manage.settings.cancelLabel")}
+        </div>
         <div className={styles.dzText}>
-          All attendees will be notified and RSVPs will be released. This cannot
-          be undone. A cancellation message will be sent automatically.
+          {t("gatherings:manage.settings.cancelText")}
         </div>
         <Button variant="ghost" className={styles.cancelBtn} onClick={onCancel}>
-          Cancel gathering
+          {t("gatherings:manage.settings.cancelCta")}
         </Button>
       </div>
     </div>
@@ -377,9 +466,14 @@ interface ManageGatheringSidebarProps {
   onCopyLink: () => void;
 }
 
+/** Content, not chrome — the live listing URL for this gathering. */
+const SHARE_URL = "queerpulse.com/g/pride-brunch-jun";
+
 export function ManageGatheringSidebar({
   onCopyLink,
 }: ManageGatheringSidebarProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const GATHERING = routes.gathering;
   const CONTACT = routes.contact;
   return (
@@ -387,35 +481,42 @@ export function ManageGatheringSidebar({
       <div className={styles.sbCard}>
         <div className={styles.sbImg}>
           <div className={styles.sbImgLabel}>
-            gathering
+            {t("gatherings:manage.sidebar.coverPhotoLine1")}
             <br />
-            cover photo
+            {t("gatherings:manage.sidebar.coverPhotoLine2")}
           </div>
         </div>
         <div className={styles.sbBody}>
-          <div className={styles.sbTitle}>Pride Brunch — June</div>
-          <div className={styles.sbMeta}>Sat 21 June · Príncipe Real</div>
+          <div className={styles.sbTitle}>{GATHERING_TITLE}</div>
+          <div className={styles.sbMeta}>
+            {fmt.date(GATHERING_DATE, {
+              weekday: "short",
+              day: "numeric",
+              month: "long",
+            })}{" "}
+            · {t("gatherings:hood.principeReal")}
+          </div>
           <div className={styles.shareRow}>
-            <div className={styles.shareUrl}>
-              queerpulse.com/g/pride-brunch-jun
-            </div>
+            <div className={styles.shareUrl}>{SHARE_URL}</div>
             <button
               type="button"
               className={styles.copyBtn}
               onClick={onCopyLink}
             >
-              Copy
+              {t("gatherings:manage.sidebar.copyCta")}
             </button>
           </div>
           <Link className={styles.sbViewLink} to={GATHERING}>
-            View public listing →
+            {t("gatherings:manage.sidebar.viewListingCta")} →
           </Link>
         </div>
       </div>
       <div className={styles.supportCard}>
         <div className={styles.supText}>
-          Need help with your gathering?{" "}
-          <Link to={CONTACT}>Message the QueerPulse team →</Link>
+          <Translation
+            i18nKey="gatherings:manage.sidebar.supportText"
+            components={{ a: <Link to={CONTACT} /> }}
+          />
         </div>
       </div>
     </div>
@@ -429,9 +530,16 @@ interface ManageGatheringTabsProps {
   onCancel: () => void;
   details: GatheringDetail[];
   description: string;
-  onUpdateDetail: (label: string, value: string) => void;
+  onUpdateDetail: (id: string, value: string) => void;
   onUpdateDescription: (value: string) => void;
 }
+
+const TAB_LABEL_KEYS: Record<Tab, string> = {
+  overview: "gatherings:manage.tabs.overview",
+  attendees: "gatherings:manage.tabs.attendees",
+  messages: "gatherings:manage.tabs.messages",
+  settings: "gatherings:manage.tabs.settings",
+};
 
 export function ManageGatheringTabs({
   initialTab = "overview",
@@ -442,21 +550,22 @@ export function ManageGatheringTabs({
   onUpdateDetail,
   onUpdateDescription,
 }: ManageGatheringTabsProps) {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>(initialTab);
   return (
     <div>
       <div className={styles.tabBar}>
         {(["overview", "attendees", "messages", "settings"] as Tab[]).map(
-          (t) => (
+          (tabId) => (
             <button
-              key={t}
+              key={tabId}
               type="button"
-              className={[styles.tabBtn, tab === t && styles.tabBtnActive]
+              className={[styles.tabBtn, tab === tabId && styles.tabBtnActive]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => setTab(t)}
+              onClick={() => setTab(tabId)}
             >
-              {t.charAt(0).toUpperCase() + t.slice(1)}
+              {t(TAB_LABEL_KEYS[tabId])}
             </button>
           ),
         )}

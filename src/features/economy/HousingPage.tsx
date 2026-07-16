@@ -1,106 +1,57 @@
-import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Reveal, SubpageIndex } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { HOUSING_LISTINGS as LISTINGS } from "./housingListings";
-import { FILTERS, HOUSING_SUBPAGES } from "./housing.data";
-import { HousingListingGrid } from "./HousingListingGrid";
-import { HousingLandlords, HousingTips } from "./HousingSections";
-import { ListSpaceModal } from "./ListSpaceModal";
+import { Reveal, Tabs } from "../../shared/components/ui";
+import { HousingBoard } from "./HousingBoard";
+import { FlatmatesBoard } from "./FlatmatesBoard";
 import styles from "./HousingPage.module.css";
 
+const TABS = [
+  { id: "housing", label: "Housing" },
+  { id: "flatmates", label: "Flatmates" },
+];
+
 export function HousingPage() {
-  const { demoMode } = useDemoMode();
-  const loading = useSimulatedLoad();
-  const [filter, setFilter] = useState("all");
-  const [listing, setListing] = useState(false);
-  // The housing board has no live backend yet, so real listings/endorsements
-  // only exist in demo mode ("Populate platform"). Live mode shows the empty
-  // board rather than mock members' spaces.
-  const source = demoMode ? LISTINGS : [];
-  // With nothing on the board, the type filters have nothing to act on — hide
-  // them and let the empty state carry the single call to action.
-  const boardEmpty = source.length === 0;
-  const visible = useMemo(
-    () => (filter === "all" ? source : source.filter((l) => l.type === filter)),
-    [filter, source],
-  );
+  const [params, setParams] = useSearchParams();
+  // Tab lives in the URL (?tab=flatmates) so the Flatmates view is deep-linkable
+  // and back-button friendly; the default (no param) is the Housing board.
+  const active = params.get("tab") === "flatmates" ? "flatmates" : "housing";
+
+  const setActive = (id: string) => {
+    const next = new URLSearchParams(params);
+    if (id === "flatmates") next.set("tab", "flatmates");
+    else next.delete("tab");
+    setParams(next);
+  };
 
   return (
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
-            Housing Board
+            Housing Board · Lisbon
           </Reveal>
           <Reveal as="h1" delay={60}>
-            Find a home among <em>people you can trust.</em>
+            Find a home — and the people to <em>share it with.</em>
           </Reveal>
           <Reveal as="p" delay={120}>
-            A queer-specific housing board for Lisbon. Sublets, room shares,
-            short-term stays, and landlord recommendations — all within the
+            A queer-specific housing board for Lisbon. Browse spaces to rent, or
+            find a flatmate you can actually be yourself around — all within the
             community network.
           </Reveal>
           <Reveal className={styles.note} delay={160}>
             <span className={styles.noteDot} />
-            Every listing is posted by a verified QueerPulse member
+            Every listing and profile is posted by a verified QueerPulse member
           </Reveal>
         </div>
       </div>
 
-      <div className={styles.body}>
+      <div className={styles.tabBar}>
         <div className="wrap">
-          {!boardEmpty && (
-            <div className={styles.top}>
-              <Reveal as="div" className={styles.filters}>
-                {FILTERS.map((f) => (
-                  <button
-                    type="button"
-                    key={f.value}
-                    className={[
-                      styles.chip,
-                      filter === f.value && styles.chipActive,
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                    onClick={() => setFilter(f.value)}
-                  >
-                    {f.label}
-                  </button>
-                ))}
-              </Reveal>
-              <Reveal
-                as="button"
-                className={styles.listBtn}
-                delay={60}
-                onClick={() => setListing(true)}
-              >
-                + List your space
-              </Reveal>
-            </div>
-          )}
-          <HousingListingGrid
-            loading={loading}
-            visible={visible}
-            filtered={filter !== "all"}
-            onClearFilter={() => setFilter("all")}
-            onListSpace={() => setListing(true)}
-          />
+          <Tabs tabs={TABS} active={active} onChange={setActive} />
         </div>
       </div>
 
-      {demoMode && <HousingLandlords />}
-
-      <HousingTips />
-
-      {listing && <ListSpaceModal onClose={() => setListing(false)} />}
-
-      <SubpageIndex
-        eyebrow="Housing"
-        title="More on housing"
-        items={HOUSING_SUBPAGES}
-      />
+      {active === "flatmates" ? <FlatmatesBoard /> : <HousingBoard />}
     </PageShell>
   );
 }

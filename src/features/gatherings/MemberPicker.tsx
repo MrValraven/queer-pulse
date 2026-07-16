@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Avatar, SearchInput } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CohostCandidate } from "./manageCohosts.data";
 import styles from "./ManageCohosts.module.css";
 
@@ -28,8 +29,11 @@ export function MemberPicker({
   onToggle,
   atCap = false,
   multiSelect = false,
-  searchLabel = "Search members",
+  searchLabel,
 }: MemberPickerProps) {
+  const { t } = useTranslation();
+  const resolvedSearchLabel =
+    searchLabel ?? t("gatherings:cohost.picker.searchLabelDefault");
   const [query, setQuery] = useState("");
 
   const visible = useMemo(() => {
@@ -48,16 +52,18 @@ export function MemberPicker({
       <SearchInput
         value={query}
         onChange={setQuery}
-        placeholder="Search by name or role…"
-        ariaLabel={searchLabel}
+        placeholder={t("gatherings:cohost.picker.placeholder")}
+        ariaLabel={resolvedSearchLabel}
       />
       <div
         className={styles.pickerList}
         role="listbox"
-        aria-label={searchLabel}
+        aria-label={resolvedSearchLabel}
       >
         {visible.length === 0 ? (
-          <div className={styles.noResults}>No members match "{query}".</div>
+          <div className={styles.noResults}>
+            {t("gatherings:cohost.picker.noResults", { query })}
+          </div>
         ) : (
           visible.map((c) => {
             const isOn = selected.includes(c.slug);

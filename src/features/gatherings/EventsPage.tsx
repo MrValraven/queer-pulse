@@ -11,15 +11,19 @@ import {
   SkeletonLine,
   Tag,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type CalendarEvent } from "./data";
 import { useEvents } from "./api/useEvents";
-import { MONTHS, MSHORT } from "./calendar.data";
 import { EVENT_CATEGORIES, eventsHeader } from "./eventsPage.data";
 import styles from "./EventsPage.module.css";
 
 function EventCard({ event }: { event: CalendarEvent }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const fmt = useFormat();
 
   function buyTicket(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -32,7 +36,7 @@ function EventCard({ event }: { event: CalendarEvent }) {
       <div className={styles.date}>
         <span className={styles.day}>{event.date.getDate()}</span>
         <span className={styles.month} style={{ color: event.orgColor }}>
-          {MSHORT[event.date.getMonth()]}
+          {fmt.date(event.date, { month: "short" })}
         </span>
       </div>
       <div className={styles.cardBody}>
@@ -45,15 +49,21 @@ function EventCard({ event }: { event: CalendarEvent }) {
               event.kind === "event" ? styles.badgeEvent : styles.badgeGathering
             }
           >
-            {event.kind === "event" ? "Event" : "Gathering"}
+            {event.kind === "event"
+              ? t("gatherings:events.kindEvent")
+              : t("gatherings:events.kindGathering")}
           </Tag>
-          {event.ticketed && <span className={styles.ticketTag}>Ticketed</span>}
+          {event.ticketed && (
+            <span className={styles.ticketTag}>
+              {t("gatherings:events.ticketedTag")}
+            </span>
+          )}
         </div>
         <h3 className={styles.cardTitle}>{event.title}</h3>
         <div className={styles.meta}>
           <span>{event.hood}</span>
           <span className={styles.dot} aria-hidden />
-          <span>{event.time}</span>
+          <span>{fmt.time(event.date)}</span>
         </div>
         {event.ticketed && (
           <span
@@ -65,9 +75,18 @@ function EventCard({ event }: { event: CalendarEvent }) {
               if (e.key === "Enter" || e.key === " ") buyTicket(e);
             }}
           >
-            <FiTag aria-hidden /> Buy ticket
-            {event.price && (
-              <span className={styles.buyPrice}>{event.price}</span>
+            <FiTag aria-hidden /> {t("gatherings:events.buyTicketCta")}
+            {event.priceMin !== undefined && (
+              <span className={styles.buyPrice}>
+                {event.priceMax !== undefined
+                  ? t("gatherings:events.priceRange", {
+                      min: fmt.currency(event.priceMin),
+                      max: fmt.currency(event.priceMax),
+                    })
+                  : t("gatherings:events.priceSingle", {
+                      price: fmt.currency(event.priceMin),
+                    })}
+              </span>
             )}
           </span>
         )}
@@ -95,6 +114,8 @@ function EventSkeleton() {
 }
 
 export function EventsPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [active, setActive] = useState("all");
   const {
     items: events,
@@ -115,30 +136,31 @@ export function EventsPage() {
   const months = useMemo(() => {
     const map = new Map<string, CalendarEvent[]>();
     for (const event of filtered) {
-      const key = `${MONTHS[event.date.getMonth()]} ${event.date.getFullYear()}`;
+      const key = fmt.date(event.date, { month: "long", year: "numeric" });
       const list = map.get(key) ?? [];
       list.push(event);
       map.set(key, list);
     }
     return [...map.entries()];
-  }, [filtered]);
+  }, [filtered, fmt]);
 
   return (
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <Eyebrow>{eventsHeader.eyebrow}</Eyebrow>
+          <Eyebrow>{t(eventsHeader.eyebrowKey)}</Eyebrow>
           <SectionHead
             title={
-              <>
-                Everything happening <em>this season</em>
-              </>
+              <Translation
+                i18nKey="gatherings:events.heroTitle"
+                components={{ em: <em /> }}
+              />
             }
-            subtitle={eventsHeader.subtitle}
+            subtitle={t(eventsHeader.subtitleKey)}
             action={
               noEvents ? undefined : (
                 <Button variant="ghost" to={routes.calendar}>
-                  View as calendar
+                  {t("gatherings:events.viewCalendarCta")}
                 </Button>
               )
             }
@@ -152,7 +174,7 @@ export function EventsPage() {
             <div
               className={styles.filters}
               role="tablist"
-              aria-label="Filter events"
+              aria-label={t("gatherings:events.filterAriaLabel")}
             >
               {EVENT_CATEGORIES.map((cat) => (
                 <button
@@ -168,7 +190,7 @@ export function EventsPage() {
                     style={{ background: cat.dot }}
                     aria-hidden
                   />
-                  {cat.label}
+                  {t(cat.labelKey)}
                 </button>
               ))}
             </div>
@@ -201,21 +223,21 @@ export function EventsPage() {
               {noEvents ? (
                 <EmptyState
                   icon={<FiCalendar />}
-                  title="Nothing on just yet"
-                  description="No events are scheduled right now. New gatherings and partner events land here all the time — check back soon."
+                  title={t("gatherings:events.emptyTitle")}
+                  description={t("gatherings:events.emptyDescription")}
                 />
               ) : (
                 filtered.length === 0 && (
                   <EmptyState
                     icon={<FiCalendar />}
-                    title="Nothing in this category yet"
-                    description="No events match this filter for the season. Try another category, or browse everything that's on."
+                    title={t("gatherings:events.emptyFilterTitle")}
+                    description={t("gatherings:events.emptyFilterDescription")}
                     action={{
-                      label: "Show all events",
+                      label: t("gatherings:events.showAllCta"),
                       onClick: () => setActive("all"),
                     }}
                     secondaryAction={{
-                      label: "View as calendar",
+                      label: t("gatherings:events.viewCalendarCta"),
                       to: "/calendar",
                     }}
                   />
@@ -230,7 +252,9 @@ export function EventsPage() {
                     disabled={isFetchingNextPage}
                     onClick={fetchNextPage}
                   >
-                    {isFetchingNextPage ? "Loading…" : "Load more events"}
+                    {isFetchingNextPage
+                      ? t("gatherings:events.loadingMore")
+                      : t("gatherings:events.loadMoreCta")}
                   </Button>
                 </div>
               )}

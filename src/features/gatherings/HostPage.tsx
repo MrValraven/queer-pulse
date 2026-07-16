@@ -1,5 +1,7 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { HostSteps } from "./HostSteps";
 import { HostSidebar } from "./HostSidebar";
@@ -7,23 +9,23 @@ import { HERO_TYPES } from "./hostPage.data";
 import styles from "./HostPage.module.css";
 
 export function HostPage() {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>For members</div>
+          <div className={styles.cat}>{t("gatherings:host.hero.eyebrow")}</div>
           <h1 className={styles.title}>
-            Host a gathering <em>for your people.</em>
+            <Translation
+              i18nKey="gatherings:host.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.lede}>
-            You don't need a venue budget, a committee, or a plan. You need a
-            date, a few chairs, and something worth gathering for. This guide
-            walks you through the rest.
-          </p>
+          <p className={styles.lede}>{t("gatherings:host.hero.lead")}</p>
           <div className={styles.heroTypes}>
-            {HERO_TYPES.map((type) => (
-              <span key={type} className={styles.htype}>
-                {type}
+            {HERO_TYPES.map((typeKey) => (
+              <span key={typeKey} className={styles.htype}>
+                {t(typeKey)}
               </span>
             ))}
           </div>
@@ -41,14 +43,15 @@ export function HostPage() {
 
       <Outro
         title={
-          <>
-            The best gatherings are the ones <em>that happen.</em>
-          </>
+          <Translation
+            i18nKey="gatherings:host.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Start small, start soon. The community is here."
+        sub={t("gatherings:host.outro.sub")}
       >
         <Button to={routes.createGathering} size="lg">
-          Create your gathering →
+          {t("gatherings:host.createGatheringCta")} →
         </Button>
       </Outro>
     </PageShell>

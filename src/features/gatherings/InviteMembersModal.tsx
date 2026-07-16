@@ -3,6 +3,8 @@ import { FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
 import { MemberPicker } from "./MemberPicker";
 import { MEMBER_POOL } from "./manageCohosts.data";
@@ -23,6 +25,7 @@ export function InviteMembersModal({
   excludeSlugs?: string[];
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
   const { showToast } = useToast();
   const inviteMembers = useInviteMembers(slug);
@@ -55,9 +58,7 @@ export function InviteMembersModal({
     inviteMembers.mutate(selected);
     setSent(true);
     showToast(
-      `Invitation sent to ${selected.length} ${
-        selected.length === 1 ? "member" : "members"
-      }`,
+      t("gatherings:manage.invite.sentToast", { count: selected.length }),
       "success",
     );
   };
@@ -72,45 +73,46 @@ export function InviteMembersModal({
       {sent ? (
         <GatheringSuccessPanel
           title={
-            <>
-              Invitations <em>on their way.</em>
-            </>
+            <Translation
+              i18nKey="gatherings:manage.invite.successTitle"
+              components={{ em: <em /> }}
+            />
           }
           sub={
-            <>
-              <b>
-                {selected.length} {selected.length === 1 ? "member" : "members"}
-              </b>{" "}
-              just got an invite to this gathering, by email and in their
-              QueerPulse notifications. You'll see them appear as they RSVP.
-            </>
+            <Translation
+              i18nKey="gatherings:manage.invite.successSub"
+              values={{ count: selected.length }}
+              components={{ b: <b /> }}
+            />
           }
-          meta={`Sent just now · ${selected.length} invited`}
+          meta={t("gatherings:manage.invite.successMeta", {
+            count: selected.length,
+          })}
           onClose={onClose}
         />
       ) : (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Invite members"
+          aria-label={t("gatherings:manage.invite.eyebrow")}
           className={modal.modal}
         >
           <button
             type="button"
             className={modal.close}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("gatherings:manage.closeAria")}
           >
             <FiX />
           </button>
-          <div className={modal.eye}>Invite members</div>
+          <div className={modal.eye}>{t("gatherings:manage.invite.eyebrow")}</div>
           <div className={modal.title}>
-            Bring the <em>right people</em> in
+            <Translation
+              i18nKey="gatherings:manage.invite.title"
+              components={{ em: <em /> }}
+            />
           </div>
-          <p className={modal.sub}>
-            Pick the members you'd like at this gathering. They'll get a warm
-            invite they can accept or pass on — no pressure either way.
-          </p>
+          <p className={modal.sub}>{t("gatherings:manage.invite.sub")}</p>
 
           <MemberPicker
             candidates={MEMBER_POOL}
@@ -119,20 +121,25 @@ export function InviteMembersModal({
             onToggle={toggle}
             atCap={atCap}
             multiSelect
-            searchLabel="Search members to invite"
+            searchLabel={t("gatherings:manage.invite.searchLabel")}
           />
 
           <div className={styles.pickerFooter}>
             <div className={styles.selCount}>
               {selected.length === 0 ? (
-                "No one selected yet"
+                t("gatherings:manage.invite.noneSelected")
               ) : (
                 <>
-                  <b>{selected.length}</b> selected
+                  <Translation
+                    i18nKey="gatherings:manage.invite.selectedCount"
+                    values={{ count: selected.length }}
+                    components={{ b: <b /> }}
+                  />
                   {atCap && (
                     <span className={styles.capWarn}>
-                      {" "}
-                      · that's the max (100)
+                      {t("gatherings:manage.invite.capWarning", {
+                        max: MAX_INVITES,
+                      })}
                     </span>
                   )}
                 </>
@@ -147,13 +154,11 @@ export function InviteMembersModal({
               disabled={selected.length === 0}
             >
               {selected.length === 0
-                ? "Send invites"
-                : `Invite ${selected.length} ${
-                    selected.length === 1 ? "member" : "members"
-                  }`}
+                ? t("gatherings:manage.invite.sendDefaultCta")
+                : t("gatherings:manage.invite.sendCta", { count: selected.length })}
             </Button>
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {t("gatherings:manage.cancelCta")}
             </Button>
           </div>
         </div>
