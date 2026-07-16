@@ -3,11 +3,15 @@ import { API_BASE_URL } from "./config";
 /** Normalized API failure carrying the HTTP status. */
 export class ApiError extends Error {
   status: number;
+  /** The parsed JSON error body, when the response had one. Lets callers read
+   *  structured fields (e.g. a 422 `{ unmet: string[] }`) beyond `message`. */
+  data?: unknown;
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, data?: unknown) {
     super(message);
     this.name = "ApiError";
     this.status = status;
+    this.data = data;
   }
 }
 
@@ -119,8 +123,10 @@ async function request<T>(
 
   if (!res.ok) {
     let message = res.statusText;
+    let data: unknown;
     try {
       const j = await res.json();
+      data = j;
       message = Array.isArray(j.message)
         ? j.message.join(", ")
         : (j.message ?? message);
@@ -141,7 +147,7 @@ async function request<T>(
       return request<T>(method, path, body, false);
     }
 
-    throw new ApiError(res.status, message);
+    throw new ApiError(res.status, message, data);
   }
 
   if (res.status === 204) return undefined as T;

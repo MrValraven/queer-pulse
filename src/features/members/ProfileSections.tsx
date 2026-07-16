@@ -70,6 +70,7 @@ export function ProfileHero({
   self,
   asVisitor = false,
   onEdit,
+  onEditLinks,
   onPreview,
 }: {
   profile: MemberProfile;
@@ -83,6 +84,8 @@ export function ProfileHero({
   asVisitor?: boolean;
   /** Enter inline edit mode (only used on your own profile). */
   onEdit?: () => void;
+  /** Enter inline edit mode jumped to the Links section (your own profile). */
+  onEditLinks?: () => void;
   /** Preview your profile as a visitor (only used on your own profile). */
   onPreview?: () => void;
 }) {
@@ -151,7 +154,11 @@ export function ProfileHero({
                 <Tag key={tag}>{tag}</Tag>
               ))}
             </TagRow>
-            <SocialLinksRow links={profile.socials} />
+            <SocialLinksRow
+              links={profile.socials}
+              self={isSelf}
+              onEdit={onEditLinks}
+            />
             <div className={styles.cta}>
               {isSelf ? (
                 <>

@@ -11,6 +11,7 @@ import {
   FiSend,
   FiBriefcase,
   FiBookmark,
+  FiLayers,
   FiRss,
   FiCalendar,
   FiMessageSquare,
@@ -64,6 +65,7 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
   [
     { label: "Applications", to: routes.applicationStatus, icon: FiFileText },
     { label: "Work", to: routes.work, icon: FiBriefcase },
+    { label: "Subprofiles", to: routes.subprofilesDashboard, icon: FiLayers },
   ],
   // Activity
   [

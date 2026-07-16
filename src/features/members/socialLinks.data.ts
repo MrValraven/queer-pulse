@@ -8,7 +8,14 @@ import {
   FiMail,
   FiYoutube,
 } from "react-icons/fi";
-import { SiBluesky, SiMastodon } from "react-icons/si";
+import {
+  SiBehance,
+  SiBluesky,
+  SiDribbble,
+  SiMastodon,
+  SiTiktok,
+  SiX,
+} from "react-icons/si";
 
 /** A selectable platform in the social-links editor. `key` is stored on the
  *  `SocialLink`; `icon` renders it in read + edit mode; `placeholder` hints the
@@ -38,6 +45,13 @@ export const SOCIAL_PLATFORMS: SocialPlatform[] = [
     hrefPrefix: "https://instagram.com/",
   },
   {
+    key: "x",
+    label: "X",
+    icon: SiX,
+    placeholder: "@handle",
+    hrefPrefix: "https://x.com/",
+  },
+  {
     key: "bluesky",
     label: "Bluesky",
     icon: SiBluesky,
@@ -64,10 +78,31 @@ export const SOCIAL_PLATFORMS: SocialPlatform[] = [
     hrefPrefix: "https://github.com/",
   },
   {
+    key: "dribbble",
+    label: "Dribbble",
+    icon: SiDribbble,
+    placeholder: "dribbble.com/you",
+    hrefPrefix: "https://dribbble.com/",
+  },
+  {
+    key: "behance",
+    label: "Behance",
+    icon: SiBehance,
+    placeholder: "behance.net/you",
+    hrefPrefix: "https://www.behance.net/",
+  },
+  {
     key: "youtube",
     label: "YouTube",
     icon: FiYoutube,
     placeholder: "youtube.com/@you",
+  },
+  {
+    key: "tiktok",
+    label: "TikTok",
+    icon: SiTiktok,
+    placeholder: "@handle",
+    hrefPrefix: "https://www.tiktok.com/@",
   },
   {
     key: "email",

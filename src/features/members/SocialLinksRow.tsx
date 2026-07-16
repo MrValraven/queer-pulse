@@ -1,3 +1,4 @@
+import { FiEdit3, FiPlus } from "react-icons/fi";
 import type { SocialLink } from "./data/members";
 import { socialHref, socialPlatform } from "./socialLinks.data";
 import styles from "./ProfilePage.module.css";
@@ -6,10 +7,26 @@ import styles from "./ProfilePage.module.css";
  * Read-mode display of a member's social / web links as tidy chips, shown in the
  * hero beneath the tags. Each resolves to a real link where it can; otherwise it
  * renders as a plain, non-interactive chip (e.g. a Mastodon address).
+ *
+ * On your own profile (`self`) it also renders a discoverable affordance: an
+ * "Add links" chip when you have none, or a trailing "Edit" chip when you do —
+ * both call `onEdit` to open the inline editor jumped to the Links section.
  */
-export function SocialLinksRow({ links }: { links?: SocialLink[] }) {
+export function SocialLinksRow({
+  links,
+  self = false,
+  onEdit,
+}: {
+  links?: SocialLink[];
+  /** True on the viewer's own profile — enables the add/edit affordance. */
+  self?: boolean;
+  /** Open the inline profile editor at the Links section. */
+  onEdit?: () => void;
+}) {
   const items = (links ?? []).filter((l) => l.urlOrHandle.trim());
-  if (items.length === 0) return null;
+  // Visitors with an empty list see nothing; on your own profile we always show
+  // the row so there's an obvious way to add links.
+  if (items.length === 0 && !self) return null;
 
   return (
     <div className={styles.socialRow}>
@@ -40,6 +57,26 @@ export function SocialLinksRow({ links }: { links?: SocialLink[] }) {
           </span>
         );
       })}
+
+      {self &&
+        (items.length === 0 ? (
+          <button
+            type="button"
+            className={`${styles.socialChip} ${styles.socialChipAdd}`}
+            onClick={onEdit}
+          >
+            <FiPlus aria-hidden /> <span>Add links</span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`${styles.socialChip} ${styles.socialChipEdit}`}
+            aria-label="Edit your links"
+            onClick={onEdit}
+          >
+            <FiEdit3 aria-hidden /> <span>Edit</span>
+          </button>
+        ))}
     </div>
   );
 }

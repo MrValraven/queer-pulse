@@ -7,7 +7,6 @@ import { PitchTrackerHeader } from "./PitchTrackerHeader";
 import { PitchTabs } from "./PitchTabs";
 import { PitchCard } from "./PitchCard";
 import {
-  PITCHES,
   PITCH_TABS,
   countByTab,
   selectPitches,
@@ -37,8 +36,10 @@ export function PitchTrackerPage() {
   const [withdrawn, setWithdrawn] = useState<Set<string>>(new Set());
   const { data: pitches } = useMySubmissions();
 
+  // `useMySubmissions` already returns the demo PITCHES in demo mode and the
+  // member's real submissions live, so an empty result here means "none yet".
   const base = useMemo(
-    () => (pitches ?? PITCHES).filter((p) => !withdrawn.has(p.id)),
+    () => (pitches ?? []).filter((p) => !withdrawn.has(p.id)),
     [pitches, withdrawn],
   );
   const counts = useMemo(() => countByTab(base), [base]);

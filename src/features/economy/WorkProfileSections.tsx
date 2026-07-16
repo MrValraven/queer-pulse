@@ -1,5 +1,6 @@
 import { Tag, TagRow } from "../../shared/components/ui";
-import { workIdentity } from "./work.data";
+import { useProfile } from "../../app/providers/ProfileProvider";
+import { fullName } from "../members/data/members";
 import {
   OUT_AT_WORK,
   TRANS_SUPPORT,
@@ -11,6 +12,8 @@ import styles from "./WorkProfilePage.module.css";
 
 /** Section 1 — professional identity: how you're named and described. */
 export function IdentitySection() {
+  // The signed-in member (real profile live, mock currentUser in demo mode).
+  const { profile } = useProfile();
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>
@@ -26,7 +29,7 @@ export function IdentitySection() {
           <input
             className={styles.fieldInput}
             type="text"
-            defaultValue={workIdentity.name}
+            defaultValue={fullName(profile)}
           />
         </div>
         <div className={styles.field}>
@@ -51,7 +54,7 @@ export function IdentitySection() {
           <input
             className={styles.fieldInput}
             type="text"
-            defaultValue={workIdentity.pronouns}
+            defaultValue={profile.pronouns ?? ""}
           />
         </div>
         <div className={styles.field}>
@@ -59,7 +62,7 @@ export function IdentitySection() {
           <input
             className={styles.fieldInput}
             type="text"
-            defaultValue={workIdentity.headline}
+            defaultValue={profile.role}
           />
         </div>
       </div>
@@ -69,7 +72,7 @@ export function IdentitySection() {
         <input
           className={styles.fieldInput}
           type="text"
-          defaultValue={workIdentity.location}
+          defaultValue={profile.hood}
         />
       </div>
 

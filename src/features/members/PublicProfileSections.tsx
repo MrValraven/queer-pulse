@@ -4,6 +4,7 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useCountUp } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
+import { SocialLinksRow } from "./SocialLinksRow";
 import type { Member } from "./data/members";
 import type { PublicCard } from "./publicProfile.data";
 import type { PublicContributions } from "./currentUserPublic.data";
@@ -134,6 +135,7 @@ export function PublicProfileHead({
           </Link>
         )}
         <p className={styles.bio}>{profile.bio}</p>
+        <SocialLinksRow links={profile.socials} />
 
         <div className={styles.meta}>
           <span>

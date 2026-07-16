@@ -33,6 +33,26 @@ const MemberDirectoryFilterPage = lazy(() =>
     default: m.MemberDirectoryFilterPage,
   })),
 );
+const SubprofilePage = lazy(() =>
+  import("../features/subprofiles/SubprofilePage").then((m) => ({
+    default: m.SubprofilePage,
+  })),
+);
+const SubprofileDirectoryPage = lazy(() =>
+  import("../features/subprofiles/SubprofileDirectoryPage").then((m) => ({
+    default: m.SubprofileDirectoryPage,
+  })),
+);
+const MySubprofilesPage = lazy(() =>
+  import("../features/subprofiles/MySubprofilesPage").then((m) => ({
+    default: m.MySubprofilesPage,
+  })),
+);
+const SubprofileEditorPage = lazy(() =>
+  import("../features/subprofiles/SubprofileEditorPage").then((m) => ({
+    default: m.SubprofileEditorPage,
+  })),
+);
 const SearchPage = lazy(() =>
   import("../features/members/SearchPage").then((m) => ({
     default: m.SearchPage,
@@ -1708,6 +1728,20 @@ export function AppRoutes() {
           <Route path={routes.search} element={<SearchPage />} />
           <Route path={routes.accountProfile} element={<ProfilePage />} />
           <Route path={`${routes.members}/:slug`} element={<ProfilePage />} />
+          {/* Linked persona nested under its owner's main profile. A two-segment
+              path never shadows the one-segment `:slug` route above in react-router
+              v7 (a `/members/x` URL only matches `:slug`; `/members/x/y` only this). */}
+          <Route
+            path={`${routes.members}/:slug/:subslug`}
+            element={<SubprofilePage />}
+          />
+          {/* Standalone (unlinked) persona by its global handle. */}
+          <Route path="/p/:handle" element={<SubprofilePage />} />
+          {/* Public persona directory. */}
+          <Route
+            path={routes.subprofiles}
+            element={<SubprofileDirectoryPage />}
+          />
           <Route path="/profile/:slug" element={<MemberProfileRedirect />} />
           <Route path={routes.publicProfile} element={<PublicProfilePage />} />
           <Route path={routes.badges} element={<BadgesPage />} />
@@ -2308,6 +2342,14 @@ export function AppRoutes() {
             element={<Navigate to={routes.accountProfile} replace />}
           />
           <Route path={routes.editProfile} element={<EditProfilePage />} />
+          <Route
+            path={routes.subprofilesDashboard}
+            element={<MySubprofilesPage />}
+          />
+          <Route
+            path={`${routes.subprofilesDashboard}/:id/edit`}
+            element={<SubprofileEditorPage />}
+          />
           <Route path={routes.work} element={<WorkHubPage />} />
           <Route path={routes.workProfile} element={<WorkProfilePage />} />
           <Route

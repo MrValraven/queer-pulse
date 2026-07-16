@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ChipSelect, useChipSet } from "../../shared/components/ui";
+import { ChipSelect, ComingSoon } from "../../shared/components/ui";
+import { useProfile } from "../../app/providers/ProfileProvider";
 import { Pane, Section, ToggleList, ToggleRow } from "./SettingsControls";
 import {
   AGE_LABELS,
@@ -10,33 +11,11 @@ import {
   IDENTITIES,
   LOOKING_FOR,
   READING_PREFS,
-  type ChipGroup,
 } from "./interests.data";
 import styles from "./InterestsPane.module.css";
 
-function ChipField({
-  group,
-  onChange,
-}: {
-  group: ChipGroup;
-  onChange: () => void;
-}) {
-  const { selected, toggle } = useChipSet(group.defaults);
-
-  return (
-    <ChipSelect
-      tick={false}
-      options={group.options}
-      selected={selected}
-      onToggle={(label) => {
-        toggle(label);
-        onChange();
-      }}
-    />
-  );
-}
-
 export function InterestsPane({ onChange }: { onChange: () => void }) {
+  const { draft, updateDraft } = useProfile();
   const [identitiesSkipped, setIdentitiesSkipped] = useState(false);
   const [ageIndex, setAgeIndex] = useState(DEFAULT_AGE_INDEX);
   const [freq, setFreq] = useState(DEFAULT_FREQ);
@@ -67,18 +46,40 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
           Select as many as feel right. We use these to suggest relevant
           communities and content — not to categorise you.
         </div>
-        <ChipField group={IDENTITIES} onChange={onChange} />
+        <ChipSelect
+          tick={false}
+          options={IDENTITIES.options}
+          selected={new Set(draft.identities)}
+          onToggle={(label) => {
+            const next = draft.identities.includes(label)
+              ? draft.identities.filter((x) => x !== label)
+              : [...draft.identities, label];
+            updateDraft({ identities: next });
+            onChange();
+          }}
+        />
       </div>
 
       <div className={styles.prefSection}>
         <div className={styles.psHead}>What are you looking for here?</div>
         <div className={styles.psHelper}>Select as many as you like.</div>
-        <ChipField group={LOOKING_FOR} onChange={onChange} />
+        <ChipSelect
+          tick={false}
+          options={LOOKING_FOR.options}
+          selected={new Set(draft.lookingFor)}
+          onToggle={(label) => {
+            const next = draft.lookingFor.includes(label)
+              ? draft.lookingFor.filter((x) => x !== label)
+              : [...draft.lookingFor, label];
+            updateDraft({ lookingFor: next });
+            onChange();
+          }}
+        />
       </div>
 
       <div className={styles.prefSection}>
         <div className={styles.psHead}>
-          A bit about your life
+          A bit about your life <ComingSoon />
           <span className={styles.psHeadNote}>
             (private — helps with local suggestions)
           </span>
@@ -89,6 +90,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             <input
               type="text"
               defaultValue="Lisbon, Portugal"
+              disabled
               onChange={onChange}
             />
           </div>
@@ -97,6 +99,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             <input
               type="text"
               placeholder="e.g. Portuguese, English"
+              disabled
               onChange={onChange}
             />
           </div>
@@ -115,6 +118,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             max={AGE_LABELS.length - 1}
             step={1}
             value={ageIndex}
+            disabled
             onChange={(e) => {
               setAgeIndex(Number(e.target.value));
               onChange();
@@ -137,12 +141,13 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
               key={title}
               title={title}
               defaultChecked
+              comingSoon
               onChange={onChange}
             />
           ))}
         </ToggleList>
         <div className={styles.subHead}>
-          How often do you want to hear from us?
+          How often do you want to hear from us? <ComingSoon />
         </div>
         <div className={styles.freqOpts}>
           {FREQ_OPTIONS.map((opt) => (
@@ -150,6 +155,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
               key={opt.key}
               type="button"
               className={`${styles.freqOpt} ${freq === opt.key ? styles.freqOptSelected : ""}`}
+              disabled
               onClick={() => {
                 setFreq(opt.key);
                 onChange();
@@ -178,6 +184,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
               key={title}
               title={title}
               defaultChecked
+              comingSoon
               onChange={onChange}
             />
           ))}

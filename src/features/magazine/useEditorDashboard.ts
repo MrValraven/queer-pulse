@@ -1,5 +1,6 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   PIECES,
   PITCHES,
@@ -41,12 +42,14 @@ type Action =
   | { type: "setQuery"; q: string }
   | { type: "setFilter"; key: FilterKey; value: string }
   | { type: "toggleMyQueue" }
+  | { type: "reseed"; demoMode: boolean }
   | { type: "reset" };
 
-function init(): DashState {
+// The editorial pipeline is demo-only fiction (no backend); live mode is empty.
+function init(demoMode: boolean): DashState {
   return {
-    pieces: PIECES.map((p) => ({ ...p })),
-    pitches: PITCHES.map((p) => ({ ...p })),
+    pieces: demoMode ? PIECES.map((p) => ({ ...p })) : [],
+    pitches: demoMode ? PITCHES.map((p) => ({ ...p })) : [],
     selPitches: [],
     me: ME,
     q: "",
@@ -97,6 +100,8 @@ function reducer(state: DashState, action: Action): DashState {
       };
     case "clearSelect":
       return { ...state, selPitches: [] };
+    case "reseed":
+      return init(action.demoMode);
     case "setMe":
       return { ...state, me: action.me };
     case "setQuery":
@@ -144,8 +149,16 @@ export interface EditorDashboard {
 }
 
 export function useEditorDashboard(): EditorDashboard {
-  const [state, dispatch] = useReducer(reducer, undefined, init);
+  const { demoMode } = useDemoMode();
+  const [state, dispatch] = useReducer(reducer, demoMode, init);
   const { showToast } = useToast();
+
+  // Re-seed when the "Populate platform" toggle flips.
+  const [prevDemo, setPrevDemo] = useState(demoMode);
+  if (prevDemo !== demoMode) {
+    setPrevDemo(demoMode);
+    dispatch({ type: "reseed", demoMode });
+  }
 
   const filters: Filters = {
     q: state.q,

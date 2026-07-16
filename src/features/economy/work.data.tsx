@@ -10,8 +10,6 @@ import {
   FiMessageCircle,
 } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
-import { currentUser, fullName } from "../members/data/members";
-import type { VisibilityMode } from "../../shared/components/ui";
 import { APPS } from "./applicationStatus.data";
 import { MENTORS } from "./mentorship.data";
 
@@ -20,20 +18,7 @@ const sentApps = APPS.filter((a) => a.cat !== "draft").length;
 const offers = APPS.filter((a) => a.cat === "offer").length;
 const openMentors = MENTORS.filter((m) => m.btn !== "Join waitlist").length;
 
-/** The signed-in member's work identity, as it currently stands. */
-export const workIdentity = {
-  name: fullName(currentUser),
-  first: currentUser.first,
-  initials: currentUser.initials,
-  pronouns: "they/them",
-  headline: currentUser.role,
-  location: "Lisbon · open to remote",
-  /** Out-at-work state shown on the hub — 'network' = verified employers only. */
-  outAtWork: "network" as VisibilityMode,
-  completeness: 70,
-};
-
-/** A live one-line summary of where work stands, derived from the data above. */
+/** A live one-line summary of where work stands, derived from the mock data. */
 export const workStatusLine = `${activeApps} active application${activeApps === 1 ? "" : "s"} · ${
   offers ? `${offers} offer to respond to` : "no offers yet"
 } · 2 mentor threads`;

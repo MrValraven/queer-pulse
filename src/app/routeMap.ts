@@ -254,6 +254,11 @@ export const routes = {
   studioTrack: "/studio/track",
   submitStory: "/magazine/submit-story",
   subscriptions: "/account/subscriptions",
+  // Subprofiles: the public persona directory + the owner's dashboard. Param
+  // routes (/p/:handle, /members/:slug/:subslug, the editor) are declared in
+  // routes.tsx and linked via the helpers below.
+  subprofiles: "/subprofiles",
+  subprofilesDashboard: "/account/subprofiles",
   tag: "/magazine/tag",
   topic: "/topic",
   terms: "/policies/terms",
@@ -342,6 +347,15 @@ export const thread = (id: number | string) => `/thread/${id}`;
 /** A community topic (hashtag) feed page. Accepts a bare tag or a "#tag". */
 export const topicPath = (tag: string) =>
   `/topic/${tag.replace(/^#/, "").toLowerCase()}`;
+
+/** The owner editor for one subprofile (`/account/subprofiles/:id/edit`). */
+export const subprofileEditPath = (id: string) =>
+  `/account/subprofiles/${id}/edit`;
+/** A standalone (unlinked) persona's public page by its global handle. */
+export const personaPath = (handle: string) => `/p/${handle}`;
+/** A linked persona nested under its owner's main profile. */
+export const nestedPersonaPath = (ownerSlug: string, slug: string) =>
+  `/members/${ownerSlug}/${slug}`;
 
 /** Known top-level routes that should render real (or placeholder) pages. */
 export const KNOWN_ROUTE_SLUGS: string[] = [

@@ -1,6 +1,8 @@
 import { http, HttpResponse } from "msw";
 import type { JobCardDTO } from "../../features/economy/api/jobs.api";
 import type { Paginated } from "../../shared/api/refs";
+import { subprofileHandlers } from "./subprofiles.handlers";
+import { handleHandlers } from "./handles.handlers";
 
 /**
  * MSW handlers for the few LIVE-mode suites. They double as executable
@@ -57,4 +59,6 @@ export const handlers = [
     };
     return HttpResponse.json(body);
   }),
+  ...subprofileHandlers(API),
+  ...handleHandlers(API),
 ];

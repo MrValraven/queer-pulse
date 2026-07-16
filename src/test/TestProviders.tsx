@@ -2,6 +2,7 @@ import { type ComponentType, type ReactNode } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "../app/providers/ThemeProvider";
+import { AccessibilityProvider } from "../app/providers/AccessibilityProvider";
 import { DemoModeProvider } from "../app/providers/DemoModeProvider";
 import { AuthProvider } from "../app/providers/AuthProvider";
 import { ConsentProvider } from "../app/providers/ConsentProvider";
@@ -39,6 +40,7 @@ type ProviderComponent = ComponentType<{ children: ReactNode }>;
  */
 const PROVIDERS: ProviderComponent[] = [
   ThemeProvider,
+  AccessibilityProvider,
   DemoModeProvider,
   AuthProvider,
   ConsentProvider,

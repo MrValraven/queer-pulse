@@ -70,6 +70,9 @@ export interface ProfileDraft {
   work: WorkItem[];
   /** Skills offered — persisted on save via PUT /profiles/me/skills. */
   skills: SkillItem[];
+  /** Private Settings → Interests preferences — not shown on the profile. */
+  identities: string[];
+  lookingFor: string[];
 }
 
 function toDraft(m: Member): ProfileDraft {
@@ -86,6 +89,8 @@ function toDraft(m: Member): ProfileDraft {
     socials: (m.socials ?? []).map((s) => ({ ...s })),
     work: m.work.map((w) => ({ ...w })),
     skills: m.skills.map((s) => ({ ...s })),
+    identities: [...(m.identities ?? [])],
+    lookingFor: [...(m.lookingFor ?? [])],
   };
 }
 
@@ -101,6 +106,8 @@ function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
     location: d.hood.trim(),
     visibility: d.visibility,
     tags: d.tags,
+    identities: d.identities,
+    lookingFor: d.lookingFor,
   };
 }
 
@@ -224,6 +231,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       socials: draft.socials.filter((s) => s.urlOrHandle.trim()),
       work: draft.work,
       skills: draft.skills,
+      identities: draft.identities,
+      lookingFor: draft.lookingFor,
     }));
     setIsEditing(false);
     setJustSaved(true);

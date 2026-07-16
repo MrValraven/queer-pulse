@@ -138,8 +138,27 @@
   animation: qeRise 220ms var(--ease, ease) both;
 }
 
-.aboutClose {
+.aboutNote {
+  margin: 10px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.aboutNote strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.aboutActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 10px;
+}
+
+.aboutClose,
+.aboutHide {
   padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid rgba(var(--line-rgb), 0.18);
@@ -152,8 +171,14 @@
 }
 
 .aboutClose:hover,
-.aboutClose:focus-visible {
+.aboutClose:focus-visible,
+.aboutHide:hover,
+.aboutHide:focus-visible {
   background: rgba(var(--plum-rgb), 0.06);
+}
+
+.aboutHide {
+  color: var(--ink-60);
 }
 
 /* Reduced-motion: kill entrance + hover lift; function never depends on it. */

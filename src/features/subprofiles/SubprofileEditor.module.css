@@ -1,0 +1,339 @@
+/* Shared styles for the subprofile owner-editor cluster: the editor page, its
+   meta form, image-upload field, and the section / item editors. Tokens only. */
+
+.page {
+  background: var(--cream);
+  min-height: 60svh;
+  padding-block: clamp(24px, 5vw, 56px);
+}
+
+.container {
+  width: min(760px, 100% - 40px);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink-60);
+  text-decoration: none;
+  width: fit-content;
+}
+@media (hover: hover) {
+  .backLink:hover {
+    color: var(--ink);
+  }
+}
+.backLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ── Page header ─────────────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.headTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(26px, 3.6vw, 38px);
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  line-height: 1.1;
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.headTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.headMeta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ── Card surface ────────────────────────────────────────────────────────── */
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+  padding: clamp(18px, 3vw, 28px);
+}
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.cardIcon {
+  display: inline-flex;
+  color: var(--accent-ink);
+}
+.cardTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--text-strong);
+  margin: 0;
+}
+.cardNote {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin: 4px 0 18px;
+  line-height: 1.5;
+}
+
+/* ── Meta form ───────────────────────────────────────────────────────────── */
+.linkHelp {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin: 8px 0 0;
+}
+.pathPreview {
+  font-family: var(--sans);
+  color: var(--ink-40);
+}
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* ── Image / avatar upload field ─────────────────────────────────────────── */
+.imgField {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.avatarField {
+  align-items: flex-start;
+}
+.imgActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.smallBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 999px;
+  padding: 7px 13px;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease);
+}
+.smallBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .smallBtn:not(:disabled):hover {
+    border-color: var(--line-strong);
+  }
+}
+.smallBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.imgError {
+  font-size: 12px;
+  color: var(--accent-ink);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ── Section editor ──────────────────────────────────────────────────────── */
+.itemsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sectionFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1.5px dashed color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius: 14px;
+  padding: 11px 18px;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+.addBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  color: var(--ink-40);
+  border-color: rgba(var(--line-rgb), 0.16);
+  background: transparent;
+}
+@media (hover: hover) {
+  .addBtn:not(:disabled):hover {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+  }
+}
+.addBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.capHint {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+.emptySection {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin: 0 0 4px;
+}
+
+/* ── Item editor ─────────────────────────────────────────────────────────── */
+.itemCard {
+  background: color-mix(in srgb, var(--plum) 2.5%, var(--cream));
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 16px;
+  padding: 16px;
+}
+.itemHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.itemNum {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-40);
+}
+.itemTools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.toolBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  background: var(--paper);
+  color: var(--ink-60);
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease);
+}
+.toolBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .toolBtn:not(:disabled):hover {
+    border-color: var(--line-strong);
+    color: var(--ink);
+  }
+}
+.toolBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.removeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: none;
+  border: none;
+  padding: 6px 8px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.removeBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Publish panel ───────────────────────────────────────────────────────── */
+.publishBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.publishCopy {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin: 0;
+  flex: 1 1 260px;
+  min-width: 0;
+}
+.publishActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.checklistWrap {
+  margin-top: 20px;
+}
+
+/* ── Loading / not-found states ──────────────────────────────────────────── */
+.stateWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: clamp(40px, 8vw, 80px) 20px;
+  color: var(--ink-60);
+  text-align: center;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

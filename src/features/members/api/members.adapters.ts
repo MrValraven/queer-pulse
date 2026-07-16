@@ -125,6 +125,8 @@ export function profileToMember(dto: ProfileDTO): Member {
     since: joinYear(dto.joinedAt),
     now: dto.now ?? "",
     openTo: dto.openTo ?? [],
+    identities: dto.identities ?? [],
+    lookingFor: dto.lookingFor ?? [],
     socials: (dto.socials ?? []).map((s) => ({
       platform: s.platform,
       urlOrHandle: s.urlOrHandle,

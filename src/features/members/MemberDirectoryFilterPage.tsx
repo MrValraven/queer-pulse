@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiUsers } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -91,6 +91,13 @@ export function MemberDirectoryFilterPage() {
   }, [sourceMembers, filters, sort]);
 
   const chips = useMemo(() => appliedChips(filters), [filters]);
+  // Distinguish a genuinely empty directory (nothing to show, e.g. live mode
+  // against a fresh backend) from filters that happen to exclude everyone. The
+  // age range carries no chip, so fold it in alongside the chip count.
+  const hasActiveFilters =
+    chips.length > 0 ||
+    filters.yearsFrom !== EMPTY_FILTERS.yearsFrom ||
+    filters.yearsTo !== EMPTY_FILTERS.yearsTo;
   // Server pagination drives "load more" now; client-side filtering/sorting runs
   // over every page fetched so far. Demo mode returns the whole MEMBERS list as a
   // single page, so `hasNextPage` is false and the full mock list renders.
@@ -193,18 +200,26 @@ export function MemberDirectoryFilterPage() {
                 ))}
               </div>
             ) : shown.length === 0 ? (
-              <EmptyState
-                icon={<FiSearch />}
-                title="Nothing matches your filters"
-                description="No members fit all of these just now. Loosen a filter or two and more people will show up."
-                action={{
-                  label: "Clear filters",
-                  onClick: () => {
-                    applyFilters(EMPTY_FILTERS);
-                    setSort("Recently active");
-                  },
-                }}
-              />
+              hasActiveFilters ? (
+                <EmptyState
+                  icon={<FiSearch />}
+                  title="Nothing matches your filters"
+                  description="No members fit all of these just now. Loosen a filter or two and more people will show up."
+                  action={{
+                    label: "Clear filters",
+                    onClick: () => {
+                      applyFilters(EMPTY_FILTERS);
+                      setSort("Recently active");
+                    },
+                  }}
+                />
+              ) : (
+                <EmptyState
+                  icon={<FiUsers />}
+                  title="No members here yet"
+                  description="This directory is still filling up. As people join QueerPulse and opt in to being findable, they'll show up here — check back soon."
+                />
+              )
             ) : (
               <div className={styles.mGrid}>
                 {shown.map((member, i) => (

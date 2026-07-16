@@ -327,7 +327,9 @@
 }
 .skeletonImg {
   aspect-ratio: 16 / 9;
-  background: rgba(var(--plum-rgb), 0.07);
+  /* --line-rgb flips to light channels in dark mode so the placeholder stays
+     visible on dark surfaces (raw --plum-rgb would go dark-on-dark). */
+  background: rgba(var(--line-rgb), 0.07);
 }
 
 .betaGrid {

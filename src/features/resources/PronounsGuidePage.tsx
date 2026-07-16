@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useAuth } from "../../app/providers/authContext";
 import { NameTable, WhereGrid, FaqList } from "./PronounsGuideSections";
 import styles from "./PronounsGuidePage.module.css";
 
 export function PronounsGuidePage() {
+  const { loggedIn } = useAuth();
   return (
     <PageShell>
       <header className={styles.hero}>
@@ -26,7 +28,7 @@ export function PronounsGuidePage() {
       <main className={styles.body}>
         <div className={styles.layout}>
           <div>
-            <section className={styles.section}>
+            <Reveal as="section" className={styles.section}>
               <div className={styles.proseEye}>The basics</div>
               <h2 className={styles.proseH}>
                 Chosen name vs. <em>legal name.</em>
@@ -48,9 +50,9 @@ export function PronounsGuidePage() {
                 </p>
               </div>
               <NameTable />
-            </section>
+            </Reveal>
 
-            <section className={styles.section}>
+            <Reveal as="section" className={styles.section}>
               <div className={styles.proseEye}>When you update your name</div>
               <h2 className={styles.proseH}>
                 What changes, <em>and when.</em>
@@ -63,9 +65,9 @@ export function PronounsGuidePage() {
                 </p>
               </div>
               <WhereGrid />
-            </section>
+            </Reveal>
 
-            <section className={styles.section}>
+            <Reveal as="section" className={styles.section}>
               <div className={styles.proseEye}>Pronouns</div>
               <h2 className={styles.proseH}>
                 Setting and <em>changing pronouns.</em>
@@ -90,30 +92,32 @@ export function PronounsGuidePage() {
                   misgendering as a code of conduct issue.
                 </p>
               </div>
-            </section>
+            </Reveal>
 
-            <section className={styles.section}>
+            <Reveal as="section" className={styles.section}>
               <div className={styles.proseEye}>Common questions</div>
               <h2 className={styles.proseH}>
                 Things people <em>ask us.</em>
               </h2>
               <FaqList />
-            </section>
+            </Reveal>
           </div>
 
           <aside className={styles.sidebar}>
-            <div className={styles.sidebarCard}>
-              <h3>
-                Update your <em>name now</em>
-              </h3>
-              <p>
-                Make changes to your display name, chosen name, and pronouns in
-                your profile settings.
-              </p>
-              <Button variant="primary" to={routes.settings}>
-                Edit profile
-              </Button>
-            </div>
+            {loggedIn && (
+              <div className={styles.sidebarCard}>
+                <h3>
+                  Update your <em>name now</em>
+                </h3>
+                <p>
+                  Make changes to your display name, chosen name, and pronouns
+                  in your profile settings.
+                </p>
+                <Button variant="primary" to={routes.settings}>
+                  Edit profile
+                </Button>
+              </div>
+            )}
             <div className={styles.commitment}>
               <h4>Our commitment</h4>
               <p>

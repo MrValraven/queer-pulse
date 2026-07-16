@@ -5,6 +5,8 @@ import { useAuth } from "../../app/providers/authContext";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useConsent } from "../../app/providers/ConsentProvider";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { Language } from "../../shared/i18n/types";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
 import type { Member } from "../members/data/members";
 import { TERMS } from "./settings.data";
@@ -20,7 +22,7 @@ import {
   ToggleList,
   ToggleRow,
 } from "./SettingsControls";
-import { DataExportModal, SuggestEditModal } from "./SettingsModals";
+import { DataExportModal } from "./SettingsModals";
 import styles from "./SettingsPage.module.css";
 
 const VISIBILITY_OPTIONS: { v: VisibilityMode; t: string; d: string }[] = [
@@ -160,9 +162,9 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
   );
 }
 
-export function LanguagePane({ onChange }: { onChange: () => void }) {
+export function LanguagePane() {
+  const { language, setLanguage } = useTranslation();
   const [termQuery, setTermQuery] = useState("");
-  const [editTerm, setEditTerm] = useState<string | null>(null);
   const terms = useMemo(() => {
     const q = termQuery.trim().toLowerCase();
     if (!q) return TERMS;
@@ -179,16 +181,18 @@ export function LanguagePane({ onChange }: { onChange: () => void }) {
           Language &amp; <em>terminology.</em>
         </>
       }
-      sub="A living document, edited by the community. If a term feels incomplete or missing — suggest an edit. All changes are reviewed before going live."
+      sub="A living reference, kept up to date by the community. Search for a term to see how we use it across QueerPulse."
     >
       <Section label="Platform language preference">
         <SelectRow
           title="Interface language"
-          desc="The language QueerPulse uses for menus, labels, and system messages"
-          options={["English", "Português", "Español", "Français"]}
-          defaultValue="English"
-          comingSoon
-          onChange={onChange}
+          desc="The language QueerPulse uses for menus, labels, and system messages. Português is still being translated across the platform — some pages stay in English for now."
+          options={[
+            { value: "en", label: "English" },
+            { value: "pt", label: "Português" },
+          ]}
+          value={language}
+          onChange={(v) => setLanguage(v as Language)}
         />
       </Section>
       <Section label="Community terminology guide">
@@ -204,19 +208,10 @@ export function LanguagePane({ onChange }: { onChange: () => void }) {
             <div key={t.name} className={styles.termRow}>
               <div className={styles.termName}>{t.name}</div>
               <div className={styles.termDef}>{t.def}</div>
-              <span
-                className={styles.termEdit}
-                onClick={() => setEditTerm(t.name)}
-              >
-                Suggest an edit →
-              </span>
             </div>
           ))}
         </div>
       </Section>
-      {editTerm && (
-        <SuggestEditModal term={editTerm} onClose={() => setEditTerm(null)} />
-      )}
     </Pane>
   );
 }

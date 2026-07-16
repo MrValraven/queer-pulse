@@ -76,6 +76,12 @@ export interface Member {
   /** Social / web links the member surfaces on their profile. Optional — most
    *  members have none; default to `[]` wherever read. */
   socials?: SocialLink[];
+  /** Private "which identities feel like yours" preference (Settings → Interests).
+   *  Not shown on the profile; drives content/community suggestions. */
+  identities?: string[];
+  /** Private "what are you looking for here" preference (Settings → Interests).
+   *  Fixed taxonomy, private — distinct from the public `openTo` blurbs. */
+  lookingFor?: string[];
   board: BoardItem[];
   /** Member slugs of people who have vouched (cross-referenced into the registry). */
   vouchers: string[];
@@ -3171,6 +3177,14 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "test bio description for logged in user (tiago)",
     now: "Building things for the web, writing poetry, and organising events for the queer and non-monogamy communities in Lisbon.",
     openTo: ["Collaboration", "Community events", "Mentorship"],
+    identities: ["Gay", "Bisexual", "Queer"],
+    lookingFor: [
+      "Community & friendship",
+      "Professional networking",
+      "Gatherings & events",
+      "Creative collaboration",
+      "Reading & culture",
+    ],
     work: [
       {
         category: "Fullstack Developer",

@@ -11,6 +11,7 @@ import styles from "./EditorDashboardPage.module.css";
 /** The "Pieces · in flight" section: header, sortable count, rows, empty state. */
 export function EditorPiecesTable({
   pieces,
+  totalPieces,
   me,
   sort,
   focusedId,
@@ -18,6 +19,8 @@ export function EditorPiecesTable({
   onReset,
 }: {
   pieces: Piece[];
+  /** Unfiltered pipeline size — distinguishes "nothing in flight" from "no matches". */
+  totalPieces: number;
   me: Editor;
   sort: SortKey;
   focusedId: string | null;
@@ -44,14 +47,25 @@ export function EditorPiecesTable({
           </div>
         )}
         {pieces.length === 0 ? (
-          <div className={styles.empty}>
-            <div className={styles.emptyMark} />
-            <b>No pieces match</b>
-            <span>Try clearing the search or filters.</span>
-            <Button variant="ghost" onClick={onReset}>
-              Clear filters
-            </Button>
-          </div>
+          totalPieces === 0 ? (
+            <div className={styles.empty}>
+              <div className={styles.emptyMark} />
+              <b>Nothing in flight yet</b>
+              <span>
+                No pieces are in the pipeline right now. Accept a pitch below or
+                commission one, and it'll land here to edit.
+              </span>
+            </div>
+          ) : (
+            <div className={styles.empty}>
+              <div className={styles.emptyMark} />
+              <b>No pieces match</b>
+              <span>Try clearing the search or filters.</span>
+              <Button variant="ghost" onClick={onReset}>
+                Clear filters
+              </Button>
+            </div>
+          )
         ) : (
           pieces.map((p) => (
             <EditorPieceRow

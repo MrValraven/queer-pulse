@@ -3,7 +3,7 @@ import { AppShell } from "../../shared/components/layout";
 import { Button, EmptyState } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
-import { currentUser } from "../members/data/members";
+import { useProfile } from "../../app/providers/ProfileProvider";
 import { CommunitiesHomeDigest } from "./CommunitiesHomeDigest";
 import { CommunitiesHomeSidebar } from "./CommunitiesHomeSidebar";
 import {
@@ -15,7 +15,9 @@ import styles from "./CommunitiesHomePage.module.css";
 
 export function CommunitiesHomePage() {
   const loading = useSimulatedLoad(500);
-  const firstName = currentUser.first;
+  // The signed-in member (real profile live, mock currentUser in demo mode).
+  const { profile } = useProfile();
+  const firstName = profile.first;
   const { pulse, todos, myCommunities, upcoming, suggestions, digest } =
     useCommunitiesHomeData();
 

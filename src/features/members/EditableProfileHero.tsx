@@ -1,5 +1,7 @@
+import { useEffect, useRef } from "react";
 import { Reveal } from "../../shared/components/ui";
 import type { ImageSlotTint } from "../../shared/components/ui";
+import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { AvatarEditor } from "./AvatarEditor";
 import {
@@ -22,8 +24,29 @@ function resolveTint(tint: string): ImageSlotTint {
  * can change is an inline control bound to the draft in `ProfileProvider`. Saving
  * and discarding live in the sticky `ProfileEditBar` rendered by the page.
  */
-export function EditableProfileHero() {
+export function EditableProfileHero({
+  focusLinks = false,
+}: {
+  /** When entered via the "Add/Edit links" affordance, scroll + focus the Links field. */
+  focusLinks?: boolean;
+}) {
   const { profile, draft, updateDraft } = useProfile();
+  const linksRef = useRef<HTMLDivElement>(null);
+  const reduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (!focusLinks) return;
+    const raf = requestAnimationFrame(() => {
+      const el = linksRef.current;
+      if (!el) return;
+      el.scrollIntoView({
+        behavior: reduced ? "auto" : "smooth",
+        block: "center",
+      });
+      el.querySelector<HTMLElement>("select, input, button")?.focus();
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [focusLinks, reduced]);
 
   return (
     <header className={base.phero}>
@@ -120,7 +143,7 @@ export function EditableProfileHero() {
               />
             </div>
 
-            <div className={styles.field}>
+            <div className={styles.field} ref={linksRef}>
               <label className={styles.fieldLabel}>Links</label>
               <SocialLinksEditor
                 links={draft.socials}

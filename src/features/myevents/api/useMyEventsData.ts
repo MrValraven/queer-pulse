@@ -16,8 +16,9 @@ export interface MyEventsDataResult {
   loading: boolean;
 }
 
-/** Stable empty array so the "no data yet" case doesn't churn identity every render. */
+/** Stable empty arrays so the "no data yet" case doesn't churn identity every render. */
 const EMPTY_EVENTS: MyEvent[] = [];
+const EMPTY_NOTIFS: Notif[] = [];
 
 /** Every cat-bearing filter the dashboard needs — "upcoming" is a client-derived
  *  pill (see `inPill`), never fetched directly. */
@@ -41,8 +42,9 @@ const LIVE_FILTERS: EventFilter[] = [
  * GET /event-invites for pending invitations, and merges everything into the
  * same flat `MyEvent[]` shape `useMyEventsState` already filters/mutates
  * locally. Notifications and "sent" (outgoing invites you sent) have no
- * backend contract yet, so both stay demo-only in live mode too — a
- * documented gap rather than a fake success.
+ * backend contract yet; rather than pass the mock off as real, live mode
+ * returns no notifications at all (empty "What's changed" + zero bell badge) —
+ * a documented gap rather than a fake success.
  */
 export function useMyEventsData(): MyEventsDataResult {
   const { demoMode } = useDemoMode();
@@ -66,9 +68,12 @@ export function useMyEventsData(): MyEventsDataResult {
   if (demoMode) {
     return { events: INITIAL_EVENTS, notifs: INITIAL_NOTIFS, loading: false };
   }
+  // Notifications have no backend contract yet, so rather than surface the mock
+  // "What's changed" list as if it were real, live mode shows none — the panel
+  // renders its "all caught up" empty state and the bell badge reads zero.
   return {
     events: query.data ?? EMPTY_EVENTS,
-    notifs: INITIAL_NOTIFS,
+    notifs: EMPTY_NOTIFS,
     loading: query.isPending,
   };
 }

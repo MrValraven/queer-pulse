@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiInbox } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad, usePrefersReducedMotion } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import {
@@ -38,6 +40,7 @@ const HIDDEN_PITCHES = PITCH_TOTAL - PITCHES.length;
 export function EditorDashboardPage() {
   const loading = useSimulatedLoad();
   const reduced = usePrefersReducedMotion();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const dash = useEditorDashboard();
@@ -72,7 +75,11 @@ export function EditorDashboardPage() {
     }),
     [state.pieces],
   );
-  const pitchesInInbox = HIDDEN_PITCHES + state.pitches.length;
+  // `HIDDEN_PITCHES` is mock-only backlog — only real in demo mode.
+  const pitchesInInbox = demoMode
+    ? HIDDEN_PITCHES + state.pitches.length
+    : state.pitches.length;
+  const isEmpty = state.pieces.length === 0 && state.pitches.length === 0;
 
   function runTriage(ids: string[], commit: () => void) {
     if (reduced || !ids.length) {
@@ -126,6 +133,12 @@ export function EditorDashboardPage() {
       <div className={styles.page}>
         {loading ? (
           <EditorDashboardSkeleton />
+        ) : isEmpty ? (
+          <EmptyState
+            icon={<FiInbox />}
+            title="The desk is clear"
+            description="No pieces in flight and no pitches waiting. When writers pitch or you commission a piece, it'll show up here to triage and edit."
+          />
         ) : (
           <>
             <FadeIn>
@@ -163,6 +176,7 @@ export function EditorDashboardPage() {
               <main>
                 <EditorPiecesTable
                   pieces={visible}
+                  totalPieces={state.pieces.length}
                   me={state.me}
                   sort={state.sort}
                   focusedId={focusedId}

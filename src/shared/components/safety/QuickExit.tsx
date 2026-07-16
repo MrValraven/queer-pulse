@@ -3,6 +3,7 @@ import { FiLogOut, FiX } from "react-icons/fi";
 import { useQuickExit } from "../../hooks/useQuickExit";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
+import { useToast } from "../feedback/useToast";
 import styles from "./QuickExit.module.css";
 
 const SEEN_KEY = "qp.safety.quickExit.seen.v1";
@@ -16,8 +17,9 @@ const SEEN_KEY = "qp.safety.quickExit.seen.v1";
  * wiped by any web app.
  */
 export function QuickExit() {
-  const { enabled, keyTrigger, triggerExit } = useQuickExit();
+  const { enabled, keyTrigger, triggerExit, setEnabled } = useQuickExit();
   const prefersReduced = usePrefersReducedMotion();
+  const { showToast } = useToast();
   const [seen, setSeen] = useLocalStorage<boolean>(SEEN_KEY, false);
   const [showAbout, setShowAbout] = useState(false);
 
@@ -27,6 +29,14 @@ export function QuickExit() {
     setSeen(true); // interacting counts as "seen"
     triggerExit();
   }, [setSeen, triggerExit]);
+
+  const onHide = useCallback(() => {
+    setEnabled(false); // unmounts the widget (enabled gate below)
+    showToast(
+      "Quick exit hidden. Turn it back on in Settings → Safety.",
+      "info",
+    );
+  }, [setEnabled, showToast]);
 
   if (!enabled) return null;
 
@@ -65,13 +75,22 @@ export function QuickExit() {
             suggestions. For real safety, also use a private window and clear
             your history.
           </p>
-          <button
-            type="button"
-            className={styles.aboutClose}
-            onClick={() => setShowAbout(false)}
-          >
-            Got it
-          </button>
+          <p className={styles.aboutNote}>
+            Don’t need it? You can hide this button and turn it back on any time
+            in <strong>Settings → Safety</strong>.
+          </p>
+          <div className={styles.aboutActions}>
+            <button
+              type="button"
+              className={styles.aboutClose}
+              onClick={() => setShowAbout(false)}
+            >
+              Got it
+            </button>
+            <button type="button" className={styles.aboutHide} onClick={onHide}>
+              Hide Quick exit
+            </button>
+          </div>
         </div>
       )}
 

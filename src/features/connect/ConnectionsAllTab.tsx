@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiUsers } from "react-icons/fi";
 import {
   Button,
   EmptyState,
   FadeIn,
   SearchInput,
 } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { ConnectionsGridSkeleton } from "./ConnectionsSkeleton";
 import { AllConnectionCard } from "./ConnectionCards";
 import {
@@ -109,21 +110,30 @@ export function ConnectionsAllTab({
               </FadeIn>
             ))}
           </div>
-          {visibleAll.length === 0 && (
-            <EmptyState
-              compact
-              icon={<FiSearch />}
-              title="Nothing matches your filters"
-              description="No one in your network fits that search just yet. Clear it to see everyone again."
-              action={{
-                label: "Clear filters",
-                onClick: () => {
-                  setQuery("");
-                  setSort("Recently connected");
-                },
-              }}
-            />
-          )}
+          {visibleAll.length === 0 &&
+            (query.trim() === "" ? (
+              <EmptyState
+                compact
+                icon={<FiUsers />}
+                title="No connections yet"
+                description="Your network starts with a single hello. Meet people at a gathering, or find members you already know and connect once you've met."
+                action={{ label: "Find members", to: routes.members }}
+              />
+            ) : (
+              <EmptyState
+                compact
+                icon={<FiSearch />}
+                title="Nothing matches your search"
+                description="No one in your network fits that search just yet. Clear it to see everyone again."
+                action={{
+                  label: "Clear search",
+                  onClick: () => {
+                    setQuery("");
+                    setSort("Recently connected");
+                  },
+                }}
+              />
+            ))}
           {hasMore && query.trim() === "" && (
             <div className={styles.loadMore}>
               <Button

@@ -6,6 +6,7 @@ import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDrafts } from "../../app/providers/DraftsProvider";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { DraftsHeader } from "./DraftsHeader";
 import { DraftsControls } from "./DraftsControls";
 import { DraftRow } from "./DraftRow";
@@ -56,6 +57,7 @@ export function DraftsPage() {
   const { showToast } = useToast();
   const navigate = useNavigate();
   const loading = useSimulatedLoad();
+  const { demoMode } = useDemoMode();
   const { drafts: userDrafts, addDraft, removeDraft } = useDrafts();
 
   const [category, setCategory] = useState<"all" | DraftCategory>("all");
@@ -71,16 +73,17 @@ export function DraftsPage() {
   );
 
   // Live list: user drafts ahead of the mock set, minus locally-deleted ones,
-  // with any "kept" draft's 90-day timer visibly reset.
+  // with any "kept" draft's 90-day timer visibly reset. The static mock drafts
+  // are demo-only — live mode shows just the member's real drafts.
   const base = useMemo(() => {
-    return [...userDrafts, ...DRAFTS]
+    return [...userDrafts, ...(demoMode ? DRAFTS : [])]
       .filter((d) => !hidden.has(d.id))
       .map((d): Draft =>
         kept.has(d.id)
           ? { ...d, status: "draft", deadlineDays: null, meta: KEPT_META }
           : d,
       );
-  }, [userDrafts, hidden, kept]);
+  }, [userDrafts, hidden, kept, demoMode]);
 
   const counts = useMemo(() => countByCategory(base), [base]);
   const visible = useMemo(

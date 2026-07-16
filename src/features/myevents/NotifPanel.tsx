@@ -3,18 +3,20 @@ import { useMyEvents } from "./MyEventsContext";
 
 /** The notifications dropdown list. */
 export function NotifPanel() {
-  const { notifs, markAllRead, notifGo } = useMyEvents();
+  const { notifs, unreadCount, markAllRead, notifGo } = useMyEvents();
   return (
     <div className={sx("notif-panel")} role="dialog" aria-label="Notifications">
       <div className={sx("notif-head")}>
         <span className={sx("notif-h-title")}>What’s changed</span>
-        <button
-          type="button"
-          className={sx("notif-clear")}
-          onClick={markAllRead}
-        >
-          Mark all read
-        </button>
+        {unreadCount > 0 && (
+          <button
+            type="button"
+            className={sx("notif-clear")}
+            onClick={markAllRead}
+          >
+            Mark all read
+          </button>
+        )}
       </div>
       <div className={sx("notif-list")}>
         {notifs.length === 0 ? (

@@ -67,7 +67,9 @@ img {
   border: 0;
 }
 
-/* Reduced-motion: neutralize transitions/animations + smooth scroll */
+/* Reduced-motion: neutralize transitions/animations + smooth scroll.
+   Triggered by the OS setting OR the in-app "Reduce motion" toggle, which
+   AccessibilityProvider reflects onto <html data-reduce-motion="true">. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -79,6 +81,17 @@ img {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+html[data-reduce-motion="true"] {
+  scroll-behavior: auto;
+}
+html[data-reduce-motion="true"] *,
+html[data-reduce-motion="true"] *::before,
+html[data-reduce-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }
 
 /* Brand scrollbars — subtle plum on transparent, matching the palette */

@@ -89,17 +89,26 @@ export function SelectRow({
   desc,
   options,
   defaultValue,
+  value,
   comingSoon,
   onChange,
 }: {
   title: string;
   desc: string;
-  options: string[];
-  defaultValue: string;
+  /** Plain strings when value === label, or `{ value, label }` when they differ. */
+  options: (string | { value: string; label: string })[];
+  defaultValue?: string;
+  /** Pass to make the select controlled (its value tracks live state). */
+  value?: string;
   /** Flags a control with no backend behind it yet: shows a badge, disables the select. */
   comingSoon?: boolean;
-  onChange: () => void;
+  /** Receives the selected option's value. */
+  onChange: (value: string) => void;
 }) {
+  const opts = options.map((o) =>
+    typeof o === "string" ? { value: o, label: o } : o,
+  );
+  const controlled = value !== undefined;
   return (
     <div className={styles.selectRow}>
       <div className={styles.toggleLabel}>
@@ -110,12 +119,14 @@ export function SelectRow({
       </div>
       <select
         className={styles.select}
-        defaultValue={defaultValue}
+        {...(controlled ? { value } : { defaultValue })}
         disabled={comingSoon}
-        onChange={comingSoon ? undefined : onChange}
+        onChange={comingSoon ? undefined : (e) => onChange(e.target.value)}
       >
-        {options.map((o) => (
-          <option key={o}>{o}</option>
+        {opts.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
         ))}
       </select>
     </div>

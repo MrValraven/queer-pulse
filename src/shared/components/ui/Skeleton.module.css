@@ -1,9 +1,12 @@
 .shimmer {
+  /* --line-rgb flips to light channels in dark mode, so the shimmer reads as a
+     subtle light-on-dark pulse there instead of vanishing (dark plum on dark).
+     Raw --plum-rgb would not flip. */
   background: linear-gradient(
     90deg,
-    rgba(var(--plum-rgb), 0.06) 25%,
-    rgba(var(--plum-rgb), 0.11) 50%,
-    rgba(var(--plum-rgb), 0.06) 75%
+    rgba(var(--line-rgb), 0.06) 25%,
+    rgba(var(--line-rgb), 0.11) 50%,
+    rgba(var(--line-rgb), 0.06) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;

@@ -261,6 +261,26 @@
 .faqItem.open .faqArrow {
   transform: rotate(180deg);
 }
+.faqPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-slow) var(--ease);
+}
+.faqItem.open .faqPanel {
+  grid-template-rows: 1fr;
+}
+.faqPanelInner {
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+.faqItem.open .faqPanelInner {
+  opacity: 1;
+  transform: translateY(0);
+}
 .faqA {
   font-size: 14px;
   color: var(--ink-60);

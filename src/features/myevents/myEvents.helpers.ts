@@ -109,6 +109,73 @@ export function inPill(ev: MyEvent, p: Pill): boolean {
   }
 }
 
+export interface YearInsights {
+  /** The calendar year these figures cover. */
+  year: number;
+  /** Gatherings you actually turned up to this year. */
+  attended: number;
+  /** Gatherings you're hosting this year. */
+  hosted: number;
+  /** Consecutive months (ending at your most recent one) with a gathering. */
+  streak: number;
+  /** The community you showed up for most this year, or null. */
+  topCircle: string | null;
+}
+
+/**
+ * Derive the "Your year so far" figures straight from the event list — so the
+ * card reflects real activity (populated demo data, or a live account) instead
+ * of a hardcoded tally. An empty list yields all-zero, which the card renders
+ * as an empty state rather than fake numbers.
+ */
+export function yearInsights(events: MyEvent[]): YearInsights {
+  const year = TODAY.getFullYear();
+  const attendedEvents = events.filter(
+    (ev) =>
+      ev.cat === "past" &&
+      !ev.noShow &&
+      parseDate(ev.date).getFullYear() === year,
+  );
+  const hosted = events.filter(
+    (ev) => ev.cat === "hosting" && parseDate(ev.date).getFullYear() === year,
+  ).length;
+
+  // Top circle: the community you attended most often this year.
+  const tally = new Map<string, number>();
+  for (const ev of attendedEvents) {
+    if (!ev.community) continue;
+    tally.set(ev.community, (tally.get(ev.community) ?? 0) + 1);
+  }
+  let topCircle: string | null = null;
+  let bestCount = 0;
+  for (const [circle, count] of tally) {
+    if (count > bestCount) {
+      bestCount = count;
+      topCircle = circle;
+    }
+  }
+
+  // Streak: consecutive months with a gathering, counting back from the most
+  // recent active month (so it reads as an ongoing run, not zero once a
+  // fallow month passes).
+  const activeMonths = new Set(
+    attendedEvents.map((ev) => {
+      const dt = parseDate(ev.date);
+      return dt.getFullYear() * 12 + dt.getMonth();
+    }),
+  );
+  let streak = 0;
+  if (activeMonths.size) {
+    let cursor = Math.max(...activeMonths);
+    while (activeMonths.has(cursor)) {
+      streak += 1;
+      cursor -= 1;
+    }
+  }
+
+  return { year, attended: attendedEvents.length, hosted, streak, topCircle };
+}
+
 /** Dot class for a calendar cell, by category. */
 export function dotClass(cat: string): string {
   return cat === "going"

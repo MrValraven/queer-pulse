@@ -1,48 +1,62 @@
-import {
-  Avatar,
-  Button,
-  VisibilityBadge,
-  type VisibilityMode,
-} from "../../shared/components/ui";
+import { Avatar, Button, VisibilityBadge } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { useWorkProfile } from "../../app/providers/WorkProfileProvider";
-import { workIdentity } from "./work.data";
+import { useProfile } from "../../app/providers/ProfileProvider";
+import { fullName, type Member } from "../members/data/members";
 import styles from "./WorkHubPage.module.css";
 
-/** Maps the out-at-work spectrum to the shared VisibilityBadge modes. */
-const OUT_TO_MODE: Record<string, VisibilityMode> = {
-  out: "open",
-  verified: "network",
-  private: "private",
-};
+/** Share of the employer-facing profile fields the member has actually filled. */
+function completenessOf(member: Member): number {
+  const checks = [
+    Boolean(member.photo),
+    Boolean(member.role?.trim()),
+    Boolean(member.pronouns?.trim()),
+    Boolean(member.hood?.trim()),
+    Boolean(member.bio?.trim()),
+    member.tags.length > 0,
+    member.work.length > 0,
+    member.skills.length > 0,
+    (member.socials?.length ?? 0) > 0,
+  ];
+  const filled = checks.filter(Boolean).length;
+  return Math.round((filled / checks.length) * 100);
+}
 
 /** The Work Profile summary module — identity at the centre of the workspace. */
 export function WorkProfileCard() {
-  const { outAtWork } = useWorkProfile();
-  const mode = OUT_TO_MODE[outAtWork] ?? "network";
+  // The signed-in member (real profile live, mock currentUser in demo mode).
+  const { profile } = useProfile();
+  const completeness = completenessOf(profile);
   return (
     <div className={styles.pCard}>
       <div className={styles.pHead}>
-        <Avatar initials={workIdentity.initials} tint="coral" size={52} />
+        <Avatar
+          initials={profile.initials}
+          src={profile.photo}
+          alt={fullName(profile)}
+          tint={profile.tint}
+          size={52}
+        />
         <div className={styles.pId}>
           <div className={styles.pName}>
-            {workIdentity.name}
-            <span className={styles.pPronouns}>{workIdentity.pronouns}</span>
+            {fullName(profile)}
+            {profile.pronouns && (
+              <span className={styles.pPronouns}>{profile.pronouns}</span>
+            )}
           </div>
-          <div className={styles.pHeadline}>{workIdentity.headline}</div>
-          <div className={styles.pLocation}>{workIdentity.location}</div>
+          <div className={styles.pHeadline}>{profile.role}</div>
+          <div className={styles.pLocation}>{profile.hood}</div>
         </div>
-        <VisibilityBadge mode={mode} className={styles.pBadge} />
+        <VisibilityBadge mode={profile.visibility} className={styles.pBadge} />
       </div>
 
       <div className={styles.pMeterRow}>
         <span className={styles.pMeterLabel}>
-          Profile {workIdentity.completeness}% complete
+          Profile {completeness}% complete
         </span>
         <div className={styles.meter}>
           <div
             className={styles.meterFill}
-            style={{ width: `${workIdentity.completeness}%` }}
+            style={{ width: `${completeness}%` }}
           />
         </div>
       </div>

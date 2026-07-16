@@ -10,6 +10,7 @@ import { useSocial } from "../../app/providers/SocialProvider";
 import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
+import { ProfileSubprofilesSection } from "./ProfileSubprofilesSection";
 import { MyPlacesSection } from "./MyPlacesSection";
 import { PublicProfileControl } from "./PublicProfileControl";
 import { EditableProfileHero } from "./EditableProfileHero";
@@ -30,6 +31,14 @@ export function ProfilePage() {
   const { user } = useAuth();
   const { isBlocked } = useSocial();
   const [previewing, setPreviewing] = useState(false);
+  // When entering edit mode from the "Add/Edit links" affordance, jump the editor
+  // straight to the Links section instead of landing at the top of the form.
+  const [focusLinks, setFocusLinks] = useState(false);
+
+  function enterEdit(focus = false) {
+    setFocusLinks(focus);
+    startEditing();
+  }
 
   const selfSlug = user?.profile.slug ?? currentUserSlug;
   const isSelf = !slug || slug === selfSlug;
@@ -113,13 +122,14 @@ export function ProfilePage() {
       </div>
 
       {selfView && isEditing ? (
-        <EditableProfileHero />
+        <EditableProfileHero focusLinks={focusLinks} />
       ) : (
         <ProfileHero
           profile={resolvedProfile}
           self={isSelf}
           asVisitor={isSelf && previewing}
-          onEdit={startEditing}
+          onEdit={() => enterEdit(false)}
+          onEditLinks={() => enterEdit(true)}
           onPreview={() => setPreviewing(true)}
         />
       )}
@@ -134,6 +144,14 @@ export function ProfilePage() {
               }
             : undefined
         }
+      />
+
+      {/* "Also as…" — the owner's linked + published personas. Public viewers see
+          only linked personas (the hook enforces this); self view adds a manage
+          link and a create prompt when empty. Preview counts as a public view. */}
+      <ProfileSubprofilesSection
+        ownerSlug={isSelf ? selfSlug : (slug ?? "")}
+        isSelf={selfView}
       />
 
       {selfView && !isEditing && <PublicProfileControl />}

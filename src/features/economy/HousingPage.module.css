@@ -130,6 +130,11 @@
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 18px;
 }
+/* Let the empty state span the full grid width so it centers, rather than
+   sitting in a single left-hand column. */
+.empty {
+  grid-column: 1 / -1;
+}
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -137,6 +142,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  height: 100%;
   cursor: pointer;
   color: inherit;
   text-decoration: none;
@@ -178,6 +184,14 @@
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
+  /* Clamp to two lines with an ellipsis and reserve both lines so titles of
+     different lengths keep every card's body aligned to the same rhythm. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(19px * 1.2 * 2);
 }
 .details {
   display: flex;
@@ -196,6 +210,12 @@
   color: var(--ink-60);
   line-height: 1.6;
   flex: 1;
+  /* Clamp overflowing descriptions to three lines with an ellipsis. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .foot {
   display: flex;

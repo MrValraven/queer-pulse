@@ -395,8 +395,26 @@ div.backBar {
   color: var(--accent);
   flex: none;
 }
+button.socialChip {
+  cursor: pointer;
+  font-family: var(--sans);
+}
+/* Own-profile affordances: dashed "Add links" and a subtle trailing "Edit". */
+.socialChipAdd {
+  border-style: dashed;
+  border-color: rgba(var(--line-rgb), 0.28);
+  background: transparent;
+  color: var(--accent-ink);
+}
+.socialChipAdd svg {
+  color: var(--accent-ink);
+}
+.socialChipEdit {
+  color: var(--ink-60);
+}
 @media (hover: hover) {
-  a.socialChip:hover {
+  a.socialChip:hover,
+  button.socialChip:hover {
     border-color: var(--line-strong);
     color: var(--text-strong);
     transform: translateY(-1px);

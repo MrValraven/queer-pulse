@@ -14,7 +14,7 @@ import {
   SkeletonLine,
   EmptyState,
 } from "../../shared/components/ui";
-import { currentUser } from "../members/data/members";
+import { useProfile } from "../../app/providers/ProfileProvider";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
 import { communities } from "../homepage/data/communities";
@@ -106,6 +106,8 @@ export function FeedPage() {
   const [prevDemo, setPrevDemo] = useState(demoMode);
   const { memberships } = useCommunityMembership();
   const { blocked, muted } = useSocial();
+  // The signed-in member (real profile live, mock currentUser in demo mode).
+  const { profile } = useProfile();
   const { greeting, dateLine } = useNowGreeting();
 
   // Live feed source (inert in demo mode, which renders its scripted cards).
@@ -201,7 +203,7 @@ export function FeedPage() {
           <div className={styles.greetingRow}>
             <div>
               <div className={styles.greeting}>
-                {greeting}, <em>{currentUser.first}</em>
+                {greeting}, <em>{profile.first}</em>
               </div>
               <div className={styles.greetingDate}>{dateLine}</div>
             </div>

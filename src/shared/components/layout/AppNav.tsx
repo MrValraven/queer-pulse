@@ -3,12 +3,14 @@ import { Button } from "../ui";
 import { useScrolled } from "../../hooks/useScrolled";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
+import { routes } from "../../../app/routeMap";
 import { AccountMenu } from "./AccountMenu";
 import styles from "./AppNav.module.css";
 
 const APP_LINKS = [
   { label: "Home", to: "/feed" },
   { label: "Members", to: "/members" },
+  { label: "Subprofiles", to: routes.subprofiles },
   { label: "Communities", to: "/communities" },
   { label: "Messages", to: "/messages" },
 ];

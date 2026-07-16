@@ -1,6 +1,7 @@
-import { useEffect, useState, type KeyboardEvent } from "react";
+import { useState, type KeyboardEvent } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useProfile } from "../../app/providers/ProfileProvider";
+import { useAuth } from "../../app/providers/authContext";
 import {
   BioSection,
   IdentitySection,
@@ -8,10 +9,12 @@ import {
   SkillsSection,
   VisibilitySection,
 } from "./EditProfileSections";
+import { LinksSection } from "./LinksSection";
+import { UsernameSection } from "./UsernameSection";
 
 /** Section id of a change, so the host can list what was edited on save. */
 export type ProfileSection =
-  "identity" | "pronouns" | "bio" | "skills" | "visibility";
+  "identity" | "pronouns" | "bio" | "links" | "skills" | "visibility";
 
 /**
  * Full profile editor — the rich Identity / Pronouns / Bio / Skills / Visibility
@@ -27,21 +30,13 @@ export function EditProfilePane({
 }) {
   const { showToast } = useToast();
   const { draft, updateDraft } = useProfile();
+  const { user } = useAuth();
   const [skillInput, setSkillInput] = useState("");
   const [interestInput, setInterestInput] = useState("");
 
-  // Revoke a freshly-picked avatar object URL when replaced / unmounted.
-  useEffect(() => {
-    const url = draft.photo;
-    if (!url || !url.startsWith("blob:")) return;
-    return () => URL.revokeObjectURL(url);
-  }, [draft.photo]);
-
-  function handlePickFile(file: File) {
-    updateDraft({ photo: URL.createObjectURL(file) });
-    showToast("Photo updated", "success");
-    onChange("identity");
-  }
+  // The avatar we received from the member's social login (Google), offered as a
+  // one-tap restore whenever they have no photo set.
+  const googlePhoto = user?.profile.avatarUrl ?? undefined;
 
   function handleRemovePhoto() {
     updateDraft({ photo: undefined });
@@ -49,8 +44,18 @@ export function EditProfilePane({
     onChange("identity");
   }
 
+  function handleUseGooglePhoto() {
+    if (!googlePhoto) return;
+    updateDraft({ photo: googlePhoto });
+    showToast("Photo restored from Google.", "success");
+    onChange("identity");
+  }
+
   const selectedPronouns = draft.pronouns
-    ? draft.pronouns.split(",").map((p) => p.trim()).filter(Boolean)
+    ? draft.pronouns
+        .split(",")
+        .map((p) => p.trim())
+        .filter(Boolean)
     : [];
 
   function togglePronoun(p: string) {
@@ -112,14 +117,16 @@ export function EditProfilePane({
         displayName={`${draft.first} ${draft.last}`.trim()}
         location={draft.hood}
         photo={draft.photo}
+        googlePhoto={googlePhoto}
         onNameChange={setName}
         onLocationChange={(v) => {
           updateDraft({ hood: v });
           onChange("identity");
         }}
-        onPickFile={handlePickFile}
+        onUseGooglePhoto={handleUseGooglePhoto}
         onRemove={handleRemovePhoto}
       />
+      <UsernameSection />
       <PronounsSection selected={selectedPronouns} onToggle={togglePronoun} />
       <BioSection
         bioText={draft.bio}
@@ -131,6 +138,13 @@ export function EditProfilePane({
         onOccupationChange={(v) => {
           updateDraft({ role: v });
           onChange("bio");
+        }}
+      />
+      <LinksSection
+        links={draft.socials}
+        onChange={(socials) => {
+          updateDraft({ socials });
+          onChange("links");
         }}
       />
       <SkillsSection

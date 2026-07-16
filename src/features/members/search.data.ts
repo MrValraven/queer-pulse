@@ -5,12 +5,13 @@ import {
   FiUsers,
   FiClipboard,
   FiHash,
+  FiLayers,
 } from "react-icons/fi";
 import { routes, topicPath } from "../../app/routeMap";
 import { memberName } from "./data/members";
 import { TOPICS } from "../topics/topics.data";
 export type ResultType =
-  "member" | "gathering" | "community" | "board" | "topic";
+  "member" | "gathering" | "community" | "board" | "topic" | "page";
 
 export interface SearchItem {
   t: ResultType;
@@ -37,6 +38,21 @@ const TOPIC_SEARCH_ITEMS: SearchItem[] = Object.values(TOPICS).map((topic) => ({
 }));
 
 export const SEARCH_DATA: SearchItem[] = [
+  // Quick destinations — the persona directory + the owner's subprofile dashboard.
+  {
+    t: "page",
+    name: "Browse subprofiles",
+    sub: "The persona directory",
+    href: routes.subprofiles,
+    kw: "subprofiles personas directory professional developer musician writer",
+  },
+  {
+    t: "page",
+    name: "My subprofiles",
+    sub: "Your professional personas",
+    href: routes.subprofilesDashboard,
+    kw: "subprofiles personas manage dashboard professional",
+  },
   ...TOPIC_SEARCH_ITEMS,
   {
     t: "member",
@@ -237,6 +253,7 @@ export const TYPE_BG: Record<ResultType, string> = {
   community: "rgba(232,119,90,.1)",
   board: "rgba(122,82,184,.1)",
   topic: "rgba(232,119,90,.1)",
+  page: "rgba(74,140,111,.1)",
 };
 export const TYPE_ICON: Record<ResultType, IconType> = {
   member: FiUser,
@@ -244,6 +261,7 @@ export const TYPE_ICON: Record<ResultType, IconType> = {
   community: FiUsers,
   board: FiClipboard,
   topic: FiHash,
+  page: FiLayers,
 };
 export const TYPE_LABEL: Record<ResultType, string> = {
   member: "Members",
@@ -251,6 +269,7 @@ export const TYPE_LABEL: Record<ResultType, string> = {
   community: "Communities",
   board: "Board",
   topic: "Topics",
+  page: "Pages",
 };
 export const RECENTS = [
   "portrait sessions",

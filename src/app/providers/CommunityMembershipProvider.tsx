@@ -10,6 +10,7 @@ import type {
   CommunityRole,
   Membership,
 } from "../../features/communities/membership.types";
+import { useDemoMode } from "./DemoModeProvider";
 
 interface CommunityMembershipContextValue {
   /** The current user's membership in each community, keyed by slug. */
@@ -37,7 +38,11 @@ interface CommunityMembershipContextValue {
 const CommunityMembershipContext =
   createContext<CommunityMembershipContextValue | null>(null);
 
-/** Pre-seeded so all three role/join states are demonstrable on the flagships. */
+/**
+ * Pre-seeded so all three role/join states are demonstrable on the flagships.
+ * Demo-only fiction — in live mode the viewer's real membership comes from the
+ * API (`myRole` per community), so the store starts empty.
+ */
 const SEED: Record<string, Membership> = {
   "queer-runners": { role: "mod", joinedAt: "March 2025" },
   "trans-hub": { role: "mod", joinedAt: "Jan 2025" },
@@ -49,12 +54,24 @@ export function CommunityMembershipProvider({
 }: {
   children: ReactNode;
 }) {
-  const [memberships, setMemberships] =
-    useState<Record<string, Membership>>(SEED);
+  const { demoMode } = useDemoMode();
+  const [memberships, setMemberships] = useState<Record<string, Membership>>(
+    () => (demoMode ? SEED : {}),
+  );
   const [pendingRequests, setPendingRequests] = useState<string[]>([]);
   const [promotedMods, setPromotedMods] = useState<Record<string, string[]>>(
     {},
   );
+
+  // Re-seed when the "Populate platform" toggle flips: the mock memberships are
+  // demo-only, so live mode must never show them.
+  const [prevDemo, setPrevDemo] = useState(demoMode);
+  if (prevDemo !== demoMode) {
+    setPrevDemo(demoMode);
+    setMemberships(demoMode ? SEED : {});
+    setPendingRequests([]);
+    setPromotedMods({});
+  }
 
   const isMember = useCallback(
     (slug: string) => slug in memberships,

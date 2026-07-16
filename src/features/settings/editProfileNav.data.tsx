@@ -46,6 +46,17 @@ export const PROFILE_NAV: ProfileNavItem[] = [
     ),
   },
   {
+    id: "links",
+    label: "Links & social",
+    group: "Profile",
+    icon: (
+      <svg viewBox="0 0 16 16">
+        <path d="M6.5 9.5a2.5 2.5 0 0 0 3.6.1l2-2a2.5 2.5 0 0 0-3.5-3.6l-1 1" />
+        <path d="M9.5 6.5a2.5 2.5 0 0 0-3.6-.1l-2 2a2.5 2.5 0 0 0 3.5 3.6l1-1" />
+      </svg>
+    ),
+  },
+  {
     id: "skills",
     label: "Skills & interests",
     group: "Profile",

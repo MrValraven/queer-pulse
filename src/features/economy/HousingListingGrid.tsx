@@ -34,11 +34,15 @@ function ListingSkeleton() {
 export function HousingListingGrid({
   loading,
   visible,
+  filtered,
   onClearFilter,
+  onListSpace,
 }: {
   loading: boolean;
   visible: Listing[];
+  filtered?: boolean;
   onClearFilter: () => void;
+  onListSpace: () => void;
 }) {
   return (
     <div className={styles.grid}>
@@ -46,57 +50,71 @@ export function HousingListingGrid({
         Array.from({ length: 6 }).map((_, i) => <ListingSkeleton key={i} />)
       ) : visible.length === 0 ? (
         <EmptyState
+          className={styles.empty}
           icon={<FiHome />}
-          title="No listings of this kind right now"
-          description="Nothing's posted in this category at the moment. Clear the filter to see every space the community has open — new listings go up often."
-          action={{ label: "Clear filters", onClick: onClearFilter }}
+          title={
+            filtered
+              ? "No listings of this kind right now"
+              : "The housing board is quiet right now"
+          }
+          description={
+            filtered
+              ? "Nothing's posted in this category at the moment. Clear the filter to see every space the community has open — new listings go up often."
+              : "No spaces are posted yet. When members share sublets, room shares, and short-term stays, they'll show up here — check back soon, or list a space of your own."
+          }
+          action={
+            filtered
+              ? { label: "Clear filters", onClick: onClearFilter }
+              : { label: "List a space", onClick: onListSpace }
+          }
         />
       ) : (
         visible.map((listing, i) => (
-          <FadeIn key={listing.title} delay={Math.min(i, 8) * 60}>
-            <Link
-              to={`${routes.housing}/${listing.slug}`}
-              className={styles.card}
-            >
-              <ImageSlot
-                tint={listing.tint}
-                src={listing.image}
-                height={150}
-                radius={0}
-                placeholder={`Photo · ${listing.hood}`}
-              />
-              <div className={styles.cardBody}>
-                <span
-                  className={styles.type}
-                  style={{
-                    background: listing.typeColor,
-                    color: listing.typeText,
-                  }}
-                >
-                  {listing.typeLabel}
-                </span>
-                <div className={styles.cardTitle}>{listing.title}</div>
-                <div className={styles.details}>
-                  <span className={styles.detail}>{listing.hood}</span>
-                  <span className={styles.detail}>{listing.beds}</span>
-                  <span className={styles.detail}>From {listing.avail}</span>
+          <FadeIn
+            key={listing.title}
+            as={Link}
+            to={`${routes.housing}/${listing.slug}`}
+            className={styles.card}
+            delay={Math.min(i, 8) * 60}
+          >
+            <ImageSlot
+              tint={listing.tint}
+              src={listing.image}
+              height={150}
+              radius={0}
+              placeholder={`Photo · ${listing.hood}`}
+            />
+            <div className={styles.cardBody}>
+              <span
+                className={styles.type}
+                style={{
+                  background: listing.typeColor,
+                  color: listing.typeText,
+                }}
+              >
+                {listing.typeLabel}
+              </span>
+              <div className={styles.cardTitle}>{listing.title}</div>
+              <div className={styles.details}>
+                <span className={styles.detail}>{listing.hood}</span>
+                <span className={styles.detail}>{listing.beds}</span>
+                <span className={styles.detail}>From {listing.avail}</span>
+              </div>
+              <p className={styles.cardDesc}>{listing.desc}</p>
+              <div className={styles.foot}>
+                <div className={styles.price}>
+                  {listing.price} <span>/ {listing.period}</span>
                 </div>
-                <p className={styles.cardDesc}>{listing.desc}</p>
-                <div className={styles.foot}>
-                  <div className={styles.price}>
-                    {listing.price} <span>/ {listing.period}</span>
-                  </div>
-                  <div className={styles.poster}>
-                    <Avatar
-                      initials={listing.poster.initials}
-                      tint={listing.poster.tint}
-                      size={26}
-                    />
-                    {listing.poster.name}
-                  </div>
+                <div className={styles.poster}>
+                  <Avatar
+                    initials={listing.poster.initials}
+                    tint={listing.poster.tint}
+                    size={26}
+                  />
+                  {listing.poster.name}
                 </div>
               </div>
-            </Link>
+            </div>
           </FadeIn>
         ))
       )}

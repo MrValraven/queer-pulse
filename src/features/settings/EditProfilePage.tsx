@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
+import { useProfile } from "../../app/providers/ProfileProvider";
 import { EditProfilePane, type ProfileSection } from "./EditProfilePane";
 import { EditProfileSidebar } from "./EditProfileSidebar";
 import { SECTION_LABELS } from "./editProfileNav.data";
@@ -13,6 +14,7 @@ export function EditProfilePage() {
     null,
   );
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { save, isSaving, saveError, cancelEditing } = useProfile();
 
   const unsaved = changed.size > 0;
 
@@ -25,14 +27,18 @@ export function EditProfilePage() {
     setSavedSections(null);
   }
 
-  function handleSave() {
-    setSavedSections([...changed]);
+  async function handleSave() {
+    const sections = [...changed];
+    const ok = await save();
+    if (!ok) return; // provider.saveError surfaces in the save bar
+    setSavedSections(sections);
     setChanged(new Set());
     if (savedTimer.current) clearTimeout(savedTimer.current);
     savedTimer.current = setTimeout(() => setSavedSections(null), 6000);
   }
 
   function handleDiscard() {
+    cancelEditing();
     setChanged(new Set());
     setSavedSections(null);
   }
@@ -84,11 +90,12 @@ export function EditProfilePage() {
             {[...changed].map((s) => SECTION_LABELS[s] ?? s).join(", ")}
           </span>
           <div className={styles.saveActions}>
-            <Button variant="ghost" onClick={handleDiscard}>
+            {saveError && <span className={styles.saveError}>{saveError}</span>}
+            <Button variant="ghost" onClick={handleDiscard} disabled={isSaving}>
               Discard
             </Button>
-            <Button variant="primary" onClick={handleSave}>
-              Save profile
+            <Button variant="primary" onClick={handleSave} disabled={isSaving}>
+              {isSaving ? "Saving…" : "Save profile"}
             </Button>
           </div>
         </div>

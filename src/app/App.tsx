@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../shared/api/queryClient";
 import { ThemeProvider } from "./providers/ThemeProvider";
+import { AccessibilityProvider } from "./providers/AccessibilityProvider";
 import { NavModeProvider } from "./providers/NavModeProvider";
 import { DemoModeProvider } from "./providers/DemoModeProvider";
 import { AuthProvider } from "./providers/AuthProvider";
@@ -65,6 +66,9 @@ function QueryProvider({ children }: { children: ReactNode }) {
 // App-wide context, available everywhere including outside the router.
 const RootProviders = composeProviders([
   ThemeProvider,
+  // Reflects the "Reduce motion" preference onto <html>; independent of the
+  // others, kept next to ThemeProvider since both drive DOM-attribute display state.
+  AccessibilityProvider,
   DemoModeProvider,
   QueryProvider,
   AuthProvider,

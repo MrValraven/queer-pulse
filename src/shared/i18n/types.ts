@@ -8,7 +8,7 @@ export const LANGUAGES: readonly Language[] = ["en", "pt"] as const;
  * Adding a domain = add its id here and drop `en/<id>.ts` + `pt/<id>.ts` in
  * `catalogs/`. Keeping them enumerated gives us typo-safe namespace ids.
  */
-export type Namespace = "common" | "nav" | "footer" | "auth";
+export type Namespace = "common" | "nav" | "footer" | "auth" | "subprofiles";
 
 /** Flat key → translated string. Keys are dot paths, e.g. `signIn.title`. */
 export type Catalog = Record<string, string>;

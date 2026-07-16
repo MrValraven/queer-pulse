@@ -84,6 +84,9 @@ export interface ProfileDTO extends MemberCardDTO {
   bio?: string;
   location?: string;
   openTo?: string[];
+  /** Private Interests preferences — not shown on the profile (Settings → Interests). */
+  identities?: string[];
+  lookingFor?: string[];
   socials?: SocialLinkDTO[];
   work?: WorkItemDTO[];
   /** Whether the member is identity-verified (drives the "Verified member" badge). */
@@ -146,6 +149,9 @@ export interface UpdateProfileDTO {
   location?: string;
   visibility?: Visibility;
   openTo?: string[];
+  /** Private Interests preferences — not shown on the profile (Settings → Interests). */
+  identities?: string[];
+  lookingFor?: string[];
   tags?: string[];
 }
 

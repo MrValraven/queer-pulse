@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { AppShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useReduceMotion } from "../../app/providers/accessibilityContext";
 import styles from "./AccessibilityPreferencesPage.module.css";
 import {
   A11yDisplaySection,
@@ -26,7 +27,10 @@ type SectionId = (typeof SECTIONS)[number];
 
 export function AccessibilityPreferencesPage() {
   const { showToast } = useToast();
+  // Reduce motion is the one live, persisted preference; the rest are unbacked.
+  const { reduceMotion, setReduceMotion } = useReduceMotion();
   const [prefs, setPrefs] = useState<A11yPrefs>(DEFAULT_PREFS);
+  const merged = { ...prefs, reduceMotion };
   const [activeSection, setActiveSection] = useState<SectionId>("display");
   const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
     display: null,
@@ -37,7 +41,11 @@ export function AccessibilityPreferencesPage() {
   });
 
   function toggle(key: keyof A11yPrefs) {
-    setPrefs((p) => ({ ...p, [key]: !p[key] }));
+    if (key === "reduceMotion") {
+      setReduceMotion((current) => !current);
+    } else {
+      setPrefs((p) => ({ ...p, [key]: !p[key] }));
+    }
   }
 
   function scrollToSection(id: SectionId) {
@@ -50,6 +58,7 @@ export function AccessibilityPreferencesPage() {
 
   function resetAll() {
     setPrefs(DEFAULT_PREFS);
+    setReduceMotion(false);
     showToast("All preferences reset", "info");
   }
 
@@ -80,7 +89,7 @@ export function AccessibilityPreferencesPage() {
 
           <div>
             <A11yDisplaySection
-              prefs={prefs}
+              prefs={merged}
               onToggle={toggle}
               onSizeChange={(v) => setPrefs((p) => ({ ...p, textSize: v }))}
               sectionRef={(el) => {
@@ -88,14 +97,14 @@ export function AccessibilityPreferencesPage() {
               }}
             />
             <A11yMotionSection
-              prefs={prefs}
+              prefs={merged}
               onToggle={toggle}
               sectionRef={(el) => {
                 sectionRefs.current.motion = el;
               }}
             />
             <A11yReadingSection
-              prefs={prefs}
+              prefs={merged}
               onToggle={toggle}
               onColorTheme={(t) =>
                 setPrefs((p) => ({ ...p, colorTheme: t as ColorTheme }))
@@ -105,7 +114,7 @@ export function AccessibilityPreferencesPage() {
               }}
             />
             <A11yInteractionSection
-              prefs={prefs}
+              prefs={merged}
               onToggle={toggle}
               sectionRef={(el) => {
                 sectionRefs.current.interaction = el;

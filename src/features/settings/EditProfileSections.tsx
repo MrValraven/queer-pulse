@@ -1,4 +1,4 @@
-import { useRef, type ChangeEvent, type KeyboardEvent } from "react";
+import { type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
 import { Button, ComingSoon } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
@@ -9,9 +9,11 @@ interface IdentitySectionProps {
   displayName: string;
   location: string;
   photo?: string;
+  /** Avatar from the member's social login, offered as a one-tap restore. */
+  googlePhoto?: string;
   onNameChange: (v: string) => void;
   onLocationChange: (v: string) => void;
-  onPickFile: (file: File) => void;
+  onUseGooglePhoto: () => void;
   onRemove: () => void;
 }
 
@@ -19,25 +21,18 @@ export function IdentitySection({
   displayName,
   location,
   photo,
+  googlePhoto,
   onNameChange,
   onLocationChange,
-  onPickFile,
+  onUseGooglePhoto,
   onRemove,
 }: IdentitySectionProps) {
-  const fileRef = useRef<HTMLInputElement>(null);
   const initials = displayName
     .split(" ")
     .map((w) => w[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
-
-  function handleFile(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) onPickFile(file);
-    // reset so picking the same file again still fires onChange
-    e.target.value = "";
-  }
 
   return (
     <div className={styles.section} id="identity">
@@ -64,58 +59,59 @@ export function IdentitySection({
           {photo ? "" : initials}
         </div>
         <div>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            onChange={handleFile}
-          />
           <div className={styles.photoActions}>
-            <Button
-              variant="ghost"
-              onClick={() => fileRef.current?.click()}
-              style={{ fontSize: "13.5px", padding: "9px 18px" }}
-            >
-              Upload new photo
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={onRemove}
-              style={{
-                fontSize: "13.5px",
-                padding: "9px 18px",
-                color: "var(--ink-40)",
-              }}
-            >
-              Remove photo
-            </Button>
+            <span className={styles.uploadAction}>
+              <Button
+                variant="ghost"
+                disabled
+                style={{ fontSize: "13.5px", padding: "9px 18px" }}
+              >
+                Upload new photo
+              </Button>
+              <ComingSoon />
+            </span>
+            {photo ? (
+              <Button
+                variant="ghost"
+                onClick={onRemove}
+                style={{
+                  fontSize: "13.5px",
+                  padding: "9px 18px",
+                  color: "var(--ink-40)",
+                }}
+              >
+                Remove photo
+              </Button>
+            ) : googlePhoto ? (
+              <Button
+                variant="ghost"
+                onClick={onUseGooglePhoto}
+                style={{ fontSize: "13.5px", padding: "9px 18px" }}
+              >
+                Use your Google photo
+              </Button>
+            ) : null}
           </div>
           <div className={styles.photoHint}>
-            JPG or PNG · max 5 MB · square works best
+            {photo
+              ? "JPG or PNG · max 5 MB · square works best"
+              : googlePhoto
+                ? "We can bring back the photo from the account you signed in with."
+                : "JPG or PNG · max 5 MB · square works best"}
           </div>
         </div>
       </div>
-      <div className={styles.fieldRow}>
-        <div className={styles.field}>
-          <div className={styles.fieldLabel}>Display name</div>
-          <input
-            className={styles.fieldInput}
-            type="text"
-            value={displayName}
-            onChange={(e) => onNameChange(e.target.value)}
-          />
-        </div>
-        <div className={styles.field}>
-          <div className={styles.fieldLabel}>
-            Username <ComingSoon />
-          </div>
-          <input
-            className={styles.fieldInput}
-            type="text"
-            placeholder="@username"
-            disabled
-          />
+      <div className={styles.field}>
+        <div className={styles.fieldLabel}>Display name</div>
+        <input
+          className={styles.fieldInput}
+          type="text"
+          value={displayName}
+          onChange={(e) => onNameChange(e.target.value)}
+        />
+        <div className={styles.fieldHint}>
+          Your display name is what people read; your username below is your
+          handle.
         </div>
       </div>
       <div className={styles.field}>
@@ -143,10 +139,7 @@ interface PronounsSectionProps {
   onToggle: (p: string) => void;
 }
 
-export function PronounsSection({
-  selected,
-  onToggle,
-}: PronounsSectionProps) {
+export function PronounsSection({ selected, onToggle }: PronounsSectionProps) {
   return (
     <div className={styles.section} id="pronouns">
       <h2 className={styles.sectionTitle}>
@@ -274,21 +267,6 @@ export function BioSection({
             placeholder="Where you work or study"
             disabled
           />
-        </div>
-      </div>
-      <div className={styles.field}>
-        <div className={styles.fieldLabel}>
-          Link <ComingSoon />{" "}
-          <span className={styles.fieldOptional}>optional</span>
-        </div>
-        <input
-          className={styles.fieldInput}
-          type="url"
-          placeholder="https://…"
-          disabled
-        />
-        <div className={styles.fieldHint}>
-          One link. No social media icons. Just a URL if you want one.
         </div>
       </div>
     </div>

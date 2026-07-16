@@ -112,15 +112,27 @@ export function CommunitiesPage() {
           </Reveal>
 
           {!loading && visible.length === 0 ? (
-            <EmptyState
-              icon={<FiUsers />}
-              title="Nothing matches your filters"
-              description="No communities in this category yet. Switch back to all communities to see everything across Lisbon."
-              action={{
-                label: "Clear filters",
-                onClick: () => setFilter("all"),
-              }}
-            />
+            communities.length === 0 ? (
+              <EmptyState
+                icon={<FiUsers />}
+                title="No communities yet"
+                description="The directory is still finding its feet. Be one of the first to gather your people — start a community and others will follow."
+                action={{
+                  label: "Start a community",
+                  to: routes.startCommunity,
+                }}
+              />
+            ) : (
+              <EmptyState
+                icon={<FiUsers />}
+                title="Nothing matches your filters"
+                description="No communities in this category yet. Switch back to all communities to see everything across Lisbon."
+                action={{
+                  label: "Clear filters",
+                  onClick: () => setFilter("all"),
+                }}
+              />
+            )
           ) : (
             <div className={styles.grid}>
               {loading

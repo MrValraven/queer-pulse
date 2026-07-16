@@ -1,0 +1,31 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.manage {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 16px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  transition: color 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .manage:hover {
+    color: var(--accent);
+  }
+}
+.manage:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .manage {
+    transition: none;
+  }
+}

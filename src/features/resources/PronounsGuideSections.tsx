@@ -83,22 +83,36 @@ export function FaqList() {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <div>
-      {PRONOUN_FAQS.map((f, i) => (
-        <div
-          key={f.q}
-          className={`${styles.faqItem} ${open === i ? styles.open : ""}`}
-        >
-          <button
-            type="button"
-            className={styles.faqQ}
-            onClick={() => setOpen(open === i ? null : i)}
+      {PRONOUN_FAQS.map((faq, faqIndex) => {
+        const isOpen = open === faqIndex;
+        return (
+          <div
+            key={faq.q}
+            className={`${styles.faqItem} ${isOpen ? styles.open : ""}`}
           >
-            <span className={styles.faqQText}>{f.q}</span>
-            <span className={styles.faqArrow}>▼</span>
-          </button>
-          {open === i && <div className={styles.faqA}>{f.a}</div>}
-        </div>
-      ))}
+            <button
+              type="button"
+              className={styles.faqQ}
+              aria-expanded={isOpen}
+              aria-controls={`pronoun-faq-${faqIndex}`}
+              onClick={() => setOpen(isOpen ? null : faqIndex)}
+            >
+              <span className={styles.faqQText}>{faq.q}</span>
+              <span className={styles.faqArrow}>▼</span>
+            </button>
+            <div
+              id={`pronoun-faq-${faqIndex}`}
+              className={styles.faqPanel}
+              role="region"
+              inert={!isOpen}
+            >
+              <div className={styles.faqPanelInner}>
+                <div className={styles.faqA}>{faq.a}</div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { FiFileText } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
+import { EmptyState } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { routes } from "../../app/routeMap";
 import {
   APPS,
   type Application,
@@ -24,7 +28,15 @@ interface OpenModal {
 
 export function ApplicationStatusPage() {
   const loading = useSimulatedLoad();
-  const [apps, setApps] = useState<Application[]>(APPS);
+  const { demoMode } = useDemoMode();
+  // The tracked applications are demo-only fiction; live mode starts empty until
+  // the member actually applies to something.
+  const [apps, setApps] = useState<Application[]>(() => (demoMode ? APPS : []));
+  const [prevDemo, setPrevDemo] = useState(demoMode);
+  if (prevDemo !== demoMode) {
+    setPrevDemo(demoMode);
+    setApps(demoMode ? APPS : []);
+  }
   const [tab, setTab] = useState<Cat | "all">("all");
   const [open, setOpen] = useState<OpenModal | null>(null);
   const [comparing, setComparing] = useState(false);
@@ -91,17 +103,28 @@ export function ApplicationStatusPage() {
           sentCount={sentCount}
         />
 
-        <ApplicationStatusTabs tabs={tabs} tab={tab} setTab={setTab} />
+        {!loading && apps.length === 0 ? (
+          <EmptyState
+            icon={<FiFileText />}
+            title="No applications yet"
+            description="When you apply to a job, grant, or opportunity, you'll be able to track every one — and compare offers side by side — right here."
+            action={{ label: "Browse jobs", to: routes.jobs }}
+          />
+        ) : (
+          <>
+            <ApplicationStatusTabs tabs={tabs} tab={tab} setTab={setTab} />
 
-        <ApplicationStatusLegend />
+            <ApplicationStatusLegend />
 
-        <ApplicationStatusList
-          loading={loading}
-          groups={groups}
-          canCompare={canCompare}
-          onCompare={() => setComparing(true)}
-          onAction={(appId, action) => setOpen({ action, appId })}
-        />
+            <ApplicationStatusList
+              loading={loading}
+              groups={groups}
+              canCompare={canCompare}
+              onCompare={() => setComparing(true)}
+              onAction={(appId, action) => setOpen({ action, appId })}
+            />
+          </>
+        )}
       </div>
 
       {comparing && (

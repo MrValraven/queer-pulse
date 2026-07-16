@@ -175,21 +175,29 @@ export function GuestListCard({
           onChange={(e) => setQuery(e.target.value)}
         />
         <div>
-          {visible.length === 0 && (
-            <EmptyState
-              compact
-              icon={<FiUsers />}
-              title="No guests in this view"
-              description="No one matches your current filter or search. Try widening it to see everyone expected."
-              action={{
-                label: "Clear filters",
-                onClick: () => {
-                  setFilter("all");
-                  setQuery("");
-                },
-              }}
-            />
-          )}
+          {visible.length === 0 &&
+            (guests.length === 0 ? (
+              <EmptyState
+                compact
+                icon={<FiUsers />}
+                title="No one's on the guest list yet"
+                description="As people reserve their spot, they'll appear here ready to check in. Share your gathering to bring the first guests in."
+              />
+            ) : (
+              <EmptyState
+                compact
+                icon={<FiUsers />}
+                title="No guests in this view"
+                description="No one matches your current filter or search. Try widening it to see everyone expected."
+                action={{
+                  label: "Clear filters",
+                  onClick: () => {
+                    setFilter("all");
+                    setQuery("");
+                  },
+                }}
+              />
+            ))}
           {visible.map((g) => (
             <div className={styles.attRow} key={g.name}>
               <div

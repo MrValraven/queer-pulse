@@ -4,11 +4,13 @@ import { common as enCommon } from "./en/common";
 import { nav as enNav } from "./en/nav";
 import { footer as enFooter } from "./en/footer";
 import { auth as enAuth } from "./en/auth";
+import { subprofiles as enSubprofiles } from "./en/subprofiles";
 
 import { common as ptCommon } from "./pt/common";
 import { nav as ptNav } from "./pt/nav";
 import { footer as ptFooter } from "./pt/footer";
 import { auth as ptAuth } from "./pt/auth";
+import { subprofiles as ptSubprofiles } from "./pt/subprofiles";
 
 /**
  * The full catalog registry, keyed `language → namespace → catalog`.
@@ -25,11 +27,13 @@ export const catalogs: Record<Language, Record<Namespace, Catalog>> = {
     nav: enNav,
     footer: enFooter,
     auth: enAuth,
+    subprofiles: enSubprofiles,
   },
   pt: {
     common: ptCommon,
     nav: ptNav,
     footer: ptFooter,
     auth: ptAuth,
+    subprofiles: ptSubprofiles,
   },
 };

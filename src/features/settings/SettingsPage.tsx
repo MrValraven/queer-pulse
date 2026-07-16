@@ -11,6 +11,7 @@ import { DeleteAccountSection } from "./DeleteAccountSection";
 import { EditProfilePane } from "./EditProfilePane";
 import { ProfileThemePane, AccessibilityPane } from "./SettingsPersonalisation";
 import { InterestsPane } from "./InterestsPane";
+import { SafetyPane } from "./SafetyPane";
 import { DeleteAccountModal } from "./SettingsControls";
 import {
   AccountPane,
@@ -37,7 +38,15 @@ export function SettingsPage() {
   const [dirty, setDirty] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const openedRef = useRef(false);
+  const cancelEditingRef = useRef(cancelEditing);
   useScrollLock(showDelete);
+
+  // Keep the ref current after every render (outside render, so this is safe),
+  // so the unmount-only cleanup below always calls the latest cancelEditing
+  // without needing to depend on it (its identity changes on every save).
+  useEffect(() => {
+    cancelEditingRef.current = cancelEditing;
+  });
 
   // Drop any leftover unsaved theme edits when re-entering Settings.
   useEffect(() => {
@@ -49,7 +58,7 @@ export function SettingsPage() {
   // own session — never one the members profile page opened.
   useEffect(() => {
     if (
-      (pane === "profile" || pane === "visibility") &&
+      (pane === "profile" || pane === "visibility" || pane === "interests") &&
       !isEditing &&
       !openedRef.current
     ) {
@@ -62,9 +71,9 @@ export function SettingsPage() {
   // opened elsewhere is left intact.
   useEffect(
     () => () => {
-      if (openedRef.current) cancelEditing();
+      if (openedRef.current) cancelEditingRef.current();
     },
-    [cancelEditing],
+    [],
   );
 
   const markChanged = () => setDirty(true);
@@ -104,7 +113,7 @@ export function SettingsPage() {
             {pane === "notifications" && (
               <NotificationsPane onChange={markChanged} />
             )}
-            {pane === "language" && <LanguagePane onChange={markChanged} />}
+            {pane === "language" && <LanguagePane />}
             {pane === "data" && (
               <DataPane
                 onChange={markChanged}
@@ -121,6 +130,7 @@ export function SettingsPage() {
             )}
             {pane === "interests" && <InterestsPane onChange={markChanged} />}
             {pane === "account" && <AccountPane onChange={markChanged} />}
+            {pane === "safety" && <SafetyPane />}
             {pane === "simulations" && <SimulationsPane />}
             {pane === "delete" && <DeleteAccountSection />}
           </FadeIn>

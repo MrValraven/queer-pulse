@@ -134,15 +134,27 @@ export function VolunteerPage() {
           </div>
 
           {!loading && visible.length === 0 ? (
-            <EmptyState
-              icon={<FiHeart />}
-              title="No opportunities match those filters yet"
-              description="Try widening your search — there are plenty of ways to give your time, and new roles are added often."
-              action={{
-                label: "Clear filters",
-                onClick: () => setFilter("all"),
-              }}
-            />
+            opps.length === 0 ? (
+              <EmptyState
+                icon={<FiHeart />}
+                title="No opportunities posted yet"
+                description="No organisations have posted roles here yet. If yours is looking for hands, be the first to put out the call."
+                action={{
+                  label: "Post an opportunity",
+                  to: routes.postVolunteer,
+                }}
+              />
+            ) : (
+              <EmptyState
+                icon={<FiHeart />}
+                title="No opportunities match those filters yet"
+                description="Try widening your search — there are plenty of ways to give your time, and new roles are added often."
+                action={{
+                  label: "Clear filters",
+                  onClick: () => setFilter("all"),
+                }}
+              />
+            )
           ) : (
             <div className={s.grid}>
               {loading

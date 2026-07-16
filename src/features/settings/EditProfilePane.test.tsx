@@ -12,9 +12,7 @@ describe("EditProfilePane", () => {
       </TestProviders>,
     );
     // Display name input reflects the real member.
-    expect(
-      screen.getByDisplayValue(fullName(currentUser)),
-    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue(fullName(currentUser))).toBeInTheDocument();
     // The old hardcoded bio must be gone.
     expect(
       screen.queryByDisplayValue(/Former housing rights lawyer/),
