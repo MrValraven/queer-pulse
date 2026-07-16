@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   CURRENT_MEMBER,
   VISIBILITY_OPTIONS,
@@ -34,12 +36,13 @@ export function OpenLetterSidebar({
   signed,
   onSign,
 }: SidebarProps) {
+  const { t } = useTranslation();
   return (
     <aside className={s.side}>
       <SignCard signed={signed} onSign={onSign} />
       <div className={s.card}>
         <div className={s.listCard}>
-          <h4>Recent signatures</h4>
+          <h4>{t("marketing:openLetter.sidebar.recentSignatures")}</h4>
           {signatures.map((sig, i) => (
             <div className={s.sigRow} key={`${sig.name}-${i}`}>
               <div className={`${s.sigAv} ${tintClass[sig.tint]}`}>
@@ -47,23 +50,28 @@ export function OpenLetterSidebar({
               </div>
               <div className={s.sigText}>
                 <b>{sig.name}</b>
-                <em>{sig.note ? `"${sig.note}"` : "—"}</em>
+                <em>
+                  {sig.note
+                    ? `"${sig.note}"`
+                    : t("marketing:openLetter.sidebar.noNote")}
+                </em>
               </div>
             </div>
           ))}
         </div>
       </div>
       <div className={s.status}>
-        <b>Why we run open letters this way:</b> every signature has a verified
-        member name behind it. <em>That makes them harder to dismiss.</em> We
-        won't do anonymous-mass petitions — the model is fewer, real, named
-        signatures.
+        <Translation
+          i18nKey="marketing:openLetter.sidebar.aboutRunning"
+          components={{ b: <b />, em: <em /> }}
+        />
       </div>
     </aside>
   );
 }
 
 function SignCard({ signed, onSign }: Pick<SidebarProps, "signed" | "onSign">) {
+  const { t } = useTranslation();
   const [name, setName] = useState(CURRENT_MEMBER.name);
   const [visibility, setVisibility] = useState("full");
   const [note, setNote] = useState("");
@@ -74,7 +82,7 @@ function SignCard({ signed, onSign }: Pick<SidebarProps, "signed" | "onSign">) {
     const trimmed = name.trim() || CURRENT_MEMBER.name;
     const shown =
       visibility === "anon"
-        ? "A member"
+        ? t("marketing:openLetter.sign.anonName")
         : visibility === "initials"
           ? `${initials(trimmed)}.`
           : trimmed;
@@ -89,14 +97,19 @@ function SignCard({ signed, onSign }: Pick<SidebarProps, "signed" | "onSign">) {
   return (
     <form className={s.card} id="sign" onSubmit={submit}>
       <div className={s.signHead}>
-        <h4>Sign the open letter</h4>
+        <h4>{t("marketing:openLetter.sign.title")}</h4>
         <div className={s.as}>
-          As {CURRENT_MEMBER.name} · {CURRENT_MEMBER.pronouns}
+          {t("marketing:openLetter.sign.asLabel", {
+            name: CURRENT_MEMBER.name,
+            pronouns: CURRENT_MEMBER.pronouns,
+          })}
         </div>
       </div>
       <div className={s.signBody}>
         <div className={s.field}>
-          <label htmlFor="ol-name">Display name on the list</label>
+          <label htmlFor="ol-name">
+            {t("marketing:openLetter.sign.nameLabel")}
+          </label>
           <input
             id="ol-name"
             type="text"
@@ -106,7 +119,9 @@ function SignCard({ signed, onSign }: Pick<SidebarProps, "signed" | "onSign">) {
           />
         </div>
         <div className={s.field}>
-          <label htmlFor="ol-vis">Show as · visibility</label>
+          <label htmlFor="ol-vis">
+            {t("marketing:openLetter.sign.visibilityLabel")}
+          </label>
           <select
             id="ol-vis"
             value={visibility}
@@ -115,19 +130,23 @@ function SignCard({ signed, onSign }: Pick<SidebarProps, "signed" | "onSign">) {
           >
             {VISIBILITY_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
-                {o.label}
+                {t(o.labelKey)}
               </option>
             ))}
           </select>
         </div>
         <div className={s.field}>
           <label htmlFor="ol-note">
-            Add a sentence (optional)
-            <span className={s.fieldAside}>{note.length}/280</span>
+            {t("marketing:openLetter.sign.noteLabel")}
+            <span className={s.fieldAside}>
+              {t("marketing:openLetter.sign.noteCounter", {
+                length: note.length,
+              })}
+            </span>
           </label>
           <textarea
             id="ol-note"
-            placeholder="Why this matters to you · 280 chars"
+            placeholder={t("marketing:openLetter.sign.notePlaceholder")}
             maxLength={280}
             value={note}
             onChange={(e) => setNote(e.target.value)}
@@ -142,17 +161,15 @@ function SignCard({ signed, onSign }: Pick<SidebarProps, "signed" | "onSign">) {
           >
             {signed ? (
               <>
-                <FiCheck aria-hidden /> You signed the letter
+                <FiCheck aria-hidden />{" "}
+                {t("marketing:openLetter.sign.signedCta")}
               </>
             ) : (
-              "Sign the letter"
+              t("marketing:openLetter.sign.submitCta")
             )}
           </Button>
         </div>
-        <p className={s.signFoot}>
-          Members only. We never share your data with the recipient
-          organisation. You can withdraw your signature any time.
-        </p>
+        <p className={s.signFoot}>{t("marketing:openLetter.sign.footer")}</p>
       </div>
     </form>
   );

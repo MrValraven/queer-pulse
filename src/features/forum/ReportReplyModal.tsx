@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import { reasonsFor, type ReasonCode } from "../safety/reportReasons";
 import { logError } from "../../shared/observability/logger";
@@ -24,6 +26,7 @@ export function ReportReplyModal({
   onClose,
 }: ReportReplyModalProps) {
   useScrollLock();
+  const { t } = useTranslation();
   const [reason, setReason] = useState<ReasonCode | null>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const createReport = useCreateReport();
@@ -71,32 +74,36 @@ export function ReportReplyModal({
               <FiCheck />
             </span>
             <h2 id="report-title" className={styles.confirmTitle}>
-              Thank you — <em>we're on it.</em>
+              <Translation
+                i18nKey="forum:reportReply.confirmTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.confirmBody}>
-              A moderator will take a look. Reports stay private, and{" "}
-              {authorName.split(" ")[0]} won't know it came from you.
+              {t("forum:reportReply.confirmBody", {
+                name: authorName.split(" ")[0] ?? authorName,
+              })}
             </p>
             <div className={styles.confirmActions}>
               <Button variant="ghost-dark" onClick={onClose}>
-                Done
+                {t("forum:reportReply.done")}
               </Button>
             </div>
           </div>
         ) : (
           <>
             <h2 id="report-title" className={styles.title}>
-              Report this reply
+              {t("forum:reportReply.title")}
             </h2>
             <p className={styles.sub}>
-              Let a moderator know what's wrong with {authorName.split(" ")[0]}
-              's reply. This is private — no one is notified that you reported
-              it.
+              {t("forum:reportReply.sub", {
+                name: authorName.split(" ")[0] ?? authorName,
+              })}
             </p>
             <div
               className={styles.reasons}
               role="radiogroup"
-              aria-label="Reason for reporting"
+              aria-label={t("forum:reportReply.reasonGroupAria")}
             >
               {REASONS.map((r) => {
                 const on = reason === r.code;
@@ -124,7 +131,7 @@ export function ReportReplyModal({
                 onClick={onClose}
                 disabled={status === "sending"}
               >
-                Cancel
+                {t("forum:reportReply.cancel")}
               </Button>
               <Button
                 variant="primary"
@@ -135,10 +142,10 @@ export function ReportReplyModal({
                 {status === "sending" ? (
                   <>
                     <span className={styles.spinner} aria-hidden />
-                    Sending…
+                    {t("forum:reportReply.sending")}
                   </>
                 ) : (
-                  "Send report"
+                  t("forum:reportReply.sendCta")
                 )}
               </Button>
             </div>

@@ -10,133 +10,190 @@ import { MdAccessible } from "react-icons/md";
 import { MEMBERS, memberName } from "../members/data/members";
 import { routes } from "../../app/routeMap";
 
+/**
+ * i18n Pattern A. All chrome: a static nav rail (page-authored anchor labels).
+ */
 export const NAV = [
-  { id: "health", label: "Community health" },
-  { id: "moderation", label: "Moderation" },
-  { id: "council", label: "Advisory council" },
-  { id: "principles", label: "Principles" },
-  { id: "finances", label: "Finances" },
-  { id: "decisions", label: "Decision log" },
-  { id: "raise", label: "Raise a concern" },
+  { id: "health", labelKey: "governance:nav.health" },
+  { id: "moderation", labelKey: "governance:nav.moderation" },
+  { id: "council", labelKey: "governance:nav.council" },
+  { id: "principles", labelKey: "governance:nav.principles" },
+  { id: "finances", labelKey: "governance:nav.finances" },
+  { id: "decisions", labelKey: "governance:nav.decisions" },
+  { id: "raise", labelKey: "governance:nav.raise" },
 ];
 
+/** i18n Pattern A. Platform-authored index of the constitutional documents. */
 export const GOVERNING_DOCS = [
   {
-    label: "Constitution",
+    labelKey: "governance:governingDocs.constitution.label",
     to: routes.constitution,
-    blurb: "The formal organising document — twelve plain-language articles.",
+    blurbKey: "governance:governingDocs.constitution.blurb",
   },
   {
-    label: "Code of Conduct",
+    labelKey: "governance:governingDocs.codeOfConduct.label",
     to: routes.codeOfConduct,
-    blurb: "What we expect of each other, and what happens when it's breached.",
+    blurbKey: "governance:governingDocs.codeOfConduct.blurb",
   },
   {
-    label: "Annual Assembly",
+    labelKey: "governance:governingDocs.annualAssembly.label",
     to: routes.annualAssembly,
-    blurb: "The yearly members' meeting — agenda, resolutions, and minutes.",
+    blurbKey: "governance:governingDocs.annualAssembly.blurb",
   },
   {
-    label: "Transparency report",
+    labelKey: "governance:governingDocs.transparencyReport.label",
     to: routes.transparencyReport,
-    blurb: "Moderation actions, finances, and data requests, in the open.",
+    blurbKey: "governance:governingDocs.transparencyReport.blurb",
   },
 ];
 
-export const HEALTH = [
-  { n: "247", l: "Active members", trend: "↑ 38 this quarter", up: true },
-  { n: "96%", l: "Member retention rate", trend: "Steady", up: false },
+/**
+ * i18n Pattern A/B. The quarterly health snapshot has no backend of its own
+ * (unlike the finances section below) — it's hardcoded identically in demo and
+ * live, so it's chrome, not fetched content. `n`/`up` stay plain data; `trend`
+ * was a fused chrome+datum string ("↑ 38 this quarter") in the original, so it
+ * now carries a key + optional interpolation values instead — see
+ * `buildHealthStats(t)` in GovernanceSections.tsx.
+ */
+export const HEALTH: {
+  n: string;
+  labelKey: string;
+  trendKey: string;
+  trendValues?: { count: number };
+  up: boolean;
+}[] = [
   {
-    n: "12",
-    l: "Reports filed this quarter",
-    trend: "All resolved",
+    n: "247",
+    labelKey: "governance:health.stat.activeMembers.label",
+    trendKey: "governance:health.trend.upThisQuarter",
+    trendValues: { count: 38 },
+    up: true,
+  },
+  {
+    n: "96%",
+    labelKey: "governance:health.stat.retention.label",
+    trendKey: "governance:health.trend.steady",
     up: false,
   },
-  { n: "3", l: "Members removed", trend: "Code of care violations", up: false },
-  { n: "34", l: "Gatherings hosted", trend: "↑ 8 vs Q1", up: true },
-  { n: "1", l: "Moderation appeal upheld", trend: "of 2 filed", up: false },
+  {
+    n: "12",
+    labelKey: "governance:health.stat.reportsFiled.label",
+    trendKey: "governance:health.trend.allResolved",
+    up: false,
+  },
+  {
+    n: "3",
+    labelKey: "governance:health.stat.membersRemoved.label",
+    trendKey: "governance:health.trend.cocViolations",
+    up: false,
+  },
+  {
+    n: "34",
+    labelKey: "governance:health.stat.gatheringsHosted.label",
+    trendKey: "governance:health.trend.upVsQ1",
+    trendValues: { count: 8 },
+    up: true,
+  },
+  {
+    n: "1",
+    labelKey: "governance:health.stat.appealUpheld.label",
+    trendKey: "governance:health.trend.ofFiled",
+    trendValues: { count: 2 },
+    up: false,
+  },
 ];
 
+/** i18n Pattern A. The moderation process rail — platform-authored procedure. */
 export const STEPS = [
   {
-    title: "Report filed",
-    text: "Any member can report another member, a gathering, a board post, or any content. Reports are confidential — the reported person is not told who filed the report.",
+    titleKey: "governance:steps.reportFiled.title",
+    textKey: "governance:steps.reportFiled.text",
   },
   {
-    title: "Review within 48 hours",
-    text: "The moderation team reviews the report within 48 hours. For urgent safety issues, same-day. The person who filed is updated at each stage.",
+    titleKey: "governance:steps.review.title",
+    textKey: "governance:steps.review.text",
   },
   {
-    title: "Decision and communication",
-    text: "Possible outcomes: no action (with explanation), direct communication, warning, temporary suspension, permanent removal. The reported person is informed of the outcome but not the reporter.",
+    titleKey: "governance:steps.decision.title",
+    textKey: "governance:steps.decision.text",
   },
   {
-    title: "Right to appeal",
-    text: "Any member can appeal a moderation decision within 14 days. Appeals are reviewed by the advisory council, not the original team. The outcome is final.",
+    titleKey: "governance:steps.appeal.title",
+    textKey: "governance:steps.appeal.text",
   },
 ];
 
+/**
+ * i18n Pattern A. `name` stays a real member's name (from the member registry);
+ * `role` is this page's own short descriptor of their council seat, so it's
+ * translated as platform chrome via `roleKey`.
+ */
 export const COUNCIL = [
   {
     i: MEMBERS.mariana!.initials,
     name: memberName("mariana"),
-    role: "Psychologist · Chair",
+    roleKey: "governance:council.psychologistChair",
     bg: "rgba(74,140,111,.15)",
     color: "var(--jade)",
   },
   {
     i: MEMBERS["raquel-baptista"]!.initials,
     name: memberName("raquel-baptista"),
-    role: "Lawyer · Legal advisor",
+    roleKey: "governance:council.lawyerLegalAdvisor",
     bg: "rgba(122,82,184,.12)",
     color: "var(--violet)",
   },
   {
     i: MEMBERS["catarina-vaz"]!.initials,
     name: memberName("catarina-vaz"),
-    role: "Housing activist",
+    roleKey: "governance:council.housingActivist",
     bg: "rgba(45,27,61,.1)",
     color: "var(--plum)",
   },
   {
     i: MEMBERS.jonas!.initials,
     name: memberName("jonas"),
-    role: "Healthcare advocate",
+    roleKey: "governance:council.healthcareAdvocate",
     bg: "rgba(74,140,111,.12)",
     color: "var(--jade)",
   },
 ];
 
-export const PRINCIPLES: { icon: IconType; title: string; text: string }[] = [
+/** i18n Pattern A. Platform principles — fixed policy prose, chrome either way. */
+export const PRINCIPLES: {
+  icon: IconType;
+  titleKey: string;
+  textKey: string;
+}[] = [
   {
     icon: FiLock,
-    title: "We will never sell member data",
-    text: "Member data is used only to run the platform. We never share, sell, or use it for advertising.",
+    titleKey: "governance:principles.noSellingData.title",
+    textKey: "governance:principles.noSellingData.text",
   },
   {
     icon: FiEye,
-    title: "Visibility is always your choice",
-    text: "You control who can see your profile, posts, and activity. Defaults are conservative.",
+    titleKey: "governance:principles.visibilityChoice.title",
+    textKey: "governance:principles.visibilityChoice.text",
   },
   {
     icon: FiSlash,
-    title: "No algorithms deciding who you see",
-    text: "No engagement algorithm. Members are not ranked. You see what you choose to see.",
+    titleKey: "governance:principles.noAlgorithms.title",
+    textKey: "governance:principles.noAlgorithms.text",
   },
   {
     icon: FiMessageCircle,
-    title: "Community has a voice in decisions",
-    text: "Significant changes are discussed in the Forum before implementation; proposals go to the council.",
+    titleKey: "governance:principles.communityVoice.title",
+    textKey: "governance:principles.communityVoice.text",
   },
   {
     icon: FiBookOpen,
-    title: "Transparency is non-negotiable",
-    text: "Quarterly health reports. Published moderation stats. Council meetings summarised publicly.",
+    titleKey: "governance:principles.transparency.title",
+    textKey: "governance:principles.transparency.text",
   },
   {
     icon: MdAccessible,
-    title: "Access is not conditional on ability to pay",
-    text: "A sliding scale for all paid gatherings. No one is excluded for financial circumstances.",
+    titleKey: "governance:principles.accessNotConditional.title",
+    textKey: "governance:principles.accessNotConditional.text",
   },
 ];
 
@@ -463,21 +520,56 @@ export const EVENTS: [string, string][] = [
   ],
 ];
 
-export const DECISIONS: [string, string][] = [
-  [
-    "May 2026 — Sliding scale introduced for gatherings.",
-    "Following a forum discussion by Catarina Vaz, the council agreed to implement a sliding scale for all paid gatherings. 23 members participated.",
-  ],
-  [
-    "April 2026 — Forum launched.",
-    "Following member requests for a place to discuss longer-form topics. Categories and guidelines co-designed with 12 members over three weeks.",
-  ],
-  [
-    "March 2026 — Visibility defaults made more conservative.",
-    'New members now default to "network only" instead of "open", and can open up when comfortable.',
-  ],
-  [
-    "February 2026 — Language toggle added.",
-    "PT/EN toggle added to all pages following requests from Portuguese-speaking members.",
-  ],
+/**
+ * i18n Pattern A. The decision log is platform-authored institutional record —
+ * fixed prose, identical in both modes, no backend of its own. `leadKey` is the
+ * bolded lead sentence, `bodyKey` the rest of the paragraph.
+ */
+export const DECISIONS: { leadKey: string; bodyKey: string }[] = [
+  {
+    leadKey: "governance:decisions.slidingScale.lead",
+    bodyKey: "governance:decisions.slidingScale.body",
+  },
+  {
+    leadKey: "governance:decisions.forumLaunched.lead",
+    bodyKey: "governance:decisions.forumLaunched.body",
+  },
+  {
+    leadKey: "governance:decisions.visibilityDefaults.lead",
+    bodyKey: "governance:decisions.visibilityDefaults.body",
+  },
+  {
+    leadKey: "governance:decisions.languageToggle.lead",
+    bodyKey: "governance:decisions.languageToggle.body",
+  },
+];
+
+/**
+ * The operational-reserve progress line and the two disclosed-partner rows in
+ * `FinancesSection` are hardcoded prose with no backend of their own (unlike
+ * `FIN_STATS`/`INCOME`/`EXPENSE`/`EVENTS` above, which `GET /governance/finances`
+ * serves) — so per the scope rule they're chrome, and the surrounding sentence
+ * is translated. The euro figures stay real numbers here and are formatted with
+ * `useFormat().currency()` at render, never baked as pre-formatted strings.
+ */
+export const RESERVE_CURRENT = 4380;
+export const RESERVE_TARGET = 12450;
+
+export interface FinancePartner {
+  name: string;
+  amount: number;
+  scopeKey: string;
+}
+
+export const FINANCE_PARTNERS: FinancePartner[] = [
+  {
+    name: "Fundação Calouste Gulbenkian",
+    amount: 400,
+    scopeKey: "governance:sections.finances.partnerScope.mentalHealthFund",
+  },
+  {
+    name: "ILGA Portugal",
+    amount: 200,
+    scopeKey: "governance:sections.finances.partnerScope.communityEvents",
+  },
 ];

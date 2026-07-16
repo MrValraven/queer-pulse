@@ -1,5 +1,6 @@
 import { FiArrowDown, FiArrowUp, FiTrash2 } from "react-icons/fi";
 import { FormField } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileItemDTO } from "./api/subprofiles.api";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import { FIELD_META } from "./subprofileEditor.data";
@@ -36,6 +37,7 @@ export function SubprofileItemEditor({
   onRemove,
   onMove,
 }: SubprofileItemEditorProps) {
+  const { t } = useTranslation();
   const textFields = fields.filter(
     (f) => f !== "imageUrl" && f !== "tags" && f !== "section",
   );
@@ -43,14 +45,16 @@ export function SubprofileItemEditor({
   return (
     <article className={styles.itemCard}>
       <div className={styles.itemHead}>
-        <span className={styles.itemNum}>Item {index + 1}</span>
+        <span className={styles.itemNum}>
+          {t("subprofiles:itemEditor.itemNumber", { n: index + 1 })}
+        </span>
         <div className={styles.itemTools}>
           <button
             type="button"
             className={styles.toolBtn}
             onClick={() => onMove(-1)}
             disabled={!canMoveUp}
-            aria-label="Move up"
+            aria-label={t("subprofiles:itemEditor.moveUp")}
           >
             <FiArrowUp size={15} aria-hidden />
           </button>
@@ -59,12 +63,12 @@ export function SubprofileItemEditor({
             className={styles.toolBtn}
             onClick={() => onMove(1)}
             disabled={!canMoveDown}
-            aria-label="Move down"
+            aria-label={t("subprofiles:itemEditor.moveDown")}
           >
             <FiArrowDown size={15} aria-hidden />
           </button>
           <button type="button" className={styles.removeBtn} onClick={onRemove}>
-            <FiTrash2 size={14} aria-hidden /> Remove
+            <FiTrash2 size={14} aria-hidden /> {t("subprofiles:itemEditor.remove")}
           </button>
         </div>
       </div>
@@ -84,13 +88,13 @@ export function SubprofileItemEditor({
         return (
           <FormField
             key={field}
-            label={meta.label}
+            label={t(meta.labelKey)}
             required={field === "title"}
           >
             {meta.multiline ? (
               <textarea
                 value={value}
-                placeholder={meta.placeholder}
+                placeholder={t(meta.placeholderKey)}
                 onChange={(e) =>
                   onChange({
                     [field]: e.target.value,
@@ -100,7 +104,7 @@ export function SubprofileItemEditor({
             ) : (
               <input
                 value={value}
-                placeholder={meta.placeholder}
+                placeholder={t(meta.placeholderKey)}
                 onChange={(e) =>
                   onChange({
                     [field]: e.target.value,
@@ -113,15 +117,18 @@ export function SubprofileItemEditor({
       })}
 
       {fields.includes("tags") && (
-        <FormField label={FIELD_META.tags!.label} helper="Separate with commas">
+        <FormField
+          label={t(FIELD_META.tags!.labelKey)}
+          helper={t("subprofiles:itemEditor.tagsHelper")}
+        >
           <input
             value={item.tags.join(", ")}
-            placeholder={FIELD_META.tags!.placeholder}
+            placeholder={t(FIELD_META.tags!.placeholderKey)}
             onChange={(e) =>
               onChange({
                 tags: e.target.value
                   .split(",")
-                  .map((t) => t.trim())
+                  .map((tag) => tag.trim())
                   .filter(Boolean),
               })
             }

@@ -2,7 +2,11 @@
 // across the Communities section components. These stay in a plain module
 // (not a *.data.ts) because they depend on the CSS-module import, and living
 // here keeps the component files free of the react-refresh mixed-export rule.
-import type { CommunityFace, FullCommunity } from "./Communities.data";
+import type {
+  CommunityCategory,
+  CommunityFace,
+  FullCommunity,
+} from "./Communities.data";
 import styles from "./Communities.module.css";
 
 type FullCategory = FullCommunity["category"];
@@ -37,8 +41,10 @@ export const DOT: Record<string, string | undefined> = {
 };
 
 // i18n Pattern A — a fixed set of platform-defined category labels (chrome);
-// consumers resolve with `t()`.
-export const CAT_LABEL_KEY: Record<string, string> = {
+// consumers resolve with `t()`. Keyed on the closed `CommunityCategory` union
+// (not a generic string index) so lookups by `d.category` stay `string`, not
+// `string | undefined`, under `noUncheckedIndexedAccess`.
+export const CAT_LABEL_KEY: Record<CommunityCategory, string> = {
   social: "homepage:communities.category.social",
   arts: "homepage:communities.category.arts",
   support: "homepage:communities.category.support",

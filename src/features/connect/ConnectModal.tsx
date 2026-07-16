@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   defaultProfileSlug,
   memberProfiles,
@@ -18,6 +19,7 @@ export function ConnectModal({
   slug?: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const member =
     (slug && memberProfiles[slug]) || memberProfiles[defaultProfileSlug]!;
   const { send } = useConnectionActions();
@@ -52,7 +54,7 @@ export function ConnectModal({
             type="button"
             className={styles.close}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("connect:modal.close")}
           >
             ×
           </button>

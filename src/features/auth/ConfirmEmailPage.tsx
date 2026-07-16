@@ -88,12 +88,12 @@ export function ConfirmEmailPage() {
     if (cooling) return;
     showToast(t("auth:confirmEmail.resendToast"), "info");
     setCooling(true);
-    let t = 45;
-    setTimer(t);
+    let secondsRemaining = 45;
+    setTimer(secondsRemaining);
     timerRef.current = setInterval(() => {
-      t--;
-      setTimer(t);
-      if (t <= 0) {
+      secondsRemaining--;
+      setTimer(secondsRemaining);
+      if (secondsRemaining <= 0) {
         clearInterval(timerRef.current!);
         setCooling(false);
         setTimer(0);

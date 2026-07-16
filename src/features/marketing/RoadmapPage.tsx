@@ -2,6 +2,8 @@ import { FiCheck, FiTrendingUp } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn, SkeletonCard, SubpageIndex } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { BuildingCard, PlannedCard, ShippedCard } from "./RoadmapCards";
 import { HowWeDecide, SubmitIdea, TopIdeas } from "./RoadmapSections";
@@ -9,20 +11,23 @@ import { BUILDING, HERO_STATS, PLANNED, SHIPPED } from "./roadmap.data";
 import styles from "./RoadmapPage.module.css";
 
 export function RoadmapPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
 
   return (
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <div className={styles.eyebrow}>What we're building</div>
+          <div className={styles.eyebrow}>
+            {t("marketing:roadmap.hero.eyebrow")}
+          </div>
           <h1 className={styles.heroTitle}>
-            The <em>roadmap</em>
+            <Translation
+              i18nKey="marketing:roadmap.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.heroSub}>
-            QueerPulse is built by a small team in Lisbon. Here's what we're
-            working on, what's shipped, and what you can vote on next.
-          </p>
+          <p className={styles.heroSub}>{t("marketing:roadmap.hero.sub")}</p>
           <div className={styles.heroStats}>
             {HERO_STATS.map((s) => (
               <span
@@ -42,7 +47,7 @@ export function RoadmapPage() {
             <section className={styles.col}>
               <div className={styles.colHeader}>
                 <span className={`${styles.colChip} ${styles.shipped}`}>
-                  <FiCheck aria-hidden /> Done
+                  <FiCheck aria-hidden /> {t("marketing:roadmap.col.done")}
                 </span>
               </div>
               {loading
@@ -59,7 +64,8 @@ export function RoadmapPage() {
             <section className={styles.col}>
               <div className={styles.colHeader}>
                 <span className={`${styles.colChip} ${styles.building}`}>
-                  <span className={styles.pulseDot} aria-hidden /> Building now
+                  <span className={styles.pulseDot} aria-hidden />{" "}
+                  {t("marketing:roadmap.col.buildingNow")}
                 </span>
               </div>
               {loading
@@ -76,7 +82,8 @@ export function RoadmapPage() {
             <section className={styles.col}>
               <div className={styles.colHeader}>
                 <span className={`${styles.colChip} ${styles.planned}`}>
-                  <FiTrendingUp aria-hidden /> Planned
+                  <FiTrendingUp aria-hidden />{" "}
+                  {t("marketing:roadmap.col.planned")}
                 </span>
               </div>
               {loading
@@ -93,11 +100,13 @@ export function RoadmapPage() {
 
           <section className={styles.shapeSection}>
             <h2 className={styles.sectionHead}>
-              Have an <em>idea?</em>
+              <Translation
+                i18nKey="marketing:roadmap.shape.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.sectionSub}>
-              We read every suggestion. The most-voted ideas move up the
-              roadmap.
+              {t("marketing:roadmap.shape.sub")}
             </p>
             <div className={styles.shapeGrid}>
               <SubmitIdea />
@@ -110,12 +119,12 @@ export function RoadmapPage() {
       </div>
 
       <SubpageIndex
-        title="Already shipped"
+        title={t("marketing:roadmap.subpageIndex.title")}
         items={[
           {
-            label: "Changelog",
+            label: t("marketing:roadmap.subpageIndex.changelog.label"),
             to: routes.changelog,
-            blurb: "Every release, dated — what we've shipped so far.",
+            blurb: t("marketing:roadmap.subpageIndex.changelog.blurb"),
           },
         ]}
       />

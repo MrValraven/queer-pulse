@@ -58,97 +58,141 @@ export interface CreatedCommunity extends CommunityDraft {
 
 /* ---------- Panel metadata ---------- */
 
+/**
+ * i18n Pattern A/B hybrid. The rail label/eyebrow/lead resolve as plain `t()`
+ * keys; `titleKey` resolves through `t()` too, but the resulting string still
+ * carries the source's own `⟪ ⟫` coral-emphasis markers (kept, rather than
+ * switched to `<Translation>`'s `<em>` convention, so the catalog value can be
+ * split by the existing `renderTitle()` in `StartCommunityChrome.tsx` without
+ * a second markup dialect). See `docs/i18n/glossary-pt.md` for the pt-PT copy.
+ */
 export interface PanelMeta {
   key: string;
-  thread: string; // short label on the founding-thread rail
-  eyebrow: string;
-  /** Title text; the segment wrapped in ⟪ ⟫ renders as a coral <em>. */
-  title: string;
-  lead: string;
+  threadKey: string; // short label on the founding-thread rail
+  eyebrowKey: string;
+  /** Resolves to a string still containing ⟪ ⟫ markers — see note above. */
+  titleKey: string;
+  leadKey: string;
 }
 
 export const PANELS: PanelMeta[] = [
   {
     key: "open",
-    thread: "Open",
-    eyebrow: "Founding a space",
-    title: "Every community started with ⟪one person⟫ opening a door.",
-    lead: "This is yours to open. Take it a step at a time — nothing goes live until the very end, and you can leave and come back whenever you like.",
+    threadKey: "communities:start.panel.open.thread",
+    eyebrowKey: "communities:start.panel.open.eyebrow",
+    titleKey: "communities:start.panel.open.title",
+    leadKey: "communities:start.panel.open.lead",
   },
   {
     key: "why",
-    thread: "Why",
-    eyebrow: "Chapter one · the heart",
-    title: "Let's start with ⟪why.⟫",
-    lead: "Before anything practical — what is this space for, and who is it for? Say it plainly. This is what people read first.",
+    threadKey: "communities:start.panel.why.thread",
+    eyebrowKey: "communities:start.panel.why.eyebrow",
+    titleKey: "communities:start.panel.why.title",
+    leadKey: "communities:start.panel.why.lead",
   },
   {
     key: "who",
-    thread: "Who",
-    eyebrow: "Chapter two · the people",
-    title: "Who are you ⟪gathering?⟫",
-    lead: "The people this space is meant to hold. Be specific and be welcoming — this helps the right people know it's for them.",
+    threadKey: "communities:start.panel.who.thread",
+    eyebrowKey: "communities:start.panel.who.eyebrow",
+    titleKey: "communities:start.panel.who.title",
+    leadKey: "communities:start.panel.who.lead",
   },
   {
     key: "safety",
-    thread: "Safety",
-    eyebrow: "Chapter three · the door",
-    title: "Who can ⟪find⟫ this space?",
-    lead: "The most important choice you'll make. It decides who can see the community, and how someone gets in. You can change it later.",
+    threadKey: "communities:start.panel.safety.thread",
+    eyebrowKey: "communities:start.panel.safety.eyebrow",
+    titleKey: "communities:start.panel.safety.title",
+    leadKey: "communities:start.panel.safety.lead",
   },
   {
     key: "running",
-    thread: "Running",
-    eyebrow: "Chapter four · the hands",
-    title: "Who ⟪holds the keys?⟫",
-    lead: "Most spaces run better with more than one pair of hands. Add co-stewards, and choose what the community can do.",
+    threadKey: "communities:start.panel.running.thread",
+    eyebrowKey: "communities:start.panel.running.eyebrow",
+    titleKey: "communities:start.panel.running.title",
+    leadKey: "communities:start.panel.running.lead",
   },
   {
     key: "tone",
-    thread: "Tone",
-    eyebrow: "Chapter five · the culture",
-    title: "Set ⟪the tone.⟫",
-    lead: "Every space has a culture. Here's a short covenant to start from — keep what fits, add your own words.",
+    threadKey: "communities:start.panel.tone.thread",
+    eyebrowKey: "communities:start.panel.tone.eyebrow",
+    titleKey: "communities:start.panel.tone.title",
+    leadKey: "communities:start.panel.tone.lead",
   },
   {
     key: "feeling",
-    thread: "Feeling",
-    eyebrow: "Chapter six · the feel",
-    title: "Give it ⟪a feeling.⟫",
-    lead: "A colour and a line that capture the heart of the place. Small touches, but they're what make it feel like somewhere.",
+    threadKey: "communities:start.panel.feeling.thread",
+    eyebrowKey: "communities:start.panel.feeling.eyebrow",
+    titleKey: "communities:start.panel.feeling.title",
+    leadKey: "communities:start.panel.feeling.lead",
   },
   {
     key: "people",
-    thread: "People",
-    eyebrow: "Chapter seven · the first few",
-    title: "Don't open to ⟪an empty room.⟫",
-    lead: "A space feels alive when someone's already there. Invite a few people you'd love to see in the doorway on day one.",
+    threadKey: "communities:start.panel.people.thread",
+    eyebrowKey: "communities:start.panel.people.eyebrow",
+    titleKey: "communities:start.panel.people.title",
+    leadKey: "communities:start.panel.people.lead",
   },
   {
     key: "confirm",
-    thread: "Confirm",
-    eyebrow: "The last step",
-    title: "Ready to ⟪open the doors?⟫",
-    lead: "Here's the whole space, in one glance. Nothing here is fixed — you can change all of it once you're inside.",
+    threadKey: "communities:start.panel.confirm.thread",
+    eyebrowKey: "communities:start.panel.confirm.eyebrow",
+    titleKey: "communities:start.panel.confirm.title",
+    leadKey: "communities:start.panel.confirm.lead",
   },
 ];
 
 /* ---------- Category options ---------- */
 
+/**
+ * i18n note: `labelKey`/`badgeKey` are wizard chrome (the "what kind of
+ * space?" chip label, and the live-preview/confirm badge) — translated.
+ * `typeLabel` is the plain-string field stored on the eventual community
+ * record and read verbatim by already-shipped, untranslated consumers
+ * (`CommunityCard.tsx`'s `community.typeLabel`, `useAllCommunities.ts`) —
+ * kept as-is so a freshly founded community's badge matches every other
+ * community's badge rendering.
+ */
 export interface CategoryOption {
   type: CommunityType;
-  label: string;
+  labelKey: string;
+  badgeKey: string;
   typeLabel: string;
 }
 export const CATEGORY_OPTIONS: CategoryOption[] = [
-  { type: "social", label: "Social", typeLabel: "Social club" },
-  { type: "arts", label: "Arts & culture", typeLabel: "Arts collective" },
-  { type: "activism", label: "Activism", typeLabel: "Activist group" },
-  { type: "support", label: "Support", typeLabel: "Support circle" },
-  { type: "sports", label: "Sports & movement", typeLabel: "Sports team" },
+  {
+    type: "social",
+    labelKey: "communities:start.category.social.label",
+    badgeKey: "communities:start.category.social.badge",
+    typeLabel: "Social club",
+  },
+  {
+    type: "arts",
+    labelKey: "communities:start.category.arts.label",
+    badgeKey: "communities:start.category.arts.badge",
+    typeLabel: "Arts collective",
+  },
+  {
+    type: "activism",
+    labelKey: "communities:start.category.activism.label",
+    badgeKey: "communities:start.category.activism.badge",
+    typeLabel: "Activist group",
+  },
+  {
+    type: "support",
+    labelKey: "communities:start.category.support.label",
+    badgeKey: "communities:start.category.support.badge",
+    typeLabel: "Support circle",
+  },
+  {
+    type: "sports",
+    labelKey: "communities:start.category.sports.label",
+    badgeKey: "communities:start.category.sports.badge",
+    typeLabel: "Sports team",
+  },
   {
     type: "professional",
-    label: "Professional",
+    labelKey: "communities:start.category.professional.label",
+    badgeKey: "communities:start.category.professional.badge",
     typeLabel: "Professional network",
   },
 ];
@@ -159,44 +203,54 @@ export function typeLabelFor(type: CommunityType | ""): string {
   );
 }
 
+/** Chrome counterpart of {@link typeLabelFor}, for the wizard's own preview/
+ *  confirm screens (translated), as distinct from the plain-string
+ *  `typeLabel` used post-creation. */
+export function typeBadgeKeyFor(type: CommunityType | ""): string {
+  return (
+    CATEGORY_OPTIONS.find((c) => c.type === type)?.badgeKey ??
+    "communities:start.category.fallbackBadge"
+  );
+}
+
 /* ---------- Access tiers ---------- */
 
 export interface AccessOption {
   tier: AccessTier;
-  name: string;
-  find: string;
-  join: string;
-  note: string;
+  nameKey: string;
+  findKey: string;
+  joinKey: string;
+  noteKey: string;
   private?: boolean;
 }
 export const ACCESS_OPTIONS: AccessOption[] = [
   {
     tier: "public",
-    name: "Open to all",
-    find: "Anyone on QueerPulse can find it in Discover.",
-    join: "They join instantly and are in.",
-    note: "Best for social clubs, sports, and anything that grows by word of mouth.",
+    nameKey: "communities:start.access.public.name",
+    findKey: "communities:start.access.public.find",
+    joinKey: "communities:start.access.public.join",
+    noteKey: "communities:start.access.public.note",
   },
   {
     tier: "request",
-    name: "Request to join",
-    find: "Listed in Discover, so people can find it.",
-    join: "They send a request; you or a co-steward let them in.",
-    note: "A gentle gate. Good when you want to say hello before someone's inside.",
+    nameKey: "communities:start.access.request.name",
+    findKey: "communities:start.access.request.find",
+    joinKey: "communities:start.access.request.join",
+    noteKey: "communities:start.access.request.note",
   },
   {
     tier: "invite",
-    name: "Invite only",
-    find: "Listed, but the door needs a code or an invite link.",
-    join: "Only people you've invited can get in.",
-    note: "For tighter circles that still want to be visible.",
+    nameKey: "communities:start.access.invite.name",
+    findKey: "communities:start.access.invite.find",
+    joinKey: "communities:start.access.invite.join",
+    noteKey: "communities:start.access.invite.note",
   },
   {
     tier: "private",
-    name: "Private & unlisted",
-    find: "Hidden from Discover entirely. Members share it person to person.",
-    join: "Invite only, and no one outside can see it exists.",
-    note: "For spaces where being found is itself a risk — coming-out groups, survivors, people not yet out.",
+    nameKey: "communities:start.access.private.name",
+    findKey: "communities:start.access.private.find",
+    joinKey: "communities:start.access.private.join",
+    noteKey: "communities:start.access.private.note",
     private: true,
   },
 ];
@@ -205,50 +259,65 @@ export const ACCESS_OPTIONS: AccessOption[] = [
 
 export interface FeatureOption {
   id: string;
-  label: string;
-  desc: string;
+  labelKey: string;
+  descKey: string;
   locked?: boolean;
 }
 export const FEATURE_OPTIONS: FeatureOption[] = [
   {
     id: "discussion",
-    label: "Discussion",
-    desc: "A shared board for threads.",
+    labelKey: "communities:start.feature.discussion.label",
+    descKey: "communities:start.feature.discussion.desc",
     locked: true,
   },
-  { id: "events", label: "Events", desc: "Gatherings and a calendar." },
-  { id: "rooms", label: "Rooms", desc: "Sub-channels for topics." },
+  {
+    id: "events",
+    labelKey: "communities:start.feature.events.label",
+    descKey: "communities:start.feature.events.desc",
+  },
+  {
+    id: "rooms",
+    labelKey: "communities:start.feature.rooms.label",
+    descKey: "communities:start.feature.rooms.desc",
+  },
   {
     id: "roster",
-    label: "Member roster",
-    desc: "A visible list of who's here.",
+    labelKey: "communities:start.feature.roster.label",
+    descKey: "communities:start.feature.roster.desc",
   },
-  { id: "library", label: "Resources", desc: "Shared files and links." },
+  {
+    id: "library",
+    labelKey: "communities:start.feature.library.label",
+    descKey: "communities:start.feature.library.desc",
+  },
 ];
 
 /* ---------- Covenant rule presets ---------- */
 
-export const RULE_PRESETS: string[] = [
-  "Treat everyone with warmth and respect — no bigotry, ever.",
-  "What's shared here stays here. No screenshots, no outing.",
-  "Consent first. Ask before photos, tags, or intros.",
-  "Newcomers get a welcome, not a test.",
+export const RULE_PRESET_KEYS: string[] = [
+  "communities:start.rulePreset.warmth",
+  "communities:start.rulePreset.confidentiality",
+  "communities:start.rulePreset.consent",
+  "communities:start.rulePreset.welcome",
 ];
 
 /** The enforcement ladder, shown as static context on the Tone chapter. */
 export interface LadderStep {
-  title: string;
-  desc: string;
+  titleKey: string;
+  descKey: string;
 }
 export const ENFORCEMENT_LADDER: LadderStep[] = [
-  { title: "A quiet word", desc: "A steward reaches out privately first." },
   {
-    title: "A visible reminder",
-    desc: "The covenant is restated to the group.",
+    titleKey: "communities:start.ladder.quietWord.title",
+    descKey: "communities:start.ladder.quietWord.desc",
   },
   {
-    title: "A pause or a goodbye",
-    desc: "Repeat harm means time out, or out.",
+    titleKey: "communities:start.ladder.reminder.title",
+    descKey: "communities:start.ladder.reminder.desc",
+  },
+  {
+    titleKey: "communities:start.ladder.pause.title",
+    descKey: "communities:start.ladder.pause.desc",
   },
 ];
 
@@ -256,12 +325,12 @@ export const ENFORCEMENT_LADDER: LadderStep[] = [
 
 export interface TintOption {
   key: TintKey;
-  label: string;
+  labelKey: string;
 }
 export const TINT_OPTIONS: TintOption[] = [
-  { key: "coral", label: "Warm coral" },
-  { key: "jade", label: "Calm jade" },
-  { key: "plum", label: "Deep plum" },
+  { key: "coral", labelKey: "communities:start.tint.coral" },
+  { key: "jade", labelKey: "communities:start.tint.jade" },
+  { key: "plum", labelKey: "communities:start.tint.plum" },
 ];
 
 /* ---------- Invite-seed candidates ---------- */

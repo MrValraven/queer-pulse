@@ -1,9 +1,12 @@
 import { SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import {
   REPORT_WEEKS,
   REPORT_SERIES,
   MEMBER_GROWTH,
   RESPONSE_DIST,
+  WEEK_LABEL_KEYS,
 } from "./adminDashboard.data";
 import styles from "./AdminDashboardPage.module.css";
 
@@ -12,6 +15,7 @@ type ChartProps = { loading?: boolean };
 // ── 1 · Reports by type (stacked bar) ───────────────────────────────────────
 
 export function ReportsByTypeChart({ loading = false }: ChartProps) {
+  const { t } = useTranslation();
   const W = 640,
     H = 240,
     padL = 34,
@@ -27,14 +31,18 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
     <figure className={styles.chartCard}>
       <div className={styles.chHead}>
         <div>
-          <div className={styles.chTitle}>Reports by type</div>
-          <div className={styles.chSub}>Last 8 weeks · weekly volume</div>
+          <div className={styles.chTitle}>
+            {t("admin:dashboard.charts.reportsByType.title")}
+          </div>
+          <div className={styles.chSub}>
+            {t("admin:dashboard.charts.reportsByType.sub")}
+          </div>
         </div>
         <div className={styles.chLegend}>
           {REPORT_SERIES.map((s) => (
-            <span key={s.key} className={styles.chLeg}>
+            <span key={s.id} className={styles.chLeg}>
               <span className={styles.chSw} style={{ background: s.color }} />
-              {s.key}
+              {t(s.labelKey)}
             </span>
           ))}
         </div>
@@ -46,7 +54,7 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
           viewBox={`0 0 ${W} ${H}`}
           width="100%"
           role="img"
-          aria-label="Stacked weekly reports by type"
+          aria-label={t("admin:dashboard.charts.reportsByType.ariaLabel")}
         >
           {[0, 4, 8, 12].map((v) => {
             const y = padT + gh - (v / max) * gh;
@@ -101,7 +109,7 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
                   textAnchor="middle"
                   className={recent ? styles.chLabelStrong : styles.chLabel}
                 >
-                  {wk.week}
+                  {WEEK_LABEL_KEYS[wk.week] ? t(WEEK_LABEL_KEYS[wk.week]!) : wk.week}
                 </text>
               </g>
             );
@@ -126,6 +134,8 @@ function smoothPath(pts: [number, number][]) {
 }
 
 export function MemberGrowthChart({ loading = false }: ChartProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const W = 360,
     H = 220,
     padL = 8,
@@ -152,8 +162,12 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
 
   return (
     <figure className={styles.chartCard}>
-      <div className={styles.chTitle}>Member growth</div>
-      <div className={styles.chSub}>Joined vs churned · with Pride spike</div>
+      <div className={styles.chTitle}>
+        {t("admin:dashboard.charts.memberGrowth.title")}
+      </div>
+      <div className={styles.chSub}>
+        {t("admin:dashboard.charts.memberGrowth.sub")}
+      </div>
       {loading ? (
         <SkeletonLine height={180} style={{ borderRadius: 14, marginTop: 8 }} />
       ) : (
@@ -161,7 +175,7 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
           viewBox={`0 0 ${W} ${H}`}
           width="100%"
           role="img"
-          aria-label="Member growth line chart"
+          aria-label={t("admin:dashboard.charts.memberGrowth.ariaLabel")}
         >
           {[0, 140, 280, 420, 560].map((v) => (
             <line
@@ -210,12 +224,12 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
                 textAnchor="middle"
                 className={styles.chSpike}
               >
-                Pride
+                {t("admin:dashboard.charts.memberGrowth.spike")}
               </text>
             </>
           )}
           {MEMBER_GROWTH.map((p, i) =>
-            p.month ? (
+            p.date ? (
               <text
                 key={i}
                 x={px(i)}
@@ -223,7 +237,7 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
                 textAnchor="middle"
                 className={styles.chLabel}
               >
-                {p.month}
+                {fmt.date(p.date, { month: "short" })}
               </text>
             ) : null,
           )}
@@ -235,14 +249,14 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
             className={styles.chSwDot}
             style={{ background: "var(--jade)" }}
           />
-          Joined
+          {t("admin:dashboard.charts.legend.joined")}
         </span>
         <span className={styles.chLeg}>
           <span
             className={styles.chSwDot}
             style={{ background: "var(--accent-ink)" }}
           />
-          Churned
+          {t("admin:dashboard.charts.legend.churned")}
         </span>
       </div>
     </figure>
@@ -252,6 +266,7 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
 // ── 3 · Response time (distribution) ────────────────────────────────────────
 
 export function ResponseTimeChart({ loading = false }: ChartProps) {
+  const { t } = useTranslation();
   const W = 360,
     H = 220,
     padL = 8,
@@ -268,8 +283,12 @@ export function ResponseTimeChart({ loading = false }: ChartProps) {
 
   return (
     <figure className={styles.chartCard}>
-      <div className={styles.chTitle}>Response time</div>
-      <div className={styles.chSub}>Distribution · this month</div>
+      <div className={styles.chTitle}>
+        {t("admin:dashboard.charts.responseTime.title")}
+      </div>
+      <div className={styles.chSub}>
+        {t("admin:dashboard.charts.responseTime.sub")}
+      </div>
       {loading ? (
         <SkeletonLine height={180} style={{ borderRadius: 14, marginTop: 8 }} />
       ) : (
@@ -277,7 +296,7 @@ export function ResponseTimeChart({ loading = false }: ChartProps) {
           viewBox={`0 0 ${W} ${H}`}
           width="100%"
           role="img"
-          aria-label="Moderation response distribution"
+          aria-label={t("admin:dashboard.charts.responseTime.ariaLabel")}
         >
           {[0, 40, 80].map((v) => {
             const y = padT + gh - (v / max) * gh;
@@ -336,21 +355,21 @@ export function ResponseTimeChart({ loading = false }: ChartProps) {
             opacity={0.6}
           />
           <text x={slaX + 5} y={padT + 8} className={styles.chSla}>
-            6h SLA
+            {t("admin:dashboard.charts.responseTime.slaLabel", { hours: "6h" })}
           </text>
         </svg>
       )}
       <div className={styles.chLegend}>
         <span className={styles.chLeg}>
           <span className={styles.chSw} style={{ background: "var(--jade)" }} />
-          Within SLA
+          {t("admin:dashboard.charts.legend.withinSla")}
         </span>
         <span className={styles.chLeg}>
           <span
             className={styles.chSw}
             style={{ background: "var(--amber)" }}
           />
-          Over 6h
+          {t("admin:dashboard.charts.legend.overSla", { hours: "6h" })}
         </span>
       </div>
     </figure>

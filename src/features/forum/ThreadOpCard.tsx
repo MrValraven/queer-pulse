@@ -1,3 +1,5 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { CATS, CAT_STYLE, type Thread } from "./forum.data";
 import {
   ForumAvatar,
@@ -23,6 +25,8 @@ export function ThreadOpCard({
   setBookmarked: (fn: (v: boolean) => boolean) => void;
   onReport: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const catMeta = CATS.find((c) => c.id === thread.cat);
   const catColor = CAT_STYLE[thread.cat]?.color ?? "var(--plum)";
 
@@ -61,12 +65,19 @@ export function ThreadOpCard({
           <ModeratorByline mod={thread.author.mod} />
           <div className={styles.opSub}>
             <span className={styles.opCat} style={{ color: catColor }}>
-              {catMeta?.name}
+              {catMeta && t(catMeta.nameKey)}
             </span>
             <span>·</span>
-            <span>Posted {thread.posted}</span>
+            <span>
+              {t("forum:threadOp.postedPrefix", { time: thread.posted })}
+            </span>
             <span>·</span>
-            <span>{thread.views.toLocaleString()} views</span>
+            <span>
+              {t("forum:threadOp.viewsCount", {
+                count: thread.views,
+                formatted: fmt.number(thread.views),
+              })}
+            </span>
           </div>
         </div>
       </div>
@@ -107,10 +118,12 @@ export function ThreadOpCard({
             .join(" ")}
           onClick={() => setBookmarked((v) => !v)}
         >
-          {bookmarked ? "Saved" : "Bookmark"}
+          {bookmarked
+            ? t("forum:threadOp.saved")
+            : t("forum:threadOp.bookmark")}
         </button>
         <button type="button" className={styles.report} onClick={onReport}>
-          Report
+          {t("forum:threadOp.report")}
         </button>
       </div>
     </div>

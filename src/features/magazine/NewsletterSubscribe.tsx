@@ -2,7 +2,9 @@ import { useState, type FormEvent } from "react";
 import { FiCheckCircle, FiMail } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { STREAM_LABEL, type Stream } from "./newsletterArchive.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { STREAM_LABEL_KEY, type Stream } from "./newsletterArchive.data";
 import styles from "./NewsletterArchivePage.module.css";
 
 interface Props {
@@ -12,6 +14,7 @@ interface Props {
 
 export function NewsletterSubscribe({ stream }: Props) {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [done, setDone] = useState<{
     email: string;
@@ -22,7 +25,7 @@ export function NewsletterSubscribe({ stream }: Props) {
     e.preventDefault();
     if (!email.trim()) return;
     setDone({ email: email.trim(), stream });
-    showToast("Almost there — check your inbox to confirm", "success");
+    showToast(t("magazine:newsletter.subscribe.confirmToast"), "success");
     setEmail("");
   }
 
@@ -34,19 +37,23 @@ export function NewsletterSubscribe({ stream }: Props) {
         </span>
         <div>
           <h3 className={styles.subDoneTitle}>
-            One more <em>step.</em>
+            <Translation
+              i18nKey="magazine:newsletter.subscribe.doneTitle"
+              components={{ em: <em /> }}
+            />
           </h3>
           <p className={styles.subDoneBody}>
-            We'll send <strong>{STREAM_LABEL[done.stream]}</strong> to{" "}
-            <strong>{done.email}</strong>.
+            <Translation
+              i18nKey="magazine:newsletter.subscribe.doneBody"
+              components={{ strong: <strong /> }}
+              values={{ stream: t(STREAM_LABEL_KEY[done.stream]), email: done.email }}
+            />
           </p>
           <p className={styles.subDoneNext}>
-            <FiMail aria-hidden /> Check your inbox to confirm — the link
-            expires in 48 hours. You can change which streams you get from any
-            email.
+            <FiMail aria-hidden /> {t("magazine:newsletter.subscribe.doneNext")}
           </p>
           <Button variant="ghost-dark" onClick={() => setDone(null)}>
-            Subscribe another email
+            {t("magazine:newsletter.subscribe.anotherCta")}
           </Button>
         </div>
       </div>
@@ -58,26 +65,27 @@ export function NewsletterSubscribe({ stream }: Props) {
       <form className={styles.sub} onSubmit={handleSubmit}>
         <input
           type="email"
-          placeholder="you@example.com"
+          placeholder={t("magazine:newsletter.subscribe.emailPlaceholder")}
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
         <Button variant="primary" type="submit">
-          Subscribe →
+          {t("magazine:newsletter.subscribe.submitCta")}
         </Button>
       </form>
       <p className={styles.subFoot}>
         {stream === "all" ? (
-          "Pick which newsletters you want in step 2. "
+          t("magazine:newsletter.subscribe.footAll")
         ) : (
-          <>
-            You'll get <strong>{STREAM_LABEL[stream]}</strong> — adjust in step
-            2.{" "}
-          </>
+          <Translation
+            i18nKey="magazine:newsletter.subscribe.footOne"
+            components={{ strong: <strong /> }}
+            values={{ stream: t(STREAM_LABEL_KEY[stream]) }}
+          />
         )}
-        Unsubscribe one-tap from any email. We never share your address.
+        {t("magazine:newsletter.subscribe.footShared")}
       </p>
     </>
   );

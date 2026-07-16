@@ -1,9 +1,17 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { SystemStateShell } from "../../shared/components/layout";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./AccountLockedPage.module.css";
 
+/** Fixed demo incident identifiers — not language, kept as data. */
+const INCIDENT_ID = "QP-8423-LOCK";
+const INCIDENT_TIME = "14:08 WET";
+
 export function AccountLockedPage() {
+  const { t } = useTranslation();
+
   return (
     <SystemStateShell>
       <div className={styles.card}>
@@ -14,15 +22,14 @@ export function AccountLockedPage() {
           </svg>
         </div>
 
-        <div className={styles.kicker}>Account locked · temporary</div>
+        <div className={styles.kicker}>{t("system:accountLocked.kicker")}</div>
         <h1 className={styles.heading}>
-          Your account is <em>on pause.</em>
+          <Translation
+            i18nKey="system:accountLocked.heading"
+            components={{ em: <em /> }}
+          />
         </h1>
-        <p className={styles.lead}>
-          We spotted unusual sign-in activity on your account and locked it as a
-          precaution. You're not in trouble — we'd rather over-react than risk
-          it.
-        </p>
+        <p className={styles.lead}>{t("system:accountLocked.lead")}</p>
 
         <div className={styles.reasonList}>
           <div className={styles.reasonRow}>
@@ -33,8 +40,10 @@ export function AccountLockedPage() {
               </svg>
             </div>
             <div className={styles.reasonText}>
-              <b>5 failed sign-in attempts</b> in the last 12 minutes, from two
-              devices.
+              <Translation
+                i18nKey="system:accountLocked.reason1"
+                components={{ b: <b /> }}
+              />
             </div>
           </div>
           <div className={styles.reasonRow}>
@@ -44,8 +53,10 @@ export function AccountLockedPage() {
               </svg>
             </div>
             <div className={styles.reasonText}>
-              <b>New location:</b> attempt from <b>Madrid, Spain</b> — you
-              usually sign in from Lisbon.
+              <Translation
+                i18nKey="system:accountLocked.reason2"
+                components={{ b: <b /> }}
+              />
             </div>
           </div>
           <div className={styles.reasonRow}>
@@ -56,8 +67,10 @@ export function AccountLockedPage() {
               </svg>
             </div>
             <div className={styles.reasonText}>
-              <b>Lock will lift automatically</b> in 23 minutes — or use one of
-              the options below to unlock now.
+              <Translation
+                i18nKey="system:accountLocked.reason3"
+                components={{ b: <b /> }}
+              />
             </div>
           </div>
         </div>
@@ -66,9 +79,11 @@ export function AccountLockedPage() {
           <Link to={routes.magicLink} className={styles.wnRow}>
             <div className={styles.wnNum}>1</div>
             <div className={styles.wnText}>
-              <div className={styles.wnTitle}>Sign in with a magic link</div>
+              <div className={styles.wnTitle}>
+                {t("system:accountLocked.whatNow.magicLink.title")}
+              </div>
               <div className={styles.wnDesc}>
-                Quickest if you're the rightful owner — confirm via email.
+                {t("system:accountLocked.whatNow.magicLink.desc")}
               </div>
             </div>
             <span className={styles.wnArrow} aria-hidden>
@@ -78,10 +93,11 @@ export function AccountLockedPage() {
           <Link to={routes.contact} className={styles.wnRow}>
             <div className={styles.wnNum}>2</div>
             <div className={styles.wnText}>
-              <div className={styles.wnTitle}>Contact the team</div>
+              <div className={styles.wnTitle}>
+                {t("system:accountLocked.whatNow.contact.title")}
+              </div>
               <div className={styles.wnDesc}>
-                If none of the above work, write to us and we'll verify you by
-                hand.
+                {t("system:accountLocked.whatNow.contact.desc")}
               </div>
             </div>
             <span className={styles.wnArrow} aria-hidden>
@@ -92,11 +108,18 @@ export function AccountLockedPage() {
 
         <div className={styles.foot}>
           <span>
-            Incident <span className={styles.incidentId}>QP-8423-LOCK</span> ·
-            14:08 WET
+            <Translation
+              i18nKey="system:accountLocked.foot.incident"
+              values={{ id: INCIDENT_ID, time: INCIDENT_TIME }}
+              components={{
+                idTag: <span className={styles.incidentId} />,
+              }}
+            />
           </span>
           <span>
-            <Link to={routes.help}>Why does this happen?</Link>
+            <Link to={routes.help}>
+              {t("system:accountLocked.foot.whyLink")}
+            </Link>
           </span>
         </div>
       </div>

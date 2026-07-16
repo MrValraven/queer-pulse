@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { safetyFor } from "./employerSafety.data";
 import { SafetyBadges } from "./SafetyBadges";
 import type { Company } from "./employerReviews.data";
@@ -12,6 +13,7 @@ export function EmployerReviewCard({
   company: Company;
   onWriteReview?: () => void;
 }) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -36,7 +38,7 @@ export function EmployerReviewCard({
           </div>
           <div className={styles.coLabel}>/ 10</div>
           <div className={styles.coConfidence}>
-            based on {c.reviewCount} reviews
+            {t("economy:employerReviewCard.basedOn", { count: c.reviewCount })}
           </div>
         </div>
       </div>
@@ -91,10 +93,14 @@ export function EmployerReviewCard({
           type="button"
           variant="ghost"
           className={styles.coBtn}
-          onClick={() => setExpanded((v) => !v)}
+          onClick={() => setExpanded((wasExpanded) => !wasExpanded)}
           aria-expanded={expanded}
         >
-          {expanded ? "Show less" : `Read all ${c.reviews.length} reviews`}
+          {expanded
+            ? t("economy:employerReviewCard.showLess")
+            : t("economy:employerReviewCard.readAll", {
+                count: c.reviews.length,
+              })}
         </Button>
         <Button
           type="button"
@@ -102,7 +108,7 @@ export function EmployerReviewCard({
           className={styles.coBtn}
           onClick={onWriteReview}
         >
-          Write a review
+          {t("economy:company.reviews.writeReview")}
         </Button>
       </div>
     </div>

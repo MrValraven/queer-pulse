@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FiArrowRight, FiCheck, FiMail, FiRefreshCw } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { REAUTH_EMAIL, RESEND_COOLDOWN } from "./verificationNeeded.data";
 import styles from "./VerificationNeededPage.module.css";
 
@@ -29,17 +31,18 @@ export function MagicLinkMethod({
   busy: boolean;
   onVerify: () => void;
 }) {
+  const { t } = useTranslation();
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [cooldown, setCooldown] = useState(0);
 
   function startCooldown() {
-    let t = RESEND_COOLDOWN;
-    setCooldown(t);
+    let secondsRemaining = RESEND_COOLDOWN;
+    setCooldown(secondsRemaining);
     const iv = setInterval(() => {
-      t--;
-      setCooldown(t);
-      if (t <= 0) clearInterval(iv);
+      secondsRemaining--;
+      setCooldown(secondsRemaining);
+      if (secondsRemaining <= 0) clearInterval(iv);
     }, 1000);
   }
 
@@ -57,16 +60,19 @@ export function MagicLinkMethod({
     return (
       <div className={styles.magicIntro}>
         <p className={styles.magicCopy}>
-          We’ll email a one-time confirmation link to <b>{REAUTH_EMAIL}</b>.
-          Open it on this device to confirm it’s you.
+          <Translation
+            i18nKey="system:verificationNeeded.magicLink.intro"
+            values={{ email: REAUTH_EMAIL }}
+            components={{ b: <b /> }}
+          />
         </p>
         <Button className={styles.confirmBtn} onClick={send} disabled={sending}>
           {sending ? (
             <>
-              <Spinner /> Sending link…
+              <Spinner /> {t("system:verificationNeeded.magicLink.sendingCta")}
             </>
           ) : (
-            <>Email me a confirmation link</>
+            <>{t("system:verificationNeeded.magicLink.sendCta")}</>
           )}
         </Button>
       </div>
@@ -78,18 +84,25 @@ export function MagicLinkMethod({
       <div className={styles.sentIc}>
         <FiMail aria-hidden />
       </div>
-      <p className={styles.sentTitle}>Link on its way</p>
+      <p className={styles.sentTitle}>
+        {t("system:verificationNeeded.magicLink.sentTitle")}
+      </p>
       <p className={styles.magicCopy}>
-        Tap the link we sent to <b>{REAUTH_EMAIL}</b>, then come back here.
+        <Translation
+          i18nKey="system:verificationNeeded.magicLink.sentCopy"
+          values={{ email: REAUTH_EMAIL }}
+          components={{ b: <b /> }}
+        />
       </p>
       <Button className={styles.confirmBtn} onClick={onVerify} disabled={busy}>
         {busy ? (
           <>
-            <Spinner /> Verifying…
+            <Spinner /> {t("system:verificationNeeded.magicLink.verifyingCta")}
           </>
         ) : (
           <>
-            I’ve opened the link <FiArrowRight aria-hidden />
+            {t("system:verificationNeeded.magicLink.confirmCta")}{" "}
+            <FiArrowRight aria-hidden />
           </>
         )}
       </Button>
@@ -100,7 +113,11 @@ export function MagicLinkMethod({
         disabled={cooldown > 0 || sending}
       >
         <FiRefreshCw aria-hidden />
-        {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend link"}
+        {cooldown > 0
+          ? t("system:verificationNeeded.magicLink.resendCountdown", {
+              seconds: cooldown,
+            })
+          : t("system:verificationNeeded.magicLink.resendCta")}
       </button>
     </div>
   );
@@ -112,23 +129,28 @@ export function MagicLinkMethod({
 // a plain string, so props don't map cleanly. Already follows the success
 // pattern (jade tick, coral <em>).
 export function SuccessPanel({ onContinue }: { onContinue: () => void }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.success}>
       <div className={styles.successIc}>
         <FiCheck aria-hidden />
       </div>
       <h2 className={styles.successTitle}>
-        It’s you — <em>verified.</em>
+        <Translation
+          i18nKey="system:verificationNeeded.success.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.successSub}>
-        Re-authentication confirmed. Taking you on to cancel your membership…
+        {t("system:verificationNeeded.success.sub")}
       </p>
       <Button
         variant="ghost-dark"
         className={styles.successBtn}
         onClick={onContinue}
       >
-        Continue now <FiArrowRight aria-hidden />
+        {t("system:verificationNeeded.success.continueCta")}{" "}
+        <FiArrowRight aria-hidden />
       </Button>
     </div>
   );
@@ -136,6 +158,7 @@ export function SuccessPanel({ onContinue }: { onContinue: () => void }) {
 
 /* ── Expired ──────────────────────────────────────────────── */
 export function ExpiredPanel({ onRestart }: { onRestart: () => void }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.expired}>
       <div className={styles.expiredIc}>
@@ -145,14 +168,16 @@ export function ExpiredPanel({ onRestart }: { onRestart: () => void }) {
         </svg>
       </div>
       <h2 className={styles.expiredTitle}>
-        This check <em>timed out.</em>
+        <Translation
+          i18nKey="system:verificationNeeded.expired.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.expiredSub}>
-        For your security, re-authentication only stays open for a few minutes.
-        Start again to continue.
+        {t("system:verificationNeeded.expired.sub")}
       </p>
       <Button variant="primary" onClick={onRestart}>
-        Start over
+        {t("system:verificationNeeded.expired.restartCta")}
       </Button>
     </div>
   );

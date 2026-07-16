@@ -155,6 +155,8 @@ function FullSpotlight({ community: d }: { community: FullCommunity }) {
         <ImageSlot
           className={styles.glimpse}
           tint={mediaTint(d.tint)}
+          src={d.photoSrc}
+          alt={d.photoSrc ? d.photo : ""}
           placeholder={d.photo}
           radius={0}
           height="100%"

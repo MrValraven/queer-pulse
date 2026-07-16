@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { Button, FadeIn } from "../../shared/components/ui";
 import type { VolunteerOpportunity } from "./volunteerOpportunities";
 import type { SignupRow } from "./api/volunteering.adapters";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { VolunteerSignupsCard } from "./VolunteerSignupsCard";
 import { routes } from "../../app/routeMap";
 import styles from "./VolunteerOpportunityPage.module.css";
@@ -44,6 +46,7 @@ export function VolunteerOpportunitySidebar({
   closed: boolean;
   alternatives: VolunteerOpportunity[];
 }) {
+  const { t } = useTranslation();
   const partnerTo = opp.partner?.slug
     ? `${routes.partners}/${opp.partner.slug}`
     : PARTNER;
@@ -65,11 +68,14 @@ export function VolunteerOpportunitySidebar({
             </svg>
           </div>
           <div className={styles.appliedTitle}>
-            You're <em>on the list.</em>
+            <Translation
+              i18nKey="marketing:volunteerDetail.sidebar.appliedTitle"
+              components={{ em: <em /> }}
+            />
           </div>
           <p className={styles.appliedText}>{opp.applyConfirm}</p>
           <Button variant="ghost-dark" className={styles.ctaBtn} to={MESSAGES}>
-            Message the team
+            {t("marketing:volunteerDetail.sidebar.messageTeam")}
           </Button>
           <button
             type="button"
@@ -78,17 +84,19 @@ export function VolunteerOpportunitySidebar({
             disabled={withdrawing}
             aria-busy={withdrawing}
           >
-            {withdrawing ? "Withdrawing…" : "Withdraw my interest"}
+            {withdrawing
+              ? t("marketing:volunteerDetail.sidebar.withdrawing")
+              : t("marketing:volunteerDetail.sidebar.withdraw")}
           </button>
         </FadeIn>
       ) : (
         <div className={styles.card}>
           <div className={styles.applyHead}>
-            <h4>Apply</h4>
+            <h4>{t("marketing:volunteerDetail.sidebar.applyHeading")}</h4>
             <div className={styles.role}>{opp.applyRole}</div>
           </div>
           <div className={styles.spotsRow}>
-            <span>Spots filled</span>
+            <span>{t("marketing:volunteerDetail.sidebar.spotsFilled")}</span>
             <b>{opp.spotsFilled}</b>
           </div>
           <div className={styles.spotsBar}>
@@ -109,13 +117,13 @@ export function VolunteerOpportunitySidebar({
               aria-busy={submitting}
             >
               {isFull
-                ? "This role is full"
+                ? t("marketing:volunteerDetail.sidebar.roleFull")
                 : submitting
-                  ? "Sending your application…"
-                  : "Apply →"}
+                  ? t("marketing:volunteerDetail.sidebar.sending")
+                  : t("marketing:volunteerDetail.sidebar.applyCta")}
             </Button>
             <Button variant="ghost" className={styles.ctaBtn} to={MESSAGES}>
-              Ask the team
+              {t("marketing:volunteerDetail.sidebar.askTeam")}
             </Button>
           </div>
           {error && (
@@ -124,9 +132,10 @@ export function VolunteerOpportunitySidebar({
             </p>
           )}
           <p className={styles.footNote}>
-            Returning volunteers:{" "}
-            <Link to={MEMBER}>use last year's profile →</Link> · skips the
-            screen.
+            <Translation
+              i18nKey="marketing:volunteerDetail.sidebar.footNote"
+              components={{ a: <Link to={MEMBER} /> }}
+            />
           </p>
         </div>
       )}
@@ -143,25 +152,33 @@ export function VolunteerOpportunitySidebar({
 
       {opp.partner && (
         <div className={styles.card}>
-          <div className={styles.cardLabel}>In partnership with</div>
+          <div className={styles.cardLabel}>
+            {t("marketing:volunteerDetail.sidebar.partnershipLabel")}
+          </div>
           <span className={styles.partnerPill}>{opp.partner.name}</span>
           <p className={styles.partnerText}>{opp.partner.text}</p>
           <Link to={partnerTo} className={styles.partnerLink}>
-            About the partnership →
+            {t("marketing:volunteerDetail.sidebar.partnershipLink")}
           </Link>
         </div>
       )}
 
       <div className={styles.card}>
-        <div className={styles.cardLabel}>Not the right fit?</div>
-        <p className={styles.altText}>Other ways to help right now:</p>
+        <div className={styles.cardLabel}>
+          {t("marketing:volunteerDetail.sidebar.notRightFit")}
+        </div>
+        <p className={styles.altText}>
+          {t("marketing:volunteerDetail.sidebar.otherWays")}
+        </p>
         <div className={styles.altList}>
           {alternatives.map((a) => (
             <Link key={a.slug} to={`${routes.volunteer}/opportunity/${a.slug}`}>
               → {a.role} · {a.org}
             </Link>
           ))}
-          <Link to={DONATE}>→ Fund this work instead</Link>
+          <Link to={DONATE}>
+            {t("marketing:volunteerDetail.sidebar.fundInstead")}
+          </Link>
         </div>
       </div>
     </aside>

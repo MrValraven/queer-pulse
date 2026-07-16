@@ -1,19 +1,24 @@
 import { Link } from "react-router-dom";
 import { FiInfo } from "react-icons/fi";
 import { SkeletonLine } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ACTIVITY_FEED } from "./adminDashboard.data";
 import { routes } from "../../app/routeMap";
 import styles from "./AdminDashboardPage.module.css";
 
 export function AdminDashboardFeed({ loading = false }: { loading?: boolean }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.feedRail}>
       <div className={styles.feedCard}>
         <div className={styles.feedHead}>
-          <span className={styles.feedTitle}>Live activity</span>
+          <span className={styles.feedTitle}>
+            {t("admin:dashboard.feed.title")}
+          </span>
           <span className={styles.live}>
             <span className={styles.liveDot} aria-hidden />
-            Live
+            {t("admin:dashboard.feed.live")}
           </span>
         </div>
         <div className={styles.feed}>
@@ -57,10 +62,12 @@ export function AdminDashboardFeed({ loading = false }: { loading?: boolean }) {
       <div className={styles.transpCard}>
         <FiInfo className={styles.transpIco} aria-hidden />
         <span>
-          Every action here is <b>logged and shown</b> to the member it affects.
-          No silent removals, ever.{" "}
+          <Translation
+            i18nKey="admin:dashboard.feed.transparency"
+            components={{ strong: <b /> }}
+          />{" "}
           <Link to={routes.adminGovernance} className={styles.transpLink}>
-            See the audit log →
+            {t("admin:dashboard.feed.auditLinkCta")} →
           </Link>
         </span>
       </div>

@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { type TabId, type TagKind, TABS, buildPanels } from "./hateCrime.data";
+import {
+  type TabId,
+  type TagKind,
+  TAB_KEYS,
+  buildPanels,
+} from "./hateCrime.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./HateCrimePage.module.css";
 
 const MENTAL = routes.mentalHealth;
 const FORUM = routes.forum;
 const LEGAL = routes.legal;
-
-const PANELS = buildPanels({ MENTAL, FORUM, LEGAL });
 
 const TAG_CLASS: Record<TagKind, string> = {
   immediate: "tagImmediate",
@@ -23,19 +27,23 @@ export function HateCrimeTabBar({
   tab: TabId;
   setTab: (t: TabId) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.tabBar}>
       <div className={styles.tbInner}>
-        {TABS.map((t) => (
+        {TAB_KEYS.map((tabItem) => (
           <button
-            key={t.id}
+            key={tabItem.id}
             type="button"
-            className={[styles.tabBtn, tab === t.id && styles.tabBtnActive]
+            className={[
+              styles.tabBtn,
+              tab === tabItem.id && styles.tabBtnActive,
+            ]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setTab(t.id)}
+            onClick={() => setTab(tabItem.id)}
           >
-            {t.label}
+            {t(tabItem.labelKey)}
           </button>
         ))}
       </div>
@@ -44,7 +52,12 @@ export function HateCrimeTabBar({
 }
 
 export function HateCrimePanel() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<TabId>("immediate");
+  const panels = useMemo(
+    () => buildPanels(t, { MENTAL, FORUM, LEGAL }),
+    [t],
+  );
 
   return (
     <>
@@ -53,7 +66,7 @@ export function HateCrimePanel() {
         <div className="wrap">
           <div className={styles.layout}>
             <div>
-              {PANELS[tab].map((b, i) => {
+              {panels[tab].map((b, i) => {
                 if (b.kind === "preamble")
                   return (
                     <p className={styles.preamble} key={i}>
@@ -114,69 +127,90 @@ export function HateCrimePanel() {
 }
 
 function HateCrimeSidebar() {
+  const { t } = useTranslation();
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sbCard}>
-        <div className={styles.sbcTitle}>Emergency &amp; immediate</div>
+        <div className={styles.sbcTitle}>
+          {t("safety:hateCrime.sidebar.emergencyTitle")}
+        </div>
         <div className={styles.sbcItem}>
-          <div className={styles.sbcOrg}>Emergency services</div>
+          <div className={styles.sbcOrg}>
+            {t("safety:hateCrime.sidebar.emergencyServices")}
+          </div>
           <div className={styles.sbcNum}>112</div>
         </div>
         <div className={styles.sbcItem}>
-          <div className={styles.sbcOrg}>APAV Victim Support</div>
-          <div className={styles.sbcRole}>24h confidential</div>
+          <div className={styles.sbcOrg}>
+            {t("safety:hateCrime.sidebar.apav.org")}
+          </div>
+          <div className={styles.sbcRole}>
+            {t("safety:hateCrime.sidebar.apav.role")}
+          </div>
           <div className={styles.sbcNum}>116 006</div>
         </div>
         <div className={styles.sbcItem}>
           <div className={styles.sbcOrg}>
-            SOS Racismo (also covers identity)
+            {t("safety:hateCrime.sidebar.sosRacismo")}
           </div>
           <div className={styles.sbcNum}>21 314 85 82</div>
         </div>
       </div>
       <div className={styles.sbCard}>
-        <div className={styles.sbcTitle}>Legal &amp; advocacy</div>
+        <div className={styles.sbcTitle}>
+          {t("safety:hateCrime.sidebar.legalTitle")}
+        </div>
         <div className={styles.sbcItem}>
           <div className={styles.sbcOrg}>ILGA Portugal</div>
           <div className={styles.sbcRole}>
-            Free legal accompaniment, hate crime monitoring
+            {t("safety:hateCrime.sidebar.ilga.role")}
           </div>
           <div className={styles.sbcNum}>213 887 615</div>
-          <span className={styles.sbcAnon}>Anonymous reporting</span>
+          <span className={styles.sbcAnon}>
+            {t("safety:hateCrime.sidebar.ilga.anon")}
+          </span>
         </div>
         <div className={styles.sbcItem}>
-          <div className={styles.sbcOrg}>Provedor de Justiça</div>
+          <div className={styles.sbcOrg}>
+            {t("safety:hateCrime.sidebar.provedor.org")}
+          </div>
           <div className={styles.sbcRole}>
-            Ombudsman — if authorities fail to act
+            {t("safety:hateCrime.sidebar.provedor.role")}
           </div>
           <div className={styles.sbcNum}>provedor-jus.pt</div>
         </div>
         <div className={styles.sbcItem}>
-          <div className={styles.sbcOrg}>ILGA Europe</div>
-          <div className={styles.sbcRole}>EU-level legal support</div>
+          <div className={styles.sbcOrg}>
+            {t("safety:hateCrime.sidebar.ilgaEurope.org")}
+          </div>
+          <div className={styles.sbcRole}>
+            {t("safety:hateCrime.sidebar.ilgaEurope.role")}
+          </div>
           <div className={styles.sbcNum}>ilga-europe.org</div>
         </div>
       </div>
       <div className={styles.sbCard}>
-        <div className={styles.sbcTitle}>On QueerPulse</div>
+        <div className={styles.sbcTitle}>
+          {t("safety:hateCrime.sidebar.onTitle")}
+        </div>
         <div className={styles.sbcItem}>
           <Link to={LEGAL} className={styles.sbcLink}>
-            Legal Resources →
+            {t("safety:hateCrime.sidebar.legalResourcesCta")}
           </Link>
         </div>
         <div className={styles.sbcItem}>
           <Link to={MENTAL} className={styles.sbcLink}>
-            Mental Health →
+            {t("safety:hateCrime.sidebar.mentalHealthCta")}
           </Link>
         </div>
         <div className={styles.sbcItem}>
           <Link to={routes.solidarity} className={styles.sbcLink}>
-            Solidarity Pricing →
+            {t("safety:hateCrime.sidebar.solidarityCta")}
           </Link>
         </div>
         <div className={styles.sbcItem}>
           <Link to={routes.report} className={styles.sbcLink}>
-            Report to QueerPulse →
+            {t("safety:hateCrime.sidebar.reportCta")}
           </Link>
         </div>
       </div>

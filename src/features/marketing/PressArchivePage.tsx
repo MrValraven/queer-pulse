@@ -2,6 +2,8 @@ import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./PressArchivePage.module.css";
 import {
@@ -237,11 +239,11 @@ const DATA: YearGroup[] = [
 ];
 
 const CHIPS = [
-  "All · 54",
-  "Features · 22",
-  "Interviews · 12",
-  "News · 14",
-  "Critiques · 6",
+  { labelKey: "marketing:pressArchive.chip.all", count: 54 },
+  { labelKey: "marketing:pressArchive.chip.features", count: 22 },
+  { labelKey: "marketing:pressArchive.chip.interviews", count: 12 },
+  { labelKey: "marketing:pressArchive.chip.news", count: 14 },
+  { labelKey: "marketing:pressArchive.chip.critiques", count: 6 },
 ];
 
 /** A deterministic "older archive" generated from the curated pieces, so
@@ -292,6 +294,7 @@ function PressRowSkeleton() {
 }
 
 export function PressArchivePage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const { showToast } = useToast();
   const [chip, setChip] = useState(0);
@@ -311,16 +314,26 @@ export function PressArchivePage() {
   return (
     <PageShell>
       <div className={styles.page}>
-        <HubBackLink to={routes.pressKit} label="Press Kit" />
+        <HubBackLink
+          to={routes.pressKit}
+          label={t("marketing:pressArchive.hero.backLabel")}
+        />
         <header className={styles.head}>
           <div>
-            <div className={styles.eye}>Coverage archive · since 2024</div>
+            <div className={styles.eye}>
+              {t("marketing:pressArchive.hero.eyebrow")}
+            </div>
             <h1 className={styles.h1}>
-              Everything written <em>about us.</em>
+              <Translation
+                i18nKey="marketing:pressArchive.hero.title"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.sub}>
-              Pieces about QueerPulse in third-party publications, indexed by
-              year. <em>Includes critiques we disagreed with.</em>
+              <Translation
+                i18nKey="marketing:pressArchive.hero.sub"
+                components={{ em: <em /> }}
+              />
             </p>
           </div>
           <div className={styles.stats}>
@@ -328,16 +341,17 @@ export function PressArchivePage() {
               <b>
                 <em>54</em>
               </b>
-              Pieces all-time
+              {t("marketing:pressArchive.stats.allTime")}
             </span>
             <span>
-              <b>6</b>Languages
+              <b>6</b>
+              {t("marketing:pressArchive.stats.languages")}
             </span>
             <span>
               <b>
                 <em>14</em>
               </b>
-              This year
+              {t("marketing:pressArchive.stats.thisYear")}
             </span>
           </div>
         </header>
@@ -348,18 +362,21 @@ export function PressArchivePage() {
               <circle cx="11" cy="11" r="7" />
               <path d="m21 21-4.35-4.35" />
             </svg>
-            <input type="text" placeholder="Search title, source, author" />
+            <input
+              type="text"
+              placeholder={t("marketing:pressArchive.search.placeholder")}
+            />
           </div>
           {CHIPS.map((c, i) => (
             <button
-              key={c}
+              key={c.labelKey}
               type="button"
               className={[styles.chip, chip === i && styles.chipActive]
                 .filter(Boolean)
                 .join(" ")}
               onClick={() => setChip(i)}
             >
-              {c}
+              {t(c.labelKey, { count: c.count })}
             </button>
           ))}
         </div>
@@ -387,7 +404,12 @@ export function PressArchivePage() {
                     className={styles.row}
                     onClick={(e) => {
                       e.preventDefault();
-                      showToast(`Opening on ${p.out}…`, "info");
+                      showToast(
+                        t("marketing:pressArchive.toast.opening", {
+                          source: p.out,
+                        }),
+                        "info",
+                      );
                     }}
                   >
                     <div className={styles.date}>
@@ -401,7 +423,11 @@ export function PressArchivePage() {
                           p.sourceMuted ? { color: "var(--ink-60)" } : undefined
                         }
                       >
-                        {p.pin && <span className={styles.pin}>Featured</span>}
+                        {p.pin && (
+                          <span className={styles.pin}>
+                            {t("marketing:pressArchive.pinBadge")}
+                          </span>
+                        )}
                         {p.source}
                         <span className={styles.kind}>· {p.sourceKind}</span>
                       </div>
@@ -436,14 +462,16 @@ export function PressArchivePage() {
               disabled={loadingMore}
               aria-busy={loadingMore}
             >
-              {loadingMore ? "Loading older pieces…" : "Load older coverage"}
+              {loadingMore
+                ? t("marketing:pressArchive.loadingMore")
+                : t("marketing:pressArchive.loadMoreCta")}
             </Button>
           </div>
         )}
         {!loading && allLoaded && (
           <div className={styles.loadMore}>
             <span className={styles.end}>
-              That's the whole archive — 2022 to today.
+              {t("marketing:pressArchive.endOfArchive")}
             </span>
           </div>
         )}

@@ -1,27 +1,28 @@
-import type { ReactNode } from "react";
-
-/** The three promise cards at the top of the Rights & takedown page. */
+/**
+ * The three promise cards at the top of the Rights & takedown page. Chrome
+ * (Pattern A) — resolved via `t(titleKey)` / `t(bodyKey)` in the component.
+ */
 export interface RightsPromise {
   key: string;
-  title: ReactNode;
-  body: ReactNode;
+  titleKey: string;
+  bodyKey: string;
 }
 
 export const PROMISES: RightsPromise[] = [
   {
     key: "window",
-    title: "14-day removal",
-    body: "Confirm a takedown and the release stops being served within 14 days — usually the same night. Caches clear, links 404 to a tasteful page.",
+    titleKey: "studio:rights.promise.window.title",
+    bodyKey: "studio:rights.promise.window.body",
   },
   {
     key: "paid",
-    title: "Past plays stay paid",
-    body: "Every listen up to removal is paid in the next cycle. Taking work down never claws back money already earned.",
+    titleKey: "studio:rights.promise.paid.title",
+    bodyKey: "studio:rights.promise.paid.body",
   },
   {
     key: "banking",
-    title: "Banking untouched",
-    body: "A takedown is not an account closure. Your SEPA details, your payout schedule, your collaborator splits — all stay live.",
+    titleKey: "studio:rights.promise.banking.title",
+    bodyKey: "studio:rights.promise.banking.body",
   },
 ];
 

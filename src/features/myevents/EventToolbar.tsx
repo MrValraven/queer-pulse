@@ -1,17 +1,19 @@
 import { sx } from "./myEvents.styles";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyEvents } from "./MyEventsContext";
 import type { FilterKey, SortBy } from "./myEvents.types";
 
-const FILTERS: { key: FilterKey; label: string }[] = [
-  { key: "inperson", label: "In person" },
-  { key: "online", label: "Online" },
-  { key: "free", label: "Free" },
-  { key: "paid", label: "Ticketed" },
-  { key: "month", label: "This calendar month" },
+const FILTERS: { key: FilterKey; labelKey: string }[] = [
+  { key: "inperson", labelKey: "myevents:toolbar.filter.inperson" },
+  { key: "online", labelKey: "myevents:toolbar.filter.online" },
+  { key: "free", labelKey: "myevents:toolbar.filter.free" },
+  { key: "paid", labelKey: "myevents:toolbar.filter.paid" },
+  { key: "month", labelKey: "myevents:toolbar.filter.month" },
 ];
 
 /** Search field, secondary filter chips, and the sort/density/select controls. */
 export function EventToolbar() {
+  const { t } = useTranslation();
   const c = useMyEvents();
   return (
     <div className={sx("ev-toolbar")}>
@@ -29,10 +31,10 @@ export function EventToolbar() {
         <input
           className={sx("ev-search")}
           type="search"
-          placeholder="Search your events by name or place…"
+          placeholder={t("myevents:toolbar.searchPlaceholder")}
           value={c.searchTerm}
           onChange={(e) => c.setSearch(e.target.value)}
-          aria-label="Search your events"
+          aria-label={t("myevents:toolbar.searchAria")}
         />
       </div>
 
@@ -44,7 +46,7 @@ export function EventToolbar() {
             className={sx(`fchip${c.activeFilters[f.key] ? " on" : ""}`)}
             onClick={() => c.toggleFilter(f.key)}
           >
-            {f.label}
+            {t(f.labelKey)}
           </button>
         ))}
       </div>
@@ -52,13 +54,15 @@ export function EventToolbar() {
       <div className={sx("ev-controls")}>
         <select
           className={sx("ev-sort")}
-          aria-label="Sort events"
+          aria-label={t("myevents:toolbar.sortAria")}
           value={c.sortBy}
           onChange={(e) => c.setSort(e.target.value as SortBy)}
         >
-          <option value="date">Sort: by date</option>
-          <option value="community">Sort: by community</option>
-          <option value="status">Sort: by status</option>
+          <option value="date">{t("myevents:toolbar.sort.date")}</option>
+          <option value="community">
+            {t("myevents:toolbar.sort.community")}
+          </option>
+          <option value="status">{t("myevents:toolbar.sort.status")}</option>
         </select>
         <button
           type="button"
@@ -75,7 +79,11 @@ export function EventToolbar() {
           >
             <path d="M2 3h10M2 7h10M2 11h10" />
           </svg>
-          <span>{c.density === "compact" ? "Compact" : "Comfortable"}</span>
+          <span>
+            {c.density === "compact"
+              ? t("myevents:toolbar.density.compact")
+              : t("myevents:toolbar.density.comfortable")}
+          </span>
         </button>
         <button
           type="button"
@@ -93,10 +101,14 @@ export function EventToolbar() {
           >
             <path d="M3 7.5 6 10.5 11 4" />
           </svg>
-          <span>{c.selectMode ? "Done" : "Select"}</span>
+          <span>
+            {c.selectMode
+              ? t("myevents:toolbar.select.done")
+              : t("myevents:toolbar.select.select")}
+          </span>
         </button>
         <span className={sx("ctrl-spacer")} />
-        <span className={sx("tz-note")}>Times shown in Lisbon (WEST)</span>
+        <span className={sx("tz-note")}>{t("myevents:toolbar.tzNote")}</span>
       </div>
     </div>
   );

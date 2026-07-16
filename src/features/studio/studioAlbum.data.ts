@@ -131,7 +131,7 @@ export const MORE: {
   em?: string;
   meta: string;
   tag: "mem" | "free";
-  tagLabel: string;
+  tagLabelKey: string;
   tint: "plum" | "coral" | "jade";
   image?: string;
 }[] = [
@@ -140,7 +140,7 @@ export const MORE: {
     em: "Beja",
     meta: "EP · 5 tracks · 2024",
     tag: "mem",
-    tagLabel: "Sustainer",
+    tagLabelKey: "studio:tag.sustainer",
     tint: "plum",
     image:
       "https://images.unsplash.com/photo-1651443039959-582bbea6be6a?q=80&w=400&auto=format&fit=crop",
@@ -149,7 +149,7 @@ export const MORE: {
     pre: "Devoção",
     meta: "Album · 9 tracks · 2023",
     tag: "mem",
-    tagLabel: "Sustainer",
+    tagLabelKey: "studio:tag.sustainer",
     tint: "coral",
     image:
       "https://images.unsplash.com/photo-1657627157213-c5f44dbd0724?q=80&w=800&auto=format&fit=crop",
@@ -159,7 +159,7 @@ export const MORE: {
     em: "vento",
     meta: "Single · 2025",
     tag: "free",
-    tagLabel: "Free",
+    tagLabelKey: "studio:tag.free",
     tint: "jade",
     image:
       "https://images.unsplash.com/photo-1670956008011-a9dfc94e12b8?q=80&w=800&auto=format&fit=crop",
@@ -169,7 +169,7 @@ export const MORE: {
     em: "quente",
     meta: "Single · 2024",
     tag: "free",
-    tagLabel: "Free",
+    tagLabelKey: "studio:tag.free",
     tint: "plum",
     image:
       "https://images.unsplash.com/photo-1671703938773-df94fd42e838?q=80&w=800&auto=format&fit=crop",

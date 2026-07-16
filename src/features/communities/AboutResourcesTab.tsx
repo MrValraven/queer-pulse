@@ -4,6 +4,7 @@ import type { IconType } from "react-icons";
 import type { CommunityDetail } from "./communityDetails";
 import type { CommunityResource, LivingCommunity } from "./community.model";
 import { sisterCommunities } from "./communityConnections";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
 
@@ -28,6 +29,7 @@ export function AboutResourcesTab({
   info: CommunityDetail;
   living: LivingCommunity;
 }) {
+  const { t } = useTranslation();
   const sisters = sisterCommunities(living.slug);
   return (
     <div>
@@ -37,7 +39,7 @@ export function AboutResourcesTab({
         </p>
       ))}
 
-      <div className={detail.secLbl}>Who this is for</div>
+      <div className={detail.secLbl}>{t("communities:detail.about.whoFor")}</div>
       {info.whoFor.map((w) => (
         <div className={detail.bullet} key={w}>
           <div className={detail.bulletDot} />
@@ -45,7 +47,9 @@ export function AboutResourcesTab({
         </div>
       ))}
 
-      <div className={detail.secLbl}>House rules</div>
+      <div className={detail.secLbl}>
+        {t("communities:detail.aboutResources.houseRules")}
+      </div>
       <ol className={styles.rules}>
         {living.rules.map((r, i) => (
           <li className={styles.rule} key={r}>
@@ -55,7 +59,9 @@ export function AboutResourcesTab({
         ))}
       </ol>
 
-      <div className={detail.secLbl}>Resources</div>
+      <div className={detail.secLbl}>
+        {t("communities:detail.aboutResources.resources")}
+      </div>
       <div className={styles.shelf}>
         {living.resources.map((res) => {
           const Icon = RESOURCE_ICON[res.kind];
@@ -78,7 +84,9 @@ export function AboutResourcesTab({
 
       {sisters.length > 0 && (
         <>
-          <div className={detail.secLbl}>Sister communities</div>
+          <div className={detail.secLbl}>
+            {t("communities:detail.aboutResources.sisterCommunities")}
+          </div>
           <div className={styles.sisters}>
             {sisters.map(({ community, shared }) => (
               <Link
@@ -92,7 +100,9 @@ export function AboutResourcesTab({
                 <span className={styles.sisterMain}>
                   <span className={styles.sisterName}>{community.name}</span>
                   <span className={styles.sisterShared}>
-                    {shared} {shared === 1 ? "person" : "people"} in both
+                    {t("communities:detail.aboutResources.sharedPeople", {
+                      count: shared,
+                    })}
                   </span>
                 </span>
                 <FiArrowUpRight aria-hidden className={styles.resourceArrow} />
@@ -103,9 +113,9 @@ export function AboutResourcesTab({
       )}
 
       <div className={detail.tagRow}>
-        {info.tags.map((t) => (
-          <span className={detail.tag} key={t}>
-            {t}
+        {info.tags.map((tag) => (
+          <span className={detail.tag} key={tag}>
+            {tag}
           </span>
         ))}
       </div>

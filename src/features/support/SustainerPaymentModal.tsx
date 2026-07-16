@@ -2,9 +2,12 @@ import { useEffect, useState, type ReactNode } from "react";
 import { FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { PaymentCheckout } from "./PaymentCheckout";
 import { PaymentSuccess, type Receipt } from "./PaymentSuccess";
-import { FREQS } from "./sustainer.pricing";
+import { FREQS, TIER_LABEL_KEYS } from "./sustainer.pricing";
 import type { SustainerStore } from "./useSustainer";
 import styles from "./sustainer.module.css";
 
@@ -13,25 +16,26 @@ function makeRef(): string {
   return `QP-2026-${String(Math.floor(1000 + Math.random() * 8999))}`;
 }
 
-function buildReceipt(store: SustainerStore): Receipt {
-  const f = FREQS[store.freq];
+function buildReceipt(t: TFunction, store: SustainerStore): Receipt {
   const total = store.baseAmount + (store.solid ? store.solidAmount : 0);
-  const tierWord =
-    store.selectedName === "Custom" ? "Custom" : store.selectedName;
+  const tierLabel =
+    store.selectedName === "Custom"
+      ? t("support:tiers.name.custom")
+      : t(TIER_LABEL_KEYS[store.selectedName as keyof typeof TIER_LABEL_KEYS]);
   return {
     welcomeName: store.gift
-      ? "friend of QueerPulse"
+      ? t("support:modal.welcomeName.gift")
       : store.selectedName === "Custom"
-        ? "supporter"
-        : store.selectedName,
+        ? t("support:modal.welcomeName.customSupporter")
+        : tierLabel,
     text: store.gift
-      ? "We've emailed your gift and their new Sustainer badge is ready to activate."
-      : "Your Sustainer badge is active. Thank you for keeping this place alive.",
-    tier: tierWord + (store.gift ? " (gift)" : ""),
-    billing: f.billing,
+      ? t("support:modal.receipt.giftText")
+      : t("support:modal.receipt.text"),
+    tier: tierLabel + (store.gift ? t("support:modal.receipt.giftSuffix") : ""),
+    billing: t(FREQS[store.freq].billingKey),
     solid: store.solid ? store.money(store.solidAmount) : null,
     ref: makeRef(),
-    charged: `${store.money(total)}.00`,
+    charged: store.money(total),
   };
 }
 
@@ -45,6 +49,7 @@ export function SustainerPaymentModal({
   onClose: () => void;
 }) {
   useScrollLock();
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [receipt, setReceipt] = useState<Receipt | null>(null);
 
@@ -55,19 +60,19 @@ export function SustainerPaymentModal({
   }, [onClose]);
 
   function complete() {
-    const r = buildReceipt(store);
+    const r = buildReceipt(t, store);
     if (!store.gift) {
-      const f = FREQS[store.freq];
       store.becomeSupporter({
         tier: store.selectedName === "Custom" ? "Custom" : store.selectedName,
         price: store.money(store.baseAmount),
-        per: f.per,
-        billing: f.billing,
+        freq: store.freq,
       });
     }
     setReceipt(r);
     showToast(
-      store.gift ? "Gift sent." : "Welcome aboard — badge activated.",
+      store.gift
+        ? t("support:modal.giftSentToast")
+        : t("support:modal.welcomeToast"),
       "success",
     );
   }
@@ -75,27 +80,30 @@ export function SustainerPaymentModal({
   let head: ReactNode;
   if (receipt) {
     head = (
-      <>
-        All <em>done</em>
-      </>
+      <Translation i18nKey="support:modal.head.done" components={{ em: <em /> }} />
     );
   } else if (store.gift) {
     head = (
-      <>
-        Gift a <em>membership</em>
-      </>
+      <Translation i18nKey="support:modal.head.gift" components={{ em: <em /> }} />
     );
   } else if (store.selectedName === "Custom") {
     head = (
-      <>
-        Support <em>QueerPulse</em>
-      </>
+      <Translation
+        i18nKey="support:modal.head.custom"
+        components={{ em: <em /> }}
+      />
     );
   } else {
     head = (
-      <>
-        Becoming a <em>{store.selectedName}</em>
-      </>
+      <Translation
+        i18nKey="support:modal.head.tier"
+        values={{
+          name: t(
+            TIER_LABEL_KEYS[store.selectedName as keyof typeof TIER_LABEL_KEYS],
+          ),
+        }}
+        components={{ em: <em /> }}
+      />
     );
   }
 
@@ -110,7 +118,7 @@ export function SustainerPaymentModal({
         className={styles.paymentCard}
         role="dialog"
         aria-modal="true"
-        aria-label="Supporting membership checkout"
+        aria-label={t("support:modal.checkoutAriaLabel")}
       >
         <div className={styles.pcTop}>
           <div className={styles.pcHead}>{head}</div>
@@ -118,7 +126,7 @@ export function SustainerPaymentModal({
             type="button"
             className={styles.pcClose}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("support:modal.close")}
           >
             <FiX />
           </button>

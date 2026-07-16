@@ -4,6 +4,8 @@ import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PROFILES, matchesBudget, type ListingType } from "./flatmates.data";
 import { FlatmateCard } from "./FlatmateCard";
 import { FlatmateSkeleton } from "./FlatmateSkeleton";
@@ -12,6 +14,7 @@ import { PostProfileModal } from "./PostProfileModal";
 import styles from "./FlatmatesPage.module.css";
 
 export function FlatmatesBoard() {
+  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const [type, setType] = useState<ListingType | "all">("all");
@@ -36,13 +39,14 @@ export function FlatmatesBoard() {
       return false;
     if (!matchesBudget(p, budget)) return false;
     if (movein !== "all" && p.moveinKey !== movein) return false;
-    if (tags.length > 0 && !tags.every((t) => p.tags.includes(t))) return false;
+    if (tags.length > 0 && !tags.every((tag) => p.tags.includes(tag)))
+      return false;
     return true;
   });
 
   const toggleTag = (tag: string) =>
     setTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+      prev.includes(tag) ? prev.filter((existing) => existing !== tag) : [...prev, tag],
     );
 
   const clearFilters = () => {
@@ -75,7 +79,7 @@ export function FlatmatesBoard() {
           {!boardEmpty && (
             <div className={styles.top}>
               <div className={styles.count}>
-                <b>{filtered.length}</b> profiles active this week
+                {t("economy:flatmates.count", { count: filtered.length })}
               </div>
               <button
                 type="button"
@@ -90,23 +94,23 @@ export function FlatmatesBoard() {
                     strokeLinecap="round"
                   />
                 </svg>
-                Post your profile
+                {t("economy:flatmates.postProfileCta")}
               </button>
             </div>
           )}
           <div className={styles.grid}>
             {loading ? (
-              Array.from({ length: 6 }).map((_, i) => (
-                <FlatmateSkeleton key={i} />
+              Array.from({ length: 6 }).map((_, skeletonIndex) => (
+                <FlatmateSkeleton key={skeletonIndex} />
               ))
             ) : boardEmpty ? (
               <EmptyState
                 className={styles.empty}
                 icon={<FiHome />}
-                title="The flatmate board is quiet right now"
-                description="No profiles are posted yet. When members share what they're looking for — a room, a flatmate, a neighbourhood, a budget — they'll show up here. Check back soon, or post a profile of your own."
+                title={t("economy:flatmates.empty.title")}
+                description={t("economy:flatmates.empty.description")}
                 action={{
-                  label: "Post your profile",
+                  label: t("economy:flatmates.postProfileCta"),
                   onClick: () => setModalOpen(true),
                 }}
               />
@@ -116,18 +120,26 @@ export function FlatmatesBoard() {
                   <EmptyState
                     className={styles.empty}
                     icon={<FiHome />}
-                    title="No profiles match those filters"
-                    description="No one fits that exact combination right now. Try widening your filters — or post your own profile and let the right flatmate find you."
-                    action={{ label: "Clear filters", onClick: clearFilters }}
+                    title={t("economy:flatmates.empty.filteredTitle")}
+                    description={t(
+                      "economy:flatmates.empty.filteredDescription",
+                    )}
+                    action={{
+                      label: t("economy:flatmates.empty.clearFilters"),
+                      onClick: clearFilters,
+                    }}
                   />
                 )}
-                {filtered.map((p, i) => (
-                  <FadeIn key={p.id} delay={Math.min(i, 8) * 60}>
+                {filtered.map((profile, profileIndex) => (
+                  <FadeIn
+                    key={profile.id}
+                    delay={Math.min(profileIndex, 8) * 60}
+                  >
                     <FlatmateCard
-                      p={p}
-                      sent={sent.has(p.id)}
+                      p={profile}
+                      sent={sent.has(profile.id)}
                       onSayHello={() =>
-                        setSent((prev) => new Set(prev).add(p.id))
+                        setSent((prev) => new Set(prev).add(profile.id))
                       }
                     />
                   </FadeIn>
@@ -140,11 +152,12 @@ export function FlatmatesBoard() {
 
       <Outro
         title={
-          <>
-            A home where <em>you belong.</em>
-          </>
+          <Translation
+            i18nKey="economy:flatmates.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="The right flatmate can make a city feel like home. Take your time, trust your gut, and use the community."
+        sub={t("economy:flatmates.outro.sub")}
       >
         <Button
           type="button"
@@ -152,10 +165,10 @@ export function FlatmatesBoard() {
           size="lg"
           onClick={() => setModalOpen(true)}
         >
-          Post your profile
+          {t("economy:flatmates.postProfileCta")}
         </Button>
         <Button to={routes.forum} variant="ghost-dark" size="lg">
-          Ask the forum →
+          {t("economy:flatmates.outro.askForum")}
         </Button>
       </Outro>
 

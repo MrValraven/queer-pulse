@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MusicPlayer } from "./MusicPlayer";
 import {
+  BADGE_LABEL_KEYS,
   PROFILE,
   TINT_BG,
   TINT_FG,
@@ -12,6 +14,7 @@ import { badgeClass } from "./creativesBadge";
 import styles from "./CreativesPage.module.css";
 
 export function ArtCard({ w }: { w: ArtWork }) {
+  const { t } = useTranslation();
   return (
     <article className={styles.artCard}>
       <div className={styles.artImg} style={{ height: w.imgH }}>
@@ -23,11 +26,7 @@ export function ArtCard({ w }: { w: ArtWork }) {
           <div className={styles.artBadges}>
             {w.badges.map((b) => (
               <span key={b} className={`${styles.badge} ${badgeClass(b)}`}>
-                {b === "commission"
-                  ? "Commission open"
-                  : b === "exhibition"
-                    ? "Exhibition"
-                    : b}
+                {BADGE_LABEL_KEYS[b] ? t(BADGE_LABEL_KEYS[b]!) : b}
               </span>
             ))}
           </div>
@@ -46,7 +45,7 @@ export function ArtCard({ w }: { w: ArtWork }) {
             <div className={styles.artHood}>{w.hood}</div>
           </div>
           <Link to={PROFILE} className={styles.artProfile}>
-            View profile →
+            {t("community:creatives.card.viewProfileCta")}
           </Link>
         </div>
       </div>
@@ -63,10 +62,13 @@ export function MusicCard({
   active: boolean;
   onPlay: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <article className={styles.musicCard}>
       <div className={styles.mcLeft}>
-        <div className={styles.mcImg}>{a.name} — artist photo</div>
+        <div className={styles.mcImg}>
+          {a.name} — {t("community:creatives.card.artistPhoto")}
+        </div>
         <div>
           <div className={styles.mcName}>{a.name}</div>
           <div className={styles.mcGenre}>{a.genre}</div>
@@ -78,7 +80,7 @@ export function MusicCard({
         <div className={styles.mcBadges}>
           {a.badges.map((b) => (
             <span key={b} className={`${styles.badge} ${badgeClass(b)}`}>
-              {b}
+              {BADGE_LABEL_KEYS[b] ? t(BADGE_LABEL_KEYS[b]!) : b}
             </span>
           ))}
         </div>
@@ -87,7 +89,7 @@ export function MusicCard({
           variant="ghost"
           style={{ fontSize: 13, padding: "9px 16px" }}
         >
-          View profile
+          {t("community:creatives.card.viewProfileCtaShort")}
         </Button>
       </div>
       <div className={styles.mcRight}>

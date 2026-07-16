@@ -10,184 +10,165 @@ import {
   FiVolume2,
   FiPause,
 } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import type { TFunction } from "../../shared/i18n/types";
+
+/**
+ * Content for the Studio Accessibility page. Platform-authored chrome (never
+ * fetched — see `docs/i18n/extraction-brief.md` §1). Pattern B:
+ * `buildGroups(t)` / `buildShortcuts(t)` are memoized in the consumer.
+ */
 
 export type ItemStatus = "live" | "soon";
 
 export interface AccessItem {
   icon: ReactNode;
-  /** Heading, split so the emphasised part can render as an italic <em>. */
-  pre: string;
-  em: string;
-  post?: string;
+  heading: ReactNode;
   body: ReactNode;
   status: ItemStatus;
 }
 
 export interface AccessGroup {
-  /** Section title, split so the emphasised part can render as an italic <em>. */
-  pre: string;
-  em: string;
-  post?: string;
+  heading: ReactNode;
   dek: string;
   items: AccessItem[];
 }
 
-export const GROUPS: AccessGroup[] = [
-  {
-    pre: "For Deaf & ",
-    em: "hard-of-hearing",
-    post: " listeners",
-    dek: "A music platform can't pretend everyone hears it the same way. So we caption the talk and surface the words.",
-    items: [
-      {
-        icon: <FiMessageSquare />,
-        pre: "Captioned ",
-        em: "live rooms",
-        body: (
-          <>
-            Every broadcast is auto-captioned in real time; council broadcasts
-            get a <em>human pass</em>. The talk between songs, the dedications,
-            the artist's asides — all transcribed and adjustable in size.
-          </>
-        ),
-        status: "live",
-      },
-      {
-        icon: <FiAlignLeft />,
-        pre: "Time-synced ",
-        em: "lyrics",
-        body: (
-          <>
-            Where the artist supplied them, lyrics scroll in time with playback,
-            with the current line highlighted. Readable as a static sheet too,
-            for any track.
-          </>
-        ),
-        status: "live",
-      },
-      {
-        icon: <FiActivity />,
-        pre: "Visual ",
-        em: "waveforms",
-        body: (
-          <>
-            Live rooms and tracks show a real-time waveform tied to the actual
-            audio, so rhythm and dynamics are visible, not only audible.
-          </>
-        ),
-        status: "live",
-      },
-      {
-        icon: <FiCheck />,
-        pre: "Signed ",
-        em: "broadcasts",
-        body: (
-          <>
-            Flagship council broadcasts include a Portuguese Sign Language (LGP)
-            interpreter window. Expanding to weekly rooms next quarter.
-          </>
-        ),
-        status: "soon",
-      },
-    ],
-  },
-  {
-    pre: "For listeners in ",
-    em: "any language",
-    dek: "The catalogue is mostly in Portuguese, with songs in a dozen other languages. Words shouldn't be a wall.",
-    items: [
-      {
-        icon: <FiGlobe />,
-        pre: "Lyric ",
-        em: "translation",
-        body: (
-          <>
-            Community translations sit beside the original. Show one or both at
-            once. Translators are credited and{" "}
-            <em>paid from the solidarity fund</em> — translation is labour.
-          </>
-        ),
-        status: "live",
-      },
-      {
-        icon: <FiList />,
-        pre: "Interface in ",
-        em: "your language",
-        body: (
-          <>
-            Studio's chrome ships in Portuguese, English, Spanish and French,
-            with more added as members translate them. Set it in Settings →
-            Captions &amp; lyrics.
-          </>
-        ),
-        status: "live",
-      },
-    ],
-  },
-  {
-    pre: "For low-vision & ",
-    em: "keyboard",
-    post: " navigation",
-    dek: "The whole player is operable without a mouse, and the dark theme is built to clear contrast — not just to look moody.",
-    items: [
-      {
-        icon: <FiEye />,
-        pre: "Contrast that ",
-        em: "passes",
-        body: (
-          <>
-            Body text sits at 4.5:1 or better against the plum; interactive
-            elements at 3:1 minimum, with a high-contrast mode that lifts
-            everything further. Focus rings are always visible.
-          </>
-        ),
-        status: "live",
-      },
-      {
-        icon: <FiVolume2 />,
-        pre: "Screen-reader notes on the ",
-        em: "player",
-        body: (
-          <>
-            The persistent transport announces track, artist, elapsed time, and{" "}
-            <em>what this play pays the artist</em>. Tip and save are labelled
-            buttons; the live tip feed is a polite ARIA live region, never a
-            barrage.
-          </>
-        ),
-        status: "live",
-      },
-      {
-        icon: <FiPause />,
-        pre: "Respects ",
-        em: "reduced motion",
-        body: (
-          <>
-            Every decorative animation — the pulse dot, the waveforms, the
-            equaliser bars — stills itself when your system asks for reduced
-            motion. Nothing essential moves.
-          </>
-        ),
-        status: "live",
-      },
-    ],
-  },
-];
+export function buildGroups(t: TFunction): AccessGroup[] {
+  return [
+    {
+      heading: (
+        <Translation i18nKey="studio:accessibility.group.deaf.heading" components={{ em: <em /> }} />
+      ),
+      dek: t("studio:accessibility.group.deaf.dek"),
+      items: [
+        {
+          icon: <FiMessageSquare />,
+          heading: (
+            <Translation i18nKey="studio:accessibility.item.captions.heading" components={{ em: <em /> }} />
+          ),
+          body: <Translation i18nKey="studio:accessibility.item.captions.body" components={{ em: <em /> }} />,
+          status: "live",
+        },
+        {
+          icon: <FiAlignLeft />,
+          heading: (
+            <Translation i18nKey="studio:accessibility.item.lyrics.heading" components={{ em: <em /> }} />
+          ),
+          body: <Translation i18nKey="studio:accessibility.item.lyrics.body" components={{ em: <em /> }} />,
+          status: "live",
+        },
+        {
+          icon: <FiActivity />,
+          heading: (
+            <Translation i18nKey="studio:accessibility.item.waveforms.heading" components={{ em: <em /> }} />
+          ),
+          body: <Translation i18nKey="studio:accessibility.item.waveforms.body" components={{ em: <em /> }} />,
+          status: "live",
+        },
+        {
+          icon: <FiCheck />,
+          heading: (
+            <Translation i18nKey="studio:accessibility.item.signed.heading" components={{ em: <em /> }} />
+          ),
+          body: <Translation i18nKey="studio:accessibility.item.signed.body" components={{ em: <em /> }} />,
+          status: "soon",
+        },
+      ],
+    },
+    {
+      heading: (
+        <Translation i18nKey="studio:accessibility.group.language.heading" components={{ em: <em /> }} />
+      ),
+      dek: t("studio:accessibility.group.language.dek"),
+      items: [
+        {
+          icon: <FiGlobe />,
+          heading: (
+            <Translation i18nKey="studio:accessibility.item.translation.heading" components={{ em: <em /> }} />
+          ),
+          body: <Translation i18nKey="studio:accessibility.item.translation.body" components={{ em: <em /> }} />,
+          status: "live",
+        },
+        {
+          icon: <FiList />,
+          heading: (
+            <Translation i18nKey="studio:accessibility.item.interfaceLang.heading" components={{ em: <em /> }} />
+          ),
+          body: <Translation i18nKey="studio:accessibility.item.interfaceLang.body" components={{ em: <em /> }} />,
+          status: "live",
+        },
+      ],
+    },
+    {
+      heading: (
+        <Translation i18nKey="studio:accessibility.group.lowVision.heading" components={{ em: <em /> }} />
+      ),
+      dek: t("studio:accessibility.group.lowVision.dek"),
+      items: [
+        {
+          icon: <FiEye />,
+          heading: (
+            <Translation i18nKey="studio:accessibility.item.contrast.heading" components={{ em: <em /> }} />
+          ),
+          body: <Translation i18nKey="studio:accessibility.item.contrast.body" components={{ em: <em /> }} />,
+          status: "live",
+        },
+        {
+          icon: <FiVolume2 />,
+          heading: (
+            <Translation i18nKey="studio:accessibility.item.screenReader.heading" components={{ em: <em /> }} />
+          ),
+          body: <Translation i18nKey="studio:accessibility.item.screenReader.body" components={{ em: <em /> }} />,
+          status: "live",
+        },
+        {
+          icon: <FiPause />,
+          heading: (
+            <Translation i18nKey="studio:accessibility.item.reducedMotion.heading" components={{ em: <em /> }} />
+          ),
+          body: <Translation i18nKey="studio:accessibility.item.reducedMotion.body" components={{ em: <em /> }} />,
+          status: "live",
+        },
+      ],
+    },
+  ];
+}
 
 export interface ShortcutRow {
-  /** Description, split so the emphasised part can render as an italic <em>. */
-  pre: string;
-  em?: string;
-  post?: string;
+  heading: ReactNode;
   keys: string[];
 }
 
-export const SHORTCUTS: ShortcutRow[] = [
-  { pre: "Play / ", em: "pause", keys: ["Space"] },
-  { pre: "Previous / next ", em: "track", keys: ["←", "→"] },
-  { pre: "Volume ", em: "up / down", keys: ["↑", "↓"] },
-  { pre: "Tip the current artist", keys: ["T"] },
-  { pre: "Save to library", keys: ["S"] },
-  { pre: "Toggle ", em: "captions / lyrics", keys: ["C"] },
-  { pre: "Open search", keys: ["/"] },
-];
+export function buildShortcuts(t: TFunction): ShortcutRow[] {
+  return [
+    {
+      heading: <Translation i18nKey="studio:accessibility.shortcut.playPause" components={{ em: <em /> }} />,
+      keys: [t("studio:accessibility.key.space")],
+    },
+    {
+      heading: <Translation i18nKey="studio:accessibility.shortcut.prevNext" components={{ em: <em /> }} />,
+      keys: ["←", "→"],
+    },
+    {
+      heading: <Translation i18nKey="studio:accessibility.shortcut.volume" components={{ em: <em /> }} />,
+      keys: ["↑", "↓"],
+    },
+    {
+      heading: t("studio:accessibility.shortcut.tip"),
+      keys: ["T"],
+    },
+    {
+      heading: t("studio:accessibility.shortcut.save"),
+      keys: ["S"],
+    },
+    {
+      heading: <Translation i18nKey="studio:accessibility.shortcut.captions" components={{ em: <em /> }} />,
+      keys: ["C"],
+    },
+    {
+      heading: t("studio:accessibility.shortcut.search"),
+      keys: ["/"],
+    },
+  ];
+}

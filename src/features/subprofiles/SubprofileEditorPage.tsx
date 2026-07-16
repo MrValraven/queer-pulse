@@ -2,7 +2,8 @@ import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { Badge, EmptyState, Spinner } from "../../shared/components/ui";
-import { KIND_LABELS } from "./subprofile-kinds";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { useSubprofile } from "./api/useSubprofile";
 import { STATUS_BADGE } from "./mySubprofiles.data";
 import { SubprofileMetaForm } from "./SubprofileMetaForm";
@@ -18,6 +19,7 @@ const DASHBOARD = "/account/subprofiles";
  * B4 registers `/account/subprofiles/:id/edit`.
  */
 export function SubprofileEditorPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { data: subprofile, isLoading } = useSubprofile(id);
 
@@ -26,7 +28,7 @@ export function SubprofileEditorPage() {
       <AppShell>
         <div className={styles.stateWrap} role="status" aria-live="polite">
           <Spinner />
-          <span>Loading your persona…</span>
+          <span>{t("subprofiles:editor.loading")}</span>
         </div>
       </AppShell>
     );
@@ -38,9 +40,9 @@ export function SubprofileEditorPage() {
         <div className={styles.page}>
           <div className={styles.container}>
             <EmptyState
-              title="We couldn't find that persona"
-              description="It may have been removed, or the link isn't quite right."
-              action={{ label: "Back to your subprofiles", to: DASHBOARD }}
+              title={t("subprofiles:editor.notFoundTitle")}
+              description={t("subprofiles:editor.notFoundDescription")}
+              action={{ label: t("subprofiles:editor.notFoundAction"), to: DASHBOARD }}
             />
           </div>
         </div>
@@ -55,17 +57,17 @@ export function SubprofileEditorPage() {
       <div className={styles.page}>
         <div className={styles.container}>
           <Link to={DASHBOARD} className={styles.backLink}>
-            <FiArrowLeft size={16} aria-hidden /> Your subprofiles
+            <FiArrowLeft size={16} aria-hidden /> {t("subprofiles:editor.backLink")}
           </Link>
 
           <div className={styles.header}>
             <h1 className={styles.headTitle}>
-              {subprofile.displayName || "Untitled persona"}
+              {subprofile.displayName || t("subprofiles:mine.untitled")}
             </h1>
             <div className={styles.headMeta}>
-              <Badge tone="ghost">{KIND_LABELS[subprofile.kind]}</Badge>
+              <Badge tone="ghost">{t(KIND_LABEL_KEYS[subprofile.kind])}</Badge>
               <Badge tone={status.tone} dot>
-                {status.label}
+                {t(status.labelKey)}
               </Badge>
             </div>
           </div>

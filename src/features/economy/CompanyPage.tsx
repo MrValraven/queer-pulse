@@ -3,6 +3,7 @@ import { FiBriefcase } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -19,6 +20,7 @@ import styles from "./CompanyPage.module.css";
 type TabId = "about" | "jobs" | "reviews" | "work";
 
 export function CompanyPage() {
+  const { t } = useTranslation();
   const { slug = "" } = useParams();
   const { demoMode } = useDemoMode();
   const { postedJobs } = usePostedJobs();
@@ -66,9 +68,12 @@ export function CompanyPage() {
         <div className={styles.body}>
           <EmptyState
             icon={<FiBriefcase />}
-            title="Company not found"
-            description="This company profile doesn't exist or has been taken down. Browse the job board to find queer-run and verified-inclusive employers."
-            action={{ label: "Back to the job board", to: routes.jobs }}
+            title={t("economy:company.notFound.title")}
+            description={t("economy:company.notFound.description")}
+            action={{
+              label: t("economy:company.notFound.backCta"),
+              to: routes.jobs,
+            }}
           />
         </div>
       </PageShell>

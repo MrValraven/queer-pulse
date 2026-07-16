@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiAlertTriangle, FiHome, FiBriefcase } from "react-icons/fi";
 import { LuLandmark } from "react-icons/lu";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CATS } from "./forum.data";
 import styles from "./ForumPage.module.css";
 
@@ -16,9 +17,10 @@ export function ForumSidebar({
   counts: Record<string, number>;
   totalCount: number;
 }) {
+  const { t } = useTranslation();
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.sbLabel}>Categories</div>
+      <div className={styles.sbLabel}>{t("forum:sidebar.categoriesLabel")}</div>
       {CATS.map((c) => (
         <button
           type="button"
@@ -31,7 +33,7 @@ export function ForumSidebar({
           <span className={styles.catIcon}>
             <c.icon />
           </span>
-          <span className={styles.catName}>{c.name}</span>
+          <span className={styles.catName}>{t(c.nameKey)}</span>
           <span className={styles.catCount}>
             {c.id === "all" ? totalCount : (counts[c.id] ?? 0)}
           </span>
@@ -39,16 +41,16 @@ export function ForumSidebar({
       ))}
       <div className={styles.sbDivider} />
       <Link to={routes.safety} className={styles.sbLink}>
-        <FiAlertTriangle /> Emergency resources
+        <FiAlertTriangle /> {t("forum:sidebar.emergencyResources")}
       </Link>
       <Link to={routes.housing} className={styles.sbLink}>
-        <FiHome /> Housing board
+        <FiHome /> {t("forum:sidebar.housingBoard")}
       </Link>
       <Link to={routes.jobs} className={styles.sbLink}>
-        <FiBriefcase /> Job board
+        <FiBriefcase /> {t("forum:sidebar.jobBoard")}
       </Link>
       <Link to={routes.governance} className={styles.sbLink}>
-        <LuLandmark /> Governance &amp; transparency
+        <LuLandmark /> {t("forum:sidebar.governance")}
       </Link>
     </aside>
   );

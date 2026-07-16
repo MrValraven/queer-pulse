@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FACTS } from "./filmPage.data";
 import { FilmHeroPoster } from "./FilmHeroPoster";
 import { FilmHeroWatch } from "./FilmHeroWatch";
@@ -6,6 +7,7 @@ import styles from "./FilmPage.module.css";
 import { routes } from "../../app/routeMap";
 
 export function FilmHero() {
+  const { t } = useTranslation();
   return (
     <section className={styles.hero}>
       <div className={`wrap ${styles.heroInner}`}>
@@ -13,10 +15,10 @@ export function FilmHero() {
 
         <div>
           <div className={styles.kicker}>
-            <span>Cover film · week 23</span>
+            <span>{t("cinema:film.hero.coverWeek", { week: 23 })}</span>
             <span className={styles.dot} />
             <span className={styles.by}>
-              Programmed by{" "}
+              {t("cinema:film.hero.programmedBy")}{" "}
               <Link to={`${routes.cinemaCurator}/joao-ribeiro`}>
                 João Ribeiro
               </Link>
@@ -60,13 +62,13 @@ export function FilmHero() {
               Co-hosted with Casa do Comum.{" "}
               <em>Live captions in EN &amp; PT.</em>
             </div>
-            <Link to={routes.rsvp}>RSVP →</Link>
+            <Link to={routes.rsvp}>{t("cinema:film.hero.rsvpCta")}</Link>
           </div>
 
           <div className={styles.facts}>
             {FACTS.map((f) => (
-              <div key={f.k} className={styles.fact}>
-                <div className="k">{f.k}</div>
+              <div key={f.labelKey} className={styles.fact}>
+                <div className="k">{t(f.labelKey)}</div>
                 <div className="v">
                   {f.ok && (
                     <span className="ok">

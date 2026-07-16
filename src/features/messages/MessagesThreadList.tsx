@@ -5,6 +5,7 @@ import {
   FadeIn,
   SearchInput,
 } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MessageThreadListSkeleton } from "./MessagesSkeleton";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
@@ -28,15 +29,16 @@ export function MessagesThreadList({
   onOpen: (id: string) => void;
   onCompose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.threadPanel}>
       <div className={styles.tpTop}>
         <div className={styles.tpHeadRow}>
-          <div className={styles.tpTitle}>Messages</div>
+          <div className={styles.tpTitle}>{t("messages:thread.title")}</div>
           <button
             type="button"
             className={styles.composeBtn}
-            title="New message"
+            title={t("messages:thread.composeTooltip")}
             onClick={onCompose}
           >
             <svg
@@ -64,8 +66,8 @@ export function MessagesThreadList({
         <SearchInput
           value={query}
           onChange={onQueryChange}
-          placeholder="Search conversations…"
-          ariaLabel="Search conversations"
+          placeholder={t("messages:thread.searchPlaceholder")}
+          ariaLabel={t("messages:thread.searchAria")}
         />
       </div>
 
@@ -77,12 +79,12 @@ export function MessagesThreadList({
             <EmptyState
               compact
               icon={<FiSearch />}
-              title="No conversations found"
-              description={
-                <>No one matches “{query.trim()}”. Try a different name.</>
-              }
+              title={t("messages:thread.emptySearchTitle")}
+              description={t("messages:thread.emptySearchDescription", {
+                query: query.trim(),
+              })}
               action={{
-                label: "Clear search",
+                label: t("messages:thread.clearSearch"),
                 onClick: () => onQueryChange(""),
               }}
             />
@@ -90,10 +92,10 @@ export function MessagesThreadList({
             <EmptyState
               compact
               icon={<FiMessageCircle />}
-              title="No conversations yet"
-              description="When you start a chat, it’ll live here — a quiet, private space just for you and the people you reach out to."
+              title={t("messages:thread.emptyTitle")}
+              description={t("messages:thread.emptyDescription")}
               action={{
-                label: "New message",
+                label: t("messages:thread.newMessage"),
                 onClick: onCompose,
               }}
             />

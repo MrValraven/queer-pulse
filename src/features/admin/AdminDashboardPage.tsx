@@ -2,6 +2,7 @@ import { FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { ADMIN_PROFILE } from "../../shared/components/layout/adminNav.data";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminDashboardHeader } from "./AdminDashboardHeader";
 import { AdminStatGrid } from "./AdminStatGrid";
 import { AdminTriageQueue } from "./AdminTriageQueue";
@@ -21,9 +22,11 @@ export function AdminDashboardPage() {
   return (
     <AdminShell
       title={
-        <>
-          Overview · <em>good morning, {ADMIN_PROFILE.firstName}</em>
-        </>
+        <Translation
+          i18nKey="admin:dashboard.title"
+          components={{ em: <em /> }}
+          values={{ name: ADMIN_PROFILE.firstName }}
+        />
       }
     >
       <FadeIn>

@@ -1,41 +1,81 @@
-export const ASSURANCES = [
-  { n: "< 2 min", label: "average wait for a peer supporter" },
-  { n: "Trained", label: "queer volunteers, not a bot" },
-  { n: "Confidential", label: "nothing is stored or shared" },
-];
+import type { TFunction } from "../../shared/i18n/types";
 
-export const OPENING = [
-  {
-    from: "them" as const,
-    name: "Rui · peer supporter",
-    text: "Hi, I'm Rui. I'm a trained volunteer and I'm here with you. There's no rush — we can take this at whatever pace feels okay.",
-  },
-  {
-    from: "them" as const,
-    name: "Rui · peer supporter",
-    text: "Whatever brought you here today, you don't have to explain it well. Just start wherever you want.",
-  },
-];
+/**
+ * i18n Pattern B. Every field here is chrome (platform-authored crisis-line
+ * copy + the prototype's canned opening messages) so each `build*` function
+ * takes `t` and is memoized in `CrisisChatPage.tsx` via `useMemo(() => buildX(t), [t])`.
+ * Phone numbers are never translated — they're identical in both catalogs.
+ */
 
-export const LINES = [
-  {
-    label: "Emergency services",
-    num: "112",
-    note: "Police, ambulance, fire — 24h, free",
-  },
-  {
-    label: "SOS Voz Amiga",
-    num: "213 544 545",
-    note: "Crisis & suicide prevention · 16:00–24:00",
-  },
-  {
-    label: "ILGA Portugal helpline",
-    num: "707 200 220",
-    note: "LGBTQ+ crisis support",
-  },
-  {
-    label: "SNS 24 (Health line)",
-    num: "808 24 24 24",
-    note: "Medical advice & referral · 24h",
-  },
-];
+export interface Assurance {
+  n: string;
+  label: string;
+}
+
+export function buildAssurances(t: TFunction): Assurance[] {
+  return [
+    {
+      n: t("safety:crisisChat.assurance.wait.n"),
+      label: t("safety:crisisChat.assurance.wait.label"),
+    },
+    {
+      n: t("safety:crisisChat.assurance.trained.n"),
+      label: t("safety:crisisChat.assurance.trained.label"),
+    },
+    {
+      n: t("safety:crisisChat.assurance.confidential.n"),
+      label: t("safety:crisisChat.assurance.confidential.label"),
+    },
+  ];
+}
+
+export interface CrisisLine {
+  label: string;
+  num: string;
+  note: string;
+}
+
+export function buildLines(t: TFunction): CrisisLine[] {
+  return [
+    {
+      label: t("safety:crisisChat.lines.emergency.label"),
+      num: "112",
+      note: t("safety:crisisChat.lines.emergency.note"),
+    },
+    {
+      label: t("safety:crisisChat.lines.sosVozAmiga.label"),
+      num: "213 544 545",
+      note: t("safety:crisisChat.lines.sosVozAmiga.note"),
+    },
+    {
+      label: t("safety:crisisChat.lines.ilga.label"),
+      num: "707 200 220",
+      note: t("safety:crisisChat.lines.ilga.note"),
+    },
+    {
+      label: t("safety:crisisChat.lines.sns24.label"),
+      num: "808 24 24 24",
+      note: t("safety:crisisChat.lines.sns24.note"),
+    },
+  ];
+}
+
+/** Fictional demo peer supporter. Stays English in both catalogs (content),
+ * passed as the `{name}` interpolation value into the chrome around it. */
+export const SUPPORTER_NAME = "Rui";
+
+export interface Message {
+  from: "them" | "me";
+  name?: string;
+  text: string;
+}
+
+export function buildOpening(t: TFunction): Message[] {
+  const name = t("safety:crisisChat.chat.supporterLabel", {
+    name: SUPPORTER_NAME,
+  });
+  return [
+    { from: "them", name, text: t("safety:crisisChat.opening.msg1") },
+    { from: "them", name, text: t("safety:crisisChat.opening.msg2") },
+  ];
+}

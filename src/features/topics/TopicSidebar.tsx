@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom";
 import { Avatar, Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath, routes, topicPath } from "../../app/routeMap";
 import type { Topic } from "./topics.data";
 import styles from "./TopicPage.module.css";
 
 export function TopicSidebar({ topic }: { topic: Topic }) {
+  const { t } = useTranslation();
   return (
     <aside className={styles.side}>
       {topic.resources && (
         <div className={styles.resources}>
-          <h5>{topic.resources.title}</h5>
+          <h5>{t("topics:stats.verifiedResources")}</h5>
           <p>{topic.resources.body}</p>
           <Link to={linkToPath(topic.resources.href)}>
             {topic.resources.ctaLabel}
@@ -19,7 +21,7 @@ export function TopicSidebar({ topic }: { topic: Topic }) {
 
       {topic.relatedTopics.length > 0 && (
         <div className={styles.sideCard}>
-          <h4>Related topics</h4>
+          <h4>{t("topics:sidebar.relatedTitle")}</h4>
           <div className={styles.relatedList}>
             {topic.relatedTopics.map((related) => (
               <Link key={related.tag} to={topicPath(related.tag)}>
@@ -36,7 +38,7 @@ export function TopicSidebar({ topic }: { topic: Topic }) {
 
       {topic.topVoices.length > 0 && (
         <div className={styles.sideCard}>
-          <h4>Top voices here</h4>
+          <h4>{t("topics:sidebar.topVoicesTitle")}</h4>
           <div className={styles.topPeople}>
             {topic.topVoices.map((voice) => (
               <Link
@@ -57,13 +59,13 @@ export function TopicSidebar({ topic }: { topic: Topic }) {
 
       {topic.crisisCard && (
         <div className={styles.crisis}>
-          <p>In crisis? Don't wait for the thread.</p>
+          <p>{t("topics:sidebar.crisis.body")}</p>
           <Button
             variant="primary"
             to={linkToPath(routes.crisisChat)}
             className={styles.crisisBtn}
           >
-            Open crisis chat
+            {t("topics:sidebar.crisis.cta")}
           </Button>
         </div>
       )}

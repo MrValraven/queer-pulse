@@ -8,6 +8,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import type {
   LivingCommunity,
@@ -51,6 +52,7 @@ function PulsePost({
   /** Persist a reply (no-op in demo). */
   onReplyPost?: (id: string, text: string) => void;
 }) {
+  const { t } = useTranslation();
   const [reactions, setReactions] = useState(post.reactions);
   const [showReply, setShowReply] = useState(false);
   const [replyDraft, setReplyDraft] = useState("");
@@ -70,15 +72,16 @@ function PulsePost({
       {
         author: { initials: "Me", name: "You", tint: "plum" },
         text,
-        time: "just now",
+        time: t("communities:common.justNow"),
       },
     ]);
     setReplyDraft("");
     onReplyPost?.(post.id, text);
   };
+  const replyAction = t("communities:detail.pulse.replyAction");
   const replyLabel = replies.length
-    ? `Show ${replies.length} repl${replies.length === 1 ? "y" : "ies"}`
-    : "Reply";
+    ? t("communities:detail.pulse.replyLabel", { count: replies.length })
+    : replyAction;
   return (
     <article
       className={[styles.post, pinned && styles.pinned]
@@ -87,7 +90,8 @@ function PulsePost({
     >
       {pinned && (
         <div className={styles.pinFlag}>
-          <FiMessageCircle aria-hidden /> Pinned announcement
+          <FiMessageCircle aria-hidden />{" "}
+          {t("communities:detail.pulse.pinnedAnnouncement")}
         </div>
       )}
       <header className={styles.pHead}>
@@ -102,7 +106,9 @@ function PulsePost({
           <div className={styles.pName}>
             {post.author.name} <RoleBadge role={roleOf(post.author)} />
           </div>
-          <div className={styles.pTime}>{post.time} ago</div>
+          <div className={styles.pTime}>
+            {t("communities:common.timeAgo", { time: post.time })}
+          </div>
         </div>
       </header>
       <p className={styles.pBody}>{post.body}</p>
@@ -126,7 +132,7 @@ function PulsePost({
             }
           }}
         >
-          <FiCornerUpLeft aria-hidden /> {replies.length || "Reply"}
+          <FiCornerUpLeft aria-hidden /> {replies.length || replyAction}
         </span>
       </div>
       {replies.map((rep, i) => (
@@ -146,12 +152,12 @@ function PulsePost({
           <textarea
             className={styles.replyTa}
             rows={1}
-            placeholder="Write a reply…"
+            placeholder={t("communities:detail.pulse.replyPlaceholder")}
             value={replyDraft}
             onChange={(e) => setReplyDraft(e.target.value)}
           />
           <Button variant="ghost" style={{ fontSize: 13 }} onClick={sendReply}>
-            Reply
+            {replyAction}
           </Button>
         </div>
       )}
@@ -170,6 +176,7 @@ export function PulseTab({
 }) {
   const loading = useSimulatedLoad(500);
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const createPost = useCreatePost(community.slug);
   const react = useReact(community.slug);
   const unreact = useUnreact(community.slug);
@@ -207,7 +214,7 @@ export function PulseTab({
     ]);
     setDraft("");
     createPost.mutate({ body: text });
-    showToast("Shared with the community.", "success");
+    showToast(t("communities:detail.pulse.sharedToast"), "success");
   };
 
   // Interleave system moments between posts so the feed reads as alive.
@@ -243,7 +250,9 @@ export function PulseTab({
           <textarea
             className={styles.composerTa}
             rows={1}
-            placeholder={`Share something with ${name}…`}
+            placeholder={t("communities:detail.pulse.composerPlaceholder", {
+              name,
+            })}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
           />
@@ -252,12 +261,12 @@ export function PulseTab({
             onClick={share}
             style={{ whiteSpace: "nowrap" }}
           >
-            <FiSend aria-hidden /> Share
+            <FiSend aria-hidden /> {t("communities:detail.pulse.shareCta")}
           </Button>
         </div>
       ) : (
         <div className={styles.joinHint}>
-          You're welcome to read — join {name} to take part.
+          {t("communities:detail.pulse.joinHint", { name })}
         </div>
       )}
 
@@ -288,7 +297,9 @@ export function PulseTab({
             <div className={styles.moment}>
               <span className={styles.momentDot} />
               {item.moment!.text} ·{" "}
-              <span className={styles.momentTime}>{item.moment!.time} ago</span>
+              <span className={styles.momentTime}>
+                {t("communities:common.timeAgo", { time: item.moment!.time })}
+              </span>
             </div>
           </FadeIn>
         ),

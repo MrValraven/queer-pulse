@@ -1,19 +1,25 @@
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { ASSURANCES, LINES, OPENING } from "./crisisChat.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  SUPPORTER_NAME,
+  buildAssurances,
+  buildLines,
+  buildOpening,
+  type Message,
+} from "./crisisChat.data";
 import styles from "./CrisisChatPage.module.css";
 
-interface Message {
-  from: "them" | "me";
-  name?: string;
-  text: string;
-}
-
 export function CrisisChatPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
-  const [messages, setMessages] = useState<Message[]>(OPENING);
+  const assurances = useMemo(() => buildAssurances(t), [t]);
+  const lines = useMemo(() => buildLines(t), [t]);
+  const opening = useMemo(() => buildOpening(t), [t]);
+  const [messages, setMessages] = useState<Message[]>(opening);
   const [draft, setDraft] = useState("");
 
   function handleSend(event: FormEvent) {
@@ -22,14 +28,16 @@ export function CrisisChatPage() {
     if (!text) return;
     setMessages((prev) => [...prev, { from: "me", text }]);
     setDraft("");
-    showToast("Rui is typing — a peer supporter will reply shortly.");
+    showToast(t("safety:crisisChat.toast.typing", { name: SUPPORTER_NAME }));
     window.setTimeout(() => {
       setMessages((prev) => [
         ...prev,
         {
           from: "them",
-          name: "Rui · peer supporter",
-          text: "Thank you for telling me that. I'm here, and we'll stay with it together for as long as you need.",
+          name: t("safety:crisisChat.chat.supporterLabel", {
+            name: SUPPORTER_NAME,
+          }),
+          text: t("safety:crisisChat.reply.thankYou"),
         },
       ]);
     }, 1400);
@@ -42,19 +50,20 @@ export function CrisisChatPage() {
           <div className={styles.inner}>
             <div>
               <Reveal className={styles.eyebrow}>
-                Crisis chat · A supporter is online
+                {t("safety:crisisChat.eyebrow")}
               </Reveal>
               <Reveal as="h1" className={styles.title} delay={60}>
-                You don't have to <em>hold this alone.</em>
+                <Translation
+                  i18nKey="safety:crisisChat.hero.title"
+                  components={{ em: <em /> }}
+                />
               </Reveal>
               <Reveal as="p" className={styles.lead} delay={120}>
-                A confidential chat with a trained queer peer supporter. No
-                appointment, no referral, no judgement — just someone who will
-                stay with you for as long as you need.
+                {t("safety:crisisChat.hero.lead")}
               </Reveal>
 
               <Reveal className={styles.assurances} delay={160}>
-                {ASSURANCES.map((item) => (
+                {assurances.map((item) => (
                   <div key={item.label}>
                     <div className={styles.assN}>{item.n}</div>
                     <div className={styles.assL}>{item.label}</div>
@@ -64,9 +73,9 @@ export function CrisisChatPage() {
 
               <div className={styles.lines}>
                 <div className={styles.linesH}>
-                  If you're in immediate danger, call
+                  {t("safety:crisisChat.lines.heading")}
                 </div>
-                {LINES.map((line) => (
+                {lines.map((line) => (
                   <div key={line.label} className={styles.line}>
                     <div>
                       <div className={styles.lineLabel}>{line.label}</div>
@@ -87,9 +96,9 @@ export function CrisisChatPage() {
               <div className={styles.chatHead}>
                 <span className={styles.chatDot} />
                 <div>
-                  <div className={styles.chatHeadName}>Rui</div>
+                  <div className={styles.chatHeadName}>{SUPPORTER_NAME}</div>
                   <div className={styles.chatHeadStatus}>
-                    Peer supporter · online now
+                    {t("safety:crisisChat.chat.status")}
                   </div>
                 </div>
               </div>
@@ -109,20 +118,16 @@ export function CrisisChatPage() {
               <form className={styles.composer} onSubmit={handleSend}>
                 <input
                   type="text"
-                  placeholder="Type whatever you can…"
+                  placeholder={t("safety:crisisChat.composer.placeholder")}
                   value={draft}
                   onChange={(event) => setDraft(event.target.value)}
-                  aria-label="Message"
+                  aria-label={t("safety:crisisChat.composer.ariaLabel")}
                 />
                 <Button type="submit" variant="primary">
-                  Send
+                  {t("safety:crisisChat.composer.sendCta")}
                 </Button>
               </form>
-              <p className={styles.note}>
-                This is a prototype — messages aren't sent to a real person. In
-                the live platform, nothing here is stored or shown on your
-                profile.
-              </p>
+              <p className={styles.note}>{t("safety:crisisChat.note")}</p>
             </Reveal>
           </div>
         </div>

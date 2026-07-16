@@ -232,6 +232,7 @@ export const community: Catalog = {
   "creatives.count.artists_other": "{count} artists",
   "creatives.card.viewProfileCta": "View profile →",
   "creatives.card.viewProfileCtaShort": "View profile",
+  "creatives.card.artistPhoto": "artist photo",
   "creatives.player.playAriaLabel": "Play",
   "creatives.empty.art.title": "Nothing matches your filters",
   "creatives.empty.art.description":

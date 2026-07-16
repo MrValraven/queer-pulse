@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   LIFESTYLE_TAGS,
   NEIGHBOURHOODS,
@@ -30,25 +31,29 @@ export function FlatmatesFilterBar({
   tags,
   toggleTag,
 }: FilterBarProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.filterBar}>
       <div className="wrap">
         <div className={styles.filterRow}>
-          <span className={styles.fLabel}>Show</span>
-          {(["all", "seeking", "offering"] as const).map((t) => (
+          <span className={styles.fLabel}>{t("economy:flatmates.filter.show")}</span>
+          {(["all", "seeking", "offering"] as const).map((typeOption) => (
             <button
-              key={t}
+              key={typeOption}
               type="button"
-              className={[styles.typeChip, type === t && styles.typeOn]
+              className={[
+                styles.typeChip,
+                type === typeOption && styles.typeOn,
+              ]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => setType(t)}
+              onClick={() => setType(typeOption)}
             >
-              {t === "all"
-                ? "All profiles"
-                : t === "seeking"
-                  ? "Seeking a room"
-                  : "Offering a room"}
+              {typeOption === "all"
+                ? t("economy:flatmates.filter.all")
+                : typeOption === "seeking"
+                  ? t("economy:flatmates.filter.seeking")
+                  : t("economy:flatmates.filter.offering")}
             </button>
           ))}
           <div className={styles.spacer} />
@@ -57,10 +62,12 @@ export function FlatmatesFilterBar({
             value={neighbourhood}
             onChange={(e) => setNeighbourhood(e.target.value)}
           >
-            <option value="all">Any neighbourhood</option>
-            {NEIGHBOURHOODS.map((n) => (
-              <option key={n} value={n}>
-                {n}
+            <option value="all">
+              {t("economy:flatmates.filter.anyNeighbourhood")}
+            </option>
+            {NEIGHBOURHOODS.map((neighbourhoodName) => (
+              <option key={neighbourhoodName} value={neighbourhoodName}>
+                {neighbourhoodName}
               </option>
             ))}
           </select>
@@ -69,36 +76,48 @@ export function FlatmatesFilterBar({
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
           >
-            <option value="all">Any budget</option>
-            <option value="600">Up to €700</option>
-            <option value="700">€700–900</option>
-            <option value="900">€900–1,100</option>
-            <option value="1100">€1,100+</option>
+            <option value="all">{t("economy:flatmates.filter.anyBudget")}</option>
+            <option value="600">
+              {t("economy:flatmates.filter.budget.upTo700")}
+            </option>
+            <option value="700">
+              {t("economy:flatmates.filter.budget.700to900")}
+            </option>
+            <option value="900">
+              {t("economy:flatmates.filter.budget.900to1100")}
+            </option>
+            <option value="1100">
+              {t("economy:flatmates.filter.budget.1100plus")}
+            </option>
           </select>
           <select
             className={styles.fSelect}
             value={movein}
             onChange={(e) => setMovein(e.target.value)}
           >
-            <option value="all">Any move-in</option>
-            <option value="now">Available now</option>
-            <option value="jul">July</option>
-            <option value="aug">August</option>
-            <option value="flex">Flexible</option>
+            <option value="all">{t("economy:flatmates.filter.anyMoveIn")}</option>
+            <option value="now">{t("economy:flatmates.filter.moveIn.now")}</option>
+            <option value="jul">{t("economy:flatmates.filter.moveIn.jul")}</option>
+            <option value="aug">{t("economy:flatmates.filter.moveIn.aug")}</option>
+            <option value="flex">
+              {t("economy:flatmates.filter.moveIn.flex")}
+            </option>
           </select>
         </div>
         <div className={styles.filterRow}>
-          <span className={styles.fLabel}>Lifestyle</span>
-          {LIFESTYLE_TAGS.map((t) => (
+          <span className={styles.fLabel}>
+            {t("economy:flatmates.filter.lifestyle")}
+          </span>
+          {LIFESTYLE_TAGS.map((tag) => (
             <button
-              key={t}
+              key={tag}
               type="button"
-              className={[styles.tagChip, tags.includes(t) && styles.tagOn]
+              className={[styles.tagChip, tags.includes(tag) && styles.tagOn]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => toggleTag(t)}
+              onClick={() => toggleTag(tag)}
             >
-              {t}
+              {tag}
             </button>
           ))}
         </div>

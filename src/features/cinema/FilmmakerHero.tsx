@@ -1,4 +1,5 @@
 import { Button, ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { Filmmaker } from "./cinemaFilmmaker.data";
 import styles from "./CinemaFilmmakerPage.module.css";
@@ -10,6 +11,7 @@ interface FilmmakerHeroProps {
 }
 
 export function FilmmakerHero({ filmmaker, onTip }: FilmmakerHeroProps) {
+  const { t } = useTranslation();
   return (
     <section className={styles.hero}>
       <div className={`wrap ${styles.heroInner}`}>
@@ -38,13 +40,13 @@ export function FilmmakerHero({ filmmaker, onTip }: FilmmakerHeroProps) {
 
           <div className={styles.actions}>
             <Button variant="primary" onClick={onTip}>
-              ↳ Tip {filmmaker.nameEm} · 100% to her
+              {t("cinema:filmmaker.hero.tipCta", { name: filmmaker.nameEm })}
             </Button>
             <Button variant="ghost" to={routes.studioCalls}>
-              Request a screening
+              {t("cinema:filmmaker.hero.requestScreeningCta")}
             </Button>
             <Button variant="ghost" to={routes.members}>
-              Connect on QueerPulse
+              {t("cinema:filmmaker.hero.connectCta")}
             </Button>
           </div>
         </div>

@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSaved } from "../../app/providers/SavedProvider";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FILM_SAVED, WATCH_TABS } from "./filmPage.data";
 import { routes } from "../../app/routeMap";
 import styles from "./FilmPage.module.css";
@@ -10,13 +13,17 @@ import styles from "./FilmPage.module.css";
 export function FilmHeroWatch() {
   const { showToast } = useToast();
   const { isSaved, toggleSave } = useSaved();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [tab, setTab] = useState(0);
 
   const onWatchlist = isSaved(FILM_SAVED.id);
   function toggleWatchlist() {
     const next = toggleSave(FILM_SAVED);
     showToast(
-      next ? "Added to your watchlist" : "Removed from your watchlist",
+      next
+        ? t("cinema:film.watchlist.addedToast")
+        : t("cinema:film.watchlist.removedToast"),
       next ? "success" : "info",
     );
   }
@@ -24,29 +31,41 @@ export function FilmHeroWatch() {
   function copyLink() {
     void navigator.clipboard
       ?.writeText(window.location.href)
-      .then(() => showToast("Link copied", "success"))
-      .catch(() => showToast("Could not copy link", "error"));
+      .then(() => showToast(t("cinema:film.share.copiedToast"), "success"))
+      .catch(() => showToast(t("cinema:film.share.copyErrorToast"), "error"));
   }
 
   return (
     <div className={styles.watchBlock}>
       <div className={styles.wbTabs}>
-        {WATCH_TABS.map((t, i) => (
+        {WATCH_TABS.map((tabInfo, index) => (
           <div
-            key={t.label}
-            className={[styles.wbTab, tab === i && styles.wbTabActive]
+            key={tabInfo.labelKey}
+            className={[styles.wbTab, tab === index && styles.wbTabActive]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setTab(i)}
+            onClick={() => setTab(index)}
           >
-            <span>{t.label}</span>
-            <span className={styles.tw}>{t.sub}</span>
+            <span>
+              {t(
+                tabInfo.labelKey,
+                tabInfo.price != null
+                  ? { price: fmt.currency(tabInfo.price) }
+                  : undefined,
+              )}
+            </span>
+            <span className={styles.tw}>
+              {t(
+                tabInfo.subKey,
+                tabInfo.hours != null ? { hours: tabInfo.hours } : undefined,
+              )}
+            </span>
           </div>
         ))}
       </div>
       <div className={styles.wbActions}>
         <Button size="lg" to={routes.cinemaWatch}>
-          ▶ &nbsp;Watch full film · 1h 32m
+          {t("cinema:film.watch.mainCta", { duration: "1h 32m" })}
         </Button>
         <span
           role="button"
@@ -54,11 +73,13 @@ export function FilmHeroWatch() {
           className={[styles.iconBtn, onWatchlist && styles.iconBtnOn]
             .filter(Boolean)
             .join(" ")}
-          title={onWatchlist ? "Remove from watchlist" : "Add to watchlist"}
+          title={t(
+            onWatchlist ? "cinema:film.watchlist.remove" : "cinema:film.watchlist.add",
+          )}
           aria-pressed={onWatchlist}
-          aria-label={
-            onWatchlist ? "Remove from watchlist" : "Add to watchlist"
-          }
+          aria-label={t(
+            onWatchlist ? "cinema:film.watchlist.remove" : "cinema:film.watchlist.add",
+          )}
           onClick={toggleWatchlist}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -82,8 +103,8 @@ export function FilmHeroWatch() {
           role="button"
           tabIndex={0}
           className={styles.iconBtn}
-          title="Share"
-          aria-label="Copy link to this film"
+          title={t("cinema:film.share.title")}
+          aria-label={t("cinema:film.share.ariaLabel")}
           onClick={copyLink}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -121,10 +142,20 @@ export function FilmHeroWatch() {
           <path d="M12 6v6l4 2" />
         </svg>
         <div>
-          When you rent at €3, <strong>€2.40 goes to Maria.</strong> €0.36
-          covers payment processing. €0.24 covers hosting &amp; captions. The
-          split is the same for every filmmaker.{" "}
-          <Link to={routes.governance}>Read the deed →</Link>
+          <Translation
+            i18nKey="cinema:film.split.explainer"
+            components={{ strong: <strong /> }}
+            values={{
+              rentPrice: fmt.currency(3),
+              filmmakerShare: fmt.currency(2.4),
+              paymentFee: fmt.currency(0.36),
+              hostingFee: fmt.currency(0.24),
+              name: "Maria",
+            }}
+          />{" "}
+          <Link to={routes.governance}>
+            {t("cinema:film.split.readDeedCta")}
+          </Link>
         </div>
       </div>
     </div>

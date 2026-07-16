@@ -2,9 +2,22 @@ import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { SystemStateShell } from "../../shared/components/layout";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./AccountSuspendedPage.module.css";
 
+/** Fixed demo case data — names, dates and case IDs stay as data, not copy. */
+const SUSPENSION_DAYS = 7;
+const CHANNEL = "#trans-mutual-aid";
+const STARTED_AT = "Mon 9 Jun · 14:08 WET";
+const LIFTS_AT = "Mon 16 Jun · 14:08";
+const REVIEWER_NAME = "Sofia C.";
+const CASE_ID = "QP-MOD-2026-1184";
+const OVERTURNED_PERCENT = 11;
+
 export function AccountSuspendedPage() {
+  const { t } = useTranslation();
+
   return (
     <SystemStateShell>
       <div className={styles.card}>
@@ -16,66 +29,86 @@ export function AccountSuspendedPage() {
           </svg>
         </div>
 
-        <div className={styles.kicker}>Account paused · moderation action</div>
+        <div className={styles.kicker}>
+          {t("system:accountSuspended.kicker")}
+        </div>
         <h1 className={styles.heading}>
-          Your account is <em>suspended</em> for 7 days.
+          <Translation
+            i18nKey="system:accountSuspended.heading"
+            values={{ days: SUSPENSION_DAYS }}
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.lead}>
-          A moderator reviewed a report and decided your recent message in{" "}
-          <b>#trans-mutual-aid</b> crossed §02·02 of the Code of Conduct (
-          <em>repeated misgendering</em>). This is a{" "}
-          <b>temporary suspension at rung 3</b> of the moderation ladder.
+          <Translation
+            i18nKey="system:accountSuspended.lead"
+            values={{ channel: CHANNEL }}
+            components={{ b: <b />, em: <em /> }}
+          />
         </p>
 
         <div className={styles.detailList}>
           <div className={styles.detailRow}>
-            <span>Action</span>
-            <b>7-day suspension</b>
+            <span>{t("system:accountSuspended.details.action")}</span>
+            <b>
+              {t("system:accountSuspended.details.actionValue", {
+                days: SUSPENSION_DAYS,
+              })}
+            </b>
           </div>
           <div className={styles.detailRow}>
-            <span>Started</span>
-            <b>Mon 9 Jun · 14:08 WET</b>
+            <span>{t("system:accountSuspended.details.started")}</span>
+            <b>{STARTED_AT}</b>
           </div>
           <div className={styles.detailRow}>
-            <span>Lifts automatically</span>
+            <span>
+              {t("system:accountSuspended.details.liftsAutomatically")}
+            </span>
             <span className={styles.detailNum}>
-              <em>Mon 16 Jun · 14:08</em>
+              <em>{LIFTS_AT}</em>
             </span>
           </div>
           <div className={styles.detailRow}>
-            <span>Reviewed by</span>
-            <b>Sofia C. + one anon. mod</b>
+            <span>{t("system:accountSuspended.details.reviewedBy")}</span>
+            <b>
+              {t("system:accountSuspended.details.reviewedByValue", {
+                name: REVIEWER_NAME,
+              })}
+            </b>
           </div>
           <div className={styles.detailRow}>
-            <span>Case ID</span>
-            <b>QP-MOD-2026-1184</b>
+            <span>{t("system:accountSuspended.details.caseId")}</span>
+            <b>{CASE_ID}</b>
           </div>
         </div>
 
         <div className={styles.whatStays}>
-          <h4>What still works · during suspension</h4>
+          <h4>{t("system:accountSuspended.whatStays.title")}</h4>
           <ul>
-            <li>Reading public content &amp; the magazine</li>
-            <li>Attending gatherings you'd already RSVP'd to</li>
-            <li>Crisis chat · always available, no exceptions</li>
-            <li>Filing an appeal · response within 5 working days</li>
+            <li>{t("system:accountSuspended.whatStays.item1")}</li>
+            <li>{t("system:accountSuspended.whatStays.item2")}</li>
+            <li>{t("system:accountSuspended.whatStays.item3")}</li>
+            <li>{t("system:accountSuspended.whatStays.item4")}</li>
           </ul>
         </div>
 
         <div className={styles.actions}>
-          <Button to={routes.report}>File an appeal</Button>
+          <Button to={routes.report}>
+            {t("system:accountSuspended.actions.appealCta")}
+          </Button>
           <Button variant="ghost" to={routes.codeOfConduct}>
-            Read the ladder
+            {t("system:accountSuspended.actions.ladderCta")}
           </Button>
           <Button variant="ghost" to={routes.messages}>
-            Message the mod team
+            {t("system:accountSuspended.actions.messageModCta")}
           </Button>
         </div>
         <p className={styles.foot}>
-          11% of appeals are overturned. We publish the number annually.{" "}
-          <Link to={routes.transparencyReport}>
-            See 2025 moderation stats →
-          </Link>
+          <Translation
+            i18nKey="system:accountSuspended.foot"
+            values={{ percent: OVERTURNED_PERCENT }}
+            components={{ a: <Link to={routes.transparencyReport} /> }}
+          />
         </p>
       </div>
     </SystemStateShell>

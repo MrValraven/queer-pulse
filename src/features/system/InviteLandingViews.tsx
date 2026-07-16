@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { routes } from "../../app/routeMap";
 import type { InviteView } from "../../features/auth/api/useInvite";
-import { loaderSteps, WHAT_ITEMS } from "./inviteLanding.data";
+import { buildLoaderSteps, WHAT_ITEMS } from "./inviteLanding.data";
 import styles from "./InviteLandingPage.module.css";
 
 function InviterAvatar({
@@ -37,14 +39,18 @@ function InviterAvatar({
 
 /** Network phase: while GET /invites/:code is in flight. */
 export function InviteLoadingView() {
+  const { t } = useTranslation();
   return (
     <div className={styles.root}>
       <div className={styles.loader}>
         <div className={styles.loaderBrand}>
-          Queer<em>Pulse</em>
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <em /> }}
+          />
         </div>
         <p className={styles.loaderStatus} role="status" aria-live="polite">
-          Verifying your invite code…
+          {t("system:inviteLanding.loader.verifying")}
         </p>
         <div className={styles.loaderBar}>
           <div className={styles.loaderBarFill} />
@@ -62,6 +68,7 @@ export function InviteSealedView({
   view: InviteView;
   onOpen: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.root}>
       <div className={styles.sealed}>
@@ -72,20 +79,26 @@ export function InviteSealedView({
           <InviterAvatar view={view} className={styles.sealAvatar} />
         </div>
         <div className={styles.loaderBrand}>
-          Queer<em>Pulse</em>
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <em /> }}
+          />
         </div>
         <div className={styles.sealedEyebrow}>
-          You've been personally invited
+          {t("system:inviteLanding.sealed.eyebrow")}
         </div>
         <h1 className={styles.loaderTitle}>
-          <em>{view.inviter.name}</em> invited you.
+          <Translation
+            i18nKey="system:inviteLanding.sealed.title"
+            values={{ name: view.inviter.name }}
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.sealedSub}>
-          Invite-only · {view.memberCount} members. This link was created for
-          you and can only be opened once.
+          {t("system:inviteLanding.sealed.sub", { count: view.memberCount })}
         </p>
         <Button size="lg" onClick={onOpen} className={styles.sealedBtn}>
-          Open invitation
+          {t("system:inviteLanding.sealed.openCta")}
         </Button>
       </div>
     </div>
@@ -100,7 +113,11 @@ export function InviteOpeningView({
   view: InviteView;
   step: number;
 }) {
-  const steps = loaderSteps(view.inviter.firstName);
+  const { t } = useTranslation();
+  const steps = useMemo(
+    () => buildLoaderSteps(t, view.inviter.firstName),
+    [t, view.inviter.firstName],
+  );
   return (
     <div className={styles.root}>
       <div className={styles.loader}>
@@ -111,10 +128,17 @@ export function InviteOpeningView({
           <InviterAvatar view={view} className={styles.sealAvatar} />
         </div>
         <div className={styles.loaderBrand}>
-          Queer<em>Pulse</em>
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <em /> }}
+          />
         </div>
         <h1 className={styles.loaderTitle}>
-          An invitation from <em>{view.inviter.firstName}.</em>
+          <Translation
+            i18nKey="system:inviteLanding.opening.title"
+            values={{ name: view.inviter.firstName }}
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.loaderStatus} role="status" aria-live="polite">
           {steps[step]}
@@ -135,13 +159,17 @@ export function InviteCardView({
   view: InviteView;
   onGoogle: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.root}>
       <div className={styles.card}>
         <div className={styles.header}>
           <Link to={routes.homepage} className={styles.brand}>
             <span className={styles.brandDot} aria-hidden />
-            Queer<em>Pulse</em>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em /> }}
+            />
           </Link>
           <div className={styles.inviterRow}>
             <InviterAvatar view={view} className={styles.inviterAvatar} />
@@ -149,25 +177,32 @@ export function InviteCardView({
               <div className={styles.inviterName}>{view.inviter.name}</div>
               <div className={styles.inviterNote}>
                 {view.inviter.since
-                  ? `Member since ${view.inviter.since} · `
-                  : ""}
-                invited you
+                  ? t("system:inviteLanding.card.inviterNoteWithSince", {
+                      since: view.inviter.since,
+                    })
+                  : t("system:inviteLanding.card.inviterNoteNoSince")}
               </div>
             </div>
           </div>
           <h1 className={styles.heading}>
-            You belong <em>here.</em>
+            <Translation
+              i18nKey="system:inviteLanding.card.heading"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.headerNote}>
-            This invitation was created for you personally — it's yours, and
-            yours alone.
+            {t("system:inviteLanding.card.headerNote")}
           </p>
         </div>
 
+        {/* view.note is the inviter's own message — user-authored content
+            fetched from the API in live mode, so it is never translated. */}
         {view.note && (
           <div className={styles.message}>
             <div className={styles.messageLabel}>
-              A note from {view.inviter.firstName}
+              {t("system:inviteLanding.card.noteFrom", {
+                name: view.inviter.firstName,
+              })}
             </div>
             <div className={styles.messageText}>{view.note}</div>
           </div>
@@ -176,10 +211,10 @@ export function InviteCardView({
         <div className={styles.body}>
           <div className={styles.whatList}>
             {WHAT_ITEMS.map((item) => (
-              <div className={styles.whatItem} key={item.strong}>
+              <div className={styles.whatItem} key={item.strongKey}>
                 <div className={styles.whatDot} aria-hidden />
                 <div className={styles.whatText}>
-                  <strong>{item.strong}</strong> {item.rest}
+                  <strong>{t(item.strongKey)}</strong> {t(item.restKey)}
                 </div>
               </div>
             ))}
@@ -187,11 +222,15 @@ export function InviteCardView({
 
           <div className={styles.tokenBadge}>
             <div>
-              <div className={styles.tokenLabel}>Your invite code</div>
+              <div className={styles.tokenLabel}>
+                {t("system:inviteLanding.card.tokenLabel")}
+              </div>
               <div className={styles.tokenCode}>{view.code}</div>
             </div>
             <div className={styles.tokenExpiry}>
-              Valid for {view.validForDays} days
+              {t("system:inviteLanding.card.validFor", {
+                count: view.validForDays,
+              })}
             </div>
           </div>
 
@@ -201,8 +240,12 @@ export function InviteCardView({
                 <circle cx="7" cy="7" r="5.5" />
                 <polyline points="7,4 7,7 9,9" />
               </svg>
+              {/* view.expiryLabel is formatted upstream by useInvite.ts
+                  (features/auth), outside this namespace's remit. */}
               <span>
-                Invite expires <span>{view.expiryLabel}</span>
+                {t("system:inviteLanding.card.expires", {
+                  date: view.expiryLabel,
+                })}
               </span>
             </div>
           )}
@@ -226,24 +269,34 @@ export function InviteCardView({
                 fill="#EA4335"
               />
             </svg>
-            Register with Google
+            {t("system:inviteLanding.card.googleCta")}
           </button>
 
           <p className={styles.consentNote}>
-            By continuing you agree to our{" "}
-            <Link to={routes.terms}>terms of use</Link> and{" "}
-            <Link to={routes.privacy}>privacy policy</Link>.
+            <Translation
+              i18nKey="system:inviteLanding.card.consent"
+              components={{
+                termsLink: <Link to={routes.terms} />,
+                privacyLink: <Link to={routes.privacy} />,
+              }}
+            />
           </p>
 
           <p className={styles.alreadyMember}>
-            Already have an account? <Link to={routes.signIn}>Sign in</Link>
+            <Translation
+              i18nKey="system:inviteLanding.card.alreadyMember"
+              components={{ a: <Link to={routes.signIn} /> }}
+            />
           </p>
         </div>
       </div>
 
       <div className={styles.pageFooter}>
         <p>
-          Not expecting this? <Link to={routes.privacy}>Privacy policy</Link>
+          <Translation
+            i18nKey="system:inviteLanding.card.notExpecting"
+            components={{ a: <Link to={routes.privacy} /> }}
+          />
         </p>
       </div>
     </div>

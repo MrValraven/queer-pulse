@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import styles from "./StudioEndCardPage.module.css";
 
 /* Fixed constellation dot coordinates (in the 1920×1080 frame). */
@@ -37,6 +39,7 @@ const SPINE_COUNT = 150;
 const JADE_BARS = new Set([96, 97]);
 
 export function StudioEndCardPage() {
+  const { t } = useTranslation();
   const frameRef = useRef<HTMLDivElement>(null);
 
   /* Scale the fixed 1920×1080 frame to fit the viewport, letterboxed. */
@@ -124,7 +127,7 @@ export function StudioEndCardPage() {
         </div>
 
         <div className={styles.lockup}>
-          <div className={styles.eyebrow}>A streaming co-op</div>
+          <div className={styles.eyebrow}>{t("studio:endCard.eyebrow")}</div>
 
           <div className={styles.wordmark}>
             <span className={styles.pulse} aria-hidden />
@@ -135,7 +138,7 @@ export function StudioEndCardPage() {
           </div>
 
           <div className={styles.tagline}>
-            the music, <em>paid forward.</em>
+            <Translation i18nKey="studio:endCard.tagline" components={{ em: <em /> }} />
           </div>
 
           <div className={styles.ledger}>
@@ -160,16 +163,18 @@ export function StudioEndCardPage() {
                   strokeLinecap="round"
                 />
               </svg>
-              €11,940 paid to artists this month
+              {t("studio:endCard.paidThisMonth")}
             </span>
             <span className={styles.div} aria-hidden />
             <span className={styles.per}>
-              <b>€0.05</b> a play · <b>100%</b> of every tip
+              <b>€0.05</b> {t("studio:endCard.perPlayLabel")} · <b>100%</b>{" "}
+              {t("studio:endCard.perTipLabel")}
             </span>
           </div>
 
           <div className={styles.cta}>
-            listen with pride<b>studio.queerpulse.com</b>
+            {t("studio:endCard.listenCta")}
+            <b>studio.queerpulse.com</b>
           </div>
         </div>
       </div>

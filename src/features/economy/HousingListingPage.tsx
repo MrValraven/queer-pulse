@@ -5,8 +5,10 @@ import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { getListing } from "./housingListings";
 import { GAL_BG } from "./housingListing.data";
+import { FILTERS } from "./housing.data";
 import { MessageModal } from "./HousingModals";
 import { HousingListingSkeleton } from "./HousingListingSkeleton";
 import {
@@ -16,19 +18,20 @@ import {
 import s from "./HousingListingPage.module.css";
 
 export function HousingListingPage() {
+  const { t } = useTranslation();
   const { slug } = useParams();
   const [messaging, setMessaging] = useState(false);
   const loading = useSimulatedLoad();
 
-  const l = getListing(slug);
-  if (!l) return <Navigate to={routes.housing} replace />;
+  const listing = getListing(slug);
+  if (!listing) return <Navigate to={routes.housing} replace />;
 
   if (loading) {
     return (
       <PageShell>
         <div className={s.page}>
           <Link to={routes.housing} className={s.back}>
-            ← Housing board
+            {t("economy:housingListing.back")}
           </Link>
           <HousingListingSkeleton />
         </div>
@@ -36,24 +39,28 @@ export function HousingListingPage() {
     );
   }
 
-  const first = l.poster.fullName.split(" ")[0] ?? l.poster.fullName;
+  const first = listing.poster.fullName.split(" ")[0] ?? listing.poster.fullName;
+  const typeLabel = t(
+    FILTERS.find((filterOption) => filterOption.value === listing.type)
+      ?.labelKey ?? "economy:housing.filter.all",
+  );
 
   return (
     <PageShell>
       <div className={s.page}>
         <Link to={routes.housing} className={s.back}>
-          ← Housing board
+          {t("economy:housingListing.back")}
         </Link>
 
         <FadeIn>
           <div className={s.gallery}>
-            {l.gallery.map((cap, i) => (
+            {listing.gallery.map((caption, index) => (
               <div
-                key={i}
+                key={index}
                 className={s.gCell}
-                style={{ background: GAL_BG[l.tint] }}
+                style={{ background: GAL_BG[listing.tint] }}
               >
-                <span className={s.gCap}>{cap}</span>
+                <span className={s.gCap}>{caption}</span>
               </div>
             ))}
           </div>
@@ -61,27 +68,29 @@ export function HousingListingPage() {
           <header className={s.head}>
             <span
               className={s.type}
-              style={{ background: l.typeColor, color: l.typeText }}
+              style={{ background: listing.typeColor, color: listing.typeText }}
             >
-              {l.typeLabel}
+              {typeLabel}
             </span>
-            <h1 className={s.title}>{l.title}</h1>
+            <h1 className={s.title}>{listing.title}</h1>
             <div className={s.metaRow}>
               <span className={s.metaPill}>
-                <FiMapPin /> {l.hood}
+                <FiMapPin /> {listing.hood}
               </span>
-              <span className={s.metaPill}>{l.beds}</span>
-              <span className={s.metaPill}>From {l.avail}</span>
+              <span className={s.metaPill}>{listing.beds}</span>
               <span className={s.metaPill}>
-                {l.price} / {l.period}
+                {t("economy:housing.listing.from", { date: listing.avail })}
+              </span>
+              <span className={s.metaPill}>
+                {listing.price} / {listing.period}
               </span>
             </div>
           </header>
 
           <div className={s.grid}>
-            <HousingListingMain l={l} />
+            <HousingListingMain listing={listing} />
             <HousingListingSidebar
-              l={l}
+              listing={listing}
               first={first}
               onMessage={() => setMessaging(true)}
             />
@@ -91,9 +100,9 @@ export function HousingListingPage() {
 
       {messaging && (
         <MessageModal
-          toName={l.poster.fullName}
-          listingTitle={l.title}
-          responseTime={l.poster.responseTime}
+          toName={listing.poster.fullName}
+          listingTitle={listing.title}
+          responseTime={listing.poster.responseTime}
           onClose={() => setMessaging(false)}
         />
       )}

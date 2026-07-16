@@ -197,6 +197,279 @@ export const cinema: Catalog = {
   "film.relation.sameForm": "Mesmo formato · {format}",
   "film.relation.curatorsPick": "Escolha da curadoria",
 
+  // ── Página do filme (FilmPage.tsx, FilmHero*.tsx, FilmBody.tsx) — só chrome;
+  // título/sinopse/biografias da equipa/citação da curadoria/data do evento
+  // são conteúdo deste filme e ficam em inglês ───────────────────────────────
+  "film.crumb.backCta": "← Voltar à sala",
+  "film.split.eyebrow": "A divisão",
+  "film.split.title":
+    "Oitenta por cento de cada aluguer vai para <em>quem fez o filme.</em>",
+  "film.split.body":
+    "Sem exceções, sem escalões, sem tarifas negociadas. O mesmo acordo para quem estreia como para quem já venceu festivais. O registo é público; a escritura é vinculativa.",
+  "film.split.breakdownHeading": "Aluguer de {price} · para onde vai",
+  "film.split.amountTo": "{amount} para {name}",
+  "film.split.explainer":
+    "Quando alugas por {rentPrice}, <strong>{filmmakerShare} vai para {name}.</strong> {paymentFee} cobre o processamento de pagamentos. {hostingFee} cobre alojamento e legendagem. A divisão é igual para todas as pessoas cineastas.",
+  "film.split.readDeedCta": "Lê a escritura →",
+  "film.related.title": "Mais da <em>programação</em>",
+  "film.related.sub": "Filmes que partilham uma curadoria, um país ou uma pergunta.",
+
+  "film.hero.coverWeek": "Filme de capa · semana {week}",
+  "film.hero.programmedBy": "Com curadoria de",
+  "film.hero.rsvpCta": "Confirmar presença →",
+  "film.facts.language": "Idioma",
+  "film.facts.captions": "Legendas",
+
+  "film.poster.trailerCta": "Reproduzir · trailer {duration}",
+  "film.tipjar.heading": "↳ dar gorjeta a quem fez o filme",
+  "film.tipjar.note": "100% vai para {name}. Sem taxas.",
+  "film.tipjar.footnote_one": "<strong>{count} pessoa</strong> deu gorjeta esta semana.",
+  "film.tipjar.footnote_other": "<strong>{count} pessoas</strong> deram gorjeta esta semana.",
+  "film.tipjar.tippedToast": "Gorjeta de {amount} enviada a {name}",
+
+  "film.watchTabs.watch.label": "Ver",
+  "film.watchTabs.watch.sub": "incluído · sustentador",
+  "film.watchTabs.rent.sub": "{hours} h",
+  "film.watchTabs.buy.label": "Comprar · {price}",
+  "film.watchTabs.buy.sub": "para sempre",
+  "film.watch.mainCta": "▶  Ver o filme completo · {duration}",
+  "film.watchlist.add": "Adicionar à lista para ver",
+  "film.watchlist.remove": "Remover da lista para ver",
+  "film.watchlist.addedToast": "Adicionado à tua lista para ver",
+  "film.watchlist.removedToast": "Removido da tua lista para ver",
+  "film.share.title": "Partilhar",
+  "film.share.ariaLabel": "Copiar link para este filme",
+  "film.share.copiedToast": "Link copiado",
+  "film.share.copyErrorToast": "Não foi possível copiar o link",
+
+  "film.body.filmWords.title": "As <em>palavras</em> do próprio filme",
+  "film.body.cast.title": "Elenco &amp; <em>equipa</em>",
+  "film.body.tag.member": "Pessoa da QueerPulse",
+  "film.body.filmmaker.stat.films_one": "<em>{count}</em> filme no Cinema",
+  "film.body.filmmaker.stat.films_other": "<em>{count}</em> filmes no Cinema",
+  "film.body.filmmaker.stat.earned": "ganho aqui",
+  "film.body.filmmaker.viewProfileCta": "Ver perfil",
+  "film.body.filmmaker.followCta": "Seguir quem fez o filme",
+  "film.body.filmmaker.followingCta": "A seguir",
+  "film.body.filmmaker.followedToast": "A seguir {name}",
+  "film.body.filmmaker.unfollowedToast": "Deixaste de seguir {name}",
+
+  // ── Detalhe da coleção (CinemaCollectionPage.tsx + Header/Essay/Films/Aside)
+  // — só o chrome; o ensaio/estatísticas/lista de filmes/preços de cada
+  // coleção são conteúdo dessa coleção e ficam em inglês (vêm de
+  // GET /cinema/collections/:slug em modo live) ──────────────────────────────
+  "collection.notFound.eyebrow": "Coleção não encontrada",
+  "collection.notFound.title": "Não conseguimos encontrar <em>essa coleção</em>",
+  "collection.notFound.body":
+    "Pode ter sido renomeada ou retirada. Explora o catálogo completo para veres para onde foram os filmes.",
+  "collection.notFound.browseCta": "Ver todos os filmes",
+  "collection.outro.title": "Um cinema que <em>argumenta</em>.",
+  "collection.outro.sub":
+    "As coleções são argumentos da curadoria. Quem sustenta financia as próximas.",
+  "collection.backCta": "← Voltar ao Cinema",
+  "collection.details.heading": "Detalhes da coleção",
+  "collection.details.startWatchingCta": "Começar a ver",
+  "collection.details.saveCta": "+ Guardar coleção",
+  "collection.films.watchCta": "Ver",
+  "collection.films.watchNowCta": "Ver agora",
+  "collection.films.seeAllFallback": "Ver todos os filmes",
+  "collection.aside.progressHeading": "O teu progresso",
+  "collection.aside.progressHint": "Inicia sessão para veres onde ficaste",
+  "collection.aside.signInCta": "Iniciar sessão para acompanhar o progresso",
+  "collection.aside.relatedHeading": "Coleções relacionadas",
+
+  // ── Índice de coleções (CinemaCollectionsPage.tsx, CinemaCollectionsSections.tsx)
+  // — chips de filtro + chrome da página; a citação do cabeçalho, a
+  // descrição/estatísticas/curadoria de cada coleção e o texto da proposta
+  // de coleção são conteúdo editorial desta página e ficam em inglês ────────
+  "collectionsIndex.filter.all": "Todas",
+  "collectionsIndex.filter.new": "Novo",
+  "collectionsIndex.filter.shortCollections": "Coleções curtas",
+  "collectionsIndex.filterLabel": "Filtrar:",
+  "collectionsIndex.summary_one": "{count} coleção · {filmTotal} filmes no total",
+  "collectionsIndex.summary_other": "{count} coleções · {filmTotal} filmes no total",
+  "collectionsIndex.empty.title": "<em>Ainda</em> não há coleções neste filtro.",
+  "collectionsIndex.empty.body": "O conselho está sempre a construir. Tenta outra lente.",
+  "collectionsIndex.empty.resetCta": "Mostrar todas as coleções",
+  "collectionsIndex.outro.title": "Começa a <em>vaguear</em>.",
+  "collectionsIndex.outro.sub":
+    "As coleções são como argumentamos sobre cinema. Escolhe uma e começa.",
+  "collectionsIndex.outro.cta": "Abrir uma coleção →",
+  "collectionsIndex.card.curatedBy": "Com curadoria de",
+  "collectionsIndex.propose.toast":
+    "Envia a tua tese de 200 palavras para curators@queerpulse.co — o conselho responde em 3 semanas.",
+  "collectionsIndex.propose.cta": "Propor uma coleção",
+  "collectionsIndex.propose.meetCouncilCta": "Conhecer o conselho",
+
+  // ── Perfil de curadoria (CinemaCuratorPage.tsx, CuratorHero/Main/Aside.tsx)
+  // — só o chrome; a biografia, a citação, as notas de programação e as
+  // entradas do bloco de notas de cada pessoa são conteúdo do seu próprio
+  // perfil e ficam em inglês (vêm de GET /cinema/curators/:slug em modo live) ─
+  "curator.notFound.title": "Curadoria não encontrada",
+  "curator.notFound.description":
+    "Esta página de curadoria não existe ou foi movida. Conhece o conselho na página Sobre do Cinema.",
+  "curator.notFound.backCta": "Voltar ao Cinema",
+  "curator.crumb.council": "Conselho",
+  "curator.crumb.backCta": "← Voltar ao conselho",
+  "curator.outro.openCollectionCta": "Abrir a coleção →",
+  "curator.main.coverFilmsTitle": "Filmes de capa <em>recentes</em>",
+  "curator.main.programmesTotal_one": "{count} programação no total",
+  "curator.main.programmesTotal_other": "{count} programações no total",
+  "curator.main.collectionsByTitle": "Coleções <em>de {name}</em>",
+  "curator.main.notebookTitle": "Do <em>bloco de notas</em>",
+  "curator.main.notebookEntries_one": "{count} entrada",
+  "curator.main.notebookEntries_other": "{count} entradas",
+  "curator.aside.otherCuratorsHeading": "Outras pessoas da curadoria",
+  "curator.aside.contactHeading": "Contacto",
+  "curator.aside.contactBody":
+    "Para questões de imprensa, propostas de exibição ou sugestões de coleção — contacta {name} através da cooperativa.",
+  "curator.aside.contactCta": "Contactar {name}",
+  "curator.aside.proposeHeading": "Propor uma coleção",
+  "curator.aside.proposeBody":
+    "Tens uma tese? Um conjunto de filmes que argumentam algo em conjunto? Escreve ao conselho.",
+  "curator.aside.proposeCta": "Propor →",
+
+  // ── Perfil de cineasta (CinemaFilmmakerPage.tsx, FilmmakerHero/Main/Aside.tsx)
+  // — só o chrome; a biografia, a declaração, a filmografia, os festivais e
+  // os eventos de cada pessoa são conteúdo do seu próprio perfil e ficam em
+  // inglês (vêm de GET /cinema/filmmakers/:slug em modo live) ───────────────
+  "filmmaker.notFound.title": "Perfil de cineasta não encontrado",
+  "filmmaker.notFound.description":
+    "Esta página não existe ou foi movida. Explora o Cinema para encontrares trabalho de pessoas cineastas queer em toda a cooperativa.",
+  "filmmaker.crumb.backCta": "← Voltar ao Cinema",
+  "filmmaker.outro.title": "Faz algo. <em>Recebe por isso.</em>",
+  "filmmaker.outro.sub":
+    "Submete o teu filme ao Cinema. A divisão é igual para todas as pessoas.",
+  "filmmaker.hero.tipCta": "↳ Dar gorjeta a {name} · 100% vai diretamente para essa pessoa",
+  "filmmaker.hero.requestScreeningCta": "Pedir uma exibição",
+  "filmmaker.hero.connectCta": "Ligar-te na QueerPulse",
+  "filmmaker.main.filmographyTitle": "Filmografia <em>no Cinema</em>",
+  "filmmaker.main.filmsTotal_one": "{count} filme no total",
+  "filmmaker.main.filmsTotal_other": "{count} filmes no total",
+  "filmmaker.main.festivalCircuitTitle": "Circuito de <em>festivais</em>",
+  "filmmaker.main.upcomingEventsTitle": "Próximos eventos <em>de {name}</em>",
+  "filmmaker.aside.tipHeading": "Dar gorjeta a {name}",
+  "filmmaker.aside.tipSub":
+    "100% vai para {name} — a cooperativa não retém nada de uma gorjeta. As gorjetas ajudam a continuar a fazer trabalho.",
+  "filmmaker.aside.sendCta": "Enviar {amount}",
+  "filmmaker.aside.tippedToast": "{amount} a caminho de {name} — obrigado",
+  "filmmaker.aside.tippedNote_one": "<strong>{count} pessoa</strong> deu gorjeta a {name} este mês.",
+  "filmmaker.aside.tippedNote_other": "<strong>{count} pessoas</strong> deram gorjeta a {name} este mês.",
+  "filmmaker.aside.splitHeading": "A divisão da cooperativa",
+  "filmmaker.aside.splitBody":
+    "Quando alugas qualquer filme de {name}, <strong>80%</strong> vai para essa pessoa. Quando compras, o mesmo. As gorjetas são 100%. A divisão é igual para todas as pessoas cineastas no Cinema.",
+  "filmmaker.aside.seeOpenCallsCta": "Ver chamadas abertas",
+
+  // ── Feito aqui / Shorts (CinemaShortsPage.tsx + Header/Intro/Curated/
+  // Shelves/Catalog/Parts/Community.tsx) — só o chrome + vocabulário de
+  // filtro/ordenação/idioma; a nota semanal da curadoria, o filme em
+  // destaque, as sessões em grupo, as opções de votação e os números de
+  // transparência são conteúdo editorial/comunitário desta página e ficam
+  // em inglês ─────────────────────────────────────────────────────────────
+  "shorts.toast.savedToWatchlist": "Adicionado à tua lista para ver",
+  "shorts.toast.linkCopiedShare": "Link copiado — partilha “{label}”",
+  "shorts.outro.title": "Dá uma gorjeta a <em>quem fez o filme</em>.",
+  "shorts.outro.sub": "100% vai para essa pessoa. Sem taxas. Sem mínimo. Vê primeiro, decide depois.",
+  "shorts.outro.browseCta": "Ver todos os filmes da comunidade",
+  "shorts.header.eyebrow": "Filmes da comunidade · todos grátis para ver",
+  "shorts.header.sub":
+    "Curtas, médias-metragens e documentários feitos por pessoas da QueerPulse. <em>Grátis para ver, pago para fazer.</em> Dá uma gorjeta a quem fez o filme — 100% vai para essa pessoa.",
+  "shorts.curatorNote.readPastNotesCta": "ler notas anteriores",
+  "shorts.accessNote.body":
+    "<strong>Todos os filmes têm legendas.</strong> As notas de conteúdo aparecem em cada filme, e os trabalhos com audiodescrição estão marcados com <em>AD</em>. Filtra pelas tuas necessidades de acesso abaixo.",
+  "shorts.spotlight.mostWatchedBadge": "Mais visto esta semana",
+  "shorts.spotlight.communityPickKicker": "Escolha da comunidade · semana {week}",
+  "shorts.spotlight.watchNowCta": "Ver agora · grátis",
+  "shorts.spotlight.becomeSustainerCta": "Torna-te um →",
+  "shorts.shelf.newThisWeek.title": "Novo <em>esta semana</em>",
+  "shorts.shelf.newThisWeek.sub": "Filmes submetidos e aprovados nos últimos 7 dias",
+  "shorts.shelf.newThisWeek.cta": "Ver todos os novos →",
+  "shorts.shelf.becauseYouTipped.title": "Porque deste gorjeta a <em>{filmTitle}</em>",
+  "shorts.shelf.becauseYouTipped.sub": "Mais de {maker}, e filmes no mesmo tom",
+  "shorts.shelf.becauseYouTipped.cta": "Página de {maker} →",
+  "shorts.shelf.firstFilm.title": "O primeiro <em>filme de alguém</em>",
+  "shorts.shelf.firstFilm.sub": "As estreias merecem uma primeira audiência — sê tu essa pessoa",
+  "shorts.shelf.firstFilm.cta": "Ver todas as estreias →",
+  "shorts.shelf.mostTipped.title": "Mais <em>gorjetas</em>",
+  "shorts.shelf.mostTipped.sub": "Filmes com quem as pessoas foram generosas este mês",
+  "shorts.shelf.mostTipped.cta": "Ver todos os filmes →",
+  "shorts.shelf.continueWatching.title": "Continuar <em>a ver</em>",
+  "shorts.shelf.continueWatching.sub": "Retoma onde ficaste",
+  "shorts.shelf.continueWatching.cta": "A tua biblioteca →",
+  "shorts.shelf.continueWatching.minutesLeft": "{minutes} min restantes · {maker}",
+  "shorts.shelf.programmes.title": "Ver por <em>programação</em>",
+  "shorts.shelf.programmes.sub":
+    "Conjuntos de curtas com curadoria de membros — uma forma de começar quando não sabes por onde ir",
+  "shorts.shelf.programmes.cta": "Todas as programações →",
+  "shorts.shelf.programmes.shareAriaLabel": "Partilhar programação",
+  "shorts.shelf.meetMakers.title": "Conhece quem <em>faz os filmes</em>",
+  "shorts.shelf.meetMakers.sub": "Todos os filmes aqui têm uma pessoa por trás — diz olá",
+  "shorts.shelf.meetMakers.cta": "Todas as pessoas cineastas →",
+  "shorts.catalog.title": "Explora o <em>catálogo completo</em>",
+  "shorts.catalog.sub": "Todos os filmes da comunidade — filtra, ordena e pesquisa à tua maneira",
+  "shorts.catalog.cta": "Abrir em Explorar →",
+  "shorts.catalog.searchPlaceholder": "Pesquisar filmes, pessoas ou temas…",
+  "shorts.catalog.searchAriaLabel": "Pesquisar filmes",
+  "shorts.catalog.languageLabel": "Idioma",
+  "shorts.catalog.languageAriaLabel": "Filtrar por idioma",
+  "shorts.catalog.sortLabel": "Ordenar",
+  "shorts.catalog.sortAriaLabel": "Ordenar filmes",
+  "shorts.catalog.surpriseCta": "Surpreende-me",
+  "shorts.catalog.allFilmsChip": "Todos os filmes",
+  "shorts.catalog.empty.title": "Nada corresponde — ainda",
+  "shorts.catalog.empty.body":
+    "Nenhum filme corresponde a essa combinação. Alivia um filtro, ou diz-nos o que gostavas que existisse — encomendamos a partir de pedidos de membros.",
+  "shorts.catalog.empty.suggestCta": "Sugerir um filme",
+  "shorts.catalog.count_one": "<em>{count}</em> filme · todos grátis para ver",
+  "shorts.catalog.count_other": "<em>{count}</em> filmes · todos grátis para ver",
+  "shorts.card.saveAriaLabel": "Guardar na lista para ver",
+  "shorts.card.watches_one": "{count} visualização",
+  "shorts.card.watches_other": "{count} visualizações",
+  "shorts.card.contentNoteLabel": "nota de conteúdo",
+  "shorts.card.contentNoteHeading": "Nota de conteúdo",
+  "shorts.card.noContentNotes": "sem notas de conteúdo",
+  "shorts.watchParties.title": "Ver <em>em conjunto</em>",
+  "shorts.watchParties.sub":
+    "Salas ao vivo onde o conjunto todo passa de uma vez — quem fez os filmes está no chat",
+  "shorts.watchParties.hostCta": "Organizar uma →",
+  "shorts.watchParties.nextBadge": "A seguir",
+  "shorts.watchParties.goingCount_one": "{count} confirmada",
+  "shorts.watchParties.goingCount_other": "{count} confirmadas",
+  "shorts.watchParties.goingCta": "Confirmado",
+  "shorts.watchParties.rsvpFreeCta": "Confirmar presença · grátis",
+  "shorts.watchParties.rsvpToast": "Vais participar · {title}",
+  "shorts.vote.title": "Programa o <em>próximo conjunto</em>",
+  "shorts.vote.yourPickLabel": "A tua escolha",
+  "shorts.vote.voteCta": "Votar",
+  "shorts.vote.countedToast": "Voto contabilizado — obrigado",
+  "shorts.transparency.ledgerCta": "Ver o registo aberto",
+  "shorts.submitCta.seeGrantsCta": "Ver bolsas abertas",
+  "shorts.filterCat.runtime": "Duração",
+  "shorts.filterCat.type": "Tipo",
+  "shorts.filterCat.access": "Acesso",
+  "shorts.filterCat.more": "Mais",
+  "shorts.filter.rtU10": "Menos de 10 min",
+  "shorts.filter.rt1030": "10–30 min",
+  "shorts.filter.rt30": "30 min+",
+  "shorts.filter.kDoc": "Documentário",
+  "shorts.filter.kNar": "Narrativa",
+  "shorts.filter.kEss": "Ensaio / experimental",
+  "shorts.filter.aAd": "Com audiodescrição",
+  "shorts.filter.aCnf": "Sem notas de conteúdo",
+  "shorts.filter.mGrant": "Com financiamento",
+  "shorts.filter.mLisbon": "Lisboa",
+  "shorts.filter.mSaved": "Guardados",
+  "shorts.lang.any": "Qualquer idioma",
+  "shorts.lang.pt": "Português",
+  "shorts.lang.es": "Espanhol",
+  "shorts.lang.ptbr": "Português-BR",
+  "shorts.lang.en": "Legendas em inglês",
+  "shorts.sort.newest": "Mais recentes primeiro",
+  "shorts.sort.mostWatched": "Mais vistos",
+  "shorts.sort.mostTipped": "Mais gorjetas",
+  "shorts.sort.shortest": "Mais curtos primeiro",
+  "shorts.sort.staffPicks": "Escolhas da equipa",
+
   // ── Sobre (CinemaAboutPage.tsx, CinemaAboutSections.tsx, cinemaAbout.data.tsx) ─
   "about.hero.eyebrow": "QueerPulse Cinema · a cooperativa",
   "about.hero.title": "Um teatro, um arquivo, <em>uma cooperativa</em>.",

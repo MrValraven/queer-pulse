@@ -1,5 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import styles from "./ApplicationModals.module.css";
 
@@ -39,38 +41,40 @@ interface ContactRequestModalProps {
 export function ContactRequestModal({
   toName,
   eyebrow,
-  title = "Send a",
-  em = "request.",
+  title,
+  em,
   sub,
   preset = "",
-  successTitle = "Request",
-  successEm = "sent.",
+  successTitle,
+  successEm,
   successBody,
-  sendLabel = "Send request",
-  sendingLabel = "Sending…",
+  sendLabel,
+  sendingLabel,
   minChars = 20,
   onClose,
 }: ContactRequestModalProps) {
+  const { t } = useTranslation();
   const [message, setMessage] = useState(preset);
   const { sending, done, submit } = useSubmitFlow();
   const valid = message.trim().length >= minChars;
   const firstName = toName.split(" ")[0];
+  const remaining = minChars - message.trim().length;
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title={successTitle}
-          em={successEm}
+          title={successTitle ?? t("economy:contactRequest.defaultSuccessTitle")}
+          em={successEm ?? t("economy:contactRequest.defaultSuccessEm")}
           onClose={onClose}
-          closeLabel="Done"
+          closeLabel={t("economy:contactRequest.done")}
         >
           {successBody ?? (
-            <>
-              Your message is on its way to <strong>{firstName}</strong>.
-              They'll reply straight to your inbox here — contact details are
-              shared once you both agree to take it further.
-            </>
+            <Translation
+              i18nKey="economy:contactRequest.defaultSuccessBody"
+              values={{ firstName }}
+              components={{ strong: <strong /> }}
+            />
           )}
         </SuccessPanel>
       ) : (
@@ -82,23 +86,26 @@ export function ContactRequestModal({
         >
           {eyebrow && <div className={styles.eyebrow}>{eyebrow}</div>}
           <h2 className={styles.title}>
-            {title} <em>{em}</em>
+            {title ?? t("economy:contactRequest.defaultTitle")}{" "}
+            <em>{em ?? t("economy:contactRequest.defaultEm")}</em>
           </h2>
           {sub && <p className={styles.sub}>{sub}</p>}
 
           <div className={styles.field}>
-            <label htmlFor="cr-msg">Your message *</label>
+            <label htmlFor="cr-msg">
+              {t("economy:contactRequest.messageLabel")}
+            </label>
             <textarea
               id="cr-msg"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="A sentence about who you are and what you're hoping for goes a long way."
+              placeholder={t("economy:contactRequest.messagePlaceholder")}
             />
           </div>
           <p className={styles.note}>
-            {message.trim().length < minChars
-              ? `${minChars - message.trim().length} more characters so they have context.`
-              : "Looks good — keep the conversation here until you both decide to take it further."}
+            {remaining > 0
+              ? t("economy:contactRequest.charsNeeded", { count: remaining })
+              : t("economy:contactRequest.looksGood")}
           </p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
@@ -108,7 +115,7 @@ export function ContactRequestModal({
               onClick={onClose}
               disabled={sending}
             >
-              Cancel
+              {t("economy:contactRequest.cancel")}
             </button>
             <Button
               variant="primary"
@@ -116,7 +123,15 @@ export function ContactRequestModal({
               type="submit"
               disabled={!valid || sending}
             >
-              {sending ? <Sending label={sendingLabel} /> : sendLabel}
+              {sending ? (
+                <Sending
+                  label={
+                    sendingLabel ?? t("economy:contactRequest.defaultSendingLabel")
+                  }
+                />
+              ) : (
+                (sendLabel ?? t("economy:contactRequest.defaultSendLabel"))
+              )}
             </Button>
           </div>
         </form>

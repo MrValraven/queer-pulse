@@ -1,6 +1,10 @@
 /**
  * Static content for the Sustainer page. Values are copy + light structure only;
  * anything that depends on the CSS module (tint class maps) stays in components.
+ *
+ * i18n Pattern A throughout: every field that used to hold literal English
+ * copy now holds a catalog key (`*Key` suffix), resolved with `t()` in the
+ * consuming component. See `docs/i18n/extraction-brief.md`.
  */
 import type { TierName } from "./sustainer.pricing";
 
@@ -8,99 +12,112 @@ import type { TierName } from "./sustainer.pricing";
 export type ImpactTint = "jade" | "accent" | "plumSoft" | "jadeSoft";
 export const IMPACT_CARDS: {
   tint: ImpactTint;
-  title: string;
-  desc: string;
+  titleKey: string;
+  descKey: string;
 }[] = [
   {
     tint: "jade",
-    title: "Moderation & safety",
-    desc: "Reviewing reports, managing appeals, and keeping the community a place people actually want to be in.",
+    titleKey: "support:impact.card.moderation.title",
+    descKey: "support:impact.card.moderation.desc",
   },
   {
     tint: "accent",
-    title: "Hosting & infrastructure",
-    desc: "Servers, email delivery, backups, and the small army of services that make it all reliable.",
+    titleKey: "support:impact.card.hosting.title",
+    descKey: "support:impact.card.hosting.desc",
   },
   {
     tint: "plumSoft",
-    title: "The team",
-    desc: "Two part-time people and a small contractor budget. We pay fair wages. That costs money.",
+    titleKey: "support:impact.card.team.title",
+    descKey: "support:impact.card.team.desc",
   },
   {
     tint: "jadeSoft",
-    title: "Free access for everyone",
-    desc: "Supporting members make it possible for the platform to stay free for everyone else. Always.",
+    titleKey: "support:impact.card.freeAccess.title",
+    descKey: "support:impact.card.freeAccess.desc",
   },
 ];
 
-/** Monthly running-cost breakdown for the transparency block. */
+/** Monthly running-cost breakdown for the transparency block. `amountEur` is
+ * a plain number now (not a pre-formatted "€1,900" string) — formatted with
+ * `useFormat().currency()` at render so pt-PT gets its comma + suffix. */
 export type BudgetTint = "plum" | "accent" | "jade" | "plumSoft" | "ink";
 export const BUDGET_ROWS: {
-  name: string;
+  nameKey: string;
   pct: number;
   tint: BudgetTint;
-  amount: string;
+  amountEur: number;
 }[] = [
-  { name: "Team (2 part-time)", pct: 100, tint: "plum", amount: "€1,900" },
   {
-    name: "Magazine & contributors",
+    nameKey: "support:budget.row.team",
+    pct: 100,
+    tint: "plum",
+    amountEur: 1900,
+  },
+  {
+    nameKey: "support:budget.row.magazine",
     pct: 19,
     tint: "accent",
-    amount: "€360",
+    amountEur: 360,
   },
   {
-    name: "Hosting & infrastructure",
+    nameKey: "support:impact.card.hosting.title",
     pct: 13,
     tint: "jade",
-    amount: "€240",
+    amountEur: 240,
   },
   {
-    name: "Moderation & safety tools",
+    nameKey: "support:budget.row.moderationTools",
     pct: 8,
     tint: "plumSoft",
-    amount: "€160",
+    amountEur: 160,
   },
-  { name: "Payment processing", pct: 5, tint: "ink", amount: "€90" },
+  {
+    nameKey: "support:budget.row.payments",
+    pct: 5,
+    tint: "ink",
+    amountEur: 90,
+  },
 ];
-export const BUDGET_TOTAL = "€2,750";
+export const BUDGET_TOTAL_EUR = 2750;
 
-/** Per-tier perk lists and the little microlabel under each name. */
-export const TIER_MICROLABELS: Record<TierName, string> = {
-  Supporter: "Popular with new members",
-  Friend: "The sweet spot",
-  Patron: "Best for regulars",
+/** Per-tier perk lists and the little microlabel under each name — catalog
+ * keys, resolved by `TierCard.tsx`. */
+export const TIER_MICROLABEL_KEYS: Record<TierName, string> = {
+  Supporter: "support:tiers.microlabel.supporter",
+  Friend: "support:tiers.microlabel.friend",
+  Patron: "support:tiers.microlabel.patron",
 };
-export const TIER_PERKS: Record<TierName, string[]> = {
+export const TIER_PERK_KEYS: Record<TierName, string[]> = {
   Supporter: [
-    "Sustainer badge on your profile",
-    "Name in monthly thank-you post",
-    "Our genuine gratitude",
+    "support:tiers.perk.supporter.badge",
+    "support:tiers.perk.supporter.thankYou",
+    "support:tiers.perk.supporter.gratitude",
   ],
   Friend: [
-    "Everything in Supporter",
-    "Early access to new features",
-    "Sustainer badge (Rare)",
-    "10 XP credited monthly",
+    "support:tiers.perk.friend.everythingSupporter",
+    "support:tiers.perk.friend.earlyAccess",
+    "support:tiers.perk.friend.rareBadge",
+    "support:tiers.perk.friend.xp",
   ],
   Patron: [
-    "Everything in Friend",
-    "Name in annual supporters list",
-    "Direct line to the team",
-    "Input on roadmap priorities",
+    "support:tiers.perk.patron.everythingFriend",
+    "support:tiers.perk.patron.annualList",
+    "support:tiers.perk.patron.directLine",
+    "support:tiers.perk.patron.roadmap",
   ],
 };
 
-export const HERO_CHIPS = [
-  "Built by a small team",
-  "No investors",
-  "Free forever",
+export const HERO_CHIP_KEYS = [
+  "support:hero.chip.smallTeam",
+  "support:hero.chip.noInvestors",
+  "support:hero.chip.freeForever",
 ];
 
-export const HOW_STEPS = [
-  "Pick an amount that feels right for you",
-  "Pay securely — card, Apple Pay, PayPal or SEPA",
-  "Your Sustainer badge activates instantly",
-  "Change or cancel any time, no questions",
+export const HOW_STEP_KEYS = [
+  "support:howItWorks.step1",
+  "support:howItWorks.step2",
+  "support:howItWorks.step3",
+  "support:howItWorks.step4",
 ];
 
 /** Stacked-avatar initials + tint for the social-proof cards. */
@@ -123,13 +140,28 @@ export const SIDEBAR_AVATARS: { initials: string; tint: AvatarTint }[] = [
   { initials: "NC", tint: "jadeDim" },
 ];
 
-export const IMPACT_STATS = [
-  { num: "€18k", label: "to the mental-health fund" },
-  { num: "47", label: "free memberships funded" },
-  { num: "3 yrs", label: "running, still here" },
-  { num: "100%", label: "community-funded" },
+/** `unitKey` translates a short word-unit appended after `num` (e.g. "years")
+ * — kept separate from `num` so a fused "3 yrs" style string doesn't bake an
+ * untranslated English abbreviation into the data. */
+export const IMPACT_STATS: {
+  num: string;
+  unitKey?: string;
+  labelKey: string;
+}[] = [
+  { num: "€18k", labelKey: "support:impactStats.mentalHealthFund" },
+  { num: "47", labelKey: "support:impactStats.freeMemberships" },
+  {
+    num: "3",
+    unitKey: "support:impactStats.years",
+    labelKey: "support:impactStats.yearsRunning",
+  },
+  { num: "100%", labelKey: "support:impactStats.communityFunded" },
 ];
 
+/** Fictional-member testimonials — content (a member's own quote, name and
+ * role), left untranslated per the extraction brief's scope rule: these are
+ * the same "attributed quote from a fictional person" case as a mock member
+ * bio, not platform-authored chrome. */
 export type Testimonial = {
   quote: string;
   name: string;
@@ -160,37 +192,16 @@ export const TESTIMONIALS: Testimonial[] = [
   },
 ];
 
-export const FAQS: { q: string; a: string }[] = [
+export const FAQS: { qKey: string; aKey: string }[] = [
+  { qKey: "support:faq.change.q", aKey: "support:faq.change.a" },
+  { qKey: "support:faq.cancel.q", aKey: "support:faq.cancel.a" },
+  { qKey: "support:faq.refunds.q", aKey: "support:faq.refunds.a" },
+  { qKey: "support:faq.methods.q", aKey: "support:faq.methods.a" },
+  { qKey: "support:faq.invoice.q", aKey: "support:faq.invoice.a" },
   {
-    q: "Can I change or pause my amount later?",
-    a: "Any time, from your account settings. Change the amount, switch between monthly and yearly, pause for a few months, or cancel — all self-serve, no email required.",
+    qKey: "support:faq.taxDeductible.q",
+    aKey: "support:faq.taxDeductible.a",
   },
-  {
-    q: "Can I cancel?",
-    a: "Yes, instantly, any time — from your account settings. No questions, no retention flow, no guilt trip. Your Sustainer badge stays until the billing period ends.",
-  },
-  {
-    q: "Do you offer refunds?",
-    a: "If you change your mind within 14 days of a payment, email us and we'll refund it in full, no reason needed. After that, cancelling stops future payments but past ones aren't refunded.",
-  },
-  {
-    q: "Which payment methods work?",
-    a: "Card, Apple Pay, PayPal and SEPA direct debit for EU bank accounts. Everything is processed by Stripe — we never see or store your card details.",
-  },
-  {
-    q: "Can I get an invoice or receipt?",
-    a: "Yes. Every payment sends a receipt to your email automatically, and you can download a dated invoice — including a company name and VAT number — from your account.",
-  },
-  {
-    q: "Is this tax deductible?",
-    a: "No — QueerPulse is not a registered charity. Your contribution is a membership payment, not a donation. We can't provide tax receipts for deduction purposes.",
-  },
-  {
-    q: "Can I support in a currency other than euro?",
-    a: "Euro is our default and what our costs are in, but you can pay in GBP or USD using the currency switch above the amounts. Your card can be from anywhere.",
-  },
-  {
-    q: "What if I can't afford it?",
-    a: "The platform is free and always will be. Contributing is never required. If you want to support in other ways — hosting a gathering, vouching for members, writing for the magazine — those matter just as much.",
-  },
+  { qKey: "support:faq.currency.q", aKey: "support:faq.currency.a" },
+  { qKey: "support:faq.cantAfford.q", aKey: "support:faq.cantAfford.a" },
 ];

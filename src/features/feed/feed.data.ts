@@ -1,6 +1,12 @@
 import { MEMBERS, memberName } from "../members/data/members";
 import { routes } from "../../app/routeMap";
 
+/**
+ * Canonical tab ids — never translated. Held in component state, used as
+ * `Record` keys and to filter `FEED_ITEMS` below, so a language switch must
+ * never change these values (label-key indirection: `tab.<id>` in the
+ * `feed` catalog resolves the display label a `FeedTabs` button shows).
+ */
 export const FEED_TABS = [
   "All",
   "Communities",
@@ -10,15 +16,24 @@ export const FEED_TABS = [
 ] as const;
 export type FeedTab = (typeof FEED_TABS)[number];
 
+/** `feed:tab.<id>` catalog key for a tab's display label. */
+export const FEED_TAB_LABEL_KEY: Record<FeedTab, string> = {
+  All: "feed:tab.all",
+  Communities: "feed:tab.communities",
+  Gatherings: "feed:tab.gatherings",
+  People: "feed:tab.people",
+  Posts: "feed:tab.posts",
+};
+
 /** Which react-icons glyph a tab's empty/error panel shows (resolved in the page). */
 export type FeedTabIcon =
   "inbox" | "communities" | "gatherings" | "people" | "posts";
 
 interface FeedTabMessage {
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   /** Where the primary button sends you to start filling this space. */
-  action?: { label: string; to: string };
+  action?: { labelKey: string; to: string };
 }
 
 interface FeedTabCopy {
@@ -29,76 +44,78 @@ interface FeedTabCopy {
   error: Omit<FeedTabMessage, "action">;
 }
 
-/** Distinct, tab-specific empty + error copy. Each panel names what this corner
- *  of the feed is for and offers one warm way to start filling it. */
+/**
+ * i18n Pattern A. Distinct, tab-specific empty + error copy — each panel names
+ * what this corner of the feed is for and offers one warm way to start
+ * filling it. The data file holds catalog keys; `FeedPage.tsx` resolves them
+ * with `t()`. Keep the per-tab distinctions intact — do not collapse into one
+ * generic string.
+ */
 export const FEED_TAB_COPY: Record<FeedTab, FeedTabCopy> = {
   All: {
     icon: "inbox",
     empty: {
-      title: "Your feed is quiet",
-      description:
-        "When the people and communities you follow post, gather, or welcome someone new, it lands here.",
-      action: { label: "Find people to follow", to: routes.members },
+      titleKey: "feed:tab.all.empty.title",
+      descriptionKey: "feed:tab.all.empty.description",
+      action: { labelKey: "feed:tab.all.empty.action", to: routes.members },
     },
     error: {
-      title: "Couldn't load your feed",
-      description:
-        "Something got in the way reaching the community. Give it another try.",
+      titleKey: "feed:tab.all.error.title",
+      descriptionKey: "feed:tab.all.error.description",
     },
   },
   Communities: {
     icon: "communities",
     empty: {
-      title: "No community pulse yet",
-      description:
-        "Join a community and its plans, pinned notes, and conversations will gather here.",
-      action: { label: "Browse communities", to: routes.communities },
+      titleKey: "feed:tab.communities.empty.title",
+      descriptionKey: "feed:tab.communities.empty.description",
+      action: {
+        labelKey: "feed:tab.communities.empty.action",
+        to: routes.communities,
+      },
     },
     error: {
-      title: "Couldn't reach your communities",
-      description:
-        "The pulse from your communities didn't come through. Try again in a moment.",
+      titleKey: "feed:tab.communities.error.title",
+      descriptionKey: "feed:tab.communities.error.description",
     },
   },
   Gatherings: {
     icon: "gatherings",
     empty: {
-      title: "Nothing on the calendar yet",
-      description:
-        "When a gathering you're part of is announced or recapped, you'll find it here.",
-      action: { label: "See what's on", to: routes.gatherings },
+      titleKey: "feed:tab.gatherings.empty.title",
+      descriptionKey: "feed:tab.gatherings.empty.description",
+      action: {
+        labelKey: "feed:tab.gatherings.empty.action",
+        to: routes.gatherings,
+      },
     },
     error: {
-      title: "Couldn't load gatherings",
-      description: "We couldn't reach what's coming up. Give it another try.",
+      titleKey: "feed:tab.gatherings.error.title",
+      descriptionKey: "feed:tab.gatherings.error.description",
     },
   },
   People: {
     icon: "people",
     empty: {
-      title: "No new faces yet",
-      description:
-        "As people you're connected to arrive or share something, they'll show up here.",
-      action: { label: "Meet the community", to: routes.members },
+      titleKey: "feed:tab.people.empty.title",
+      descriptionKey: "feed:tab.people.empty.description",
+      action: { labelKey: "feed:tab.people.empty.action", to: routes.members },
     },
     error: {
-      title: "Couldn't load new faces",
-      description:
-        "We couldn't reach the latest arrivals. Try again in a moment.",
+      titleKey: "feed:tab.people.error.title",
+      descriptionKey: "feed:tab.people.error.description",
     },
   },
   Posts: {
     icon: "posts",
     empty: {
-      title: "Quiet in here for now",
-      description:
-        "Follow more people, or start the conversation yourself, and posts will fill this space.",
-      action: { label: "Go to the forum", to: routes.forum },
+      titleKey: "feed:tab.posts.empty.title",
+      descriptionKey: "feed:tab.posts.empty.description",
+      action: { labelKey: "feed:tab.posts.empty.action", to: routes.forum },
     },
     error: {
-      title: "Couldn't load posts",
-      description:
-        "The conversation didn't come through this time. Give it another try.",
+      titleKey: "feed:tab.posts.error.title",
+      descriptionKey: "feed:tab.posts.error.description",
     },
   },
 };

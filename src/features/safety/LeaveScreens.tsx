@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import {
-  DELETED,
+  DELETED_KEYS,
   DURATIONS,
-  PAUSE_EFFECTS,
+  PAUSE_EFFECT_KEYS,
   type LeaveState,
+  type PauseDurationId,
 } from "./leave.data";
 import s from "./flows.module.css";
 
@@ -17,36 +21,37 @@ export function LeaveConsidering({
   onPause: () => void;
   onDelete: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={`${s.card} ${s.cardWide} ${s.screenIn}`}>
       <Link to={routes.settings} className={s.backLink}>
-        ← Back to settings
+        {t("safety:leave.backLink")}
       </Link>
       <div className={s.title}>
-        <em>Leaving</em> QueerPulse
+        <Translation
+          i18nKey="safety:leave.considering.title"
+          components={{ em: <em /> }}
+        />
       </div>
-      <div className={s.sub}>
-        We're sorry to see you go. Before you delete your account, we want to
-        make sure this is the right choice — and that you have everything you
-        need.
-      </div>
+      <div className={s.sub}>{t("safety:leave.considering.sub")}</div>
 
       <div className={s.lossCard}>
-        <div className={s.lcLabel}>What gets deleted</div>
-        {DELETED.map((d) => (
-          <div key={d} className={s.lossItem}>
+        <div className={s.lcLabel}>{t("safety:leave.deleted.label")}</div>
+        {DELETED_KEYS.map((key) => (
+          <div key={key} className={s.lossItem}>
             <span className={s.lossDot} />
-            {d}
+            {t(key)}
           </div>
         ))}
         <div className={s.privacyNote}>
-          We retain only anonymised, aggregated data. Your personal data is
-          deleted within 30 days.{" "}
-          <Link to={routes.safety}>Read our Privacy Policy →</Link>
+          <Translation
+            i18nKey="safety:leave.considering.privacyNote"
+            components={{ link: <Link to={routes.safety} /> }}
+          />
         </div>
       </div>
 
-      <div className={s.altLabel}>There might be a gentler option</div>
+      <div className={s.altLabel}>{t("safety:leave.considering.altLabel")}</div>
       <div className={s.altCard}>
         <span
           className={s.altIcon}
@@ -70,15 +75,13 @@ export function LeaveConsidering({
         </span>
         <div>
           <div className={s.altTitle}>
-            Take a break — pause for up to 6 months
+            {t("safety:leave.considering.pauseTitle")}
           </div>
           <div className={s.altDesc}>
-            Your profile goes private, you disappear from search, and no
-            notifications are sent. Everything is exactly as you left it when
-            you come back.
+            {t("safety:leave.considering.pauseDesc")}
           </div>
           <Button variant="ghost" onClick={onPause}>
-            Pause instead
+            {t("safety:leave.considering.pauseCta")}
           </Button>
         </div>
       </div>
@@ -98,26 +101,25 @@ export function LeaveConsidering({
         </span>
         <div>
           <div className={s.altTitle}>
-            Step back quietly — reduce your presence
+            {t("safety:leave.considering.quietTitle")}
           </div>
           <div className={s.altDesc}>
-            Set your profile to private, mute all notifications, and come back
-            whenever you're ready. No pressure, no timer, no questions.
+            {t("safety:leave.considering.quietDesc")}
           </div>
           <Button variant="ghost" to={routes.settings}>
-            Go quiet instead
+            {t("safety:leave.considering.quietCta")}
           </Button>
         </div>
       </div>
 
       <div className={s.divider} />
-      <div className={s.stillWant}>Still want to delete?</div>
+      <div className={s.stillWant}>{t("safety:leave.considering.stillWant")}</div>
       <textarea
         className={s.reasonTa}
-        placeholder="Optional — tell us why you're leaving. We read every response."
+        placeholder={t("safety:leave.considering.reasonPlaceholder")}
       />
       <button type="button" className={s.deleteBtn} onClick={onDelete}>
-        Delete my account
+        {t("safety:leave.considering.deleteCta")}
       </button>
     </div>
   );
@@ -130,39 +132,43 @@ export function LeavePausing({
   onPaused,
   onDelete,
 }: {
-  dur: string;
-  onDur: (d: string) => void;
+  dur: PauseDurationId;
+  onDur: (d: PauseDurationId) => void;
   onBack: () => void;
   onPaused: () => void;
   onDelete: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={`${s.card} ${s.screenIn}`}>
       <button type="button" className={s.backLink} onClick={onBack}>
-        ← Back
+        {t("safety:leave.pausing.backCta")}
       </button>
       <div className={s.title}>
-        Pausing your <em>account</em>
+        <Translation
+          i18nKey="safety:leave.pausing.title"
+          components={{ em: <em /> }}
+        />
       </div>
       <div className={s.sub} style={{ marginBottom: 22 }}>
-        Your profile goes private, you leave search results, and we stop sending
-        notifications. Everything is preserved.
+        {t("safety:leave.pausing.sub")}
       </div>
       <div className={s.durOpts}>
         {DURATIONS.map((d) => (
           <div
-            key={d.label}
-            className={[s.durOpt, dur === d.label && s.durOptSelected]
+            key={d.id}
+            className={[s.durOpt, dur === d.id && s.durOptSelected]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => onDur(d.label)}
+            onClick={() => onDur(d.id)}
             role="radio"
-            aria-checked={dur === d.label}
+            aria-checked={dur === d.id}
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                onDur(d.label);
+                onDur(d.id);
               }
             }}
           >
@@ -170,25 +176,29 @@ export function LeavePausing({
               <span className={s.ocDot} />
             </span>
             <div>
-              <div className={s.durTitle}>{d.label}</div>
-              <div className={s.durDesc}>{d.back}</div>
+              <div className={s.durTitle}>{t(d.labelKey)}</div>
+              <div className={s.durDesc}>
+                {t("safety:leave.duration.backOn", {
+                  date: fmt.date(d.backDate),
+                })}
+              </div>
             </div>
           </div>
         ))}
       </div>
       <div className={s.lossCard} style={{ marginBottom: 22 }}>
-        <div className={s.lcLabel}>What pausing does</div>
-        {PAUSE_EFFECTS.map((e) => (
-          <div key={e} className={s.lossItem}>
+        <div className={s.lcLabel}>{t("safety:leave.pausing.effectsLabel")}</div>
+        {PAUSE_EFFECT_KEYS.map((key) => (
+          <div key={key} className={s.lossItem}>
             <span className={s.lossDot} style={{ background: "var(--jade)" }} />
-            {e}
+            {t(key)}
           </div>
         ))}
       </div>
       <div className={s.actions}>
-        <Button onClick={onPaused}>Pause my account</Button>
+        <Button onClick={onPaused}>{t("safety:leave.pausing.pauseCta")}</Button>
         <button type="button" className={s.cancelLink} onClick={onDelete}>
-          Actually, I'd rather delete →
+          {t("safety:leave.pausing.deleteInsteadCta")}
         </button>
       </div>
     </div>
@@ -199,36 +209,42 @@ export function LeavePaused({
   dur,
   onSettings,
 }: {
-  dur: string;
+  dur: PauseDurationId;
   onSettings: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const match = DURATIONS.find((d) => d.id === dur);
   return (
     <div className={`${s.card} ${s.pausedCard} ${s.screenIn}`}>
       <div className={s.pausedIcon}>
         <FiCheck />
       </div>
       <div className={s.title}>
-        Your account is <em>resting.</em>
+        <Translation
+          i18nKey="safety:leave.paused.title"
+          components={{ em: <em /> }}
+        />
       </div>
-      <p className={s.pausedSub}>
-        You're invisible to other members now, and we've stopped every
-        notification. Your people, your badges, your history — all of it is
-        exactly where you left it. Come back the moment you want to.
-      </p>
+      <p className={s.pausedSub}>{t("safety:leave.paused.sub")}</p>
       <div className={s.pausedReturn}>
         <span className={s.pausedReturnLbl}>
-          You'll reactivate automatically
+          {t("safety:leave.paused.reactivateLabel")}
         </span>
         <span className={s.pausedReturnVal}>
-          {DURATIONS.find((d) => d.label === dur)?.back ?? dur}
+          {match
+            ? t("safety:leave.duration.backOn", {
+                date: fmt.date(match.backDate),
+              })
+            : null}
         </span>
       </div>
       <div className={s.pausedActions}>
         <Button variant="ghost-dark" to={routes.signIn}>
-          Come back early →
+          {t("safety:leave.paused.comeBackCta")}
         </Button>
         <Button variant="ghost-dark" onClick={onSettings}>
-          Back to settings
+          {t("safety:leave.paused.backToSettingsCta")}
         </Button>
       </div>
     </div>
@@ -236,6 +252,7 @@ export function LeavePaused({
 }
 
 export function LeaveConfirmed() {
+  const { t } = useTranslation();
   return (
     <div className={`${s.card} ${s.center} ${s.screenIn}`}>
       <div className={s.icon} style={{ background: "rgba(45,27,61,.07)" }}>
@@ -256,32 +273,38 @@ export function LeaveConfirmed() {
         </svg>
       </div>
       <div className={s.title}>
-        Account deletion <em>requested</em>
+        <Translation
+          i18nKey="safety:leave.confirmed.title"
+          components={{ em: <em /> }}
+        />
       </div>
-      <div className={s.sub}>
-        Your account will be fully deleted within 30 days. You've been signed
-        out and your profile is no longer visible.
-      </div>
+      <div className={s.sub}>{t("safety:leave.confirmed.sub")}</div>
       <div className={s.timeline}>
         <div className={s.tlStep}>
           <div className={`${s.tlDot} ${s.tlActive}`}>1</div>
-          <div className={s.tlLabel}>Request submitted</div>
+          <div className={s.tlLabel}>
+            {t("safety:leave.confirmed.timeline.submitted")}
+          </div>
         </div>
         <div className={s.tlLine} />
         <div className={s.tlStep}>
           <div className={`${s.tlDot} ${s.tlPending}`}>2</div>
-          <div className={s.tlLabel}>Processing</div>
+          <div className={s.tlLabel}>
+            {t("safety:leave.confirmed.timeline.processing")}
+          </div>
         </div>
         <div className={s.tlLine} />
         <div className={s.tlStep}>
           <div className={`${s.tlDot} ${s.tlPending}`}>3</div>
-          <div className={s.tlLabel}>Deleted</div>
+          <div className={s.tlLabel}>
+            {t("safety:leave.confirmed.timeline.deleted")}
+          </div>
         </div>
       </div>
       <div className={s.reportNote} style={{ borderTop: "none" }}>
-        Changed your mind? You can cancel by signing back in within 30 days.
+        {t("safety:leave.confirmed.cancelNote")}
         <br />
-        <Link to={routes.signIn}>Sign in to cancel →</Link>
+        <Link to={routes.signIn}>{t("safety:leave.confirmed.cancelCta")}</Link>
       </div>
     </div>
   );

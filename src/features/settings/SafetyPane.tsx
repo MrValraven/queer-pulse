@@ -1,6 +1,8 @@
 import { FiShield } from "react-icons/fi";
 import { Toggle } from "../../shared/components/ui";
 import { useQuickExit } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Pane, Section, ToggleList } from "./SettingsControls";
 import styles from "./SettingsPage.module.css";
 
@@ -41,39 +43,41 @@ function ControlledToggleRow({
 }
 
 export function SafetyPane() {
+  const { t } = useTranslation();
   const { enabled, keyTrigger, setEnabled, setKeyTrigger } = useQuickExit();
 
   return (
     <Pane
       title={
-        <>
-          Safety &amp; <em>quick exit.</em>
-        </>
+        <Translation
+          i18nKey="settings:safety.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="A fast way to clear the screen if someone walks in. These settings live on this device only — they're never tied to your account."
+      sub={t("settings:safety.sub")}
     >
       <div className={styles.gdprBox}>
         <span className={styles.gIcon}>
           <FiShield />
         </span>
         <p>
-          <strong>Quick exit is a fast screen-clear, not anonymity.</strong> It
-          sends this tab to a neutral weather page and reopens QueerPulse in a
-          separate tab. It can't wipe your earlier browser history, bookmarks,
-          or address-bar suggestions — for that, also use a private window.
+          <Translation
+            i18nKey="settings:safety.gdprBox"
+            components={{ strong: <strong /> }}
+          />
         </p>
       </div>
-      <Section label="Quick exit">
+      <Section label={t("settings:safety.section.quickExit")}>
         <ToggleList>
           <ControlledToggleRow
-            title="Show the Quick exit button"
-            desc="A floating button, on every page, that leaves the site instantly. On by default for everyone's safety."
+            title={t("settings:safety.toggle.showButton.title")}
+            desc={t("settings:safety.toggle.showButton.desc")}
             checked={enabled}
             onChange={setEnabled}
           />
           <ControlledToggleRow
-            title="Double-tap Shift shortcut"
-            desc="Tap the Shift key twice to leave without reaching for the button. Works only while the Quick exit button is on."
+            title={t("settings:safety.toggle.doubleTap.title")}
+            desc={t("settings:safety.toggle.doubleTap.desc")}
             checked={keyTrigger}
             onChange={setKeyTrigger}
             disabled={!enabled}

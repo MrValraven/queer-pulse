@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PostProfileForm } from "./PostProfileForm";
 import styles from "./FlatmatesPage.module.css";
 
 export function PostProfileModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   useScrollLock();
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    const onKeyDown = (event: KeyboardEvent) =>
+      event.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [onClose]);
   const [submitted, setSubmitted] = useState(false);
 
@@ -24,13 +28,13 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-label="Post your flatmate profile"
+        aria-label={t("economy:postProfileModal.ariaLabel")}
       >
         <button
           type="button"
           className={styles.modalX}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("economy:housingModal.close")}
         >
           ×
         </button>
@@ -49,14 +53,14 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
               </svg>
             </div>
             <h2>
-              You're on the <em>board.</em>
+              <Translation
+                i18nKey="economy:postProfileModal.success.title"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              Your profile is live. Members will reach out directly — keep an
-              eye on your QueerPulse messages.
-            </p>
+            <p>{t("economy:postProfileModal.success.body")}</p>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Back to profiles
+              {t("economy:postProfileModal.success.backCta")}
             </Button>
           </div>
         ) : (

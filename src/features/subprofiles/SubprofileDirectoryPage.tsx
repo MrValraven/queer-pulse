@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiLayers } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, Reveal, Spinner } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSubprofileDirectory } from "./api/useSubprofileDirectory";
 import { SubprofileCard } from "./SubprofileCard";
@@ -31,7 +32,10 @@ export function SubprofileDirectoryPage() {
               {t("subprofiles:directory.eyebrow")}
             </span>
             <h1 className={styles.title}>
-              The many ways we <em>make</em>
+              <Translation
+                i18nKey="subprofiles:directory.title"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.sub}>{t("subprofiles:directory.subtitle")}</p>
           </header>

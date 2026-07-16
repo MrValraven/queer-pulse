@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { FiSkipBack, FiSkipForward, FiPlay, FiPause } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { RADIO } from "./culture.data";
 import styles from "./CulturePage.module.css";
 
 /** Full-bleed plum radio player, shown only on the Radio tab. */
 export function CultureRadioPanel() {
+  const { t } = useTranslation();
   const [playing, setPlaying] = useState(false);
 
   return (
@@ -12,20 +14,24 @@ export function CultureRadioPanel() {
       <div className="wrap">
         <div className={styles.radioWrap}>
           <div>
-            <div className={styles.curatorLabel}>{RADIO.curatorLabel}</div>
+            <div className={styles.curatorLabel}>
+              {t(RADIO.curatorLabelKey)}
+            </div>
             <div className={styles.curatorTitle}>{RADIO.curatorTitle}</div>
-            <div className={styles.curatedBy}>{RADIO.curatedBy}</div>
+            <div className={styles.curatedBy}>
+              {t("culture:radio.curatedBy", { name: RADIO.curatorName })}
+            </div>
             <p className={styles.curatorQuote}>{RADIO.quote}</p>
             <div className={styles.curatorLinks}>
-              <a href="#past">Past playlists</a>
-              <a href="#curate">Become a curator</a>
+              <a href="#past">{t("culture:radio.pastPlaylists")}</a>
+              <a href="#curate">{t("culture:radio.becomeCurator")}</a>
             </div>
           </div>
 
           <div className={styles.radioPlayer}>
             <div className={styles.radioNow}>
               <span className={styles.rdot} aria-hidden />
-              Now playing
+              {t("culture:radio.nowPlaying")}
             </div>
             <div className={styles.radioTrack}>{RADIO.now.track}</div>
             <div className={styles.radioArtist}>{RADIO.now.artist}</div>
@@ -39,7 +45,7 @@ export function CultureRadioPanel() {
               <button
                 type="button"
                 className={styles.rBtn}
-                aria-label="Previous track"
+                aria-label={t("culture:radio.previousTrack")}
               >
                 <FiSkipBack size={18} aria-hidden />
               </button>
@@ -47,7 +53,9 @@ export function CultureRadioPanel() {
                 type="button"
                 className={styles.rPlay}
                 onClick={() => setPlaying((p) => !p)}
-                aria-label={playing ? "Pause" : "Play"}
+                aria-label={
+                  playing ? t("culture:radio.pause") : t("culture:radio.play")
+                }
               >
                 {playing ? (
                   <FiPause size={22} aria-hidden />
@@ -58,7 +66,7 @@ export function CultureRadioPanel() {
               <button
                 type="button"
                 className={styles.rBtn}
-                aria-label="Next track"
+                aria-label={t("culture:radio.nextTrack")}
               >
                 <FiSkipForward size={18} aria-hidden />
               </button>
@@ -66,7 +74,7 @@ export function CultureRadioPanel() {
               <span className={styles.radioTime}>{RADIO.now.time}</span>
             </div>
             <div className={styles.radioQueue}>
-              <div className={styles.rqLabel}>Up next</div>
+              <div className={styles.rqLabel}>{t("culture:radio.upNext")}</div>
               {RADIO.queue.map((item) => (
                 <div key={item.n} className={styles.rqItem}>
                   <div className={styles.rqN}>{item.n}</div>

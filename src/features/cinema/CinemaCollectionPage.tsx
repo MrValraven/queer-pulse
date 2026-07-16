@@ -1,5 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CinemaShell } from "./CinemaShell";
 import { CinemaCollectionHeader } from "./CinemaCollectionHeader";
 import { CinemaCollectionEssay } from "./CinemaCollectionEssay";
@@ -11,6 +13,7 @@ import { routes } from "../../app/routeMap";
 
 export function CinemaCollectionPage() {
   const { slug = "" } = useParams();
+  const { t } = useTranslation();
   const data = collectionDetails[slug];
 
   if (!data) {
@@ -18,15 +21,17 @@ export function CinemaCollectionPage() {
       <CinemaShell>
         <section className={styles.notFound}>
           <div className="wrap">
-            <div className="eb">Collection not found</div>
+            <div className="eb">{t("cinema:collection.notFound.eyebrow")}</div>
             <h1>
-              We couldn't find <em>that collection</em>
+              <Translation
+                i18nKey="cinema:collection.notFound.title"
+                components={{ em: <em /> }}
+              />
             </h1>
-            <p>
-              It may have been renamed or retired. Browse the full catalogue to
-              find where the films went.
-            </p>
-            <Button to={routes.cinemaBrowse}>Browse all films</Button>
+            <p>{t("cinema:collection.notFound.body")}</p>
+            <Button to={routes.cinemaBrowse}>
+              {t("cinema:collection.notFound.browseCta")}
+            </Button>
           </div>
         </section>
       </CinemaShell>
@@ -51,14 +56,16 @@ export function CinemaCollectionPage() {
         <div className="wrap">
           <div className={styles.outroInner}>
             <h2>
-              A cinema that <em>argues</em>.
+              <Translation
+                i18nKey="cinema:collection.outro.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.outroSub}>
-              Collections are curators' arguments. Sustainers fund the next
-              ones.
+              {t("cinema:collection.outro.sub")}
             </p>
             <Button to={routes.cinemaMembership} size="lg">
-              Sustain the cinema
+              {t("cinema:outro.sustainCta")}
             </Button>
           </div>
         </div>
@@ -67,7 +74,7 @@ export function CinemaCollectionPage() {
       <div className={styles.backRow}>
         <div className="wrap">
           <Link to={routes.cinema} className={styles.back}>
-            ← Back to Cinema
+            {t("cinema:collection.backCta")}
           </Link>
         </div>
       </div>

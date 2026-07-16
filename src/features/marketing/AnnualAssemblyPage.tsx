@@ -4,6 +4,8 @@ import { FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Button, HubBackLink } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   AgendaSection,
@@ -17,6 +19,7 @@ const TOTAL_SPOTS = 120;
 const SPOTS_TAKEN = 87;
 
 export function AnnualAssemblyPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [rsvped, setRsvped] = useState(false);
   const spotsLeft = TOTAL_SPOTS - (rsvped ? SPOTS_TAKEN + 1 : SPOTS_TAKEN);
@@ -24,10 +27,10 @@ export function AnnualAssemblyPage() {
   const toggleRsvp = () => {
     if (rsvped) {
       setRsvped(false);
-      showToast("RSVP cancelled · your seat is back in the pool", "info");
+      showToast(t("marketing:annualAssembly.toast.rsvpCancelled"), "info");
     } else {
       setRsvped(true);
-      showToast("You're on the list · see you 14 Nov", "success");
+      showToast(t("marketing:annualAssembly.toast.rsvpConfirmed"), "success");
     }
   };
 
@@ -35,45 +38,51 @@ export function AnnualAssemblyPage() {
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <HubBackLink to={routes.governance} label="Governance" tone="dark" />
+          <HubBackLink
+            to={routes.governance}
+            label={t("marketing:hub.governanceLabel")}
+            tone="dark"
+          />
           <div className={styles.eyebrow}>
-            Annual Assembly · 14 November 2026 · Lisbon
+            {t("marketing:annualAssembly.hero.eyebrow")}
           </div>
           <h1 className={styles.h1}>
-            Two days, eleven <em>resolutions.</em>
+            <Translation
+              i18nKey="marketing:annualAssembly.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.dek}>
-            QueerPulse's binding annual gathering. Where the manifesto gets
-            revised, the budget gets approved, and any decision that can't be
-            made by a circle goes to a member vote.{" "}
-            <em>
-              You can attend in person, online, or just read the minutes after
-            </em>{" "}
-            — but your vote counts the same.
+            <Translation
+              i18nKey="marketing:annualAssembly.hero.dek"
+              components={{ em: <em /> }}
+            />
           </p>
           <div className={styles.meta}>
             <span>
-              <b>14 — 15 Nov</b>Two days · Sat &amp; Sun
+              <b>14 — 15 Nov</b>
+              {t("marketing:annualAssembly.hero.meta.datesLabel")}
             </span>
             <span>
               <b>
                 <em>Atelier Pulso</em>
               </b>
-              + video link
+              {t("marketing:annualAssembly.hero.meta.videoLink")}
             </span>
             <span>
-              <b>1,847</b>Members eligible to vote
+              <b>1,847</b>
+              {t("marketing:annualAssembly.hero.meta.eligibleLabel")}
             </span>
             <span>
               <b>
                 <em>184</em>
               </b>
-              Quorum · met
+              {t("marketing:annualAssembly.hero.meta.quorumLabel")}
             </span>
           </div>
           <div className={styles.ctaRow}>
             <Button href="#vote" variant="primary">
-              Vote now · 11 resolutions
+              {t("marketing:annualAssembly.hero.voteCta", { count: 11 })}
             </Button>
             <Button
               type="button"
@@ -86,20 +95,23 @@ export function AnnualAssemblyPage() {
                     aria-hidden
                     style={{ marginRight: 6, verticalAlign: "-2px" }}
                   />
-                  You're going · tap to cancel
+                  {t("marketing:annualAssembly.hero.rsvpGoing")}
                 </>
               ) : (
-                <>
-                  RSVP in-person · {spotsLeft} of {TOTAL_SPOTS} spots left
-                </>
+                t("marketing:annualAssembly.hero.rsvpCta", {
+                  spotsLeft,
+                  totalSpots: TOTAL_SPOTS,
+                })
               )}
             </Button>
             <Button
               type="button"
               variant="ghost-dark"
-              onClick={() => showToast("Opening Zoom link…", "info")}
+              onClick={() =>
+                showToast(t("marketing:annualAssembly.toast.openingZoom"), "info")
+              }
             >
-              Join online · Zoom link
+              {t("marketing:annualAssembly.hero.joinOnlineCta")}
             </Button>
           </div>
         </div>
@@ -111,9 +123,15 @@ export function AnnualAssemblyPage() {
         <AttendCard />
         <PastAssembliesSection />
         <div className={styles.footer}>
-          Questions about your eligibility? <Link to={routes.help}>Help →</Link>{" "}
-          · Want to submit a member proposal for next year?{" "}
-          <Link to={routes.contact}>Write to us</Link>.
+          {t("marketing:annualAssembly.footer.eligibility")}{" "}
+          <Link to={routes.help}>
+            {t("marketing:annualAssembly.footer.helpCta")}
+          </Link>{" "}
+          · {t("marketing:annualAssembly.footer.proposal")}{" "}
+          <Link to={routes.contact}>
+            {t("marketing:annualAssembly.footer.writeCta")}
+          </Link>
+          .
         </div>
       </div>
     </PageShell>

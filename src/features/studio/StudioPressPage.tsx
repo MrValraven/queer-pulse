@@ -2,6 +2,8 @@ import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import { StudioPressBar } from "./StudioPressBar";
 import {
@@ -21,12 +23,13 @@ import styles from "./StudioPressPage.module.css";
 
 /** Auto-generated artist press kit for Mariana Sol. Standalone dark page. */
 export function StudioPressPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
 
   const copy = (text: string) => {
     navigator.clipboard?.writeText(text).then(
-      () => showToast("Copied", "success"),
-      () => showToast("Could not copy", "info"),
+      () => showToast(t("studio:press.copiedToast"), "success"),
+      () => showToast(t("studio:press.copyFailToast"), "info"),
     );
   };
 
@@ -39,10 +42,10 @@ export function StudioPressPage() {
         <BioSection onCopyBoth={() => copy(`${BIO_SHORT}\n\n${BIO_LONG}`)} />
         <PhotosSection
           onDownloadAll={() =>
-            showToast("Downloading press photos · hi-res", "success")
+            showToast(t("studio:press.downloadingPhotosToast"), "success")
           }
           onDownloadOne={() =>
-            showToast("Downloading photo · hi-res", "success")
+            showToast(t("studio:press.downloadingPhotoToast"), "success")
           }
         />
         <ReleaseSection />
@@ -50,10 +53,7 @@ export function StudioPressPage() {
         <BoilerplateSection onCopy={copy} />
         <ContactSection
           onRequest={() =>
-            showToast(
-              "Press access requested — we'll verify you once",
-              "success",
-            )
+            showToast(t("studio:press.accessRequestedToast"), "success")
           }
         />
       </div>
@@ -62,6 +62,8 @@ export function StudioPressPage() {
 }
 
 function Hero() {
+  const { t } = useTranslation();
+  const facts = PRESS_FACTS;
   return (
     <div className={styles.hero}>
       <div className={styles.portrait}>
@@ -76,9 +78,7 @@ function Hero() {
         />
       </div>
       <div className={styles.hi}>
-        <div className={styles.eb}>
-          Auto-generated press kit · always current
-        </div>
+        <div className={styles.eb}>{t("studio:press.eyebrow")}</div>
         <h1>
           Mariana <em>Sol</em>
         </h1>
@@ -87,9 +87,9 @@ function Hero() {
           <em>A hymn for the ones who left and the ones who stayed.</em>
         </div>
         <div className={styles.facts}>
-          {PRESS_FACTS.map((f) => (
-            <div key={f.label} className={styles.pf}>
-              <span className={styles.l}>{f.label}</span>
+          {facts.map((f) => (
+            <div key={f.labelKey} className={styles.pf}>
+              <span className={styles.l}>{t(f.labelKey)}</span>
               <span>{f.value}</span>
             </div>
           ))}
@@ -115,6 +115,7 @@ function SectionHead({
 }
 
 function PreviewSection() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [playing, setPlaying] = useState(false);
 
@@ -125,19 +126,19 @@ function PreviewSection() {
           <button
             type="button"
             className={styles.dl}
-            onClick={() => showToast("Full promo requested", "success")}
+            onClick={() => showToast(t("studio:press.fullPromoRequestedToast"), "success")}
           >
-            Request full promo →
+            {t("studio:press.requestFullPromoCta")}
           </button>
         }
       >
-        Streamable <em>preview</em>
+        <Translation i18nKey="studio:press.section.preview" components={{ em: <em /> }} />
       </SectionHead>
       <div className={styles.track}>
         <button
           type="button"
           className={styles.playBig}
-          aria-label={playing ? "Pause preview" : "Play preview"}
+          aria-label={t(playing ? "studio:press.pauseAria" : "studio:press.playAria")}
           aria-pressed={playing}
           onClick={() => setPlaying((p) => !p)}
         >
@@ -165,36 +166,35 @@ function PreviewSection() {
             ))}
           </div>
         </div>
-        <span className={styles.wmBadge}>Watermarked</span>
+        <span className={styles.wmBadge}>{t("studio:press.watermarkedBadge")}</span>
       </div>
       <div className={styles.trackNote}>
-        This preview carries an <em>inaudible watermark</em> and a spoken
-        QueerPulse tag at the tail. For a clean broadcast master, request the
-        full promo — we verify press once, then you're cleared for everything.
+        <Translation i18nKey="studio:press.previewNote" components={{ em: <em /> }} />
       </div>
     </section>
   );
 }
 
 function BioSection({ onCopyBoth }: { onCopyBoth: () => void }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <SectionHead
         action={
           <button type="button" className={styles.dl} onClick={onCopyBoth}>
-            Copy both →
+            {t("studio:press.copyBothCta")}
           </button>
         }
       >
-        <em>Bio</em>
+        <Translation i18nKey="studio:press.section.bio" components={{ em: <em /> }} />
       </SectionHead>
       <div className={styles.bio}>
         <div className={`${styles.col} ${styles.short}`}>
-          <div className={styles.bl}>Short · 40 words</div>
+          <div className={styles.bl}>{t("studio:press.bio.shortLabel")}</div>
           <p>{BIO_SHORT_RICH}</p>
         </div>
         <div className={styles.col}>
-          <div className={styles.bl}>Long · 120 words</div>
+          <div className={styles.bl}>{t("studio:press.bio.longLabel")}</div>
           {BIO_LONG_RICH}
         </div>
       </div>
@@ -209,16 +209,17 @@ function PhotosSection({
   onDownloadAll: () => void;
   onDownloadOne: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <SectionHead
         action={
           <button type="button" className={styles.dl} onClick={onDownloadAll}>
-            Download all · hi-res →
+            {t("studio:press.downloadAllCta")}
           </button>
         }
       >
-        Press <em>photos</em>
+        <Translation i18nKey="studio:press.section.photos" components={{ em: <em /> }} />
       </SectionHead>
       <div className={styles.photos}>
         {PRESS_PHOTOS.map((p) => (
@@ -237,7 +238,7 @@ function PhotosSection({
               placeholder={p.caption}
               style={{ position: "absolute", inset: 0 }}
             />
-            <span className={styles.photoHint}>Download hi-res →</span>
+            <span className={styles.photoHint}>{t("studio:press.downloadOneHint")}</span>
           </button>
         ))}
       </div>
@@ -246,10 +247,11 @@ function PhotosSection({
 }
 
 function ReleaseSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <SectionHead>
-        Latest <em>release</em>
+        <Translation i18nKey="studio:press.section.release" components={{ em: <em /> }} />
       </SectionHead>
       <Link to={routes.studioAlbum} className={styles.track}>
         <div className={styles.cv}>
@@ -271,7 +273,7 @@ function ReleaseSection() {
             Album · 11 tracks · released 14 Mar 2026 · CC-BY-NC
           </div>
         </div>
-        <span className={`${styles.wmBadge} ${styles.jade}`}>Out now</span>
+        <span className={`${styles.wmBadge} ${styles.jade}`}>{t("studio:press.outNowBadge")}</span>
       </Link>
     </section>
   );
@@ -281,7 +283,7 @@ function QuotesSection() {
   return (
     <section className={styles.sec}>
       <SectionHead>
-        Selected <em>press</em>
+        <Translation i18nKey="studio:press.section.press" components={{ em: <em /> }} />
       </SectionHead>
       <div className={styles.quotes}>
         {PRESS_QUOTES.map((q) => (
@@ -295,23 +297,24 @@ function QuotesSection() {
   );
 }
 
-function BoilerplateSection({ onCopy }: { onCopy: (t: string) => void }) {
+function BoilerplateSection({ onCopy }: { onCopy: (text: string) => void }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <SectionHead>
-        Facts &amp; <em>boilerplate</em>
+        <Translation i18nKey="studio:press.section.boilerplate" components={{ em: <em /> }} />
       </SectionHead>
       <div className={styles.boiler}>
         {BOILERPLATE.map((row) => (
-          <div key={row.key} className={styles.copyRow}>
-            <span className={styles.k}>{row.key}</span>
+          <div key={row.labelKey} className={styles.copyRow}>
+            <span className={styles.k}>{t(row.labelKey)}</span>
             <span className={styles.v}>{row.value}</span>
             <button
               type="button"
               className={styles.cp}
               onClick={() => onCopy(row.copy)}
             >
-              Copy
+              {t("studio:press.copyCta")}
             </button>
           </div>
         ))}
@@ -321,12 +324,13 @@ function BoilerplateSection({ onCopy }: { onCopy: (t: string) => void }) {
 }
 
 function ContactSection({ onRequest }: { onRequest: () => void }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <div className={styles.contact}>
         <div className={styles.ci}>
           <h3>
-            Press &amp; <em>booking</em>
+            <Translation i18nKey="studio:press.section.contactHeading" components={{ em: <em /> }} />
           </h3>
           <p>
             Mariana handles her own press — no gatekeepers.{" "}
@@ -334,15 +338,14 @@ function ContactSection({ onRequest }: { onRequest: () => void }) {
           </p>
         </div>
         <Button variant="ghost-dark" size="lg" to={routes.studioArtist}>
-          View artist page →
+          {t("studio:press.viewArtistCta")}
         </Button>
         <Button variant="primary" size="lg" onClick={onRequest}>
-          Request press access
+          {t("studio:press.requestAccessCta")}
         </Button>
       </div>
       <div className={styles.gen}>
-        Generated by QueerPulse Studio · last refreshed 10 Jun 2026 · this page
-        updates itself as Mariana releases
+        {t("studio:press.generatedFooter", { name: "Mariana" })}
       </div>
     </section>
   );

@@ -1,4 +1,6 @@
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { downloadBlob } from "./downloadBlob";
 import {
   ALLOC,
@@ -34,22 +36,24 @@ export function Bignum({ d }: { d: BignumData }) {
 }
 
 export function MoneySection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec} id="money">
       <div className={styles.secH}>
         <h2>
-          Where the money <em>came from,</em> and where it <em>went.</em>
+          <Translation
+            i18nKey="marketing:transparency.money.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>
           0<em>1</em>
         </span>
       </div>
-      <p className={styles.secSub}>
-        All figures in euros, calendar year 2025. Books audited by an
-        independent auditor (no relationship to the organisation), available on
-        request as itemised CSV.
-      </p>
-      <div className={styles.miniH}>Where the €278,400 came from</div>
+      <p className={styles.secSub}>{t("marketing:transparency.money.sub")}</p>
+      <div className={styles.miniH}>
+        {t("marketing:transparency.money.sourcesHeading")}
+      </div>
       <div className={styles.sourceGrid}>
         {SOURCES.map((s) => (
           <div className={styles.source} key={s.name}>
@@ -64,8 +68,7 @@ export function MoneySection() {
           <em>€267,420</em>
         </div>
         <div className={styles.allocTotalLbl}>
-          Spent in 2025 · 96.1% of receipts · €10,980 surplus carried to
-          reserves
+          {t("marketing:transparency.money.spentLabel")}
         </div>
         <div className={styles.allocBar}>
           {ALLOC.map((a, i) => (
@@ -91,20 +94,21 @@ export function MoneySection() {
 }
 
 export function PeopleSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec} id="people">
       <div className={styles.secH}>
         <h2>
-          The <em>people</em> behind the numbers.
+          <Translation
+            i18nKey="marketing:transparency.people.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>
           0<em>2</em>
         </span>
       </div>
-      <p className={styles.secSub}>
-        Members at year-end, growth, who actually shows up. We don't celebrate
-        big numbers — only the right ones.
-      </p>
+      <p className={styles.secSub}>{t("marketing:transparency.people.sub")}</p>
       <div className={styles.bignumRow}>
         {PEOPLE1.map((d) => (
           <Bignum d={d} key={d.lbl} />
@@ -120,19 +124,22 @@ export function PeopleSection() {
 }
 
 export function ModerationSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec} id="moderation">
       <div className={styles.secH}>
         <h2>
-          Moderation, <em>by the numbers.</em>
+          <Translation
+            i18nKey="marketing:transparency.moderation.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>
           0<em>3</em>
         </span>
       </div>
       <p className={styles.secSub}>
-        What was reported, what we acted on, and how long it took. Every action
-        logged; full anonymised log available to any member on request.
+        {t("marketing:transparency.moderation.sub")}
       </p>
       <div className={styles.bignumRow} style={{ marginBottom: 24 }}>
         {MOD_STATS.map((d) => (
@@ -141,10 +148,10 @@ export function ModerationSection() {
       </div>
       <div className={styles.modTable}>
         <div className={`${styles.modRow} ${styles.modHead}`}>
-          <span>Reason for moderation action</span>
-          <span>Count</span>
-          <span>YoY</span>
-          <span>% of all</span>
+          <span>{t("marketing:transparency.moderation.colReason")}</span>
+          <span>{t("marketing:transparency.moderation.colCount")}</span>
+          <span>{t("marketing:transparency.moderation.colYoy")}</span>
+          <span>{t("marketing:transparency.moderation.colPct")}</span>
         </div>
         {MOD_ROWS.map((r, i) => (
           <div className={styles.modRow} key={i}>
@@ -162,10 +169,10 @@ export function ModerationSection() {
         ))}
       </div>
       <p className={styles.modBreakdown}>
-        Action breakdown: <b>96 posts/comments removed</b>,{" "}
-        <b>52 warnings issued</b>, <b>23 temporary suspensions</b> (median 7
-        days), <b>9 permanent bans</b>, <b>4 cases referred to ILGA</b> for
-        legal handling.
+        <Translation
+          i18nKey="marketing:transparency.moderation.breakdown"
+          components={{ b: <b /> }}
+        />
       </p>
     </section>
   );
@@ -176,16 +183,20 @@ export function RequestsSection() {
     <section className={styles.sec} id="requests">
       <div className={styles.secH}>
         <h2>
-          Government &amp; legal <em>requests</em> for member data.
+          <Translation
+            i18nKey="marketing:transparency.requests.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>
           0<em>4</em>
         </span>
       </div>
       <p className={styles.secSub}>
-        Every request we received from any government or legal entity in 2025.
-        We comply with valid Portuguese court orders.{" "}
-        <em>We do not comply with informal asks.</em>
+        <Translation
+          i18nKey="marketing:transparency.requests.sub"
+          components={{ em: <em /> }}
+        />
       </p>
       {REQUESTS.map((r, i) => (
         <div className={styles.reqCard} key={i}>
@@ -208,16 +219,20 @@ export function MistakesSection() {
     <section className={styles.sec} id="mistakes">
       <div className={styles.secH}>
         <h2>
-          Things we got <em>wrong</em> in 2025.
+          <Translation
+            i18nKey="marketing:transparency.mistakes.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>
           0<em>5</em>
         </span>
       </div>
       <p className={styles.secSub}>
-        Published because we want this section to be the easiest part of the
-        report to write next year.{" "}
-        <em>Naming our own mistakes is the price of being trusted.</em>
+        <Translation
+          i18nKey="marketing:transparency.mistakes.sub"
+          components={{ em: <em /> }}
+        />
       </p>
       {MISTAKES.map((m, i) => (
         <div className={styles.mistake} key={i}>
@@ -232,19 +247,22 @@ export function MistakesSection() {
 }
 
 export function GovernanceSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec} id="governance">
       <div className={styles.secH}>
         <h2>
-          How <em>decisions</em> got made.
+          <Translation
+            i18nKey="marketing:transparency.governance.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.secNum}>
           0<em>6</em>
         </span>
       </div>
       <p className={styles.secSub}>
-        Boring meeting minutes are the foundation of trust. Here's how
-        QueerPulse's governance actually worked in 2025.
+        {t("marketing:transparency.governance.sub")}
       </p>
       <div className={styles.bignumRow} style={{ marginBottom: 24 }}>
         {GOV_STATS.map((d) => (
@@ -252,8 +270,7 @@ export function GovernanceSection() {
         ))}
       </div>
       <p className={styles.modBreakdown}>
-        For full meeting minutes, the constitution, the Sustainer agreement, and
-        the formal organisational chart, see Governance.
+        {t("marketing:transparency.governance.seeMore")}
       </p>
     </section>
   );
@@ -286,27 +303,30 @@ governance,assembly_votes_cast,312
 `;
 
 export function Signoff() {
+  const { t } = useTranslation();
   return (
     <div className={styles.signoff}>
       <h3>
-        Signed in <em>good faith,</em> and ready for questions.
+        <Translation
+          i18nKey="marketing:transparency.signoff.title"
+          components={{ em: <em /> }}
+        />
       </h3>
       <p>
-        This report was prepared by Catarina Vaz and André Bento, reviewed by
-        the full Assembly, and audited independently by Dra. Helena Faria of
-        Faria Auditoria. <em>Errors are ours.</em> Questions, corrections, or
-        concerns:{" "}
-        <a href="mailto:transparency@queerpulse.app">
-          transparency@queerpulse.app
-        </a>{" "}
-        — a real person reads them within 48 hours.
+        <Translation
+          i18nKey="marketing:transparency.signoff.body"
+          components={{
+            em: <em />,
+            a: <a href="mailto:transparency@queerpulse.app" />,
+          }}
+        />
       </p>
       <div className={styles.signRow}>
         <div className={styles.signAv}>CV</div>
         <div>
           <div className={styles.signName}>Catarina Vaz</div>
           <div className={styles.signRole}>
-            Co-treasurer · drafted finance + mistakes
+            {t("marketing:transparency.signoff.role.catarina")}
           </div>
         </div>
         <div
@@ -321,7 +341,7 @@ export function Signoff() {
         <div>
           <div className={styles.signName}>André Bento</div>
           <div className={styles.signRole}>
-            Co-treasurer · drafted moderation + governance
+            {t("marketing:transparency.signoff.role.andre")}
           </div>
         </div>
         <div
@@ -335,7 +355,9 @@ export function Signoff() {
         </div>
         <div>
           <div className={styles.signName}>Dra. Helena Faria</div>
-          <div className={styles.signRole}>Independent auditor</div>
+          <div className={styles.signRole}>
+            {t("marketing:transparency.signoff.role.auditor")}
+          </div>
         </div>
       </div>
       <div className={styles.trActions}>
@@ -350,7 +372,7 @@ export function Signoff() {
             )
           }
         >
-          Download PDF (84 pages)
+          {t("marketing:transparency.signoff.downloadPdf")}
         </Button>
         <Button
           type="button"
@@ -363,7 +385,7 @@ export function Signoff() {
             )
           }
         >
-          Download raw CSV
+          {t("marketing:transparency.signoff.downloadCsv")}
         </Button>
       </div>
     </div>

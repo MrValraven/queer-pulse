@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useScrollLock } from "../../shared/hooks";
 import styles from "./MarketingModal.module.css";
 
 export function LiveStreamModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const [playing, setPlaying] = useState(false);
   useScrollLock();
 
@@ -24,31 +27,38 @@ export function LiveStreamModal({ onClose }: { onClose: () => void }) {
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("marketing:liveStream.closeAria")}
         >
           ×
         </button>
 
-        <div className={styles.eye}>Live stream · Atelier Pulso</div>
+        <div className={styles.eye}>{t("marketing:liveStream.eyebrow")}</div>
         <h2 className={styles.title} id="liveStreamModalTitle">
-          Annual Assembly · <em>live.</em>
+          <Translation
+            i18nKey="marketing:liveStream.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={styles.lead}>
-          The in-person sessions are streamed here with open chat. The stream
-          goes live when the room opens — <b>14 Nov · 10:00 WET.</b>
+          <Translation
+            i18nKey="marketing:liveStream.lead"
+            components={{ b: <b /> }}
+          />
         </p>
 
         <div className={styles.stage}>
           <span className={styles.liveTag}>
             <span className={styles.liveDot} />
-            {playing ? "Live" : "Starts soon"}
+            {playing
+              ? t("marketing:liveStream.statusLive")
+              : t("marketing:liveStream.statusSoon")}
           </span>
           {!playing && (
             <button
               type="button"
               className={styles.playBtn}
               onClick={() => setPlaying(true)}
-              aria-label="Play stream"
+              aria-label={t("marketing:liveStream.playAria")}
             >
               <svg viewBox="0 0 24 24" aria-hidden>
                 <path d="M6 4l14 8-14 8z" fill="currentColor" />
@@ -57,17 +67,17 @@ export function LiveStreamModal({ onClose }: { onClose: () => void }) {
           )}
           <div className={styles.stageNote}>
             {playing
-              ? "Streaming the main room · audio + slides · chat below"
-              : "Stream starts at 10:00 WET on 14 November"}
+              ? t("marketing:liveStream.noteStreaming")
+              : t("marketing:liveStream.noteSoon")}
           </div>
         </div>
 
         <div className={styles.foot}>
           <button type="button" className={styles.back} onClick={onClose}>
-            ← Close
+            {t("marketing:liveStream.backCta")}
           </button>
           <Button size="lg" href="#vote" onClick={onClose}>
-            Cast your vote instead →
+            {t("marketing:liveStream.voteInsteadCta")}
           </Button>
         </div>
       </div>

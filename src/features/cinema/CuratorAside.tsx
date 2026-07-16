@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CURATORS, type CuratorProfile } from "./cinemaCurator.data";
 import styles from "./CinemaCuratorPage.module.css";
@@ -11,13 +12,16 @@ const AV_CLASS = {
 } as const;
 
 export function CuratorAside({ curator }: { curator: CuratorProfile }) {
+  const { t } = useTranslation();
   const name = curator.namePre.trim();
   const others = Object.values(CURATORS).filter((c) => c.slug !== curator.slug);
 
   return (
     <aside className={styles.aside}>
       <div className={styles.ca}>
-        <div className={styles.caHead}>Other curators</div>
+        <div className={styles.caHead}>
+          {t("cinema:curator.aside.otherCuratorsHeading")}
+        </div>
         <div className={styles.otherCur}>
           {others.map((c) => (
             <Link
@@ -41,24 +45,26 @@ export function CuratorAside({ curator }: { curator: CuratorProfile }) {
       </div>
 
       <div className={styles.ca}>
-        <div className={styles.caHead}>Contact</div>
+        <div className={styles.caHead}>
+          {t("cinema:curator.aside.contactHeading")}
+        </div>
         <div className={styles.caBody}>
-          For press enquiries, screening proposals, or collection suggestions —
-          reach {name} through the co-op.
+          {t("cinema:curator.aside.contactBody", { name })}
         </div>
         <Button variant="ghost" to={routes.contact} style={{ width: "100%" }}>
-          Contact {name}
+          {t("cinema:curator.aside.contactCta", { name })}
         </Button>
       </div>
 
       <div className={styles.ca}>
-        <div className={styles.caHead}>Propose a collection</div>
+        <div className={styles.caHead}>
+          {t("cinema:curator.aside.proposeHeading")}
+        </div>
         <div className={styles.caBody}>
-          Have a thesis? A set of films that argue something together? Write to
-          the council.
+          {t("cinema:curator.aside.proposeBody")}
         </div>
         <Button variant="ghost" to={routes.contact} style={{ width: "100%" }}>
-          Propose →
+          {t("cinema:curator.aside.proposeCta")}
         </Button>
       </div>
     </aside>

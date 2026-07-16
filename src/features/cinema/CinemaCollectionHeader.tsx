@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CollectionDetail } from "./cinemaCollection.data";
 import styles from "./CinemaCollectionPage.module.css";
 import { routes } from "../../app/routeMap";
@@ -7,15 +8,16 @@ import { curatorSlugForName } from "./cinemaCurator.data";
 
 /** Plum collection header: breadcrumb, live tag, serif title, stats, curators. */
 export function CinemaCollectionHeader({ data }: { data: CollectionDetail }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.header}>
       <div className={`wrap ${styles.headerInner}`}>
         <div className={styles.crumb}>
-          <Link to={routes.cinema}>Cinema</Link>
+          <Link to={routes.cinema}>{t("cinema:brand.tag")}</Link>
           <span className={styles.sep} aria-hidden>
             ›
           </span>
-          <Link to={routes.cinemaBrowse}>Collections</Link>
+          <Link to={routes.cinemaBrowse}>{t("cinema:nav.collections")}</Link>
           <span className={styles.sep} aria-hidden>
             ›
           </span>

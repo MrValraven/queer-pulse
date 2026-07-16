@@ -1,3 +1,5 @@
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { TESTIMONIALS, type Testimonial } from "./sustainer.data";
 import styles from "./sustainer.module.css";
 
@@ -18,13 +20,17 @@ function initials(name: string): string {
 
 /** Full-bleed band of member testimonials — "Why members chip in". */
 export function SustainerTestimonials() {
+  const { t } = useTranslation();
   return (
     <section className={styles.testiBand}>
       <div className="wrap">
         <h2 className={styles.secHead}>
-          Why members <em>chip in</em>
+          <Translation
+            i18nKey="support:testimonials.heading"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p className={styles.secSub}>In their own words.</p>
+        <p className={styles.secSub}>{t("support:testimonials.sub")}</p>
         <div className={styles.testiGrid}>
           {TESTIMONIALS.map((t) => (
             <div key={t.name} className={styles.testiCard}>

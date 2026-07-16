@@ -3,6 +3,8 @@ import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { FadeIn, HubBackLink, SkeletonLine } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import styles from "./CoverGalleryPage.module.css";
 
@@ -229,6 +231,7 @@ function CoverTileSkeleton() {
 
 export function CoverGalleryPage() {
   const loading = useSimulatedLoad();
+  const { t } = useTranslation();
 
   return (
     <PageShell>
@@ -238,21 +241,23 @@ export function CoverGalleryPage() {
           <div className={styles.heroInner}>
             <HubBackLink
               to={routes.magazine}
-              label="the Magazine"
+              label={t("magazine:coverGallery.backLink")}
               tone="light"
             />
             <div className={styles.eyebrow}>
-              Magazine · all covers · 2024 → present
+              {t("magazine:coverGallery.eyebrow")}
             </div>
             <h1 className={styles.h1}>
-              Nine <em>covers,</em> one each season.
+              <Translation
+                i18nKey="magazine:coverGallery.title"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.dek}>
-              Every QueerPulse Magazine cover, in order. Risograph-printed in
-              Lisbon, sized A5. Each was made by a different artist working with
-              the editorial team.{" "}
-              <em>Press is welcome to use any of these images</em> under the
-              terms in our <Link to={PRESS}>press kit</Link>.
+              <Translation
+                i18nKey="magazine:coverGallery.dek"
+                components={{ em: <em />, a: <Link to={PRESS} /> }}
+              />
             </p>
           </div>
         </section>
@@ -303,11 +308,13 @@ export function CoverGalleryPage() {
 
         <section className={styles.illus}>
           <h2>
-            Made <em>with</em>
+            <Translation
+              i18nKey="magazine:coverGallery.madeWithHeading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p className={styles.sub}>
-            Cover artists, in cover order. Most are members; two we commissioned
-            externally.
+            {t("magazine:coverGallery.madeWithSub")}
           </p>
           <div className={styles.illusGrid}>
             {ILLUS.map((il) => (

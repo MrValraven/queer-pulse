@@ -1,17 +1,22 @@
+/**
+ * i18n Pattern A — chrome list (join-flow involvement options), sole
+ * consumer is `JoinModalSteps.tsx`. `value` is the stable stored enum id;
+ * `labelKey`/`descKey` resolve through `t()` at render.
+ */
 export const INVOLVEMENT = [
   {
     value: "updates",
-    label: "Keep me updated",
-    desc: "News and events only — no commitment",
+    labelKey: "communities:join.involvement.updates.label",
+    descKey: "communities:join.involvement.updates.desc",
   },
   {
     value: "active",
-    label: "Active member",
-    desc: "Come to events and join the group",
+    labelKey: "communities:join.involvement.active.label",
+    descKey: "communities:join.involvement.active.desc",
   },
   {
     value: "organise",
-    label: "Help organise",
-    desc: "Volunteer to help run things",
+    labelKey: "communities:join.involvement.organise.label",
+    descKey: "communities:join.involvement.organise.desc",
   },
 ];

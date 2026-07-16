@@ -1,39 +1,39 @@
 import type { ReactNode } from "react";
+import { Translation } from "../../shared/i18n/Translation";
+import type { TFunction } from "../../shared/i18n/types";
 
-export const FACTS: { v: ReactNode; l: string }[] = [
-  {
-    v: (
-      <>
-        <em>6</em> seats
-      </>
-    ),
-    l: "2-year terms · staggered",
-  },
-  {
-    v: (
-      <>
-        €<em>400</em>
-      </>
-    ),
-    l: "monthly stipend · on the ledger",
-  },
-  {
-    v: (
-      <>
-        <em>52</em>
-      </>
-    ),
-    l: "slates programmed this year",
-  },
-  {
-    v: (
-      <>
-        <em>9 Jun</em>
-      </>
-    ),
-    l: "next election · assembly",
-  },
-];
+/**
+ * Council fact strip is platform-authored chrome (Pattern B, `buildFacts(t)`).
+ * `MEMBERS` below is each curator's own profile — seat, bio, notebook quotes,
+ * programmed slates, and stats are the curator's authored/personal record and
+ * stay English in both modes per `docs/i18n/extraction-brief.md` §1 (same
+ * treatment as the Cinema curator profile pages).
+ */
+export interface CouncilFact {
+  v: ReactNode;
+  l: string;
+}
+
+export function buildFacts(t: TFunction): CouncilFact[] {
+  return [
+    {
+      v: <Translation i18nKey="studio:council.fact.seats.value" components={{ em: <em /> }} />,
+      l: t("studio:council.fact.seats.label"),
+    },
+    {
+      v: <Translation i18nKey="studio:council.fact.stipend.value" components={{ em: <em /> }} />,
+      l: t("studio:council.fact.stipend.label"),
+    },
+    {
+      v: <Translation i18nKey="studio:council.fact.slates.value" components={{ em: <em /> }} />,
+      l: t("studio:council.fact.slates.label"),
+    },
+    {
+      v: <Translation i18nKey="studio:council.fact.election.value" components={{ em: <em /> }} />,
+      l: t("studio:council.fact.election.label"),
+    },
+  ];
+}
 
 export interface Member {
   tint: "coral" | "jade" | "plum";

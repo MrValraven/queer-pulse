@@ -8,23 +8,29 @@ export interface Step {
 }
 
 export interface Section {
-  title: string;
+  /**
+   * i18n Pattern A — section headers are short chrome, translated via a
+   * catalog key. `steps` below stay English (FLAGGED, not swept — see
+   * transHealthcare catalog header comment): dense, high-precision
+   * medical/legal procedural detail pending dedicated native review.
+   */
+  titleKey: string;
   steps: Step[];
 }
 
 export interface Path {
   id: string;
-  label: string;
+  labelKey: string;
   sections: Section[];
 }
 
 export const PATHS: Path[] = [
   {
     id: "hrt-sns",
-    label: "HRT via SNS",
+    labelKey: "resources:transHealthcare.path.hrtSns.label",
     sections: [
       {
-        title: "Getting into the system",
+        titleKey: "resources:transHealthcare.section.gettingIntoSystem",
         steps: [
           {
             n: 1,
@@ -52,7 +58,7 @@ export const PATHS: Path[] = [
         ],
       },
       {
-        title: "Gender clinic",
+        titleKey: "resources:transHealthcare.section.genderClinic",
         steps: [
           {
             n: 4,
@@ -80,7 +86,7 @@ export const PATHS: Path[] = [
         ],
       },
       {
-        title: "Ongoing care",
+        titleKey: "resources:transHealthcare.section.ongoingCare",
         steps: [
           {
             n: 7,
@@ -103,10 +109,10 @@ export const PATHS: Path[] = [
   },
   {
     id: "hrt-private",
-    label: "HRT privately",
+    labelKey: "resources:transHealthcare.path.hrtPrivate.label",
     sections: [
       {
-        title: "Finding a private provider",
+        titleKey: "resources:transHealthcare.section.findingPrivateProvider",
         steps: [
           {
             n: 1,
@@ -134,7 +140,7 @@ export const PATHS: Path[] = [
         ],
       },
       {
-        title: "Ongoing",
+        titleKey: "resources:transHealthcare.section.ongoing",
         steps: [
           {
             n: 4,
@@ -157,10 +163,10 @@ export const PATHS: Path[] = [
   },
   {
     id: "legal-name",
-    label: "Legal name change",
+    labelKey: "resources:transHealthcare.path.legalName.label",
     sections: [
       {
-        title: "The process (Lei n.º 38/2018)",
+        titleKey: "resources:transHealthcare.section.legalProcess",
         steps: [
           {
             n: 1,
@@ -206,10 +212,10 @@ export const PATHS: Path[] = [
   },
   {
     id: "gender-marker",
-    label: "Gender marker",
+    labelKey: "resources:transHealthcare.path.genderMarker.label",
     sections: [
       {
-        title: "Changing your gender marker",
+        titleKey: "resources:transHealthcare.section.genderMarkerChange",
         steps: [
           {
             n: 1,
@@ -247,10 +253,10 @@ export const PATHS: Path[] = [
   },
   {
     id: "surgery",
-    label: "Surgery access",
+    labelKey: "resources:transHealthcare.path.surgery.label",
     sections: [
       {
-        title: "Gender-affirming surgery in Portugal",
+        titleKey: "resources:transHealthcare.section.surgeryInPortugal",
         steps: [
           {
             n: 1,

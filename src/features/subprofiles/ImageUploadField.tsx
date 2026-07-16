@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage, type UploadKind } from "../members/api/useUploadImage";
 import styles from "./SubprofileEditor.module.css";
 
@@ -25,13 +26,15 @@ export function ImageUploadField({
   kind,
   circle = false,
   size = 150,
-  placeholder = "Image",
+  placeholder,
 }: ImageUploadFieldProps) {
+  const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
   const createdUrl = useRef<string | null>(null);
   const upload = useUploadImage(kind);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resolvedPlaceholder = placeholder ?? t("subprofiles:imageUpload.defaultPlaceholder");
 
   useEffect(
     () => () => {
@@ -52,7 +55,7 @@ export function ImageUploadField({
       setError(
         err instanceof Error && err.message
           ? err.message
-          : "We couldn't add that image. Please try again.",
+          : t("subprofiles:imageUpload.error"),
       );
     } finally {
       setUploading(false);
@@ -76,7 +79,7 @@ export function ImageUploadField({
         width={circle ? size : "100%"}
         height={size}
         radius={14}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
       />
       <div className={styles.imgActions}>
         <button
@@ -86,13 +89,17 @@ export function ImageUploadField({
           disabled={uploading}
         >
           <FiCamera size={14} aria-hidden />
-          {uploading ? "Uploading…" : value ? "Change" : "Add image"}
+          {uploading
+            ? t("subprofiles:imageUpload.uploading")
+            : value
+              ? t("subprofiles:imageUpload.change")
+              : t("subprofiles:imageUpload.add")}
         </button>
         {value && !uploading && (
           <button
             type="button"
             className={styles.smallBtn}
-            aria-label="Remove image"
+            aria-label={t("subprofiles:imageUpload.remove")}
             onClick={clear}
           >
             <FiTrash2 size={14} aria-hidden />

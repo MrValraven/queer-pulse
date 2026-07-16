@@ -1,13 +1,22 @@
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useCountUp } from "../../shared/hooks/useCountUp";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { METRICS, type StatCard } from "./adminDashboard.data";
 import styles from "./AdminDashboardPage.module.css";
+
+/** Decorative direction glyph — a symbol, not language content. */
+const TREND_ARROW: Record<StatCard["trend"]["dir"], string> = {
+  up: "▲",
+  down: "▼",
+  warn: "",
+};
 
 export function AdminStatGrid({ loading = false }: { loading?: boolean }) {
   return (
     <div className={styles.statGrid}>
       {METRICS.map((m, i) => (
-        <FadeIn key={m.label} delay={i * 70}>
+        <FadeIn key={m.labelKey} delay={i * 70}>
           <AdminStatCard stat={m} loading={loading} />
         </FadeIn>
       ))}
@@ -22,8 +31,10 @@ function AdminStatCard({
   stat: StatCard;
   loading: boolean;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const {
-    label,
+    labelKey,
     icon: Icon,
     value,
     comma,
@@ -31,7 +42,8 @@ function AdminStatCard({
     prefix,
     suffix,
     trend,
-    foot,
+    footKey,
+    footValues,
   } = stat;
   const target = decimal ? Math.round(value * 10) : value;
   // Hold at the start value until the skeleton clears, then count up on reveal.
@@ -39,14 +51,14 @@ function AdminStatCard({
   const display = decimal
     ? (n / 10).toFixed(1)
     : comma
-      ? n.toLocaleString("en-US")
+      ? fmt.number(n)
       : String(n);
 
   return (
     <div className={styles.statCard}>
       <span className={styles.statLabel}>
         <Icon className={styles.statIcon} aria-hidden />
-        {label}
+        {t(labelKey)}
       </span>
       {loading ? (
         <SkeletonLine height={30} width="68%" style={{ margin: "2px 0 4px" }} />
@@ -61,9 +73,9 @@ function AdminStatCard({
         <span
           className={[styles.trend, styles[`trend_${trend.dir}`]].join(" ")}
         >
-          {trend.label}
+          {TREND_ARROW[trend.dir]} {t(trend.key, trend.values)}
         </span>{" "}
-        {foot}
+        {t(footKey, footValues)}
       </span>
     </div>
   );

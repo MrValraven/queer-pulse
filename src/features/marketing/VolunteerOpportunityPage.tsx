@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { ApiError } from "../../shared/api/client";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
 import { useOpportunity } from "./api/useOpportunity";
 import { useOpportunities } from "./api/useOpportunities";
@@ -16,20 +18,21 @@ import { VolunteerOpportunitySidebar } from "./VolunteerOpportunitySidebar";
 import styles from "./VolunteerOpportunityPage.module.css";
 
 /** Map a failed signup to member-facing copy, distinguishing the two 409 cases. */
-function signupErrorMessage(e: unknown): string {
+function signupErrorMessage(e: unknown, t: TFunction): string {
   if (e instanceof ApiError && e.status === 409) {
     if (/already/i.test(e.message)) {
-      return "You've already signed up for this role.";
+      return t("marketing:volunteerDetail.error.alreadySignedUp");
     }
     if (/full/i.test(e.message)) {
-      return "This opportunity just filled up — every spot is taken.";
+      return t("marketing:volunteerDetail.error.full");
     }
-    return "You've already signed up, or this opportunity is now full.";
+    return t("marketing:volunteerDetail.error.alreadyOrFull");
   }
-  return "Something went wrong sending your interest — please try again.";
+  return t("marketing:volunteerDetail.error.generic");
 }
 
 export function VolunteerOpportunityPage() {
+  const { t } = useTranslation();
   const { slug } = useParams();
   const { data, isLoading } = useOpportunity(slug);
   const { data: list } = useOpportunities();
@@ -53,7 +56,7 @@ export function VolunteerOpportunityPage() {
       {},
       {
         onSuccess: () => setSignedUp(true),
-        onError: (e) => setError(signupErrorMessage(e)),
+        onError: (e) => setError(signupErrorMessage(e, t)),
       },
     );
   };
@@ -79,7 +82,7 @@ export function VolunteerOpportunityPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={routes.volunteer} className={styles.back}>
-          ← All volunteer opportunities
+          {t("marketing:volunteerDetail.backCta")}
         </Link>
 
         <header className={styles.head}>

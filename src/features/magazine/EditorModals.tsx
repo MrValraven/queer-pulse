@@ -1,32 +1,40 @@
 import { useState } from "react";
 import { Modal, Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import {
   EDITORS,
   dueInfo,
   stripEm,
   firstName,
+  STAGE_LABEL_KEY,
   type Piece,
   type Editor,
 } from "./editorDashboard.data";
 import styles from "./EditorDashboardPage.module.css";
 
 const SHORTCUTS: [string, string][] = [
-  ["j / k", "Move between pieces"],
-  ["o", "Open focused piece"],
-  ["c", "Nudge writer of focused piece"],
-  ["y / n / m", "Accept / decline / maybe top pitch"],
-  ["/", "Search"],
-  ["?", "This help"],
+  ["j / k", "magazine:editor.modals.shortcuts.moveBetweenPieces"],
+  ["o", "magazine:editor.modals.shortcuts.openFocusedPiece"],
+  ["c", "magazine:editor.modals.shortcuts.nudgeWriter"],
+  ["y / n / m", "magazine:editor.modals.shortcuts.acceptDeclineMaybe"],
+  ["/", "magazine:editor.modals.shortcuts.search"],
+  ["?", "magazine:editor.modals.shortcuts.thisHelp"],
 ];
 
-function chaseBody(piece: Piece): string {
+function chaseBody(piece: Piece, t: TFunction): string {
   const name = firstName(piece.author);
   const title = stripEm(piece.title);
   if (piece.newVoice) {
-    return `Hi ${name} — no pressure at all, just checking in on “${title}”. How's it feeling? Happy to hop on a call or push the date if that would help. We're really glad to have you in this issue.`;
+    return t("magazine:editor.modals.chase.bodyNewVoice", { name, title });
   }
-  const due = piece.due === "ready" ? "—" : dueInfo(piece.due).label;
-  return `Hi ${name} — gentle nudge on “${title}”, currently at ${piece.stage} and due ${due}. Let me know if anything's getting in the way, and we'll sort it together.`;
+  const due = piece.due === "ready" ? "—" : dueInfo(piece.due, t).label;
+  return t("magazine:editor.modals.chase.bodyReturning", {
+    name,
+    title,
+    stage: t(STAGE_LABEL_KEY[piece.stage]),
+    due,
+  });
 }
 
 /** Nudge/chase-a-writer composer. Softer tone for first-time contributors. */
@@ -39,15 +47,20 @@ export function ChaseModal({
   onClose: () => void;
   onSend: (piece: Piece) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <Modal
-      eyebrow={`Nudge · ${piece.newVoice ? "first-time contributor" : "contributor"}`}
-      title={`Message ${piece.author}`}
+      eyebrow={t(
+        piece.newVoice
+          ? "magazine:editor.modals.chase.eyebrowFirstTime"
+          : "magazine:editor.modals.chase.eyebrow",
+      )}
+      title={t("magazine:editor.modals.chase.title", { name: piece.author })}
       onClose={onClose}
       footer={
         <div className={styles.mActions}>
           <Button variant="ghost" onClick={onClose}>
-            Cancel
+            {t("magazine:editor.modals.chase.cancel")}
           </Button>
           <Button
             variant="primary"
@@ -56,25 +69,26 @@ export function ChaseModal({
               onClose();
             }}
           >
-            Send nudge
+            {t("magazine:editor.modals.chase.send")}
           </Button>
         </div>
       }
     >
       {piece.newVoice && (
         <div className={styles.mHint}>
-          Softer tone — this is one of their first pieces with us.
+          {t("magazine:editor.modals.chase.softHint")}
         </div>
       )}
       <textarea
         className={styles.mText}
         rows={6}
-        defaultValue={chaseBody(piece)}
-        aria-label="Message to contributor"
+        defaultValue={chaseBody(piece, t)}
+        aria-label={t("magazine:editor.modals.chase.messageAria")}
       />
       <div className={styles.mRow}>
         <label className={styles.mCheck}>
-          <input type="checkbox" defaultChecked /> Offer a deadline extension
+          <input type="checkbox" defaultChecked />{" "}
+          {t("magazine:editor.modals.chase.offerExtension")}
         </label>
       </div>
     </Modal>
@@ -91,22 +105,28 @@ export function HandoffModal({
   onClose: () => void;
   onHandoff: (editor: Editor) => void;
 }) {
+  const { t } = useTranslation();
   const others = EDITORS.filter((e) => e !== piece.editor);
   const [to, setTo] = useState<Editor>(others[0] ?? "Marta");
-  const note =
+  const stageLabel = t(STAGE_LABEL_KEY[piece.stage]);
+  const note = t(
     piece.blocked === "writer"
-      ? `@${to} handing this over — it's at ${piece.stage}, still waiting on the writer. Shout if you want context.`
-      : `@${to} handing this over — it's at ${piece.stage}, ready for your eyes. Shout if you want context.`;
+      ? "magazine:editor.modals.handoff.noteWriterWaiting"
+      : "magazine:editor.modals.handoff.noteReady",
+    { editor: to, stage: stageLabel },
+  );
 
   return (
     <Modal
-      eyebrow="Hand off"
-      title={`Pass “${stripEm(piece.title)}”`}
+      eyebrow={t("magazine:editor.modals.handoff.eyebrow")}
+      title={t("magazine:editor.modals.handoff.title", {
+        title: stripEm(piece.title),
+      })}
       onClose={onClose}
       footer={
         <div className={styles.mActions}>
           <Button variant="ghost" onClick={onClose}>
-            Cancel
+            {t("magazine:editor.modals.handoff.cancel")}
           </Button>
           <Button
             variant="primary"
@@ -115,13 +135,13 @@ export function HandoffModal({
               onClose();
             }}
           >
-            Hand off
+            {t("magazine:editor.modals.handoff.cta")}
           </Button>
         </div>
       }
     >
       <label className={styles.mLabel} htmlFor="handoff-to">
-        Hand to
+        {t("magazine:editor.modals.handoff.handTo")}
       </label>
       <select
         id="handoff-to"
@@ -136,7 +156,7 @@ export function HandoffModal({
         ))}
       </select>
       <label className={styles.mLabel} htmlFor="handoff-note">
-        Note
+        {t("magazine:editor.modals.handoff.noteLabel")}
       </label>
       <textarea
         id="handoff-note"
@@ -151,24 +171,25 @@ export function HandoffModal({
 
 /** Keyboard-shortcut reference. */
 export function ShortcutsModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   return (
     <Modal
-      eyebrow="Keyboard"
-      title="Shortcuts"
+      eyebrow={t("magazine:editor.modals.shortcuts.eyebrow")}
+      title={t("magazine:editor.modals.shortcuts.title")}
       onClose={onClose}
       footer={
         <div className={styles.mActions}>
           <Button variant="primary" onClick={onClose}>
-            Got it
+            {t("magazine:editor.modals.shortcuts.gotIt")}
           </Button>
         </div>
       }
     >
       <div className={styles.kbGrid}>
-        {SHORTCUTS.map(([k, desc]) => (
+        {SHORTCUTS.map(([k, descKey]) => (
           <div key={k} style={{ display: "contents" }}>
             <div className={styles.kbK}>{k}</div>
-            <div className={styles.kbD}>{desc}</div>
+            <div className={styles.kbD}>{t(descKey)}</div>
           </div>
         ))}
       </div>

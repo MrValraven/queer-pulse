@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Avatar } from "../../shared/components/ui";
 import { linkToPath } from "../../app/routeMap";
-import { KIND_LABELS } from "./subprofile-kinds";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import type { SubprofileCardDTO } from "./api/subprofiles.api";
 import styles from "./SubprofileCard.module.css";
 
@@ -28,6 +29,7 @@ export function SubprofileCard({
   card: SubprofileCardDTO;
   to?: string;
 }) {
+  const { t } = useTranslation();
   return (
     <Link className={styles.card} to={to ?? linkToPath(`/p/${card.handle}`)}>
       <Avatar
@@ -38,7 +40,7 @@ export function SubprofileCard({
         className={styles.avatar}
       />
       <div className={styles.body}>
-        <span className={styles.kindBadge}>{KIND_LABELS[card.kind]}</span>
+        <span className={styles.kindBadge}>{t(KIND_LABEL_KEYS[card.kind])}</span>
         <span className={styles.name}>{card.displayName}</span>
         {card.tagline && <span className={styles.tagline}>{card.tagline}</span>}
       </div>

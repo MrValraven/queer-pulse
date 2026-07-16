@@ -1,12 +1,22 @@
 import { useMemo, useRef, useState, type RefObject } from "react";
 import { sx } from "./myEvents.styles";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { useMyEvents } from "./MyEventsContext";
-import { MON, MONFULL, DOW } from "./myEvents.data";
 import { parseDate, ymd, dotClass } from "./myEvents.helpers";
 import { TODAY } from "./myEvents.data";
 import type { MyEvent } from "./myEvents.types";
 
-const WEEK_HEAD = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+/** Mon–Sun short weekday labels for the month grid's header row, localized. */
+function weekHeadLabels(fmt: Formatters): string[] {
+  // 2024-01-01 is a Monday — a stable anchor to walk a Mon..Sun week from.
+  const monday = new Date(2024, 0, 1);
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(monday);
+    d.setDate(d.getDate() + i);
+    return fmt.date(d, { weekday: "short" });
+  });
+}
 
 /** Distinct category dots for a given day. */
 function Dots({ events }: { events: MyEvent[] }) {
@@ -34,6 +44,9 @@ export function CalendarGrid({
 }: {
   cardRef: RefObject<HTMLElement | null>;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const weekHead = useMemo(() => weekHeadLabels(fmt), [fmt]);
   const {
     events,
     viewY,
@@ -74,12 +87,13 @@ export function CalendarGrid({
   if (calView === "year") {
     return (
       <div className={sx("cal-grid cal-year")} ref={gridRef}>
-        {MON.map((name, m) => {
+        {Array.from({ length: 12 }, (_, m) => {
           const evs = events.filter((e) => {
             const dt = parseDate(e.date);
             return dt.getFullYear() === viewY && dt.getMonth() === m;
           });
           const now = viewY === TODAY.getFullYear() && m === TODAY.getMonth();
+          const name = fmt.date(new Date(viewY, m, 1), { month: "short" });
           return (
             <button
               key={m}
@@ -117,7 +131,9 @@ export function CalendarGrid({
           const inner = (
             <>
               <div className={sx("cw-date")}>
-                <div className={sx("cw-dow")}>{DOW[dt.getDay()]}</div>
+                <div className={sx("cw-dow")}>
+                  {fmt.date(dt, { weekday: "short" })}
+                </div>
                 <div className={sx("cw-num")}>{dt.getDate()}</div>
               </div>
               <div className={sx("cw-evs")}>
@@ -129,7 +145,9 @@ export function CalendarGrid({
                     </div>
                   ))
                 ) : (
-                  <div className={sx("cw-none")}>Nothing planned</div>
+                  <div className={sx("cw-none")}>
+                    {t("myevents:calendar.nothingPlanned")}
+                  </div>
                 )}
               </div>
             </>
@@ -167,8 +185,12 @@ export function CalendarGrid({
 
   return (
     <>
-      <div className={sx("cal-grid")} ref={gridRef} aria-label="Event calendar">
-        {WEEK_HEAD.map((d) => (
+      <div
+        className={sx("cal-grid")}
+        ref={gridRef}
+        aria-label={t("myevents:calendar.gridAria")}
+      >
+        {weekHead.map((d) => (
           <div key={d} className={sx("cal-dow")} aria-hidden>
             {d}
           </div>
@@ -183,7 +205,19 @@ export function CalendarGrid({
           const evs = byDate[ds] || [];
           const isTd = dt.getTime() === TODAY.getTime();
           const sel = selectedDate === ds;
-          const label = `${dn} ${MONFULL[viewM]} ${viewY}${isTd ? ", today" : ""}, ${evs.length ? `${evs.length} event${evs.length > 1 ? "s" : ""}` : "no events"}`;
+          const dayLabel = fmt.date(dt, {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          });
+          const eventsPart = evs.length
+            ? t("myevents:calendar.cellEventCount", { count: evs.length })
+            : t("myevents:calendar.cellNoEvents");
+          const label =
+            dayLabel +
+            (isTd ? t("myevents:calendar.cellAriaToday") : "") +
+            ", " +
+            eventsPart;
           return (
             <button
               key={ds}

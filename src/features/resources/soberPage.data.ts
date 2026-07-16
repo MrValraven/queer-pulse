@@ -14,21 +14,33 @@ export interface SoberEvent {
   d: string;
   m: string;
   type: EventType;
-  typeLabel: string;
   name: string;
   meta: SoberMeta[];
   going?: boolean;
 }
 
-export const REASONS = [
-  "In recovery",
-  "Sober-curious",
-  "Medication",
-  "Health reasons",
-  "Religious practice",
-  "Personal preference",
-  "Just don't feel like it",
+/**
+ * i18n Pattern A. Reason chips are platform-authored chrome. `EVENTS` below
+ * keep organizer-authored `name`/`meta` in English (content, per the scope
+ * rule); `typeLabel` used to be repeated per-event chrome baked into the mock
+ * — lifted out to `TYPE_LABEL_KEY` since it's really a function of `type`.
+ */
+export const REASON_KEYS = [
+  "resources:sober.reason.recovery",
+  "resources:sober.reason.soberCurious",
+  "resources:sober.reason.medication",
+  "resources:sober.reason.health",
+  "resources:sober.reason.religious",
+  "resources:sober.reason.preference",
+  "resources:sober.reason.justDont",
 ];
+
+export const TYPE_LABEL_KEY: Record<EventType, string> = {
+  Social: "resources:sober.type.alcoholFree",
+  Support: "resources:sober.type.supportGroup",
+  Outdoors: "resources:sober.type.alcoholFree",
+  Culture: "resources:sober.type.alcoholFree",
+};
 
 export const EVENTS: SoberEvent[] = [
   {
@@ -36,7 +48,6 @@ export const EVENTS: SoberEvent[] = [
     d: "08",
     m: "Jun",
     type: "Social",
-    typeLabel: "Alcohol-free",
     name: "Morning walk — Monsanto Forest Park",
     meta: [
       { icon: FiMapPin, text: "Monsanto" },
@@ -50,7 +61,6 @@ export const EVENTS: SoberEvent[] = [
     d: "14",
     m: "Jun",
     type: "Culture",
-    typeLabel: "Alcohol-free",
     name: "Book club meetup — Giovanni's Room",
     meta: [
       { icon: FiCoffee, text: "Linha d'Água café, Príncipe Real" },
@@ -63,7 +73,6 @@ export const EVENTS: SoberEvent[] = [
     d: "21",
     m: "Jun",
     type: "Support",
-    typeLabel: "Support group",
     name: "Sober & Queer — weekly peer support",
     meta: [
       { icon: FiMapPin, text: "Online (private link sent on RSVP)" },
@@ -76,7 +85,6 @@ export const EVENTS: SoberEvent[] = [
     d: "28",
     m: "Jun",
     type: "Outdoors",
-    typeLabel: "Alcohol-free",
     name: "Pride picnic — alcohol-free zone",
     meta: [
       { icon: FiMapPin, text: "Jardim da Estrela" },
@@ -89,7 +97,6 @@ export const EVENTS: SoberEvent[] = [
     d: "05",
     m: "Jul",
     type: "Social",
-    typeLabel: "Alcohol-free",
     name: "Film night — Portrait of a Lady on Fire",
     meta: [
       { icon: FiMapPin, text: "Member's flat, Mouraria" },
@@ -108,16 +115,16 @@ export const TYPE_CLASS: Record<EventType, string> = {
 
 export const STATS = [
   {
-    n: "2–3×",
-    l: "LGBTQ+ people are 2–3x more likely to experience alcohol dependency than the general population (Public Health England, 2017)",
+    nKey: "resources:sober.stat.rate.n",
+    lKey: "resources:sober.stat.rate.label",
   },
   {
-    n: "Very few",
-    l: "queer social spaces are alcohol-free or actively sober-welcoming — despite the need",
+    nKey: "resources:sober.stat.fewSpaces.n",
+    lKey: "resources:sober.stat.fewSpaces.label",
   },
   {
-    n: "This changes",
-    l: "when community spaces deliberately include sober options — and when sober people don't have to be invisible",
+    nKey: "resources:sober.stat.changes.n",
+    lKey: "resources:sober.stat.changes.label",
   },
 ];
 
@@ -180,27 +187,27 @@ export const VOICES = [
 
 export const RECOVERY_OPTS = [
   {
-    title: "Sober & Queer peer group",
-    desc: "A private, moderated space within QueerPulse for people in recovery. Weekly online meeting, text channel, and occasional in-person gatherings. No particular programme — all approaches welcome.",
-    linkLabel: "Join the group →",
+    titleKey: "resources:sober.recovery.peerGroup.title",
+    descKey: "resources:sober.recovery.peerGroup.desc",
+    linkLabelKey: "resources:sober.recovery.peerGroup.linkLabel",
     linkKey: "COMMUNITIES",
   },
   {
-    title: "One-to-one — talk to a peer",
-    desc: "Request a conversation with a community member who has offered to talk to people navigating sobriety. No counsellors — just someone who's been through something similar.",
-    linkLabel: "Find a peer →",
+    titleKey: "resources:sober.recovery.oneToOne.title",
+    descKey: "resources:sober.recovery.oneToOne.desc",
+    linkLabelKey: "resources:sober.recovery.oneToOne.linkLabel",
     linkKey: "MENTORSHIP",
   },
   {
-    title: "Queer-affirming therapists",
-    desc: "The wellbeing directory includes therapists who specialise in addiction and queer identity — because those two things aren't separate.",
-    linkLabel: "Find a therapist →",
+    titleKey: "resources:sober.recovery.therapists.title",
+    descKey: "resources:sober.recovery.therapists.desc",
+    linkLabelKey: "resources:sober.recovery.therapists.linkLabel",
     linkKey: "WELLBEING",
   },
   {
-    title: "External resources",
-    desc: "APDES (harm reduction), AAPT (AA Portugal), SMART Recovery Portugal — for when community support isn't enough on its own.",
-    linkLabel: "See resources →",
+    titleKey: "resources:sober.recovery.external.title",
+    descKey: "resources:sober.recovery.external.desc",
+    linkLabelKey: "resources:sober.recovery.external.linkLabel",
     linkKey: "RESOURCES",
   },
 ];

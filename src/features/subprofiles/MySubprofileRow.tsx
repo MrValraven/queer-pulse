@@ -4,7 +4,8 @@ import {
   Button,
   VisibilityBadge,
 } from "../../shared/components/ui";
-import { KIND_LABELS } from "./subprofile-kinds";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { LINK_BADGE, STATUS_BADGE } from "./mySubprofiles.data";
 import styles from "./MySubprofilesPage.module.css";
@@ -29,6 +30,7 @@ export function MySubprofileRow({
   subprofile: SubprofileView;
   onDelete: (subprofile: SubprofileView) => void;
 }) {
+  const { t } = useTranslation();
   const status = STATUS_BADGE[subprofile.status];
   const link = LINK_BADGE[subprofile.linkVisibility];
   const editPath = `/account/subprofiles/${subprofile.id}/edit`;
@@ -43,23 +45,23 @@ export function MySubprofileRow({
       />
       <div className={styles.rowMain}>
         <h2 className={styles.rowName}>
-          {subprofile.displayName || "Untitled persona"}
+          {subprofile.displayName || t("subprofiles:mine.untitled")}
         </h2>
         <div className={styles.rowBadges}>
-          <Badge tone="ghost">{KIND_LABELS[subprofile.kind]}</Badge>
+          <Badge tone="ghost">{t(KIND_LABEL_KEYS[subprofile.kind])}</Badge>
           <Badge tone={status.tone} dot>
-            {status.label}
+            {t(status.labelKey)}
           </Badge>
-          <Badge tone={link.tone}>{link.label}</Badge>
+          <Badge tone={link.tone}>{t(link.labelKey)}</Badge>
           <VisibilityBadge mode={subprofile.visibility} />
         </div>
       </div>
       <div className={styles.rowActions}>
         <Button variant="ghost" to={editPath}>
-          Edit
+          {t("subprofiles:mine.rowEdit")}
         </Button>
         <Button variant="ghost" onClick={() => onDelete(subprofile)}>
-          Delete
+          {t("subprofiles:mine.rowDelete")}
         </Button>
       </div>
     </article>

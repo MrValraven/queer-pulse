@@ -6,6 +6,7 @@ import {
   Tag,
   TagRow,
 } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
   SubprofileItemView,
   SubprofileSectionView,
@@ -32,6 +33,7 @@ function ItemCard({
   section: SubprofileSectionView;
   item: SubprofileItemView;
 }) {
+  const { t } = useTranslation();
   const hasImage = shows(section, item, "imageUrl");
   return (
     <article className={styles.card}>
@@ -75,7 +77,7 @@ function ItemCard({
             target="_blank"
             rel="noreferrer noopener"
           >
-            Visit <FiExternalLink aria-hidden />
+            {t("subprofiles:page.visit")} <FiExternalLink aria-hidden />
           </a>
         )}
       </div>
@@ -112,6 +114,7 @@ export function SubprofileSections({
 }: {
   sections: SubprofileSectionView[];
 }) {
+  const { t } = useTranslation();
   if (sections.length === 0) return null;
   return (
     <div className={styles.sections}>
@@ -123,7 +126,7 @@ export function SubprofileSections({
               title={
                 <span className={styles.headTitle}>
                   <Icon aria-hidden className={styles.headIcon} />
-                  {section.label}
+                  {t(section.labelKey)}
                 </span>
               }
             />

@@ -2,8 +2,24 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { Avatar } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { me, type ChatMessage, type Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
+
+/**
+ * `day` is a stable canonical id ("Today" / "Yesterday", or an already
+ * locale-formatted date string from the adapter) — label-key indirection so
+ * only "Today"/"Yesterday" (the two chrome buckets computed client-side)
+ * resolve through the catalog; any other value is a date string and rendered
+ * as-is (see the sweep report for the known gap in the rest of the date
+ * formatting here).
+ */
+function dayHeading(day: string, t: TFunction): string {
+  if (day === "Today") return t("messages:day.today");
+  if (day === "Yesterday") return t("messages:day.yesterday");
+  return day;
+}
 
 interface ConversationPanelProps {
   active: Conversation;
@@ -25,6 +41,7 @@ export function ConversationPanel({
   blocked = false,
 }: ConversationPanelProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const areaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,8 +57,14 @@ export function ConversationPanel({
           <div className={styles.ctbName}>{active.name}</div>
           <div className={styles.ctbMeta}>
             {active.official
-              ? "Official · Cannot reply to this thread"
-              : `${active.pronouns}${active.connectedSince ? ` · Connected since ${active.connectedSince}` : ""}`}
+              ? t("messages:conversation.officialMeta")
+              : `${active.pronouns}${
+                  active.connectedSince
+                    ? t("messages:conversation.connectedSinceSuffix", {
+                        date: active.connectedSince,
+                      })
+                    : ""
+                }`}
           </div>
         </div>
         {!active.official && (
@@ -50,7 +73,7 @@ export function ConversationPanel({
             className={styles.ctbLink}
             onClick={() => navigate(routes.accountProfile)}
           >
-            View profile →
+            {t("messages:conversation.viewProfile")} →
           </button>
         )}
       </div>
@@ -58,7 +81,7 @@ export function ConversationPanel({
       <div className={styles.area} ref={areaRef}>
         {messageGroups.map((group) => (
           <div key={group.day}>
-            <div className={styles.dayLabel}>{group.day}</div>
+            <div className={styles.dayLabel}>{dayHeading(group.day, t)}</div>
             {group.items.map((message, index) => {
               const isSent = message.from === "me";
               return (
@@ -96,18 +119,21 @@ export function ConversationPanel({
 
       {active.official ? (
         <div className={styles.officialBar}>
-          This is an automated thread — replies aren't monitored.
+          {t("messages:conversation.officialNotice")}
         </div>
       ) : blocked ? (
         <div className={styles.officialBar}>
-          You blocked {active.name.split(" ")[0]}. Unblock them from their
-          profile to send a message.
+          {t("messages:conversation.blockedNotice", {
+            name: active.name.split(" ")[0]!,
+          })}
         </div>
       ) : (
         <div className={styles.composer}>
           <textarea
             className={styles.composerTa}
-            placeholder={`Message ${active.name.split(" ")[0]}…`}
+            placeholder={t("messages:conversation.composerPlaceholder", {
+              name: active.name.split(" ")[0]!,
+            })}
             value={draft}
             rows={1}
             onChange={(event) => onDraftChange(event.target.value)}
@@ -124,7 +150,7 @@ export function ConversationPanel({
               .filter(Boolean)
               .join(" ")}
             onClick={onSend}
-            aria-label="Send"
+            aria-label={t("messages:conversation.send")}
           >
             <svg
               width={16}

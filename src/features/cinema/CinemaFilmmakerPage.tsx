@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { FiFilm } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { FILMMAKERS } from "./cinemaFilmmaker.data";
 import { FilmmakerHero } from "./FilmmakerHero";
@@ -12,6 +14,7 @@ import styles from "./CinemaFilmmakerPage.module.css";
 
 export function CinemaFilmmakerPage() {
   const { slug = "" } = useParams();
+  const { t } = useTranslation();
   const filmmaker = FILMMAKERS[slug];
   const tipRef = useRef<HTMLDivElement>(null);
 
@@ -21,9 +24,9 @@ export function CinemaFilmmakerPage() {
         <div className={styles.body}>
           <EmptyState
             icon={<FiFilm />}
-            title="Filmmaker not found"
-            description="This filmmaker page doesn't exist or has moved. Browse the cinema to find work by queer filmmakers across the co-op."
-            action={{ label: "Back to the cinema", to: routes.cinema }}
+            title={t("cinema:filmmaker.notFound.title")}
+            description={t("cinema:filmmaker.notFound.description")}
+            action={{ label: t("cinema:curator.notFound.backCta"), to: routes.cinema }}
           />
         </div>
       </PageShell>
@@ -35,14 +38,14 @@ export function CinemaFilmmakerPage() {
       <section className={styles.crumb}>
         <div className="wrap">
           <div className={styles.crumbRow}>
-            <Link to={routes.cinema}>Cinema</Link>
+            <Link to={routes.cinema}>{t("cinema:brand.tag")}</Link>
             <span className={styles.sep}>›</span>
             <span className={styles.cur}>
               {filmmaker.namePre}
               {filmmaker.nameEm}
             </span>
             <Link to={routes.cinema} className={styles.crumbBack}>
-              ← Back to the cinema
+              {t("cinema:filmmaker.crumb.backCta")}
             </Link>
           </div>
         </div>
@@ -67,14 +70,15 @@ export function CinemaFilmmakerPage() {
 
       <Outro
         title={
-          <>
-            Make something. <em>Get paid.</em>
-          </>
+          <Translation
+            i18nKey="cinema:filmmaker.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Submit your film to the cinema. The split is the same for everyone."
+        sub={t("cinema:filmmaker.outro.sub")}
       >
         <Button size="lg" to={routes.studioUpload}>
-          Submit your film →
+          {t("cinema:ledger.submitCta")}
         </Button>
       </Outro>
     </PageShell>

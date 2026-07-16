@@ -2,7 +2,8 @@ import { useState } from "react";
 import { FiChevronDown, FiLock, FiStar } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Button } from "../../shared/components/ui";
-import { FREQS } from "./sustainer.pricing";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { FREQS, TIER_LABEL_KEYS } from "./sustainer.pricing";
 import type { SustainerStore } from "./useSustainer";
 import styles from "./sustainer.module.css";
 
@@ -18,6 +19,7 @@ export function PaymentCheckout({
   store: SustainerStore;
   onComplete: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [method, setMethod] = useState<Method>("card");
   const [moreOpen, setMoreOpen] = useState(false);
@@ -35,7 +37,7 @@ export function PaymentCheckout({
 
   const f = FREQS[store.freq];
   const total = store.baseAmount + (store.solid ? store.solidAmount : 0);
-  const short = store.freq === "once" ? "" : f.short;
+  const short = store.freq === "once" ? "" : (f.short ?? t(f.shortKey!));
   const set = (k: keyof typeof fields, v: string) =>
     setFields((prev) => ({ ...prev, [k]: v }));
 
@@ -57,7 +59,7 @@ export function PaymentCheckout({
 
   function submit() {
     if ((method === "card" || method === "sepa" || store.gift) && !validate()) {
-      showToast("Please check the highlighted fields.", "error");
+      showToast(t("support:checkout.validationToast"), "error");
       return;
     }
     const delay = method === "card" || method === "sepa" ? 1300 : 700;
@@ -69,6 +71,11 @@ export function PaymentCheckout({
     `${styles.payField} ${errs.has(k) ? styles.error : ""}`;
   const inv = (k: string) => (errs.has(k) ? (styles.invalid ?? "") : "");
 
+  const tierNameLabel =
+    store.selectedName === "Custom"
+      ? t("support:recap.customName")
+      : t(TIER_LABEL_KEYS[store.selectedName as keyof typeof TIER_LABEL_KEYS]);
+
   return (
     <>
       <div className={styles.pcTier}>
@@ -77,27 +84,25 @@ export function PaymentCheckout({
             <div className={styles.pcTierName}>
               {store.gift
                 ? store.selectedName === "Custom"
-                  ? "Gift membership"
-                  : `${store.selectedName} (gift)`
-                : store.selectedName === "Custom"
-                  ? "Your contribution"
-                  : store.selectedName}
+                  ? t("support:checkout.giftMembership")
+                  : `${t(TIER_LABEL_KEYS[store.selectedName as keyof typeof TIER_LABEL_KEYS])}${t("support:modal.receipt.giftSuffix")}`
+                : tierNameLabel}
             </div>
-            <div className={styles.pcTierSub}>{f.sub}</div>
+            <div className={styles.pcTierSub}>{t(f.subKey)}</div>
           </div>
           <div className={styles.pcTierPrice}>
             {store.money(store.baseAmount)}
-            <small>{f.per}</small>
+            <small>{t(f.perKey)}</small>
           </div>
         </div>
         {store.solid && (
           <>
             <div className={styles.pcLine}>
-              <span>Sponsor a free membership</span>
+              <span>{t("support:checkout.solidLine")}</span>
               <span>+ {store.money(store.solidAmount)}</span>
             </div>
             <div className={`${styles.pcLine} ${styles.total}`}>
-              <span>Total today</span>
+              <span>{t("support:checkout.totalToday")}</span>
               <span>
                 {store.money(total)}
                 {short}
@@ -114,7 +119,9 @@ export function PaymentCheckout({
 
       {store.gift && (
         <div className={err("gift")}>
-          <label htmlFor="giftEmail">Recipient's email</label>
+          <label htmlFor="giftEmail">
+            {t("support:checkout.recipientEmailLabel")}
+          </label>
           <input
             id="giftEmail"
             type="email"
@@ -124,7 +131,7 @@ export function PaymentCheckout({
             value={fields.gift}
             onChange={(e) => set("gift", e.target.value)}
           />
-          <div className={styles.fieldErr}>Enter a valid email.</div>
+          <div className={styles.fieldErr}>{t("support:checkout.emailErr")}</div>
         </div>
       )}
 
@@ -134,7 +141,7 @@ export function PaymentCheckout({
       {method === "sepa" && (
         <div className={styles.pmPanel}>
           <div className={err("iban")}>
-            <label htmlFor="iban">IBAN</label>
+            <label htmlFor="iban">{t("support:checkout.ibanLabel")}</label>
             <input
               id="iban"
               placeholder="PT50 0002 0123 1234 5678 9015 4"
@@ -142,10 +149,12 @@ export function PaymentCheckout({
               value={fields.iban}
               onChange={(e) => set("iban", e.target.value.toUpperCase())}
             />
-            <div className={styles.fieldErr}>Enter a valid IBAN.</div>
+            <div className={styles.fieldErr}>{t("support:checkout.ibanErr")}</div>
           </div>
           <div className={err("acc")}>
-            <label htmlFor="acc">Account holder</label>
+            <label htmlFor="acc">
+              {t("support:checkout.accountHolderLabel")}
+            </label>
             <input
               id="acc"
               placeholder="Sofia Rodrigues"
@@ -154,7 +163,7 @@ export function PaymentCheckout({
               onChange={(e) => set("acc", e.target.value)}
             />
             <div className={styles.fieldErr}>
-              Enter the account holder name.
+              {t("support:checkout.accountHolderErr")}
             </div>
           </div>
         </div>
@@ -162,28 +171,28 @@ export function PaymentCheckout({
       {method === "apple" && (
         <div className={styles.pmPanel}>
           <p className={styles.walletNote}>
-            Fast, private checkout with Touch ID or Face ID.
+            {t("support:checkout.applePayNote")}
           </p>
           <button
             type="button"
             className={`${styles.walletBtn} ${styles.walletApple}`}
             onClick={submit}
           >
-            Pay with Apple Pay
+            {t("support:checkout.applePayCta")}
           </button>
         </div>
       )}
       {method === "paypal" && (
         <div className={styles.pmPanel}>
           <p className={styles.walletNote}>
-            You'll be redirected to PayPal to confirm.
+            {t("support:checkout.paypalNote")}
           </p>
           <button
             type="button"
             className={`${styles.walletBtn} ${styles.walletPaypal}`}
             onClick={submit}
           >
-            Continue with PayPal
+            {t("support:checkout.paypalCta")}
           </button>
         </div>
       )}
@@ -207,17 +216,15 @@ export function PaymentCheckout({
           disabled={loading}
         >
           {loading && <span className={styles.spinner} aria-hidden />}
-          Start supporting — {store.money(total)}
-          {short}
+          {t("support:checkout.startCta", {
+            amount: store.money(total) + short,
+          })}
         </Button>
       )}
       <div className={styles.payStripe}>
-        <FiLock size={12} aria-hidden /> Powered by Stripe · Secure payment
+        <FiLock size={12} aria-hidden /> {t("support:checkout.stripeNote")}
       </div>
-      <p className={styles.payFineprint}>
-        By continuing you agree to our terms. Cancel any time; 14-day refund on
-        request.
-      </p>
+      <p className={styles.payFineprint}>{t("support:checkout.fineprint")}</p>
     </>
   );
 }
@@ -234,6 +241,7 @@ function CardFields({
   err: (k: string) => string;
   inv: (k: string) => string;
 }) {
+  const { t } = useTranslation();
   const fmtCard = (v: string) =>
     v
       .replace(/\D/g, "")
@@ -247,7 +255,7 @@ function CardFields({
   return (
     <div className={styles.pmPanel}>
       <div className={err("num")}>
-        <label htmlFor="cardNum">Card number</label>
+        <label htmlFor="cardNum">{t("support:checkout.cardNumberLabel")}</label>
         <input
           id="cardNum"
           inputMode="numeric"
@@ -258,12 +266,12 @@ function CardFields({
           onChange={(e) => set("num", fmtCard(e.target.value))}
         />
         <div className={styles.fieldErr}>
-          Enter a valid 16-digit card number.
+          {t("support:checkout.cardNumberErr")}
         </div>
       </div>
       <div className={styles.payGrid}>
         <div className={err("exp")}>
-          <label htmlFor="cardExp">Expiry</label>
+          <label htmlFor="cardExp">{t("support:checkout.expiryLabel")}</label>
           <input
             id="cardExp"
             inputMode="numeric"
@@ -276,7 +284,7 @@ function CardFields({
           <div className={styles.fieldErr}>MM / YY</div>
         </div>
         <div className={err("cvc")}>
-          <label htmlFor="cardCvc">CVC</label>
+          <label htmlFor="cardCvc">{t("support:checkout.cvcLabel")}</label>
           <input
             id="cardCvc"
             inputMode="numeric"
@@ -288,11 +296,11 @@ function CardFields({
               set("cvc", e.target.value.replace(/\D/g, "").slice(0, 4))
             }
           />
-          <div className={styles.fieldErr}>3–4 digits</div>
+          <div className={styles.fieldErr}>{t("support:checkout.cvcErr")}</div>
         </div>
       </div>
       <div className={err("name")}>
-        <label htmlFor="cardName">Name on card</label>
+        <label htmlFor="cardName">{t("support:checkout.nameOnCardLabel")}</label>
         <input
           id="cardName"
           autoComplete="cc-name"
@@ -301,7 +309,9 @@ function CardFields({
           value={fields.name}
           onChange={(e) => set("name", e.target.value)}
         />
-        <div className={styles.fieldErr}>Enter the name on the card.</div>
+        <div className={styles.fieldErr}>
+          {t("support:checkout.nameOnCardErr")}
+        </div>
       </div>
     </div>
   );
@@ -319,10 +329,11 @@ function MethodSwitcher({
   onToggleMore: () => void;
   onPick: (m: Method) => void;
 }) {
-  const alts: { key: Method; label: string }[] = [
-    { key: "apple", label: "Apple Pay" },
-    { key: "paypal", label: "PayPal" },
-    { key: "sepa", label: "SEPA" },
+  const { t } = useTranslation();
+  const alts: { key: Method; labelKey: string }[] = [
+    { key: "apple", labelKey: "support:checkout.method.applePay" },
+    { key: "paypal", labelKey: "support:checkout.method.paypal" },
+    { key: "sepa", labelKey: "support:checkout.method.sepa" },
   ];
   if (method !== "card") {
     return (
@@ -331,7 +342,7 @@ function MethodSwitcher({
         className={styles.pmBack}
         onClick={() => onPick("card")}
       >
-        ‹ Pay by card instead
+        {t("support:checkout.backToCard")}
       </button>
     );
   }
@@ -342,7 +353,7 @@ function MethodSwitcher({
         className={`${styles.pmMoreToggle} ${moreOpen ? styles.open : ""}`}
         onClick={onToggleMore}
       >
-        More ways to pay{" "}
+        {t("support:checkout.moreWaysToPay")}{" "}
         <span className={styles.chev}>
           <FiChevronDown aria-hidden />
         </span>
@@ -356,7 +367,7 @@ function MethodSwitcher({
               className={styles.pmTab}
               onClick={() => onPick(a.key)}
             >
-              {a.label}
+              {t(a.labelKey)}
             </button>
           ))}
         </div>

@@ -1,41 +1,45 @@
 import type { Cause, Commit } from "./api/volunteering.api";
 
-/** Cause options for the create form — value is the lowercase API cause. */
-export const CAUSE_OPTIONS: { value: Cause; label: string }[] = [
-  { value: "rights", label: "LGBTQ+ Rights" },
-  { value: "health", label: "Health & Wellbeing" },
-  { value: "youth", label: "Youth" },
-  { value: "housing", label: "Housing" },
-  { value: "arts", label: "Arts & Culture" },
+/** Cause options for the create form — value is the lowercase API cause;
+ *  labelKey resolves via t() at render. */
+export const CAUSE_OPTIONS: { value: Cause; labelKey: string }[] = [
+  { value: "rights", labelKey: "marketing:postOpportunity.cause.rights" },
+  { value: "health", labelKey: "marketing:postOpportunity.cause.health" },
+  { value: "youth", labelKey: "marketing:postOpportunity.cause.youth" },
+  { value: "housing", labelKey: "marketing:postOpportunity.cause.housing" },
+  { value: "arts", labelKey: "marketing:postOpportunity.cause.arts" },
 ];
 
 /** Commitment level options with a short honesty line under each. */
-export const COMMIT_OPTIONS: { value: Commit; label: string; hint: string }[] =
-  [
-    {
-      value: "low",
-      label: "Low commitment",
-      hint: "A couple of flexible hours a week, no fixed term.",
-    },
-    {
-      value: "medium",
-      label: "Medium commitment",
-      hint: "A regular shift and a minimum term — consistency matters.",
-    },
-  ];
+export const COMMIT_OPTIONS: {
+  value: Commit;
+  labelKey: string;
+  hintKey: string;
+}[] = [
+  {
+    value: "low",
+    labelKey: "marketing:postOpportunity.commit.low.label",
+    hintKey: "marketing:postOpportunity.commit.low.hint",
+  },
+  {
+    value: "medium",
+    labelKey: "marketing:postOpportunity.commit.medium.label",
+    hintKey: "marketing:postOpportunity.commit.medium.hint",
+  },
+];
 
 /** Tips shown in the sidebar while filling out the form. */
-export const POST_TIPS: { title: string; body: string }[] = [
+export const POST_TIPS: { titleKey: string; bodyKey: string }[] = [
   {
-    title: "Be honest about the ask",
-    body: "Volunteers stay when the commitment matches what you promised. Spell out the hours, the term, and any training up front.",
+    titleKey: "marketing:postOpportunity.tip1.title",
+    bodyKey: "marketing:postOpportunity.tip1.body",
   },
   {
-    title: "Say who it's good for",
-    body: "The best roles name the person they need — their temperament, not just their CV. It helps the right people self-select in.",
+    titleKey: "marketing:postOpportunity.tip2.title",
+    bodyKey: "marketing:postOpportunity.tip2.body",
   },
   {
-    title: "What happens after you post",
-    body: "Your role appears on the volunteer board immediately. Interested members sign up from the detail page, and you'll see the roster there.",
+    titleKey: "marketing:postOpportunity.tip3.title",
+    bodyKey: "marketing:postOpportunity.tip3.body",
   },
 ];

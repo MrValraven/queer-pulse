@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import s from "./StudioRightsPage.module.css";
 
 interface StudioTakedownModalProps {
@@ -21,6 +23,7 @@ export function StudioTakedownModal({
   onConfirm,
   onClose,
 }: StudioTakedownModalProps) {
+  const { t } = useTranslation();
   useScrollLock();
 
   useEffect(() => {
@@ -42,23 +45,23 @@ export function StudioTakedownModal({
         className={s.modal}
         role="dialog"
         aria-modal="true"
-        aria-label={`Confirm takedown of ${title}`}
+        aria-label={t("studio:rights.modal.confirmAria", { title })}
       >
-        <div className={s.eb}>Confirm takedown</div>
+        <div className={s.eb}>{t("studio:rights.modal.eyebrow")}</div>
         <h3 className={s.modalTitle}>
-          Take down <em>{title}</em>?
+          <Translation
+            i18nKey="studio:rights.modal.title"
+            values={{ title }}
+            components={{ em: <em /> }}
+          />
         </h3>
         <div className={s.modalMeta}>{meta}</div>
         <p className={s.modalBody}>
-          It'll stop being served within 14 days. Existing links will resolve to
-          a short "this work has been withdrawn by the artist" page.{" "}
-          <em>You can re-publish it any time</em> — your masters never leave
-          your hands.
+          <Translation i18nKey="studio:rights.modal.body" components={{ em: <em /> }} />
         </p>
         <div className={s.keep}>
           <p>
-            <em>You keep everything already earned.</em> This release stays paid
-            for every play up to removal, in the next cycle.
+            <Translation i18nKey="studio:rights.modal.keepEarned" components={{ em: <em /> }} />
           </p>
         </div>
         <div className={s.modalActions}>
@@ -67,10 +70,10 @@ export function StudioTakedownModal({
             className={`${s.bt} ${s.btConfirm}`}
             onClick={onConfirm}
           >
-            Take it down →
+            {t("studio:rights.modal.confirmCta")}
           </button>
           <button type="button" className={s.bt} onClick={onClose}>
-            Keep it up
+            {t("studio:rights.modal.cancelCta")}
           </button>
         </div>
       </div>

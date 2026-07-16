@@ -1,4 +1,6 @@
 import { type ReactNode } from "react";
+import { Translation } from "../../shared/i18n/Translation";
+import type { TFunction } from "../../shared/i18n/types";
 
 export type TabId = "immediate" | "document" | "report" | "support" | "law";
 export type TagKind = "immediate" | "optional" | "recommended";
@@ -17,282 +19,273 @@ export type Block =
     }
   | { kind: "def"; h4: string; paras: string[] };
 
-export const TABS: { id: TabId; label: string }[] = [
-  { id: "immediate", label: "Right now" },
-  { id: "document", label: "Document it" },
-  { id: "report", label: "Report formally" },
-  { id: "support", label: "Get support" },
-  { id: "law", label: "Portuguese law" },
+/** i18n Pattern A — chrome list, sole consumer is `HateCrimeTabBar`. */
+export const TAB_KEYS: { id: TabId; labelKey: string }[] = [
+  { id: "immediate", labelKey: "safety:hateCrime.tab.immediate" },
+  { id: "document", labelKey: "safety:hateCrime.tab.document" },
+  { id: "report", labelKey: "safety:hateCrime.tab.report" },
+  { id: "support", labelKey: "safety:hateCrime.tab.support" },
+  { id: "law", labelKey: "safety:hateCrime.tab.law" },
 ];
 
-export function buildPanels(links: {
-  MENTAL: string;
-  FORUM: string;
-  LEGAL: string;
-}): Record<TabId, Block[]> {
+/**
+ * i18n Pattern B. Every field is platform-authored guidance chrome, so
+ * `buildPanels` takes `t` and is memoized in `HateCrimeTabs.tsx` via
+ * `useMemo(() => buildPanels(t, links), [t])`. `sectionHead` nodes carry the
+ * coral `<em>` idiom and so are built with `<Translation>` rather than `t()`.
+ */
+export function buildPanels(
+  t: TFunction,
+  links: { MENTAL: string; FORUM: string; LEGAL: string },
+): Record<TabId, Block[]> {
   const { MENTAL, FORUM } = links;
+  const tag = (labelKey: string, kind: TagKind) => ({ label: t(labelKey), kind });
+
   return {
     immediate: [
-      {
-        kind: "preamble",
-        text: "The moments after an incident are disorienting. These steps help you protect yourself and preserve your options — without committing to anything yet.",
-      },
+      { kind: "preamble", text: t("safety:hateCrime.immediate.preamble") },
       {
         kind: "step",
         num: 1,
-        title: "Get to safety",
-        desc: "Leave the location if you can. Find a public space, a shop, a café, or somewhere you know. Do not feel obligated to confront the perpetrator or wait for anyone.",
-        tag: { label: "Immediate", kind: "immediate" },
+        title: t("safety:hateCrime.immediate.step1.title"),
+        desc: t("safety:hateCrime.immediate.step1.desc"),
+        tag: tag("safety:hateCrime.tag.immediate", "immediate"),
       },
       {
         kind: "step",
         num: 2,
-        title: "Contact someone you trust",
-        desc: "Call or message a friend, partner, or community member. You should not be alone right now. If no one is available, APAV's victim support line (116 006) is staffed 24 hours.",
-        tag: { label: "Immediate", kind: "immediate" },
+        title: t("safety:hateCrime.immediate.step2.title"),
+        desc: t("safety:hateCrime.immediate.step2.desc"),
+        tag: tag("safety:hateCrime.tag.immediate", "immediate"),
       },
       {
         kind: "step",
         num: 3,
-        title: "Get medical attention if needed",
-        desc: "If you were physically assaulted, go to the nearest hospital emergency room. Ask them to document your injuries — this documentation is evidence, even if you do not report to police.",
-        tag: { label: "If physically hurt", kind: "immediate" },
+        title: t("safety:hateCrime.immediate.step3.title"),
+        desc: t("safety:hateCrime.immediate.step3.desc"),
+        tag: tag("safety:hateCrime.tag.ifHurt", "immediate"),
       },
       {
         kind: "step",
         num: 4,
-        title: "Write down what happened — now",
-        desc: "While it is fresh: time, location, what was said or done, description of the perpetrator(s), any witnesses. Do this before you sleep. Memory degrades quickly after trauma. Use your phone notes if that is easiest.",
-        tag: { label: "Recommended", kind: "recommended" },
+        title: t("safety:hateCrime.immediate.step4.title"),
+        desc: t("safety:hateCrime.immediate.step4.desc"),
+        tag: tag("safety:hateCrime.tag.recommended", "recommended"),
       },
       {
         kind: "step",
         num: 5,
-        title: "Preserve any evidence",
-        desc: "Screenshots of messages. Photographs of damage or injuries. Do not wash clothes worn during the incident. Back up your phone if messages were involved.",
-        tag: { label: "Recommended", kind: "recommended" },
+        title: t("safety:hateCrime.immediate.step5.title"),
+        desc: t("safety:hateCrime.immediate.step5.desc"),
+        tag: tag("safety:hateCrime.tag.recommended", "recommended"),
       },
     ],
     document: [
-      {
-        kind: "preamble",
-        text: "Good documentation gives you options. You can decide later whether to report formally — but the evidence will only exist if you collect it now.",
-      },
+      { kind: "preamble", text: t("safety:hateCrime.document.preamble") },
       {
         kind: "sectionHead",
         node: (
-          <>
-            What to <em>collect</em>
-          </>
+          <Translation
+            i18nKey="safety:hateCrime.document.collectHeading"
+            components={{ em: <em /> }}
+          />
         ),
       },
       {
         kind: "step",
         num: 1,
-        title: "Written account",
-        desc: "Date, time, exact location. What was said or done, in as much detail as you remember. The perpetrator's appearance and any distinguishing features. Whether there were witnesses and who they were.",
+        title: t("safety:hateCrime.document.step1.title"),
+        desc: t("safety:hateCrime.document.step1.desc"),
       },
       {
         kind: "step",
         num: 2,
-        title: "Photographs",
-        desc: "Injuries (dated photographs from multiple angles). Damage to property. The location itself. Any graffiti or materials left behind. Turn on location tagging in your phone camera before you take them.",
+        title: t("safety:hateCrime.document.step2.title"),
+        desc: t("safety:hateCrime.document.step2.desc"),
       },
       {
         kind: "step",
         num: 3,
-        title: "Digital evidence",
-        desc: "Screenshots of messages, social media posts, or emails — including the URL, username, and timestamp visible. Screenshot the profile too, not just the message. Save locally and to cloud storage.",
+        title: t("safety:hateCrime.document.step3.title"),
+        desc: t("safety:hateCrime.document.step3.desc"),
       },
       {
         kind: "step",
         num: 4,
-        title: "CCTV",
-        desc: "If the incident happened in a commercial area, there may be CCTV footage. Act quickly — most systems overwrite after 72 hours. You can request the footage yourself or ask police to do so when you report.",
+        title: t("safety:hateCrime.document.step4.title"),
+        desc: t("safety:hateCrime.document.step4.desc"),
       },
       {
         kind: "step",
         num: 5,
-        title: "Witness information",
-        desc: "If there were witnesses, ask for their contact details. Even a name and phone number helps. You do not need to pressure anyone — just ask.",
-        tag: { label: "If applicable", kind: "optional" },
+        title: t("safety:hateCrime.document.step5.title"),
+        desc: t("safety:hateCrime.document.step5.desc"),
+        tag: tag("safety:hateCrime.tag.ifApplicable", "optional"),
       },
       {
         kind: "sectionHead",
         node: (
-          <>
-            Where to <em>keep it</em>
-          </>
+          <Translation
+            i18nKey="safety:hateCrime.document.keepHeading"
+            components={{ em: <em /> }}
+          />
         ),
       },
-      {
-        kind: "note",
-        text: "Store everything in at least two places — your phone and a cloud service (email to yourself works). If you contact ILGA Portugal or APAV, they can help you organise your evidence file.",
-      },
+      { kind: "note", text: t("safety:hateCrime.document.note") },
     ],
     report: [
-      {
-        kind: "preamble",
-        text: "You have options. Formal police reporting is one path — but not the only one. You can also report anonymously through civil society organisations, or choose not to report at all. Your choice is valid regardless.",
-      },
+      { kind: "preamble", text: t("safety:hateCrime.report.preamble") },
       {
         kind: "sectionHead",
         node: (
-          <>
-            Option 1: <em>PSP / GNR (Police)</em>
-          </>
+          <Translation
+            i18nKey="safety:hateCrime.report.policeHeading"
+            components={{ em: <em /> }}
+          />
         ),
       },
       {
         kind: "step",
         num: 1,
-        title: "Go to your nearest police station",
-        desc: "For hate crimes in Lisbon, the PSP (Polícia de Segurança Pública) has jurisdiction. You can report in person or online at queixaselectronicas.mai.gov.pt for less serious offences.",
+        title: t("safety:hateCrime.report.police.step1.title"),
+        desc: t("safety:hateCrime.report.police.step1.desc"),
       },
       {
         kind: "step",
         num: 2,
-        title: "Ask for hate crime classification",
-        desc: "Explicitly state that the crime was motivated by your sexual orientation or gender identity. Ask for it to be recorded as a hate crime (crime de ódio) under Article 132 of the Penal Code. Police may not do this automatically.",
-        tag: { label: "Important", kind: "immediate" },
+        title: t("safety:hateCrime.report.police.step2.title"),
+        desc: t("safety:hateCrime.report.police.step2.desc"),
+        tag: tag("safety:hateCrime.tag.important", "immediate"),
       },
       {
         kind: "step",
         num: 3,
-        title: "Take accompaniment",
-        desc: "You are allowed to bring a support person. ILGA Portugal offers free legal accompaniment for hate crime reports. Contact them before you go — even 30 minutes of preparation helps.",
-        tag: { label: "Strongly recommended", kind: "recommended" },
+        title: t("safety:hateCrime.report.police.step3.title"),
+        desc: t("safety:hateCrime.report.police.step3.desc"),
+        tag: tag("safety:hateCrime.tag.stronglyRecommended", "recommended"),
       },
       {
         kind: "sectionHead",
         node: (
-          <>
-            Option 2: <em>ILGA Portugal</em>
-          </>
+          <Translation
+            i18nKey="safety:hateCrime.report.ilgaHeading"
+            components={{ em: <em /> }}
+          />
         ),
       },
       {
         kind: "step",
         num: 1,
-        title: "Report directly to ILGA",
-        desc: "ILGA maintains its own hate crime monitoring system (independently of police). Reporting here is confidential and does not trigger automatic police contact. Your report contributes to advocacy and data.",
-        tag: { label: "Anonymous option available", kind: "recommended" },
+        title: t("safety:hateCrime.report.ilga.step1.title"),
+        desc: t("safety:hateCrime.report.ilga.step1.desc"),
+        tag: tag("safety:hateCrime.tag.anonOptionAvailable", "recommended"),
       },
       {
         kind: "step",
         num: 2,
-        title: "Legal support and accompaniment",
-        desc: "If you want to report to police, ILGA can provide a volunteer or staff member to accompany you. They also offer legal guidance on what to expect from the process and how to assert your rights.",
+        title: t("safety:hateCrime.report.ilga.step2.title"),
+        desc: t("safety:hateCrime.report.ilga.step2.desc"),
       },
       {
         kind: "sectionHead",
         node: (
-          <>
-            Option 3: <em>EU mechanisms</em>
-          </>
+          <Translation
+            i18nKey="safety:hateCrime.report.euHeading"
+            components={{ em: <em /> }}
+          />
         ),
       },
       {
         kind: "step",
         num: 1,
-        title: "Provedor de Justiça (Ombudsman)",
-        desc: "If you believe authorities have failed to act on your report, you can complain to Portugal's Ombudsman (Provedor de Justiça) at provedor-jus.pt. Free, independent, and available to residents.",
+        title: t("safety:hateCrime.report.eu.step1.title"),
+        desc: t("safety:hateCrime.report.eu.step1.desc"),
       },
       {
         kind: "step",
         num: 2,
-        title: "European Court of Human Rights",
-        desc: "For serious cases where all domestic remedies are exhausted, the ECHR at Strasbourg can be petitioned. This is a long process — ILGA Europe provides guidance and in some cases legal support.",
-        tag: { label: "After domestic process", kind: "optional" },
+        title: t("safety:hateCrime.report.eu.step2.title"),
+        desc: t("safety:hateCrime.report.eu.step2.desc"),
+        tag: tag("safety:hateCrime.tag.afterDomesticProcess", "optional"),
       },
     ],
     support: [
-      {
-        kind: "preamble",
-        text: "Reporting is not the only thing you need. Being the target of hate is traumatic — and that trauma is real regardless of whether a crime can be proven.",
-      },
+      { kind: "preamble", text: t("safety:hateCrime.support.preamble") },
       {
         kind: "sectionHead",
         node: (
-          <>
-            Immediate <em>support</em>
-          </>
+          <Translation
+            i18nKey="safety:hateCrime.support.immediateHeading"
+            components={{ em: <em /> }}
+          />
         ),
       },
       {
         kind: "step",
         num: 1,
-        title: "APAV — Victim Support",
-        desc: "Free, confidential support for crime victims. Emotional support, practical help navigating the system, and legal information. 116 006 — available nationally. Online support at apav.pt.",
+        title: t("safety:hateCrime.support.step1.title"),
+        desc: t("safety:hateCrime.support.step1.desc"),
       },
       {
         kind: "step",
         num: 2,
-        title: "ILGA Portugal — Community support",
-        desc: "Beyond legal help, ILGA connects you with peer support and counselling. They understand the specific dimensions of LGBTQ+ hate crime. 213 887 615 · ilga-portugal.pt.",
+        title: t("safety:hateCrime.support.step2.title"),
+        desc: t("safety:hateCrime.support.step2.desc"),
       },
       {
         kind: "step",
         num: 3,
-        title: "QueerPulse Mental Health directory",
-        desc: "Sliding-scale therapists with experience in trauma and identity-based violence. You do not have to wait to feel better — early support makes a real difference.",
-        link: { label: "See the directory →", href: MENTAL },
+        title: t("safety:hateCrime.support.step3.title"),
+        desc: t("safety:hateCrime.support.step3.desc"),
+        link: { label: t("safety:hateCrime.support.directoryCta"), href: MENTAL },
       },
       {
         kind: "sectionHead",
         node: (
-          <>
-            Longer <em>term</em>
-          </>
+          <Translation
+            i18nKey="safety:hateCrime.support.longerTermHeading"
+            components={{ em: <em /> }}
+          />
         ),
       },
       {
         kind: "step",
         num: 4,
-        title: "Peer support groups",
-        desc: "ILGA Portugal runs monthly peer groups for people who have experienced hate crime. Sharing with others who have been through similar experiences is often the most useful thing. Ask ILGA for the current schedule.",
+        title: t("safety:hateCrime.support.step4.title"),
+        desc: t("safety:hateCrime.support.step4.desc"),
       },
       {
         kind: "step",
         num: 5,
-        title: "You do not have to process it alone",
-        desc: "The QueerPulse forum has a private, moderated space for people who have experienced discrimination or violence. You can share as much or as little as you want.",
-        link: { label: "Go to the forum →", href: FORUM },
+        title: t("safety:hateCrime.support.step5.title"),
+        desc: t("safety:hateCrime.support.step5.desc"),
+        link: { label: t("safety:hateCrime.support.forumCta"), href: FORUM },
       },
     ],
     law: [
-      {
-        kind: "preamble",
-        text: "Understanding what the law actually says helps you assert your rights — and know when they are being violated.",
-      },
+      { kind: "preamble", text: t("safety:hateCrime.law.preamble") },
       {
         kind: "def",
-        h4: "What is a hate crime under Portuguese law?",
+        h4: t("safety:hateCrime.law.def1.h4"),
         paras: [
-          "Under Article 132 of the Penal Code (Código Penal), a crime committed with hate motivation — including sexual orientation and gender identity — is an aggravating circumstance. This means the same act (assault, damage, harassment) carries a higher sentence when proven to be motivated by hatred of the victim's identity.",
-          "Additionally, the Lei contra a discriminação (Law 93/2017) prohibits discrimination based on sexual orientation and gender identity in access to goods, services, housing, and employment.",
+          t("safety:hateCrime.law.def1.para1"),
+          t("safety:hateCrime.law.def1.para2"),
         ],
       },
       {
         kind: "def",
-        h4: "What counts as a hate crime?",
-        paras: [
-          "Physical assault, threats, harassment, intimidation, property damage, incitement to hatred, and online abuse can all be hate crimes when motivated by the victim's sexual orientation or gender identity. The motivation must be established — which is why documentation and the way you frame your report matter.",
-        ],
+        h4: t("safety:hateCrime.law.def2.h4"),
+        paras: [t("safety:hateCrime.law.def2.para1")],
       },
       {
         kind: "def",
-        h4: "Online hate crimes",
-        paras: [
-          "Threats and harassment online are crimes in Portugal. Report to the platform AND to police. Preserve screenshots immediately — platforms delete reported content and perpetrators can delete their accounts. You can also report to the Autoridade Nacional de Comunicações (ANACOM) for persistent platform inaction.",
-        ],
+        h4: t("safety:hateCrime.law.def3.h4"),
+        paras: [t("safety:hateCrime.law.def3.para1")],
       },
       {
         kind: "def",
-        h4: "If the police don't take it seriously",
-        paras: [
-          "You have the right to ask for a different officer. You can escalate within the PSP to a supervisor. You can contact the Inspeção-Geral da Administração Interna (IGAI) to complain about police conduct. ILGA Portugal accompaniment helps prevent this situation. Your report cannot be refused — you are entitled to a receipt (NUIPC number) when you make a formal complaint.",
-        ],
+        h4: t("safety:hateCrime.law.def4.h4"),
+        paras: [t("safety:hateCrime.law.def4.para1")],
       },
     ],
   };

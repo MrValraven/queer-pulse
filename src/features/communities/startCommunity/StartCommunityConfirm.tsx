@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { FiCheck, FiGift } from "react-icons/fi";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ACCESS_OPTIONS,
   FEATURE_OPTIONS,
@@ -20,6 +22,7 @@ function Recap({
   onEdit: (step: number) => void;
   rows: { k: string; v: React.ReactNode; missing?: boolean }[];
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.recapGroup}>
       <div className={styles.recapH}>
@@ -29,7 +32,7 @@ function Recap({
           className={styles.recapEdit}
           onClick={() => onEdit(step)}
         >
-          Edit
+          {t("communities:start.confirm.editCta")}
         </button>
       </div>
       {rows.map((r) => (
@@ -52,6 +55,7 @@ export function StepConfirm({
   form: CommunityForm;
   onEdit: (step: number) => void;
 }) {
+  const { t } = useTranslation();
   const { draft, set } = form;
 
   // Pre-fill the handle from the name the first time they reach this step.
@@ -65,18 +69,18 @@ export function StepConfirm({
   const access = ACCESS_OPTIONS.find((a) => a.tier === draft.accessTier);
   const featureLabels = FEATURE_OPTIONS.filter((f) =>
     draft.features.includes(f.id),
-  ).map((f) => f.label);
+  ).map((f) => t(f.labelKey));
   const invitedCount = draft.invites.length;
+  const notSetYet = t("communities:start.confirm.notSetYet");
 
   return (
     <div>
-      <p className={styles.confirmLead}>
-        Here's the whole space, in one glance. Nothing here is fixed — you can
-        change all of it once you're inside.
-      </p>
+      <p className={styles.confirmLead}>{t("communities:start.confirm.lead")}</p>
 
       <div className={styles.handleBox}>
-        <label htmlFor="sc-handle">Your community's address</label>
+        <label htmlFor="sc-handle">
+          {t("communities:start.confirm.handleLabel")}
+        </label>
         <div className={styles.handleWrap}>
           <span className={styles.handlePre}>queerpulse.app/community/</span>
           <input
@@ -89,90 +93,117 @@ export function StepConfirm({
       </div>
 
       <Recap
-        title="Why"
+        title={t("communities:start.confirm.recap.why")}
         step={1}
         onEdit={onEdit}
         rows={[
           {
-            k: "Name",
-            v: draft.name || "Not set yet",
+            k: t("communities:start.confirm.recap.name"),
+            v: draft.name || notSetYet,
             missing: !draft.name,
           },
           {
-            k: "For",
-            v: draft.purpose || "Not set yet",
+            k: t("communities:start.confirm.recap.for"),
+            v: draft.purpose || notSetYet,
             missing: !draft.purpose,
           },
-          { k: "Kind", v: typeLabelFor(draft.type) },
+          {
+            k: t("communities:start.confirm.recap.kind"),
+            v: typeLabelFor(draft.type),
+          },
         ]}
       />
       <Recap
-        title="Who"
+        title={t("communities:start.confirm.recap.who")}
         step={2}
         onEdit={onEdit}
         rows={[
           {
-            k: "Gathering",
-            v: draft.whoFor || "Not set yet",
+            k: t("communities:start.confirm.recap.gathering"),
+            v: draft.whoFor || notSetYet,
             missing: !draft.whoFor,
           },
         ]}
       />
       <Recap
-        title="Safety"
+        title={t("communities:start.confirm.recap.safety")}
         step={3}
         onEdit={onEdit}
         rows={[
           {
-            k: "Access",
-            v: access?.name ?? "Not chosen yet",
+            k: t("communities:start.confirm.recap.access"),
+            v: access
+              ? t(access.nameKey)
+              : t("communities:start.confirm.notChosenYet"),
             missing: !access,
           },
           {
-            k: "Roster",
-            v: draft.rosterVisible ? "Visible to members" : "Hidden",
+            k: t("communities:start.confirm.recap.roster"),
+            v: draft.rosterVisible
+              ? t("communities:start.confirm.rosterVisible")
+              : t("communities:start.confirm.rosterHidden"),
           },
         ]}
       />
       <Recap
-        title="Running"
+        title={t("communities:start.confirm.recap.running")}
         step={4}
         onEdit={onEdit}
         rows={[
           {
-            k: "Stewards",
-            v: `${draft.stewards.length} (you + ${draft.stewards.length - 1} co)`,
+            k: t("communities:start.confirm.recap.stewards"),
+            v: t("communities:start.confirm.stewardsValue", {
+              count: draft.stewards.length,
+              co: draft.stewards.length - 1,
+            }),
           },
-          { k: "Inside", v: featureLabels.join(", ") },
+          {
+            k: t("communities:start.confirm.recap.inside"),
+            v: featureLabels.join(", "),
+          },
         ]}
       />
       <Recap
-        title="Tone & feeling"
+        title={t("communities:start.confirm.recap.toneFeeling")}
         step={5}
         onEdit={onEdit}
         rows={[
-          { k: "Shared values", v: `${draft.rules.length} agreed` },
           {
-            k: "Tagline",
-            v: draft.tagline || "Not set yet",
+            k: t("communities:start.confirm.recap.sharedValues"),
+            v: t("communities:start.confirm.sharedValuesCount", {
+              count: draft.rules.length,
+            }),
+          },
+          {
+            k: t("communities:start.confirm.recap.tagline"),
+            v: draft.tagline || notSetYet,
             missing: !draft.tagline,
           },
         ]}
       />
       {invitedCount > 0 && (
         <Recap
-          title="First people"
+          title={t("communities:start.confirm.recap.firstPeople")}
           step={7}
           onEdit={onEdit}
-          rows={[{ k: "Inviting", v: `${invitedCount} on day one` }]}
+          rows={[
+            {
+              k: t("communities:start.confirm.recap.inviting"),
+              v: t("communities:start.confirm.invitingCount", {
+                count: invitedCount,
+              }),
+            },
+          ]}
         />
       )}
 
       <div className={styles.costNote}>
         <FiGift size={18} aria-hidden />
         <p>
-          <b>Founding a community is free, and always will be.</b> QueerPulse
-          never charges to gather your people.
+          <Translation
+            i18nKey="communities:start.confirm.costNote"
+            components={{ strong: <b /> }}
+          />
         </p>
       </div>
 
@@ -188,9 +219,10 @@ export function StepConfirm({
           <FiCheck size={12} aria-hidden />
         </span>
         <span className={styles.ccTxt}>
-          <b>I'll steward this space with care.</b> I understand I'm responsible
-          for keeping it safe and welcoming, and that QueerPulse's community
-          guidelines apply here too.
+          <Translation
+            i18nKey="communities:start.confirm.consentText"
+            components={{ strong: <b /> }}
+          />
         </span>
       </button>
     </div>

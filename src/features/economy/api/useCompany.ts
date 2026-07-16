@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getCompany } from "./companies.api";
 import { companyDetailToProfile } from "./companies.adapters";
 import { jobCardToJob } from "./jobs.adapters";
@@ -21,8 +22,9 @@ export interface CompanyResult {
  */
 export function useCompany(slug: string | undefined) {
   const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
   return useQuery<CompanyResult>({
-    queryKey: ["company", slug, demoMode],
+    queryKey: ["company", slug, demoMode, language],
     enabled: Boolean(slug),
     queryFn: async () => {
       if (!slug) return { profile: null, openRoles: null, isOwner: false };
@@ -36,7 +38,7 @@ export function useCompany(slug: string | undefined) {
       const dto = await getCompany(slug);
       return {
         profile: companyDetailToProfile(dto),
-        openRoles: dto.openRoles.map(jobCardToJob),
+        openRoles: dto.openRoles.map((jobCard) => jobCardToJob(jobCard, t)),
         isOwner: dto.isOwner,
       };
     },

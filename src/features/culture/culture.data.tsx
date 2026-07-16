@@ -15,22 +15,34 @@ import type { AvatarTint } from "../../shared/components/ui";
 
 export type TabKey = "club" | "commission" | "showcase" | "radio";
 
-export const TABS: { key: TabKey; label: string }[] = [
-  { key: "club", label: "Book · Film · Music Club" },
-  { key: "commission", label: "Commission Board" },
-  { key: "showcase", label: "Art Showcase" },
-  { key: "radio", label: "Radio" },
+export const TABS: { key: TabKey; labelKey: string }[] = [
+  { key: "club", labelKey: "culture:tabs.club" },
+  { key: "commission", labelKey: "culture:tabs.commission" },
+  { key: "showcase", labelKey: "culture:tabs.showcase" },
+  { key: "radio", labelKey: "culture:tabs.radio" },
 ];
 
 export type PickKind = "book" | "film" | "music";
+
+/** i18n Pattern A — label-key indirection. `kind` is the canonical id shown
+ * as a badge; `PICK_KIND_LABEL_KEY` resolves its translated text. `eventKey`
+ * pairs with `eventDate` so `ClubSection`'s render composes
+ * `t(eventKey, { date: fmt.date(eventDate, …) })` instead of baking a
+ * hand-formatted date into a fused "Meets 14 Jun" string. */
+export const PICK_KIND_LABEL_KEY: Record<PickKind, string> = {
+  book: "culture:club.kind.book",
+  film: "culture:club.kind.film",
+  music: "culture:club.kind.music",
+};
 
 export interface Pick {
   kind: PickKind;
   emoji: IconType;
   title: string;
   author: string;
-  discussing: string;
-  when: string;
+  discussingCount: number;
+  eventKey: string;
+  eventDate: Date;
 }
 
 export const PICKS: Pick[] = [
@@ -39,24 +51,27 @@ export const PICKS: Pick[] = [
     emoji: FiBookOpen,
     title: "Giovanni's Room",
     author: "James Baldwin · 1956",
-    discussing: "42 discussing",
-    when: "Meets 14 Jun",
+    discussingCount: 42,
+    eventKey: "culture:club.picks.eventKind.meets",
+    eventDate: new Date(2026, 5, 14),
   },
   {
     kind: "film",
     emoji: FiFilm,
     title: "Portrait of a Lady on Fire",
     author: "Céline Sciamma · 2019",
-    discussing: "38 discussing",
-    when: "Screening 19 Jun",
+    discussingCount: 38,
+    eventKey: "culture:club.picks.eventKind.screening",
+    eventDate: new Date(2026, 5, 19),
   },
   {
     kind: "music",
     emoji: FiMusic,
     title: "The Gag Order",
     author: "Kehlani · 2023",
-    discussing: "27 discussing",
-    when: "Listening party 22 Jun",
+    discussingCount: 27,
+    eventKey: "culture:club.picks.eventKind.listeningParty",
+    eventDate: new Date(2026, 5, 22),
   },
 ];
 
@@ -101,9 +116,19 @@ export const THREADS: Thread[] = [
 
 export type CommissionCat = "Photo" | "Music" | "Writing" | "Design" | "Film";
 
+/** i18n Pattern A — label-key indirection. `cat` is the canonical id (also
+ * the shape the backend's `CreateCommissionInterestDto.commissionCategory`
+ * expects, see `api/culture.api.ts`); this map resolves its display label. */
+export const COMMISSION_CAT_LABEL_KEY: Record<CommissionCat, string> = {
+  Photo: "culture:commissions.cat.photo",
+  Music: "culture:commissions.cat.music",
+  Writing: "culture:commissions.cat.writing",
+  Design: "culture:commissions.cat.design",
+  Film: "culture:commissions.cat.film",
+};
+
 export interface Commission {
   cat: CommissionCat;
-  catLabel: string;
   title: string;
   desc: string;
   seeking: string;
@@ -114,7 +139,6 @@ export interface Commission {
 export const COMMISSIONS: Commission[] = [
   {
     cat: "Photo",
-    catLabel: "Photography",
     title: "Portraits of Queer Elders in Mouraria",
     desc: "Documenting the queer people who have lived in this neighbourhood for 30+ years — before gentrification, before visibility. I have access and subjects. I need a writer for long-form captions and an editor who knows photo books.",
     seeking: "Looking for — Writer · Photo editor",
@@ -133,7 +157,6 @@ export const COMMISSIONS: Commission[] = [
   },
   {
     cat: "Music",
-    catLabel: "Music",
     title: "EP about growing up queer in Setúbal",
     desc: "Six songs in Portuguese, recorded live. Fully produced — looking for a cellist for two tracks, and someone with a Lisbon studio who'd let me finish the mixing session. Non-commercial, first EP, for the community.",
     seeking: "Looking for — Cellist · Studio space",
@@ -142,7 +165,6 @@ export const COMMISSIONS: Commission[] = [
   },
   {
     cat: "Writing",
-    catLabel: "Writing",
     title: "Translating a forgotten queer Portuguese novel into English",
     desc: "Working on an English translation of a 1987 novel no one outside Portugal has read. Looking for a co-translator who can catch what I miss in idiomatic English, and a sensitivity reader for LGBTQ+ nuance.",
     seeking: "Looking for — Co-translator (EN/PT) · Sensitivity reader",
@@ -156,7 +178,6 @@ export const COMMISSIONS: Commission[] = [
   },
   {
     cat: "Design",
-    catLabel: "Design",
     title: "Zine on queer housing discrimination in Lisbon",
     desc: "Combining collected testimonials (anonymised) with data visualisation. Need an illustrator and a typesetter — this will be printed and distributed at community spaces across the city.",
     seeking: "Looking for — Illustrator · Typesetter",
@@ -239,22 +260,27 @@ export const GALLERY: GalleryItem[] = [
 ];
 
 export interface RadioData {
-  curatorLabel: string;
+  /** Chrome eyebrow — a static label, not curator-authored content. */
+  curatorLabelKey: string;
+  /** Content: this week's curator's own playlist title (already
+   * Portuguese-flavoured mock copy, unrelated to the i18n sweep). */
   curatorTitle: ReactNode;
-  curatedBy: string;
+  /** Content: the curator's name, interpolated into the "curated by {name}"
+   * chrome phrase at render (`CultureRadioPanel.tsx`). */
+  curatorName: string;
   quote: string;
   now: { track: string; artist: string; progress: number; time: string };
   queue: { n: number; track: string; artist: string; dur: string }[];
 }
 
 export const RADIO: RadioData = {
-  curatorLabel: "This week's curator",
+  curatorLabelKey: "culture:radio.curatorLabel",
   curatorTitle: (
     <>
       A noite que ficou <em>em Lisboa</em>
     </>
   ),
-  curatedBy: "curated by Beatriz Noronha",
+  curatorName: "Beatriz Noronha",
   quote:
     '"Songs for 2am in Príncipe Real. Songs that sound like staying when you thought you\'d leave. Play loud or barely at all."',
   now: {

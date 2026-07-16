@@ -1,7 +1,15 @@
 import { Link } from "react-router-dom";
 import { FiStar, FiHeart, FiMessageSquare } from "react-icons/fi";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
-import { REPLY_SORTS, MOD_ROLE, type Reply } from "./forum.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import {
+  MOD_ROLE_KEY,
+  REPLY_SORTS,
+  type Reply,
+  type ReplySortId,
+} from "./forum.data";
 import {
   ForumAvatar,
   ProfileLink,
@@ -16,14 +24,19 @@ import styles from "./ThreadPage.module.css";
 /** Names the moderator who published an official QueerPulse post, linking to
  * their member profile — so the platform voice stays accountable to a person. */
 export function ModeratorByline({ mod }: { mod?: string }) {
+  const { t } = useTranslation();
   if (!mod) return null;
+  const roleKey = MOD_ROLE_KEY[mod];
+  const name = memberName(mod);
   return (
     <div className={styles.modBy}>
-      Written by{" "}
-      <Link to={memberPath(mod)} className={styles.modByLink}>
-        {memberName(mod)}
-      </Link>
-      {MOD_ROLE[mod] ? `, ${MOD_ROLE[mod]}` : ""} · on behalf of the team
+      <Translation
+        i18nKey={roleKey ? "forum:byline.withRole" : "forum:byline.noRole"}
+        components={{
+          name: <Link to={memberPath(mod)} className={styles.modByLink} />,
+        }}
+        values={roleKey ? { name, role: t(roleKey) } : { name }}
+      />
     </div>
   );
 }
@@ -34,25 +47,27 @@ export function ReplySortBar({
   setSort,
 }: {
   count: number;
-  sort: (typeof REPLY_SORTS)[number];
-  setSort: (s: (typeof REPLY_SORTS)[number]) => void;
+  sort: ReplySortId;
+  setSort: (s: ReplySortId) => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.replyBar}>
       <span className={styles.replyCount}>
-        {count} repl{count === 1 ? "y" : "ies"}
+        {t("forum:repliesCount", { count, formatted: fmt.number(count) })}
       </span>
       <div className={styles.replySort}>
         {REPLY_SORTS.map((s) => (
           <button
             type="button"
-            key={s}
-            className={[styles.sortBtn, sort === s && styles.sortBtnOn]
+            key={s.id}
+            className={[styles.sortBtn, sort === s.id && styles.sortBtnOn]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setSort(s)}
+            onClick={() => setSort(s.id)}
           >
-            {s}
+            {t(s.labelKey)}
           </button>
         ))}
       </div>
@@ -75,6 +90,7 @@ export function ThreadReplies({
   toggleReplyLike: (r: Reply) => void;
   onFocusComposer: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div>
       {loading && <ThreadRepliesSkeleton count={3} />}
@@ -82,9 +98,9 @@ export function ThreadReplies({
         <EmptyState
           compact
           icon={<FiMessageSquare />}
-          title="No replies yet"
-          description="This thread is waiting for its first voice. Be the first to reply — a thoughtful answer goes a long way."
-          action={{ label: "Write a reply", onClick: onFocusComposer }}
+          title={t("forum:replies.emptyTitle")}
+          description={t("forum:replies.emptyDescription")}
+          action={{ label: t("forum:replies.emptyAction"), onClick: onFocusComposer }}
         />
       )}
       {!loading &&
@@ -128,10 +144,14 @@ export function ThreadReplies({
                     </ProfileLink>
                   </span>
                   {r.official && <OfficialBadge />}
-                  {r.isOP && <span className={styles.opBadge}>OP</span>}
+                  {r.isOP && (
+                    <span className={styles.opBadge}>
+                      {t("forum:replies.opBadge")}
+                    </span>
+                  )}
                   {r.helpful && (
                     <span className={styles.helpfulBadge}>
-                      <FiStar /> Most helpful
+                      <FiStar /> {t("forum:replies.mostHelpfulBadge")}
                     </span>
                   )}
                   <span className={styles.replyTime}>{r.time}</span>
@@ -151,7 +171,11 @@ export function ThreadReplies({
                 <button
                   type="button"
                   aria-pressed={isLiked}
-                  aria-label={isLiked ? "Unlike this reply" : "Like this reply"}
+                  aria-label={
+                    isLiked
+                      ? t("forum:replies.unlikeAria")
+                      : t("forum:replies.likeAria")
+                  }
                   className={[styles.replyReact, isLiked && styles.replyReactOn]
                     .filter(Boolean)
                     .join(" ")}

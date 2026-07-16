@@ -351,7 +351,7 @@ export function StudioTracksSection() {
                 style={{ position: "absolute", inset: 0 }}
               />
               <span className={`${styles.tag} ${tagClass[track.tag]}`}>
-                {track.tagLabel}
+                {t(track.tagLabelKey)}
               </span>
               <span
                 role="button"

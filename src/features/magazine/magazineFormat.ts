@@ -31,12 +31,13 @@ export function wordsText(words: number, t: TFunction): string {
 }
 
 /**
- * "{count} reads this week" — `reads` is passed as already-formatted text
+ * "{reads} reads this week" — `reads` is passed as already-formatted text
  * (mock data uses compact forms like "1.2k") so it is interpolated as an
- * opaque token rather than pluralized.
+ * opaque `reads` token rather than pluralized (hence not `count`, which
+ * drives CLDR plural-category selection and is typed `number`-only).
  */
 export function readsThisWeekText(reads: string | number, t: TFunction): string {
-  return t("magazine:format.readsThisWeek", { count: reads });
+  return t("magazine:format.readsThisWeek", { reads });
 }
 
 /** "Published {date}" */

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, SuccessPanel } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
   PublishUnmetError,
@@ -28,6 +29,7 @@ export function SubprofilePublishPanel({
 }) {
   const { publish, unpublish } = useSubprofileMutations();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [checklist, setChecklist] = useState<ChecklistState | null>(null);
   const [justPublished, setJustPublished] = useState(false);
 
@@ -39,16 +41,13 @@ export function SubprofilePublishPanel({
     try {
       await publish.mutateAsync(subprofile.id);
       setJustPublished(true);
-      showToast("Your persona is live", "success");
+      showToast(t("subprofiles:publishPanel.toastLive"), "success");
     } catch (err) {
       if (err instanceof PublishUnmetError) {
         setChecklist({ unmet: err.unmet, unknown: false });
       } else {
         setChecklist({ unmet: [], unknown: true });
-        showToast(
-          "We couldn't publish — check the requirements below.",
-          "error",
-        );
+        showToast(t("subprofiles:publishPanel.toastPublishError"), "error");
       }
     }
   }
@@ -58,23 +57,23 @@ export function SubprofilePublishPanel({
       await unpublish.mutateAsync(subprofile.id);
       setJustPublished(false);
       setChecklist(null);
-      showToast("Back to draft — only you can see it now.", "info");
+      showToast(t("subprofiles:publishPanel.toastUnpublished"), "info");
     } catch {
-      showToast("We couldn't do that just now — try again.", "error");
+      showToast(t("subprofiles:publishPanel.toastError"), "error");
     }
   }
 
   if (justPublished) {
     return (
       <SuccessPanel
-        title="You're"
-        em="live"
+        title={t("subprofiles:publishPanel.successTitle")}
+        em={t("subprofiles:publishPanel.successEm")}
         onClose={() => setJustPublished(false)}
-        closeLabel="Keep editing"
+        closeLabel={t("subprofiles:publishPanel.closeLabel")}
       >
         {isLinked
-          ? "This persona now shows on your main profile as another side of you."
-          : "This persona stands on its own now — people can find it by its handle and in the directory."}
+          ? t("subprofiles:publishPanel.successLinked")
+          : t("subprofiles:publishPanel.successUnlinked")}
       </SuccessPanel>
     );
   }
@@ -84,10 +83,10 @@ export function SubprofilePublishPanel({
       <div className={styles.publishBar}>
         <p className={styles.publishCopy}>
           {isPublished
-            ? "This persona is live. Your edits save as you go."
+            ? t("subprofiles:publishPanel.copyPublished")
             : isLinked
-              ? "Publish to show this persona on your main profile."
-              : "Publish to give this persona its own handle and a directory listing."}
+              ? t("subprofiles:publishPanel.copyLinkedUnpublished")
+              : t("subprofiles:publishPanel.copyUnlinkedUnpublished")}
         </p>
         <div className={styles.publishActions}>
           {isPublished && (
@@ -96,7 +95,9 @@ export function SubprofilePublishPanel({
               onClick={onUnpublish}
               disabled={unpublish.isPending}
             >
-              {unpublish.isPending ? "Working…" : "Move to draft"}
+              {unpublish.isPending
+                ? t("subprofiles:publishPanel.working")
+                : t("subprofiles:publishPanel.moveToDraft")}
             </Button>
           )}
           <Button
@@ -105,10 +106,10 @@ export function SubprofilePublishPanel({
             disabled={publish.isPending}
           >
             {publish.isPending
-              ? "Publishing…"
+              ? t("subprofiles:publishPanel.publishing")
               : isPublished
-                ? "Re-check & publish"
-                : "Publish"}
+                ? t("subprofiles:publishPanel.recheck")
+                : t("subprofiles:publishPanel.publish")}
           </Button>
         </div>
       </div>

@@ -1,28 +1,30 @@
 import { Link } from "react-router-dom";
 import { Button, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CONTACTS, type Path } from "./transHealthcare.data";
 import styles from "./TransHealthcarePage.module.css";
 
 export function TransHealthcareHero() {
+  const { t } = useTranslation();
   return (
     <header className={styles.hero}>
       <div className="wrap">
-        <div className={styles.eye}>Trans Healthcare · Portugal</div>
+        <div className={styles.eye}>
+          {t("resources:transHealthcare.hero.eyebrow")}
+        </div>
         <h1 className={styles.title}>
-          Your journey,
+          {t("resources:transHealthcare.hero.titleLine1")}
           <br />
-          <em>step by step.</em>
+          <Translation
+            i18nKey="resources:transHealthcare.hero.titleLine2"
+            components={{ em: <em /> }}
+          />
         </h1>
-        <p className={styles.sub}>
-          How to access gender-affirming healthcare in Portugal — through the
-          SNS or privately. Legal name change. What to bring, who to call, what
-          to expect.
-        </p>
+        <p className={styles.sub}>{t("resources:transHealthcare.hero.sub")}</p>
         <p className={styles.disclaimer}>
-          This guide reflects the system as of June 2026. Always verify current
-          waiting times and procedures with ILGA Portugal or your GP. This is
-          community knowledge, not legal or medical advice.
+          {t("resources:transHealthcare.hero.disclaimer")}
         </p>
       </div>
     </header>
@@ -30,11 +32,12 @@ export function TransHealthcareHero() {
 }
 
 export function TransHealthcareJourney({ path }: { path: Path }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.journey}>
       {path.sections.map((sec) => (
-        <div className={styles.jSection} key={sec.title}>
-          <div className={styles.jSectionTitle}>{sec.title}</div>
+        <div className={styles.jSection} key={sec.titleKey}>
+          <div className={styles.jSectionTitle}>{t(sec.titleKey)}</div>
           {sec.steps.map((s) => (
             <div className={styles.step} key={s.n}>
               <div className={styles.stepNum}>{s.n}</div>
@@ -64,10 +67,13 @@ export function TransHealthcareJourney({ path }: { path: Path }) {
 }
 
 export function TransHealthcareSidebar() {
+  const { t } = useTranslation();
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sbCard}>
-        <div className={styles.sbcTitle}>Key contacts</div>
+        <div className={styles.sbcTitle}>
+          {t("resources:transHealthcare.sidebar.keyContacts")}
+        </div>
         {CONTACTS.map((c) => (
           <div className={styles.sbcItem} key={c.org}>
             <div className={styles.sbcOrg}>{c.org}</div>
@@ -77,34 +83,40 @@ export function TransHealthcareSidebar() {
         ))}
       </div>
       <div className={styles.sbAlert}>
-        <div className={styles.sbAlertTitle}>Community tip</div>
+        <div className={styles.sbAlertTitle}>
+          {t("resources:transHealthcare.sidebar.communityTip")}
+        </div>
         <div className={styles.sbAlertBody}>
-          ILGA Portugal offers free legal accompaniment for trans people
-          navigating the SNS system. You do not have to do this alone — call
-          them before your first appointment.
+          {t("resources:transHealthcare.sidebar.communityTipBody")}
         </div>
       </div>
       <div className={styles.sbCard}>
-        <div className={styles.sbcTitle}>Related on QueerPulse</div>
+        <div className={styles.sbcTitle}>
+          {t("resources:transHealthcare.sidebar.relatedTitle")}
+        </div>
         <div className={styles.sbcItem}>
           <Link to={routes.solidarity} className={styles.sbcLink}>
-            Solidarity Pricing Registry →
+            {t("resources:transHealthcare.sidebar.solidarityCta")}
           </Link>
           <div className={styles.sbcRole}>
-            Trans-affirming GPs, psychiatrists
+            {t("resources:transHealthcare.sidebar.solidarityRole")}
           </div>
         </div>
         <div className={styles.sbcItem}>
           <Link to={routes.legal} className={styles.sbcLink}>
-            Legal Resources →
+            {t("resources:transHealthcare.sidebar.legalCta")}
           </Link>
-          <div className={styles.sbcRole}>Name change documents</div>
+          <div className={styles.sbcRole}>
+            {t("resources:transHealthcare.sidebar.legalRole")}
+          </div>
         </div>
         <div className={styles.sbcItem}>
           <Link to={routes.mentalHealth} className={styles.sbcLink}>
-            Mental Health →
+            {t("resources:transHealthcare.sidebar.mentalHealthCta")}
           </Link>
-          <div className={styles.sbcRole}>Support through the process</div>
+          <div className={styles.sbcRole}>
+            {t("resources:transHealthcare.sidebar.mentalHealthRole")}
+          </div>
         </div>
       </div>
     </aside>
@@ -112,17 +124,19 @@ export function TransHealthcareSidebar() {
 }
 
 export function TransHealthcareOutro() {
+  const { t } = useTranslation();
   return (
     <Outro
       title={
-        <>
-          You deserve <em>good care.</em>
-        </>
+        <Translation
+          i18nKey="resources:transHealthcare.outro.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="The QueerPulse community includes trans-affirming GPs, therapists, and legal professionals. You do not have to navigate this alone."
+      sub={t("resources:transHealthcare.outro.sub")}
     >
       <Button to={routes.solidarity} variant="primary" size="lg">
-        Find solidarity pricing
+        {t("resources:transHealthcare.outro.cta")}
       </Button>
     </Outro>
   );

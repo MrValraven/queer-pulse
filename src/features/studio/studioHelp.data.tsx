@@ -1,6 +1,15 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import type { TFunction } from "../../shared/i18n/types";
+
+/**
+ * Content for the Studio Help page. Platform-authored chrome (never fetched —
+ * see `docs/i18n/extraction-brief.md` §1). Pattern B: `buildHelpCats(t)` /
+ * `buildHelpSections(t)` / `buildContactCards(t)` are memoized in the
+ * consumer.
+ */
 
 /** A single FAQ entry. `id` is used both as React key and accordion open-id. */
 export interface FaqItem {
@@ -12,194 +21,152 @@ export interface FaqItem {
 /** A top-of-page category card that jumps to a section. */
 export interface HelpCat {
   target: string;
-  pre: string;
-  em: string;
-  post?: string;
+  heading: ReactNode;
   blurb: string;
   icon: "note" | "user" | "coin";
 }
 
-/** A FAQ section: heading (split for the coral <em>) + its items. */
+/** A FAQ section: heading (carries the coral <em>) + its items. */
 export interface HelpSection {
   id: string;
-  pre: string;
-  em: string;
-  post?: string;
+  heading: ReactNode;
   items: FaqItem[];
 }
 
-export const HELP_CATS: HelpCat[] = [
-  {
-    target: "listening",
-    pre: "Listening & ",
-    em: "tipping",
-    blurb: "Playback, tips, sustaining, library",
-    icon: "note",
-  },
-  {
-    target: "account",
-    pre: "Account & ",
-    em: "billing",
-    blurb: "Membership, tiers, privacy, cancelling",
-    icon: "user",
-  },
-  {
-    target: "artists",
-    pre: "For ",
-    em: "artists",
-    blurb: "Uploads, payouts, rights, the rate",
-    icon: "coin",
-  },
-];
+export function buildHelpCats(t: TFunction): HelpCat[] {
+  return [
+    {
+      target: "listening",
+      heading: <Translation i18nKey="studio:help.cat.listening.heading" components={{ em: <em /> }} />,
+      blurb: t("studio:help.cat.listening.blurb"),
+      icon: "note",
+    },
+    {
+      target: "account",
+      heading: <Translation i18nKey="studio:help.cat.account.heading" components={{ em: <em /> }} />,
+      blurb: t("studio:help.cat.account.blurb"),
+      icon: "user",
+    },
+    {
+      target: "artists",
+      heading: <Translation i18nKey="studio:help.cat.artists.heading" components={{ em: <em /> }} />,
+      blurb: t("studio:help.cat.artists.blurb"),
+      icon: "coin",
+    },
+  ];
+}
 
-export const HELP_SECTIONS: HelpSection[] = [
-  {
-    id: "listening",
-    pre: "Listening & ",
-    em: "tipping",
-    items: [
-      {
-        id: "money-go",
-        q: "Where does my money actually go?",
-        a: (
-          <>
-            Of your subscription, <strong>80% reaches artists</strong> by play,
-            at a floor of &euro;0.05 each. <em>Every cent of every tip</em> goes
-            to the artist with no platform cut. The rest funds curation
-            stipends, infrastructure, and the solidarity fund. You can see the
-            exact split on the <Link to={routes.governance}>public ledger</Link>
-            , updated Mondays at noon.
-          </>
-        ),
-      },
-      {
-        id: "tip-no-account",
-        q: "Can I tip without an account?",
-        a: (
-          <>
-            You can <em>listen</em> to one demo set free, but tipping needs an
-            account so the money can route to the artist and mint you a receipt.
-            Sign-up takes under a minute and the first month is on us.
-          </>
-        ),
-      },
-      {
-        id: "tip-notes-private",
-        q: "Are my tip notes private?",
-        a: (
-          <>
-            <strong>Yes, by default.</strong> A note you write with a tip is
-            seen only by you and the artist. You can choose to make notes
-            semi-public or public in <Link to="/studio/settings">Settings</Link>
-            , and flip any single note later.
-          </>
-        ),
-      },
-      {
-        id: "listening-history",
-        q: "Do you keep my listening history?",
-        a: (
-          <>
-            Not unless you turn it on. By default{" "}
-            <em>nothing about what you play leaves your browser</em>. If you
-            enable history, it&apos;s a private record only you see, erasable in
-            one tap with no confirmation modal.
-          </>
-        ),
-      },
-    ],
-  },
-  {
-    id: "account",
-    pre: "Account & ",
-    em: "billing",
-    items: [
-      {
-        id: "7-vs-11",
-        q: "What's the difference between €7 and €11?",
-        a: (
-          <>
-            <strong>&euro;7/mo</strong> is Studio only.{" "}
-            <strong>&euro;11/mo</strong> is the whole QueerPulse co-op &mdash;
-            Studio plus Cinema, the Magazine, Gatherings, reading groups, and a
-            vote at the annual assembly. One membership, every surface. Change
-            tiers any month.
-          </>
-        ),
-      },
-      {
-        id: "cancel",
-        q: "How do I cancel?",
-        a: (
-          <>
-            One click in{" "}
-            <Link to="/studio/settings">Settings &rarr; Erase &amp; exit</Link>.
-            No retention call, no &ldquo;are you sure&rdquo; loop, no winback
-            emails. We think leaving should be as easy as arriving &mdash;
-            that&apos;s the only honest way to ask you to stay.
-          </>
-        ),
-      },
-      {
-        id: "data-sold",
-        q: "Is my data sold or used to train anything?",
-        a: (
-          <>
-            <strong>Never.</strong> We don&apos;t sell, share, or train on what
-            you listen to. Aggregate play counts feed the public ledger, but
-            nothing that identifies you. Full detail in the{" "}
-            <Link to={routes.studioTerms}>trust &amp; terms</Link> page.
-          </>
-        ),
-      },
-    ],
-  },
-  {
-    id: "artists",
-    pre: "For ",
-    em: "artists",
-    items: [
-      {
-        id: "get-paid",
-        q: "When and how do I get paid?",
-        a: (
-          <>
-            Monthly, on the 5th, with a &euro;5 floor. SEPA or Stripe Connect.
-            You see the per-stream rate that month, ledger entry numbers, and
-            per-release breakdowns. Collaborators are paid <em>directly</em>{" "}
-            &mdash; there&apos;s no &ldquo;main artist&rdquo; wallet. See{" "}
-            <Link to={routes.studioPayouts}>Payouts</Link>.
-          </>
-        ),
-      },
-      {
-        id: "keep-masters",
-        q: "Do I keep my masters?",
-        a: (
-          <>
-            <strong>Always.</strong> You keep your masters and your rights. You
-            can take any release down in a one-page, 14-day process with no
-            retention loop &mdash; and past plays stay paid. See{" "}
-            <Link to={routes.studioRights}>Rights &amp; takedown</Link>.
-          </>
-        ),
-      },
-      {
-        id: "realistic-earn",
-        q: "What can I realistically earn?",
-        a: (
-          <>
-            We&apos;re honest about the ceiling: roughly &euro;74/mo casual,
-            &euro;340/mo building, &euro;1,820/mo sustaining. Studio won&apos;t
-            replace a touring income &mdash; but it can replace the rent. The
-            full breakdown is on{" "}
-            <Link to={routes.studioAbout}>About Studio</Link>.
-          </>
-        ),
-      },
-    ],
-  },
-];
+export function buildHelpSections(t: TFunction): HelpSection[] {
+  return [
+    {
+      id: "listening",
+      heading: <Translation i18nKey="studio:help.cat.listening.heading" components={{ em: <em /> }} />,
+      items: [
+        {
+          id: "money-go",
+          q: t("studio:help.faq.moneyGo.q"),
+          a: (
+            <Translation
+              i18nKey="studio:help.faq.moneyGo.a"
+              components={{
+                strong: <strong />,
+                em: <em />,
+                a: <Link to={routes.governance} />,
+              }}
+            />
+          ),
+        },
+        {
+          id: "tip-no-account",
+          q: t("studio:help.faq.tipNoAccount.q"),
+          a: <Translation i18nKey="studio:help.faq.tipNoAccount.a" components={{ em: <em /> }} />,
+        },
+        {
+          id: "tip-notes-private",
+          q: t("studio:help.faq.tipNotesPrivate.q"),
+          a: (
+            <Translation
+              i18nKey="studio:help.faq.tipNotesPrivate.a"
+              components={{ strong: <strong />, a: <Link to="/studio/settings" /> }}
+            />
+          ),
+        },
+        {
+          id: "listening-history",
+          q: t("studio:help.faq.listeningHistory.q"),
+          a: <Translation i18nKey="studio:help.faq.listeningHistory.a" components={{ em: <em /> }} />,
+        },
+      ],
+    },
+    {
+      id: "account",
+      heading: <Translation i18nKey="studio:help.cat.account.heading" components={{ em: <em /> }} />,
+      items: [
+        {
+          id: "7-vs-11",
+          q: t("studio:help.faq.priceDiff.q"),
+          a: <Translation i18nKey="studio:help.faq.priceDiff.a" components={{ strong: <strong /> }} />,
+        },
+        {
+          id: "cancel",
+          q: t("studio:help.faq.cancel.q"),
+          a: (
+            <Translation
+              i18nKey="studio:help.faq.cancel.a"
+              components={{ a: <Link to="/studio/settings" /> }}
+            />
+          ),
+        },
+        {
+          id: "data-sold",
+          q: t("studio:help.faq.dataSold.q"),
+          a: (
+            <Translation
+              i18nKey="studio:help.faq.dataSold.a"
+              components={{ strong: <strong />, a: <Link to={routes.studioTerms} /> }}
+            />
+          ),
+        },
+      ],
+    },
+    {
+      id: "artists",
+      heading: <Translation i18nKey="studio:help.cat.artists.heading" components={{ em: <em /> }} />,
+      items: [
+        {
+          id: "get-paid",
+          q: t("studio:help.faq.getPaid.q"),
+          a: (
+            <Translation
+              i18nKey="studio:help.faq.getPaid.a"
+              components={{ em: <em />, a: <Link to={routes.studioPayouts} /> }}
+            />
+          ),
+        },
+        {
+          id: "keep-masters",
+          q: t("studio:help.faq.keepMasters.q"),
+          a: (
+            <Translation
+              i18nKey="studio:help.faq.keepMasters.a"
+              components={{ strong: <strong />, a: <Link to={routes.studioRights} /> }}
+            />
+          ),
+        },
+        {
+          id: "realistic-earn",
+          q: t("studio:help.faq.realisticEarn.q"),
+          a: (
+            <Translation
+              i18nKey="studio:help.faq.realisticEarn.a"
+              components={{ a: <Link to={routes.studioAbout} /> }}
+            />
+          ),
+        },
+      ],
+    },
+  ];
+}
 
 /** A "still stuck?" contact card. */
 export interface ContactCard {
@@ -207,61 +174,40 @@ export interface ContactCard {
   jade?: boolean;
   title: ReactNode;
   body: ReactNode;
-  /** Button/link label. */
   action: string;
-  /** When set, the card action is a router link; otherwise it fires a toast. */
   to?: string;
-  /** Toast message fired when there is no `to`. */
   toast?: string;
 }
 
-export const CONTACT_CARDS: ContactCard[] = [
-  {
-    icon: "mail",
-    title: (
-      <>
-        <em>Email</em> a human
-      </>
-    ),
-    body: (
-      <>
-        <em>help@queerpulse.org</em>
-        <br />
-        replies within a day
-      </>
-    ),
-    action: "Send a message",
-    toast: "Opening your mail client…",
-  },
-  {
-    icon: "chat",
-    title: (
-      <>
-        Community <em>forum</em>
-      </>
-    ),
-    body: (
-      <>
-        Members helping members <em>&middot; always open</em>
-      </>
-    ),
-    action: "Visit the forum",
-    toast: "Opening the forum…",
-  },
-  {
-    icon: "check",
-    jade: true,
-    title: (
-      <>
-        Report an <em>access barrier</em>
-      </>
-    ),
-    body: (
-      <>
-        Assistive-tech reports <em>jump the queue</em>
-      </>
-    ),
-    action: "Accessibility →",
-    to: routes.studioAccessibility,
-  },
-];
+export function buildContactCards(t: TFunction): ContactCard[] {
+  return [
+    {
+      icon: "mail",
+      title: <Translation i18nKey="studio:help.contact.email.title" components={{ em: <em /> }} />,
+      body: (
+        <>
+          <em>help@queerpulse.org</em>
+          <br />
+          {t("studio:help.contact.email.replyLine")}
+        </>
+      ),
+      action: t("studio:help.contact.email.action"),
+      toast: t("studio:help.contact.email.toast"),
+    },
+    {
+      icon: "chat",
+      title: <Translation i18nKey="studio:help.contact.forum.title" components={{ em: <em /> }} />,
+      body: <Translation i18nKey="studio:help.contact.forum.body" components={{ em: <em /> }} />,
+      action: t("studio:help.contact.forum.action"),
+      toast: t("studio:help.contact.forum.toast"),
+    },
+    {
+      icon: "check",
+      jade: true,
+      title: <Translation i18nKey="studio:help.contact.access.title" components={{ em: <em /> }} />,
+      body: <Translation i18nKey="studio:help.contact.access.body" components={{ em: <em /> }} />,
+      action: t("studio:help.contact.access.action"),
+      to: routes.studioAccessibility,
+    },
+  ];
+}

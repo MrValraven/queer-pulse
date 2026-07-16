@@ -9,10 +9,20 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./ChangelogPage.module.css";
 
 type Type = "feature" | "community" | "fix" | "policy" | "magazine";
+
+const TYPE_BADGE_KEYS: Record<Type, string> = {
+  feature: "marketing:changelog.badge.feature",
+  community: "marketing:changelog.badge.community",
+  fix: "marketing:changelog.badge.fix",
+  policy: "marketing:changelog.badge.policy",
+  magazine: "marketing:changelog.badge.magazine",
+};
 
 interface Entry {
   type: Type;
@@ -154,13 +164,13 @@ const DATA: YearBlock[] = [
   },
 ];
 
-const FILTERS: { id: Type | "all"; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "feature", label: "Features" },
-  { id: "community", label: "Community" },
-  { id: "fix", label: "Fixes" },
-  { id: "policy", label: "Policy" },
-  { id: "magazine", label: "Magazine" },
+const FILTERS: { id: Type | "all"; labelKey: string }[] = [
+  { id: "all", labelKey: "marketing:changelog.filter.all" },
+  { id: "feature", labelKey: "marketing:changelog.filter.feature" },
+  { id: "community", labelKey: "marketing:changelog.filter.community" },
+  { id: "fix", labelKey: "marketing:changelog.filter.fix" },
+  { id: "policy", labelKey: "marketing:changelog.filter.policy" },
+  { id: "magazine", labelKey: "marketing:changelog.filter.magazine" },
 ];
 
 function EntrySkeleton() {
@@ -181,6 +191,7 @@ function EntrySkeleton() {
 }
 
 export function ChangelogPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [filter, setFilter] = useState<Type | "all">("all");
 
@@ -188,24 +199,28 @@ export function ChangelogPage() {
     <PageShell>
       <div className={styles.page}>
         <div className={`wrap ${styles.wrap}`}>
-          <HubBackLink to={routes.roadmap} label="Roadmap" />
+          <HubBackLink
+            to={routes.roadmap}
+            label={t("marketing:changelog.hero.backLabel")}
+          />
           <div className={styles.header}>
-            <div className={styles.eye}>Platform changelog</div>
+            <div className={styles.eye}>
+              {t("marketing:changelog.hero.eyebrow")}
+            </div>
             <h1 className={styles.title}>
-              What's <em>changed,</em>
+              <Translation
+                i18nKey="marketing:changelog.hero.title"
+                components={{ em: <em /> }}
+              />
               <br />
-              and when.
+              {t("marketing:changelog.hero.titleLine2")}
             </h1>
-            <p className={styles.sub}>
-              Every update to QueerPulse, in reverse order. We publish changes
-              here so you always know what's different and why. Nothing happens
-              without a record.
-            </p>
+            <p className={styles.sub}>{t("marketing:changelog.hero.sub")}</p>
           </div>
 
           <FilterChips
             className={styles.filter}
-            options={FILTERS.map((f) => ({ value: f.id, label: f.label }))}
+            options={FILTERS.map((f) => ({ value: f.id, label: t(f.labelKey) }))}
             value={filter}
             onChange={(v) => setFilter(v as Type | "all")}
           />
@@ -224,10 +239,10 @@ export function ChangelogPage() {
             ) ? (
             <EmptyState
               icon={<FiClock />}
-              title="Nothing logged under that filter yet"
-              description="No changes of this kind have shipped so far. Clear the filter to see the full history."
+              title={t("marketing:changelog.empty.title")}
+              description={t("marketing:changelog.empty.description")}
               action={{
-                label: "Clear filters",
+                label: t("marketing:changelog.empty.clearCta"),
                 onClick: () => setFilter("all"),
               }}
             />
@@ -256,7 +271,7 @@ export function ChangelogPage() {
                             <span
                               className={`${styles.badge} ${styles[e.type]}`}
                             >
-                              {e.badge}
+                              {t(TYPE_BADGE_KEYS[e.type])}
                             </span>
                             <div className={styles.entryTitle}>{e.title}</div>
                           </div>

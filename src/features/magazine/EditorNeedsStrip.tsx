@@ -1,10 +1,13 @@
 import { FiArrowRight } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   needsYouNow,
   isLate,
   dueInfo,
   stripEm,
   firstName,
+  STAGE_LABEL_KEY,
   type Piece,
   type Editor,
 } from "./editorDashboard.data";
@@ -25,14 +28,18 @@ export function EditorNeedsStrip({
   onOpen: (piece: Piece) => void;
   onChase: (piece: Piece) => void;
 }) {
+  const { t } = useTranslation();
   const urgent = needsYouNow(pieces, me);
 
   if (!urgent.length) {
     return (
       <section className={styles.needs}>
         <div className={styles.needsClear}>
-          You’re all clear, {me}. Nothing late and nothing waiting in your
-          court. <span>Nice.</span>
+          <Translation
+            i18nKey="magazine:editor.needsStrip.allClear"
+            components={{ emph: <span /> }}
+            values={{ name: me }}
+          />
         </div>
       </section>
     );
@@ -41,23 +48,32 @@ export function EditorNeedsStrip({
   return (
     <section className={styles.needs}>
       <div className={styles.needsHead}>
-        Needs you now · <em>{urgent.length}</em>
+        <Translation
+          i18nKey="magazine:editor.needsStrip.heading"
+          components={{ em: <em /> }}
+          values={{ count: urgent.length }}
+        />
       </div>
       <div className={styles.needsCards}>
         {urgent.map((p) => {
           const late = isLate(p);
-          const di = dueInfo(p.due);
+          const di = dueInfo(p.due, t);
           const isChase = late && p.blocked === "writer";
+          const stageLabel = t(STAGE_LABEL_KEY[p.stage]);
           const reason = late
             ? p.blocked === "writer"
-              ? "Writer hasn’t filed"
-              : `Overdue at ${p.stage}`
-            : `Sitting in your court · ${p.stage}`;
+              ? t("magazine:editor.needsStrip.writerHasntFiled")
+              : t("magazine:editor.needsStrip.overdueAt", { stage: stageLabel })
+            : t("magazine:editor.needsStrip.sittingInCourt", {
+                stage: stageLabel,
+              });
           const action = isChase
-            ? `Chase ${firstName(p.author)}`
+            ? t("magazine:editor.needsStrip.chase", {
+                name: firstName(p.author),
+              })
             : late
-              ? "Open"
-              : "Pick up";
+              ? t("magazine:editor.pieceRow.open")
+              : t("magazine:editor.needsStrip.pickUp");
           return (
             <button
               key={p.id}
@@ -69,7 +85,7 @@ export function EditorNeedsStrip({
               onClick={() => (isChase ? onChase(p) : onOpen(p))}
             >
               <span className={styles.needsTag}>
-                {late ? di.label : "Your court"}
+                {late ? di.label : t("magazine:editor.needsStrip.yourCourt")}
               </span>
               <span className={styles.needsTitle}>{stripEm(p.title)}</span>
               <span className={styles.needsReason}>{reason}</span>

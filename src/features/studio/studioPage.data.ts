@@ -117,7 +117,7 @@ export const SET: SetRow[] = [
 export interface TrackCard {
   cvTint: "coral" | "jade" | "plum";
   tag: "free" | "mem";
-  tagLabel: string;
+  tagLabelKey: string;
   curator: string;
   titlePre: string;
   titleEm?: string;
@@ -130,7 +130,7 @@ export const TRACKS: TrackCard[] = [
   {
     cvTint: "jade",
     tag: "free",
-    tagLabel: "Free",
+    tagLabelKey: "studio:tag.free",
     curator: "Programmed by SM",
     titlePre: "The kitchen in ",
     titleEm: "April",
@@ -142,7 +142,7 @@ export const TRACKS: TrackCard[] = [
   {
     cvTint: "coral",
     tag: "mem",
-    tagLabel: "Sustainer",
+    tagLabelKey: "studio:tag.sustainer",
     curator: "Programmed by DO",
     titlePre: "Bicha, with ",
     titleEm: "love",
@@ -154,7 +154,7 @@ export const TRACKS: TrackCard[] = [
   {
     cvTint: "plum",
     tag: "free",
-    tagLabel: "Free",
+    tagLabelKey: "studio:tag.free",
     curator: "Programmed by JR",
     titlePre: "Cantiga para a ",
     titleEm: "vizinha",
@@ -166,7 +166,7 @@ export const TRACKS: TrackCard[] = [
   {
     cvTint: "jade",
     tag: "mem",
-    tagLabel: "Sustainer",
+    tagLabelKey: "studio:tag.sustainer",
     curator: "Programmed by YR",
     titlePre: "Pedro on the ",
     titleEm: "25",

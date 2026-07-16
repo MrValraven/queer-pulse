@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiStar, FiFlag } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { VerifiedSpace } from "./safeSpaces";
 import { TYPE_CLASS } from "./safeSpacesPage.data";
@@ -15,6 +16,7 @@ export function SafeSpaceCard({
   onFlag: () => void;
   delay?: number;
 }) {
+  const { t } = useTranslation();
   const flag = (e: React.SyntheticEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -33,7 +35,7 @@ export function SafeSpaceCard({
         </div>
         <div className={styles.verifiedBadge}>
           <div className={styles.vbDot} />
-          Verified
+          {t("safety:spaces.card.verifiedBadge")}
         </div>
       </div>
       <div className={styles.name}>{s.name}</div>
@@ -62,7 +64,7 @@ export function SafeSpaceCard({
             if (e.key === "Enter" || e.key === " ") flag(e);
           }}
         >
-          <FiFlag /> Flag
+          <FiFlag /> {t("safety:spaces.card.flagCta")}
         </span>
       </div>
     </FadeIn>

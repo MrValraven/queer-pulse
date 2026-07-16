@@ -4,7 +4,7 @@ import type { Catalog } from "../../types";
  * Community — pt-PT inclusivo. Mesmas chaves que `en/community.ts`.
  *
  * Notas de tradução:
- * - "Members" → *pessoas*/*a comunidade*, nunca *Membros*.
+ * - "Members" → "pessoas" ou "a comunidade", nunca "Membros".
  * - Registo `tu`, caloroso, nunca `você`.
  * - Formas neutras (-e) só quando nos dirigimos diretamente à pessoa
  *   (ex.: "bem-vinde", "obrigade", "prontе"), nunca `@`/`x`, nunca
@@ -235,6 +235,7 @@ export const community: Catalog = {
   "creatives.count.artists_other": "{count} artistas",
   "creatives.card.viewProfileCta": "Ver perfil →",
   "creatives.card.viewProfileCtaShort": "Ver perfil",
+  "creatives.card.artistPhoto": "foto de artista",
   "creatives.player.playAriaLabel": "Reproduzir",
   "creatives.empty.art.title": "Nada corresponde aos teus filtros",
   "creatives.empty.art.description":

@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Reveal, SubpageIndex } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NAV, GOVERNING_DOCS } from "./governance.data";
 import {
   CouncilSection,
@@ -14,7 +16,17 @@ import {
 import styles from "./GovernancePage.module.css";
 
 export function GovernancePage() {
+  const { t } = useTranslation();
   const [active, setActive] = useState("health");
+  const governingDocs = useMemo(
+    () =>
+      GOVERNING_DOCS.map((doc) => ({
+        label: t(doc.labelKey),
+        to: doc.to,
+        blurb: t(doc.blurbKey),
+      })),
+    [t],
+  );
 
   useEffect(() => {
     const onScroll = () => {
@@ -37,15 +49,16 @@ export function GovernancePage() {
       <section className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
-            Governance &amp; Transparency
+            {t("governance:page.hero.eyebrow")}
           </Reveal>
           <Reveal as="h1" delay={60}>
-            How we run this, and who <em>decides.</em>
+            <Translation
+              i18nKey="governance:page.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" delay={120}>
-            QueerPulse is a community platform. That means being transparent
-            about how it's governed, how decisions are made, and what happens
-            when things go wrong. This page is that record.
+            {t("governance:page.hero.lead")}
           </Reveal>
         </div>
       </section>
@@ -65,7 +78,7 @@ export function GovernancePage() {
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  {item.label}
+                  {t(item.labelKey)}
                 </a>
               ))}
             </Reveal>
@@ -84,9 +97,9 @@ export function GovernancePage() {
       </section>
 
       <SubpageIndex
-        eyebrow="Governing documents"
-        title="Read the fine print."
-        items={GOVERNING_DOCS}
+        eyebrow={t("governance:subpageIndex.eyebrow")}
+        title={t("governance:subpageIndex.title")}
+        items={governingDocs}
       />
     </PageShell>
   );

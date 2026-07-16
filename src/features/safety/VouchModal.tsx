@@ -2,14 +2,51 @@ import { useEffect, useState } from "react";
 import { FiShield } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./VouchModal.module.css";
 
-const RELATIONSHIPS = [
-  "I go here regularly",
-  "I've been once or twice",
-  "I work or volunteer here",
-  "I came with a friend who needed it",
+const RELATIONSHIP_KEYS = [
+  "safety:vouchModal.relationship.regular",
+  "safety:vouchModal.relationship.onceOrTwice",
+  "safety:vouchModal.relationship.workOrVolunteer",
+  "safety:vouchModal.relationship.withFriend",
 ];
+
+function VouchSuccessPanel({
+  spaceName,
+  onDone,
+}: {
+  spaceName: string;
+  onDone: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.success}>
+      <div className={styles.successIcon}>
+        <FiShield size={28} />
+      </div>
+      <div className={styles.successTitle}>
+        <Translation
+          i18nKey="safety:vouchModal.success.title"
+          components={{ em: <em /> }}
+        />
+      </div>
+      <p className={styles.successSub}>
+        <Translation
+          i18nKey="safety:vouchModal.success.body"
+          values={{ spaceName }}
+          components={{ strong: <strong /> }}
+        />
+      </p>
+      <div className={styles.successActions}>
+        <Button variant="ghost-dark" className={styles.full} onClick={onDone}>
+          {t("safety:vouchModal.success.doneCta")}
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 /**
  * Add a safety vouch for a verified space. A short relationship + note form that
@@ -23,7 +60,8 @@ export function VouchModal({
   spaceName: string;
   onClose: () => void;
 }) {
-  const [relationship, setRelationship] = useState(RELATIONSHIPS[0]);
+  const { t } = useTranslation();
+  const [relationship, setRelationship] = useState(RELATIONSHIP_KEYS[0]!);
   const [note, setNote] = useState("");
   const [status, setStatus] = useState<"form" | "loading" | "done">("form");
   useScrollLock();
@@ -44,6 +82,8 @@ export function VouchModal({
     window.setTimeout(() => setStatus("done"), 1100);
   };
 
+  const charsLeft = 12 - note.trim().length;
+
   return (
     <div
       className={styles.overlay}
@@ -55,60 +95,44 @@ export function VouchModal({
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-label="Vouch for this space"
+        aria-label={t("safety:vouchModal.ariaLabel")}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("safety:vouchModal.closeAriaLabel")}
         >
           ×
         </button>
 
         <div className={styles.scroll}>
           {status === "done" ? (
-            <div className={styles.success}>
-              <div className={styles.successIcon}>
-                <FiShield size={28} />
-              </div>
-              <div className={styles.successTitle}>
-                Your vouch is <em>in.</em>
-              </div>
-              <p className={styles.successSub}>
-                Thank you for standing behind <b>{spaceName}</b>. Member vouches
-                are how others know a space is safe before they ever walk in —
-                yours will appear once a moderator confirms it.
-              </p>
-              <div className={styles.successActions}>
-                <Button
-                  variant="ghost-dark"
-                  className={styles.full}
-                  onClick={onClose}
-                >
-                  Done
-                </Button>
-              </div>
-            </div>
+            <VouchSuccessPanel spaceName={spaceName} onDone={onClose} />
           ) : (
             <div>
-              <div className={styles.eye}>Add your vouch</div>
-              <div className={styles.title}>
-                Stand behind <em>{spaceName}</em>
+              <div className={styles.eye}>
+                {t("safety:vouchModal.form.eyebrow")}
               </div>
-              <p className={styles.sub}>
-                A vouch is a short, honest note about why this space feels safe
-                to you. Specifics help other members trust it.
-              </p>
+              <div className={styles.title}>
+                <Translation
+                  i18nKey="safety:vouchModal.form.title"
+                  values={{ spaceName }}
+                  components={{ em: <em /> }}
+                />
+              </div>
+              <p className={styles.sub}>{t("safety:vouchModal.form.lead")}</p>
 
-              <div className={styles.label}>How do you know this space?</div>
+              <div className={styles.label}>
+                {t("safety:vouchModal.form.relationshipLabel")}
+              </div>
               <div className={styles.opts}>
-                {RELATIONSHIPS.map((r) => (
+                {RELATIONSHIP_KEYS.map((key) => (
                   <label
-                    key={r}
+                    key={key}
                     className={[
                       styles.opt,
-                      relationship === r && styles.optChecked,
+                      relationship === key && styles.optChecked,
                     ]
                       .filter(Boolean)
                       .join(" ")}
@@ -116,31 +140,37 @@ export function VouchModal({
                     <input
                       type="radio"
                       name="vouch-relationship"
-                      value={r}
-                      checked={relationship === r}
-                      onChange={() => setRelationship(r)}
+                      value={key}
+                      checked={relationship === key}
+                      onChange={() => setRelationship(key)}
                     />
-                    {r}
+                    {t(key)}
                   </label>
                 ))}
               </div>
 
-              <div className={styles.label}>Your note</div>
+              <div className={styles.label}>
+                {t("safety:vouchModal.form.noteLabel")}
+              </div>
               <textarea
                 className={styles.textarea}
-                placeholder="What makes this space feel safe to you? Staff, atmosphere, accessibility, a moment that mattered…"
+                placeholder={t("safety:vouchModal.form.notePlaceholder")}
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />
               <div className={styles.counter}>
-                {note.trim().length < 12
-                  ? `${12 - note.trim().length} more characters to submit`
-                  : `${note.trim().length} characters`}
+                {charsLeft > 0
+                  ? t("safety:vouchModal.form.charsRemaining", {
+                      count: charsLeft,
+                    })
+                  : t("safety:vouchModal.form.charsCount", {
+                      count: note.trim().length,
+                    })}
               </div>
 
               <div className={styles.actions}>
                 <Button variant="ghost" onClick={onClose}>
-                  Cancel
+                  {t("safety:vouchModal.form.cancelCta")}
                 </Button>
                 <Button
                   variant="primary"
@@ -148,7 +178,9 @@ export function VouchModal({
                   onClick={submit}
                   disabled={!canSubmit || status === "loading"}
                 >
-                  {status === "loading" ? "Submitting…" : "Add my vouch"}
+                  {status === "loading"
+                    ? t("safety:vouchModal.form.submitting")
+                    : t("safety:vouchModal.form.submitCta")}
                 </Button>
               </div>
             </div>

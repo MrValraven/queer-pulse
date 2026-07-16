@@ -6,6 +6,8 @@ import {
   FiCompass,
   FiShield,
 } from "react-icons/fi";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ACCESS_OPTIONS } from "./startCommunity.data";
 import type { AccessTier } from "../membership.types";
 import type { CommunityForm } from "./useCommunityForm";
@@ -20,6 +22,7 @@ const ICONS = {
 
 /** Chapter 3 — Safety: who can find the space, and how they get in. */
 export function StepSafety({ form }: { form: CommunityForm }) {
+  const { t } = useTranslation();
   const { draft, set } = form;
   const pick = (tier: AccessTier) => set({ accessTier: tier });
 
@@ -28,8 +31,10 @@ export function StepSafety({ form }: { form: CommunityForm }) {
       <div className={styles.accLead}>
         <FiCompass size={22} aria-hidden />
         <p>
-          This is the one to sit with. It shapes who feels safe here.{" "}
-          <b>You can change it later</b>, but it's worth getting close now.
+          <Translation
+            i18nKey="communities:start.safety.lead"
+            components={{ strong: <b /> }}
+          />
         </p>
       </div>
 
@@ -56,22 +61,28 @@ export function StepSafety({ form }: { form: CommunityForm }) {
               </span>
               <span className={styles.accBody}>
                 <span className={styles.accTop}>
-                  <span className={styles.accName}>{opt.name}</span>
+                  <span className={styles.accName}>{t(opt.nameKey)}</span>
                   {opt.private && (
-                    <span className={styles.accFlag}>Safest</span>
+                    <span className={styles.accFlag}>
+                      {t("communities:start.safety.safestFlag")}
+                    </span>
                   )}
                 </span>
                 <span className={styles.accLines}>
                   <span className={styles.accLine}>
-                    <span className={styles.accKey}>Find</span>
-                    {opt.find}
+                    <span className={styles.accKey}>
+                      {t("communities:start.safety.findLabel")}
+                    </span>
+                    {t(opt.findKey)}
                   </span>
                   <span className={styles.accLine}>
-                    <span className={styles.accKey}>Join</span>
-                    {opt.join}
+                    <span className={styles.accKey}>
+                      {t("communities:start.safety.joinLabel")}
+                    </span>
+                    {t(opt.joinKey)}
                   </span>
                 </span>
-                <span className={styles.accNote}>{opt.note}</span>
+                <span className={styles.accNote}>{t(opt.noteKey)}</span>
               </span>
               <span className={styles.accRadio} aria-hidden />
             </button>
@@ -82,15 +93,13 @@ export function StepSafety({ form }: { form: CommunityForm }) {
       {draft.accessTier === "private" && (
         <div className={styles.privReassure}>
           <FiShield size={20} aria-hidden />
-          <p>
-            Private communities never appear in Discover, search, or member
-            suggestions. Only people who are already inside can see who else is
-            here.
-          </p>
+          <p>{t("communities:start.safety.privateReassure")}</p>
         </div>
       )}
 
-      <div className={styles.groupH}>Member roster</div>
+      <div className={styles.groupH}>
+        {t("communities:start.safety.rosterHeading")}
+      </div>
       <button
         type="button"
         className={styles.toggleRow}
@@ -99,10 +108,11 @@ export function StepSafety({ form }: { form: CommunityForm }) {
         style={{ width: "100%", textAlign: "left" }}
       >
         <span className={styles.trTxt}>
-          <b>Show the member list to members</b>
-          <span>
-            When off, people can be here without their name appearing to others.
-          </span>
+          <Translation
+            i18nKey="communities:start.safety.rosterToggleTitle"
+            components={{ strong: <b /> }}
+          />
+          <span>{t("communities:start.safety.rosterToggleBody")}</span>
         </span>
         <span
           className={[styles.tg, draft.rosterVisible && styles.tgOn]

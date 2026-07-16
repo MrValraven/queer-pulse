@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { Button, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CinemaShell } from "./CinemaShell";
 import { CinemaShortsHeader } from "./CinemaShortsHeader";
@@ -24,6 +26,7 @@ import styles from "./CinemaShortsPage.module.css";
 /** Made Here — the community catalogue of member-made queer short films. */
 export function CinemaShortsPage() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [saved, setSaved] = useState<string[]>([]);
 
   const shelf = useMemo<ShortsShelf>(
@@ -34,16 +37,20 @@ export function CinemaShortsPage() {
         setSaved((prev) => {
           const has = prev.includes(id);
           showToast(
-            has ? "Removed from your watchlist" : "Saved to your watchlist",
+            t(
+              has
+                ? "cinema:film.watchlist.removedToast"
+                : "cinema:shorts.toast.savedToWatchlist",
+            ),
             "success",
           );
           return has ? prev.filter((x) => x !== id) : [...prev, id];
         }),
       onShare: (label) =>
-        showToast(`Link copied — share “${label}”`, "success"),
+        showToast(t("cinema:shorts.toast.linkCopiedShare", { label }), "success"),
       notify: (message) => showToast(message, "success"),
     }),
-    [saved, showToast],
+    [saved, showToast, t],
   );
 
   return (
@@ -74,14 +81,15 @@ export function CinemaShortsPage() {
 
       <Outro
         title={
-          <>
-            Tip a <em>filmmaker</em>.
-          </>
+          <Translation
+            i18nKey="cinema:shorts.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="100% goes to them. No fees. No minimum. Watch first, then decide."
+        sub={t("cinema:shorts.outro.sub")}
       >
         <Button size="lg" to={`${routes.cinemaBrowse}?f=made-here`}>
-          Browse all community films
+          {t("cinema:shorts.outro.browseCta")}
         </Button>
       </Outro>
     </CinemaShell>

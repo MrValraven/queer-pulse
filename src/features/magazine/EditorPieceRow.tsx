@@ -1,12 +1,14 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiChevronDown, FiArrowRight, FiMoreHorizontal } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { Popover, StageMenu, AssignMenu, MoreMenu } from "./EditorPopover";
 import {
   dueInfo,
   isLate,
   blockedLine,
+  STAGE_LABEL_KEY,
   type Piece,
   type Editor,
   type Stage,
@@ -80,10 +82,11 @@ export function EditorPieceRow({
   focused: boolean;
   handlers: PieceRowHandlers;
 }) {
-  const di = dueInfo(p.due);
+  const { t } = useTranslation();
+  const di = dueInfo(p.due, t);
   const late = isLate(p);
   const pct = p.pct ? ` · ${p.pct}%` : "";
-  const blk = blockedLine(p, me);
+  const blk = blockedLine(p, me, t);
 
   return (
     <div
@@ -94,7 +97,9 @@ export function EditorPieceRow({
         <div className={styles.pieceTitle}>{renderEm(p.title)}</div>
         <div className={styles.pieceBy}>
           {p.author} · {p.words.toLocaleString()} words · {p.section}
-          {p.newVoice && <span className={styles.nv}> · new voice</span>}
+          {p.newVoice && (
+            <span className={styles.nv}> · {t("magazine:editor.pieceRow.newVoice")}</span>
+          )}
         </div>
         <div className={styles.pcChips}>
           <Popover
@@ -105,7 +110,8 @@ export function EditorPieceRow({
                 onClick={toggle}
               >
                 <span className={cx(styles.chipDot, editorDot(p.editor))} />
-                with {p.editor} <FiChevronDown size={12} aria-hidden />
+                {t("magazine:editor.pieceRow.withEditor", { editor: p.editor })}{" "}
+                <FiChevronDown size={12} aria-hidden />
               </button>
             )}
           >
@@ -134,7 +140,7 @@ export function EditorPieceRow({
               className={cx(styles.pieceStatus, STAGE_CLASS[p.stage])}
               onClick={toggle}
             >
-              {p.stage}
+              {t(STAGE_LABEL_KEY[p.stage])}
               {pct} <FiChevronDown size={11} aria-hidden />
             </button>
           )}
@@ -159,7 +165,7 @@ export function EditorPieceRow({
 
       <div className={styles.pcAct}>
         <Link to={routes.issue} className={styles.pieceAction}>
-          Open <FiArrowRight size={12} aria-hidden />
+          {t("magazine:editor.pieceRow.open")} <FiArrowRight size={12} aria-hidden />
         </Link>
         <Popover
           align="right"
@@ -168,7 +174,7 @@ export function EditorPieceRow({
               type="button"
               className={styles.rowMore}
               onClick={toggle}
-              aria-label="More actions"
+              aria-label={t("magazine:editor.pieceRow.moreActionsAria")}
             >
               <FiMoreHorizontal size={16} aria-hidden />
             </button>

@@ -2,29 +2,52 @@ import { useState } from "react";
 import { FiArrowUp } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { DECISIONS, TOP_IDEAS, type IdeaItem } from "./roadmap.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { TOP_IDEAS, type IdeaItem } from "./roadmap.data";
 import styles from "./RoadmapPage.module.css";
 
+const DECISION_KEYS = [
+  {
+    tone: "jade" as const,
+    titleKey: "marketing:roadmap.howWeDecide.memberVotes.title",
+    descKey: "marketing:roadmap.howWeDecide.memberVotes.desc",
+  },
+  {
+    tone: "accent" as const,
+    titleKey: "marketing:roadmap.howWeDecide.safetyFirst.title",
+    descKey: "marketing:roadmap.howWeDecide.safetyFirst.desc",
+  },
+  {
+    tone: "plum" as const,
+    titleKey: "marketing:roadmap.howWeDecide.smallTeam.title",
+    descKey: "marketing:roadmap.howWeDecide.smallTeam.desc",
+  },
+];
+
 export function SubmitIdea() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [value, setValue] = useState("");
 
   function submit() {
     if (!value.trim()) {
-      showToast("Write a few words first", "error");
+      showToast(t("marketing:roadmap.submitIdea.toast.empty"), "error");
       return;
     }
-    showToast("Idea submitted — thank you", "success");
+    showToast(t("marketing:roadmap.submitIdea.toast.submitted"), "success");
     setValue("");
   }
 
   return (
     <div className={styles.shapeCard}>
-      <h3 className={styles.shapeHead}>Submit an idea</h3>
+      <h3 className={styles.shapeHead}>
+        {t("marketing:roadmap.submitIdea.title")}
+      </h3>
       <textarea
         className={styles.ideaTa}
-        aria-label="Your idea"
-        placeholder="What would make QueerPulse better for you?"
+        aria-label={t("marketing:roadmap.submitIdea.ariaLabel")}
+        placeholder={t("marketing:roadmap.submitIdea.placeholder")}
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
@@ -33,20 +56,21 @@ export function SubmitIdea() {
         onClick={submit}
         style={{ width: "100%", justifyContent: "center" }}
       >
-        Submit idea
+        {t("marketing:roadmap.submitIdea.cta")}
       </Button>
     </div>
   );
 }
 
 function IdeaRow({ idea }: { idea: IdeaItem }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [voted, setVoted] = useState(false);
 
   function vote() {
     if (voted) return;
     setVoted(true);
-    showToast("Vote recorded", "success");
+    showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
   }
 
   return (
@@ -60,16 +84,22 @@ function IdeaRow({ idea }: { idea: IdeaItem }) {
         aria-pressed={voted}
         disabled={voted}
       >
-        <FiArrowUp aria-hidden /> {voted ? "Voted" : "Vote"}
+        <FiArrowUp aria-hidden />{" "}
+        {voted
+          ? t("marketing:roadmap.topIdeas.voted")
+          : t("marketing:roadmap.topIdeas.vote")}
       </button>
     </div>
   );
 }
 
 export function TopIdeas() {
+  const { t } = useTranslation();
   return (
     <div className={styles.shapeCard}>
-      <h3 className={styles.shapeHead}>Most requested ideas</h3>
+      <h3 className={styles.shapeHead}>
+        {t("marketing:roadmap.topIdeas.title")}
+      </h3>
       <div className={styles.topIdeas}>
         {TOP_IDEAS.map((idea) => (
           <IdeaRow key={idea.text} idea={idea} />
@@ -80,18 +110,22 @@ export function TopIdeas() {
 }
 
 export function HowWeDecide() {
+  const { t } = useTranslation();
   return (
     <section className={styles.howSection}>
       <h2 className={styles.sectionHead} style={{ marginBottom: 20 }}>
-        How we <em>decide</em>
+        <Translation
+          i18nKey="marketing:roadmap.howWeDecide.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <div className={styles.howCards}>
-        {DECISIONS.map((d) => (
-          <div className={styles.howCard} key={d.title}>
+        {DECISION_KEYS.map((d) => (
+          <div className={styles.howCard} key={d.titleKey}>
             <span className={`${styles.hcDot} ${styles[d.tone]}`} />
             <div>
-              <div className={styles.hcTitle}>{d.title}</div>
-              <p className={styles.hcDesc}>{d.desc}</p>
+              <div className={styles.hcTitle}>{t(d.titleKey)}</div>
+              <p className={styles.hcDesc}>{t(d.descKey)}</p>
             </div>
           </div>
         ))}

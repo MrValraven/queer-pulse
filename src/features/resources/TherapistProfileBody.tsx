@@ -10,6 +10,7 @@ import {
   FiSliders,
 } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { Therapist } from "./mentalHealth.data";
 import styles from "./TherapistProfileModal.module.css";
@@ -21,6 +22,7 @@ export function TherapistProfileBody({
   therapist: Therapist;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const meta: { icon: ReactNode; label: string }[] = [
     { icon: <FiMapPin />, label: therapist.location },
     { icon: <FiClock />, label: therapist.availability },
@@ -28,10 +30,15 @@ export function TherapistProfileBody({
     {
       icon: <FiSliders />,
       label: therapist.slidingScale
-        ? "Sliding scale available"
-        : "Fixed session rate",
+        ? t("resources:mentalHealth.therapistProfile.meta.slidingScale")
+        : t("resources:mentalHealth.therapistProfile.meta.fixedRate"),
     },
-    { icon: <FiAward />, label: `${therapist.years} years in practice` },
+    {
+      icon: <FiAward />,
+      label: t("resources:mentalHealth.therapistProfile.meta.years", {
+        count: therapist.years,
+      }),
+    },
     { icon: <FiGlobe />, label: therapist.langs.join(", ") },
   ];
 
@@ -62,8 +69,8 @@ export function TherapistProfileBody({
           >
             <span className={styles.statusDot} />
             {therapist.acceptingNew
-              ? "Accepting new clients"
-              : "Waitlist only right now"}
+              ? t("resources:mentalHealth.therapistProfile.status.acceptingNew")
+              : t("resources:mentalHealth.therapistProfile.status.waitlistOnly")}
           </span>
         </div>
       </div>
@@ -86,7 +93,9 @@ export function TherapistProfileBody({
       </div>
 
       <div className={styles.section}>
-        <h3 className={styles.h3}>About</h3>
+        <h3 className={styles.h3}>
+          {t("resources:mentalHealth.therapistProfile.section.about")}
+        </h3>
         {therapist.bio.map((p, i) => (
           <p className={styles.body} key={i}>
             {p}
@@ -96,7 +105,9 @@ export function TherapistProfileBody({
 
       <div className={styles.cols}>
         <div className={styles.section}>
-          <h3 className={styles.h3}>How I work</h3>
+          <h3 className={styles.h3}>
+            {t("resources:mentalHealth.therapistProfile.section.howIWork")}
+          </h3>
           <div className={styles.pills}>
             {therapist.approach.map((a) => (
               <span key={a} className={styles.pill}>
@@ -106,10 +117,12 @@ export function TherapistProfileBody({
           </div>
         </div>
         <div className={styles.section}>
-          <h3 className={styles.h3}>Training &amp; qualifications</h3>
+          <h3 className={styles.h3}>
+            {t("resources:mentalHealth.therapistProfile.section.training")}
+          </h3>
           <ul className={styles.list}>
-            {therapist.training.map((t) => (
-              <li key={t}>{t}</li>
+            {therapist.training.map((trainingItem) => (
+              <li key={trainingItem}>{trainingItem}</li>
             ))}
           </ul>
         </div>
@@ -120,7 +133,9 @@ export function TherapistProfileBody({
           <FiHeart aria-hidden />
         </div>
         <div>
-          <div className={styles.fsLabel}>Your first session</div>
+          <div className={styles.fsLabel}>
+            {t("resources:mentalHealth.therapistProfile.section.firstSession")}
+          </div>
           <p className={styles.fsText}>{therapist.firstSession}</p>
         </div>
       </div>
@@ -131,7 +146,7 @@ export function TherapistProfileBody({
           to={`${routes.therapists}/${therapist.id}`}
           onClick={onClose}
         >
-          See full profile →
+          {t("resources:mentalHealth.therapistProfile.seeFullProfileCta")}
         </Button>
       </div>
     </>

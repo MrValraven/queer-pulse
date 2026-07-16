@@ -2,13 +2,24 @@ import { type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
 import styles from "./adminUi.module.css";
 
-/** Segmented pill control — one value selected at a time. */
+export interface AdminSegOption {
+  value: string;
+  /** Already-resolved display label — call sites pass `t(labelKey)`. */
+  label: string;
+}
+
+/**
+ * Segmented pill control — one value selected at a time. `options` carry a
+ * stable canonical `value` (never translated — it's what call sites persist
+ * or compare against) alongside a pre-resolved `label` for display, so a
+ * language switch never corrupts stored state (spec: label-key indirection).
+ */
 export function AdminSeg({
   options,
   value,
   onChange,
 }: {
-  options: string[];
+  options: AdminSegOption[];
   value: string;
   onChange: (value: string) => void;
 }) {
@@ -16,15 +27,15 @@ export function AdminSeg({
     <div className={styles.seg} role="group">
       {options.map((o) => (
         <button
-          key={o}
+          key={o.value}
           type="button"
-          aria-pressed={value === o}
-          className={[styles.segBtn, value === o && styles.segOn]
+          aria-pressed={value === o.value}
+          className={[styles.segBtn, value === o.value && styles.segOn]
             .filter(Boolean)
             .join(" ")}
-          onClick={() => onChange(o)}
+          onClick={() => onChange(o.value)}
         >
-          {o}
+          {o.label}
         </button>
       ))}
     </div>

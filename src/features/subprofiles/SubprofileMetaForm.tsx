@@ -6,14 +6,15 @@ import {
   SegmentedControl,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { currentUserSlug } from "../members/data/members";
 import type { LinkVisibility, Visibility } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileMutations } from "./api/useSubprofileMutations";
 import {
-  LINK_HELP,
+  LINK_HELP_KEY,
   LINK_OPTIONS,
-  LINK_TO_LABEL,
+  LINK_TO_LABEL_KEY,
   MIN_BIO,
   VISIBILITY_OPTIONS,
 } from "./subprofileEditor.data";
@@ -35,6 +36,7 @@ export function SubprofileMetaForm({
 }) {
   const { update } = useSubprofileMutations();
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   const [displayName, setDisplayName] = useState(subprofile.displayName);
   const [tagline, setTagline] = useState(subprofile.tagline);
@@ -73,11 +75,16 @@ export function SubprofileMetaForm({
           handle: handle.trim(),
         },
       });
-      showToast("Details saved", "success");
+      showToast(t("subprofiles:metaForm.toastSaved"), "success");
     } catch {
-      showToast("We couldn't save that just now — try again.", "error");
+      showToast(t("subprofiles:metaForm.toastError"), "error");
     }
   }
+
+  const linkChoices = LINK_OPTIONS.map((value) => ({
+    value,
+    label: t(LINK_TO_LABEL_KEY[value]),
+  }));
 
   return (
     <section className={styles.card}>
@@ -85,73 +92,75 @@ export function SubprofileMetaForm({
         <span className={styles.cardIcon}>
           <FiUser size={20} aria-hidden />
         </span>
-        <h2 className={styles.cardTitle}>The basics</h2>
+        <h2 className={styles.cardTitle}>{t("subprofiles:metaForm.sectionTitle")}</h2>
       </div>
 
-      <FormField label="Avatar">
+      <FormField label={t("subprofiles:metaForm.avatarLabel")}>
         <ImageUploadField
           value={avatarUrl}
           kind="avatar"
           circle
           size={120}
-          placeholder="Avatar"
+          placeholder={t("subprofiles:metaForm.avatarPlaceholder")}
           onChange={setAvatarUrl}
         />
       </FormField>
 
       <FormField
-        label="Display name"
+        label={t("subprofiles:metaForm.displayNameLabel")}
         required
-        error={
-          nameMissing ? "This persona needs a name to go live." : undefined
-        }
+        error={nameMissing ? t("subprofiles:metaForm.displayNameError") : undefined}
       >
         <input
           value={displayName}
-          placeholder="How this persona is known"
+          placeholder={t("subprofiles:metaForm.displayNamePlaceholder")}
           onChange={(e) => setDisplayName(e.target.value)}
         />
       </FormField>
 
-      <FormField label="Tagline" helper="One line on what you make.">
+      <FormField
+        label={t("subprofiles:metaForm.taglineLabel")}
+        helper={t("subprofiles:metaForm.taglineHelper")}
+      >
         <input
           value={tagline}
-          placeholder="e.g. After-hours electronics for queer dancefloors"
+          placeholder={t("subprofiles:metaForm.taglinePlaceholder")}
           onChange={(e) => setTagline(e.target.value)}
         />
       </FormField>
 
       <FormField
-        label="Bio"
+        label={t("subprofiles:metaForm.bioLabel")}
         labelAside={`${bio.length}/${MIN_BIO}`}
-        helper="At least 80 characters to publish a standalone persona."
+        helper={t("subprofiles:metaForm.bioHelper")}
       >
         <textarea
           value={bio}
           rows={4}
-          placeholder="A few sentences in your own words."
+          placeholder={t("subprofiles:metaForm.bioPlaceholder")}
           onChange={(e) => setBio(e.target.value)}
         />
       </FormField>
 
-      <FormField label="Link to your main profile">
+      <FormField label={t("subprofiles:metaForm.linkLabel")}>
         <SegmentedControl
           fullWidth
-          options={[...LINK_OPTIONS]}
-          value={LINK_TO_LABEL[link]}
-          onChange={(v) =>
-            setLink(v === LINK_TO_LABEL.linked ? "linked" : "unlinked")
-          }
+          options={linkChoices.map((c) => c.label)}
+          value={t(LINK_TO_LABEL_KEY[link])}
+          onChange={(v) => {
+            const match = linkChoices.find((c) => c.label === v);
+            if (match) setLink(match.value);
+          }}
         />
       </FormField>
-      <p className={styles.linkHelp}>{LINK_HELP[link]}</p>
+      <p className={styles.linkHelp}>{t(LINK_HELP_KEY[link])}</p>
 
       {link === "linked" ? (
         <FormField
-          label="Profile address"
+          label={t("subprofiles:metaForm.addressLabel")}
           helper={
             <>
-              Lives at{" "}
+              {t("subprofiles:metaForm.livesAt")}{" "}
               <span className={styles.pathPreview}>
                 /members/{currentUserSlug}/{slug || "…"}
               </span>
@@ -160,7 +169,7 @@ export function SubprofileMetaForm({
         >
           <input
             value={slug}
-            placeholder="e.g. engineering"
+            placeholder={t("subprofiles:metaForm.addressPlaceholder")}
             onChange={(e) => setSlug(e.target.value)}
           />
         </FormField>
@@ -169,10 +178,10 @@ export function SubprofileMetaForm({
           value={handle}
           onChange={setHandle}
           currentName={subprofile.handle ?? undefined}
-          label="Handle"
+          label={t("subprofiles:metaForm.handleLabel")}
           hint={
             <>
-              Lives at{" "}
+              {t("subprofiles:metaForm.livesAt")}{" "}
               <span className={styles.pathPreview}>/p/{handle || "…"}</span>
             </>
           }
@@ -181,8 +190,11 @@ export function SubprofileMetaForm({
       )}
 
       <FormField
-        label="Who can see it"
-        helper={VISIBILITY_OPTIONS.find((o) => o.value === visibility)?.help}
+        label={t("subprofiles:metaForm.visibilityLabel")}
+        helper={t(
+          VISIBILITY_OPTIONS.find((o) => o.value === visibility)?.helpKey ??
+            VISIBILITY_OPTIONS[0]!.helpKey,
+        )}
       >
         <select
           value={visibility}
@@ -190,7 +202,7 @@ export function SubprofileMetaForm({
         >
           {VISIBILITY_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
-              {o.label}
+              {t(o.labelKey)}
             </option>
           ))}
         </select>
@@ -202,7 +214,9 @@ export function SubprofileMetaForm({
           onClick={save}
           disabled={update.isPending || nameMissing || handleBlocked}
         >
-          {update.isPending ? "Saving…" : "Save details"}
+          {update.isPending
+            ? t("subprofiles:metaForm.saving")
+            : t("subprofiles:metaForm.save")}
         </Button>
       </div>
     </section>

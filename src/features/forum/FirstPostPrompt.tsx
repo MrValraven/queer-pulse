@@ -1,7 +1,9 @@
 import { FiX } from "react-icons/fi";
 import { TbPencilPlus } from "react-icons/tb";
 import { Button } from "../../shared/components/ui";
-import { FIRST_POST_STARTERS } from "./firstPostPrompt.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { FIRST_POST_STARTER_KEYS } from "./firstPostPrompt.data";
 import styles from "./FirstPostPrompt.module.css";
 
 /**
@@ -18,13 +20,14 @@ export function FirstPostPrompt({
   onPickStarter: (text: string) => void;
   onDismiss: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.card}>
       <button
         type="button"
         className={styles.dismiss}
         onClick={onDismiss}
-        aria-label="Dismiss"
+        aria-label={t("forum:firstPost.dismissAria")}
       >
         <FiX />
       </button>
@@ -34,34 +37,32 @@ export function FirstPostPrompt({
       </span>
 
       <div className={styles.copy}>
-        <span className={styles.eyebrow}>You haven't posted yet</span>
+        <span className={styles.eyebrow}>{t("forum:firstPost.eyebrow")}</span>
         <h2 className={styles.title}>
-          Everyone was <em>new</em> once.
+          <Translation
+            i18nKey="forum:firstPost.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p className={styles.body}>
-          The forum is only as good as what people bring to it. You don't need
-          something big — a question, a recommendation, something you noticed.
-          It all counts. Here are a few things people often find useful to
-          share:
-        </p>
+        <p className={styles.body}>{t("forum:firstPost.body")}</p>
 
         <div className={styles.starters}>
-          {FIRST_POST_STARTERS.map((s) => (
+          {FIRST_POST_STARTER_KEYS.map((key) => (
             <button
-              key={s}
+              key={key}
               type="button"
               className={styles.starter}
-              onClick={() => onPickStarter(s)}
+              onClick={() => onPickStarter(t(key))}
             >
-              {s}
+              {t(key)}
             </button>
           ))}
         </div>
 
         <div className={styles.actions}>
-          <Button onClick={onWrite}>Write your first post</Button>
+          <Button onClick={onWrite}>{t("forum:firstPost.writeCta")}</Button>
           <Button variant="ghost" onClick={onDismiss}>
-            Maybe later
+            {t("forum:firstPost.maybeLater")}
           </Button>
         </div>
       </div>

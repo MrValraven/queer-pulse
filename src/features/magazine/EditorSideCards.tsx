@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   SECTIONS,
   ACTIVITY,
   WORD_TARGET,
+  CURRENT_ISSUE,
   editorLoad,
   loadGap,
   issueProgress,
@@ -20,15 +22,20 @@ function editorDot(ed: Editor): string | undefined {
   return ed === "Marta" ? styles.edMarta : styles.edSara;
 }
 
-/** Issue 10 progress: pieces ready, word count, time to close. */
+/** Issue N progress: pieces ready, word count, time to close. */
 export function ProgressCard({ pieces }: { pieces: Piece[] }) {
+  const { t } = useTranslation();
   const p = issueProgress(pieces);
   return (
     <div className={styles.sideCard}>
-      <h4>Issue 10 progress</h4>
+      <h4>
+        {t("magazine:editor.sideCards.progressHeading", {
+          number: CURRENT_ISSUE.number,
+        })}
+      </h4>
       <div className={styles.issueBar}>
         <div className={styles.issueBarRow}>
-          <span>Pieces ready</span>
+          <span>{t("magazine:editor.sideCards.piecesReady")}</span>
           <b>
             {p.ready} / {p.total}
           </b>
@@ -37,7 +44,7 @@ export function ProgressCard({ pieces }: { pieces: Piece[] }) {
           <span style={{ width: `${p.readyPct}%` }} />
         </div>
         <div className={styles.issueBarRow} style={{ marginTop: 8 }}>
-          <span>Word count</span>
+          <span>{t("magazine:editor.sideCards.wordCount")}</span>
           <b>
             {p.words.toLocaleString()} / {WORD_TARGET.toLocaleString()}
           </b>
@@ -46,8 +53,8 @@ export function ProgressCard({ pieces }: { pieces: Piece[] }) {
           <span style={{ width: `${p.wordPct}%` }} />
         </div>
         <div className={styles.issueBarRow} style={{ marginTop: 8 }}>
-          <span>Time to close</span>
-          <b>11 days</b>
+          <span>{t("magazine:editor.sideCards.timeToClose")}</span>
+          <b>{t("magazine:editor.sideCards.daysLeft", { count: 11 })}</b>
         </div>
         <div className={styles.bar}>
           <span style={{ width: "64%" }} />
@@ -65,30 +72,45 @@ export function EditorLoadCard({
   pieces: Piece[];
   me: Editor;
 }) {
+  const { t } = useTranslation();
   const rows = editorLoad(pieces, me);
   const max = Math.max(1, ...rows.map((r) => r.words));
   const gap = loadGap(pieces);
   const hint =
     gap > 0
-      ? `Sara is carrying ${gap.toLocaleString()} more words. Reassign to balance.`
+      ? t("magazine:editor.sideCards.loadHintOtherMore", {
+          editor: "Sara",
+          amount: gap.toLocaleString(),
+        })
       : gap < 0
-        ? `Marta is carrying ${(-gap).toLocaleString()} more words. Reassign to balance.`
-        : "Load is evenly balanced across editors.";
+        ? t("magazine:editor.sideCards.loadHintOtherMore", {
+            editor: "Marta",
+            amount: (-gap).toLocaleString(),
+          })
+        : t("magazine:editor.sideCards.loadHintBalanced");
 
   return (
     <div className={styles.sideCard}>
-      <h4>Editor load</h4>
+      <h4>{t("magazine:editor.sideCards.editorLoadHeading")}</h4>
       {rows.map((r) => (
         <div key={r.editor} className={cx(styles.loadRow, r.mine && styles.me)}>
           <div className={styles.loadTop}>
             <b>
               <span className={cx(styles.chipDot, editorDot(r.editor))} />
               {r.editor}
-              {r.mine && " · you"}
+              {r.mine && ` · ${t("magazine:editor.sideCards.you")}`}
             </b>
             <span>
-              {r.count} pieces · {r.words.toLocaleString()}w
-              {r.late > 0 && <em className={styles.ll}> · {r.late} late</em>}
+              {t("magazine:editor.sideCards.piecesWords", {
+                count: r.count,
+                words: r.words.toLocaleString(),
+              })}
+              {r.late > 0 && (
+                <em className={styles.ll}>
+                  {" "}
+                  · {t("magazine:editor.sideCards.lateCount", { count: r.late })}
+                </em>
+              )}
             </span>
           </div>
           <div className={styles.bar}>
@@ -113,6 +135,7 @@ function Dots({ filled, planned }: { filled: number; planned: number }) {
 
 /** Planned vs filled slots per magazine section. */
 export function SectionBudgetCard() {
+  const { t } = useTranslation();
   const open = SECTIONS.reduce(
     (a, s) => a + Math.max(0, s.planned - s.filled),
     0,
@@ -120,7 +143,10 @@ export function SectionBudgetCard() {
   return (
     <div className={styles.sideCard}>
       <h4>
-        Section budget <span className={styles.free}>{open} slots open</span>
+        {t("magazine:editor.sideCards.sectionBudgetHeading")}{" "}
+        <span className={styles.free}>
+          {t("magazine:editor.sideCards.slotsOpen", { count: open })}
+        </span>
       </h4>
       {SECTIONS.map((s) => {
         const gap = s.planned - s.filled;
@@ -132,7 +158,11 @@ export function SectionBudgetCard() {
             <span className={styles.secName}>{s.name}</span>
             <Dots filled={s.filled} planned={s.planned} />
             <span className={cx(styles.secCount, gap > 0 && styles.need)}>
-              {gap > 0 ? `need ${gap}` : <FiCheck aria-label="filled" />}
+              {gap > 0 ? (
+                t("magazine:editor.sideCards.needCount", { count: gap })
+              ) : (
+                <FiCheck aria-label={t("magazine:editor.sideCards.filledAria")} />
+              )}
             </span>
           </div>
         );
@@ -149,6 +179,7 @@ export function ContributorMixCard({
   pieces: Piece[];
   query: string;
 }) {
+  const { t } = useTranslation();
   const q = query.toLowerCase();
   const match = q
     ? [...new Set(pieces.map((p) => p.author))].filter((a) =>
@@ -158,7 +189,9 @@ export function ContributorMixCard({
 
   return (
     <div className={styles.sideCard}>
-      <h4>Contributors · this issue</h4>
+      <h4>{t("magazine:editor.sideCards.contributorsHeading")}</h4>
+      {/* This aggregate role/geography breakdown is mock analytics content
+          (would come from an API stats endpoint in live mode) — left as-is. */}
       <div className={styles.mixRow}>
         <b>11</b>
         <span>contributors · 8 writers · 2 illustrators · 1 photographer</span>
@@ -166,15 +199,17 @@ export function ContributorMixCard({
       <div className={styles.mixSplit}>
         <div className={styles.mixCell}>
           <b className={styles.jade}>4</b>
-          <span>new voices</span>
+          <span>{t("magazine:editor.sideCards.newVoices")}</span>
         </div>
         <div className={styles.mixCell}>
           <b>7</b>
-          <span>returning</span>
+          <span>{t("magazine:editor.sideCards.returning")}</span>
         </div>
       </div>
       <div className={styles.pay}>
-        <div className={styles.payHead}>Contributor pay</div>
+        <div className={styles.payHead}>
+          {t("magazine:editor.sideCards.contributorPay")}
+        </div>
         <div className={styles.payBar}>
           <span
             className={cx(styles.paySeg, styles.paid)}
@@ -191,13 +226,15 @@ export function ContributorMixCard({
         </div>
         <div className={styles.payKey}>
           <span>
-            <i className={styles.paid} />4 paid
+            <i className={styles.paid} />4 {t("magazine:editor.sideCards.paid")}
           </span>
           <span>
-            <i className={styles.inv} />3 awaiting
+            <i className={styles.inv} />3{" "}
+            {t("magazine:editor.sideCards.awaiting")}
           </span>
           <span>
-            <i className={styles.none} />5 to invoice
+            <i className={styles.none} />5{" "}
+            {t("magazine:editor.sideCards.toInvoice")}
           </span>
         </div>
       </div>
@@ -207,12 +244,12 @@ export function ContributorMixCard({
       {q && (
         <div className={styles.contribMatch}>
           {match.length
-            ? `Matching: ${match.join(", ")}`
-            : "No contributor matches"}
+            ? t("magazine:editor.sideCards.matching", { names: match.join(", ") })
+            : t("magazine:editor.sideCards.noContributorMatch")}
         </div>
       )}
       <Link to={routes.author} className={styles.contribLink}>
-        See contributor profiles →
+        {t("magazine:editor.sideCards.seeContributorProfiles")}
       </Link>
     </div>
   );
@@ -220,6 +257,7 @@ export function ContributorMixCard({
 
 /** Recent editorial activity feed. */
 export function ActivityCard() {
+  const { t } = useTranslation();
   const dotClass = {
     coral: styles.tCoral,
     jade: styles.tJade,
@@ -227,7 +265,7 @@ export function ActivityCard() {
   };
   return (
     <div className={styles.sideCard}>
-      <h4>Recent activity</h4>
+      <h4>{t("magazine:editor.sideCards.recentActivity")}</h4>
       {ACTIVITY.map((a, i) => (
         <div key={i} className={styles.actRow}>
           <span className={cx(styles.actDot, dotClass[a.tint])} />
@@ -249,28 +287,35 @@ export function QuickActionsCard({
 }: {
   onStub: (msg: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={cx(styles.sideCard, styles.qaCard)}>
-      <h4>Quick actions</h4>
+      <h4>{t("magazine:editor.sideCards.quickActions")}</h4>
       <div className={styles.qa}>
         <button
           type="button"
-          onClick={() => onStub("Opening bulk pitch triage")}
+          onClick={() => onStub(t("magazine:editor.toast.openingBulkTriage"))}
         >
-          → Send pitch decisions in bulk
+          {t("magazine:editor.sideCards.sendPitchDecisions")}
         </button>
         <button
           type="button"
-          onClick={() => onStub("Drafting reminders to 3 contributors")}
+          onClick={() =>
+            onStub(t("magazine:editor.toast.draftingReminders", { count: 3 }))
+          }
         >
-          → Email contributors waiting
+          {t("magazine:editor.sideCards.emailContributorsWaiting")}
         </button>
-        <Link to={routes.issue}>→ Preview issue layout</Link>
+        <Link to={routes.issue}>
+          {t("magazine:editor.sideCards.previewIssueLayout")}
+        </Link>
         <button
           type="button"
-          onClick={() => onStub("Contributor list exported (CSV)")}
+          onClick={() =>
+            onStub(t("magazine:editor.toast.contributorListExported"))
+          }
         >
-          → Export contributor list (CSV)
+          {t("magazine:editor.sideCards.exportContributorList")}
         </button>
       </div>
     </div>

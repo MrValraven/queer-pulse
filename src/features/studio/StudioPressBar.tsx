@@ -1,19 +1,22 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import styles from "./StudioPressPage.module.css";
 
 /** Sticky press-kit topbar: brand + crumb + copy-link / download-assets actions. */
 export function StudioPressBar() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
 
   function copyLink() {
     const url =
       typeof window !== "undefined" ? window.location.href : routes.studioPress;
     navigator.clipboard?.writeText(url).then(
-      () => showToast("Copied", "success"),
-      () => showToast("Could not copy link", "info"),
+      () => showToast(t("studio:press.copiedToast"), "success"),
+      () => showToast(t("studio:press.bar.copyLinkFailToast"), "info"),
     );
   }
 
@@ -26,17 +29,21 @@ export function StudioPressBar() {
         </span>
       </Link>
       <span className={styles.crumb}>
-        Press kit · <em>Mariana Sol</em>
+        <Translation
+          i18nKey="studio:press.bar.crumb"
+          values={{ name: "Mariana Sol" }}
+          components={{ em: <em /> }}
+        />
       </span>
       <div className={styles.acts}>
         <Button variant="ghost-dark" onClick={copyLink}>
-          Copy press link
+          {t("studio:press.bar.copyLinkCta")}
         </Button>
         <Button
           variant="primary"
-          onClick={() => showToast("Preparing your press assets", "success")}
+          onClick={() => showToast(t("studio:press.bar.preparingToast"), "success")}
         >
-          Download assets
+          {t("studio:press.bar.downloadAssetsCta")}
         </Button>
       </div>
     </div>

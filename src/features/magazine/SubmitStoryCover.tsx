@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FiImage, FiX } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage } from "../members/api/useUploadImage";
 import styles from "./SubmitStoryPage.module.css";
 import upload from "./SubmitStoryCover.module.css";
@@ -16,6 +17,7 @@ export function SubmitStoryCover({
 }: {
   onChange: (url: string | null) => void;
 }) {
+  const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
   const createdUrl = useRef<string | null>(null);
   const uploadCover = useUploadImage("story-cover");
@@ -55,7 +57,7 @@ export function SubmitStoryCover({
       setError(
         err instanceof Error && err.message
           ? err.message
-          : "We couldn't add that cover. Please try again.",
+          : t("magazine:submitStory.cover.errorFallback"),
       );
     } finally {
       setProgress(null);
@@ -90,7 +92,7 @@ export function SubmitStoryCover({
           <img
             className={styles.coverImg}
             src={cover.url}
-            alt="Cover preview"
+            alt={t("magazine:submitStory.cover.previewAlt")}
           />
           <div className={styles.coverMeta}>
             <div className={styles.coverName}>{cover.name}</div>
@@ -101,7 +103,7 @@ export function SubmitStoryCover({
                 onClick={() => inputRef.current?.click()}
                 disabled={busy}
               >
-                Replace
+                {t("magazine:submitStory.cover.replaceCta")}
               </button>
               <button
                 type="button"
@@ -109,7 +111,7 @@ export function SubmitStoryCover({
                 onClick={remove}
                 disabled={busy}
               >
-                <FiX aria-hidden="true" /> Remove
+                <FiX aria-hidden="true" /> {t("magazine:submitStory.cover.removeCta")}
               </button>
             </div>
           </div>
@@ -122,17 +124,20 @@ export function SubmitStoryCover({
           disabled={busy}
         >
           <FiImage className={styles.coverIcon} aria-hidden="true" />
-          <p>{busy ? "Uploading…" : "Add a cover image"}</p>
-          <span>
-            JPG, PNG or WebP · min 1200 × 600px · displayed at top of published
-            story
-          </span>
+          <p>
+            {busy
+              ? t("magazine:submitStory.cover.uploading")
+              : t("magazine:submitStory.cover.addCta")}
+          </p>
+          <span>{t("magazine:submitStory.cover.hint")}</span>
         </button>
       )}
 
       {busy && (
         <div className={upload.progress}>
-          <div className={upload.progressLabel}>Uploading… {progress}%</div>
+          <div className={upload.progressLabel}>
+            {t("magazine:submitStory.cover.uploadingProgress", { progress })}
+          </div>
           <div
             className={upload.track}
             role="progressbar"

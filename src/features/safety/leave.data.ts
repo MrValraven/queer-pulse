@@ -1,23 +1,49 @@
 export type LeaveState = "considering" | "pausing" | "paused" | "confirmed";
 
-export const DELETED = [
-  "Your profile, bio, and display name",
-  "Your connections and message history",
-  "Your gathering history and earned badges",
-  "Your saved articles and reading history",
-  "Your invite history and vouches given",
+export type PauseDurationId = "oneMonth" | "threeMonths" | "sixMonths";
+
+/** i18n Pattern A — chrome list, sole consumer is `LeaveConsidering`. */
+export const DELETED_KEYS = [
+  "safety:leave.deleted.profile",
+  "safety:leave.deleted.connections",
+  "safety:leave.deleted.gatherings",
+  "safety:leave.deleted.savedArticles",
+  "safety:leave.deleted.invites",
 ];
 
-export const PAUSE_EFFECTS = [
-  "Your profile becomes invisible to other members",
-  "You won't appear in search or the member directory",
-  "All notifications are paused",
-  "All your data, badges, and connections are preserved",
-  "Sign back in at any time to reactivate instantly",
+/** i18n Pattern A — chrome list, sole consumer is `LeavePausing`. */
+export const PAUSE_EFFECT_KEYS = [
+  "safety:leave.pausing.effects.profileInvisible",
+  "safety:leave.pausing.effects.notInSearch",
+  "safety:leave.pausing.effects.notificationsPaused",
+  "safety:leave.pausing.effects.dataPreserved",
+  "safety:leave.pausing.effects.reactivateAnytime",
 ];
 
-export const DURATIONS = [
-  { label: "1 month", back: "Back on 6 July 2026" },
-  { label: "3 months", back: "Back on 6 September 2026" },
-  { label: "6 months", back: "Back on 6 December 2026" },
+/**
+ * Each pause option's label key + the real reactivation `Date`. `backDate` is
+ * formatted through `useFormat()` at render (`leave.duration.backOn`,
+ * `{date}`) instead of baking a formatted string in here — see the extraction
+ * brief's "hand-rolled formatting" trap.
+ */
+export const DURATIONS: {
+  id: PauseDurationId;
+  labelKey: string;
+  backDate: Date;
+}[] = [
+  {
+    id: "oneMonth",
+    labelKey: "safety:leave.duration.oneMonth",
+    backDate: new Date(2026, 6, 6),
+  },
+  {
+    id: "threeMonths",
+    labelKey: "safety:leave.duration.threeMonths",
+    backDate: new Date(2026, 8, 6),
+  },
+  {
+    id: "sixMonths",
+    labelKey: "safety:leave.duration.sixMonths",
+    backDate: new Date(2026, 11, 6),
+  },
 ];

@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CultureModals.module.css";
 
 // Consolidated into the shared UI/hooks layer — re-exported here so existing
@@ -24,6 +25,7 @@ export function ModalShell({
   label?: string;
   children: ReactNode;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -42,7 +44,7 @@ export function ModalShell({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={label ?? "Dialog"}
+        aria-label={label ?? t("culture:modal.dialogAriaLabel")}
         className={[styles.modal, success && styles.modalSuccess]
           .filter(Boolean)
           .join(" ")}
@@ -51,7 +53,7 @@ export function ModalShell({
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("culture:modal.close")}
         >
           ×
         </button>
@@ -79,6 +81,7 @@ export function SuccessPanel({
   steps?: ReactNode[];
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.success}>
       <div className={styles.successIcon}>
@@ -100,22 +103,27 @@ export function SuccessPanel({
       )}
       <div className={styles.successBtn}>
         <Button size="lg" variant="ghost-dark" onClick={onClose}>
-          Done
+          {t("culture:modal.done")}
         </Button>
       </div>
     </div>
   );
 }
 
-/** Multi-select pill row used inside the modal forms. */
+/** Multi-select pill row used inside the modal forms. `options` stay stable
+ * English ids (the `Set<string>` selection state never changes with
+ * language); `optionLabel` resolves each option's translated display text —
+ * i18n Pattern A's label-key indirection applied to a generic component. */
 export function ChipSelect({
   options,
   selected,
   onToggle,
+  optionLabel,
 }: {
   options: readonly string[];
   selected: Set<string>;
   onToggle: (value: string) => void;
+  optionLabel?: (option: string) => string;
 }) {
   return (
     <div className={styles.chips} role="group">
@@ -131,7 +139,7 @@ export function ChipSelect({
               .join(" ")}
             onClick={() => onToggle(opt)}
           >
-            {opt}
+            {optionLabel ? optionLabel(opt) : opt}
           </button>
         );
       })}

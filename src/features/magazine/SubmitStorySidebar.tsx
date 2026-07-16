@@ -1,18 +1,23 @@
 import { Button } from "../../shared/components/ui";
-import { AFTER_SUBMIT, GUIDELINES } from "./submitStory.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AFTER_SUBMIT_KEYS, GUIDELINE_KEYS } from "./submitStory.data";
 import styles from "./SubmitStoryPage.module.css";
 
 export function SubmitStorySidebar() {
+  const { t } = useTranslation();
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sideCard}>
-        <div className={styles.sideTitle}>Editorial guidelines</div>
+        <div className={styles.sideTitle}>
+          {t("magazine:submitStory.sidebar.guidelinesHeading")}
+        </div>
         <div className={styles.sideList}>
-          {GUIDELINES.map((g) => (
-            <div key={g.term} className={styles.sideItem}>
+          {GUIDELINE_KEYS.map((g) => (
+            <div key={g.termKey} className={styles.sideItem}>
               <span className={styles.sideDot} />
               <span className={styles.sideText}>
-                <strong>{g.term}</strong> {g.detail}
+                <strong>{t(g.termKey)}</strong> {t(g.detailKey)}
               </span>
             </div>
           ))}
@@ -20,15 +25,15 @@ export function SubmitStorySidebar() {
       </div>
 
       <div className={styles.sideCard}>
-        <div className={styles.sideTitle}>After you submit</div>
+        <div className={styles.sideTitle}>
+          {t("magazine:submitStory.sidebar.afterSubmitHeading")}
+        </div>
         <div className={styles.sideList}>
-          {AFTER_SUBMIT.map((a) => (
-            <div key={a.strong} className={styles.sideItem}>
+          {AFTER_SUBMIT_KEYS.map((key) => (
+            <div key={key} className={styles.sideItem}>
               <span className={`${styles.sideDot} ${styles.sideDotJade}`} />
               <span className={styles.sideText}>
-                {a.pre}
-                <strong>{a.strong}</strong>
-                {a.post}
+                <Translation i18nKey={key} components={{ strong: <strong /> }} />
               </span>
             </div>
           ))}
@@ -36,17 +41,18 @@ export function SubmitStorySidebar() {
       </div>
 
       <div className={`${styles.sideCard} ${styles.sideMuted}`}>
-        <div className={styles.sideTitle}>Questions?</div>
+        <div className={styles.sideTitle}>
+          {t("magazine:submitStory.sidebar.questionsHeading")}
+        </div>
         <p className={styles.sideText} style={{ marginBottom: 14 }}>
-          Email the editorial team or check past issues for a sense of what we
-          publish.
+          {t("magazine:submitStory.sidebar.questionsBody")}
         </p>
         <Button
           href="mailto:magazine@queerpulse.pt"
           variant="ghost"
           style={{ width: "100%", justifyContent: "center" }}
         >
-          Email editorial
+          {t("magazine:submitStory.sidebar.emailCta")}
         </Button>
       </div>
     </aside>

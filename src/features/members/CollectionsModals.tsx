@@ -240,7 +240,7 @@ export function AddToCollectionModal({
             <Translation
               i18nKey="members:collections.modal.add.success.body"
               components={{ b: <b /> }}
-              values={{ name: c?.name }}
+              values={{ name: c?.plainName }}
             />
           </p>
           <Button variant="ghost-dark" onClick={onClose}>

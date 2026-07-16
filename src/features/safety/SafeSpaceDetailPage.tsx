@@ -3,6 +3,8 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   getSpace,
@@ -34,19 +36,20 @@ function emName(name: string) {
 }
 
 function VerifiedView({ s }: { s: VerifiedSpace }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [vouchOpen, setVouchOpen] = useState(false);
   const { lead, last } = emName(s.name);
   const share = () => {
     if (navigator.clipboard)
       navigator.clipboard.writeText(window.location.href);
-    showToast("Link copied", "success");
+    showToast(t("safety:spaces.detail.linkCopiedToast"), "success");
   };
 
   return (
     <div className={styles.page}>
       <Link to={routes.safeSpaces} className={styles.back}>
-        ← Safe spaces
+        {t("safety:spaces.detail.backLink")}
       </Link>
 
       <div className={styles.trustBanner}>
@@ -54,11 +57,13 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
           <Tick />
         </div>
         <div>
-          <h3>Verified safe space · {s.tier}</h3>
+          <h3>{t("safety:spaces.detail.trust.title", { tier: s.tier })}</h3>
           <p>
-            <b>This space meets the Safe Spaces criteria</b> and was visited by
-            QueerPulse moderators in the last 12 months. Last re-verified{" "}
-            <b>{s.reVerified}</b> · {s.verifier}.
+            <Translation
+              i18nKey="safety:spaces.detail.trust.body"
+              values={{ date: s.reVerified, verifier: s.verifier }}
+              components={{ strong: <strong /> }}
+            />
           </p>
         </div>
       </div>
@@ -91,11 +96,12 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
         <main>
           <section className={styles.sec}>
             <h2>
-              What you can rely on, <em>here</em>
+              <Translation
+                i18nKey="safety:spaces.detail.relyTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p className={styles.secSub}>
-              Every verified space commits to these. We check in twice a year.
-            </p>
+            <p className={styles.secSub}>{t("safety:spaces.detail.relySub")}</p>
             <div className={styles.promises}>
               {s.promises.map((p) => (
                 <div className={styles.promise} key={p.title}>
@@ -113,20 +119,20 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
 
           <section className={styles.sec}>
             <h2>
-              Vouched by{" "}
-              <em>
-                {s.vouches.length}{" "}
-                {s.vouches.length === 1 ? "member" : "members"}
-              </em>
+              <Translation
+                i18nKey="safety:spaces.detail.vouchedTitle"
+                values={{ count: s.vouches.length }}
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.secSub}>
-              Independent safety reviews from verified members.{" "}
+              {t("safety:spaces.detail.vouchedSub")}{" "}
               <Button
                 variant="ghost"
                 className={styles.vouchTrigger}
                 onClick={() => setVouchOpen(true)}
               >
-                Add yours →
+                {t("safety:spaces.detail.addVouchCta")}
               </Button>
             </p>
             <div className={styles.vouchRow}>
@@ -152,32 +158,32 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
 
           <section className={styles.sec}>
             <h2>
-              If something happens <em>here</em>
+              <Translation
+                i18nKey="safety:spaces.detail.incidentTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={styles.incident}>
-              <h3>You're in immediate danger</h3>
+              <h3>{t("safety:spaces.detail.dangerTitle")}</h3>
               <p>
-                Tell any staff member you need help leaving — verified spaces
-                will escort you out, no questions asked. If you can, also call{" "}
-                <b>112</b>.
+                <Translation
+                  i18nKey="safety:spaces.detail.dangerBody"
+                  components={{ strong: <strong /> }}
+                />
               </p>
-              <Link to={SAFETY}>Emergency guide →</Link>
+              <Link to={SAFETY}>{t("safety:spaces.detail.emergencyGuideCta")}</Link>
             </div>
             <div className={[styles.incident, styles.incidentPlum].join(" ")}>
-              <h3>Something felt off (not urgent)</h3>
-              <p>
-                Even small things matter — they're how we know when a space
-                slips. File a quiet report; moderators read every one and the
-                venue is told without your name attached.
-              </p>
-              <Link to={SAFETY}>File a quiet report →</Link>
+              <h3>{t("safety:spaces.detail.offTitle")}</h3>
+              <p>{t("safety:spaces.detail.offBody")}</p>
+              <Link to={SAFETY}>{t("safety:spaces.detail.quietReportCta")}</Link>
             </div>
           </section>
         </main>
 
         <aside className={styles.side}>
           <div className={styles.sideCard}>
-            <h4>Where</h4>
+            <h4>{t("safety:spaces.detail.whereTitle")}</h4>
             <div className={styles.addr}>
               <b>{s.name}</b>
               {s.address}
@@ -187,12 +193,12 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
               className={styles.sideFull}
               to={routes.safeSpaces}
             >
-              Back to all spaces
+              {t("safety:spaces.detail.backAllCta")}
             </Button>
           </div>
 
           <div className={styles.sideCard}>
-            <h4>At a glance</h4>
+            <h4>{t("safety:spaces.detail.glanceTitle")}</h4>
             {s.glance.map((g) => (
               <div className={styles.sideRow} key={g.label}>
                 <span>{g.label}</span>
@@ -204,17 +210,14 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
           </div>
 
           <div className={[styles.sideCard, styles.sharePlum].join(" ")}>
-            <h4>If a friend needs a place</h4>
-            <p>
-              Send them this exact page. Everything here — the promises, the
-              vouches, the exits — is what they can rely on.
-            </p>
+            <h4>{t("safety:spaces.detail.shareTitle")}</h4>
+            <p>{t("safety:spaces.detail.shareBody")}</p>
             <Button
               variant="ghost-dark"
               className={styles.sideFull}
               onClick={share}
             >
-              Copy link to share
+              {t("safety:spaces.detail.copyLinkCta")}
             </Button>
           </div>
         </aside>
@@ -228,11 +231,12 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
 }
 
 function RemovedView({ s }: { s: RemovedSpace }) {
+  const { t } = useTranslation();
   const { lead, last } = emName(s.name);
   return (
     <div className={styles.page}>
       <Link to={routes.safeSpaces} className={styles.back}>
-        ← Safe spaces
+        {t("safety:spaces.detail.backLink")}
       </Link>
 
       <div className={styles.removedBanner}>
@@ -244,7 +248,10 @@ function RemovedView({ s }: { s: RemovedSpace }) {
           </svg>
         </div>
         <div className={styles.removedEyebrow}>
-          Removed from safe spaces · {s.typeLabel} · {s.hood}
+          {t("safety:spaces.detail.removedEyebrow", {
+            type: s.typeLabel,
+            hood: s.hood,
+          })}
         </div>
         <h1 className={styles.removedTitle}>
           {lead && `${lead} `}
@@ -253,13 +260,16 @@ function RemovedView({ s }: { s: RemovedSpace }) {
         <p className={styles.removedReason}>{s.reason}</p>
         <div className={styles.removedMetaRow}>
           <div className={styles.removedMeta}>
-            <b>{s.removedDate}</b>Removed
+            <b>{s.removedDate}</b>
+            {t("safety:spaces.detail.removedMeta.removed")}
           </div>
           <div className={styles.removedMeta}>
-            <b>{s.listedSince}</b>Listed since
+            <b>{s.listedSince}</b>
+            {t("safety:spaces.detail.removedMeta.listedSince")}
           </div>
           <div className={styles.removedMeta}>
-            <b>{s.flags}</b>Member flags
+            <b>{s.flags}</b>
+            {t("safety:spaces.detail.removedMeta.flags")}
           </div>
         </div>
       </div>
@@ -268,7 +278,10 @@ function RemovedView({ s }: { s: RemovedSpace }) {
         <main>
           <section className={styles.sec}>
             <h2>
-              Why it was <em>removed</em>
+              <Translation
+                i18nKey="safety:spaces.detail.whyRemovedTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
             {s.reasonLong.map((p, i) => (
               <p className={styles.reasonP} key={i}>
@@ -279,17 +292,20 @@ function RemovedView({ s }: { s: RemovedSpace }) {
 
           <section className={styles.sec}>
             <h2>
-              How it <em>happened</em>
+              <Translation
+                i18nKey="safety:spaces.detail.howHappenedTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.secSub}>
-              Every removal follows the same steps, in the open.
+              {t("safety:spaces.detail.howHappenedSub")}
             </p>
             <div className={styles.timeline}>
-              {s.timeline.map((t, i) => (
+              {s.timeline.map((item, i) => (
                 <div className={styles.tlItem} key={i}>
                   <div className={styles.tlDot} />
-                  <div className={styles.tlDate}>{t.date}</div>
-                  <div className={styles.tlEvent}>{t.event}</div>
+                  <div className={styles.tlDate}>{item.date}</div>
+                  <div className={styles.tlEvent}>{item.event}</div>
                 </div>
               ))}
             </div>
@@ -298,12 +314,12 @@ function RemovedView({ s }: { s: RemovedSpace }) {
 
         <aside className={styles.side}>
           <div className={styles.whatNowCard}>
-            <h3>What this means now</h3>
+            <h3>{t("safety:spaces.detail.whatNowTitle")}</h3>
             <p>{s.whatNow}</p>
           </div>
 
           <div className={styles.sideCard}>
-            <h4>Had an experience here?</h4>
+            <h4>{t("safety:spaces.detail.hadExperienceTitle")}</h4>
             <div
               className={styles.addr}
               style={{
@@ -312,26 +328,26 @@ function RemovedView({ s }: { s: RemovedSpace }) {
                 color: "var(--ink-60)",
               }}
             >
-              The record stays open. If something happened to you here, telling
-              us still helps — it informs any future re-review.
+              {t("safety:spaces.detail.hadExperienceBody")}
             </div>
             <Button variant="ghost" className={styles.sideFull} to={SAFETY}>
-              File a report →
+              {t("safety:spaces.detail.fileReportCta")}
             </Button>
           </div>
 
           <div className={[styles.sideCard, styles.sharePlum].join(" ")}>
-            <h4>Looking for somewhere safe?</h4>
+            <h4>{t("safety:spaces.detail.lookingForTitle")}</h4>
             <p>
-              This space is delisted, but {VERIFIED_COUNT}+ verified spaces
-              across Lisbon are not. Find one near you.
+              {t("safety:spaces.detail.lookingForBody", {
+                count: VERIFIED_COUNT,
+              })}
             </p>
             <Button
               variant="ghost-dark"
               className={styles.sideFull}
               to={routes.safeSpaces}
             >
-              See verified spaces →
+              {t("safety:spaces.detail.seeVerifiedCta")}
             </Button>
           </div>
         </aside>

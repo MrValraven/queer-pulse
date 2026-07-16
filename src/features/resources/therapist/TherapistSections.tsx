@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Therapist } from "../mentalHealth.data";
 import {
-  possessive,
+  possessiveKey,
   shortName,
   type TherapistProfile,
   type VouchTint,
@@ -22,6 +24,7 @@ export function TherapistSections({
   therapist: Therapist;
   profile: TherapistProfile;
 }) {
+  const { t } = useTranslation();
   const [vouching, setVouching] = useState(false);
   const short = shortName(therapist.name);
 
@@ -29,10 +32,14 @@ export function TherapistSections({
     <main>
       <section className={styles.sec}>
         <h2 className={styles.secTitle}>
-          What {short} <em>works with</em>
+          <Translation
+            i18nKey="resources:therapistProfilePage.worksWith.title"
+            components={{ em: <em /> }}
+            values={{ name: short }}
+          />
         </h2>
         <p className={styles.secSub}>
-          Self-declared and consistent with the vouching community.
+          {t("resources:therapistProfilePage.worksWith.sub")}
         </p>
         <div className={styles.specGrid}>
           {profile.specialisms.map((s) => (
@@ -49,7 +56,9 @@ export function TherapistSections({
 
       <section className={styles.sec}>
         <h2 className={styles.secTitle}>
-          {possessive(therapist.pronouns)} approach
+          {t(
+            `resources:therapistProfilePage.approachTitle.${possessiveKey(therapist.pronouns)}`,
+          )}
         </h2>
         <div className={styles.approach}>
           <h3 className={styles.approachTitle}>
@@ -63,11 +72,14 @@ export function TherapistSections({
 
       <section className={styles.sec}>
         <h2 className={styles.secTitle}>
-          {profile.vouches.length} members <em>vouched</em>
+          <Translation
+            i18nKey="resources:therapistProfilePage.vouches.title"
+            components={{ em: <em /> }}
+            values={{ count: profile.vouches.length }}
+          />
         </h2>
         <p className={styles.secSub}>
-          Anonymised by the vouching member. The clinic doesn't see who said
-          what.
+          {t("resources:therapistProfilePage.vouches.sub")}
         </p>
         <div className={styles.vouchRow}>
           {profile.vouches.map((v) => (
@@ -89,9 +101,13 @@ export function TherapistSections({
             <div className={styles.vouchHead}>
               <div className={styles.vouchAv}>+</div>
               <div>
-                <div className={styles.vouchName}>Have you seen {short}?</div>
+                <div className={styles.vouchName}>
+                  {t("resources:therapistProfilePage.vouches.addPrompt", {
+                    name: short,
+                  })}
+                </div>
                 <div className={styles.vouchByline}>
-                  Help the next member decide
+                  {t("resources:therapistProfilePage.vouches.addHelp")}
                 </div>
               </div>
             </div>
@@ -100,7 +116,7 @@ export function TherapistSections({
               className={styles.vouchLink}
               onClick={() => setVouching(true)}
             >
-              Add an anonymised vouch →
+              {t("resources:therapistProfilePage.vouches.addCta")}
             </button>
           </div>
         </div>
@@ -108,7 +124,10 @@ export function TherapistSections({
 
       <section className={styles.sec}>
         <h2 className={styles.secTitle}>
-          Before you book — <em>good to know</em>
+          <Translation
+            i18nKey="resources:therapistProfilePage.beforeBook.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <div className={styles.noteGrid}>
           {profile.notes.map((n) => (

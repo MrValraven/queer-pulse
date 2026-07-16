@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiCheck, FiMessageCircle } from "react-icons/fi";
 import { Avatar, SearchInput } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import type { RosterMember } from "./community.model";
 import { photoOf } from "./communityPeople";
@@ -26,6 +27,7 @@ export function RosterTab({
   slug: string;
 }) {
   const { openConnect } = useConnect();
+  const { t } = useTranslation();
   const [q, setQ] = useState("");
 
   const shown = useMemo(() => {
@@ -47,8 +49,8 @@ export function RosterTab({
     <div>
       <SearchInput
         className={styles.searchRow}
-        ariaLabel="Search members"
-        placeholder="Search members by name, role or neighbourhood…"
+        ariaLabel={t("communities:detail.roster.searchAria")}
+        placeholder={t("communities:detail.roster.searchPlaceholder")}
         value={q}
         onChange={setQ}
       />
@@ -79,7 +81,7 @@ export function RosterTab({
               <RoleBadge role={m.role} />
               {m.verified && (
                 <span className={styles.verified}>
-                  <FiCheck aria-hidden /> Verified
+                  <FiCheck aria-hidden /> {t("communities:detail.roster.verified")}
                 </span>
               )}
             </div>
@@ -91,7 +93,9 @@ export function RosterTab({
               const others = alsoIn(m.slug, slug);
               return others.length > 0 ? (
                 <div className={styles.alsoIn}>
-                  Also a member of {others.join(", ")}
+                  {t("communities:detail.roster.alsoIn", {
+                    names: others.join(", "),
+                  })}
                 </div>
               ) : null;
             })()}
@@ -105,13 +109,17 @@ export function RosterTab({
                 (e.preventDefault(), openConnect(m.slug))
               }
             >
-              <FiMessageCircle aria-hidden /> Message
+              <FiMessageCircle aria-hidden />{" "}
+              {t("communities:detail.roster.messageCta")}
             </span>
           </div>
         ))}
       </div>
       <p className={detail.showing}>
-        Showing {shown.length} of {total} members
+        {t("communities:detail.roster.showingOf", {
+          shown: shown.length,
+          count: total,
+        })}
       </p>
     </div>
   );

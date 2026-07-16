@@ -3,6 +3,7 @@ import { AppShell } from "../../shared/components/layout";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PitchTrackerHeader } from "./PitchTrackerHeader";
 import { PitchTabs } from "./PitchTabs";
 import { PitchCard } from "./PitchCard";
@@ -32,6 +33,7 @@ function PitchCardSkeleton() {
 export function PitchTrackerPage() {
   const loading = useSimulatedLoad();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [tab, setTab] = useState("all");
   const [withdrawn, setWithdrawn] = useState<Set<string>>(new Set());
   const { data: pitches } = useMySubmissions();
@@ -47,8 +49,8 @@ export function PitchTrackerPage() {
 
   function withdraw(pitch: Pitch) {
     setWithdrawn((prev) => new Set(prev).add(pitch.id));
-    showToast("Pitch withdrawn", "info", undefined, {
-      label: "Undo",
+    showToast(t("magazine:pitchTracker.page.withdrawnToast"), "info", undefined, {
+      label: t("magazine:pitchTracker.page.undoCta"),
       onClick: () =>
         setWithdrawn((prev) => {
           const nextSet = new Set(prev);
@@ -59,7 +61,7 @@ export function PitchTrackerPage() {
   }
 
   function stub(label: string) {
-    showToast(`${label} — coming soon in this prototype`, "info");
+    showToast(t("magazine:pitchTracker.page.stubToast", { label }), "info");
   }
 
   return (
@@ -77,11 +79,8 @@ export function PitchTrackerPage() {
           Array.from({ length: 4 }).map((_, i) => <PitchCardSkeleton key={i} />)
         ) : visible.length === 0 ? (
           <div className={styles.empty}>
-            <h3>Nothing in this view.</h3>
-            <p>
-              No pitches here right now. Switch tabs, or start something new
-              from the New pitch button above.
-            </p>
+            <h3>{t("magazine:pitchTracker.page.emptyTitle")}</h3>
+            <p>{t("magazine:pitchTracker.page.emptyBody")}</p>
           </div>
         ) : (
           visible.map((pitch, i) => (

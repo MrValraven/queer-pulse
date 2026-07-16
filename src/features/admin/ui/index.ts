@@ -4,5 +4,10 @@ export { AdminChip, AdminCat, type AdminTone } from "./AdminChip";
 export { AdminAvatar, type AvatarTone } from "./AdminAvatar";
 export { AdminDrawer } from "./AdminDrawer";
 export { AdminModal } from "./AdminModal";
-export { AdminSeg, AdminToggle, AdminCheckLine } from "./AdminControls";
+export {
+  AdminSeg,
+  AdminToggle,
+  AdminCheckLine,
+  type AdminSegOption,
+} from "./AdminControls";
 export { default as adminUiStyles } from "./adminUi.module.css";

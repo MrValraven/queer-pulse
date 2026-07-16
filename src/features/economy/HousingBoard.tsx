@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Reveal, SubpageIndex } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { HOUSING_LISTINGS as LISTINGS } from "./housingListings";
 import { FILTERS, HOUSING_SUBPAGES } from "./housing.data";
 import { HousingListingGrid } from "./HousingListingGrid";
@@ -10,10 +11,20 @@ import { ListSpaceModal } from "./ListSpaceModal";
 import styles from "./HousingPage.module.css";
 
 export function HousingBoard() {
+  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const [filter, setFilter] = useState("all");
   const [listing, setListing] = useState(false);
+  const subpages = useMemo(
+    () =>
+      HOUSING_SUBPAGES.map((subpage) => ({
+        to: subpage.to,
+        label: t(subpage.labelKey),
+        blurb: t(subpage.blurbKey),
+      })),
+    [t],
+  );
   // The housing board has no live backend yet, so real listings/endorsements
   // only exist in demo mode ("Populate platform"). Live mode shows the empty
   // board rather than mock members' spaces.
@@ -45,7 +56,7 @@ export function HousingBoard() {
                       .join(" ")}
                     onClick={() => setFilter(f.value)}
                   >
-                    {f.label}
+                    {t(f.labelKey)}
                   </button>
                 ))}
               </Reveal>
@@ -55,7 +66,7 @@ export function HousingBoard() {
                 delay={60}
                 onClick={() => setListing(true)}
               >
-                + List your space
+                {t("economy:housing.listSpaceCta")}
               </Reveal>
             </div>
           )}
@@ -76,9 +87,9 @@ export function HousingBoard() {
       {listing && <ListSpaceModal onClose={() => setListing(false)} />}
 
       <SubpageIndex
-        eyebrow="Housing"
-        title="More on housing"
-        items={HOUSING_SUBPAGES}
+        eyebrow={t("economy:housing.subpages.eyebrow")}
+        title={t("economy:housing.subpages.title")}
+        items={subpages}
       />
     </>
   );

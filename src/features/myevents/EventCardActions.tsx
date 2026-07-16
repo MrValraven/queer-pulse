@@ -1,6 +1,7 @@
 import type { MouseEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import { sx } from "./myEvents.styles";
@@ -22,6 +23,7 @@ const RECEIPT = linkToPath("QueerPulse Receipt.html");
 
 /** Right-hand action column, varying by category. */
 export function EventSide({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
   const { rsvpSaved, acceptInvite, declineInvite, softRemove, toast } =
     useMyEvents();
   return (
@@ -29,17 +31,17 @@ export function EventSide({ ev }: { ev: MyEvent }) {
       {ev.cat === "going" &&
         (ev.cancelled ? (
           <Button variant="ghost" to={GATHERING}>
-            Find similar
+            {t("myevents:side.findSimilar")}
           </Button>
         ) : (
           <>
             {ev.ticket && (
               <Button variant="ghost" to={TICKET}>
-                View ticket
+                {t("myevents:side.viewTicket")}
               </Button>
             )}
             <Link className={sx("ev-link")} to={detailPath(ev)}>
-              Event details →
+              {t("myevents:side.eventDetailsCta")}
             </Link>
           </>
         ))}
@@ -47,17 +49,17 @@ export function EventSide({ ev }: { ev: MyEvent }) {
       {ev.cat === "hosting" && (
         <>
           <Button variant="primary" to={MANAGE}>
-            Manage
+            {t("myevents:side.manageCta")}
           </Button>
           <Link className={sx("ev-link")} to={detailPath(ev)}>
-            View listing →
+            {t("myevents:side.viewListingCta")}
           </Link>
         </>
       )}
 
       {ev.cat === "waitlisted" && (
         <Link className={sx("ev-link")} to={detailPath(ev)}>
-          Event details →
+          {t("myevents:side.eventDetailsCta")}
         </Link>
       )}
 
@@ -65,20 +67,20 @@ export function EventSide({ ev }: { ev: MyEvent }) {
         <>
           {ev.photos ? (
             <Link className={sx("ev-link")} to={PHOTOS}>
-              See photos →
+              {t("myevents:side.seePhotosCta")}
             </Link>
           ) : (
             <button
               type="button"
               className={sx("ev-link quiet")}
-              onClick={() => toast("Opening your note…")}
+              onClick={() => toast(t("myevents:side.leaveNoteToast"))}
             >
-              Leave a note →
+              {t("myevents:side.leaveNoteCta")}
             </button>
           )}
           {ev.receipt && (
             <Link className={sx("ev-link quiet")} to={RECEIPT}>
-              Receipt →
+              {t("myevents:side.receiptCta")}
             </Link>
           )}
         </>
@@ -89,23 +91,23 @@ export function EventSide({ ev }: { ev: MyEvent }) {
           {ev.soldOut ? (
             <Button
               variant="ghost"
-              onClick={() =>
-                toast("Added to the waitlist — we’ll be in touch", "success")
-              }
+              onClick={() => toast(t("myevents:side.joinWaitlistToast"), "success")}
             >
-              Join waitlist
+              {t("myevents:side.joinWaitlistCta")}
             </Button>
           ) : (
             <Button variant="jade" onClick={() => rsvpSaved(ev.id)}>
-              RSVP
+              {t("myevents:side.rsvpCta")}
             </Button>
           )}
           <button
             type="button"
             className={sx("ev-link quiet")}
-            onClick={() => softRemove(ev.id, "Removed from saved")}
+            onClick={() =>
+              softRemove(ev.id, t("myevents:side.removedFromSavedToast"))
+            }
           >
-            Remove →
+            {t("myevents:side.removeCta")}
           </button>
         </>
       )}
@@ -113,17 +115,17 @@ export function EventSide({ ev }: { ev: MyEvent }) {
       {ev.cat === "invite" && (
         <div className={sx("invite-row")}>
           <Button variant="jade" onClick={() => acceptInvite(ev.id)}>
-            Accept
+            {t("myevents:side.acceptCta")}
           </Button>
           <Button variant="ghost" onClick={() => declineInvite(ev.id)}>
-            Decline
+            {t("myevents:side.declineCta")}
           </Button>
         </div>
       )}
 
       {ev.cat === "sent" && (
         <Link className={sx("ev-link")} to={MANAGE}>
-          Manage →
+          {t("myevents:side.manageInviteCta")}
         </Link>
       )}
     </div>
@@ -162,6 +164,7 @@ export function EventTools({
   dayofShown: boolean;
   onToggleDayof: () => void;
 }) {
+  const { t } = useTranslation();
   const c = useMyEvents();
   const onMore = (e: MouseEvent<HTMLButtonElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -170,28 +173,37 @@ export function EventTools({
   const Bell = (
     <ToolBtn on={ev.reminder} onClick={() => c.toggleReminder(ev.id)}>
       {Icons.bell}
-      <span>{ev.reminder ? "Reminder on" : "Remind me"}</span>
+      <span>
+        {ev.reminder
+          ? t("myevents:tools.reminderOn")
+          : t("myevents:tools.remindMe")}
+      </span>
     </ToolBtn>
   );
   const Cal = (
-    <ToolBtn onClick={() => c.toast("Added to your calendar", "success")}>
-      {Icons.cal}Add to calendar
+    <ToolBtn
+      onClick={() => c.toast(t("myevents:tools.addedToCalendarToast"), "success")}
+    >
+      {Icons.cal}
+      {t("myevents:tools.addToCalendar")}
     </ToolBtn>
   );
   const MoreBtn = (
     <button
       type="button"
       className={sx("tool-btn")}
-      aria-label="More options"
+      aria-label={t("myevents:tools.moreOptionsAria")}
       onClick={onMore}
     >
-      {Icons.more}More
+      {Icons.more}
+      {t("myevents:tools.more")}
     </button>
   );
   const DayofBtn =
     isToday(ev) && ev.dayof ? (
       <ToolBtn on={dayofShown} onClick={onToggleDayof}>
-        {Icons.info}Day-of details
+        {Icons.info}
+        {t("myevents:tools.dayOfDetails")}
       </ToolBtn>
     ) : null;
 
@@ -203,15 +215,18 @@ export function EventTools({
         {DayofBtn}
         {ev.maybe && (
           <ToolBtn onClick={() => c.setGoing(ev.id)}>
-            {Icons.check}Switch to going
+            {Icons.check}
+            {t("myevents:tools.switchToGoing")}
           </ToolBtn>
         )}
         {Cal}
         <ToolBtn onClick={() => c.openDetails(ev.id)}>
-          {Icons.edit}Your details
+          {Icons.edit}
+          {t("myevents:tools.yourDetails")}
         </ToolBtn>
         <ToolBtn danger onClick={() => c.cantGo(ev.id)}>
-          {Icons.x}Can’t make it
+          {Icons.x}
+          {t("myevents:tools.cantMakeIt")}
         </ToolBtn>
         {MoreBtn}
       </div>
@@ -224,7 +239,8 @@ export function EventTools({
         {Cal}
         {!ev.cohost && (
           <Link className={sx("tool-btn")} to={COHOST}>
-            {Icons.plus}Invite a co-host
+            {Icons.plus}
+            {t("myevents:tools.inviteCoHost")}
           </Link>
         )}
         {MoreBtn}
@@ -236,7 +252,8 @@ export function EventTools({
       <div className={sx("card-tools")}>
         {Bell}
         <ToolBtn danger onClick={() => c.leaveWaitlist(ev.id)}>
-          {Icons.leave}Leave waitlist
+          {Icons.leave}
+          {t("myevents:tools.leaveWaitlist")}
         </ToolBtn>
         {MoreBtn}
       </div>
@@ -246,19 +263,24 @@ export function EventTools({
     return (
       <div className={sx("card-tools")}>
         {ev.noShow ? (
-          <ToolBtn onClick={() => c.toast("Opening a note to the host…")}>
-            {Icons.info}Tell the host why
+          <ToolBtn onClick={() => c.toast(t("myevents:tools.tellHostToast"))}>
+            {Icons.info}
+            {t("myevents:tools.tellHostWhy")}
           </ToolBtn>
         ) : (
           <ToolBtn
-            onClick={() => c.toast("Thank-you sent to the host", "success")}
+            onClick={() => c.toast(t("myevents:tools.thankedToast"), "success")}
           >
-            {Icons.heart}Thank the host
+            {Icons.heart}
+            {t("myevents:tools.thankHost")}
           </ToolBtn>
         )}
         {ev.connect && (
-          <ToolBtn onClick={() => c.toast("Showing people you met here…")}>
-            {Icons.connect}Connect with who you met
+          <ToolBtn
+            onClick={() => c.toast(t("myevents:tools.connectWithMetToast"))}
+          >
+            {Icons.connect}
+            {t("myevents:tools.connectWithMet")}
           </ToolBtn>
         )}
         {MoreBtn}
@@ -276,8 +298,9 @@ export function EventTools({
   if (ev.cat === "invite") {
     return (
       <div className={sx("card-tools")}>
-        <ToolBtn onClick={() => c.toast("Opening a message to the host…")}>
-          {Icons.msg}Ask a question
+        <ToolBtn onClick={() => c.toast(t("myevents:tools.askQuestionToast"))}>
+          {Icons.msg}
+          {t("myevents:tools.askQuestion")}
         </ToolBtn>
         {MoreBtn}
       </div>
@@ -287,15 +310,22 @@ export function EventTools({
     return (
       <div className={sx("card-tools")}>
         <ToolBtn
-          onClick={() => c.toast(`Nudge sent to ${ev.invitee}`, "success")}
+          onClick={() =>
+            c.toast(
+              t("myevents:tools.nudgeSentToast", { invitee: ev.invitee }),
+              "success",
+            )
+          }
         >
-          {Icons.bell}Send a nudge
+          {Icons.bell}
+          {t("myevents:tools.sendNudge")}
         </ToolBtn>
         <ToolBtn
           danger
-          onClick={() => c.softRemove(ev.id, "Invitation withdrawn")}
+          onClick={() => c.softRemove(ev.id, t("myevents:tools.withdrawnToast"))}
         >
-          {Icons.x}Withdraw
+          {Icons.x}
+          {t("myevents:tools.withdraw")}
         </ToolBtn>
       </div>
     );

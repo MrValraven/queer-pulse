@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { FiCheckCircle, FiDollarSign, FiLock } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { StudioShell } from "./StudioShell";
 import { StudioTakedownModal } from "./StudioTakedownModal";
 import { PROMISES, RELEASES, type Release } from "./studioRights.data";
@@ -15,6 +17,7 @@ const PROMISE_ICONS: Record<string, ReactNode> = {
 };
 
 export function StudioRightsPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [releases, setReleases] = useState<Release[]>(RELEASES);
   const [pending, setPending] = useState<Release | null>(null);
@@ -36,7 +39,7 @@ export function StudioRightsPage() {
       ),
     );
     setPending(null);
-    showToast(`"${title}" enters its 14-day removal window`, "info");
+    showToast(t("studio:rights.takedownStartedToast", { title }), "info");
   }
 
   function cancelRemoval(rel: Release) {
@@ -45,41 +48,38 @@ export function StudioRightsPage() {
         r.id === rel.id ? { ...r, state: "live", daysLeft: undefined } : r,
       ),
     );
-    showToast("Removal cancelled — release stays up", "success");
+    showToast(t("studio:rights.removalCancelledToast"), "success");
   }
 
   return (
     <StudioShell>
       <div className={s.wrap}>
         <div className={s.pageH}>
-          <div className={s.eb}>Your work · your call</div>
+          <div className={s.eb}>{t("studio:rights.hero.eyebrow")}</div>
           <h1>
-            Rights &amp; <em>takedown</em>.
+            <Translation i18nKey="studio:rights.hero.title" components={{ em: <em /> }} />
           </h1>
-          <div className={s.dek}>
-            One page. Your masters are yours — you can take any release off
-            Studio at any time, for any reason or none. No retention team, no
-            exit survey, no "are you sure" loop designed to wear you down.
-          </div>
+          <div className={s.dek}>{t("studio:rights.hero.dek")}</div>
         </div>
 
         <div className={s.promise}>
           {PROMISES.map((p) => (
             <div key={p.key} className={s.p}>
               <span className={s.pIcon}>{PROMISE_ICONS[p.key]}</span>
-              <h4>{p.title}</h4>
-              <p>{p.body}</p>
+              <h4>{t(p.titleKey)}</h4>
+              <p>{t(p.bodyKey)}</p>
             </div>
           ))}
         </div>
 
         <div className={s.secH}>
           <h2>
-            Your <em>releases</em>
+            <Translation i18nKey="studio:rights.releases.heading" components={{ em: <em /> }} />
           </h2>
           <div className={s.sub}>
-            {liveCount} live
-            {removingCount > 0 && ` · ${removingCount} in a removal window`}
+            {t("studio:rights.releases.liveCount", { count: liveCount })}
+            {removingCount > 0 &&
+              ` · ${t("studio:rights.releases.removingCount", { count: removingCount })}`}
           </div>
         </div>
 
@@ -115,14 +115,14 @@ export function StudioRightsPage() {
                 <>
                   <div className={s.rtStatus}>
                     <span className={s.d} aria-hidden />
-                    Removing · {rel.daysLeft} days left
+                    {t("studio:rights.removingStatus", { count: rel.daysLeft ?? 0 })}
                   </div>
                   <button
                     type="button"
                     className={s.btUndo}
                     onClick={() => cancelRemoval(rel)}
                   >
-                    Cancel removal
+                    {t("studio:rights.cancelRemovalCta")}
                   </button>
                 </>
               ) : (
@@ -138,7 +138,7 @@ export function StudioRightsPage() {
                     className={s.btTake}
                     onClick={() => setPending(rel)}
                   >
-                    Take down
+                    {t("studio:rights.takeDownCta")}
                   </button>
                 </>
               )}
@@ -148,15 +148,13 @@ export function StudioRightsPage() {
 
         <div className={s.foot}>
           <h4>
-            Leaving the co-op <em>entirely</em>?
+            <Translation i18nKey="studio:rights.leavingCoop.title" components={{ em: <em /> }} />
           </h4>
           <p>
-            This page only removes individual releases. To close your artist
-            account, end your sustainer membership, and request a full data
-            export, that lives in{" "}
-            <Link to="/studio/settings">Settings → Erase &amp; exit</Link>.{" "}
-            <em>Even then, past payouts are yours to keep</em> and we'll keep
-            paying out any plays that already happened.
+            <Translation
+              i18nKey="studio:rights.leavingCoop.body"
+              components={{ em: <em />, a: <Link to="/studio/settings" /> }}
+            />
           </p>
         </div>
       </div>

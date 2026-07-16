@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { AppShell } from "../../shared/components/layout";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { useRealtimeConnection } from "../../shared/api/realtime";
@@ -18,6 +19,7 @@ import {
 import styles from "./MessagesPage.module.css";
 
 export function MessagesPage() {
+  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { isBlocked } = useSocial();
   const simLoading = useSimulatedLoad();
@@ -119,7 +121,7 @@ export function MessagesPage() {
       ...prev,
       [convId]: [
         ...(prev[convId] ?? []),
-        { from: "me", text: body, time: "Just now" },
+        { from: "me", text: body, time: t("messages:time.justNow") },
       ],
     }));
     setDraft("");

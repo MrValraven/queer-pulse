@@ -11,11 +11,31 @@ export type TierIndex = 0 | 1 | 2;
 export const TIER_NAMES = ["Supporter", "Friend", "Patron"] as const;
 export type TierName = (typeof TIER_NAMES)[number];
 
+/**
+ * i18n Pattern A — label-key indirection. `TierName` (plus the "Custom"
+ * amount) is the canonical, never-translated id: it's the value persisted to
+ * `localStorage` (`Supporter.tier`, see `useSustainer.ts`) and used to index
+ * `TIER_MICROLABELS`/`TIER_PERKS`. Only the *displayed* tier name is
+ * translated, via this map, everywhere a tier name renders (`TierCard.tsx`,
+ * `SustainerTiers.tsx`, `SustainerRecapBar.tsx`, `SustainerMemberBanner.tsx`,
+ * `SustainerPaymentModal.tsx`).
+ */
+export const TIER_LABEL_KEYS: Record<TierName | "Custom", string> = {
+  Supporter: "support:tiers.name.supporter",
+  Friend: "support:tiers.name.friend",
+  Patron: "support:tiers.name.patron",
+  Custom: "support:tiers.name.custom",
+};
+
 /** Monthly base amount per tier, in EUR. */
 export const BASE_EUR: readonly number[] = [5, 10, 25];
 
 export type CurrencyCode = "EUR" | "GBP" | "USD";
 
+/** `label` here is a currency-code display (e.g. "€ EUR") — a universal ISO
+ * code + symbol pairing, not prose, so it isn't routed through the i18n
+ * catalog (see `docs/i18n/extraction-brief.md` §1 — chrome is *authored*
+ * copy; this is data). */
 export const CURRENCIES: Record<
   CurrencyCode,
   { sym: string; rate: number; label: string }
@@ -27,30 +47,43 @@ export const CURRENCIES: Record<
 
 export type FreqKey = "monthly" | "annual" | "once";
 
+/**
+ * i18n Pattern A — `FreqKey` ("monthly"/"annual"/"once") is the canonical,
+ * never-translated id; `perKey`/`shortKey`/`billingKey`/`subKey` are catalog
+ * keys resolved with `t()` at the consuming component. `short` for "once"
+ * has no word to translate (an empty suffix), so it stays a plain string.
+ */
 export const FREQS: Record<
   FreqKey,
-  { mult: number; per: string; short: string; billing: string; sub: string }
+  {
+    mult: number;
+    perKey: string;
+    shortKey?: string;
+    short?: string;
+    billingKey: string;
+    subKey: string;
+  }
 > = {
   monthly: {
     mult: 1,
-    per: "per month",
-    short: "/month",
-    billing: "Monthly",
-    sub: "Recurring · cancel any time",
+    perKey: "support:freq.monthly.per",
+    shortKey: "support:freq.monthly.short",
+    billingKey: "support:freq.monthly.billing",
+    subKey: "support:freq.monthly.sub",
   },
   annual: {
     mult: 10,
-    per: "per year",
-    short: "/year",
-    billing: "Yearly",
-    sub: "Billed once a year · cancel any time",
+    perKey: "support:freq.annual.per",
+    shortKey: "support:freq.annual.short",
+    billingKey: "support:freq.annual.billing",
+    subKey: "support:freq.annual.sub",
   },
   once: {
     mult: 5,
-    per: "one time",
+    perKey: "support:freq.once.per",
     short: "",
-    billing: "One-time",
-    sub: "A single contribution",
+    billingKey: "support:freq.once.billing",
+    subKey: "support:freq.once.sub",
   },
 };
 
@@ -66,11 +99,6 @@ export function amountFor(
   freq: FreqKey,
 ): number {
   return round(BASE_EUR[tier]! * FREQS[freq].mult * CURRENCIES[cur].rate);
-}
-
-/** Format a number in the active currency, e.g. `€1,900`. */
-export function money(cur: CurrencyCode, v: number): string {
-  return CURRENCIES[cur].sym + v.toLocaleString();
 }
 
 /** The solidarity add-on amount in the active currency + frequency. */
@@ -95,11 +123,13 @@ export function eurMonthlyEquiv(
   return baseInCur / CURRENCIES[cur].rate / FREQS[freq].mult;
 }
 
-/** Warm, concrete framing of where a contribution goes. */
-export function impactMsg(eurMonthly: number): string {
-  if (eurMonthly >= 22)
-    return "funds nearly a full day of the team keeping this place running and cared for.";
-  if (eurMonthly >= 9)
-    return "covers a month of hosting and email for dozens of members.";
-  return "keeps the forum and the moderation tools running.";
+/**
+ * Warm, concrete framing of where a contribution goes — returns a catalog
+ * key (i18n Pattern A) rather than a sentence; `useSustainer.ts`'s
+ * `impactText()` resolves it with `t()`.
+ */
+export function impactMsgKey(eurMonthly: number): string {
+  if (eurMonthly >= 22) return "support:impact.msg.high";
+  if (eurMonthly >= 9) return "support:impact.msg.mid";
+  return "support:impact.msg.low";
 }

@@ -1,4 +1,5 @@
 import { FiCheck } from "react-icons/fi";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { INVITE_CANDIDATES, type TintKey } from "./startCommunity.data";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
@@ -11,14 +12,13 @@ const FACE: Record<TintKey, string> = {
 
 /** Chapter 7 — People: invite a few to be there on day one. */
 export function StepPeople({ form }: { form: CommunityForm }) {
+  const { t } = useTranslation();
   const { draft, toggleInvite } = form;
   return (
     <div>
       <div className={styles.field}>
-        <label>People you'd love to see here</label>
-        <span className={styles.hint}>
-          They'll get a warm invite when you open — no pressure, no spam.
-        </span>
+        <label>{t("communities:start.people.label")}</label>
+        <span className={styles.hint}>{t("communities:start.people.hint")}</span>
         <div className={styles.inviteList}>
           {INVITE_CANDIDATES.map((c) => {
             const on = draft.invites.includes(c.key);
@@ -46,10 +46,7 @@ export function StepPeople({ form }: { form: CommunityForm }) {
           })}
         </div>
       </div>
-      <p className={styles.seedNote}>
-        You can also share your community's link once it's open — that's often
-        how the first ten people really arrive.
-      </p>
+      <p className={styles.seedNote}>{t("communities:start.people.seedNote")}</p>
     </div>
   );
 }

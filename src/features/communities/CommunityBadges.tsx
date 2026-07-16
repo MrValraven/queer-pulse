@@ -13,47 +13,51 @@ import {
 import type { IconType } from "react-icons";
 import type { Reaction, ReactionKey } from "./community.model";
 import type { AccessTier, CommunityRole } from "./membership.types";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CommunityBadges.module.css";
 
 /** Owner/mod role pill. Members render nothing (no badge clutter). */
 export function RoleBadge({ role }: { role: CommunityRole | undefined }) {
+  const { t } = useTranslation();
   if (role === "owner") {
     return (
       <span className={[styles.role, styles.owner].join(" ")}>
-        <FiStar aria-hidden /> Owner
+        <FiStar aria-hidden /> {t("communities:badges.role.owner")}
       </span>
     );
   }
   if (role === "mod") {
     return (
       <span className={[styles.role, styles.mod].join(" ")}>
-        <FiShield aria-hidden /> Mod
+        <FiShield aria-hidden /> {t("communities:badges.role.mod")}
       </span>
     );
   }
   return null;
 }
 
-const TIER_META: Record<
-  AccessTier,
-  { label: string; icon: IconType; cls: string }
-> = {
-  public: { label: "Open to all", icon: FiGlobe, cls: styles.tierOpen! },
-  request: {
-    label: "Request to join",
-    icon: FiUserCheck,
-    cls: styles.tierRequest!,
-  },
-  invite: { label: "Invite-only", icon: FiMail, cls: styles.tierInvite! },
-  private: { label: "Private", icon: FiLock, cls: styles.tierPrivate! },
+/** Icon + CSS-module class per access tier — kept as styling data, not copy. */
+const TIER_META: Record<AccessTier, { icon: IconType; cls: string }> = {
+  public: { icon: FiGlobe, cls: styles.tierOpen! },
+  request: { icon: FiUserCheck, cls: styles.tierRequest! },
+  invite: { icon: FiMail, cls: styles.tierInvite! },
+  private: { icon: FiLock, cls: styles.tierPrivate! },
+};
+
+const TIER_LABEL_KEY: Record<AccessTier, string> = {
+  public: "communities:badges.tier.public",
+  request: "communities:badges.tier.request",
+  invite: "communities:badges.tier.invite",
+  private: "communities:badges.tier.private",
 };
 
 /** Access-tier pill for community cards/headers. */
 export function AccessTierBadge({ tier }: { tier: AccessTier }) {
-  const { label, icon: Icon, cls } = TIER_META[tier];
+  const { t } = useTranslation();
+  const { icon: Icon, cls } = TIER_META[tier];
   return (
     <span className={[styles.tier, cls].join(" ")}>
-      <Icon aria-hidden /> {label}
+      <Icon aria-hidden /> {t(TIER_LABEL_KEY[tier])}
     </span>
   );
 }
@@ -64,11 +68,11 @@ const REACTION_ICON: Record<ReactionKey, IconType> = {
   support: FiLifeBuoy,
   fire: FiZap,
 };
-const REACTION_LABEL: Record<ReactionKey, string> = {
-  heart: "Love",
-  celebrate: "Celebrate",
-  support: "Support",
-  fire: "Fire",
+const REACTION_LABEL_KEY: Record<ReactionKey, string> = {
+  heart: "communities:badges.reaction.heart",
+  celebrate: "communities:badges.reaction.celebrate",
+  support: "communities:badges.reaction.support",
+  fire: "communities:badges.reaction.fire",
 };
 
 export function ReactionBar({
@@ -78,6 +82,7 @@ export function ReactionBar({
   reactions: Reaction[];
   onReact?: (key: ReactionKey) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.reactions}>
       {reactions.map((r) => {
@@ -88,7 +93,10 @@ export function ReactionBar({
             role="button"
             tabIndex={0}
             aria-pressed={r.reacted}
-            aria-label={`${REACTION_LABEL[r.key]} — ${r.count}`}
+            aria-label={t("communities:badges.reaction.ariaLabel", {
+              label: t(REACTION_LABEL_KEY[r.key]),
+              count: r.count,
+            })}
             className={[styles.pill, r.reacted && styles.pillOn]
               .filter(Boolean)
               .join(" ")}

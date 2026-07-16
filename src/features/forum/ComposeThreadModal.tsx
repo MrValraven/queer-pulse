@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CATS } from "./forum.data";
 import styles from "./ComposeThreadModal.module.css";
 
@@ -28,6 +30,7 @@ export function ComposeThreadModal({
   initialTitle = "",
 }: ComposeThreadModalProps) {
   useScrollLock();
+  const { t } = useTranslation();
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState("");
   const [cat, setCat] = useState(POST_CATS[0]!.id);
@@ -60,15 +63,17 @@ export function ComposeThreadModal({
               <FiCheck />
             </span>
             <h2 id="compose-title" className={styles.confirmTitle}>
-              Posted to <em>the commons</em>
+              <Translation
+                i18nKey="forum:compose.confirmTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.confirmBody}>
-              Your thread is live at the top of the forum. Members can reply,
-              upvote, and help.
+              {t("forum:compose.confirmBody")}
             </p>
             <div className={styles.confirmActions}>
               <Button variant="ghost-dark" onClick={onClose}>
-                Done
+                {t("forum:compose.done")}
               </Button>
             </div>
           </div>
@@ -82,19 +87,18 @@ export function ComposeThreadModal({
             }}
           >
             <h2 id="compose-title" className={styles.dialogTitle}>
-              New post
+              {t("forum:compose.title")}
             </h2>
-            <p className={styles.dialogSub}>
-              Ask a question, share a guide, or float a proposal. Be kind, be
-              useful.
-            </p>
+            <p className={styles.dialogSub}>{t("forum:compose.sub")}</p>
 
             <label className={styles.field}>
-              <span className={styles.fieldLabel}>Title</span>
+              <span className={styles.fieldLabel}>
+                {t("forum:compose.titleFieldLabel")}
+              </span>
               <input
                 className={styles.input}
                 type="text"
-                placeholder="A clear, specific title"
+                placeholder={t("forum:compose.titlePlaceholder")}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 autoFocus
@@ -102,7 +106,9 @@ export function ComposeThreadModal({
             </label>
 
             <label className={styles.field}>
-              <span className={styles.fieldLabel}>Category</span>
+              <span className={styles.fieldLabel}>
+                {t("forum:compose.categoryFieldLabel")}
+              </span>
               <select
                 className={styles.input}
                 value={cat}
@@ -110,17 +116,19 @@ export function ComposeThreadModal({
               >
                 {POST_CATS.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.name}
+                    {t(c.nameKey)}
                   </option>
                 ))}
               </select>
             </label>
 
             <label className={styles.field}>
-              <span className={styles.fieldLabel}>Post</span>
+              <span className={styles.fieldLabel}>
+                {t("forum:compose.postFieldLabel")}
+              </span>
               <textarea
                 className={styles.textarea}
-                placeholder="Write your post…"
+                placeholder={t("forum:compose.postPlaceholder")}
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 rows={5}
@@ -129,10 +137,10 @@ export function ComposeThreadModal({
 
             <div className={styles.dialogActions}>
               <Button variant="ghost" type="button" onClick={onClose}>
-                Cancel
+                {t("forum:compose.cancel")}
               </Button>
               <Button variant="primary" type="submit" disabled={!canPublish}>
-                Publish post
+                {t("forum:compose.publishCta")}
               </Button>
             </div>
           </form>

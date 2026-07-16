@@ -2,22 +2,59 @@ import { useRef } from "react";
 import type { IconType } from "react-icons";
 import { FiBold, FiImage, FiItalic, FiLink, FiList } from "react-icons/fi";
 import { TbBlockquote } from "react-icons/tb";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { minReadApproxText } from "./magazineFormat";
 import type { DraftForm } from "./submitStory.data";
 import styles from "./SubmitStoryPage.module.css";
 
 type Tool =
-  | { key: string; label: string; icon: IconType; wrap: [string, string] }
-  | { key: string; label: string; icon: IconType; prefix: string }
-  | { key: string; label: string; text: string; prefix: string };
+  | { key: string; labelKey: string; icon: IconType; wrap: [string, string] }
+  | { key: string; labelKey: string; icon: IconType; prefix: string }
+  | { key: string; labelKey: string; text: string; prefix: string };
 
 const TOOLS: Tool[] = [
-  { key: "bold", label: "Bold", icon: FiBold, wrap: ["**", "**"] },
-  { key: "italic", label: "Italic", icon: FiItalic, wrap: ["_", "_"] },
-  { key: "link", label: "Link", icon: FiLink, wrap: ["[", "](https://)"] },
-  { key: "h2", label: "Heading", text: "H2", prefix: "## " },
-  { key: "quote", label: "Block quote", icon: TbBlockquote, prefix: "> " },
-  { key: "bullet", label: "Bullet list", icon: FiList, prefix: "- " },
-  { key: "image", label: "Image", icon: FiImage, wrap: ["![", "](https://)"] },
+  {
+    key: "bold",
+    labelKey: "magazine:submitStory.writer.tool.bold",
+    icon: FiBold,
+    wrap: ["**", "**"],
+  },
+  {
+    key: "italic",
+    labelKey: "magazine:submitStory.writer.tool.italic",
+    icon: FiItalic,
+    wrap: ["_", "_"],
+  },
+  {
+    key: "link",
+    labelKey: "magazine:submitStory.writer.tool.link",
+    icon: FiLink,
+    wrap: ["[", "](https://)"],
+  },
+  {
+    key: "h2",
+    labelKey: "magazine:submitStory.writer.tool.heading",
+    text: "H2",
+    prefix: "## ",
+  },
+  {
+    key: "quote",
+    labelKey: "magazine:submitStory.writer.tool.quote",
+    icon: TbBlockquote,
+    prefix: "> ",
+  },
+  {
+    key: "bullet",
+    labelKey: "magazine:submitStory.writer.tool.bullet",
+    icon: FiList,
+    prefix: "- ",
+  },
+  {
+    key: "image",
+    labelKey: "magazine:submitStory.writer.tool.image",
+    icon: FiImage,
+    wrap: ["![", "](https://)"],
+  },
 ];
 
 export function SubmitStoryWriter({
@@ -33,6 +70,7 @@ export function SubmitStoryWriter({
   readTime: number;
   saveState: "saved" | "unsaved";
 }) {
+  const { t } = useTranslation();
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
   function apply(tool: Tool) {
@@ -77,8 +115,8 @@ export function SubmitStoryWriter({
             <button
               type="button"
               className={styles.tbBtn}
-              title={tool.label}
-              aria-label={tool.label}
+              title={t(tool.labelKey)}
+              aria-label={t(tool.labelKey)}
               onClick={() => apply(tool)}
             >
               {"icon" in tool ? <tool.icon /> : tool.text}
@@ -86,22 +124,24 @@ export function SubmitStoryWriter({
           </span>
         ))}
         <span className={styles.autosave}>
-          {saveState === "saved" ? "Autosaved" : "Unsaved…"}
+          {saveState === "saved"
+            ? t("magazine:submitStory.writer.autosaved")
+            : t("magazine:submitStory.writer.unsaved")}
         </span>
       </div>
 
       <textarea
         className={styles.headlineInput}
-        aria-label="Headline"
-        placeholder="Your headline"
+        aria-label={t("magazine:submitStory.writer.headlineAria")}
+        placeholder={t("magazine:submitStory.writer.headlinePlaceholder")}
         rows={2}
         value={values.headline}
         onChange={(e) => set({ headline: e.target.value })}
       />
       <textarea
         className={styles.deckInput}
-        aria-label="Standfirst"
-        placeholder="A sentence or two that draws the reader in…"
+        aria-label={t("magazine:submitStory.writer.standfirstAria")}
+        placeholder={t("magazine:submitStory.writer.standfirstPlaceholder")}
         rows={2}
         value={values.deck}
         onChange={(e) => set({ deck: e.target.value })}
@@ -109,15 +149,17 @@ export function SubmitStoryWriter({
       <textarea
         ref={bodyRef}
         className={styles.bodyInput}
-        aria-label="Story body"
-        placeholder="Start writing…"
+        aria-label={t("magazine:submitStory.writer.bodyAria")}
+        placeholder={t("magazine:submitStory.writer.bodyPlaceholder")}
         value={values.body}
         onChange={(e) => set({ body: e.target.value })}
       />
 
       <div className={styles.writeFooter}>
-        <span className={styles.wordCount}>{wordCount} words</span>
-        <span>~ {readTime} min read</span>
+        <span className={styles.wordCount}>
+          {t("magazine:submitStory.writer.wordCount", { count: wordCount })}
+        </span>
+        <span>{minReadApproxText(readTime, t)}</span>
       </div>
     </div>
   );

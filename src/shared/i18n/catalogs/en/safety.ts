@@ -18,6 +18,9 @@ import type { Catalog } from "../../types";
  *   member-bio convention elsewhere.
  */
 export const safety: Catalog = {
+  // ── Shared across ReportPage.tsx / HateCrimePage.tsx (HubBackLink label) ─
+  "nav.safetyGuideLabel": "Safety Guide",
+
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
   "report.eyebrow": "Safety & Reporting",
   "report.hero.title": "Safety is <em>structural.</em>",

@@ -1,5 +1,12 @@
 import { FiSearch, FiX } from "react-icons/fi";
-import { SECTIONS, EDITORS, type SortKey } from "./editorDashboard.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
+import {
+  SECTIONS,
+  EDITORS,
+  SORT_LABEL_KEY,
+  type SortKey,
+} from "./editorDashboard.data";
 import type { FilterKey } from "./useEditorDashboard";
 import styles from "./EditorDashboardPage.module.css";
 
@@ -7,19 +14,13 @@ const cx = (...c: (string | false | undefined)[]) =>
   c.filter(Boolean).join(" ");
 
 const STATUS_OPTS: [string, string][] = [
-  ["all", "All statuses"],
-  ["late", "Late"],
-  ["blocked", "In an editor’s court"],
-  ["ready", "Ready"],
+  ["all", "magazine:editor.toolbar.status.all"],
+  ["late", "magazine:editor.toolbar.status.late"],
+  ["blocked", "magazine:editor.toolbar.status.blocked"],
+  ["ready", "magazine:editor.toolbar.status.ready"],
 ];
 
-const SORT_OPTS: [SortKey, string][] = [
-  ["due", "Sort · deadline"],
-  ["status", "Sort · stage"],
-  ["editor", "Sort · editor"],
-  ["section", "Sort · section"],
-  ["words", "Sort · length"],
-];
+const SORT_OPTS: SortKey[] = ["due", "status", "editor", "section", "words"];
 
 /** Search + filters + sort + My-queue toggle + shortcuts hint. */
 export function EditorToolbar({
@@ -45,6 +46,7 @@ export function EditorToolbar({
   onToggleMyQueue: () => void;
   onShortcuts: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.toolbar}>
       <div className={styles.searchBox}>
@@ -55,16 +57,16 @@ export function EditorToolbar({
           id="editor-search"
           type="text"
           value={q}
-          placeholder="Search pieces, pitches, contributors…"
+          placeholder={t("magazine:editor.toolbar.searchPlaceholder")}
           onChange={(e) => onQuery(e.target.value)}
-          aria-label="Search"
+          aria-label={t("magazine:editor.toolbar.searchAria")}
         />
         {q && (
           <button
             type="button"
             className={styles.searchClear}
             onClick={() => onQuery("")}
-            aria-label="Clear search"
+            aria-label={t("magazine:editor.toolbar.clearSearchAria")}
           >
             <FiX size={14} aria-hidden />
           </button>
@@ -75,9 +77,9 @@ export function EditorToolbar({
         className={styles.tbSel}
         value={fEditor}
         onChange={(e) => onFilter("fEditor", e.target.value)}
-        aria-label="Filter by editor"
+        aria-label={t("magazine:editor.toolbar.filterEditorAria")}
       >
-        <option value="all">All editors</option>
+        <option value="all">{t("magazine:editor.toolbar.allEditors")}</option>
         {EDITORS.map((ed) => (
           <option key={ed} value={ed}>
             {ed}
@@ -89,11 +91,11 @@ export function EditorToolbar({
         className={styles.tbSel}
         value={fStatus}
         onChange={(e) => onFilter("fStatus", e.target.value)}
-        aria-label="Filter by status"
+        aria-label={t("magazine:editor.toolbar.filterStatusAria")}
       >
-        {STATUS_OPTS.map(([v, label]) => (
+        {STATUS_OPTS.map(([v, labelKey]) => (
           <option key={v} value={v}>
-            {label}
+            {t(labelKey)}
           </option>
         ))}
       </select>
@@ -102,9 +104,9 @@ export function EditorToolbar({
         className={styles.tbSel}
         value={fSection}
         onChange={(e) => onFilter("fSection", e.target.value)}
-        aria-label="Filter by section"
+        aria-label={t("magazine:editor.toolbar.filterSectionAria")}
       >
-        <option value="all">All sections</option>
+        <option value="all">{t("magazine:editor.toolbar.allSections")}</option>
         {SECTIONS.map((s) => {
           const v = s.name.split(" ")[0];
           return (
@@ -119,11 +121,11 @@ export function EditorToolbar({
         className={styles.tbSel}
         value={sort}
         onChange={(e) => onFilter("sort", e.target.value)}
-        aria-label="Sort pieces"
+        aria-label={t("magazine:editor.toolbar.sortAria")}
       >
-        {SORT_OPTS.map(([v, label]) => (
-          <option key={v} value={v}>
-            {label}
+        {SORT_OPTS.map((key) => (
+          <option key={key} value={key}>
+            {t(SORT_LABEL_KEY[key])}
           </option>
         ))}
       </select>
@@ -134,11 +136,16 @@ export function EditorToolbar({
         onClick={onToggleMyQueue}
         aria-pressed={myQueue}
       >
-        {myQueue ? "My queue · on" : "My queue"}
+        {myQueue
+          ? t("magazine:editor.toolbar.myQueueOn")
+          : t("magazine:editor.toolbar.myQueue")}
       </button>
 
       <button type="button" className={styles.kbdHint} onClick={onShortcuts}>
-        Press <kbd>?</kbd> for shortcuts
+        <Translation
+          i18nKey="magazine:editor.toolbar.shortcutsHint"
+          components={{ kbd: <kbd /> }}
+        />
       </button>
     </div>
   );

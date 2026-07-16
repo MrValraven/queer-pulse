@@ -6,6 +6,8 @@ import {
   Sending,
   SuccessPanel,
 } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./TherapistProfilePage.module.css";
 
 type Phase = "idle" | "sending" | "sent";
@@ -18,6 +20,7 @@ export function AddVouchModal({
   therapistShort: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>("idle");
   const [text, setText] = useState("");
   const [byline, setByline] = useState("");
@@ -30,56 +33,86 @@ export function AddVouchModal({
 
   if (phase === "sent") {
     return (
-      <ModalSheet onClose={onClose} success ariaLabel="Vouch received">
-        <SuccessPanel title="Vouch received," em="thank you." onClose={onClose}>
-          A moderator reads every vouch before it's published — yours will
-          appear within a couple of days, anonymised exactly as you wrote it.{" "}
-          {therapistShort} won't see who sent it, and neither will the clinic.
+      <ModalSheet
+        onClose={onClose}
+        success
+        ariaLabel={t("resources:therapistProfilePage.vouch.successAriaLabel")}
+      >
+        <SuccessPanel
+          title={t("resources:therapistProfilePage.vouch.successTitle")}
+          em={t("resources:therapistProfilePage.vouch.successEm")}
+          onClose={onClose}
+        >
+          {t("resources:therapistProfilePage.vouch.successBody", {
+            name: therapistShort,
+          })}
         </SuccessPanel>
       </ModalSheet>
     );
   }
 
   return (
-    <ModalSheet onClose={onClose} ariaLabel={`Vouch for ${therapistShort}`}>
-      <div className={styles.vmEyebrow}>Community vouch</div>
+    <ModalSheet
+      onClose={onClose}
+      ariaLabel={t("resources:therapistProfilePage.vouch.modalAriaLabel", {
+        name: therapistShort,
+      })}
+    >
+      <div className={styles.vmEyebrow}>
+        {t("resources:therapistProfilePage.vouch.eyebrow")}
+      </div>
       <h3 className={styles.vmTitle}>
-        Have you seen {therapistShort}? <em>Say so.</em>
+        <Translation
+          i18nKey="resources:therapistProfilePage.vouch.title"
+          components={{ em: <em /> }}
+          values={{ name: therapistShort }}
+        />
       </h3>
       <p className={styles.vmSub}>
-        Vouches are anonymised — {therapistShort} won't see who wrote what, and
-        neither will the clinic. One honest paragraph helps the next member
-        decide.
+        {t("resources:therapistProfilePage.vouch.sub", {
+          name: therapistShort,
+        })}
       </p>
-      <FormField label="Your vouch" required>
+      <FormField
+        label={t("resources:therapistProfilePage.vouch.form.textLabel")}
+        required
+      >
         <textarea
           rows={5}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="What was it like to work with them? What should the next member know?"
+          placeholder={t(
+            "resources:therapistProfilePage.vouch.form.textPlaceholder",
+          )}
         />
       </FormField>
       <FormField
-        label="How should we describe you? (optional)"
-        helper="Shown instead of your name — keep it as vague as you like."
+        label={t("resources:therapistProfilePage.vouch.form.bylineLabel")}
+        helper={t("resources:therapistProfilePage.vouch.form.bylineHelper")}
       >
         <input
           type="text"
           value={byline}
           onChange={(e) => setByline(e.target.value)}
-          placeholder="e.g. Member · couple work"
+          placeholder={t(
+            "resources:therapistProfilePage.vouch.form.bylinePlaceholder",
+          )}
         />
       </FormField>
       <div className={styles.vmFoot}>
         <Button variant="ghost" onClick={onClose}>
-          Cancel
+          {t("resources:suggestEdit.cancelCta")}
         </Button>
         <Button
           variant="primary"
           onClick={submit}
           disabled={phase === "sending" || !text.trim()}
         >
-          {phase === "sending" ? <Sending label="Sending…" /> : "Add my vouch"}
+          {phase === "sending" ? (
+            <Sending label={t("resources:suggestEdit.sendingLabel")} />
+          ) : (
+            t("resources:therapistProfilePage.vouch.submitCta")
+          )}
         </Button>
       </div>
     </ModalSheet>

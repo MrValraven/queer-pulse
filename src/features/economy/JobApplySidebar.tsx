@@ -1,7 +1,9 @@
 import { FiMapPin, FiBriefcase, FiDollarSign, FiClock } from "react-icons/fi";
 import { FaRainbow } from "react-icons/fa6";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Job } from "./jobs.data";
-import { APPLY_TIPS } from "./jobApply.data";
+import { APPLY_TIP_KEYS } from "./jobApply.data";
 import styles from "./JobApplyPage.module.css";
 
 export function JobApplySidebar({
@@ -11,6 +13,7 @@ export function JobApplySidebar({
   job: Job;
   deadlineFull: string;
 }) {
+  const { t } = useTranslation();
   const info = [
     { icon: <FiMapPin size={13} aria-hidden />, node: <b>{job.location}</b> },
     {
@@ -25,7 +28,11 @@ export function JobApplySidebar({
       icon: <FiClock size={13} aria-hidden />,
       node: (
         <span>
-          Closes <b>{deadlineFull}</b>
+          <Translation
+            i18nKey="economy:jobApply.sidebar.closes"
+            values={{ date: deadlineFull }}
+            components={{ b: <b /> }}
+          />
         </span>
       ),
     },
@@ -62,10 +69,10 @@ export function JobApplySidebar({
       </div>
 
       <div className={`${styles.sideCard} ${styles.tips}`}>
-        <h4>Before you send</h4>
+        <h4>{t("economy:jobApply.sidebar.tipsTitle")}</h4>
         <ul className={styles.tipsList}>
-          {APPLY_TIPS.map((tip, i) => (
-            <li key={i}>{tip}</li>
+          {APPLY_TIP_KEYS.map((tipKey) => (
+            <li key={tipKey}>{t(tipKey)}</li>
           ))}
         </ul>
       </div>

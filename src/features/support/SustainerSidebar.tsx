@@ -1,4 +1,5 @@
 import { FiCheckCircle, FiLock, FiShield } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCountUp } from "../../shared/hooks";
 import { useAnimatedFill } from "./useAnimatedFill";
 import {
@@ -20,6 +21,7 @@ const AV_CLASS: Record<AvatarTint, string> = {
 
 /** Sticky sidebar: live supporter count, impact stats, the "why", reassurance. */
 export function SustainerSidebar({ store }: { store: SustainerStore }) {
+  const { t } = useTranslation();
   const count = useCountUp(store.count);
   const pct = Math.min(100, Math.round((store.count / store.goal) * 100));
   const fill = useAnimatedFill(pct);
@@ -28,9 +30,13 @@ export function SustainerSidebar({ store }: { store: SustainerStore }) {
     <aside className={styles.sidebar}>
       <div className={styles.sbCard}>
         <div className={styles.sbPlum}>
-          <div className={styles.sbPlumTitle}>Supporting right now</div>
+          <div className={styles.sbPlumTitle}>
+            {t("support:hero.supportingNow")}
+          </div>
           <div className={styles.sbCount}>{count}</div>
-          <div className={styles.sbCountLabel}>supporting members</div>
+          <div className={styles.sbCountLabel}>
+            {t("support:hero.supportingMembersLabel")}
+          </div>
           <div className={styles.sbProgress}>
             <div className={styles.sbProgTrack}>
               <div
@@ -40,9 +46,12 @@ export function SustainerSidebar({ store }: { store: SustainerStore }) {
             </div>
             <div className={styles.sbProgLabel}>
               <strong>
-                {store.count} of {store.goal}
+                {t("support:hero.progressCount", {
+                  count: store.count,
+                  goal: store.goal,
+                })}
               </strong>{" "}
-              members needed to fully cover monthly costs
+              {t("support:sidebar.membersNeeded")}
             </div>
           </div>
           <div className={styles.sbAvs}>
@@ -59,18 +68,22 @@ export function SustainerSidebar({ store }: { store: SustainerStore }) {
             </div>
           </div>
           <div className={styles.sbActivity}>
-            <span className={styles.dot} />3 people joined this week
+            <span className={styles.dot} />
+            {t("support:hero.joinedThisWeek", { count: 3 })}
           </div>
         </div>
       </div>
 
       <div className={styles.sbCard}>
-        <div className={styles.sbStatsHead}>Members' impact so far</div>
+        <div className={styles.sbStatsHead}>{t("support:sidebar.statsHead")}</div>
         <div className={styles.sbStats}>
           {IMPACT_STATS.map((s) => (
-            <div key={s.label} className={styles.sbStat}>
-              <div className={styles.sbStatNum}>{s.num}</div>
-              <div className={styles.sbStatLabel}>{s.label}</div>
+            <div key={s.labelKey} className={styles.sbStat}>
+              <div className={styles.sbStatNum}>
+                {s.num}
+                {s.unitKey ? ` ${t(s.unitKey)}` : ""}
+              </div>
+              <div className={styles.sbStatLabel}>{t(s.labelKey)}</div>
             </div>
           ))}
         </div>
@@ -78,30 +91,24 @@ export function SustainerSidebar({ store }: { store: SustainerStore }) {
 
       <div className={styles.sbCard}>
         <div className={styles.sbBody}>
-          <div className={styles.sbWhyHead}>Why we built it this way</div>
-          <div className={styles.sbWhyText}>
-            We turned down investment offers. Not out of pride — out of
-            principle. The moment a platform has investors, the community stops
-            being the product and starts becoming one. QueerPulse stays free
-            because the people who use it choose to keep it alive. That's the
-            deal.
-          </div>
-          <div className={styles.sbSign}>— The QueerPulse team</div>
+          <div className={styles.sbWhyHead}>{t("support:sidebar.whyHead")}</div>
+          <div className={styles.sbWhyText}>{t("support:sidebar.whyText")}</div>
+          <div className={styles.sbSign}>{t("support:sidebar.sign")}</div>
         </div>
       </div>
 
       <div className={styles.reassure}>
         <div className={styles.reassureItem}>
           <FiLock size={15} aria-hidden />
-          Secure via Stripe
+          {t("support:sidebar.reassure.stripe")}
         </div>
         <div className={styles.reassureItem}>
           <FiShield size={15} aria-hidden />
-          Cancel any time
+          {t("support:sidebar.reassure.cancel")}
         </div>
         <div className={styles.reassureItem}>
           <FiCheckCircle size={15} aria-hidden />
-          14-day refund
+          {t("support:sidebar.reassure.refund")}
         </div>
       </div>
     </aside>

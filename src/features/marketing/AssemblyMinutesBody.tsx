@@ -1,11 +1,20 @@
 import { FiCheck, FiX, FiClock } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   type AssemblyMinutes,
   type MinutesResolution,
 } from "./assemblyMinutes.data";
 import styles from "./AssemblyMinutesPage.module.css";
 
+const OUTCOME_KEYS: Record<MinutesResolution["outcome"], string> = {
+  Passed: "marketing:assemblyMinutes.outcome.passed",
+  Rejected: "marketing:assemblyMinutes.outcome.rejected",
+  Tabled: "marketing:assemblyMinutes.outcome.tabled",
+};
+
 function OutcomeTag({ outcome }: { outcome: MinutesResolution["outcome"] }) {
+  const { t } = useTranslation();
   const cls =
     outcome === "Passed"
       ? styles.passed
@@ -16,41 +25,57 @@ function OutcomeTag({ outcome }: { outcome: MinutesResolution["outcome"] }) {
     outcome === "Passed" ? FiCheck : outcome === "Rejected" ? FiX : FiClock;
   return (
     <span className={`${styles.outcome} ${cls}`}>
-      <Icon aria-hidden /> {outcome}
+      <Icon aria-hidden /> {t(OUTCOME_KEYS[outcome])}
     </span>
   );
 }
 
 export function AssemblyMinutesBody({ minutes }: { minutes: AssemblyMinutes }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.body}>
       <section className={styles.metaCard}>
         <div className={styles.metaGrid}>
           <div>
-            <span className={styles.metaLabel}>Date</span>
+            <span className={styles.metaLabel}>
+              {t("marketing:assemblyMinutes.meta.date")}
+            </span>
             <b>{minutes.date}</b>
           </div>
           <div>
-            <span className={styles.metaLabel}>Location</span>
+            <span className={styles.metaLabel}>
+              {t("marketing:assemblyMinutes.meta.location")}
+            </span>
             <b>{minutes.location}</b>
           </div>
           <div>
-            <span className={styles.metaLabel}>Chair</span>
+            <span className={styles.metaLabel}>
+              {t("marketing:assemblyMinutes.meta.chair")}
+            </span>
             <b>{minutes.chair}</b>
           </div>
           <div>
-            <span className={styles.metaLabel}>Secretary</span>
+            <span className={styles.metaLabel}>
+              {t("marketing:assemblyMinutes.meta.secretary")}
+            </span>
             <b>{minutes.secretary}</b>
           </div>
           <div>
-            <span className={styles.metaLabel}>Quorum</span>
+            <span className={styles.metaLabel}>
+              {t("marketing:assemblyMinutes.meta.quorum")}
+            </span>
             <b>{minutes.quorum}</b>
           </div>
           <div>
-            <span className={styles.metaLabel}>Attendance</span>
+            <span className={styles.metaLabel}>
+              {t("marketing:assemblyMinutes.meta.attendance")}
+            </span>
             <b>
-              {minutes.attendeesInPerson} in person · {minutes.attendeesOnline}{" "}
-              online · {minutes.votesCast} votes
+              {t("marketing:assemblyMinutes.meta.attendanceValue", {
+                inPerson: minutes.attendeesInPerson,
+                online: minutes.attendeesOnline,
+                votes: minutes.votesCast,
+              })}
             </b>
           </div>
         </div>
@@ -58,14 +83,20 @@ export function AssemblyMinutesBody({ minutes }: { minutes: AssemblyMinutes }) {
 
       <section className={styles.sec}>
         <h2>
-          Summary of <em>proceedings</em>
+          <Translation
+            i18nKey="marketing:assemblyMinutes.summary.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={styles.summary}>{minutes.summary}</p>
       </section>
 
       <section className={styles.sec}>
         <h2>
-          <em>Agenda</em> as taken
+          <Translation
+            i18nKey="marketing:assemblyMinutes.agenda.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <div className={styles.agenda}>
           {minutes.agenda.map((a, i) => (
@@ -82,7 +113,10 @@ export function AssemblyMinutesBody({ minutes }: { minutes: AssemblyMinutes }) {
 
       <section className={styles.sec}>
         <h2>
-          Resolutions &amp; <em>outcomes</em>
+          <Translation
+            i18nKey="marketing:assemblyMinutes.resolutions.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <div className={styles.resTable}>
           {minutes.resolutions.map((r) => (
@@ -100,7 +134,10 @@ export function AssemblyMinutesBody({ minutes }: { minutes: AssemblyMinutes }) {
 
       <section className={styles.sec}>
         <h2>
-          Actions &amp; <em>next steps</em>
+          <Translation
+            i18nKey="marketing:assemblyMinutes.actions.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <ul className={styles.actions}>
           {minutes.actions.map((a, i) => (
@@ -110,8 +147,10 @@ export function AssemblyMinutesBody({ minutes }: { minutes: AssemblyMinutes }) {
       </section>
 
       <div className={styles.signoff}>
-        Minutes recorded by {minutes.secretary} · ratified at the close of the{" "}
-        {minutes.year} Annual Assembly. This is the public record.
+        {t("marketing:assemblyMinutes.signoff", {
+          secretary: minutes.secretary,
+          year: minutes.year,
+        })}
       </div>
     </div>
   );

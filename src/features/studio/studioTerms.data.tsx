@@ -1,4 +1,13 @@
 import type { ReactNode } from "react";
+import { Translation } from "../../shared/i18n/Translation";
+import type { TFunction } from "../../shared/i18n/types";
+
+/**
+ * Content for the Studio Trust & Terms page. Platform-authored legal/chrome
+ * copy (never fetched — see `docs/i18n/extraction-brief.md` §1). Pattern B:
+ * `buildDeals(t)` / `buildLicences(t)` are memoized in the consumer. Licence
+ * codes (ARR, CC-BY-NC, CC-BY-SA) are standard identifiers and stay as-is.
+ */
 
 /** The four headline "deal" cards at the top of the terms page. */
 export interface Deal {
@@ -51,64 +60,30 @@ const exitIcon = (
   </svg>
 );
 
-export const DEALS: Deal[] = [
-  {
-    icon: coinIcon,
-    title: (
-      <>
-        Artists keep <em>80%</em> &amp; their masters
-      </>
-    ),
-    body: (
-      <>
-        The split is in the deed, not a settings page.{" "}
-        <em>The floor can rise, never fall</em> without a two-thirds vote.
-      </>
-    ),
-  },
-  {
-    icon: checkCircleIcon,
-    title: (
-      <>
-        Tips are <em>100%</em>, always
-      </>
-    ),
-    body: (
-      <>
-        No platform cut on tips, ever. This one isn&rsquo;t up for a vote —
-        it&rsquo;s a founding term.
-      </>
-    ),
-  },
-  {
-    icon: lockIcon,
-    title: (
-      <>
-        Your data is <em>never</em> sold
-      </>
-    ),
-    body: (
-      <>
-        Not sold, not shared, not used to train anything. History is off by
-        default and erasable in one tap.
-      </>
-    ),
-  },
-  {
-    icon: exitIcon,
-    title: (
-      <>
-        Leaving is <em>one page</em>
-      </>
-    ),
-    body: (
-      <>
-        Take down work in 14 days, close your account in one click. Past plays
-        stay paid either way.
-      </>
-    ),
-  },
-];
+export function buildDeals(): Deal[] {
+  return [
+    {
+      icon: coinIcon,
+      title: <Translation i18nKey="studio:terms.deal.artists.title" components={{ em: <em /> }} />,
+      body: <Translation i18nKey="studio:terms.deal.artists.body" components={{ em: <em /> }} />,
+    },
+    {
+      icon: checkCircleIcon,
+      title: <Translation i18nKey="studio:terms.deal.tips.title" components={{ em: <em /> }} />,
+      body: <Translation i18nKey="studio:terms.deal.tips.body" components={{ em: <em /> }} />,
+    },
+    {
+      icon: lockIcon,
+      title: <Translation i18nKey="studio:terms.deal.data.title" components={{ em: <em /> }} />,
+      body: <Translation i18nKey="studio:terms.deal.data.body" components={{ em: <em /> }} />,
+    },
+    {
+      icon: exitIcon,
+      title: <Translation i18nKey="studio:terms.deal.leaving.title" components={{ em: <em /> }} />,
+      body: <Translation i18nKey="studio:terms.deal.leaving.body" components={{ em: <em /> }} />,
+    },
+  ];
+}
 
 /** A single licence card in section 02. */
 export interface Licence {
@@ -117,58 +92,40 @@ export interface Licence {
   rows: { ok: boolean; label: ReactNode }[];
 }
 
-export const LICENCES: Licence[] = [
-  {
-    code: "ARR",
-    title: (
-      <>
-        All rights <em>reserved</em>
-      </>
-    ),
-    rows: [
-      { ok: true, label: <>Stream &amp; save it</> },
-      { ok: true, label: <>Buy a copy to keep</> },
-      { ok: false, label: <>No reuse without asking</> },
-    ],
-  },
-  {
-    code: "CC-BY-NC",
-    title: (
-      <>
-        Credit, <em>non-commercial</em>
-      </>
-    ),
-    rows: [
-      {
-        ok: true,
-        label: (
-          <>
-            Reuse in <em>non-paid</em> work
-          </>
-        ),
-      },
-      { ok: true, label: <>Remix, with credit</> },
-      { ok: false, label: <>Not for commercial use</> },
-    ],
-  },
-  {
-    code: "CC-BY-SA",
-    title: (
-      <>
-        Credit, <em>share-alike</em>
-      </>
-    ),
-    rows: [
-      { ok: true, label: <>Reuse anywhere, with credit</> },
-      { ok: true, label: <>Commercial use allowed</> },
-      {
-        ok: true,
-        label: (
-          <>
-            Share remixes <em>same licence</em>
-          </>
-        ),
-      },
-    ],
-  },
-];
+export function buildLicences(t: TFunction): Licence[] {
+  return [
+    {
+      code: "ARR",
+      title: <Translation i18nKey="studio:terms.licence.arr.title" components={{ em: <em /> }} />,
+      rows: [
+        { ok: true, label: t("studio:terms.licence.arr.row1") },
+        { ok: true, label: t("studio:terms.licence.arr.row2") },
+        { ok: false, label: t("studio:terms.licence.arr.row3") },
+      ],
+    },
+    {
+      code: "CC-BY-NC",
+      title: <Translation i18nKey="studio:terms.licence.ccByNc.title" components={{ em: <em /> }} />,
+      rows: [
+        {
+          ok: true,
+          label: <Translation i18nKey="studio:terms.licence.ccByNc.row1" components={{ em: <em /> }} />,
+        },
+        { ok: true, label: t("studio:terms.licence.ccByNc.row2") },
+        { ok: false, label: t("studio:terms.licence.ccByNc.row3") },
+      ],
+    },
+    {
+      code: "CC-BY-SA",
+      title: <Translation i18nKey="studio:terms.licence.ccBySa.title" components={{ em: <em /> }} />,
+      rows: [
+        { ok: true, label: t("studio:terms.licence.ccBySa.row1") },
+        { ok: true, label: t("studio:terms.licence.ccBySa.row2") },
+        {
+          ok: true,
+          label: <Translation i18nKey="studio:terms.licence.ccBySa.row3" components={{ em: <em /> }} />,
+        },
+      ],
+    },
+  ];
+}

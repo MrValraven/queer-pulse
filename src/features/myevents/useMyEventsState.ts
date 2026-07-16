@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { ToastAction } from "../../shared/components/feedback/toastContext";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { MyEvent, Notif, Pill, Prefs } from "./myEvents.types";
 import type { MyEventsValue, MoreMenuState } from "./MyEventsContext";
-import { DEFAULT_PREFS, PILLS, MONFULL, DOWFULL } from "./myEvents.data";
+import { DEFAULT_PREFS, PILLS } from "./myEvents.data";
 import { inPill, parseDate, timeStr } from "./myEvents.helpers";
 import { useMyEventsCalendar } from "./useMyEventsCalendar";
 import { useMyEventsToolbar } from "./useMyEventsToolbar";
@@ -15,6 +17,8 @@ import { useMyEventsData } from "./api/useMyEventsData";
 /** Central state + actions for the My Events dashboard. */
 export function useMyEventsState(): MyEventsValue {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const toast = useCallback(
     (msg: string, type: "success" | "info" = "info") => showToast(msg, type),
@@ -174,19 +178,19 @@ export function useMyEventsState(): MyEventsValue {
         setRemovingId(null);
         setEvents((prev) => prev.filter((e) => e.id !== id));
         toastAction(msg, {
-          label: "Undo",
+          label: t("myevents:bulk.undoCta"),
           onClick: () => {
             setEvents((prev) => {
               const copy = prev.slice();
               copy.splice(Math.min(idx, copy.length), 0, ev);
               return copy;
             });
-            toast("Brought it back", "info");
+            toast(t("myevents:bulk.broughtBackToast"), "info");
           },
         });
       }, 200);
     },
-    [events, toast, toastAction],
+    [events, t, toast, toastAction],
   );
 
   // ── rsvp lifecycle ────────────────────────────────
@@ -201,28 +205,30 @@ export function useMyEventsState(): MyEventsValue {
       const next = !ev.reminder;
       patch(id, (e) => ({ ...e, reminder: next }));
       toast(
-        next ? `Reminder set — ${prefs.reminderLead} before` : "Reminder off",
+        next
+          ? t("myevents:toast.reminderSet", { lead: prefs.reminderLead })
+          : t("myevents:toast.reminderOff"),
         "info",
       );
     },
-    [byId, patch, prefs.reminderLead, toast],
+    [byId, patch, prefs.reminderLead, t, toast],
   );
 
   const setMaybe = useCallback(
     (id: string) => {
       patch(id, (e) => ({ ...e, maybe: true }));
       setMoreMenu((m) => ({ ...m, open: false }));
-      toast("Marked as maybe — the host can see you’re tentative", "info");
+      toast(t("myevents:toast.markedMaybe"), "info");
     },
-    [patch, toast],
+    [patch, t, toast],
   );
   const setGoing = useCallback(
     (id: string) => {
       patch(id, (e) => ({ ...e, maybe: false }));
       setMoreMenu((m) => ({ ...m, open: false }));
-      toast("You’re fully in — see you there", "success");
+      toast(t("myevents:toast.fullyIn"), "success");
     },
-    [patch, toast],
+    [patch, t, toast],
   );
 
   const rsvpSaved = useCallback(
@@ -233,9 +239,9 @@ export function useMyEventsState(): MyEventsValue {
         whoText: `${e.going} going`,
         who: [["YOU", "coral"]],
       }));
-      toast("You’re going — see you there", "success");
+      toast(t("myevents:toast.rsvpGoing"), "success");
     },
-    [patch, toast],
+    [patch, t, toast],
   );
 
   const acceptInvite = useCallback(
@@ -246,7 +252,7 @@ export function useMyEventsState(): MyEventsValue {
       setConfirm({
         open: true,
         title: ev.title,
-        meta: `${DOWFULL[dt.getDay()]} ${dt.getDate()} ${MONFULL[dt.getMonth()]} · ${timeStr(ev)} · ${ev.venue}`,
+        meta: `${fmt.date(dt, { weekday: "long", day: "numeric", month: "long" })} · ${timeStr(ev)} · ${ev.venue}`,
       });
       patch(id, (e) => ({
         ...e,
@@ -255,15 +261,15 @@ export function useMyEventsState(): MyEventsValue {
         who: [["YOU", "coral"]],
       }));
     },
-    [byId, patch],
+    [byId, fmt, patch],
   );
   const closeConfirm = useCallback(
     () => setConfirm((c) => ({ ...c, open: false })),
     [],
   );
   const declineInvite = useCallback(
-    (id: string) => softRemove(id, "Invitation declined — that’s okay."),
-    [softRemove],
+    (id: string) => softRemove(id, t("myevents:toast.invitationDeclined")),
+    [softRemove, t],
   );
 
   const cantGo = useCallback(
@@ -273,16 +279,13 @@ export function useMyEventsState(): MyEventsValue {
         setScope({ open: true, evId: id, title: ev.title });
         return;
       }
-      softRemove(
-        id,
-        "Your place was released — the next person on the waitlist will hear from us.",
-      );
+      softRemove(id, t("myevents:toast.placeReleased"));
     },
-    [byId, softRemove],
+    [byId, softRemove, t],
   );
   const leaveWaitlist = useCallback(
-    (id: string) => softRemove(id, "You’ve left the waitlist."),
-    [softRemove],
+    (id: string) => softRemove(id, t("myevents:toast.leftWaitlist")),
+    [softRemove, t],
   );
   const closeScope = useCallback(
     () => setScope((s) => ({ ...s, open: false })),
@@ -294,10 +297,10 @@ export function useMyEventsState(): MyEventsValue {
       setScope((s) => ({ ...s, open: false }));
       if (!id) return;
       if (which === "one")
-        softRemove(id, "Skipped this one — you’re still in the series.");
-      else softRemove(id, "Left the whole series.");
+        softRemove(id, t("myevents:toast.skippedThisOne"));
+      else softRemove(id, t("myevents:toast.leftWholeSeries"));
     },
-    [scope.evId, softRemove],
+    [scope.evId, softRemove, t],
   );
 
   // ── notifications ─────────────────────────────────
@@ -366,9 +369,9 @@ export function useMyEventsState(): MyEventsValue {
     (next: Partial<Prefs>) => {
       setPrefs((p) => ({ ...p, ...next }));
       setSettingsOpen(false);
-      toast("Preferences saved", "success");
+      toast(t("myevents:toast.preferencesSaved"), "success");
     },
-    [toast],
+    [t, toast],
   );
 
   // ── more menu ─────────────────────────────────────

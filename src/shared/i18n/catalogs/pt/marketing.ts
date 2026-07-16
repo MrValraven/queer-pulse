@@ -1573,4 +1573,582 @@ export const marketing: Catalog = {
   "listBusiness.fullPreview.findIt": "Onde fica",
   "listBusiness.fullPreview.whoRunsIt": "Quem o gere",
   "listBusiness.fullPreview.instagramPrefix": "Instagram · {handle}",
+
+  // ── Etiqueta partilhada de regresso ao hub (secção Governação) ─────────
+  "hub.governanceLabel": "Governação",
+
+  // ── Assembleia Anual — chrome da página. A agenda/resoluções/contagens/
+  //    histórico são registos de governação por ano (propostas e votos
+  //    concretos) — ficam em inglês; ver o relatório da varredura.
+  "annualAssembly.hero.eyebrow": "Assembleia Anual · 14 de novembro de 2026 · Lisboa",
+  "annualAssembly.hero.title": "Dois dias, onze <em>resoluções.</em>",
+  "annualAssembly.hero.dek":
+    "O encontro anual vinculativo da QueerPulse. Onde o manifesto é revisto, o orçamento é aprovado, e qualquer decisão que não possa ser tomada por um círculo vai a votação da comunidade. <em>Podes participar presencialmente, online, ou só ler as atas depois</em> — mas o teu voto conta da mesma forma.",
+  "annualAssembly.hero.meta.datesLabel": "Dois dias · sáb. e dom.",
+  "annualAssembly.hero.meta.videoLink": "+ link de vídeo",
+  "annualAssembly.hero.meta.eligibleLabel": "Pessoas com direito a voto",
+  "annualAssembly.hero.meta.quorumLabel": "Quórum · atingido",
+  "annualAssembly.hero.voteCta": "Vota agora · {count} resoluções",
+  "annualAssembly.hero.rsvpGoing": "Vais participar · toca para cancelar",
+  "annualAssembly.hero.rsvpCta":
+    "Confirmar presença · faltam {spotsLeft} de {totalSpots} vagas",
+  "annualAssembly.hero.joinOnlineCta": "Participar online · link do Zoom",
+  "annualAssembly.toast.rsvpCancelled":
+    "Confirmação cancelada · o teu lugar volta a estar disponível",
+  "annualAssembly.toast.rsvpConfirmed": "Estás na lista · até 14 de novembro",
+  "annualAssembly.toast.openingZoom": "A abrir o link do Zoom…",
+  "annualAssembly.footer.eligibility": "Perguntas sobre o teu direito a voto?",
+  "annualAssembly.footer.helpCta": "Ajuda →",
+  "annualAssembly.footer.proposal":
+    "Queres propor algo para o próximo ano?",
+  "annualAssembly.footer.writeCta": "Escreve-nos",
+  "annualAssembly.agenda.title": "A <em>agenda</em>",
+  "annualAssembly.agenda.sub":
+    "Mais ou menos por esta ordem. Os horários são indicativos. Nunca acabámos a horas e não esperamos começar agora.",
+  "annualAssembly.vote.title": "Votação · <em>aberta até 14 de nov. · 14:00</em>",
+  "annualAssembly.vote.sub":
+    "Todas as pessoas votam — quer participem ou não. Vota quando quiseres; podes mudar o voto até ao encerramento. <em>Um voto por pessoa, por resolução.</em>",
+  "annualAssembly.vote.quorumStrip":
+    "<b>Quórum:</b> são precisos 184 votos para validar uma resolução. <em>Neste momento há 312 votos registados</em> — quórum atingido. <b>Limiares de aprovação:</b> maioria simples para itens de orçamento; maioria qualificada de 60% para alterações ao Código de Conduta e ao manifesto.",
+  "annualAssembly.vote.noCta": "Não · rejeitar",
+  "annualAssembly.vote.abstainCta": "Abster",
+  "annualAssembly.vote.showMore": "Mostrar mais {count} resoluções →",
+  "annualAssembly.vote.recorded": "Voto registado · podes alterá-lo quando quiseres",
+  "annualAssembly.vote.tallyYes": "Sim",
+  "annualAssembly.vote.tallyNo": "Não",
+  "annualAssembly.vote.tallyAbstain": "Abstenção",
+  "annualAssembly.attend.title": "Não podes vir presencialmente?",
+  "annualAssembly.attend.body":
+    "Vota online quando quiseres até 14 de nov. · 14:00. Assiste à transmissão em direto das sessões presenciais com chat. Lê as atas na sexta-feira seguinte.",
+  "annualAssembly.attend.voteCta": "Vota",
+  "annualAssembly.attend.streamCta": "Link da transmissão",
+  "annualAssembly.past.title": "Assembleias <em>anteriores</em>",
+  "annualAssembly.past.sub":
+    "As resoluções e as atas de todas as Assembleias Anuais são públicas.",
+  "annualAssembly.past.minutesCta": "Atas →",
+
+  // ── Modal de transmissão em direto (Assembleia Anual) ──────────────────
+  "liveStream.closeAria": "Fechar",
+  "liveStream.eyebrow": "Transmissão em direto · Atelier Pulso",
+  "liveStream.title": "Assembleia Anual · <em>em direto.</em>",
+  "liveStream.lead":
+    "As sessões presenciais são transmitidas aqui, com chat aberto. A transmissão começa quando a sala abre — <b>14 de nov. · 10:00 WET.</b>",
+  "liveStream.playAria": "Reproduzir transmissão",
+  "liveStream.statusLive": "Em direto",
+  "liveStream.statusSoon": "Começa em breve",
+  "liveStream.noteStreaming":
+    "A transmitir a sala principal · áudio + diapositivos · chat abaixo",
+  "liveStream.noteSoon": "A transmissão começa às 10:00 WET, 14 de novembro",
+  "liveStream.backCta": "← Fechar",
+  "liveStream.voteInsteadCta": "Ir votar em vez disso →",
+
+  // ── Atas da Assembleia — chrome da página. As atas de cada ano (resumo,
+  //    agenda, resoluções, ações) são o registo oficial de governação —
+  //    ficam em inglês; ver o relatório da varredura.
+  "assemblyMinutes.hero.eyebrow": "Assembleia Anual · Atas · {year}",
+  "assemblyMinutes.hero.title": "As <em>atas.</em>",
+  "assemblyMinutes.hero.dek":
+    "O registo público da Assembleia Anual de {year} — quem presidiu, o que esteve em cima da mesa, e como ficou cada resolução.",
+  "assemblyMinutes.hero.fallbackNote":
+    "Não temos atas de {requestedYear} arquivadas, por isso aqui tens o registo de {year}.",
+  "assemblyMinutes.hero.backCta": "← Voltar à Assembleia",
+  "assemblyMinutes.otherYears": "Outros anos:",
+  "assemblyMinutes.meta.date": "Data",
+  "assemblyMinutes.meta.location": "Local",
+  "assemblyMinutes.meta.chair": "Presidência",
+  "assemblyMinutes.meta.secretary": "Secretariado",
+  "assemblyMinutes.meta.quorum": "Quórum",
+  "assemblyMinutes.meta.attendance": "Presenças",
+  "assemblyMinutes.meta.attendanceValue":
+    "{inPerson} presenciais · {online} online · {votes} votos",
+  "assemblyMinutes.summary.title": "Resumo dos <em>trabalhos</em>",
+  "assemblyMinutes.agenda.title": "<em>Agenda</em> seguida",
+  "assemblyMinutes.resolutions.title": "Resoluções e <em>resultados</em>",
+  "assemblyMinutes.actions.title": "Ações e <em>próximos passos</em>",
+  "assemblyMinutes.signoff":
+    "Atas registadas por {secretary} · ratificadas no encerramento da Assembleia Anual de {year}. Este é o registo público.",
+  "assemblyMinutes.outcome.passed": "Aprovada",
+  "assemblyMinutes.outcome.rejected": "Rejeitada",
+  "assemblyMinutes.outcome.tabled": "Adiada",
+
+  // ── Carta aberta — o corpo da carta é um documento de defesa de direitos
+  //    autoral e delimitado (não é conteúdo de utilizadores); traduzido na
+  //    íntegra, como o Manifesto. Nomes de signatários e notas individuais
+  //    de assinatura ficam em inglês (palavras/nomes próprios das pessoas).
+  "openLetter.hero.eyebrowPrefix": "Carta aberta · {partners}",
+  "openLetter.hero.live_one": "Ativa · falta {days} dia",
+  "openLetter.hero.live_other": "Ativa · faltam {days} dias",
+  "openLetter.hero.addressed": "Endereçada a <b>{to}</b> · {date}",
+  "openLetter.hero.countGoalSuffix": "/ {goal} assinaturas",
+  "openLetter.hero.countLabel":
+    "Pessoas da QueerPulse e organizações parceiras · última assinatura <b>{at}</b> por {by}",
+  "openLetter.hero.pctLabel": "<b>{pct}%</b> · {note}",
+  "openLetter.toast.signatureAdded": "Assinatura adicionada · {total} no total",
+  "openLetter.body.addressee":
+    "Ao Ministério da Saúde, e à Direção-Geral da Saúde:",
+  "openLetter.body.lead":
+    "A Lei n.º 38/2018 consagrou um princípio fundamental na lei portuguesa: que a identidade de género de uma pessoa é dela para determinar, e que o Estado e o seu sistema de saúde são obrigados a reconhecer essa determinação. <em>A lei é boa.</em> Ainda não está a ser aplicada.",
+  "openLetter.body.p2":
+    "Concretamente, os protocolos de prescrição de terapêutica hormonal de substituição em Portugal <strong>não são portáteis dentro do SNS</strong>. Uma pessoa trans que inicia acompanhamento com um médico de família em Lisboa, constrói um processo clínico ao longo de 12 a 24 meses, e depois muda de cidade — por trabalho, por habitação, por segurança — tem de, na prática, recomeçar do zero com um novo médico de família na nova cidade. A evidência clínica não a acompanha. O historial de prescrições não a acompanha. <em>A confiança construída com quem a acompanhava não a acompanha.</em>",
+  "openLetter.body.p3":
+    "Não é isto que a lei diz que deveria acontecer. É esta a realidade operacional.",
+  "openLetter.body.asksTitle": "O que estamos a <em>pedir</em>",
+  "openLetter.body.asksLead":
+    "Três mudanças concretas e exequíveis. Nenhuma exige legislação nova.",
+  "openLetter.body.ask1.lead": "Um registo nacional de prescrições de THS",
+  "openLetter.body.ask1.body":
+    ", de adesão voluntária e acesso restrito a clínicos, disponível a qualquer médico de família do SNS que a pessoa autorize. O mesmo modelo do registo de diabetes adotado em 2019.",
+  "openLetter.body.ask2.lead": "Uma regra de “receita-ponte” de 14 dias",
+  "openLetter.body.ask2.body":
+    " — quando a pessoa muda de região, o novo médico de família pode emitir uma receita-ponte de 90 dias até uma reavaliação completa, sem exigir um novo processo de diagnóstico.",
+  "openLetter.body.ask3.lead":
+    "Inclusão dos cuidados afirmativos trans no módulo de formação inicial de medicina geral e familiar",
+  "openLetter.body.ask3.body":
+    " — obrigatório, com quatro horas, elaborado em colaboração com clínicos portugueses certificados pela WPATH.",
+  "openLetter.body.whyNowTitle": "Porquê <em>agora</em>",
+  "openLetter.body.whyNowP1":
+    "Porque a janela política está aberta. Porque o Ministério assumiu, no orçamento da saúde de 2026, o compromisso de “avaliar percursos de continuidade de cuidados para medicação crónica”. Porque os clínicos que teriam de implementar isto — incluindo a <em>Dra. Inês Pereira</em>, da Clínica do Largo, o <em>Dr. Hugo Marques</em>, da USF Sé, e a <em>Dra. Mariza Câmara</em>, da Câmara — já declararam publicamente que estão prontos a participar.",
+  "openLetter.body.whyNowP2":
+    "E porque, por cada mês que esperamos, <strong>cerca de 40 pessoas trans em Portugal perdem a continuidade da THS</strong> só por atrito administrativo. O custo clínico destas interrupções está documentado. O custo pessoal é incalculável.",
+  "openLetter.body.whatWeDoTitle": "O que vamos fazer <em>com esta carta</em>",
+  "openLetter.body.whatWeDoP1":
+    "Ao chegar às 5000 assinaturas, esta carta será entregue em mão ao Ministério por uma delegação de três pessoas: <em>Catarina Vaz</em> (QueerPulse, Trans Hub), <em>Filipa Mendes</em> (ILGA Portugal), e uma pessoa trans cuja continuidade de cuidados foi interrompida nos últimos 24 meses. Vamos pedir uma reunião. Vamos publicar a resposta, seja ela qual for.",
+  "openLetter.body.whatWeDoP2":
+    "Se recusarem reunir-se, esta carta segue para a próxima audição trimestral da comissão de saúde da Assembleia da República — já agendada para discutir a implementação da Lei n.º 38/2018 — e para a imprensa.",
+  "openLetter.body.kicker":
+    "Não estamos a pedir um direito novo. <strong>Estamos a pedir que um direito já existente se torne real na prática.</strong>",
+  "openLetter.sig.transHub":
+    "Coordenação do Trans Hub · co-tesouraria · QueerPulse",
+  "openLetter.sig.ilgaDirector": "Direção executiva · ILGA Portugal",
+  "openLetter.sidebar.recentSignatures": "Assinaturas recentes",
+  "openLetter.sidebar.aboutRunning":
+    "<b>Porque fazemos cartas abertas assim:</b> por trás de cada assinatura está um nome verificado. <em>Isso torna-as mais difíceis de ignorar.</em> Não fazemos petições de massa anónimas — o modelo é menos assinaturas, mas reais e identificadas.",
+  "openLetter.sign.title": "Assina a carta aberta",
+  "openLetter.sign.asLabel": "Como {name} · {pronouns}",
+  "openLetter.sign.nameLabel": "Nome a mostrar na lista",
+  "openLetter.sign.visibilityLabel": "Mostrar como · visibilidade",
+  "openLetter.sign.noteLabel": "Acrescenta uma frase (opcional)",
+  "openLetter.sign.noteCounter": "{length}/280",
+  "openLetter.sign.notePlaceholder": "Porque é que isto importa para ti · 280 carateres",
+  "openLetter.sign.submitCta": "Assinar a carta",
+  "openLetter.sign.signedCta": "Assinaste a carta",
+  "openLetter.sign.footer":
+    "Só para pessoas da comunidade. Nunca partilhamos os teus dados com a organização destinatária. Podes retirar a tua assinatura quando quiseres.",
+  "openLetter.sign.anonName": "Uma pessoa da comunidade",
+  "openLetter.visibility.full": "Nome completo · público",
+  "openLetter.visibility.initials": "Só iniciais",
+  "openLetter.visibility.anon": "Anónimo · “Uma pessoa da comunidade”",
+  "openLetter.sidebar.noNote": "—",
+
+  // ── Relatório de Transparência — chrome da página. Os valores em euros,
+  //    a repartição do orçamento, as linhas de moderação, os pedidos
+  //    governamentais, os erros nomeados e as estatísticas de governação
+  //    são os números auditados reais do ano — ficam em inglês; ver o
+  //    relatório da varredura.
+  "transparency.tabs.money": "Dinheiro",
+  "transparency.tabs.people": "Pessoas",
+  "transparency.tabs.moderation": "Moderação",
+  "transparency.tabs.requests": "Pedidos governamentais",
+  "transparency.tabs.mistakes": "Erros",
+  "transparency.tabs.governance": "Como se decide",
+  "transparency.hero.eyebrow": "Relatório anual de transparência · 2025",
+  "transparency.hero.title":
+    "Cada <em>euro,</em> cada <em>moderação,</em> cada <em>erro.</em>",
+  "transparency.hero.dek":
+    "Os números por trás da QueerPulse em 2025 — finanças, ações de moderação, pedidos governamentais, e o que fizemos mal. <em>Publicado pela Associação QueerPulse</em> a 14 de maio de 2026, após revisão independente pela Dra. Helena Faria (auditora).",
+  "transparency.hero.meta.raised": "Total angariado",
+  "transparency.hero.meta.toPrograms": "Para programas",
+  "transparency.hero.meta.activeMembers": "Pessoas ativas",
+  "transparency.hero.meta.mistakesNamed": "Erros públicos nomeados",
+  "transparency.yearSwitch.inProgress": "em curso",
+  "transparency.money.title":
+    "De onde <em>veio</em> o dinheiro, e para onde <em>foi.</em>",
+  "transparency.money.sub":
+    "Todos os valores em euros, ano civil de 2025. Contas auditadas por um auditor independente (sem relação com a organização), disponíveis a pedido como CSV detalhado.",
+  "transparency.money.sourcesHeading": "De onde vieram os 278 400 €",
+  "transparency.money.spentLabel":
+    "Gasto em 2025 · 96,1% das receitas · 10 980 € de excedente transitado para reservas",
+  "transparency.people.title": "As <em>pessoas</em> por trás dos números.",
+  "transparency.people.sub":
+    "Pessoas no fim do ano, crescimento, quem realmente aparece. Não celebramos números grandes — só os certos.",
+  "transparency.moderation.title": "Moderação, <em>em números.</em>",
+  "transparency.moderation.sub":
+    "O que foi denunciado, sobre o que agimos, e quanto tempo demorou. Toda a ação fica registada; o registo completo e anonimizado está disponível a qualquer pessoa da comunidade que o peça.",
+  "transparency.moderation.colReason": "Motivo da ação de moderação",
+  "transparency.moderation.colCount": "Contagem",
+  "transparency.moderation.colYoy": "Face ao ano anterior",
+  "transparency.moderation.colPct": "% do total",
+  "transparency.moderation.breakdown":
+    "Repartição das ações: <b>96 publicações/comentários removidos</b>, <b>52 avisos emitidos</b>, <b>23 suspensões temporárias</b> (mediana de 7 dias), <b>9 remoções permanentes</b>, <b>4 casos encaminhados para a ILGA</b> para tratamento legal.",
+  "transparency.requests.title":
+    "Pedidos <em>governamentais e legais</em> de dados de pessoas da comunidade.",
+  "transparency.requests.sub":
+    "Todos os pedidos que recebemos de qualquer entidade governamental ou legal em 2025. Cumprimos ordens judiciais portuguesas válidas. <em>Não cumprimos pedidos informais.</em>",
+  "transparency.mistakes.title": "Coisas que fizemos <em>mal</em> em 2025.",
+  "transparency.mistakes.sub":
+    "Publicado porque queremos que esta secção seja a parte mais fácil de escrever no relatório do próximo ano. <em>Nomear os nossos próprios erros é o preço de sermos dignos de confiança.</em>",
+  "transparency.governance.title": "Como se <em>tomaram</em> as decisões.",
+  "transparency.governance.sub":
+    "Atas de reunião aborrecidas são a base da confiança. Eis como a governação da QueerPulse funcionou de facto em 2025.",
+  "transparency.governance.seeMore":
+    "Para as atas completas, a constituição, o acordo de Apoiante, e o organograma formal, consulta Governação.",
+  "transparency.signoff.title":
+    "Assinado de <em>boa-fé,</em> e pronto para perguntas.",
+  "transparency.signoff.body":
+    "Este relatório foi preparado por Catarina Vaz e André Bento, revisto pela Assembleia no seu todo, e auditado de forma independente pela Dra. Helena Faria da Faria Auditoria. <em>Os erros são nossos.</em> Perguntas, correções ou preocupações: <a>transparency@queerpulse.app</a> — uma pessoa a sério lê tudo no espaço de 48 horas.",
+  "transparency.signoff.role.catarina":
+    "Co-tesouraria · redigiu finanças + erros",
+  "transparency.signoff.role.andre":
+    "Co-tesouraria · redigiu moderação + governação",
+  "transparency.signoff.role.auditor": "Auditora independente",
+  "transparency.signoff.downloadPdf": "Descarregar PDF (84 páginas)",
+  "transparency.signoff.downloadCsv": "Descarregar CSV em bruto",
+
+  // ── Arquivo da Comunidade — chrome da página. As citações, biografias e
+  //    excertos de histórias orais são testemunhos reais de pessoas — ficam
+  //    em inglês (o caso canónico de "biografia fictícia" da regra de âmbito).
+  "archive.hero.category": "Arquivo da Comunidade",
+  "archive.hero.title": "Histórias que não devem <em>ser esquecidas.</em>",
+  "archive.hero.sub":
+    "Um arquivo contínuo de histórias orais, testemunhos e relatos pessoais de pessoas queer em Lisboa — de ontem e de hoje. Histórias que registam quem somos, o que construímos, e o que isso custou.",
+  "archive.featured.label": "A história em destaque este mês",
+  "archive.featured.readCta": "Lê a história dela →",
+  "archive.grid.title": "Do <em>arquivo</em>",
+  "archive.grid.sub":
+    "Relatos pessoais de pessoas da comunidade, de ontem e de hoje.",
+  "archive.oral.title": "Nas <em>próprias palavras.</em>",
+  "archive.oral.sub":
+    "Excertos curtos de histórias orais mais longas no arquivo.",
+  "archive.submit.title": "A tua história <em>também tem lugar aqui.</em>",
+  "archive.submit.body":
+    "O arquivo cresce com a contribuição da comunidade. Se tens uma história para contar — sobre Lisboa, sobre a tua comunidade, sobre o que te trouxe até aqui ou o que te manteve a caminhar — queremos ouvi-la. Todos os formatos são bem-vindos: escrito, áudio, vídeo, fotos.",
+  "archive.submit.cta": "Submete a tua história →",
+
+  // ── Registo de alterações — chrome da página. As 18 entradas datadas
+  //    (título/corpo/tag) são notas de lançamento históricas — ficam em
+  //    inglês por causa do volume; sinalizado no relatório em vez de feito
+  //    à pressa.
+  "changelog.hero.backLabel": "Roteiro",
+  "changelog.hero.eyebrow": "Registo de alterações da plataforma",
+  "changelog.hero.title": "O que <em>mudou,</em>",
+  "changelog.hero.titleLine2": "e quando.",
+  "changelog.hero.sub":
+    "Todas as atualizações da QueerPulse, da mais recente para a mais antiga. Publicamos as alterações aqui para saberes sempre o que é diferente e porquê. Nada acontece sem ficar registado.",
+  "changelog.filter.all": "Todas",
+  "changelog.filter.feature": "Funcionalidades",
+  "changelog.filter.community": "Comunidade",
+  "changelog.filter.fix": "Correções",
+  "changelog.filter.policy": "Políticas",
+  "changelog.filter.magazine": "Revista",
+  "changelog.badge.feature": "Funcionalidade",
+  "changelog.badge.community": "Comunidade",
+  "changelog.badge.fix": "Correção",
+  "changelog.badge.policy": "Política",
+  "changelog.badge.magazine": "Revista",
+  "changelog.empty.title": "Ainda nada registado com este filtro",
+  "changelog.empty.description":
+    "Ainda não houve alterações deste tipo. Limpa o filtro para ver o histórico completo.",
+  "changelog.empty.clearCta": "Limpar filtros",
+
+  // ── Roteiro — chrome da página. Os itens enviados/em construção/
+  //    planeados, as ideias mais votadas e as contagens de votos são o
+  //    backlog em direto — ficam em inglês; ver o relatório da varredura.
+  "roadmap.hero.eyebrow": "O que estamos a construir",
+  "roadmap.hero.title": "O <em>roteiro</em>",
+  "roadmap.hero.sub":
+    "A QueerPulse é feita por uma pequena equipa em Lisboa. Eis o que estamos a fazer, o que já lançámos, e no que podes votar a seguir.",
+  "roadmap.col.done": "Feito",
+  "roadmap.col.buildingNow": "Em construção",
+  "roadmap.col.planned": "Planeado",
+  "roadmap.card.memberRequested": "Pedido por uma pessoa da comunidade",
+  "roadmap.card.progressAria": "Progresso de {name}",
+  "roadmap.card.mostWanted": "Mais pedido",
+  "roadmap.card.votesSuffix": "votos",
+  "roadmap.shape.title": "Tens uma <em>ideia?</em>",
+  "roadmap.shape.sub":
+    "Lemos todas as sugestões. As ideias mais votadas sobem no roteiro.",
+  "roadmap.submitIdea.title": "Submeter uma ideia",
+  "roadmap.submitIdea.ariaLabel": "A tua ideia",
+  "roadmap.submitIdea.placeholder": "O que tornaria a QueerPulse melhor para ti?",
+  "roadmap.submitIdea.cta": "Submeter ideia",
+  "roadmap.submitIdea.toast.empty": "Escreve primeiro algumas palavras",
+  "roadmap.submitIdea.toast.submitted": "Ideia submetida — obrigado",
+  "roadmap.topIdeas.title": "Ideias mais pedidas",
+  "roadmap.topIdeas.voted": "Votado",
+  "roadmap.topIdeas.vote": "Votar",
+  "roadmap.topIdeas.toast.voted": "Voto registado",
+  "roadmap.howWeDecide.title": "Como <em>decidimos</em>",
+  "roadmap.howWeDecide.memberVotes.title": "Votos da comunidade",
+  "roadmap.howWeDecide.memberVotes.desc":
+    "As funcionalidades em que votas sobem ao topo. Vemos isto semanalmente.",
+  "roadmap.howWeDecide.safetyFirst.title": "Segurança em primeiro lugar",
+  "roadmap.howWeDecide.safetyFirst.desc":
+    "Cada funcionalidade é revista quanto ao modo como poderia ser usada de forma abusiva numa comunidade como esta.",
+  "roadmap.howWeDecide.smallTeam.title": "Equipa pequena, ritmo cuidado",
+  "roadmap.howWeDecide.smallTeam.desc":
+    "Somos duas pessoas de engenharia e uma de design. Preferimos construir devagar e acertar.",
+  "roadmap.subpageIndex.title": "Já lançado",
+  "roadmap.subpageIndex.changelog.label": "Registo de alterações",
+  "roadmap.subpageIndex.changelog.blurb":
+    "Todos os lançamentos, datados — o que já lançámos até agora.",
+
+  // ── Arquivo de Imprensa — chrome da página. Títulos/fontes/autores da
+  //    cobertura são peças de imprensa de terceiros reais (palavras de
+  //    outras pessoas) e ficam em inglês, o mesmo precedente da secção de
+  //    cobertura do Press Kit.
+  "pressArchive.hero.backLabel": "Press Kit",
+  "pressArchive.hero.eyebrow": "Arquivo de cobertura · desde 2024",
+  "pressArchive.hero.title": "Tudo o que já escreveram <em>sobre nós.</em>",
+  "pressArchive.hero.sub":
+    "Peças sobre a QueerPulse em publicações de terceiros, indexadas por ano. <em>Inclui críticas com as quais discordámos.</em>",
+  "pressArchive.stats.allTime": "Peças, desde sempre",
+  "pressArchive.stats.languages": "Idiomas",
+  "pressArchive.stats.thisYear": "Este ano",
+  "pressArchive.search.placeholder": "Pesquisar título, fonte, autor",
+  "pressArchive.chip.all": "Todas · {count}",
+  "pressArchive.chip.features": "Reportagens · {count}",
+  "pressArchive.chip.interviews": "Entrevistas · {count}",
+  "pressArchive.chip.news": "Notícias · {count}",
+  "pressArchive.chip.critiques": "Críticas · {count}",
+  "pressArchive.pinBadge": "Destaque",
+  "pressArchive.toast.opening": "A abrir em {source}…",
+  "pressArchive.loadingMore": "A carregar peças mais antigas…",
+  "pressArchive.loadMoreCta": "Carregar cobertura mais antiga",
+  "pressArchive.endOfArchive": "É este o arquivo completo — de 2022 até hoje.",
+
+  // ── Voluntariado — chrome da página. Nomes/funções/descrições/competências
+  //    das organizações vêm da API de oportunidades em direto (ou do seu
+  //    mock de demonstração) — ficam em inglês; o adaptador compõe alguns
+  //    fragmentos de chrome (etiqueta de compromisso, etiquetas de
+  //    estatística/vagas, frase de confirmação) que também têm chave aqui
+  //    para o modo em direto traduzir tal como a demonstração.
+  "volunteer.filter.all": "Todas as oportunidades",
+  "volunteer.filter.low": "Compromisso baixo",
+  "volunteer.filter.medium": "Compromisso médio",
+  "volunteer.filter.rights": "Direitos LGBTQ+",
+  "volunteer.filter.health": "Saúde e bem-estar",
+  "volunteer.filter.youth": "Juventude",
+  "volunteer.filter.housing": "Habitação",
+  "volunteer.filter.arts": "Artes e cultura",
+  "volunteer.hero.eyebrow": "Voluntariado",
+  "volunteer.hero.title": "Dá o teu tempo à <em>comunidade</em> à tua volta.",
+  "volunteer.hero.sub":
+    "Não precisas de ser ativista. Precisas de duas horas livres e vontade de aparecer. Abaixo estão organizações em Lisboa genuinamente à procura de pessoas como tu.",
+  "volunteer.hero.note":
+    "Todas as organizações abaixo foram avaliadas pela comunidade QueerPulse",
+  "volunteer.hero.postCta": "Publicar uma oportunidade",
+  "volunteer.empty.noneTitle": "Ainda não há oportunidades publicadas",
+  "volunteer.empty.noneDescription":
+    "Ainda nenhuma organização publicou vagas aqui. Se a tua precisa de ajuda, sê a primeira a lançar o convite.",
+  "volunteer.empty.noneCta": "Publicar uma oportunidade",
+  "volunteer.empty.filteredTitle":
+    "Ainda não há oportunidades com estes filtros",
+  "volunteer.empty.filteredDescription":
+    "Tenta alargar a pesquisa — há muitas formas de dar o teu tempo, e há sempre vagas novas a surgir.",
+  "volunteer.empty.clearCta": "Limpar filtros",
+  "volunteer.card.commitLow": "Compromisso baixo",
+  "volunteer.card.commitMedium": "Compromisso médio",
+  "volunteer.card.expressInterest": "Mostrar interesse →",
+  "volunteer.outro.title": "Queres ligar-te <em>mais a fundo?</em>",
+  "volunteer.outro.sub":
+    "Encontra quem já está a trabalhar nas causas que te importam.",
+  "volunteer.outro.cta": "Conhece quem faz a mudança →",
+  "volunteer.signups.title": "Quem já se inscreveu",
+  "volunteer.signups.loading": "A carregar inscrições…",
+  "volunteer.signups.empty":
+    "Ainda ninguém se inscreveu — a primeira pessoa aparece aqui.",
+  "volunteer.signups.signedUp": "Inscreveu-se {when}",
+  "volunteer.signups.closedTag": "Esta oportunidade está encerrada",
+  "volunteer.signups.closing": "A encerrar…",
+  "volunteer.signups.closeCta": "Encerrar oportunidade",
+  "volunteer.adapter.eyebrow": "Voluntariado · {cause} · {org}",
+  "volunteer.adapter.recruitingNow": "A recrutar agora",
+  "volunteer.adapter.closedNotRecruiting": "Encerrado · sem recrutamento",
+  "volunteer.adapter.perWeek": "Por semana",
+  "volunteer.adapter.commitment": "Compromisso",
+  "volunteer.adapter.spotsStillOpen": "Vagas ainda disponíveis",
+  "volunteer.adapter.roleLabel": "Função",
+  "volunteer.adapter.locationLabel": "Local",
+  "volunteer.adapter.applyConfirm":
+    "Candidatura submetida para {role}. A equipa entrará em contacto com os próximos passos.",
+  "volunteer.adapter.inPartnershipWith": "Em parceria com {name}.",
+  "volunteer.adapter.anonMember": "Uma pessoa da comunidade",
+
+  // ── Publicar uma oportunidade de voluntariado — chrome do formulário
+  //    (tudo interface da plataforma).
+  "postOpportunity.hero.eyebrow": "Voluntariado · Publicar uma vaga",
+  "postOpportunity.hero.title": "Publica uma <em>oportunidade.</em>",
+  "postOpportunity.hero.sub":
+    "Precisas de pessoas para dar o tempo delas? Descreve a vaga com honestidade — as horas, o compromisso, para quem é indicada — e fica logo visível no quadro de voluntariado.",
+  "postOpportunity.toast.error":
+    "Não foi possível publicar a tua oportunidade — tenta outra vez.",
+  "postOpportunity.success.title": "A tua oportunidade está",
+  "postOpportunity.success.em": "publicada.",
+  "postOpportunity.success.closeLabel": "Ver o quadro de voluntariado →",
+  "postOpportunity.success.step1": "Já está visível no quadro de voluntariado",
+  "postOpportunity.success.step2":
+    "As pessoas podem inscrever-se a partir da ficha",
+  "postOpportunity.success.step3":
+    "Vais ver todas as inscrições na página da vaga",
+  "postOpportunity.success.body":
+    "Obrigado por abrires espaço para alguém ajudar. Quem estiver interessade já pode encontrar a tua vaga e mostrar interesse.",
+  "postOpportunity.actions.posting": "A publicar…",
+  "postOpportunity.actions.submit": "Publicar oportunidade →",
+  "postOpportunity.actions.cancel": "Cancelar",
+  "postOpportunity.tip1.title": "Sê honesto sobre o pedido",
+  "postOpportunity.tip1.body":
+    "As pessoas voluntárias ficam quando o compromisso corresponde ao que prometeste. Explica as horas, a duração, e qualquer formação, logo à partida.",
+  "postOpportunity.tip2.title": "Diz para quem é indicada",
+  "postOpportunity.tip2.body":
+    "As melhores vagas descrevem a pessoa de que precisam — o temperamento, não só o currículo. Ajuda as pessoas certas a identificarem-se.",
+  "postOpportunity.tip3.title": "O que acontece depois de publicares",
+  "postOpportunity.tip3.body":
+    "A tua vaga aparece imediatamente no quadro de voluntariado. As pessoas interessadas inscrevem-se a partir da ficha, e vês a lista ali.",
+  "postOpportunity.cause.rights": "Direitos LGBTQ+",
+  "postOpportunity.cause.health": "Saúde e bem-estar",
+  "postOpportunity.cause.youth": "Juventude",
+  "postOpportunity.cause.housing": "Habitação",
+  "postOpportunity.cause.arts": "Artes e cultura",
+  "postOpportunity.commit.low.label": "Compromisso baixo",
+  "postOpportunity.commit.low.hint":
+    "Umas horas flexíveis por semana, sem prazo fixo.",
+  "postOpportunity.commit.medium.label": "Compromisso médio",
+  "postOpportunity.commit.medium.hint":
+    "Um turno regular e um prazo mínimo — a consistência importa.",
+  "postOpportunity.core.basicsHeading": "O essencial",
+  "postOpportunity.core.orgLabel": "Organização",
+  "postOpportunity.core.orgPlaceholder": "ex.: ILGA Portugal",
+  "postOpportunity.core.roleLabel": "Título da função",
+  "postOpportunity.core.rolePlaceholder":
+    "ex.: Voluntário de Sensibilização Comunitária",
+  "postOpportunity.core.causeLabel": "Causa",
+  "postOpportunity.core.commitLabel": "Nível de compromisso",
+  "postOpportunity.core.timePlaceHeading": "Tempo e local",
+  "postOpportunity.core.timeLabel": "Disponibilidade de tempo",
+  "postOpportunity.core.timePlaceholder": "ex.: 2–4 h/semana",
+  "postOpportunity.core.locationLabel": "Local",
+  "postOpportunity.core.locationPlaceholder": "ex.: Presencial · Lisboa",
+  "postOpportunity.core.spotsLabel": "Vagas disponíveis",
+  "postOpportunity.core.spotsHelper":
+    "Quantas pessoas voluntárias consegues receber nesta função?",
+  "postOpportunity.core.spotsPlaceholder": "ex.: 24",
+  "postOpportunity.core.pitchHeading": "A apresentação",
+  "postOpportunity.core.descLabel": "Descrição breve",
+  "postOpportunity.core.descHelper":
+    "Uma ou duas frases mostradas no cartão da vaga.",
+  "postOpportunity.core.descPlaceholder":
+    "Com o que é que a pessoa voluntária vai ajudar, em linguagem simples.",
+  "postOpportunity.core.skillsLabel": "Competências",
+  "postOpportunity.core.skillsHelper":
+    "Separadas por vírgulas — mostradas como hashtags no cartão.",
+  "postOpportunity.core.skillsPlaceholder":
+    "Comunicação, Idiomas, Apoio a eventos",
+  "postOpportunity.rich.summary": "Acrescentar mais detalhe (opcional)",
+  "postOpportunity.rich.whyHeading": "Porque é que importa",
+  "postOpportunity.rich.whyLabel": "Porque é que esta função importa",
+  "postOpportunity.rich.whyHelper": "Um parágrafo por linha.",
+  "postOpportunity.rich.whyPlaceholder":
+    "O que muda porque alguém apareceu para isto.",
+  "postOpportunity.rich.goodForLabel": "Para quem é indicada",
+  "postOpportunity.rich.goodForHelper": "Um parágrafo por linha.",
+  "postOpportunity.rich.goodForPlaceholder":
+    "O temperamento e as competências que encaixam — não só o currículo.",
+  "postOpportunity.rich.tasksHeading": "O que vão fazer, na prática",
+  "postOpportunity.rich.taskTitleAria": "Título da tarefa {index}",
+  "postOpportunity.rich.taskTitlePlaceholder": "Título da tarefa",
+  "postOpportunity.rich.taskDetailAria": "Detalhe da tarefa {index}",
+  "postOpportunity.rich.taskDetailPlaceholder": "Uma linha sobre o que envolve",
+  "postOpportunity.rich.taskRemoveAria": "Remover tarefa {index}",
+  "postOpportunity.rich.addTask": "Adicionar uma tarefa",
+  "postOpportunity.rich.commitmentsHeading": "O compromisso, com honestidade",
+  "postOpportunity.rich.commitLabelAria": "Etiqueta do compromisso {index}",
+  "postOpportunity.rich.commitLabelPlaceholder": "ex.: formação de 6 horas",
+  "postOpportunity.rich.commitDetailAria": "Detalhe do compromisso {index}",
+  "postOpportunity.rich.commitDetailPlaceholder":
+    "ex.: Duas noites antes de começares · obrigatório",
+  "postOpportunity.rich.commitRemoveAria": "Remover compromisso {index}",
+  "postOpportunity.rich.addCommitment": "Adicionar um compromisso",
+  "postOpportunity.rich.teamHeading": "Equipa e contacto",
+  "postOpportunity.rich.teamIntroLabel": "Apresentação da equipa",
+  "postOpportunity.rich.teamIntroPlaceholder":
+    "ex.: 18 voluntários de sensibilização ativos este trimestre.",
+  "postOpportunity.rich.teamLabel": "Membros da equipa",
+  "postOpportunity.rich.teamHelper":
+    "Identificadores/slugs de pessoas já na equipa, separados por vírgulas.",
+  "postOpportunity.rich.teamPlaceholder": "catarina-v, jonas-f",
+  "postOpportunity.rich.applyRoleLabel": "Etiqueta da função ao candidatar-se",
+  "postOpportunity.rich.applyRoleHelper":
+    "Por predefinição, “Função · Organização”.",
+  "postOpportunity.rich.applyRolePlaceholder":
+    "Sensibilização Comunitária · ILGA Lisboa",
+  "postOpportunity.rich.partnerSlugLabel": "Slug do parceiro",
+  "postOpportunity.rich.partnerSlugHelper":
+    "Liga à página de um parceiro.",
+  "postOpportunity.rich.partnerSlugPlaceholder": "ilga-portugal",
+  "postOpportunity.rich.handleLabel": "Identificador de contacto",
+  "postOpportunity.rich.handleHelper":
+    "Onde as pessoas interessadas te podem contactar.",
+  "postOpportunity.rich.handlePlaceholder": "@teu-identificador ou um email",
+
+  // ── Detalhe da oportunidade de voluntariado — chrome da página.
+  //    `opp.eyebrow` / `.urgent` / `.titleLead` / `.titleEm` / `.sub` /
+  //    `.stats[].label` / `.spots[].label` / `.applyConfirm` /
+  //    `.partner.text` / `.applyRole` vêm do modelo de vista partilhado que
+  //    o adaptador em direto e o mock de demonstração preenchem
+  //    (`volunteering.adapters.tsx`, `volunteerOpportunities.dataA/B.tsx`) —
+  //    NÃO varridos nesta passagem; corrigi-los implica mudar esse tipo
+  //    partilhado no adaptador + nos dois ficheiros de dados de
+  //    demonstração, sinalizado no relatório da varredura como trabalho
+  //    futuro. Todo o resto nesta página (títulos, botões, etiquetas fixas)
+  //    é chrome e está traduzido abaixo.
+  "volunteerDetail.backCta": "← Todas as oportunidades de voluntariado",
+  "volunteerDetail.error.alreadySignedUp": "Já te inscreveste nesta função.",
+  "volunteerDetail.error.full":
+    "Esta oportunidade acabou de ficar completa — todas as vagas estão ocupadas.",
+  "volunteerDetail.error.alreadyOrFull":
+    "Já te inscreveste, ou esta oportunidade já está completa.",
+  "volunteerDetail.error.generic":
+    "Algo correu mal ao enviar o teu interesse — tenta outra vez.",
+  "volunteerDetail.main.whyTitle": "Porque é que esta função <em>importa</em>",
+  "volunteerDetail.main.tasksTitle": "O que vais <em>fazer, na prática</em>",
+  "volunteerDetail.main.commitmentTitle":
+    "O <em>compromisso</em>, com honestidade",
+  "volunteerDetail.main.goodForTitle": "Para <em>quem é indicada</em>",
+  "volunteerDetail.main.teamTitle": "Quem <em>já está cá</em>",
+  "volunteerDetail.sidebar.appliedTitle": "Estás <em>na lista.</em>",
+  "volunteerDetail.sidebar.messageTeam": "Enviar mensagem à equipa",
+  "volunteerDetail.sidebar.withdrawing": "A retirar…",
+  "volunteerDetail.sidebar.withdraw": "Retirar o meu interesse",
+  "volunteerDetail.sidebar.applyHeading": "Candidatar",
+  "volunteerDetail.sidebar.spotsFilled": "Vagas ocupadas",
+  "volunteerDetail.sidebar.roleFull": "Esta função está completa",
+  "volunteerDetail.sidebar.sending": "A enviar a tua candidatura…",
+  "volunteerDetail.sidebar.applyCta": "Candidatar →",
+  "volunteerDetail.sidebar.askTeam": "Perguntar à equipa",
+  "volunteerDetail.sidebar.footNote":
+    "Pessoas voluntárias antigas: <a>usa o perfil do ano passado →</a> · salta este ecrã.",
+  "volunteerDetail.sidebar.partnershipLabel": "Em parceria com",
+  "volunteerDetail.sidebar.partnershipLink": "Sobre a parceria →",
+  "volunteerDetail.sidebar.notRightFit": "Não é a vaga certa para ti?",
+  "volunteerDetail.sidebar.otherWays": "Outras formas de ajudar agora:",
+  "volunteerDetail.sidebar.fundInstead": "→ Financiar este trabalho em vez disso",
+
+  // ── Detalhe do Parceiro — chrome da página. O conteúdo sobre/trabalho
+  //    conjunto/linha do tempo/como trabalhamos, as estatísticas, e os
+  //    contactos são conteúdo próprio de cada organização parceira
+  //    (partnerDetails.dataA/B.tsx) — ficam em inglês, o mesmo precedente da
+  //    página de listagem de Parceiros.
+  "partnerDetail.loadError":
+    "Não conseguimos carregar este parceiro agora. Tenta outra vez.",
+  "partnerDetail.backCta": "← Todos os parceiros",
+  "partnerDetail.tab.about": "Sobre",
+  "partnerDetail.tab.work": "Trabalho conjunto",
+  "partnerDetail.tab.timeline": "Linha do tempo",
+  "partnerDetail.tab.how": "Como trabalhamos juntos",
+  "partnerDetail.sidebar.atGlance": "De relance",
+  "partnerDetail.sidebar.contactDirectly": "Contacta {name} diretamente",
+  "partnerDetail.sidebar.becomeTitle": "Torna-te parceiro",
+  "partnerDetail.sidebar.becomeBody":
+    "És uma organização que devia estar operacionalmente ligada à QueerPulse? Somos pequenos e lentos nisto — escreve-nos.",
+  "partnerDetail.sidebar.becomeCta": "Entra em contacto →",
 };

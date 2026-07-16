@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { linkToPath } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { TINT_STYLE } from "./myEvents.data";
@@ -31,11 +32,12 @@ export function AvStack({ who }: { who?: AvatarSpec[] }) {
 
 /** Time · venue · (directions / join) line. */
 export function EventMeta({ ev, links }: { ev: MyEvent; links: boolean }) {
+  const { t } = useTranslation();
   const { toast } = useMyEvents();
-  const t = timeStr(ev) + (ev.tz ? ` ${ev.tz}` : "");
+  const timeLabel = timeStr(ev) + (ev.tz ? ` ${ev.tz}` : "");
   return (
     <div className={sx("ev-meta")}>
-      <span>{t}</span>
+      <span>{timeLabel}</span>
       <span className={sx("dotsep")} />
       <span>{ev.venue}</span>
       {links && (
@@ -45,17 +47,19 @@ export function EventMeta({ ev, links }: { ev: MyEvent; links: boolean }) {
             <button
               type="button"
               className={sx("meta-link")}
-              onClick={() => toast("Opening the join link…")}
+              onClick={() => toast(t("myevents:card.joinLinkToast"))}
             >
-              Join link
+              {t("myevents:card.joinLinkCta")}
             </button>
           ) : (
             <button
               type="button"
               className={sx("meta-link")}
-              onClick={() => toast(`Opening directions to ${ev.venue}`)}
+              onClick={() =>
+                toast(t("myevents:card.directionsToast", { venue: ev.venue }))
+              }
             >
-              Directions
+              {t("myevents:card.directionsCta")}
             </button>
           )}
         </>
@@ -70,9 +74,11 @@ export function PriceChip({ ev }: { ev: MyEvent }) {
 }
 
 export function UrgencyChip({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
   let text: string | null = null;
-  if (ev.soldOut) text = "Sold out";
-  else if (ev.spotsLeft != null) text = `${ev.spotsLeft} spots open`;
+  if (ev.soldOut) text = t("myevents:card.soldOut");
+  else if (ev.spotsLeft != null)
+    text = t("myevents:card.spotsOpen", { count: ev.spotsLeft });
   else if (ev.deadline) text = ev.deadline;
   if (!text) return null;
   return (
@@ -84,27 +90,29 @@ export function UrgencyChip({ ev }: { ev: MyEvent }) {
 }
 
 export function FriendsLine({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
   const { toast } = useMyEvents();
   if (!ev.friends) return null;
   return (
     <button
       type="button"
       className={sx("ev-friends")}
-      onClick={() => toast("Showing connections who are going…")}
+      onClick={() => toast(t("myevents:card.friendsToast"))}
     >
       <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden>
         <path d="M5.5 8a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4ZM11 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM1.5 13c0-2.3 1.8-3.6 4-3.6s4 1.3 4 3.6H1.5ZM10.4 9.5c1.9.1 3.3 1.3 3.3 3.5h-2.6c0-1.4-.3-2.5-.7-3.5Z" />
       </svg>
-      {ev.friends} of your connections are going
+      {t("myevents:card.friendsGoing", { count: ev.friends })}
     </button>
   );
 }
 
 /** Today's "starts in / happening now" bar with quick links. */
 export function SoonBar({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
   const { toast } = useMyEvents();
   if (!isToday(ev) || !COMMITTED[ev.cat] || ev.cancelled) return null;
-  const lab = soonLabel(ev);
+  const lab = soonLabel(ev, t);
   if (!lab) return null;
   return (
     <div className={sx("soon-bar")}>
@@ -114,26 +122,28 @@ export function SoonBar({ ev }: { ev: MyEvent }) {
       <button
         type="button"
         className={sx("soon-link")}
-        onClick={() => toast("Checked in — have a lovely time", "success")}
+        onClick={() => toast(t("myevents:soon.checkedInToast"), "success")}
       >
-        Check in
+        {t("myevents:soon.checkInCta")}
       </button>
       <span className={sx("soon-sep")}>·</span>
       {isOnline(ev) ? (
         <button
           type="button"
           className={sx("soon-link")}
-          onClick={() => toast("Opening the join link…")}
+          onClick={() => toast(t("myevents:card.joinLinkToast"))}
         >
-          Join link
+          {t("myevents:card.joinLinkCta")}
         </button>
       ) : (
         <button
           type="button"
           className={sx("soon-link")}
-          onClick={() => toast(`Opening directions to ${ev.venue}`)}
+          onClick={() =>
+            toast(t("myevents:card.directionsToast", { venue: ev.venue }))
+          }
         >
-          Directions
+          {t("myevents:card.directionsCta")}
         </button>
       )}
       {ev.ticket && (
@@ -143,7 +153,7 @@ export function SoonBar({ ev }: { ev: MyEvent }) {
             className={sx("soon-link")}
             to={linkToPath("QueerPulse RSVP Ticket.html")}
           >
-            Ticket
+            {t("myevents:soon.ticketCta")}
           </Link>
         </>
       )}

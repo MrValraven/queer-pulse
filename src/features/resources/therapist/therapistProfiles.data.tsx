@@ -51,11 +51,17 @@ export function shortName(name: string): string {
     : (parts[0] ?? name);
 }
 
-/** Possessive pronoun for section headings, from the profile pronouns. */
-export function possessive(pronouns: string): string {
-  if (pronouns.startsWith("he")) return "His";
-  if (pronouns.startsWith("she")) return "Her";
-  return "Their";
+/**
+ * Which `resources:therapistProfilePage.approachTitle.*` variant to use for
+ * this therapist's pronouns — English and pt-PT build the phrase in
+ * different word orders ("His approach" vs. "A abordagem dele"), so the
+ * component resolves the full localized phrase via `t()` rather than
+ * splicing this English word into a sentence.
+ */
+export function possessiveKey(pronouns: string): "he" | "she" | "neutral" {
+  if (pronouns.startsWith("he")) return "he";
+  if (pronouns.startsWith("she")) return "she";
+  return "neutral";
 }
 
 /**

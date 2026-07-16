@@ -27,10 +27,13 @@ export interface SubprofileItemView {
   tags: string[];
 }
 
-/** A section grouped for rendering/editing: its metadata + ordered items. */
+/** A section grouped for rendering/editing: its metadata + ordered items.
+ *  `labelKey` (not a resolved string) is i18n label-key indirection — `section`
+ *  is the persisted canonical id, and the consuming component resolves the
+ *  display label via `t(labelKey)`. */
 export interface SubprofileSectionView {
   section: SubprofileSection;
-  label: string;
+  labelKey: string;
   icon: IconType;
   fields: Array<keyof SubprofileItemDTO>;
   items: SubprofileItemView[];
@@ -101,7 +104,7 @@ export function buildSections(
     return [
       {
         section,
-        label: meta.label,
+        labelKey: meta.labelKey,
         icon: meta.icon,
         fields: meta.fields,
         items: sectionItems,

@@ -1,4 +1,5 @@
-import { FEATURED } from "./creatives.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { BADGE_LABEL_KEYS, FEATURED } from "./creatives.data";
 import { badgeClass } from "./creativesBadge";
 import styles from "./CreativesPage.module.css";
 
@@ -9,13 +10,16 @@ export function CreativesHero({
   featuredIdx: number;
   setFeaturedIdx: (i: number) => void;
 }) {
+  const { t } = useTranslation();
   const f = FEATURED[featuredIdx]!;
   return (
     <header className={styles.hero}>
       <div className={styles.heroBg} />
       <div className={styles.heroOverlay} />
       <div className={`${styles.heroContent} wrap`}>
-        <div className={styles.eyebrow}>Featured this week</div>
+        <div className={styles.eyebrow}>
+          {t("community:creatives.hero.eyebrow")}
+        </div>
         <h1 className={styles.heroName}>
           {f.nameMain}
           <em>{f.nameEm}</em>
@@ -25,7 +29,7 @@ export function CreativesHero({
         <div className={styles.heroBadges}>
           {f.badges.map((b) => (
             <span key={b} className={`${styles.badge} ${badgeClass(b)}`}>
-              {b}
+              {BADGE_LABEL_KEYS[b] ? t(BADGE_LABEL_KEYS[b]!) : b}
             </span>
           ))}
         </div>
@@ -34,7 +38,9 @@ export function CreativesHero({
             <button
               key={i}
               type="button"
-              aria-label={`Featured ${i + 1}`}
+              aria-label={t("community:creatives.hero.dotAriaLabel", {
+                index: i + 1,
+              })}
               className={[
                 styles.heroDot,
                 i === featuredIdx && styles.heroDotActive,

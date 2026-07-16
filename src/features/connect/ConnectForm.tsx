@@ -6,6 +6,8 @@ import {
   Sending,
   type AvatarTint,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { EMAIL_RE, REASONS } from "./connectModal.data";
 import styles from "./ConnectModal.module.css";
 
@@ -31,6 +33,7 @@ export function ConnectForm({
   onSubmit: (message: string) => void;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [reason, setReason] = useState("");
@@ -66,60 +69,56 @@ export function ConnectForm({
       </div>
 
       <h1 className={styles.title}>
-        Say <em>hello.</em>
+        <Translation i18nKey="connect:form.title" components={{ em: <em /> }} />
       </h1>
-      <p className={styles.sub}>
-        Your message goes directly. No notifications, no read receipts, no
-        algorithm watching. Just a real message.
-      </p>
+      <p className={styles.sub}>{t("connect:form.sub")}</p>
 
-      <FormField label="Your name" required>
+      <FormField label={t("connect:form.nameLabel")} required>
         <input
           id="connect-name"
           type="text"
-          placeholder="How you'd like to be known"
+          placeholder={t("connect:form.namePlaceholder")}
           value={name}
           onChange={(event) => setName(event.target.value)}
           disabled={sending}
         />
       </FormField>
-      <FormField label="Your email" required>
+      <FormField label={t("connect:form.emailLabel")} required>
         <input
           id="connect-email"
           type="email"
-          placeholder="So they can write back"
+          placeholder={t("connect:form.emailPlaceholder")}
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           disabled={sending}
         />
       </FormField>
-      <FormField label="What's this about?">
+      <FormField label={t("connect:form.reasonLabel")}>
         <select
           id="connect-about"
           value={reason}
           onChange={(event) => setReason(event.target.value)}
           disabled={sending}
         >
-          <option value="">Pick a reason, or leave it open</option>
+          <option value="">{t("connect:form.reasonPlaceholder")}</option>
           {REASONS.map((reasonOption) => (
-            <option key={reasonOption}>{reasonOption}</option>
+            <option key={reasonOption.id} value={reasonOption.id}>
+              {t(reasonOption.labelKey)}
+            </option>
           ))}
         </select>
       </FormField>
-      <FormField label="Your message" required>
+      <FormField label={t("connect:form.messageLabel")} required>
         <textarea
           id="connect-msg"
-          placeholder="Write naturally. There's no template."
+          placeholder={t("connect:form.messagePlaceholder")}
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           disabled={sending}
         />
       </FormField>
 
-      <div className={styles.note}>
-        Messages from people not yet in the network are held briefly and
-        reviewed by the team before delivery. This keeps the room safe.
-      </div>
+      <div className={styles.note}>{t("connect:form.note")}</div>
 
       <div className={styles.foot}>
         <button
@@ -128,10 +127,14 @@ export function ConnectForm({
           onClick={onClose}
           disabled={sending}
         >
-          ← Cancel
+          ← {t("connect:form.cancel")}
         </button>
         <Button size="lg" type="submit" disabled={!canSend || sending}>
-          {sending ? <Sending label="Sending…" /> : "Send →"}
+          {sending ? (
+            <Sending label={t("connect:form.sendingLabel")} />
+          ) : (
+            <>{t("connect:form.send")} →</>
+          )}
         </Button>
       </div>
     </form>

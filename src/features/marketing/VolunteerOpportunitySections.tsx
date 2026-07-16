@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { VolunteerOpportunity } from "./volunteerOpportunities";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import styles from "./VolunteerOpportunityPage.module.css";
 
@@ -20,7 +21,10 @@ export function VolunteerOpportunityMain({
     <main>
       <section className={styles.sec}>
         <h2>
-          Why this role <em>matters</em>
+          <Translation
+            i18nKey="marketing:volunteerDetail.main.whyTitle"
+            components={{ em: <em /> }}
+          />
         </h2>
         {opp.why.map((p, i) => (
           <p key={i}>{p}</p>
@@ -29,17 +33,20 @@ export function VolunteerOpportunityMain({
 
       <section className={styles.sec}>
         <h2>
-          What you'll <em>actually do</em>
+          <Translation
+            i18nKey="marketing:volunteerDetail.main.tasksTitle"
+            components={{ em: <em /> }}
+          />
         </h2>
         <div className={styles.tasks}>
-          {opp.tasks.map((t) => (
-            <div className={styles.taskRow} key={t.title}>
+          {opp.tasks.map((task) => (
+            <div className={styles.taskRow} key={task.title}>
               <div className={styles.taskIc}>
                 <Tick />
               </div>
               <div>
-                <b>{t.title}</b>
-                <span>{t.desc}</span>
+                <b>{task.title}</b>
+                <span>{task.desc}</span>
               </div>
             </div>
           ))}
@@ -48,7 +55,10 @@ export function VolunteerOpportunityMain({
 
       <section className={styles.sec}>
         <h2>
-          The <em>commitment</em>, honestly
+          <Translation
+            i18nKey="marketing:volunteerDetail.main.commitmentTitle"
+            components={{ em: <em /> }}
+          />
         </h2>
         <div className={styles.commitGrid}>
           {opp.commitments.map((c) => (
@@ -62,7 +72,10 @@ export function VolunteerOpportunityMain({
 
       <section className={styles.sec}>
         <h2>
-          Who's <em>good for this</em>
+          <Translation
+            i18nKey="marketing:volunteerDetail.main.goodForTitle"
+            components={{ em: <em /> }}
+          />
         </h2>
         {opp.goodFor.map((p, i) => (
           <p key={i}>{p}</p>
@@ -71,7 +84,10 @@ export function VolunteerOpportunityMain({
 
       <section className={styles.sec}>
         <h2>
-          Who's <em>already in</em>
+          <Translation
+            i18nKey="marketing:volunteerDetail.main.teamTitle"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={styles.teamIntro}>{opp.teamIntro}</p>
         <div className={styles.teamRow}>

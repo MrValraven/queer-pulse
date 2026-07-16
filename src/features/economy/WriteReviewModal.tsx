@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import type { Company, Review } from "./employerReviews.data";
 import styles from "./WriteReviewModal.module.css";
@@ -20,19 +22,26 @@ function StarRating({
   value: number;
   onChange: (n: number) => void;
 }) {
+  const { t } = useTranslation();
   return (
-    <div className={styles.stars} role="radiogroup" aria-label="Overall rating">
-      {[1, 2, 3, 4, 5].map((n) => (
+    <div
+      className={styles.stars}
+      role="radiogroup"
+      aria-label={t("economy:companyReview.overallRatingAriaLabel")}
+    >
+      {[1, 2, 3, 4, 5].map((starValue) => (
         <button
-          key={n}
+          key={starValue}
           type="button"
           role="radio"
-          aria-checked={value === n}
-          aria-label={`${n} star${n === 1 ? "" : "s"}`}
-          className={[styles.star, n <= value && styles.starOn]
+          aria-checked={value === starValue}
+          aria-label={t("economy:companyReview.starAriaLabel", {
+            count: starValue,
+          })}
+          className={[styles.star, starValue <= value && styles.starOn]
             .filter(Boolean)
             .join(" ")}
-          onClick={() => onChange(n)}
+          onClick={() => onChange(starValue)}
         >
           <FiStar size={26} aria-hidden />
         </button>
@@ -57,6 +66,7 @@ export function WriteReviewModal({
   onClose: () => void;
   onSubmit: (review: SubmittedReview) => void;
 }) {
+  const { t } = useTranslation();
   const [company, setCompany] = useState(
     initialCompany ?? companies[0]?.name ?? "",
   );
@@ -88,67 +98,81 @@ export function WriteReviewModal({
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
-        <SuccessPanel title="Review" em="posted." onClose={onClose}>
-          Thank you — your anonymous review of {company} is live. Your name is
-          never stored with it, and {company} can't edit or remove what you
-          wrote.
+        <SuccessPanel
+          title={t("economy:companyReview.success.title")}
+          em={t("economy:companyReview.success.em")}
+          onClose={onClose}
+        >
+          <Translation
+            i18nKey="economy:writeReviewModal.success.body"
+            values={{ company }}
+          />
         </SuccessPanel>
       ) : (
         <form onSubmit={handleSubmit}>
-          <div className={shell.eyebrow}>Write a review · anonymous</div>
+          <div className={shell.eyebrow}>
+            {t("economy:writeReviewModal.eyebrow")}
+          </div>
           <h2 className={shell.title}>
-            What was it <em>actually like?</em>
+            <Translation
+              i18nKey="economy:companyReview.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={shell.sub}>
-            Your honest account helps the next queer person decide whether to
-            take the interview. Verified by membership, never attached to your
-            name.
-          </p>
+          <p className={shell.sub}>{t("economy:writeReviewModal.sub")}</p>
 
           <div className={shell.field}>
-            <label htmlFor="wr-company">Company</label>
+            <label htmlFor="wr-company">
+              {t("economy:writeReviewModal.companyLabel")}
+            </label>
             <select
               id="wr-company"
               value={company}
               onChange={(e) => setCompany(e.target.value)}
             >
-              {companies.map((c) => (
-                <option key={c.name}>{c.name}</option>
+              {companies.map((companyOption) => (
+                <option key={companyOption.name}>{companyOption.name}</option>
               ))}
             </select>
           </div>
 
           <div className={shell.field}>
-            <label>Overall rating</label>
+            <label>{t("economy:companyReview.overallRatingAriaLabel")}</label>
             <StarRating value={rating} onChange={setRating} />
           </div>
 
           <div className={shell.field}>
-            <label htmlFor="wr-role">Your role / team</label>
+            <label htmlFor="wr-role">
+              {t("economy:writeReviewModal.roleLabel")}
+            </label>
             <input
               id="wr-role"
               type="text"
-              placeholder="e.g. Engineering, Design, Operations"
+              placeholder={t("economy:writeReviewModal.rolePlaceholder")}
               value={role}
               onChange={(e) => setRole(e.target.value)}
             />
           </div>
 
           <div className={shell.field}>
-            <label htmlFor="wr-pros">What worked — the good</label>
+            <label htmlFor="wr-pros">
+              {t("economy:companyReview.prosLabel")}
+            </label>
             <textarea
               id="wr-pros"
-              placeholder="Pronouns respected, real trans healthcare, leadership that gets it…"
+              placeholder={t("economy:writeReviewModal.prosPlaceholder")}
               value={pros}
               onChange={(e) => setPros(e.target.value)}
             />
           </div>
 
           <div className={shell.field}>
-            <label htmlFor="wr-cons">What was hard — the rest</label>
+            <label htmlFor="wr-cons">
+              {t("economy:companyReview.consLabel")}
+            </label>
             <textarea
               id="wr-cons"
-              placeholder="Pride logo with no follow-through, HR that didn't know how to help…"
+              placeholder={t("economy:writeReviewModal.consPlaceholder")}
               value={cons}
               onChange={(e) => setCons(e.target.value)}
             />
@@ -161,10 +185,14 @@ export function WriteReviewModal({
               onClick={onClose}
               disabled={sending}
             >
-              ← Cancel
+              {t("economy:companyReview.cancel")}
             </button>
             <Button size="lg" type="submit" disabled={sending || !canSubmit}>
-              {sending ? <Sending label="Posting…" /> : "Post review →"}
+              {sending ? (
+                <Sending label={t("economy:companyReview.posting")} />
+              ) : (
+                t("economy:companyReview.submitCta")
+              )}
             </Button>
           </div>
         </form>

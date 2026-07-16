@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiUsers } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SignupRow } from "./api/volunteering.adapters";
 import { routes } from "../../app/routeMap";
 import styles from "./VolunteerOpportunityPage.module.css";
@@ -23,17 +24,20 @@ export function VolunteerSignupsCard({
   closing: boolean;
   closed: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.card}>
       <div className={styles.cardLabel}>
-        <FiUsers aria-hidden style={{ verticalAlign: "-2px" }} /> Who's signed
-        up
+        <FiUsers aria-hidden style={{ verticalAlign: "-2px" }} />{" "}
+        {t("marketing:volunteer.signups.title")}
       </div>
       {loading ? (
-        <p className={styles.altText}>Loading signups…</p>
+        <p className={styles.altText}>
+          {t("marketing:volunteer.signups.loading")}
+        </p>
       ) : signups.length === 0 ? (
         <p className={styles.altText}>
-          No-one's signed up yet — the first person will show up here.
+          {t("marketing:volunteer.signups.empty")}
         </p>
       ) : (
         <div className={styles.signupList}>
@@ -53,7 +57,9 @@ export function VolunteerSignupsCard({
                   ) : (
                     row.when && (
                       <span className={styles.signupNote}>
-                        Signed up {row.when}
+                        {t("marketing:volunteer.signups.signedUp", {
+                          when: row.when,
+                        })}
                       </span>
                     )
                   )}
@@ -79,7 +85,9 @@ export function VolunteerSignupsCard({
 
       <div className={styles.posterActions}>
         {closed ? (
-          <span className={styles.closedTag}>This opportunity is closed</span>
+          <span className={styles.closedTag}>
+            {t("marketing:volunteer.signups.closedTag")}
+          </span>
         ) : (
           <Button
             variant="ghost"
@@ -88,7 +96,9 @@ export function VolunteerSignupsCard({
             disabled={closing}
             aria-busy={closing}
           >
-            {closing ? "Closing…" : "Close opportunity"}
+            {closing
+              ? t("marketing:volunteer.signups.closing")
+              : t("marketing:volunteer.signups.closeCta")}
           </Button>
         )}
       </div>

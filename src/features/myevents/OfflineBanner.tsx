@@ -1,13 +1,14 @@
 import { sx } from "./myEvents.styles";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyEvents } from "./MyEventsContext";
 
 /** Top banner shown when the browser reports it's offline. */
 export function OfflineBanner() {
+  const { t } = useTranslation();
   const { offline } = useMyEvents();
   return (
     <div className={`${sx("offline-banner")} ${offline ? sx("show") : ""}`}>
-      You’re offline — showing your saved events. We’ll sync any changes when
-      you’re back.
+      {t("myevents:offline.banner")}
     </div>
   );
 }

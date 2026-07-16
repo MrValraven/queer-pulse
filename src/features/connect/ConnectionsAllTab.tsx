@@ -7,6 +7,8 @@ import {
   SearchInput,
 } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { ConnectionsGridSkeleton } from "./ConnectionsSkeleton";
 import { AllConnectionCard } from "./ConnectionCards";
 import {
@@ -17,8 +19,22 @@ import {
 } from "./connections.data";
 import styles from "./ConnectionsPage.module.css";
 
-const SORTS = ["Recently connected", "A to Z", "Closest mutuals"] as const;
+// i18n label-key indirection: `Sort` stays a stable canonical English id (not
+// persisted, but keeping the id/label split avoids recomputing comparisons
+// against translated text). The label is resolved via `t()` at render.
+const SORTS = ["recentlyConnected", "aToZ", "closestMutuals"] as const;
 type Sort = (typeof SORTS)[number];
+
+function sortLabel(sort: Sort, t: TFunction): string {
+  switch (sort) {
+    case "aToZ":
+      return t("connect:allTab.sortAToZ");
+    case "closestMutuals":
+      return t("connect:allTab.sortClosestMutuals");
+    default:
+      return t("connect:allTab.sortRecentlyConnected");
+  }
+}
 
 function matchesView(v: ConnectionView, q: string): boolean {
   return [v.name, v.pron ?? "", v.role, ...v.tags]
@@ -45,8 +61,9 @@ export function ConnectionsAllTab({
   onUnblock: (v: ConnectionView) => void;
   onMessage: (slug: string) => void;
 }) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
-  const [sort, setSort] = useState<Sort>("Recently connected");
+  const [sort, setSort] = useState<Sort>("recentlyConnected");
   const [morePages, setMorePages] = useState(0);
 
   const revealedSlugs = useMemo(
@@ -63,9 +80,9 @@ export function ConnectionsAllTab({
     let views = [...connected, ...extra];
     const q = query.trim().toLowerCase();
     if (q) views = views.filter((v) => matchesView(v, q));
-    if (sort === "A to Z") {
+    if (sort === "aToZ") {
       views = [...views].sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sort === "Closest mutuals") {
+    } else if (sort === "closestMutuals") {
       views = [...views].sort(
         (a, b) => (b.meta.mutuals ?? 0) - (a.meta.mutuals ?? 0),
       );
@@ -80,8 +97,8 @@ export function ConnectionsAllTab({
           className={styles.searchInput}
           value={query}
           onChange={setQuery}
-          placeholder="Search by name, role, or community"
-          ariaLabel="Search connections"
+          placeholder={t("connect:allTab.searchPlaceholder")}
+          ariaLabel={t("connect:allTab.searchAria")}
         />
         <select
           className={styles.sortSel}
@@ -89,7 +106,9 @@ export function ConnectionsAllTab({
           onChange={(e) => setSort(e.target.value as Sort)}
         >
           {SORTS.map((s) => (
-            <option key={s}>{s}</option>
+            <option key={s} value={s}>
+              {sortLabel(s, t)}
+            </option>
           ))}
         </select>
       </div>
@@ -115,21 +134,21 @@ export function ConnectionsAllTab({
               <EmptyState
                 compact
                 icon={<FiUsers />}
-                title="No connections yet"
-                description="Your network starts with a single hello. Meet people at a gathering, or find members you already know and connect once you've met."
-                action={{ label: "Find members", to: routes.members }}
+                title={t("connect:allTab.emptyTitle")}
+                description={t("connect:allTab.emptyDescription")}
+                action={{ label: t("connect:allTab.findMembers"), to: routes.members }}
               />
             ) : (
               <EmptyState
                 compact
                 icon={<FiSearch />}
-                title="Nothing matches your search"
-                description="No one in your network fits that search just yet. Clear it to see everyone again."
+                title={t("connect:allTab.emptySearchTitle")}
+                description={t("connect:allTab.emptySearchDescription")}
                 action={{
-                  label: "Clear search",
+                  label: t("connect:allTab.clearSearch"),
                   onClick: () => {
                     setQuery("");
-                    setSort("Recently connected");
+                    setSort("recentlyConnected");
                   },
                 }}
               />
@@ -141,7 +160,7 @@ export function ConnectionsAllTab({
                 variant="ghost"
                 onClick={() => setMorePages((p) => p + 1)}
               >
-                Load more connections
+                {t("connect:allTab.loadMore")}
               </Button>
             </div>
           )}

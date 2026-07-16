@@ -5,10 +5,12 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useConnectionActions } from "./api/useConnectionActions";
 import {
   profilePath,
-  vouchBadgeLabel,
+  vouchBadgeLabelKey,
   type ConnectionView,
 } from "./connections.data";
 import styles from "./ConnectionsPage.module.css";
@@ -36,9 +38,10 @@ function ConnectionMoreMenu({
   const { isBlocked, isMuted, toggleMute } = useSocial();
   const { block, unblock } = useConnectionActions();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const first = name.split(" ")[0];
+  const first = name.split(" ")[0]!;
 
   useEffect(() => {
     if (!open) return;
@@ -64,37 +67,46 @@ function ConnectionMoreMenu({
     run: () => void;
   }[] = [
     {
-      label: "Message",
+      label: t("connect:moreMenu.message"),
       icon: <FiMessageCircle />,
       run: () => openConnect(slug),
     },
     {
-      label: `${isMuted(slug) ? "Unmute" : "Mute"} ${first}`,
+      label: isMuted(slug)
+        ? t("connect:moreMenu.unmute", { name: first })
+        : t("connect:moreMenu.mute", { name: first }),
       icon: <FiVolumeX />,
       run: () =>
         showToast(
-          toggleMute(slug) ? `Muted ${first}` : `Unmuted ${first}`,
+          toggleMute(slug)
+            ? t("connect:moreMenu.toastMuted", { name: first })
+            : t("connect:moreMenu.toastUnmuted", { name: first }),
           "success",
         ),
     },
     {
-      label: `${isBlocked(slug) ? "Unblock" : "Block"} ${first}`,
+      label: isBlocked(slug)
+        ? t("connect:moreMenu.unblock", { name: first })
+        : t("connect:moreMenu.block", { name: first }),
       icon: <FiSlash />,
       danger: true,
       run: () => {
         const wasBlocked = isBlocked(slug);
         void (wasBlocked ? unblock({ slug, id }) : block({ slug, id }));
         showToast(
-          wasBlocked ? `Unblocked ${first}` : `Blocked ${first}`,
+          wasBlocked
+            ? t("connect:moreMenu.toastUnblocked", { name: first })
+            : t("connect:moreMenu.toastBlocked", { name: first }),
           "success",
         );
       },
     },
     {
-      label: "Report",
+      label: t("connect:moreMenu.report"),
       icon: <FiFlag />,
       danger: true,
-      run: () => showToast(`Report sent for ${first}`, "info"),
+      run: () =>
+        showToast(t("connect:moreMenu.toastReportSent", { name: first }), "info"),
     },
   ];
 
@@ -105,7 +117,7 @@ function ConnectionMoreMenu({
         className={styles.more}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label={`More options for ${name}`}
+        aria-label={t("connect:moreMenu.ariaMore", { name })}
         onClick={() => setOpen((o) => !o)}
       >
         <MoreIcon />
@@ -142,12 +154,13 @@ export function CardHead({
   view: ConnectionView;
   more?: boolean;
 }) {
+  const { t } = useTranslation();
   const to = profilePath(view.slug);
   return (
     <div className={styles.cardHead}>
       <Link
         to={to}
-        aria-label={`${view.name}'s profile`}
+        aria-label={t("connect:card.profileAria", { name: view.name })}
         className={styles.avLink}
       >
         <Avatar
@@ -184,6 +197,7 @@ export function CardHead({
  * visible count is computed in a single pass without a setState-in-effect loop.
  */
 function ConnectionTags({ tags }: { tags: string[] }) {
+  const { t } = useTranslation();
   const measureRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(tags.length);
 
@@ -215,22 +229,22 @@ function ConnectionTags({ tags }: { tags: string[] }) {
   return (
     <div className={styles.tagsWrap}>
       <div className={styles.tagsMeasure} aria-hidden ref={measureRef}>
-        {tags.map((t) => (
-          <span key={t} className={styles.tag}>
-            {t}
+        {tags.map((tag) => (
+          <span key={tag} className={styles.tag}>
+            {tag}
           </span>
         ))}
       </div>
       <div className={styles.tags}>
-        {shown.map((t) => (
-          <span key={t} className={styles.tag}>
-            {t}
+        {shown.map((tag) => (
+          <span key={tag} className={styles.tag}>
+            {tag}
           </span>
         ))}
         {hidden.length > 0 && (
           <span
             className={`${styles.tag} ${styles.tagMore}`}
-            title={`Also: ${hidden.join(", ")}`}
+            title={t("connect:card.tagsMoreTitle", { list: hidden.join(", ") })}
           >
             +{hidden.length}
           </span>
@@ -241,20 +255,21 @@ function ConnectionTags({ tags }: { tags: string[] }) {
 }
 
 function ConnectionMeta({ view }: { view: ConnectionView }) {
-  const badge = vouchBadgeLabel(view.meta);
+  const { t } = useTranslation();
+  const badgeKey = vouchBadgeLabelKey(view.meta);
   const { mutuals, since } = view.meta;
   return (
     <div className={styles.meta}>
-      {badge && <span className={styles.vouched}>{badge}</span>}
+      {badgeKey && <span className={styles.vouched}>{t(badgeKey)}</span>}
       {mutuals != null && (
-        <span>
-          <b>{mutuals}</b> mutuals
-        </span>
+        <span>{t("connect:card.mutuals", { count: mutuals })}</span>
       )}
       {since && (
-        <span>
-          Connected <b>{since}</b>
-        </span>
+        <Translation
+          i18nKey="connect:card.connectedSince"
+          components={{ b: <b /> }}
+          values={{ since }}
+        />
       )}
     </div>
   );
@@ -271,6 +286,7 @@ export function AllConnectionCard({
   onUnblock: () => void;
   onMessage: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       className={[styles.card, blocked && styles.blocked]
@@ -278,21 +294,25 @@ export function AllConnectionCard({
         .join(" ")}
     >
       <CardHead view={view} more />
-      {blocked && <span className={styles.blockedBadge}>Blocked</span>}
+      {blocked && (
+        <span className={styles.blockedBadge}>
+          {t("connect:card.blockedBadge")}
+        </span>
+      )}
       <ConnectionTags tags={view.tags} />
       <ConnectionMeta view={view} />
       <div className={styles.actions}>
         {blocked ? (
           <Button type="button" variant="ghost" onClick={onUnblock}>
-            Unblock
+            {t("connect:card.unblock")}
           </Button>
         ) : (
           <>
             <Button type="button" variant="ghost" onClick={onMessage}>
-              Message
+              {t("connect:card.message")}
             </Button>
             <Button to={profilePath(view.slug)} variant="primary">
-              View profile
+              {t("connect:card.viewProfile")}
             </Button>
           </>
         )}
@@ -310,33 +330,36 @@ export function IncomingCard({
   onAccept: () => void;
   onDecline: () => void;
 }) {
+  const { t } = useTranslation();
   const { mutuals, sentAgo, requestMessage } = view.meta;
   return (
     <div className={`${styles.card} ${styles.pending}`}>
       <CardHead view={view} />
       <div className={styles.meta}>
         {mutuals != null && mutuals > 0 ? (
-          <span>
-            <b>{mutuals}</b> mutuals
-          </span>
+          <Translation
+            i18nKey="connect:card.mutuals"
+            components={{ b: <b /> }}
+            values={{ count: mutuals }}
+          />
         ) : (
-          <span className={styles.metaMuted}>
-            No mutuals — review carefully
-          </span>
+          <span className={styles.metaMuted}>{t("connect:card.noMutuals")}</span>
         )}
         {sentAgo && (
-          <span>
-            Sent <b>{sentAgo}</b>
-          </span>
+          <Translation
+            i18nKey="connect:card.sentAgo"
+            components={{ b: <b /> }}
+            values={{ sentAgo }}
+          />
         )}
       </div>
       {requestMessage && <p className={styles.reqMessage}>{requestMessage}</p>}
       <div className={styles.actions}>
         <Button type="button" variant="ghost" onClick={onDecline}>
-          Decline
+          {t("connect:card.decline")}
         </Button>
         <Button type="button" variant="primary" onClick={onAccept}>
-          Accept
+          {t("connect:card.accept")}
         </Button>
       </div>
     </div>
@@ -350,18 +373,26 @@ export function SentCard({
   view: ConnectionView;
   onWithdraw: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.card}>
       <CardHead view={view} />
       <div className={styles.meta}>
         <span className={styles.metaMuted}>
-          Awaiting reply{view.meta.sentAgo ? " · sent " : ""}
-          {view.meta.sentAgo && <b>{view.meta.sentAgo}</b>}
+          {view.meta.sentAgo ? (
+            <Translation
+              i18nKey="connect:card.awaitingReplySince"
+              components={{ b: <b /> }}
+              values={{ sentAgo: view.meta.sentAgo }}
+            />
+          ) : (
+            t("connect:card.awaitingReply")
+          )}
         </span>
       </div>
       <div className={styles.actions}>
         <Button type="button" variant="ghost" onClick={onWithdraw}>
-          Withdraw
+          {t("connect:card.withdraw")}
         </Button>
       </div>
     </div>
@@ -375,21 +406,20 @@ export function BlockedCard({
   view: ConnectionView;
   onUnblock: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={`${styles.card} ${styles.blocked}`}>
       <CardHead view={view} />
-      <span className={styles.blockedBadge}>Blocked</span>
+      <span className={styles.blockedBadge}>{t("connect:card.blockedBadge")}</span>
       <div className={styles.meta}>
-        <span className={styles.metaMuted}>
-          They can't message you or see your updates.
-        </span>
+        <span className={styles.metaMuted}>{t("connect:card.cantMessage")}</span>
       </div>
       <div className={styles.actions}>
         <Button type="button" variant="ghost" onClick={onUnblock}>
-          Unblock
+          {t("connect:card.unblock")}
         </Button>
         <Button to={profilePath(view.slug)} variant="primary">
-          View profile
+          {t("connect:card.viewProfile")}
         </Button>
       </div>
     </div>
@@ -403,6 +433,7 @@ export function VouchedCard({
   view: ConnectionView;
   note: string;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.card}>
       <CardHead view={view} />
@@ -411,7 +442,7 @@ export function VouchedCard({
       </div>
       <div className={styles.actions}>
         <Button to={profilePath(view.slug)} variant="primary">
-          View profile
+          {t("connect:card.viewProfile")}
         </Button>
       </div>
     </div>

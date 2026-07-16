@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FiFileText,
@@ -10,12 +10,14 @@ import {
 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { StudioShell } from "./StudioShell";
 import { StudioHelpFaq } from "./StudioHelpFaq";
 import {
-  HELP_CATS,
-  HELP_SECTIONS,
-  CONTACT_CARDS,
+  buildHelpCats,
+  buildHelpSections,
+  buildContactCards,
   type HelpCat,
   type ContactCard,
 } from "./studioHelp.data";
@@ -45,11 +47,7 @@ function CategoryCard({ cat }: { cat: HelpCat }) {
   return (
     <button type="button" className={s.cat} onClick={() => jump(cat.target)}>
       <Icon className={s.catIcon} aria-hidden />
-      <h4>
-        {cat.pre}
-        <em>{cat.em}</em>
-        {cat.post}
-      </h4>
+      <h4>{cat.heading}</h4>
       <p>{cat.blurb}</p>
     </button>
   );
@@ -81,27 +79,27 @@ function ContactCardItem({ card }: { card: ContactCard }) {
 }
 
 export function StudioHelpPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [query, setQuery] = useState("");
+  const helpCats = useMemo(() => buildHelpCats(t), [t]);
+  const helpSections = useMemo(() => buildHelpSections(t), [t]);
+  const contactCards = useMemo(() => buildContactCards(t), [t]);
 
   function onSearch(e: React.FormEvent) {
     e.preventDefault();
-    showToast("Searching the help centre…", "info");
+    showToast(t("studio:help.searchingToast"), "info");
   }
 
   return (
     <StudioShell hidePlayer>
       <div className={s.wrap}>
         <div className={s.pageH}>
-          <div className={s.eb}>Help · real people, real answers</div>
+          <div className={s.eb}>{t("studio:help.hero.eyebrow")}</div>
           <h1>
-            How can we <em>help</em>?
+            <Translation i18nKey="studio:help.hero.title" components={{ em: <em /> }} />
           </h1>
-          <div className={s.dek}>
-            Most answers are below. If they&apos;re not, a human reads every
-            message — we don&apos;t run a bot maze, and there&apos;s no tier of
-            support you have to pay for.
-          </div>
+          <div className={s.dek}>{t("studio:help.hero.dek")}</div>
         </div>
 
         <div className={s.hpWrap}>
@@ -109,43 +107,39 @@ export function StudioHelpPage() {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search help — tipping, payouts, audio quality…"
-              aria-label="Search help"
+              placeholder={t("studio:help.searchPlaceholder")}
+              aria-label={t("studio:help.searchAria")}
             />
             <Button type="submit" variant="primary">
-              Search
+              {t("studio:help.searchCta")}
             </Button>
           </form>
 
           <div className={s.cats}>
-            {HELP_CATS.map((cat) => (
+            {helpCats.map((cat) => (
               <CategoryCard key={cat.target} cat={cat} />
             ))}
           </div>
 
-          {HELP_SECTIONS.map((sec) => (
+          {helpSections.map((sec) => (
             <section key={sec.id} id={sec.id} className={s.sec}>
-              <h2>
-                {sec.pre}
-                <em>{sec.em}</em>
-                {sec.post}
-              </h2>
+              <h2>{sec.heading}</h2>
               <StudioHelpFaq items={sec.items} />
             </section>
           ))}
 
           <section className={s.sec}>
             <h2>
-              Still <em>stuck</em>?
+              <Translation i18nKey="studio:help.stillStuck.title" components={{ em: <em /> }} />
             </h2>
             <div className={s.contact}>
-              {CONTACT_CARDS.map((card, i) => (
+              {contactCards.map((card, i) => (
                 <ContactCardItem key={i} card={card} />
               ))}
             </div>
             <div className={s.status}>
               <span className={s.dot} />
-              All systems operational ·{" "}
+              {t("studio:help.statusOperational")}{" "}
               <a
                 href="https://status.queerpulse.org"
                 target="_blank"

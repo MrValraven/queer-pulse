@@ -1,11 +1,14 @@
 import { sx } from "./myEvents.styles";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyEvents } from "./MyEventsContext";
-import { ACCESS_LABELS } from "./myEvents.data";
+import { ACCESS_LABEL_KEYS } from "./myEvents.data";
 import { conflictFor } from "./myEvents.helpers";
 import type { MyEvent } from "./myEvents.types";
 
 /** Access + safety chips. */
 export function AccessRow({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
   const { toast } = useMyEvents();
   if (!ev.access?.length) return null;
   return (
@@ -18,11 +21,14 @@ export function AccessRow({ ev }: { ev: MyEvent }) {
               type="button"
               className={sx("acc-chip note clickable")}
               onClick={() =>
-                toast(ev.contentNote || "This event carries a content note")
+                toast(
+                  ev.contentNote ||
+                    t("myevents:access.contentNoteFallbackToast"),
+                )
               }
             >
               <span className={sx("ad")} />
-              Content note
+              {t("myevents:access.contentNote")}
             </button>
           );
         }
@@ -32,23 +38,19 @@ export function AccessRow({ ev }: { ev: MyEvent }) {
               key={k}
               type="button"
               className={sx("acc-chip policy clickable")}
-              onClick={() =>
-                toast(
-                  "This gathering follows the QueerPulse safer-space policy",
-                )
-              }
+              onClick={() => toast(t("myevents:access.saferSpaceToast"))}
             >
               <span className={sx("ad")} />
-              Safer-space policy
+              {t("myevents:access.saferSpacePolicy")}
             </button>
           );
         }
-        const label = ACCESS_LABELS[k];
-        if (!label) return null;
+        const labelKey = ACCESS_LABEL_KEYS[k];
+        if (!labelKey) return null;
         return (
           <span key={k} className={sx("acc-chip")}>
             <span className={sx("ad")} />
-            {label}
+            {t(labelKey)}
           </span>
         );
       })}
@@ -58,6 +60,7 @@ export function AccessRow({ ev }: { ev: MyEvent }) {
 
 /** "Plans changed" alert strip. */
 export function AlertStrip({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
   const { toast } = useMyEvents();
   if (!ev.changed) return null;
   return (
@@ -74,12 +77,12 @@ export function AlertStrip({ ev }: { ev: MyEvent }) {
         <path d="M8 5v.4M8 7.4v3.6" strokeLinecap="round" />
       </svg>
       <span>
-        <strong>Plans changed.</strong> {ev.changed}{" "}
+        <strong>{t("myevents:alert.plansChanged")}</strong> {ev.changed}{" "}
         <button
           type="button"
-          onClick={() => toast("Showing the full change history")}
+          onClick={() => toast(t("myevents:alert.seeWhatChangedToast"))}
         >
-          See what changed
+          {t("myevents:alert.seeWhatChanged")}
         </button>
       </span>
     </div>
@@ -88,6 +91,7 @@ export function AlertStrip({ ev }: { ev: MyEvent }) {
 
 /** Same-time clash with another committed event. */
 export function ConflictNote({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
   const { events } = useMyEvents();
   const other = conflictFor(ev, events);
   if (!other) return null;
@@ -104,8 +108,10 @@ export function ConflictNote({ ev }: { ev: MyEvent }) {
         <path d="M8 6.5v3M8 11.2v.3" strokeLinecap="round" />
       </svg>
       <span>
-        <strong>Clashes with {other.title}</strong> at the same time. You can
-        only be in one place — you might want to let one go.
+        <strong>
+          {t("myevents:conflict.clashesWith", { title: other.title })}
+        </strong>{" "}
+        {t("myevents:conflict.body")}
       </span>
     </div>
   );
@@ -113,6 +119,7 @@ export function ConflictNote({ ev }: { ev: MyEvent }) {
 
 /** Cancelled / under review / blocked edge notes. */
 export function EdgeNote({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
   const { toast } = useMyEvents();
   if (ev.cancelled) {
     return (
@@ -128,13 +135,13 @@ export function EdgeNote({ ev }: { ev: MyEvent }) {
           <path d="M5.5 5.5l5 5M10.5 5.5l-5 5" strokeLinecap="round" />
         </svg>
         <span>
-          <strong>The host cancelled this gathering.</strong> Your RSVP was
-          released —{" "}
+          <strong>{t("myevents:edge.cancelledTitle")}</strong>{" "}
+          {t("myevents:edge.cancelledBody")}{" "}
           <button
             type="button"
-            onClick={() => toast("Finding similar gatherings…")}
+            onClick={() => toast(t("myevents:edge.findingSimilarToast"))}
           >
-            find something similar
+            {t("myevents:edge.findSomethingSimilar")}
           </button>
           .
         </span>
@@ -157,13 +164,13 @@ export function EdgeNote({ ev }: { ev: MyEvent }) {
           />
         </svg>
         <span>
-          <strong>Under review.</strong> A report came in, so this gathering is
-          being checked by our team. It stays up while we look —{" "}
+          <strong>{t("myevents:edge.reviewTitle")}</strong>{" "}
+          {t("myevents:edge.reviewBody")}{" "}
           <button
             type="button"
-            onClick={() => toast("Opening the review status…")}
+            onClick={() => toast(t("myevents:edge.seeStatusToast"))}
           >
-            see status
+            {t("myevents:edge.seeStatus")}
           </button>
           .
         </span>
@@ -183,10 +190,7 @@ export function EdgeNote({ ev }: { ev: MyEvent }) {
           <circle cx="8" cy="8" r="6.3" />
           <path d="M3.6 3.6l8.8 8.8" strokeLinecap="round" />
         </svg>
-        <span>
-          Someone you’ve blocked is going to this. They won’t see you, and you
-          won’t see them on the night.
-        </span>
+        <span>{t("myevents:edge.blockedBody")}</span>
       </div>
     );
   }
@@ -195,13 +199,20 @@ export function EdgeNote({ ev }: { ev: MyEvent }) {
 
 /** Recurring-series line. */
 export function SeriesLine({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
   const { toast } = useMyEvents();
   if (!ev.series) return null;
   return (
     <button
       type="button"
       className={sx("ev-series")}
-      onClick={() => toast(`Upcoming dates · ${ev.series?.dates || ""}`)}
+      onClick={() =>
+        toast(
+          t("myevents:series.upcomingDatesToast", {
+            dates: ev.series?.dates || "",
+          }),
+        )
+      }
     >
       <svg
         viewBox="0 0 16 16"
@@ -223,13 +234,14 @@ export function SeriesLine({ ev }: { ev: MyEvent }) {
 
 /** Day-of run-of-show panel (only when the event is today). */
 export function DayOfPanel({ ev, show }: { ev: MyEvent; show: boolean }) {
+  const { t } = useTranslation();
   const dof = ev.dayof;
   if (!dof) return null;
   return (
     <div className={`${sx("dayof")} ${show ? sx("show") : ""}`}>
       {dof.run && (
         <div className={sx("dof-sec")}>
-          <div className={sx("dof-h")}>Run of show</div>
+          <div className={sx("dof-h")}>{t("myevents:dayof.runOfShow")}</div>
           {dof.run.map((r) => (
             <div key={r[0]} className={sx("dof-row")}>
               <span className={sx("dof-t")}>{r[0]}</span>
@@ -240,7 +252,7 @@ export function DayOfPanel({ ev, show }: { ev: MyEvent; show: boolean }) {
       )}
       {dof.bring && (
         <div className={sx("dof-sec")}>
-          <div className={sx("dof-h")}>What to bring</div>
+          <div className={sx("dof-h")}>{t("myevents:dayof.whatToBring")}</div>
           <div className={sx("dof-tags")}>
             {dof.bring.map((b) => (
               <span key={b} className={sx("dof-tag")}>
@@ -252,19 +264,19 @@ export function DayOfPanel({ ev, show }: { ev: MyEvent; show: boolean }) {
       )}
       {(dof.meet || dof.door) && (
         <div className={sx("dof-sec")}>
-          <div className={sx("dof-h")}>Getting in</div>
+          <div className={sx("dof-h")}>{t("myevents:dayof.gettingIn")}</div>
           <div className={sx("dof-info")}>
             {dof.meet && (
               <>
-                <strong>Meeting point:</strong> {dof.meet}
+                <strong>{t("myevents:dayof.meetingPoint")}</strong> {dof.meet}
                 <br />
               </>
             )}
             {dof.door && (
               <>
-                <strong>Door code:</strong> {dof.door}{" "}
+                <strong>{t("myevents:dayof.doorCode")}</strong> {dof.door}{" "}
                 <span style={{ color: "var(--ink-40)" }}>
-                  — shown because it starts soon
+                  {t("myevents:dayof.doorCodeNote")}
                 </span>
               </>
             )}

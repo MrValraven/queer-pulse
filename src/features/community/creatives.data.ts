@@ -219,25 +219,46 @@ export const MUSIC_ARTISTS: MusicArtist[] = [
   },
 ];
 
-export const ART_FILTERS = [
-  "All",
-  "Photography",
-  "Ceramics",
-  "Typography",
-  "Film",
-  "Illustration",
-  "Textile",
-  "Mural",
+/**
+ * Filter chips: `id` is the stable English value used for matching + storage
+ * (matches against item content, which stays English per the scope rule);
+ * `labelKey` resolves the chip's displayed, translated text. Keeping these
+ * separate avoids the id doubling as a translated lookup key.
+ */
+export interface FilterOption {
+  id: string;
+  labelKey: string;
+}
+
+export const ART_FILTERS: FilterOption[] = [
+  { id: "All", labelKey: "community:creatives.filter.all" },
+  { id: "Photography", labelKey: "community:creatives.filter.photography" },
+  { id: "Ceramics", labelKey: "community:creatives.filter.ceramics" },
+  { id: "Typography", labelKey: "community:creatives.filter.typography" },
+  { id: "Film", labelKey: "community:creatives.filter.film" },
+  { id: "Illustration", labelKey: "community:creatives.filter.illustration" },
+  { id: "Textile", labelKey: "community:creatives.filter.textile" },
+  { id: "Mural", labelKey: "community:creatives.filter.mural" },
 ];
-export const MUSIC_FILTERS = [
-  "All",
-  "Electronic",
-  "Folk",
-  "Jazz",
-  "R&B",
-  "Live sets",
-  "Commission open",
+export const MUSIC_FILTERS: FilterOption[] = [
+  { id: "All", labelKey: "community:creatives.filter.all" },
+  { id: "Electronic", labelKey: "community:creatives.filter.electronic" },
+  { id: "Folk", labelKey: "community:creatives.filter.folk" },
+  { id: "Jazz", labelKey: "community:creatives.filter.jazz" },
+  { id: "R&B", labelKey: "community:creatives.filter.rnb" },
+  { id: "Live sets", labelKey: "community:creatives.badge.liveSets" },
+  { id: "Commission open", labelKey: "community:creatives.badge.commission" },
 ];
+
+/** Badge id (stable English, stored on mock records) → its catalog label key. */
+export const BADGE_LABEL_KEYS: Record<string, string> = {
+  commission: "community:creatives.badge.commission",
+  "open call": "community:creatives.badge.openCall",
+  exhibition: "community:creatives.badge.exhibition",
+  "live sets": "community:creatives.badge.liveSets",
+  "bookings open": "community:creatives.badge.bookingsOpen",
+  collab: "community:creatives.badge.collab",
+};
 
 export function parseDur(s: string) {
   const [m = 0, sec = 0] = s.split(":").map(Number);

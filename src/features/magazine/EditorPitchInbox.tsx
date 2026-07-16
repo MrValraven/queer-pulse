@@ -1,3 +1,5 @@
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   PITCHES,
   PITCH_TOTAL,
@@ -44,20 +46,23 @@ export function EditorPitchInbox({
   onTriage: (id: string, verdict: TriageVerdict) => void;
   onShowMore: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <h2 className={styles.secH2}>
         <span>
-          Pitch inbox · <em>{PITCH_TOTAL}</em>
+          <Translation
+            i18nKey="magazine:editor.pitchInbox.heading"
+            components={{ em: <em /> }}
+            values={{ total: PITCH_TOTAL }}
+          />
         </span>
-        <span className={styles.ct}>
-          avg response 6 days · triage in bulk ↓
-        </span>
+        <span className={styles.ct}>{t("magazine:editor.pitchInbox.subhead")}</span>
       </h2>
       <div className={styles.pieces}>
         {pitches.length === 0 ? (
           <div className={cx(styles.empty, styles.small)}>
-            <b>No pitches match “{query}”</b>
+            <b>{t("magazine:editor.pitchInbox.emptyMatch", { query })}</b>
           </div>
         ) : (
           <>
@@ -75,7 +80,7 @@ export function EditorPitchInbox({
             </div>
             <div className={styles.pitchFoot}>
               <button type="button" onClick={onShowMore}>
-                Show {HIDDEN} more pitches →
+                {t("magazine:editor.pitchInbox.showMore", { count: HIDDEN })}
               </button>
             </div>
           </>
@@ -98,6 +103,7 @@ function PitchRow({
   onToggleSelect: (id: string) => void;
   onTriage: (id: string, verdict: TriageVerdict) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       className={cx(
@@ -112,7 +118,7 @@ function PitchRow({
         className={styles.pitchCheck}
         checked={selected}
         onChange={() => onToggleSelect(p.id)}
-        aria-label={`Select pitch from ${p.name}`}
+        aria-label={t("magazine:editor.pitchInbox.selectAria", { name: p.name })}
       />
       <span className={cx(styles.pitchAv, TINT_CLASS[p.tint])}>
         {initials(p.name)}
@@ -120,7 +126,9 @@ function PitchRow({
       <div className={styles.pitchInfo}>
         <b>
           {p.name} · {p.title}
-          {p.newVoice && <span className={styles.nv}> new voice</span>}
+          {p.newVoice && (
+            <span className={styles.nv}> {t("magazine:editor.pieceRow.newVoice")}</span>
+          )}
         </b>
         <span>
           {p.kind} · sent {p.when}
@@ -132,17 +140,17 @@ function PitchRow({
           className={styles.yes}
           onClick={() => onTriage(p.id, "yes")}
         >
-          Yes
+          {t("magazine:editor.pitchInbox.yes")}
         </button>
         <button type="button" onClick={() => onTriage(p.id, "maybe")}>
-          Maybe
+          {t("magazine:editor.pitchInbox.maybe")}
         </button>
         <button
           type="button"
           className={styles.no}
           onClick={() => onTriage(p.id, "no")}
         >
-          No
+          {t("magazine:editor.pitchInbox.no")}
         </button>
       </div>
     </div>

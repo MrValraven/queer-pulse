@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { SubmitStoryMeta } from "./SubmitStoryMeta";
 import { SubmitStoryWriter } from "./SubmitStoryWriter";
@@ -19,6 +20,7 @@ export function SubmitStoryEditor({
   onSubmit: (headline: string) => void;
 }) {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const [form, setForm] = useState<DraftForm>(INITIAL_DRAFT);
@@ -51,24 +53,21 @@ export function SubmitStoryEditor({
 
   function saveDraft() {
     setSaveState("saved");
-    showToast("Draft saved.", "success");
+    showToast(t("magazine:submitStory.editor.draftSaved"), "success");
   }
 
   async function submit() {
     if (!form.section) {
-      showToast("Choose a section for your piece first.", "error");
+      showToast(t("magazine:submitStory.editor.chooseSectionError"), "error");
       return;
     }
     if (!form.headline.trim()) {
-      showToast(
-        "Your story needs a headline before it goes to editors.",
-        "error",
-      );
+      showToast(t("magazine:submitStory.editor.needHeadlineError"), "error");
       return;
     }
     if (words < MIN_WORDS) {
       showToast(
-        `A little more to go — at least ${MIN_WORDS} words before you submit.`,
+        t("magazine:submitStory.editor.minWordsError", { min: MIN_WORDS }),
         "error",
       );
       return;
@@ -90,10 +89,7 @@ export function SubmitStoryEditor({
           queryKey: [MY_SUBMISSIONS_QUERY_KEY],
         });
       } catch {
-        showToast(
-          "Couldn't submit your story right now — please try again.",
-          "error",
-        );
+        showToast(t("magazine:submitStory.editor.submitError"), "error");
         setSubmitting(false);
         return;
       }
@@ -104,7 +100,9 @@ export function SubmitStoryEditor({
   }
 
   const statusPill = (
-    <span className={`${styles.statusPill} ${styles.statusDraft}`}>Draft</span>
+    <span className={`${styles.statusPill} ${styles.statusDraft}`}>
+      {t("magazine:submitStory.meta.statusDraft")}
+    </span>
   );
 
   return (
@@ -125,7 +123,7 @@ export function SubmitStoryEditor({
           onClick={saveDraft}
           style={{ flex: 1, justifyContent: "center" }}
         >
-          Save draft
+          {t("magazine:submitStory.editor.saveDraftCta")}
         </Button>
         <Button
           variant="primary"
@@ -134,7 +132,9 @@ export function SubmitStoryEditor({
           aria-busy={submitting}
           style={{ flex: 1, justifyContent: "center" }}
         >
-          {submitting ? "Submitting…" : "Submit for review"}
+          {submitting
+            ? t("magazine:submitStory.editor.submittingCta")
+            : t("magazine:submitStory.editor.submitCta")}
         </Button>
       </div>
     </Reveal>

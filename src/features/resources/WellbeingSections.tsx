@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Button, Reveal } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/ConnectProvider";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { THERAPISTS, CRISIS, HARM } from "./wellbeing.data";
 import styles from "./resources.module.css";
@@ -8,6 +10,7 @@ import styles from "./resources.module.css";
 /** Community-vetted therapist directory. */
 export function TherapistsSection() {
   const { openConnect } = useConnect();
+  const { t } = useTranslation();
   return (
     <section
       className={`${styles.section} ${styles.sectionPaper}`}
@@ -15,13 +18,16 @@ export function TherapistsSection() {
     >
       <div className="wrap">
         <Reveal as="h2">
-          Queer-affirming <em>therapists in Lisbon</em>
+          <Translation
+            i18nKey="resources:wellbeing.therapists.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.leadP}>
-          Vetted by community members. Each therapist listed has been
-          recommended by at least two QueerPulse members. We do not charge
-          listing fees. Want to add someone?{" "}
-          <Link to={routes.contact}>Get in touch.</Link>
+          <Translation
+            i18nKey="resources:wellbeing.therapists.lead"
+            components={{ a: <Link to={routes.contact} /> }}
+          />
         </Reveal>
         <div className={styles.grid}>
           {THERAPISTS.map((therapist, index) => (
@@ -53,7 +59,7 @@ export function TherapistsSection() {
                     }
                   }}
                 >
-                  Request intro →
+                  {t("resources:wellbeing.therapists.requestIntroCta")}
                 </span>
               </div>
             </Reveal>
@@ -63,13 +69,13 @@ export function TherapistsSection() {
             delay={THERAPISTS.length * 55}
           >
             <div>
-              Are you a queer-affirming therapist?
+              {t("resources:wellbeing.therapists.applyPrompt")}
               <br />
               <Link
                 to={routes.contact}
                 style={{ color: "var(--plum)", fontWeight: 600 }}
               >
-                Apply to be listed →
+                {t("resources:wellbeing.therapists.applyCta")}
               </Link>
             </div>
           </Reveal>
@@ -81,6 +87,7 @@ export function TherapistsSection() {
 
 /** Plum peer-support strip with headline stats. */
 export function PeerSupportSection() {
+  const { t } = useTranslation();
   return (
     <section
       className={`${styles.section} ${styles.sectionCream}`}
@@ -90,34 +97,39 @@ export function PeerSupportSection() {
         <Reveal className={styles.plumStrip}>
           <div>
             <h3>
-              You don't have to <em>hold it alone.</em>
+              <Translation
+                i18nKey="resources:wellbeing.peer.title"
+                components={{ em: <em /> }}
+              />
             </h3>
-            <p>
-              A moderated peer support space inside the Forum — for members
-              going through difficult times. No advice unless asked. No fixing.
-              Just people who understand, listening.
-            </p>
+            <p>{t("resources:wellbeing.peer.body")}</p>
             <div className={styles.plumActions}>
               <Button variant="ghost-dark" to={routes.forum}>
-                Join the group
+                {t("resources:wellbeing.peer.joinCta")}
               </Button>
               <Button variant="ghost-dark" href="#crisis">
-                In crisis right now?
+                {t("resources:wellbeing.peer.crisisCta")}
               </Button>
             </div>
           </div>
           <div className={styles.stats}>
             <div className={styles.stat}>
               <div className={styles.statN}>340</div>
-              <div className={styles.statL}>members in the support space</div>
+              <div className={styles.statL}>
+                {t("resources:wellbeing.peer.stat.members.label")}
+              </div>
             </div>
             <div className={styles.stat}>
               <div className={styles.statN}>24h</div>
-              <div className={styles.statL}>guaranteed moderation response</div>
+              <div className={styles.statL}>
+                {t("resources:wellbeing.peer.stat.moderation.label")}
+              </div>
             </div>
             <div className={styles.stat}>
               <div className={styles.statN}>100%</div>
-              <div className={styles.statL}>confidential within the group</div>
+              <div className={styles.statL}>
+                {t("resources:wellbeing.peer.stat.confidential.label")}
+              </div>
             </div>
           </div>
         </Reveal>
@@ -128,15 +140,21 @@ export function PeerSupportSection() {
 
 /** Crisis & emergency contact cards. */
 export function CrisisSection() {
+  const { t } = useTranslation();
   return (
     <section className={`${styles.section} ${styles.sectionPaper}`} id="crisis">
       <div className="wrap">
         <Reveal as="h2">
-          Crisis &amp; <em>emergency resources</em>
+          <Translation
+            i18nKey="resources:wellbeing.crisisSection.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.leadP}>
-          If you are in immediate danger, call <strong>112</strong>. These
-          resources are specific to LGBTQ+ situations in Portugal.
+          <Translation
+            i18nKey="resources:wellbeing.crisisSection.lead"
+            components={{ strong: <strong /> }}
+          />
         </Reveal>
         <div className={styles.gridNarrow} style={{ display: "grid" }}>
           {CRISIS.map((item, index) => (
@@ -144,27 +162,28 @@ export function CrisisSection() {
               <div className={styles.cardName} style={{ fontSize: 18 }}>
                 {item.name}
               </div>
-              <div className={styles.cardSpec}>{item.desc}</div>
+              <div className={styles.cardSpec}>{t(item.descKey)}</div>
               <div className={styles.crisisNum}>{item.num}</div>
-              <div className={styles.crisisHours}>{item.hours}</div>
+              <div className={styles.crisisHours}>{t(item.hoursKey)}</div>
             </Reveal>
           ))}
           <Reveal className={styles.card} delay={CRISIS.length * 55}>
             <div className={styles.cardName} style={{ fontSize: 18 }}>
-              QueerPulse Emergency
+              {t("resources:wellbeing.crisis.qpEmergency.title")}
             </div>
             <div className={styles.cardSpec}>
-              Safe housing contacts, community members who can help, and
-              emergency escalation paths — available always.
+              {t("resources:wellbeing.crisis.qpEmergency.desc")}
             </div>
             <Link
               to={routes.emergency}
               className={styles.crisisNum}
               style={{ fontSize: 16 }}
             >
-              Open emergency page →
+              {t("resources:wellbeing.crisis.qpEmergency.cta")}
             </Link>
-            <div className={styles.crisisHours}>Always available</div>
+            <div className={styles.crisisHours}>
+              {t("resources:wellbeing.crisis.qpEmergency.hours")}
+            </div>
           </Reveal>
         </div>
       </div>
@@ -174,6 +193,7 @@ export function CrisisSection() {
 
 /** Harm-reduction information cards. */
 export function HarmReductionSection() {
+  const { t } = useTranslation();
   return (
     <section
       className={`${styles.section} ${styles.sectionCream}`}
@@ -181,20 +201,25 @@ export function HarmReductionSection() {
     >
       <div className="wrap">
         <Reveal as="h2">
-          Harm <em>reduction</em>
+          <Translation
+            i18nKey="resources:wellbeing.harm.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.leadP}>
-          Non-judgmental information for a community that lives in the real
-          world. This is not moral instruction — it's practical care. No one
-          here will tell you how to live.
+          {t("resources:wellbeing.harm.lead")}
         </Reveal>
         <div className={styles.gridNarrow} style={{ display: "grid" }}>
           {HARM.map((item, index) => (
-            <Reveal key={item.title} className={styles.card} delay={index * 55}>
+            <Reveal
+              key={item.titleKey}
+              className={styles.card}
+              delay={index * 55}
+            >
               <div className={styles.cardName} style={{ fontSize: 18 }}>
-                {item.title}
+                {t(item.titleKey)}
               </div>
-              <div className={styles.cardSpec}>{item.desc}</div>
+              <div className={styles.cardSpec}>{t(item.descKey)}</div>
             </Reveal>
           ))}
         </div>

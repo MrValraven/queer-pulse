@@ -1,6 +1,8 @@
 import { Fragment } from "react";
 import { FiAlertCircle, FiCheck } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { PANELS, TOTAL_STEPS } from "./startCommunity.data";
 import styles from "./StartCommunityPage.module.css";
 
@@ -12,8 +14,10 @@ export function FoundingThread({
   step: number;
   onJump: (n: number) => void;
 }) {
+  const { t } = useTranslation();
   const fill = (step / (TOTAL_STEPS - 1)) * 100;
   const current = PANELS[step];
+  const currentThread = current ? t(current.threadKey) : "";
   return (
     <div className={styles.threadWrap}>
       <div className={styles.thread}>
@@ -25,12 +29,13 @@ export function FoundingThread({
           const state =
             i < step ? styles.done : i === step ? styles.current : "";
           const done = i < step;
+          const threadLabel = t(panel.threadKey);
           const label = (
             <>
               <span className={styles.dot}>
                 {done && <FiCheck size={11} aria-hidden />}
               </span>
-              <span className={styles.nodeLabel}>{panel.thread}</span>
+              <span className={styles.nodeLabel}>{threadLabel}</span>
             </>
           );
           return (
@@ -40,7 +45,9 @@ export function FoundingThread({
                   type="button"
                   className={[styles.node, styles.nodeDone, state].join(" ")}
                   onClick={() => onJump(i)}
-                  aria-label={`Back to ${panel.thread}`}
+                  aria-label={t("communities:start.thread.backTo", {
+                    thread: threadLabel,
+                  })}
                 >
                   {label}
                 </button>
@@ -57,7 +64,11 @@ export function FoundingThread({
         })}
       </div>
       <div className={styles.threadMobile}>
-        Step {step + 1} of {TOTAL_STEPS} · <b>{current?.thread}</b>
+        <Translation
+          i18nKey="communities:start.thread.stepOf"
+          components={{ b: <b /> }}
+          values={{ step: step + 1, total: TOTAL_STEPS, thread: currentThread }}
+        />
       </div>
     </div>
   );
@@ -66,7 +77,7 @@ export function FoundingThread({
 /** Back / next footer with the "what's still needed" hint. */
 export function PanelActions({
   onBack,
-  backLabel = "← Back",
+  backLabel,
   onNext,
   nextLabel,
   missing,
@@ -79,6 +90,7 @@ export function PanelActions({
   missing: string[];
   flush?: boolean;
 }) {
+  const { t } = useTranslation();
   const blocked = missing.length > 0;
   return (
     <div
@@ -89,11 +101,11 @@ export function PanelActions({
       {blocked && (
         <div className={styles.neededBar}>
           <FiAlertCircle size={15} aria-hidden />
-          <span>Still needed:</span>
+          <span>{t("communities:start.actions.stillNeeded")}</span>
           <span className={styles.neededChips}>
             {missing.map((m) => (
               <span key={m} className={styles.neededChip}>
-                {m}
+                {t(m)}
               </span>
             ))}
           </span>
@@ -101,13 +113,15 @@ export function PanelActions({
       )}
       <div className={styles.paneActions}>
         <Button variant="ghost" onClick={onBack}>
-          {backLabel}
+          {backLabel ?? t("communities:start.back")}
         </Button>
         <Button
           variant="primary"
           onClick={onNext}
           disabled={blocked}
-          title={blocked ? "A few things left to fill in" : undefined}
+          title={
+            blocked ? t("communities:start.actions.blockedTitle") : undefined
+          }
         >
           {nextLabel}
         </Button>
@@ -118,13 +132,14 @@ export function PanelActions({
 
 /** Serif chapter header (with coral `<em>` where the title marks ⟪ ⟫). */
 export function ChapterHead({ index }: { index: number }) {
+  const { t } = useTranslation();
   const panel = PANELS[index];
   if (!panel) return null;
   return (
     <>
-      <div className={styles.chEyebrow}>{panel.eyebrow}</div>
-      <h2 className={styles.chH}>{renderTitle(panel.title)}</h2>
-      <p className={styles.chLead}>{panel.lead}</p>
+      <div className={styles.chEyebrow}>{t(panel.eyebrowKey)}</div>
+      <h2 className={styles.chH}>{renderTitle(t(panel.titleKey))}</h2>
+      <p className={styles.chLead}>{t(panel.leadKey)}</p>
     </>
   );
 }

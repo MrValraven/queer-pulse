@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { STATS, VENUES, VOICES, RECOVERY_OPTS } from "./soberPage.data";
 import styles from "./SoberPage.module.css";
 
@@ -7,37 +9,27 @@ interface SoberHonestSectionProps {
 }
 
 export function SoberHonestSection(_props: SoberHonestSectionProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.honest}>
       <div className="wrap">
         <div className={styles.honestInner}>
           <div>
             <h2>
-              The queer scene and <em>alcohol.</em>
+              <Translation
+                i18nKey="resources:sober.honest.title"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              Queer social life has long been organised around bars — partly for
-              historical reasons (bars were where it was safe to be visible),
-              partly because nightlife is genuinely important to queer culture.
-              That's real and worth holding.
-            </p>
-            <p>
-              But queer people also have significantly higher rates of harmful
-              substance use than the general population — and that's not
-              incidental. It's connected to minority stress, limited safe social
-              spaces, and a culture that sometimes makes sobriety feel like
-              opting out.
-            </p>
-            <p>
-              This space is for people who want community and joy without
-              alcohol at the centre — for any reason, no explanation required.
-            </p>
+            <p>{t("resources:sober.honest.p1")}</p>
+            <p>{t("resources:sober.honest.p2")}</p>
+            <p>{t("resources:sober.honest.p3")}</p>
           </div>
           <div className={styles.stats}>
             {STATS.map((s) => (
-              <div className={styles.stat} key={s.n}>
-                <div className={styles.n}>{s.n}</div>
-                <div className={styles.l}>{s.l}</div>
+              <div className={styles.stat} key={s.nKey}>
+                <div className={styles.n}>{t(s.nKey)}</div>
+                <div className={styles.l}>{t(s.lKey)}</div>
               </div>
             ))}
           </div>
@@ -54,17 +46,17 @@ interface SoberVenuesSectionProps {
 export function SoberVenuesSection({
   safeSpacesPath,
 }: SoberVenuesSectionProps) {
+  const { t } = useTranslation();
   return (
     <div className={`${styles.sec} ${styles.secCream}`}>
       <div className="wrap">
         <h2 className={styles.h}>
-          Sober-friendly <em>spaces.</em>
+          <Translation
+            i18nKey="resources:sober.venues.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p className={styles.sub}>
-          Places where you can have a genuinely good time without alcohol — and
-          where the staff won't make it weird. All are also on the Safe Spaces
-          verified list.
-        </p>
+        <p className={styles.sub}>{t("resources:sober.venues.lead")}</p>
         <div className={styles.venueGrid}>
           {VENUES.map((v) => (
             <div className={styles.venueCard} key={v.name}>
@@ -83,7 +75,7 @@ export function SoberVenuesSection({
         </div>
         <div className={styles.seeAll}>
           <Link to={safeSpacesPath} className={styles.seeAllLink}>
-            See all verified safe spaces →
+            {t("resources:sober.venues.seeAllCta")}
           </Link>
         </div>
       </div>
@@ -92,15 +84,17 @@ export function SoberVenuesSection({
 }
 
 export function SoberVoicesSection() {
+  const { t } = useTranslation();
   return (
     <div className={styles.sec}>
       <div className="wrap">
         <h2 className={styles.h}>
-          In their <em>words.</em>
+          <Translation
+            i18nKey="resources:sober.voices.title"
+            components={{ em: <em /> }}
+          />
         </h2>
-        <p className={styles.sub}>
-          Community members on what sober queer social life actually looks like.
-        </p>
+        <p className={styles.sub}>{t("resources:sober.voices.lead")}</p>
         <div className={styles.voicesGrid}>
           {VOICES.map((v) => (
             <div className={styles.voiceCard} key={v.name}>
@@ -130,25 +124,25 @@ interface SoberRecoverySectionProps {
 }
 
 export function SoberRecoverySection({ linkMap }: SoberRecoverySectionProps) {
+  const { t } = useTranslation();
   return (
     <div className={`${styles.sec} ${styles.secCream}`}>
       <div className="wrap">
         <div className={styles.recoveryBox}>
           <h3>
-            If you're navigating <em>recovery.</em>
+            <Translation
+              i18nKey="resources:sober.recovery.title"
+              components={{ em: <em /> }}
+            />
           </h3>
-          <p>
-            This isn't only about lifestyle preference. If you're in recovery —
-            from alcohol, substances, or anything else — there are people here
-            who understand. No advice unless you ask for it.
-          </p>
+          <p>{t("resources:sober.recovery.body")}</p>
           <div className={styles.recoveryOpts}>
             {RECOVERY_OPTS.map((o) => (
-              <div className={styles.recOpt} key={o.title}>
-                <div className={styles.recTitle}>{o.title}</div>
-                <div className={styles.recDesc}>{o.desc}</div>
+              <div className={styles.recOpt} key={o.titleKey}>
+                <div className={styles.recTitle}>{t(o.titleKey)}</div>
+                <div className={styles.recDesc}>{t(o.descKey)}</div>
                 <Link to={linkMap[o.linkKey]!} className={styles.recLink}>
-                  {o.linkLabel}
+                  {t(o.linkLabelKey)}
                 </Link>
               </div>
             ))}

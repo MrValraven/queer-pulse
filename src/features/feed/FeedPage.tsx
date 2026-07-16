@@ -14,6 +14,8 @@ import {
   SkeletonLine,
   EmptyState,
 } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
@@ -25,6 +27,7 @@ import {
   FEED_TABS,
   FEED_POST,
   FEED_TAB_COPY,
+  FEED_TAB_LABEL_KEY,
   type FeedTab,
   type FeedTabIcon,
 } from "./feed.data";

@@ -5,6 +5,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useDrafts } from "../../app/providers/DraftsProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
+import type { Draft, DraftAction, DraftMeta } from "../members/drafts.data";
 import { SENDER_NAME } from "./invite.data";
 import styles from "./InvitePage.module.css";
 
@@ -22,22 +23,26 @@ function buildInviteDraft(
   first: string,
   know: string,
   filled: number,
-) {
+): Draft {
   const name = first.trim();
+  const meta: DraftMeta[] = [
+    { label: t("auth:invite.draft.savedJustNow"), variant: "pulse" },
+  ];
+  const actions: DraftAction[] = [
+    { label: t("auth:common.resume"), variant: "primary" },
+    { label: t("auth:common.delete"), variant: "danger", deletes: true },
+  ];
   return {
     id: draftId,
-    kind: "INVITE" as const,
-    kindVariant: "post" as const,
+    kind: "INVITE",
+    kindVariant: "post",
     title: t("auth:invite.draft.title", {
       name: name || t("auth:invite.draft.titleFallbackName"),
     }),
     desc: know.trim() || t("auth:invite.draft.descFallback"),
-    meta: [{ label: t("auth:invite.draft.savedJustNow"), variant: "pulse" }],
+    meta,
     progress: Math.min(95, 25 + filled * 25),
-    actions: [
-      { label: t("auth:common.resume"), variant: "primary" as const },
-      { label: t("auth:common.delete"), variant: "danger" as const, deletes: true },
-    ],
+    actions,
   };
 }
 

@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { OpenLetterBody } from "./OpenLetterBody";
 import { OpenLetterSidebar } from "./OpenLetterSidebar";
 import {
@@ -13,6 +15,7 @@ import s from "./OpenLetterPage.module.css";
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 export function OpenLetterPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [count, setCount] = useState(OPEN_LETTER.startCount);
   const [signatures, setSignatures] = useState<Signature[]>(RECENT_SIGNATURES);
@@ -27,7 +30,10 @@ export function OpenLetterPage() {
     setSignatures((prev) => [entry, ...prev].slice(0, 6));
     setSigned(true);
     setLast({ at: "just now", by: entry.name });
-    showToast(`Signature added · ${fmt(next)} total`, "success");
+    showToast(
+      t("marketing:openLetter.toast.signatureAdded", { total: fmt(next) }),
+      "success",
+    );
   };
 
   const [whole, frac] = useMemo(() => {
@@ -41,15 +47,26 @@ export function OpenLetterPage() {
       <section className={s.hero}>
         <div className={s.heroInner}>
           <div className={s.eyebrow}>
-            <span>Open letter · {OPEN_LETTER.partners}</span>
+            <span>
+              {t("marketing:openLetter.hero.eyebrowPrefix", {
+                partners: OPEN_LETTER.partners,
+              })}
+            </span>
             <span className={s.sep}>·</span>
             <span className={s.live}>
-              Live · {OPEN_LETTER.daysLeft} days left
+              {t("marketing:openLetter.hero.live", {
+                count: OPEN_LETTER.daysLeft,
+                days: OPEN_LETTER.daysLeft,
+              })}
             </span>
           </div>
           <h1 className={s.h1}>{OPEN_LETTER.title}</h1>
           <p className={s.addressed}>
-            Addressed to <b>{OPEN_LETTER.addressedTo}</b> · {OPEN_LETTER.date}
+            <Translation
+              i18nKey="marketing:openLetter.hero.addressed"
+              components={{ b: <b /> }}
+              values={{ to: OPEN_LETTER.addressedTo, date: OPEN_LETTER.date }}
+            />
           </p>
 
           <div className={s.counter}>
@@ -58,12 +75,17 @@ export function OpenLetterPage() {
                 {whole}
                 <em>{frac}</em>{" "}
                 <span className={s.countGoal}>
-                  / {fmt(OPEN_LETTER.goal)} signatures
+                  {t("marketing:openLetter.hero.countGoalSuffix", {
+                    goal: fmt(OPEN_LETTER.goal),
+                  })}
                 </span>
               </div>
               <div className={s.countLabel}>
-                Members of QP &amp; partner orgs · last signed <b>{last.at}</b>{" "}
-                by {last.by}
+                <Translation
+                  i18nKey="marketing:openLetter.hero.countLabel"
+                  components={{ b: <b /> }}
+                  values={{ at: last.at, by: last.by }}
+                />
               </div>
             </div>
             <div className={s.progress}>
@@ -71,7 +93,11 @@ export function OpenLetterPage() {
                 <span style={{ width: `${pct}%` }} />
               </div>
               <div className={s.pct}>
-                <b>{pct}%</b> · {OPEN_LETTER.handoverNote}
+                <Translation
+                  i18nKey="marketing:openLetter.hero.pctLabel"
+                  components={{ b: <b /> }}
+                  values={{ pct, note: OPEN_LETTER.handoverNote }}
+                />
               </div>
             </div>
           </div>

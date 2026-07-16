@@ -1,50 +1,53 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { Avatar, Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { HOUSING_LISTINGS, type HousingListing } from "./housingListings";
 import { GAL_BG } from "./housingListing.data";
 import s from "./HousingListingPage.module.css";
 
-export function HousingListingMain({ l }: { l: HousingListing }) {
+export function HousingListingMain({ listing }: { listing: HousingListing }) {
+  const { t } = useTranslation();
   return (
     <main>
       <section className={s.sec}>
-        <h2>About this place</h2>
-        {l.longDesc.map((p, i) => (
-          <p key={i}>{p}</p>
+        <h2>{t("economy:housingListing.section.about")}</h2>
+        {listing.longDesc.map((paragraph, index) => (
+          <p key={index}>{paragraph}</p>
         ))}
       </section>
 
       <section className={s.sec}>
-        <h2>Features</h2>
+        <h2>{t("economy:housingListing.section.features")}</h2>
         <div className={s.features}>
-          {l.features.map((f) => (
-            <span key={f} className={s.feature}>
-              {f}
+          {listing.features.map((feature) => (
+            <span key={feature} className={s.feature}>
+              {feature}
             </span>
           ))}
         </div>
       </section>
 
       <section className={s.sec}>
-        <h2>The facts</h2>
+        <h2>{t("economy:housingListing.section.facts")}</h2>
         <div className={s.facts}>
-          {l.facts.map((f) => (
-            <div key={f.label} className={s.factRow}>
-              <span>{f.label}</span>
-              <b>{f.value}</b>
+          {listing.facts.map((fact) => (
+            <div key={fact.label} className={s.factRow}>
+              <span>{fact.label}</span>
+              <b>{fact.value}</b>
             </div>
           ))}
         </div>
       </section>
 
       <section className={s.sec}>
-        <h2>Ideal for</h2>
+        <h2>{t("economy:housingListing.section.idealFor")}</h2>
         <div className={s.bullets}>
-          {l.idealFor.map((b) => (
-            <div key={b} className={s.bullet}>
+          {listing.idealFor.map((bullet) => (
+            <div key={bullet} className={s.bullet}>
               <div className={s.bulletDot} />
-              {b}
+              {bullet}
             </div>
           ))}
         </div>
@@ -54,74 +57,89 @@ export function HousingListingMain({ l }: { l: HousingListing }) {
 }
 
 export function HousingListingSidebar({
-  l,
+  listing,
   first,
   onMessage,
 }: {
-  l: HousingListing;
+  listing: HousingListing;
   first: string;
   onMessage: () => void;
 }) {
-  const similar = HOUSING_LISTINGS.filter((x) => x.slug !== l.slug).slice(0, 3);
+  const { t } = useTranslation();
+  const similar = HOUSING_LISTINGS.filter(
+    (other) => other.slug !== listing.slug,
+  ).slice(0, 3);
   return (
     <aside className={s.side}>
       <div className={s.priceCard}>
         <div className={s.priceBig}>
-          {l.price} <span>/ {l.period}</span>
+          {listing.price} <span>/ {listing.period}</span>
         </div>
         <div className={s.priceMeta}>
-          Available from {l.avail} · posted by a verified member
+          {t("economy:housingListing.availableFrom", { date: listing.avail })}
         </div>
         <Button variant="ghost-dark" className={s.priceBtn} onClick={onMessage}>
-          Message {first} →
+          {t("economy:housingListing.messageCtaArrow", { name: first })}
         </Button>
       </div>
 
       <div className={s.sideCard}>
-        <h4>Listed by</h4>
+        <h4>{t("economy:housingListing.listedBy")}</h4>
         <div className={s.lister}>
-          <Avatar initials={l.poster.initials} tint={l.poster.tint} size={44} />
+          <Avatar
+            initials={listing.poster.initials}
+            tint={listing.poster.tint}
+            size={44}
+          />
           <div>
-            <div className={s.listerName}>{l.poster.fullName}</div>
-            <div className={s.listerSince}>{l.poster.memberSince}</div>
+            <div className={s.listerName}>{listing.poster.fullName}</div>
+            <div className={s.listerSince}>{listing.poster.memberSince}</div>
           </div>
         </div>
-        <span className={s.verifiedRow}>Verified member</span>
-        <p className={s.listerBio}>{l.poster.bio}</p>
+        <span className={s.verifiedRow}>
+          {t("economy:housingListing.verifiedMember")}
+        </span>
+        <p className={s.listerBio}>{listing.poster.bio}</p>
         <div className={s.replyRow}>
-          Usually replies <b>{l.poster.responseTime}</b>
+          <Translation
+            i18nKey="economy:housingListing.repliesUsually"
+            values={{ time: listing.poster.responseTime }}
+            components={{ b: <b /> }}
+          />
         </div>
         <Button variant="primary" className={s.sideFull} onClick={onMessage}>
-          Message {first}
+          {t("economy:housingListing.messageCta", { name: first })}
         </Button>
       </div>
 
       <div className={s.sideCard}>
-        <h4>Stay safe</h4>
+        <h4>{t("economy:housingListing.staySafe.title")}</h4>
         <div className={s.safety}>
-          <b>Never pay a deposit before viewing in person.</b> Keep the
-          conversation on QueerPulse until you've met. If something feels off,
-          the Queer Housing Justice Network can advise.
+          <Translation
+            i18nKey="economy:housingListing.staySafe.body"
+            components={{ b: <b /> }}
+          />
         </div>
       </div>
 
       <div className={s.sideCard}>
-        <h4>More on the board</h4>
+        <h4>{t("economy:housingListing.moreOnBoard")}</h4>
         <div className={s.more}>
-          {similar.map((x) => (
+          {similar.map((otherListing) => (
             <Link
-              key={x.slug}
-              to={`${routes.housing}/${x.slug}`}
+              key={otherListing.slug}
+              to={`${routes.housing}/${otherListing.slug}`}
               className={s.moreItem}
             >
               <div
                 className={s.moreThumb}
-                style={{ background: GAL_BG[x.tint] }}
+                style={{ background: GAL_BG[otherListing.tint] }}
               />
               <div>
-                <div className={s.moreName}>{x.title}</div>
+                <div className={s.moreName}>{otherListing.title}</div>
                 <div className={s.morePrice}>
-                  {x.price} / {x.period} · {x.hood}
+                  {otherListing.price} / {otherListing.period} ·{" "}
+                  {otherListing.hood}
                 </div>
               </div>
             </Link>

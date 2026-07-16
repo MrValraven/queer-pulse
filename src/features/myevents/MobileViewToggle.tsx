@@ -1,8 +1,10 @@
 import { sx } from "./myEvents.styles";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyEvents } from "./MyEventsContext";
 
 /** List / Calendar switch — only visible on narrow screens (CSS-gated). */
 export function MobileViewToggle() {
+  const { t } = useTranslation();
   const { mobileView, setMobileView } = useMyEvents();
   return (
     <div className={sx("mview")}>
@@ -21,7 +23,7 @@ export function MobileViewToggle() {
         >
           <path d="M2 3.5h10M2 7h10M2 10.5h10" />
         </svg>
-        List
+        {t("myevents:mobileView.list")}
       </button>
       <button
         type="button"
@@ -39,7 +41,7 @@ export function MobileViewToggle() {
           <rect x="2" y="2.5" width="10" height="9" rx="1.5" />
           <path d="M2 5.5h10M5 1.5v2M9 1.5v2" />
         </svg>
-        Calendar
+        {t("myevents:mobileView.calendar")}
       </button>
     </div>
   );

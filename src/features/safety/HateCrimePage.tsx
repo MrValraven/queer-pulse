@@ -1,5 +1,7 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, HubBackLink, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { HateCrimePanel } from "./HateCrimeTabs";
 import styles from "./HateCrimePage.module.css";
@@ -7,27 +9,33 @@ import styles from "./HateCrimePage.module.css";
 const LEGAL = routes.legal;
 
 export function HateCrimePage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <HubBackLink to={routes.safety} label="Safety Guide" tone="dark" />
-          <div className={styles.eye}>Reporting guide · Portugal</div>
+          <HubBackLink
+            to={routes.safety}
+            label={t("safety:nav.safetyGuideLabel")}
+            tone="dark"
+          />
+          <div className={styles.eye}>{t("safety:hateCrime.eyebrow")}</div>
           <h1 className={styles.title}>
-            How to report
+            {t("safety:hateCrime.title.line1")}
             <br />
-            <em>a hate crime.</em>
+            <Translation
+              i18nKey="safety:hateCrime.title.line2"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.sub}>
-            Step-by-step — from the moment it happens to formal reporting,
-            community support, and legal follow-up. Most people don't report
-            because they don't know how. This guide removes that barrier.
-          </p>
+          <p className={styles.sub}>{t("safety:hateCrime.sub")}</p>
           <div className={styles.important}>
             <p>
-              <strong>Your safety comes first.</strong> If you are in immediate
-              danger, call <strong>112</strong> now. This guide is for after you
-              are safe.
+              <Translation
+                i18nKey="safety:hateCrime.important"
+                components={{ strong: <strong /> }}
+              />
             </p>
           </div>
         </div>
@@ -37,14 +45,15 @@ export function HateCrimePage() {
 
       <Outro
         title={
-          <>
-            You have <em>rights.</em>
-          </>
+          <Translation
+            i18nKey="safety:hateCrime.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="The QueerPulse community includes lawyers, legal professionals, and people who have been through this process. You do not have to navigate it alone."
+        sub={t("safety:hateCrime.outro.sub")}
       >
         <Button to={LEGAL} variant="primary" size="lg">
-          Legal resources
+          {t("safety:hateCrime.outro.legalCta")}
         </Button>
       </Outro>
     </PageShell>

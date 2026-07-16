@@ -10,6 +10,8 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useOpportunities } from "./api/useOpportunities";
 import { causeToLower } from "./api/volunteering.adapters";
 import type { VolunteerCause } from "./volunteerOpportunities.types";
@@ -26,14 +28,14 @@ const CAUSE_FILTERS = new Set<string>([
 ]);
 
 const FILTERS = [
-  { f: "all", label: "All opportunities" },
-  { f: "low", label: "Low commitment" },
-  { f: "medium", label: "Medium commitment" },
-  { f: "Rights", label: "LGBTQ+ Rights" },
-  { f: "Health", label: "Health & Wellbeing" },
-  { f: "Youth", label: "Youth" },
-  { f: "Housing", label: "Housing" },
-  { f: "Arts", label: "Arts & Culture" },
+  { f: "all", labelKey: "marketing:volunteer.filter.all" },
+  { f: "low", labelKey: "marketing:volunteer.filter.low" },
+  { f: "medium", labelKey: "marketing:volunteer.filter.medium" },
+  { f: "Rights", labelKey: "marketing:volunteer.filter.rights" },
+  { f: "Health", labelKey: "marketing:volunteer.filter.health" },
+  { f: "Youth", labelKey: "marketing:volunteer.filter.youth" },
+  { f: "Housing", labelKey: "marketing:volunteer.filter.housing" },
+  { f: "Arts", labelKey: "marketing:volunteer.filter.arts" },
 ];
 
 function VolunteerCardSkeleton() {
@@ -69,6 +71,7 @@ function VolunteerCardSkeleton() {
 }
 
 export function VolunteerPage() {
+  const { t } = useTranslation();
   const simLoading = useSimulatedLoad();
   const [filter, setFilter] = useState("all");
 
@@ -97,21 +100,21 @@ export function VolunteerPage() {
   return (
     <PageShell>
       <PageHero
-        eyebrow="Volunteer"
+        eyebrow={t("marketing:volunteer.hero.eyebrow")}
         title={
-          <>
-            Give your time to the <em>community</em> around you.
-          </>
+          <Translation
+            i18nKey="marketing:volunteer.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="You don't need to be an activist. You need two free hours and a willingness to show up. Below are organisations in Lisbon genuinely looking for people like you."
+        sub={t("marketing:volunteer.hero.sub")}
       >
         <div className={s.note}>
-          <span className={s.dot} /> Every organisation below has been vetted by
-          the QueerPulse community
+          <span className={s.dot} /> {t("marketing:volunteer.hero.note")}
         </div>
         <div className={s.heroCta}>
           <Button to={routes.postVolunteer} variant="ghost-dark">
-            <FiPlus aria-hidden /> Post an opportunity
+            <FiPlus aria-hidden /> {t("marketing:volunteer.hero.postCta")}
           </Button>
         </div>
       </PageHero>
@@ -128,7 +131,7 @@ export function VolunteerPage() {
                   .join(" ")}
                 onClick={() => setFilter(f.f)}
               >
-                {f.label}
+                {t(f.labelKey)}
               </button>
             ))}
           </div>
@@ -137,20 +140,22 @@ export function VolunteerPage() {
             opps.length === 0 ? (
               <EmptyState
                 icon={<FiHeart />}
-                title="No opportunities posted yet"
-                description="No organisations have posted roles here yet. If yours is looking for hands, be the first to put out the call."
+                title={t("marketing:volunteer.empty.noneTitle")}
+                description={t("marketing:volunteer.empty.noneDescription")}
                 action={{
-                  label: "Post an opportunity",
+                  label: t("marketing:volunteer.empty.noneCta"),
                   to: routes.postVolunteer,
                 }}
               />
             ) : (
               <EmptyState
                 icon={<FiHeart />}
-                title="No opportunities match those filters yet"
-                description="Try widening your search — there are plenty of ways to give your time, and new roles are added often."
+                title={t("marketing:volunteer.empty.filteredTitle")}
+                description={t(
+                  "marketing:volunteer.empty.filteredDescription",
+                )}
                 action={{
-                  label: "Clear filters",
+                  label: t("marketing:volunteer.empty.clearCta"),
                   onClick: () => setFilter("all"),
                 }}
               />
@@ -187,8 +192,8 @@ export function VolunteerPage() {
                             className={`${s.commit} ${o.commit === "low" ? s.commitGreen : s.commitAmber}`}
                           >
                             {o.commit === "low"
-                              ? "Low commitment"
-                              : "Medium commitment"}
+                              ? t("marketing:volunteer.card.commitLow")
+                              : t("marketing:volunteer.card.commitMedium")}
                           </span>
                           <span className={s.metaPill}>{o.location}</span>
                         </div>
@@ -205,7 +210,7 @@ export function VolunteerPage() {
                             className={s.express}
                             to={`${routes.volunteer}/opportunity/${o.slug}`}
                           >
-                            Express interest →
+                            {t("marketing:volunteer.card.expressInterest")}
                           </Link>
                         </div>
                       </div>
@@ -218,14 +223,15 @@ export function VolunteerPage() {
 
       <Outro
         title={
-          <>
-            Want to connect <em>more deeply?</em>
-          </>
+          <Translation
+            i18nKey="marketing:volunteer.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Find the change makers already working on the causes you care about."
+        sub={t("marketing:volunteer.outro.sub")}
       >
         <Button size="lg" to={routes.changemakers}>
-          Meet the change makers →
+          {t("marketing:volunteer.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

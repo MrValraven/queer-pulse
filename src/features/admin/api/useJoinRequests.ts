@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { TFunction } from "../../../shared/i18n/types";
 import {
   getJoinRequests,
   type JoinRequestDTO,
@@ -34,16 +36,21 @@ function toneFor(id: string): AvatarTone {
   return TONES[h % TONES.length]!;
 }
 
-function appliedLine(iso: string): string {
+/**
+ * i18n note: this composes chrome sentences from data (a mutual's name, a
+ * relative day count) at render time, in both demo and live mode alike — so
+ * the phrases themselves must be catalog keys, not baked English, exactly
+ * like the gatherings `api/events.adapters.ts` precedent.
+ */
+function appliedLine(iso: string, t: TFunction): string {
   const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return "Applied recently";
+  if (Number.isNaN(then)) return t("admin:members.verify.appliedRecently");
   const days = Math.floor((Date.now() - then) / 86_400_000);
-  if (days <= 0) return "Applied today";
-  if (days === 1) return "Applied 1 day ago";
-  return `Applied ${days} days ago`;
+  if (days <= 0) return t("admin:members.verify.appliedToday");
+  return t("admin:members.verify.appliedDaysAgo", { count: days });
 }
 
-function dtoToView(dto: JoinRequestDTO): JoinRequestView {
+function dtoToView(dto: JoinRequestDTO, t: TFunction): JoinRequestView {
   const a = dto.applicant;
   const first = a?.firstName ?? "New";
   const last = a?.lastName ?? "applicant";
@@ -54,9 +61,9 @@ function dtoToView(dto: JoinRequestDTO): JoinRequestView {
     tone: toneFor(dto.id),
     message: dto.message,
     mutualLine: a?.mutual
-      ? `Named ${a.mutual} as a mutual`
-      : "No mutual named yet",
-    appliedLine: appliedLine(dto.createdAt),
+      ? t("admin:members.verify.mutualLine", { name: a.mutual })
+      : t("admin:members.verify.noMutual"),
+    appliedLine: appliedLine(dto.createdAt, t),
   };
 }
 
@@ -67,13 +74,14 @@ function dtoToView(dto: JoinRequestDTO): JoinRequestView {
  */
 export function useJoinRequests(status: JoinRequestDTO["status"] = "pending") {
   const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
   return useQuery<JoinRequestView[]>({
-    queryKey: ["join-requests", demoMode, status],
+    queryKey: ["join-requests", demoMode, status, language],
     queryFn: async () => {
       const rows = demoMode
         ? JOIN_REQUESTS.filter((r) => r.status === status)
         : await getJoinRequests(status);
-      return rows.map(dtoToView);
+      return rows.map((row) => dtoToView(row, t));
     },
   });
 }

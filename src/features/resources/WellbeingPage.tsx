@@ -1,5 +1,8 @@
+import { useMemo } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
 import { CrisisStrip } from "./CrisisStrip";
@@ -12,23 +15,50 @@ import {
 import { WELLBEING_SUBPAGES } from "./wellbeing.data";
 
 export function WellbeingPage() {
+  const { t } = useTranslation();
+  const subpages = useMemo(
+    () =>
+      WELLBEING_SUBPAGES.map((subpage) => ({
+        label: t(subpage.labelKey),
+        to: subpage.to,
+        blurb: t(subpage.blurbKey),
+      })),
+    [t],
+  );
+  const anchors = useMemo(
+    () => [
+      {
+        label: t("resources:wellbeing.hero.anchor.therapists"),
+        href: "#therapists",
+      },
+      {
+        label: t("resources:wellbeing.hero.anchor.peerSupport"),
+        href: "#peer-support",
+      },
+      {
+        label: t("resources:wellbeing.hero.anchor.crisis"),
+        href: "#crisis",
+      },
+      {
+        label: t("resources:wellbeing.hero.anchor.harmReduction"),
+        href: "#harm-reduction",
+      },
+    ],
+    [t],
+  );
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Wellbeing"
+        eyebrow={t("resources:wellbeing.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"
         title={
-          <>
-            A room that <em>looks after you.</em>
-          </>
+          <Translation
+            i18nKey="resources:wellbeing.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="Resources built by and for the community — therapists, peer support, crisis help, and harm reduction. This is what a professional network looks like when it takes care seriously."
-        anchors={[
-          { label: "Therapist directory", href: "#therapists" },
-          { label: "Peer support", href: "#peer-support" },
-          { label: "Crisis resources", href: "#crisis" },
-          { label: "Harm reduction", href: "#harm-reduction" },
-        ]}
+        lead={t("resources:wellbeing.hero.lead")}
+        anchors={anchors}
       />
 
       <CrisisStrip />
@@ -40,18 +70,22 @@ export function WellbeingPage() {
 
       <Outro
         title={
-          <>
-            You belong <em>here.</em>
-          </>
+          <Translation
+            i18nKey="resources:wellbeing.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="If you're not yet a member, request an invite. If you are, everything above is in the member area — no separate login needed."
+        sub={t("resources:wellbeing.outro.sub")}
       >
         <Button to={routes.requestInvite} variant="primary" size="lg">
-          Request an invite
+          {t("resources:wellbeing.outro.cta")}
         </Button>
       </Outro>
 
-      <SubpageIndex title="More wellbeing support" items={WELLBEING_SUBPAGES} />
+      <SubpageIndex
+        title={t("resources:wellbeing.subpageIndex.title")}
+        items={subpages}
+      />
     </PageShell>
   );
 }

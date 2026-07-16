@@ -2,12 +2,19 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { FILM_POSTER, TIPS } from "./filmPage.data";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { FILM_POSTER, TIP_AMOUNTS } from "./filmPage.data";
 import { routes } from "../../app/routeMap";
 import styles from "./FilmPage.module.css";
 
+const FILMMAKER_NAME = "Maria";
+
 export function FilmHeroPoster() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [tip, setTip] = useState(1);
 
   return (
@@ -29,36 +36,50 @@ export function FilmHeroPoster() {
             </svg>
           </span>
         </Link>
-        <div className={styles.posterCaption}>Press play · trailer 1:42</div>
+        <div className={styles.posterCaption}>
+          {t("cinema:film.poster.trailerCta", { duration: "1:42" })}
+        </div>
       </div>
 
       <div className={styles.tipjar}>
-        <div className={styles.tipjarH}>↳ tip the filmmaker</div>
+        <div className={styles.tipjarH}>{t("cinema:film.tipjar.heading")}</div>
         <div className={styles.tipjarName}>
           Maria <em>Vasconcelos</em>
         </div>
         <div className={styles.tipjarSub}>
-          100% goes to Maria. No fees skimmed.
+          {t("cinema:film.tipjar.note", { name: FILMMAKER_NAME })}
         </div>
         <div className={styles.tipRow}>
-          {TIPS.map((t, i) => (
+          {TIP_AMOUNTS.map((amount, index) => (
             <button
               type="button"
-              key={t}
-              className={[styles.tipChip, tip === i && styles.tipChipOn]
+              key={amount ?? "custom"}
+              className={[styles.tipChip, tip === index && styles.tipChipOn]
                 .filter(Boolean)
                 .join(" ")}
               onClick={() => {
-                setTip(i);
-                if (t !== "···") showToast(`Tipped ${t} to Maria`, "success");
+                setTip(index);
+                if (amount != null) {
+                  showToast(
+                    t("cinema:film.tipjar.tippedToast", {
+                      amount: fmt.currency(amount),
+                      name: FILMMAKER_NAME,
+                    }),
+                    "success",
+                  );
+                }
               }}
             >
-              {t}
+              {amount != null ? fmt.currency(amount) : "···"}
             </button>
           ))}
         </div>
         <div className={styles.tipFoot}>
-          <strong>187 members</strong> have tipped this week.
+          <Translation
+            i18nKey="cinema:film.tipjar.footnote"
+            values={{ count: 187 }}
+            components={{ strong: <strong /> }}
+          />
         </div>
       </div>
     </div>

@@ -120,22 +120,26 @@ export function ChangemakerStoryPage() {
 
       <Outro
         title={
-          <>
-            Want to support <em>{cm.name.split(" ")[0]}'s</em> work?
-          </>
+          <Translation
+            i18nKey="community:changemakerStory.outro.title"
+            components={{ em: <em /> }}
+            values={{ name: firstName }}
+          />
         }
-        sub="Change makers do this alongside their day jobs. A message, an introduction, or an hour of your time goes further than you'd think."
+        sub={t("community:changemakerStory.outro.sub")}
       >
         <Button variant="primary" onClick={() => openConnect()}>
-          Connect with {cm.name.split(" ")[0]} →
+          {t("community:changemakerStory.outro.connectCta", { name: firstName })}
         </Button>
         <Button variant="ghost-dark" to={routes.changemakers}>
-          Meet more change makers
+          {t("community:changemakerStory.outro.moreCta")}
         </Button>
       </Outro>
 
       <div className={styles.more}>
-        <div className={styles.moreLabel}>More change makers</div>
+        <div className={styles.moreLabel}>
+          {t("community:changemakerStory.moreLabel")}
+        </div>
         <div className={styles.moreGrid}>
           {others.map((o) => (
             <Link

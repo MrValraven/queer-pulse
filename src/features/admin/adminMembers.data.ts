@@ -9,6 +9,13 @@ export interface VouchAvatar {
   tone: AvatarTone;
 }
 
+/**
+ * i18n note: the status CHIP LABEL is derived, never stored — `verified`
+ * (already a canonical boolean) plus `openReportsCount` (a real per-member
+ * count) are all AdminMemberRows.tsx needs to resolve
+ * `admin:members.status.verified` / `admin:members.status.openReports` at
+ * render. This avoids baking an English "1 open report" phrase into data.
+ */
 export interface AdminMember {
   id: string;
   name: string;
@@ -16,8 +23,8 @@ export interface AdminMember {
   tone: AvatarTone;
   pronoun: string;
   verified: boolean;
-  /** short status chip label, e.g. "Verified", "1 open report" */
-  statusLabel: string;
+  /** Open reports against this member, when not verified. */
+  openReportsCount?: number;
   /** tone for the status chip */
   statusTone: "jade" | "amber" | "coral" | "violet" | "plum" | "ghost";
   /** used by the "New this week" filter */
@@ -28,22 +35,26 @@ export interface AdminMember {
   vouchedBy: VouchAvatar[];
 }
 
+/** Canonical, stable flagged-member status id — the chip label resolves via
+ *  `admin:members.flagged.status.<statusId>`, never a stored English string. */
+export type FlaggedStatusId = "underReview" | "frozen" | "limited";
+
 export interface FlaggedMember {
   id: string;
   handle: string;
   initials: string;
   tone: AvatarTone;
-  /** left category chip, e.g. "4 reports" */
-  catLabel: string;
+  /** left category chip: a fixed reason id ("doxxing"/"spam") or a real
+   *  per-member report count (`{ count }`), never a baked English string. */
+  category: { kind: "doxxing" | "spam" } | { kind: "reportsCount"; count: number };
   catTone: "danger" | "amber" | "violet" | "coral";
   meta: string;
-  /** right status chip, e.g. "Under review" */
-  statusLabel: string;
+  statusId: FlaggedStatusId;
   statusTone: "danger" | "amber" | "violet" | "coral";
 }
 
 export interface DrawerStat {
-  label: string;
+  labelKey: string;
   value: string;
 }
 
@@ -94,7 +105,6 @@ export const MEMBERS: AdminMember[] = [
     tone: "jade",
     pronoun: "she/her",
     verified: true,
-    statusLabel: "Verified",
     statusTone: "jade",
     newThisWeek: false,
     meta: "Joined Mar 2023 · Founder, Maré Records · Trans & Friends · Queer Creatives",
@@ -112,7 +122,6 @@ export const MEMBERS: AdminMember[] = [
     tone: "coral",
     pronoun: "they/them",
     verified: true,
-    statusLabel: "Verified",
     statusTone: "jade",
     newThisWeek: false,
     meta: "Joined Jun 2025 · Illustrator · Queer Creatives",
@@ -129,7 +138,7 @@ export const MEMBERS: AdminMember[] = [
     tone: "violet",
     pronoun: "he/him",
     verified: false,
-    statusLabel: "1 open report",
+    openReportsCount: 1,
     statusTone: "coral",
     newThisWeek: false,
     meta: "Joined Sep 2024 · Community organiser · Lisbon Queers",
@@ -146,7 +155,6 @@ export const MEMBERS: AdminMember[] = [
     tone: "amber",
     pronoun: "she/they",
     verified: true,
-    statusLabel: "Verified",
     statusTone: "jade",
     newThisWeek: false,
     meta: "Joined Jan 2024 · Nurse · mutual aid lead · Trans & Friends",
@@ -163,7 +171,6 @@ export const MEMBERS: AdminMember[] = [
     tone: "plum",
     pronoun: "xe/xem",
     verified: true,
-    statusLabel: "Verified",
     statusTone: "jade",
     newThisWeek: true,
     meta: "Joined Nov 2025 · DJ · night-life · Queer Creatives",
@@ -180,10 +187,10 @@ export const FLAGGED: FlaggedMember[] = [
     handle: "@nightowl",
     initials: "N",
     tone: "plum",
-    catLabel: "4 reports",
+    category: { kind: "reportsCount", count: 4 },
     catTone: "danger",
     meta: "Joined Sep 2024 · Pattern: repeated DMs after blocks",
-    statusLabel: "Under review",
+    statusId: "underReview",
     statusTone: "coral",
   },
   {
@@ -191,10 +198,10 @@ export const FLAGGED: FlaggedMember[] = [
     handle: "@anon_4471",
     initials: "A",
     tone: "anon",
-    catLabel: "Doxxing report",
+    category: { kind: "doxxing" },
     catTone: "danger",
     meta: "New account · 1h old · 0 vouches · Auto-frozen pending review",
-    statusLabel: "Frozen",
+    statusId: "frozen",
     statusTone: "danger",
   },
   {
@@ -202,10 +209,10 @@ export const FLAGGED: FlaggedMember[] = [
     handle: "@coin_daily",
     initials: "CD",
     tone: "amber",
-    catLabel: "Spam",
+    category: { kind: "spam" },
     catTone: "amber",
     meta: "Joined last week · Crypto links across 6 threads",
-    statusLabel: "Limited",
+    statusId: "limited",
     statusTone: "amber",
   },
 ];
@@ -216,9 +223,9 @@ export const MEMBER_DETAIL: Record<string, MemberDetail> = {
   ines: {
     id: "ines",
     glance: [
-      { label: "Vouches", value: "21" },
-      { label: "Member for", value: "3yr" },
-      { label: "Reports against", value: "0" },
+      { labelKey: "admin:members.glance.vouches", value: "21" },
+      { labelKey: "admin:members.glance.memberFor", value: "3yr" },
+      { labelKey: "admin:members.glance.reportsAgainst", value: "0" },
     ],
     graphNote:
       "21 members vouch for Inês. A dense, mutual graph is a sign of deeply-held trust — not a metric to game.",
@@ -288,9 +295,12 @@ export function detailFor(member: AdminMember): MemberDetail {
   return {
     id: member.id,
     glance: [
-      { label: "Vouches", value: String(member.vouchCount) },
-      { label: "Member for", value: member.newThisWeek ? "new" : "1yr+" },
-      { label: "Reports against", value: "0" },
+      { labelKey: "admin:members.glance.vouches", value: String(member.vouchCount) },
+      {
+        labelKey: "admin:members.glance.memberFor",
+        value: member.newThisWeek ? "new" : "1yr+",
+      },
+      { labelKey: "admin:members.glance.reportsAgainst", value: "0" },
     ],
     graphNote: `${member.vouchCount} members have vouched for ${first}. A mutual graph is a sign of trust — not a metric to optimise.`,
     communities: [
@@ -324,8 +334,9 @@ export function detailFor(member: AdminMember): MemberDetail {
 }
 
 /* ── Identity & privacy (sealed-lock card copy) ──────────── */
-
+/** i18n Pattern A — platform policy copy, sole consumer is SealedIdentity in
+ *  AdminMemberDrawerSections.tsx. */
 export const SEALED_IDENTITY = {
-  title: "Legacy identity is sealed",
-  body: "Any prior name is encrypted and shown to no one — not in reports, not here, not to admins. Only the member controls their chosen name.",
+  titleKey: "admin:members.sealed.title",
+  bodyKey: "admin:members.sealed.body",
 };

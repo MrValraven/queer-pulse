@@ -1,13 +1,17 @@
 import { sx } from "./myEvents.styles";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { PriceChip, UrgencyChip, AvStack } from "./EventCardParts";
 import type { MyEvent } from "./myEvents.types";
 
 /** The status-pill / count badge row, varying by category. */
 export function StatusBadges({ ev }: { ev: MyEvent }) {
-  return <div className={sx("ev-badges")}>{badgeContent(ev)}</div>;
+  const { t } = useTranslation();
+  return <div className={sx("ev-badges")}>{badgeContent(ev, t)}</div>;
 }
 
-function badgeContent(ev: MyEvent) {
+function badgeContent(ev: MyEvent, t: TFunction) {
   switch (ev.cat) {
     case "going":
       return (
@@ -15,12 +19,12 @@ function badgeContent(ev: MyEvent) {
           {ev.maybe ? (
             <span className={sx("status-pill maybe")}>
               <span className={sx("sd")} />
-              Maybe
+              {t("myevents:badges.maybe")}
             </span>
           ) : (
             <span className={sx("status-pill going")}>
               <span className={sx("sd")} />
-              Going
+              {t("myevents:badges.going")}
             </span>
           )}
           <PriceChip ev={ev} />
@@ -31,10 +35,15 @@ function badgeContent(ev: MyEvent) {
         <>
           <span className={sx("status-pill hosting")}>
             <span className={sx("sd")} />
-            {ev.cohost ? "Co-hosting" : "Hosting"}
+            {ev.cohost
+              ? t("myevents:badges.coHosting")
+              : t("myevents:badges.hosting")}
           </span>
           <span className={sx("ev-count")}>
-            {ev.going} going{ev.waitlist ? ` · ${ev.waitlist} waitlist` : ""}
+            {t("myevents:badges.goingCount", { count: ev.going })}
+            {ev.waitlist
+              ? t("myevents:badges.waitlistSuffix", { count: ev.waitlist })
+              : ""}
           </span>
           <PriceChip ev={ev} />
         </>
@@ -44,9 +53,11 @@ function badgeContent(ev: MyEvent) {
         <>
           <span className={sx("status-pill waitlisted")}>
             <span className={sx("sd")} />
-            Waitlisted · #{ev.position}
+            {t("myevents:badges.waitlistedPosition", { position: ev.position })}
           </span>
-          <span className={sx("ev-count")}>{ev.going} going · full</span>
+          <span className={sx("ev-count")}>
+            {t("myevents:badges.goingFull", { count: ev.going })}
+          </span>
           <PriceChip ev={ev} />
         </>
       );
@@ -56,18 +67,18 @@ function badgeContent(ev: MyEvent) {
           {ev.noShow ? (
             <span className={sx("status-pill missed")}>
               <span className={sx("sd")} />
-              Didn’t make it
+              {t("myevents:badges.didntMakeIt")}
             </span>
           ) : (
             <span className={sx("status-pill attended")}>
               <span className={sx("sd")} />
-              Attended
+              {t("myevents:badges.attended")}
             </span>
           )}
           <PriceChip ev={ev} />
           {ev.taggedPhotos ? (
             <span className={sx("ev-count")}>
-              You’re in {ev.taggedPhotos} photos
+              {t("myevents:badges.inPhotos", { count: ev.taggedPhotos })}
             </span>
           ) : null}
         </>
@@ -88,7 +99,7 @@ function badgeContent(ev: MyEvent) {
                 fill="currentColor"
               />
             </svg>
-            Saved
+            {t("myevents:badges.saved")}
           </span>
           <UrgencyChip ev={ev} />
           <PriceChip ev={ev} />
@@ -99,7 +110,7 @@ function badgeContent(ev: MyEvent) {
         <>
           <span className={sx("status-pill pending")}>
             <span className={sx("sd")} />
-            Invited — take your time
+            {t("myevents:badges.invitedTakeYourTime")}
           </span>
           <UrgencyChip ev={ev} />
           <PriceChip ev={ev} />
@@ -109,7 +120,7 @@ function badgeContent(ev: MyEvent) {
       return (
         <span className={sx("status-pill pending")}>
           <span className={sx("sd")} />
-          You invited {ev.invitee}
+          {t("myevents:badges.youInvited", { invitee: ev.invitee })}
         </span>
       );
     default:
@@ -119,6 +130,7 @@ function badgeContent(ev: MyEvent) {
 
 /** The attendee / status footer line, varying by category. */
 export function EventFoot({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
   if (ev.cat === "going") {
     if (ev.cancelled) return null;
     return (
@@ -133,7 +145,7 @@ export function EventFoot({ ev }: { ev: MyEvent }) {
       ev.cohost && ev.cohosts ? [...ev.cohosts, ...(ev.who || [])] : ev.who;
     const footText =
       ev.cohost && ev.cohostName
-        ? `Co-hosting with ${ev.cohostName}`
+        ? t("myevents:foot.coHostingWith", { name: ev.cohostName })
         : ev.whoText;
     return (
       <div className={sx("ev-foot")}>
@@ -146,8 +158,11 @@ export function EventFoot({ ev }: { ev: MyEvent }) {
     return (
       <div className={sx("ev-foot")}>
         <span className={sx("ev-foot-text")}>
-          <strong>{ev.ahead} people before you.</strong> We’ll let you know if a
-          spot opens.
+          <Translation
+            i18nKey="myevents:foot.aheadOfYou"
+            components={{ strong: <strong /> }}
+            values={{ count: ev.ahead }}
+          />
         </span>
       </div>
     );
@@ -156,7 +171,11 @@ export function EventFoot({ ev }: { ev: MyEvent }) {
     return (
       <div className={sx("ev-foot")}>
         <span className={sx("ev-foot-text")}>
-          <strong>{ev.from}</strong> invited you
+          <Translation
+            i18nKey="myevents:foot.invitedYou"
+            components={{ strong: <strong /> }}
+            values={{ from: ev.from ?? "" }}
+          />
         </span>
       </div>
     );
@@ -165,7 +184,11 @@ export function EventFoot({ ev }: { ev: MyEvent }) {
     return (
       <div className={sx("ev-foot")}>
         <span className={sx("ev-foot-text")}>
-          Waiting on <strong>{ev.invitee}</strong> to reply
+          <Translation
+            i18nKey="myevents:foot.waitingOnReply"
+            components={{ strong: <strong /> }}
+            values={{ invitee: ev.invitee ?? "" }}
+          />
         </span>
       </div>
     );

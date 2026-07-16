@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button, Avatar } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateCommissionInterest } from "./api/useCreateCommissionInterest";
 import { ModalShell, SuccessPanel, Sending } from "./CultureModalKit";
-import type { Commission } from "./culture.data";
+import { COMMISSION_CAT_LABEL_KEY, type Commission } from "./culture.data";
 import styles from "./CultureModals.module.css";
 
 /**
@@ -25,6 +27,7 @@ export function CommissionInterestModal({
   onClose: () => void;
   onSent: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const mutation = useCreateCommissionInterest();
@@ -41,7 +44,7 @@ export function CommissionInterestModal({
       },
       {
         onError: () =>
-          showToast("Couldn't send your interest — please try again.", "error"),
+          showToast(t("culture:commissionInterest.errorToast"), "error"),
       },
     );
   }
@@ -50,31 +53,39 @@ export function CommissionInterestModal({
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="Interest"
-          em="sent."
+          title={t("culture:commissionInterest.success.title")}
+          em={t("culture:commissionInterest.success.em")}
           steps={[
-            <>{commission.who.name} can see your note and profile.</>,
-            "If they want to move forward, we'll introduce you by email.",
-            "No pressure either way — collaborations here are always a yes from both sides.",
+            <Translation
+              key="step1"
+              i18nKey="culture:commissionInterest.success.step1"
+              values={{ name: commission.who.name }}
+            />,
+            t("culture:commissionInterest.success.step2"),
+            t("culture:commissionInterest.success.step3"),
           ]}
           onClose={() => {
             onSent();
             onClose();
           }}
         >
-          We'll connect you with {commission.who.name} if they'd like to take it
-          further.
+          {t("culture:commissionInterest.success.body", {
+            name: commission.who.name,
+          })}
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Express interest</div>
+          <div className={styles.eyebrow}>
+            {t("culture:commissionInterest.eyebrow")}
+          </div>
           <h2 className={styles.title}>
-            Reach out to <em>{commission.who.name.split(" ")[0]}</em>
+            <Translation
+              i18nKey="culture:commissionInterest.title"
+              values={{ name: commission.who.name.split(" ")[0] }}
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.sub}>
-            Tell them a little about you and why this project speaks to you.
-            They'll only see this if you send.
-          </p>
+          <p className={styles.sub}>{t("culture:commissionInterest.sub")}</p>
 
           <div className={styles.panel}>
             <Avatar
@@ -83,16 +94,20 @@ export function CommissionInterestModal({
               size={40}
             />
             <div>
-              <div className={styles.panelCat}>{commission.catLabel}</div>
+              <div className={styles.panelCat}>
+                {t(COMMISSION_CAT_LABEL_KEY[commission.cat])}
+              </div>
               <div className={styles.panelTitle}>{commission.title}</div>
             </div>
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="ci-msg">Your message (optional)</label>
+            <label htmlFor="ci-msg">
+              {t("culture:commissionInterest.messageLabel")}
+            </label>
             <textarea
               id="ci-msg"
-              placeholder="What you'd bring, what you've made before, or just hello…"
+              placeholder={t("culture:commissionInterest.messagePlaceholder")}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
@@ -100,14 +115,18 @@ export function CommissionInterestModal({
 
           <div className={styles.foot}>
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {t("culture:common.cancel")}
             </Button>
             <Button
               variant="primary"
               disabled={sending}
               onClick={() => submit()}
             >
-              {sending ? <Sending label="Sending…" /> : "Send interest"}
+              {sending ? (
+                <Sending label={t("culture:common.sending")} />
+              ) : (
+                t("culture:commissionInterest.sendCta")
+              )}
             </Button>
           </div>
         </>

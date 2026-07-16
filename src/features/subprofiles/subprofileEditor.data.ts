@@ -8,61 +8,84 @@ export const MIN_BIO = 80;
 export const MAX_ITEMS_PER_SECTION = 100;
 
 // ── Meta-form options + copy ─────────────────────────────────────────────────
+// i18n label-key indirection throughout this section: `value`/the Record key
+// is the PERSISTED canonical id (visibility / linkVisibility are stored
+// fields), so `labelKey`/`helpKey` resolve via `t()` at render — a language
+// switch never touches the stored choice.
 
 export const VISIBILITY_OPTIONS: {
   value: Visibility;
-  label: string;
-  help: string;
+  labelKey: string;
+  helpKey: string;
 }[] = [
   {
     value: "open",
-    label: "Open to everyone",
-    help: "Anyone in the community can find and view this persona.",
+    labelKey: "subprofiles:visibility.open.label",
+    helpKey: "subprofiles:visibility.open.help",
   },
   {
     value: "network",
-    label: "Your network",
-    help: "Only people you're connected with can see it.",
+    labelKey: "subprofiles:visibility.network.label",
+    helpKey: "subprofiles:visibility.network.help",
   },
   {
     value: "private",
-    label: "Just you",
-    help: "Kept to yourself while you shape it.",
+    labelKey: "subprofiles:visibility.private.label",
+    helpKey: "subprofiles:visibility.private.help",
   },
 ];
 
-/** Segmented-control labels for the link-visibility choice. */
-export const LINK_OPTIONS = ["Linked", "Standalone"] as const;
+/** Segmented-control values for the link-visibility choice — canonical ids;
+ *  the component renders their translated labels via `LINK_TO_LABEL_KEY`. */
+export const LINK_OPTIONS = ["linked", "unlinked"] as const satisfies readonly LinkVisibility[];
 
-export const LINK_TO_LABEL: Record<LinkVisibility, string> = {
-  linked: "Linked",
-  unlinked: "Standalone",
+export const LINK_TO_LABEL_KEY: Record<LinkVisibility, string> = {
+  linked: "subprofiles:link.linked",
+  unlinked: "subprofiles:link.standalone",
 };
 
-export const LINK_HELP: Record<LinkVisibility, string> = {
-  linked:
-    "Shown on your main profile as another side of you — people can see the two are the same person.",
-  unlinked:
-    "Stands on its own, with no visible tie to your main profile. It earns a public handle once it passes the completeness check.",
+export const LINK_HELP_KEY: Record<LinkVisibility, string> = {
+  linked: "subprofiles:link.help.linked",
+  unlinked: "subprofiles:link.help.unlinked",
 };
 
 // ── Per-field labels for the item editor ─────────────────────────────────────
 // Generic, friendly labels for the generalized item columns. Each section only
-// renders the fields listed in SECTION_META[section].fields.
+// renders the fields listed in SECTION_META[section].fields. Not persisted
+// choices (the field NAMES title/subtitle/… are fixed, only their labels
+// translate), still resolved via `t()` for consistency.
 
 export const FIELD_META: Record<
   string,
-  { label: string; placeholder: string; multiline?: boolean }
+  { labelKey: string; placeholderKey: string; multiline?: boolean }
 > = {
-  title: { label: "Title", placeholder: "What's it called?" },
-  subtitle: { label: "Subtitle", placeholder: "A label, venue or publisher" },
+  title: {
+    labelKey: "subprofiles:field.title.label",
+    placeholderKey: "subprofiles:field.title.placeholder",
+  },
+  subtitle: {
+    labelKey: "subprofiles:field.subtitle.label",
+    placeholderKey: "subprofiles:field.subtitle.placeholder",
+  },
   description: {
-    label: "Description",
-    placeholder: "A sentence or two",
+    labelKey: "subprofiles:field.description.label",
+    placeholderKey: "subprofiles:field.description.placeholder",
     multiline: true,
   },
-  url: { label: "Link", placeholder: "https://" },
-  date: { label: "Date", placeholder: "e.g. 2025" },
-  meta: { label: "Detail", placeholder: "A short note" },
-  tags: { label: "Tags", placeholder: "e.g. React, TypeScript" },
+  url: {
+    labelKey: "subprofiles:field.url.label",
+    placeholderKey: "subprofiles:field.url.placeholder",
+  },
+  date: {
+    labelKey: "subprofiles:field.date.label",
+    placeholderKey: "subprofiles:field.date.placeholder",
+  },
+  meta: {
+    labelKey: "subprofiles:field.meta.label",
+    placeholderKey: "subprofiles:field.meta.placeholder",
+  },
+  tags: {
+    labelKey: "subprofiles:field.tags.label",
+    placeholderKey: "subprofiles:field.tags.placeholder",
+  },
 };

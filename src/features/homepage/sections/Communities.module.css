@@ -467,12 +467,12 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--jade-ink);
-  background: rgba(var(--jade-rgb), 0.14);
+  background: var(--paper);
   border: 1px solid rgba(var(--jade-rgb), 0.3);
   border-radius: var(--radius-pill);
   padding: 5px 11px 5px 9px;
   white-space: nowrap;
-  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 12px -6px rgba(var(--plum-rgb), 0.35);
 }
 .veri svg {
   width: 12px;

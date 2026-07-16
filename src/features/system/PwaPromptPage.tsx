@@ -3,75 +3,63 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./PwaPromptPage.module.css";
 
-const FEATURES = [
+const FEATURES: { labelKey: string; detailKey: string }[] = [
   {
-    label: "Quick exit",
-    detail: "· lives in the nav · one tap closes the app",
+    labelKey: "system:pwaPrompt.features.quickExit.label",
+    detailKey: "system:pwaPrompt.features.quickExit.detail",
   },
   {
-    label: "Push notifications",
-    detail: "· RSVPs, replies, mentions · granular & quiet",
+    labelKey: "system:pwaPrompt.features.push.label",
+    detailKey: "system:pwaPrompt.features.push.detail",
   },
   {
-    label: "Works offline",
-    detail: "· cached map, crisis chat, your QR ticket",
+    labelKey: "system:pwaPrompt.features.offline.label",
+    detailKey: "system:pwaPrompt.features.offline.detail",
   },
   {
-    label: "~ 6 MB on your phone",
-    detail: "· no storage bloat · no background scanning",
+    labelKey: "system:pwaPrompt.features.size.label",
+    detailKey: "system:pwaPrompt.features.size.detail",
   },
 ];
 
 type Platform = "ios" | "android" | "desktop";
 
-const INSTRUCTIONS: Record<
-  Platform,
-  { title: string; steps: React.ReactNode[] }
-> = {
+const INSTRUCTIONS: Record<Platform, { titleKey: string; stepKeys: string[] }> = {
   ios: {
-    title: "iPhone · Safari · 3 taps",
-    steps: [
-      <>
-        Tap the <b>Share</b> icon at the bottom of Safari
-      </>,
-      <>
-        Scroll &amp; tap <b>Add to Home Screen</b> <em>· near the bottom</em>
-      </>,
-      <>
-        Tap <b>Add</b> in the top-right. Done.
-      </>,
+    titleKey: "system:pwaPrompt.instructions.ios.title",
+    stepKeys: [
+      "system:pwaPrompt.instructions.ios.step1",
+      "system:pwaPrompt.instructions.ios.step2",
+      "system:pwaPrompt.instructions.ios.step3",
     ],
   },
   android: {
-    title: "Android · Chrome & Firefox · 2 taps",
-    steps: [
-      <>
-        Tap the <b>three-dot menu</b> top-right
-      </>,
-      <>
-        Choose <b>Install app</b> or <b>Add to home screen</b>
-      </>,
-      <>
-        Confirm · QueerPulse will appear with your other apps.{" "}
-        <em>Works the same.</em>
-      </>,
+    titleKey: "system:pwaPrompt.instructions.android.title",
+    stepKeys: [
+      "system:pwaPrompt.instructions.android.step1",
+      "system:pwaPrompt.instructions.android.step2",
+      "system:pwaPrompt.instructions.android.step3",
     ],
   },
   desktop: {
-    title: "Desktop · Chrome & Edge",
-    steps: [
-      <>
-        Look for the <b>install icon</b> in the address bar (right side)
-      </>,
-      <>
-        Click it, then <b>Install</b> in the popup
-      </>,
-      <>Opens in its own window · pin to taskbar / Dock</>,
+    titleKey: "system:pwaPrompt.instructions.desktop.title",
+    stepKeys: [
+      "system:pwaPrompt.instructions.desktop.step1",
+      "system:pwaPrompt.instructions.desktop.step2",
+      "system:pwaPrompt.instructions.desktop.step3",
     ],
   },
+};
+
+const TAB_LABEL_KEY: Record<Platform, string> = {
+  ios: "system:pwaPrompt.tabs.ios",
+  android: "system:pwaPrompt.tabs.android",
+  desktop: "system:pwaPrompt.tabs.desktop",
 };
 
 const CheckIcon = () => (
@@ -89,16 +77,17 @@ const CheckIcon = () => (
 export function PwaPromptPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [platform, setPlatform] = useState<Platform>("ios");
 
-  const { title, steps } = INSTRUCTIONS[platform];
+  const { titleKey, stepKeys } = INSTRUCTIONS[platform];
 
   function install() {
-    showToast("Look for the install prompt · usually top-right", "info");
+    showToast(t("system:pwaPrompt.toast.installHint"), "info");
   }
 
   function snooze() {
-    showToast("Won't ask again for 30 days", "info");
+    showToast(t("system:pwaPrompt.toast.snoozed"), "info");
     setTimeout(() => navigate(-1), 900);
   }
 
@@ -108,32 +97,36 @@ export function PwaPromptPage() {
         <div className={styles.ic}>
           <div className={styles.icInner}>
             <span className={styles.icDot} />
-            Queer<em>Pulse</em>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em /> }}
+            />
           </div>
         </div>
 
-        <div className={styles.kicker}>
-          Add to home screen · no app store needed
-        </div>
+        <div className={styles.kicker}>{t("system:pwaPrompt.kicker")}</div>
         <h1 className={styles.h1}>
-          Keep <em>QueerPulse</em> a tap away.
+          <Translation
+            i18nKey="system:pwaPrompt.heading"
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.lead}>
-          Install the web app on your phone in 30 seconds.{" "}
-          <em>Same as a regular app</em> — but no app-store account, no
-          tracking, no review. Just a shortcut that opens crisis chat, your
-          ticket, and the safe-spaces map in one tap.
+          <Translation
+            i18nKey="system:pwaPrompt.lead"
+            components={{ em: <em /> }}
+          />
         </p>
 
         <div className={styles.featureList}>
           {FEATURES.map((f) => (
-            <div key={f.label} className={styles.featureRow}>
+            <div key={f.labelKey} className={styles.featureRow}>
               <div className={styles.featureIc}>
                 <CheckIcon />
               </div>
               <div>
-                <b>{f.label}</b>
-                <span>{f.detail}</span>
+                <b>{t(f.labelKey)}</b>
+                <span>{t(f.detailKey)}</span>
               </div>
             </div>
           ))}
@@ -149,36 +142,42 @@ export function PwaPromptPage() {
                 .join(" ")}
               onClick={() => setPlatform(p)}
             >
-              {p === "ios" ? "iPhone" : p === "android" ? "Android" : "Desktop"}
+              {t(TAB_LABEL_KEY[p])}
             </button>
           ))}
         </div>
 
         <div className={styles.howto}>
-          <h4 className={styles.howtoTitle}>{title}</h4>
-          {steps.map((step, i) => (
-            <div key={i} className={styles.step}>
+          <h4 className={styles.howtoTitle}>{t(titleKey)}</h4>
+          {stepKeys.map((stepKey, i) => (
+            <div key={stepKey} className={styles.step}>
               <span className={styles.stepN}>{i + 1}</span>
-              <span>{step}</span>
+              <span>
+                <Translation
+                  i18nKey={stepKey}
+                  components={{ b: <b />, em: <em /> }}
+                />
+              </span>
             </div>
           ))}
         </div>
 
         <div className={styles.actions}>
           <Button onClick={install} className={styles.installBtn}>
-            Install now
+            {t("system:pwaPrompt.installCta")}
           </Button>
           <button type="button" className={styles.laterBtn} onClick={snooze}>
-            Maybe later
+            {t("system:pwaPrompt.laterCta")}
           </button>
         </div>
         <p className={styles.actionsFoot}>
-          Snoozing this stops us asking on this device for <b>30 days</b>. You
-          can also install any time from{" "}
-          <Link to={routes.getTheApp} className={styles.appLink}>
-            Get the app
-          </Link>
-          .
+          <Translation
+            i18nKey="system:pwaPrompt.actionsFoot"
+            components={{
+              b: <b />,
+              a: <Link to={routes.getTheApp} className={styles.appLink} />,
+            }}
+          />
         </p>
       </div>
     </SystemStateShell>

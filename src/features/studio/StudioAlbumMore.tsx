@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { StudioCardGridSkeleton } from "./StudioSkeletons";
 import { MORE } from "./studioAlbum.data";
 import { routes } from "../../app/routeMap";
@@ -9,16 +11,17 @@ import styles from "./studio.module.css";
 const tagClass = { free: styles.tagFree, mem: styles.tagMem };
 
 export function StudioAlbumMore() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
 
   return (
     <section className={styles.row} style={{ paddingBottom: 60 }}>
       <div className={styles.rowH}>
         <h2>
-          More from <em>Mariana Sol</em>
+          <Translation i18nKey="studio:album.more.heading" values={{ artist: "Mariana Sol" }} components={{ em: <em /> }} />
         </h2>
         <Link to={routes.studioArtist} className={styles.all}>
-          Artist page →
+          {t("studio:album.more.artistPageCta")} →
         </Link>
       </div>
       {loading ? (
@@ -44,7 +47,7 @@ export function StudioAlbumMore() {
                   style={{ position: "absolute", inset: 0 }}
                 />
                 <span className={`${styles.tag} ${tagClass[m.tag]}`}>
-                  {m.tagLabel}
+                  {t(m.tagLabelKey)}
                 </span>
               </div>
               <h4>

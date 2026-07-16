@@ -1,10 +1,12 @@
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CollectionDetail } from "./cinemaCollection.data";
 import styles from "./CinemaCollectionPage.module.css";
 import { routes } from "../../app/routeMap";
 
 /** Curator essay column + a "Collection details" sidebar card with actions. */
 export function CinemaCollectionEssay({ data }: { data: CollectionDetail }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.essay}>
       <div className={`wrap ${styles.essayInner}`}>
@@ -18,7 +20,9 @@ export function CinemaCollectionEssay({ data }: { data: CollectionDetail }) {
         </div>
 
         <aside className={styles.detailsCard}>
-          <div className={styles.detailsHead}>Collection details</div>
+          <div className={styles.detailsHead}>
+            {t("cinema:collection.details.heading")}
+          </div>
           {data.details.map((row) => (
             <div key={row.k} className={styles.detailsRow}>
               <span className={styles.detailsK}>{row.k}</span>
@@ -28,10 +32,10 @@ export function CinemaCollectionEssay({ data }: { data: CollectionDetail }) {
           <p className={styles.detailsNote}>{data.detailsNote}</p>
           <div className={styles.detailsActions}>
             <Button to={routes.cinemaWatch} className={styles.wideBtn}>
-              Start watching
+              {t("cinema:collection.details.startWatchingCta")}
             </Button>
             <Button variant="ghost" className={styles.wideBtn}>
-              + Save collection
+              {t("cinema:collection.details.saveCta")}
             </Button>
           </div>
         </aside>

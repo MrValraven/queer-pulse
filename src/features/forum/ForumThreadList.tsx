@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { FiMessageSquare } from "react-icons/fi";
 import { TbPin } from "react-icons/tb";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { thread as threadPath } from "../../app/routeMap";
 import { CATS, CAT_STYLE, type Thread } from "./forum.data";
 import {
@@ -34,6 +36,8 @@ export function ForumThreadList({
   onShowAll: () => void;
   onCompose: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div>
       <div className={styles.top}>
@@ -45,7 +49,7 @@ export function ForumThreadList({
               .join(" ")}
             onClick={() => setSort("top")}
           >
-            Top
+            {t("forum:threadList.top")}
           </button>
           <button
             type="button"
@@ -54,11 +58,14 @@ export function ForumThreadList({
               .join(" ")}
             onClick={() => setSort("new")}
           >
-            New
+            {t("forum:threadList.new")}
           </button>
         </div>
         <span className={styles.count}>
-          {threads.length} thread{threads.length === 1 ? "" : "s"}
+          {t("forum:threadList.count", {
+            count: threads.length,
+            formatted: fmt.number(threads.length),
+          })}
         </span>
       </div>
 
@@ -66,29 +73,38 @@ export function ForumThreadList({
       {!loading && threads.length === 0 && filtered && (
         <EmptyState
           icon={<FiMessageSquare />}
-          title="Nothing in this category yet"
-          description="No posts here right now. Try another category, or start the conversation yourself."
-          action={{ label: "Show all posts", onClick: onShowAll }}
+          title={t("forum:threadList.emptyFiltered.title")}
+          description={t("forum:threadList.emptyFiltered.description")}
+          action={{
+            label: t("forum:threadList.emptyFiltered.action"),
+            onClick: onShowAll,
+          }}
         />
       )}
       {!loading && threads.length === 0 && !filtered && (
         <EmptyState
           icon={<FiMessageSquare />}
-          title="Quiet in here — for now"
-          description="The commons is open to every member. Be the one to start the conversation."
-          action={{ label: "Write a post", onClick: onCompose }}
+          title={t("forum:threadList.emptyAll.title")}
+          description={t("forum:threadList.emptyAll.description")}
+          action={{
+            label: t("forum:threadList.emptyAll.action"),
+            onClick: onCompose,
+          }}
         />
       )}
       {!loading &&
-        threads.map((t, idx) => {
-          const isVoted = voted.has(t.id);
-          const catMeta = CATS.find((c) => c.id === t.cat);
-          const cs = CAT_STYLE[t.cat];
+        threads.map((thread, idx) => {
+          const isVoted = voted.has(thread.id);
+          const catMeta = CATS.find((c) => c.id === thread.cat);
+          const cs = CAT_STYLE[thread.cat];
           return (
-            <FadeIn key={t.id} delay={Math.min(idx, 8) * 60}>
+            <FadeIn key={thread.id} delay={Math.min(idx, 8) * 60}>
               <Link
-                to={threadPath(t.id)}
-                className={[styles.thread, t.pinned && styles.threadPinned]
+                to={threadPath(thread.id)}
+                className={[
+                  styles.thread,
+                  thread.pinned && styles.threadPinned,
+                ]
                   .filter(Boolean)
                   .join(" ")}
               >
@@ -97,15 +113,19 @@ export function ForumThreadList({
                   role="button"
                   tabIndex={0}
                   aria-pressed={isVoted}
-                  aria-label={isVoted ? "Remove upvote" : "Upvote"}
+                  aria-label={
+                    isVoted
+                      ? t("forum:threadList.removeUpvoteAria")
+                      : t("forum:threadList.upvoteAria")
+                  }
                   onClick={(e) => {
                     e.preventDefault();
-                    toggleVote(t.id);
+                    toggleVote(thread.id);
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
-                      toggleVote(t.id);
+                      toggleVote(thread.id);
                     }
                   }}
                 >
@@ -118,54 +138,65 @@ export function ForumThreadList({
                     ▲
                   </span>
                   <span className={styles.voteN}>
-                    {t.upvotes + (isVoted ? 1 : 0)}
+                    {thread.upvotes + (isVoted ? 1 : 0)}
                   </span>
                 </div>
                 <div>
                   <div className={styles.badges}>
-                    {t.pinned && (
+                    {thread.pinned && (
                       <span className={styles.pinBadge}>
-                        <TbPin /> Pinned
+                        <TbPin /> {t("forum:threadList.pinnedBadge")}
                       </span>
                     )}
                     <span
                       className={styles.catBadge}
                       style={{ background: cs?.bg, color: cs?.color }}
                     >
-                      {catMeta && <catMeta.icon />} {catMeta?.name}
+                      {catMeta && <catMeta.icon />}{" "}
+                      {catMeta && t(catMeta.nameKey)}
                     </span>
-                    {t.tags.map((tg) => (
+                    {thread.tags.map((tg) => (
                       <span key={tg} className={styles.tag}>
                         #{tg}
                       </span>
                     ))}
                   </div>
-                  <div className={styles.threadTitle}>{t.title}</div>
-                  <div className={styles.threadExcerpt}>{t.excerpt}</div>
+                  <div className={styles.threadTitle}>{thread.title}</div>
+                  <div className={styles.threadExcerpt}>{thread.excerpt}</div>
                   <div className={styles.threadMeta}>
                     <ProfileSpanLink
-                      to={authorHref(t.author)}
-                      name={t.author.n}
-                      official={t.author.official}
+                      to={authorHref(thread.author)}
+                      name={thread.author.n}
+                      official={thread.author.official}
                       className={styles.tmWho}
                     >
                       <ForumAvatar
                         className={styles.tmAv}
-                        style={{ background: t.author.t, color: t.author.tt }}
+                        style={{
+                          background: thread.author.t,
+                          color: thread.author.tt,
+                        }}
                         person={{
-                          slug: t.author.slug,
-                          photo: t.author.photo,
-                          initials: t.author.i,
-                          name: t.author.n,
+                          slug: thread.author.slug,
+                          photo: thread.author.photo,
+                          initials: thread.author.i,
+                          name: thread.author.n,
                         }}
                       />
-                      <span className={styles.tmAuthor}>{t.author.n}</span>
-                      {t.author.official && <OfficialBadge />}
+                      <span className={styles.tmAuthor}>
+                        {thread.author.n}
+                      </span>
+                      {thread.author.official && <OfficialBadge />}
                     </ProfileSpanLink>
                     <span className={styles.tmDot} />
-                    <span>{t.posted}</span>
+                    <span>{thread.posted}</span>
                     <span className={styles.tmDot} />
-                    <span>{t.comments} replies</span>
+                    <span>
+                      {t("forum:repliesCount", {
+                        count: thread.comments,
+                        formatted: fmt.number(thread.comments),
+                      })}
+                    </span>
                   </div>
                 </div>
               </Link>

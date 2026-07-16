@@ -1,12 +1,14 @@
 import { useReducer, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   PIECES,
   PITCHES,
   ME,
   stripEm,
   firstName,
+  STAGE_LABEL_KEY,
   type Piece,
   type Pitch,
   type Editor,
@@ -124,12 +126,6 @@ function reducer(state: DashState, action: Action): DashState {
   }
 }
 
-const TRIAGE_LABEL: Record<TriageVerdict, string> = {
-  yes: "Accepted",
-  maybe: "Saved to Maybe",
-  no: "Declined",
-};
-
 export interface EditorDashboard {
   state: DashState;
   filters: Filters;
@@ -152,6 +148,7 @@ export function useEditorDashboard(): EditorDashboard {
   const { demoMode } = useDemoMode();
   const [state, dispatch] = useReducer(reducer, demoMode, init);
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   // Re-seed when the "Populate platform" toggle flips.
   const [prevDemo, setPrevDemo] = useState(demoMode);
@@ -175,22 +172,36 @@ export function useEditorDashboard(): EditorDashboard {
     filters,
     setStage(piece, stage) {
       dispatch({ type: "setStage", id: piece.id, stage });
-      showToast(`“${stripEm(piece.title)}” → ${stage}`, "success");
+      showToast(
+        t("magazine:editor.toast.stageChanged", {
+          title: stripEm(piece.title),
+          stage: t(STAGE_LABEL_KEY[stage]),
+        }),
+        "success",
+      );
     },
     assign(piece, editor) {
       if (editor === piece.editor) return;
       dispatch({ type: "assign", id: piece.id, editor });
-      showToast(`Reassigned to ${editor}`, "success");
+      showToast(t("magazine:editor.toast.reassigned", { editor }), "success");
     },
     handoff(piece, editor) {
       dispatch({ type: "assign", id: piece.id, editor });
-      showToast(`Handed to ${editor} with a note`, "success");
+      showToast(t("magazine:editor.toast.handedOff", { editor }), "success");
     },
     triage(id, verdict) {
       const pitch = state.pitches.find((p) => p.id === id);
       dispatch({ type: "removePitches", ids: [id] });
+      const verdictLabel = {
+        yes: t("magazine:editor.toast.triageAccepted"),
+        maybe: t("magazine:editor.toast.triageMaybeSaved"),
+        no: t("magazine:editor.toast.triageDeclined"),
+      }[verdict];
       showToast(
-        `${TRIAGE_LABEL[verdict]} · ${pitch?.name ?? ""}`,
+        t("magazine:editor.toast.triageSingle", {
+          verdict: verdictLabel,
+          name: pitch?.name ?? "",
+        }),
         verdict === "no" ? "info" : "success",
       );
     },
@@ -198,13 +209,16 @@ export function useEditorDashboard(): EditorDashboard {
       const ids = state.selPitches;
       if (!ids.length) return;
       dispatch({ type: "removePitches", ids });
-      const label = {
-        yes: "Accepted",
-        maybe: "Moved to Maybe",
-        no: "Declined",
+      const verdictLabel = {
+        yes: t("magazine:editor.toast.bulkAccepted"),
+        maybe: t("magazine:editor.toast.bulkMaybeMoved"),
+        no: t("magazine:editor.toast.bulkDeclined"),
       }[verdict];
       showToast(
-        `${label} ${ids.length} pitch${ids.length > 1 ? "es" : ""} · templated replies sent`,
+        t("magazine:editor.toast.bulkResult", {
+          verdict: verdictLabel,
+          count: ids.length,
+        }),
         "success",
       );
     },
@@ -230,7 +244,10 @@ export function useEditorDashboard(): EditorDashboard {
       dispatch({ type: "reset" });
     },
     chaseSent(piece) {
-      showToast(`Nudge sent to ${firstName(piece.author)}`, "success");
+      showToast(
+        t("magazine:editor.toast.nudgeSent", { name: firstName(piece.author) }),
+        "success",
+      );
     },
   };
 }

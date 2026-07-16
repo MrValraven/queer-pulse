@@ -1,8 +1,11 @@
 import { FaRainbow } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import type { Job } from "./jobs.data";
+import { postedText } from "./api/jobs.adapters";
 import { COMPANY_SLUG_BY_NAME } from "./companies.data";
 import styles from "./JobDetailPage.module.css";
 
@@ -13,6 +16,8 @@ export function JobDetailSidebar({
   job: Job;
   deadlineFull: string;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const d = job.detail;
   const companySlug = COMPANY_SLUG_BY_NAME[job.org];
   return (
@@ -57,7 +62,7 @@ export function JobDetailSidebar({
           <span className={styles.dl}>Deadline</span>
           <span className={styles.dv}>{deadlineFull}</span>
         </div>
-        <div className={styles.posted}>{d.posted}</div>
+        <div className={styles.posted}>{postedText(d.posted, t, fmt)}</div>
 
         <div className={styles.applyWrap}>
           <Button

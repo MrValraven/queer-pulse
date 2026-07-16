@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom";
 import { FiShare2 } from "react-icons/fi";
 import { Avatar, Button, ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { ShortsShelf } from "./cinemaShorts.data";
 import styles from "./CinemaShortsPage.module.css";
 
 /** Programmer's weekly letter. */
 export function CuratorNote() {
+  const { t } = useTranslation();
   return (
     <div className={styles.curatorNote}>
       <div className={styles.cnAv}>JR</div>
@@ -20,7 +23,9 @@ export function CuratorNote() {
         </p>
         <p className={styles.cnSign}>
           — João Reis, community programmer ·{" "}
-          <Link to={routes.cinemaAbout}>read past notes</Link>
+          <Link to={routes.cinemaAbout}>
+            {t("cinema:shorts.curatorNote.readPastNotesCta")}
+          </Link>
         </p>
       </div>
     </div>
@@ -33,9 +38,10 @@ export function AccessNote() {
     <p className={styles.accessNote}>
       <span className={styles.anDot} aria-hidden />
       <span>
-        <strong>Every film is captioned.</strong> Content notes appear on each
-        film, and audio-described works are marked <em>AD</em>. Filter by your
-        access needs below.
+        <Translation
+          i18nKey="cinema:shorts.accessNote.body"
+          components={{ strong: <strong />, em: <em /> }}
+        />
       </span>
     </p>
   );
@@ -43,6 +49,7 @@ export function AccessNote() {
 
 /** Most-watched hero film with a live tip goal. */
 export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.spotlight}>
       <div className={styles.spPoster}>
@@ -53,12 +60,14 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
           placeholder="spotlight poster"
           style={{ position: "absolute", inset: 0 }}
         />
-        <span className={styles.spBadge}>Most watched this week</span>
+        <span className={styles.spBadge}>
+          {t("cinema:shorts.spotlight.mostWatchedBadge")}
+        </span>
       </div>
       <div className={styles.spText}>
         <div className={styles.spKicker}>
           <span className={styles.live} aria-hidden />
-          Community pick · week 23
+          {t("cinema:shorts.spotlight.communityPickKicker", { week: 23 })}
         </div>
         <h2 className={styles.spTitle}>
           The first <em>Sunday</em>
@@ -94,7 +103,9 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
           </div>
         </div>
         <div className={styles.spActions}>
-          <Button to={routes.cinemaWatch}>Watch now · free</Button>
+          <Button to={routes.cinemaWatch}>
+            {t("cinema:shorts.spotlight.watchNowCta")}
+          </Button>
           <Button variant="ghost" to={`${routes.cinemaFilmmaker}/ines-tavares`}>
             Tip the collective
           </Button>
@@ -104,7 +115,7 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
             onClick={() => shelf.onShare("The first Sunday")}
           >
             <FiShare2 aria-hidden />
-            Share
+            {t("cinema:film.share.title")}
           </button>
         </div>
         <div className={styles.spTip}>
@@ -123,7 +134,9 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
           <span>
             Sustainers funded this film through the spring pool — and they fund
             the €2.5k open grant.{" "}
-            <Link to={routes.cinemaMembership}>Become one →</Link>
+            <Link to={routes.cinemaMembership}>
+              {t("cinema:shorts.spotlight.becomeSustainerCta")}
+            </Link>
           </span>
         </div>
       </div>

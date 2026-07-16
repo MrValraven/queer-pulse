@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { FiArrowLeft, FiCheck } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 import { Button, ImageSlot, Sending } from "../../../shared/components/ui";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { usePrefersReducedMotion } from "../../../shared/hooks";
 import type { Therapist } from "../mentalHealth.data";
 import type { TherapistProfile } from "./therapistProfiles.data";
@@ -22,6 +24,7 @@ export function TherapistHero({
   therapist: Therapist;
   profile: TherapistProfile;
 }) {
+  const { t } = useTranslation();
   const [msg, setMsg] = useState<MsgPhase>("idle");
   const reduced = usePrefersReducedMotion();
   const firstName = therapist.name.replace(/^Dr\.\s*/, "").split(" ")[0];
@@ -42,7 +45,7 @@ export function TherapistHero({
   return (
     <>
       <Link className={styles.back} to={routes.mentalHealth}>
-        <FiArrowLeft aria-hidden /> Therapist directory
+        <FiArrowLeft aria-hidden /> {t("resources:therapistProfilePage.backLink")}
       </Link>
 
       <div className={styles.verified}>
@@ -50,10 +53,14 @@ export function TherapistHero({
           <FiCheck aria-hidden />
         </span>
         <p className={styles.verifiedText}>
-          <b>Vetted clinician.</b> Credentials checked by QueerPulse Wellbeing
-          on {profile.vettedOn}. {profile.vouches.length} independent community{" "}
-          {profile.vouches.length === 1 ? "vouch" : "vouches"} in the last 12
-          months. <Link to={`${routes.wellbeing}#vetting`}>How we vet →</Link>
+          <Translation
+            i18nKey="resources:therapistProfilePage.verified.body"
+            components={{
+              b: <b />,
+              a: <Link to={`${routes.wellbeing}#vetting`} />,
+            }}
+            values={{ vettedOn: profile.vettedOn, count: profile.vouches.length }}
+          />
         </p>
       </div>
 
@@ -97,11 +104,12 @@ export function TherapistHero({
               <FiCheck aria-hidden />
               <div>
                 <div className={styles.sentTitle}>
-                  Message sent to {firstName}.
+                  {t("resources:mentalHealth.therapistModal.sentTitle", {
+                    name: firstName,
+                  })}
                 </div>
                 <p className={styles.sentText}>
-                  They'll reply directly to your email if it feels like a fit.
-                  No notifications, no pressure.
+                  {t("resources:mentalHealth.therapistModal.sentText")}
                 </p>
               </div>
             </div>
@@ -116,9 +124,9 @@ export function TherapistHero({
                 disabled={msg === "sending"}
               >
                 {msg === "sending" ? (
-                  <Sending label="Sending…" />
+                  <Sending label={t("resources:suggestEdit.sendingLabel")} />
                 ) : (
-                  "Send a message"
+                  t("resources:therapistProfilePage.sendMessageCta")
                 )}
               </Button>
             </div>

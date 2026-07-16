@@ -1,9 +1,15 @@
 import { useMemo, useState } from "react";
 import { Button, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CinemaShell } from "./CinemaShell";
-import { collectionFilters, collections } from "./cinemaCollections.data";
+import {
+  COLLECTION_FILTER_LABEL_KEYS,
+  collectionFilters,
+  collections,
+} from "./cinemaCollections.data";
 import {
   CollectionCard,
   CollectionsHeader,
@@ -14,6 +20,7 @@ import {
 import styles from "./CinemaCollectionsPage.module.css";
 
 export function CinemaCollectionsPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [active, setActive] = useState("All");
 
@@ -35,7 +42,9 @@ export function CinemaCollectionsPage() {
       <section className={styles.body}>
         <div className="wrap">
           <div className={styles.sortBar}>
-            <span className={styles.sbLabel}>Filter:</span>
+            <span className={styles.sbLabel}>
+              {t("cinema:collectionsIndex.filterLabel")}
+            </span>
             {collectionFilters.map((f) => (
               <button
                 key={f}
@@ -44,13 +53,14 @@ export function CinemaCollectionsPage() {
                 aria-pressed={active === f}
                 onClick={() => setActive(f)}
               >
-                {f}
+                {t(COLLECTION_FILTER_LABEL_KEYS[f] ?? f)}
               </button>
             ))}
             <span className={styles.sbRight} aria-live="polite">
-              {visible.length}{" "}
-              {visible.length === 1 ? "collection" : "collections"} ·{" "}
-              {filmTotal} films total
+              {t("cinema:collectionsIndex.summary", {
+                count: visible.length,
+                filmTotal,
+              })}
             </span>
           </div>
 
@@ -81,17 +91,18 @@ export function CinemaCollectionsPage() {
 
       <Outro
         title={
-          <>
-            Start <em>wandering</em>.
-          </>
+          <Translation
+            i18nKey="cinema:collectionsIndex.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Collections are how we argue about film. Pick one and begin."
+        sub={t("cinema:collectionsIndex.outro.sub")}
       >
         <Button
           size="lg"
           to={`${routes.cinemaCollections}/${collections[0]!.slug}`}
         >
-          Open a collection →
+          {t("cinema:collectionsIndex.outro.cta")}
         </Button>
       </Outro>
     </CinemaShell>
@@ -99,6 +110,7 @@ export function CinemaCollectionsPage() {
 }
 
 function FeaturedEmpty({ onReset }: { onReset: () => void }) {
+  const { t } = useTranslation();
   return (
     <div style={{ textAlign: "center", padding: "40px 0" }}>
       <p
@@ -109,7 +121,10 @@ function FeaturedEmpty({ onReset }: { onReset: () => void }) {
           marginBottom: 8,
         }}
       >
-        No collections in this filter <em>yet</em>.
+        <Translation
+          i18nKey="cinema:collectionsIndex.empty.title"
+          components={{ em: <em /> }}
+        />
       </p>
       <p
         style={{
@@ -118,10 +133,10 @@ function FeaturedEmpty({ onReset }: { onReset: () => void }) {
           fontSize: 14,
         }}
       >
-        The council is always building. Try another lens.
+        {t("cinema:collectionsIndex.empty.body")}
       </p>
       <Button variant="ghost-dark" onClick={onReset}>
-        Show all collections
+        {t("cinema:collectionsIndex.empty.resetCta")}
       </Button>
     </div>
   );

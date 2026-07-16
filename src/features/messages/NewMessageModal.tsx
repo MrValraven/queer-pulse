@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { Avatar, SearchInput } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { conversations, type Conversation } from "./data";
 import styles from "./NewMessageModal.module.css";
@@ -14,6 +15,7 @@ interface NewMessageModalProps {
 /** Self-contained recipient picker — opens (or reuses) a thread for the chosen member. */
 export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
   useScrollLock();
+  const { t } = useTranslation();
   const { isBlocked } = useSocial();
   const [query, setQuery] = useState("");
 
@@ -47,24 +49,24 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
       >
         <div className={styles.head}>
           <h2 id="new-message-title" className={styles.title}>
-            New message
+            {t("messages:newMessage.title")}
           </h2>
           <button
             type="button"
             className={styles.close}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("messages:newMessage.close")}
           >
             <FiX />
           </button>
         </div>
-        <p className={styles.sub}>Pick a connection to start a conversation.</p>
+        <p className={styles.sub}>{t("messages:newMessage.sub")}</p>
         <SearchInput
           className={styles.searchField}
           value={query}
           onChange={setQuery}
-          placeholder="Search connections…"
-          ariaLabel="Search connections"
+          placeholder={t("messages:newMessage.searchPlaceholder")}
+          ariaLabel={t("messages:newMessage.searchAria")}
         />
         <ul className={styles.list}>
           {people.map((person) => (
@@ -87,7 +89,9 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
             </li>
           ))}
           {people.length === 0 && (
-            <li className={styles.empty}>No connections match “{query}”.</li>
+            <li className={styles.empty}>
+              {t("messages:newMessage.empty", { query })}
+            </li>
           )}
         </ul>
       </div>

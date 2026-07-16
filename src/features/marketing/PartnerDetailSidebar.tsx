@@ -1,12 +1,14 @@
 import { Button } from "../../shared/components/ui";
 import type { Partner } from "./partnerDetails";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./PartnerDetailPage.module.css";
 
 export function PartnerDetailSidebar({ p }: { p: Partner }) {
+  const { t } = useTranslation();
   return (
     <aside className={s.side}>
       <div className={s.sideCard}>
-        <h4>At a glance</h4>
+        <h4>{t("marketing:partnerDetail.sidebar.atGlance")}</h4>
         {p.atGlance.map((row) => (
           <div className={s.infoRow} key={row.label}>
             <span>{row.label}</span>
@@ -26,7 +28,11 @@ export function PartnerDetailSidebar({ p }: { p: Partner }) {
       </div>
 
       <div className={s.sideCard}>
-        <h4>Contact {p.name} directly</h4>
+        <h4>
+          {t("marketing:partnerDetail.sidebar.contactDirectly", {
+            name: p.name,
+          })}
+        </h4>
         {p.contact.phone && (
           <div className={s.contactRow}>
             <svg viewBox="0 0 24 24">
@@ -75,17 +81,14 @@ export function PartnerDetailSidebar({ p }: { p: Partner }) {
       </div>
 
       <div className={[s.sideCard, s.becomeCard].join(" ")}>
-        <h4>Become a partner</h4>
-        <p>
-          Are you an org that ought to be operationally connected to QueerPulse?
-          We're small and slow about this — write to us.
-        </p>
+        <h4>{t("marketing:partnerDetail.sidebar.becomeTitle")}</h4>
+        <p>{t("marketing:partnerDetail.sidebar.becomeBody")}</p>
         <Button
           variant="primary"
           className={s.becomeBtn}
           href="mailto:partners@queerpulse.pt"
         >
-          Get in touch →
+          {t("marketing:partnerDetail.sidebar.becomeCta")}
         </Button>
       </div>
     </aside>

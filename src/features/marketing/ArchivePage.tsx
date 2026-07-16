@@ -8,6 +8,8 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { FEATURED, ARCHIVE_CARDS, ORAL_QUOTES } from "./archive.data";
 import styles from "./ArchivePage.module.css";
@@ -39,6 +41,7 @@ function ArchiveCardSkeleton() {
 }
 
 export function ArchivePage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
 
   return (
@@ -46,15 +49,16 @@ export function ArchivePage() {
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
-            Community Archive
+            {t("marketing:archive.hero.category")}
           </Reveal>
           <Reveal as="h1" delay={60}>
-            Stories that shouldn't <em>be forgotten.</em>
+            <Translation
+              i18nKey="marketing:archive.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.heroSub} delay={120}>
-            An ongoing archive of oral histories, testimonials, and personal
-            accounts from queer people in Lisbon — past and present. Stories
-            that document who we are, what we've built, and what it cost.
+            {t("marketing:archive.hero.sub")}
           </Reveal>
         </div>
       </div>
@@ -62,7 +66,7 @@ export function ArchivePage() {
       <section className={styles.featured}>
         <div className="wrap">
           <Reveal as="div" className={styles.featLabel}>
-            This month's featured story
+            {t("marketing:archive.featured.label")}
           </Reveal>
           <Reveal as="div" className={styles.featStory} delay={60}>
             <ImageSlot
@@ -92,7 +96,7 @@ export function ArchivePage() {
                 variant="ghost"
                 style={{ alignSelf: "flex-start" }}
               >
-                Read her story →
+                {t("marketing:archive.featured.readCta")}
               </Button>
             </div>
           </Reveal>
@@ -104,11 +108,12 @@ export function ArchivePage() {
           <Reveal>
             <SectionHead
               title={
-                <>
-                  From the <em>archive</em>
-                </>
+                <Translation
+                  i18nKey="marketing:archive.grid.title"
+                  components={{ em: <em /> }}
+                />
               }
-              subtitle="Personal accounts from community members, past and present."
+              subtitle={t("marketing:archive.grid.sub")}
             />
           </Reveal>
           <div className={styles.grid}>
@@ -158,10 +163,13 @@ export function ArchivePage() {
         <div className="wrap">
           <Reveal as="div" className={styles.oralHead}>
             <h2 className={styles.oralH}>
-              In their own <em>words.</em>
+              <Translation
+                i18nKey="marketing:archive.oral.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={styles.oralSub}>
-              Short excerpts from longer oral histories in the archive.
+              {t("marketing:archive.oral.sub")}
             </div>
           </Reveal>
           <div className={styles.oralGrid}>
@@ -186,16 +194,14 @@ export function ArchivePage() {
         <div className="wrap">
           <Reveal as="div" className={styles.submitInner}>
             <h2>
-              Your story <em>belongs here too.</em>
+              <Translation
+                i18nKey="marketing:archive.submit.title"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              The archive grows through community contribution. If you have a
-              story you want to tell — about Lisbon, about your community, about
-              what brought you here or what kept you going — we want to hear it.
-              All formats welcome: written, audio, video, photos.
-            </p>
+            <p>{t("marketing:archive.submit.body")}</p>
             <Button to={routes.contact} variant="primary" size="lg">
-              Submit your story →
+              {t("marketing:archive.submit.cta")}
             </Button>
           </Reveal>
         </div>

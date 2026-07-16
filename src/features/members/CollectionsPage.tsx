@@ -182,6 +182,7 @@ export function CollectionsPage() {
         id,
         count: "0",
         name,
+        plainName: name,
         meta: t("members:collections.newCollection.defaultMeta"),
         thumbs: ["a", "b", "c"],
         more: "",

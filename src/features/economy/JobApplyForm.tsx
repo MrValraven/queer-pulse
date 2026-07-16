@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Job } from "./jobs.data";
 import { AVAILABILITY } from "./jobApply.data";
 import styles from "./JobApplyPage.module.css";
@@ -32,24 +33,26 @@ interface SectionProps {
 }
 
 function AboutSection({ fields, setField }: SectionProps) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <h2 className={styles.secHead}>
-        <span className={styles.secNum}>01</span>About you
+        <span className={styles.secNum}>01</span>
+        {t("economy:jobApply.aboutYouTitle")}
       </h2>
-      <p className={styles.secSub}>
-        We pre-filled what we could from your profile. Edit anything that's
-        changed.
-      </p>
+      <p className={styles.secSub}>{t("economy:jobApply.aboutYouSub")}</p>
       <div className={styles.fieldRow}>
-        <FormField label="Full name" required>
+        <FormField label={t("economy:jobApply.fullName")} required>
           <input
             type="text"
             value={fields.name}
             onChange={(e) => setField("name", e.target.value)}
           />
         </FormField>
-        <FormField label="Pronouns" helper="Shown to the hiring team.">
+        <FormField
+          label={t("economy:jobApply.pronouns")}
+          helper={t("economy:jobApply.pronounsHelper")}
+        >
           <input
             type="text"
             value={fields.pronouns}
@@ -58,14 +61,14 @@ function AboutSection({ fields, setField }: SectionProps) {
         </FormField>
       </div>
       <div className={styles.fieldRow}>
-        <FormField label="Email" required>
+        <FormField label={t("economy:jobApply.email")} required>
           <input
             type="email"
             value={fields.email}
             onChange={(e) => setField("email", e.target.value)}
           />
         </FormField>
-        <FormField label="Where are you based?" required>
+        <FormField label={t("economy:jobApply.location")} required>
           <input
             type="text"
             value={fields.location}
@@ -78,16 +81,16 @@ function AboutSection({ fields, setField }: SectionProps) {
 }
 
 function WorkSection({ fields, setField }: SectionProps) {
+  const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
   return (
     <section className={styles.sec}>
       <h2 className={styles.secHead}>
-        <span className={styles.secNum}>02</span>Your work
+        <span className={styles.secNum}>02</span>
+        {t("economy:jobApply.yourWorkTitle")}
       </h2>
-      <p className={styles.secSub}>
-        A CV is great. A portfolio is better. Drop both if you can.
-      </p>
-      <FormField label="CV or résumé">
+      <p className={styles.secSub}>{t("economy:jobApply.yourWorkSub")}</p>
+      <FormField label={t("economy:jobApply.cv")}>
         <label className={styles.upload}>
           <input
             ref={fileRef}
@@ -102,23 +105,27 @@ function WorkSection({ fields, setField }: SectionProps) {
           </span>
           <span className={styles.uploadText}>
             <span className={styles.uploadTitle}>
-              {fields.cvName || "Drop PDF here, or click to choose"}
+              {fields.cvName || t("economy:jobApply.cvDrop")}
             </span>
-            <span className={styles.uploadDesc}>Max 5 MB · PDF / DOCX</span>
+            <span className={styles.uploadDesc}>
+              {t("economy:jobApply.cvHint")}
+            </span>
           </span>
-          <span className={styles.uploadCta}>Browse →</span>
+          <span className={styles.uploadCta}>
+            {t("economy:jobApply.browse")}
+          </span>
         </label>
       </FormField>
       <FormField
-        label="Portfolio links"
-        helper="Your QueerPulse profile is auto-attached. Untick in Privacy if you'd rather not."
+        label={t("economy:jobApply.portfolio")}
+        helper={t("economy:jobApply.portfolioHelper")}
       >
         <div className={styles.idRow}>
           <span className={styles.idLink}>
             <span className={styles.idLinkIc}>W</span>
             <input
               type="url"
-              placeholder="Your site or Are.na"
+              placeholder={t("economy:jobApply.sitePlaceholder")}
               value={fields.site}
               onChange={(e) => setField("site", e.target.value)}
             />
@@ -127,7 +134,7 @@ function WorkSection({ fields, setField }: SectionProps) {
             <span className={styles.idLinkIc}>IG</span>
             <input
               type="text"
-              placeholder="@yourhandle"
+              placeholder={t("economy:jobApply.instagramPlaceholder")}
               value={fields.instagram}
               onChange={(e) => setField("instagram", e.target.value)}
             />
@@ -143,28 +150,32 @@ function WorkSection({ fields, setField }: SectionProps) {
 }
 
 function WhySection({ job, fields, setField }: SectionProps) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <h2 className={styles.secHead}>
-        <span className={styles.secNum}>03</span>Why this role?
+        <span className={styles.secNum}>03</span>
+        {t("economy:jobApply.whyTitle")}
       </h2>
       <p className={styles.secSub}>
-        Two short paragraphs is more than enough. Be specific — what about{" "}
-        {job.org}, and what you'd bring.
+        {t("economy:jobApply.whySub", { org: job.org })}
       </p>
       <FormField
-        label="Cover note"
-        labelAside={`${fields.letter.length} / 800`}
+        label={t("economy:jobApply.coverNote")}
+        labelAside={t("economy:jobApply.charCount", {
+          used: fields.letter.length,
+          max: 800,
+        })}
       >
         <textarea
           rows={6}
           maxLength={800}
-          placeholder="What drew you to this role? What are you good at? What are you hoping to grow into?"
+          placeholder={t("economy:jobApply.coverPlaceholder")}
           value={fields.letter}
           onChange={(e) => setField("letter", e.target.value)}
         />
       </FormField>
-      <FormField label="Available from">
+      <FormField label={t("economy:jobApply.availableFrom")}>
         <div className={styles.radioGrid}>
           {AVAILABILITY.map((a) => (
             <label
@@ -179,19 +190,19 @@ function WhySection({ job, fields, setField }: SectionProps) {
                 checked={fields.when === a.value}
                 onChange={() => setField("when", a.value)}
               />
-              <span className={styles.rcardT}>{a.title}</span>
-              <span className={styles.rcardD}>{a.desc}</span>
+              <span className={styles.rcardT}>{t(a.titleKey)}</span>
+              <span className={styles.rcardD}>{t(a.descKey)}</span>
             </label>
           ))}
         </div>
       </FormField>
       <FormField
-        label="Salary expectation"
-        helper={`Posted range is ${job.salary}. You can name a number outside this — they'll consider.`}
+        label={t("economy:jobApply.salaryExpectation")}
+        helper={t("economy:jobApply.salaryHelper", { salary: job.salary })}
       >
         <input
           type="text"
-          placeholder="e.g. €1,400/mo, or open"
+          placeholder={t("economy:jobApply.salaryPlaceholder")}
           value={fields.salary}
           onChange={(e) => setField("salary", e.target.value)}
         />
@@ -201,24 +212,30 @@ function WhySection({ job, fields, setField }: SectionProps) {
 }
 
 function ExtraSection({ job, fields, setField }: SectionProps) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <h2 className={styles.secHead}>
-        <span className={styles.secNum}>04</span>One thing extra
-        <span className={styles.secOpt}>— optional</span>
+        <span className={styles.secNum}>04</span>
+        {t("economy:jobApply.extraTitle")}
+        <span className={styles.secOpt}>
+          {t("economy:jobApply.extraOptional")}
+        </span>
       </h2>
       <p className={styles.secSub}>
-        Anything else you'd like {job.org} to know? Working hours, access needs,
-        references — whatever's relevant.
+        {t("economy:jobApply.extraSub", { org: job.org })}
       </p>
       <FormField
-        label="Notes for the hiring team"
-        labelAside={`${fields.extra.length} / 400`}
+        label={t("economy:jobApply.extraLabel")}
+        labelAside={t("economy:jobApply.charCount", {
+          used: fields.extra.length,
+          max: 400,
+        })}
       >
         <textarea
           rows={4}
           maxLength={400}
-          placeholder="I'd prefer Tuesdays and Thursdays in-office to coordinate with my kid's school pickup…"
+          placeholder={t("economy:jobApply.extraPlaceholder")}
           value={fields.extra}
           onChange={(e) => setField("extra", e.target.value)}
         />
@@ -239,6 +256,7 @@ export function JobApplyForm({
   onSaveDraft: () => void;
   onSubmit: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <form
       className={styles.form}
@@ -255,14 +273,16 @@ export function JobApplyForm({
       <div className={styles.actions}>
         <div className={styles.saved}>
           <span className={styles.savedDot} />
-          <span>Draft saved · just now</span>
+          <span>{t("economy:jobApply.draftSavedJustNow")}</span>
         </div>
         <div className={styles.actionBtns}>
           <Button type="button" variant="ghost" onClick={onSaveDraft}>
-            Save draft
+            {t("economy:jobApply.saveDraft")}
           </Button>
           <Button type="submit" variant="primary" disabled={submitting}>
-            {submitting ? "Sending…" : "Send application →"}
+            {submitting
+              ? t("economy:jobApply.sending")
+              : t("economy:jobApply.sendCta")}
           </Button>
         </div>
       </div>

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { ChipSelect, ComingSoon } from "../../shared/components/ui";
 import { useProfile } from "../../app/providers/ProfileProvider";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Pane, Section, ToggleList, ToggleRow } from "./SettingsControls";
 import {
   AGE_LABELS,
@@ -15,6 +17,7 @@ import {
 import styles from "./InterestsPane.module.css";
 
 export function InterestsPane({ onChange }: { onChange: () => void }) {
+  const { t } = useTranslation();
   const { draft, updateDraft } = useProfile();
   const [identitiesSkipped, setIdentitiesSkipped] = useState(false);
   const [ageIndex, setAgeIndex] = useState(DEFAULT_AGE_INDEX);
@@ -23,29 +26,34 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
   return (
     <Pane
       title={
-        <>
-          Shape what you <em>see.</em>
-        </>
+        <Translation
+          i18nKey="settings:interests.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="These are private — not shown on your profile. They help us surface gatherings, members, and content that's relevant to you. Change them any time."
+      sub={t("settings:interests.sub")}
     >
       <div
         className={`${styles.prefSection} ${identitiesSkipped ? styles.skipped : ""}`}
       >
         <div className={styles.psHead}>
-          Which identities feel like yours?
+          {t("settings:interests.identities.heading")}
           <button
             type="button"
             className={styles.psSkip}
             onClick={() => setIdentitiesSkipped((v) => !v)}
           >
-            {identitiesSkipped ? "Skipped" : "Skip"}
+            {identitiesSkipped
+              ? t("settings:interests.identities.skipped")
+              : t("settings:interests.identities.skip")}
           </button>
         </div>
         <div className={styles.psHelper}>
-          Select as many as feel right. We use these to suggest relevant
-          communities and content — not to categorise you.
+          {t("settings:interests.identities.helper")}
         </div>
+        {/* IDENTITIES.options are the literal stored value of
+            draft.identities — see the NOTE in interests.data.ts. Left
+            untranslated on purpose. */}
         <ChipSelect
           tick={false}
           options={IDENTITIES.options}
@@ -61,8 +69,15 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
       </div>
 
       <div className={styles.prefSection}>
-        <div className={styles.psHead}>What are you looking for here?</div>
-        <div className={styles.psHelper}>Select as many as you like.</div>
+        <div className={styles.psHead}>
+          {t("settings:interests.lookingFor.heading")}
+        </div>
+        <div className={styles.psHelper}>
+          {t("settings:interests.lookingFor.helper")}
+        </div>
+        {/* LOOKING_FOR.options are the literal stored value of
+            draft.lookingFor — see the NOTE in interests.data.ts. Left
+            untranslated on purpose. */}
         <ChipSelect
           tick={false}
           options={LOOKING_FOR.options}
@@ -79,14 +94,14 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
 
       <div className={styles.prefSection}>
         <div className={styles.psHead}>
-          A bit about your life <ComingSoon />
+          {t("settings:interests.life.heading")} <ComingSoon />
           <span className={styles.psHeadNote}>
-            (private — helps with local suggestions)
+            {t("settings:interests.life.note")}
           </span>
         </div>
         <div className={styles.worldGrid}>
           <div className={styles.field}>
-            <label>City / region</label>
+            <label>{t("settings:interests.life.cityLabel")}</label>
             <input
               type="text"
               defaultValue="Lisbon, Portugal"
@@ -95,10 +110,10 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             />
           </div>
           <div className={styles.field}>
-            <label>Languages</label>
+            <label>{t("settings:interests.life.languagesLabel")}</label>
             <input
               type="text"
-              placeholder="e.g. Portuguese, English"
+              placeholder={t("settings:interests.life.languagesPlaceholder")}
               disabled
               onChange={onChange}
             />
@@ -106,9 +121,9 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
         </div>
         <div className={styles.field}>
           <label>
-            Your age range{" "}
+            {t("settings:interests.life.ageLabel")}{" "}
             <span className={styles.fieldNote}>
-              (optional — never shown to other members)
+              {t("settings:interests.life.ageNote")}
             </span>
           </label>
           <input
@@ -125,21 +140,25 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             }}
           />
           <div className={styles.ageLabelRow}>
-            {AGE_LABELS.map((l) => (
-              <span key={l}>{l}</span>
+            {AGE_LABELS.map((label) => (
+              <span key={label.id}>{t(label.labelKey)}</span>
             ))}
           </div>
-          <div className={styles.ageVal}>{AGE_LABELS[ageIndex]}</div>
+          <div className={styles.ageVal}>
+            {t(AGE_LABELS[ageIndex].labelKey)}
+          </div>
         </div>
       </div>
 
       <div className={styles.prefSection}>
-        <div className={styles.psHead}>What do you like reading?</div>
+        <div className={styles.psHead}>
+          {t("settings:interests.reading.heading")}
+        </div>
         <ToggleList>
-          {READING_PREFS.map((title) => (
+          {READING_PREFS.map((pref) => (
             <ToggleRow
-              key={title}
-              title={title}
+              key={pref.id}
+              title={t(pref.labelKey)}
               defaultChecked
               comingSoon
               onChange={onChange}
@@ -147,7 +166,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
           ))}
         </ToggleList>
         <div className={styles.subHead}>
-          How often do you want to hear from us? <ComingSoon />
+          {t("settings:interests.reading.frequencyHeading")} <ComingSoon />
         </div>
         <div className={styles.freqOpts}>
           {FREQ_OPTIONS.map((opt) => (
@@ -165,24 +184,23 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
                 <div className={styles.foDot} />
               </div>
               <div>
-                <div className={styles.foTitle}>{opt.title}</div>
-                <div className={styles.foDesc}>{opt.desc}</div>
+                <div className={styles.foTitle}>{t(opt.titleKey)}</div>
+                <div className={styles.foDesc}>{t(opt.descKey)}</div>
               </div>
             </button>
           ))}
         </div>
       </div>
 
-      <Section label="Content settings">
+      <Section label={t("settings:interests.content.heading")}>
         <div className={styles.psHelper}>
-          Turning these off never affects your community access — only your
-          feed.
+          {t("settings:interests.content.helper")}
         </div>
         <ToggleList>
-          {CONTENT_SETTINGS.map((title) => (
+          {CONTENT_SETTINGS.map((setting) => (
             <ToggleRow
-              key={title}
-              title={title}
+              key={setting.id}
+              title={t(setting.labelKey)}
               defaultChecked
               comingSoon
               onChange={onChange}
@@ -190,7 +208,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
           ))}
         </ToggleList>
         <div className={styles.legalNote}>
-          These preferences are private. Only you and QueerPulse can see them.
+          {t("settings:interests.content.legalNote")}
         </div>
       </Section>
     </Pane>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { CompanyProfile } from "./companies.data";
 import styles from "./CompanyPage.module.css";
@@ -14,15 +15,18 @@ const avClass: Record<
 };
 
 export function CompanySidebar({ profile }: { profile: CompanyProfile }) {
+  const { t } = useTranslation();
   const contactName = profile.hiringContact.name;
   const isPerson = !/team|founders|programmes/i.test(contactName);
   const messageLabel = isPerson
-    ? `Message ${contactName.split(" ")[0]}`
-    : "Send a message";
+    ? t("economy:company.sidebar.messagePerson", {
+        name: contactName.split(" ")[0],
+      })
+    : t("economy:company.sidebar.sendMessage");
   return (
     <aside className={styles.side}>
       <div className={styles.sideCard}>
-        <h4>Studio details</h4>
+        <h4>{t("economy:company.sidebar.detailsTitle")}</h4>
         {profile.info.map((row) => (
           <div key={row.label} className={styles.infoRow}>
             <span>{row.label}</span>
@@ -32,16 +36,16 @@ export function CompanySidebar({ profile }: { profile: CompanyProfile }) {
       </div>
 
       <div className={styles.sideCard}>
-        <h4>People here on QueerPulse</h4>
+        <h4>{t("economy:company.sidebar.peopleTitle")}</h4>
         <div className={styles.team}>
-          {profile.team.map((av) => (
+          {profile.team.map((teamMember) => (
             <div
-              key={av.initials}
-              className={[styles.teamAv, avClass[av.tone ?? "coral"]]
+              key={teamMember.initials}
+              className={[styles.teamAv, avClass[teamMember.tone ?? "coral"]]
                 .filter(Boolean)
                 .join(" ")}
             >
-              {av.initials}
+              {teamMember.initials}
             </div>
           ))}
         </div>
@@ -53,7 +57,7 @@ export function CompanySidebar({ profile }: { profile: CompanyProfile }) {
       </div>
 
       <div className={styles.sideCard}>
-        <h4>Hiring contact</h4>
+        <h4>{t("economy:company.sidebar.hiringContactTitle")}</h4>
         <p className={styles.contactName}>{profile.hiringContact.name}</p>
         <p className={styles.contactRole}>{profile.hiringContact.role}</p>
         <Button

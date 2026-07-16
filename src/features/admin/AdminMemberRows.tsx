@@ -1,4 +1,5 @@
 import { FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminAvatar, AdminChip } from "./ui";
 import { portrait } from "./adminPeople.data";
 import { portraitByInitials } from "./adminVouchGraph.data";
@@ -18,8 +19,9 @@ export function AdminMemberRows({
   members: AdminMember[];
   onSelect: (m: AdminMember) => void;
 }) {
+  const { t } = useTranslation();
   if (members.length === 0) {
-    return <p className={styles.emptyLine}>No members match those filters.</p>;
+    return <p className={styles.emptyLine}>{t("admin:members.empty")}</p>;
   }
   return (
     <div className={styles.rows}>
@@ -29,7 +31,7 @@ export function AdminMemberRows({
             className={styles.row}
             role="button"
             tabIndex={0}
-            aria-label={`Open ${m.name}`}
+            aria-label={t("admin:members.openAriaLabel", { name: m.name })}
             onClick={() => onSelect(m)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -50,7 +52,11 @@ export function AdminMemberRows({
                 <span className={styles.rowName}>{m.name}</span>
                 <span className={styles.pronoun}>{m.pronoun}</span>
                 <AdminChip tone={m.statusTone} dot>
-                  {m.statusLabel}
+                  {m.verified
+                    ? t("admin:members.status.verified")
+                    : t("admin:members.status.openReports", {
+                        count: m.openReportsCount ?? 0,
+                      })}
                 </AdminChip>
               </div>
               <div className={styles.rowMeta}>{m.meta}</div>
@@ -70,6 +76,7 @@ function VouchStrip({
   vouchedBy: VouchAvatar[];
   total: number;
 }) {
+  const { t } = useTranslation();
   const shown = vouchedBy.slice(0, 4);
   const more = total - shown.length;
   return (
@@ -91,7 +98,7 @@ function VouchStrip({
         ))}
         {more > 0 && <span className={styles.stackMore}>+{more}</span>}
       </div>
-      <span className={styles.vouchLabel}>vouched</span>
+      <span className={styles.vouchLabel}>{t("admin:members.vouchedLabel")}</span>
     </div>
   );
 }
@@ -99,6 +106,7 @@ function VouchStrip({
 /* ── Flagged ─────────────────────────────────────────────── */
 
 export function AdminFlaggedRows({ members }: { members: FlaggedMember[] }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.rows}>
       {members.map((m, i) => (
@@ -108,12 +116,18 @@ export function AdminFlaggedRows({ members }: { members: FlaggedMember[] }) {
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>
                 <span className={styles.rowHandle}>{m.handle}</span>
-                <AdminChip tone={m.catTone}>{m.catLabel}</AdminChip>
+                <AdminChip tone={m.catTone}>
+                  {m.category.kind === "reportsCount"
+                    ? t("admin:members.flagged.reportsCount", {
+                        count: m.category.count,
+                      })
+                    : t(`admin:members.flagged.category.${m.category.kind}`)}
+                </AdminChip>
               </div>
               <div className={styles.rowMeta}>{m.meta}</div>
             </div>
             <AdminChip tone={m.statusTone} dot>
-              {m.statusLabel}
+              {t(`admin:members.flagged.status.${m.statusId}`)}
             </AdminChip>
           </div>
         </FadeIn>

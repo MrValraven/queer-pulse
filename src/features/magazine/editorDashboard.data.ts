@@ -4,7 +4,19 @@
    All data is static; "today" is pinned so due-date math is
    deterministic. No component may store derived data — the
    selectors below recompute it from the (mutable) pieces list.
+
+   i18n: piece/pitch/activity RECORDS (titles, notes, names) are
+   editorial-database content and stay English mock data. The
+   composed UI phrases below (dueInfo, blockedLine, sort/stage
+   labels) are platform chrome — they take a `t` (TFunction) and
+   return an already-translated string, same idiom as
+   `magazineFormat.ts`. Stage/SortKey themselves stay their
+   canonical English ids (label-key indirection): components
+   resolve display text via `t(STAGE_LABEL_KEY[stage])` /
+   `t(SORT_LABEL_KEY[sort])` rather than storing translated text.
    =========================================================== */
+
+import type { TFunction } from "../../shared/i18n/types";
 
 export type Stage =
   | "Commissioned"
@@ -115,6 +127,32 @@ export const PIPELINE: Stage[] = [
 
 export const EDITORS: Editor[] = ["Marta", "Sara"];
 export const ME: Editor = "Marta"; // current user
+
+/** Stage id → catalog key. The Stage id itself is the stored/compared value. */
+export const STAGE_LABEL_KEY: Record<Stage, string> = {
+  Commissioned: "magazine:editor.stage.commissioned",
+  Drafting: "magazine:editor.stage.drafting",
+  "In review": "magazine:editor.stage.inReview",
+  "First edit": "magazine:editor.stage.firstEdit",
+  Copyedit: "magazine:editor.stage.copyedit",
+  "Fact-check": "magazine:editor.stage.factCheck",
+  "Sensitivity read": "magazine:editor.stage.sensitivityRead",
+  Ready: "magazine:editor.stage.ready",
+};
+
+/**
+ * The current in-production issue's own metadata — a specific issue record
+ * (number, theme, dates, assigned editors), so in live mode this would be
+ * fetched, not authored chrome. Dates are real `Date`s so the header can
+ * format them through `useFormat()` instead of a hardcoded English string.
+ */
+export const CURRENT_ISSUE = {
+  number: 10,
+  theme: "“On Care.”",
+  closesDate: new Date(2026, 6, 14),
+  publishesDate: new Date(2026, 8, 1),
+  editorsLabel: "Marta & Sara",
+};
 
 /* ── Pieces ─────────────────────────────────────────── */
 export const PIECES: Piece[] = [
@@ -439,12 +477,13 @@ export interface Filters {
   me: Editor;
 }
 
-export const SORT_LABEL: Record<SortKey, string> = {
-  due: "by deadline",
-  status: "by stage",
-  editor: "by editor",
-  section: "by section",
-  words: "by length",
+/** SortKey → catalog key (mirrors `editor.toolbar.sort.*`, reused for the count line). */
+export const SORT_LABEL_KEY: Record<SortKey, string> = {
+  due: "magazine:editor.toolbar.sort.due",
+  status: "magazine:editor.toolbar.sort.status",
+  editor: "magazine:editor.toolbar.sort.editor",
+  section: "magazine:editor.toolbar.sort.section",
+  words: "magazine:editor.toolbar.sort.words",
 };
 
 /* ═══════════════ Due formatting ═══════════════════════ */
@@ -455,22 +494,56 @@ export interface DueInfo {
   abs?: string;
 }
 
-export function dueInfo(due: Date | "ready"): DueInfo {
-  if (due === "ready") return { label: "Ready", cls: "ready", diff: 9999 };
+export function dueInfo(due: Date | "ready", t: TFunction): DueInfo {
+  if (due === "ready")
+    return { label: t("magazine:editor.due.ready"), cls: "ready", diff: 9999 };
   const diff = Math.round((due.getTime() - TODAY.getTime()) / 86400000);
   if (diff < 0)
-    return { label: `Late · ${-diff}d`, cls: "late", diff, abs: fmtAbs(due) };
+    return {
+      label: t("magazine:editor.due.late", { days: -diff }),
+      cls: "late",
+      diff,
+      abs: fmtAbs(due),
+    };
   if (diff === 0)
-    return { label: "Today", cls: "soon", diff: 0, abs: fmtAbs(due) };
+    return {
+      label: t("magazine:editor.due.today"),
+      cls: "soon",
+      diff: 0,
+      abs: fmtAbs(due),
+    };
   if (diff <= 3)
-    return { label: `in ${diff}d`, cls: "soon", diff, abs: fmtAbs(due) };
-  return { label: `in ${diff}d`, cls: "normal", diff, abs: fmtAbs(due) };
+    return {
+      label: t("magazine:editor.due.inDays", { days: diff }),
+      cls: "soon",
+      diff,
+      abs: fmtAbs(due),
+    };
+  return {
+    label: t("magazine:editor.due.inDays", { days: diff }),
+    cls: "normal",
+    diff,
+    abs: fmtAbs(due),
+  };
+}
+
+/** `dueInfo`'s day-diff without needing a `t` — used by pure filters/sorts. */
+function dueDiff(due: Date | "ready"): number {
+  if (due === "ready") return 9999;
+  return Math.round((due.getTime() - TODAY.getTime()) / 86400000);
+}
+
+/** `dueInfo`'s classification without needing a `t` — used by pure filters/sorts. */
+function dueClass(due: Date | "ready"): DueInfo["cls"] {
+  if (due === "ready") return "ready";
+  const diff = dueDiff(due);
+  if (diff < 0) return "late";
+  if (diff <= 3) return "soon";
+  return "normal";
 }
 
 export function isLate(p: Piece): boolean {
-  return (
-    p.due !== "ready" && dueInfo(p.due).cls === "late" && p.stage !== "Ready"
-  );
+  return p.due !== "ready" && dueClass(p.due) === "late" && p.stage !== "Ready";
 }
 
 export function stageProgress(stage: Stage): number {
@@ -483,18 +556,27 @@ export interface BlockedLine {
   cls: "court" | "other" | "writer" | "note";
 }
 
-export function blockedLine(p: Piece, me: Editor): BlockedLine | null {
+export function blockedLine(
+  p: Piece,
+  me: Editor,
+  t: TFunction,
+): BlockedLine | null {
   if (p.stage === "Ready") return null;
   if (p.blocked === "editor") {
     const mine = p.editor === me;
     return {
-      text: mine ? "→ in your court" : `→ in ${p.editor}’s court`,
+      text: mine
+        ? t("magazine:editor.blocked.inYourCourt")
+        : t("magazine:editor.blocked.inEditorsCourt", { editor: p.editor }),
       cls: mine ? "court" : "other",
     };
   }
   if (p.blocked === "writer") {
     const note = p.blockedNote ? ` · ${p.blockedNote}` : "";
-    return { text: `waiting on ${firstName(p.author)}${note}`, cls: "writer" };
+    return {
+      text: `${t("magazine:editor.blocked.waitingOnWriter", { name: firstName(p.author) })}${note}`,
+      cls: "writer",
+    };
   }
   return p.blockedNote ? { text: p.blockedNote, cls: "note" } : null;
 }
@@ -520,14 +602,13 @@ export function visiblePieces(pieces: Piece[], f: Filters): Piece[] {
       const la = isLate(a);
       const lb = isLate(b);
       if (la !== lb) return la ? -1 : 1;
-      return dueInfo(a.due).diff - dueInfo(b.due).diff;
+      return dueDiff(a.due) - dueDiff(b.due);
     }
     if (f.sort === "status")
       return PIPELINE.indexOf(a.stage) - PIPELINE.indexOf(b.stage);
     if (f.sort === "editor")
       return (
-        a.editor.localeCompare(b.editor) ||
-        dueInfo(a.due).diff - dueInfo(b.due).diff
+        a.editor.localeCompare(b.editor) || dueDiff(a.due) - dueDiff(b.due)
       );
     if (f.sort === "section") return a.section.localeCompare(b.section);
     if (f.sort === "words") return b.words - a.words;
@@ -548,7 +629,7 @@ export function filterPitches(pitches: Pitch[], q: string): Pitch[] {
 export function needsYouNow(pieces: Piece[], me: Editor): Piece[] {
   return pieces
     .filter((p) => isLate(p) || (p.blocked === "editor" && p.editor === me))
-    .sort((a, b) => dueInfo(a.due).diff - dueInfo(b.due).diff);
+    .sort((a, b) => dueDiff(a.due) - dueDiff(b.due));
 }
 
 /* ═══════════════ Editor load ══════════════════════════ */

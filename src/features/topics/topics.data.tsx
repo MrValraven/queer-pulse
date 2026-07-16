@@ -41,14 +41,20 @@ export interface RelatedTopic {
 }
 
 export interface TopicStat {
+  /** Numeric/compact-count data (e.g. "347", "1.2k") — never translated. */
   value: string;
+  /** Chrome override for a non-numeric badge value (e.g. "New") — a catalog key. */
+  valueKey?: string;
   /** Render the value in coral italic (used for the headline stat). */
   em?: boolean;
-  label: string;
+  /** Catalog key for the stat's label (i18n Pattern A — resolved in TopicHeader.tsx). */
+  labelKey: string;
 }
 
 export interface TopicResources {
-  title: string;
+  /** Curator-authored description + CTA — content (see scope-rule note below),
+   * stays untranslated. The panel's own title is static chrome, hardcoded in
+   * TopicSidebar.tsx instead of duplicated here. */
   body: string;
   ctaLabel: string;
   href: string;
@@ -56,7 +62,8 @@ export interface TopicResources {
 
 export interface Topic {
   tag: string;
-  eyebrow: string;
+  /** Catalog key ("topics:common.eyebrow") — i18n Pattern A. */
+  eyebrowKey: string;
   /** Serif H1 content, already including the leading "#" markup. */
   title: ReactNode;
   sub: ReactNode;
@@ -87,7 +94,7 @@ function tagTitle(head: string, tail: string): ReactNode {
 
 const healthcare: Topic = {
   tag: "healthcare",
-  eyebrow: "Topic",
+  eyebrowKey: "topics:common.eyebrow",
   title: tagTitle("health", "care"),
   sub: (
     <>
@@ -98,10 +105,10 @@ const healthcare: Topic = {
     </>
   ),
   stats: [
-    { value: "347", em: true, label: "Posts" },
-    { value: "1.2k", label: "Members following" },
-    { value: "52", label: "This week" },
-    { value: "18", label: "Verified resources" },
+    { value: "347", em: true, labelKey: "topics:stats.posts" },
+    { value: "1.2k", labelKey: "topics:stats.membersFollowing" },
+    { value: "52", labelKey: "topics:stats.thisWeek" },
+    { value: "18", labelKey: "topics:stats.verifiedResources" },
   ],
   writeHref: routes.forum,
   totalPosts: 347,
@@ -270,7 +277,6 @@ const healthcare: Topic = {
     },
   ],
   resources: {
-    title: "Verified resources",
     body: "This topic is curated. 18 names, clinics, and guides have been vetted by community moderators in the last 90 days.",
     ctaLabel: "Browse vetted resources →",
     href: routes.transHub,
@@ -280,7 +286,7 @@ const healthcare: Topic = {
 
 const trans: Topic = {
   tag: "trans",
-  eyebrow: "Topic",
+  eyebrowKey: "topics:common.eyebrow",
   title: tagTitle("tr", "ans"),
   sub: (
     <>
@@ -290,10 +296,10 @@ const trans: Topic = {
     </>
   ),
   stats: [
-    { value: "512", em: true, label: "Posts" },
-    { value: "2.1k", label: "Members following" },
-    { value: "74", label: "This week" },
-    { value: "31", label: "Verified resources" },
+    { value: "512", em: true, labelKey: "topics:stats.posts" },
+    { value: "2.1k", labelKey: "topics:stats.membersFollowing" },
+    { value: "74", labelKey: "topics:stats.thisWeek" },
+    { value: "31", labelKey: "topics:stats.verifiedResources" },
   ],
   writeHref: routes.forum,
   totalPosts: 512,
@@ -416,7 +422,6 @@ const trans: Topic = {
     },
   ],
   resources: {
-    title: "Verified resources",
     body: "31 guides, legal templates, and vetted providers, re-checked by trans-led moderators every quarter.",
     ctaLabel: "Open the Trans Hub →",
     href: routes.transHub,
@@ -426,7 +431,7 @@ const trans: Topic = {
 
 const mentalhealth: Topic = {
   tag: "mentalhealth",
-  eyebrow: "Topic",
+  eyebrowKey: "topics:common.eyebrow",
   title: tagTitle("mental", "health"),
   sub: (
     <>
@@ -436,10 +441,10 @@ const mentalhealth: Topic = {
     </>
   ),
   stats: [
-    { value: "428", em: true, label: "Posts" },
-    { value: "1.6k", label: "Members following" },
-    { value: "63", label: "This week" },
-    { value: "24", label: "Verified resources" },
+    { value: "428", em: true, labelKey: "topics:stats.posts" },
+    { value: "1.6k", labelKey: "topics:stats.membersFollowing" },
+    { value: "63", labelKey: "topics:stats.thisWeek" },
+    { value: "24", labelKey: "topics:stats.verifiedResources" },
   ],
   writeHref: routes.forum,
   totalPosts: 428,
@@ -560,7 +565,6 @@ const mentalhealth: Topic = {
     },
   ],
   resources: {
-    title: "Verified resources",
     body: "24 vetted therapists, helplines, and peer rooms — checked for queer-affirming practice by Wellbeing moderators.",
     ctaLabel: "Browse Wellbeing →",
     href: routes.wellbeing,
@@ -570,7 +574,7 @@ const mentalhealth: Topic = {
 
 const housing: Topic = {
   tag: "housing",
-  eyebrow: "Topic",
+  eyebrowKey: "topics:common.eyebrow",
   title: tagTitle("hous", "ing"),
   sub: (
     <>
@@ -579,10 +583,10 @@ const housing: Topic = {
     </>
   ),
   stats: [
-    { value: "173", em: true, label: "Posts" },
-    { value: "890", label: "Members following" },
-    { value: "29", label: "This week" },
-    { value: "7", label: "Co-ops forming" },
+    { value: "173", em: true, labelKey: "topics:stats.posts" },
+    { value: "890", labelKey: "topics:stats.membersFollowing" },
+    { value: "29", labelKey: "topics:stats.thisWeek" },
+    { value: "7", labelKey: "topics:stats.coopsForming" },
   ],
   writeHref: routes.forum,
   totalPosts: 173,
@@ -706,7 +710,7 @@ const housing: Topic = {
 
 const nightlife: Topic = {
   tag: "nightlife",
-  eyebrow: "Topic",
+  eyebrowKey: "topics:common.eyebrow",
   title: tagTitle("night", "life"),
   sub: (
     <>
@@ -716,10 +720,10 @@ const nightlife: Topic = {
     </>
   ),
   stats: [
-    { value: "289", em: true, label: "Posts" },
-    { value: "1.4k", label: "Members following" },
-    { value: "48", label: "This week" },
-    { value: "12", label: "Safer-space venues" },
+    { value: "289", em: true, labelKey: "topics:stats.posts" },
+    { value: "1.4k", labelKey: "topics:stats.membersFollowing" },
+    { value: "48", labelKey: "topics:stats.thisWeek" },
+    { value: "12", labelKey: "topics:stats.saferSpaceVenues" },
   ],
   writeHref: routes.forum,
   totalPosts: 289,
@@ -877,7 +881,7 @@ export function getTopic(rawTag: string): Topic {
 
   return {
     tag,
-    eyebrow: "Topic",
+    eyebrowKey: "topics:common.eyebrow",
     title: splitForTitle(tag),
     sub: (
       <>
@@ -886,9 +890,9 @@ export function getTopic(rawTag: string): Topic {
       </>
     ),
     stats: [
-      { value: "—", em: true, label: "Posts" },
-      { value: "New", label: "Topic" },
-      { value: "0", label: "This week" },
+      { value: "—", em: true, labelKey: "topics:stats.posts" },
+      { value: "New", valueKey: "topics:stats.newValue", labelKey: "topics:common.eyebrow" },
+      { value: "0", labelKey: "topics:stats.thisWeek" },
     ],
     writeHref: routes.forum,
     totalPosts: 0,

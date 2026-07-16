@@ -543,6 +543,30 @@ export const resources: Catalog = {
   "mentalHealth.sns.peer.joinCta": "Join the group",
   "mentalHealth.sns.peer.mentorCta": "Find a peer mentor →",
 
+  // ── TherapistProfileModal + TherapistProfileBody ────────────────────────
+  // therapist.bio/approach/training/firstSession stay English (mock content,
+  // fetched from the API in live mode); everything below is platform chrome.
+  "mentalHealth.therapistModal.profileAriaLabel": "{name} — profile",
+  "mentalHealth.therapistModal.sayHelloCta": "Say hello →",
+  "mentalHealth.therapistModal.sentTitle": "Message sent to {name}.",
+  "mentalHealth.therapistModal.sentText":
+    "They'll reply directly to your email if it feels like a fit. No notifications, no pressure.",
+  "mentalHealth.therapistModal.footNote":
+    "Messages go straight to {name} — held briefly and reviewed before delivery to keep the room safe.",
+
+  "mentalHealth.therapistProfile.meta.slidingScale": "Sliding scale available",
+  "mentalHealth.therapistProfile.meta.fixedRate": "Fixed session rate",
+  "mentalHealth.therapistProfile.meta.years_one": "{count} year in practice",
+  "mentalHealth.therapistProfile.meta.years_other": "{count} years in practice",
+  "mentalHealth.therapistProfile.status.acceptingNew": "Accepting new clients",
+  "mentalHealth.therapistProfile.status.waitlistOnly":
+    "Waitlist only right now",
+  "mentalHealth.therapistProfile.section.about": "About",
+  "mentalHealth.therapistProfile.section.howIWork": "How I work",
+  "mentalHealth.therapistProfile.section.training": "Training & qualifications",
+  "mentalHealth.therapistProfile.section.firstSession": "Your first session",
+  "mentalHealth.therapistProfile.seeFullProfileCta": "See full profile →",
+
   // ── WellbeingPage (+ WellbeingSections.tsx + wellbeing.data.ts) ──────────
   "wellbeing.hero.eyebrow": "Wellbeing",
   "wellbeing.hero.title": "A room that <em>looks after you.</em>",
@@ -615,4 +639,445 @@ export const resources: Catalog = {
   "wellbeing.harm.chemsex.title": "Chemsex support",
   "wellbeing.harm.chemsex.desc":
     "Confidential, non-judgmental resources for members navigating chemsex — connected to real services and real people who've been there.",
+
+  // ── TherapistProfilePage (therapist/ subfolder) ─────────────────────────
+  // Per-therapist facts in therapistProfiles.data.tsx (bio, quote, credsLine,
+  // specialisms, approach paragraphs, vouches, notes, fees, venue, bookCta)
+  // are fetched profile content in live mode and stay English. Everything
+  // below is platform chrome around that content.
+  "therapistProfilePage.backLink": "Therapist directory",
+  "therapistProfilePage.verified.body_one":
+    "<b>Vetted clinician.</b> Credentials checked by QueerPulse Wellbeing on {vettedOn}. {count} independent community vouch in the last 12 months. <a>How we vet →</a>",
+  "therapistProfilePage.verified.body_other":
+    "<b>Vetted clinician.</b> Credentials checked by QueerPulse Wellbeing on {vettedOn}. {count} independent community vouches in the last 12 months. <a>How we vet →</a>",
+  "therapistProfilePage.sendMessageCta": "Send a message",
+
+  "therapistProfilePage.worksWith.title": "What {name} <em>works with</em>",
+  "therapistProfilePage.worksWith.sub":
+    "Self-declared and consistent with the vouching community.",
+  "therapistProfilePage.approachTitle.he": "His approach",
+  "therapistProfilePage.approachTitle.she": "Her approach",
+  "therapistProfilePage.approachTitle.neutral": "Their approach",
+  "therapistProfilePage.vouches.title_one": "{count} member <em>vouched</em>",
+  "therapistProfilePage.vouches.title_other":
+    "{count} members <em>vouched</em>",
+  "therapistProfilePage.vouches.sub":
+    "Anonymised by the vouching member. The clinic doesn't see who said what.",
+  "therapistProfilePage.vouches.addPrompt": "Have you seen {name}?",
+  "therapistProfilePage.vouches.addHelp": "Help the next member decide",
+  "therapistProfilePage.vouches.addCta": "Add an anonymised vouch →",
+  "therapistProfilePage.beforeBook.title":
+    "Before you book — <em>good to know</em>",
+
+  "therapistProfilePage.sidebar.bookHeadingAccepting": "Book — next 4 weeks",
+  "therapistProfilePage.sidebar.bookHeadingWaitlist":
+    "Availability — waitlist",
+  "therapistProfilePage.sidebar.legendAvailable": "Available",
+  "therapistProfilePage.sidebar.legendBooked": "Booked",
+  "therapistProfilePage.sidebar.heldAccepting":
+    "Held {slot}. {name} will confirm by email — nothing is charged for holding.",
+  "therapistProfilePage.sidebar.heldWaitlist":
+    "You're on the list. {name} will write when a slot opens — usually 6–10 weeks.",
+  "therapistProfilePage.sidebar.holdingLabel": "Holding…",
+  "therapistProfilePage.sidebar.joiningLabel": "Joining…",
+  "therapistProfilePage.sidebar.holdSlotCta": "Hold {slot} →",
+  "therapistProfilePage.sidebar.pickSlotCta": "Pick an open slot",
+  "therapistProfilePage.sidebar.feesHeading": "Fees",
+  "therapistProfilePage.sidebar.whereHeading": "Where",
+  "therapistProfilePage.sidebar.crisisHeading": "In crisis right now",
+  "therapistProfilePage.sidebar.crisisText":
+    "Therapy isn't the right path when you're in immediate danger. Use these instead — they're staffed for this.",
+  "therapistProfilePage.sidebar.crisisChatCta": "Open crisis chat",
+  "therapistProfilePage.sidebar.sosVozAmigaCta": "SOS Voz Amiga · 213 544 545",
+
+  "therapistProfilePage.vouch.successAriaLabel": "Vouch received",
+  "therapistProfilePage.vouch.successTitle": "Vouch received,",
+  "therapistProfilePage.vouch.successEm": "thank you.",
+  "therapistProfilePage.vouch.successBody":
+    "A moderator reads every vouch before it's published — yours will appear within a couple of days, anonymised exactly as you wrote it. {name} won't see who sent it, and neither will the clinic.",
+  "therapistProfilePage.vouch.modalAriaLabel": "Vouch for {name}",
+  "therapistProfilePage.vouch.eyebrow": "Community vouch",
+  "therapistProfilePage.vouch.title": "Have you seen {name}? <em>Say so.</em>",
+  "therapistProfilePage.vouch.sub":
+    "Vouches are anonymised — {name} won't see who wrote what, and neither will the clinic. One honest paragraph helps the next member decide.",
+  "therapistProfilePage.vouch.form.textLabel": "Your vouch",
+  "therapistProfilePage.vouch.form.textPlaceholder":
+    "What was it like to work with them? What should the next member know?",
+  "therapistProfilePage.vouch.form.bylineLabel":
+    "How should we describe you? (optional)",
+  "therapistProfilePage.vouch.form.bylineHelper":
+    "Shown instead of your name — keep it as vague as you like.",
+  "therapistProfilePage.vouch.form.bylinePlaceholder": "e.g. Member · couple work",
+  "therapistProfilePage.vouch.submitCta": "Add my vouch",
+
+  // ── TransHubPage ─────────────────────────────────────────────────────────
+  // Trans healthcare/legal navigation guidance for Portugal — flag for native
+  // review. Real-world proper nouns (SNS, Hospital de Santa Maria, Hospital
+  // Curry Cabral, ILGA Portugal, Rede ex aequo, Cartão de Cidadão, NIF, Law
+  // 38/2018) stay untranslated inside the catalog values themselves.
+  "transHub.hero.eyebrow": "Trans & Non-Binary Hub",
+  "transHub.hero.title": "A dedicated space, <em>not an afterthought.</em>",
+  "transHub.hero.lead":
+    "Healthcare navigation, legal guides, peer support, and community — built specifically for trans and non-binary members. You don't have to figure this out alone.",
+  "transHub.hero.anchor.healthcare": "Healthcare",
+  "transHub.hero.anchor.legal": "Legal & admin",
+  "transHub.hero.anchor.resources": "Resources",
+  "transHub.hero.anchor.community": "Community",
+
+  "transHub.healthcare.title": "Healthcare <em>navigation</em>",
+  "transHub.healthcare.lead":
+    "Trans healthcare in Portugal has improved significantly since 2018. The SNS now covers hormone therapy and gender-affirming surgeries. Navigating it is still complex — here's how it works.",
+  "transHub.healthcare.step1.title": "Start with your GP (Médico de Família)",
+  "transHub.healthcare.step1.body":
+    "Request a referral to an endocrinologist or the nearest gender clinic. Your GP may not be familiar with the process — bring our GP referral guide to help. SNS referrals typically take 6–18 months.",
+  "transHub.healthcare.step2.title": "Gender clinics in Lisbon",
+  "transHub.healthcare.step2.body":
+    "Hospital de Santa Maria and Hospital Curry Cabral both have gender medicine units. Private options include the Clínica de Identidade de Género for faster access. We have member reviews of all three.",
+  "transHub.healthcare.step3.title": "HRT access",
+  "transHub.healthcare.step3.body":
+    "Hormone therapy is available via the SNS once you have an endocrinology referral. Many members use the informed consent model at private clinics as a faster first step, then transition to SNS for ongoing care.",
+  "transHub.healthcare.step4.title": "Surgical procedures",
+  "transHub.healthcare.step4.body":
+    "Gender-affirming surgeries covered by the SNS include vaginoplasty, phalloplasty, mastectomy, and others. Waiting lists are long (1–3+ years). <a>Jonas Ferreira</a> has helped many members navigate this.",
+  "transHub.healthcare.step5.title": "If you're facing barriers",
+  "transHub.healthcare.step5.body":
+    "If a provider refuses treatment or makes the process hostile, document everything. Contact <a>our legal resources</a> or ILGA Portugal. You have rights — and this community can help you enforce them.",
+
+  "transHub.legal.title": "Legal & <em>administrative</em>",
+  "transHub.legal.lead":
+    "Navigating legal name and gender marker changes in Portugal. The 2018 Gender Identity Law (Law 38/2018) significantly simplified the process.",
+  "transHub.legal.step1.title": "Legal name & gender change",
+  "transHub.legal.step1.body":
+    "Since 2018, you can change your legal name and gender marker at any civil registry office without medical documentation. You need only a declaration — no psychiatric evaluation required. The fee is approximately €200.",
+  "transHub.legal.step2.title": "Updating your documents",
+  "transHub.legal.step2.body":
+    "Once your Cartão de Cidadão is updated, other documents follow. Your employer, bank, and health records can all be updated with the new ID. We have a checklist of everything that needs updating and in which order.",
+  "transHub.legal.step3.title": "Non-binary legal recognition",
+  "transHub.legal.step3.body":
+    "Portugal does not currently have a third gender option on official documents. This is an area of ongoing advocacy — ILGA Portugal and Rede ex aequo are working on it. We have resources if this affects you.",
+
+  "transHub.resources.title": "Resources & <em>guides</em>",
+  "transHub.resources.lead":
+    "Maintained by trans and non-binary members. Practical, current, and free.",
+  "transHub.resources.openCta": "Open →",
+  "transHub.resources.cat.guide": "Guide",
+  "transHub.resources.cat.checklist": "Checklist",
+  "transHub.resources.cat.directory": "Directory",
+  "transHub.resources.cat.peerSupport": "Peer support",
+  "transHub.resource.snsGuide.title": "The SNS trans healthcare guide",
+  "transHub.resource.snsGuide.desc":
+    "A members-maintained walkthrough of the public system — referrals, clinics, what to bring, and how long each step really takes.",
+  "transHub.resource.docChecklist.title": "Document-change checklist",
+  "transHub.resource.docChecklist.desc":
+    "Every document to update after a legal name change, in the right order — CC, NIF, bank, employer, health records.",
+  "transHub.resource.clinicians.title": "Affirming clinicians",
+  "transHub.resource.clinicians.desc":
+    "Endocrinologists, surgeons, and GPs reviewed by trans members. No listing fees, no algorithm — just lived experience.",
+  "transHub.resource.peerCircle.title": "Trans & NB peer circle",
+  "transHub.resource.peerCircle.desc":
+    "A moderated space to share what worked, vent what didn't, and find someone a few steps ahead of you on the same path.",
+
+  "transHub.community.title": "A community that <em>has your back.</em>",
+  "transHub.community.body":
+    "The Trans & Non-Binary Hub is more than resources — it's people. Members share clinic reviews, celebrate milestones, and turn up for each other when the system doesn't.",
+  "transHub.community.joinCta": "Join the hub",
+  "transHub.community.stat.members.label": "members in the hub",
+  "transHub.community.stat.reviews.label": "clinician reviews",
+  "transHub.community.stat.lawYear.label": "self-ID law in effect",
+
+  "transHub.outro.title": "You're seen <em>here.</em>",
+  "transHub.outro.sub":
+    "QueerPulse is a vouched-for, invite-only network. If someone you trust is already here, ask them to vouch for you.",
+  "transHub.outro.cta": "Request an invite",
+
+  // ── TransHealthcarePage ──────────────────────────────────────────────────
+  // FLAGGED, partially swept — see sweep report. The ~26 detailed procedural
+  // steps in transHealthcare.data.ts (exact wait times, costs, legal
+  // citations, clinic names) and the CONTACTS list are deliberately left
+  // untranslated pending dedicated native review: this is the densest,
+  // highest-precision medical/legal content in the namespace and a rushed
+  // translation risks a subtly wrong wait-time or legal detail. Only the
+  // surrounding page chrome below (hero, tab labels, section headers,
+  // sidebar, outro) is translated.
+  "transHealthcare.hero.eyebrow": "Trans Healthcare · Portugal",
+  "transHealthcare.hero.titleLine1": "Your journey,",
+  "transHealthcare.hero.titleLine2": "step by step.",
+  "transHealthcare.hero.sub":
+    "How to access gender-affirming healthcare in Portugal — through the SNS or privately. Legal name change. What to bring, who to call, what to expect.",
+  "transHealthcare.hero.disclaimer":
+    "This guide reflects the system as of June 2026. Always verify current waiting times and procedures with ILGA Portugal or your GP. This is community knowledge, not legal or medical advice.",
+
+  "transHealthcare.path.hrtSns.label": "HRT via SNS",
+  "transHealthcare.path.hrtPrivate.label": "HRT privately",
+  "transHealthcare.path.legalName.label": "Legal name change",
+  "transHealthcare.path.genderMarker.label": "Gender marker",
+  "transHealthcare.path.surgery.label": "Surgery access",
+
+  "transHealthcare.section.gettingIntoSystem": "Getting into the system",
+  "transHealthcare.section.genderClinic": "Gender clinic",
+  "transHealthcare.section.ongoingCare": "Ongoing care",
+  "transHealthcare.section.findingPrivateProvider":
+    "Finding a private provider",
+  "transHealthcare.section.ongoing": "Ongoing",
+  "transHealthcare.section.legalProcess": "The process (Lei n.º 38/2018)",
+  "transHealthcare.section.genderMarkerChange": "Changing your gender marker",
+  "transHealthcare.section.surgeryInPortugal":
+    "Gender-affirming surgery in Portugal",
+
+  "transHealthcare.sidebar.keyContacts": "Key contacts",
+  "transHealthcare.sidebar.communityTip": "Community tip",
+  "transHealthcare.sidebar.communityTipBody":
+    "ILGA Portugal offers free legal accompaniment for trans people navigating the SNS system. You do not have to do this alone — call them before your first appointment.",
+  "transHealthcare.sidebar.relatedTitle": "Related on QueerPulse",
+  "transHealthcare.sidebar.solidarityCta": "Solidarity Pricing Registry →",
+  "transHealthcare.sidebar.solidarityRole": "Trans-affirming GPs, psychiatrists",
+  "transHealthcare.sidebar.legalCta": "Legal Resources →",
+  "transHealthcare.sidebar.legalRole": "Name change documents",
+  "transHealthcare.sidebar.mentalHealthCta": "Mental Health →",
+  "transHealthcare.sidebar.mentalHealthRole": "Support through the process",
+
+  "transHealthcare.outro.title": "You deserve <em>good care.</em>",
+  "transHealthcare.outro.sub":
+    "The QueerPulse community includes trans-affirming GPs, therapists, and legal professionals. You do not have to navigate this alone.",
+  "transHealthcare.outro.cta": "Find solidarity pricing",
+
+  // ── HarmReductionPage (+ HarmReductionSections.tsx + harmReduction.data.tsx) ──
+  // Overdose response / substance-safety guidance — the highest-stakes copy
+  // in this namespace. Kept literal and unambiguous; every number, timing,
+  // drug name, phone number and org name is preserved exactly between EN and
+  // PT. Flag for the closest native review before shipping.
+  "harmReduction.emergency.emergencyLabel": "Emergency:",
+  "harmReduction.emergency.snsLabel": "SNS 24 (non-emergency):",
+  "harmReduction.emergency.mentalHealthLabel":
+    "Linha de Apoio (mental health):",
+
+  "harmReduction.hero.backLink": "Wellbeing Hub",
+  "harmReduction.hero.eyebrow": "Harm Reduction · Community guide",
+  "harmReduction.hero.titleLine1": "No judgment.",
+  "harmReduction.hero.titleLine2": "Just information.",
+  "harmReduction.hero.sub":
+    "If you are going to use substances — at a club, at a party, at home — this guide is for you. Not to stop you. To help you stay safe.",
+  "harmReduction.hero.sos":
+    "<strong>If someone stops breathing:</strong> call 112 immediately. Portugal has a good samaritan law — you will not be prosecuted for calling for help.",
+
+  "harmReduction.naloxone.title": "Naloxone <em>saves lives.</em>",
+  "harmReduction.naloxone.body1":
+    "Naloxone (Narcan) reverses an opioid overdose in minutes. It is available free of charge in Portugal through harm reduction services and some pharmacies. It is safe, easy to use, and non-prescription. Carry it if you or anyone around you uses opioids — including fentanyl, heroin, or strong prescription painkillers.",
+  "harmReduction.naloxone.body2":
+    "In Lisbon: GAT Lisboa, APDES, and the Ares do Pinhal harm reduction team distribute naloxone free of charge. Ask at your nearest harm reduction service or contact GAT directly.",
+  "harmReduction.naloxone.stepsLabel": "If someone overdoses",
+  "harmReduction.naloxone.step1":
+    '<strong>Call 112</strong> — say "a person is unresponsive and not breathing normally"',
+  "harmReduction.naloxone.step2":
+    "<strong>Administer naloxone</strong> — nasal spray: one spray in one nostril. Injection: follow kit instructions.",
+  "harmReduction.naloxone.step3":
+    "<strong>Recovery position</strong> — roll onto their side, tilt head back to open airway",
+  "harmReduction.naloxone.step4":
+    "<strong>If no response in 2–3 minutes</strong> — give a second dose if you have one. Continue until help arrives.",
+  "harmReduction.naloxone.step5":
+    "<strong>Stay with them</strong> — naloxone wears off before many opioids do. They need monitoring.",
+
+  "harmReduction.section.beforeNight.label": "Before the night",
+  "harmReduction.section.beforeNight.title": "Know before you go",
+  "harmReduction.section.beforeNight.item.eat.title": "Eat beforehand",
+  "harmReduction.section.beforeNight.item.eat.body":
+    "Alcohol and MDMA both hit harder on an empty stomach. Eat a proper meal 2–3 hours before, not immediately before.",
+  "harmReduction.section.beforeNight.item.test.title": "Test your substances",
+  "harmReduction.section.beforeNight.item.test.body":
+    "Drug checking services operate in Lisbon — KOSMICARE at festivals, and the DICAD-supported service. Reagent test kits are legal in Portugal and available online. Never assume a pill is what you were told.",
+  "harmReduction.section.beforeNight.item.meds.title": "Know your medications",
+  "harmReduction.section.beforeNight.item.meds.body":
+    "SSRIs, MAOIs, antiretrovirals, and many other medications interact dangerously with MDMA, stimulants, and some psychedelics. Check interactions at TripSit or DrugsData before you go.",
+  "harmReduction.section.beforeNight.item.tellSomeone.title":
+    "Tell someone where you are",
+  "harmReduction.section.beforeNight.item.tellSomeone.body":
+    "Share your location with a trusted person who is not going out. Agree on a check-in time. This is not paranoia — it is standard care for yourself.",
+  "harmReduction.section.beforeNight.item.budget.title": "Budget your doses",
+  "harmReduction.section.beforeNight.item.budget.body":
+    "Decide what you are taking before you go. It is much harder to make good decisions at 3am in a loud room. Write it down if it helps.",
+
+  "harmReduction.section.duringNight.label": "At the party",
+  "harmReduction.section.duringNight.title": "During the night",
+  "harmReduction.section.duringNight.alert.head":
+    "Water: not too little, not too much",
+  "harmReduction.section.duringNight.alert.body":
+    "MDMA can cause both dehydration and hyponatraemia (too much water). If dancing heavily: ~500ml per hour. If not dancing: ~250ml per hour. Sports drinks help with salt.",
+  "harmReduction.section.duringNight.item.startLow.title":
+    "Start low, wait longer than you think",
+  "harmReduction.section.duringNight.item.startLow.body":
+    "MDMA takes 45–90 minutes to peak. Cocaine's effect is shorter. Many hospitalisations happen because someone redosed before the first dose peaked. Wait at least 90 minutes.",
+  "harmReduction.section.duringNight.item.breaks.title":
+    "Take breaks from dancing",
+  "harmReduction.section.duringNight.item.breaks.body":
+    "Overheating is a genuine risk. Go outside, sit down, cool off regularly. If you feel very hot and stop sweating, get help immediately.",
+  "harmReduction.section.duringNight.item.mixing.title": "Mixing substances",
+  "harmReduction.section.duringNight.item.mixing.body":
+    "Alcohol + MDMA: harder on your body, increases dehydration. MDMA + cocaine: significant cardiac stress. MDMA + ketamine: unpredictable. Never mix with opioids unless you have naloxone present.",
+  "harmReduction.section.duringNight.item.lookAfter.title":
+    "Look after each other",
+  "harmReduction.section.duringNight.item.lookAfter.body":
+    "If your friend seems confused, overly hot, or unresponsive to your voice — get them out of the crowd, give water, and if no improvement in 5 minutes, call 112.",
+
+  "harmReduction.section.after.label": "The next day",
+  "harmReduction.section.after.title": "Recovery",
+  "harmReduction.section.after.item.comedown.title": "MDMA comedown is real",
+  "harmReduction.section.after.item.comedown.body":
+    "MDMA temporarily depletes serotonin. Days 2–4 after use can involve low mood, anxiety, and fatigue. This is neurological, not a reflection of your life. It passes. Eating, sleeping, and light activity help.",
+  "harmReduction.section.after.item.sleepFood.title": "Sleep and food first",
+  "harmReduction.section.after.item.sleepFood.body":
+    "Before anything else. Your body has worked hard. The urge to redose to chase the good feeling almost always makes the comedown worse.",
+  "harmReduction.section.after.item.worried.title":
+    "If you feel worried about your use",
+  "harmReduction.section.after.item.worried.body":
+    "CAT (Centro de Atendimento a Toxicodependentes) offers free, confidential support — no judgment, no obligation. You do not have to be dependent to ask for support. Call 800 20 40 60.",
+  "harmReduction.section.after.item.chemsex.title":
+    "Chemsex and follow-up testing",
+  "harmReduction.section.after.item.chemsex.body":
+    "If you have had sex while using substances, consider an STI test within 72 hours if you want PEP (HIV post-exposure prophylaxis). Checkpoint and GAT both offer rapid testing. No appointment needed.",
+
+  "harmReduction.section.sober.label": "Not using",
+  "harmReduction.section.sober.title": "Sober at the party",
+  "harmReduction.section.sober.item.belong.title": "You belong there",
+  "harmReduction.section.sober.item.belong.body":
+    "Queer nightlife can feel substance-centric. You are allowed to be there without drinking or using — and you do not owe anyone an explanation.",
+  "harmReduction.section.sober.item.nonAlcoholic.title":
+    "Non-alcoholic options",
+  "harmReduction.section.sober.item.nonAlcoholic.body":
+    "Most Lisbon venues serve water and soft drinks. Ask for sparkling water with lime if you do not want it to look like you are not drinking — it is no one else's business.",
+  "harmReduction.section.sober.item.qpCommunity.title":
+    "QueerPulse Sober community",
+  "harmReduction.section.sober.item.qpCommunity.body":
+    "The Sober page connects community members who are sober or sober-curious. You are not alone in wanting to be part of the night without the substances.",
+  "harmReduction.section.sober.linkCta": "Visit the Sober page →",
+
+  "harmReduction.section.services.label": "Support & services",
+  "harmReduction.section.services.title": "Where to go",
+  "harmReduction.section.services.item.gat.title": "GAT Lisboa",
+  "harmReduction.section.services.item.gat.body":
+    "Free HIV/STI testing, naloxone, condoms, harm reduction support. Rua de São Lázaro 58 · gat.org.pt",
+  "harmReduction.section.services.item.checkpoint.title": "Checkpoint Lisboa",
+  "harmReduction.section.services.item.checkpoint.body":
+    "Rapid HIV and STI testing, PrEP support, walk-ins welcome. Rua do Crucifixo 100 · checkpointlx.com",
+  "harmReduction.section.services.item.cat.title": "CAT (drug support)",
+  "harmReduction.section.services.item.cat.body":
+    "Free and confidential support for anyone concerned about their substance use. 800 20 40 60 · no appointment needed.",
+  "harmReduction.section.services.item.kosmicare.title": "KOSMICARE",
+  "harmReduction.section.services.item.kosmicare.body":
+    "Psychedelic crisis support and integration. Active at Boom Festival and available for consultations year-round. kosmicare.org",
+  "harmReduction.section.services.item.tripsit.title": "TripSit & DrugsData",
+  "harmReduction.section.services.item.tripsit.body":
+    "Drug interaction checker, dosage guides, and substance information. tripsit.me · drugsdata.org",
+
+  "harmReduction.outro.title": "Take care of <em>each other.</em>",
+  "harmReduction.outro.sub":
+    "Harm reduction is a community practice. The more people who know this, the safer our nights are.",
+  "harmReduction.outro.cta": "Sexual health resources",
+
+  // ── SoberPage (+ SoberSections.tsx + soberPage.data.ts) ─────────────────
+  // Mock VENUES (directory listing), VOICES (member testimonial quotes) and
+  // EVENTS' organizer-authored fields (name/meta) stay English — content per
+  // the scope rule, matching the LAWYERS/THERAPISTS directory precedent.
+  // typeLabel is lifted to a shared per-EventType map since it's a repeated
+  // chrome phrase, not organizer-specific.
+  "sober.hero.backLink": "Wellbeing Hub",
+  "sober.hero.eyebrow": "Sober & social",
+  "sober.hero.title": "A full social life, without <em>alcohol.</em>",
+  "sober.hero.lead":
+    "Whether you're in recovery, sober-curious, on medication, or just don't drink — you shouldn't have to justify it. There's a vibrant queer social world that doesn't centre the bar.",
+  "sober.reason.recovery": "In recovery",
+  "sober.reason.soberCurious": "Sober-curious",
+  "sober.reason.medication": "Medication",
+  "sober.reason.health": "Health reasons",
+  "sober.reason.religious": "Religious practice",
+  "sober.reason.preference": "Personal preference",
+  "sober.reason.justDont": "Just don't feel like it",
+
+  "sober.honest.title": "The queer scene and <em>alcohol.</em>",
+  "sober.honest.p1":
+    "Queer social life has long been organised around bars — partly for historical reasons (bars were where it was safe to be visible), partly because nightlife is genuinely important to queer culture. That's real and worth holding.",
+  "sober.honest.p2":
+    "But queer people also have significantly higher rates of harmful substance use than the general population — and that's not incidental. It's connected to minority stress, limited safe social spaces, and a culture that sometimes makes sobriety feel like opting out.",
+  "sober.honest.p3":
+    "This space is for people who want community and joy without alcohol at the centre — for any reason, no explanation required.",
+  "sober.stat.rate.n": "2–3×",
+  "sober.stat.fewSpaces.n": "Very few",
+  "sober.stat.changes.n": "This changes",
+  "sober.stat.rate.label":
+    "LGBTQ+ people are 2–3x more likely to experience alcohol dependency than the general population (Public Health England, 2017)",
+  "sober.stat.fewSpaces.label":
+    "queer social spaces are alcohol-free or actively sober-welcoming — despite the need",
+  "sober.stat.changes.label":
+    "when community spaces deliberately include sober options — and when sober people don't have to be invisible",
+
+  "sober.gatherings.title": "Sober <em>gatherings.</em>",
+  "sober.gatherings.lead":
+    "Alcohol-free events, or events where alcohol is present but not the point. All QueerPulse gatherings are marked if they're alcohol-free.",
+  "sober.gatherings.hostCta": "+ Host or attend a meeting",
+  "sober.type.alcoholFree": "Alcohol-free",
+  "sober.type.supportGroup": "Support group",
+  "sober.rsvp.going": "Going",
+  "sober.rsvp.cta": "RSVP",
+
+  "sober.venues.title": "Sober-friendly <em>spaces.</em>",
+  "sober.venues.lead":
+    "Places where you can have a genuinely good time without alcohol — and where the staff won't make it weird. All are also on the Safe Spaces verified list.",
+  "sober.venues.seeAllCta": "See all verified safe spaces →",
+
+  "sober.voices.title": "In their <em>words.</em>",
+  "sober.voices.lead":
+    "Community members on what sober queer social life actually looks like.",
+
+  "sober.recovery.title": "If you're navigating <em>recovery.</em>",
+  "sober.recovery.body":
+    "This isn't only about lifestyle preference. If you're in recovery — from alcohol, substances, or anything else — there are people here who understand. No advice unless you ask for it.",
+  "sober.recovery.peerGroup.title": "Sober & Queer peer group",
+  "sober.recovery.peerGroup.desc":
+    "A private, moderated space within QueerPulse for people in recovery. Weekly online meeting, text channel, and occasional in-person gatherings. No particular programme — all approaches welcome.",
+  "sober.recovery.peerGroup.linkLabel": "Join the group →",
+  "sober.recovery.oneToOne.title": "One-to-one — talk to a peer",
+  "sober.recovery.oneToOne.desc":
+    "Request a conversation with a community member who has offered to talk to people navigating sobriety. No counsellors — just someone who's been through something similar.",
+  "sober.recovery.oneToOne.linkLabel": "Find a peer →",
+  "sober.recovery.therapists.title": "Queer-affirming therapists",
+  "sober.recovery.therapists.desc":
+    "The wellbeing directory includes therapists who specialise in addiction and queer identity — because those two things aren't separate.",
+  "sober.recovery.therapists.linkLabel": "Find a therapist →",
+  "sober.recovery.external.title": "External resources",
+  "sober.recovery.external.desc":
+    "APDES (harm reduction), AAPT (AA Portugal), SMART Recovery Portugal — for when community support isn't enough on its own.",
+  "sober.recovery.external.linkLabel": "See resources →",
+
+  "sober.outro.title": "You belong <em>here.</em>",
+  "sober.outro.sub":
+    "Sober, curious, or somewhere in between. The community is big enough for all of it.",
+  "sober.outro.findSpacesCta": "Find safe spaces",
+  "sober.outro.browseCommunitiesCta": "Browse communities",
+
+  "sober.host.modalTitle": "Sober gatherings",
+  "sober.host.success.hostTitle": "Gathering <em>submitted.</em>",
+  "sober.host.success.attendTitle": "You're <em>in.</em>",
+  "sober.host.success.hostSub":
+    "A coordinator will confirm the alcohol-free listing and add it to the calendar within a day. You'll get the host checklist by email.",
+  "sober.host.success.attendSub":
+    "We've saved your spot. The private location and a gentle reminder will reach you the day before — nothing is shared publicly.",
+  "sober.host.intro":
+    "Start an alcohol-free meet-up, or join an existing peer meeting. Either way, you decide how visible you are.",
+  "sober.host.modeLabel": "What would you like to do?",
+  "sober.host.mode.host.name": "Host a meeting",
+  "sober.host.mode.host.desc": "Propose a new alcohol-free gathering.",
+  "sober.host.mode.attend.name": "Attend a meeting",
+  "sober.host.mode.attend.desc": "Ask to join a peer support meeting.",
+  "sober.host.nameLabel.host": "Your name",
+  "sober.host.nameLabel.attend": "Name we should greet you by",
+  "sober.host.namePlaceholder.host": "e.g. Mariana L.",
+  "sober.host.namePlaceholder.attend": "First name or chosen name",
+  "sober.host.detailLabel.host": "What and where",
+  "sober.host.detailLabel.attend": "Which meeting (and anything to flag)",
+  "sober.host.detailPlaceholder.host":
+    "A morning walk, a quiet book club, a peer support circle… venue, day, rough time.",
+  "sober.host.detailPlaceholder.attend":
+    "e.g. the weekly Sober & Queer peer support — and whether you'd like a buddy to meet you there.",
+  "sober.host.cancelCta": "Cancel",
+  "sober.host.submitCta.host": "Submit gathering",
+  "sober.host.submitCta.attend": "Request to attend",
 };

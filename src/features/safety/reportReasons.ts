@@ -46,6 +46,30 @@ export const REASON_LABELS: Record<ReasonCode, string> = {
 };
 
 /**
+ * Stable code → catalog key. `reasonCode` is the value that gets stored on the
+ * report (server-owned, stable across languages) — never the translated label.
+ * `ReportPage.tsx` and `FlagModal.tsx` (the two in-namespace consumers) resolve
+ * these with `t()` at render time instead of reading `REASON_LABELS` directly.
+ * `REASON_LABELS` itself is left untouched: `forum`/`feed`/`admin` (outside this
+ * sweep's scope) still depend on its plain-English shape.
+ */
+export const REASON_LABEL_KEYS: Record<ReasonCode, string> = {
+  outing: "safety:reason.outing",
+  doxxing: "safety:reason.doxxing",
+  harassment: "safety:reason.harassment",
+  hate_speech: "safety:reason.hateSpeech",
+  unwanted_contact: "safety:reason.unwantedContact",
+  impersonation: "safety:reason.impersonation",
+  discrimination: "safety:reason.discrimination",
+  spam: "safety:reason.spam",
+  off_topic: "safety:reason.offTopic",
+  venue_safety: "safety:reason.venueSafety",
+  venue_staff: "safety:reason.venueStaff",
+  venue_accessibility: "safety:reason.venueAccessibility",
+  other: "safety:reason.other",
+};
+
+/**
  * Which reason codes are offered per subject type. Every subject also gets
  * `other`. Emergency severity (outing / doxxing / threat) is derived
  * server-side — the reporter never chooses it.

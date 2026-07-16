@@ -3,6 +3,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { CompanyProfile } from "./companies.data";
 import styles from "./CompanyPage.module.css";
@@ -25,16 +26,20 @@ export function CompanyCover({
   openRoles: number;
   onSeeRoles: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [following, setFollowing] = useState(false);
 
   function toggleFollow() {
-    setFollowing((f) => {
-      const next = !f;
+    setFollowing((wasFollowing) => {
+      const next = !wasFollowing;
       showToast(
-        next
-          ? `Following ${profile.nameText} — you'll hear about new roles`
-          : `Unfollowed ${profile.nameText}`,
+        t(
+          next
+            ? "economy:company.cover.toast.followed"
+            : "economy:company.cover.toast.unfollowed",
+          { name: profile.nameText },
+        ),
         "success",
       );
       return next;
@@ -45,7 +50,7 @@ export function CompanyCover({
     <div className={styles.cover}>
       <div className={styles.coverInner}>
         <Link to={routes.jobs} className={styles.back}>
-          <FiArrowLeft /> All companies
+          <FiArrowLeft /> {t("economy:company.cover.backCta")}
         </Link>
         <div className={styles.head}>
           <div
@@ -58,21 +63,26 @@ export function CompanyCover({
             <h1 className={styles.name}>{profile.name}</h1>
             <p className={styles.tagline}>{profile.tagline}</p>
             <div className={styles.badges}>
-              {profile.badges.map((b) => (
+              {profile.badges.map((badge) => (
                 <span
-                  key={b.label}
-                  className={[styles.badge, badgeClass[b.kind ?? "plain"]]
+                  key={badge.label}
+                  className={[
+                    styles.badge,
+                    badgeClass[badge.kind ?? "plain"],
+                  ]
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  {b.label}
+                  {badge.label}
                 </span>
               ))}
             </div>
             <div className={styles.actions}>
               {openRoles > 0 && (
                 <Button variant="primary" onClick={onSeeRoles}>
-                  See {openRoles} open role{openRoles > 1 ? "s" : ""}
+                  {t("economy:company.cover.seeOpenRoles", {
+                    count: openRoles,
+                  })}
                 </Button>
               )}
               <Button
@@ -80,10 +90,12 @@ export function CompanyCover({
                 onClick={toggleFollow}
                 aria-pressed={following}
               >
-                {following ? "Following" : "Follow company"}
+                {following
+                  ? t("economy:company.cover.following")
+                  : t("economy:company.cover.follow")}
               </Button>
               <Button variant="ghost-dark" to={routes.messages}>
-                Message
+                {t("economy:company.cover.message")}
               </Button>
             </div>
           </div>
@@ -91,15 +103,15 @@ export function CompanyCover({
       </div>
       <div className={styles.stats}>
         <div className={styles.statsInner}>
-          {profile.stats.map((s) => (
-            <div key={s.label} className={styles.stat}>
-              <b>{s.value}</b>
-              {s.label}
+          {profile.stats.map((stat) => (
+            <div key={stat.label} className={styles.stat}>
+              <b>{stat.value}</b>
+              {stat.label}
             </div>
           ))}
           <div className={styles.stat}>
             <b>{openRoles}</b>
-            {openRoles === 1 ? "Open role" : "Open roles"}
+            {t("economy:company.cover.openRoleStat", { count: openRoles })}
           </div>
         </div>
       </div>

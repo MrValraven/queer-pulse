@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { FiPlay, FiShare2 } from "react-icons/fi";
 import { Avatar, FadeIn, ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   continueWatching,
@@ -14,6 +16,7 @@ import styles from "./CinemaShortsPage.module.css";
 
 /** Pick-up-where-you-left-off rail. Hidden when nothing is in progress. */
 export function ContinueWatching() {
+  const { t } = useTranslation();
   const items = continueWatching
     .map((c) => ({ film: getShort(c.id), pct: c.pct }))
     .filter(
@@ -28,13 +31,14 @@ export function ContinueWatching() {
     <div>
       <SecDiv
         title={
-          <>
-            Continue <em>watching</em>
-          </>
+          <Translation
+            i18nKey="cinema:shorts.shelf.continueWatching.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Pick up where you left off"
+        sub={t("cinema:shorts.shelf.continueWatching.sub")}
         actionTo={routes.cinemaWatch}
-        actionLabel="Your library →"
+        actionLabel={t("cinema:shorts.shelf.continueWatching.cta")}
       />
       <div className={styles.rail}>
         {items.map(({ film, pct }) => {
@@ -67,7 +71,10 @@ export function ContinueWatching() {
                 <ShortTitle film={film} />
               </div>
               <div className={styles.cwLeft}>
-                {left} min left · {film.makerShort}
+                {t("cinema:shorts.shelf.continueWatching.minutesLeft", {
+                  minutes: left,
+                  maker: film.makerShort,
+                })}
               </div>
             </Link>
           );
@@ -79,17 +86,19 @@ export function ContinueWatching() {
 
 /** Curated short-set programmes. */
 export function Programmes({ shelf }: { shelf: ShortsShelf }) {
+  const { t } = useTranslation();
   return (
     <>
       <SecDiv
         title={
-          <>
-            Watch by <em>programme</em>
-          </>
+          <Translation
+            i18nKey="cinema:shorts.shelf.programmes.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Short sets curated by members — a way in when you don't know where to start"
+        sub={t("cinema:shorts.shelf.programmes.sub")}
         actionTo={routes.cinemaCollections}
-        actionLabel="All programmes →"
+        actionLabel={t("cinema:shorts.shelf.programmes.cta")}
       />
       <div className={styles.progGrid}>
         {programmes.map((p) => (
@@ -109,7 +118,7 @@ export function Programmes({ shelf }: { shelf: ShortsShelf }) {
               role="button"
               tabIndex={0}
               className={styles.progShare}
-              aria-label="Share programme"
+              aria-label={t("cinema:shorts.shelf.programmes.shareAriaLabel")}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -141,17 +150,19 @@ export function Programmes({ shelf }: { shelf: ShortsShelf }) {
 
 /** People-behind-the-films row. */
 export function MeetTheMakers() {
+  const { t } = useTranslation();
   return (
     <>
       <SecDiv
         title={
-          <>
-            Meet the <em>makers</em>
-          </>
+          <Translation
+            i18nKey="cinema:shorts.shelf.meetMakers.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Every film here has a person behind it — say hello"
+        sub={t("cinema:shorts.shelf.meetMakers.sub")}
         actionTo={routes.cinemaBrowse}
-        actionLabel="All filmmakers →"
+        actionLabel={t("cinema:shorts.shelf.meetMakers.cta")}
       />
       <div className={styles.makersRow}>
         {makers.map((m, i) => (

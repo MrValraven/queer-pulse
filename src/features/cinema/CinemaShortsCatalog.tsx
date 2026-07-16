@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FiFilm, FiSearch, FiX, FiZap } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
+  FILTER_CAT_LABEL_KEYS,
   filterAndSortShorts,
   filterByKey,
   filterCatOrder,
@@ -19,11 +22,12 @@ const madeHere = `${routes.cinemaBrowse}?f=made-here`;
 
 /** Full "Made Here" catalogue with live search, language, sort and filters. */
 export function CinemaShortsCatalog({ shelf }: { shelf: ShortsShelf }) {
+  const { t } = useTranslation();
   const [state, setState] = useState<CatalogState>({
     active: [],
     lang: "",
     query: "",
-    sort: sortOptions[0]!,
+    sort: sortOptions[0]!.value,
   });
   const [flashId, setFlashId] = useState<string | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);

@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from "react";
 import { FiX } from "react-icons/fi";
 import { useScrollLock } from "../../../shared/hooks";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./adminUi.module.css";
 
 /**
@@ -23,6 +24,7 @@ export function AdminModal({
   children: ReactNode;
 }) {
   useScrollLock();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -49,7 +51,7 @@ export function AdminModal({
             type="button"
             className={styles.modalX}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("admin:common.close")}
           >
             <FiX />
           </button>

@@ -1,5 +1,7 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   StatusHero,
@@ -10,6 +12,8 @@ import {
 } from "./StatusComponents";
 
 export function StatusPage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <StatusHero />
@@ -21,15 +25,18 @@ export function StatusPage() {
       <Outro
         title={
           <>
-            A queer network.
+            {t("system:status.outro.line1")}
             <br />
-            <em>Rooted in Lisbon.</em>
+            <Translation
+              i18nKey="system:status.outro.line2"
+              components={{ em: <em /> }}
+            />
           </>
         }
-        sub="Invite-only. Community-owned. Built to last."
+        sub={t("system:status.outro.sub")}
       >
         <Button size="lg" to={routes.requestInvite}>
-          Request an invite
+          {t("system:status.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

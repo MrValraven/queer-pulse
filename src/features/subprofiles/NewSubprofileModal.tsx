@@ -2,10 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, FormField, Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { currentUserSlug } from "../members/data/members";
 import type { SubprofileKind } from "./api/subprofiles.api";
 import {
   KIND_LABELS,
+  KIND_LABEL_KEYS,
   KIND_SECTIONS,
   SECTION_META,
   defaultSlugForKind,
@@ -32,6 +35,7 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate();
   const { create, update } = useSubprofileMutations();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [kind, setKind] = useState<SubprofileKind | null>(null);
   const [displayName, setDisplayName] = useState("");
   // Slug follows the picked kind until the owner types their own address.
@@ -72,30 +76,33 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
       onClose();
       navigate(`/account/subprofiles/${created.id}/edit`);
     } catch {
-      showToast("We couldn't start that one — try again.", "error");
+      showToast(t("subprofiles:newModal.toastError"), "error");
     }
   }
 
   return (
     <Modal
       title={
-        <>
-          Start a new <em>persona</em>
-        </>
+        <Translation
+          i18nKey="subprofiles:newModal.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Each one is a professional side of you — pick what it's for."
+      sub={t("subprofiles:newModal.sub")}
       onClose={onClose}
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>
-            Cancel
+            {t("subprofiles:newModal.cancel")}
           </Button>
           <Button
             variant="primary"
             onClick={submit}
             disabled={!ready || create.isPending}
           >
-            {create.isPending ? "Creating…" : "Create draft"}
+            {create.isPending
+              ? t("subprofiles:newModal.creating")
+              : t("subprofiles:newModal.create")}
           </Button>
         </>
       }
@@ -114,30 +121,34 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
               onClick={() => pickKind(k)}
             >
               <Icon size={18} aria-hidden />
-              {KIND_LABELS[k]}
+              {t(KIND_LABEL_KEYS[k])}
             </button>
           );
         })}
       </div>
 
       <FormField
-        label="Display name"
-        helper="Optional — leave it blank to be known by the profession."
+        label={t("subprofiles:newModal.displayNameLabel")}
+        helper={t("subprofiles:newModal.displayNameHelper")}
       >
         <input
           value={displayName}
           placeholder={
-            kind ? `e.g. ${KIND_LABELS[kind]}` : "How this persona is known"
+            kind
+              ? t("subprofiles:newModal.displayNamePlaceholderExample", {
+                  kind: t(KIND_LABEL_KEYS[kind]),
+                })
+              : t("subprofiles:newModal.displayNamePlaceholderDefault")
           }
           onChange={(e) => setDisplayName(e.target.value)}
         />
       </FormField>
 
       <FormField
-        label="Profile address"
+        label={t("subprofiles:newModal.addressLabel")}
         helper={
           <>
-            Lives at{" "}
+            {t("subprofiles:metaForm.livesAt")}{" "}
             <span className={styles.pathPreview}>
               /members/{currentUserSlug}/{slug || "…"}
             </span>
@@ -146,7 +157,7 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
       >
         <input
           value={slug}
-          placeholder="e.g. poetry"
+          placeholder={t("subprofiles:newModal.addressPlaceholder")}
           onChange={(e) => {
             setSlugEdited(true);
             setSlug(e.target.value);

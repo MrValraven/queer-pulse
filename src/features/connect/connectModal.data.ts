@@ -1,9 +1,11 @@
-export const REASONS = [
-  "I'd love to collaborate",
-  "I'd like some advice",
-  "I saw your board post",
-  "I think we should meet",
-  "Something else entirely",
+/** i18n Pattern A — chrome options for the "what's this about?" picker.
+ *  `id` is the stable value the field stores; `labelKey` resolves via `t()`. */
+export const REASONS: { id: string; labelKey: string }[] = [
+  { id: "collaborate", labelKey: "connect:form.reasonCollaborate" },
+  { id: "advice", labelKey: "connect:form.reasonAdvice" },
+  { id: "sawPost", labelKey: "connect:form.reasonSawPost" },
+  { id: "shouldMeet", labelKey: "connect:form.reasonShouldMeet" },
+  { id: "somethingElse", labelKey: "connect:form.reasonSomethingElse" },
 ];
 
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

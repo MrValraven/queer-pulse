@@ -4,6 +4,8 @@ import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../../shared/components/layout";
 import { FadeIn } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { Translation } from "../../../shared/i18n/Translation";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useCreatedCommunities } from "../../../app/providers/CreatedCommunitiesProvider";
 import { useCommunityMembership } from "../../../app/providers/CommunityMembershipProvider";
@@ -32,20 +34,50 @@ import styles from "./StartCommunityPage.module.css";
 
 type Phase = "form" | "opening" | "done";
 
-const NEXT_LABELS = [
-  "Let's begin →",
-  "Next: the people →",
-  "Next: the door →",
-  "Next: who runs it →",
-  "Next: the tone →",
-  "Next: the feeling →",
-  "Next: the first few →",
-  "Review & open →",
-  "Open the doors →",
+const NEXT_LABEL_KEYS = [
+  "communities:start.next.begin",
+  "communities:start.next.people",
+  "communities:start.next.door",
+  "communities:start.next.who",
+  "communities:start.next.tone",
+  "communities:start.next.feeling",
+  "communities:start.next.first",
+  "communities:start.next.review",
+  "communities:start.next.open",
 ];
+
+/** Page header: back link, eyebrow, and the coral-`<em>` title/lead. */
+function StartCommunityHero() {
+  const { t } = useTranslation();
+  return (
+    <header className={styles.hero}>
+      <div className={`${styles.heroInner} wrap`}>
+        <Link to={routes.communitiesHome} className={styles.back}>
+          <FiArrowLeft size={14} /> {t("communities:start.hero.back")}
+        </Link>
+        <div className={styles.eyebrow}>
+          {t("communities:start.hero.eyebrow")}
+        </div>
+        <h1 className={styles.h1}>
+          <Translation
+            i18nKey="communities:start.hero.title"
+            components={{ em: <em /> }}
+          />
+        </h1>
+        <p className={styles.lead}>
+          <Translation
+            i18nKey="communities:start.hero.lead"
+            components={{ strong: <b /> }}
+          />
+        </p>
+      </div>
+    </header>
+  );
+}
 
 export function StartCommunityPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const { createCommunity } = useCreatedCommunities();
@@ -89,7 +121,7 @@ export function StartCommunityPage() {
           if (dto) navigate(`/community/${dto.slug}`);
         },
         onError: () => {
-          showToast("Couldn't open your community — try again.", "error");
+          showToast(t("communities:start.toast.createError"), "error");
           setPhase("form");
         },
       });
@@ -100,7 +132,10 @@ export function StartCommunityPage() {
       createOwned(record.slug);
       setCreated(record);
       setPhase("done");
-      showToast(`${record.name} is live — welcome, steward`, "success");
+      showToast(
+        t("communities:start.toast.created", { name: record.name }),
+        "success",
+      );
       scrollUp();
     }, 1500);
   };
@@ -120,22 +155,7 @@ export function StartCommunityPage() {
 
   return (
     <PageShell>
-      <header className={styles.hero}>
-        <div className={`${styles.heroInner} wrap`}>
-          <Link to={routes.communitiesHome} className={styles.back}>
-            <FiArrowLeft size={14} /> Back to your communities
-          </Link>
-          <div className={styles.eyebrow}>Communities · found a space</div>
-          <h1 className={styles.h1}>
-            Start a <em>community.</em>
-          </h1>
-          <p className={styles.lead}>
-            A place for your people to gather — social, support, creative, or
-            something only you can name.{" "}
-            <b>Nothing goes live until you're ready.</b>
-          </p>
-        </div>
-      </header>
+      <StartCommunityHero />
 
       <div className="wrap">
         {phase === "form" && (
@@ -164,9 +184,15 @@ export function StartCommunityPage() {
                     )}
                     <PanelActions
                       onBack={back}
-                      backLabel={step === 0 ? "Cancel" : "← Back"}
+                      backLabel={
+                        step === 0
+                          ? t("communities:start.cancel")
+                          : t("communities:start.back")
+                      }
                       onNext={next}
-                      nextLabel={NEXT_LABELS[step] ?? "Continue →"}
+                      nextLabel={t(
+                        NEXT_LABEL_KEYS[step] ?? "communities:start.next.fallback",
+                      )}
                       missing={form.missing[step] ?? []}
                       flush={step === 0}
                     />
@@ -183,7 +209,7 @@ export function StartCommunityPage() {
           <div className={styles.page}>
             <div className={styles.statusPanel}>
               <div className={styles.ring} />
-              <p>Opening the doors…</p>
+              <p>{t("communities:start.opening.status")}</p>
             </div>
           </div>
         )}

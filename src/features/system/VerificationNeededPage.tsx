@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthLayout } from "../auth/AuthLayout";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
 import {
   ExpiredPanel,
   MagicLinkMethod,
@@ -82,12 +83,16 @@ export function VerificationNeededPage() {
       </div>
 
       <h1>
-        Quick check · <em>is this still you?</em>
+        <Translation
+          i18nKey="system:verificationNeeded.heading"
+          components={{ em: <em /> }}
+        />
       </h1>
       <p className={styles.lead}>
-        For your next step we need to confirm it’s still you on this device.{" "}
-        <b>This is one of two actions</b> we re-auth for: cancelling membership,
-        or removing your account.
+        <Translation
+          i18nKey="system:verificationNeeded.lead"
+          components={{ b: <b /> }}
+        />
       </p>
 
       <div className={styles.actionCard}>
@@ -98,7 +103,10 @@ export function VerificationNeededPage() {
           </svg>
         </div>
         <span>
-          You’re about to <b>cancel your Sustainer membership</b>
+          <Translation
+            i18nKey="system:verificationNeeded.actionCard"
+            components={{ b: <b /> }}
+          />
         </span>
       </div>
 
@@ -109,15 +117,19 @@ export function VerificationNeededPage() {
       </div>
 
       <p className={styles.foot}>
-        This re-auth expires in{" "}
-        <b
-          className={[styles.timer, urgent && styles.timerUrgent]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {fmt(secondsLeft)}
-        </b>
-        .
+        <Translation
+          i18nKey="system:verificationNeeded.foot"
+          values={{ time: fmt(secondsLeft) }}
+          components={{
+            b: (
+              <b
+                className={[styles.timer, urgent && styles.timerUrgent]
+                  .filter(Boolean)
+                  .join(" ")}
+              />
+            ),
+          }}
+        />
       </p>
     </AuthLayout>
   );

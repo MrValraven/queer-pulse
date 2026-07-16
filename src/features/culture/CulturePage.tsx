@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   ClubSection,
@@ -14,6 +16,7 @@ import { TABS, type TabKey } from "./culture.data";
 import styles from "./CulturePage.module.css";
 
 export function CulturePage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<TabKey>("club");
   const [submitOpen, setSubmitOpen] = useState(false);
 
@@ -21,25 +24,25 @@ export function CulturePage() {
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Lisbon scene & radio</div>
+          <div className={styles.cat}>{t("culture:hero.eyebrow")}</div>
           <h1 className={styles.heroH}>
-            Lisbon's queer <em>scene</em>.
+            <Translation
+              i18nKey="culture:hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.lead}>
-            The clubs, commissions, showcases, and radio that make up the city's
-            queer cultural life — community-curated, ever-changing.
-          </p>
+          <p className={styles.lead}>{t("culture:hero.lead")}</p>
           <div className={styles.tabs} role="tablist">
-            {TABS.map((t) => (
+            {TABS.map((tabItem) => (
               <button
                 type="button"
-                key={t.key}
+                key={tabItem.key}
                 role="tab"
-                aria-selected={tab === t.key}
-                className={`${styles.tab} ${tab === t.key ? styles.tabActive : ""}`}
-                onClick={() => setTab(t.key)}
+                aria-selected={tab === tabItem.key}
+                className={`${styles.tab} ${tab === tabItem.key ? styles.tabActive : ""}`}
+                onClick={() => setTab(tabItem.key)}
               >
-                {t.label}
+                {t(tabItem.labelKey)}
               </button>
             ))}
           </div>
@@ -61,17 +64,18 @@ export function CulturePage() {
 
       <Outro
         title={
-          <>
-            Make something <em>with us.</em>
-          </>
+          <Translation
+            i18nKey="culture:outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Culture isn't what happens at events. It's what we build between them — quietly, consistently, together."
+        sub={t("culture:outro.sub")}
       >
         <Button size="lg" onClick={() => setSubmitOpen(true)}>
-          Submit your work
+          {t("culture:outro.submitWorkCta")}
         </Button>
         <Button size="lg" variant="ghost-dark" to={routes.communities}>
-          Explore communities
+          {t("culture:outro.exploreCommunitiesCta")}
         </Button>
       </Outro>
 

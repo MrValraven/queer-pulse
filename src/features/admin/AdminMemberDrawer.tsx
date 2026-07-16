@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { AdminDrawer, AdminAvatar, AdminChip } from "./ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { VouchGraphPreview } from "./VouchGraphPreview";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminVouchGraphModal } from "./AdminVouchGraphModal";
 import { personIdByInitials } from "./adminVouchGraph.data";
 import {
+  MemberOverviewSections,
   ModerationTimeline,
   SealedIdentity,
 } from "./AdminMemberDrawerSections";
@@ -23,6 +24,7 @@ const firstName = (full: string) => full.split(" ")[0];
 
 export function AdminMemberDrawer({ member, onClose }: Props) {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [confirming, setConfirming] = useState(false);
   const [modal, setModal] = useState<"message" | "restrict" | "network" | null>(
     null,
@@ -54,7 +56,11 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
                   tone={member.verified ? "jade" : member.statusTone}
                   dot
                 >
-                  {member.verified ? "Verified member" : member.statusLabel}
+                  {member.verified
+                    ? t("admin:members.drawer.verifiedChip")
+                    : t("admin:members.status.openReports", {
+                        count: member.openReportsCount ?? 0,
+                      })}
                 </AdminChip>
               </div>
             </div>
@@ -66,7 +72,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
               body={detail.removeBody}
               onKeep={() => setConfirming(false)}
               onContinue={() =>
-                showToast("A reason is required before removal", "error")
+                showToast(t("admin:members.drawer.reasonRequiredToast"), "error")
               }
             />
           ) : (
@@ -75,100 +81,44 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
                 variant="jade"
                 size="md"
                 onClick={() =>
-                  showToast(`${member.name} is verified.`, "success")
+                  showToast(
+                    t("admin:members.drawer.verifiedToast", { name: member.name }),
+                    "success",
+                  )
                 }
               >
-                Verify
+                {t("admin:members.drawer.verifyCta")}
               </Button>
               <Button
                 variant="ghost"
                 size="md"
                 onClick={() => setModal("message")}
               >
-                Message
+                {t("admin:members.drawer.messageCta")}
               </Button>
               <Button
                 variant="ghost"
                 size="md"
                 onClick={() => setModal("restrict")}
               >
-                Restrict…
+                {t("admin:members.drawer.restrictCta")}
               </Button>
               <Button
                 variant="danger"
                 size="md"
                 onClick={() => setConfirming(true)}
               >
-                Remove member…
+                {t("admin:members.drawer.removeCta")}
               </Button>
             </div>
           )
         }
       >
-        <section className={styles.dSection}>
-          <h3 className={styles.dHeading}>At a glance</h3>
-          <div className={styles.glanceGrid}>
-            {detail.glance.map((s) => (
-              <div key={s.label} className={styles.glanceStat}>
-                <div className={styles.glanceValue}>{s.value}</div>
-                <div className={styles.glanceLabel}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.dSection}>
-          <h3 className={styles.dHeading}>Vouch graph — who trusts them</h3>
-          <div
-            className={styles.graphWrap}
-            role="button"
-            tabIndex={0}
-            aria-label="Open the full trust network"
-            title="Open the full trust network"
-            onClick={() => setModal("network")}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setModal("network");
-              }
-            }}
-          >
-            <VouchGraphPreview focusId={focusId} />
-          </div>
-          <div className={styles.graphNoteRow}>
-            <p className={styles.dHint}>{detail.graphNote}</p>
-            <Button
-              variant="ghost"
-              size="md"
-              onClick={() => setModal("network")}
-            >
-              Explore network →
-            </Button>
-          </div>
-        </section>
-
-        <section className={styles.dSection}>
-          <h3 className={styles.dHeading}>Communities</h3>
-          <div className={styles.commChips}>
-            {detail.communities.map((c) => (
-              <AdminChip key={c.label} tone={c.tone}>
-                {c.label}
-              </AdminChip>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.dSection}>
-          <h3 className={styles.dHeading}>Contribution history</h3>
-          <ul className={styles.contribList}>
-            {detail.contributions.map((c, i) => (
-              <li key={i} className={styles.contribItem}>
-                <span>{c.what}</span>
-                <span className={styles.contribWhen}>{c.when}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <MemberOverviewSections
+          detail={detail}
+          focusId={focusId}
+          onOpenNetwork={() => setModal("network")}
+        />
 
         <ModerationTimeline entries={detail.moderationTimeline} />
 
@@ -188,7 +138,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
           onClose={() => setModal(null)}
           onSend={() => {
             setModal(null);
-            showToast("Message sent", "success");
+            showToast(t("admin:members.drawer.messageSentToast"), "success");
           }}
         />
       )}
@@ -198,18 +148,29 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
           name={member.name}
           onClose={() => setModal(null)}
           onMissingReason={() =>
-            showToast(`A reason is required — ${first} will see it`, "error")
+            showToast(
+              t("admin:members.drawer.missingReasonToast", { name: first }),
+              "error",
+            )
           }
-          onApply={(dur, scope) => {
+          onApply={(durationLabel, scopeLabel) => {
             setModal(null);
             onClose();
             showToast(
-              `Restricted · ${dur} · ${scope} — ${first} notified`,
+              t("admin:members.drawer.restrictedToast", {
+                name: first,
+                duration: durationLabel,
+                scope: scopeLabel,
+              }),
               "success",
               undefined,
               {
-                label: "Undo",
-                onClick: () => showToast("Restriction reversed.", "info"),
+                label: t("admin:common.undo"),
+                onClick: () =>
+                  showToast(
+                    t("admin:members.drawer.restrictionUndoneToast"),
+                    "info",
+                  ),
               },
             );
           }}
@@ -228,16 +189,19 @@ function RemovePanel({
   onKeep: () => void;
   onContinue: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.removePanel}>
-      <p className={styles.removeTitle}>Removing a member is permanent.</p>
+      <p className={styles.removeTitle}>
+        {t("admin:members.drawer.removePanel.title")}
+      </p>
       <p className={styles.removeText}>{body}</p>
       <div className={styles.removeActions}>
         <Button variant="ghost" size="md" onClick={onKeep}>
-          Keep member
+          {t("admin:members.drawer.removePanel.keepCta")}
         </Button>
         <Button variant="danger" size="md" onClick={onContinue}>
-          I understand — continue
+          {t("admin:members.drawer.removePanel.continueCta")}
         </Button>
       </div>
     </div>

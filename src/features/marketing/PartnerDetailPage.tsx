@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { usePartner } from "./api/usePartner";
 import { routes } from "../../app/routeMap";
 import {
@@ -40,6 +41,7 @@ function PartnerDetailLoading() {
 }
 
 export function PartnerDetailPage() {
+  const { t } = useTranslation();
   const { slug } = useParams();
   const [tab, setTab] = useState<PartnerTab>("about");
 
@@ -57,11 +59,9 @@ export function PartnerDetailPage() {
     return (
       <PageShell>
         <div className={s.page}>
-          <p className={s.error}>
-            We couldn't load this partner just now. Please try again.
-          </p>
+          <p className={s.error}>{t("marketing:partnerDetail.loadError")}</p>
           <Button variant="ghost" to={routes.partners}>
-            ← All partners
+            {t("marketing:partnerDetail.backCta")}
           </Button>
         </div>
       </PageShell>
@@ -74,7 +74,7 @@ export function PartnerDetailPage() {
     <PageShell>
       <div className={s.page}>
         <Link to={routes.partners} className={s.back}>
-          ← All partners
+          {t("marketing:partnerDetail.backCta")}
         </Link>
 
         <header className={s.hero}>

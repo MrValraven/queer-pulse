@@ -15,6 +15,7 @@ import { closeJob } from "../../features/economy/api/jobs.api";
 import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import { logError } from "../../shared/observability/logger";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 
 interface PostedJobsContextValue {
   /** Member-posted jobs, newest first. Merged into the board + company pages. */
@@ -52,6 +53,7 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
   const queryClient = useQueryClient();
+  const { t, language } = useTranslation();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -66,11 +68,11 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
   // hits the network) in demo mode. The query key carries `demoMode` so the two
   // modes never share a cache entry.
   const { data: serverJobs = [] } = useQuery({
-    queryKey: ["myJobs", demoMode],
+    queryKey: ["myJobs", demoMode, language],
     enabled: !demoMode && loggedIn,
     queryFn: async () => {
       const res = await getMyJobs();
-      return res.items.map(jobCardToJob);
+      return res.items.map((dto) => jobCardToJob(dto, t));
     },
   });
 

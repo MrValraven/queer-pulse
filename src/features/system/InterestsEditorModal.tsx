@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DEFAULT_INTERESTS, INTEREST_OPTIONS } from "./interestsEditor.data";
 import styles from "./InterestsEditorModal.module.css";
 
@@ -12,14 +14,15 @@ import styles from "./InterestsEditorModal.module.css";
  */
 export function InterestsEditorModal({ onClose }: { onClose: () => void }) {
   useScrollLock();
+  const { t } = useTranslation();
   const [selected, setSelected] = useState<string[]>(DEFAULT_INTERESTS);
   const [saved, setSaved] = useState(false);
 
-  function toggle(interest: string) {
+  function toggle(interestId: string) {
     setSelected((prev) =>
-      prev.includes(interest)
-        ? prev.filter((i) => i !== interest)
-        : [...prev, interest],
+      prev.includes(interestId)
+        ? prev.filter((id) => id !== interestId)
+        : [...prev, interestId],
     );
   }
 
@@ -40,7 +43,7 @@ export function InterestsEditorModal({ onClose }: { onClose: () => void }) {
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("system:interestsEditor.closeAria")}
         >
           ×
         </button>
@@ -51,52 +54,55 @@ export function InterestsEditorModal({ onClose }: { onClose: () => void }) {
               <FiCheck />
             </div>
             <h2 id="interests-title" className={styles.successTitle}>
-              Interests <em>updated.</em>
+              <Translation
+                i18nKey="system:interestsEditor.success.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.successSub}>
-              We've noted your {selected.length} interest
-              {selected.length === 1 ? "" : "s"}. A vouching member with
-              overlapping interests will pick up your request — keeping these
-              current can speed up the match.
+              {t("system:interestsEditor.success.sub", {
+                count: selected.length,
+              })}
             </p>
             <div className={styles.successActions}>
               <Button variant="ghost-dark" onClick={onClose}>
-                Done
+                {t("system:interestsEditor.success.doneCta")}
               </Button>
             </div>
           </div>
         ) : (
           <>
-            <div className={styles.eye}>Invite request · interests</div>
+            <div className={styles.eye}>{t("system:interestsEditor.eyebrow")}</div>
             <h2 id="interests-title" className={styles.title}>
-              Update your <em>interests.</em>
+              <Translation
+                i18nKey="system:interestsEditor.title"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p className={styles.desc}>
-              We match your request to a vouching member with overlapping
-              interests. Pick the ones that fit — the more honest, the better
-              the match.
-            </p>
+            <p className={styles.desc}>{t("system:interestsEditor.desc")}</p>
 
             <div className={styles.chips}>
-              {INTEREST_OPTIONS.map((interest) => {
-                const on = selected.includes(interest);
+              {INTEREST_OPTIONS.map((option) => {
+                const on = selected.includes(option.id);
                 return (
                   <button
-                    key={interest}
+                    key={option.id}
                     type="button"
                     className={`${styles.chip} ${on ? styles.chipOn : ""}`}
                     aria-pressed={on}
-                    onClick={() => toggle(interest)}
+                    onClick={() => toggle(option.id)}
                   >
-                    {interest}
+                    {t(option.labelKey)}
                   </button>
                 );
               })}
             </div>
 
             <div className={styles.count}>
-              {selected.length} selected
-              {selected.length < 2 ? " · pick at least 2" : ""}
+              {t("system:interestsEditor.count", { count: selected.length })}
+              {selected.length < 2
+                ? ` · ${t("system:interestsEditor.pickAtLeastTwo")}`
+                : ""}
             </div>
 
             <div className={styles.actions}>
@@ -105,10 +111,10 @@ export function InterestsEditorModal({ onClose }: { onClose: () => void }) {
                 disabled={selected.length < 2}
                 onClick={() => setSaved(true)}
               >
-                Save interests
+                {t("system:interestsEditor.saveCta")}
               </Button>
               <Button variant="ghost" onClick={onClose}>
-                Cancel
+                {t("system:interestsEditor.cancelCta")}
               </Button>
             </div>
           </>

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useToast } from "../../shared/components/feedback/useToast";
 import {
@@ -15,11 +17,12 @@ import { LiveStreamModal } from "./LiveStreamModal";
 import styles from "./AnnualAssemblyPage.module.css";
 
 function ResolutionCard({ res }: { res: Resolution }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [vote, setVote] = useState<AssemblyVote>(res.defaultVote ?? null);
   const cast = (v: AssemblyVote) => {
     setVote(v);
-    showToast("Vote recorded · you can change it any time", "success");
+    showToast(t("marketing:annualAssembly.vote.recorded"), "success");
   };
   const cls = (v: AssemblyVote) =>
     [
@@ -47,14 +50,14 @@ function ResolutionCard({ res }: { res: Resolution }) {
           {res.yesLabel}
         </button>
         <button type="button" className={cls("no")} onClick={() => cast("no")}>
-          No · reject
+          {t("marketing:annualAssembly.vote.noCta")}
         </button>
         <button
           type="button"
           className={cls("abstain")}
           onClick={() => cast("abstain")}
         >
-          Abstain
+          {t("marketing:annualAssembly.vote.abstainCta")}
         </button>
       </div>
       <div className={styles.resBar}>
@@ -64,15 +67,17 @@ function ResolutionCard({ res }: { res: Resolution }) {
       </div>
       <div className={styles.resTally}>
         <span className={styles.jade}>
-          Yes <b>{res.tally.yes.split(" · ")[0]}</b> ·{" "}
+          {t("marketing:annualAssembly.vote.tallyYes")}{" "}
+          <b>{res.tally.yes.split(" · ")[0]}</b> ·{" "}
           {res.tally.yes.split(" · ")[1]}
         </span>
         <span className={styles.accent}>
-          No <b>{res.tally.no.split(" · ")[0]}</b> ·{" "}
-          {res.tally.no.split(" · ")[1]}
+          {t("marketing:annualAssembly.vote.tallyNo")}{" "}
+          <b>{res.tally.no.split(" · ")[0]}</b> · {res.tally.no.split(" · ")[1]}
         </span>
         <span>
-          Abstain <b>{res.tally.abstain.split(" · ")[0]}</b> ·{" "}
+          {t("marketing:annualAssembly.vote.tallyAbstain")}{" "}
+          <b>{res.tally.abstain.split(" · ")[0]}</b> ·{" "}
           {res.tally.abstain.split(" · ")[1]}
         </span>
         {res.tally.extra}
@@ -82,14 +87,17 @@ function ResolutionCard({ res }: { res: Resolution }) {
 }
 
 export function AgendaSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <h2>
-        The <em>agenda</em>
+        <Translation
+          i18nKey="marketing:annualAssembly.agenda.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.subText}>
-        Roughly the order. Times are guidelines. We've never finished on time
-        and we don't expect to.
+        {t("marketing:annualAssembly.agenda.sub")}
       </p>
       <div className={styles.agenda}>
         {AGENDA.map((a, i) => (
@@ -113,22 +121,27 @@ export function AgendaSection() {
 }
 
 export function VoteSection() {
+  const { t } = useTranslation();
   const [showAll, setShowAll] = useState(false);
   return (
     <section className={styles.sec} id="vote">
       <h2>
-        Vote · <em>open until 14 Nov · 14:00</em>
+        <Translation
+          i18nKey="marketing:annualAssembly.vote.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.subText}>
-        Everyone votes — whether you're attending or not. Cast your vote any
-        time; you can change it until the close.{" "}
-        <em>One vote per member, per resolution.</em>
+        <Translation
+          i18nKey="marketing:annualAssembly.vote.sub"
+          components={{ em: <em /> }}
+        />
       </p>
       <div className={styles.quorumStrip}>
-        <b>Quorum:</b> 184 votes required to validate a resolution.{" "}
-        <em>Currently at 312 votes cast</em> — quorum met.{" "}
-        <b>Yes/no thresholds:</b> simple majority for budget items; 60%
-        supermajority for Code of Conduct &amp; manifesto changes.
+        <Translation
+          i18nKey="marketing:annualAssembly.vote.quorumStrip"
+          components={{ b: <b />, em: <em /> }}
+        />
       </div>
       {RESOLUTIONS.map((r, i) => (
         <ResolutionCard res={r} key={i} />
@@ -150,7 +163,9 @@ export function VoteSection() {
               }
             }}
           >
-            Show {MORE_RESOLUTIONS.length} more resolutions →
+            {t("marketing:annualAssembly.vote.showMore", {
+              count: MORE_RESOLUTIONS.length,
+            })}
           </a>
         </p>
       )}
@@ -159,27 +174,24 @@ export function VoteSection() {
 }
 
 export function AttendCard() {
+  const { t } = useTranslation();
   const [stream, setStream] = useState(false);
   return (
     <div className={styles.attendCard}>
       <div>
-        <h3>Can't make it in person?</h3>
-        <p>
-          Vote online any time until 14 Nov · 14:00. Watch the live stream of
-          the in-person sessions with chat. Read the minutes the following
-          Friday.
-        </p>
+        <h3>{t("marketing:annualAssembly.attend.title")}</h3>
+        <p>{t("marketing:annualAssembly.attend.body")}</p>
       </div>
       <div className={styles.attendActions}>
         <Button href="#vote" variant="primary">
-          Cast your vote
+          {t("marketing:annualAssembly.attend.voteCta")}
         </Button>
         <Button
           type="button"
           variant="ghost-dark"
           onClick={() => setStream(true)}
         >
-          Live stream link
+          {t("marketing:annualAssembly.attend.streamCta")}
         </Button>
       </div>
       {stream && <LiveStreamModal onClose={() => setStream(false)} />}
@@ -188,13 +200,17 @@ export function AttendCard() {
 }
 
 export function PastAssembliesSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <h2>
-        Past <em>assemblies</em>
+        <Translation
+          i18nKey="marketing:annualAssembly.past.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.subText}>
-        Every Annual Assembly's resolutions and minutes are public.
+        {t("marketing:annualAssembly.past.sub")}
       </p>
       {HISTORY.map((h) => (
         <div className={styles.historyRow} key={h.y}>
@@ -209,7 +225,7 @@ export function PastAssembliesSection() {
             className={styles.histLink}
             to={`${routes.annualAssembly}/minutes/202${h.y}`}
           >
-            Minutes →
+            {t("marketing:annualAssembly.past.minutesCta")}
           </Link>
         </div>
       ))}

@@ -1,16 +1,17 @@
 import { useRef } from "react";
 import { sx } from "./myEvents.styles";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { useMyEvents } from "./MyEventsContext";
-import { MON, MONFULL } from "./myEvents.data";
 import { CalendarGrid } from "./CalendarGrid";
 import { CalendarSubscribe } from "./CalendarSubscribe";
 import { InsightsCard } from "./InsightsCard";
 import type { CalView } from "./myEvents.types";
 
-const VIEWS: { key: CalView; label: string }[] = [
-  { key: "month", label: "Month" },
-  { key: "week", label: "Week" },
-  { key: "year", label: "Year" },
+const VIEWS: { key: CalView; labelKey: string }[] = [
+  { key: "month", labelKey: "myevents:calendar.view.month" },
+  { key: "week", labelKey: "myevents:calendar.view.week" },
+  { key: "year", labelKey: "myevents:calendar.view.year" },
 ];
 
 function monthLabel(
@@ -18,21 +19,26 @@ function monthLabel(
   viewY: number,
   viewM: number,
   weekStart: Date,
+  fmt: Formatters,
 ): string {
   if (calView === "year") return String(viewY);
   if (calView === "week") {
     const end = new Date(weekStart);
     end.setDate(end.getDate() + 6);
-    return `${weekStart.getDate()} ${MON[weekStart.getMonth()]} – ${end.getDate()} ${MON[end.getMonth()]}`;
+    const startLabel = `${weekStart.getDate()} ${fmt.date(weekStart, { month: "short" })}`;
+    const endLabel = `${end.getDate()} ${fmt.date(end, { month: "short" })}`;
+    return `${startLabel} – ${endLabel}`;
   }
-  return `${MONFULL[viewM]} ${viewY}`;
+  return fmt.date(new Date(viewY, viewM, 1), { month: "long", year: "numeric" });
 }
 
 /** The right-hand calendar aside: nav, grid, legend, subscribe, insights. */
 export function CalendarCard() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const c = useMyEvents();
   const cardRef = useRef<HTMLElement>(null);
-  const label = monthLabel(c.calView, c.viewY, c.viewM, c.weekStart);
+  const label = monthLabel(c.calView, c.viewY, c.viewM, c.weekStart, fmt);
 
   return (
     <aside className={sx("cal-card")} ref={cardRef}>
@@ -44,13 +50,13 @@ export function CalendarCard() {
             className={sx("cal-today-btn")}
             onClick={c.goToday}
           >
-            Today
+            {t("myevents:calendar.today")}
           </button>
           <button
             type="button"
             className={sx("cal-arrow")}
             onClick={() => c.shiftMonth(-1)}
-            aria-label="Previous"
+            aria-label={t("myevents:calendar.prevAria")}
           >
             <svg viewBox="0 0 24 24" fill="none" aria-hidden>
               <path
@@ -66,7 +72,7 @@ export function CalendarCard() {
             type="button"
             className={sx("cal-arrow")}
             onClick={() => c.shiftMonth(1)}
-            aria-label="Next"
+            aria-label={t("myevents:calendar.nextAria")}
           >
             <svg viewBox="0 0 24 24" fill="none" aria-hidden>
               <path
@@ -89,7 +95,7 @@ export function CalendarCard() {
             className={sx(`cal-view-btn${c.calView === v.key ? " on" : ""}`)}
             onClick={() => c.setCalView(v.key)}
           >
-            {v.label}
+            {t(v.labelKey)}
           </button>
         ))}
       </div>
@@ -98,13 +104,13 @@ export function CalendarCard() {
 
       <div className={sx("cal-legend")}>
         <div className={sx("cal-leg")}>
-          <span className={sx("ld hosting")} /> Hosting
+          <span className={sx("ld hosting")} /> {t("myevents:calendar.legend.hosting")}
         </div>
         <div className={sx("cal-leg")}>
-          <span className={sx("ld going")} /> Going
+          <span className={sx("ld going")} /> {t("myevents:calendar.legend.going")}
         </div>
         <div className={sx("cal-leg")}>
-          <span className={sx("ld pending")} /> Saved · waitlist · invite
+          <span className={sx("ld pending")} /> {t("myevents:calendar.legend.pending")}
         </div>
       </div>
 

@@ -198,14 +198,13 @@ export function mergeAuthor(
             : "Feature",
           title: featured.title,
           dek: featured.dek,
-          meta: [
-            featured.publishedAt
-              ? `Published ${formatDayMonthYear(featured.publishedAt)}`
-              : null,
-            `${featured.readMinutes} min read`,
-          ]
-            .filter(Boolean)
-            .join(" · "),
+          publishedDate: featured.publishedAt
+            ? new Date(featured.publishedAt)
+            : base.featured.publishedDate,
+          minutes: featured.readMinutes,
+          // No backend contract for a weekly-reads tally (mock-only stat,
+          // same "no live analogue" gap as the editorial furniture below).
+          readsThisWeek: base.featured.readsThisWeek,
           articleId: featured.slug,
           image: base.featured.image,
         }

@@ -7,15 +7,17 @@ import {
   Reveal,
   Spinner,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   usePublicSubprofile,
   type PublicSubprofileArgs,
 } from "./api/usePublicSubprofile";
-import { KIND_LABELS } from "./subprofile-kinds";
+import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { SubprofileSections } from "./SubprofileSections";
 import { SubprofileNotFoundArt } from "./SubprofileNotFoundArt";
-import { NOT_FOUND, OWNER_TIE_PREFIX } from "./subprofilePage.data";
+import { NOT_FOUND } from "./subprofilePage.data";
 import styles from "./SubprofilePage.module.css";
 
 /** Up to two initials from a display name, for the avatar fallback. */
@@ -34,6 +36,7 @@ function initialsFrom(name: string): string {
  * reveals who is behind it.
  */
 export function SubprofilePage() {
+  const { t } = useTranslation();
   const { handle, slug, subslug } = useParams();
   const navigate = useNavigate();
 
@@ -47,7 +50,7 @@ export function SubprofilePage() {
       <PageShell>
         <div className={styles.stateWrap} role="status" aria-live="polite">
           <Spinner />
-          <span>Loading persona…</span>
+          <span>{t("subprofiles:page.loading")}</span>
         </div>
       </PageShell>
     );
@@ -60,11 +63,11 @@ export function SubprofilePage() {
           <SubprofileNotFoundArt />
           <EmptyState
             className={styles.stateEmpty}
-            title={NOT_FOUND.title}
-            description={NOT_FOUND.description}
-            action={NOT_FOUND.action}
+            title={t(NOT_FOUND.titleKey)}
+            description={t(NOT_FOUND.descriptionKey)}
+            action={{ label: t(NOT_FOUND.actionLabelKey), to: NOT_FOUND.actionTo }}
             secondaryAction={{
-              label: NOT_FOUND.backLabel,
+              label: <>← {t(NOT_FOUND.backLabelKey)}</>,
               onClick: () => navigate(-1),
             }}
           />
@@ -92,7 +95,7 @@ export function SubprofilePage() {
               className={styles.avatar}
             />
             <div className={styles.heroText}>
-              <span className={styles.kindBadge}>{KIND_LABELS[data.kind]}</span>
+              <span className={styles.kindBadge}>{t(KIND_LABEL_KEYS[data.kind])}</span>
               <h1 className={styles.name}>{data.displayName}</h1>
               {data.tagline && <p className={styles.tagline}>{data.tagline}</p>}
               {linkedToOwner && (
@@ -100,7 +103,11 @@ export function SubprofilePage() {
                   className={styles.ownerTie}
                   to={`${routes.members}/${data.ownerSlug}`}
                 >
-                  {OWNER_TIE_PREFIX} <em>{data.ownerName}</em>
+                  <Translation
+                    i18nKey="subprofiles:page.ownerTie"
+                    components={{ em: <em /> }}
+                    values={{ name: data.ownerName ?? "" }}
+                  />
                   <FiArrowUpRight aria-hidden />
                 </Link>
               )}

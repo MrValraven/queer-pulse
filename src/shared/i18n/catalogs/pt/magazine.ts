@@ -19,7 +19,7 @@ export const magazine: Catalog = {
   "format.minReadApprox": "~ leitura de {count} min",
   "format.words_one": "{count} palavra",
   "format.words_other": "{count} palavras",
-  "format.readsThisWeek": "{count} leituras esta semana",
+  "format.readsThisWeek": "{reads} leituras esta semana",
   "format.published": "Publicado a {date}",
   "format.issueArticles_one": "Edição {issue} · {count} artigo",
   "format.issueArticles_other": "Edição {issue} · {count} artigos",
@@ -262,4 +262,466 @@ export const magazine: Catalog = {
   "audio.tabs.autoScrollOn": "Deslocamento automático · ativo",
   "audio.tabs.downloadCta": "Transferir",
   "audio.tabs.nowPlaying": "Agora",
+
+  // ══════════════════ Painel de edição (uso interno) ═══════════════════════
+  // Os REGISTOS de peças/propostas (títulos, notas, feed de atividade, nomes
+  // de secções) ficam como dados em inglês — conteúdo editorial, não chrome.
+  // Só a UI do painel, autorada pela plataforma, está traduzida abaixo.
+
+  // ── Vocabulário de fase — indireção por chave (Stage mantém o id em inglês) ──
+  "editor.stage.commissioned": "Encomendado",
+  "editor.stage.drafting": "Em redação",
+  "editor.stage.inReview": "Em revisão",
+  "editor.stage.firstEdit": "Primeira edição",
+  "editor.stage.copyedit": "Revisão de texto",
+  "editor.stage.factCheck": "Verificação de factos",
+  "editor.stage.sensitivityRead": "Leitura de sensibilidade",
+  "editor.stage.ready": "Pronto",
+
+  // ── Composição de dueInfo() / blockedLine() (editorDashboard.data.ts) ─────
+  "editor.due.ready": "Pronto",
+  "editor.due.today": "Hoje",
+  "editor.due.late": "Atrasado · {days}d",
+  "editor.due.inDays": "em {days}d",
+  "editor.blocked.inYourCourt": "→ do teu lado",
+  "editor.blocked.inEditorsCourt": "→ do lado de {editor}",
+  "editor.blocked.waitingOnWriter": "à espera de {name}",
+
+  // ── EditorDashboardHeader ──────────────────────────────────────────────
+  "editor.header.eyebrow": "Editorial · painel da Edição {number}",
+  "editor.header.title": "Edição {number} · <em>{theme}</em>",
+  "editor.header.meta":
+    "Fecha a <b>{closes}</b> · publica a <b>{publishes}</b> · <b>{editors}</b> em edição",
+  "editor.header.viewingAs": "A ver como",
+  "editor.header.viewingAsAria": "Ver o painel como esta pessoa editora",
+  "editor.header.commissionCta": "+ Encomendar",
+
+  // ── EditorStats ────────────────────────────────────────────────────────
+  "editor.stats.piecesInFlight": "Peças em curso",
+  "editor.stats.readyToLayOut": "Prontas para paginar",
+  "editor.stats.behindSchedule": "Atrasadas",
+  "editor.stats.pitchesInInbox": "Propostas na caixa de entrada",
+
+  // ── EditorBulkBar ──────────────────────────────────────────────────────
+  "editor.bulkBar.selected_one": "{count} proposta selecionada",
+  "editor.bulkBar.selected_other": "{count} propostas selecionadas",
+  "editor.bulkBar.accept": "Aceitar",
+  "editor.bulkBar.maybe": "Talvez",
+  "editor.bulkBar.decline": "Recusar",
+  "editor.bulkBar.clear": "Limpar",
+  "editor.bulkBar.note":
+    "Aceitar ou recusar envia automaticamente uma resposta pré-definida a quem escreveu.",
+
+  // ── EditorToolbar ──────────────────────────────────────────────────────
+  "editor.toolbar.searchPlaceholder":
+    "Pesquisar peças, propostas, pessoas colaboradoras…",
+  "editor.toolbar.searchAria": "Pesquisar",
+  "editor.toolbar.clearSearchAria": "Limpar pesquisa",
+  "editor.toolbar.filterEditorAria": "Filtrar por pessoa editora",
+  "editor.toolbar.allEditors": "Todas as pessoas editoras",
+  "editor.toolbar.filterStatusAria": "Filtrar por estado",
+  "editor.toolbar.status.all": "Todos os estados",
+  "editor.toolbar.status.late": "Atrasadas",
+  "editor.toolbar.status.blocked": "Do lado de uma pessoa editora",
+  "editor.toolbar.status.ready": "Prontas",
+  "editor.toolbar.filterSectionAria": "Filtrar por secção",
+  "editor.toolbar.allSections": "Todas as secções",
+  "editor.toolbar.sortAria": "Ordenar peças",
+  "editor.toolbar.sort.due": "Ordenar · prazo",
+  "editor.toolbar.sort.status": "Ordenar · fase",
+  "editor.toolbar.sort.editor": "Ordenar · pessoa editora",
+  "editor.toolbar.sort.section": "Ordenar · secção",
+  "editor.toolbar.sort.words": "Ordenar · extensão",
+  "editor.toolbar.myQueueOn": "A minha fila · ativa",
+  "editor.toolbar.myQueue": "A minha fila",
+  "editor.toolbar.shortcutsHint": "Prime <kbd>?</kbd> para atalhos",
+
+  // ── EditorPiecesTable ──────────────────────────────────────────────────
+  "editor.piecesTable.heading": "Peças · <em>em curso</em>",
+  "editor.piecesTable.countLabel": "{count} · {sort}",
+  "editor.piecesTable.columnPieceEditorArt": "Peça · pessoa editora · imagem",
+  "editor.piecesTable.columnStage": "Fase",
+  "editor.piecesTable.columnDue": "Prazo",
+  "editor.piecesTable.emptyNoneTitle": "Ainda não há nada em curso",
+  "editor.piecesTable.emptyNoneBody":
+    "Não há peças no pipeline neste momento. Aceita uma proposta abaixo ou encomenda uma peça, e ela aparece aqui para editares.",
+  "editor.piecesTable.emptyFilteredTitle": "Nenhuma peça corresponde",
+  "editor.piecesTable.emptyFilteredBody": "Tenta limpar a pesquisa ou os filtros.",
+  "editor.piecesTable.clearFiltersCta": "Limpar filtros",
+
+  // ── EditorPieceRow ─────────────────────────────────────────────────────
+  "editor.pieceRow.withEditor": "com {editor}",
+  "editor.pieceRow.newVoice": "voz nova",
+  "editor.pieceRow.open": "Abrir",
+  "editor.pieceRow.moreActionsAria": "Mais ações",
+
+  // ── EditorPopover (Popover / StageMenu / AssignMenu / MoreMenu) ───────────
+  "editor.popover.movePiece": "Mover “{title}”",
+  "editor.popover.current": "atual",
+  "editor.popover.editorForPiece": "Pessoa editora desta peça",
+  "editor.popover.piecesCount_one": "{count} peça",
+  "editor.popover.piecesCount_other": "{count} peças",
+  "editor.popover.piecesCountCurrent_one": "{count} peça · atual",
+  "editor.popover.piecesCountCurrent_other": "{count} peças · atual",
+  "editor.popover.handOffWithNote": "Passar com uma nota…",
+  "editor.popover.nudge": "Lembrar {name}…",
+  "editor.popover.handOffToCoEditor": "Passar à pessoa coeditora…",
+  "editor.popover.previewInLayout": "Pré-visualizar na paginação",
+  "editor.popover.duplicateBrief": "Duplicar o briefing",
+
+  // ── EditorPitchInbox ───────────────────────────────────────────────────
+  "editor.pitchInbox.heading": "Caixa de propostas · <em>{total}</em>",
+  "editor.pitchInbox.subhead": "resposta média em 6 dias · triagem em lote ↓",
+  "editor.pitchInbox.emptyMatch": "Nenhuma proposta corresponde a “{query}”",
+  "editor.pitchInbox.selectAria": "Selecionar proposta de {name}",
+  "editor.pitchInbox.showMore": "Mostrar mais {count} propostas →",
+  "editor.pitchInbox.yes": "Sim",
+  "editor.pitchInbox.maybe": "Talvez",
+  "editor.pitchInbox.no": "Não",
+
+  // ── EditorNeedsStrip ───────────────────────────────────────────────────
+  "editor.needsStrip.allClear":
+    "Está tudo em dia, {name}. Nada atrasado e nada à tua espera. <emph>Boa.</emph>",
+  "editor.needsStrip.heading": "Precisam de ti agora · <em>{count}</em>",
+  "editor.needsStrip.yourCourt": "Do teu lado",
+  "editor.needsStrip.writerHasntFiled": "Quem escreve ainda não entregou",
+  "editor.needsStrip.overdueAt": "Atrasada em {stage}",
+  "editor.needsStrip.sittingInCourt": "Do teu lado · {stage}",
+  "editor.needsStrip.chase": "Lembrar {name}",
+  "editor.needsStrip.pickUp": "Assumir",
+
+  // ── EditorModals: Chase / Handoff / Shortcuts ─────────────────────────
+  "editor.modals.chase.eyebrowFirstTime":
+    "Lembrete · pessoa colaboradora pela primeira vez",
+  "editor.modals.chase.eyebrow": "Lembrete · pessoa colaboradora",
+  "editor.modals.chase.title": "Mensagem para {name}",
+  "editor.modals.chase.cancel": "Cancelar",
+  "editor.modals.chase.send": "Enviar lembrete",
+  "editor.modals.chase.softHint":
+    "Tom mais suave — esta é uma das primeiras peças desta pessoa connosco.",
+  "editor.modals.chase.messageAria": "Mensagem para a pessoa colaboradora",
+  "editor.modals.chase.offerExtension": "Propor uma prorrogação do prazo",
+  "editor.modals.chase.bodyNewVoice":
+    "Olá {name} — sem qualquer pressão, só a confirmar como vai “{title}”. Como é que estás a sentir-te? Se ajudar, marcamos uma chamada ou adiamos o prazo. Estamos mesmo felizes por te ter nesta edição.",
+  "editor.modals.chase.bodyReturning":
+    "Olá {name} — um lembrete simpático sobre “{title}”, agora em {stage} e com prazo a {due}. Diz-me se alguma coisa está a atrapalhar, e vemos como resolver.",
+  "editor.modals.handoff.eyebrow": "Passar a peça",
+  "editor.modals.handoff.title": "Passar “{title}”",
+  "editor.modals.handoff.cancel": "Cancelar",
+  "editor.modals.handoff.cta": "Passar",
+  "editor.modals.handoff.handTo": "Passar a",
+  "editor.modals.handoff.noteLabel": "Nota",
+  "editor.modals.handoff.noteWriterWaiting":
+    "@{editor} a passar-te isto — está em {stage}, ainda à espera de quem escreve. Diz se quiseres mais contexto.",
+  "editor.modals.handoff.noteReady":
+    "@{editor} a passar-te isto — está em {stage}, pronto para os teus olhos. Diz se quiseres mais contexto.",
+  "editor.modals.shortcuts.eyebrow": "Teclado",
+  "editor.modals.shortcuts.title": "Atalhos",
+  "editor.modals.shortcuts.gotIt": "Percebido",
+  "editor.modals.shortcuts.moveBetweenPieces": "Mover entre peças",
+  "editor.modals.shortcuts.openFocusedPiece": "Abrir a peça em foco",
+  "editor.modals.shortcuts.nudgeWriter": "Lembrar quem escreve a peça em foco",
+  "editor.modals.shortcuts.acceptDeclineMaybe":
+    "Aceitar / recusar / talvez a proposta do topo",
+  "editor.modals.shortcuts.search": "Pesquisar",
+  "editor.modals.shortcuts.thisHelp": "Esta ajuda",
+
+  // ── EditorSideCards ────────────────────────────────────────────────────
+  "editor.sideCards.progressHeading": "Progresso da Edição {number}",
+  "editor.sideCards.piecesReady": "Peças prontas",
+  "editor.sideCards.wordCount": "Contagem de palavras",
+  "editor.sideCards.timeToClose": "Tempo até fechar",
+  "editor.sideCards.daysLeft_one": "{count} dia",
+  "editor.sideCards.daysLeft_other": "{count} dias",
+  "editor.sideCards.editorLoadHeading": "Carga por pessoa editora",
+  "editor.sideCards.you": "tu",
+  "editor.sideCards.piecesWords": "{count} peças · {words}p",
+  "editor.sideCards.lateCount_one": "{count} atrasada",
+  "editor.sideCards.lateCount_other": "{count} atrasadas",
+  "editor.sideCards.loadHintOtherMore":
+    "{editor} está a ficar com mais {amount} palavras. Reatribui para equilibrar.",
+  "editor.sideCards.loadHintBalanced":
+    "A carga está equilibrada entre as pessoas editoras.",
+  "editor.sideCards.sectionBudgetHeading": "Orçamento de secções",
+  "editor.sideCards.slotsOpen_one": "{count} vaga por preencher",
+  "editor.sideCards.slotsOpen_other": "{count} vagas por preencher",
+  "editor.sideCards.needCount": "faltam {count}",
+  "editor.sideCards.filledAria": "preenchida",
+  "editor.sideCards.contributorsHeading": "Pessoas colaboradoras · esta edição",
+  "editor.sideCards.newVoices": "vozes novas",
+  "editor.sideCards.returning": "regressam",
+  "editor.sideCards.contributorPay": "Pagamento a pessoas colaboradoras",
+  "editor.sideCards.paid": "pago",
+  "editor.sideCards.awaiting": "por confirmar",
+  "editor.sideCards.toInvoice": "por faturar",
+  "editor.sideCards.matching": "A corresponder: {names}",
+  "editor.sideCards.noContributorMatch": "Nenhuma pessoa colaboradora corresponde",
+  "editor.sideCards.seeContributorProfiles":
+    "Ver perfis de pessoas colaboradoras →",
+  "editor.sideCards.recentActivity": "Atividade recente",
+  "editor.sideCards.quickActions": "Ações rápidas",
+  "editor.sideCards.sendPitchDecisions": "→ Enviar decisões de propostas em lote",
+  "editor.sideCards.emailContributorsWaiting":
+    "→ Enviar email às pessoas colaboradoras em espera",
+  "editor.sideCards.previewIssueLayout": "→ Pré-visualizar a paginação da edição",
+  "editor.sideCards.exportContributorList":
+    "→ Exportar lista de pessoas colaboradoras (CSV)",
+
+  // ── EditorDashboardPage ────────────────────────────────────────────────
+  "editor.page.emptyTitle": "A secretária está livre",
+  "editor.page.emptyDescription":
+    "Não há peças em curso nem propostas à espera. Quando alguém propuser um texto ou encomendares uma peça, ela aparece aqui para fazeres a triagem e editares.",
+  "editor.page.everyPitchLoaded":
+    "Já viste todas as propostas carregadas neste protótipo",
+
+  // ── useEditorDashboard / useEditorKeyboard toasts ──────────────────────
+  "editor.toast.stageChanged": "“{title}” → {stage}",
+  "editor.toast.reassigned": "Reatribuído a {editor}",
+  "editor.toast.handedOff": "Passado a {editor} com uma nota",
+  "editor.toast.triageAccepted": "Aceite",
+  "editor.toast.triageMaybeSaved": "Guardado em Talvez",
+  "editor.toast.triageDeclined": "Recusado",
+  "editor.toast.triageSingle": "{verdict} · {name}",
+  "editor.toast.bulkAccepted": "Aceite",
+  "editor.toast.bulkMaybeMoved": "Movido para Talvez",
+  "editor.toast.bulkDeclined": "Recusado",
+  "editor.toast.bulkResult_one":
+    "{verdict} {count} proposta · respostas pré-definidas enviadas",
+  "editor.toast.bulkResult_other":
+    "{verdict} {count} propostas · respostas pré-definidas enviadas",
+  "editor.toast.nudgeSent": "Lembrete enviado a {name}",
+  "editor.toast.briefDuplicated": "Briefing duplicado para rascunhos",
+  "editor.toast.openingBulkTriage": "A abrir a triagem de propostas em lote",
+  "editor.toast.draftingReminders":
+    "A redigir lembretes para {count} pessoas colaboradoras",
+  "editor.toast.contributorListExported":
+    "Lista de pessoas colaboradoras exportada (CSV)",
+
+  // ══════════════════ Assistente de Propor um Texto ════════════════════════
+  // `INITIAL_DRAFT` (o exemplo de título/assinatura/resumo/corpo) fica como
+  // conteúdo em inglês — um ensaio de exemplo, não chrome.
+
+  // ── SubmitStoryIntro ───────────────────────────────────────────────────
+  "submitStory.intro.eyebrow": "Propõe um texto",
+  "submitStory.intro.title": "Tens algo que <em>vale a pena contar?</em>",
+  "submitStory.intro.lead":
+    "A revista da QueerPulse é escrita pela comunidade. Não precisas de uma assinatura habitual nem de um agente — só de uma história que importa e de uma forma honesta de a contar.",
+  "submitStory.intro.lookingFor.specific.title":
+    "O específico em vez do geral",
+  "submitStory.intro.lookingFor.specific.body":
+    "Um clube de jantares, uma rua, uma tarde. Confiamos que a história pequena carrega a grande.",
+  "submitStory.intro.lookingFor.beyond.title": "Lisboa e para além dela",
+  "submitStory.intro.lookingFor.beyond.body":
+    "Enraizados aqui, mas publicamos também vozes da diáspora e de quem nos visita. O lugar importa; as fronteiras, menos.",
+  "submitStory.intro.lookingFor.pay.title": "Pagamos, sempre",
+  "submitStory.intro.lookingFor.pay.body":
+    "Todas as peças publicadas são pagas de forma justa — valores partilhados à partida, nunca em troca de \"visibilidade\".",
+  "submitStory.intro.stepsHeading": "O que acontece a seguir",
+  "submitStory.intro.step.reply":
+    "Uma resposta em duas semanas — sim, não, ou vamos falar.",
+  "submitStory.intro.step.assigned":
+    "Se for sim, é atribuída uma pessoa editora e combinam juntas o valor e o prazo.",
+  "submitStory.intro.step.copyright":
+    "Mantêm os direitos de autor. Nós licenciamos, não somos donos do texto.",
+
+  // ── SubmitStorySidebar ─────────────────────────────────────────────────
+  "submitStory.sidebar.guidelinesHeading": "Linhas editoriais",
+  "submitStory.sidebar.guideline.length.term": "800–2500 palavras",
+  "submitStory.sidebar.guideline.length.detail":
+    "para a maioria das secções. Reportagens longas até 4000.",
+  "submitStory.sidebar.guideline.experience.term": "Escreve a partir da experiência.",
+  "submitStory.sidebar.guideline.experience.detail":
+    "Em primeira pessoa ou com reportagem próxima. Não é opinião de comentador.",
+  "submitStory.sidebar.guideline.noPromo.term": "Sem conteúdo promocional.",
+  "submitStory.sidebar.guideline.noPromo.detail":
+    "A revista não publica publicidade nem peças patrocinadas.",
+  "submitStory.sidebar.guideline.language.term": "Português ou inglês",
+  "submitStory.sidebar.guideline.language.detail": "— publicamos nos dois.",
+  "submitStory.sidebar.guideline.deadlines.term": "Os prazos são firmes.",
+  "submitStory.sidebar.guideline.deadlines.detail":
+    "Submissões atrasadas passam para a edição seguinte.",
+  "submitStory.sidebar.afterSubmitHeading": "Depois de submeteres",
+  "submitStory.sidebar.afterSubmit.response":
+    "As pessoas editoras respondem no prazo de <strong>5 dias úteis</strong> com aceitação, um pedido de alterações, ou uma recusa com notas.",
+  "submitStory.sidebar.afterSubmit.approve":
+    "As peças aceites passam por uma ronda de edição. <strong>Aprovas a versão final</strong> antes de ser publicada.",
+  "submitStory.sidebar.afterSubmit.licence":
+    "Mantés os direitos de autor. <strong>A QueerPulse tem uma licença não exclusiva</strong> para publicar na revista e no arquivo.",
+  "submitStory.sidebar.questionsHeading": "Perguntas?",
+  "submitStory.sidebar.questionsBody":
+    "Escreve à redação por email ou consulta edições anteriores para teres uma ideia do que publicamos.",
+  "submitStory.sidebar.emailCta": "Email à redação",
+
+  // ── SubmitStorySuccess ─────────────────────────────────────────────────
+  "submitStory.success.title": "Estamos a <em>ler.</em>",
+  "submitStory.success.sub":
+    "Obrigada por confiares em nós com “{title}”. Aconteça o que acontecer, os direitos de autor são teus.",
+  "submitStory.success.defaultTitle": "o teu texto",
+  "submitStory.success.timeline.readsEvery":
+    "Uma pessoa editora lê pessoalmente todas as propostas.",
+  "submitStory.success.timeline.hearBy":
+    "Tens resposta nossa até <strong>{date}</strong> — sim, não, ou vamos falar.",
+  "submitStory.success.timeline.ifYes":
+    "Se for sim, combinamos juntas o valor e o prazo.",
+  "submitStory.success.backCta": "Voltar à revista",
+  "submitStory.success.pastIssuesCta": "Ler edições anteriores",
+
+  // ── SubmitStoryMeta ────────────────────────────────────────────────────
+  "submitStory.meta.heading": "Detalhes <em>do texto</em>",
+  "submitStory.meta.sectionLabel": "Secção",
+  "submitStory.meta.sectionPlaceholder": "Escolhe uma secção…",
+  "submitStory.meta.section.longRead": "Reportagem longa",
+  "submitStory.meta.section.personalEssay": "Ensaio pessoal",
+  "submitStory.meta.section.interview": "Entrevista",
+  "submitStory.meta.section.opinion": "Opinião",
+  "submitStory.meta.section.communityReport": "Reportagem da comunidade",
+  "submitStory.meta.section.shortFiction": "Ficção curta",
+  "submitStory.meta.section.photography": "Fotografia",
+  "submitStory.meta.bylineLabel": "Assinatura",
+  "submitStory.meta.bylineNoteLabel": "Nota da assinatura",
+  "submitStory.meta.optional": "opcional",
+  "submitStory.meta.bylineNotePlaceholder": "ex.: escreve sobre habitação",
+  "submitStory.meta.tagsLabel": "Etiquetas",
+  "submitStory.meta.commaSeparated": "separadas por vírgula",
+  "submitStory.meta.tagsPlaceholder": "ex.: habitação, identidade, Lisboa",
+  "submitStory.meta.statusDraft": "Rascunho",
+
+  // ── SubmitStoryWriter ──────────────────────────────────────────────────
+  "submitStory.writer.tool.bold": "Negrito",
+  "submitStory.writer.tool.italic": "Itálico",
+  "submitStory.writer.tool.link": "Link",
+  "submitStory.writer.tool.heading": "Título",
+  "submitStory.writer.tool.quote": "Citação em bloco",
+  "submitStory.writer.tool.bullet": "Lista com marcadores",
+  "submitStory.writer.tool.image": "Imagem",
+  "submitStory.writer.autosaved": "Guardado automaticamente",
+  "submitStory.writer.unsaved": "Por guardar…",
+  "submitStory.writer.headlineAria": "Título",
+  "submitStory.writer.headlinePlaceholder": "O teu título",
+  "submitStory.writer.standfirstAria": "Resumo",
+  "submitStory.writer.standfirstPlaceholder":
+    "Uma ou duas frases que atraiam quem lê…",
+  "submitStory.writer.bodyAria": "Corpo do texto",
+  "submitStory.writer.bodyPlaceholder": "Começa a escrever…",
+  "submitStory.writer.wordCount_one": "{count} palavra",
+  "submitStory.writer.wordCount_other": "{count} palavras",
+
+  // ── SubmitStoryEditor ──────────────────────────────────────────────────
+  "submitStory.editor.draftSaved": "Rascunho guardado.",
+  "submitStory.editor.chooseSectionError":
+    "Escolhe primeiro uma secção para a tua peça.",
+  "submitStory.editor.needHeadlineError":
+    "O teu texto precisa de um título antes de seguir para a redação.",
+  "submitStory.editor.minWordsError":
+    "Falta um pouco mais — pelo menos {min} palavras antes de submeteres.",
+  "submitStory.editor.submitError":
+    "Não foi possível submeter o teu texto agora — tenta de novo.",
+  "submitStory.editor.saveDraftCta": "Guardar rascunho",
+  "submitStory.editor.submittingCta": "A submeter…",
+  "submitStory.editor.submitCta": "Submeter para revisão",
+
+  // ── SubmitStoryCover ───────────────────────────────────────────────────
+  "submitStory.cover.previewAlt": "Pré-visualização da capa",
+  "submitStory.cover.replaceCta": "Substituir",
+  "submitStory.cover.removeCta": "Remover",
+  "submitStory.cover.uploading": "A carregar…",
+  "submitStory.cover.addCta": "Adicionar uma imagem de capa",
+  "submitStory.cover.hint":
+    "JPG, PNG ou WebP · mín. 1200 × 600px · aparece no topo do texto publicado",
+  "submitStory.cover.uploadingProgress": "A carregar… {progress}%",
+  "submitStory.cover.errorFallback":
+    "Não foi possível adicionar essa capa. Tenta de novo.",
+
+  // ── submitStory.data.ts: ISSUE (o registo da edição aberta a propostas) ──
+  "submitStory.issue.badge": "Edição {number}",
+  "submitStory.issue.name": "Edição de {monthYear} · aberta a propostas",
+  "submitStory.issue.deadline": "Prazo de submissão: {date}",
+
+  // ══════════════════ Pitch Tracker ═════════════════════════════════════════
+  // Ver a nota em en/magazine.ts: os campos por proposta em PitchCard/
+  // PitchStages não são reativos a uma mudança de idioma (vêm de dados mock +
+  // do adaptador live fora da árvore de renderização) — ficam por traduzir
+  // nesta ronda. Só o chrome do contentor abaixo está traduzido.
+
+  // ── PitchTrackerHeader ─────────────────────────────────────────────────
+  "pitchTracker.header.eyebrow": "Revista · as tuas propostas",
+  "pitchTracker.header.title": "Onde cada proposta <em>realmente está.</em>",
+  "pitchTracker.header.lead":
+    "{active} propostas ativas · {published} publicadas ao todo. A redação responde em <b>~ {days} dias</b>.",
+  "pitchTracker.header.newPitchCta": "+ Nova proposta",
+
+  // ── PitchTabs ──────────────────────────────────────────────────────────
+  "pitchTracker.tabs.ariaLabel": "Estado da proposta",
+  "pitchTracker.tabs.all": "Todas",
+  "pitchTracker.tabs.review": "Em revisão",
+  "pitchTracker.tabs.commissioned": "Encomendadas",
+  "pitchTracker.tabs.published": "Publicadas",
+  "pitchTracker.tabs.closed": "Fechadas",
+
+  // ── PitchTrackerPage ───────────────────────────────────────────────────
+  "pitchTracker.page.emptyTitle": "Nada nesta vista.",
+  "pitchTracker.page.emptyBody":
+    "Não há propostas aqui neste momento. Muda de separador, ou começa algo novo no botão Nova proposta acima.",
+  "pitchTracker.page.withdrawnToast": "Proposta retirada",
+  "pitchTracker.page.undoCta": "Desfazer",
+  "pitchTracker.page.stubToast": "{label} — brevemente neste protótipo",
+
+  // ══════════════════ NewsletterSubscribe ═══════════════════════════════════
+  "newsletter.subscribe.streamLabel.all": "as três newsletters",
+  "newsletter.subscribe.streamLabel.dispatch": "o Dispatch da Comunidade",
+  "newsletter.subscribe.streamLabel.long": "a mensal Reportagens longas",
+  "newsletter.subscribe.streamLabel.trans": "o boletim do Trans Hub",
+  "newsletter.subscribe.confirmToast":
+    "Quase lá — confirma na tua caixa de entrada",
+  "newsletter.subscribe.doneTitle": "Falta mais um <em>passo.</em>",
+  "newsletter.subscribe.doneBody":
+    "Vamos enviar <strong>{stream}</strong> para <strong>{email}</strong>.",
+  "newsletter.subscribe.doneNext":
+    "Confirma na tua caixa de entrada — o link expira em 48 horas. Podes mudar que newsletters recebes a partir de qualquer email.",
+  "newsletter.subscribe.anotherCta": "Subscrever outro email",
+  "newsletter.subscribe.emailPlaceholder": "tu@exemplo.com",
+  "newsletter.subscribe.submitCta": "Subscrever →",
+  "newsletter.subscribe.footAll":
+    "Escolhe que newsletters queres no passo 2. ",
+  "newsletter.subscribe.footOne":
+    "Vais receber <strong>{stream}</strong> — ajusta no passo 2. ",
+  "newsletter.subscribe.footShared":
+    "Cancela a subscrição num toque a partir de qualquer email. Nunca partilhamos o teu endereço.",
+
+  // ══════════════════ PrintOrderModal (edição impressa da Edição 09) ═══════
+  "printOrder.dialogAria": "Encomendar a edição impressa",
+  "printOrder.closeAria": "Fechar",
+  "printOrder.success.title": "Está a <em>caminho de ti.</em>",
+  "printOrder.success.body_one":
+    "{count} exemplar de <b>{issue}</b> reservado desta tiragem. Enviamos um email para <b>{email}</b> quando sair de Marvila — normalmente dentro de uma semana. Obrigada por financiares as pessoas colaboradoras da próxima edição.",
+  "printOrder.success.body_other":
+    "{count} exemplares de <b>{issue}</b> reservados desta tiragem. Enviamos um email para <b>{email}</b> quando saírem de Marvila — normalmente dentro de uma semana. Obrigada por financiares as pessoas colaboradoras da próxima edição.",
+  "printOrder.success.doneCta": "Concluído",
+  "printOrder.eyebrow": "Edição impressa · {issue}",
+  "printOrder.title": "Encomendar a <em>tiragem impressa.</em>",
+  "printOrder.lead":
+    "{pages} páginas, capa em risografia, impressa em Marvila. <b>{price} € ao custo</b> — as receitas financiam as pessoas colaboradoras da próxima edição.",
+  "printOrder.copiesLabel": "Exemplares",
+  "printOrder.fewerCopiesAria": "Menos exemplares",
+  "printOrder.moreCopiesAria": "Mais exemplares",
+  "printOrder.emailFieldLabel": "Email para atualizações do envio",
+  "printOrder.emailFieldHelper":
+    "Só o usamos para te avisar quando o teu exemplar for enviado.",
+  "printOrder.emailPlaceholder": "tu@exemplo.com",
+  "printOrder.cancelCta": "← Cancelar",
+  "printOrder.placingCta": "A colocar a tua encomenda…",
+  "printOrder.placeCta": "Fazer encomenda — {total} €",
+
+  // ══════════════════ CoverGalleryPage ══════════════════════════════════════
+  // Os registos de COVERS/STATS/ILLUS (tema de cada capa, créditos de autoria,
+  // estatísticas de impressão) são conteúdo específico de cada edição —
+  // ficam como dados em inglês.
+  "coverGallery.backLink": "a Revista",
+  "coverGallery.eyebrow": "Revista · todas as capas · 2024 → presente",
+  "coverGallery.title": "Nove <em>capas,</em> uma por estação.",
+  "coverGallery.dek":
+    "Todas as capas da Revista QueerPulse, por ordem. Impressas em risografia em Lisboa, em formato A5. Cada uma foi feita por uma pessoa artista diferente, em conjunto com a redação. <em>A imprensa pode utilizar qualquer uma destas imagens</em> nos termos do nosso <a>dossiê de imprensa</a>.",
+  "coverGallery.madeWithHeading": "Feitas <em>com</em>",
+  "coverGallery.madeWithSub":
+    "Pessoas artistas de capa, por ordem de capa. A maioria são pessoas da comunidade; duas foram encomendadas externamente.",
 };

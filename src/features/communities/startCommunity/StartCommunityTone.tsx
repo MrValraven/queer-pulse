@@ -1,18 +1,26 @@
 import { useState } from "react";
 import { FiCheck, FiPlus } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
-import { ENFORCEMENT_LADDER, RULE_PRESETS } from "./startCommunity.data";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import {
+  ENFORCEMENT_LADDER,
+  RULE_PRESET_KEYS,
+} from "./startCommunity.data";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
 
 /** Chapter 5 — Tone: the covenant, plus how the group holds it. */
 export function StepTone({ form }: { form: CommunityForm }) {
+  const { t } = useTranslation();
   const { draft, toggleRule, addRule } = form;
   const [custom, setCustom] = useState("");
 
-  // Presets first (in their canonical order), then any custom rules added.
-  const customRules = draft.rules.filter((r) => !RULE_PRESETS.includes(r));
-  const shown = [...RULE_PRESETS, ...customRules];
+  // Preset keys first (in their canonical order — a stable, language-
+  // independent id), then any custom rules the member typed in their own
+  // words, which are content and rendered verbatim rather than through t().
+  const isPreset = (rule: string) => RULE_PRESET_KEYS.includes(rule);
+  const customRules = draft.rules.filter((r) => !isPreset(r));
+  const shown = [...RULE_PRESET_KEYS, ...customRules];
 
   const add = () => {
     const r = custom.trim();
@@ -24,8 +32,7 @@ export function StepTone({ form }: { form: CommunityForm }) {
   return (
     <div>
       <p className={styles.covenantIntro}>
-        "We look after each other here. Warmth first, always — and no room for
-        anyone who'd make this space unsafe."
+        {t("communities:start.tone.covenantIntro")}
       </p>
 
       <div className={styles.rulesList}>
@@ -44,7 +51,9 @@ export function StepTone({ form }: { form: CommunityForm }) {
               <span className={styles.ruleBox}>
                 <FiCheck size={12} aria-hidden />
               </span>
-              <span className={styles.ruleTxt}>{rule}</span>
+              <span className={styles.ruleTxt}>
+                {isPreset(rule) ? t(rule) : rule}
+              </span>
             </button>
           );
         })}
@@ -54,7 +63,7 @@ export function StepTone({ form }: { form: CommunityForm }) {
         <input
           type="text"
           className={styles.input}
-          placeholder="Add a value in your own words"
+          placeholder={t("communities:start.tone.addPlaceholder")}
           value={custom}
           onChange={(e) => setCustom(e.target.value)}
           onKeyDown={(e) => {
@@ -65,22 +74,21 @@ export function StepTone({ form }: { form: CommunityForm }) {
           }}
         />
         <Button variant="ghost" onClick={add} disabled={!custom.trim()}>
-          <FiPlus size={15} aria-hidden /> Add
+          <FiPlus size={15} aria-hidden /> {t("communities:start.tone.addCta")}
         </Button>
       </div>
 
-      <div className={styles.groupH}>When something goes wrong</div>
-      <p className={styles.groupSub}>
-        You won't have to improvise. Every community starts with the same gentle
-        ladder — you can adjust it inside.
-      </p>
+      <div className={styles.groupH}>
+        {t("communities:start.tone.wrongHeading")}
+      </div>
+      <p className={styles.groupSub}>{t("communities:start.tone.wrongSub")}</p>
       <div className={styles.ladder}>
         {ENFORCEMENT_LADDER.map((step, i) => (
-          <div key={step.title} className={styles.ladderStep}>
+          <div key={step.titleKey} className={styles.ladderStep}>
             <span className={styles.lsN}>{i + 1}</span>
             <span className={styles.lsT}>
-              <b>{step.title}</b>
-              <span>{step.desc}</span>
+              <b>{t(step.titleKey)}</b>
+              <span>{t(step.descKey)}</span>
             </span>
           </div>
         ))}

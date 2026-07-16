@@ -75,7 +75,7 @@ export function RoomLoader() {
     const id = window.setInterval(() => {
       current += 1;
       setStep(current);
-      if (current >= STEPS.length) {
+      if (current >= STEP_KEYS.length) {
         window.clearInterval(id);
         window.setTimeout(endPreparing, 600);
       }
@@ -90,7 +90,7 @@ export function RoomLoader() {
       className={`${styles.overlay} ${shown ? styles.shown : ""}`}
       role="status"
       aria-live="polite"
-      aria-label="Preparing the room"
+      aria-label={t("shared:feedback.roomLoader.ariaLabel")}
     >
       <div className={styles.inner}>
         <div className={styles.brand}>
@@ -99,14 +99,18 @@ export function RoomLoader() {
         </div>
 
         <h2 className={styles.title}>
-          Setting up your <em>room</em>
+          <Translation
+            i18nKey="shared:feedback.roomLoader.title"
+            components={{ em: <em /> }}
+          />
         </h2>
 
         <ul className={styles.steps}>
-          {STEPS.map((label, i) => {
-            const state = i < step ? "done" : i === step ? "active" : "pending";
+          {STEP_KEYS.map((stepKey, stepIndex) => {
+            const state =
+              stepIndex < step ? "done" : stepIndex === step ? "active" : "pending";
             return (
-              <li key={label} className={`${styles.step} ${styles[state]}`}>
+              <li key={stepKey} className={`${styles.step} ${styles[state]}`}>
                 <span className={styles.icon} aria-hidden>
                   {state === "done" ? (
                     <CheckIcon />
@@ -116,15 +120,13 @@ export function RoomLoader() {
                     <span className={styles.pendingDot} />
                   )}
                 </span>
-                {label}
+                {t(stepKey)}
               </li>
             );
           })}
         </ul>
 
-        <p className={styles.caption}>
-          Pouring the coffee, dimming the lights…
-        </p>
+        <p className={styles.caption}>{t("shared:feedback.roomLoader.caption")}</p>
       </div>
     </div>
   );

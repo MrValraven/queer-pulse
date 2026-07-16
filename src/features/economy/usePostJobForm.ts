@@ -90,16 +90,14 @@ function slugify(s: string) {
   );
 }
 
-function fmtDeadline(d: string) {
-  if (!d) return "Open";
-  try {
-    return new Date(`${d}T00:00`).toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-    });
-  } catch {
-    return d;
-  }
+/** Parse the wizard's `<input type="date">` value into a real `Date` (local
+ *  midnight, so the picked day never shifts across timezones); empty/invalid
+ *  input means "no deadline" — the consumer renders that as "Open" via
+ *  `deadlineText()`/`useFormat()`, never a baked-in locale string here. */
+function parseFormDeadline(d: string): Date | null {
+  if (!d) return null;
+  const parsed = new Date(`${d}T00:00`);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
 export function usePostJobForm() {
@@ -220,12 +218,12 @@ export function usePostJobForm() {
         type: state.commitment,
         location,
         salary,
-        deadline: fmtDeadline(state.deadline),
+        deadline: parseFormDeadline(state.deadline),
         desc,
         tags: state.tags.length ? state.tags : [state.category],
         detail: {
           category: state.category,
-          posted: "Posted just now",
+          posted: new Date(),
           about: [state.description],
           dayToDay: [],
           lookingFor: state.tags,

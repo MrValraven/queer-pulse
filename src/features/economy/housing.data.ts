@@ -1,51 +1,50 @@
 import { routes } from "../../app/routeMap";
 
 export const FILTERS = [
-  { value: "all", label: "All listings" },
-  { value: "sublet", label: "Sublet" },
-  { value: "room", label: "Room share" },
-  { value: "short", label: "Short-term" },
-  { value: "studio", label: "Studio / whole flat" },
+  { value: "all", labelKey: "economy:housing.filter.all" },
+  { value: "sublet", labelKey: "economy:housing.filter.sublet" },
+  { value: "room", labelKey: "economy:housing.filter.room" },
+  { value: "short", labelKey: "economy:housing.filter.short" },
+  { value: "studio", labelKey: "economy:housing.filter.studio" },
 ];
 
 export const TIPS = [
   {
     num: "01",
-    title: "Budget for a competitive market",
-    text: "Rooms in central neighbourhoods go for €700–1000/month. Studios €900–1400. Things move quickly. Have documents ready: NIF, proof of income or a guarantor, and a cover message.",
+    titleKey: "economy:housing.tip.budget.title",
+    textKey: "economy:housing.tip.budget.text",
   },
   {
     num: "02",
-    title: "Use the community board",
-    text: 'The QueerPulse board consistently surfaces housing before it hits any portal. Post "looking for a room in [neighbourhood]" and the network will reply. It works.',
+    titleKey: "economy:housing.tip.board.title",
+    textKey: "economy:housing.tip.board.text",
   },
   {
     num: "03",
-    title: "Know your rights as a tenant",
-    text: "Portuguese tenancy law is reasonably protective. You need a written contract. Landlords can't evict without proper notice. ILGA Portugal can advise if you face discrimination.",
+    titleKey: "economy:housing.tip.rights.title",
+    textKey: "economy:housing.tip.rights.text",
   },
   {
     num: "04",
-    title: "Short-term first is fine",
-    text: "It's completely valid to arrive with a short-term sublet for 2–3 months and find long-term housing once you know the city better.",
+    titleKey: "economy:housing.tip.shortTerm.title",
+    textKey: "economy:housing.tip.shortTerm.text",
   },
   {
     num: "05",
-    title: "Trust your gut on viewings",
-    text: "Meet the landlord before signing. Ask about other tenants. A bad feeling is worth more than a good price.",
+    titleKey: "economy:housing.tip.gut.title",
+    textKey: "economy:housing.tip.gut.text",
   },
   {
     num: "06",
-    title: "In an emergency, ask the community",
-    text: "If you're suddenly homeless or in a dangerous living situation, post to the board. The community responds quickly to genuine need.",
+    titleKey: "economy:housing.tip.emergency.title",
+    textKey: "economy:housing.tip.emergency.text",
   },
 ];
 
 export const HOUSING_SUBPAGES = [
   {
-    label: "Housing Co-op",
+    labelKey: "economy:housing.subpages.coop.label",
     to: routes.housingCoop,
-    blurb:
-      "Members buying and running homes together — how co-ops form, and how to join one.",
+    blurbKey: "economy:housing.subpages.coop.blurb",
   },
 ];

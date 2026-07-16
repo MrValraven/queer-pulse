@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./AccountBannedPage.module.css";
 
 export function AccountBannedPage() {
+  const { t } = useTranslation();
+
   return (
     <SystemStateShell orbTone="plum" mutedBrand>
       <div className={styles.card}>
@@ -15,27 +19,33 @@ export function AccountBannedPage() {
           </svg>
         </div>
 
-        <div className={styles.kicker}>Account removed · final action</div>
+        <div className={styles.kicker}>{t("system:accountBanned.kicker")}</div>
         <h1 className={styles.heading}>
-          Your account has been <em>closed.</em>
+          <Translation
+            i18nKey="system:accountBanned.heading"
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.lead}>
-          After a full moderation review and one round of appeal, your account
-          has been permanently removed from QueerPulse.{" "}
-          <em>This was not done lightly.</em>
+          <Translation
+            i18nKey="system:accountBanned.lead1"
+            components={{ em: <em /> }}
+          />
         </p>
         <p className={styles.lead}>
-          Your active Sustainer membership has been <b>refunded pro-rated</b> to
-          the card on file.
+          <Translation
+            i18nKey="system:accountBanned.lead2"
+            components={{ b: <b /> }}
+          />
         </p>
 
         <div className={styles.violation}>
-          <h4>Reason · referenced from your case file</h4>
+          <h4>{t("system:accountBanned.violation.title")}</h4>
           <p>
-            <b>§02·06</b> — Weaponising platform access against members. The
-            pattern of behaviour was documented across{" "}
-            <b>8 separate incidents</b> over four months and reviewed by two
-            independent moderators.
+            <Translation
+              i18nKey="system:accountBanned.violation.body"
+              components={{ b: <b /> }}
+            />
           </p>
         </div>
 
@@ -43,60 +53,59 @@ export function AccountBannedPage() {
           <div className={styles.whatRow}>
             <div className={styles.whatNum}>1</div>
             <div className={styles.whatText}>
-              <b>You can appeal this decision once</b>
-              <span>
-                Open within 14 days of removal. Reviewed by the Assembly's
-                standing appeals panel — different humans than your case
-                moderators. Response within 21 days.
-              </span>
+              <b>{t("system:accountBanned.whatNow.row1.title")}</b>
+              <span>{t("system:accountBanned.whatNow.row1.body")}</span>
             </div>
           </div>
           <div className={styles.whatRow}>
             <div className={styles.whatNum}>2</div>
             <div className={styles.whatText}>
-              <b>Your data is removed from the platform within 30 days</b>
+              <b>{t("system:accountBanned.whatNow.row2.title")}</b>
               <span>
-                Per our <Link to={routes.privacy}>privacy policy</Link>. Posts
-                you authored are anonymised, not deleted, unless you
-                specifically request deletion below.
+                <Translation
+                  i18nKey="system:accountBanned.whatNow.row2.body"
+                  components={{ a: <Link to={routes.privacy} /> }}
+                />
               </span>
             </div>
           </div>
           <div className={styles.whatRow}>
             <div className={styles.whatNum}>3</div>
             <div className={styles.whatText}>
-              <b>Public records of this action are not kept</b>
-              <span>
-                The case file exists internally for 36 months. Your connections
-                were notified you left, without reason. No member will know you
-                were removed unless you tell them.
-              </span>
+              <b>{t("system:accountBanned.whatNow.row3.title")}</b>
+              <span>{t("system:accountBanned.whatNow.row3.body")}</span>
             </div>
           </div>
           <div className={styles.whatRow}>
             <div className={styles.whatNum}>4</div>
             <div className={styles.whatText}>
-              <b>Crisis support remains available</b>
+              <b>{t("system:accountBanned.whatNow.row4.title")}</b>
               <span>
-                <Link to={routes.crisisChat}>Crisis chat</Link> and the{" "}
-                <Link to={routes.wellbeing}>resource library</Link> are open to
-                everyone, member or not.
+                <Translation
+                  i18nKey="system:accountBanned.whatNow.row4.body"
+                  components={{
+                    crisisLink: <Link to={routes.crisisChat} />,
+                    wellbeingLink: <Link to={routes.wellbeing} />,
+                  }}
+                />
               </span>
             </div>
           </div>
         </div>
 
         <div className={styles.actions}>
-          <Button to={routes.report}>File the appeal</Button>
+          <Button to={routes.report}>
+            {t("system:accountBanned.actions.appealCta")}
+          </Button>
           <Button variant="ghost" to={routes.dataExport}>
-            Request full data erasure
+            {t("system:accountBanned.actions.eraseCta")}
           </Button>
         </div>
         <p className={styles.foot}>
-          If you believe this was the result of coordinated false reports,
-          please include the names you suspect in the appeal — we investigate
-          this carefully.{" "}
-          <Link to={routes.codeOfConduct}>Re-read the Code of Conduct →</Link>
+          <Translation
+            i18nKey="system:accountBanned.foot"
+            components={{ a: <Link to={routes.codeOfConduct} /> }}
+          />
         </p>
       </div>
     </SystemStateShell>

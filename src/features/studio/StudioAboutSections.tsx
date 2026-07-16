@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 import { FadeIn } from "../../shared/components/ui";
-import { RATE_CELLS, TIERS, SKEPTICS, TIER_FOOT } from "./studioAbout.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { buildRateCells, buildTiers, buildSkeptics, buildTierFoot } from "./studioAbout.data";
 import s from "./StudioAboutPage.module.css";
 
 /** A numbered section shell: eyebrow number + heading + children. */
@@ -26,9 +27,11 @@ export function AboutSection({
 
 /** The €0.05 rate band — three cells (02). */
 export function RateBand() {
+  const { t } = useTranslation();
+  const rateCells = useMemo(() => buildRateCells(t), [t]);
   return (
     <div className={s.rateBand}>
-      {RATE_CELLS.map((cell, i) => (
+      {rateCells.map((cell, i) => (
         <div
           key={i}
           className={cell.jade ? `${s.rateCell} ${s.jade}` : s.rateCell}
@@ -43,10 +46,13 @@ export function RateBand() {
 
 /** The four earning tiers grid + footnote (03). */
 export function Tiers() {
+  const { t } = useTranslation();
+  const tiers = useMemo(() => buildTiers(t), [t]);
+  const tierFoot = useMemo(() => buildTierFoot(), []);
   return (
     <>
       <div className={s.tiers}>
-        {TIERS.map((tier) => {
+        {tiers.map((tier) => {
           const variantClass =
             tier.variant === "hi"
               ? s.hi
@@ -65,16 +71,18 @@ export function Tiers() {
           );
         })}
       </div>
-      <div className={s.tierFoot}>{TIER_FOOT}</div>
+      <div className={s.tierFoot}>{tierFoot}</div>
     </>
   );
 }
 
 /** The "hard questions" Q&A cards (05). */
 export function Skeptics() {
+  const { t } = useTranslation();
+  const skeptics = useMemo(() => buildSkeptics(t), [t]);
   return (
     <div className={s.skeptic}>
-      {SKEPTICS.map((item, i) => (
+      {skeptics.map((item, i) => (
         <div key={i} className={s.sk}>
           <h4>{item.q}</h4>
           <p>{item.a}</p>

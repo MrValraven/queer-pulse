@@ -750,7 +750,13 @@ export const transparencyNums = [
 export interface ShortFilter {
   key: string;
   cat: "Runtime" | "Type" | "Access" | "More";
-  label: string;
+  /**
+   * i18n Pattern A / label-key indirection: `key` is the canonical id
+   * matched/stored in `CatalogState.active` (URL-shareable filter state, per
+   * docs/i18n/extraction-brief.md — a language switch must not corrupt it).
+   * Only `labelKey` (the rendered chip text) resolves via `t()`.
+   */
+  labelKey: string;
   jade?: boolean;
   test: (f: ShortFilm, saved: string[]) => boolean;
 }
@@ -759,71 +765,71 @@ export const shortFilters: ShortFilter[] = [
   {
     key: "rt-u10",
     cat: "Runtime",
-    label: "Under 10 min",
+    labelKey: "cinema:shorts.filter.rtU10",
     test: (f) => f.runtime < 10,
   },
   {
     key: "rt-1030",
     cat: "Runtime",
-    label: "10–30 min",
+    labelKey: "cinema:shorts.filter.rt1030",
     test: (f) => f.runtime >= 10 && f.runtime < 30,
   },
   {
     key: "rt-30",
     cat: "Runtime",
-    label: "30 min+",
+    labelKey: "cinema:shorts.filter.rt30",
     test: (f) => f.runtime >= 30,
   },
   {
     key: "k-doc",
     cat: "Type",
-    label: "Documentary",
+    labelKey: "cinema:shorts.filter.kDoc",
     test: (f) => f.kind === "Documentary",
   },
   {
     key: "k-nar",
     cat: "Type",
-    label: "Narrative",
+    labelKey: "cinema:shorts.filter.kNar",
     test: (f) => f.kind === "Narrative",
   },
   {
     key: "k-ess",
     cat: "Type",
-    label: "Essay / experimental",
+    labelKey: "cinema:shorts.filter.kEss",
     test: (f) => f.kind === "Essay",
   },
   {
     key: "a-ad",
     cat: "Access",
-    label: "Audio-described",
+    labelKey: "cinema:shorts.filter.aAd",
     jade: true,
     test: (f) => f.ad,
   },
   {
     key: "a-cnf",
     cat: "Access",
-    label: "No content notes",
+    labelKey: "cinema:shorts.filter.aCnf",
     jade: true,
     test: (f) => !f.cn,
   },
   {
     key: "m-grant",
     cat: "More",
-    label: "Grant-funded",
+    labelKey: "cinema:shorts.filter.mGrant",
     jade: true,
     test: (f) => !!f.grant,
   },
   {
     key: "m-lisbon",
     cat: "More",
-    label: "Lisbon",
+    labelKey: "cinema:shorts.filter.mLisbon",
     jade: true,
     test: (f) => f.place === "Lisbon",
   },
   {
     key: "m-saved",
     cat: "More",
-    label: "Saved",
+    labelKey: "cinema:shorts.filter.mSaved",
     jade: true,
     test: (f, saved) => saved.includes(f.id),
   },
@@ -836,20 +842,33 @@ export const filterCatOrder: ShortFilter["cat"][] = [
   "More",
 ];
 
+/** Chrome label for each filter-chip group header. */
+export const FILTER_CAT_LABEL_KEYS: Record<ShortFilter["cat"], string> = {
+  Runtime: "cinema:shorts.filterCat.runtime",
+  Type: "cinema:shorts.filterCat.type",
+  Access: "cinema:shorts.filterCat.access",
+  More: "cinema:shorts.filterCat.more",
+};
+
 export const langOptions = [
-  { value: "", label: "Any language" },
-  { value: "pt", label: "Portuguese" },
-  { value: "es", label: "Spanish" },
-  { value: "ptbr", label: "Português-BR" },
-  { value: "en", label: "English subtitles" },
+  { value: "", labelKey: "cinema:shorts.lang.any" },
+  { value: "pt", labelKey: "cinema:shorts.lang.pt" },
+  { value: "es", labelKey: "cinema:shorts.lang.es" },
+  { value: "ptbr", labelKey: "cinema:shorts.lang.ptbr" },
+  { value: "en", labelKey: "cinema:shorts.lang.en" },
 ];
 
+/**
+ * Canonical `value` is the stable stored/matched sort id (see
+ * `CatalogState.sort` + `sortShorts` below); `labelKey` is the only piece
+ * that resolves via `t()`.
+ */
 export const sortOptions = [
-  "Newest first",
-  "Most watched",
-  "Most tipped",
-  "Shortest first",
-  "Staff picks",
+  { value: "newest", labelKey: "cinema:shorts.sort.newest" },
+  { value: "mostWatched", labelKey: "cinema:shorts.sort.mostWatched" },
+  { value: "mostTipped", labelKey: "cinema:shorts.sort.mostTipped" },
+  { value: "shortest", labelKey: "cinema:shorts.sort.shortest" },
+  { value: "staffPicks", labelKey: "cinema:shorts.sort.staffPicks" },
 ];
 
 /** Formats a raw watch count like the design's fmtWatch. */
@@ -886,13 +905,13 @@ function matchLang(f: ShortFilm, lang: string): boolean {
 function sortShorts(list: ShortFilm[], sort: string): ShortFilm[] {
   const l = [...list];
   switch (sort) {
-    case "Shortest first":
+    case "shortest":
       return l.sort((a, b) => a.runtime - b.runtime);
-    case "Most watched":
+    case "mostWatched":
       return l.sort((a, b) => b.watches - a.watches);
-    case "Most tipped":
+    case "mostTipped":
       return l.sort((a, b) => b.tips - a.tips);
-    case "Staff picks":
+    case "staffPicks":
       return l.sort(
         (a, b) => (b.grant ? 1 : 0) - (a.grant ? 1 : 0) || b.tips - a.tips,
       );

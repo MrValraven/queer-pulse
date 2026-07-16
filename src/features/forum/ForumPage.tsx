@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { SELF_AUTHOR, type Thread } from "./forum.data";
@@ -17,6 +19,7 @@ import styles from "./ForumPage.module.css";
 const PROMPT_DISMISSED_KEY = "qp_forum_prompt_dismissed";
 
 export function ForumPage() {
+  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const simLoading = useSimulatedLoad();
   const [cat, setCat] = useState("all");
@@ -122,23 +125,22 @@ export function ForumPage() {
         <div className="wrap">
           <div className={styles.heroRow}>
             <div>
-              <div className={styles.cat}>
-                The Public Square · open to every member
-              </div>
+              <div className={styles.cat}>{t("forum:hero.eyebrow")}</div>
               <h1>
-                The <em>commons</em>
+                <Translation
+                  i18nKey="forum:hero.title"
+                  components={{ em: <em /> }}
+                />
               </h1>
               <p>
-                The one community everyone here belongs to — questions,
-                proposals, guides, and the slow work of building a movement.
-                Take care of each other. Looking for a smaller room?{" "}
+                {t("forum:hero.lead")}{" "}
                 <Link to={routes.communities} className={styles.heroLink}>
-                  Find your communities →
+                  {t("forum:hero.findCommunitiesCta")}
                 </Link>
               </p>
             </div>
             <Button className={styles.newBtn} onClick={() => openCompose()}>
-              + New post
+              {t("forum:newPostCta")}
             </Button>
           </div>
         </div>

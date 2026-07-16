@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "../../shared/components/ui";
 import { BackToSettingsLink } from "../../shared/components/layout";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./ServerErrorPage.module.css";
 
 function Countdown() {
+  const { t } = useTranslation();
   const endRef = useRef<number | null>(null);
   const [display, setDisplay] = useState("23:44");
 
@@ -24,7 +27,7 @@ function Countdown() {
 
   return (
     <div className={styles.countdown}>
-      <div className={styles.cdLabel}>Estimated back online in</div>
+      <div className={styles.cdLabel}>{t("system:serverError.countdown.label")}</div>
       <div className={styles.cdNum}>{display}</div>
     </div>
   );
@@ -33,13 +36,17 @@ function Countdown() {
 type Mode = "error" | "maintenance";
 
 export function ServerErrorPage() {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<Mode>("error");
   const isMaint = mode === "maintenance";
 
   return (
     <div className={styles.root}>
       <BackToSettingsLink />
-      <div className={styles.modeTabs} aria-label="Demo mode">
+      <div
+        className={styles.modeTabs}
+        aria-label={t("system:serverError.demoModeAria")}
+      >
         {(["error", "maintenance"] as Mode[]).map((m) => (
           <button
             type="button"
@@ -49,7 +56,9 @@ export function ServerErrorPage() {
               .join(" ")}
             onClick={() => setMode(m)}
           >
-            {m === "error" ? "500 Error" : "Maintenance"}
+            {m === "error"
+              ? t("system:serverError.tabs.error")
+              : t("system:serverError.tabs.maintenance")}
           </button>
         ))}
       </div>
@@ -58,7 +67,10 @@ export function ServerErrorPage() {
         <div className={styles.cardTop}>
           <div className={styles.brand}>
             <span className={styles.dot} aria-hidden />
-            Queer<em>Pulse</em>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em /> }}
+            />
           </div>
           <div className={styles.codeBg} aria-hidden>
             {isMaint ? "—" : "500"}
@@ -66,29 +78,35 @@ export function ServerErrorPage() {
           <h1 className={styles.heading}>
             {isMaint ? (
               <>
-                Planned maintenance.
+                {t("system:serverError.heading.maintenance.line1")}
                 <br />
-                <em>Back soon.</em>
+                <Translation
+                  i18nKey="system:serverError.heading.maintenance.line2"
+                  components={{ em: <em /> }}
+                />
               </>
             ) : (
               <>
-                Something went
+                {t("system:serverError.heading.error.line1")}
                 <br />
-                <em>wrong on our end.</em>
+                <Translation
+                  i18nKey="system:serverError.heading.error.line2"
+                  components={{ em: <em /> }}
+                />
               </>
             )}
           </h1>
           <p className={styles.headingSub}>
             {isMaint
-              ? "We're upgrading the platform. Shouldn't be long. We appreciate your patience."
-              : "This is our fault, not yours. We've been automatically notified and we're looking at it."}
+              ? t("system:serverError.sub.maintenance")
+              : t("system:serverError.sub.error")}
           </p>
         </div>
 
         <div className={styles.cardBody}>
           {isMaint && (
             <div className={styles.maintBadge}>
-              <span>Scheduled maintenance</span>
+              <span>{t("system:maintenance.eyebrow")}</span>
             </div>
           )}
 
@@ -107,19 +125,21 @@ export function ServerErrorPage() {
             />
             <span className={styles.statusText}>
               {isMaint ? (
-                <>
-                  <strong>Planned downtime.</strong> Follow{" "}
-                  <a href="https://status.queerpulse.pt">
-                    status.queerpulse.pt
-                  </a>{" "}
-                  for updates.
-                </>
+                <Translation
+                  i18nKey="system:serverError.status.maintenance"
+                  components={{
+                    strong: <strong />,
+                    a: <a href="https://status.queerpulse.pt" />,
+                  }}
+                />
               ) : (
-                <>
-                  <strong>Our team has been alerted.</strong> Check{" "}
-                  <a href={routes.status}>status.queerpulse.pt</a> for live
-                  updates.
-                </>
+                <Translation
+                  i18nKey="system:serverError.status.error"
+                  components={{
+                    strong: <strong />,
+                    a: <a href={routes.status} />,
+                  }}
+                />
               )}
             </span>
           </div>
@@ -131,21 +151,21 @@ export function ServerErrorPage() {
               onClick={() => window.location.reload()}
               className={styles.actionBtn}
             >
-              Try again
+              {t("system:serverError.actions.retryCta")}
             </Button>
             <Button
               variant="ghost"
               to={routes.homepage}
               className={styles.actionBtn}
             >
-              Go to homepage
+              {t("system:serverError.actions.homeCta")}
             </Button>
             <Button
               variant="ghost"
               to={routes.status}
               className={styles.actionBtn}
             >
-              Check platform status
+              {t("system:serverError.actions.statusCta")}
             </Button>
           </div>
         </div>
@@ -153,8 +173,10 @@ export function ServerErrorPage() {
 
       <div className={styles.footer}>
         <p>
-          If this keeps happening,{" "}
-          <a href="mailto:help@queerpulse.pt">contact us</a>.
+          <Translation
+            i18nKey="system:serverError.footer.contact"
+            components={{ a: <a href="mailto:help@queerpulse.pt" /> }}
+          />
         </p>
       </div>
     </div>

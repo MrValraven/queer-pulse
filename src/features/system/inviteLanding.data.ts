@@ -1,24 +1,34 @@
-/** Decorative "unsealing" steps shown after the recipient taps Open invitation. */
-export function loaderSteps(inviterFirst: string): string[] {
+import type { TFunction } from "../../shared/i18n/types";
+
+/**
+ * i18n Pattern B. The decorative "unsealing" steps mix chrome with the
+ * inviter's first name, so this needs `t` at call time — memoized by its sole
+ * consumer, `InviteLandingViews.tsx`, via `useMemo(() => buildLoaderSteps(t,
+ * name), [t, name])`.
+ */
+export function buildLoaderSteps(t: TFunction, inviterFirst: string): string[] {
   return [
-    "Verifying your invite code…",
-    `Unsealing ${inviterFirst}'s invitation…`,
-    "Preparing your welcome…",
+    t("system:inviteLanding.loader.verifying"),
+    t("system:inviteLanding.loader.unsealing", { name: inviterFirst }),
+    t("system:inviteLanding.loader.preparing"),
   ];
 }
 
-/** The three "what this is" promises on the opened invitation card. */
-export const WHAT_ITEMS: { strong: string; rest: string }[] = [
+/**
+ * i18n Pattern A. The three "what this is" promises on the opened invitation
+ * card — pure chrome, resolved by `InviteLandingViews.tsx` with `t()`.
+ */
+export const WHAT_ITEMS: { strongKey: string; restKey: string }[] = [
   {
-    strong: "Private by design.",
-    rest: "Invite-only. 247 members. Not trying to grow for growth's sake.",
+    strongKey: "system:inviteLanding.what.private.strong",
+    restKey: "system:inviteLanding.what.private.rest",
   },
   {
-    strong: "No ads. No algorithm.",
-    rest: "A platform that works for you, not for advertisers.",
+    strongKey: "system:inviteLanding.what.noAds.strong",
+    restKey: "system:inviteLanding.what.noAds.rest",
   },
   {
-    strong: "Real community.",
-    rest: "Forum, events, a monthly magazine, and a mental health fund.",
+    strongKey: "system:inviteLanding.what.community.strong",
+    restKey: "system:inviteLanding.what.community.rest",
   },
 ];

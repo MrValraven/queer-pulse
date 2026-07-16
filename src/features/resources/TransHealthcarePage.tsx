@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PATHS } from "./transHealthcare.data";
 import {
   TransHealthcareHero,
@@ -10,6 +11,7 @@ import {
 import styles from "./TransHealthcarePage.module.css";
 
 export function TransHealthcarePage() {
+  const { t } = useTranslation();
   const [active, setActive] = useState("hrt-sns");
   const path = PATHS.find((p) => p.id === active) ?? PATHS[0]!;
 
@@ -31,7 +33,7 @@ export function TransHealthcarePage() {
                 .join(" ")}
               onClick={() => setActive(p.id)}
             >
-              {p.label}
+              {t(p.labelKey)}
             </button>
           ))}
         </div>

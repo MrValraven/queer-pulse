@@ -283,6 +283,17 @@ export const communities: Catalog = {
   "start.back": "← Back",
   "start.actions.stillNeeded": "Still needed:",
   "start.actions.blockedTitle": "A few things left to fill in",
+
+  // ── "Still needed" validation chips (useCommunityForm.ts → PanelActions) ──
+  "start.missing.name": "a name",
+  "start.missing.purpose": "what it's for",
+  "start.missing.category": "a category",
+  "start.missing.whoFor": "who it's for",
+  "start.missing.access": "who can find it",
+  "start.missing.rules": "at least one shared value",
+  "start.missing.tagline": "a tagline",
+  "start.missing.handle": "a handle",
+  "start.missing.consent": "your confirmation",
   "start.thread.backTo": "Back to {thread}",
   "start.thread.stepOf": "Step {step} of {total} · <b>{thread}</b>",
 

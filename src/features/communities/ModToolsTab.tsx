@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
 import type { LivingCommunity } from "./community.model";
 import { useJoinRequests } from "./api/useJoinRequests";
@@ -15,6 +16,7 @@ import {
 
 export function ModToolsTab({ living }: { living: LivingCommunity }) {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const { approveRequest, promoteToMod } = useCommunityMembership();
   const reviewRequest = useReviewJoinRequest(living.slug);
   const removeMember = useRemoveMember(living.slug);
@@ -38,8 +40,8 @@ export function ModToolsTab({ living }: { living: LivingCommunity }) {
     reviewRequest.mutate({ id, action: approved ? "approve" : "decline" });
     showToast(
       approved
-        ? `${name} approved — welcome them in.`
-        : `${name}'s request wasn't approved this time.`,
+        ? t("communities:detail.modtools.toast.approved", { name })
+        : t("communities:detail.modtools.toast.declined", { name }),
       approved ? "success" : "info",
     );
   };
@@ -47,8 +49,8 @@ export function ModToolsTab({ living }: { living: LivingCommunity }) {
     setReports((prev) => prev.filter((r) => r.id !== id));
     showToast(
       removedPost
-        ? "Post removed. The author has been reached."
-        : "Report dismissed.",
+        ? t("communities:detail.modtools.toast.postRemoved")
+        : t("communities:detail.modtools.toast.reportDismissed"),
       removedPost ? "success" : "info",
     );
   };
@@ -57,12 +59,12 @@ export function ModToolsTab({ living }: { living: LivingCommunity }) {
     const key = memberKey(slug, name);
     setPromoted((p) => [...p, key]);
     promoteToMod(living.slug, key);
-    showToast(`${name} is now a mod.`, "success");
+    showToast(t("communities:detail.modtools.toast.promoted", { name }), "success");
   };
   const remove = (slug: string | undefined, name: string) => {
     setRemoved((p) => [...p, memberKey(slug, name)]);
     if (slug) removeMember.mutate(slug);
-    showToast(`${name} has been removed.`, "info");
+    showToast(t("communities:detail.modtools.toast.removed", { name }), "info");
   };
 
   const manageable = living.roster.filter(

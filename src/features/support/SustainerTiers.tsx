@@ -1,23 +1,36 @@
 import { forwardRef, useEffect, useState } from "react";
 import { FiArrowRight, FiCheck, FiLock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SustainerControls } from "./SustainerControls";
 import { TierCard } from "./TierCard";
 import { currencySymbol } from "./useSustainer";
-import { money } from "./sustainer.pricing";
+import { TIER_LABEL_KEYS } from "./sustainer.pricing";
 import type { SustainerStore } from "./useSustainer";
 import type { TierIndex } from "./sustainer.pricing";
+import type { TFunction } from "../../shared/i18n/types";
 import styles from "./sustainer.module.css";
 
 const TIERS: TierIndex[] = [0, 1, 2];
 
+const FREQ_ADVERB_KEY: Record<SustainerStore["freq"], string> = {
+  monthly: "support:tiers.freqAdverb.monthly",
+  annual: "support:tiers.freqAdverb.annual",
+  once: "support:tiers.freqAdverb.once",
+};
+
 /** Helper line under the custom-amount field, framing the equivalent figure. */
-function customHelp(store: SustainerStore, amount: number): string {
+function customHelp(t: TFunction, store: SustainerStore, amount: number): string {
   if (store.freq === "monthly")
-    return `= ${money(store.cur, amount * 12)} per year`;
+    return t("support:tiers.customHelp.perYear", {
+      amount: store.money(amount * 12),
+    });
   if (store.freq === "annual")
-    return `≈ ${money(store.cur, Math.round(amount / 12))} per month`;
-  return "A one-time contribution";
+    return t("support:tiers.customHelp.perMonth", {
+      amount: store.money(Math.round(amount / 12)),
+    });
+  return t("support:tiers.customHelp.onceNote");
 }
 
 /** The amount-picker: frequency + currency controls, tier cards, custom amount,
@@ -26,6 +39,7 @@ export const SustainerTiers = forwardRef<
   HTMLDivElement,
   { store: SustainerStore; onContinue: () => void }
 >(({ store, onContinue }, ref) => {
+  const { t } = useTranslation();
   const [raw, setRaw] = useState("");
   const [err, setErr] = useState(false);
 
@@ -34,14 +48,10 @@ export const SustainerTiers = forwardRef<
     if (store.selType === "tier") setRaw("");
   }, [store.selType, store.tier]);
 
-  const freqWord =
-    store.freq === "monthly"
-      ? "monthly"
-      : store.freq === "annual"
-        ? "yearly"
-        : "one-time";
-  const ctaName =
-    store.selectedName === "Custom" ? "your amount" : store.selectedName;
+  const ctaNameKey =
+    store.selectedName === "Custom"
+      ? "support:tiers.yourAmount"
+      : TIER_LABEL_KEYS[store.selectedName as keyof typeof TIER_LABEL_KEYS];
 
   function handleContinue() {
     if (store.selType === "custom" && (!store.custom || store.custom < 1)) {
@@ -54,12 +64,12 @@ export const SustainerTiers = forwardRef<
   return (
     <>
       <h2 className={styles.secHead}>
-        What feels <em>right</em>
+        <Translation
+          i18nKey="support:tiers.heading"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.secSub}>
-        There's no wrong amount. Every contribution helps, and you can change or
-        cancel at any time.
-      </p>
+      <p className={styles.secSub}>{t("support:tiers.sub")}</p>
 
       <div ref={ref}>
         <SustainerControls store={store} />
@@ -78,9 +88,9 @@ export const SustainerTiers = forwardRef<
             className={styles.customInput}
             type="number"
             inputMode="decimal"
-            placeholder="Other"
+            placeholder={t("support:tiers.customAmountPlaceholder")}
             min={1}
-            aria-label="Custom amount"
+            aria-label={t("support:tiers.customAmountAriaLabel")}
             value={raw}
             onChange={(e) => {
               const next = e.target.value;
@@ -92,29 +102,30 @@ export const SustainerTiers = forwardRef<
           />
         </div>
         <div className={styles.customText}>
-          Or contribute what you can, {freqWord}
+          {t("support:tiers.customText", { freq: t(FREQ_ADVERB_KEY[store.freq]) })}
         </div>
       </div>
       {store.selType === "custom" && store.custom ? (
         <div className={styles.customHelp}>
-          {customHelp(store, store.custom)}
+          {customHelp(t, store, store.custom)}
         </div>
       ) : (
         <div className={styles.customHelp} />
       )}
       {err && (
         <div className={styles.customErr}>
-          Please enter an amount of {currencySymbol(store.cur)}1 or more.
+          {t("support:tiers.customErr", { sym: currencySymbol(store.cur) })}
         </div>
       )}
 
       <div className={styles.continueRow}>
         <Button variant="primary" size="lg" onClick={handleContinue}>
-          Continue with {ctaName} <FiArrowRight aria-hidden />
+          {t("support:tiers.continueCta", { name: t(ctaNameKey) })}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
         <span className={styles.chargeNote}>
           <FiLock size={15} aria-hidden />
-          You won't be charged until you review &amp; confirm.
+          {t("support:tiers.chargeNote")}
         </span>
       </div>
 
@@ -132,15 +143,12 @@ export const SustainerTiers = forwardRef<
             <FiCheck size={12} />
           </span>
           <span className={styles.optLabel}>
-            Add{" "}
-            <span className={styles.solidAmt}>
-              {money(store.cur, store.solidAmount)}
-            </span>{" "}
-            to sponsor a free membership
-            <span>
-              Pay it forward for someone in the community who can't contribute
-              right now.
-            </span>
+            <Translation
+              i18nKey="support:tiers.solidOpt.title"
+              values={{ amount: store.money(store.solidAmount) }}
+              components={{ amt: <span className={styles.solidAmt} /> }}
+            />
+            <span>{t("support:tiers.solidOpt.detail")}</span>
           </span>
         </button>
 
@@ -157,11 +165,8 @@ export const SustainerTiers = forwardRef<
             <FiCheck size={12} />
           </span>
           <span className={styles.optLabel}>
-            Make this a gift
-            <span>
-              Support QueerPulse on behalf of someone else — they'll get the
-              badge and a note from you.
-            </span>
+            {t("support:tiers.giftOpt.title")}
+            <span>{t("support:tiers.giftOpt.detail")}</span>
           </span>
         </button>
       </div>

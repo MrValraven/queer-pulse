@@ -1,4 +1,5 @@
 import type { Partner, Tint } from "./partnerDetails";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./PartnerDetailPage.module.css";
 
 export type PartnerTab = "about" | "work" | "timeline" | "how";
@@ -12,6 +13,7 @@ export function PartnerTabBar({
   tab: PartnerTab;
   setTab: (t: PartnerTab) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={s.tabs}>
       <button
@@ -21,7 +23,7 @@ export function PartnerTabBar({
           .join(" ")}
         onClick={() => setTab("about")}
       >
-        About
+        {t("marketing:partnerDetail.tab.about")}
       </button>
       <button
         type="button"
@@ -30,7 +32,8 @@ export function PartnerTabBar({
           .join(" ")}
         onClick={() => setTab("work")}
       >
-        Joint work <span className={s.tabCount}>{p.jointWork.length}</span>
+        {t("marketing:partnerDetail.tab.work")}{" "}
+        <span className={s.tabCount}>{p.jointWork.length}</span>
       </button>
       <button
         type="button"
@@ -39,7 +42,7 @@ export function PartnerTabBar({
           .join(" ")}
         onClick={() => setTab("timeline")}
       >
-        Timeline
+        {t("marketing:partnerDetail.tab.timeline")}
       </button>
       <button
         type="button"
@@ -48,7 +51,7 @@ export function PartnerTabBar({
           .join(" ")}
         onClick={() => setTab("how")}
       >
-        How we work together
+        {t("marketing:partnerDetail.tab.how")}
       </button>
     </div>
   );

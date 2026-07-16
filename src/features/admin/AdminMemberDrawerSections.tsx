@@ -1,8 +1,107 @@
 import { FiLock } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { SEALED_IDENTITY, type ModerationEntry } from "./adminMembers.data";
+import { AdminChip } from "./ui";
+import { VouchGraphPreview } from "./VouchGraphPreview";
+import {
+  SEALED_IDENTITY,
+  type MemberDetail,
+  type ModerationEntry,
+} from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
+
+/* ── At a glance / trust network / communities / contributions ──────────── */
+
+/**
+ * The four "overview" sections of the member drawer, split out of
+ * AdminMemberDrawer.tsx to keep that component under the repo's 200-line
+ * limit once its literals were routed through `t()`.
+ */
+export function MemberOverviewSections({
+  detail,
+  focusId,
+  onOpenNetwork,
+}: {
+  detail: MemberDetail;
+  focusId: string;
+  onOpenNetwork: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <section className={styles.dSection}>
+        <h3 className={styles.dHeading}>
+          {t("admin:members.drawer.glanceTitle")}
+        </h3>
+        <div className={styles.glanceGrid}>
+          {detail.glance.map((s) => (
+            <div key={s.labelKey} className={styles.glanceStat}>
+              <div className={styles.glanceValue}>{s.value}</div>
+              <div className={styles.glanceLabel}>{t(s.labelKey)}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.dSection}>
+        <h3 className={styles.dHeading}>
+          {t("admin:members.drawer.graphTitle")}
+        </h3>
+        <div
+          className={styles.graphWrap}
+          role="button"
+          tabIndex={0}
+          aria-label={t("admin:members.drawer.graphAriaLabel")}
+          title={t("admin:members.drawer.graphAriaLabel")}
+          onClick={onOpenNetwork}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onOpenNetwork();
+            }
+          }}
+        >
+          <VouchGraphPreview focusId={focusId} />
+        </div>
+        <div className={styles.graphNoteRow}>
+          <p className={styles.dHint}>{detail.graphNote}</p>
+          <Button variant="ghost" size="md" onClick={onOpenNetwork}>
+            {t("admin:members.drawer.exploreCta")} →
+          </Button>
+        </div>
+      </section>
+
+      <section className={styles.dSection}>
+        <h3 className={styles.dHeading}>
+          {t("admin:members.drawer.communitiesTitle")}
+        </h3>
+        <div className={styles.commChips}>
+          {detail.communities.map((c) => (
+            <AdminChip key={c.label} tone={c.tone}>
+              {c.label}
+            </AdminChip>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.dSection}>
+        <h3 className={styles.dHeading}>
+          {t("admin:members.drawer.contributionsTitle")}
+        </h3>
+        <ul className={styles.contribList}>
+          {detail.contributions.map((c, i) => (
+            <li key={i} className={styles.contribItem}>
+              <span>{c.what}</span>
+              <span className={styles.contribWhen}>{c.when}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </>
+  );
+}
 
 /* ── Moderation history — for & against ──────────────────── */
 
@@ -11,11 +110,10 @@ export function ModerationTimeline({
 }: {
   entries: ModerationEntry[];
 }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.dSection}>
-      <h3 className={styles.dHeading}>
-        Moderation history — for &amp; against
-      </h3>
+      <h3 className={styles.dHeading}>{t("admin:members.timeline.title")}</h3>
       <ul className={styles.timeline}>
         {entries.map((e, i) => (
           <li
@@ -42,7 +140,7 @@ export function ModerationTimeline({
         ))}
       </ul>
       <Link className={styles.auditLink} to={routes.adminGovernance}>
-        Every entry in the audit log →
+        {t("admin:members.timeline.auditLinkCta")} →
       </Link>
     </section>
   );
@@ -51,16 +149,21 @@ export function ModerationTimeline({
 /* ── Identity & privacy (sealed-lock card) ───────────────── */
 
 export function SealedIdentity() {
+  const { t } = useTranslation();
   return (
     <section className={styles.dSection}>
-      <h3 className={styles.dHeading}>Identity &amp; privacy</h3>
+      <h3 className={styles.dHeading}>
+        {t("admin:members.sealed.sectionTitle")}
+      </h3>
       <div className={styles.sealedCard}>
         <span className={styles.sealedIcon} aria-hidden>
           <FiLock />
         </span>
         <div>
-          <div className={styles.sealedTitle}>{SEALED_IDENTITY.title}</div>
-          <p className={styles.sealedBody}>{SEALED_IDENTITY.body}</p>
+          <div className={styles.sealedTitle}>
+            {t(SEALED_IDENTITY.titleKey)}
+          </div>
+          <p className={styles.sealedBody}>{t(SEALED_IDENTITY.bodyKey)}</p>
         </div>
       </div>
     </section>

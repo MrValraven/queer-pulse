@@ -1,18 +1,18 @@
 export const HOW = [
   {
     n: "01",
-    title: "Write anonymously",
-    desc: "Your identity is never attached to your review. We verify you're a member — nothing else is logged.",
+    titleKey: "economy:employerReviews.how.write.title",
+    descKey: "economy:employerReviews.how.write.desc",
   },
   {
     n: "02",
-    title: "Rate what matters",
-    desc: "Safety to be out, management awareness, trans inclusion, HR responsiveness, and culture vs. stated values.",
+    titleKey: "economy:employerReviews.how.rate.title",
+    descKey: "economy:employerReviews.how.rate.desc",
   },
   {
     n: "03",
-    title: "Help the next person",
-    desc: "Your review helps other queer people make better choices about where they take their talent and their whole selves.",
+    titleKey: "economy:employerReviews.how.help.title",
+    descKey: "economy:employerReviews.how.help.desc",
   },
 ];
 
@@ -144,24 +144,24 @@ export const COMPANIES: Company[] = [
 
 export const VERIFY = [
   {
-    label: "Verified safe",
-    desc: "Inclusive policies confirmed on paper, then cross-checked against 3+ anonymous staff reviews. Re-verified yearly.",
+    labelKey: "economy:employerReviews.verify.verifiedSafe.label",
+    descKey: "economy:employerReviews.verify.verifiedSafe.desc",
   },
   {
-    label: "Queer-run vs. queer-friendly",
-    desc: "Queer-run means led or owned by queer people. Queer-friendly is affirming but not community-led — we never conflate the two.",
+    labelKey: "economy:employerReviews.verify.queerRun.label",
+    descKey: "economy:employerReviews.verify.queerRun.desc",
   },
   {
-    label: "Confidence in the score",
-    desc: "Every score shows how many reviews it rests on. More reviews, more confidence — a 9 from 3 people is not a 9 from 30.",
+    labelKey: "economy:employerReviews.verify.confidence.label",
+    descKey: "economy:employerReviews.verify.confidence.desc",
   },
 ];
 
-export const RULES = [
-  "Reviews are anonymous — your name is never attached",
-  "We verify you're a QueerPulse member, nothing more",
-  "Employers cannot edit, remove, or respond to reviews",
-  "We moderate for factual accuracy, not for comfort",
-  "You can update or retract your review at any time",
-  "No company can buy a higher rating or featured placement",
+export const RULE_KEYS = [
+  "economy:employerReviews.write.rule.anonymous",
+  "economy:employerReviews.write.rule.verifyMembership",
+  "economy:employerReviews.write.rule.noEdit",
+  "economy:employerReviews.write.rule.moderation",
+  "economy:employerReviews.write.rule.retract",
+  "economy:employerReviews.write.rule.noBuying",
 ];

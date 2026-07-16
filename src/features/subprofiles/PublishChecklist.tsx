@@ -1,4 +1,6 @@
 import { FiAlertCircle, FiCheck, FiClock } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PUBLISH_REQUIREMENTS } from "./publishChecklist.data";
 import styles from "./PublishChecklist.module.css";
 
@@ -15,10 +17,12 @@ interface PublishChecklistProps {
 
 type RowState = "pass" | "fail" | "unknown";
 
-const STATE_LABEL: Record<RowState, string> = {
-  pass: "Done",
-  fail: "Needs attention",
-  unknown: "Still to check",
+/** i18n label-key indirection: `RowState` is local, ephemeral UI state (never
+ *  persisted), but keys are used for consistency with the rest of the sweep. */
+const STATE_LABEL_KEY: Record<RowState, string> = {
+  pass: "subprofiles:checklist.statePass",
+  fail: "subprofiles:checklist.stateFail",
+  unknown: "subprofiles:checklist.stateUnknown",
 };
 
 /**
@@ -31,15 +35,16 @@ export function PublishChecklist({
   unmet,
   unknown = false,
 }: PublishChecklistProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.card} role="status" aria-live="polite">
       <h3 className={styles.title}>
-        Almost <em>there</em>
+        <Translation i18nKey="subprofiles:checklist.title" components={{ em: <em /> }} />
       </h3>
       <p className={styles.lede}>
         {unknown
-          ? "We couldn't publish this just yet. Run through these and try again."
-          : "A few things to finish before this persona can stand on its own."}
+          ? t("subprofiles:checklist.ledeUnknown")
+          : t("subprofiles:checklist.ledeDefault")}
       </p>
       <ul className={styles.list}>
         {PUBLISH_REQUIREMENTS.map((req) => {
@@ -51,7 +56,7 @@ export function PublishChecklist({
             : failedCode
               ? "fail"
               : "pass";
-          const detail = failedCode ? req.fail[failedCode] : req.met;
+          const detailKey = failedCode ? req.failKey[failedCode] : req.metKey;
           return (
             <li key={req.key} className={styles.row} data-state={state}>
               <span className={styles.icon} aria-hidden>
@@ -64,10 +69,10 @@ export function PublishChecklist({
                 )}
               </span>
               <span className={styles.text}>
-                <span className={styles.rowTitle}>{req.title}</span>
-                <span className={styles.rowHelp}>{detail}</span>
+                <span className={styles.rowTitle}>{t(req.titleKey)}</span>
+                <span className={styles.rowHelp}>{detailKey && t(detailKey)}</span>
               </span>
-              <span className={styles.srOnly}>{STATE_LABEL[state]}</span>
+              <span className={styles.srOnly}>{t(STATE_LABEL_KEY[state])}</span>
             </li>
           );
         })}

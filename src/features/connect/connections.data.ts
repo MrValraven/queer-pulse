@@ -148,24 +148,31 @@ export function connectionViews(slugs: string[]): ConnectionView[] {
     .filter((v): v is ConnectionView => v !== null);
 }
 
-const VOUCH_LABEL: Record<NonNullable<ConnectionMeta["vouchBadge"]>, string> = {
-  "vouched-for-you": "Vouched for you",
-  "you-vouched": "You vouched",
-  mutual: "Mutual vouch",
+// i18n Pattern A (label-key indirection): the vouch relationship is a stable
+// English enum (`vouchBadge`); only the rendered label is resolved via `t()`
+// by the consuming component, so a language switch never touches the stored
+// relationship value.
+const VOUCH_LABEL_KEY: Record<
+  NonNullable<ConnectionMeta["vouchBadge"]>,
+  string
+> = {
+  "vouched-for-you": "connect:vouch.forYou",
+  "you-vouched": "connect:vouch.byYou",
+  mutual: "connect:vouch.mutual",
 };
 
-/** Short label for a connection's vouch relationship, if any. */
-export function vouchBadgeLabel(meta: ConnectionMeta): string | undefined {
-  return meta.vouchBadge ? VOUCH_LABEL[meta.vouchBadge] : undefined;
+/** Catalog key for a connection's vouch relationship badge, if any. */
+export function vouchBadgeLabelKey(meta: ConnectionMeta): string | undefined {
+  return meta.vouchBadge ? VOUCH_LABEL_KEY[meta.vouchBadge] : undefined;
 }
 
-/** The note shown on a card in the Vouched-for tab. */
-export function vouchNote(slug: string, youVouched: boolean): string {
+/** Catalog key for the note shown on a card in the Vouched-for tab. */
+export function vouchNoteKey(slug: string, youVouched: boolean): string {
   const badge = CONNECTION_META[slug]?.vouchBadge;
   const theyVouched = badge === "vouched-for-you" || badge === "mutual";
-  if (youVouched && theyVouched) return "Vouched both ways";
-  if (youVouched) return "You vouched";
-  if (badge === "vouched-for-you") return "Vouched for you";
-  if (badge === "mutual") return "Vouched both ways";
-  return "You vouched";
+  if (youVouched && theyVouched) return "connect:vouch.bothWays";
+  if (youVouched) return "connect:vouch.byYou";
+  if (badge === "vouched-for-you") return "connect:vouch.forYou";
+  if (badge === "mutual") return "connect:vouch.bothWays";
+  return "connect:vouch.byYou";
 }

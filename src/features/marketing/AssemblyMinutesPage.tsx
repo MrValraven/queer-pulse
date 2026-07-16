@@ -1,12 +1,15 @@
 import { useParams, Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { AssemblyMinutesBody } from "./AssemblyMinutesBody";
 import { MINUTES, MINUTES_FALLBACK_YEAR } from "./assemblyMinutes.data";
 import styles from "./AssemblyMinutesPage.module.css";
 
 export function AssemblyMinutesPage() {
+  const { t } = useTranslation();
   const { year } = useParams<{ year: string }>();
   const minutes = (year && MINUTES[year]) || MINUTES[MINUTES_FALLBACK_YEAR]!;
   const exact = Boolean(year && MINUTES[year]);
@@ -16,24 +19,30 @@ export function AssemblyMinutesPage() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.eyebrow}>
-            Annual Assembly · Minutes · {minutes.year}
+            {t("marketing:assemblyMinutes.hero.eyebrow", {
+              year: minutes.year,
+            })}
           </div>
           <h1 className={styles.h1}>
-            The <em>minutes.</em>
+            <Translation
+              i18nKey="marketing:assemblyMinutes.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.dek}>
-            The public record of the {minutes.year} Annual Assembly — who
-            chaired, what was on the table, and how every resolution landed.{" "}
+            {t("marketing:assemblyMinutes.hero.dek", { year: minutes.year })}{" "}
             {!exact && (
               <em>
-                We don't have minutes for {year} on file, so here's the{" "}
-                {minutes.year} record instead.
+                {t("marketing:assemblyMinutes.hero.fallbackNote", {
+                  requestedYear: year,
+                  year: minutes.year,
+                })}
               </em>
             )}
           </p>
           <div className={styles.actions}>
             <Button to={routes.annualAssembly} variant="ghost">
-              ← Back to the Assembly
+              {t("marketing:assemblyMinutes.hero.backCta")}
             </Button>
           </div>
         </div>
@@ -43,7 +52,7 @@ export function AssemblyMinutesPage() {
         <AssemblyMinutesBody minutes={minutes} />
 
         <div className={styles.otherYears}>
-          <span>Other years:</span>
+          <span>{t("marketing:assemblyMinutes.otherYears")}</span>
           {Object.keys(MINUTES)
             .sort()
             .reverse()

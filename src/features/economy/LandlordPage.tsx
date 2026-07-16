@@ -6,6 +6,8 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn, ImageSlot } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { getLandlord, type Tint } from "./landlords";
 import { RecommendModal } from "./HousingModals";
 import { ContactRequestModal } from "./ContactRequestModal";
@@ -17,30 +19,31 @@ const TINT: Record<Tint, string | undefined> = {
   jade: s.tJade,
   plum: s.tPlum,
 };
-const Stars = ({ n }: { n: number }) => (
+const Stars = ({ count }: { count: number }) => (
   <>
-    {Array.from({ length: 5 }, (_, i) => (
-      <FiStar key={i} className={i < n ? s.starOn : undefined} />
+    {Array.from({ length: 5 }, (_, starIndex) => (
+      <FiStar key={starIndex} className={starIndex < count ? s.starOn : undefined} />
     ))}
   </>
 );
 
 export function LandlordPage() {
+  const { t } = useTranslation();
   const { slug } = useParams();
   const { showToast } = useToast();
   const [recommending, setRecommending] = useState(false);
   const [introducing, setIntroducing] = useState(false);
   const loading = useSimulatedLoad();
 
-  const ll = getLandlord(slug);
-  if (!ll) return <Navigate to={routes.housing} replace />;
+  const landlord = getLandlord(slug);
+  if (!landlord) return <Navigate to={routes.housing} replace />;
 
   if (loading) {
     return (
       <PageShell>
         <div className={s.page}>
           <Link to={routes.housing} className={s.back}>
-            ← Housing board
+            {t("economy:housingListing.back")}
           </Link>
           <LandlordSkeleton />
         </div>
@@ -48,42 +51,46 @@ export function LandlordPage() {
     );
   }
 
+  const firstName = landlord.name.split(" ")[0];
+
   return (
     <PageShell>
       <div className={s.page}>
         <Link to={routes.housing} className={s.back}>
-          ← Housing board
+          {t("economy:housingListing.back")}
         </Link>
 
         <FadeIn>
           <header className={s.hero}>
             <ImageSlot
               className={s.photo}
-              src={ll.photo}
-              alt={ll.name}
-              tint={ll.tint}
-              initials={ll.initials}
+              src={landlord.photo}
+              alt={landlord.name}
+              tint={landlord.tint}
+              initials={landlord.initials}
               radius={16}
               width={160}
               height={160}
             />
             <div>
-              <div className={s.eyebrow}>Community-endorsed landlord</div>
-              <h1 className={s.name}>{ll.name}</h1>
+              <div className={s.eyebrow}>{t("economy:landlordPage.eyebrow")}</div>
+              <h1 className={s.name}>{landlord.name}</h1>
               <div className={s.metaLine}>
                 <span className={s.stars}>
-                  <Stars n={Math.round(ll.stars)} />
+                  <Stars count={Math.round(landlord.stars)} />
                 </span>
-                <span>{ll.hood}</span>
+                <span>{landlord.hood}</span>
               </div>
-              <p className={s.tagline}>{ll.tagline}</p>
+              <p className={s.tagline}>{landlord.tagline}</p>
             </div>
             <div className={s.heroAction}>
               <Button variant="primary" onClick={() => setRecommending(true)}>
-                Recommend {ll.name}
+                {t("economy:landlordPage.recommendCta", { name: landlord.name })}
               </Button>
               <span className={s.recCount}>
-                {ll.recommendations.length} member recommendations
+                {t("economy:landlordPage.recommendCount", {
+                  count: landlord.recommendations.length,
+                })}
               </span>
             </div>
           </header>
@@ -91,42 +98,53 @@ export function LandlordPage() {
           <div className={s.grid}>
             <main>
               <section className={s.sec}>
-                <h2>About {ll.name}</h2>
-                {ll.about.map((p, i) => (
-                  <p key={i}>{p}</p>
+                <h2>
+                  {t("economy:landlordPage.section.about", {
+                    name: landlord.name,
+                  })}
+                </h2>
+                {landlord.about.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
                 ))}
               </section>
 
               <section className={s.sec}>
-                <h2>Where they rent</h2>
+                <h2>{t("economy:landlordPage.section.whereTheyRent")}</h2>
                 <div className={s.areas}>
-                  {ll.areas.map((a) => (
-                    <div key={a} className={s.area}>
+                  {landlord.areas.map((area) => (
+                    <div key={area} className={s.area}>
                       <div className={s.areaDot} />
-                      {a}
+                      {area}
                     </div>
                   ))}
                 </div>
               </section>
 
               <section className={s.sec}>
-                <h2>Member recommendations</h2>
+                <h2>{t("economy:landlordPage.section.recommendations")}</h2>
                 <div className={s.recs}>
-                  {ll.recommendations.map((r) => (
-                    <div key={r.name + r.when} className={s.rec}>
+                  {landlord.recommendations.map((recommendation) => (
+                    <div
+                      key={recommendation.name + recommendation.when}
+                      className={s.rec}
+                    >
                       <div className={s.recHead}>
-                        <div className={[s.recAv, TINT[r.tint]].join(" ")}>
-                          {r.initials}
+                        <div
+                          className={[s.recAv, TINT[recommendation.tint]].join(
+                            " ",
+                          )}
+                        >
+                          {recommendation.initials}
                         </div>
                         <div>
-                          <div className={s.recName}>{r.name}</div>
-                          <div className={s.recWhen}>{r.when}</div>
+                          <div className={s.recName}>{recommendation.name}</div>
+                          <div className={s.recWhen}>{recommendation.when}</div>
                         </div>
                         <span className={s.recStars}>
-                          <Stars n={r.stars} />
+                          <Stars count={recommendation.stars} />
                         </span>
                       </div>
-                      <div className={s.recText}>{r.text}</div>
+                      <div className={s.recText}>{recommendation.text}</div>
                     </div>
                   ))}
                 </div>
@@ -135,46 +153,46 @@ export function LandlordPage() {
 
             <aside className={s.side}>
               <div className={s.sideCard}>
-                <h4>At a glance</h4>
-                {ll.stats.map((st) => (
-                  <div key={st.label} className={s.statRow}>
-                    <span>{st.label}</span>
+                <h4>{t("economy:landlordPage.sidebar.atAGlance")}</h4>
+                {landlord.stats.map((stat) => (
+                  <div key={stat.label} className={s.statRow}>
+                    <span>{stat.label}</span>
                     <b>
-                      {st.label === "Community rating" && (
+                      {stat.label === "Community rating" && (
                         <FiStar className={s.statStar} />
                       )}
-                      {st.value}
+                      {stat.value}
                     </b>
                   </div>
                 ))}
               </div>
 
               <div className={s.recCard}>
-                <h4>Rented from {ll.name}?</h4>
-                <p>
-                  Your recommendation is what makes this list trustworthy — and
-                  what makes someone else's move so much safer. It takes two
-                  minutes.
-                </p>
+                <h4>
+                  {t("economy:landlordPage.sidebar.rentedFrom", {
+                    name: landlord.name,
+                  })}
+                </h4>
+                <p>{t("economy:landlordPage.sidebar.rentedFromBody")}</p>
                 <Button
                   variant="ghost-dark"
                   className={s.sideFull}
                   onClick={() => setRecommending(true)}
                 >
-                  Recommend this landlord
+                  {t("economy:landlordPage.sidebar.recommendCta")}
                 </Button>
               </div>
 
               <div className={s.sideCard}>
-                <h4>How to rent from them</h4>
-                <p className={s.note}>{ll.rentingNote}</p>
+                <h4>{t("economy:landlordPage.sidebar.howToRent")}</h4>
+                <p className={s.note}>{landlord.rentingNote}</p>
                 <Button
                   variant="ghost"
                   className={s.sideFull}
                   style={{ marginTop: 14 }}
                   onClick={() => setIntroducing(true)}
                 >
-                  Request an introduction →
+                  {t("economy:landlordPage.sidebar.requestIntro")}
                 </Button>
               </div>
             </aside>
@@ -184,32 +202,35 @@ export function LandlordPage() {
 
       {recommending && (
         <RecommendModal
-          landlordName={ll.name}
+          landlordName={landlord.name}
           onClose={() => setRecommending(false)}
           onSubmitted={(stars) =>
-            showToast(`Recommendation submitted — ${stars} stars`, "success")
+            showToast(
+              t("economy:landlordPage.toast.recommended", { count: stars }),
+              "success",
+            )
           }
         />
       )}
 
       {introducing && (
         <ContactRequestModal
-          toName={ll.name}
-          eyebrow="Housing · Introduction"
-          title="Ask for an"
-          em="introduction."
-          sub={`We'll pass a warm note to ${ll.name} on your behalf. Say a little about what you're looking for and when you'd like to move.`}
-          preset={`Hi ${ll.name.split(" ")[0]}, I found you through the QueerPulse housing board. I'm looking for a place in `}
-          successTitle="Introduction"
-          successEm="requested."
+          toName={landlord.name}
+          eyebrow={t("economy:landlordPage.intro.eyebrow")}
+          title={t("economy:landlordPage.intro.title")}
+          em={t("economy:landlordPage.intro.em")}
+          sub={t("economy:landlordPage.intro.sub", { name: landlord.name })}
+          preset={t("economy:landlordPage.intro.preset", { firstName })}
+          successTitle={t("economy:landlordPage.intro.successTitle")}
+          successEm={t("economy:landlordPage.intro.successEm")}
           successBody={
-            <>
-              We've passed your note to <strong>{ll.name.split(" ")[0]}</strong>
-              . If they have something that fits, they'll reach out here — no
-              pressure either way.
-            </>
+            <Translation
+              i18nKey="economy:landlordPage.intro.successBody"
+              values={{ firstName }}
+              components={{ strong: <strong /> }}
+            />
           }
-          sendLabel="Request introduction"
+          sendLabel={t("economy:landlordPage.intro.sendLabel")}
           onClose={() => setIntroducing(false)}
         />
       )}

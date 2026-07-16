@@ -4,69 +4,68 @@
  * that fail it (`codes`) to friendly, second-person copy, plus the reassuring
  * line shown once it's met (`met`). The live 422 body / demo check returns those
  * same codes, so the checklist reads them straight through.
+ *
+ * i18n Pattern A: `titleKey`/`metKey`/`failKey` hold catalog keys, resolved by
+ * `PublishChecklist.tsx` via `t()`. `codes` are fixed contract-C5 identifiers,
+ * never displayed directly, so they stay as plain English ids.
  */
 export interface PublishRequirement {
   key: string;
-  title: string;
-  /** Copy shown when this requirement is satisfied. */
-  met: string;
+  titleKey: string;
+  /** Catalog key for the copy shown when this requirement is satisfied. */
+  metKey: string;
   /** Contract-C5 codes that fail this requirement. */
   codes: string[];
-  /** Per-code copy shown when the requirement isn't met yet. */
-  fail: Record<string, string>;
+  /** Per-code catalog key shown when the requirement isn't met yet. */
+  failKey: Record<string, string>;
 }
 
 export const PUBLISH_REQUIREMENTS: PublishRequirement[] = [
   {
     key: "handle",
-    title: "A handle that's yours",
-    met: "This is where people will find you — queerpulse.app/p/your-handle.",
+    titleKey: "subprofiles:checklist.reqHandleTitle",
+    metKey: "subprofiles:checklist.reqHandleMet",
     codes: ["handle_invalid", "handle_taken", "handle_reserved"],
-    fail: {
-      handle_invalid:
-        "Handles are 3–30 characters: lowercase letters, numbers and hyphens.",
-      handle_taken: "Someone already has that handle — try another.",
-      handle_reserved: "That handle is reserved. Pick a different one.",
+    failKey: {
+      handle_invalid: "subprofiles:checklist.reqHandleFailInvalid",
+      handle_taken: "subprofiles:checklist.reqHandleFailTaken",
+      handle_reserved: "subprofiles:checklist.reqHandleFailReserved",
     },
   },
   {
     key: "avatar",
-    title: "A photo or image",
-    met: "Your avatar helps people recognise this persona.",
+    titleKey: "subprofiles:checklist.reqAvatarTitle",
+    metKey: "subprofiles:checklist.reqAvatarMet",
     codes: ["avatar_missing"],
-    fail: {
-      avatar_missing:
-        "Add an avatar so people can put a face, or a mark, to the name.",
+    failKey: {
+      avatar_missing: "subprofiles:checklist.reqAvatarFail",
     },
   },
   {
     key: "bio",
-    title: "A bio of at least 80 characters",
-    met: "Enough for someone to get who you are at a glance.",
+    titleKey: "subprofiles:checklist.reqBioTitle",
+    metKey: "subprofiles:checklist.reqBioMet",
     codes: ["bio_too_short"],
-    fail: {
-      bio_too_short:
-        "Tell people a little more — your bio needs at least 80 characters.",
+    failKey: {
+      bio_too_short: "subprofiles:checklist.reqBioFail",
     },
   },
   {
     key: "items",
-    title: "At least three things to show",
-    met: "Enough work for the page to feel alive.",
+    titleKey: "subprofiles:checklist.reqItemsTitle",
+    metKey: "subprofiles:checklist.reqItemsMet",
     codes: ["not_enough_items"],
-    fail: {
-      not_enough_items:
-        "Add a few more pieces — you need at least three across your sections.",
+    failKey: {
+      not_enough_items: "subprofiles:checklist.reqItemsFail",
     },
   },
   {
     key: "language",
-    title: "Language that keeps everyone welcome",
-    met: "Nothing flagged.",
+    titleKey: "subprofiles:checklist.reqLanguageTitle",
+    metKey: "subprofiles:checklist.reqLanguageMet",
     codes: ["blocked_terms"],
-    fail: {
-      blocked_terms:
-        "Something in your name, handle or bio was flagged — please reword it.",
+    failKey: {
+      blocked_terms: "subprofiles:checklist.reqLanguageFail",
     },
   },
 ];

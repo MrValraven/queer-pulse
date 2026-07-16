@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { currentUser } from "../../members/data/members";
 import {
   INVITE_CANDIDATES,
-  RULE_PRESETS,
+  RULE_PRESET_KEYS,
   type CommunityDraft,
   type Steward,
   type TintKey,
@@ -29,7 +29,7 @@ export function emptyDraft(): CommunityDraft {
     rosterVisible: true,
     stewards: [ownerSteward()],
     features: ["discussion"],
-    rules: [...RULE_PRESETS],
+    rules: [...RULE_PRESET_KEYS],
     tint: "coral",
     tagline: "",
     invites: [],
@@ -107,7 +107,10 @@ export function useCommunityForm(initial?: CommunityDraft) {
     setDraft((d) => ({ ...d, tint }));
   }, []);
 
-  /* ---- per-step "what's still needed" gating ---- */
+  /* ---- per-step "what's still needed" gating ----
+     Each entry is a catalog key (chrome, resolved by `t()` where the chips
+     render — see `PanelActions` in `StartCommunityChrome.tsx`), not raw text,
+     so a language switch never leaves stale English baked into form state. */
   const missing = useMemo(() => {
     const s: Record<number, string[]> = {
       0: [],
@@ -121,20 +124,22 @@ export function useCommunityForm(initial?: CommunityDraft) {
       8: [],
     };
     // 1 · why
-    if (!draft.name.trim()) s[1]!.push("a name");
-    if (!draft.purpose.trim()) s[1]!.push("what it's for");
-    if (!draft.type) s[1]!.push("a category");
+    if (!draft.name.trim()) s[1]!.push("communities:start.missing.name");
+    if (!draft.purpose.trim())
+      s[1]!.push("communities:start.missing.purpose");
+    if (!draft.type) s[1]!.push("communities:start.missing.category");
     // 2 · who
-    if (!draft.whoFor.trim()) s[2]!.push("who it's for");
+    if (!draft.whoFor.trim()) s[2]!.push("communities:start.missing.whoFor");
     // 3 · safety
-    if (!draft.accessTier) s[3]!.push("who can find it");
+    if (!draft.accessTier) s[3]!.push("communities:start.missing.access");
     // 5 · tone
-    if (!draft.rules.length) s[5]!.push("at least one shared value");
+    if (!draft.rules.length) s[5]!.push("communities:start.missing.rules");
     // 6 · feeling
-    if (!draft.tagline.trim()) s[6]!.push("a tagline");
+    if (!draft.tagline.trim())
+      s[6]!.push("communities:start.missing.tagline");
     // 8 · confirm
-    if (!draft.handle.trim()) s[8]!.push("a handle");
-    if (!draft.consent) s[8]!.push("your confirmation");
+    if (!draft.handle.trim()) s[8]!.push("communities:start.missing.handle");
+    if (!draft.consent) s[8]!.push("communities:start.missing.consent");
     return s;
   }, [draft]);
 

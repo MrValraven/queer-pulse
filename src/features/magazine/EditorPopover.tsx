@@ -8,12 +8,14 @@ import {
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { FiEdit3 } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   PIPELINE,
   EDITORS,
   stripEm,
   firstName,
+  STAGE_LABEL_KEY,
   type Piece,
   type Editor,
   type Stage,
@@ -120,9 +122,12 @@ export function StageMenu({
   onPick: (stage: Stage) => void;
   close: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
-      <div className={styles.popHead}>Move “{stripEm(piece.title)}”</div>
+      <div className={styles.popHead}>
+        {t("magazine:editor.popover.movePiece", { title: stripEm(piece.title) })}
+      </div>
       {PIPELINE.map((s, i) => {
         const cur = s === piece.stage;
         return (
@@ -137,8 +142,8 @@ export function StageMenu({
             }}
           >
             <span className={styles.popNum}>{i + 1}</span>
-            {s}
-            {cur && <em>current</em>}
+            {t(STAGE_LABEL_KEY[s])}
+            {cur && <em>{t("magazine:editor.popover.current")}</em>}
           </button>
         );
       })}
@@ -160,9 +165,12 @@ export function AssignMenu({
   onHandoff: () => void;
   close: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
-      <div className={styles.popHead}>Editor for this piece</div>
+      <div className={styles.popHead}>
+        {t("magazine:editor.popover.editorForPiece")}
+      </div>
       {EDITORS.map((ed) => {
         const cur = ed === piece.editor;
         return (
@@ -179,7 +187,12 @@ export function AssignMenu({
             <span className={cx(styles.chipDot, editorDot(ed))} />
             {ed}
             <em>
-              {loads[ed]} pieces{cur ? " · current" : ""}
+              {t(
+                cur
+                  ? "magazine:editor.popover.piecesCountCurrent"
+                  : "magazine:editor.popover.piecesCount",
+                { count: loads[ed] },
+              )}
             </em>
           </button>
         );
@@ -193,7 +206,7 @@ export function AssignMenu({
           onHandoff();
         }}
       >
-        <FiEdit3 aria-hidden /> Hand off with a note…
+        <FiEdit3 aria-hidden /> {t("magazine:editor.popover.handOffWithNote")}
       </button>
     </>
   );
@@ -213,6 +226,7 @@ export function MoreMenu({
   onDuplicate: () => void;
   close: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <button
@@ -224,7 +238,7 @@ export function MoreMenu({
           onChase();
         }}
       >
-        Nudge {firstName(piece.author)}…
+        {t("magazine:editor.popover.nudge", { name: firstName(piece.author) })}
       </button>
       <button
         type="button"
@@ -235,7 +249,7 @@ export function MoreMenu({
           onHandoff();
         }}
       >
-        Hand off to co-editor…
+        {t("magazine:editor.popover.handOffToCoEditor")}
       </button>
       <Link
         className={styles.popItem}
@@ -243,7 +257,7 @@ export function MoreMenu({
         to={routes.issue}
         onClick={close}
       >
-        Preview in layout
+        {t("magazine:editor.popover.previewInLayout")}
       </Link>
       <button
         type="button"
@@ -254,7 +268,7 @@ export function MoreMenu({
           onDuplicate();
         }}
       >
-        Duplicate brief
+        {t("magazine:editor.popover.duplicateBrief")}
       </button>
     </>
   );

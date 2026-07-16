@@ -1,44 +1,30 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { SystemStateShell } from "../../shared/components/layout";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./GeoRestrictedPage.module.css";
 
 const CAN_DO = [
   {
-    label: "Read all public articles & the magazine",
-    detail: (
-      <>
-        The full editorial archive is open ·{" "}
-        <Link to={routes.magazine}>browse →</Link>
-      </>
-    ),
+    labelKey: "system:geoRestricted.can.readArticles.label",
+    detailKey: "system:geoRestricted.can.readArticles.detail",
+    to: routes.magazine,
   },
   {
-    label: "Access crisis & safety resources",
-    detail: (
-      <>
-        Crisis chat, emergency guides, and harm-reduction docs ·{" "}
-        <Link to={routes.crisisChat}>open crisis chat →</Link>
-      </>
-    ),
+    labelKey: "system:geoRestricted.can.crisis.label",
+    detailKey: "system:geoRestricted.can.crisis.detail",
+    to: routes.crisisChat,
   },
   {
-    label: "Browse vetted international resources",
-    detail: (
-      <>
-        Hotlines, queer-friendly legal aid, and emergency contacts in 14 other
-        countries · <Link to={routes.resources}>resource library →</Link>
-      </>
-    ),
+    labelKey: "system:geoRestricted.can.resources.label",
+    detailKey: "system:geoRestricted.can.resources.detail",
+    to: routes.resources,
   },
   {
-    label: "Ask us to open access here",
-    detail: (
-      <>
-        Tell us where you are (no need for your name) and what would help ·{" "}
-        <Link to={routes.contact + "?topic=region"}>write to the team →</Link>
-      </>
-    ),
+    labelKey: "system:geoRestricted.can.askUs.label",
+    detailKey: "system:geoRestricted.can.askUs.detail",
+    to: routes.contact + "?topic=region",
   },
 ];
 
@@ -56,6 +42,8 @@ const CheckIcon = () => (
 );
 
 export function GeoRestrictedPage() {
+  const { t } = useTranslation();
+
   return (
     <SystemStateShell>
       <div className={styles.card}>
@@ -74,39 +62,46 @@ export function GeoRestrictedPage() {
           </svg>
         </div>
 
-        <div className={styles.eyebrow}>Region restricted</div>
+        <div className={styles.eyebrow}>{t("system:geoRestricted.eyebrow")}</div>
         <h1 className={styles.h1}>
-          QueerPulse isn't <em>fully available</em> here yet.
+          <Translation
+            i18nKey="system:geoRestricted.h1"
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.lead}>
-          It looks like you're connecting from a country where some QueerPulse
-          features are restricted — most often because we don't have moderators
-          in your timezone, or because we're working through local legal review.{" "}
-          <em>Crisis support and safety resources are still open to you.</em>
+          <Translation
+            i18nKey="system:geoRestricted.lead"
+            components={{ em: <em /> }}
+          />
         </p>
 
         <div className={styles.why}>
-          <h4>Why this happens</h4>
+          <h4>{t("system:geoRestricted.why.title")}</h4>
           <p>
-            We open access to a new region only when we have{" "}
-            <em>at least one moderator in-country</em> and have reviewed the
-            local legal framework for queer expression. It is intentionally
-            slow. We don't want to advertise queer community to a place where
-            members would be put at risk by joining.
+            <Translation
+              i18nKey="system:geoRestricted.why.body"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
 
         <div className={styles.can}>
-          <h3 className={styles.canTitle}>What you can still do · right now</h3>
+          <h3 className={styles.canTitle}>{t("system:geoRestricted.can.title")}</h3>
           <div className={styles.canList}>
-            {CAN_DO.map((item, i) => (
-              <div key={i} className={styles.canRow}>
+            {CAN_DO.map((item) => (
+              <div key={item.labelKey} className={styles.canRow}>
                 <div className={styles.canIc}>
                   <CheckIcon />
                 </div>
                 <div>
-                  <b>{item.label}</b>
-                  <span>{item.detail}</span>
+                  <b>{t(item.labelKey)}</b>
+                  <span>
+                    <Translation
+                      i18nKey={item.detailKey}
+                      components={{ a: <Link to={item.to} /> }}
+                    />
+                  </span>
                 </div>
               </div>
             ))}
@@ -116,10 +111,12 @@ export function GeoRestrictedPage() {
         <div className={styles.detect}>
           <div className={styles.flag} aria-hidden />
           <span>
-            Detected: <b>Portugal · Lisbon</b> · this is a demo of the
-            region-restricted view.
+            <Translation
+              i18nKey="system:geoRestricted.detect"
+              components={{ b: <b /> }}
+            />
           </span>
-          <Link to={routes.homepage}>Go home →</Link>
+          <Link to={routes.homepage}>{t("system:geoRestricted.goHome")}</Link>
         </div>
       </div>
     </SystemStateShell>

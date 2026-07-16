@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FiInbox } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad, usePrefersReducedMotion } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -38,6 +39,7 @@ type ModalState =
 const HIDDEN_PITCHES = PITCH_TOTAL - PITCHES.length;
 
 export function EditorDashboardPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const reduced = usePrefersReducedMotion();
   const { demoMode } = useDemoMode();
@@ -110,7 +112,8 @@ export function EditorDashboardPage() {
     onAssign: dash.assign,
     onHandoff: (piece) => setModal({ kind: "handoff", piece }),
     onChase: openChase,
-    onDuplicate: () => showToast("Brief duplicated to drafts", "info"),
+    onDuplicate: () =>
+      showToast(t("magazine:editor.toast.briefDuplicated"), "info"),
   };
 
   useEditorKeyboard({
@@ -136,8 +139,8 @@ export function EditorDashboardPage() {
         ) : isEmpty ? (
           <EmptyState
             icon={<FiInbox />}
-            title="The desk is clear"
-            description="No pieces in flight and no pitches waiting. When writers pitch or you commission a piece, it'll show up here to triage and edit."
+            title={t("magazine:editor.page.emptyTitle")}
+            description={t("magazine:editor.page.emptyDescription")}
           />
         ) : (
           <>
@@ -191,7 +194,7 @@ export function EditorDashboardPage() {
                   onToggleSelect={dash.toggleSelect}
                   onTriage={handleTriage}
                   onShowMore={() =>
-                    stub("That’s every pitch loaded in this prototype")
+                    stub(t("magazine:editor.page.everyPitchLoaded"))
                   }
                 />
               </main>

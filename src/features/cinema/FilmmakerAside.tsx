@@ -3,6 +3,9 @@ import type { RefObject } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { TIP_AMOUNTS, type Filmmaker } from "./cinemaFilmmaker.data";
 import styles from "./CinemaFilmmakerPage.module.css";
@@ -14,16 +17,19 @@ interface FilmmakerAsideProps {
 
 export function FilmmakerAside({ filmmaker, tipRef }: FilmmakerAsideProps) {
   const { showToast } = useToast();
-  const [amount, setAmount] = useState(TIP_AMOUNTS[1]);
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const [amount, setAmount] = useState(TIP_AMOUNTS[1] ?? TIP_AMOUNTS[0] ?? 7);
   const name = filmmaker.namePre.trim();
 
   return (
     <aside className={styles.aside}>
       <div className={styles.tipjar} ref={tipRef}>
-        <div className={styles.tjHead}>Tip {name}</div>
+        <div className={styles.tjHead}>
+          {t("cinema:filmmaker.aside.tipHeading", { name })}
+        </div>
         <div className={styles.tjSub}>
-          “100% goes to {name} — the co-op takes nothing off a tip. Tipping
-          keeps her making things.”
+          “{t("cinema:filmmaker.aside.tipSub", { name })}”
         </div>
         <div className={styles.tjChips}>
           {TIP_AMOUNTS.map((v) => (
@@ -34,7 +40,7 @@ export function FilmmakerAside({ filmmaker, tipRef }: FilmmakerAsideProps) {
               aria-pressed={amount === v}
               onClick={() => setAmount(v)}
             >
-              €{v}
+              {fmt.currency(v)}
             </button>
           ))}
         </div>
@@ -42,30 +48,44 @@ export function FilmmakerAside({ filmmaker, tipRef }: FilmmakerAsideProps) {
           variant="primary"
           className={styles.tjSend}
           onClick={() =>
-            showToast(`€${amount} on its way to ${name} — thank you`, "success")
+            showToast(
+              t("cinema:filmmaker.aside.tippedToast", {
+                amount: fmt.currency(amount),
+                name,
+              }),
+              "success",
+            )
           }
         >
-          Send €{amount}
+          {t("cinema:filmmaker.aside.sendCta", { amount: fmt.currency(amount) })}
         </Button>
         <div className={styles.tjNote}>
-          <strong>187 members</strong> have tipped {name} this month.
+          <Translation
+            i18nKey="cinema:filmmaker.aside.tippedNote"
+            values={{ count: 187, name }}
+            components={{ strong: <strong /> }}
+          />
         </div>
       </div>
 
       <div className={styles.asideCard}>
-        <div className={styles.acHead}>The co-op split</div>
+        <div className={styles.acHead}>
+          {t("cinema:filmmaker.aside.splitHeading")}
+        </div>
         <div className={styles.acBody}>
-          When you rent any of {name}'s films, <strong>80%</strong> goes to her.
-          When you buy, the same. Tips are 100%. The split is the same for every
-          filmmaker on the cinema.
+          <Translation
+            i18nKey="cinema:filmmaker.aside.splitBody"
+            values={{ name }}
+            components={{ strong: <strong /> }}
+          />
         </div>
         <Link to={routes.governance} className={styles.acLink}>
-          Read the deed →
+          {t("cinema:film.split.readDeedCta")}
         </Link>
       </div>
 
       <div className={styles.asideCard}>
-        <div className={styles.acHead}>Open calls</div>
+        <div className={styles.acHead}>{t("cinema:nav.openCalls")}</div>
         <div className={styles.acBody} style={{ marginBottom: 14 }}>
           {name} is a mentor for the “First feature, any stage” open call.
           Applications close 15 July.
@@ -75,7 +95,7 @@ export function FilmmakerAside({ filmmaker, tipRef }: FilmmakerAsideProps) {
           to={routes.studioCalls}
           style={{ width: "100%" }}
         >
-          See open calls
+          {t("cinema:filmmaker.aside.seeOpenCallsCta")}
         </Button>
       </div>
     </aside>

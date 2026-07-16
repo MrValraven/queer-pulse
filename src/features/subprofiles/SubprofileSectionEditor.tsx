@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileSection } from "./api/subprofiles.api";
 import {
   itemsToInputDto,
@@ -47,10 +48,12 @@ export function SubprofileSectionEditor({
 }) {
   const { replaceSection } = useSubprofileMutations();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [rows, setRows] = useState<Row[]>(() => section.items.map(withUid));
   const [dirty, setDirty] = useState(false);
 
   const Icon = section.icon;
+  const label = t(section.labelKey);
   const atMax = rows.length >= MAX_ITEMS_PER_SECTION;
   const saving = replaceSection.isPending;
 
@@ -90,9 +93,9 @@ export function SubprofileSectionEditor({
         items: itemsToInputDto(rows),
       });
       setDirty(false);
-      showToast(`${section.label} saved`, "success");
+      showToast(t("subprofiles:sectionEditor.toastSaved", { section: label }), "success");
     } catch {
-      showToast("We couldn't save that just now — try again.", "error");
+      showToast(t("subprofiles:sectionEditor.toastError"), "error");
     }
   }
 
@@ -102,13 +105,11 @@ export function SubprofileSectionEditor({
         <span className={styles.cardIcon}>
           <Icon size={20} aria-hidden />
         </span>
-        <h2 className={styles.cardTitle}>{section.label}</h2>
+        <h2 className={styles.cardTitle}>{label}</h2>
       </div>
 
       {rows.length === 0 && (
-        <p className={styles.emptySection}>
-          Nothing here yet — add your first when you're ready.
-        </p>
+        <p className={styles.emptySection}>{t("subprofiles:sectionEditor.empty")}</p>
       )}
 
       <div className={styles.itemsWrap}>
@@ -135,17 +136,17 @@ export function SubprofileSectionEditor({
             onClick={add}
             disabled={atMax}
           >
-            <FiPlus size={18} aria-hidden /> Add to{" "}
-            {section.label.toLowerCase()}
+            <FiPlus size={18} aria-hidden />{" "}
+            {t("subprofiles:sectionEditor.addTo", { section: label.toLowerCase() })}
           </button>
           {atMax && (
-            <p className={styles.capHint}>
-              That's the most you can add to one section.
-            </p>
+            <p className={styles.capHint}>{t("subprofiles:sectionEditor.capHint")}</p>
           )}
         </div>
         <Button variant="primary" onClick={save} disabled={saving || !dirty}>
-          {saving ? "Saving…" : "Save section"}
+          {saving
+            ? t("subprofiles:sectionEditor.saving")
+            : t("subprofiles:sectionEditor.save")}
         </Button>
       </div>
     </section>

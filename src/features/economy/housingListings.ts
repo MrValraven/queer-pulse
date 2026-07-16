@@ -16,7 +16,6 @@ export interface Poster {
 export interface HousingListing {
   slug: string;
   type: string;
-  typeLabel: string;
   typeColor: string;
   typeText: string;
   tint: Tint;
@@ -41,7 +40,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "principe-real-sunny-onebed",
     type: "sublet",
-    typeLabel: "Sublet",
     typeColor: "rgba(var(--accent-rgb),.1)",
     typeText: "var(--accent-ink)",
     tint: "coral",
@@ -100,7 +98,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "arroios-room-share",
     type: "room",
-    typeLabel: "Room share",
     typeColor: "rgba(var(--jade-rgb),.1)",
     typeText: "var(--jade)",
     tint: "jade",
@@ -159,7 +156,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "graca-studio-shortterm",
     type: "short",
-    typeLabel: "Short-term",
     typeColor: "rgba(var(--plum-rgb),.08)",
     typeText: "var(--plum)",
     tint: "plum",
@@ -218,7 +214,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "marvila-warehouse-room",
     type: "room",
-    typeLabel: "Room share",
     typeColor: "rgba(var(--jade-rgb),.1)",
     typeText: "var(--jade)",
     tint: "jade",
@@ -277,7 +272,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "cais-do-sodre-full-flat",
     type: "studio",
-    typeLabel: "Studio",
     typeColor: "rgba(var(--violet-rgb),.1)",
     typeText: "var(--violet)",
     tint: "plum",
@@ -331,7 +325,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "mouraria-two-bed",
     type: "sublet",
-    typeLabel: "Sublet",
     typeColor: "rgba(var(--accent-rgb),.1)",
     typeText: "var(--accent-ink)",
     tint: "coral",

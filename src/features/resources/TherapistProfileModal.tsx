@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FiCheck, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Therapist } from "./mentalHealth.data";
 import { TherapistProfileBody } from "./TherapistProfileBody";
 import styles from "./TherapistProfileModal.module.css";
@@ -15,6 +16,7 @@ export function TherapistProfileModal({
   therapist: Therapist;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>("idle");
   useScrollLock();
 
@@ -46,13 +48,15 @@ export function TherapistProfileModal({
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-label={`${therapist.name} — profile`}
+        aria-label={t("resources:mentalHealth.therapistModal.profileAriaLabel", {
+          name: therapist.name,
+        })}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("resources:modal.closeAriaLabel")}
         >
           <FiX />
         </button>
@@ -66,19 +70,21 @@ export function TherapistProfileModal({
             </span>
             <div>
               <div className={styles.sentTitle}>
-                Message sent to {firstName}.
+                {t("resources:mentalHealth.therapistModal.sentTitle", {
+                  name: firstName,
+                })}
               </div>
               <p className={styles.sentText}>
-                They'll reply directly to your email if it feels like a fit. No
-                notifications, no pressure.
+                {t("resources:mentalHealth.therapistModal.sentText")}
               </p>
             </div>
           </div>
         ) : (
           <div className={styles.foot}>
             <div className={styles.footNote}>
-              Messages go straight to {firstName} — held briefly and reviewed
-              before delivery to keep the room safe.
+              {t("resources:mentalHealth.therapistModal.footNote", {
+                name: firstName,
+              })}
             </div>
             <Button
               size="lg"
@@ -88,10 +94,11 @@ export function TherapistProfileModal({
             >
               {phase === "sending" ? (
                 <span className={styles.sending}>
-                  <span className={styles.spinner} aria-hidden /> Sending…
+                  <span className={styles.spinner} aria-hidden />{" "}
+                  {t("resources:suggestEdit.sendingLabel")}
                 </span>
               ) : (
-                "Say hello →"
+                t("resources:mentalHealth.therapistModal.sayHelloCta")
               )}
             </Button>
           </div>

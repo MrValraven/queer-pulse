@@ -334,12 +334,15 @@ export const STREAM_CLASS: Record<Stream, string> = {
   trans: "streamTrans",
 };
 
-/** Human label for each stream (and "all"), used in subscribe confirmation. */
-export const STREAM_LABEL: Record<Stream | "all", string> = {
-  all: "all three newsletters",
-  dispatch: "the Community dispatch",
-  long: "the Long reads monthly",
-  trans: "the Trans Hub bulletin",
+/**
+ * Catalog key for each stream's human label (and "all") — chrome, used in the
+ * subscribe confirmation (label-key indirection; `Stream` stays the id).
+ */
+export const STREAM_LABEL_KEY: Record<Stream | "all", string> = {
+  all: "magazine:newsletter.subscribe.streamLabel.all",
+  dispatch: "magazine:newsletter.subscribe.streamLabel.dispatch",
+  long: "magazine:newsletter.subscribe.streamLabel.long",
+  trans: "magazine:newsletter.subscribe.streamLabel.trans",
 };
 
 export interface LatestIssue {

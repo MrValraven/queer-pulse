@@ -1,4 +1,6 @@
 import { Button, HubBackLink, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   SECTIONS,
@@ -11,23 +13,24 @@ import {
 import styles from "./HarmReductionPage.module.css";
 
 function SectionCard({ section }: { section: HrSection }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.section}>
       <div className={styles.sectionHead}>
-        <div className={styles.hrsLabel}>{section.label}</div>
-        <div className={styles.hrsTitle}>{section.title}</div>
+        <div className={styles.hrsLabel}>{t(section.labelKey)}</div>
+        <div className={styles.hrsTitle}>{t(section.titleKey)}</div>
       </div>
       <div className={styles.sectionBody}>
         {section.alert && (
           <div className={styles.alert}>
-            <div className={styles.alertHead}>{section.alert.head}</div>
-            <div className={styles.alertBody}>{section.alert.body}</div>
+            <div className={styles.alertHead}>{t(section.alert.headKey)}</div>
+            <div className={styles.alertBody}>{t(section.alert.bodyKey)}</div>
           </div>
         )}
         {section.items.map((it) => (
-          <div className={styles.item} key={it.title}>
-            <div className={styles.itemTitle}>{it.title}</div>
-            <div className={styles.itemBody}>{it.body}</div>
+          <div className={styles.item} key={it.titleKey}>
+            <div className={styles.itemTitle}>{t(it.titleKey)}</div>
+            <div className={styles.itemBody}>{t(it.bodyKey)}</div>
           </div>
         ))}
         {section.link && (
@@ -36,7 +39,7 @@ function SectionCard({ section }: { section: HrSection }) {
             variant="ghost"
             className={styles.sectionBtn}
           >
-            {section.link.label}
+            {t(section.link.labelKey)}
           </Button>
         )}
       </div>
@@ -45,19 +48,22 @@ function SectionCard({ section }: { section: HrSection }) {
 }
 
 export function HarmReductionEmergencyStrip() {
+  const { t } = useTranslation();
   return (
     <div className={styles.emergencyStrip}>
       <div className={`wrap ${styles.esInner}`}>
         <div className={styles.esItem}>
-          <span>Emergency:</span>
+          <span>{t("resources:harmReduction.emergency.emergencyLabel")}</span>
           <span className={styles.esNum}>112</span>
         </div>
         <div className={styles.esItem}>
-          <span>SNS 24 (non-emergency):</span>
+          <span>{t("resources:harmReduction.emergency.snsLabel")}</span>
           <span className={styles.esNum}>808 24 24 24</span>
         </div>
         <div className={styles.esItem}>
-          <span>Linha de Apoio (mental health):</span>
+          <span>
+            {t("resources:harmReduction.emergency.mentalHealthLabel")}
+          </span>
           <span className={styles.esNum}>800 202 296</span>
         </div>
       </div>
@@ -66,25 +72,30 @@ export function HarmReductionEmergencyStrip() {
 }
 
 export function HarmReductionHero() {
+  const { t } = useTranslation();
   return (
     <header className={styles.hero}>
       <div className="wrap">
-        <HubBackLink to={routes.wellbeing} label="Wellbeing Hub" tone="dark" />
-        <div className={styles.eye}>Harm Reduction · Community guide</div>
+        <HubBackLink
+          to={routes.wellbeing}
+          label={t("resources:harmReduction.hero.backLink")}
+          tone="dark"
+        />
+        <div className={styles.eye}>
+          {t("resources:harmReduction.hero.eyebrow")}
+        </div>
         <h1 className={styles.title}>
-          No judgment.
+          {t("resources:harmReduction.hero.titleLine1")}
           <br />
-          <em>Just information.</em>
+          <em>{t("resources:harmReduction.hero.titleLine2")}</em>
         </h1>
-        <p className={styles.sub}>
-          If you are going to use substances — at a club, at a party, at home —
-          this guide is for you. Not to stop you. To help you stay safe.
-        </p>
+        <p className={styles.sub}>{t("resources:harmReduction.hero.sub")}</p>
         <div className={styles.sos}>
           <span>
-            <strong>If someone stops breathing:</strong> call 112 immediately.
-            Portugal has a good samaritan law — you will not be prosecuted for
-            calling for help.
+            <Translation
+              i18nKey="resources:harmReduction.hero.sos"
+              components={{ strong: <strong /> }}
+            />
           </span>
         </div>
       </div>
@@ -93,31 +104,36 @@ export function HarmReductionHero() {
 }
 
 export function NaloxoneCard() {
+  const { t } = useTranslation();
   return (
     <div className={styles.naloxoneCard}>
       <div>
         <div className={styles.ncTitle}>
-          Naloxone <em>saves lives.</em>
+          <Translation
+            i18nKey="resources:harmReduction.naloxone.title"
+            components={{ em: <em /> }}
+          />
         </div>
         <p className={styles.ncBody}>
-          Naloxone (Narcan) reverses an opioid overdose in minutes. It is
-          available free of charge in Portugal through harm reduction services
-          and some pharmacies. It is safe, easy to use, and non-prescription.
-          Carry it if you or anyone around you uses opioids — including
-          fentanyl, heroin, or strong prescription painkillers.
+          {t("resources:harmReduction.naloxone.body1")}
         </p>
         <p className={styles.ncBody}>
-          In Lisbon: GAT Lisboa, APDES, and the Ares do Pinhal harm reduction
-          team distribute naloxone free of charge. Ask at your nearest harm
-          reduction service or contact GAT directly.
+          {t("resources:harmReduction.naloxone.body2")}
         </p>
       </div>
       <div className={styles.ncSteps}>
-        <div className={styles.ncStepsLabel}>If someone overdoses</div>
+        <div className={styles.ncStepsLabel}>
+          {t("resources:harmReduction.naloxone.stepsLabel")}
+        </div>
         {NALOXONE_STEPS.map((s) => (
           <div className={styles.ncStep} key={s.n}>
             <div className={styles.ncN}>{s.n}</div>
-            <div className={styles.ncStepBody}>{s.body}</div>
+            <div className={styles.ncStepBody}>
+              <Translation
+                i18nKey={s.bodyKey}
+                components={{ strong: <strong /> }}
+              />
+            </div>
           </div>
         ))}
       </div>
@@ -143,17 +159,19 @@ export function HarmReductionGrid() {
 }
 
 export function HarmReductionOutro() {
+  const { t } = useTranslation();
   return (
     <Outro
       title={
-        <>
-          Take care of <em>each other.</em>
-        </>
+        <Translation
+          i18nKey="resources:harmReduction.outro.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Harm reduction is a community practice. The more people who know this, the safer our nights are."
+      sub={t("resources:harmReduction.outro.sub")}
     >
       <Button to={routes.sexualHealth} variant="primary" size="lg">
-        Sexual health resources
+        {t("resources:harmReduction.outro.cta")}
       </Button>
     </Outro>
   );

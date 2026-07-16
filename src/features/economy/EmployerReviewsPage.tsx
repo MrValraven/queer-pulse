@@ -4,10 +4,12 @@ import { routes } from "../../app/routeMap";
 import { Button, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { FiShield } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   COMPANIES,
   HOW,
-  RULES,
+  RULE_KEYS,
   VERIFY,
   type Company,
 } from "./employerReviews.data";
@@ -19,6 +21,7 @@ import styles from "./EmployerReviewsPage.module.css";
 const INVITE = routes.requestInvite;
 
 export function EmployerReviewsPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [companies, setCompanies] = useState<Company[]>(COMPANIES);
   // null = closed; string = open, pre-selecting that company; '' = open, no preselect.
@@ -44,16 +47,15 @@ export function EmployerReviewsPage() {
         <div className="wrap">
           <div className={styles.eyebrow}>
             <span className={styles.live} />
-            Employer Reviews
+            {t("economy:employerReviews.hero.eyebrow")}
           </div>
           <h1>
-            Is your workplace <em>actually safe?</em>
+            <Translation
+              i18nKey="economy:employerReviews.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.lead}>
-            Anonymous reviews of Lisbon companies by LGBTQ+ employees. Beyond
-            the Pride logo — what it's actually like to be out there, behind
-            closed office doors.
-          </p>
+          <p className={styles.lead}>{t("economy:employerReviews.hero.lead")}</p>
         </div>
       </header>
 
@@ -62,19 +64,22 @@ export function EmployerReviewsPage() {
           <div className={styles.secHead}>
             <div>
               <h2>
-                How it <em>works</em>
+                <Translation
+                  i18nKey="economy:employerReviews.how.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
               <div className={styles.sub}>
-                Anonymous, verified by membership, not editable by employers.
+                {t("economy:employerReviews.how.sub")}
               </div>
             </div>
           </div>
           <div className={styles.howGrid}>
-            {HOW.map((h) => (
-              <div className={styles.howItem} key={h.n}>
-                <div className={styles.howN}>{h.n}</div>
-                <div className={styles.howTitle}>{h.title}</div>
-                <div className={styles.howDesc}>{h.desc}</div>
+            {HOW.map((howItem) => (
+              <div className={styles.howItem} key={howItem.n}>
+                <div className={styles.howN}>{howItem.n}</div>
+                <div className={styles.howTitle}>{t(howItem.titleKey)}</div>
+                <div className={styles.howDesc}>{t(howItem.descKey)}</div>
               </div>
             ))}
           </div>
@@ -86,31 +91,37 @@ export function EmployerReviewsPage() {
           <div className={styles.secHead}>
             <div>
               <h2>
-                Recent <em>reviews</em>
+                <Translation
+                  i18nKey="economy:employerReviews.recent.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
               <div className={styles.sub}>
-                Member-written · anonymous · updated continuously
+                {t("economy:employerReviews.recent.sub")}
               </div>
             </div>
             <div className={styles.secActions}>
               <Button to={routes.jobs} variant="ghost">
-                Browse queer-inclusive jobs →
+                {t("economy:employerReviews.recent.browseCta")}
               </Button>
               <Button variant="ghost" onClick={() => setWriteFor("")}>
-                Write a review →
+                {t("economy:employerReviews.recent.writeCta")}
               </Button>
             </div>
           </div>
           <div className={styles.companyGrid}>
             {loading
-              ? Array.from({ length: 6 }).map((_, i) => (
-                  <EmployerReviewSkeleton key={i} />
+              ? Array.from({ length: 6 }).map((_, skeletonIndex) => (
+                  <EmployerReviewSkeleton key={skeletonIndex} />
                 ))
-              : companies.map((c, i) => (
-                  <FadeIn key={c.name} delay={Math.min(i, 8) * 60}>
+              : companies.map((company, companyIndex) => (
+                  <FadeIn
+                    key={company.name}
+                    delay={Math.min(companyIndex, 8) * 60}
+                  >
                     <EmployerReviewCard
-                      company={c}
-                      onWriteReview={() => setWriteFor(c.name)}
+                      company={company}
+                      onWriteReview={() => setWriteFor(company.name)}
                     />
                   </FadeIn>
                 ))}
@@ -122,14 +133,21 @@ export function EmployerReviewsPage() {
                 <FiShield />
               </span>
               <h3>
-                How <em>verification</em> works
+                <Translation
+                  i18nKey="economy:employerReviews.verify.title"
+                  components={{ em: <em /> }}
+                />
               </h3>
             </div>
             <div className={styles.verifyGrid}>
-              {VERIFY.map((v) => (
-                <div className={styles.verifyItem} key={v.label}>
-                  <div className={styles.verifyLabel}>{v.label}</div>
-                  <div className={styles.verifyDesc}>{v.desc}</div>
+              {VERIFY.map((verifyItem) => (
+                <div className={styles.verifyItem} key={verifyItem.labelKey}>
+                  <div className={styles.verifyLabel}>
+                    {t(verifyItem.labelKey)}
+                  </div>
+                  <div className={styles.verifyDesc}>
+                    {t(verifyItem.descKey)}
+                  </div>
                 </div>
               ))}
             </div>
@@ -138,31 +156,31 @@ export function EmployerReviewsPage() {
           <div className={styles.writeBox} id="write">
             <div>
               <h2>
-                Write a <em>review.</em>
+                <Translation
+                  i18nKey="economy:employerReviews.write.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
-              <p>
-                You've been there. You know what it was actually like. Your
-                review helps the next queer person decide whether to take that
-                interview. It takes 5 minutes and is completely anonymous.
-              </p>
+              <p>{t("economy:employerReviews.write.body")}</p>
               <Button
                 variant="primary"
                 className={styles.writeBtn}
                 onClick={() => setWriteFor("")}
               >
-                Write a review →
+                {t("economy:employerReviews.recent.writeCta")}
               </Button>
               <div className={styles.writeNote}>
-                Members only · anonymous · your identity is never stored with
-                your review
+                {t("economy:employerReviews.write.note")}
               </div>
             </div>
             <div className={styles.writeRules}>
-              <div className={styles.rulesTitle}>Our review principles</div>
-              {RULES.map((r) => (
-                <div className={styles.rule} key={r}>
+              <div className={styles.rulesTitle}>
+                {t("economy:employerReviews.write.rulesTitle")}
+              </div>
+              {RULE_KEYS.map((ruleKey) => (
+                <div className={styles.rule} key={ruleKey}>
                   <div className={styles.ruleDot} />
-                  {r}
+                  {t(ruleKey)}
                 </div>
               ))}
             </div>
@@ -172,14 +190,15 @@ export function EmployerReviewsPage() {
 
       <Outro
         title={
-          <>
-            Your work <em>matters.</em>
-          </>
+          <Translation
+            i18nKey="economy:employerReviews.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="You deserve to know what you're walking into. So does everyone else."
+        sub={t("economy:employerReviews.outro.sub")}
       >
         <Button to={INVITE} variant="primary" size="lg">
-          Request an invite
+          {t("economy:employerReviews.outro.cta")}
         </Button>
       </Outro>
 

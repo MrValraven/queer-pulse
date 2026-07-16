@@ -1,20 +1,23 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   CURRENCIES,
+  FREQS,
   type CurrencyCode,
   type FreqKey,
 } from "./sustainer.pricing";
 import type { SustainerStore } from "./useSustainer";
 import styles from "./sustainer.module.css";
 
-const FREQ_OPTIONS: { key: FreqKey; label: string; tag?: string }[] = [
-  { key: "monthly", label: "Monthly" },
-  { key: "annual", label: "Yearly", tag: "2 mo free" },
-  { key: "once", label: "One-time" },
+const FREQ_OPTIONS: { key: FreqKey; tagKey?: string }[] = [
+  { key: "monthly" },
+  { key: "annual", tagKey: "support:controls.saveTag" },
+  { key: "once" },
 ];
 
 /** Billing-frequency pill segment (with a sliding indicator) + currency dropdown. */
 export function SustainerControls({ store }: { store: SustainerStore }) {
+  const { t } = useTranslation();
   const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [ind, setInd] = useState({ left: 4, width: 0 });
   const activeIndex = FREQ_OPTIONS.findIndex((o) => o.key === store.freq);
@@ -34,7 +37,7 @@ export function SustainerControls({ store }: { store: SustainerStore }) {
       <div
         className={styles.pillSeg}
         role="tablist"
-        aria-label="Billing frequency"
+        aria-label={t("support:controls.billingFrequencyAriaLabel")}
       >
         <span
           className={styles.pillIndicator}
@@ -53,8 +56,8 @@ export function SustainerControls({ store }: { store: SustainerStore }) {
             className={`${styles.pillBtn} ${store.freq === o.key ? styles.active : ""}`}
             onClick={() => store.setFreq(o.key)}
           >
-            {o.label}
-            {o.tag && <span className={styles.saveTag}>{o.tag}</span>}
+            {t(FREQS[o.key].billingKey)}
+            {o.tagKey && <span className={styles.saveTag}>{t(o.tagKey)}</span>}
           </button>
         ))}
       </div>
@@ -62,7 +65,7 @@ export function SustainerControls({ store }: { store: SustainerStore }) {
       <div className={styles.curSelectWrap}>
         <select
           className={styles.curSelect}
-          aria-label="Currency"
+          aria-label={t("support:controls.currencyAriaLabel")}
           value={store.cur}
           onChange={(e) => store.setCurrency(e.target.value as CurrencyCode)}
         >

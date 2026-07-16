@@ -114,7 +114,9 @@ export const QUARTERS: QuarterPoint[] = [
   { label: "Q2 26", income: 34.37, spend: 29.5 },
 ];
 
-export const QUARTER_RANGES = ["4Q", "6Q", "All"];
+/** Canonical range ids — never translated (compared directly by the chart). */
+export type QuarterRangeId = "4q" | "6q" | "all";
+export const QUARTER_RANGE_IDS: QuarterRangeId[] = ["4q", "6q", "all"];
 
 // ── Policy & versions ─────────────────────────────────────────────────────────
 

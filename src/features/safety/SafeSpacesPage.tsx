@@ -9,6 +9,8 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { VERIFIED_SPACES, type Category } from "./safeSpaces";
 import { FILTERS } from "./safeSpacesPage.data";
@@ -24,6 +26,7 @@ import {
 import styles from "./SafeSpacesPage.module.css";
 
 export function SafeSpacesPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const loading = useSimulatedLoad();
   const [filter, setFilter] = useState<Category | "all">("all");
@@ -40,28 +43,31 @@ export function SafeSpacesPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Community verified</div>
+          <div className={styles.cat}>{t("safety:spaces.hero.category")}</div>
           <h1>
-            Spaces that are actually <em>safe.</em>
+            <Translation
+              i18nKey="safety:spaces.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.lead}>
-            Not self-declared. Not a rainbow sticker in the window. Every venue
-            on this list has been visited and reviewed by multiple community
-            members — and can lose its status if things change.
-          </p>
+          <p className={styles.lead}>{t("safety:spaces.hero.lead")}</p>
           <div className={styles.heroStats}>
             <div className={styles.stat}>
               <div className={styles.n}>47</div>
-              <div className={styles.l}>verified spaces in Lisbon</div>
+              <div className={styles.l}>
+                {t("safety:spaces.hero.stat.verified")}
+              </div>
             </div>
             <div className={styles.stat}>
               <div className={styles.n}>312</div>
-              <div className={styles.l}>member reviews submitted</div>
+              <div className={styles.l}>
+                {t("safety:spaces.hero.stat.reviews")}
+              </div>
             </div>
             <div className={styles.stat}>
               <div className={styles.n}>6</div>
               <div className={styles.l}>
-                spaces flagged &amp; removed this year
+                {t("safety:spaces.hero.stat.removed")}
               </div>
             </div>
           </div>
@@ -75,10 +81,13 @@ export function SafeSpacesPage() {
           <div className={styles.dirHead}>
             <div>
               <h2>
-                Verified <em>spaces.</em>
+                <Translation
+                  i18nKey="safety:spaces.dir.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
               <div className={styles.dirUpdated}>
-                Last updated June 2025 · Member-maintained
+                {t("safety:spaces.dir.updated")}
               </div>
             </div>
             <button
@@ -86,13 +95,13 @@ export function SafeSpacesPage() {
               className={styles.nominateBtn}
               onClick={scrollToNominate}
             >
-              + Nominate a space
+              {t("safety:spaces.dir.nominateCta")}
             </button>
           </div>
 
           <FilterChips
             className={styles.filters}
-            options={FILTERS.map((f) => ({ value: f.id, label: f.label }))}
+            options={FILTERS.map((f) => ({ value: f.id, label: t(f.labelKey) }))}
             value={filter}
             onChange={(v) => setFilter(v as Category | "all")}
           />
@@ -115,14 +124,14 @@ export function SafeSpacesPage() {
           {!loading && items.length === 0 && (
             <EmptyState
               icon={<FiMapPin />}
-              title="No verified spaces in this category yet"
-              description="The list grows as members visit and review places. Try another category — or nominate somewhere you already trust, and we'll get it reviewed."
+              title={t("safety:spaces.empty.title")}
+              description={t("safety:spaces.empty.description")}
               action={{
-                label: "Clear filters",
+                label: t("safety:spaces.empty.clearCta"),
                 onClick: () => setFilter("all"),
               }}
               secondaryAction={{
-                label: "Nominate a space",
+                label: t("safety:spaces.empty.nominateCta"),
                 onClick: scrollToNominate,
               }}
             />
@@ -136,17 +145,18 @@ export function SafeSpacesPage() {
 
       <Outro
         title={
-          <>
-            Safety is <em>collective.</em>
-          </>
+          <Translation
+            i18nKey="safety:spaces.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Every review, every flag, every nomination makes this list more useful for everyone. It only works because the community maintains it."
+        sub={t("safety:spaces.outro.sub")}
       >
         <Button to={routes.safety} variant="primary" size="lg">
-          Safety &amp; reporting
+          {t("safety:spaces.outro.safetyCta")}
         </Button>
         <Button to={routes.sober} variant="ghost-dark" size="lg">
-          Sober &amp; social
+          {t("safety:spaces.outro.soberCta")}
         </Button>
       </Outro>
 
@@ -155,7 +165,10 @@ export function SafeSpacesPage() {
           spaceName={flagging}
           onClose={() => setFlagging(null)}
           onSubmitted={(reason) =>
-            showToast(`Flag submitted — ${reason.toLowerCase()}`, "success")
+            showToast(
+              t("safety:spaces.flagToast", { reason: reason.toLowerCase() }),
+              "success",
+            )
           }
         />
       )}

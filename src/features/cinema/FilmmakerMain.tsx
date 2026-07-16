@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { Filmmaker } from "./cinemaFilmmaker.data";
 import styles from "./CinemaFilmmakerPage.module.css";
@@ -11,16 +13,22 @@ const BADGE_CLASS = {
 } as const;
 
 export function FilmmakerMain({ filmmaker }: { filmmaker: Filmmaker }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.main}>
       {/* Filmography */}
       <div>
         <div className={styles.sb}>
           <h2>
-            Filmography <em>on Cinema</em>
+            <Translation
+              i18nKey="cinema:filmmaker.main.filmographyTitle"
+              components={{ em: <em /> }}
+            />
           </h2>
           <span className={styles.sbAll}>
-            {filmmaker.filmography.length} films total
+            {t("cinema:filmmaker.main.filmsTotal", {
+              count: filmmaker.filmography.length,
+            })}
           </span>
         </div>
         <div className={styles.filmog}>
@@ -59,7 +67,10 @@ export function FilmmakerMain({ filmmaker }: { filmmaker: Filmmaker }) {
       <div>
         <div className={styles.sb}>
           <h2>
-            Festival <em>circuit</em>
+            <Translation
+              i18nKey="cinema:filmmaker.main.festivalCircuitTitle"
+              components={{ em: <em /> }}
+            />
           </h2>
         </div>
         <div className={styles.festList}>
@@ -83,10 +94,14 @@ export function FilmmakerMain({ filmmaker }: { filmmaker: Filmmaker }) {
       <div>
         <div className={styles.sb}>
           <h2>
-            {filmmaker.nameEm}'s <em>upcoming</em> events
+            <Translation
+              i18nKey="cinema:filmmaker.main.upcomingEventsTitle"
+              values={{ name: filmmaker.nameEm }}
+              components={{ em: <em /> }}
+            />
           </h2>
           <Link to={routes.calendar} className={styles.sbAll}>
-            Full calendar →
+            {t("cinema:live.fullCalendarCta")}
           </Link>
         </div>
         <div className={styles.eventList}>
@@ -110,7 +125,7 @@ export function FilmmakerMain({ filmmaker }: { filmmaker: Filmmaker }) {
                 to={routes.rsvp}
                 className={styles.evRsvp}
               >
-                RSVP
+                {t("cinema:live.rsvpCta")}
               </Button>
             </div>
           ))}

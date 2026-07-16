@@ -75,6 +75,25 @@ export const collectionFilters = [
 ];
 
 /**
+ * Label-key indirection (docs/i18n/extraction-brief.md): `collectionFilters`
+ * and each collection's `filters: [...]` array keep the stable canonical
+ * English id as the stored/matched value — a language switch must never
+ * corrupt the active filter. Only the rendered chip label resolves via `t()`,
+ * reusing already-translated cinema keys where the wording matches exactly.
+ */
+export const COLLECTION_FILTER_LABEL_KEYS: Record<string, string> = {
+  All: "cinema:collectionsIndex.filter.all",
+  New: "cinema:collectionsIndex.filter.new",
+  Free: "cinema:access.free",
+  Sustainer: "cinema:access.sustainer",
+  "Short collections": "cinema:collectionsIndex.filter.shortCollections",
+  Portugal: "cinema:browse.country.portugal",
+  "Trans filmmakers": "cinema:browse.madeBy.trans",
+  Documentary: "cinema:format.documentary",
+  Feature: "cinema:format.feature",
+};
+
+/**
  * All collections, most editorial first. The first item matching the active
  * filter renders large (featured); the rest fill the grid.
  */

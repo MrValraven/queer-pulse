@@ -1,21 +1,24 @@
 import { FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./SubmitStoryPage.module.css";
 
-/** Two weeks from "now", formatted as e.g. "10 July 2026". */
-function replyByDate(): string {
+/** Two weeks from "now". */
+function replyByDate(): Date {
   const d = new Date();
   d.setDate(d.getDate() + 14);
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  return d;
 }
 
 export function SubmitStorySuccess({ working }: { working: string }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const title = working || t("magazine:submitStory.success.defaultTitle");
+
   return (
     <PageShell>
       <section className={styles.page}>
@@ -25,16 +28,18 @@ export function SubmitStorySuccess({ working }: { working: string }) {
               <FiCheck />
             </div>
             <h1 className={styles.panelTitle}>
-              We're <em>reading.</em>
+              <Translation
+                i18nKey="magazine:submitStory.success.title"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.panelSub}>
-              Thank you for trusting us with “{working || "your story"}”.
-              Whatever happens, the copyright stays yours.
+              {t("magazine:submitStory.success.sub", { title })}
             </p>
             <div className={styles.timeline}>
               <div className={styles.timelineRow}>
                 <span className={styles.timelineDot} />
-                <span>An editor reads every pitch personally.</span>
+                <span>{t("magazine:submitStory.success.timeline.readsEvery")}</span>
               </div>
               <div className={styles.timelineRow}>
                 <span
@@ -43,23 +48,30 @@ export function SubmitStorySuccess({ working }: { working: string }) {
                   )}
                 />
                 <span>
-                  You'll hear from us by <strong>{replyByDate()}</strong> — yes,
-                  no, or let's talk.
+                  <Translation
+                    i18nKey="magazine:submitStory.success.timeline.hearBy"
+                    components={{ strong: <strong /> }}
+                    values={{
+                      date: fmt.date(replyByDate(), {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      }),
+                    }}
+                  />
                 </span>
               </div>
               <div className={styles.timelineRow}>
                 <span className={styles.timelineDot} />
-                <span>
-                  If it's a yes, we agree a rate and deadline together.
-                </span>
+                <span>{t("magazine:submitStory.success.timeline.ifYes")}</span>
               </div>
             </div>
             <div className={styles.panelActions}>
               <Button to={routes.magazine} variant="ghost-dark" size="lg">
-                Back to the magazine
+                {t("magazine:submitStory.success.backCta")}
               </Button>
               <Button to={routes.issues} variant="jade" size="lg">
-                Read past issues
+                {t("magazine:submitStory.success.pastIssuesCta")}
               </Button>
             </div>
           </Reveal>

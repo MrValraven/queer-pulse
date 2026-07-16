@@ -1,24 +1,32 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PRIVACY, STAGES } from "./comingOut.data";
 import styles from "./ComingOutPage.module.css";
 
 export function ComingOutPage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
           <Reveal className={styles.eyebrow}>
-            Coming-Out Support · Private space
+            {t("community:comingOut.hero.eyebrow")}
           </Reveal>
           <Reveal as="h1" className={styles.title} delay={60}>
-            A place to say it <em>before you say it.</em>
+            <Translation
+              i18nKey="community:comingOut.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.lead} delay={120}>
-            A private, low-visibility space for people navigating coming out —
-            at work, to family, or to themselves. There's no pressure to be
-            "out" to join, and nothing here is visible from your public profile.
+            <Translation
+              i18nKey="community:comingOut.hero.lead"
+              components={{ em: <em /> }}
+            />
           </Reveal>
         </div>
       </header>
@@ -26,25 +34,26 @@ export function ComingOutPage() {
       <section className={styles.section}>
         <div className="wrap">
           <Reveal as="h2" className={styles.h2}>
-            Built for <em>privacy</em>, first.
+            <Translation
+              i18nKey="community:comingOut.privacy.heading"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            This space carries additional controls beyond the rest of
-            QueerPulse. They exist so you can be here without it costing you
-            anything elsewhere.
+            {t("community:comingOut.privacy.lead")}
           </Reveal>
           <div className={styles.grid}>
             {PRIVACY.map((item, index) => (
               <Reveal
-                key={item.title}
+                key={item.titleKey}
                 className={styles.card}
                 delay={index * 55}
               >
                 <div className={styles.cardIcon}>
                   <item.icon />
                 </div>
-                <div className={styles.cardTitle}>{item.title}</div>
-                <div className={styles.cardBody}>{item.body}</div>
+                <div className={styles.cardTitle}>{t(item.titleKey)}</div>
+                <div className={styles.cardBody}>{t(item.bodyKey)}</div>
               </Reveal>
             ))}
           </div>
@@ -54,19 +63,21 @@ export function ComingOutPage() {
       <section className={`${styles.section} ${styles.sectionPaper}`}>
         <div className="wrap">
           <Reveal as="h2" className={styles.h2}>
-            However you <em>need to use it.</em>
+            <Translation
+              i18nKey="community:comingOut.stages.heading"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            Facilitated with a light hand by Mariana, a clinical psychologist
-            who holds confidentiality as the first rule and the last.
+            {t("community:comingOut.stages.lead")}
           </Reveal>
           <div className={styles.steps}>
             {STAGES.map((stage, index) => (
               <Reveal key={stage.n} className={styles.step} delay={index * 60}>
                 <span className={styles.stepN}>{stage.n}</span>
                 <div>
-                  <div className={styles.stepTitle}>{stage.title}</div>
-                  <div className={styles.stepBody}>{stage.body}</div>
+                  <div className={styles.stepTitle}>{t(stage.titleKey)}</div>
+                  <div className={styles.stepBody}>{t(stage.bodyKey)}</div>
                 </div>
               </Reveal>
             ))}
@@ -76,17 +87,18 @@ export function ComingOutPage() {
 
       <Outro
         title={
-          <>
-            You don't owe a <em>perfect speech.</em>
-          </>
+          <Translation
+            i18nKey="community:comingOut.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Saying the true thing badly is still saying the true thing. Enter the space whenever you're ready — and leave the moment you are."
+        sub={t("community:comingOut.outro.sub")}
       >
         <Button to={routes.comingOut} variant="primary" size="lg">
-          Enter the space →
+          {t("community:comingOut.outro.enterCta")}
         </Button>
         <Button to={routes.communities} variant="ghost-dark" size="lg">
-          See all communities
+          {t("community:comingOut.outro.communitiesCta")}
         </Button>
       </Outro>
     </PageShell>

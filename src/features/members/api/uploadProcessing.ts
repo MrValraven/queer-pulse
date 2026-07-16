@@ -9,12 +9,14 @@ import type { UploadContentType, UploadKind } from "./uploads.api";
  * message itself is chrome, not fetched content.
  */
 export class ImageProcessingError extends Error {
-  constructor(
-    readonly i18nKey: string,
-    readonly values?: TranslateOptions,
-  ) {
+  readonly i18nKey: string;
+  readonly values?: TranslateOptions;
+
+  constructor(i18nKey: string, values?: TranslateOptions) {
     super(i18nKey);
     this.name = "ImageProcessingError";
+    this.i18nKey = i18nKey;
+    this.values = values;
   }
 }
 

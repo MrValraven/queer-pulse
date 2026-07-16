@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Footer } from "../../shared/components/layout";
-import type { BlockMuteState } from "./blockMute.data";
+import type { BlockMuteState, MuteDurationId } from "./blockMute.data";
 import {
   BlockMuteBlocked,
   BlockMuteChoose,
@@ -13,7 +13,7 @@ export function BlockMutePage() {
   const navigate = useNavigate();
   const [state, setState] = useState<BlockMuteState>("choose");
   const [chosen, setChosen] = useState<"mute" | "block" | null>(null);
-  const [muteDur, setMuteDur] = useState("Until I unmute");
+  const [muteDur, setMuteDur] = useState<MuteDurationId>("untilUnmute");
 
   return (
     <>

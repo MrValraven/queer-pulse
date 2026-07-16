@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AUTO_CLOSE_SECONDS } from "./connectModal.data";
 import styles from "./ConnectModal.module.css";
 
@@ -11,6 +13,7 @@ export function ConnectSentPanel({
   firstName: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [secondsLeft, setSecondsLeft] = useState(AUTO_CLOSE_SECONDS);
 
   useEffect(() => {
@@ -40,21 +43,18 @@ export function ConnectSentPanel({
         </svg>
       </div>
       <h2>
-        Message <em>sent.</em>
+        <Translation i18nKey="connect:sent.title" components={{ em: <em /> }} />
       </h2>
-      <p>
-        Your message to {firstName} is on its way. If they'd like to continue
-        the conversation, they'll write back directly to your email.
-      </p>
+      <p>{t("connect:sent.body", { name: firstName })}</p>
       <Button size="lg" variant="ghost-dark" onClick={onClose}>
-        Close
+        {t("connect:sent.close")}
       </Button>
       <div className={styles.autoClose} aria-live="polite">
         <span className={styles.autoCloseTrack}>
           <span className={styles.autoCloseBar} />
         </span>
         <span className={styles.autoCloseText}>
-          Closing automatically in {secondsLeft}s
+          {t("connect:sent.autoClose", { seconds: secondsLeft })}
         </span>
       </div>
     </div>

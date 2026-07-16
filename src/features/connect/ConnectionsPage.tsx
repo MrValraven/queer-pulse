@@ -3,6 +3,8 @@ import { FiInfo, FiUserPlus } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useConnect } from "../../app/providers/ConnectProvider";
@@ -12,7 +14,7 @@ import { useSocial } from "../../app/providers/SocialProvider";
 import { useVouch } from "../../app/providers/VouchProvider";
 import {
   CONNECTION_META,
-  vouchNote,
+  vouchNoteKey,
   type ConnectionView,
   type TabId,
 } from "./connections.data";
@@ -29,6 +31,7 @@ import {
 import styles from "./ConnectionsPage.module.css";
 
 export function ConnectionsPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const { openConnect } = useConnect();
@@ -69,33 +72,33 @@ export function ConnectionsPage() {
   }, [vouched]);
 
   const tabs: ConnectionsTab[] = [
-    { id: "all", label: "All connections", count: connected.length },
+    { id: "all", label: t("connect:tabs.all"), count: connected.length },
     {
       id: "incoming",
-      label: "Incoming requests",
+      label: t("connect:tabs.incoming"),
       count: incoming.length,
       accent: incoming.length > 0,
     },
-    { id: "sent", label: "Sent", count: sent.length },
-    { id: "blocked", label: "Blocked", count: blocked.length },
-    { id: "vouched", label: "Vouched-for", count: vouchedCount },
+    { id: "sent", label: t("connect:tabs.sent"), count: sent.length },
+    { id: "blocked", label: t("connect:tabs.blocked"), count: blocked.length },
+    { id: "vouched", label: t("connect:tabs.vouched"), count: vouchedCount },
   ];
 
   function onAccept(v: ConnectionView) {
     void acceptRequest({ slug: v.slug, id: v.meta.id });
-    showToast(`Connected with ${v.name.split(" ")[0]}`, "success");
+    showToast(t("connect:toast.connected", { name: v.name.split(" ")[0]! }), "success");
   }
   function onDecline(v: ConnectionView) {
     void declineRequest({ slug: v.slug, id: v.meta.id });
-    showToast("Politely declined", "info");
+    showToast(t("connect:toast.declined"), "info");
   }
   function onWithdraw(v: ConnectionView) {
     void withdrawRequest({ slug: v.slug, id: v.meta.id });
-    showToast("Request withdrawn", "info");
+    showToast(t("connect:toast.withdrawn"), "info");
   }
   function onUnblock(v: ConnectionView) {
     void unblockAction({ slug: v.slug, id: v.meta.id });
-    showToast(`Unblocked ${v.name.split(" ")[0]}`, "success");
+    showToast(t("connect:toast.unblocked", { name: v.name.split(" ")[0]! }), "success");
   }
 
   return (
@@ -103,20 +106,19 @@ export function ConnectionsPage() {
       <div className={styles.page}>
         <header className={styles.head}>
           <div className={styles.headText}>
-            <div className={styles.eyebrow}>Your network</div>
+            <div className={styles.eyebrow}>{t("connect:page.eyebrow")}</div>
             <h1 className={styles.h1}>
-              People you've <em>actually met.</em>
+              <Translation
+                i18nKey="connect:page.title"
+                components={{ em: <em /> }}
+              />
             </h1>
-            <p className={styles.lead}>
-              QueerPulse doesn't do followers. You connect with people once
-              you've met them — at a gathering, through someone, or because they
-              vouched for you. Quality over count.
-            </p>
+            <p className={styles.lead}>{t("connect:page.lead")}</p>
           </div>
           <div className={styles.headActions}>
             <Button variant="primary" to={routes.invite}>
               <FiUserPlus />
-              Invite a friend
+              {t("connect:page.inviteCta")}
             </Button>
           </div>
         </header>
@@ -126,10 +128,7 @@ export function ConnectionsPage() {
             <FiInfo />
           </span>
           <span>
-            <b>No follower counts on purpose.</b> If you're looking to "follow a
-            member's posts" without connecting first, use the Communities feed
-            instead. Connections are a two-way thing — they unlock messaging and
-            tagged updates.
+            <Translation i18nKey="connect:page.note" components={{ b: <b /> }} />
           </span>
         </div>
 
@@ -167,7 +166,7 @@ export function ConnectionsPage() {
           <VouchedPanel
             loading={loading}
             views={views}
-            noteFor={(v) => vouchNote(v.slug, hasVouched(v.slug))}
+            noteFor={(v) => t(vouchNoteKey(v.slug, hasVouched(v.slug)))}
           />
         )}
 
@@ -179,7 +178,9 @@ export function ConnectionsPage() {
               disabled={isFetchingNextPage}
               onClick={fetchNextPage}
             >
-              {isFetchingNextPage ? "Loading…" : "Load more"}
+              {isFetchingNextPage
+                ? t("connect:page.loadMoreLoading")
+                : t("connect:page.loadMore")}
             </Button>
           </div>
         )}

@@ -35,20 +35,24 @@ export const PREVIEW_WAVE: number[] = [
   54, 72, 38, 68, 60, 50, 78, 56, 44, 64, 70, 52, 60, 48, 74, 40, 58, 66,
 ];
 
-/** Facts shown as label / value pairs in the hero. */
-export const PRESS_FACTS: { label: string; value: ReactNode }[] = [
-  { label: "From", value: "Sintra, Portugal" },
-  { label: "Pronouns", value: "she / her" },
-  { label: "Since", value: "2024" },
+/**
+ * Facts shown as label / value pairs in the hero. `labelKey` is chrome
+ * (Pattern A); `value` is the artist's own authored/press data and stays
+ * English in both modes per `docs/i18n/extraction-brief.md` §1.
+ */
+export const PRESS_FACTS: { labelKey: string; value: ReactNode }[] = [
+  { labelKey: "studio:press.fact.from", value: "Sintra, Portugal" },
+  { labelKey: "studio:press.fact.pronouns", value: "she / her" },
+  { labelKey: "studio:press.fact.since", value: "2024" },
   {
-    label: "Plays",
+    labelKey: "studio:press.fact.plays",
     value: (
       <>
         <em>231k</em> on Studio
       </>
     ),
   },
-  { label: "For fans of", value: "Cesária, Anohni" },
+  { labelKey: "studio:press.fact.forFansOf", value: "Cesária, Anohni" },
 ];
 
 /** Short + long bios (both copyable). */
@@ -121,20 +125,24 @@ export const PRESS_QUOTES: { quote: string; source: ReactNode }[] = [
   },
 ];
 
-/** Facts & boilerplate copy rows. `value` is display JSX; `copy` is the plain string put on the clipboard. */
-export const BOILERPLATE: { key: string; value: ReactNode; copy: string }[] = [
+/**
+ * Facts & boilerplate copy rows. `labelKey` is chrome (Pattern A); `value`
+ * (display) and `copy` (clipboard text) are the artist's own press data and
+ * stay English in both modes per `docs/i18n/extraction-brief.md` §1.
+ */
+export const BOILERPLATE: { labelKey: string; value: ReactNode; copy: string }[] = [
   {
-    key: "Full name",
+    labelKey: "studio:press.boilerplate.fullName",
     value: "Mariana Sol (b. 1996, Sintra)",
     copy: "Mariana Sol (b. 1996, Sintra)",
   },
   {
-    key: "Genre",
+    labelKey: "studio:press.boilerplate.genre",
     value: "Fado · devotional · art song",
     copy: "Fado · devotional · art song",
   },
   {
-    key: "Label",
+    labelKey: "studio:press.boilerplate.label",
     value: (
       <>
         <em>Self-released</em> · masters retained · via QueerPulse Studio co-op
@@ -143,12 +151,12 @@ export const BOILERPLATE: { key: string; value: ReactNode; copy: string }[] = [
     copy: "Self-released · masters retained · via QueerPulse Studio co-op",
   },
   {
-    key: "Booking",
+    labelKey: "studio:press.boilerplate.booking",
     value: "Direct · no agent · bookings@marianasol.pt",
     copy: "Direct · no agent · bookings@marianasol.pt",
   },
   {
-    key: "Pronounce",
+    labelKey: "studio:press.boilerplate.pronounce",
     value: "mah-ree-AH-nah SOL",
     copy: "mah-ree-AH-nah SOL",
   },

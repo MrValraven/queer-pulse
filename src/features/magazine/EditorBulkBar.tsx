@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TriageVerdict } from "./editorDashboard.data";
 import styles from "./EditorDashboardPage.module.css";
 
@@ -14,11 +15,12 @@ export function EditorBulkBar({
   onBulk: (verdict: TriageVerdict) => void;
   onClear: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={cx(styles.bulkBar, count > 0 && styles.show)}>
       <div className={styles.bulkInner}>
         <span className={styles.bulkCount}>
-          {count} pitch{count === 1 ? "" : "es"} selected
+          {t("magazine:editor.bulkBar.selected", { count })}
         </span>
         <div className={styles.bulkActions}>
           <button
@@ -26,33 +28,32 @@ export function EditorBulkBar({
             className={cx(styles.bulkBtn, styles.yes)}
             onClick={() => onBulk("yes")}
           >
-            Accept
+            {t("magazine:editor.bulkBar.accept")}
           </button>
           <button
             type="button"
             className={styles.bulkBtn}
             onClick={() => onBulk("maybe")}
           >
-            Maybe
+            {t("magazine:editor.bulkBar.maybe")}
           </button>
           <button
             type="button"
             className={cx(styles.bulkBtn, styles.no)}
             onClick={() => onBulk("no")}
           >
-            Decline
+            {t("magazine:editor.bulkBar.decline")}
           </button>
           <button
             type="button"
             className={cx(styles.bulkBtn, styles.clear)}
             onClick={onClear}
           >
-            Clear
+            {t("magazine:editor.bulkBar.clear")}
           </button>
         </div>
         <span className={styles.bulkNote}>
-          Accepting or declining sends each writer a templated reply
-          automatically.
+          {t("magazine:editor.bulkBar.note")}
         </span>
       </div>
     </div>

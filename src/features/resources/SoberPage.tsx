@@ -10,8 +10,10 @@ import {
   Outro,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { REASONS, EVENTS, TYPE_CLASS } from "./soberPage.data";
+import { REASON_KEYS, EVENTS, TYPE_CLASS, TYPE_LABEL_KEY } from "./soberPage.data";
 import {
   SoberHonestSection,
   SoberVenuesSection,
@@ -52,6 +54,7 @@ function EventSkeleton() {
 }
 
 export function SoberPage() {
+  const { t } = useTranslation();
   const [hostOpen, setHostOpen] = useState(false);
   const loading = useSimulatedLoad();
   const [going, setGoing] = useState<Set<number>>(
@@ -64,22 +67,21 @@ export function SoberPage() {
         <div className="wrap">
           <HubBackLink
             to={routes.wellbeing}
-            label="Wellbeing Hub"
+            label={t("resources:sober.hero.backLink")}
             tone="light"
           />
-          <div className={styles.label}>Sober &amp; social</div>
+          <div className={styles.label}>{t("resources:sober.hero.eyebrow")}</div>
           <h1>
-            A full social life, without <em>alcohol.</em>
+            <Translation
+              i18nKey="resources:sober.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.lead}>
-            Whether you're in recovery, sober-curious, on medication, or just
-            don't drink — you shouldn't have to justify it. There's a vibrant
-            queer social world that doesn't centre the bar.
-          </p>
+          <p className={styles.lead}>{t("resources:sober.hero.lead")}</p>
           <div className={styles.reasons}>
-            {REASONS.map((r) => (
-              <span key={r} className={styles.reason}>
-                {r}
+            {REASON_KEYS.map((reasonKey) => (
+              <span key={reasonKey} className={styles.reason}>
+                {t(reasonKey)}
               </span>
             ))}
           </div>
@@ -93,12 +95,13 @@ export function SoberPage() {
           <div className={styles.secHeadRow}>
             <div>
               <h2 className={styles.h}>
-                Sober <em>gatherings.</em>
+                <Translation
+                  i18nKey="resources:sober.gatherings.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
               <p className={styles.sub} style={{ marginBottom: 0 }}>
-                Alcohol-free events, or events where alcohol is present but not
-                the point. All QueerPulse gatherings are marked if they're
-                alcohol-free.
+                {t("resources:sober.gatherings.lead")}
               </p>
             </div>
             <button
@@ -106,7 +109,7 @@ export function SoberPage() {
               className={styles.primaryBtn}
               onClick={() => setHostOpen(true)}
             >
-              + Host or attend a meeting
+              {t("resources:sober.gatherings.hostCta")}
             </button>
           </div>
           <div className={styles.events} aria-busy={loading}>
@@ -130,7 +133,7 @@ export function SoberPage() {
                         <div
                           className={`${styles.seType} ${styles[TYPE_CLASS[e.type]]}`}
                         >
-                          {e.typeLabel}
+                          {t(TYPE_LABEL_KEY[e.type])}
                         </div>
                         <div className={styles.seName}>{e.name}</div>
                         <div className={styles.seMeta}>
@@ -158,10 +161,10 @@ export function SoberPage() {
                       >
                         {isGoing ? (
                           <>
-                            Going <FiCheck />
+                            {t("resources:sober.rsvp.going")} <FiCheck />
                           </>
                         ) : (
-                          "RSVP"
+                          t("resources:sober.rsvp.cta")
                         )}
                       </button>
                     </FadeIn>
@@ -177,17 +180,18 @@ export function SoberPage() {
 
       <Outro
         title={
-          <>
-            You belong <em>here.</em>
-          </>
+          <Translation
+            i18nKey="resources:sober.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Sober, curious, or somewhere in between. The community is big enough for all of it."
+        sub={t("resources:sober.outro.sub")}
       >
         <Button to={SAFE_SPACES} variant="primary" size="lg">
-          Find safe spaces
+          {t("resources:sober.outro.findSpacesCta")}
         </Button>
         <Button to={COMMUNITIES} variant="ghost-dark" size="lg">
-          Browse communities
+          {t("resources:sober.outro.browseCommunitiesCta")}
         </Button>
       </Outro>
 

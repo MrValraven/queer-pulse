@@ -13,16 +13,21 @@ import { FaHandFist } from "react-icons/fa6";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { MEMBERS, fullName, currentUser } from "../members/data/members";
 
-export const CATS: { id: string; name: string; icon: IconType }[] = [
-  { id: "all", name: "All posts", icon: FiGlobe },
-  { id: "general", name: "General", icon: FiMessageCircle },
-  { id: "housing", name: "Housing", icon: FiHome },
-  { id: "health", name: "Health & Wellbeing", icon: FiActivity },
-  { id: "arts", name: "Arts & Culture", icon: LuPalette },
-  { id: "activism", name: "Activism & Proposals", icon: FaHandFist },
-  { id: "guides", name: "Guides & Resources", icon: FiBookOpen },
-  { id: "jobs", name: "Jobs & Skills", icon: FiBriefcase },
-  { id: "trans", name: "Trans & Non-Binary", icon: FiZap },
+/**
+ * i18n Pattern A + label-key indirection: `id` is the canonical value the rest
+ * of the app filters/routes/persists on (never translated); `nameKey` is the
+ * only thing that changes with language.
+ */
+export const CATS: { id: string; nameKey: string; icon: IconType }[] = [
+  { id: "all", nameKey: "forum:cat.all", icon: FiGlobe },
+  { id: "general", nameKey: "forum:cat.general", icon: FiMessageCircle },
+  { id: "housing", nameKey: "forum:cat.housing", icon: FiHome },
+  { id: "health", nameKey: "forum:cat.health", icon: FiActivity },
+  { id: "arts", nameKey: "forum:cat.arts", icon: LuPalette },
+  { id: "activism", nameKey: "forum:cat.activism", icon: FaHandFist },
+  { id: "guides", nameKey: "forum:cat.guides", icon: FiBookOpen },
+  { id: "jobs", nameKey: "forum:cat.jobs", icon: FiBriefcase },
+  { id: "trans", nameKey: "forum:cat.trans", icon: FiZap },
 ];
 
 export const CAT_STYLE: Record<string, { bg: string; color: string }> = {
@@ -681,12 +686,23 @@ export const THREADS: Thread[] = [
   },
 ];
 
-/** Role label for each moderator who posts under the official QueerPulse
+/** Role label KEY for each moderator who posts under the official QueerPulse
  * account, mirroring the moderation team on the governance page. */
-export const MOD_ROLE: Record<string, string> = {
-  mariana: "lead moderator",
-  rui: "moderator",
-  ana: "moderator (part-time)",
+export const MOD_ROLE_KEY: Record<string, string> = {
+  mariana: "forum:modRole.mariana",
+  rui: "forum:modRole.rui",
+  ana: "forum:modRole.ana",
 };
 
-export const REPLY_SORTS = ["Oldest", "Newest", "Most helpful"] as const;
+/**
+ * Label-key indirection: `id` is the canonical value `ThreadPage`'s `sort`
+ * state holds and compares against (never translated); `labelKey` is the only
+ * thing that changes with language.
+ */
+export const REPLY_SORTS: { id: "oldest" | "newest" | "mostHelpful"; labelKey: string }[] =
+  [
+    { id: "oldest", labelKey: "forum:replySort.oldest" },
+    { id: "newest", labelKey: "forum:replySort.newest" },
+    { id: "mostHelpful", labelKey: "forum:replySort.mostHelpful" },
+  ];
+export type ReplySortId = (typeof REPLY_SORTS)[number]["id"];

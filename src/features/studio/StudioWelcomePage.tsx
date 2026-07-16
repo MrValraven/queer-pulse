@@ -156,29 +156,30 @@ function StepPrivacy({
   onSkip: () => void;
   onFinish: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={s.stepCard}>
       <h2>
-        How private do you want the <em>room</em>?
+        <Translation i18nKey="studio:welcome.step3.title" components={{ em: <em /> }} />
       </h2>
       <div className={s.scDek}>
-        Our defaults are the careful ones.{" "}
-        <em>Nothing here is on unless you turn it on.</em>
+        <Translation i18nKey="studio:welcome.step3.dek" components={{ em: <em /> }} />
       </div>
       {TOGGLE_ROWS.map((r) => {
         const on = toggles[r.id];
+        const title = t(r.titleKey);
         return (
           <div key={r.id} className={s.opt}>
             <div className={s.optText}>
-              <h4>{r.title}</h4>
-              <p>{r.body}</p>
+              <h4>{title}</h4>
+              <p>{t(r.bodyKey)}</p>
             </div>
             <button
               type="button"
               className={`${s.tgSw} ${on ? s.on : ""}`}
               role="switch"
               aria-checked={on}
-              aria-label={r.title}
+              aria-label={title}
               onClick={() => onToggle(r.id)}
             />
           </div>
@@ -186,10 +187,10 @@ function StepPrivacy({
       })}
       <div className={s.nav}>
         <button type="button" className={s.skip} onClick={onSkip}>
-          Skip
+          {t("studio:welcome.skipCta")}
         </button>
         <Button variant="jade" onClick={onFinish}>
-          Enter the room →
+          {t("studio:welcome.enterRoomCta")} →
         </Button>
       </div>
     </div>
@@ -199,6 +200,7 @@ function StepPrivacy({
 export function StudioWelcomePage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   const [step, setStep] = useState(1);
   const [followed, setFollowed] = useState<Set<string>>(
@@ -224,7 +226,7 @@ export function StudioWelcomePage() {
   }
 
   function finish() {
-    showToast("Your room is ready", "success");
+    showToast(t("studio:welcome.readyToast"), "success");
     navigate(routes.studio);
   }
 
@@ -240,14 +242,17 @@ export function StudioWelcomePage() {
 
       <div className={s.inner}>
         <div className={s.eyebrow}>
-          You&apos;re in · let&apos;s set your room
+          <Translation i18nKey="studio:welcome.eyebrow" components={{ em: <em /> }} />
         </div>
         <h1>
-          Welcome to the <em>room</em>, Rita.
+          <Translation
+            i18nKey="studio:welcome.title"
+            components={{ em: <em /> }}
+            values={{ name: CURRENT_MEMBER_NAME }}
+          />
         </h1>
         <p className={s.sub}>
-          Three quick things and the first set is yours. <em>Skip any of it</em>{" "}
-          — none of this is locked in.
+          <Translation i18nKey="studio:welcome.sub" components={{ em: <em /> }} />
         </p>
 
         <div className={s.steps}>

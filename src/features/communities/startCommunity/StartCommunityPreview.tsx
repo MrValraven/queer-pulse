@@ -1,4 +1,5 @@
 import { FiHome, FiLock, FiUnlock, FiUserCheck, FiKey } from "react-icons/fi";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ACCESS_OPTIONS,
   FEATURE_OPTIONS,
@@ -34,6 +35,7 @@ const ACCESS_ICON = {
 
 /** Sticky live community-card preview that fills in as the wizard progresses. */
 export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
+  const { t } = useTranslation();
   const owner = ownerSteward();
   const invited = draft.invites
     .map((k) => INVITE_CANDIDATES.find((c) => c.key === k))
@@ -49,7 +51,7 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
   return (
     <aside className={styles.previewCol}>
       <div className={styles.pvHead}>
-        <span className={styles.pvDot} /> Live preview
+        <span className={styles.pvDot} /> {t("communities:start.preview.liveLabel")}
       </div>
 
       {!draft.name.trim() ? (
@@ -57,7 +59,7 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
           <div className={styles.ceDoor}>
             <FiHome size={26} aria-hidden />
           </div>
-          <p>Your community takes shape here as you go.</p>
+          <p>{t("communities:start.preview.emptyBody")}</p>
         </div>
       ) : (
         <div className={styles.cpvCard}>
@@ -68,20 +70,20 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
             </div>
             <div className={styles.cpvName}>{draft.name}</div>
             <div className={styles.cpvHandle}>
-              @{handle || "your-community"}
+              @{handle || t("communities:start.preview.handleFallback")}
             </div>
             {draft.purpose.trim() ? (
               <p className={styles.cpvPurpose}>{draft.purpose}</p>
             ) : (
               <p className={`${styles.cpvPurpose} ${styles.cpvPurposePh}`}>
-                What is this space for?
+                {t("communities:start.preview.purposePlaceholder")}
               </p>
             )}
 
             {access && AccessIcon && (
               <div className={styles.cpvBadges}>
                 <span className={styles.cpvMinibadge}>
-                  <AccessIcon size={12} aria-hidden /> {access.name}
+                  <AccessIcon size={12} aria-hidden /> {t(access.nameKey)}
                 </span>
               </div>
             )}
@@ -92,11 +94,13 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
 
             {rooms.length > 0 && (
               <div className={styles.cpvRooms}>
-                <div className={styles.cpvRoomsL}>What's inside</div>
+                <div className={styles.cpvRoomsL}>
+                  {t("communities:start.preview.insideLabel")}
+                </div>
                 <div className={styles.cpvRoomsList}>
                   {rooms.map((r) => (
                     <span key={r.id} className={styles.cpvRoom}>
-                      {r.label}
+                      {t(r.labelKey)}
                     </span>
                   ))}
                 </div>
@@ -105,7 +109,7 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
 
             <div className={styles.cpvSub}>
               <div className={styles.cpvSubH}>
-                <span>Founding members</span>
+                <span>{t("communities:start.preview.foundingMembers")}</span>
                 <span>{roster.length}</span>
               </div>
               <div className={styles.cpvRoster}>
@@ -124,9 +128,7 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
         </div>
       )}
 
-      <p className={styles.pvFoot}>
-        Nothing is public yet — this is only visible to you.
-      </p>
+      <p className={styles.pvFoot}>{t("communities:start.preview.footNote")}</p>
     </aside>
   );
 }

@@ -1,4 +1,5 @@
 import { FormField } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Cause, Commit } from "./api/volunteering.api";
 import type { PostOpportunityForm } from "./usePostOpportunityForm";
 import { CAUSE_OPTIONS, COMMIT_OPTIONS } from "./postVolunteerOpportunity.data";
@@ -10,47 +11,61 @@ export function PostOpportunityCoreFields({
 }: {
   form: PostOpportunityForm;
 }) {
+  const { t } = useTranslation();
   const { state, set, errorFor } = form;
   return (
     <>
-      <div className={styles.sectionHead}>The basics</div>
+      <div className={styles.sectionHead}>
+        {t("marketing:postOpportunity.core.basicsHeading")}
+      </div>
 
-      <FormField label="Organisation" required error={errorFor("org")}>
+      <FormField
+        label={t("marketing:postOpportunity.core.orgLabel")}
+        required
+        error={errorFor("org")}
+      >
         <input
           type="text"
           value={state.org}
           onChange={(e) => set("org", e.target.value)}
-          placeholder="e.g. ILGA Portugal"
+          placeholder={t("marketing:postOpportunity.core.orgPlaceholder")}
         />
       </FormField>
 
-      <FormField label="Role title" required error={errorFor("role")}>
+      <FormField
+        label={t("marketing:postOpportunity.core.roleLabel")}
+        required
+        error={errorFor("role")}
+      >
         <input
           type="text"
           value={state.role}
           onChange={(e) => set("role", e.target.value)}
-          placeholder="e.g. Community Outreach Volunteer"
+          placeholder={t("marketing:postOpportunity.core.rolePlaceholder")}
         />
       </FormField>
 
       <div className={styles.row}>
-        <FormField label="Cause" required>
+        <FormField label={t("marketing:postOpportunity.core.causeLabel")} required>
           <select
             value={state.cause}
             onChange={(e) => set("cause", e.target.value as Cause)}
           >
             {CAUSE_OPTIONS.map((c) => (
               <option key={c.value} value={c.value}>
-                {c.label}
+                {t(c.labelKey)}
               </option>
             ))}
           </select>
         </FormField>
 
         <FormField
-          label="Commitment level"
+          label={t("marketing:postOpportunity.core.commitLabel")}
           required
-          helper={COMMIT_OPTIONS.find((c) => c.value === state.commit)?.hint}
+          helper={t(
+            COMMIT_OPTIONS.find((c) => c.value === state.commit)?.hintKey ??
+              "",
+          )}
         >
           <select
             value={state.commit}
@@ -58,75 +73,89 @@ export function PostOpportunityCoreFields({
           >
             {COMMIT_OPTIONS.map((c) => (
               <option key={c.value} value={c.value}>
-                {c.label}
+                {t(c.labelKey)}
               </option>
             ))}
           </select>
         </FormField>
       </div>
 
-      <div className={styles.sectionHead}>Time & place</div>
+      <div className={styles.sectionHead}>
+        {t("marketing:postOpportunity.core.timePlaceHeading")}
+      </div>
 
       <div className={styles.row}>
-        <FormField label="Time commitment" required error={errorFor("time")}>
+        <FormField
+          label={t("marketing:postOpportunity.core.timeLabel")}
+          required
+          error={errorFor("time")}
+        >
           <input
             type="text"
             value={state.time}
             onChange={(e) => set("time", e.target.value)}
-            placeholder="e.g. 2–4 hrs/week"
+            placeholder={t("marketing:postOpportunity.core.timePlaceholder")}
           />
         </FormField>
 
-        <FormField label="Location" required error={errorFor("location")}>
+        <FormField
+          label={t("marketing:postOpportunity.core.locationLabel")}
+          required
+          error={errorFor("location")}
+        >
           <input
             type="text"
             value={state.location}
             onChange={(e) => set("location", e.target.value)}
-            placeholder="e.g. In-person · Lisbon"
+            placeholder={t(
+              "marketing:postOpportunity.core.locationPlaceholder",
+            )}
           />
         </FormField>
       </div>
 
       <FormField
-        label="Spots available"
+        label={t("marketing:postOpportunity.core.spotsLabel")}
         required
         error={errorFor("spotsTotal")}
-        helper="How many volunteers can you take on for this role?"
+        helper={t("marketing:postOpportunity.core.spotsHelper")}
       >
         <input
           type="number"
           min={1}
           value={state.spotsTotal}
           onChange={(e) => set("spotsTotal", e.target.value)}
-          placeholder="e.g. 24"
+          placeholder={t("marketing:postOpportunity.core.spotsPlaceholder")}
         />
       </FormField>
 
-      <div className={styles.sectionHead}>The pitch</div>
+      <div className={styles.sectionHead}>
+        {t("marketing:postOpportunity.core.pitchHeading")}
+      </div>
 
       <FormField
-        label="Short description"
+        label={t("marketing:postOpportunity.core.descLabel")}
         required
         error={errorFor("desc")}
-        helper="One or two sentences shown on the listing card."
+        helper={t("marketing:postOpportunity.core.descHelper")}
       >
         <textarea
           rows={3}
           value={state.desc}
           onChange={(e) => set("desc", e.target.value)}
-          placeholder="What the volunteer will help with, in plain language."
+          placeholder={t("marketing:postOpportunity.core.descPlaceholder")}
         />
       </FormField>
 
       <FormField
-        label="Skills"
-        helper="Comma-separated — shown as hashtags on the card."
+        label={t("marketing:postOpportunity.core.skillsLabel")}
+        helper={t("marketing:postOpportunity.core.skillsHelper")}
       >
         <input
           type="text"
           value={state.skills}
           onChange={(e) => set("skills", e.target.value)}
-          placeholder="Communication, Languages, Event support"
+          placeholder={t("marketing:postOpportunity.core.skillsPlaceholder")}
         />
       </FormField>
     </>

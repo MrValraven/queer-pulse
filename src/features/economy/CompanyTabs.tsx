@@ -2,18 +2,29 @@ import type { ReactNode } from "react";
 import { FiBriefcase, FiEdit3, FiPlus, FiStar } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button, EmptyState } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import type { CompanyProfile, CompanyReview } from "./companies.data";
 import type { Job } from "./jobs.data";
+import { deadlineText } from "./api/jobs.adapters";
 import styles from "./CompanyPage.module.css";
 
 type TabId = "about" | "jobs" | "reviews" | "work";
 
 function Stars({ n }: { n: number }) {
+  const { t } = useTranslation();
   return (
-    <div className={styles.revStars} aria-label={`${n} out of 5`}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <FiStar key={i} fill={i < n ? "currentColor" : "none"} aria-hidden />
+    <div
+      className={styles.revStars}
+      aria-label={t("economy:company.reviews.starsAriaLabel", { count: n })}
+    >
+      {Array.from({ length: 5 }).map((_, starIndex) => (
+        <FiStar
+          key={starIndex}
+          fill={starIndex < n ? "currentColor" : "none"}
+          aria-hidden
+        />
       ))}
     </div>
   );
@@ -24,10 +35,10 @@ function AboutPane({ profile }: { profile: CompanyProfile }) {
     <>
       <div className={styles.prose}>{profile.about}</div>
       <div className={styles.values}>
-        {profile.values.map((v) => (
-          <div key={v.title} className={styles.val}>
-            <h4>{v.title}</h4>
-            <p>{v.desc}</p>
+        {profile.values.map((value) => (
+          <div key={value.title} className={styles.val}>
+            <h4>{value.title}</h4>
+            <p>{value.desc}</p>
           </div>
         ))}
       </div>
@@ -36,13 +47,15 @@ function AboutPane({ profile }: { profile: CompanyProfile }) {
 }
 
 function JobsPane({ jobs, postHref }: { jobs: Job[]; postHref: string }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   if (jobs.length === 0) {
     return (
       <EmptyState
         icon={<FiBriefcase />}
-        title="No open roles right now"
-        description="This company isn't hiring on QueerPulse at the moment. Follow them from the top of the page to hear when a role opens."
-        action={{ label: "Post a role", to: postHref }}
+        title={t("economy:company.jobs.empty.title")}
+        description={t("economy:company.jobs.empty.description")}
+        action={{ label: t("economy:company.jobs.postRole"), to: postHref }}
       />
     );
   }
@@ -50,7 +63,7 @@ function JobsPane({ jobs, postHref }: { jobs: Job[]; postHref: string }) {
     <div className={styles.jobs}>
       <div className={styles.jobsHead}>
         <Button variant="ghost" size="md" to={postHref}>
-          <FiPlus aria-hidden /> Post a role
+          <FiPlus aria-hidden /> {t("economy:company.jobs.postRole")}
         </Button>
       </div>
       {jobs.map((job) => (
@@ -68,7 +81,11 @@ function JobsPane({ jobs, postHref }: { jobs: Job[]; postHref: string }) {
             </div>
           </div>
           <div className={styles.jobR}>
-            <b>Apply by {job.deadline}</b>
+            <b>
+              {t("economy:jobs.card.applyBy", {
+                date: deadlineText(job.deadline, t, fmt),
+              })}
+            </b>
             {job.detail.category}
           </div>
         </Link>
@@ -88,6 +105,7 @@ function ReviewsPane({
   reviewCount: number;
   onWrite: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <div className={styles.revSummary}>
@@ -96,7 +114,7 @@ function ReviewsPane({
             <em>{profile.reviewScore}</em>
           </div>
           <div className={styles.revScoreOut}>
-            / 5 · {reviewCount} review{reviewCount === 1 ? "" : "s"}
+            {t("economy:company.reviews.outOf5", { count: reviewCount })}
           </div>
         </div>
         <div className={styles.revBars}>
@@ -118,28 +136,31 @@ function ReviewsPane({
       </div>
       <div className={styles.jobsHead}>
         <Button variant="ghost" size="md" onClick={onWrite}>
-          <FiEdit3 aria-hidden /> Write a review
+          <FiEdit3 aria-hidden /> {t("economy:company.reviews.writeReview")}
         </Button>
       </div>
       {reviews.length === 0 ? (
         <EmptyState
           icon={<FiStar />}
-          title="No reviews yet"
-          description="Been here, or worked with them? Be the first to tell the next queer person what it's actually like."
-          action={{ label: "Write a review", onClick: onWrite }}
+          title={t("economy:company.reviews.empty.title")}
+          description={t("economy:company.reviews.empty.description")}
+          action={{
+            label: t("economy:company.reviews.writeReview"),
+            onClick: onWrite,
+          }}
         />
       ) : (
         <div className={styles.revList}>
-          {reviews.map((rev, i) => (
-            <div key={`${rev.title}-${i}`} className={styles.rev}>
+          {reviews.map((review, reviewIndex) => (
+            <div key={`${review.title}-${reviewIndex}`} className={styles.rev}>
               <div className={styles.revHead}>
-                <div className={styles.revTitle}>{rev.title}</div>
-                <Stars n={rev.stars} />
+                <div className={styles.revTitle}>{review.title}</div>
+                <Stars n={review.stars} />
               </div>
-              <div className={styles.revByline}>{rev.byline}</div>
+              <div className={styles.revByline}>{review.byline}</div>
               <div className={styles.revBody}>
-                {rev.body.map((p, j) => (
-                  <p key={j}>{p}</p>
+                {review.body.map((paragraph, paragraphIndex) => (
+                  <p key={paragraphIndex}>{paragraph}</p>
                 ))}
               </div>
             </div>
@@ -151,10 +172,11 @@ function ReviewsPane({
 }
 
 function WorkPane({ work }: { work: NonNullable<CompanyProfile["work"]> }) {
+  const { t } = useTranslation();
   return (
     <>
       <div className={styles.prose}>
-        <p>A small selection of recent projects from the studio.</p>
+        <p>{t("economy:company.work.intro")}</p>
       </div>
       <div className={styles.workGrid}>
         {work.map((slot) => (
@@ -184,39 +206,42 @@ export function CompanyTabs({
   tab: TabId;
   setTab: (t: TabId) => void;
 }) {
+  const { t } = useTranslation();
   const tabs: { id: TabId; label: string; badge?: ReactNode }[] = [
-    { id: "about", label: "About" },
+    { id: "about", label: t("economy:company.tabs.about") },
     {
       id: "jobs",
-      label: "Jobs",
+      label: t("economy:company.tabs.jobs"),
       badge: jobs.length > 0 && (
         <span className={styles.tabCount}>{jobs.length}</span>
       ),
     },
     {
       id: "reviews",
-      label: "Reviews",
+      label: t("economy:company.tabs.reviews"),
       badge: <span className={styles.tabCountMuted}>{reviewCount}</span>,
     },
-    ...(profile.work ? [{ id: "work" as const, label: "Work" }] : []),
+    ...(profile.work
+      ? [{ id: "work" as const, label: t("economy:company.tabs.work") }]
+      : []),
   ];
 
   return (
     <main>
       <div className={styles.tabs} role="tablist">
-        {tabs.map((t) => (
+        {tabs.map((tabItem) => (
           <button
-            key={t.id}
+            key={tabItem.id}
             type="button"
             role="tab"
-            aria-selected={tab === t.id}
-            className={[styles.tab, tab === t.id && styles.tabActive]
+            aria-selected={tab === tabItem.id}
+            className={[styles.tab, tab === tabItem.id && styles.tabActive]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setTab(t.id)}
+            onClick={() => setTab(tabItem.id)}
           >
-            {t.label}
-            {t.badge}
+            {tabItem.label}
+            {tabItem.badge}
           </button>
         ))}
       </div>

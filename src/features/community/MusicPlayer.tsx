@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { parseDur, seededHeights, type MusicArtist } from "./creatives.data";
 import styles from "./CreativesPage.module.css";
 
@@ -11,6 +12,7 @@ export function MusicPlayer({
   active: boolean;
   onPlay: () => void;
 }) {
+  const { t } = useTranslation();
   const [playing, setPlaying] = useState(false);
   const [trackIdx, setTrackIdx] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -65,7 +67,7 @@ export function MusicPlayer({
           type="button"
           className={styles.playBtn}
           onClick={toggle}
-          aria-label="Play"
+          aria-label={t("community:creatives.player.playAriaLabel")}
         >
           {playing ? (
             <svg viewBox="0 0 24 24">

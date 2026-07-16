@@ -44,7 +44,13 @@ const PRINCIPLE_KEYS = [
   { num: "06", titleKey: "cinema:about.principles.p6.title", bodyKey: "cinema:about.principles.p6.body" },
 ];
 
-export function buildPrinciples(t: TFunction): Principle[] {
+/**
+ * Every title/body here renders via `<Translation>`, which resolves its own
+ * string from the i18n context when mounted — there's no `t()` call to make
+ * here, so (unlike the other builders in this file) this one takes no
+ * translate function.
+ */
+export function buildPrinciples(): Principle[] {
   return PRINCIPLE_KEYS.map(({ num, titleKey, bodyKey }) => ({
     num,
     title: <Translation i18nKey={titleKey} components={{ em: <em /> }} />,

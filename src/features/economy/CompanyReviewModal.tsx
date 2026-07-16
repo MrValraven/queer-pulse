@@ -4,6 +4,8 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ApiError } from "../../shared/api/client";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { useCreateReview } from "./api/useCompanyMutations";
 import type { CompanyReview } from "./companies.data";
@@ -18,19 +20,26 @@ function StarRating({
   value: number;
   onChange: (n: number) => void;
 }) {
+  const { t } = useTranslation();
   return (
-    <div className={styles.stars} role="radiogroup" aria-label="Overall rating">
-      {[1, 2, 3, 4, 5].map((n) => (
+    <div
+      className={styles.stars}
+      role="radiogroup"
+      aria-label={t("economy:companyReview.overallRatingAriaLabel")}
+    >
+      {[1, 2, 3, 4, 5].map((starValue) => (
         <button
-          key={n}
+          key={starValue}
           type="button"
           role="radio"
-          aria-checked={value === n}
-          aria-label={`${n} star${n === 1 ? "" : "s"}`}
-          className={[styles.star, n <= value && styles.starOn]
+          aria-checked={value === starValue}
+          aria-label={t("economy:companyReview.starAriaLabel", {
+            count: starValue,
+          })}
+          className={[styles.star, starValue <= value && styles.starOn]
             .filter(Boolean)
             .join(" ")}
-          onClick={() => onChange(n)}
+          onClick={() => onChange(starValue)}
         >
           <FiStar size={26} aria-hidden />
         </button>
@@ -56,6 +65,7 @@ export function CompanyReviewModal({
   onClose: () => void;
   onCreated: (review: CompanyReview) => void;
 }) {
+  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const create = useCreateReview(slug);
@@ -109,73 +119,93 @@ export function CompanyReviewModal({
     } catch (err) {
       setSending(false);
       if (err instanceof ApiError && err.status === 409) {
-        showToast("You've already reviewed this company.", "error");
+        showToast(t("economy:companyReview.toast.alreadyReviewed"), "error");
       } else {
-        showToast("We couldn't post your review. Please try again.", "error");
+        showToast(t("economy:companyReview.toast.error"), "error");
       }
     }
   }
 
   return (
-    <ModalShell onClose={onClose} success={done} ariaLabel="Write a review">
+    <ModalShell
+      onClose={onClose}
+      success={done}
+      ariaLabel={t("economy:company.reviews.writeReview")}
+    >
       {done ? (
-        <SuccessPanel title="Review" em="posted." onClose={onClose}>
-          Thank you — your review of {companyName} is live. {companyName}{" "}
-          can&apos;t edit or remove what you wrote.
+        <SuccessPanel
+          title={t("economy:companyReview.success.title")}
+          em={t("economy:companyReview.success.em")}
+          onClose={onClose}
+        >
+          <Translation
+            i18nKey="economy:companyReview.success.body"
+            values={{ companyName }}
+          />
         </SuccessPanel>
       ) : (
         <form onSubmit={handleSubmit}>
-          <div className={shell.eyebrow}>Write a review</div>
+          <div className={shell.eyebrow}>
+            {t("economy:company.reviews.writeReview")}
+          </div>
           <h2 className={shell.title}>
-            What was it <em>actually like?</em>
+            <Translation
+              i18nKey="economy:companyReview.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={shell.sub}>
-            Your honest account helps the next queer person decide whether to
-            take the interview. Verified by membership.
-          </p>
+          <p className={shell.sub}>{t("economy:companyReview.sub")}</p>
 
           <div className={shell.field}>
-            <label htmlFor="cr-title">Headline</label>
+            <label htmlFor="cr-title">
+              {t("economy:companyReview.headlineLabel")}
+            </label>
             <input
               id="cr-title"
               type="text"
-              placeholder="Sum it up in a line"
+              placeholder={t("economy:companyReview.headlinePlaceholder")}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
           <div className={shell.field}>
-            <label>Overall rating</label>
+            <label>{t("economy:companyReview.overallRatingAriaLabel")}</label>
             <StarRating value={rating} onChange={setRating} />
           </div>
 
           <div className={shell.field}>
-            <label htmlFor="cr-role">Your role / tenure</label>
+            <label htmlFor="cr-role">
+              {t("economy:companyReview.roleLabel")}
+            </label>
             <input
               id="cr-role"
               type="text"
-              placeholder="e.g. Designer, 2 years in role"
+              placeholder={t("economy:companyReview.rolePlaceholder")}
               value={role}
               onChange={(e) => setRole(e.target.value)}
             />
           </div>
 
           <div className={shell.field}>
-            <label htmlFor="cr-pros">What worked — the good</label>
+            <label htmlFor="cr-pros">
+              {t("economy:companyReview.prosLabel")}
+            </label>
             <textarea
               id="cr-pros"
-              placeholder="Pronouns respected, real inclusion, leadership that gets it…"
+              placeholder={t("economy:companyReview.prosPlaceholder")}
               value={pros}
               onChange={(e) => setPros(e.target.value)}
             />
           </div>
 
           <div className={shell.field}>
-            <label htmlFor="cr-cons">What was hard — the rest</label>
+            <label htmlFor="cr-cons">
+              {t("economy:companyReview.consLabel")}
+            </label>
             <textarea
               id="cr-cons"
-              placeholder="Where the follow-through fell short…"
+              placeholder={t("economy:companyReview.consPlaceholder")}
               value={cons}
               onChange={(e) => setCons(e.target.value)}
             />
@@ -188,10 +218,14 @@ export function CompanyReviewModal({
               onClick={onClose}
               disabled={sending}
             >
-              ← Cancel
+              {t("economy:companyReview.cancel")}
             </button>
             <Button size="lg" type="submit" disabled={sending || !canSubmit}>
-              {sending ? <Sending label="Posting…" /> : "Post review →"}
+              {sending ? (
+                <Sending label={t("economy:companyReview.posting")} />
+              ) : (
+                t("economy:companyReview.submitCta")
+              )}
             </Button>
           </div>
         </form>

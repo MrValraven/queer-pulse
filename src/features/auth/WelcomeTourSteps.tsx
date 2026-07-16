@@ -119,6 +119,7 @@ export function TourProfile({ onNext, onBack }: StepProps) {
 }
 
 export function TourInterests({ onNext, onBack }: StepProps) {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   function toggle(label: string) {
     setSelected((current) => {
@@ -139,24 +140,24 @@ export function TourInterests({ onNext, onBack }: StepProps) {
         as many as you like.
       </p>
       <div className={styles.intGrid}>
-        {INTERESTS.map((interest) => (
-          <button
-            key={interest.label}
-            type="button"
-            className={[
-              styles.intItem,
-              selected.has(interest.label) && styles.intSel,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => toggle(interest.label)}
-          >
-            <span className={styles.intIcon}>
-              <interest.icon />
-            </span>
-            <span className={styles.intLabel}>{interest.label}</span>
-          </button>
-        ))}
+        {INTERESTS.map((interest) => {
+          const label = t(interest.labelKey);
+          return (
+            <button
+              key={interest.value}
+              type="button"
+              className={[styles.intItem, selected.has(label) && styles.intSel]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => toggle(label)}
+            >
+              <span className={styles.intIcon}>
+                <interest.icon />
+              </span>
+              <span className={styles.intLabel}>{label}</span>
+            </button>
+          );
+        })}
       </div>
       <div className={styles.nav}>
         <button type="button" className={styles.back} onClick={onBack}>
@@ -278,6 +279,7 @@ export function TourConnections({ onNext, onBack }: StepProps) {
 }
 
 export function TourExplore() {
+  const { t } = useTranslation();
   return (
     <>
       <div className={styles.eye}>You're all set</div>
@@ -291,15 +293,15 @@ export function TourExplore() {
       <div className={styles.exploreGrid}>
         {EXPLORE_CARDS.map((card) => (
           <Link
-            key={card.name}
+            key={card.nameKey}
             to={linkToPath(card.href)}
             className={styles.exCard}
           >
             <div className={styles.exIcon}>
               <card.icon />
             </div>
-            <div className={styles.exName}>{card.name}</div>
-            <div className={styles.exDesc}>{card.desc}</div>
+            <div className={styles.exName}>{t(card.nameKey)}</div>
+            <div className={styles.exDesc}>{t(card.descKey)}</div>
           </Link>
         ))}
       </div>

@@ -1,4 +1,6 @@
 import { tintForSlug, type SlugTint } from "../../../shared/api/refs";
+import type { Formatters } from "../../../shared/i18n/format";
+import type { TFunction } from "../../../shared/i18n/types";
 import type { Reply, Thread } from "../forum.data";
 import type { ForumPostResponse, ForumThreadResponse } from "./forum.api";
 
@@ -41,17 +43,17 @@ function initials(name: string): string {
   return `${p[0]?.[0] ?? ""}${p.length > 1 ? (p.at(-1)?.[0] ?? "") : ""}`.toUpperCase();
 }
 
-function relative(iso: string): string {
+function relative(iso: string, t: TFunction, fmt: Formatters): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
   const mins = Math.max(0, Math.floor((Date.now() - d.getTime()) / 60000));
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return t("forum:time.justNow");
+  if (mins < 60) return fmt.relativeTime(-mins, "minute");
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
+  if (hrs < 24) return fmt.relativeTime(-hrs, "hour");
   const days = Math.floor(hrs / 24);
-  if (days < 30) return `${days}d ago`;
-  return d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+  if (days < 30) return fmt.relativeTime(-days, "day");
+  return fmt.date(d, { day: "numeric", month: "short" });
 }
 
 /** Split a raw post body into the paragraph array the view-models render. */
@@ -63,7 +65,11 @@ function paragraphs(body: string): string[] {
 }
 
 /** ForumThreadResponse → the `Thread` list card (body/replies filled later). */
-export function threadToCard(dto: ForumThreadResponse): Thread {
+export function threadToCard(
+  dto: ForumThreadResponse,
+  t: TFunction,
+  fmt: Formatters,
+): Thread {
   const id = numericId(dto.slug);
   slugById.set(id, dto.slug);
   const slug = dto.author.handle;
@@ -83,7 +89,7 @@ export function threadToCard(dto: ForumThreadResponse): Thread {
       slug,
       photo: dto.author.avatarUrl ?? undefined,
     },
-    posted: relative(dto.lastActivityAt),
+    posted: relative(dto.lastActivityAt, t, fmt),
     views: 0,
     upvotes: 0,
     comments: dto.replyCount,
@@ -94,7 +100,12 @@ export function threadToCard(dto: ForumThreadResponse): Thread {
 }
 
 /** ForumPostResponse → a `Reply` (used for the OP body too). */
-export function postToReply(dto: ForumPostResponse, isOP = false): Reply {
+export function postToReply(
+  dto: ForumPostResponse,
+  t: TFunction,
+  fmt: Formatters,
+  isOP = false,
+): Reply {
   const slug = dto.author.handle;
   const tint = tintForSlug(slug);
   const soft = SOFT[tint];
@@ -105,7 +116,7 @@ export function postToReply(dto: ForumPostResponse, isOP = false): Reply {
     name: dto.author.displayName,
     slug,
     photo: dto.author.avatarUrl ?? undefined,
-    time: relative(dto.createdAt),
+    time: relative(dto.createdAt, t, fmt),
     isOP,
     body: paragraphs(dto.body),
     reactions: dto.voteCount,
@@ -116,14 +127,16 @@ export function postToReply(dto: ForumPostResponse, isOP = false): Reply {
 export function threadDetail(
   dto: ForumThreadResponse,
   posts: ForumPostResponse[],
+  t: TFunction,
+  fmt: Formatters,
 ): Thread {
-  const card = threadToCard(dto);
+  const card = threadToCard(dto, t, fmt);
   const [op, ...rest] = posts;
   return {
     ...card,
     excerpt: op ? (paragraphs(op.body)[0] ?? "") : "",
     body: op ? paragraphs(op.body) : [],
     upvotes: op?.voteCount ?? 0,
-    replies: rest.map((p) => postToReply(p)),
+    replies: rest.map((p) => postToReply(p, t, fmt)),
   };
 }

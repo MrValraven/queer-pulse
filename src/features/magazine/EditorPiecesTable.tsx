@@ -1,7 +1,9 @@
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { EditorPieceRow, type PieceRowHandlers } from "./EditorPieceRow";
 import {
-  SORT_LABEL,
+  SORT_LABEL_KEY,
   type Piece,
   type Editor,
   type SortKey,
@@ -27,22 +29,29 @@ export function EditorPiecesTable({
   handlers: PieceRowHandlers;
   onReset: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <h2 className={styles.secH2}>
         <span>
-          Pieces · <em>in flight</em>
+          <Translation
+            i18nKey="magazine:editor.piecesTable.heading"
+            components={{ em: <em /> }}
+          />
         </span>
         <span className={styles.ct}>
-          {pieces.length} · {SORT_LABEL[sort]}
+          {t("magazine:editor.piecesTable.countLabel", {
+            count: pieces.length,
+            sort: t(SORT_LABEL_KEY[sort]),
+          })}
         </span>
       </h2>
       <div className={styles.pieces}>
         {pieces.length > 0 && (
           <div className={styles.pieceHead}>
-            <span>Piece · editor · art</span>
-            <span>Stage</span>
-            <span>Due</span>
+            <span>{t("magazine:editor.piecesTable.columnPieceEditorArt")}</span>
+            <span>{t("magazine:editor.piecesTable.columnStage")}</span>
+            <span>{t("magazine:editor.piecesTable.columnDue")}</span>
             <span />
           </div>
         )}
@@ -50,19 +59,16 @@ export function EditorPiecesTable({
           totalPieces === 0 ? (
             <div className={styles.empty}>
               <div className={styles.emptyMark} />
-              <b>Nothing in flight yet</b>
-              <span>
-                No pieces are in the pipeline right now. Accept a pitch below or
-                commission one, and it'll land here to edit.
-              </span>
+              <b>{t("magazine:editor.piecesTable.emptyNoneTitle")}</b>
+              <span>{t("magazine:editor.piecesTable.emptyNoneBody")}</span>
             </div>
           ) : (
             <div className={styles.empty}>
               <div className={styles.emptyMark} />
-              <b>No pieces match</b>
-              <span>Try clearing the search or filters.</span>
+              <b>{t("magazine:editor.piecesTable.emptyFilteredTitle")}</b>
+              <span>{t("magazine:editor.piecesTable.emptyFilteredBody")}</span>
               <Button variant="ghost" onClick={onReset}>
-                Clear filters
+                {t("magazine:editor.piecesTable.clearFiltersCta")}
               </Button>
             </div>
           )

@@ -1,3 +1,56 @@
 import type { Catalog } from "../../types";
 
-export const topics: Catalog = {};
+/**
+ * `topics` — hashtag feed pages (`/topic/:tag`). Per the extraction brief's
+ * scope rule, the posts and each topic's curated `sub`/`resources.body`/
+ * `resources.ctaLabel` are content: in live mode they come from
+ * `GET /topics/:slug` + `GET /topics/:slug/posts` (see
+ * `features/topics/api/topics.adapters.tsx`), so they stay English in both
+ * catalogs. Only the page chrome around them — stat labels, section
+ * headings, filter chips, badges, buttons — is translated here.
+ */
+export const topics: Catalog = {
+  // Shared eyebrow above every topic's H1 (also the enum-label the live
+  // adapter emits — see topics.adapters.tsx).
+  "common.eyebrow": "Topic",
+
+  // Stat-card labels (topic header). Values are numbers/compact counts and
+  // stay untranslated data; only these labels are chrome.
+  "stats.posts": "Posts",
+  "stats.membersFollowing": "Members following",
+  "stats.thisWeek": "This week",
+  "stats.verifiedResources": "Verified resources",
+  "stats.coopsForming": "Co-ops forming",
+  "stats.saferSpaceVenues": "Safer-space venues",
+  "stats.newValue": "New",
+
+  // Header actions
+  "header.followCta": "Follow topic",
+  "header.writePostCta": "Write a post",
+  "header.followToast": "Now following #{tag}",
+
+  // Feed filter chips
+  "feed.filters.all": "All",
+  "feed.filters.threads": "Threads",
+  "feed.filters.recommendations": "Recommendations",
+  "feed.filters.articles": "Articles",
+  "feed.filters.events": "Events",
+  "feed.filters.resources": "Resources",
+  "feed.loadOlder_one": "Load {count} older post",
+  "feed.loadOlder_other": "Load {count} older posts",
+
+  // Post-card kind badges (canonical `PostKind` id stays English; only the
+  // rendered label is translated)
+  "postKind.asking": "Asking",
+  "postKind.recommend": "Recommend",
+  "postKind.warn": "Warn",
+  "postKind.article": "Article",
+  "postKind.event": "Event",
+  "postKind.thread": "Thread",
+
+  // Sidebar
+  "sidebar.relatedTitle": "Related topics",
+  "sidebar.topVoicesTitle": "Top voices here",
+  "sidebar.crisis.body": "In crisis? Don't wait for the thread.",
+  "sidebar.crisis.cta": "Open crisis chat",
+};

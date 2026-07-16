@@ -1,11 +1,14 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { APPS, CULTURE, EVENTS, RECOGNITION, STRUCTURES } from "./dating.data";
 import { DatingAppCard } from "./DatingAppCard";
 import styles from "./DatingPage.module.css";
 
 export function DatingPage() {
+  const { t } = useTranslation();
   const calendar = routes.calendar;
   const forum = routes.forum;
   const legal = routes.legal;
@@ -14,15 +17,14 @@ export function DatingPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Dating &amp; Relationships · Lisbon</div>
+          <div className={styles.cat}>{t("community:dating.hero.cat")}</div>
           <h1>
-            Connection, <em>on your own terms.</em>
+            <Translation
+              i18nKey="community:dating.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.heroSub}>
-            The app landscape, dating culture in Lisbon, relationship
-            structures, legal recognition — and where the community actually
-            meets when it's not on a phone screen.
-          </p>
+          <p className={styles.heroSub}>{t("community:dating.hero.sub")}</p>
         </div>
       </div>
 
@@ -30,12 +32,12 @@ export function DatingPage() {
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
-              Apps in <em>Lisbon</em>
+              <Translation
+                i18nKey="community:dating.apps.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              What the community actually uses — honest takes, not marketing
-              copy.
-            </p>
+            <p>{t("community:dating.apps.lead")}</p>
           </div>
           <div className={styles.appGrid}>
             {APPS.map((app) => (
@@ -49,20 +51,20 @@ export function DatingPage() {
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
-              Dating culture <em>in Lisbon</em>
+              <Translation
+                i18nKey="community:dating.culture.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              Things the community wishes someone had told them before they
-              started dating here.
-            </p>
+            <p>{t("community:dating.culture.lead")}</p>
           </div>
           <div className={styles.cultureGrid}>
             {CULTURE.map((c) => (
               <div className={styles.cultureCard} key={c.num}>
                 <div className={styles.ccNum}>{c.num}</div>
                 <div>
-                  <div className={styles.ccTitle}>{c.title}</div>
-                  <div className={styles.ccText}>{c.text}</div>
+                  <div className={styles.ccTitle}>{t(c.titleKey)}</div>
+                  <div className={styles.ccText}>{t(c.textKey)}</div>
                 </div>
               </div>
             ))}
@@ -74,31 +76,34 @@ export function DatingPage() {
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
-              Relationship <em>structures</em>
+              <Translation
+                i18nKey="community:dating.structures.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              Lisbon has an active, visible community across all relationship
-              structures. No default assumed here.
-            </p>
+            <p>{t("community:dating.structures.lead")}</p>
           </div>
           <div className={styles.structuresGrid}>
             {STRUCTURES.map((s) => (
-              <div className={styles.structureCard} key={s.label}>
-                <div className={styles.scLabel}>{s.label}</div>
-                <div className={styles.scTitle}>{s.title}</div>
-                <div className={styles.scText}>{s.text}</div>
+              <div className={styles.structureCard} key={s.labelKey}>
+                <div className={styles.scLabel}>{t(s.labelKey)}</div>
+                <div className={styles.scTitle}>{t(s.titleKey)}</div>
+                <div className={styles.scText}>{t(s.textKey)}</div>
               </div>
             ))}
           </div>
 
           <h3 className={styles.recHead}>
-            Legal <em>recognition in Portugal</em>
+            <Translation
+              i18nKey="community:dating.recognition.heading"
+              components={{ em: <em /> }}
+            />
           </h3>
           <div className={styles.recStrip}>
             {RECOGNITION.map((r) => (
-              <div className={styles.recItem} key={r.title}>
-                <h4>{r.title}</h4>
-                <p>{r.text}</p>
+              <div className={styles.recItem} key={r.titleKey}>
+                <h4>{t(r.titleKey)}</h4>
+                <p>{t(r.textKey)}</p>
                 <div
                   className={[
                     styles.recStatus,
@@ -111,14 +116,14 @@ export function DatingPage() {
                       background: r.partial ? "var(--accent)" : "var(--jade)",
                     }}
                   />
-                  {r.status}
+                  {t(r.statusKey)}
                 </div>
               </div>
             ))}
           </div>
           <div className={styles.recCta}>
             <Button to={legal} variant="ghost">
-              Legal advice for relationships →
+              {t("community:dating.recognition.legalCta")}
             </Button>
           </div>
         </div>
@@ -129,29 +134,27 @@ export function DatingPage() {
           <div className={styles.socialInner}>
             <div className={styles.socialLeft}>
               <h2>
-                Meet people <em>in person.</em>
+                <Translation
+                  i18nKey="community:dating.social.heading"
+                  components={{ em: <em /> }}
+                />
               </h2>
-              <p>
-                Apps are fine. But the QueerPulse community tends to actually
-                meet at events — socials, dinners, gatherings specifically for
-                connection. Less transactional than a dating app; more honest
-                about what you're there for.
-              </p>
+              <p>{t("community:dating.social.lead")}</p>
               <div className={styles.socialActions}>
                 <Button to={calendar} variant="primary">
-                  See upcoming events
+                  {t("community:dating.social.upcomingEventsCta")}
                 </Button>
                 <Button to={forum} variant="ghost-dark">
-                  Social forum thread →
+                  {t("community:dating.social.forumThreadCta")}
                 </Button>
               </div>
             </div>
             <div className={styles.socialEvents}>
               {EVENTS.map((e) => (
-                <div className={styles.socialEvent} key={e.name}>
-                  <div className={styles.seName}>{e.name}</div>
-                  <div className={styles.seDetail}>{e.detail}</div>
-                  <div className={styles.seNote}>{e.note}</div>
+                <div className={styles.socialEvent} key={e.nameKey}>
+                  <div className={styles.seName}>{t(e.nameKey)}</div>
+                  <div className={styles.seDetail}>{t(e.detailKey)}</div>
+                  <div className={styles.seNote}>{t(e.noteKey)}</div>
                 </div>
               ))}
             </div>
@@ -161,14 +164,15 @@ export function DatingPage() {
 
       <Outro
         title={
-          <>
-            Real connection <em>exists here.</em>
-          </>
+          <Translation
+            i18nKey="community:dating.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="It takes a little time and a little showing up. The community makes it easier."
+        sub={t("community:dating.outro.sub")}
       >
         <Button to={calendar} variant="primary" size="lg">
-          See what's on →
+          {t("community:dating.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

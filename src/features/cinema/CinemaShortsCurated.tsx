@@ -1,3 +1,5 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import { getShort, shortFilms, type ShortsShelf } from "./cinemaShorts.data";
 import { SecDiv, ShortGrid } from "./CinemaShortsParts";
@@ -6,6 +8,7 @@ const madeHere = `${routes.cinemaBrowse}?f=made-here`;
 
 /** The four algorithmic shelves that sit between the intro and the makers. */
 export function CuratedShelves({ shelf }: { shelf: ShortsShelf }) {
+  const { t } = useTranslation();
   const newThisWeek = shortFilms.filter((f) => f.newWk).slice(0, 4);
 
   const tipped = getShort("pharmacy-3am");
@@ -24,25 +27,28 @@ export function CuratedShelves({ shelf }: { shelf: ShortsShelf }) {
     <>
       <SecDiv
         title={
-          <>
-            New <em>this week</em>
-          </>
+          <Translation
+            i18nKey="cinema:shorts.shelf.newThisWeek.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Films submitted and approved in the last 7 days"
+        sub={t("cinema:shorts.shelf.newThisWeek.sub")}
         actionTo={madeHere}
-        actionLabel="All new →"
+        actionLabel={t("cinema:shorts.shelf.newThisWeek.cta")}
       />
       <ShortGrid films={newThisWeek} shelf={shelf} />
 
       <SecDiv
         title={
-          <>
-            Because you tipped <em>The pharmacy at 3am</em>
-          </>
+          <Translation
+            i18nKey="cinema:shorts.shelf.becauseYouTipped.title"
+            values={{ filmTitle: "The pharmacy at 3am" }}
+            components={{ em: <em /> }}
+          />
         }
-        sub="More from Rui, and films in the same key"
+        sub={t("cinema:shorts.shelf.becauseYouTipped.sub", { maker: "Rui" })}
         actionTo={`${routes.cinemaFilmmaker}/rui-almeida`}
-        actionLabel="Rui's page →"
+        actionLabel={t("cinema:shorts.shelf.becauseYouTipped.cta", { maker: "Rui" })}
       />
       <ShortGrid films={because} shelf={shelf} />
     </>
@@ -51,6 +57,7 @@ export function CuratedShelves({ shelf }: { shelf: ShortsShelf }) {
 
 /** Debut + most-tipped shelves, shown after the makers row. */
 export function CuratedTail({ shelf }: { shelf: ShortsShelf }) {
+  const { t } = useTranslation();
   const debuts = shortFilms.filter((f) => f.debut).slice(0, 4);
   const mostTipped = [...shortFilms]
     .sort((a, b) => b.tipsMonth - a.tipsMonth)
@@ -60,25 +67,27 @@ export function CuratedTail({ shelf }: { shelf: ShortsShelf }) {
     <>
       <SecDiv
         title={
-          <>
-            Someone's <em>first film</em>
-          </>
+          <Translation
+            i18nKey="cinema:shorts.shelf.firstFilm.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Debuts deserve a first audience — be theirs"
+        sub={t("cinema:shorts.shelf.firstFilm.sub")}
         actionTo={madeHere}
-        actionLabel="All debuts →"
+        actionLabel={t("cinema:shorts.shelf.firstFilm.cta")}
       />
       <ShortGrid films={debuts} shelf={shelf} />
 
       <SecDiv
         title={
-          <>
-            Most <em>tipped</em>
-          </>
+          <Translation
+            i18nKey="cinema:shorts.shelf.mostTipped.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Films where members have been generous this month"
+        sub={t("cinema:shorts.shelf.mostTipped.sub")}
         actionTo={madeHere}
-        actionLabel="All films →"
+        actionLabel={t("cinema:shorts.shelf.mostTipped.cta")}
       />
       <ShortGrid films={mostTipped} shelf={shelf} />
     </>

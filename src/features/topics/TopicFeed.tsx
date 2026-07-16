@@ -1,21 +1,23 @@
 import { useMemo, useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { PostCategory, Topic } from "./topics.data";
 import { TopicPostCard } from "./TopicPostCard";
 import styles from "./TopicPage.module.css";
 
 type Filter = "all" | PostCategory;
 
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "thread", label: "Threads" },
-  { id: "recommendation", label: "Recommendations" },
-  { id: "article", label: "Articles" },
-  { id: "event", label: "Events" },
-  { id: "resource", label: "Resources" },
+const FILTERS: { id: Filter; labelKey: string }[] = [
+  { id: "all", labelKey: "topics:feed.filters.all" },
+  { id: "thread", labelKey: "topics:feed.filters.threads" },
+  { id: "recommendation", labelKey: "topics:feed.filters.recommendations" },
+  { id: "article", labelKey: "topics:feed.filters.articles" },
+  { id: "event", labelKey: "topics:feed.filters.events" },
+  { id: "resource", labelKey: "topics:feed.filters.resources" },
 ];
 
 export function TopicFeed({ topic }: { topic: Topic }) {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState<Filter>("all");
   const [loadedOlder, setLoadedOlder] = useState(false);
 
@@ -47,7 +49,7 @@ export function TopicFeed({ topic }: { topic: Topic }) {
               .join(" ")}
             onClick={() => setFilter(f.id)}
           >
-            {f.label} · {counts[f.id] ?? 0}
+            {t(f.labelKey)} · {counts[f.id] ?? 0}
           </button>
         ))}
       </div>
@@ -62,7 +64,7 @@ export function TopicFeed({ topic }: { topic: Topic }) {
         {older > 0 && !loadedOlder && (
           <div className={styles.loadMore}>
             <Button variant="ghost" onClick={() => setLoadedOlder(true)}>
-              Load {older} older posts
+              {t("topics:feed.loadOlder", { count: older })}
             </Button>
           </div>
         )}

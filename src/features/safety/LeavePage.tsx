@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { Footer } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { logError } from "../../shared/observability/logger";
 import { DestructiveActionFlow } from "../settings/DestructiveActionFlow";
@@ -10,7 +11,7 @@ import {
   useReauth,
   useRequestDeletion,
 } from "../settings/api/useAccountMutations";
-import type { LeaveState } from "./leave.data";
+import type { LeaveState, PauseDurationId } from "./leave.data";
 import { LeaveConsidering, LeavePaused, LeavePausing } from "./LeaveScreens";
 import s from "./flows.module.css";
 
@@ -21,6 +22,7 @@ import s from "./flows.module.css";
  * deactivate endpoint; delete opens the plum-panel destructive flow.
  */
 export function LeavePage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { signOut } = useAuth();
   const reauth = useReauth();
@@ -28,7 +30,7 @@ export function LeavePage() {
   const deactivate = useDeactivate();
 
   const [state, setState] = useState<LeaveState>("considering");
-  const [dur, setDur] = useState("1 month");
+  const [dur, setDur] = useState<PauseDurationId>("oneMonth");
   const [flowOpen, setFlowOpen] = useState(false);
 
   const runDeletion = useCallback(async () => {
@@ -43,7 +45,7 @@ export function LeavePage() {
       setState("paused");
     } catch (err) {
       logError(err, { where: "LeavePage.pause" });
-      showToast("We couldn't pause your account just now. Try again.", "error");
+      showToast(t("safety:leave.toast.pauseFailed"), "error");
     }
   }
 

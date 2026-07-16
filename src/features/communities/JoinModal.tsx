@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AccessTier } from "./membership.types";
 import {
   JoinStepAbout,
@@ -30,6 +31,7 @@ export function JoinModal({
   onJoined?: () => void;
   onRequested?: () => void;
 }) {
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [involvement, setInvolvement] = useState("active");
   const [inviteCode, setInviteCode] = useState("");
@@ -65,14 +67,14 @@ export function JoinModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={`Join ${community.name}`}
+        aria-label={t("communities:join.ariaLabel", { name: community.name })}
         className={styles.modal}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("communities:join.close")}
         >
           ×
         </button>
@@ -86,7 +88,7 @@ export function JoinModal({
               />
             </div>
             <div className={styles.progressLabel}>
-              Step {step} of {total}
+              {t("communities:join.progress", { step, total })}
             </div>
           </div>
         )}

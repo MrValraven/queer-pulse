@@ -1,6 +1,8 @@
 import { FiInbox, FiSend, FiSlash } from "react-icons/fi";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ConnectionsGridSkeleton } from "./ConnectionsSkeleton";
 import {
   BlockedCard,
@@ -24,6 +26,7 @@ export function IncomingPanel({
   onAccept: (v: ConnectionView) => void;
   onDecline: (v: ConnectionView) => void;
 }) {
+  const { t } = useTranslation();
   if (loading) return <ConnectionsGridSkeleton count={4} />;
   return (
     <div className={styles.grid}>
@@ -40,9 +43,9 @@ export function IncomingPanel({
         <EmptyState
           compact
           icon={<FiInbox />}
-          title="No requests right now"
-          description="When someone you've met asks to connect, they'll land here for you to accept or politely decline."
-          action={{ label: "Find members", to: routes.members }}
+          title={t("connect:panels.requestsEmptyTitle")}
+          description={t("connect:panels.incomingEmptyDescription")}
+          action={{ label: t("connect:allTab.findMembers"), to: routes.members }}
         />
       )}
     </div>
@@ -58,6 +61,7 @@ export function SentPanel({
   views: ConnectionView[];
   onWithdraw: (v: ConnectionView) => void;
 }) {
+  const { t } = useTranslation();
   if (loading) return <ConnectionsGridSkeleton count={4} />;
   return (
     <div className={styles.grid}>
@@ -70,9 +74,9 @@ export function SentPanel({
         <EmptyState
           compact
           icon={<FiSend />}
-          title="No requests right now"
-          description="Requests you send sit here until they're accepted. Browse members and reach out to someone you've crossed paths with."
-          action={{ label: "Find members", to: routes.members }}
+          title={t("connect:panels.requestsEmptyTitle")}
+          description={t("connect:panels.sentEmptyDescription")}
+          action={{ label: t("connect:allTab.findMembers"), to: routes.members }}
         />
       )}
     </div>
@@ -88,6 +92,7 @@ export function BlockedPanel({
   views: ConnectionView[];
   onUnblock: (v: ConnectionView) => void;
 }) {
+  const { t } = useTranslation();
   if (loading) return <ConnectionsGridSkeleton count={2} />;
   return (
     <div className={styles.grid}>
@@ -100,8 +105,8 @@ export function BlockedPanel({
         <EmptyState
           compact
           icon={<FiSlash />}
-          title="You haven't blocked anyone"
-          description="If someone makes the room feel unsafe, blocking them stops their messages and hides your updates. They'll show up here if you ever need to undo it."
+          title={t("connect:panels.blockedEmptyTitle")}
+          description={t("connect:panels.blockedEmptyDescription")}
         />
       )}
     </div>
@@ -120,9 +125,10 @@ export function VouchedPanel({
   return (
     <>
       <p className={styles.paneIntro}>
-        People you've vouched for, or who've vouched for you.{" "}
-        <em>Vouching is a small but meaningful act</em> — it stays attached to
-        that member's profile.
+        <Translation
+          i18nKey="connect:panelIntro.vouched"
+          components={{ em: <em /> }}
+        />
       </p>
       {loading ? (
         <ConnectionsGridSkeleton count={4} />

@@ -56,9 +56,13 @@ export const isContentSection = (s: SubprofileSection): boolean =>
 
 /** The item fields (in render order) that a section surfaces, plus a display
  *  label and icon. Derived from spec §3.3 — the DB stores the same generalized
- *  columns for every section; this only controls what the UI shows/edits. */
+ *  columns for every section; this only controls what the UI shows/edits.
+ *
+ *  i18n label-key indirection: `labelKey` resolves via `t()` at render —
+ *  `section` (the Record key) is the persisted canonical id and never
+ *  changes with the active language. */
 export interface SectionMeta {
-  label: string;
+  labelKey: string;
   icon: IconType;
   /** Ordered item fields this section renders/edits (from `SubprofileItemDTO`). */
   fields: Array<keyof SubprofileItemDTO>;
@@ -67,84 +71,84 @@ export interface SectionMeta {
 export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
   // developer
   projects: {
-    label: "Projects",
+    labelKey: "subprofiles:section.projects",
     icon: FiCode,
     fields: ["title", "description", "url", "imageUrl", "tags", "date"],
   },
   open_source: {
-    label: "Open source",
+    labelKey: "subprofiles:section.open_source",
     icon: FiGitBranch,
     fields: ["title", "description", "url", "meta", "date"],
   },
   // writer
   publications: {
-    label: "Publications",
+    labelKey: "subprofiles:section.publications",
     icon: FiBookOpen,
     fields: ["title", "subtitle", "description", "url", "date"],
   },
   readings: {
-    label: "Readings",
+    labelKey: "subprofiles:section.readings",
     icon: FiMic,
     fields: ["title", "subtitle", "date", "url"],
   },
   // musician
   discography: {
-    label: "Discography",
+    labelKey: "subprofiles:section.discography",
     icon: FiDisc,
     fields: ["title", "subtitle", "imageUrl", "url", "date"],
   },
   gigs: {
-    label: "Gigs",
+    labelKey: "subprofiles:section.gigs",
     icon: FiMapPin,
     fields: ["title", "subtitle", "date", "url"],
   },
   // visual_artist
   portfolio: {
-    label: "Portfolio",
+    labelKey: "subprofiles:section.portfolio",
     icon: FiImage,
     fields: ["title", "description", "imageUrl", "date"],
   },
   exhibitions: {
-    label: "Exhibitions",
+    labelKey: "subprofiles:section.exhibitions",
     icon: FiMapPin,
     fields: ["title", "subtitle", "date", "url"],
   },
   // filmmaker
   filmography: {
-    label: "Filmography",
+    labelKey: "subprofiles:section.filmography",
     icon: FiFilm,
     fields: ["title", "subtitle", "description", "imageUrl", "date", "url"],
   },
   screenings: {
-    label: "Screenings",
+    labelKey: "subprofiles:section.screenings",
     icon: FiVideo,
     fields: ["title", "subtitle", "date", "url"],
   },
   // designer
   selected_work: {
-    label: "Selected work",
+    labelKey: "subprofiles:section.selected_work",
     icon: FiLayers,
     fields: ["title", "subtitle", "description", "imageUrl", "url", "date"],
   },
   clients: {
-    label: "Clients",
+    labelKey: "subprofiles:section.clients",
     icon: FiUsers,
     fields: ["title", "meta"],
   },
   // maker
   collections: {
-    label: "Collections",
+    labelKey: "subprofiles:section.collections",
     icon: FiGrid,
     fields: ["title", "description", "imageUrl", "date", "url"],
   },
   workshops: {
-    label: "Workshops",
+    labelKey: "subprofiles:section.workshops",
     icon: FiTool,
     fields: ["title", "subtitle", "date", "url"],
   },
   // generic
   showcase: {
-    label: "Showcase",
+    labelKey: "subprofiles:section.showcase",
     icon: FiStar,
     fields: [
       "title",
@@ -158,7 +162,7 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
   },
   // universal
   links: {
-    label: "Links",
+    labelKey: "subprofiles:section.links",
     icon: FiLink,
     fields: ["title", "url"],
   },
@@ -166,6 +170,31 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
 
 // ── Kind display labels (for pickers / badges) ───────────────────────────────
 
+/** i18n label-key indirection: `kind` is a PERSISTED field on the subprofile,
+ *  so the Record key (developer/writer/…) is the stable canonical id; the
+ *  UI label resolves via `t(KIND_LABEL_KEYS[kind])` at render. */
+export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
+  developer: "subprofiles:kind.developer",
+  writer: "subprofiles:kind.writer",
+  musician: "subprofiles:kind.musician",
+  visual_artist: "subprofiles:kind.visual_artist",
+  filmmaker: "subprofiles:kind.filmmaker",
+  designer: "subprofiles:kind.designer",
+  maker: "subprofiles:kind.maker",
+  generic: "subprofiles:kind.generic",
+};
+
+/**
+ * English fallback names, kept ONLY for the "no display name typed" case: when
+ * a persona is created with a blank name, its `displayName` — a PERSISTED
+ * field — defaults to the profession (e.g. a blank Developer persona is named
+ * "Developer"). That stored value isn't chrome and isn't re-translated later
+ * (no backend translation pipeline), so it stays English like other
+ * persisted/generated content, distinct from `KIND_LABEL_KEYS` (the UI badge
+ * label, which does follow the active language). Used by
+ * `useSubprofileMutations.ts`'s demo path and the MSW test handler that
+ * mirror this same backend default.
+ */
 export const KIND_LABELS: Record<SubprofileKind, string> = {
   developer: "Developer",
   writer: "Writer",
@@ -186,7 +215,22 @@ export function slugify(value: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-/** The slug a persona gets by default when the owner names it after the profession. */
+/** English, language-independent slug per kind (matches the pre-i18n default
+ *  addresses exactly, so existing personas' addresses don't shift underfoot). */
+const KIND_SLUG: Record<SubprofileKind, string> = {
+  developer: "developer",
+  writer: "writer",
+  musician: "musician",
+  visual_artist: "visual-artist",
+  filmmaker: "filmmaker",
+  designer: "designer",
+  maker: "maker",
+  generic: "other",
+};
+
+/** The slug a persona gets by default when the owner names it after the
+ *  profession — always the fixed English id, so the default address never
+ *  changes with the active language. */
 export function defaultSlugForKind(kind: SubprofileKind): string {
-  return slugify(KIND_LABELS[kind]);
+  return KIND_SLUG[kind];
 }

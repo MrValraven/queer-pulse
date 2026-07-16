@@ -3,6 +3,8 @@ import { FiLayers, FiPlus } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { Button, EmptyState, Modal, Spinner } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSubprofiles } from "./api/useSubprofiles";
 import { useSubprofileMutations } from "./api/useSubprofileMutations";
 import type { SubprofileView } from "./api/subprofiles.adapters";
@@ -17,6 +19,7 @@ const MAX_SUBPROFILES = 12;
  * a create flow, and per-row edit / delete. Wrapped in `AppShell` (logged-in).
  */
 export function MySubprofilesPage() {
+  const { t } = useTranslation();
   const { data: subprofiles, isLoading } = useSubprofiles();
   const { remove } = useSubprofileMutations();
   const { showToast } = useToast();
@@ -28,12 +31,12 @@ export function MySubprofilesPage() {
 
   async function confirmDelete() {
     if (!deleteTarget) return;
-    const name = deleteTarget.displayName || "That persona";
+    const name = deleteTarget.displayName || t("subprofiles:mine.defaultName");
     try {
       await remove.mutateAsync(deleteTarget.id);
-      showToast(`${name} deleted`, "info");
+      showToast(t("subprofiles:mine.toastDeleted", { name }), "info");
     } catch {
-      showToast("We couldn't delete that just now — try again.", "error");
+      showToast(t("subprofiles:mine.toastDeleteError"), "error");
     } finally {
       setDeleteTarget(null);
     }
@@ -46,12 +49,12 @@ export function MySubprofilesPage() {
           <header className={styles.header}>
             <div className={styles.headText}>
               <h1 className={styles.title}>
-                Your <em>subprofiles</em>
+                <Translation
+                  i18nKey="subprofiles:mine.title"
+                  components={{ em: <em /> }}
+                />
               </h1>
-              <p className={styles.sub}>
-                A professional side of you for each thing you do — linked to
-                your main profile, or standing on its own.
-              </p>
+              <p className={styles.sub}>{t("subprofiles:mine.sub")}</p>
             </div>
             {list.length > 0 && (
               <Button
@@ -59,16 +62,12 @@ export function MySubprofilesPage() {
                 onClick={() => setCreating(true)}
                 disabled={atCap}
               >
-                <FiPlus size={16} aria-hidden /> New subprofile
+                <FiPlus size={16} aria-hidden /> {t("subprofiles:mine.newCta")}
               </Button>
             )}
           </header>
 
-          {atCap && (
-            <p className={styles.count}>
-              You've reached the most personas one account can hold.
-            </p>
-          )}
+          {atCap && <p className={styles.count}>{t("subprofiles:mine.atCap")}</p>}
 
           {isLoading ? (
             <div role="status" aria-live="polite">
@@ -77,10 +76,10 @@ export function MySubprofilesPage() {
           ) : list.length === 0 ? (
             <EmptyState
               icon={<FiLayers />}
-              title="No subprofiles yet"
-              description="Make one for each craft you want to share — your music, your code, your writing — and choose whether it's tied to your name."
+              title={t("subprofiles:mine.emptyTitle")}
+              description={t("subprofiles:mine.emptyDescription")}
               action={{
-                label: "Create your first",
+                label: t("subprofiles:mine.emptyCta"),
                 onClick: () => setCreating(true),
               }}
             />
@@ -102,25 +101,31 @@ export function MySubprofilesPage() {
 
       {deleteTarget && (
         <Modal
-          title="Delete this persona?"
-          sub={`"${deleteTarget.displayName || "This persona"}" and everything on it will be gone for good.`}
+          title={t("subprofiles:mine.deleteModalTitle")}
+          sub={t("subprofiles:mine.deleteModalSub", {
+            name:
+              deleteTarget.displayName ||
+              t("subprofiles:mine.deleteModalDefaultName"),
+          })}
           onClose={() => setDeleteTarget(null)}
           footer={
             <>
               <Button variant="ghost" onClick={() => setDeleteTarget(null)}>
-                Keep it
+                {t("subprofiles:mine.deleteModalKeep")}
               </Button>
               <Button
                 variant="danger"
                 onClick={confirmDelete}
                 disabled={remove.isPending}
               >
-                {remove.isPending ? "Deleting…" : "Delete"}
+                {remove.isPending
+                  ? t("subprofiles:mine.deleteModalDeleting")
+                  : t("subprofiles:mine.deleteModalConfirm")}
               </Button>
             </>
           }
         >
-          <p>This can't be undone.</p>
+          <p>{t("subprofiles:mine.deleteModalBody")}</p>
         </Modal>
       )}
     </AppShell>

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, ImageSlot, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   collectionsHeader,
@@ -94,6 +95,7 @@ export function FeaturedCollection({ c }: { c: Collection }) {
 }
 
 export function CollectionCard({ c }: { c: Collection }) {
+  const { t } = useTranslation();
   return (
     <Link to={collectionPath(c.slug)} className={styles.card}>
       <div className={styles.thumb}>
@@ -111,7 +113,8 @@ export function CollectionCard({ c }: { c: Collection }) {
         <div className={styles.cardCurator}>
           <span className={styles.avSm}>{c.curatorInitials}</span>
           <span className={styles.cardCuratorName}>
-            Curated by <strong>{c.curator}</strong>
+            {t("cinema:collectionsIndex.card.curatedBy")}{" "}
+            <strong>{c.curator}</strong>
           </span>
         </div>
       </div>
@@ -125,6 +128,7 @@ export function CollectionCard({ c }: { c: Collection }) {
 
 export function ProposeCollection() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const { eyebrow, titlePre, titleEm, titlePost, body, steps } = proposeContent;
 
   return (
@@ -140,16 +144,13 @@ export function ProposeCollection() {
         <div className={styles.proposeActions}>
           <Button
             onClick={() =>
-              showToast(
-                "Send your 200-word thesis to curators@queerpulse.co — the council responds within 3 weeks.",
-                "success",
-              )
+              showToast(t("cinema:collectionsIndex.propose.toast"), "success")
             }
           >
-            Propose a collection
+            {t("cinema:collectionsIndex.propose.cta")}
           </Button>
           <Button variant="ghost-dark" to={routes.governance}>
-            Meet the council
+            {t("cinema:collectionsIndex.propose.meetCouncilCta")}
           </Button>
         </div>
       </div>

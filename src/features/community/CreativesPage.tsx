@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { ArtGridSkeleton, MusicGridSkeleton } from "./CreativesSkeleton";
 import { ART_WORKS, FEATURED, INVITE, MUSIC_ARTISTS } from "./creatives.data";
@@ -11,6 +13,7 @@ import { CreativesTopbar } from "./CreativesTopbar";
 import styles from "./CreativesPage.module.css";
 
 export function CreativesPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [featuredIdx, setFeaturedIdx] = useState(0);
   const [mode, setMode] = useState<"art" | "music">("art");
@@ -18,11 +21,11 @@ export function CreativesPage() {
   const [activePlayer, setActivePlayer] = useState<string | null>(null);
 
   useEffect(() => {
-    const t = window.setInterval(
+    const intervalId = window.setInterval(
       () => setFeaturedIdx((i) => (i + 1) % FEATURED.length),
       5000,
     );
-    return () => window.clearInterval(t);
+    return () => window.clearInterval(intervalId);
   }, []);
 
   const toggleFilter = (name: string) => {
@@ -76,10 +79,10 @@ export function CreativesPage() {
               <EmptyState
                 compact
                 icon={<FiSearch />}
-                title="Nothing matches your filters"
-                description="No works fit these tags right now. Clear them to see everything the community has shared."
+                title={t("community:creatives.empty.art.title")}
+                description={t("community:creatives.empty.art.description")}
                 action={{
-                  label: "Clear filters",
+                  label: t("community:creatives.empty.clearFiltersCta"),
                   onClick: () => setFilters([]),
                 }}
               />
@@ -104,9 +107,12 @@ export function CreativesPage() {
             <EmptyState
               compact
               icon={<FiSearch />}
-              title="Nothing matches your filters"
-              description="No artists fit these tags right now. Clear them to hear everyone in the room."
-              action={{ label: "Clear filters", onClick: () => setFilters([]) }}
+              title={t("community:creatives.empty.music.title")}
+              description={t("community:creatives.empty.music.description")}
+              action={{
+                label: t("community:creatives.empty.clearFiltersCta"),
+                onClick: () => setFilters([]),
+              }}
             />
           ) : (
             <div className={styles.musicGrid}>
@@ -126,14 +132,15 @@ export function CreativesPage() {
 
       <Outro
         title={
-          <>
-            Your work <em>belongs here.</em>
-          </>
+          <Translation
+            i18nKey="community:creatives.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="QueerPulse is a space for queer creatives to be found, supported, and commissioned — by each other and the wider community."
+        sub={t("community:creatives.outro.sub")}
       >
         <Button to={INVITE} variant="primary" size="lg">
-          Add your creative profile
+          {t("community:creatives.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

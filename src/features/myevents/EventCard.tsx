@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { usePrefersReducedMotion } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { Icons } from "./MyEventsIcons";
-import { DOW, MON } from "./myEvents.data";
 import { parseDate, isToday, soonLabel, COMMITTED } from "./myEvents.helpers";
 import { EventMeta, SoonBar, FriendsLine } from "./EventCardParts";
 import { StatusBadges, EventFoot } from "./EventCardBadges";
@@ -19,6 +20,8 @@ import {
 import type { MyEvent } from "./myEvents.types";
 
 export function EventCard({ ev }: { ev: MyEvent }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { selected, toggleSelect, removingId, focusId } = useMyEvents();
   const [dayofShown, setDayofShown] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -29,7 +32,7 @@ export function EventCard({ ev }: { ev: MyEvent }) {
     isToday(ev) &&
     COMMITTED[ev.cat] &&
     !ev.cancelled &&
-    soonLabel(ev)
+    soonLabel(ev, t)
   );
   const showExtras = ev.cat !== "past" && ev.cat !== "sent";
   const isOn = !!selected[ev.id];
@@ -54,7 +57,7 @@ export function EventCard({ ev }: { ev: MyEvent }) {
         className={sx(`ev-check${isOn ? " on" : ""}`)}
         role="checkbox"
         aria-checked={isOn}
-        aria-label={`Select ${ev.title}`}
+        aria-label={t("myevents:card.selectAria", { title: ev.title })}
         tabIndex={0}
         onClick={() => toggleSelect(ev.id)}
         onKeyDown={(e) => {
@@ -68,9 +71,9 @@ export function EventCard({ ev }: { ev: MyEvent }) {
       </div>
 
       <div className={sx("ev-tile")}>
-        <div className={sx("et-dow")}>{DOW[dt.getDay()]}</div>
+        <div className={sx("et-dow")}>{fmt.date(dt, { weekday: "short" })}</div>
         <div className={sx("et-day")}>{dt.getDate()}</div>
-        <div className={sx("et-mon")}>{MON[dt.getMonth()]}</div>
+        <div className={sx("et-mon")}>{fmt.date(dt, { month: "short" })}</div>
       </div>
 
       <div className={sx("ev-body")}>

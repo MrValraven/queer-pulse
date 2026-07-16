@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
@@ -9,6 +11,7 @@ const HOST = linkToPath("QueerPulse Host.html");
 
 /** Page header: title, settings gear, notifications bell, and create CTA. */
 export function MyEventsHeader() {
+  const { t } = useTranslation();
   const { openSettings, notifOpen, setNotifOpen, unreadCount } = useMyEvents();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,22 +34,22 @@ export function MyEventsHeader() {
 
   return (
     <div className={sx("ev-head")}>
-      <div className={sx("ev-eyebrow")}>Your account · Events</div>
+      <div className={sx("ev-eyebrow")}>{t("myevents:page.eyebrow")}</div>
       <div className={sx("ev-head-row")}>
         <div>
           <h1 className={sx("ev-title")}>
-            Your <em>events</em>
+            <Translation
+              i18nKey="myevents:page.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={sx("ev-sub")}>
-            Everything you're going to, everything you're running — gathered in
-            one warm place.
-          </p>
+          <p className={sx("ev-sub")}>{t("myevents:page.sub")}</p>
         </div>
         <div className={sx("ev-head-actions")} ref={ref}>
           <button
             type="button"
             className={sx("gear-btn")}
-            aria-label="Event preferences"
+            aria-label={t("myevents:header.settingsAria")}
             onClick={openSettings}
           >
             <svg
@@ -66,7 +69,7 @@ export function MyEventsHeader() {
           <button
             type="button"
             className={sx("notif-btn")}
-            aria-label="Notifications"
+            aria-label={t("myevents:header.notifAria")}
             aria-haspopup="true"
             aria-expanded={notifOpen}
             onClick={() => setNotifOpen(!notifOpen)}
@@ -116,7 +119,7 @@ export function MyEventsHeader() {
                 strokeLinecap="round"
               />
             </svg>
-            Create a gathering
+            {t("myevents:header.createCta")}
           </Button>
           {notifOpen && <NotifPanel />}
         </div>

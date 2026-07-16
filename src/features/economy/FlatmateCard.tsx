@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiCheck, FiClock, FiMapPin } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Profile } from "./flatmates.data";
 import styles from "./FlatmatesPage.module.css";
 
@@ -13,6 +14,7 @@ export function FlatmateCard({
   sent: boolean;
   onSayHello: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.card}>
       <div className={styles.cardTop}>
@@ -36,7 +38,9 @@ export function FlatmateCard({
             p.type === "seeking" ? styles.badgeSeeking : styles.badgeOffering,
           ].join(" ")}
         >
-          {p.type === "seeking" ? "Seeking a room" : "Offering a room"}
+          {p.type === "seeking"
+            ? t("economy:flatmates.filter.seeking")
+            : t("economy:flatmates.filter.offering")}
         </span>
       </div>
       <div className={styles.details}>
@@ -50,14 +54,16 @@ export function FlatmateCard({
       </div>
       <p className={styles.note}>{p.note}</p>
       <div className={styles.tags}>
-        {p.tags.map((t) => (
-          <span key={t} className={styles.tag}>
-            {t}
+        {p.tags.map((tag) => (
+          <span key={tag} className={styles.tag}>
+            {tag}
           </span>
         ))}
       </div>
       <div className={styles.foot}>
-        <span className={styles.since}>Member since {p.since}</span>
+        <span className={styles.since}>
+          {t("economy:flatmates.card.memberSince", { date: p.since })}
+        </span>
         <button
           type="button"
           className={[styles.sayBtn, sent && styles.sayBtnSent]
@@ -67,10 +73,10 @@ export function FlatmateCard({
         >
           {sent ? (
             <>
-              <FiCheck /> Hello sent
+              <FiCheck /> {t("economy:flatmates.card.helloSent")}
             </>
           ) : (
-            "Say hello →"
+            t("economy:flatmates.card.sayHello")
           )}
         </button>
       </div>

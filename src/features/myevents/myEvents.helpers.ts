@@ -1,4 +1,5 @@
 import type { MyEvent, Pill } from "./myEvents.types";
+import type { TFunction } from "../../shared/i18n/types";
 import { TODAY, NOW } from "./myEvents.data";
 
 /** Categories that count as a committed RSVP (used for conflicts + soon bar). */
@@ -52,17 +53,23 @@ export function isOnline(ev: MyEvent): boolean {
   return !!ev.online || /online/i.test(ev.venue);
 }
 
-/** "Starts in 2h", "Happening now", or null when not imminent. */
-export function soonLabel(ev: MyEvent): string | null {
+/**
+ * "Starts in 2h", "Happening now", or null when not imminent. Chrome — the
+ * phrase is platform copy, so it resolves through `t()` at call sites (all
+ * within components, so `t` is always in scope there).
+ */
+export function soonLabel(ev: MyEvent, t: TFunction): string | null {
   const s = atTime(ev, "start");
   const e = atTime(ev, "end");
-  if (NOW >= s && NOW <= e) return "Happening now";
+  if (NOW >= s && NOW <= e) return t("myevents:soon.happeningNow");
   const mins = Math.round((s.getTime() - NOW.getTime()) / 60000);
   if (mins < 0) return null;
-  if (mins < 60) return `Starts in ${mins}m`;
+  if (mins < 60) return t("myevents:soon.startsInMins", { mins });
   const h = Math.floor(mins / 60);
   const m = mins % 60;
-  return `Starts in ${h}h${m ? ` ${m}m` : ""}`;
+  return m
+    ? t("myevents:soon.startsInHoursMins", { hours: h, mins: m })
+    : t("myevents:soon.startsInHours", { hours: h });
 }
 
 /** Another committed event overlapping this one on the same day, if any. */

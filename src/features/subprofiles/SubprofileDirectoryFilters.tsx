@@ -1,6 +1,6 @@
 import { SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { KIND_LABELS } from "./subprofile-kinds";
+import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { DIRECTORY_KINDS } from "./subprofileDirectory.data";
 import type { SubprofileKind } from "./api/subprofiles.api";
 import styles from "./SubprofileDirectoryPage.module.css";
@@ -50,7 +50,7 @@ export function SubprofileDirectoryFilters({
             aria-pressed={activeKind === kind}
             onClick={() => onKind(kind)}
           >
-            {KIND_LABELS[kind]}
+            {t(KIND_LABEL_KEYS[kind])}
           </button>
         ))}
       </div>

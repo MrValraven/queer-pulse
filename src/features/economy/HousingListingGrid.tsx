@@ -8,6 +8,8 @@ import {
   ImageSlot,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { FILTERS } from "./housing.data";
 import type { HOUSING_LISTINGS } from "./housingListings";
 import styles from "./HousingPage.module.css";
 
@@ -44,45 +46,56 @@ export function HousingListingGrid({
   onClearFilter: () => void;
   onListSpace: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.grid}>
       {loading ? (
-        Array.from({ length: 6 }).map((_, i) => <ListingSkeleton key={i} />)
+        Array.from({ length: 6 }).map((_, skeletonIndex) => (
+          <ListingSkeleton key={skeletonIndex} />
+        ))
       ) : visible.length === 0 ? (
         <EmptyState
           className={styles.empty}
           icon={<FiHome />}
-          title={
+          title={t(
             filtered
-              ? "No listings of this kind right now"
-              : "The housing board is quiet right now"
-          }
-          description={
+              ? "economy:housing.empty.filteredTitle"
+              : "economy:housing.empty.title",
+          )}
+          description={t(
             filtered
-              ? "Nothing's posted in this category at the moment. Clear the filter to see every space the community has open — new listings go up often."
-              : "No spaces are posted yet. When members share sublets, room shares, and short-term stays, they'll show up here — check back soon, or list a space of your own."
-          }
+              ? "economy:housing.empty.filteredDescription"
+              : "economy:housing.empty.description",
+          )}
           action={
             filtered
-              ? { label: "Clear filters", onClick: onClearFilter }
-              : { label: "List a space", onClick: onListSpace }
+              ? {
+                  label: t("economy:housing.empty.clearFilters"),
+                  onClick: onClearFilter,
+                }
+              : {
+                  label: t("economy:housing.empty.listSpace"),
+                  onClick: onListSpace,
+                }
           }
         />
       ) : (
-        visible.map((listing, i) => (
+        visible.map((listing, listingIndex) => (
           <FadeIn
             key={listing.title}
             as={Link}
             to={`${routes.housing}/${listing.slug}`}
             className={styles.card}
-            delay={Math.min(i, 8) * 60}
+            delay={Math.min(listingIndex, 8) * 60}
           >
             <ImageSlot
               tint={listing.tint}
               src={listing.image}
               height={150}
               radius={0}
-              placeholder={`Photo · ${listing.hood}`}
+              placeholder={t("economy:housing.listing.photoAlt", {
+                hood: listing.hood,
+              })}
             />
             <div className={styles.cardBody}>
               <span
@@ -92,13 +105,18 @@ export function HousingListingGrid({
                   color: listing.typeText,
                 }}
               >
-                {listing.typeLabel}
+                {t(
+                  FILTERS.find((filterOption) => filterOption.value === listing.type)
+                    ?.labelKey ?? "economy:housing.filter.all",
+                )}
               </span>
               <div className={styles.cardTitle}>{listing.title}</div>
               <div className={styles.details}>
                 <span className={styles.detail}>{listing.hood}</span>
                 <span className={styles.detail}>{listing.beds}</span>
-                <span className={styles.detail}>From {listing.avail}</span>
+                <span className={styles.detail}>
+                  {t("economy:housing.listing.from", { date: listing.avail })}
+                </span>
               </div>
               <p className={styles.cardDesc}>{listing.desc}</p>
               <div className={styles.foot}>

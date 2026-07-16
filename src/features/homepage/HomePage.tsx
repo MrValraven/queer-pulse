@@ -44,20 +44,20 @@ export function HomePage() {
       <Communities />
       <Gatherings />
       <PainPoints />
-      {/*  <Stories /> 
+      <Stories />
       <Media />
       <ChangeMakers />
-      <Wellbeing />*/}
-      {/*    <MicroGrants />
+      <Wellbeing />
+      <MicroGrants />
       <Board />
       <Barter />
       <SkillsTeaser />
       <Library />
-      {/* <Partners /> /}
+      <Partners />
       <SpacesMap />
-     <Platforms /> */}
+      <Platforms />
       <Newsletter />
-      {/* <Pillars /> */}
+      <Pillars />
       <Outro />
     </PageShell>
   );

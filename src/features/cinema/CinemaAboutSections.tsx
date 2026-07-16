@@ -60,8 +60,7 @@ export function TheDeed() {
 }
 
 export function Principles() {
-  const { t } = useTranslation();
-  const principles = useMemo(() => buildPrinciples(t), [t]);
+  const principles = useMemo(() => buildPrinciples(), []);
 
   return (
     <section className={styles.principles}>

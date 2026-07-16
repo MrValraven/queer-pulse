@@ -1,16 +1,22 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CollectionDetail } from "./cinemaCollection.data";
 import styles from "./CinemaCollectionPage.module.css";
 import { routes } from "../../app/routeMap";
 
 /** Sticky rail: sign-in progress card + related collections. */
 export function CinemaCollectionAside({ data }: { data: CollectionDetail }) {
+  const { t } = useTranslation();
   return (
     <aside className={styles.aside}>
       <div className={styles.asideCard}>
-        <div className={styles.asideHead}>Your progress</div>
-        <div className={styles.progHint}>Sign in to track where you are</div>
+        <div className={styles.asideHead}>
+          {t("cinema:collection.aside.progressHeading")}
+        </div>
+        <div className={styles.progHint}>
+          {t("cinema:collection.aside.progressHint")}
+        </div>
         <div className={styles.prog}>
           <div className={styles.progFill} />
         </div>
@@ -20,12 +26,14 @@ export function CinemaCollectionAside({ data }: { data: CollectionDetail }) {
           className={styles.wideBtn}
           style={{ marginTop: 14 }}
         >
-          Sign in to track progress
+          {t("cinema:collection.aside.signInCta")}
         </Button>
       </div>
 
       <div className={styles.asideCard}>
-        <div className={styles.asideHead}>Related collections</div>
+        <div className={styles.asideHead}>
+          {t("cinema:collection.aside.relatedHeading")}
+        </div>
         <div className={styles.related}>
           {data.related.map((rc) => (
             <Link

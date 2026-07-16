@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import { THREADS, type Thread } from "../forum.data";
 import { getThread, getThreadPosts, getThreads } from "./forum.api";
 import { slugForThreadId, threadDetail, threadToCard } from "./forum.adapters";
@@ -12,12 +14,14 @@ import { slugForThreadId, threadDetail, threadToCard } from "./forum.adapters";
  */
 export function useThreads(category: string) {
   const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
+  const fmt = useFormat();
   return useQuery<Thread[]>({
-    queryKey: ["forum-threads", demoMode, category],
+    queryKey: ["forum-threads", demoMode, category, language],
     queryFn: async () => {
       if (demoMode) return THREADS;
       const res = await getThreads(category);
-      return res.data.map(threadToCard);
+      return res.data.map((dto) => threadToCard(dto, t, fmt));
     },
   });
 }
@@ -31,18 +35,21 @@ export function useThreads(category: string) {
  */
 export function useThread(id: number) {
   const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
+  const fmt = useFormat();
   const slug = demoMode ? undefined : slugForThreadId(id);
   return useQuery<Thread | undefined>({
-    queryKey: ["forum-thread", demoMode, id],
+    queryKey: ["forum-thread", demoMode, id, language],
     enabled: demoMode || !!slug,
     queryFn: async () => {
-      if (demoMode) return THREADS.find((t) => t.id === id) ?? THREADS[0];
+      if (demoMode)
+        return THREADS.find((thread) => thread.id === id) ?? THREADS[0];
       if (!slug) return undefined;
       const [meta, posts] = await Promise.all([
         getThread(slug),
         getThreadPosts(slug),
       ]);
-      return threadDetail(meta, posts.data);
+      return threadDetail(meta, posts.data, t, fmt);
     },
   });
 }

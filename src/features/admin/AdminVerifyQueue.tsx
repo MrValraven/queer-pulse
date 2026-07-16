@@ -3,6 +3,7 @@ import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useJoinRequests, type JoinRequestView } from "./api/useJoinRequests";
 import { useReviewJoinRequest } from "./api/useReviewJoinRequest";
 import styles from "./AdminMembersPage.module.css";
@@ -16,6 +17,7 @@ import styles from "./AdminMembersPage.module.css";
  */
 export function AdminVerifyQueue() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const { data, isLoading } = useJoinRequests("pending");
   const reviewJoinRequest = useReviewJoinRequest();
   const [leaving, setLeaving] = useState<Set<string>>(new Set());
@@ -35,14 +37,14 @@ export function AdminVerifyQueue() {
             next.delete(item.id);
             return next;
           });
-          showToast("Could not save that decision — please try again", "error");
+          showToast(t("admin:members.verify.errorToast"), "error");
         },
       },
     );
     showToast(
       status === "approved"
-        ? `${item.name} was welcomed in`
-        : `${item.name}'s request wasn't approved this time`,
+        ? t("admin:members.verify.approvedToast", { name: item.name })
+        : t("admin:members.verify.declinedToast", { name: item.name }),
       status === "approved" ? "success" : "info",
     );
   }
@@ -66,21 +68,16 @@ export function AdminVerifyQueue() {
   if (queue.length === 0) {
     return (
       <div className={styles.queueEmpty}>
-        <p className={styles.queueIntro}>
-          The queue is clear. Everyone waiting has been welcomed in.
-        </p>
+        <p className={styles.queueIntro}>{t("admin:members.verify.empty")}</p>
       </div>
     );
   }
 
   return (
     <div>
-      <p className={styles.queueIntro}>
-        These people asked to join QueerPulse. Read what they wrote, then
-        welcome them in or set the request aside.
-      </p>
+      <p className={styles.queueIntro}>{t("admin:members.verify.intro")}</p>
       <p className={styles.queueIntroEm}>
-        <em>Take your time; there&rsquo;s no rush on a kindness.</em>
+        <em>{t("admin:members.verify.introEm")}</em>
       </p>
 
       <div className={styles.queueGrid}>
@@ -111,14 +108,14 @@ export function AdminVerifyQueue() {
                   size="md"
                   onClick={() => resolve(item, "declined")}
                 >
-                  Not this time
+                  {t("admin:members.verify.declineCta")}
                 </Button>
                 <Button
                   variant="jade"
                   size="md"
                   onClick={() => resolve(item, "approved")}
                 >
-                  Welcome in
+                  {t("admin:members.verify.approveCta")}
                 </Button>
               </div>
             </div>

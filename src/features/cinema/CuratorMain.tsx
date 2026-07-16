@@ -1,19 +1,27 @@
 import { Link } from "react-router-dom";
 import { ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CuratorProfile } from "./cinemaCurator.data";
 import styles from "./CinemaCuratorPage.module.css";
 
 export function CuratorMain({ curator }: { curator: CuratorProfile }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.main}>
       {/* Recent cover films */}
       <div>
         <div className={styles.s3}>
           <h2>
-            Recent <em>cover films</em>
+            <Translation
+              i18nKey="cinema:curator.main.coverFilmsTitle"
+              components={{ em: <em /> }}
+            />
           </h2>
           <span className={styles.sAll}>
-            {curator.programmesTotal} programmes total
+            {t("cinema:curator.main.programmesTotal", {
+              count: curator.programmesTotal,
+            })}
           </span>
         </div>
         <div className={styles.progList}>
@@ -55,7 +63,11 @@ export function CuratorMain({ curator }: { curator: CuratorProfile }) {
       <div>
         <div className={styles.s3}>
           <h2>
-            Collections <em>by {curator.namePre.trim()}</em>
+            <Translation
+              i18nKey="cinema:curator.main.collectionsByTitle"
+              values={{ name: curator.namePre.trim() }}
+              components={{ em: <em /> }}
+            />
           </h2>
         </div>
         <div className={styles.collsList}>
@@ -92,9 +104,16 @@ export function CuratorMain({ curator }: { curator: CuratorProfile }) {
       <div>
         <div className={styles.s3}>
           <h2>
-            From the <em>notebook</em>
+            <Translation
+              i18nKey="cinema:curator.main.notebookTitle"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <span className={styles.sAll}>{curator.notebookTotal} entries</span>
+          <span className={styles.sAll}>
+            {t("cinema:curator.main.notebookEntries", {
+              count: curator.notebookTotal,
+            })}
+          </span>
         </div>
         <div className={styles.notebookList}>
           {curator.notebook.map((n) => (
@@ -103,7 +122,9 @@ export function CuratorMain({ curator }: { curator: CuratorProfile }) {
               <div className={styles.nbQuote}>{n.quote}</div>
               <div className={styles.nbFoot}>
                 <span>{n.foot}</span>
-                <span className={styles.nbRead}>Read the full note →</span>
+                <span className={styles.nbRead}>
+                  {t("cinema:programme.notebook.readMoreCta")}
+                </span>
               </div>
             </Link>
           ))}

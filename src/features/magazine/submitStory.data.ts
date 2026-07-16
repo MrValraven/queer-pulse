@@ -1,87 +1,103 @@
 import type { IconType } from "react-icons";
 import { FiDollarSign, FiGlobe, FiTarget } from "react-icons/fi";
 
-/** Pitch-intro hero (the screenshot). */
-export const LOOKING_FOR: { icon: IconType; title: string; body: string }[] = [
+/**
+ * Pitch-intro hero (the screenshot). Platform-authored value props — chrome,
+ * so this holds catalog keys (Pattern A); `SubmitStoryIntro.tsx` resolves
+ * `titleKey`/`bodyKey` via `t()`.
+ */
+export const LOOKING_FOR: { icon: IconType; titleKey: string; bodyKey: string }[] = [
   {
     icon: FiTarget,
-    title: "The specific over the general",
-    body: "One supper club, one street, one afternoon. We trust the small story to carry the big one.",
+    titleKey: "magazine:submitStory.intro.lookingFor.specific.title",
+    bodyKey: "magazine:submitStory.intro.lookingFor.specific.body",
   },
   {
     icon: FiGlobe,
-    title: "Lisbon and beyond",
-    body: "Rooted here, but we publish diaspora and visitor voices too. Place matters; borders less so.",
+    titleKey: "magazine:submitStory.intro.lookingFor.beyond.title",
+    bodyKey: "magazine:submitStory.intro.lookingFor.beyond.body",
   },
   {
     icon: FiDollarSign,
-    title: "We pay, always",
-    body: 'Every published piece is paid fairly — rates shared upfront, no "exposure" ever.',
+    titleKey: "magazine:submitStory.intro.lookingFor.pay.title",
+    bodyKey: "magazine:submitStory.intro.lookingFor.pay.body",
   },
 ];
 
-export const STEPS = [
-  "A reply within two weeks — yes, no, or let's talk.",
-  "If it's a yes, an editor is assigned and you agree a rate and deadline.",
-  "You keep the copyright. We license it, we don't own it.",
+export const STEP_KEYS = [
+  "magazine:submitStory.intro.step.reply",
+  "magazine:submitStory.intro.step.assigned",
+  "magazine:submitStory.intro.step.copyright",
 ];
 
-/** The issue currently open for submissions. */
+/**
+ * The issue currently open for submissions — a specific issue's own record
+ * (number + open date + deadline), so a real `Date` backs the deadline
+ * instead of a hardcoded English string.
+ */
 export const ISSUE = {
-  badge: "Issue 26",
-  name: "July 2026 issue · Open for submissions",
-  deadline: "Submission deadline: 20 June 2026",
+  number: 26,
+  openDate: new Date(2026, 6, 1),
+  deadlineDate: new Date(2026, 5, 20),
 };
 
-/** Magazine sections the piece can be filed under. */
-export const SECTIONS = [
-  "Long read",
-  "Personal essay",
-  "Interview",
-  "Opinion",
-  "Community report",
-  "Short fiction",
-  "Photography",
-];
-
-/** Editorial guidelines shown in the sidebar; `term` renders bold. */
-export const GUIDELINES: { term: string; detail: string }[] = [
+/**
+ * Magazine sections the piece can be filed under (dropdown chrome). `id` is
+ * the canonical English value stored in `DraftForm.section` and sent to the
+ * API as `format` — label-key indirection, so switching language never
+ * changes what gets submitted. `labelKey` is what's shown in the dropdown.
+ */
+export const SECTION_OPTIONS: { id: string; labelKey: string }[] = [
+  { id: "Long read", labelKey: "magazine:submitStory.meta.section.longRead" },
   {
-    term: "800–2,500 words",
-    detail: "for most sections. Long reads up to 4,000.",
+    id: "Personal essay",
+    labelKey: "magazine:submitStory.meta.section.personalEssay",
+  },
+  { id: "Interview", labelKey: "magazine:submitStory.meta.section.interview" },
+  { id: "Opinion", labelKey: "magazine:submitStory.meta.section.opinion" },
+  {
+    id: "Community report",
+    labelKey: "magazine:submitStory.meta.section.communityReport",
   },
   {
-    term: "Write from experience.",
-    detail: "First-person or closely reported. Not punditry.",
+    id: "Short fiction",
+    labelKey: "magazine:submitStory.meta.section.shortFiction",
   },
   {
-    term: "No promotional content.",
-    detail: "The magazine doesn't carry advertising or sponsored pieces.",
-  },
-  { term: "Portuguese or English", detail: "— we publish both." },
-  {
-    term: "Deadlines are firm.",
-    detail: "Late submissions go to the following issue.",
+    id: "Photography",
+    labelKey: "magazine:submitStory.meta.section.photography",
   },
 ];
 
-/** "After you submit" reassurance, with a bold middle segment. */
-export const AFTER_SUBMIT: { pre: string; strong: string; post: string }[] = [
+/** Editorial guidelines shown in the sidebar; `termKey` renders bold. */
+export const GUIDELINE_KEYS: { termKey: string; detailKey: string }[] = [
   {
-    pre: "Our editors respond within ",
-    strong: "5 working days",
-    post: " with acceptance, a request for edits, or a pass with notes.",
+    termKey: "magazine:submitStory.sidebar.guideline.length.term",
+    detailKey: "magazine:submitStory.sidebar.guideline.length.detail",
   },
   {
-    pre: "Accepted pieces go through one round of editing. ",
-    strong: "You approve the final version",
-    post: " before it publishes.",
+    termKey: "magazine:submitStory.sidebar.guideline.experience.term",
+    detailKey: "magazine:submitStory.sidebar.guideline.experience.detail",
   },
   {
-    pre: "You retain copyright. ",
-    strong: "QueerPulse has a non-exclusive licence",
-    post: " to publish in the magazine and archive.",
+    termKey: "magazine:submitStory.sidebar.guideline.noPromo.term",
+    detailKey: "magazine:submitStory.sidebar.guideline.noPromo.detail",
   },
+  {
+    termKey: "magazine:submitStory.sidebar.guideline.language.term",
+    detailKey: "magazine:submitStory.sidebar.guideline.language.detail",
+  },
+  {
+    termKey: "magazine:submitStory.sidebar.guideline.deadlines.term",
+    detailKey: "magazine:submitStory.sidebar.guideline.deadlines.detail",
+  },
+];
+
+/** "After you submit" reassurance — each key embeds a `<strong>` run. */
+export const AFTER_SUBMIT_KEYS = [
+  "magazine:submitStory.sidebar.afterSubmit.response",
+  "magazine:submitStory.sidebar.afterSubmit.approve",
+  "magazine:submitStory.sidebar.afterSubmit.licence",
 ];
 
 /** Example draft the editor opens with (mirrors the design prototype). */

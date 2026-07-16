@@ -1609,4 +1609,568 @@ export const marketing: Catalog = {
   "listBusiness.fullPreview.findIt": "Find it",
   "listBusiness.fullPreview.whoRunsIt": "Who runs it",
   "listBusiness.fullPreview.instagramPrefix": "Instagram · {handle}",
+
+  // ── Shared hub back-link label (Governance section) ────────────────────
+  "hub.governanceLabel": "Governance",
+
+  // ── Annual Assembly — page chrome. The agenda/resolutions/tallies/history
+  //    are per-year governance records (specific proposals, vote counts,
+  //    dates) — left English; see the sweep report for why.
+  "annualAssembly.hero.eyebrow": "Annual Assembly · 14 November 2026 · Lisbon",
+  "annualAssembly.hero.title": "Two days, eleven <em>resolutions.</em>",
+  "annualAssembly.hero.dek":
+    "QueerPulse's binding annual gathering. Where the manifesto gets revised, the budget gets approved, and any decision that can't be made by a circle goes to a member vote. <em>You can attend in person, online, or just read the minutes after</em> — but your vote counts the same.",
+  "annualAssembly.hero.meta.datesLabel": "Two days · Sat &amp; Sun",
+  "annualAssembly.hero.meta.videoLink": "+ video link",
+  "annualAssembly.hero.meta.eligibleLabel": "Members eligible to vote",
+  "annualAssembly.hero.meta.quorumLabel": "Quorum · met",
+  "annualAssembly.hero.voteCta": "Vote now · {count} resolutions",
+  "annualAssembly.hero.rsvpGoing": "You're going · tap to cancel",
+  "annualAssembly.hero.rsvpCta":
+    "RSVP in-person · {spotsLeft} of {totalSpots} spots left",
+  "annualAssembly.hero.joinOnlineCta": "Join online · Zoom link",
+  "annualAssembly.toast.rsvpCancelled":
+    "RSVP cancelled · your seat is back in the pool",
+  "annualAssembly.toast.rsvpConfirmed": "You're on the list · see you 14 Nov",
+  "annualAssembly.toast.openingZoom": "Opening Zoom link…",
+  "annualAssembly.footer.eligibility": "Questions about your eligibility?",
+  "annualAssembly.footer.helpCta": "Help →",
+  "annualAssembly.footer.proposal":
+    "Want to submit a member proposal for next year?",
+  "annualAssembly.footer.writeCta": "Write to us",
+  "annualAssembly.agenda.title": "The <em>agenda</em>",
+  "annualAssembly.agenda.sub":
+    "Roughly the order. Times are guidelines. We've never finished on time and we don't expect to.",
+  "annualAssembly.vote.title": "Vote · <em>open until 14 Nov · 14:00</em>",
+  "annualAssembly.vote.sub":
+    "Everyone votes — whether you're attending or not. Cast your vote any time; you can change it until the close. <em>One vote per member, per resolution.</em>",
+  "annualAssembly.vote.quorumStrip":
+    "<b>Quorum:</b> 184 votes required to validate a resolution. <em>Currently at 312 votes cast</em> — quorum met. <b>Yes/no thresholds:</b> simple majority for budget items; 60% supermajority for Code of Conduct &amp; manifesto changes.",
+  "annualAssembly.vote.noCta": "No · reject",
+  "annualAssembly.vote.abstainCta": "Abstain",
+  "annualAssembly.vote.showMore": "Show {count} more resolutions →",
+  "annualAssembly.vote.recorded": "Vote recorded · you can change it any time",
+  "annualAssembly.vote.tallyYes": "Yes",
+  "annualAssembly.vote.tallyNo": "No",
+  "annualAssembly.vote.tallyAbstain": "Abstain",
+  "annualAssembly.attend.title": "Can't make it in person?",
+  "annualAssembly.attend.body":
+    "Vote online any time until 14 Nov · 14:00. Watch the live stream of the in-person sessions with chat. Read the minutes the following Friday.",
+  "annualAssembly.attend.voteCta": "Cast your vote",
+  "annualAssembly.attend.streamCta": "Live stream link",
+  "annualAssembly.past.title": "Past <em>assemblies</em>",
+  "annualAssembly.past.sub":
+    "Every Annual Assembly's resolutions and minutes are public.",
+  "annualAssembly.past.minutesCta": "Minutes →",
+
+  // ── Live-stream modal (Annual Assembly) ────────────────────────────────
+  "liveStream.closeAria": "Close",
+  "liveStream.eyebrow": "Live stream · Atelier Pulso",
+  "liveStream.title": "Annual Assembly · <em>live.</em>",
+  "liveStream.lead":
+    "The in-person sessions are streamed here with open chat. The stream goes live when the room opens — <b>14 Nov · 10:00 WET.</b>",
+  "liveStream.playAria": "Play stream",
+  "liveStream.statusLive": "Live",
+  "liveStream.statusSoon": "Starts soon",
+  "liveStream.noteStreaming":
+    "Streaming the main room · audio + slides · chat below",
+  "liveStream.noteSoon": "Stream starts at 10:00 WET on 14 November",
+  "liveStream.backCta": "← Close",
+  "liveStream.voteInsteadCta": "Cast your vote instead →",
+
+  // ── Assembly Minutes — page chrome. Each year's minutes (summary, agenda,
+  //    resolutions, actions) are the official governance record — left
+  //    English; see the sweep report.
+  "assemblyMinutes.hero.eyebrow": "Annual Assembly · Minutes · {year}",
+  "assemblyMinutes.hero.title": "The <em>minutes.</em>",
+  "assemblyMinutes.hero.dek":
+    "The public record of the {year} Annual Assembly — who chaired, what was on the table, and how every resolution landed.",
+  "assemblyMinutes.hero.fallbackNote":
+    "We don't have minutes for {requestedYear} on file, so here's the {year} record instead.",
+  "assemblyMinutes.hero.backCta": "← Back to the Assembly",
+  "assemblyMinutes.otherYears": "Other years:",
+  "assemblyMinutes.meta.date": "Date",
+  "assemblyMinutes.meta.location": "Location",
+  "assemblyMinutes.meta.chair": "Chair",
+  "assemblyMinutes.meta.secretary": "Secretary",
+  "assemblyMinutes.meta.quorum": "Quorum",
+  "assemblyMinutes.meta.attendance": "Attendance",
+  "assemblyMinutes.meta.attendanceValue":
+    "{inPerson} in person · {online} online · {votes} votes",
+  "assemblyMinutes.summary.title": "Summary of <em>proceedings</em>",
+  "assemblyMinutes.agenda.title": "<em>Agenda</em> as taken",
+  "assemblyMinutes.resolutions.title": "Resolutions &amp; <em>outcomes</em>",
+  "assemblyMinutes.actions.title": "Actions &amp; <em>next steps</em>",
+  "assemblyMinutes.signoff":
+    "Minutes recorded by {secretary} · ratified at the close of the {year} Annual Assembly. This is the public record.",
+  "assemblyMinutes.outcome.passed": "Passed",
+  "assemblyMinutes.outcome.rejected": "Rejected",
+  "assemblyMinutes.outcome.tabled": "Tabled",
+
+  // ── Open Letter — the letter body is a single bounded advocacy document,
+  //    platform-authored (not per-user content); translated in full like the
+  //    Manifesto. Signatory names + individual signature notes stay English
+  //    (people's own words/names).
+  "openLetter.hero.eyebrowPrefix": "Open letter · {partners}",
+  "openLetter.hero.live_one": "Live · {days} day left",
+  "openLetter.hero.live_other": "Live · {days} days left",
+  "openLetter.hero.addressed": "Addressed to <b>{to}</b> · {date}",
+  "openLetter.hero.countGoalSuffix": "/ {goal} signatures",
+  "openLetter.hero.countLabel":
+    "Members of QP &amp; partner orgs · last signed <b>{at}</b> by {by}",
+  "openLetter.hero.pctLabel": "<b>{pct}%</b> · {note}",
+  "openLetter.toast.signatureAdded": "Signature added · {total} total",
+  "openLetter.body.addressee":
+    "To the Ministry of Health, and to the Direção-Geral da Saúde:",
+  "openLetter.body.lead":
+    "Law No. 38/2018 codified a fundamental principle in Portuguese law: that a person's gender identity is theirs to determine, and that the state and its health system are obliged to recognise that determination. <em>The law is good.</em> It is not yet being applied.",
+  "openLetter.body.p2":
+    "Specifically, the prescription protocols for hormone-replacement therapy in Portugal are <strong>not portable across the SNS</strong>. A trans patient who establishes care with a GP in Lisbon, builds an evidence file over 12–24 months, and then moves — for work, for housing, for safety — must, in practice, start over with a new GP in their new city. The clinical evidence does not move with them. The prescription history does not move with them. <em>The trust they built with a clinician does not move with them.</em>",
+  "openLetter.body.p3":
+    "This is not what the law says should happen. This is what the operational reality is.",
+  "openLetter.body.asksTitle": "What we're <em>asking for</em>",
+  "openLetter.body.asksLead":
+    "Three specific, implementable changes. None require new legislation.",
+  "openLetter.body.ask1.lead": "A national HRT prescription registry",
+  "openLetter.body.ask1.body":
+    ", opt-in and clinician-only, accessible to any SNS-affiliated GP a patient consents to. Same model as the diabetes care registry adopted in 2019.",
+  "openLetter.body.ask2.lead": "A 14-day “continuity script” rule",
+  "openLetter.body.ask2.body":
+    " — when a patient moves regions, their new GP may issue a 90-day script bridging to a full review, without requiring a fresh diagnostic process.",
+  "openLetter.body.ask3.lead":
+    "Inclusion of trans-affirming care in the standard GP onboarding module",
+  "openLetter.body.ask3.body":
+    " — mandatory, four hours, drafted in collaboration with WPATH-certified Portuguese clinicians.",
+  "openLetter.body.whyNowTitle": "Why <em>now</em>",
+  "openLetter.body.whyNowP1":
+    "Because the policy window is open. Because the Ministry has committed, in the 2026 health budget, to “evaluate continuity-of-care pathways for chronic medications.” Because the clinicians who would have to implement this — including <em>Dr. Inês Pereira</em> at Clínica do Largo, <em>Dr. Hugo Marques</em> at USF Sé, and <em>Dra. Mariza Câmara</em> at the Câmara — have publicly stated they are ready to participate.",
+  "openLetter.body.whyNowP2":
+    "And because every month we wait, <strong>roughly 40 trans patients in Portugal lose continuity of HRT</strong> due solely to administrative friction. The clinical cost of these interruptions is documented. The personal cost is incalculable.",
+  "openLetter.body.whatWeDoTitle": "What we'll do <em>with this letter</em>",
+  "openLetter.body.whatWeDoP1":
+    "At 5,000 signatures, this letter will be hand-delivered to the Ministry by a delegation of three: <em>Catarina Vaz</em> (QueerPulse, Trans Hub), <em>Filipa Mendes</em> (ILGA Portugal), and one trans person whose continuity of care has been interrupted in the last 24 months. We will request a meeting. We will publish their response, whatever it is.",
+  "openLetter.body.whatWeDoP2":
+    "If they decline to meet, this letter goes to the next quarterly Assembleia da República's health committee hearing — already scheduled to discuss Law No. 38/2018 implementation — and to the press.",
+  "openLetter.body.kicker":
+    "We are not asking for a new right. <strong>We are asking that an existing right be made operationally real.</strong>",
+  "openLetter.sig.transHub":
+    "Trans Hub coordinator · co-treasurer · QueerPulse",
+  "openLetter.sig.ilgaDirector": "Executive Director · ILGA Portugal",
+  "openLetter.sidebar.recentSignatures": "Recent signatures",
+  "openLetter.sidebar.aboutRunning":
+    "<b>Why we run open letters this way:</b> every signature has a verified member name behind it. <em>That makes them harder to dismiss.</em> We won't do anonymous-mass petitions — the model is fewer, real, named signatures.",
+  "openLetter.sign.title": "Sign the open letter",
+  "openLetter.sign.asLabel": "As {name} · {pronouns}",
+  "openLetter.sign.nameLabel": "Display name on the list",
+  "openLetter.sign.visibilityLabel": "Show as · visibility",
+  "openLetter.sign.noteLabel": "Add a sentence (optional)",
+  "openLetter.sign.noteCounter": "{length}/280",
+  "openLetter.sign.notePlaceholder": "Why this matters to you · 280 chars",
+  "openLetter.sign.submitCta": "Sign the letter",
+  "openLetter.sign.signedCta": "You signed the letter",
+  "openLetter.sign.footer":
+    "Members only. We never share your data with the recipient organisation. You can withdraw your signature any time.",
+  "openLetter.sign.anonName": "A member",
+  "openLetter.visibility.full": "Full name · public",
+  "openLetter.visibility.initials": "Initials only",
+  "openLetter.visibility.anon": "Anonymous · “A member”",
+  "openLetter.sidebar.noNote": "—",
+
+  // ── Transparency Report — page chrome. The euro figures, allocation
+  //    breakdown, moderation rows, government requests, named mistakes and
+  //    governance stats are the year's actual audited figures — left
+  //    English; see the sweep report.
+  "transparency.tabs.money": "Money",
+  "transparency.tabs.people": "People",
+  "transparency.tabs.moderation": "Moderation",
+  "transparency.tabs.requests": "Gov requests",
+  "transparency.tabs.mistakes": "Mistakes",
+  "transparency.tabs.governance": "How decisions get made",
+  "transparency.hero.eyebrow": "Annual transparency report · 2025",
+  "transparency.hero.title":
+    "Every <em>euro,</em> every <em>moderation,</em> every <em>mistake.</em>",
+  "transparency.hero.dek":
+    "The numbers behind QueerPulse in 2025 — finances, moderation actions, government requests, and the things we got wrong. <em>Published by Associação QueerPulse</em> on 14 May 2026, after independent review by Dra. Helena Faria (auditor).",
+  "transparency.hero.meta.raised": "Total raised",
+  "transparency.hero.meta.toPrograms": "To programs",
+  "transparency.hero.meta.activeMembers": "Active members",
+  "transparency.hero.meta.mistakesNamed": "Public mistakes named",
+  "transparency.yearSwitch.inProgress": "in progress",
+  "transparency.money.title":
+    "Where the money <em>came from,</em> and where it <em>went.</em>",
+  "transparency.money.sub":
+    "All figures in euros, calendar year 2025. Books audited by an independent auditor (no relationship to the organisation), available on request as itemised CSV.",
+  "transparency.money.sourcesHeading": "Where the €278,400 came from",
+  "transparency.money.spentLabel":
+    "Spent in 2025 · 96.1% of receipts · €10,980 surplus carried to reserves",
+  "transparency.people.title": "The <em>people</em> behind the numbers.",
+  "transparency.people.sub":
+    "Members at year-end, growth, who actually shows up. We don't celebrate big numbers — only the right ones.",
+  "transparency.moderation.title": "Moderation, <em>by the numbers.</em>",
+  "transparency.moderation.sub":
+    "What was reported, what we acted on, and how long it took. Every action logged; full anonymised log available to any member on request.",
+  "transparency.moderation.colReason": "Reason for moderation action",
+  "transparency.moderation.colCount": "Count",
+  "transparency.moderation.colYoy": "YoY",
+  "transparency.moderation.colPct": "% of all",
+  "transparency.moderation.breakdown":
+    "Action breakdown: <b>96 posts/comments removed</b>, <b>52 warnings issued</b>, <b>23 temporary suspensions</b> (median 7 days), <b>9 permanent bans</b>, <b>4 cases referred to ILGA</b> for legal handling.",
+  "transparency.requests.title":
+    "Government &amp; legal <em>requests</em> for member data.",
+  "transparency.requests.sub":
+    "Every request we received from any government or legal entity in 2025. We comply with valid Portuguese court orders. <em>We do not comply with informal asks.</em>",
+  "transparency.mistakes.title": "Things we got <em>wrong</em> in 2025.",
+  "transparency.mistakes.sub":
+    "Published because we want this section to be the easiest part of the report to write next year. <em>Naming our own mistakes is the price of being trusted.</em>",
+  "transparency.governance.title": "How <em>decisions</em> got made.",
+  "transparency.governance.sub":
+    "Boring meeting minutes are the foundation of trust. Here's how QueerPulse's governance actually worked in 2025.",
+  "transparency.governance.seeMore":
+    "For full meeting minutes, the constitution, the Sustainer agreement, and the formal organisational chart, see Governance.",
+  "transparency.signoff.title": "Signed in <em>good faith,</em> and ready for questions.",
+  "transparency.signoff.body":
+    "This report was prepared by Catarina Vaz and André Bento, reviewed by the full Assembly, and audited independently by Dra. Helena Faria of Faria Auditoria. <em>Errors are ours.</em> Questions, corrections, or concerns: <a>transparency@queerpulse.app</a> — a real person reads them within 48 hours.",
+  "transparency.signoff.role.catarina":
+    "Co-treasurer · drafted finance + mistakes",
+  "transparency.signoff.role.andre":
+    "Co-treasurer · drafted moderation + governance",
+  "transparency.signoff.role.auditor": "Independent auditor",
+  "transparency.signoff.downloadPdf": "Download PDF (84 pages)",
+  "transparency.signoff.downloadCsv": "Download raw CSV",
+
+  // ── Community Archive — page chrome. Oral-history quotes, bios, and
+  //    excerpts are real people's own testimonials — left English (the
+  //    scope rule's canonical "mock bio" case).
+  "archive.hero.category": "Community Archive",
+  "archive.hero.title": "Stories that shouldn't <em>be forgotten.</em>",
+  "archive.hero.sub":
+    "An ongoing archive of oral histories, testimonials, and personal accounts from queer people in Lisbon — past and present. Stories that document who we are, what we've built, and what it cost.",
+  "archive.featured.label": "This month's featured story",
+  "archive.featured.readCta": "Read her story →",
+  "archive.grid.title": "From the <em>archive</em>",
+  "archive.grid.sub": "Personal accounts from community members, past and present.",
+  "archive.oral.title": "In their own <em>words.</em>",
+  "archive.oral.sub": "Short excerpts from longer oral histories in the archive.",
+  "archive.submit.title": "Your story <em>belongs here too.</em>",
+  "archive.submit.body":
+    "The archive grows through community contribution. If you have a story you want to tell — about Lisbon, about your community, about what brought you here or what kept you going — we want to hear it. All formats welcome: written, audio, video, photos.",
+  "archive.submit.cta": "Submit your story →",
+
+  // ── Changelog — page chrome. The 18 dated release entries (title/body/tag)
+  //    are historical release notes — left English due to volume; flagged in
+  //    the sweep report rather than rushed.
+  "changelog.hero.backLabel": "Roadmap",
+  "changelog.hero.eyebrow": "Platform changelog",
+  "changelog.hero.title": "What's <em>changed,</em>",
+  "changelog.hero.titleLine2": "and when.",
+  "changelog.hero.sub":
+    "Every update to QueerPulse, in reverse order. We publish changes here so you always know what's different and why. Nothing happens without a record.",
+  "changelog.filter.all": "All",
+  "changelog.filter.feature": "Features",
+  "changelog.filter.community": "Community",
+  "changelog.filter.fix": "Fixes",
+  "changelog.filter.policy": "Policy",
+  "changelog.filter.magazine": "Magazine",
+  "changelog.badge.feature": "Feature",
+  "changelog.badge.community": "Community",
+  "changelog.badge.fix": "Fix",
+  "changelog.badge.policy": "Policy",
+  "changelog.badge.magazine": "Magazine",
+  "changelog.empty.title": "Nothing logged under that filter yet",
+  "changelog.empty.description":
+    "No changes of this kind have shipped so far. Clear the filter to see the full history.",
+  "changelog.empty.clearCta": "Clear filters",
+
+  // ── Roadmap — page chrome. Shipped/building/planned items, top ideas and
+  //    vote counts are the live backlog — left English; see the sweep
+  //    report.
+  "roadmap.hero.eyebrow": "What we're building",
+  "roadmap.hero.title": "The <em>roadmap</em>",
+  "roadmap.hero.sub":
+    "QueerPulse is built by a small team in Lisbon. Here's what we're working on, what's shipped, and what you can vote on next.",
+  "roadmap.col.done": "Done",
+  "roadmap.col.buildingNow": "Building now",
+  "roadmap.col.planned": "Planned",
+  "roadmap.card.memberRequested": "Member requested",
+  "roadmap.card.progressAria": "{name} progress",
+  "roadmap.card.mostWanted": "Most wanted",
+  "roadmap.card.votesSuffix": "votes",
+  "roadmap.shape.title": "Have an <em>idea?</em>",
+  "roadmap.shape.sub":
+    "We read every suggestion. The most-voted ideas move up the roadmap.",
+  "roadmap.submitIdea.title": "Submit an idea",
+  "roadmap.submitIdea.ariaLabel": "Your idea",
+  "roadmap.submitIdea.placeholder": "What would make QueerPulse better for you?",
+  "roadmap.submitIdea.cta": "Submit idea",
+  "roadmap.submitIdea.toast.empty": "Write a few words first",
+  "roadmap.submitIdea.toast.submitted": "Idea submitted — thank you",
+  "roadmap.topIdeas.title": "Most requested ideas",
+  "roadmap.topIdeas.voted": "Voted",
+  "roadmap.topIdeas.vote": "Vote",
+  "roadmap.topIdeas.toast.voted": "Vote recorded",
+  "roadmap.howWeDecide.title": "How we <em>decide</em>",
+  "roadmap.howWeDecide.memberVotes.title": "Member votes",
+  "roadmap.howWeDecide.memberVotes.desc":
+    "The features you vote for rise to the top. We look at this weekly.",
+  "roadmap.howWeDecide.safetyFirst.title": "Safety first",
+  "roadmap.howWeDecide.safetyFirst.desc":
+    "Every feature is reviewed for how it could be misused in a community like this.",
+  "roadmap.howWeDecide.smallTeam.title": "Small team, careful pace",
+  "roadmap.howWeDecide.smallTeam.desc":
+    "We're two engineers and a designer. We'd rather build slowly and get it right.",
+  "roadmap.subpageIndex.title": "Already shipped",
+  "roadmap.subpageIndex.changelog.label": "Changelog",
+  "roadmap.subpageIndex.changelog.blurb":
+    "Every release, dated — what we've shipped so far.",
+
+  // ── Press Archive — page chrome. Coverage headlines/sources/authors are
+  //    real third-party press pieces (someone else's words) and stay
+  //    English, same precedent as the Press Kit coverage section.
+  "pressArchive.hero.backLabel": "Press Kit",
+  "pressArchive.hero.eyebrow": "Coverage archive · since 2024",
+  "pressArchive.hero.title": "Everything written <em>about us.</em>",
+  "pressArchive.hero.sub":
+    "Pieces about QueerPulse in third-party publications, indexed by year. <em>Includes critiques we disagreed with.</em>",
+  "pressArchive.stats.allTime": "Pieces all-time",
+  "pressArchive.stats.languages": "Languages",
+  "pressArchive.stats.thisYear": "This year",
+  "pressArchive.search.placeholder": "Search title, source, author",
+  "pressArchive.chip.all": "All · {count}",
+  "pressArchive.chip.features": "Features · {count}",
+  "pressArchive.chip.interviews": "Interviews · {count}",
+  "pressArchive.chip.news": "News · {count}",
+  "pressArchive.chip.critiques": "Critiques · {count}",
+  "pressArchive.pinBadge": "Featured",
+  "pressArchive.toast.opening": "Opening on {source}…",
+  "pressArchive.loadingMore": "Loading older pieces…",
+  "pressArchive.loadMoreCta": "Load older coverage",
+  "pressArchive.endOfArchive": "That's the whole archive — 2022 to today.",
+
+  // ── Volunteering — page chrome. Org names/roles/descriptions/skills come
+  //    from the live opportunities API (or its demo mock) — left English;
+  //    the adapter composes a few chrome fragments (commitment label,
+  //    stat/spot-row labels, confirmation sentence) which are also keyed
+  //    here so live mode translates identically to demo.
+  "volunteer.filter.all": "All opportunities",
+  "volunteer.filter.low": "Low commitment",
+  "volunteer.filter.medium": "Medium commitment",
+  "volunteer.filter.rights": "LGBTQ+ Rights",
+  "volunteer.filter.health": "Health &amp; Wellbeing",
+  "volunteer.filter.youth": "Youth",
+  "volunteer.filter.housing": "Housing",
+  "volunteer.filter.arts": "Arts &amp; Culture",
+  "volunteer.hero.eyebrow": "Volunteer",
+  "volunteer.hero.title": "Give your time to the <em>community</em> around you.",
+  "volunteer.hero.sub":
+    "You don't need to be an activist. You need two free hours and a willingness to show up. Below are organisations in Lisbon genuinely looking for people like you.",
+  "volunteer.hero.note":
+    "Every organisation below has been vetted by the QueerPulse community",
+  "volunteer.hero.postCta": "Post an opportunity",
+  "volunteer.empty.noneTitle": "No opportunities posted yet",
+  "volunteer.empty.noneDescription":
+    "No organisations have posted roles here yet. If yours is looking for hands, be the first to put out the call.",
+  "volunteer.empty.noneCta": "Post an opportunity",
+  "volunteer.empty.filteredTitle": "No opportunities match those filters yet",
+  "volunteer.empty.filteredDescription":
+    "Try widening your search — there are plenty of ways to give your time, and new roles are added often.",
+  "volunteer.empty.clearCta": "Clear filters",
+  "volunteer.card.commitLow": "Low commitment",
+  "volunteer.card.commitMedium": "Medium commitment",
+  "volunteer.card.expressInterest": "Express interest →",
+  "volunteer.outro.title": "Want to connect <em>more deeply?</em>",
+  "volunteer.outro.sub":
+    "Find the change makers already working on the causes you care about.",
+  "volunteer.outro.cta": "Meet the change makers →",
+  "volunteer.signups.title": "Who's signed up",
+  "volunteer.signups.loading": "Loading signups…",
+  "volunteer.signups.empty":
+    "No-one's signed up yet — the first person will show up here.",
+  "volunteer.signups.signedUp": "Signed up {when}",
+  "volunteer.signups.closedTag": "This opportunity is closed",
+  "volunteer.signups.closing": "Closing…",
+  "volunteer.signups.closeCta": "Close opportunity",
+  "volunteer.adapter.eyebrow": "Volunteer · {cause} · {org}",
+  "volunteer.adapter.recruitingNow": "Recruiting now",
+  "volunteer.adapter.closedNotRecruiting": "Closed · not recruiting",
+  "volunteer.adapter.perWeek": "Per week",
+  "volunteer.adapter.commitment": "Commitment",
+  "volunteer.adapter.spotsStillOpen": "Spots still open",
+  "volunteer.adapter.roleLabel": "Role",
+  "volunteer.adapter.locationLabel": "Location",
+  "volunteer.adapter.applyConfirm":
+    "Application submitted for {role}. The team will be in touch with next steps.",
+  "volunteer.adapter.inPartnershipWith": "In partnership with {name}.",
+  "volunteer.adapter.anonMember": "A member",
+
+  // ── Post a Volunteer Opportunity — form chrome (all platform UI).
+  "postOpportunity.hero.eyebrow": "Volunteer · Post a role",
+  "postOpportunity.hero.title": "Post an <em>opportunity.</em>",
+  "postOpportunity.hero.sub":
+    "Looking for people to give their time? Describe the role honestly — the hours, the commitment, who it's good for — and it goes live on the volunteer board straight away.",
+  "postOpportunity.toast.error":
+    "Couldn't post your opportunity — please try again.",
+  "postOpportunity.success.title": "Your opportunity is",
+  "postOpportunity.success.em": "posted.",
+  "postOpportunity.success.closeLabel": "View the volunteer board →",
+  "postOpportunity.success.step1": "It's live on the volunteer board now",
+  "postOpportunity.success.step2":
+    "Members can sign up from the listing",
+  "postOpportunity.success.step3":
+    "You'll see everyone who signs up on the role's page",
+  "postOpportunity.success.body":
+    "Thank you for making room for someone to help. Interested volunteers can now find your role and express interest.",
+  "postOpportunity.actions.posting": "Posting…",
+  "postOpportunity.actions.submit": "Post opportunity →",
+  "postOpportunity.actions.cancel": "Cancel",
+  "postOpportunity.tip1.title": "Be honest about the ask",
+  "postOpportunity.tip1.body":
+    "Volunteers stay when the commitment matches what you promised. Spell out the hours, the term, and any training up front.",
+  "postOpportunity.tip2.title": "Say who it's good for",
+  "postOpportunity.tip2.body":
+    "The best roles name the person they need — their temperament, not just their CV. It helps the right people self-select in.",
+  "postOpportunity.tip3.title": "What happens after you post",
+  "postOpportunity.tip3.body":
+    "Your role appears on the volunteer board immediately. Interested members sign up from the detail page, and you'll see the roster there.",
+  "postOpportunity.cause.rights": "LGBTQ+ Rights",
+  "postOpportunity.cause.health": "Health &amp; Wellbeing",
+  "postOpportunity.cause.youth": "Youth",
+  "postOpportunity.cause.housing": "Housing",
+  "postOpportunity.cause.arts": "Arts &amp; Culture",
+  "postOpportunity.commit.low.label": "Low commitment",
+  "postOpportunity.commit.low.hint":
+    "A couple of flexible hours a week, no fixed term.",
+  "postOpportunity.commit.medium.label": "Medium commitment",
+  "postOpportunity.commit.medium.hint":
+    "A regular shift and a minimum term — consistency matters.",
+  "postOpportunity.core.basicsHeading": "The basics",
+  "postOpportunity.core.orgLabel": "Organisation",
+  "postOpportunity.core.orgPlaceholder": "e.g. ILGA Portugal",
+  "postOpportunity.core.roleLabel": "Role title",
+  "postOpportunity.core.rolePlaceholder": "e.g. Community Outreach Volunteer",
+  "postOpportunity.core.causeLabel": "Cause",
+  "postOpportunity.core.commitLabel": "Commitment level",
+  "postOpportunity.core.timePlaceHeading": "Time &amp; place",
+  "postOpportunity.core.timeLabel": "Time commitment",
+  "postOpportunity.core.timePlaceholder": "e.g. 2–4 hrs/week",
+  "postOpportunity.core.locationLabel": "Location",
+  "postOpportunity.core.locationPlaceholder": "e.g. In-person · Lisbon",
+  "postOpportunity.core.spotsLabel": "Spots available",
+  "postOpportunity.core.spotsHelper":
+    "How many volunteers can you take on for this role?",
+  "postOpportunity.core.spotsPlaceholder": "e.g. 24",
+  "postOpportunity.core.pitchHeading": "The pitch",
+  "postOpportunity.core.descLabel": "Short description",
+  "postOpportunity.core.descHelper":
+    "One or two sentences shown on the listing card.",
+  "postOpportunity.core.descPlaceholder":
+    "What the volunteer will help with, in plain language.",
+  "postOpportunity.core.skillsLabel": "Skills",
+  "postOpportunity.core.skillsHelper":
+    "Comma-separated — shown as hashtags on the card.",
+  "postOpportunity.core.skillsPlaceholder":
+    "Communication, Languages, Event support",
+  "postOpportunity.rich.summary": "Add more detail (optional)",
+  "postOpportunity.rich.whyHeading": "Why it matters",
+  "postOpportunity.rich.whyLabel": "Why this role matters",
+  "postOpportunity.rich.whyHelper": "One paragraph per line.",
+  "postOpportunity.rich.whyPlaceholder":
+    "What changes because someone shows up for this.",
+  "postOpportunity.rich.goodForLabel": "Who's good for this",
+  "postOpportunity.rich.goodForHelper": "One paragraph per line.",
+  "postOpportunity.rich.goodForPlaceholder":
+    "The temperament and skills that fit — not just the CV.",
+  "postOpportunity.rich.tasksHeading": "What they'll actually do",
+  "postOpportunity.rich.taskTitleAria": "Task {index} title",
+  "postOpportunity.rich.taskTitlePlaceholder": "Task title",
+  "postOpportunity.rich.taskDetailAria": "Task {index} detail",
+  "postOpportunity.rich.taskDetailPlaceholder": "One line on what it involves",
+  "postOpportunity.rich.taskRemoveAria": "Remove task {index}",
+  "postOpportunity.rich.addTask": "Add a task",
+  "postOpportunity.rich.commitmentsHeading": "The commitment, honestly",
+  "postOpportunity.rich.commitLabelAria": "Commitment {index} label",
+  "postOpportunity.rich.commitLabelPlaceholder": "e.g. 6-hour training",
+  "postOpportunity.rich.commitDetailAria": "Commitment {index} detail",
+  "postOpportunity.rich.commitDetailPlaceholder":
+    "e.g. Two evenings before you start · required",
+  "postOpportunity.rich.commitRemoveAria": "Remove commitment {index}",
+  "postOpportunity.rich.addCommitment": "Add a commitment",
+  "postOpportunity.rich.teamHeading": "Team &amp; contact",
+  "postOpportunity.rich.teamIntroLabel": "Intro to the team",
+  "postOpportunity.rich.teamIntroPlaceholder":
+    "e.g. 18 outreach volunteers active this quarter.",
+  "postOpportunity.rich.teamLabel": "Team members",
+  "postOpportunity.rich.teamHelper":
+    "Comma-separated member handles / slugs already on the team.",
+  "postOpportunity.rich.teamPlaceholder": "catarina-v, jonas-f",
+  "postOpportunity.rich.applyRoleLabel": "Apply-as role label",
+  "postOpportunity.rich.applyRoleHelper":
+    "Defaults to “Role · Organisation”.",
+  "postOpportunity.rich.applyRolePlaceholder":
+    "Community Outreach · ILGA Lisboa",
+  "postOpportunity.rich.partnerSlugLabel": "Partner slug",
+  "postOpportunity.rich.partnerSlugHelper": "Links to a partner's page.",
+  "postOpportunity.rich.partnerSlugPlaceholder": "ilga-portugal",
+  "postOpportunity.rich.handleLabel": "Contact handle",
+  "postOpportunity.rich.handleHelper":
+    "Where interested volunteers can reach you.",
+  "postOpportunity.rich.handlePlaceholder": "@yourhandle or an email",
+
+  // ── Volunteer Opportunity detail — page chrome. `opp.eyebrow` / `.urgent` /
+  //    `.titleLead` / `.titleEm` / `.sub` / `.stats[].label` /
+  //    `.spots[].label` / `.applyConfirm` / `.partner.text` / `.applyRole`
+  //    come from the shared view-model the live adapter and the demo mock
+  //    data both populate (`volunteering.adapters.tsx`,
+  //    `volunteerOpportunities.dataA/B.tsx`) — NOT swept in this pass; fixing
+  //    them means changing that shared type across the adapter + both demo
+  //    data files, flagged in the sweep report as future work. Everything
+  //    else on this page (headings, buttons, static labels) is chrome and is
+  //    translated below.
+  "volunteerDetail.backCta": "← All volunteer opportunities",
+  "volunteerDetail.error.alreadySignedUp":
+    "You've already signed up for this role.",
+  "volunteerDetail.error.full":
+    "This opportunity just filled up — every spot is taken.",
+  "volunteerDetail.error.alreadyOrFull":
+    "You've already signed up, or this opportunity is now full.",
+  "volunteerDetail.error.generic":
+    "Something went wrong sending your interest — please try again.",
+  "volunteerDetail.main.whyTitle": "Why this role <em>matters</em>",
+  "volunteerDetail.main.tasksTitle": "What you'll <em>actually do</em>",
+  "volunteerDetail.main.commitmentTitle": "The <em>commitment</em>, honestly",
+  "volunteerDetail.main.goodForTitle": "Who's <em>good for this</em>",
+  "volunteerDetail.main.teamTitle": "Who's <em>already in</em>",
+  "volunteerDetail.sidebar.appliedTitle": "You're <em>on the list.</em>",
+  "volunteerDetail.sidebar.messageTeam": "Message the team",
+  "volunteerDetail.sidebar.withdrawing": "Withdrawing…",
+  "volunteerDetail.sidebar.withdraw": "Withdraw my interest",
+  "volunteerDetail.sidebar.applyHeading": "Apply",
+  "volunteerDetail.sidebar.spotsFilled": "Spots filled",
+  "volunteerDetail.sidebar.roleFull": "This role is full",
+  "volunteerDetail.sidebar.sending": "Sending your application…",
+  "volunteerDetail.sidebar.applyCta": "Apply →",
+  "volunteerDetail.sidebar.askTeam": "Ask the team",
+  "volunteerDetail.sidebar.footNote":
+    "Returning volunteers: <a>use last year's profile →</a> · skips the screen.",
+  "volunteerDetail.sidebar.partnershipLabel": "In partnership with",
+  "volunteerDetail.sidebar.partnershipLink": "About the partnership →",
+  "volunteerDetail.sidebar.notRightFit": "Not the right fit?",
+  "volunteerDetail.sidebar.otherWays": "Other ways to help right now:",
+  "volunteerDetail.sidebar.fundInstead": "→ Fund this work instead",
+
+  // ── Partner Detail — page chrome. About/joint-work/timeline/how-we-work
+  //    copy, stats, and contact details are each partner org's own content
+  //    (partnerDetails.dataA/B.tsx) — left English, same precedent as the
+  //    Partners listing page.
+  "partnerDetail.loadError": "We couldn't load this partner just now. Please try again.",
+  "partnerDetail.backCta": "← All partners",
+  "partnerDetail.tab.about": "About",
+  "partnerDetail.tab.work": "Joint work",
+  "partnerDetail.tab.timeline": "Timeline",
+  "partnerDetail.tab.how": "How we work together",
+  "partnerDetail.sidebar.atGlance": "At a glance",
+  "partnerDetail.sidebar.contactDirectly": "Contact {name} directly",
+  "partnerDetail.sidebar.becomeTitle": "Become a partner",
+  "partnerDetail.sidebar.becomeBody":
+    "Are you an org that ought to be operationally connected to QueerPulse? We're small and slow about this — write to us.",
+  "partnerDetail.sidebar.becomeCta": "Get in touch →",
 };

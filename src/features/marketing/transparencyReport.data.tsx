@@ -2,13 +2,14 @@ import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 
+/** Tab id → catalog labelKey, resolved via t() at render. */
 export const TABS: [string, string][] = [
-  ["money", "Money"],
-  ["people", "People"],
-  ["moderation", "Moderation"],
-  ["requests", "Gov requests"],
-  ["mistakes", "Mistakes"],
-  ["governance", "How decisions get made"],
+  ["money", "marketing:transparency.tabs.money"],
+  ["people", "marketing:transparency.tabs.people"],
+  ["moderation", "marketing:transparency.tabs.moderation"],
+  ["requests", "marketing:transparency.tabs.requests"],
+  ["mistakes", "marketing:transparency.tabs.mistakes"],
+  ["governance", "marketing:transparency.tabs.governance"],
 ];
 
 export const SOURCES = [

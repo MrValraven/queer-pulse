@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 import { Button, Sending } from "../../../shared/components/ui";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Therapist } from "../mentalHealth.data";
 import {
   DAY_LETTERS,
@@ -19,6 +20,7 @@ export function TherapistSidebar({
   therapist: Therapist;
   profile: TherapistProfile;
 }) {
+  const { t } = useTranslation();
   const [sel, setSel] = useState<{ w: number; d: number } | null>(null);
   const [phase, setPhase] = useState<Phase>("idle");
   const accepting = therapist.acceptingNew;
@@ -40,7 +42,9 @@ export function TherapistSidebar({
     <>
       <div className={styles.sideCard} id="book">
         <h4 className={styles.sideLabel}>
-          {accepting ? "Book — next 4 weeks" : "Availability — waitlist"}
+          {accepting
+            ? t("resources:therapistProfilePage.sidebar.bookHeadingAccepting")
+            : t("resources:therapistProfilePage.sidebar.bookHeadingWaitlist")}
         </h4>
         <div className={styles.availGrid}>
           {DAY_LETTERS.map((d, i) => (
@@ -80,16 +84,25 @@ export function TherapistSidebar({
           )}
         </div>
         <div className={styles.legend}>
-          <span className={styles.legendOpen}>Available</span>
-          <span className={styles.legendFull}>Booked</span>
+          <span className={styles.legendOpen}>
+            {t("resources:therapistProfilePage.sidebar.legendAvailable")}
+          </span>
+          <span className={styles.legendFull}>
+            {t("resources:therapistProfilePage.sidebar.legendBooked")}
+          </span>
         </div>
         {phase === "held" ? (
           <div className={styles.held}>
             <FiCheck aria-hidden />
             <p>
               {accepting
-                ? `Held ${slotLabel}. ${firstName} will confirm by email — nothing is charged for holding.`
-                : `You're on the list. ${firstName} will write when a slot opens — usually 6–10 weeks.`}
+                ? t("resources:therapistProfilePage.sidebar.heldAccepting", {
+                    slot: slotLabel ?? undefined,
+                    name: firstName,
+                  })
+                : t("resources:therapistProfilePage.sidebar.heldWaitlist", {
+                    name: firstName,
+                  })}
             </p>
           </div>
         ) : (
@@ -100,12 +113,20 @@ export function TherapistSidebar({
             disabled={phase === "holding" || (accepting && !sel)}
           >
             {phase === "holding" ? (
-              <Sending label={accepting ? "Holding…" : "Joining…"} />
+              <Sending
+                label={
+                  accepting
+                    ? t("resources:therapistProfilePage.sidebar.holdingLabel")
+                    : t("resources:therapistProfilePage.sidebar.joiningLabel")
+                }
+              />
             ) : accepting ? (
               slotLabel ? (
-                `Hold ${slotLabel} →`
+                t("resources:therapistProfilePage.sidebar.holdSlotCta", {
+                  slot: slotLabel,
+                })
               ) : (
-                "Pick an open slot"
+                t("resources:therapistProfilePage.sidebar.pickSlotCta")
               )
             ) : (
               profile.bookCta
@@ -115,7 +136,9 @@ export function TherapistSidebar({
       </div>
 
       <div className={styles.sideCard}>
-        <h4 className={styles.sideLabel}>Fees</h4>
+        <h4 className={styles.sideLabel}>
+          {t("resources:therapistProfilePage.sidebar.feesHeading")}
+        </h4>
         {profile.fees.map((f) => (
           <div className={styles.feeRow} key={f.label}>
             <span>{f.label}</span>
@@ -135,7 +158,9 @@ export function TherapistSidebar({
       </div>
 
       <div className={styles.sideCard}>
-        <h4 className={styles.sideLabel}>Where</h4>
+        <h4 className={styles.sideLabel}>
+          {t("resources:therapistProfilePage.sidebar.whereHeading")}
+        </h4>
         <p className={styles.venueAddr}>
           <b className={styles.venueName}>{profile.venue.name}</b>
           {profile.venue.lines.map((l) => (
@@ -150,25 +175,24 @@ export function TherapistSidebar({
 
       <div className={`${styles.sideCard} ${styles.crisis}`}>
         <h4 className={`${styles.sideLabel} ${styles.crisisLabel}`}>
-          In crisis right now
+          {t("resources:therapistProfilePage.sidebar.crisisHeading")}
         </h4>
         <p className={styles.crisisText}>
-          Therapy isn't the right path when you're in immediate danger. Use
-          these instead — they're staffed for this.
+          {t("resources:therapistProfilePage.sidebar.crisisText")}
         </p>
         <Button
           variant="primary"
           className={styles.crisisBtn}
           to={routes.crisisChat}
         >
-          Open crisis chat
+          {t("resources:therapistProfilePage.sidebar.crisisChatCta")}
         </Button>
         <Button
           variant="ghost"
           className={styles.crisisBtn}
           href="tel:213544545"
         >
-          SOS Voz Amiga · 213 544 545
+          {t("resources:therapistProfilePage.sidebar.sosVozAmigaCta")}
         </Button>
       </div>
     </>

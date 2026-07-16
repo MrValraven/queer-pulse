@@ -1,3 +1,4 @@
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { TINT_OPTIONS, type TintKey } from "./startCommunity.data";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
@@ -10,27 +11,28 @@ const ORB: Record<TintKey, string> = {
 
 /** Chapter 6 — Feeling: a colour and a line that capture the heart. */
 export function StepFeeling({ form }: { form: CommunityForm }) {
+  const { t } = useTranslation();
   const { draft, set, setTint } = form;
   return (
     <div>
       <div className={styles.field}>
-        <label>Pick a colour</label>
+        <label>{t("communities:start.feeling.colourLabel")}</label>
         <div className={styles.tintRow}>
-          {TINT_OPTIONS.map((t) => (
+          {TINT_OPTIONS.map((tint) => (
             <button
-              key={t.key}
+              key={tint.key}
               type="button"
               className={[
                 styles.tintSwatch,
-                draft.tint === t.key && styles.tintSelected,
+                draft.tint === tint.key && styles.tintSelected,
               ]
                 .filter(Boolean)
                 .join(" ")}
-              aria-pressed={draft.tint === t.key}
-              onClick={() => setTint(t.key)}
+              aria-pressed={draft.tint === tint.key}
+              onClick={() => setTint(tint.key)}
             >
-              <span className={`${styles.tsOrb} ${ORB[t.key]}`} />
-              <span className={styles.tsLabel}>{t.label}</span>
+              <span className={`${styles.tsOrb} ${ORB[tint.key]}`} />
+              <span className={styles.tsLabel}>{t(tint.labelKey)}</span>
             </button>
           ))}
         </div>
@@ -38,19 +40,20 @@ export function StepFeeling({ form }: { form: CommunityForm }) {
 
       <div className={styles.field}>
         <label htmlFor="sc-tagline">
-          A tagline <span className={styles.req}>*</span>
+          {t("communities:start.feeling.taglineLabel")}{" "}
+          <span className={styles.req}>*</span>
         </label>
         <input
           id="sc-tagline"
           type="text"
           className={styles.input}
-          placeholder="One line that captures the feeling of the place"
+          placeholder={t("communities:start.feeling.taglinePlaceholder")}
           value={draft.tagline}
           maxLength={90}
           onChange={(e) => set({ tagline: e.target.value })}
         />
         <span className={styles.hint}>
-          Short and warm — this sits under your community's name.
+          {t("communities:start.feeling.taglineHint")}
         </span>
       </div>
     </div>

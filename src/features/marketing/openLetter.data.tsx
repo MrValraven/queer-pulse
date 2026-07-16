@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 /** Campaign meta shown in the hero. */
 export const OPEN_LETTER = {
   partners: "Trans Hub + ILGA + QueerPulse",
@@ -17,19 +15,19 @@ export const OPEN_LETTER = {
   handoverNote: "we hand-deliver at 5,000 · co-signed by ILGA & 4 NGOs",
 };
 
-/** The three concrete asks in the letter body. */
-export const ASKS: { lead: string; body: ReactNode }[] = [
+/** The three concrete asks in the letter body — keys resolved via t(). */
+export const ASKS: { leadKey: string; bodyKey: string }[] = [
   {
-    lead: "A national HRT prescription registry",
-    body: ", opt-in and clinician-only, accessible to any SNS-affiliated GP a patient consents to. Same model as the diabetes care registry adopted in 2019.",
+    leadKey: "marketing:openLetter.body.ask1.lead",
+    bodyKey: "marketing:openLetter.body.ask1.body",
   },
   {
-    lead: 'A 14-day "continuity script" rule',
-    body: " — when a patient moves regions, their new GP may issue a 90-day script bridging to a full review, without requiring a fresh diagnostic process.",
+    leadKey: "marketing:openLetter.body.ask2.lead",
+    bodyKey: "marketing:openLetter.body.ask2.body",
   },
   {
-    lead: "Inclusion of trans-affirming care in the standard GP onboarding module",
-    body: " — mandatory, four hours, drafted in collaboration with WPATH-certified Portuguese clinicians.",
+    leadKey: "marketing:openLetter.body.ask3.lead",
+    bodyKey: "marketing:openLetter.body.ask3.body",
   },
 ];
 
@@ -49,11 +47,12 @@ export const SIGNATORIES = [
   },
 ];
 
-/** Visibility options in the sign form. */
+/** Visibility options in the sign form — labelKey resolves via t(); value is
+ *  the stable canonical id stored in form state. */
 export const VISIBILITY_OPTIONS = [
-  { value: "full", label: "Full name · public" },
-  { value: "initials", label: "Initials only" },
-  { value: "anon", label: 'Anonymous · "A member"' },
+  { value: "full", labelKey: "marketing:openLetter.visibility.full" },
+  { value: "initials", labelKey: "marketing:openLetter.visibility.initials" },
+  { value: "anon", labelKey: "marketing:openLetter.visibility.anon" },
 ];
 
 export type SignatureTint = "accent" | "jade" | "plum";

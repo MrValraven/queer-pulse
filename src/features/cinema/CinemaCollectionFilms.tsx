@@ -1,11 +1,15 @@
 import { FiInfo } from "react-icons/fi";
 import { Button, FadeIn, ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CollectionDetail, CollectionFilm } from "./cinemaCollection.data";
 import styles from "./CinemaCollectionPage.module.css";
 import { routes } from "../../app/routeMap";
 
 function FilmEntry({ film }: { film: CollectionFilm }) {
-  const watchLabel = film.free ? "Watch" : "Watch now";
+  const { t } = useTranslation();
+  const watchLabel = t(
+    film.free ? "cinema:collection.films.watchCta" : "cinema:collection.films.watchNowCta",
+  );
   return (
     <div className={styles.entry}>
       <div className={styles.entryNum} aria-hidden>
@@ -75,6 +79,7 @@ function FilmEntry({ film }: { film: CollectionFilm }) {
 
 /** Ordered, numbered film list with the curator's "why this order" note. */
 export function CinemaCollectionFilms({ data }: { data: CollectionDetail }) {
+  const { t } = useTranslation();
   return (
     <div>
       {data.orderNote && (
@@ -95,7 +100,7 @@ export function CinemaCollectionFilms({ data }: { data: CollectionDetail }) {
           <div className={styles.showMore}>
             <div className={styles.showNote}>{data.showingNote}</div>
             <Button variant="ghost">
-              {data.seeAllLabel ?? "See all films"}
+              {data.seeAllLabel ?? t("cinema:collection.films.seeAllFallback")}
             </Button>
           </div>
         )}

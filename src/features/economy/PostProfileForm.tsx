@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MODAL_TAGS, NEIGHBOURHOODS, type ListingType } from "./flatmates.data";
 import styles from "./FlatmatesPage.module.css";
 
@@ -10,44 +11,51 @@ export function PostProfileForm({
   onSubmit: () => void;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [modalType, setModalType] = useState<ListingType>("seeking");
   const [modalTags, setModalTags] = useState<Set<string>>(new Set());
 
-  const toggleTag = (t: string) =>
+  const toggleTag = (tag: string) =>
     setModalTags((prev) => {
       const next = new Set(prev);
-      if (next.has(t)) next.delete(t);
-      else next.add(t);
+      if (next.has(tag)) next.delete(tag);
+      else next.add(tag);
       return next;
     });
 
   return (
     <>
-      <div className={styles.modalTitle}>Post your profile</div>
-      <p className={styles.modalSub}>
-        Takes about two minutes. Your profile goes live straight away — members
-        reach out directly, no matching algorithm.
-      </p>
+      <div className={styles.modalTitle}>
+        {t("economy:postProfileForm.title")}
+      </div>
+      <p className={styles.modalSub}>{t("economy:postProfileForm.sub")}</p>
       <div className={styles.fields}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>What are you looking for?</label>
+          <label className={styles.fieldLabel}>
+            {t("economy:postProfileForm.lookingForLabel")}
+          </label>
           <div className={styles.typeToggle}>
-            {(["seeking", "offering"] as const).map((t) => (
+            {(["seeking", "offering"] as const).map((typeOption) => (
               <button
-                key={t}
+                key={typeOption}
                 type="button"
-                className={[styles.ttOpt, modalType === t && styles.ttOptOn]
+                className={[
+                  styles.ttOpt,
+                  modalType === typeOption && styles.ttOptOn,
+                ]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => setModalType(t)}
+                onClick={() => setModalType(typeOption)}
               >
                 <div className={styles.ttTitle}>
-                  {t === "seeking" ? "Seeking a room" : "Offering a room"}
+                  {typeOption === "seeking"
+                    ? t("economy:flatmates.filter.seeking")
+                    : t("economy:flatmates.filter.offering")}
                 </div>
                 <div className={styles.ttDesc}>
-                  {t === "seeking"
-                    ? "You're looking for a room in a flat or house"
-                    : "You have a room or flat share to offer"}
+                  {typeOption === "seeking"
+                    ? t("economy:postProfileForm.seekingDesc")
+                    : t("economy:postProfileForm.offeringDesc")}
                 </div>
               </button>
             ))}
@@ -55,98 +63,117 @@ export function PostProfileForm({
         </div>
         <div className={styles.row}>
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Your name</label>
+            <label className={styles.fieldLabel}>
+              {t("economy:postProfileForm.nameLabel")}
+            </label>
             <input
               className={styles.input}
               type="text"
-              placeholder="First name or nickname"
+              placeholder={t("economy:postProfileForm.namePlaceholder")}
             />
           </div>
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Pronouns (optional)</label>
+            <label className={styles.fieldLabel}>
+              {t("economy:postProfileForm.pronounsLabel")}
+            </label>
             <input
               className={styles.input}
               type="text"
-              placeholder="e.g. she/her, they/them"
+              placeholder={t("economy:postProfileForm.pronounsPlaceholder")}
             />
           </div>
         </div>
         <div className={styles.row}>
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Neighbourhood</label>
+            <label className={styles.fieldLabel}>
+              {t("economy:postProfileForm.neighbourhoodLabel")}
+            </label>
             <select className={styles.select} defaultValue="">
-              <option value="">Preference / location</option>
-              {NEIGHBOURHOODS.map((n) => (
-                <option key={n}>{n}</option>
+              <option value="">
+                {t("economy:postProfileForm.neighbourhoodPlaceholder")}
+              </option>
+              {NEIGHBOURHOODS.map((neighbourhoodName) => (
+                <option key={neighbourhoodName}>{neighbourhoodName}</option>
               ))}
-              <option>Anywhere central</option>
-              <option>Flexible</option>
+              <option>{t("economy:postProfileForm.anywhereCentral")}</option>
+              <option>{t("economy:flatmates.filter.moveIn.flex")}</option>
             </select>
           </div>
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Budget / month</label>
+            <label className={styles.fieldLabel}>
+              {t("economy:postProfileForm.budgetLabel")}
+            </label>
             <input
               className={styles.input}
               type="text"
-              placeholder="e.g. €700–900"
+              placeholder={t("economy:postProfileForm.budgetPlaceholder")}
             />
           </div>
         </div>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Available / move-in from</label>
+          <label className={styles.fieldLabel}>
+            {t("economy:postProfileForm.moveInLabel")}
+          </label>
           <select className={styles.select} defaultValue="">
-            <option value="">When?</option>
-            <option>Available now</option>
-            <option>July 2026</option>
-            <option>August 2026</option>
-            <option>September 2026</option>
-            <option>Flexible</option>
+            <option value="">
+              {t("economy:postProfileForm.moveInPlaceholder")}
+            </option>
+            <option>{t("economy:flatmates.filter.moveIn.now")}</option>
+            <option>{t("economy:postProfileForm.moveIn.jul2026")}</option>
+            <option>{t("economy:postProfileForm.moveIn.aug2026")}</option>
+            <option>{t("economy:postProfileForm.moveIn.sep2026")}</option>
+            <option>{t("economy:flatmates.filter.moveIn.flex")}</option>
           </select>
         </div>
         <div className={styles.fieldGroup}>
           <label className={styles.fieldLabel}>
-            About you &amp; what you're looking for in a home
+            {t("economy:postProfileForm.aboutLabel")}
           </label>
           <textarea
             className={styles.textarea}
             rows={4}
-            placeholder="Tell people a bit about yourself — your rhythm, your work, what kind of home makes you feel good. No need to sell yourself; just be honest."
+            placeholder={t("economy:postProfileForm.aboutPlaceholder")}
           />
         </div>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Lifestyle tags</label>
+          <label className={styles.fieldLabel}>
+            {t("economy:postProfileForm.lifestyleTagsLabel")}
+          </label>
           <div className={styles.lfGrid}>
-            {MODAL_TAGS.map((t) => (
+            {MODAL_TAGS.map((tag) => (
               <button
-                key={t}
+                key={tag}
                 type="button"
-                className={[styles.lfOpt, modalTags.has(t) && styles.lfOptOn]
+                className={[
+                  styles.lfOpt,
+                  modalTags.has(tag) && styles.lfOptOn,
+                ]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => toggleTag(t)}
+                onClick={() => toggleTag(tag)}
               >
-                {t}
+                {tag}
               </button>
             ))}
           </div>
         </div>
         <div className={styles.fieldGroup}>
           <label className={styles.fieldLabel}>
-            Your email (not shown publicly)
+            {t("economy:postProfileForm.emailLabel")}
           </label>
           <input
             className={styles.input}
             type="email"
-            placeholder="So members can reach you via QueerPulse"
+            placeholder={t("economy:postProfileForm.emailPlaceholder")}
           />
         </div>
       </div>
       <div className={styles.modalActions}>
         <Button type="button" variant="primary" onClick={onSubmit}>
-          Post profile →
+          {t("economy:postProfileForm.submitCta")}
         </Button>
         <Button type="button" variant="ghost" onClick={onClose}>
-          Cancel
+          {t("economy:housingModal.cancel")}
         </Button>
       </div>
     </>

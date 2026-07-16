@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { HubBackLink } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { TABS } from "./transparencyReport.data";
 import {
@@ -15,47 +17,55 @@ import {
 import styles from "./TransparencyReportPage.module.css";
 
 export function TransparencyReportPage() {
+  const { t } = useTranslation();
   const [active, setActive] = useState("money");
 
   return (
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <HubBackLink to={routes.governance} label="Governance" tone="dark" />
+          <HubBackLink
+            to={routes.governance}
+            label={t("marketing:hub.governanceLabel")}
+            tone="dark"
+          />
           <div className={styles.eyebrow}>
-            Annual transparency report · 2025
+            {t("marketing:transparency.hero.eyebrow")}
           </div>
           <h1 className={styles.h1}>
-            Every <em>euro,</em> every <em>moderation,</em> every{" "}
-            <em>mistake.</em>
+            <Translation
+              i18nKey="marketing:transparency.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.dek}>
-            The numbers behind QueerPulse in 2025 — finances, moderation
-            actions, government requests, and the things we got wrong.{" "}
-            <em>Published by Associação QueerPulse</em> on 14 May 2026, after
-            independent review by Dra. Helena Faria (auditor).
+            <Translation
+              i18nKey="marketing:transparency.hero.dek"
+              components={{ em: <em /> }}
+            />
           </p>
           <div className={styles.metaRow}>
             <span>
               <b>
                 €<em>278</em>k
               </b>
-              Total raised
+              {t("marketing:transparency.hero.meta.raised")}
             </span>
             <span>
               <b>
                 <em>96</em>%
               </b>
-              To programs
+              {t("marketing:transparency.hero.meta.toPrograms")}
             </span>
             <span>
-              <b>1,847</b>Active members
+              <b>1,847</b>
+              {t("marketing:transparency.hero.meta.activeMembers")}
             </span>
             <span>
               <b>
                 <em>3</em>
               </b>
-              Public mistakes named
+              {t("marketing:transparency.hero.meta.mistakesNamed")}
             </span>
           </div>
         </div>
@@ -63,7 +73,7 @@ export function TransparencyReportPage() {
 
       <div className={styles.tabs}>
         <div className={styles.tabsInner}>
-          {TABS.map(([id, label]) => (
+          {TABS.map(([id, labelKey]) => (
             <a
               key={id}
               href={`#${id}`}
@@ -72,7 +82,7 @@ export function TransparencyReportPage() {
                 .join(" ")}
               onClick={() => setActive(id)}
             >
-              {label}
+              {t(labelKey)}
             </a>
           ))}
         </div>
@@ -90,7 +100,7 @@ export function TransparencyReportPage() {
             2024
           </a>
           <a href="#money" className={`${styles.yearBtn} ${styles.yearFuture}`}>
-            2026 · in progress
+            2026 · {t("marketing:transparency.yearSwitch.inProgress")}
           </a>
         </div>
 

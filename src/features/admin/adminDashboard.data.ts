@@ -15,8 +15,15 @@ import { routes, adminCommunityMod } from "../../app/routeMap";
 
 // ── Hero stats ────────────────────────────────────────────────────────────────
 
+/**
+ * i18n Pattern A. `labelKey` resolves the stat name; `trend`/`foot` hold a
+ * catalog key plus the interpolation values (count/hours/percent) rather than
+ * a baked English phrase — AdminStatGrid.tsx renders the direction arrow
+ * itself from `trend.dir` (a symbol, not language) and resolves the rest
+ * through `t()`.
+ */
 export interface StatCard {
-  label: string;
+  labelKey: string;
   icon: IconType;
   /** Numeric target the value counts up to. */
   value: number;
@@ -26,43 +33,52 @@ export interface StatCard {
   decimal?: boolean;
   prefix?: string;
   suffix?: string;
-  trend: { dir: "up" | "down" | "warn"; label: string };
-  foot: string;
+  trend: {
+    dir: "up" | "down" | "warn";
+    key: string;
+    values?: Record<string, string | number>;
+  };
+  footKey: string;
+  footValues?: Record<string, string | number>;
 }
 
 export const METRICS: StatCard[] = [
   {
-    label: "Active members",
+    labelKey: "admin:dashboard.metrics.activeMembers.label",
     icon: FiUsers,
     value: 8412,
     comma: true,
-    trend: { dir: "up", label: "▲ 3.9%" },
-    foot: "+312 this month",
+    trend: { dir: "up", key: "admin:dashboard.metrics.trendPercent", values: { value: "3.9" } },
+    footKey: "admin:dashboard.metrics.footGrowth",
+    footValues: { count: 312 },
   },
   {
-    label: "Open reports",
+    labelKey: "admin:dashboard.metrics.openReports.label",
     icon: FiShield,
     value: 23,
-    trend: { dir: "warn", label: "oldest 14h" },
-    foot: "2 are emergencies",
+    trend: { dir: "warn", key: "admin:dashboard.metrics.trendOldest", values: { hours: "14h" } },
+    footKey: "admin:dashboard.metrics.footEmergencies",
+    footValues: { count: 2 },
   },
   {
-    label: "Median response",
+    labelKey: "admin:dashboard.metrics.medianResponse.label",
     icon: FiClock,
     value: 3.2,
     decimal: true,
     suffix: "h",
-    trend: { dir: "up", label: "▼ well under" },
-    foot: "6h SLA target",
+    trend: { dir: "up", key: "admin:dashboard.metrics.trendWellUnder" },
+    footKey: "admin:dashboard.metrics.footSlaTarget",
+    footValues: { hours: "6h" },
   },
   {
-    label: "Sustainer MRR",
+    labelKey: "admin:dashboard.metrics.sustainerMrr.label",
     icon: FiDollarSign,
     value: 23150,
     comma: true,
     prefix: "€",
-    trend: { dir: "up", label: "▲ 4.1%" },
-    foot: "1,842 sustainers",
+    trend: { dir: "up", key: "admin:dashboard.metrics.trendPercent", values: { value: "4.1" } },
+    footKey: "admin:dashboard.metrics.footSustainers",
+    footValues: { count: 1842 },
   },
 ];
 
@@ -70,10 +86,11 @@ export const METRICS: StatCard[] = [
 
 export type QueueTone = "danger" | "coral" | "jade" | "amber";
 
+/** i18n Pattern A — `titleKey`/`subKey`/`subEmKey` are platform chrome. */
 export interface QueueRow {
-  title: string;
-  sub: string;
-  subEm?: string;
+  titleKey: string;
+  subKey: string;
+  subEmKey?: string;
   count: number;
   tone: QueueTone;
   icon: IconType;
@@ -82,33 +99,33 @@ export interface QueueRow {
 
 export const TRIAGE_QUEUE: QueueRow[] = [
   {
-    title: "Safety emergencies",
-    sub: "Outing & doxxing —",
-    subEm: "handle these first",
+    titleKey: "admin:dashboard.triage.safetyEmergencies.title",
+    subKey: "admin:dashboard.triage.safetyEmergencies.sub",
+    subEmKey: "admin:dashboard.triage.safetyEmergencies.subEm",
     count: 2,
     tone: "danger",
     icon: FiAlertTriangle,
     to: `${routes.adminModeration}?tab=emergencies`,
   },
   {
-    title: "Open reports",
-    sub: "Harassment, spam, vouch-abuse",
+    titleKey: "admin:dashboard.triage.openReports.title",
+    subKey: "admin:dashboard.triage.openReports.sub",
     count: 21,
     tone: "coral",
     icon: FiMessageSquare,
     to: routes.adminModeration,
   },
   {
-    title: "Identity verifications",
-    sub: "Members waiting to be welcomed in",
+    titleKey: "admin:dashboard.triage.identityVerifications.title",
+    subKey: "admin:dashboard.triage.identityVerifications.sub",
     count: 11,
     tone: "jade",
     icon: FiCheckCircle,
     to: `${routes.adminMembers}?tab=verification`,
   },
   {
-    title: "Appeals awaiting decision",
-    sub: "Members asking you to look again",
+    titleKey: "admin:dashboard.triage.appeals.title",
+    subKey: "admin:dashboard.triage.appeals.sub",
     count: 4,
     tone: "amber",
     icon: FiArchive,
@@ -119,50 +136,66 @@ export const TRIAGE_QUEUE: QueueRow[] = [
 // ── Reports-by-type stacked bar (last 8 weeks) ──────────────────────────────
 
 export interface WeekBar {
+  /** Stable id for the React key. Numeric ids ("-7".."-2") are axis ticks, not
+   *  language; "last"/"this" resolve through WEEK_LABEL_KEYS below since those
+   *  two are real English words shown to the moderator. */
   week: string;
   /** Stacking order: outing → harassment → spam → vouch. */
   values: [outing: number, harassment: number, spam: number, vouch: number];
 }
 
 export const REPORT_WEEKS: WeekBar[] = [
-  { week: "w-7", values: [1, 4, 3, 2] },
-  { week: "w-6", values: [0, 3, 4, 2] },
-  { week: "w-5", values: [2, 5, 3, 1] },
-  { week: "w-4", values: [1, 4, 5, 3] },
-  { week: "w-3", values: [0, 3, 2, 2] },
-  { week: "w-2", values: [2, 6, 3, 2] },
+  { week: "-7", values: [1, 4, 3, 2] },
+  { week: "-6", values: [0, 3, 4, 2] },
+  { week: "-5", values: [2, 5, 3, 1] },
+  { week: "-4", values: [1, 4, 5, 3] },
+  { week: "-3", values: [0, 3, 2, 2] },
+  { week: "-2", values: [2, 6, 3, 2] },
   { week: "last", values: [1, 5, 4, 3] },
   { week: "this", values: [2, 7, 5, 3] },
 ];
 
+/** Only "last"/"this" are real words; other ids render as-is (bare offsets). */
+export const WEEK_LABEL_KEYS: Partial<Record<string, string>> = {
+  last: "admin:dashboard.charts.week.last",
+  this: "admin:dashboard.charts.week.this",
+};
+
+/** i18n Pattern A — `id` is a stable React key, `labelKey` resolves the legend text. */
 export const REPORT_SERIES = [
-  { key: "Outing/doxxing", color: "var(--danger)" },
-  { key: "Harassment", color: "var(--accent)" },
-  { key: "Spam", color: "var(--amber)" },
-  { key: "Vouch-abuse", color: "var(--violet)" },
+  { id: "outing", labelKey: "admin:dashboard.charts.series.outing", color: "var(--danger)" },
+  { id: "harassment", labelKey: "admin:dashboard.charts.series.harassment", color: "var(--accent)" },
+  { id: "spam", labelKey: "admin:dashboard.charts.series.spam", color: "var(--amber)" },
+  { id: "vouchAbuse", labelKey: "admin:dashboard.charts.series.vouchAbuse", color: "var(--violet)" },
 ] as const;
 
 // ── Member growth line ──────────────────────────────────────────────────────
 
 export interface GrowthPoint {
-  month: string;
+  /** `null` means "no tick label at this point" (design keeps the axis sparse). */
+  date: Date | null;
   joined: number;
   churned: number;
-  /** Labelled marker on the joined line (e.g. the Pride spike). */
-  spike?: string;
+  /** True on the labelled marker point (the Pride spike). */
+  spike?: boolean;
 }
 
+/**
+ * i18n note: `date` is a real `Date` so `MemberGrowthChart` can format ticks
+ * through `useFormat().date(..., { month: "short" })` — no hand-rolled
+ * English month-abbreviation array (the exact trap `gatherings` hit first).
+ */
 export const MEMBER_GROWTH: GrowthPoint[] = [
-  { month: "Jan", joined: 180, churned: 60 },
-  { month: "", joined: 210, churned: 70 },
-  { month: "Mar", joined: 240, churned: 55 },
-  { month: "", joined: 225, churned: 80 },
-  { month: "May", joined: 260, churned: 65 },
-  { month: "Jun", joined: 290, churned: 72 },
-  { month: "", joined: 520, churned: 120, spike: "Pride" },
-  { month: "Aug", joined: 410, churned: 95 },
-  { month: "", joined: 360, churned: 70 },
-  { month: "Oct", joined: 395, churned: 68 },
+  { date: new Date(2026, 0, 1), joined: 180, churned: 60 },
+  { date: null, joined: 210, churned: 70 },
+  { date: new Date(2026, 2, 1), joined: 240, churned: 55 },
+  { date: null, joined: 225, churned: 80 },
+  { date: new Date(2026, 4, 1), joined: 260, churned: 65 },
+  { date: new Date(2026, 5, 1), joined: 290, churned: 72 },
+  { date: null, joined: 520, churned: 120, spike: true },
+  { date: new Date(2026, 7, 1), joined: 410, churned: 95 },
+  { date: null, joined: 360, churned: 70 },
+  { date: new Date(2026, 9, 1), joined: 395, churned: 68 },
 ];
 
 // ── Response-time distribution ──────────────────────────────────────────────

@@ -11,83 +11,96 @@ export const TYPE_CLASS: Record<Category, string> = {
   Arts: "typeArts",
 };
 
-export const CRITERIA: { icon: IconType; lead: string; rest: string }[] = [
+export const CRITERIA: { icon: IconType; leadKey: string; restKey: string }[] = [
   {
     icon: FiCheck,
-    lead: "Gender-neutral bathrooms",
-    rest: " available or clearly accessible",
+    leadKey: "safety:spaces.criteria.genderNeutral.lead",
+    restKey: "safety:spaces.criteria.genderNeutral.rest",
   },
   {
     icon: FiCheck,
-    lead: "Staff intervene",
-    rest: " if a customer is being harassed or discriminated against",
+    leadKey: "safety:spaces.criteria.staffIntervene.lead",
+    restKey: "safety:spaces.criteria.staffIntervene.rest",
   },
   {
     icon: FiCheck,
-    lead: "No discriminatory incidents",
-    rest: " reported in the past 12 months",
+    leadKey: "safety:spaces.criteria.noIncidents.lead",
+    restKey: "safety:spaces.criteria.noIncidents.rest",
   },
   {
     icon: FiCheck,
-    lead: "Trans and non-binary people",
-    rest: " feel genuinely welcome, not just tolerated",
+    leadKey: "safety:spaces.criteria.transWelcome.lead",
+    restKey: "safety:spaces.criteria.transWelcome.rest",
   },
   {
     icon: FiCheck,
-    lead: "Accessible",
-    rest: " — or access limitations clearly communicated",
+    leadKey: "safety:spaces.criteria.accessible.lead",
+    restKey: "safety:spaces.criteria.accessible.rest",
   },
   {
     icon: FiCheck,
-    lead: "Minimum 3 independent reviews",
-    rest: " from verified QueerPulse members",
+    leadKey: "safety:spaces.criteria.reviews.lead",
+    restKey: "safety:spaces.criteria.reviews.rest",
   },
   {
     icon: FiRotateCcw,
-    lead: "Annual re-review",
-    rest: " — status doesn't last forever",
+    leadKey: "safety:spaces.criteria.annualReview.lead",
+    restKey: "safety:spaces.criteria.annualReview.rest",
   },
 ];
 
-export const HOW: { num: string; title: string; desc: string }[] = [
+export const HOW: { num: string; titleKey: string; descKey: string }[] = [
   {
     num: "01",
-    title: "Any member nominates",
-    desc: "Submit a space with a brief note on why you think it should be verified. We acknowledge within 48 hours.",
+    titleKey: "safety:spaces.how.step1.title",
+    descKey: "safety:spaces.how.step1.desc",
   },
   {
     num: "02",
-    title: "Three independent visits",
-    desc: "Three verified members visit the space independently and submit structured reviews against the criteria. They don't know each other's assessments.",
+    titleKey: "safety:spaces.how.step2.title",
+    descKey: "safety:spaces.how.step2.desc",
   },
   {
     num: "03",
-    title: "Review panel decides",
-    desc: "A small volunteer panel reads the reviews and decides whether the criteria are met. The space isn't told the result until after the decision.",
+    titleKey: "safety:spaces.how.step3.title",
+    descKey: "safety:spaces.how.step3.desc",
   },
   {
     num: "04",
-    title: "Badge awarded",
-    desc: "If approved, the venue receives a physical badge and a digital listing. They can display the badge in their window — it's earned, not purchased.",
+    titleKey: "safety:spaces.how.step4.title",
+    descKey: "safety:spaces.how.step4.desc",
   },
   {
     num: "05",
-    title: "Annual re-review",
-    desc: "Every listing is re-reviewed each year. No status is permanent. New ownership, staff changes, or reported incidents trigger an early review.",
+    titleKey: "safety:spaces.how.step5.title",
+    descKey: "safety:spaces.how.step5.desc",
   },
   {
     num: "06",
-    title: "Any member can flag",
-    desc: "If something changes — an incident, a shift in atmosphere — any member can flag the listing. Three flags trigger an immediate review and temporary suspension of the badge.",
+    titleKey: "safety:spaces.how.step6.title",
+    descKey: "safety:spaces.how.step6.desc",
   },
 ];
 
-export const FILTERS: { id: Category | "all"; label: string }[] = [
-  { id: "all", label: "All spaces" },
-  { id: "Bar", label: "Bars" },
-  { id: "Club", label: "Clubs" },
-  { id: "Cafe", label: "Cafés" },
-  { id: "Health", label: "Healthcare" },
-  { id: "Services", label: "Services" },
-  { id: "Arts", label: "Arts" },
+export const FILTERS: { id: Category | "all"; labelKey: string }[] = [
+  { id: "all", labelKey: "safety:spaces.filter.all" },
+  { id: "Bar", labelKey: "safety:spaces.filter.bar" },
+  { id: "Club", labelKey: "safety:spaces.filter.club" },
+  { id: "Cafe", labelKey: "safety:spaces.filter.cafe" },
+  { id: "Health", labelKey: "safety:spaces.filter.health" },
+  { id: "Services", labelKey: "safety:spaces.filter.services" },
+  { id: "Arts", labelKey: "safety:spaces.filter.arts" },
+];
+
+/** i18n Pattern A — the nomination form's "Type of space" <select> options,
+ * sole consumer is `NominateSection`. */
+export const NOMINATE_TYPE_KEYS = [
+  "safety:spaces.nominate.typeSelect.bar",
+  "safety:spaces.nominate.typeSelect.club",
+  "safety:spaces.nominate.typeSelect.cafe",
+  "safety:spaces.nominate.typeSelect.healthcare",
+  "safety:spaces.nominate.typeSelect.services",
+  "safety:spaces.nominate.typeSelect.arts",
+  "safety:spaces.nominate.typeSelect.gym",
+  "safety:spaces.nominate.typeSelect.other",
 ];

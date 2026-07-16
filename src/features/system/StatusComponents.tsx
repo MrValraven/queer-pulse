@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   SERVICES,
   INCIDENTS,
-  UPTIME_SERVICES,
-  STATUS_LABEL,
+  UPTIME_SERVICE_IDS,
+  STATUS_LABEL_KEY,
   type ServiceStatus,
 } from "./status.data";
 import { ServiceCardSkeleton, IncidentSkeleton } from "./StatusSkeletons";
@@ -20,50 +22,52 @@ const PILL_CLASS: Record<ServiceStatus, string | undefined> = {
 
 const DAYS = 90;
 
-function buildBars(name: string): string[] {
+function buildBars(id: string): string[] {
   return Array.from({ length: DAYS }, (_, i) => {
-    if (name === "Authentication" && i === 12) return "partial";
-    if (name === "Messages" && i === 43) return "partial";
+    if (id === "authentication" && i === 12) return "partial";
+    if (id === "messages" && i === 43) return "partial";
     return "op";
   });
 }
 
 export function StatusHero() {
+  const { t } = useTranslation();
   return (
     <section className={`${styles.hero} wrap`}>
       <div className={styles.overallBadge} aria-live="polite">
         <span className={styles.overallDot} aria-hidden />
-        <span className={styles.overallLabel}>All systems operational</span>
+        <span className={styles.overallLabel}>
+          {t("system:status.hero.allOperational")}
+        </span>
       </div>
-      <h1 className={styles.heroTitle}>
-        Platform <em>status</em>
-      </h1>
-      <p className={styles.heroSub}>Updated just now · Refreshes every 60 s</p>
+      <h1 className={styles.heroTitle}>{t("system:status.hero.title")}</h1>
+      <p className={styles.heroSub}>{t("system:status.hero.sub")}</p>
     </section>
   );
 }
 
 export function ServicesGrid() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   return (
     <section className="wrap" style={{ paddingBottom: 60 }}>
-      <p className={styles.sectionEye}>Services</p>
+      <p className={styles.sectionEye}>{t("system:status.services.sectionEye")}</p>
       <div className={styles.svcGrid} aria-busy={loading}>
         {loading
           ? Array.from({ length: SERVICES.length }).map((_, i) => (
               <ServiceCardSkeleton key={i} />
             ))
           : SERVICES.map((svc, i) => (
-              <FadeIn key={svc.name} delay={Math.min(i, 8) * 60}>
+              <FadeIn key={svc.id} delay={Math.min(i, 8) * 60}>
                 <div className={styles.svcCard}>
                   <div>
-                    <div className={styles.svcName}>{svc.name}</div>
-                    <div className={styles.svcDesc}>{svc.desc}</div>
+                    <div className={styles.svcName}>{t(svc.nameKey)}</div>
+                    <div className={styles.svcDesc}>{t(svc.descKey)}</div>
                   </div>
                   <span
                     className={`${styles.svcPill} ${PILL_CLASS[svc.status]}`}
                   >
-                    {STATUS_LABEL[svc.status]}
+                    {t(STATUS_LABEL_KEY[svc.status])}
                   </span>
                 </div>
               </FadeIn>
@@ -74,35 +78,49 @@ export function ServicesGrid() {
 }
 
 export function UptimeSection() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <section className="wrap" style={{ padding: "60px 0" }}>
-      <p className={styles.sectionEye}>90-day uptime</p>
-      {UPTIME_SERVICES.map((name) => {
-        const bars = buildBars(name);
+      <p className={styles.sectionEye}>{t("system:status.uptime.sectionEye")}</p>
+      {UPTIME_SERVICE_IDS.map((id) => {
+        const service = SERVICES.find((svc) => svc.id === id);
+        if (!service) return null;
+        const bars = buildBars(id);
         const pct = (
           (bars.filter((b) => b === "op").length / DAYS) *
           100
         ).toFixed(2);
         return (
-          <div key={name}>
+          <div key={id}>
             <div className={styles.uptimeHead}>
-              <span className={styles.uptimeName}>{name}</span>
-              <span className={styles.uptimePct}>{pct}% uptime</span>
+              <span className={styles.uptimeName}>{t(service.nameKey)}</span>
+              <span className={styles.uptimePct}>
+                {t("system:status.uptime.pct", {
+                  pct: fmt.number(Number(pct), {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }),
+                })}
+              </span>
             </div>
             <div className={styles.uptimeBars}>
               {bars.map((bar, i) => {
                 const d = new Date();
                 d.setDate(d.getDate() - (DAYS - i));
-                const label = d.toLocaleDateString("en-GB", {
-                  day: "numeric",
-                  month: "short",
-                });
+                const label = fmt.date(d, { day: "numeric", month: "short" });
                 const tip =
                   bar === "op"
-                    ? `Operational — ${label}`
+                    ? t("system:status.uptime.tooltip.operational", {
+                        date: label,
+                      })
                     : bar === "partial"
-                      ? `Partial outage — ${label}`
-                      : `Outage — ${label}`;
+                      ? t("system:status.uptime.tooltip.partial", {
+                          date: label,
+                        })
+                      : t("system:status.uptime.tooltip.outage", {
+                          date: label,
+                        });
                 const cls = [
                   styles.ubar,
                   bar === "partial" && styles.ubarPartial,
@@ -117,20 +135,24 @@ export function UptimeSection() {
         );
       })}
       <div className={styles.uptimeAxis}>
-        <span>90 days ago</span>
-        <span>60 days ago</span>
-        <span>30 days ago</span>
-        <span>Today</span>
+        <span>{t("system:status.uptime.axis.ninetyDaysAgo")}</span>
+        <span>{t("system:status.uptime.axis.sixtyDaysAgo")}</span>
+        <span>{t("system:status.uptime.axis.thirtyDaysAgo")}</span>
+        <span>{t("system:status.uptime.axis.today")}</span>
       </div>
     </section>
   );
 }
 
 export function IncidentsSection() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const loading = useSimulatedLoad();
   return (
     <section className="wrap" style={{ paddingBottom: 80 }}>
-      <p className={styles.sectionEye}>Incident history</p>
+      <p className={styles.sectionEye}>
+        {t("system:status.incidents.sectionEye")}
+      </p>
       <div className={styles.incList} aria-busy={loading}>
         {loading
           ? Array.from({ length: INCIDENTS.length }).map((_, i) => (
@@ -138,7 +160,7 @@ export function IncidentsSection() {
             ))
           : INCIDENTS.map((inc, i) => (
               <FadeIn
-                key={inc.date + inc.title}
+                key={inc.titleKey}
                 delay={Math.min(i, 8) * 60}
                 className={[
                   styles.incItem,
@@ -165,9 +187,9 @@ export function IncidentsSection() {
                   </svg>
                 </div>
                 <div>
-                  <div className={styles.incDate}>{inc.date}</div>
-                  <div className={styles.incTitle}>{inc.title}</div>
-                  <div className={styles.incText}>{inc.text}</div>
+                  <div className={styles.incDate}>{fmt.date(inc.date)}</div>
+                  <div className={styles.incTitle}>{t(inc.titleKey)}</div>
+                  <div className={styles.incText}>{t(inc.textKey)}</div>
                   <span
                     className={[
                       styles.incTag,
@@ -176,7 +198,9 @@ export function IncidentsSection() {
                         : styles.incTagMonitoring,
                     ].join(" ")}
                   >
-                    {inc.status === "resolved" ? "Resolved" : "Monitoring"}
+                    {inc.status === "resolved"
+                      ? t("system:status.incidents.resolvedTag")
+                      : t("system:status.incidents.monitoringTag")}
                   </span>
                 </div>
               </FadeIn>
@@ -187,12 +211,13 @@ export function IncidentsSection() {
 }
 
 export function SubscribeStrip() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [email, setEmail] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    showToast("You'll be notified during incidents.", "success");
+    showToast(t("system:status.subscribe.toast"), "success");
     setEmail("");
   }
 
@@ -200,21 +225,19 @@ export function SubscribeStrip() {
     <div className="wrap">
       <div className={styles.subStrip}>
         <div>
-          <h3>Get notified during incidents</h3>
-          <p>
-            One email when something breaks, one when it's fixed. Nothing else.
-          </p>
+          <h3>{t("system:status.subscribe.title")}</h3>
+          <p>{t("system:status.subscribe.body")}</p>
         </div>
         <form className={styles.subForm} onSubmit={handleSubmit}>
           <input
             className={styles.subInput}
             type="email"
-            placeholder="your@email.com"
+            placeholder={t("system:status.subscribe.placeholder")}
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <Button type="submit">Subscribe</Button>
+          <Button type="submit">{t("system:status.subscribe.cta")}</Button>
         </form>
       </div>
     </div>

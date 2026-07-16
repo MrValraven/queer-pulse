@@ -5,6 +5,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useConsent } from "../../app/providers/ConsentProvider";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Language } from "../../shared/i18n/types";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
@@ -25,135 +26,165 @@ import {
 import { DataExportModal } from "./SettingsModals";
 import styles from "./SettingsPage.module.css";
 
-const VISIBILITY_OPTIONS: { v: VisibilityMode; t: string; d: string }[] = [
+// Stable ids for the visibility radio options — never the translated label.
+const VISIBILITY_OPTIONS: {
+  v: VisibilityMode;
+  titleKey: string;
+  descKey: string;
+}[] = [
   {
     v: "open",
-    t: "Open to connect",
-    d: "Anyone in the network can see your profile and say hello",
+    titleKey: "settings:visibility.open.title",
+    descKey: "settings:visibility.open.desc",
   },
   {
     v: "network",
-    t: "Network only",
-    d: "Visible to people within two connections of you",
+    titleKey: "settings:visibility.network.title",
+    descKey: "settings:visibility.network.desc",
   },
   {
     v: "private",
-    t: "Keep it quiet for now",
-    d: "I'll reach out when I'm ready. Profile not visible in search.",
+    titleKey: "settings:visibility.private.title",
+    descKey: "settings:visibility.private.desc",
   },
 ];
 
+// Stable ids for the (cosmetic, comingSoon) email-delivery select — never the
+// translated label. Only "immediately"/"dailyDigest"/"weeklyDigest"/"never"
+// are ids here; nothing is persisted since the control is disabled.
+const EMAIL_DELIVERY_OPTIONS = [
+  { value: "immediately", key: "settings:notifications.delivery.email.immediately" },
+  { value: "dailyDigest", key: "settings:notifications.delivery.email.dailyDigest" },
+  { value: "weeklyDigest", key: "settings:notifications.delivery.email.weeklyDigest" },
+  { value: "never", key: "settings:notifications.delivery.email.never" },
+];
+
+// Quiet-hours time ranges are plain numeric data, not translatable chrome —
+// only the "none" option carries a label.
+const QUIET_HOURS_RANGES = ["22:00 – 08:00", "21:00 – 09:00", "20:00 – 10:00"];
+
 export function NotificationsPane({ onChange }: { onChange: () => void }) {
+  const { t } = useTranslation();
   return (
     <Pane
       title={
-        <>
-          Notification <em>preferences.</em>
-        </>
+        <Translation
+          i18nKey="settings:notifications.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Granular control over what reaches you and how. We'll never send you something you haven't asked for."
+      sub={t("settings:notifications.sub")}
     >
-      <Section label="Gatherings">
+      <Section label={t("settings:notifications.section.gatherings")}>
         <ToggleList>
           <ToggleRow
-            title="New gathering announced"
-            desc="When a gathering matching your interests is posted"
+            title={t("settings:notifications.gatherings.newAnnounced.title")}
+            desc={t("settings:notifications.gatherings.newAnnounced.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
-            title="RSVP reminder"
-            desc="48 hours before a gathering you've said you're going to"
+            title={t("settings:notifications.gatherings.rsvpReminder.title")}
+            desc={t("settings:notifications.gatherings.rsvpReminder.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
-            title="Last few spots"
-            desc="When a gathering you saved is almost full"
+            title={t("settings:notifications.gatherings.lastFewSpots.title")}
+            desc={t("settings:notifications.gatherings.lastFewSpots.desc")}
             comingSoon
             onChange={onChange}
           />
         </ToggleList>
       </Section>
-      <Section label="Messages & connections">
+      <Section label={t("settings:notifications.section.messagesConnections")}>
         <ToggleList>
           <ToggleRow
-            title="New message"
-            desc="When someone sends you a direct message"
+            title={t("settings:notifications.messages.newMessage.title")}
+            desc={t("settings:notifications.messages.newMessage.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
-            title="Connection request"
-            desc="When someone asks to connect with you"
+            title={t(
+              "settings:notifications.messages.connectionRequest.title",
+            )}
+            desc={t("settings:notifications.messages.connectionRequest.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
-            title='"Say hello" received'
-            desc="When someone waves at your profile"
+            title={t("settings:notifications.messages.sayHello.title")}
+            desc={t("settings:notifications.messages.sayHello.desc")}
             comingSoon
             onChange={onChange}
           />
         </ToggleList>
       </Section>
-      <Section label="Communities & board">
+      <Section label={t("settings:notifications.section.communitiesBoard")}>
         <ToggleList>
           <ToggleRow
-            title="New post in my communities"
-            desc="Activity in communities you've joined"
+            title={t("settings:notifications.communities.newPost.title")}
+            desc={t("settings:notifications.communities.newPost.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
-            title="Reply to a thread I'm in"
-            desc="When someone responds to a thread you've participated in"
+            title={t("settings:notifications.communities.threadReply.title")}
+            desc={t("settings:notifications.communities.threadReply.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
-            title="Weekly community digest"
-            desc="A quiet summary of what's happening — one email, once a week"
+            title={t("settings:notifications.communities.weeklyDigest.title")}
+            desc={t("settings:notifications.communities.weeklyDigest.desc")}
             comingSoon
             onChange={onChange}
           />
         </ToggleList>
       </Section>
-      <Section label="Delivery">
+      <Section label={t("settings:notifications.section.delivery")}>
         <SelectRow
-          title="Email notifications"
-          desc="How often to batch and send notifications by email"
-          options={["Immediately", "Daily digest", "Weekly digest", "Never"]}
-          defaultValue="Daily digest"
+          title={t("settings:notifications.delivery.email.title")}
+          desc={t("settings:notifications.delivery.email.desc")}
+          options={EMAIL_DELIVERY_OPTIONS.map((option) => ({
+            value: option.value,
+            label: t(option.key),
+          }))}
+          defaultValue="dailyDigest"
           comingSoon
           onChange={onChange}
         />
         <SelectRow
-          title="Quiet hours"
-          desc="Don't send anything between these hours"
+          title={t("settings:notifications.delivery.quietHours.title")}
+          desc={t("settings:notifications.delivery.quietHours.desc")}
           options={[
-            "No quiet hours",
-            "22:00 – 08:00",
-            "21:00 – 09:00",
-            "20:00 – 10:00",
+            {
+              value: "none",
+              label: t("settings:notifications.delivery.quietHours.none"),
+            },
+            ...QUIET_HOURS_RANGES.map((range) => ({
+              value: range,
+              label: range,
+            })),
           ]}
           defaultValue="22:00 – 08:00"
           comingSoon
           onChange={onChange}
         />
       </Section>
-      <Section label="Newsletters & email">
+      <Section label={t("settings:notifications.section.newslettersEmail")}>
         <div className={styles.dataCards}>
           <DataCard
-            title="Newsletter & email preferences"
-            desc="Choose which newsletters and email streams you receive — magazine issues, event digests, community announcements, and more."
-            btn="Manage"
+            title={t("settings:notifications.newsletter.title")}
+            desc={t("settings:notifications.newsletter.desc")}
+            btn={t("settings:notifications.newsletter.manage")}
             to={routes.newsletter}
           />
         </div>
@@ -163,51 +194,53 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
 }
 
 export function LanguagePane() {
-  const { language, setLanguage } = useTranslation();
+  const { language, setLanguage, t } = useTranslation();
   const [termQuery, setTermQuery] = useState("");
   const terms = useMemo(() => {
     const q = termQuery.trim().toLowerCase();
     if (!q) return TERMS;
     return TERMS.filter(
-      (t) =>
-        t.name.toLowerCase().includes(q) || t.def.toLowerCase().includes(q),
+      (term) =>
+        t(term.nameKey).toLowerCase().includes(q) ||
+        t(term.defKey).toLowerCase().includes(q),
     );
-  }, [termQuery]);
+  }, [termQuery, t]);
 
   return (
     <Pane
       title={
-        <>
-          Language &amp; <em>terminology.</em>
-        </>
+        <Translation
+          i18nKey="settings:language.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="A living reference, kept up to date by the community. Search for a term to see how we use it across QueerPulse."
+      sub={t("settings:language.sub")}
     >
-      <Section label="Platform language preference">
+      <Section label={t("settings:language.section.platformPreference")}>
         <SelectRow
-          title="Interface language"
-          desc="The language QueerPulse uses for menus, labels, and system messages. Português is still being translated across the platform — some pages stay in English for now."
+          title={t("settings:language.interfaceLanguage.title")}
+          desc={t("settings:language.interfaceLanguage.desc")}
           options={[
-            { value: "en", label: "English" },
-            { value: "pt", label: "Português" },
+            { value: "en", label: t("common:language.en") },
+            { value: "pt", label: t("common:language.pt") },
           ]}
           value={language}
           onChange={(v) => setLanguage(v as Language)}
         />
       </Section>
-      <Section label="Community terminology guide">
+      <Section label={t("settings:language.section.terminologyGuide")}>
         <input
           className={styles.termSearch}
           type="search"
-          placeholder="Search terms…"
+          placeholder={t("settings:language.searchPlaceholder")}
           value={termQuery}
           onChange={(e) => setTermQuery(e.target.value)}
         />
         <div className={styles.termList}>
-          {terms.map((t) => (
-            <div key={t.name} className={styles.termRow}>
-              <div className={styles.termName}>{t.name}</div>
-              <div className={styles.termDef}>{t.def}</div>
+          {terms.map((term) => (
+            <div key={term.nameKey} className={styles.termRow}>
+              <div className={styles.termName}>{t(term.nameKey)}</div>
+              <div className={styles.termDef}>{t(term.defKey)}</div>
             </div>
           ))}
         </div>
@@ -218,10 +251,17 @@ export function LanguagePane() {
 
 type ExportKind = "full" | "messages";
 
-export function buildExports(email: string, name: string, profile: Member) {
+// Pattern B: the export titles/notes are platform chrome (shown in the modal
+// and baked into the downloaded JSON's own copy), so they resolve via `t`.
+export function buildExports(
+  t: (key: string) => string,
+  email: string,
+  name: string,
+  profile: Member,
+) {
   return {
     full: {
-      title: "Preparing your full export",
+      title: t("settings:data.export.full.title"),
       filename: "queerpulse-export.json",
       payload: {
         account: { name, email },
@@ -234,11 +274,11 @@ export function buildExports(email: string, name: string, profile: Member) {
       },
     },
     messages: {
-      title: "Preparing your messages",
+      title: t("settings:data.export.messages.title"),
       filename: "queerpulse-messages.json",
       payload: {
         account: name,
-        note: "Plain export of your full message history.",
+        note: t("settings:data.export.messages.note"),
         exportedAt: new Date().toISOString(),
       },
     },
@@ -280,6 +320,7 @@ export function DataPane({
   onChange: () => void;
   onDeleteClick: () => void;
 }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { profile } = useProfile();
   const { consent, setConsent, openPreferences } = useConsent();
@@ -288,59 +329,58 @@ export function DataPane({
   const exports = useMemo(
     () =>
       buildExports(
+        t,
         user?.email ?? "—",
         `${profile.first} ${profile.last}`.trim(),
         profile,
       ),
-    [user?.email, profile],
+    [t, user?.email, profile],
   );
   return (
     <Pane
       title={
-        <>
-          Data &amp; <em>privacy.</em>
-        </>
+        <Translation i18nKey="settings:data.title" components={{ em: <em /> }} />
       }
-      sub="Your data belongs to you. We collect the minimum needed to run the platform and never sell it. You can download or delete everything at any time."
+      sub={t("settings:data.sub")}
     >
       <div className={styles.gdprBox}>
         <span className={styles.gIcon}>
           <FiShield />
         </span>
         <p>
-          <strong>GDPR compliant.</strong> QueerPulse is subject to EU data
-          protection law and the Portuguese RGPD. Your rights include access,
-          correction, portability, and deletion. This page is how you exercise
-          them.
+          <Translation
+            i18nKey="settings:data.gdprBox"
+            components={{ strong: <strong /> }}
+          />
         </p>
       </div>
-      <Section label="Your data">
+      <Section label={t("settings:data.section.yourData")}>
         <div className={styles.dataCards}>
           <DataCard
-            title="Download your data"
-            desc="A full export of your profile, messages, community posts, and activity. Delivered as a JSON file within 48 hours."
-            btn="Request export"
+            title={t("settings:data.download.title")}
+            desc={t("settings:data.download.desc")}
+            btn={t("settings:data.download.cta")}
             onClick={() => setExportKind("full")}
           />
           <DataCard
-            title="Download your messages"
-            desc="Your full message history, exported as plain text."
-            btn="Export messages"
+            title={t("settings:data.downloadMessages.title")}
+            desc={t("settings:data.downloadMessages.desc")}
+            btn={t("settings:data.downloadMessages.cta")}
             onClick={() => setExportKind("messages")}
           />
           <DataCard
-            title="Correct inaccurate data"
-            desc="If we hold data about you that is factually incorrect, you have the right to have it corrected."
-            btn="Contact data team"
+            title={t("settings:data.correct.title")}
+            desc={t("settings:data.correct.desc")}
+            btn={t("settings:data.correct.cta")}
             to={routes.contact}
           />
         </div>
       </Section>
-      <Section label="Cookie & privacy choices">
+      <Section label={t("settings:data.section.cookiePrivacy")}>
         <ToggleList>
           <ConsentToggleRow
-            title="Analytics & usage data"
-            desc="Anonymous, aggregate usage patterns to improve the platform. No individual tracking, no ad networks. Off unless you turn it on."
+            title={t("settings:data.consent.analytics.title")}
+            desc={t("settings:data.consent.analytics.desc")}
             checked={consent.analytics}
             onChange={(next) =>
               setConsent(
@@ -350,8 +390,8 @@ export function DataPane({
             }
           />
           <ConsentToggleRow
-            title="Crash & error reporting"
-            desc="Automatic diagnostics when something breaks, so we can fix it faster. No advertising or profiling data."
+            title={t("settings:data.consent.monitoring.title")}
+            desc={t("settings:data.consent.monitoring.desc")}
             checked={consent.monitoring}
             onChange={(next) =>
               setConsent(
@@ -363,33 +403,31 @@ export function DataPane({
         </ToggleList>
         <div className={styles.dataCards}>
           <DataCard
-            title="Manage cookie preferences"
-            desc="Review the full breakdown of what's stored and change any choice. Strictly necessary cookies keep you logged in and are always on."
-            btn="Open preferences"
+            title={t("settings:data.cookiePrefs.title")}
+            desc={t("settings:data.cookiePrefs.desc")}
+            btn={t("settings:data.cookiePrefs.cta")}
             onClick={openPreferences}
           />
         </div>
       </Section>
-      <Section label="Personalisation">
+      <Section label={t("settings:data.section.personalisation")}>
         <ToggleList>
           <ToggleRow
-            title="Search personalisation"
-            desc="Use your interests and connections to improve suggested members and gatherings. A product preference — this stays on your account, not tracking."
+            title={t("settings:data.searchPersonalisation.title")}
+            desc={t("settings:data.searchPersonalisation.desc")}
             onChange={onChange}
           />
         </ToggleList>
       </Section>
-      <Section label="Danger zone">
+      <Section label={t("settings:data.section.dangerZone")}>
         <div className={styles.dataCards}>
           <div className={`${styles.dataCard} ${styles.dangerCard}`}>
             <div className={styles.dcText}>
               <div className={`${styles.dcTitle} ${styles.dangerTitle}`}>
-                Deactivate account
+                {t("settings:data.deactivate.title")}
               </div>
               <div className={styles.dcDesc}>
-                Your profile becomes invisible and you stop receiving
-                notifications. You can reactivate at any time by logging back
-                in. Your data is retained.
+                {t("settings:data.deactivate.desc")}
               </div>
             </div>
             <Button
@@ -397,17 +435,16 @@ export function DataPane({
               className={`${styles.dcBtn} ${styles.danger}`}
               onClick={() => setDeactivateOpen(true)}
             >
-              Deactivate
+              {t("settings:data.deactivate.cta")}
             </Button>
           </div>
           <div className={`${styles.dataCard} ${styles.dangerCard}`}>
             <div className={styles.dcText}>
               <div className={`${styles.dcTitle} ${styles.dangerTitle}`}>
-                Delete account permanently
+                {t("settings:data.deletePermanently.title")}
               </div>
               <div className={styles.dcDesc}>
-                Permanently deletes your profile, messages, and all associated
-                data within 30 days. This cannot be undone.
+                {t("settings:data.deletePermanently.desc")}
               </div>
             </div>
             <Button
@@ -415,15 +452,11 @@ export function DataPane({
               className={`${styles.dcBtn} ${styles.danger}`}
               onClick={onDeleteClick}
             >
-              Delete account
+              {t("settings:data.deletePermanently.cta")}
             </Button>
           </div>
         </div>
-        <div className={styles.fineprint}>
-          Under GDPR Article 17, you have the right to erasure. Deletion
-          requests are processed within 30 days. Some data may be retained where
-          we have a legal obligation to do so.
-        </div>
+        <div className={styles.fineprint}>{t("settings:data.fineprint")}</div>
       </Section>
       {exportKind && (
         <DataExportModal
@@ -444,16 +477,23 @@ export function DataPane({
 }
 
 export function SimulationsPane() {
+  const { t } = useTranslation();
   const [preview, setPreview] = useState<SimFlow | null>(null);
   return (
     <Pane
       title={
-        <>
-          Flow <em>simulations.</em>
-        </>
+        <Translation
+          i18nKey="settings:simulations.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Preview key member journeys end to end. State screens open in a device-frame preview right here; richer flows launch the real screens so you can walk through them exactly as someone else would."
+      sub={t("settings:simulations.sub")}
     >
+      {/* NOTE: SIM_GROUPS (simulations.data.ts) group labels and each flow's
+          title/desc are still hardcoded English — ~50 flows across 12
+          groups, out of this pass's priority order (account/privacy/
+          notifications/safety/accessibility first). Flagged for a follow-up
+          sweep rather than translated partially. */}
       {SIM_GROUPS.map((g) => (
         <Section key={g.label} label={g.label}>
           <div className={styles.dataCards}>
@@ -463,7 +503,7 @@ export function SimulationsPane() {
                   key={f.title}
                   title={f.title}
                   desc={f.desc}
-                  btn="Preview"
+                  btn={t("settings:simulations.preview")}
                   onClick={() => setPreview(f)}
                 />
               ) : (
@@ -471,7 +511,7 @@ export function SimulationsPane() {
                   key={f.title}
                   title={f.title}
                   desc={f.desc}
-                  btn="Start simulation"
+                  btn={t("settings:simulations.start")}
                   to={f.to}
                 />
               ),
@@ -490,17 +530,19 @@ export function SimulationsPane() {
 }
 
 export function VisibilityPane({ onChange }: { onChange: () => void }) {
+  const { t } = useTranslation();
   const { draft, updateDraft } = useProfile();
   return (
     <Pane
       title={
-        <>
-          Profile <em>visibility.</em>
-        </>
+        <Translation
+          i18nKey="settings:visibility.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Control who can find and reach you. You can change this at any time with no questions asked."
+      sub={t("settings:visibility.sub")}
     >
-      <Section label="Who can see your profile">
+      <Section label={t("settings:visibility.section.whoCanSee")}>
         <div className={styles.toggleList}>
           {VISIBILITY_OPTIONS.map((o) => (
             <label key={o.v} className={styles.radioRow}>
@@ -515,30 +557,30 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
                 }}
               />
               <div>
-                <div className={styles.toggleTitle}>{o.t}</div>
-                <div className={styles.toggleDesc}>{o.d}</div>
+                <div className={styles.toggleTitle}>{t(o.titleKey)}</div>
+                <div className={styles.toggleDesc}>{t(o.descKey)}</div>
               </div>
             </label>
           ))}
         </div>
       </Section>
-      <Section label="Additional controls">
+      <Section label={t("settings:visibility.section.additionalControls")}>
         <ToggleList>
           <ToggleRow
-            title='Show me in "New arrivals"'
-            desc="Let the community know you've recently joined"
+            title={t("settings:visibility.newArrivals.title")}
+            desc={t("settings:visibility.newArrivals.desc")}
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
-            title="Appear in suggested connections"
-            desc="Allow the platform to suggest you to members with shared interests"
+            title={t("settings:visibility.suggestedConnections.title")}
+            desc={t("settings:visibility.suggestedConnections.desc")}
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
-            title="Show activity status"
-            desc="Let people see when you were last active (approximate)"
+            title={t("settings:visibility.activityStatus.title")}
+            desc={t("settings:visibility.activityStatus.desc")}
             comingSoon
             onChange={onChange}
           />
@@ -549,40 +591,44 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
 }
 
 export function AccountPane({ onChange }: { onChange: () => void }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   return (
     <Pane
       title={
-        <>
-          Account <em>settings.</em>
-        </>
+        <Translation
+          i18nKey="settings:account.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Login and security preferences."
+      sub={t("settings:account.sub")}
     >
-      <Section label="Account">
+      <Section label={t("settings:account.section.account")}>
         <div className={styles.toggleList}>
           <div className={styles.toggleRow}>
             <div className={styles.toggleLabel}>
-              <div className={styles.toggleTitle}>Email address</div>
+              <div className={styles.toggleTitle}>
+                {t("settings:account.emailAddress.title")}
+              </div>
               <div className={styles.toggleDesc}>
-                The address tied to your account and sign-in.
+                {t("settings:account.emailAddress.desc")}
               </div>
             </div>
             <div className={styles.accountEmail}>{user?.email ?? "—"}</div>
           </div>
         </div>
       </Section>
-      <Section label="Security">
+      <Section label={t("settings:account.section.security")}>
         <ToggleList>
           <ToggleRow
-            title="Two-factor authentication"
-            desc="Adds a second step when logging in from a new device"
+            title={t("settings:account.twoFactor.title")}
+            desc={t("settings:account.twoFactor.desc")}
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
-            title="Login alerts"
-            desc="Email me when my account is accessed from a new device"
+            title={t("settings:account.loginAlerts.title")}
+            desc={t("settings:account.loginAlerts.desc")}
             comingSoon
             onChange={onChange}
           />

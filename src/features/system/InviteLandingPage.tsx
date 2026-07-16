@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useInvite } from "../auth/api/useInvite";
@@ -12,7 +13,7 @@ import {
 } from "../auth/api/pendingInvite";
 import { OnboardingPage } from "../auth/OnboardingPage";
 import { InviteExpiredPage } from "./InviteExpiredPage";
-import { loaderSteps } from "./inviteLanding.data";
+import { buildLoaderSteps } from "./inviteLanding.data";
 import {
   InviteCardView,
   InviteLoadingView,
@@ -26,6 +27,7 @@ export function InviteLandingPage() {
   const { code } = useParams<{ code: string }>();
   const prefersReduced = usePrefersReducedMotion();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const { signIn } = useAuth();
   const { demoMode } = useDemoMode();
   const { data: invite, isLoading, isError } = useInvite(code);
@@ -58,7 +60,7 @@ export function InviteLandingPage() {
   useEffect(() => {
     if (phase !== "opening" || !invite) return;
     const stepMs = 800;
-    const total = loaderSteps(invite.inviter.firstName).length;
+    const total = buildLoaderSteps(t, invite.inviter.firstName).length;
     const timers = Array.from({ length: total }, (_, i) =>
       window.setTimeout(() => setStep(i), i * stepMs),
     );
@@ -70,7 +72,7 @@ export function InviteLandingPage() {
       timers.forEach(clearTimeout);
       clearTimeout(done);
     };
-  }, [phase, invite]);
+  }, [phase, invite, t]);
 
   // While GET /invites/:code resolves the inviter.
   if (isLoading) return <InviteLoadingView />;

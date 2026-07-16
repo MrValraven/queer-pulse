@@ -2,24 +2,52 @@ import type { AdminTone } from "./ui";
 
 export type Severity = "emergency" | "high" | "medium" | "low";
 
+/** i18n Pattern A. `labelKey` resolves the severity name shown on the AdminCat
+ *  stripe; `stripe`/`cat` are styling tokens, not language. */
 export interface SeverityMeta {
-  label: string;
+  labelKey: string;
   stripe: string;
   cat: "danger" | "coral" | "jade";
 }
 
 export const SEVERITY: Record<Severity, SeverityMeta> = {
-  emergency: { label: "Emergency", stripe: "var(--danger)", cat: "danger" },
-  high: { label: "High", stripe: "var(--danger)", cat: "coral" },
-  medium: { label: "Medium", stripe: "var(--amber)", cat: "coral" },
-  low: { label: "Low", stripe: "var(--jade)", cat: "jade" },
+  emergency: {
+    labelKey: "admin:moderation.severity.emergency",
+    stripe: "var(--danger)",
+    cat: "danger",
+  },
+  high: {
+    labelKey: "admin:moderation.severity.high",
+    stripe: "var(--danger)",
+    cat: "coral",
+  },
+  medium: {
+    labelKey: "admin:moderation.severity.medium",
+    stripe: "var(--amber)",
+    cat: "coral",
+  },
+  low: {
+    labelKey: "admin:moderation.severity.low",
+    stripe: "var(--jade)",
+    cat: "jade",
+  },
 };
 
-export interface ReportChip {
-  tone: AdminTone;
-  label: string;
-  dot?: boolean;
-}
+/**
+ * i18n note: most chips are one of a small fixed set of platform-defined
+ * report categories (repeated verbatim across many report/appeal entries) —
+ * chrome, resolved through `labelKey`. A few chips instead carry real content
+ * (a community name) — those use `text` verbatim, never translated.
+ */
+export type ReportChip =
+  | {
+      tone: AdminTone;
+      labelKey: string;
+      /** `{token}` interpolation values for `labelKey`, e.g. a plural `count`. */
+      values?: Record<string, string | number>;
+      dot?: boolean;
+    }
+  | { tone: AdminTone; text: string; dot?: boolean };
 
 export interface ThreadMsg {
   author: string;
@@ -53,10 +81,18 @@ export interface ReportDetail {
   people: DrawerPerson[];
 }
 
+/** Real per-member counts, resolved via `admin:moderation.priorReports.*` at
+ *  render — never a baked "N prior reports" string. */
+export type PriorReports =
+  | { kind: "count"; count: number }
+  | { kind: "newAccount"; vouches: number };
+
 export interface ModReport {
   id: string;
   severity: Severity;
-  /** Stronger square category label (AdminCat). */
+  /** Stronger square category label (AdminCat). Not currently rendered in the
+   *  demo UI (ReportCard shows the severity label instead) but kept to mirror
+   *  the live DTO shape (see api/moderation.adapters.ts). */
   category: string;
   chips: ReportChip[];
   title: string;
@@ -68,10 +104,9 @@ export interface ModReport {
   reporterName: string;
   reportedName: string;
   community?: string;
-  /** "1 prior report" style flag shown with a flag icon. */
-  priorReports?: string;
+  priorReports?: PriorReports;
   age: string;
-  risk: { tone: AdminTone; label: string };
+  risk: { tone: AdminTone; key: string };
   detail?: ReportDetail;
 }
 
@@ -103,7 +138,7 @@ export interface Appeal {
   tone: "plum" | "coral" | "jade" | "violet" | "amber";
   community?: string;
   age: string;
-  status: { tone: AdminTone; label: string };
+  status: { tone: AdminTone; key: string };
   original: AppealOriginal;
   /** The member's own argument, shown as a coral-bordered serif quote. */
   argument: string;
@@ -122,7 +157,7 @@ export interface ResolvedItem {
   closed: string;
   /** One or two "X notified" lines, depending on who was informed. */
   notified: string[];
-  status: { tone: AdminTone; label: string };
+  status: { tone: AdminTone; key: string };
 }
 
 /* ── Open queue: 2 emergencies first, then everything else ──────────────── */
@@ -132,7 +167,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     id: "r-emerg-1",
     severity: "emergency",
     category: "Emergency",
-    chips: [{ tone: "danger", label: "Outing / doxxing" }],
+    chips: [{ tone: "danger", labelKey: "admin:moderation.chip.outingDoxxing" }],
     title: "A member's",
     titleEm: "private trans status",
     titleAfter: "was posted in a public thread",
@@ -142,7 +177,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     reportedName: "@reblanco",
     priorReports: "1 prior report",
     age: "26m",
-    risk: { tone: "danger", label: "At risk" },
+    risk: { tone: "danger", key: "admin:moderation.risk.atRisk" },
     detail: {
       contentAuthor: "RB · @reblanco · in Lisbon Queers · public thread",
       excerpt:
@@ -181,7 +216,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
           tone: "anon",
           anon: true,
           meta: "Reporting is anonymous by design. Their identity is protected from you and from the reported member.",
-          chips: [{ tone: "ghost", label: "Identity shielded" }],
+          chips: [{ tone: "ghost", labelKey: "admin:moderation.chip.identityShielded" }],
         },
         {
           role: "Reported",
@@ -191,8 +226,12 @@ export const EMERGENCY_REPORTS: ModReport[] = [
           pronoun: "he/him",
           meta: "Member since Mar 2024 · 6 vouches · 1 prior report (resolved: warned for hostile tone, Jan 2026).",
           chips: [
-            { tone: "coral", label: "1 prior report" },
-            { tone: "ghost", label: "Lisbon Queers" },
+            {
+              tone: "coral",
+              labelKey: "admin:moderation.priorReports.count",
+              values: { count: 1 },
+            },
+            { tone: "ghost", text: "Lisbon Queers" },
           ],
         },
       ],
@@ -202,7 +241,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     id: "r-emerg-2",
     severity: "emergency",
     category: "Emergency",
-    chips: [{ tone: "danger", label: "Outing / doxxing" }],
+    chips: [{ tone: "danger", labelKey: "admin:moderation.chip.outingDoxxing" }],
     title: "Home address shared in a DM screenshot",
     preview:
       'A throwaway account posted what appears to be a member’s home address with a threat to "show up." Reporter fears for physical safety.',
@@ -210,7 +249,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     reportedName: "@anon_4471",
     priorReports: "New account · 0 vouches",
     age: "1h",
-    risk: { tone: "danger", label: "At risk" },
+    risk: { tone: "danger", key: "admin:moderation.risk.atRisk" },
   },
 ];
 
@@ -219,7 +258,7 @@ export const OTHER_REPORTS: ModReport[] = [
     id: "r-harass",
     severity: "high",
     category: "Harassment",
-    chips: [{ tone: "coral", label: "Harassment" }],
+    chips: [{ tone: "coral", labelKey: "admin:moderation.chip.harassment" }],
     title: "Repeated unwanted DMs after being asked to stop",
     preview:
       "Member reports 14 messages in 2 days from the same person despite blocking. Pattern of escalation.",
@@ -227,13 +266,13 @@ export const OTHER_REPORTS: ModReport[] = [
     reportedName: "@nightowl",
     priorReports: "4 prior reports",
     age: "3h",
-    risk: { tone: "coral", label: "High" },
+    risk: { tone: "coral", key: "admin:moderation.risk.high" },
   },
   {
     id: "r-vouch",
     severity: "medium",
     category: "Vouch-abuse",
-    chips: [{ tone: "violet", label: "Vouch-abuse" }],
+    chips: [{ tone: "violet", labelKey: "admin:moderation.chip.vouchAbuse" }],
     title: "Cluster of accounts vouching for each other in a ring",
     preview:
       "Five new accounts created within an hour, each vouching for the others to fast-track verification. Possible coordinated entry.",
@@ -241,26 +280,26 @@ export const OTHER_REPORTS: ModReport[] = [
     reportedName: "5 accounts",
     community: "Queer Creatives",
     age: "5h",
-    risk: { tone: "amber", label: "Medium" },
+    risk: { tone: "amber", key: "admin:moderation.risk.medium" },
   },
   {
     id: "r-spam",
     severity: "medium",
     category: "Spam",
-    chips: [{ tone: "amber", label: "Spam" }],
+    chips: [{ tone: "amber", labelKey: "admin:moderation.chip.spam" }],
     title: "Crypto promo links posted across 6 gathering threads",
     preview:
       "Same external link dropped into unrelated event discussions. Likely a compromised or bad-faith account.",
     reporterName: "3 members",
     reportedName: "@coin_daily",
     age: "8h",
-    risk: { tone: "amber", label: "Medium" },
+    risk: { tone: "amber", key: "admin:moderation.risk.medium" },
   },
   {
     id: "r-offtopic",
     severity: "low",
     category: "Off-topic",
-    chips: [{ tone: "jade", label: "Off-topic" }],
+    chips: [{ tone: "jade", labelKey: "admin:moderation.chip.offTopic" }],
     title: "A heated but non-abusive disagreement was reported",
     preview:
       'Two members argued about event logistics. Reported as "hostile" but reads as a tense exchange, not a code-of-care breach.',
@@ -268,7 +307,7 @@ export const OTHER_REPORTS: ModReport[] = [
     reportedName: "Trans & Friends",
     community: "Trans & Friends",
     age: "14h",
-    risk: { tone: "jade", label: "Low" },
+    risk: { tone: "jade", key: "admin:moderation.risk.low" },
   },
 ];
 
@@ -278,7 +317,7 @@ export const APPEALS: Appeal[] = [
   {
     id: "a-1",
     severity: "medium",
-    chips: [{ tone: "amber", label: "Appeal · restriction" }],
+    chips: [{ tone: "amber", labelKey: "admin:moderation.chip.appealRestriction" }],
     title: '"I was muted for a joke my friends were in on"',
     preview:
       "Member restricted for 7 days asks for a second look, says context was missed. Two members have written in support.",
@@ -288,7 +327,7 @@ export const APPEALS: Appeal[] = [
     tone: "coral",
     community: "Lisbon Queers",
     age: "2d",
-    status: { tone: "amber", label: "Awaiting" },
+    status: { tone: "amber", key: "admin:moderation.status.awaiting" },
     original: {
       action: "Restricted · 7 days",
       by: "Inês M.",
@@ -307,7 +346,7 @@ export const APPEALS: Appeal[] = [
   {
     id: "a-2",
     severity: "low",
-    chips: [{ tone: "jade", label: "Appeal · removal" }],
+    chips: [{ tone: "jade", labelKey: "admin:moderation.chip.appealRemoval" }],
     title: "Removed member says the report was retaliation",
     preview:
       "Claims the person who reported them was the original aggressor. Requests the full thread be re-read.",
@@ -317,7 +356,7 @@ export const APPEALS: Appeal[] = [
     tone: "jade",
     community: "Newly Arrived",
     age: "3d",
-    status: { tone: "jade", label: "Awaiting" },
+    status: { tone: "jade", key: "admin:moderation.status.awaiting" },
     original: {
       action: "Removed content",
       by: "Júlia S.",
@@ -332,7 +371,7 @@ export const APPEALS: Appeal[] = [
   {
     id: "a-3",
     severity: "low",
-    chips: [{ tone: "jade", label: "Appeal · warning" }],
+    chips: [{ tone: "jade", labelKey: "admin:moderation.chip.appealWarning" }],
     title: '"The link I shared was a mutual-aid fund, not spam"',
     preview:
       "Member warned for spam says the link was a member fundraiser shared on request. Offers to repost with context.",
@@ -342,7 +381,7 @@ export const APPEALS: Appeal[] = [
     tone: "amber",
     community: "Trans & Friends",
     age: "20h",
-    status: { tone: "jade", label: "Awaiting" },
+    status: { tone: "jade", key: "admin:moderation.status.awaiting" },
     original: {
       action: "Warned · spam",
       by: "Sofia A.",
@@ -362,7 +401,7 @@ export const RESOLVED: ResolvedItem[] = [
   {
     id: "re-1",
     severity: "low",
-    chips: [{ tone: "jade", label: "Resolved" }],
+    chips: [{ tone: "jade", labelKey: "admin:moderation.chip.resolved" }],
     outcome: "Restricted · 7 days",
     outcomeTone: "jade",
     title: "Harassment in Trans & Friends",
@@ -370,12 +409,12 @@ export const RESOLVED: ResolvedItem[] = [
       'Resolved by Inês M. — "Repeated DMs after a clear no. Restricted for 7 days; member notified with the policy excerpt."',
     closed: "Closed 2 min ago",
     notified: ["Member notified"],
-    status: { tone: "jade", label: "Logged" },
+    status: { tone: "jade", key: "admin:moderation.status.logged" },
   },
   {
     id: "re-2",
     severity: "low",
-    chips: [{ tone: "jade", label: "Resolved" }],
+    chips: [{ tone: "jade", labelKey: "admin:moderation.chip.resolved" }],
     outcome: "Dismissed",
     outcomeTone: "coral",
     title: 'Reported "spam" was a member’s own event',
@@ -383,12 +422,12 @@ export const RESOLVED: ResolvedItem[] = [
       'Dismissed by Júlia S. — "Genuine community gathering, not promotion. No action; reporter thanked for caution."',
     closed: "Closed 1h ago",
     notified: ["Member notified", "Reporter notified"],
-    status: { tone: "jade", label: "Logged" },
+    status: { tone: "jade", key: "admin:moderation.status.logged" },
   },
   {
     id: "re-3",
     severity: "emergency",
-    chips: [{ tone: "danger", label: "Resolved" }],
+    chips: [{ tone: "danger", labelKey: "admin:moderation.chip.resolved" }],
     outcome: "Removed + banned · 9 min response",
     outcomeTone: "danger",
     title: "Doxxing with intent to intimidate",
@@ -396,7 +435,7 @@ export const RESOLVED: ResolvedItem[] = [
       'Resolved by Júlia S. — "Address + threat. Content removed within 9 minutes, account banned, member offered safety resources."',
     closed: "Closed yesterday",
     notified: ["Affected member supported"],
-    status: { tone: "jade", label: "Logged" },
+    status: { tone: "jade", key: "admin:moderation.status.logged" },
   },
 ];
 

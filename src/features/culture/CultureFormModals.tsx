@@ -1,4 +1,7 @@
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import {
   ModalShell,
   SuccessPanel,
@@ -9,11 +12,16 @@ import {
 } from "./CultureModalKit";
 import {
   PICK_KINDS,
+  PICK_KIND_OPTION_LABEL_KEY,
   PROJECT_LOOKING_FOR,
+  PROJECT_LOOKING_FOR_LABEL_KEY,
   SHOWCASE_MEDIUMS,
+  SHOWCASE_MEDIUM_LABEL_KEY,
   PLAYLIST_VIBES,
+  PLAYLIST_VIBE_LABEL_KEY,
   replyByDate,
 } from "./cultureModals.data";
+import type { TFunction } from "../../shared/i18n/types";
 import styles from "./CultureModals.module.css";
 
 /** Shared submit button that swaps to a spinner while sending. */
@@ -26,76 +34,95 @@ function SubmitBtn({
   label: string;
   onClick: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <Button variant="primary" disabled={sending} onClick={onClick}>
-      {sending ? <Sending label="Sending…" /> : label}
+      {sending ? <Sending label={t("culture:common.sending")} /> : label}
     </Button>
   );
 }
 
 /* ── Suggest a pick ──────────────────────────────────────────────────── */
 export function SuggestPickModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { sending, done, submit } = useSubmitFlow();
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="Pick"
-          em="nominated."
+          title={t("culture:suggestPick.success.title")}
+          em={t("culture:suggestPick.success.em")}
           steps={[
-            "It joins the ballot for the last-Sunday vote.",
-            <>
-              We'll email you the results by <strong>{replyByDate(1)}</strong>.
-            </>,
+            t("culture:suggestPick.success.step1"),
+            <Translation
+              key="step2"
+              i18nKey="culture:suggestPick.success.step2"
+              values={{
+                date: fmt.date(replyByDate(1), {
+                  day: "numeric",
+                  month: "long",
+                }),
+              }}
+              components={{ strong: <strong /> }}
+            />,
           ]}
           onClose={onClose}
         >
-          Thank you for nominating something for the club. The community decides
-          what we read, watch and listen to next.
+          {t("culture:suggestPick.success.body")}
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Book · Film · Music Club</div>
+          <div className={styles.eyebrow}>{t("culture:tabs.club")}</div>
           <h2 className={styles.title}>
-            Suggest a <em>pick</em>
+            <Translation
+              i18nKey="culture:suggestPick.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.sub}>
-            Nominate something for the community to vote on this month.
-          </p>
+          <p className={styles.sub}>{t("culture:suggestPick.sub")}</p>
           <div className={styles.field}>
-            <label htmlFor="pk-kind">Format</label>
+            <label htmlFor="pk-kind">{t("culture:suggestPick.formatLabel")}</label>
             <select id="pk-kind" defaultValue={PICK_KINDS[0]}>
               {PICK_KINDS.map((k) => (
-                <option key={k}>{k}</option>
+                <option key={k} value={k}>
+                  {t(PICK_KIND_OPTION_LABEL_KEY[k])}
+                </option>
               ))}
             </select>
           </div>
           <div className={styles.field}>
-            <label htmlFor="pk-title">Title</label>
+            <label htmlFor="pk-title">{t("culture:suggestPick.titleLabel")}</label>
             <input
               id="pk-title"
               type="text"
-              placeholder="e.g. Detransition, Baby"
+              placeholder={t("culture:suggestPick.titlePlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="pk-author">Author / artist / director</label>
-            <input id="pk-author" type="text" placeholder="Who made it?" />
+            <label htmlFor="pk-author">
+              {t("culture:suggestPick.authorLabel")}
+            </label>
+            <input
+              id="pk-author"
+              type="text"
+              placeholder={t("culture:suggestPick.authorPlaceholder")}
+            />
           </div>
           <div className={styles.field}>
-            <label htmlFor="pk-why">Why this one?</label>
+            <label htmlFor="pk-why">{t("culture:suggestPick.whyLabel")}</label>
             <textarea
               id="pk-why"
-              placeholder="A sentence on why the club should pick it…"
+              placeholder={t("culture:suggestPick.whyPlaceholder")}
             />
           </div>
           <div className={styles.foot}>
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {t("culture:common.cancel")}
             </Button>
             <SubmitBtn
               sending={sending}
-              label="Nominate pick"
+              label={t("culture:suggestPick.nominateCta")}
               onClick={() => submit()}
             />
           </div>
@@ -107,65 +134,67 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
 
 /* ── Post a project (commission board) ───────────────────────────────── */
 export function PostProjectModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const { sending, done, submit } = useSubmitFlow();
   const { selected, toggle } = useChipSet();
+  const lookingForLabel = makeOptionLabel(t, PROJECT_LOOKING_FOR_LABEL_KEY);
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="Project"
-          em="posted."
+          title={t("culture:postProject.success.title")}
+          em={t("culture:postProject.success.em")}
           steps={[
-            "A moderator reviews new posts within 48 hours.",
-            <>
-              Once live, you'll get interest by email — first replies usually
-              arrive within a week.
-            </>,
+            t("culture:postProject.success.step1"),
+            t("culture:postProject.success.step2"),
           ]}
           onClose={onClose}
         >
-          Your call for collaborators is in the queue. We keep the board small
-          and intentional, so every post is read by a human first.
+          {t("culture:postProject.success.body")}
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Commission Board</div>
+          <div className={styles.eyebrow}>{t("culture:tabs.commission")}</div>
           <h2 className={styles.title}>
-            Post a <em>project</em>
+            <Translation
+              i18nKey="culture:postProject.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.sub}>
-            Tell the community what you're making and who you need.
-          </p>
+          <p className={styles.sub}>{t("culture:postProject.sub")}</p>
           <div className={styles.field}>
-            <label htmlFor="pp-title">Project title</label>
+            <label htmlFor="pp-title">
+              {t("culture:postProject.titleLabel")}
+            </label>
             <input
               id="pp-title"
               type="text"
-              placeholder="What are you making?"
+              placeholder={t("culture:postProject.titlePlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="pp-desc">Description</label>
+            <label htmlFor="pp-desc">{t("culture:postProject.descLabel")}</label>
             <textarea
               id="pp-desc"
-              placeholder="What it is, where you're at, and what collaboration looks like…"
+              placeholder={t("culture:postProject.descPlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label>Looking for</label>
+            <label>{t("culture:postProject.lookingForLabel")}</label>
             <ChipSelect
               options={PROJECT_LOOKING_FOR}
               selected={selected}
               onToggle={toggle}
+              optionLabel={lookingForLabel}
             />
           </div>
           <div className={styles.foot}>
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {t("culture:common.cancel")}
             </Button>
             <SubmitBtn
               sending={sending}
-              label="Post project"
+              label={t("culture:postProject.postCta")}
               onClick={() => submit()}
             />
           </div>
@@ -177,75 +206,92 @@ export function PostProjectModal({ onClose }: { onClose: () => void }) {
 
 /* ── Submit your work (art showcase) ─────────────────────────────────── */
 export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { sending, done, submit } = useSubmitFlow();
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="Work"
-          em="submitted."
+          title={t("culture:submitWork.success.title")}
+          em={t("culture:submitWork.success.em")}
           steps={[
-            "Submissions are reviewed once a month by rotating member curators.",
-            <>
-              You'll hear back by <strong>{replyByDate(4)}</strong>, selected or
-              not.
-            </>,
+            t("culture:submitWork.success.step1"),
+            <Translation
+              key="step2"
+              i18nKey="culture:submitWork.success.step2"
+              values={{
+                date: fmt.date(replyByDate(4), {
+                  day: "numeric",
+                  month: "long",
+                }),
+              }}
+              components={{ strong: <strong /> }}
+            />,
           ]}
           onClose={onClose}
         >
-          Thank you for trusting us with your work. The showcase rotates eight
-          pieces at a time, chosen by the community.
+          {t("culture:submitWork.success.body")}
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Art Showcase</div>
+          <div className={styles.eyebrow}>{t("culture:tabs.showcase")}</div>
           <h2 className={styles.title}>
-            Submit your <em>work</em>
+            <Translation
+              i18nKey="culture:submitWork.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.sub}>
-            Up to three pieces. Reviewed monthly by member curators.
-          </p>
+          <p className={styles.sub}>{t("culture:submitWork.sub")}</p>
           <div className={styles.field}>
-            <label htmlFor="sw-title">Title of the work</label>
+            <label htmlFor="sw-title">
+              {t("culture:submitWork.titleLabel")}
+            </label>
             <input
               id="sw-title"
               type="text"
-              placeholder="e.g. Corpo Estranho, 2024"
+              placeholder={t("culture:submitWork.titlePlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="sw-medium">Medium</label>
+            <label htmlFor="sw-medium">
+              {t("culture:submitWork.mediumLabel")}
+            </label>
             <select id="sw-medium" defaultValue="">
               <option value="" disabled>
-                Choose a medium
+                {t("culture:submitWork.mediumPlaceholder")}
               </option>
               {SHOWCASE_MEDIUMS.map((m) => (
-                <option key={m}>{m}</option>
+                <option key={m} value={m}>
+                  {t(SHOWCASE_MEDIUM_LABEL_KEY[m])}
+                </option>
               ))}
             </select>
           </div>
           <div className={styles.field}>
-            <label htmlFor="sw-link">Link to the work</label>
+            <label htmlFor="sw-link">{t("culture:submitWork.linkLabel")}</label>
             <input
               id="sw-link"
               type="url"
-              placeholder="Portfolio, image or video URL"
+              placeholder={t("culture:submitWork.linkPlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="sw-about">About the piece</label>
+            <label htmlFor="sw-about">
+              {t("culture:submitWork.aboutLabel")}
+            </label>
             <textarea
               id="sw-about"
-              placeholder="A short statement the curators can read…"
+              placeholder={t("culture:submitWork.aboutPlaceholder")}
             />
           </div>
           <div className={styles.foot}>
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {t("culture:common.cancel")}
             </Button>
             <SubmitBtn
               sending={sending}
-              label="Submit work"
+              label={t("culture:submitWork.submitCta")}
               onClick={() => submit()}
             />
           </div>
@@ -257,73 +303,92 @@ export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
 
 /* ── Submit a playlist (radio) ───────────────────────────────────────── */
 export function SubmitPlaylistModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { sending, done, submit } = useSubmitFlow();
   const { selected, toggle } = useChipSet();
+  const vibeLabel = makeOptionLabel(t, PLAYLIST_VIBE_LABEL_KEY);
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="Playlist"
-          em="received."
+          title={t("culture:submitPlaylist.success.title")}
+          em={t("culture:submitPlaylist.success.em")}
           steps={[
-            "A curator listens to every submission — no algorithm, no skips.",
-            <>
-              If it's a fit, we'll book you a slot and email you by{" "}
-              <strong>{replyByDate(3)}</strong>.
-            </>,
+            t("culture:submitPlaylist.success.step1"),
+            <Translation
+              key="step2"
+              i18nKey="culture:submitPlaylist.success.step2"
+              values={{
+                date: fmt.date(replyByDate(3), {
+                  day: "numeric",
+                  month: "long",
+                }),
+              }}
+              components={{ strong: <strong /> }}
+            />,
           ]}
           onClose={onClose}
         >
-          Thank you for offering to take a turn on community radio. We rotate
-          guest DJs so the sound stays human.
+          {t("culture:submitPlaylist.success.body")}
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Community Radio</div>
+          <div className={styles.eyebrow}>
+            {t("culture:submitPlaylist.eyebrow")}
+          </div>
           <h2 className={styles.title}>
-            Submit a <em>playlist</em>
+            <Translation
+              i18nKey="culture:submitPlaylist.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.sub}>
-            Pitch a set for a guest DJ slot. No ads, no algorithm.
-          </p>
+          <p className={styles.sub}>{t("culture:submitPlaylist.sub")}</p>
           <div className={styles.field}>
-            <label htmlFor="pl-name">Playlist name</label>
+            <label htmlFor="pl-name">
+              {t("culture:submitPlaylist.nameLabel")}
+            </label>
             <input
               id="pl-name"
               type="text"
-              placeholder="e.g. A noite que ficou em Lisboa"
+              placeholder={t("culture:submitPlaylist.namePlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="pl-link">Link to the set</label>
+            <label htmlFor="pl-link">
+              {t("culture:submitPlaylist.linkLabel")}
+            </label>
             <input
               id="pl-link"
               type="url"
-              placeholder="Spotify, SoundCloud or a tracklist URL"
+              placeholder={t("culture:submitPlaylist.linkPlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label>Vibe</label>
+            <label>{t("culture:submitPlaylist.vibeLabel")}</label>
             <ChipSelect
               options={PLAYLIST_VIBES}
               selected={selected}
               onToggle={toggle}
+              optionLabel={vibeLabel}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="pl-note">Curator's note</label>
+            <label htmlFor="pl-note">
+              {t("culture:submitPlaylist.noteLabel")}
+            </label>
             <textarea
               id="pl-note"
-              placeholder="When is this for? What's it about?…"
+              placeholder={t("culture:submitPlaylist.notePlaceholder")}
             />
           </div>
           <div className={styles.foot}>
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {t("culture:common.cancel")}
             </Button>
             <SubmitBtn
               sending={sending}
-              label="Submit playlist"
+              label={t("culture:submitPlaylist.submitCta")}
               onClick={() => submit()}
             />
           </div>
@@ -331,4 +396,12 @@ export function SubmitPlaylistModal({ onClose }: { onClose: () => void }) {
       )}
     </ModalShell>
   );
+}
+
+/** Build a `ChipSelect` `optionLabel` resolver from a canonical-id → key map. */
+function makeOptionLabel(
+  t: TFunction,
+  labelKeys: Record<string, string>,
+): (option: string) => string {
+  return (option) => t(labelKeys[option] ?? option);
 }

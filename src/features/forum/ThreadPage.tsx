@@ -3,9 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import { CATS, REPLY_SORTS, THREADS, type Reply } from "./forum.data";
+import { CATS, THREADS, type Reply, type ReplySortId } from "./forum.data";
 import { useThread } from "./api/useForum";
 import { useReply } from "./api/useForumMutations";
 import { currentUser } from "../members/data/members";
@@ -19,6 +20,7 @@ export function ThreadPage() {
   const simLoading = useSimulatedLoad();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const { id } = useParams();
   const numericId = Number(id);
   // Detail source: demo returns the scripted mock, live fetches meta + posts.
@@ -30,7 +32,7 @@ export function ThreadPage() {
 
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
-  const [sort, setSort] = useState<(typeof REPLY_SORTS)[number]>("Oldest");
+  const [sort, setSort] = useState<ReplySortId>("oldest");
   const [reply, setReply] = useState("");
   const [localReplies, setLocalReplies] = useState<Reply[]>(thread.replies);
   // Per-reply like toggles, keyed by a stable identity (replies have no id).
@@ -54,8 +56,8 @@ export function ThreadPage() {
   const catMeta = CATS.find((c) => c.id === thread.cat);
 
   const replies = useMemo(() => {
-    if (sort === "Newest") return [...localReplies].reverse();
-    if (sort === "Most helpful")
+    if (sort === "newest") return [...localReplies].reverse();
+    if (sort === "mostHelpful")
       return [...localReplies].sort(
         (a, b) =>
           Number(b.helpful ?? 0) - Number(a.helpful ?? 0) ||
@@ -80,7 +82,7 @@ export function ThreadPage() {
       },
     ]);
     setReply("");
-    showToast("Reply posted", "success");
+    showToast(t("forum:threadPage.replyPostedToast"), "success");
     // Live mode persists; demo mode no-ops (local reply above is the record).
     postReply.mutate(body);
   }
@@ -101,10 +103,12 @@ export function ThreadPage() {
               >
                 <polyline points="10,4 6,8 10,12" />
               </svg>
-              Forum
+              {t("forum:threadPage.breadcrumbForum")}
             </Link>
             <span className={styles.sep} />
-            <span className={styles.topCat}>{catMeta?.name}</span>
+            <span className={styles.topCat}>
+              {catMeta && t(catMeta.nameKey)}
+            </span>
           </div>
         </div>
       </section>

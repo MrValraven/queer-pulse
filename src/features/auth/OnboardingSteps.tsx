@@ -11,7 +11,6 @@ import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { TFunction } from "../../shared/i18n/types";
 import { currentUser, getMember } from "../members/data/members";
 import { clearInviteWelcome, readInviteWelcome } from "./api/pendingInvite";
 import { useAgeAttestation } from "./api/useAgeAttestation";

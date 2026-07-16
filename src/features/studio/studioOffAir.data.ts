@@ -5,7 +5,7 @@ export interface OffAirCard {
   to: string;
   tint: ImageSlotTint;
   tag?: "mem" | "free";
-  tagLabel?: string;
+  tagLabelKey?: string;
   curator?: string;
   title: string;
   titleEm: string;
@@ -22,7 +22,7 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     to: routes.studioAlbum,
     tint: "coral",
     tag: "mem",
-    tagLabel: "Sustainer",
+    tagLabelKey: "studio:tag.sustainer",
     title: "Cidade dos ",
     titleEm: "santos",
     meta: "Album · Mariana Sol · 11 tracks",
@@ -34,7 +34,7 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     to: routes.studioSet,
     tint: "plum",
     tag: "free",
-    tagLabel: "Replay",
+    tagLabelKey: "studio:tag.replay",
     curator: "Sara Marques",
     title: "Vespertina ",
     titleEm: "vol. iv",
@@ -56,7 +56,7 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     to: routes.studioTrack,
     tint: "default",
     tag: "free",
-    tagLabel: "Free",
+    tagLabelKey: "studio:tag.free",
     title: "The kitchen in ",
     titleEm: "April",
     meta: "Rita Ferreira · 3:42",
@@ -68,7 +68,7 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     to: routes.studioAlbum,
     tint: "plum",
     tag: "mem",
-    tagLabel: "Sustainer",
+    tagLabelKey: "studio:tag.sustainer",
     title: "Mother, ",
     titleEm: "weather",
     meta: "Yuki Tanaka · OST",

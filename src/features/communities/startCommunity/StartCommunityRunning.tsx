@@ -9,6 +9,7 @@ import {
   FiPlus,
 } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   FEATURE_OPTIONS,
   initialsOf,
@@ -33,6 +34,7 @@ const TINTS: TintKey[] = ["coral", "jade", "plum"];
 
 /** Chapter 4 — Running: co-stewards and what the community can do. */
 export function StepRunning({ form }: { form: CommunityForm }) {
+  const { t } = useTranslation();
   const { draft, addSteward, removeSteward, toggleFeature } = form;
   const [name, setName] = useState("");
 
@@ -51,10 +53,11 @@ export function StepRunning({ form }: { form: CommunityForm }) {
 
   return (
     <div>
-      <div className={styles.groupH}>Stewards</div>
+      <div className={styles.groupH}>
+        {t("communities:start.running.stewardsHeading")}
+      </div>
       <p className={styles.groupSub}>
-        Co-stewards can welcome new members, keep threads warm, and step in when
-        you can't. You can add or change them any time.
+        {t("communities:start.running.stewardsSub")}
       </p>
 
       {draft.stewards.map((s) => (
@@ -67,14 +70,18 @@ export function StepRunning({ form }: { form: CommunityForm }) {
               s.role === "owner" ? styles.roleOwner : styles.roleMod,
             ].join(" ")}
           >
-            {s.role === "owner" ? "You · owner" : "Co-steward"}
+            {s.role === "owner"
+              ? t("communities:start.running.ownerTag")
+              : t("communities:start.running.coStewardTag")}
           </span>
           {s.role !== "owner" && (
             <button
               type="button"
               className={styles.trDel}
               onClick={() => removeSteward(s.key)}
-              aria-label={`Remove ${s.name}`}
+              aria-label={t("communities:start.running.removeAria", {
+                name: s.name,
+              })}
             >
               <FiX size={17} aria-hidden />
             </button>
@@ -86,7 +93,7 @@ export function StepRunning({ form }: { form: CommunityForm }) {
         <input
           type="text"
           className={styles.input}
-          placeholder="Add a co-steward by name"
+          placeholder={t("communities:start.running.addPlaceholder")}
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => {
@@ -97,13 +104,16 @@ export function StepRunning({ form }: { form: CommunityForm }) {
           }}
         />
         <Button variant="ghost" onClick={add} disabled={!name.trim()}>
-          <FiPlus size={15} aria-hidden /> Add
+          <FiPlus size={15} aria-hidden />{" "}
+          {t("communities:start.running.addCta")}
         </Button>
       </div>
 
-      <div className={styles.groupH}>What's inside</div>
+      <div className={styles.groupH}>
+        {t("communities:start.running.insideHeading")}
+      </div>
       <p className={styles.groupSub}>
-        Turn on what fits. You can always add more once you're up and running.
+        {t("communities:start.running.insideSub")}
       </p>
       <div className={styles.featGrid}>
         {FEATURE_OPTIONS.map((f) => {
@@ -128,11 +138,15 @@ export function StepRunning({ form }: { form: CommunityForm }) {
                 <Icon size={16} aria-hidden />
               </span>
               <span className={styles.ftTxt}>
-                <b>{f.label}</b>
-                <span>{f.desc}</span>
+                <b>{t(f.labelKey)}</b>
+                <span>{t(f.descKey)}</span>
               </span>
               <span className={styles.ftState}>
-                {f.locked ? "Always on" : on ? "On" : "Off"}
+                {f.locked
+                  ? t("communities:start.running.alwaysOn")
+                  : on
+                    ? t("communities:start.running.on")
+                    : t("communities:start.running.off")}
               </span>
             </button>
           );

@@ -1,8 +1,19 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { MUTE_DURATIONS } from "./blockMute.data";
+import {
+  MEMBER_FIRST_NAME,
+  MEMBER_FULL_NAME,
+  MUTE_DURATIONS,
+  type MuteDurationId,
+} from "./blockMute.data";
 import s from "./flows.module.css";
+
+function durationLabel(t: (key: string) => string, id: MuteDurationId) {
+  return t(MUTE_DURATIONS.find((d) => d.id === id)!.labelKey);
+}
 
 export function BlockMuteChoose({
   chosen,
@@ -14,26 +25,32 @@ export function BlockMuteChoose({
 }: {
   chosen: "mute" | "block" | null;
   onChoose: (c: "mute" | "block") => void;
-  muteDur: string;
-  onMuteDur: (d: string) => void;
+  muteDur: MuteDurationId;
+  onMuteDur: (d: MuteDurationId) => void;
   onContinue: () => void;
   onCancel: () => void;
 }) {
+  const { t } = useTranslation();
+  const name = MEMBER_FIRST_NAME;
+
   return (
     <div className={`${s.card} ${s.screenIn}`}>
       <div className={s.memberRow}>
         <div className={s.memAv}>SR</div>
         <div>
-          <div className={s.memName}>Sofia Rodrigues</div>
+          <div className={s.memName}>{MEMBER_FULL_NAME}</div>
           <div className={s.memMeta}>she/her · Lisbon</div>
         </div>
       </div>
 
       <div className={s.cardHead}>
-        Privacy <em>controls</em>
+        <Translation
+          i18nKey="safety:blockMute.choose.title"
+          components={{ em: <em /> }}
+        />
       </div>
       <div className={s.cardSub}>
-        These actions are private. Sofia will not be notified.
+        {t("safety:blockMute.choose.sub", { name })}
       </div>
 
       <div
@@ -46,41 +63,45 @@ export function BlockMuteChoose({
           <span className={s.ocRadio}>
             <span className={s.ocDot} />
           </span>
-          <span className={s.ocTitle}>Mute Sofia</span>
+          <span className={s.ocTitle}>
+            {t("safety:blockMute.choose.muteTitle", { name })}
+          </span>
         </div>
-        <div className={s.ocDesc}>
-          You won't see her posts or activity. She won't know she's been muted.
-          You can unmute at any time.
-        </div>
+        <div className={s.ocDesc}>{t("safety:blockMute.choose.muteDesc")}</div>
         {chosen === "mute" && (
           <div className={s.subOpts}>
-            <div className={s.subLabel}>What to mute</div>
+            <div className={s.subLabel}>
+              {t("safety:blockMute.choose.muteScopeLabel")}
+            </div>
             <label className={s.checkRow}>
-              <input type="checkbox" defaultChecked /> Posts &amp; updates
+              <input type="checkbox" defaultChecked />{" "}
+              {t("safety:blockMute.choose.postsUpdates")}
             </label>
             <label className={s.checkRow}>
-              <input type="checkbox" defaultChecked /> Comments &amp; replies
+              <input type="checkbox" defaultChecked />{" "}
+              {t("safety:blockMute.choose.commentsReplies")}
             </label>
             <label className={s.checkRow}>
-              <input type="checkbox" /> Gathering invites
+              <input type="checkbox" />{" "}
+              {t("safety:blockMute.choose.gatheringInvites")}
             </label>
             <div className={s.subLabel} style={{ marginTop: 14 }}>
-              Duration
+              {t("safety:blockMute.choose.durationLabel")}
             </div>
             <div className={s.durationRow}>
               {MUTE_DURATIONS.map((d) => (
                 <button
                   type="button"
-                  key={d}
-                  className={[s.durBtn, muteDur === d && s.durBtnActive]
+                  key={d.id}
+                  className={[s.durBtn, muteDur === d.id && s.durBtnActive]
                     .filter(Boolean)
                     .join(" ")}
                   onClick={(e) => {
                     e.stopPropagation();
-                    onMuteDur(d);
+                    onMuteDur(d.id);
                   }}
                 >
-                  {d}
+                  {t(d.labelKey)}
                 </button>
               ))}
             </div>
@@ -98,18 +119,21 @@ export function BlockMuteChoose({
           <span className={s.ocRadio}>
             <span className={s.ocDot} />
           </span>
-          <span className={s.ocTitle}>Block Sofia</span>
+          <span className={s.ocTitle}>
+            {t("safety:blockMute.choose.blockTitle", { name })}
+          </span>
         </div>
         <div className={s.ocDesc}>
-          She can't view your profile, message you, or see you in search.
-          Neither of you can connect with the other.
+          {t("safety:blockMute.choose.blockDesc")}
         </div>
         {chosen === "block" && (
           <div className={s.subOpts}>
             <div className={s.warnBox}>
-              <strong>Note:</strong> If you share communities, Sofia will still
-              appear in member lists — but won't be able to interact with you
-              directly.
+              <Translation
+                i18nKey="safety:blockMute.choose.blockNote"
+                values={{ name }}
+                components={{ strong: <strong /> }}
+              />
             </div>
           </div>
         )}
@@ -117,10 +141,10 @@ export function BlockMuteChoose({
 
       <div className={s.actions}>
         <Button disabled={!chosen} onClick={onContinue}>
-          Continue
+          {t("safety:blockMute.choose.continueCta")}
         </Button>
         <button type="button" className={s.cancelLink} onClick={onCancel}>
-          Cancel
+          {t("safety:blockMute.choose.cancelCta")}
         </button>
       </div>
     </div>
@@ -131,9 +155,12 @@ export function BlockMuteMuted({
   muteDur,
   onUndo,
 }: {
-  muteDur: string;
+  muteDur: MuteDurationId;
   onUndo: () => void;
 }) {
+  const { t } = useTranslation();
+  const name = MEMBER_FIRST_NAME;
+
   return (
     <div className={`${s.card} ${s.center} ${s.screenIn}`}>
       <div className={s.icon} style={{ background: "rgba(45,27,61,.07)" }}>
@@ -147,36 +174,49 @@ export function BlockMuteMuted({
         </svg>
       </div>
       <div className={s.title}>
-        You've <em>muted</em> Sofia
+        <Translation
+          i18nKey="safety:blockMute.muted.title"
+          values={{ name }}
+          components={{ em: <em /> }}
+        />
       </div>
-      <div className={s.sub}>
-        Her posts and replies are now hidden from your feed. She doesn't know.
-      </div>
+      <div className={s.sub}>{t("safety:blockMute.muted.sub")}</div>
       <div className={s.summary}>
         <div className={s.csRow}>
-          <span className={s.csLabel}>What's muted</span>
-          <span className={s.csVal}>Posts &amp; comments</span>
+          <span className={s.csLabel}>
+            {t("safety:blockMute.muted.summaryLabel")}
+          </span>
+          <span className={s.csVal}>
+            {t("safety:blockMute.muted.postsComments")}
+          </span>
         </div>
         <div className={s.csRow}>
-          <span className={s.csLabel}>Duration</span>
-          <span className={s.csVal}>{muteDur}</span>
+          <span className={s.csLabel}>
+            {t("safety:blockMute.muted.durationLabel")}
+          </span>
+          <span className={s.csVal}>{durationLabel(t, muteDur)}</span>
         </div>
         <div className={s.csRow}>
-          <span className={s.csLabel}>Sofia notified?</span>
-          <span className={s.csVal}>No</span>
+          <span className={s.csLabel}>
+            {t("safety:blockMute.muted.notifiedLabel", { name })}
+          </span>
+          <span className={s.csVal}>{t("safety:common.no")}</span>
         </div>
       </div>
       <Link to={routes.settings} className={s.manageLink}>
-        Manage muted members →
+        {t("safety:blockMute.muted.manageLink")}
       </Link>
       <button type="button" className={s.undoLink} onClick={onUndo}>
-        Undo — unmute Sofia
+        {t("safety:blockMute.muted.undoCta", { name })}
       </button>
     </div>
   );
 }
 
 export function BlockMuteBlocked({ onUndo }: { onUndo: () => void }) {
+  const { t } = useTranslation();
+  const name = MEMBER_FIRST_NAME;
+
   return (
     <div className={`${s.card} ${s.center} ${s.screenIn}`}>
       <div className={s.icon} style={{ background: "rgba(45,27,61,.08)" }}>
@@ -191,35 +231,46 @@ export function BlockMuteBlocked({ onUndo }: { onUndo: () => void }) {
         </svg>
       </div>
       <div className={s.title}>
-        You've <em>blocked</em> Sofia
+        <Translation
+          i18nKey="safety:blockMute.blocked.title"
+          values={{ name }}
+          components={{ em: <em /> }}
+        />
       </div>
       <div className={s.sub}>
-        Sofia can no longer view your profile, message you, or find you in
-        search.
+        {t("safety:blockMute.blocked.sub", { name })}
       </div>
       <div className={s.summary}>
         <div className={s.csRow}>
-          <span className={s.csLabel}>Profile visible to her</span>
-          <span className={s.csVal}>No</span>
+          <span className={s.csLabel}>
+            {t("safety:blockMute.blocked.visibleLabel")}
+          </span>
+          <span className={s.csVal}>{t("safety:common.no")}</span>
         </div>
         <div className={s.csRow}>
-          <span className={s.csLabel}>Can she message you</span>
-          <span className={s.csVal}>No</span>
+          <span className={s.csLabel}>
+            {t("safety:blockMute.blocked.messageLabel")}
+          </span>
+          <span className={s.csVal}>{t("safety:common.no")}</span>
         </div>
         <div className={s.csRow}>
-          <span className={s.csLabel}>Sofia notified?</span>
-          <span className={s.csVal}>No</span>
+          <span className={s.csLabel}>
+            {t("safety:blockMute.blocked.notifiedLabel", { name })}
+          </span>
+          <span className={s.csVal}>{t("safety:common.no")}</span>
         </div>
       </div>
       <Link to={routes.settings} className={s.manageLink}>
-        Manage blocked members →
+        {t("safety:blockMute.blocked.manageLink")}
       </Link>
       <button type="button" className={s.undoLink} onClick={onUndo}>
-        Undo — unblock Sofia
+        {t("safety:blockMute.blocked.undoCta", { name })}
       </button>
       <div className={s.reportNote}>
-        Need to report harmful behaviour?{" "}
-        <Link to={routes.report}>File a report →</Link>
+        <Translation
+          i18nKey="safety:blockMute.blocked.reportNote"
+          components={{ link: <Link to={routes.report} /> }}
+        />
       </div>
     </div>
   );

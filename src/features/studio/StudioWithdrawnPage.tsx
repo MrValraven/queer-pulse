@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { StudioShell } from "./StudioShell";
 import { routes } from "../../app/routeMap";
 import { STILL_AVAILABLE, type WithdrawnCard } from "./studioWithdrawn.data";
@@ -11,6 +13,7 @@ const tagClass: Record<NonNullable<WithdrawnCard["tag"]>, string> = {
 };
 
 function StillCard({ card }: { card: WithdrawnCard }) {
+  const { t } = useTranslation();
   const inner = (
     <>
       <div className={s.cardCov}>
@@ -23,15 +26,15 @@ function StillCard({ card }: { card: WithdrawnCard }) {
           placeholder="cover"
           style={{ position: "absolute", inset: 0 }}
         />
-        {card.tag && (
+        {card.tag && card.tagLabelKey && (
           <span className={`${s.tag} ${tagClass[card.tag]}`}>
-            {card.tagLabel}
+            {t(card.tagLabelKey)}
           </span>
         )}
         <span
           role="button"
           tabIndex={0}
-          aria-label="Play"
+          aria-label={t("studio:player.play")}
           className={s.playFab}
           onClick={(e) => {
             e.preventDefault();
@@ -73,6 +76,7 @@ function StillCard({ card }: { card: WithdrawnCard }) {
 }
 
 export function StudioWithdrawnPage() {
+  const { t } = useTranslation();
   return (
     <StudioShell hidePlayer>
       <div className={s.wrap}>
@@ -92,26 +96,20 @@ export function StudioWithdrawnPage() {
               <line x1={2} y1={2} x2={22} y2={22} />
             </svg>
           </div>
-          <div className={s.eb}>Withdrawn by the artist</div>
+          <div className={s.eb}>{t("studio:withdrawn.hero.eyebrow")}</div>
           <h1>
-            This work has been <em>taken down</em>.
+            <Translation i18nKey="studio:withdrawn.hero.title" components={{ em: <em /> }} />
           </h1>
           <p className={s.sub}>
-            The artist removed it from Studio — their right, their call.{" "}
-            <em>No reason is owed</em>, and we don't ask for one.
+            <Translation i18nKey="studio:withdrawn.hero.sub" components={{ em: <em /> }} />
           </p>
         </div>
 
         <div className={s.card}>
           <h3>
-            What this <em>means</em>
+            <Translation i18nKey="studio:withdrawn.card.title" components={{ em: <em /> }} />
           </h3>
-          <p>
-            A takedown isn't a deletion of the work itself — the masters stay
-            with the artist, who can re-publish any time. It just means it's no
-            longer served here. If you'd bought or saved it, it stays in your
-            library as a record, marked withdrawn.
-          </p>
+          <p>{t("studio:withdrawn.card.body")}</p>
           <div className={s.jadeLine}>
             <svg
               viewBox="0 0 24 24"
@@ -125,30 +123,26 @@ export function StudioWithdrawnPage() {
               <path d="M22 4 12 14.01l-3-3" />
             </svg>
             <span>
-              If you tipped or bought this,{" "}
-              <em>every cent already reached the artist</em> and stays with
-              them. Nothing is clawed back.
+              <Translation i18nKey="studio:withdrawn.card.jadeLine" components={{ em: <em /> }} />
             </span>
           </div>
         </div>
 
         <div className={s.actions}>
           <Button variant="primary" size="lg" to={routes.studioArtist}>
-            Visit the artist's page
+            {t("studio:withdrawn.visitArtistCta")}
           </Button>
           <Button variant="ghost-dark" size="lg" to={routes.studio}>
-            Back to the player
+            {t("studio:withdrawn.backToPlayerCta")}
           </Button>
         </div>
 
         <div className={s.still}>
           <div className={s.rowH}>
             <h2>
-              Still <em>available</em> from this artist
+              <Translation i18nKey="studio:withdrawn.still.heading" components={{ em: <em /> }} />
             </h2>
-            <div className={s.subLine}>
-              What's left up, and what the council programmed instead
-            </div>
+            <div className={s.subLine}>{t("studio:withdrawn.still.sub")}</div>
           </div>
           <div className={s.rowGrid}>
             {STILL_AVAILABLE.map((card) => (

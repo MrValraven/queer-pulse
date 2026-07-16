@@ -1,7 +1,14 @@
 import { forwardRef } from "react";
 import { Link } from "react-router-dom";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
-import { BUDGET_ROWS, BUDGET_TOTAL, type BudgetTint } from "./sustainer.data";
+import {
+  BUDGET_ROWS,
+  BUDGET_TOTAL_EUR,
+  type BudgetTint,
+} from "./sustainer.data";
 import styles from "./sustainer.module.css";
 
 const FILL_CLASS: Record<BudgetTint, string> = {
@@ -14,40 +21,38 @@ const FILL_CLASS: Record<BudgetTint, string> = {
 
 /** "Where the money actually goes" — the transparency budget breakdown. */
 export const SustainerBudget = forwardRef<HTMLDivElement>((_props, ref) => {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.budgetBlock} ref={ref}>
       <div className={styles.budgetHead}>
-        <div className={styles.budgetTitle}>Where the money actually goes</div>
-        <div className={styles.budgetPeriod}>Typical month · 2026</div>
+        <div className={styles.budgetTitle}>{t("support:budget.title")}</div>
+        <div className={styles.budgetPeriod}>{t("support:budget.period")}</div>
       </div>
-      <p className={styles.budgetIntro}>
-        We said transparency isn't negotiable, so here's the real thing. This is
-        roughly what it costs to run QueerPulse each month. No marketing budget,
-        no office, no investors to pay back.
-      </p>
+      <p className={styles.budgetIntro}>{t("support:budget.intro")}</p>
       <div className={styles.budgetRows}>
         {BUDGET_ROWS.map((row) => (
-          <div key={row.name} className={styles.budgetItem}>
-            <div className={styles.biName}>{row.name}</div>
+          <div key={row.nameKey} className={styles.budgetItem}>
+            <div className={styles.biName}>{t(row.nameKey)}</div>
             <div className={styles.biBar}>
               <div
                 className={FILL_CLASS[row.tint]}
                 style={{ width: `${row.pct}%` }}
               />
             </div>
-            <div className={styles.biAmt}>{row.amount}</div>
+            <div className={styles.biAmt}>{fmt.currency(row.amountEur)}</div>
           </div>
         ))}
       </div>
       <div className={styles.budgetTotal}>
-        <div className={styles.btLabel}>Monthly running cost</div>
-        <div className={styles.btAmt}>{BUDGET_TOTAL}</div>
+        <div className={styles.btLabel}>{t("support:budget.totalLabel")}</div>
+        <div className={styles.btAmt}>{fmt.currency(BUDGET_TOTAL_EUR)}</div>
       </div>
       <p className={styles.budgetFoot}>
-        Full quarterly figures live in our{" "}
-        <Link to={routes.transparencyReport}>transparency report</Link>. Any
-        surplus goes to the mental-health fund and micro-grants — never to
-        profit.
+        <Translation
+          i18nKey="support:budget.foot"
+          components={{ link: <Link to={routes.transparencyReport} /> }}
+        />
       </p>
     </div>
   );

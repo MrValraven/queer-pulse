@@ -2,15 +2,19 @@ import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSocial } from "../../app/providers/SocialProvider";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CREW } from "./filmPage.data";
 import styles from "./FilmPage.module.css";
 import { routes } from "../../app/routeMap";
 
 const FILMMAKER_SLUG = "maria-vasconcelos";
+const FILMMAKER_NAME = "Maria";
 
 export function FilmBody() {
   const { showToast } = useToast();
   const { isFollowing, toggleFollow } = useSocial();
+  const { t } = useTranslation();
   const following = isFollowing(FILMMAKER_SLUG);
   return (
     <section className={styles.body}>
@@ -54,7 +58,10 @@ export function FilmBody() {
 
           <div className={styles.block}>
             <h2>
-              The film's own <em>words</em>
+              <Translation
+                i18nKey="cinema:film.body.filmWords.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={styles.syn}>
               <p>
@@ -74,7 +81,10 @@ export function FilmBody() {
 
           <div className={styles.block}>
             <h2>
-              Cast &amp; <em>crew</em>
+              <Translation
+                i18nKey="cinema:film.body.cast.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={styles.ccGrid}>
               {CREW.map((person) => (
@@ -97,12 +107,14 @@ export function FilmBody() {
                     <div className={styles.ccName}>{person.name}</div>
                     <div className={styles.ccRole}>{person.role}</div>
                     <div className={styles.ccTags}>
-                      {person.tags.map((t) => (
+                      {person.tags.map((tag) => (
                         <span
-                          key={t}
-                          className={t === "member" ? styles.member : undefined}
+                          key={tag}
+                          className={tag === "member" ? styles.member : undefined}
                         >
-                          {t === "member" ? "QueerPulse member" : t}
+                          {tag === "member"
+                            ? t("cinema:film.body.tag.member")
+                            : tag}
                         </span>
                       ))}
                     </div>
@@ -134,33 +146,43 @@ export function FilmBody() {
             </div>
             <div className={styles.fmStats}>
               <div className={styles.fmStat}>
-                <span className="n">
-                  <em>3</em>
-                </span>
-                films on the cinema
+                <Translation
+                  i18nKey="cinema:film.body.filmmaker.stat.films"
+                  values={{ count: 3 }}
+                  components={{ em: <em /> }}
+                />
               </div>
               <div className={styles.fmStat}>
                 <span className="n">
                   €<em>4.2k</em>
                 </span>
-                earned here
+                {t("cinema:film.body.filmmaker.stat.earned")}
               </div>
             </div>
             <div className={styles.fmActions}>
               <Button to={`${routes.cinemaFilmmaker}/${FILMMAKER_SLUG}`}>
-                View profile
+                {t("cinema:film.body.filmmaker.viewProfileCta")}
               </Button>
               <Button
                 variant={following ? "jade" : "ghost"}
                 onClick={() => {
                   const now = toggleFollow(FILMMAKER_SLUG);
                   showToast(
-                    now ? "Following Maria" : "Unfollowed Maria",
+                    t(
+                      now
+                        ? "cinema:film.body.filmmaker.followedToast"
+                        : "cinema:film.body.filmmaker.unfollowedToast",
+                      { name: FILMMAKER_NAME },
+                    ),
                     now ? "success" : "info",
                   );
                 }}
               >
-                {following ? "Following" : "Follow filmmaker"}
+                {t(
+                  following
+                    ? "cinema:film.body.filmmaker.followingCta"
+                    : "cinema:film.body.filmmaker.followCta",
+                )}
               </Button>
             </div>
           </div>

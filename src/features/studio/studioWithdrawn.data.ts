@@ -8,7 +8,7 @@ export interface WithdrawnCard {
   image: string;
   /** Corner pill on the cover: "Free" or "Sustainer". Omitted when absent. */
   tag?: "free" | "mem";
-  tagLabel?: string;
+  tagLabelKey?: string;
   /** Curator credit line ("by Sara Marques" / "All releases"), when present. */
   byCur?: string;
   titlePre: string;
@@ -23,7 +23,7 @@ export const STILL_AVAILABLE: WithdrawnCard[] = [
     image:
       "https://images.unsplash.com/photo-1635237773272-dcd7a1e16859?q=80&w=600&auto=format&fit=crop",
     tag: "mem",
-    tagLabel: "Sustainer",
+    tagLabelKey: "studio:tag.sustainer",
     titlePre: "Cidade dos ",
     titleEm: "santos",
     meta: "Mariana Sol · 11 tracks",
@@ -33,7 +33,7 @@ export const STILL_AVAILABLE: WithdrawnCard[] = [
     image:
       "https://images.unsplash.com/photo-1660585266731-8cb1b1162d70?q=80&w=600&auto=format&fit=crop",
     tag: "free",
-    tagLabel: "Free",
+    tagLabelKey: "studio:tag.free",
     titlePre: "A ",
     titleEm: "Beja",
     meta: "Mariana Sol · EP",
@@ -53,7 +53,7 @@ export const STILL_AVAILABLE: WithdrawnCard[] = [
     image:
       "https://images.unsplash.com/photo-1670956008011-a9dfc94e12b8?q=80&w=600&auto=format&fit=crop",
     tag: "free",
-    tagLabel: "Free",
+    tagLabelKey: "studio:tag.free",
     titlePre: "The first ",
     titleEm: "Sunday",
     meta: "Mariana Sol · single",

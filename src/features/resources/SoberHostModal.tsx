@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { FiPlusCircle, FiUsers } from "react-icons/fi";
 import { Button, Sending } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ResourceModal, PlumSuccess } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
 
 type Mode = "host" | "attend";
 
 export function SoberHostModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<Mode>("host");
   const [name, setName] = useState("");
   const [detail, setDetail] = useState("");
@@ -22,38 +25,36 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
 
   return (
     <ResourceModal
-      title={phase === "done" ? "" : "Sober gatherings"}
+      title={phase === "done" ? "" : t("resources:sober.host.modalTitle")}
       onClose={onClose}
     >
       {phase === "done" ? (
         <PlumSuccess
           title={
-            mode === "host" ? (
-              <>
-                Gathering <em>submitted.</em>
-              </>
-            ) : (
-              <>
-                You're <em>in.</em>
-              </>
-            )
+            <Translation
+              i18nKey={
+                mode === "host"
+                  ? "resources:sober.host.success.hostTitle"
+                  : "resources:sober.host.success.attendTitle"
+              }
+              components={{ em: <em /> }}
+            />
           }
-          sub={
+          sub={t(
             mode === "host"
-              ? "A coordinator will confirm the alcohol-free listing and add it to the calendar within a day. You'll get the host checklist by email."
-              : "We've saved your spot. The private location and a gentle reminder will reach you the day before — nothing is shared publicly."
-          }
+              ? "resources:sober.host.success.hostSub"
+              : "resources:sober.host.success.attendSub",
+          )}
           onClose={onClose}
         />
       ) : (
         <>
           <div className={styles.body}>
-            <p className={styles.sub}>
-              Start an alcohol-free meet-up, or join an existing peer meeting.
-              Either way, you decide how visible you are.
-            </p>
+            <p className={styles.sub}>{t("resources:sober.host.intro")}</p>
 
-            <span className={styles.label}>What would you like to do?</span>
+            <span className={styles.label}>
+              {t("resources:sober.host.modeLabel")}
+            </span>
             <div className={styles.options}>
               <button
                 type="button"
@@ -63,9 +64,11 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
                 <span className={styles.optIcon}>
                   <FiPlusCircle />
                 </span>
-                <span className={styles.optName}>Host a meeting</span>
+                <span className={styles.optName}>
+                  {t("resources:sober.host.mode.host.name")}
+                </span>
                 <span className={styles.optDesc}>
-                  Propose a new alcohol-free gathering.
+                  {t("resources:sober.host.mode.host.desc")}
                 </span>
               </button>
               <button
@@ -76,47 +79,55 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
                 <span className={styles.optIcon}>
                   <FiUsers />
                 </span>
-                <span className={styles.optName}>Attend a meeting</span>
+                <span className={styles.optName}>
+                  {t("resources:sober.host.mode.attend.name")}
+                </span>
                 <span className={styles.optDesc}>
-                  Ask to join a peer support meeting.
+                  {t("resources:sober.host.mode.attend.desc")}
                 </span>
               </button>
             </div>
 
             <span className={styles.label}>
-              {mode === "host" ? "Your name" : "Name we should greet you by"}
+              {t(
+                mode === "host"
+                  ? "resources:sober.host.nameLabel.host"
+                  : "resources:sober.host.nameLabel.attend",
+              )}
             </span>
             <input
               className={styles.input}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={
+              placeholder={t(
                 mode === "host"
-                  ? "e.g. Mariana L."
-                  : "First name or chosen name"
-              }
+                  ? "resources:sober.host.namePlaceholder.host"
+                  : "resources:sober.host.namePlaceholder.attend",
+              )}
             />
 
             <span className={styles.label}>
-              {mode === "host"
-                ? "What and where"
-                : "Which meeting (and anything to flag)"}
+              {t(
+                mode === "host"
+                  ? "resources:sober.host.detailLabel.host"
+                  : "resources:sober.host.detailLabel.attend",
+              )}
             </span>
             <textarea
               className={styles.textarea}
               value={detail}
               onChange={(e) => setDetail(e.target.value)}
-              placeholder={
+              placeholder={t(
                 mode === "host"
-                  ? "A morning walk, a quiet book club, a peer support circle… venue, day, rough time."
-                  : "e.g. the weekly Sober & Queer peer support — and whether you'd like a buddy to meet you there."
-              }
+                  ? "resources:sober.host.detailPlaceholder.host"
+                  : "resources:sober.host.detailPlaceholder.attend",
+              )}
             />
           </div>
 
           <div className={styles.footer}>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t("resources:sober.host.cancelCta")}
             </Button>
             <Button
               type="button"
@@ -125,11 +136,13 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
               disabled={!valid || phase === "loading"}
             >
               {phase === "loading" ? (
-                <Sending label="Sending…" />
-              ) : mode === "host" ? (
-                "Submit gathering"
+                <Sending label={t("resources:suggestEdit.sendingLabel")} />
               ) : (
-                "Request to attend"
+                t(
+                  mode === "host"
+                    ? "resources:sober.host.submitCta.host"
+                    : "resources:sober.host.submitCta.attend",
+                )
               )}
             </Button>
           </div>

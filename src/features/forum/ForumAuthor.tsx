@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiShield } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ForumAuthor.module.css";
 
 /** Profile path for a member slug (canonical member page). */
@@ -57,9 +58,10 @@ export function ForumAvatar({
 
 /** The "Official" pill shown beside the QueerPulse account's name. */
 export function OfficialBadge() {
+  const { t } = useTranslation();
   return (
-    <span className={styles.official} title="Official QueerPulse account">
-      <FiShield aria-hidden /> Official
+    <span className={styles.official} title={t("forum:author.officialTitle")}>
+      <FiShield aria-hidden /> {t("forum:author.officialBadge")}
     </span>
   );
 }
@@ -79,10 +81,11 @@ export function ProfileLink({
   official?: boolean;
   children: ReactNode;
 }) {
+  const { t } = useTranslation();
   if (!to) return <>{children}</>;
   const label = official
-    ? "About the QueerPulse team & governance"
-    : `View ${name}'s profile`;
+    ? t("forum:author.aboutTeamAria")
+    : t("forum:author.viewProfileAria", { name });
   return (
     <Link to={to} className={className} aria-label={label}>
       {children}
@@ -106,11 +109,12 @@ export function ProfileSpanLink({
   children: ReactNode;
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   if (!to) return <>{children}</>;
   const go = () => navigate(to);
   const label = official
-    ? "About the QueerPulse team & governance"
-    : `View ${name}'s profile`;
+    ? t("forum:author.aboutTeamAria")
+    : t("forum:author.viewProfileAria", { name });
   return (
     <span
       role="link"

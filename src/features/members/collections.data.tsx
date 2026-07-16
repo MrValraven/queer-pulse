@@ -32,6 +32,9 @@ export interface Collection {
   id: string;
   count: string;
   name: ReactNode;
+  /** Plain-text version of `name` (no embedded `<em>`), for use as an i18n
+   *  interpolation token — `Translation`/`t()` values must be string|number. */
+  plainName: string;
   meta: string;
   thumbs: Thumb[];
   more: string;
@@ -51,6 +54,7 @@ export const COLLECTIONS: Collection[] = [
         Bring to <em>therapy</em>
       </>
     ),
+    plainName: "Bring to therapy",
     meta: "Articles & threads I want to talk through with Inês",
     thumbs: ["a", "b", "c", "d"],
     more: "+ 10 more",
@@ -66,6 +70,7 @@ export const COLLECTIONS: Collection[] = [
         Lisbon <em>recs</em>
       </>
     ),
+    plainName: "Lisbon recs",
     meta: "Businesses, safe spaces, & therapists I'd send a friend to",
     thumbs: ["b", "e", "a", "d"],
     more: "+ 18 more",
@@ -81,6 +86,7 @@ export const COLLECTIONS: Collection[] = [
         Issue 10 <em>research</em>
       </>
     ),
+    plainName: "Issue 10 research",
     meta: "For the Rui-the-pharmacist piece I'm writing",
     thumbs: ["c", "d", "a"],
     more: "+ 5 more",
@@ -91,6 +97,7 @@ export const COLLECTIONS: Collection[] = [
     id: "reading",
     count: "32",
     name: <>Reading list</>,
+    plainName: "Reading list",
     meta: "Long-form pieces I'll get to eventually",
     thumbs: ["c", "c", "b"],
     more: "+ 29 more",
@@ -105,6 +112,7 @@ export const COLLECTIONS: Collection[] = [
         Send to <em>mum</em>
       </>
     ),
+    plainName: "Send to mum",
     meta: "When she's ready · printed-out version",
     thumbs: ["c", "a", "d"],
     more: "+ 2 more",

@@ -1,10 +1,13 @@
 import { useMemo, useState } from "react";
-import { AdminSeg } from "./ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminSeg, type AdminSegOption } from "./ui";
 import {
   QUARTERS,
   QUARTER_AXIS_MAX,
   QUARTER_GRIDLINES,
-  QUARTER_RANGES,
+  QUARTER_RANGE_IDS,
+  type QuarterRangeId,
 } from "./adminGovernance.data";
 import styles from "./AdminGovernancePage.module.css";
 
@@ -16,10 +19,15 @@ const PAD_T = 14;
 const PAD_B = 34;
 
 export function AdminGovernanceChart() {
-  const [range, setRange] = useState("6Q");
+  const { t } = useTranslation();
+  const [range, setRange] = useState<QuarterRangeId>("6q");
+  const rangeOptions: AdminSegOption[] = QUARTER_RANGE_IDS.map((id) => ({
+    value: id,
+    label: t(`admin:governance.chart.range.${id}`),
+  }));
 
   const data = useMemo(
-    () => (range === "4Q" ? QUARTERS.slice(-4) : QUARTERS),
+    () => (range === "4q" ? QUARTERS.slice(-4) : QUARTERS),
     [range],
   );
 
@@ -35,26 +43,35 @@ export function AdminGovernanceChart() {
       <div className={styles.chartHead}>
         <div>
           <h2 className={styles.cardTitle}>
-            Income vs spending <em>by quarter</em>
+            <Translation
+              i18nKey="admin:governance.chart.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.cardSub}>
-            The gap is surplus — it goes straight to the reserve.
-          </p>
+          <p className={styles.cardSub}>{t("admin:governance.chart.sub")}</p>
         </div>
-        <AdminSeg options={QUARTER_RANGES} value={range} onChange={setRange} />
+        <AdminSeg
+          options={rangeOptions}
+          value={range}
+          onChange={(v) => setRange(v as QuarterRangeId)}
+        />
       </div>
 
       <div className={styles.chartLegend}>
-        <Legend swatch={styles.legIncome!} label="Income" />
-        <Legend swatch={styles.legSpend!} label="Spending" />
-        <Legend swatch={styles.legReserve!} label="Surplus to reserve" dashed />
+        <Legend swatch={styles.legIncome!} label={t("admin:governance.chart.legend.income")} />
+        <Legend swatch={styles.legSpend!} label={t("admin:governance.chart.legend.spending")} />
+        <Legend
+          swatch={styles.legReserve!}
+          label={t("admin:governance.chart.legend.surplus")}
+          dashed
+        />
       </div>
 
       <svg
         className={styles.chartSvg}
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label="Grouped bar chart of income versus spending per quarter, in thousands of euros"
+        aria-label={t("admin:governance.chart.ariaLabel")}
         preserveAspectRatio="xMidYMid meet"
       >
         {QUARTER_GRIDLINES.map((g) => (

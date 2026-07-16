@@ -10,50 +10,53 @@ import {
 } from "react-icons/fi";
 import { PageShell } from "../shared/components/layout";
 import { Button } from "../shared/components/ui";
+import { Translation } from "../shared/i18n/Translation";
+import { useTranslation } from "../shared/i18n/useTranslation";
 import { routes } from "../app/routeMap";
 import styles from "./NotFoundPage.module.css";
 
 const LINKS = [
   {
     icon: <FiBookOpen />,
-    label: "Magazine",
-    sub: "June 2026 issue",
+    labelKey: "system:notFound.links.magazine.label",
+    subKey: "system:notFound.links.magazine.sub",
     to: routes.magazine,
   },
   {
     icon: <FiCalendar />,
-    label: "Gatherings",
-    sub: "Upcoming events",
+    labelKey: "system:notFound.links.gatherings.label",
+    subKey: "system:notFound.links.gatherings.sub",
     to: routes.gathering,
   },
   {
     icon: <FiBook />,
-    label: "Reading groups",
-    sub: "8 groups open",
+    labelKey: "system:notFound.links.readingGroups.label",
+    subKey: "system:notFound.links.readingGroups.sub",
     to: routes.readingGroups,
   },
   {
     icon: <FiMessageCircle />,
-    label: "Forum",
-    sub: "Community discussion",
+    labelKey: "system:notFound.links.forum.label",
+    subKey: "system:notFound.links.forum.sub",
     to: routes.forum,
   },
   {
     icon: <FiHelpCircle />,
-    label: "Help & FAQ",
-    sub: "Get answers",
+    labelKey: "system:notFound.links.help.label",
+    subKey: "system:notFound.links.help.sub",
     to: routes.help,
   },
   {
     icon: <FiMail />,
-    label: "Contact us",
-    sub: "hello@queerpulse.pt",
+    labelKey: "system:notFound.links.contact.label",
+    subKey: "system:notFound.links.contact.sub",
     to: routes.contact,
   },
 ];
 
 export function NotFoundPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
 
   function handleSearch(e: React.FormEvent) {
@@ -70,31 +73,33 @@ export function NotFoundPage() {
         </div>
 
         <div className={styles.content}>
-          <div className={styles.eyebrow}>Page not found</div>
+          <div className={styles.eyebrow}>{t("system:notFound.eyebrow")}</div>
           <h1 className={styles.title}>
-            You've arrived
+            {t("system:notFound.title.line1")}
             <br />
-            <em>somewhere else.</em>
+            <Translation
+              i18nKey="system:notFound.title.line2"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.sub}>
-            The page you're looking for doesn't exist, has moved, or requires
-            you to be logged in. It happens. Here are some places to go instead.
-          </p>
+          <p className={styles.sub}>{t("system:notFound.sub")}</p>
 
           <div className={styles.actions}>
-            <Button to="/">Go to homepage</Button>
+            <Button to="/">{t("system:notFound.homeCta")}</Button>
             <Button variant="ghost" onClick={() => navigate(-1)}>
-              ← Go back
+              {t("system:notFound.backCta")}
             </Button>
           </div>
 
-          <div className={styles.linksTitle}>Or try one of these</div>
+          <div className={styles.linksTitle}>
+            {t("system:notFound.linksTitle")}
+          </div>
           <div className={styles.grid}>
             {LINKS.map((l) => (
               <Link key={l.to} to={l.to} className={styles.link}>
                 <span className={styles.linkIcon}>{l.icon}</span>
-                <span className={styles.linkLabel}>{l.label}</span>
-                <span className={styles.linkSub}>{l.sub}</span>
+                <span className={styles.linkLabel}>{t(l.labelKey)}</span>
+                <span className={styles.linkSub}>{t(l.subKey)}</span>
               </Link>
             ))}
           </div>
@@ -103,12 +108,12 @@ export function NotFoundPage() {
             <input
               className={styles.searchInput}
               type="text"
-              placeholder="Search the platform…"
+              placeholder={t("system:notFound.searchPlaceholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
             <button type="submit" className={styles.searchBtn}>
-              Search
+              {t("system:notFound.searchCta")}
             </button>
           </form>
         </div>

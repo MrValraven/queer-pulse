@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ART_FILTERS, MUSIC_FILTERS } from "./creatives.data";
 import styles from "./CreativesPage.module.css";
 
@@ -14,6 +15,7 @@ export function CreativesTopbar({
   onSwitchMode: (m: "art" | "music") => void;
   onToggleFilter: (name: string) => void;
 }) {
+  const { t } = useTranslation();
   const availableFilters = mode === "art" ? ART_FILTERS : MUSIC_FILTERS;
 
   return (
@@ -27,7 +29,7 @@ export function CreativesTopbar({
               .join(" ")}
             onClick={() => onSwitchMode("art")}
           >
-            Visual Art
+            {t("community:creatives.mode.art")}
           </button>
           <button
             type="button"
@@ -39,23 +41,25 @@ export function CreativesTopbar({
               .join(" ")}
             onClick={() => onSwitchMode("music")}
           >
-            Music
+            {t("community:creatives.mode.music")}
           </button>
         </div>
         <div className={styles.filters}>
-          {availableFilters.map((flt) => {
+          {availableFilters.map((filterOption) => {
             const isActive =
-              flt === "All" ? filters.length === 0 : filters.includes(flt);
+              filterOption.id === "All"
+                ? filters.length === 0
+                : filters.includes(filterOption.id);
             return (
               <button
-                key={flt}
+                key={filterOption.id}
                 type="button"
                 className={[styles.chip, isActive && styles.chipActive]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => onToggleFilter(flt)}
+                onClick={() => onToggleFilter(filterOption.id)}
               >
-                {flt}
+                {t(filterOption.labelKey)}
               </button>
             );
           })}
@@ -63,8 +67,8 @@ export function CreativesTopbar({
         <div className={styles.count}>
           <b>{count}</b>{" "}
           {mode === "art"
-            ? `work${count !== 1 ? "s" : ""}`
-            : `artist${count !== 1 ? "s" : ""}`}
+            ? t("community:creatives.count.works", { count })
+            : t("community:creatives.count.artists", { count })}
         </div>
       </div>
     </div>

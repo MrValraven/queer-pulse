@@ -2,6 +2,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./housingModals.module.css";
 
 const Check = () => (
@@ -19,11 +21,13 @@ function Shell({
   onClose: () => void;
   ariaLabel?: string;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    const onKeyDown = (event: KeyboardEvent) =>
+      event.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [onClose]);
   return (
     <div
@@ -42,7 +46,7 @@ function Shell({
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("economy:housingModal.close")}
         >
           ×
         </button>
@@ -64,44 +68,58 @@ export function MessageModal({
   responseTime: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [text, setText] = useState(
     `Hi ${toName.split(" ")[0]}, I'm interested in "${listingTitle}". Is it still available? A bit about me: `,
   );
   const [done, setDone] = useState(false);
   const canSend = text.trim().length >= 20;
+  const remaining = 20 - text.trim().length;
 
   return (
-    <Shell onClose={onClose} ariaLabel="Message the lister">
+    <Shell onClose={onClose} ariaLabel={t("economy:housingModal.message.ariaLabel")}>
       {done ? (
         <div className={styles.success}>
           <div className={styles.successIcon}>
             <Check />
           </div>
           <div className={styles.title}>
-            Message <em>sent.</em>
+            <Translation
+              i18nKey="economy:housingModal.message.successTitle"
+              components={{ em: <em /> }}
+            />
           </div>
           <p className={styles.sub}>
-            Your message is on its way to <strong>{toName}</strong>, who usually
-            replies <strong>{responseTime}</strong>. You'll get a notification
-            here when they do. Contact details are shared once you both agree to
-            take it further.
+            <Translation
+              i18nKey="economy:housingModal.message.successBody"
+              values={{ toName, responseTime }}
+              components={{ strong: <strong /> }}
+            />
           </p>
           <div className={styles.actions}>
             <Button variant="ghost" className={styles.full} onClick={onClose}>
-              Done
+              {t("economy:housingModal.done")}
             </Button>
           </div>
         </div>
       ) : (
         <div>
-          <div className={styles.eye}>Message the lister</div>
+          <div className={styles.eye}>
+            {t("economy:housingModal.message.eyebrow")}
+          </div>
           <div className={styles.title}>
-            Message <em>{toName}</em>
+            <Translation
+              i18nKey="economy:housingModal.message.title"
+              values={{ toName }}
+              components={{ em: <em /> }}
+            />
           </div>
           <p className={styles.sub}>
-            About <strong>{listingTitle}</strong>. Keep it human — a sentence
-            about who you are and why it suits you goes a long way. Your profile
-            is shared with the message.
+            <Translation
+              i18nKey="economy:housingModal.message.body"
+              values={{ listingTitle }}
+              components={{ strong: <strong /> }}
+            />
           </p>
           <textarea
             className={styles.textarea}
@@ -109,17 +127,18 @@ export function MessageModal({
             onChange={(e) => setText(e.target.value)}
           />
           <div className={styles.counter}>
-            {text.trim().length < 20
-              ? `${20 - text.trim().length} more characters to send`
-              : `${text.trim().length} characters`}
+            {remaining > 0
+              ? t("economy:housingModal.charsToSend", { count: remaining })
+              : t("economy:housingModal.charsCount", {
+                  count: text.trim().length,
+                })}
           </div>
           <div className={styles.note}>
-            For your safety, keep the conversation on QueerPulse until you've
-            met. Never send a deposit before viewing the place in person.
+            {t("economy:housingModal.message.note")}
           </div>
           <div className={styles.actions}>
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {t("economy:housingModal.cancel")}
             </Button>
             <Button
               variant="primary"
@@ -127,7 +146,7 @@ export function MessageModal({
               onClick={() => setDone(true)}
               disabled={!canSend}
             >
-              Send message
+              {t("economy:housingModal.message.send")}
             </Button>
           </div>
         </div>
@@ -146,10 +165,12 @@ export function RecommendModal({
   onClose: () => void;
   onSubmitted?: (stars: number, text: string) => void;
 }) {
+  const { t } = useTranslation();
   const [stars, setStars] = useState(5);
   const [text, setText] = useState("");
   const [done, setDone] = useState(false);
   const canSubmit = text.trim().length >= 20;
+  const remaining = 20 - text.trim().length;
 
   const submit = () => {
     if (!canSubmit) return;
@@ -158,74 +179,94 @@ export function RecommendModal({
   };
 
   return (
-    <Shell onClose={onClose} ariaLabel="Recommend a landlord">
+    <Shell
+      onClose={onClose}
+      ariaLabel={t("economy:housingModal.recommend.ariaLabel")}
+    >
       {done ? (
         <div className={styles.success}>
           <div className={styles.successIcon}>
             <Check />
           </div>
           <div className={styles.title}>
-            Thank you. <em>Recorded.</em>
+            <Translation
+              i18nKey="economy:housingModal.recommend.successTitle"
+              components={{ em: <em /> }}
+            />
           </div>
           <p className={styles.sub}>
-            Your recommendation for <strong>{landlordName}</strong> will appear
-            once a moderator has confirmed you've rented from them — it's how
-            the board stays trustworthy. This is the kind of thing that makes
-            someone's move so much safer.
+            <Translation
+              i18nKey="economy:housingModal.recommend.successBody"
+              values={{ landlordName }}
+              components={{ strong: <strong /> }}
+            />
           </p>
           <div className={styles.actions}>
             <Button variant="ghost" className={styles.full} onClick={onClose}>
-              Done
+              {t("economy:housingModal.done")}
             </Button>
           </div>
         </div>
       ) : (
         <div>
-          <div className={styles.eye}>Recommend a landlord</div>
+          <div className={styles.eye}>
+            {t("economy:housingModal.recommend.eyebrow")}
+          </div>
           <div className={styles.title}>
-            Recommend <em>{landlordName}</em>
+            <Translation
+              i18nKey="economy:housingModal.recommend.title"
+              values={{ landlordName }}
+              components={{ em: <em /> }}
+            />
           </div>
           <p className={styles.sub}>
-            You've rented from them and it went well. Tell other members what to
-            expect — the specific, useful things you wish you'd known.
+            {t("economy:housingModal.recommend.body")}
           </p>
 
-          <div className={styles.label}>Your rating</div>
+          <div className={styles.label}>
+            {t("economy:housingModal.recommend.ratingLabel")}
+          </div>
           <div className={styles.stars}>
-            {[1, 2, 3, 4, 5].map((n) => (
+            {[1, 2, 3, 4, 5].map((starValue) => (
               <button
-                key={n}
+                key={starValue}
                 type="button"
-                className={[styles.star, n <= stars && styles.starOn]
+                className={[styles.star, starValue <= stars && styles.starOn]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => setStars(n)}
-                aria-label={`${n} star${n > 1 ? "s" : ""}`}
+                onClick={() => setStars(starValue)}
+                aria-label={t(
+                  "economy:housingModal.recommend.starAriaLabel",
+                  { count: starValue },
+                )}
               >
                 <FiStar />
               </button>
             ))}
           </div>
 
-          <div className={styles.label}>What should members know?</div>
+          <div className={styles.label}>
+            {t("economy:housingModal.recommend.whatShouldKnow")}
+          </div>
           <textarea
             className={styles.textarea}
-            placeholder="How were repairs, contracts, deposits? Did they respect your privacy and your relationships? Specifics help."
+            placeholder={t("economy:housingModal.recommend.placeholder")}
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
           <div className={styles.counter}>
-            {text.trim().length < 20
-              ? `${20 - text.trim().length} more characters to submit`
-              : `${text.trim().length} characters`}
+            {remaining > 0
+              ? t("economy:housingModal.charsToSubmit", { count: remaining })
+              : t("economy:housingModal.charsCount", {
+                  count: text.trim().length,
+                })}
           </div>
           <div className={styles.note}>
-            Recommendations are checked before they appear. Only recommend
-            landlords you've actually rented from.
+            {t("economy:housingModal.recommend.note")}
           </div>
           <div className={styles.actions}>
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {t("economy:housingModal.cancel")}
             </Button>
             <Button
               variant="primary"
@@ -233,7 +274,7 @@ export function RecommendModal({
               onClick={submit}
               disabled={!canSubmit}
             >
-              Submit recommendation
+              {t("economy:housingModal.recommend.submit")}
             </Button>
           </div>
         </div>

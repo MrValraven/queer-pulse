@@ -1,5 +1,6 @@
 import { FiCheck, FiX, FiFlag, FiUserPlus, FiShield } from "react-icons/fi";
 import { Avatar, Button, EmptyState } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { LivingCommunity } from "./community.model";
 import { photoOf } from "./communityPeople";
 import { RoleBadge } from "./CommunityBadges";
@@ -26,10 +27,11 @@ export function ModJoinRequests({
   requests: JoinRequest[];
   onResolve: (id: string, name: string, approved: boolean) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <div className={detail.secLbl}>
-        People asking to join{" "}
+        {t("communities:detail.modtools.joinRequests.label")}{" "}
         {requests.length > 0 && (
           <span className={detail.tabCount}>{requests.length}</span>
         )}
@@ -37,8 +39,10 @@ export function ModJoinRequests({
       {requests.length === 0 ? (
         <EmptyState
           compact
-          title="No requests waiting"
-          description="You're all caught up — new requests will appear here."
+          title={t("communities:detail.modtools.joinRequests.empty.title")}
+          description={t(
+            "communities:detail.modtools.joinRequests.empty.description",
+          )}
         />
       ) : (
         requests.map((r) => (
@@ -53,14 +57,19 @@ export function ModJoinRequests({
             <div className={styles.modMain}>
               <div className={styles.modName}>{r.person.name}</div>
               {r.note && <div className={styles.modNote}>“{r.note}”</div>}
-              <div className={styles.modMeta}>Requested {r.time} ago</div>
+              <div className={styles.modMeta}>
+                {t("communities:detail.modtools.joinRequests.requestedAgo", {
+                  time: r.time,
+                })}
+              </div>
             </div>
             <div className={styles.modActions}>
               <Button
                 variant="jade"
                 onClick={() => onResolve(r.id, r.person.name, true)}
               >
-                <FiCheck aria-hidden /> Approve
+                <FiCheck aria-hidden />{" "}
+                {t("communities:detail.modtools.joinRequests.approveCta")}
               </Button>
               <span
                 role="button"
@@ -71,7 +80,8 @@ export function ModJoinRequests({
                   onResolve(r.id, r.person.name, false),
                 )}
               >
-                <FiX aria-hidden /> Decline
+                <FiX aria-hidden />{" "}
+                {t("communities:detail.modtools.joinRequests.declineCta")}
               </span>
             </div>
           </div>
@@ -88,10 +98,11 @@ export function ModReportedPosts({
   reports: Report[];
   onResolve: (id: string, removedPost: boolean) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <div className={detail.secLbl} style={{ marginTop: 32 }}>
-        Reported posts{" "}
+        {t("communities:detail.modtools.reports.label")}{" "}
         {reports.length > 0 && (
           <span className={detail.tabCount}>{reports.length}</span>
         )}
@@ -99,8 +110,10 @@ export function ModReportedPosts({
       {reports.length === 0 ? (
         <EmptyState
           compact
-          title="All clear"
-          description="Nothing has been flagged — the community looks after each other."
+          title={t("communities:detail.modtools.reports.empty.title")}
+          description={t(
+            "communities:detail.modtools.reports.empty.description",
+          )}
         />
       ) : (
         reports.map((rep) => (
@@ -110,12 +123,15 @@ export function ModReportedPosts({
             </div>
             <p className={styles.reportExcerpt}>“{rep.postExcerpt}”</p>
             <div className={styles.modMeta}>
-              From {rep.author.name} · flagged by {rep.reporter.name} ·{" "}
-              {rep.time} ago
+              {t("communities:detail.modtools.reports.meta", {
+                author: rep.author.name,
+                reporter: rep.reporter.name,
+                time: rep.time,
+              })}
             </div>
             <div className={styles.modActions} style={{ marginTop: 12 }}>
               <Button variant="primary" onClick={() => onResolve(rep.id, true)}>
-                Remove post
+                {t("communities:detail.modtools.reports.removeCta")}
               </Button>
               <span
                 role="button"
@@ -124,7 +140,7 @@ export function ModReportedPosts({
                 onClick={() => onResolve(rep.id, false)}
                 onKeyDown={keyDownActivate(() => onResolve(rep.id, false))}
               >
-                Dismiss
+                {t("communities:detail.modtools.reports.dismissCta")}
               </span>
             </div>
           </div>
@@ -147,10 +163,12 @@ export function ModMemberManagement({
   onPromote: (slug: string | undefined, name: string) => void;
   onRemove: (slug: string | undefined, name: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <div className={detail.secLbl} style={{ marginTop: 32 }}>
-        Members <span className={detail.tabCount}>{members.length}</span>
+        {t("communities:detail.modtools.members.label")}{" "}
+        <span className={detail.tabCount}>{members.length}</span>
       </div>
       {members.map((m) => {
         const key = memberKey(m.slug, m.name);
@@ -180,7 +198,8 @@ export function ModMemberManagement({
                   onClick={() => onPromote(m.slug, m.name)}
                   onKeyDown={keyDownActivate(() => onPromote(m.slug, m.name))}
                 >
-                  <FiUserPlus aria-hidden /> Make mod
+                  <FiUserPlus aria-hidden />{" "}
+                  {t("communities:detail.modtools.members.makeModCta")}
                 </span>
               )}
               {m.role !== "owner" && (
@@ -191,12 +210,14 @@ export function ModMemberManagement({
                   onClick={() => onRemove(m.slug, m.name)}
                   onKeyDown={keyDownActivate(() => onRemove(m.slug, m.name))}
                 >
-                  <FiX aria-hidden /> Remove from community
+                  <FiX aria-hidden />{" "}
+                  {t("communities:detail.modtools.members.removeCta")}
                 </span>
               )}
               {m.role === "owner" && (
                 <span className={styles.ownerTag}>
-                  <FiShield aria-hidden /> Owner
+                  <FiShield aria-hidden />{" "}
+                  {t("communities:detail.modtools.members.ownerTag")}
                 </span>
               )}
             </div>

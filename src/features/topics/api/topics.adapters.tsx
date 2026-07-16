@@ -90,16 +90,23 @@ export function topicDetailToTopic(
 ): Topic {
   return {
     tag: detail.tag,
-    eyebrow: "Topic",
+    eyebrowKey: "topics:common.eyebrow",
     title: splitForTitle(detail.label),
     sub: detail.description,
     stats: [
-      { value: String(detail.totalPosts), em: true, label: "Posts" },
+      {
+        value: String(detail.totalPosts),
+        em: true,
+        labelKey: "topics:stats.posts",
+      },
       {
         value: compactCount(detail.followerCount),
-        label: "Members following",
+        labelKey: "topics:stats.membersFollowing",
       },
-      { value: String(detail.postsThisWeek), label: "This week" },
+      {
+        value: String(detail.postsThisWeek),
+        labelKey: "topics:stats.thisWeek",
+      },
     ],
     writeHref: routes.forum,
     posts: posts.map(topicPostResponseToTopicPost),

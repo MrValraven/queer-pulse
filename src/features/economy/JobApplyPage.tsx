@@ -8,11 +8,13 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
 import { JOBS } from "./jobs.data";
-import { APPLICANT, AVAILABILITY } from "./jobApply.data";
+import { APPLICANT, AVAILABILITY_ANSWER } from "./jobApply.data";
 import { useJob } from "./api/useJob";
 import { useApplyToJob } from "./api/useJobMutations";
 import type {
@@ -41,8 +43,7 @@ const INITIAL: JobApplyFields = {
 
 /** Map the apply form into the application DTO the API expects. */
 function toApplicationDto(fields: JobApplyFields): CreateJobApplicationDto {
-  const availability =
-    AVAILABILITY.find((a) => a.value === fields.when)?.title ?? fields.when;
+  const availability = AVAILABILITY_ANSWER[fields.when] ?? fields.when;
   const answers: JobApplicationAnswer[] = [
     { question: "Available from", answer: availability },
   ];
@@ -62,6 +63,8 @@ export function JobApplyPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const { data: fetchedJob, isLoading } = useJob(slug);
   const apply = useApplyToJob(slug ?? "");
@@ -92,7 +95,7 @@ export function JobApplyPage() {
         <PageShell>
           <div className={styles.page}>
             <Link to={routes.jobs} className={styles.back}>
-              ← Back to jobs
+              {t("economy:jobApply.backToJobs")}
             </Link>
             <SkeletonLine width="60%" height={32} style={{ marginTop: 24 }} />
             <SkeletonLine width="90%" height={16} style={{ marginTop: 16 }} />
@@ -103,8 +106,9 @@ export function JobApplyPage() {
     return <Navigate to={routes.jobs} replace />;
   }
 
-  const deadlineFull =
-    job.deadline === "Open" ? "Open" : `${job.deadline} 2026`;
+  const deadlineFull = job.deadline
+    ? fmt.date(job.deadline)
+    : t("economy:jobs.card.deadlineOpen");
   const jobPath = `${routes.jobs}/${job.slug}`;
 
   function setField<K extends keyof JobApplyFields>(
@@ -115,12 +119,12 @@ export function JobApplyPage() {
   }
 
   function saveDraft() {
-    showToast("Draft saved — picks back up whenever you're ready.", "success");
+    showToast(t("economy:jobApply.toast.draftSaved"), "success");
   }
 
   function submit() {
     if (!fields.name.trim() || !fields.email.trim()) {
-      showToast("Add your name and email before sending.", "error");
+      showToast(t("economy:jobApply.error.missingFields"), "error");
       return;
     }
     setSubmitting(true);
@@ -139,15 +143,9 @@ export function JobApplyPage() {
       onError: (err) => {
         setSubmitting(false);
         if (err instanceof ApiError && err.status === 409) {
-          showToast(
-            "You've already applied to this role — check your applications.",
-            "error",
-          );
+          showToast(t("economy:jobApply.error.alreadyApplied"), "error");
         } else {
-          showToast(
-            "We couldn't send your application. Please try again.",
-            "error",
-          );
+          showToast(t("economy:jobApply.error.generic"), "error");
         }
       },
     });
@@ -157,30 +155,32 @@ export function JobApplyPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={jobPath} className={styles.back}>
-          ← Back to job
+          {t("economy:jobApply.backToJob")}
         </Link>
 
         {submitted ? (
           <FadeIn>
             <div className={styles.success}>
               <SuccessPanel
-                title="Your application's on its way to"
+                title={t("economy:jobApply.success.title")}
                 em={job.org}
-                closeLabel="Track your application"
+                closeLabel={t("economy:jobApply.success.closeLabel")}
                 onClose={() => navigate(routes.applicationStatus)}
                 steps={[
-                  `${job.org} will see your QueerPulse profile and everything you attached.`,
-                  "You'll get a notification the moment they respond.",
-                  "Most teams here reply within 10 days.",
+                  t("economy:jobApply.success.step1", { org: job.org }),
+                  t("economy:jobApply.success.step2"),
+                  t("economy:jobApply.success.step3"),
                 ]}
                 footer={
                   <Button variant="ghost-dark" to={routes.jobs}>
-                    Back to all jobs
+                    {t("economy:jobApply.success.footerCta")}
                   </Button>
                 }
               >
-                Sent to {job.org} for the {job.title} role. Nothing else to do
-                right now — the ball's in their court.
+                {t("economy:jobApply.success.body", {
+                  org: job.org,
+                  title: job.title,
+                })}
               </SuccessPanel>
             </div>
           </FadeIn>

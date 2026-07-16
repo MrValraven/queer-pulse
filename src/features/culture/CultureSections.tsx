@@ -1,9 +1,14 @@
 import { useState, type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import {
+  COMMISSION_CAT_LABEL_KEY,
   COMMISSIONS,
   GALLERY,
+  PICK_KIND_LABEL_KEY,
   PICKS,
   THREADS,
   type Commission,
@@ -38,18 +43,23 @@ function SectionHeader({
 }
 
 export function ClubSection() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [picking, setPicking] = useState(false);
   return (
     <section>
       <SectionHeader
         title={
-          <>
-            This month's <em>picks.</em>
-          </>
+          <Translation
+            i18nKey="culture:club.picksHeading"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Community-curated. Vote for next month's selection every last Sunday."
+        sub={t("culture:club.picksSub")}
         action={
-          <Button onClick={() => setPicking(true)}>+ Suggest a pick</Button>
+          <Button onClick={() => setPicking(true)}>
+            {t("culture:club.suggestPickCta")}
+          </Button>
         }
       />
 
@@ -60,7 +70,7 @@ export function ClubSection() {
               <span
                 className={`${styles.pickBadge} ${styles[`badge_${pick.kind}`]}`}
               >
-                {pick.kind}
+                {t(PICK_KIND_LABEL_KEY[pick.kind])}
               </span>
               <pick.emoji />
             </div>
@@ -68,9 +78,20 @@ export function ClubSection() {
               <div className={styles.pickTitle}>{pick.title}</div>
               <div className={styles.pickAuthor}>{pick.author}</div>
               <div className={styles.pickMeta}>
-                <span className={styles.pickDisc}>{pick.discussing}</span>
+                <span className={styles.pickDisc}>
+                  {t("culture:club.picks.discussing", {
+                    count: pick.discussingCount,
+                  })}
+                </span>
                 <span>·</span>
-                <span>{pick.when}</span>
+                <span>
+                  {t(pick.eventKey, {
+                    date: fmt.date(pick.eventDate, {
+                      day: "numeric",
+                      month: "short",
+                    }),
+                  })}
+                </span>
               </div>
             </div>
           </article>
@@ -79,10 +100,13 @@ export function ClubSection() {
 
       <div className={styles.threadHead}>
         <h3 className={styles.subHead}>
-          Recent <em>discussions.</em>
+          <Translation
+            i18nKey="culture:club.discussionsHeading"
+            components={{ em: <em /> }}
+          />
         </h3>
         <Button variant="ghost" onClick={() => setPicking(true)}>
-          + Suggest a pick
+          {t("culture:club.suggestPickCta")}
         </Button>
       </div>
       <div className={styles.threadList}>
@@ -93,7 +117,9 @@ export function ClubSection() {
               <div className={styles.threadQ}>{thread.q}</div>
               <div className={styles.threadMeta}>{thread.meta}</div>
             </div>
-            <div className={styles.threadReplies}>{thread.replies} replies</div>
+            <div className={styles.threadReplies}>
+              {t("culture:club.replies", { count: thread.replies })}
+            </div>
           </article>
         ))}
       </div>
@@ -104,12 +130,13 @@ export function ClubSection() {
 }
 
 function CommissionCard({ commission }: { commission: Commission }) {
+  const { t } = useTranslation();
   const [sent, setSent] = useState(false);
   const [open, setOpen] = useState(false);
   return (
     <article className={styles.projCard}>
       <div className={`${styles.pcPill} ${styles[`pill_${commission.cat}`]}`}>
-        {commission.catLabel}
+        {t(COMMISSION_CAT_LABEL_KEY[commission.cat])}
       </div>
       <div className={styles.pcTitle}>{commission.title}</div>
       <p className={styles.pcDesc}>{commission.desc}</p>
@@ -137,10 +164,10 @@ function CommissionCard({ commission }: { commission: Commission }) {
         >
           {sent ? (
             <>
-              Interest sent <FiCheck />
+              {t("culture:commissions.interestSent")} <FiCheck />
             </>
           ) : (
-            "Express interest"
+            t("culture:commissions.expressInterestCta")
           )}
         </Button>
       </div>
@@ -156,18 +183,22 @@ function CommissionCard({ commission }: { commission: Commission }) {
 }
 
 export function CommissionsSection() {
+  const { t } = useTranslation();
   const [posting, setPosting] = useState(false);
   return (
     <section>
       <SectionHeader
         title={
-          <>
-            Creative <em>commissions.</em>
-          </>
+          <Translation
+            i18nKey="culture:commissions.heading"
+            components={{ em: <em /> }}
+          />
         }
-        sub="I'm making something — come help me make it better. More structured than the open board."
+        sub={t("culture:commissions.sub")}
         action={
-          <Button onClick={() => setPosting(true)}>+ Post a project</Button>
+          <Button onClick={() => setPosting(true)}>
+            {t("culture:commissions.postProjectCta")}
+          </Button>
         }
       />
       <div className={styles.projBoard}>
@@ -181,19 +212,21 @@ export function CommissionsSection() {
 }
 
 export function ShowcaseSection() {
+  const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   return (
     <section>
       <SectionHeader
         title={
-          <>
-            Member <em>work.</em>
-          </>
+          <Translation
+            i18nKey="culture:showcase.heading"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Rotating exhibition — 8 works shown at a time. Submissions reviewed monthly."
+        sub={t("culture:showcase.sub")}
         action={
           <Button onClick={() => setSubmitting(true)}>
-            + Submit your work
+            {t("culture:showcase.submitWorkCta")}
           </Button>
         }
       />
@@ -219,18 +252,22 @@ export function ShowcaseSection() {
 }
 
 export function RadioIntro() {
+  const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   return (
     <section>
       <SectionHeader
         title={
-          <>
-            Community <em>radio.</em>
-          </>
+          <Translation
+            i18nKey="culture:radio.heading"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Ambient cultural presence — curated by rotating DJs. No algorithm. No ads."
+        sub={t("culture:radio.sub")}
         action={
-          <Button onClick={() => setSubmitting(true)}>Submit a playlist</Button>
+          <Button onClick={() => setSubmitting(true)}>
+            {t("culture:radio.submitPlaylistCta")}
+          </Button>
         }
       />
       {submitting && (

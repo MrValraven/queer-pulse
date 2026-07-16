@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
 import { useLocalStorage } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import {
   amountFor,
   CURRENCIES,
   eurMonthlyEquiv,
   FREQS,
-  impactMsg,
-  money,
+  impactMsgKey,
   solidAdd,
   TIER_NAMES,
   type CurrencyCode,
@@ -16,12 +17,18 @@ import {
 
 export type SelType = "tier" | "custom";
 
-/** The persisted supporter record that drives the member banner + recap. */
+/**
+ * The persisted supporter record that drives the member banner + recap.
+ * `tier` is a canonical id (a `TierName` or "Custom" — see `TIER_LABEL_KEYS`
+ * in `sustainer.pricing.ts`), and `freq` is the canonical `FreqKey`, not a
+ * pre-formatted English phrase — so a later language switch re-derives the
+ * translated label from these stable ids instead of replaying stale English
+ * text out of `localStorage`.
+ */
 export interface Supporter {
   tier: string;
   price: string;
-  per: string;
-  billing: string;
+  freq: FreqKey;
 }
 
 const BASE_COUNT = 84;
@@ -30,7 +37,7 @@ export const SUPPORT_GOAL = 140;
 function isSupporter(v: unknown): v is Supporter | null {
   return (
     v === null ||
-    (typeof v === "object" && v !== null && "tier" in v && "billing" in v)
+    (typeof v === "object" && v !== null && "tier" in v && "freq" in v)
   );
 }
 
@@ -66,6 +73,8 @@ export interface SustainerStore {
 }
 
 export function useSustainer(): SustainerStore {
+  const { t } = useTranslation();
+  const format = useFormat();
   const [cur, setCur] = useState<CurrencyCode>("EUR");
   const [freq, setFreqState] = useState<FreqKey>("monthly");
   const [selType, setSelType] = useState<SelType>("tier");
@@ -79,7 +88,13 @@ export function useSustainer(): SustainerStore {
     isSupporter,
   );
 
-  const fmt = useMemo(() => (v: number) => money(cur, v), [cur]);
+  // Locale-aware currency formatting (24h/comma/€-suffix in pt-PT) — replaces
+  // the feature's old hand-rolled `money()` helper, which always rendered a
+  // `$`/`€` *prefix* regardless of language.
+  const fmt = useMemo(
+    () => (v: number) => format.currency(v, cur),
+    [format, cur],
+  );
 
   const baseAmount =
     selType === "custom" && custom != null
@@ -126,9 +141,9 @@ export function useSustainer(): SustainerStore {
     cancelMembership: () => setSupporter(null),
     impactText: () => {
       const equiv = eurMonthlyEquiv(baseAmount, cur, freq);
-      const short = FREQS[freq].short;
+      const short = FREQS[freq].short ?? t(FREQS[freq].shortKey!);
       const priceLabel = fmt(baseAmount) + short;
-      return `${priceLabel} ${impactMsg(equiv)}`;
+      return `${priceLabel} ${t(impactMsgKey(equiv))}`;
     },
   };
 }

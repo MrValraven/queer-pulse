@@ -71,14 +71,17 @@ export const TINT_STYLE: Record<string, { background: string; color: string }> =
     plum: { background: "rgba(var(--plum-rgb),.1)", color: "var(--plum)" },
   };
 
-/** Access / safety chip labels. */
-export const ACCESS_LABELS: Record<string, string> = {
-  sober: "Sober space",
-  stepfree: "Step-free access",
-  quiet: "Quiet corner",
-  interpret: "PT / EN",
-  bsl: "BSL interpreted",
-  masks: "Masks encouraged",
+/**
+ * Access / safety chip labels — i18n Pattern A. Chrome (a fixed taxonomy of
+ * access flags), resolved by `EventCardExtras.tsx`'s `AccessRow` via `t()`.
+ */
+export const ACCESS_LABEL_KEYS: Record<string, string> = {
+  sober: "myevents:access.label.sober",
+  stepfree: "myevents:access.label.stepfree",
+  quiet: "myevents:access.label.quiet",
+  interpret: "myevents:access.label.interpret",
+  bsl: "myevents:access.label.bsl",
+  masks: "myevents:access.label.masks",
 };
 
 export const DEFAULT_PREFS: Prefs = {

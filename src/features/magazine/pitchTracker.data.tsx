@@ -31,7 +31,8 @@ export type Pitch = {
 
 export type PitchTab = {
   key: string;
-  label: string;
+  /** Catalog key — tab chrome, label-key indirection (see PitchTabs.tsx). */
+  labelKey: string;
   match: (p: Pitch) => boolean;
 };
 
@@ -225,19 +226,27 @@ export const PITCHES: Pitch[] = [
 ];
 
 export const PITCH_TABS: PitchTab[] = [
-  { key: "all", label: "All", match: () => true },
-  { key: "review", label: "In review", match: (p) => p.status === "review" },
+  { key: "all", labelKey: "magazine:pitchTracker.tabs.all", match: () => true },
+  {
+    key: "review",
+    labelKey: "magazine:pitchTracker.tabs.review",
+    match: (p) => p.status === "review",
+  },
   {
     key: "commissioned",
-    label: "Commissioned",
+    labelKey: "magazine:pitchTracker.tabs.commissioned",
     match: (p) => p.status === "commissioned" || p.status === "editing",
   },
   {
     key: "published",
-    label: "Published",
+    labelKey: "magazine:pitchTracker.tabs.published",
     match: (p) => p.status === "published",
   },
-  { key: "closed", label: "Closed", match: (p) => p.status === "rejected" },
+  {
+    key: "closed",
+    labelKey: "magazine:pitchTracker.tabs.closed",
+    match: (p) => p.status === "rejected",
+  },
 ];
 
 export function countByTab(pitches: Pitch[]): Record<string, number> {

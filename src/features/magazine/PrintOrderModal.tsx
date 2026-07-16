@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { Button, FormField } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useScrollLock } from "../../shared/hooks";
 import styles from "./PrintOrderModal.module.css";
 
 type Stage = "compose" | "placing" | "done";
+
+/** This modal is scoped to Issue 09's print run — not a generic issue picker. */
+const ISSUE_LABEL = "Issue 09 · On Health";
 
 /**
  * Self-contained print-order flow for Issue 09: compose the order → simulated
@@ -11,6 +16,7 @@ type Stage = "compose" | "placing" | "done";
  * locks scroll unconditionally and owns its own state.
  */
 export function PrintOrderModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const [stage, setStage] = useState<Stage>("compose");
   const [qty, setQty] = useState(1);
   const [email, setEmail] = useState("");
@@ -38,13 +44,13 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
         className={`${styles.modal} ${success ? styles.modalSuccess : ""}`}
         role="dialog"
         aria-modal="true"
-        aria-label="Order the print edition"
+        aria-label={t("magazine:printOrder.dialogAria")}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("magazine:printOrder.closeAria")}
         >
           ×
         </button>
@@ -57,37 +63,51 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
               </svg>
             </div>
             <h2>
-              It's on its <em>way to you.</em>
+              <Translation
+                i18nKey="magazine:printOrder.success.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p>
-              {qty} {qty === 1 ? "copy" : "copies"} of{" "}
-              <b>Issue 09 · On Health</b> reserved from the print run. We'll
-              email <b>{email}</b> when it ships from Marvila — usually within a
-              week. Thank you for funding the next issue's contributors.
+              <Translation
+                i18nKey="magazine:printOrder.success.body"
+                components={{ b: <b /> }}
+                values={{ count: qty, issue: ISSUE_LABEL, email }}
+              />
             </p>
             <Button size="lg" variant="ghost-dark" onClick={onClose}>
-              Done
+              {t("magazine:printOrder.success.doneCta")}
             </Button>
           </div>
         ) : (
           <div>
-            <div className={styles.eye}>Print edition · Issue 09</div>
+            <div className={styles.eye}>
+              {t("magazine:printOrder.eyebrow", { issue: ISSUE_LABEL })}
+            </div>
             <h2 className={styles.title}>
-              Order the <em>print run.</em>
+              <Translation
+                i18nKey="magazine:printOrder.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.lead}>
-              84 pages, risograph cover, printed in Marvila. <b>€12 at cost</b>{" "}
-              — proceeds fund the next issue's contributors.
+              <Translation
+                i18nKey="magazine:printOrder.lead"
+                components={{ b: <b /> }}
+                values={{ pages: 84, price: 12 }}
+              />
             </p>
 
             <div className={styles.qtyRow}>
-              <span className={styles.qtyLabel}>Copies</span>
+              <span className={styles.qtyLabel}>
+                {t("magazine:printOrder.copiesLabel")}
+              </span>
               <div className={styles.stepper}>
                 <button
                   type="button"
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
                   disabled={qty <= 1 || stage === "placing"}
-                  aria-label="Fewer copies"
+                  aria-label={t("magazine:printOrder.fewerCopiesAria")}
                 >
                   −
                 </button>
@@ -98,7 +118,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                   type="button"
                   onClick={() => setQty((q) => Math.min(10, q + 1))}
                   disabled={qty >= 10 || stage === "placing"}
-                  aria-label="More copies"
+                  aria-label={t("magazine:printOrder.moreCopiesAria")}
                 >
                   +
                 </button>
@@ -109,16 +129,16 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
             </div>
 
             <FormField
-              label="Email for shipping updates"
+              label={t("magazine:printOrder.emailFieldLabel")}
               required
-              helper="We only use this to tell you when your copy ships."
+              helper={t("magazine:printOrder.emailFieldHelper")}
             >
               <input
                 id="po-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder={t("magazine:printOrder.emailPlaceholder")}
                 disabled={stage === "placing"}
               />
             </FormField>
@@ -130,7 +150,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                 onClick={onClose}
                 disabled={stage === "placing"}
               >
-                ← Cancel
+                {t("magazine:printOrder.cancelCta")}
               </button>
               <Button
                 size="lg"
@@ -140,8 +160,8 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                 aria-busy={stage === "placing"}
               >
                 {stage === "placing"
-                  ? "Placing your order…"
-                  : `Place order — €${total}`}
+                  ? t("magazine:printOrder.placingCta")
+                  : t("magazine:printOrder.placeCta", { total })}
               </Button>
             </div>
           </div>
